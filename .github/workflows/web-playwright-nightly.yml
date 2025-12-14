@@ -144,6 +144,10 @@ jobs:
           PW_SOFT_MODE: ${{ inputs.soft_mode || '1' }}
           PW_AUTH_MODE: ${{ inputs.auth_mode || 'none' }}
           PW_READONLY_ENFORCE: ${{ inputs.readonly_enforce || '0' }}
+          KEYCLOAK_TOKEN_URL: ${{ secrets.KEYCLOAK_TOKEN_URL }}
+          KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+          KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+          KEYCLOAK_SCOPE: ${{ secrets.KEYCLOAK_SCOPE }}
 
       - name: Upload reports (pw)
         if: always()
