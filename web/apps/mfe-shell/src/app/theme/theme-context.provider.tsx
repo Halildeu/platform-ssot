@@ -18,6 +18,8 @@ import {
   type ThemeSurfaceTone,
 } from 'mfe-ui-kit';
 import { clampRgba, parseAnyColor, rgbaToString, type RgbaColor } from './color-utils';
+import { useAppSelector } from '../store/store.hooks';
+import { isPermitAllMode } from '../auth/auth-config';
 
 export type ThemeKey = string;
 
@@ -428,6 +430,7 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const initialAxes = getThemeAxes();
+  const { token: authToken, initialized: authInitialized } = useAppSelector((state) => state.auth);
   const [axes, setAxes] = useState<ThemeAxes>(initialAxes);
   const [themeKey, setThemeKeyState] = useState<ThemeKey>(() => deriveThemeKeyFromAxes(initialAxes));
   const [surfaceColor, setSurfaceColorState] = useState<RgbaColor>({ r: 255, g: 255, b: 255, a: 1 });
@@ -772,6 +775,12 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     if (typeof window === 'undefined') {
       return;
     }
+    if (isPermitAllMode()) {
+      return;
+    }
+    if (!authInitialized || !authToken) {
+      return;
+    }
     let cancelled = false;
 
     const fetchResolvedTheme = async () => {
@@ -811,11 +820,17 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     return () => {
       cancelled = true;
     };
-  }, [applyResolvedTheme]);
+  }, [applyResolvedTheme, authInitialized, authToken]);
 
   const handleSetThemeId = useCallback(
     async (themeId: string | null) => {
       if (!themeId) {
+        return;
+      }
+      if (isPermitAllMode()) {
+        return;
+      }
+      if (!authInitialized || !authToken) {
         return;
       }
       try {
@@ -831,7 +846,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
         // Persist zorunlu değil; hata durumunda local seçim korunur.
       }
     },
-    [applyResolvedTheme],
+    [applyResolvedTheme, authInitialized, authToken],
   );
 
   const value: ThemeContextValue = {
