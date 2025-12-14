@@ -280,7 +280,7 @@ const wireRemoteShellServices = () => {
       .then((module) => module.configureShellServices(sharedServices))
       .catch((error) => {
         if (process.env.NODE_ENV !== 'production') {
-          console.warn(`[shell] ${name} shell-services konfigurasyonu atlandı`, error);
+          console.debug(`[shell] ${name} shell-services konfigurasyonu atlandı`, error);
         }
       });
   });
