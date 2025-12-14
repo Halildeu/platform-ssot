@@ -206,7 +206,7 @@ const captureResponse = async (
   const method = request.method();
   const status = response.status();
   const headers = sanitizeHeaders(response.headers());
-  const timing = response.timing() as unknown as Record<string, unknown>;
+  const timing = request.timing() as unknown as Record<string, unknown>;
   const allowed = isNetworkAllowed(compiledAllowlists, { url, status, method });
   return {
     ts: new Date().toISOString(),
