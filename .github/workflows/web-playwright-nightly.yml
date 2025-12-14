@@ -140,6 +140,7 @@ jobs:
         run: npm run pw:nightly
         working-directory: web
         env:
+          PW_ALLOW_LOCALHOST: "1"
           PW_SOFT_MODE: ${{ inputs.soft_mode || '1' }}
           PW_AUTH_MODE: ${{ inputs.auth_mode || 'none' }}
           PW_READONLY_ENFORCE: ${{ inputs.readonly_enforce || '0' }}

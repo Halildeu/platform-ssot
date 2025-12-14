@@ -123,6 +123,11 @@ const parseMode = () => (process.env.PW_MODE ?? 'ci').trim().toLowerCase();
 
 const isCiEnv = () => Boolean(process.env.CI) || Boolean(process.env.GITHUB_ACTIONS);
 
+const allowLocalhostInCi = () => {
+  const raw = (process.env.PW_ALLOW_LOCALHOST ?? '').trim().toLowerCase();
+  return raw === '1' || raw === 'true' || raw === 'yes';
+};
+
 const isLocalhostUrl = (value: string) => /^(https?:\/\/)?(localhost|127\.0\.0\.1)(:|\/|$)/i.test(value);
 
 const resolveBaseUrl = (baseURLFromPlaywright: string | undefined, yamlBaseUrl: string | undefined) => {
@@ -131,12 +136,14 @@ const resolveBaseUrl = (baseURLFromPlaywright: string | undefined, yamlBaseUrl: 
   const normalized = resolved.replace(/\/+$/, '');
 
   if (isCiEnv()) {
-    // CI'da localhost fallback yasak: baseUrl mutlaka env veya Playwright config üzerinden gelmeli.
-    if ((!explicit && !baseURLFromPlaywright) || isLocalhostUrl(normalized)) {
+    const allowLocalhost = allowLocalhostInCi();
+    // CI'da localhost default olarak yasak; yalnızca self-hosted lokal koşum için PW_ALLOW_LOCALHOST=1 ile açılabilir.
+    if ((!explicit && !baseURLFromPlaywright && !allowLocalhost) || (isLocalhostUrl(normalized) && !allowLocalhost)) {
       throw new Error(
         [
           "CI/runner ortamında Playwright baseUrl 'localhost' olamaz.",
           "Lütfen PLAYWRIGHT_BASE_URL (veya PW_BASE_URL) env değişkenini staging URL ile set edin.",
+          "Self-hosted lokal koşum için PW_ALLOW_LOCALHOST=1 kullanabilirsiniz.",
           `Resolved baseUrl=${normalized}`,
         ].join(' '),
       );
