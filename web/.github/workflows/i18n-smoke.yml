@@ -1,0 +1,60 @@
+name: i18n Pseudolocale Smoke
+
+on:
+  pull_request:
+    paths:
+      - 'packages/i18n-dicts/**'
+      - 'apps/mfe-shell/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/i18n-smoke.yml'
+  push:
+    branches: ['main']
+    paths:
+      - 'packages/i18n-dicts/**'
+      - 'apps/mfe-shell/**'
+      - '.github/workflows/i18n-smoke.yml'
+  workflow_dispatch: {}
+
+jobs:
+  smoke:
+    name: Pseudolocale Smoke Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate translation fetch script (dry-run)
+        run: npm run i18n:pull:ci -- --local-only --dry-run
+
+      - name: Generate pseudolocale dictionaries
+        run: npm run i18n:pseudo
+
+      - name: Check pseudolocale drift
+        run: |
+          git diff --color --exit-code packages/i18n-dicts/src/locales/pseudo
+
+      - name: Build shell with pseudolocale
+        run: I18N_LOCALE=pseudo npm run build:shell
+
+      - name: Scan build output for missing translations
+        run: |
+          if [ ! -d apps/mfe-shell/dist ]; then
+            echo "::error::apps/mfe-shell/dist bulunamadı; build adımı çıktı üretmedi.";
+            exit 1;
+          fi
+          if grep -R "MISSING_TRANSLATION" -n apps/mfe-shell/dist || \
+             grep -R "Missing translation" -n apps/mfe-shell/dist; then
+            echo "::error::Missing translation placeholder detected in pseudolocale build.";
+            exit 1;
+          fi

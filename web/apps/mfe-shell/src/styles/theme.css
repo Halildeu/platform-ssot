@@ -1,0 +1,1054 @@
+/* ⚠️ Auto-generated via scripts/theme/generate-theme-css.mjs. Do NOT edit manually. */
+
+:root {
+  --surface-default-bg: color(srgb 1 1 1);
+  --surface-raised-bg: color(srgb 1 1 1);
+  --surface-muted-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-panel-bg: color(srgb 0.9725 0.9804 0.9882);
+  --surface-header-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-overlay-bg: color(srgb 0.0588 0.0902 0.1647);
+  --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);
+  --surface-tones-ultra-2: color(srgb 0.9451 0.9529 0.9647);
+  --surface-tones-ultra-3: color(srgb 0.9255 0.9373 0.9529);
+  --surface-tones-ultra-4: color(srgb 0.8941 0.9059 0.9255);
+  --surface-tones-ultra-5: color(srgb 0.8667 0.8824 0.9059);
+  --surface-tones-ultra-6: color(srgb 0.8353 0.8549 0.8824);
+  --surface-tones-mid-1: color(srgb 0.7843 0.8078 0.8392);
+  --surface-tones-mid-2: color(srgb 0.7216 0.7451 0.7843);
+  --surface-tones-mid-3: color(srgb 0.6627 0.6902 0.7373);
+  --surface-tones-mid-4: color(srgb 0.6039 0.6353 0.6902);
+  --surface-tones-mid-5: color(srgb 0.5412 0.5765 0.6431);
+  --surface-tones-mid-6: color(srgb 0.4784 0.5137 0.5882);
+  --surface-tones-deep-1: color(srgb 0.4196 0.4549 0.5373);
+  --surface-tones-deep-2: color(srgb 0.3529 0.3882 0.4667);
+  --surface-tones-deep-3: color(srgb 0.2902 0.3255 0.4);
+  --surface-tones-deep-4: color(srgb 0.2314 0.2667 0.3373);
+  --surface-tones-deep-5: color(srgb 0.1725 0.2078 0.2706);
+  --surface-tones-deep-6: color(srgb 0.1137 0.1412 0.1882);
+  --surface-table-soft-bg: color(srgb 0.9725 0.9804 0.9882);
+  --surface-table-normal-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-table-strong-bg: color(srgb 0.8863 0.9098 0.9412);
+  --overlay-intensity-min: 0;
+  --overlay-intensity-max: 60;
+  --overlay-intensity-default: 10;
+  --overlay-opacity-default: 10;
+  --text-primary: color(srgb 0.0588 0.0902 0.1647);
+  --text-secondary: color(srgb 0.2784 0.3333 0.4118);
+  --text-subtle: color(srgb 0.3922 0.4549 0.5451);
+  --text-inverse: color(srgb 1 1 1);
+  --border-subtle: color(srgb 0.8863 0.9098 0.9412);
+  --border-default: color(srgb 0.7961 0.8353 0.8824);
+  --border-bold: color(srgb 0.1725 0.3216 0.5098);
+  --selection-bg: color(srgb 0.8588 0.9176 0.9961);
+  --selection-outline: color(srgb 0.1686 0.4235 0.6902);
+  --focus-outline: color(srgb 0.1725 0.3216 0.5098);
+  --action-primary-bg: color(srgb 0.1686 0.4235 0.6902);
+  --action-primary-text: color(srgb 1 1 1);
+  --action-primary-border: color(srgb 0.1725 0.3216 0.5098);
+  --action-secondary-bg: color(srgb 0.9451 0.9608 0.9765);
+  --action-secondary-text: color(srgb 0.0588 0.0902 0.1647);
+  --action-secondary-border: color(srgb 0.8863 0.9098 0.9412);
+  --action-ghost-bg: transparent;
+  --action-ghost-text: color(srgb 0.1686 0.4235 0.6902);
+  --action-ghost-border: transparent;
+  --state-info-bg: color(srgb 0.1922 0.5098 0.8078 / 15%);
+  --state-info-text: color(srgb 0.1922 0.5098 0.8078);
+  --state-info-border: color(srgb 0.1922 0.5098 0.8078);
+  --state-success-bg: color(srgb 0.2196 0.6314 0.4118 / 12%);
+  --state-success-text: color(srgb 0.2196 0.6314 0.4118);
+  --state-success-border: color(srgb 0.2196 0.6314 0.4118);
+  --state-warning-bg: color(srgb 0.8667 0.4196 0.1255 / 15%);
+  --state-warning-text: color(srgb 0.8667 0.4196 0.1255);
+  --state-warning-border: color(srgb 0.8667 0.4196 0.1255);
+  --state-danger-bg: color(srgb 0.898 0.2431 0.2431 / 12%);
+  --state-danger-text: color(srgb 0.898 0.2431 0.2431);
+  --state-danger-border: color(srgb 0.898 0.2431 0.2431);
+  --data-table-header-bg: color(srgb 0.9451 0.9608 0.9765);
+  --data-table-header-text: color(srgb 0.2 0.2549 0.3333);
+  --data-table-header-divider: color(srgb 0.8863 0.9098 0.9412);
+  --data-table-row-hover: color(srgb 0.1451 0.3882 0.9216 / 5%);
+  --data-table-row-selected: color(srgb 0.7804 0.8235 0.9961);
+  --data-table-row-border: color(srgb 0.8863 0.9098 0.9412);
+  --accent-primary: color(srgb 0.0392 0.5176 1);
+  --accent-primary-hover: color(srgb 0 0.4 0.8);
+  --accent-focus: color(srgb 1 0.8431 0);
+  --accent-soft: color(srgb 0.0392 0.5176 1 / 18%);
+}
+
+:root[data-theme="serban-light"], [data-theme-scope][data-theme="serban-light"] {
+  --surface-default-bg: color(srgb 1 1 1);
+  --surface-raised-bg: color(srgb 1 1 1);
+  --surface-muted-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-panel-bg: color(srgb 0.9725 0.9804 0.9882);
+  --surface-header-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-overlay-bg: color(srgb 0.0588 0.0902 0.1647);
+  --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);
+  --surface-tones-ultra-2: color(srgb 0.9451 0.9529 0.9647);
+  --surface-tones-ultra-3: color(srgb 0.9255 0.9373 0.9529);
+  --surface-tones-ultra-4: color(srgb 0.8941 0.9059 0.9255);
+  --surface-tones-ultra-5: color(srgb 0.8667 0.8824 0.9059);
+  --surface-tones-ultra-6: color(srgb 0.8353 0.8549 0.8824);
+  --surface-tones-mid-1: color(srgb 0.7843 0.8078 0.8392);
+  --surface-tones-mid-2: color(srgb 0.7216 0.7451 0.7843);
+  --surface-tones-mid-3: color(srgb 0.6627 0.6902 0.7373);
+  --surface-tones-mid-4: color(srgb 0.6039 0.6353 0.6902);
+  --surface-tones-mid-5: color(srgb 0.5412 0.5765 0.6431);
+  --surface-tones-mid-6: color(srgb 0.4784 0.5137 0.5882);
+  --surface-tones-deep-1: color(srgb 0.4196 0.4549 0.5373);
+  --surface-tones-deep-2: color(srgb 0.3529 0.3882 0.4667);
+  --surface-tones-deep-3: color(srgb 0.2902 0.3255 0.4);
+  --surface-tones-deep-4: color(srgb 0.2314 0.2667 0.3373);
+  --surface-tones-deep-5: color(srgb 0.1725 0.2078 0.2706);
+  --surface-tones-deep-6: color(srgb 0.1137 0.1412 0.1882);
+  --surface-table-soft-bg: color(srgb 0.9725 0.9804 0.9882);
+  --surface-table-normal-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-table-strong-bg: color(srgb 0.8863 0.9098 0.9412);
+  --overlay-intensity-min: 0;
+  --overlay-intensity-max: 60;
+  --overlay-intensity-default: 10;
+  --overlay-opacity-default: 10;
+  --text-primary: color(srgb 0.0588 0.0902 0.1647);
+  --text-secondary: color(srgb 0.2784 0.3333 0.4118);
+  --text-subtle: color(srgb 0.3922 0.4549 0.5451);
+  --text-inverse: color(srgb 1 1 1);
+  --border-subtle: color(srgb 0.8863 0.9098 0.9412);
+  --border-default: color(srgb 0.7961 0.8353 0.8824);
+  --border-bold: color(srgb 0.1725 0.3216 0.5098);
+  --selection-bg: color(srgb 0.8588 0.9176 0.9961);
+  --selection-outline: color(srgb 0.1686 0.4235 0.6902);
+  --focus-outline: color(srgb 0.1725 0.3216 0.5098);
+  --action-primary-bg: color(srgb 0.1686 0.4235 0.6902);
+  --action-primary-text: color(srgb 1 1 1);
+  --action-primary-border: color(srgb 0.1725 0.3216 0.5098);
+  --action-secondary-bg: color(srgb 0.9451 0.9608 0.9765);
+  --action-secondary-text: color(srgb 0.0588 0.0902 0.1647);
+  --action-secondary-border: color(srgb 0.8863 0.9098 0.9412);
+  --action-ghost-bg: transparent;
+  --action-ghost-text: color(srgb 0.1686 0.4235 0.6902);
+  --action-ghost-border: transparent;
+  --state-info-bg: color(srgb 0.1922 0.5098 0.8078 / 15%);
+  --state-info-text: color(srgb 0.1922 0.5098 0.8078);
+  --state-info-border: color(srgb 0.1922 0.5098 0.8078);
+  --state-success-bg: color(srgb 0.2196 0.6314 0.4118 / 12%);
+  --state-success-text: color(srgb 0.2196 0.6314 0.4118);
+  --state-success-border: color(srgb 0.2196 0.6314 0.4118);
+  --state-warning-bg: color(srgb 0.8667 0.4196 0.1255 / 15%);
+  --state-warning-text: color(srgb 0.8667 0.4196 0.1255);
+  --state-warning-border: color(srgb 0.8667 0.4196 0.1255);
+  --state-danger-bg: color(srgb 0.898 0.2431 0.2431 / 12%);
+  --state-danger-text: color(srgb 0.898 0.2431 0.2431);
+  --state-danger-border: color(srgb 0.898 0.2431 0.2431);
+  --data-table-header-bg: color(srgb 0.9451 0.9608 0.9765);
+  --data-table-header-text: color(srgb 0.2 0.2549 0.3333);
+  --data-table-header-divider: color(srgb 0.8863 0.9098 0.9412);
+  --data-table-row-hover: color(srgb 0.1451 0.3882 0.9216 / 5%);
+  --data-table-row-selected: color(srgb 0.7804 0.8235 0.9961);
+  --data-table-row-border: color(srgb 0.8863 0.9098 0.9412);
+}
+
+:root[data-theme="serban-dark"], [data-theme-scope][data-theme="serban-dark"] {
+  --surface-default-bg: color(srgb 0.0431 0.0706 0.1255);
+  --surface-raised-bg: color(srgb 0.0667 0.0941 0.1529);
+  --surface-muted-bg: color(srgb 0.1176 0.1608 0.2314);
+  --surface-panel-bg: color(srgb 0.051 0.0824 0.1569);
+  --surface-header-bg: color(srgb 0.0196 0.0431 0.0863);
+  --surface-overlay-bg: color(srgb 0.0078 0.0235 0.0902);
+  --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);
+  --surface-tones-ultra-2: color(srgb 0.9451 0.9529 0.9647);
+  --surface-tones-ultra-3: color(srgb 0.9255 0.9373 0.9529);
+  --surface-tones-ultra-4: color(srgb 0.8941 0.9059 0.9255);
+  --surface-tones-ultra-5: color(srgb 0.8667 0.8824 0.9059);
+  --surface-tones-ultra-6: color(srgb 0.8353 0.8549 0.8824);
+  --surface-tones-mid-1: color(srgb 0.7843 0.8078 0.8392);
+  --surface-tones-mid-2: color(srgb 0.7216 0.7451 0.7843);
+  --surface-tones-mid-3: color(srgb 0.6627 0.6902 0.7373);
+  --surface-tones-mid-4: color(srgb 0.6039 0.6353 0.6902);
+  --surface-tones-mid-5: color(srgb 0.5412 0.5765 0.6431);
+  --surface-tones-mid-6: color(srgb 0.4784 0.5137 0.5882);
+  --surface-tones-deep-1: color(srgb 0.4196 0.4549 0.5373);
+  --surface-tones-deep-2: color(srgb 0.3529 0.3882 0.4667);
+  --surface-tones-deep-3: color(srgb 0.2902 0.3255 0.4);
+  --surface-tones-deep-4: color(srgb 0.2314 0.2667 0.3373);
+  --surface-tones-deep-5: color(srgb 0.1725 0.2078 0.2706);
+  --surface-tones-deep-6: color(srgb 0.1137 0.1412 0.1882);
+  --surface-table-soft-bg: color(srgb 0.0588 0.0902 0.1647);
+  --surface-table-normal-bg: color(srgb 0.0431 0.0706 0.1255);
+  --surface-table-strong-bg: color(srgb 0.0196 0.0431 0.0863);
+  --overlay-intensity-min: 0;
+  --overlay-intensity-max: 60;
+  --overlay-intensity-default: 10;
+  --overlay-opacity-default: 10;
+  --text-primary: color(srgb 0.8863 0.9098 0.9412);
+  --text-secondary: color(srgb 0.7961 0.8353 0.8824);
+  --text-subtle: color(srgb 0.5804 0.6392 0.7216);
+  --text-inverse: color(srgb 0.0588 0.0902 0.1647);
+  --border-subtle: color(srgb 0.1216 0.1608 0.2157);
+  --border-default: color(srgb 0.2 0.2549 0.3333);
+  --border-bold: color(srgb 0.1725 0.3216 0.5098);
+  --selection-bg: color(srgb 0.1137 0.3059 0.8471);
+  --selection-outline: color(srgb 0.3765 0.6471 0.9804);
+  --focus-outline: color(srgb 0.3765 0.6471 0.9804);
+  --action-primary-bg: color(srgb 0.1686 0.4235 0.6902);
+  --action-primary-text: color(srgb 1 1 1);
+  --action-primary-border: color(srgb 0.1725 0.3216 0.5098);
+  --action-secondary-bg: color(srgb 0.1216 0.1608 0.2157);
+  --action-secondary-text: color(srgb 0.9451 0.9608 0.9765);
+  --action-secondary-border: color(srgb 0.2 0.2549 0.3333);
+  --action-ghost-bg: transparent;
+  --action-ghost-text: color(srgb 0.1686 0.4235 0.6902);
+  --action-ghost-border: transparent;
+  --state-info-bg: color(srgb 0.2314 0.5098 0.9647 / 25%);
+  --state-info-text: color(srgb 0.1922 0.5098 0.8078);
+  --state-info-border: color(srgb 0.1922 0.5098 0.8078);
+  --state-success-bg: color(srgb 0.1333 0.7725 0.3686 / 20%);
+  --state-success-text: color(srgb 0.2196 0.6314 0.4118);
+  --state-success-border: color(srgb 0.2196 0.6314 0.4118);
+  --state-warning-bg: color(srgb 0.9608 0.6196 0.0431 / 25%);
+  --state-warning-text: color(srgb 0.8667 0.4196 0.1255);
+  --state-warning-border: color(srgb 0.8667 0.4196 0.1255);
+  --state-danger-bg: color(srgb 0.9882 0.5059 0.5059 / 25%);
+  --state-danger-text: color(srgb 0.898 0.2431 0.2431);
+  --state-danger-border: color(srgb 0.898 0.2431 0.2431);
+  --data-table-header-bg: color(srgb 0.0588 0.0902 0.1647);
+  --data-table-header-text: color(srgb 0.8863 0.9098 0.9412);
+  --data-table-header-divider: color(srgb 0.1216 0.1608 0.2157);
+  --data-table-row-hover: color(srgb 0.2314 0.5098 0.9647 / 15%);
+  --data-table-row-selected: color(srgb 0.2157 0.1882 0.6392);
+  --data-table-row-border: color(srgb 0.1216 0.1608 0.2157);
+}
+
+:root[data-theme="serban-hc"], [data-theme-scope][data-theme="serban-hc"] {
+  --surface-default-bg: color(srgb 0 0 0);
+  --surface-raised-bg: color(srgb 0.0667 0.0667 0.0667);
+  --surface-muted-bg: color(srgb 0.1216 0.1216 0.1216);
+  --surface-panel-bg: color(srgb 0.0667 0.0667 0.0667);
+  --surface-header-bg: color(srgb 0 0 0);
+  --surface-overlay-bg: color(srgb 0 0 0);
+  --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);
+  --surface-tones-ultra-2: color(srgb 0.9451 0.9529 0.9647);
+  --surface-tones-ultra-3: color(srgb 0.9255 0.9373 0.9529);
+  --surface-tones-ultra-4: color(srgb 0.8941 0.9059 0.9255);
+  --surface-tones-ultra-5: color(srgb 0.8667 0.8824 0.9059);
+  --surface-tones-ultra-6: color(srgb 0.8353 0.8549 0.8824);
+  --surface-tones-mid-1: color(srgb 0.7843 0.8078 0.8392);
+  --surface-tones-mid-2: color(srgb 0.7216 0.7451 0.7843);
+  --surface-tones-mid-3: color(srgb 0.6627 0.6902 0.7373);
+  --surface-tones-mid-4: color(srgb 0.6039 0.6353 0.6902);
+  --surface-tones-mid-5: color(srgb 0.5412 0.5765 0.6431);
+  --surface-tones-mid-6: color(srgb 0.4784 0.5137 0.5882);
+  --surface-tones-deep-1: color(srgb 0.4196 0.4549 0.5373);
+  --surface-tones-deep-2: color(srgb 0.3529 0.3882 0.4667);
+  --surface-tones-deep-3: color(srgb 0.2902 0.3255 0.4);
+  --surface-tones-deep-4: color(srgb 0.2314 0.2667 0.3373);
+  --surface-tones-deep-5: color(srgb 0.1725 0.2078 0.2706);
+  --surface-tones-deep-6: color(srgb 0.1137 0.1412 0.1882);
+  --surface-table-soft-bg: color(srgb 0.0667 0.0667 0.0667);
+  --surface-table-normal-bg: color(srgb 0.0392 0.0392 0.0392);
+  --surface-table-strong-bg: color(srgb 0 0 0);
+  --overlay-intensity-min: 0;
+  --overlay-intensity-max: 60;
+  --overlay-intensity-default: 10;
+  --overlay-opacity-default: 10;
+  --text-primary: color(srgb 1 1 1);
+  --text-secondary: color(srgb 1 1 1);
+  --text-subtle: color(srgb 1 1 1);
+  --text-inverse: color(srgb 0 0 0);
+  --border-subtle: color(srgb 1 1 1);
+  --border-default: color(srgb 1 1 1);
+  --border-bold: color(srgb 1 1 1);
+  --selection-bg: color(srgb 1 1 1);
+  --selection-outline: color(srgb 1 0.8431 0);
+  --focus-outline: color(srgb 1 0.8431 0);
+  --action-primary-bg: color(srgb 0 0 0);
+  --action-primary-text: color(srgb 1 0.8431 0);
+  --action-primary-border: color(srgb 1 0.8431 0);
+  --action-secondary-bg: color(srgb 0 0 0);
+  --action-secondary-text: color(srgb 1 1 1);
+  --action-secondary-border: color(srgb 1 1 1);
+  --action-ghost-bg: transparent;
+  --action-ghost-text: color(srgb 1 0.8431 0);
+  --action-ghost-border: color(srgb 1 0.8431 0);
+  --state-info-bg: color(srgb 0 0 0);
+  --state-info-text: color(srgb 0 0.749 1);
+  --state-info-border: color(srgb 0 0.749 1);
+  --state-success-bg: color(srgb 0 0.1686 0);
+  --state-success-text: color(srgb 0 1 0);
+  --state-success-border: color(srgb 0 1 0);
+  --state-warning-bg: color(srgb 0.1333 0.102 0);
+  --state-warning-text: color(srgb 1 0.8431 0);
+  --state-warning-border: color(srgb 1 0.8431 0);
+  --state-danger-bg: color(srgb 0.1804 0 0);
+  --state-danger-text: color(srgb 1 0 0);
+  --state-danger-border: color(srgb 1 0 0);
+  --data-table-header-bg: color(srgb 0.1098 0.1098 0.1098);
+  --data-table-header-text: color(srgb 1 1 1);
+  --data-table-header-divider: color(srgb 1 1 1);
+  --data-table-row-hover: color(srgb 0.149 0.149 0.149);
+  --data-table-row-selected: color(srgb 1 1 1);
+  --data-table-row-border: color(srgb 1 1 1);
+}
+
+:root[data-theme="serban-compact"], [data-theme-scope][data-theme="serban-compact"] {
+  --surface-default-bg: color(srgb 1 1 1);
+  --surface-raised-bg: color(srgb 1 1 1);
+  --surface-muted-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-panel-bg: color(srgb 0.9725 0.9804 0.9882);
+  --surface-header-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-overlay-bg: color(srgb 0.0588 0.0902 0.1647);
+  --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);
+  --surface-tones-ultra-2: color(srgb 0.9451 0.9529 0.9647);
+  --surface-tones-ultra-3: color(srgb 0.9255 0.9373 0.9529);
+  --surface-tones-ultra-4: color(srgb 0.8941 0.9059 0.9255);
+  --surface-tones-ultra-5: color(srgb 0.8667 0.8824 0.9059);
+  --surface-tones-ultra-6: color(srgb 0.8353 0.8549 0.8824);
+  --surface-tones-mid-1: color(srgb 0.7843 0.8078 0.8392);
+  --surface-tones-mid-2: color(srgb 0.7216 0.7451 0.7843);
+  --surface-tones-mid-3: color(srgb 0.6627 0.6902 0.7373);
+  --surface-tones-mid-4: color(srgb 0.6039 0.6353 0.6902);
+  --surface-tones-mid-5: color(srgb 0.5412 0.5765 0.6431);
+  --surface-tones-mid-6: color(srgb 0.4784 0.5137 0.5882);
+  --surface-tones-deep-1: color(srgb 0.4196 0.4549 0.5373);
+  --surface-tones-deep-2: color(srgb 0.3529 0.3882 0.4667);
+  --surface-tones-deep-3: color(srgb 0.2902 0.3255 0.4);
+  --surface-tones-deep-4: color(srgb 0.2314 0.2667 0.3373);
+  --surface-tones-deep-5: color(srgb 0.1725 0.2078 0.2706);
+  --surface-tones-deep-6: color(srgb 0.1137 0.1412 0.1882);
+  --surface-table-soft-bg: color(srgb 0.9725 0.9804 0.9882);
+  --surface-table-normal-bg: color(srgb 0.9451 0.9608 0.9765);
+  --surface-table-strong-bg: color(srgb 0.8863 0.9098 0.9412);
+  --overlay-intensity-min: 0;
+  --overlay-intensity-max: 60;
+  --overlay-intensity-default: 10;
+  --overlay-opacity-default: 10;
+  --text-primary: color(srgb 0.0588 0.0902 0.1647);
+  --text-secondary: color(srgb 0.2784 0.3333 0.4118);
+  --text-subtle: color(srgb 0.3922 0.4549 0.5451);
+  --text-inverse: color(srgb 1 1 1);
+  --border-subtle: color(srgb 0.8863 0.9098 0.9412);
+  --border-default: color(srgb 0.7961 0.8353 0.8824);
+  --border-bold: color(srgb 0.1725 0.3216 0.5098);
+  --selection-bg: color(srgb 0.8588 0.9176 0.9961);
+  --selection-outline: color(srgb 0.1686 0.4235 0.6902);
+  --focus-outline: color(srgb 0.1725 0.3216 0.5098);
+  --action-primary-bg: color(srgb 0.1686 0.4235 0.6902);
+  --action-primary-text: color(srgb 1 1 1);
+  --action-primary-border: color(srgb 0.1725 0.3216 0.5098);
+  --action-secondary-bg: color(srgb 0.9451 0.9608 0.9765);
+  --action-secondary-text: color(srgb 0.0588 0.0902 0.1647);
+  --action-secondary-border: color(srgb 0.8863 0.9098 0.9412);
+  --action-ghost-bg: transparent;
+  --action-ghost-text: color(srgb 0.1686 0.4235 0.6902);
+  --action-ghost-border: transparent;
+  --state-info-bg: color(srgb 0.1922 0.5098 0.8078 / 15%);
+  --state-info-text: color(srgb 0.1922 0.5098 0.8078);
+  --state-info-border: color(srgb 0.1922 0.5098 0.8078);
+  --state-success-bg: color(srgb 0.2196 0.6314 0.4118 / 12%);
+  --state-success-text: color(srgb 0.2196 0.6314 0.4118);
+  --state-success-border: color(srgb 0.2196 0.6314 0.4118);
+  --state-warning-bg: color(srgb 0.8667 0.4196 0.1255 / 15%);
+  --state-warning-text: color(srgb 0.8667 0.4196 0.1255);
+  --state-warning-border: color(srgb 0.8667 0.4196 0.1255);
+  --state-danger-bg: color(srgb 0.898 0.2431 0.2431 / 12%);
+  --state-danger-text: color(srgb 0.898 0.2431 0.2431);
+  --state-danger-border: color(srgb 0.898 0.2431 0.2431);
+  --data-table-header-bg: color(srgb 0.9451 0.9608 0.9765);
+  --data-table-header-text: color(srgb 0.2 0.2549 0.3333);
+  --data-table-header-divider: color(srgb 0.8863 0.9098 0.9412);
+  --data-table-row-hover: color(srgb 0.1451 0.3882 0.9216 / 5%);
+  --data-table-row-selected: color(srgb 0.7804 0.8235 0.9961);
+  --data-table-row-border: color(srgb 0.8863 0.9098 0.9412);
+}
+
+:root[data-radius="rounded"], [data-theme-scope][data-radius="rounded"] {
+  --radius-control: 14px;
+  --radius-surface: 10px;
+}
+
+:root[data-radius="sharp"], [data-theme-scope][data-radius="sharp"] {
+  --radius-control: 6px;
+  --radius-surface: 6px;
+}
+
+:root[data-density="comfortable"], [data-theme-scope][data-density="comfortable"] {
+  --density-space: 16px;
+  --density-row-height: 44px;
+}
+
+:root[data-density="compact"], [data-theme-scope][data-density="compact"] {
+  --density-space: 12px;
+  --density-row-height: 36px;
+}
+
+:root[data-elevation="raised"], [data-theme-scope][data-elevation="raised"] {
+  --elevation-surface: 0 4px 12px color(srgb 0.0588 0.0902 0.1647 / 12%);
+  --elevation-overlay: 0 8px 24px color(srgb 0.0588 0.0902 0.1647 / 18%);
+}
+
+:root[data-elevation="flat"], [data-theme-scope][data-elevation="flat"] {
+  --elevation-surface: none;
+  --elevation-overlay: 0 1px 2px color(srgb 0.0588 0.0902 0.1647 / 8%);
+}
+
+:root[data-motion="standard"], [data-theme-scope][data-motion="standard"] {
+  --motion-duration-fast: 120ms;
+  --motion-duration-medium: 200ms;
+  --motion-duration-slow: 320ms;
+  --motion-easing-standard: cubic-bezier(.2,0,.2,1);
+  --motion-easing-enter: cubic-bezier(0,0,.2,1);
+  --motion-easing-exit: cubic-bezier(.4,0,1,1);
+}
+
+:root[data-motion="reduced"], [data-theme-scope][data-motion="reduced"] {
+  --motion-duration-fast: 0ms;
+  --motion-duration-medium: 0ms;
+  --motion-duration-slow: 0ms;
+  --motion-easing-standard: cubic-bezier(.2,0,.2,1);
+  --motion-easing-enter: cubic-bezier(0,0,.2,1);
+  --motion-easing-exit: cubic-bezier(.4,0,1,1);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="ultra-1"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="ultra-1"] {
+  --surface-default-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-raised-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-muted-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-panel-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-header-bg: color(srgb 0.9686 0.9725 0.9804);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="ultra-1"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="ultra-1"] {
+  --surface-default-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-raised-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-muted-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-panel-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-header-bg: color(srgb 0.9686 0.9725 0.9804);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="ultra-1"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="ultra-1"] {
+  --surface-default-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-raised-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-muted-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-panel-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-header-bg: color(srgb 0.9686 0.9725 0.9804);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="ultra-1"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="ultra-1"] {
+  --surface-default-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-raised-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-muted-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-panel-bg: color(srgb 0.9686 0.9725 0.9804);
+  --surface-header-bg: color(srgb 0.9686 0.9725 0.9804);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="ultra-2"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="ultra-2"] {
+  --surface-default-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-raised-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-muted-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-panel-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-header-bg: color(srgb 0.9451 0.9529 0.9647);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="ultra-2"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="ultra-2"] {
+  --surface-default-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-raised-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-muted-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-panel-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-header-bg: color(srgb 0.9451 0.9529 0.9647);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="ultra-2"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="ultra-2"] {
+  --surface-default-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-raised-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-muted-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-panel-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-header-bg: color(srgb 0.9451 0.9529 0.9647);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="ultra-2"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="ultra-2"] {
+  --surface-default-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-raised-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-muted-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-panel-bg: color(srgb 0.9451 0.9529 0.9647);
+  --surface-header-bg: color(srgb 0.9451 0.9529 0.9647);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="ultra-3"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="ultra-3"] {
+  --surface-default-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-raised-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-muted-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-panel-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-header-bg: color(srgb 0.9255 0.9373 0.9529);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="ultra-3"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="ultra-3"] {
+  --surface-default-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-raised-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-muted-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-panel-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-header-bg: color(srgb 0.9255 0.9373 0.9529);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="ultra-3"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="ultra-3"] {
+  --surface-default-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-raised-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-muted-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-panel-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-header-bg: color(srgb 0.9255 0.9373 0.9529);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="ultra-3"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="ultra-3"] {
+  --surface-default-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-raised-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-muted-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-panel-bg: color(srgb 0.9255 0.9373 0.9529);
+  --surface-header-bg: color(srgb 0.9255 0.9373 0.9529);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="ultra-4"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="ultra-4"] {
+  --surface-default-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-raised-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-muted-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-panel-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-header-bg: color(srgb 0.8941 0.9059 0.9255);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="ultra-4"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="ultra-4"] {
+  --surface-default-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-raised-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-muted-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-panel-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-header-bg: color(srgb 0.8941 0.9059 0.9255);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="ultra-4"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="ultra-4"] {
+  --surface-default-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-raised-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-muted-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-panel-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-header-bg: color(srgb 0.8941 0.9059 0.9255);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="ultra-4"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="ultra-4"] {
+  --surface-default-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-raised-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-muted-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-panel-bg: color(srgb 0.8941 0.9059 0.9255);
+  --surface-header-bg: color(srgb 0.8941 0.9059 0.9255);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="ultra-5"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="ultra-5"] {
+  --surface-default-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-raised-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-muted-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-panel-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-header-bg: color(srgb 0.8667 0.8824 0.9059);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="ultra-5"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="ultra-5"] {
+  --surface-default-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-raised-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-muted-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-panel-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-header-bg: color(srgb 0.8667 0.8824 0.9059);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="ultra-5"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="ultra-5"] {
+  --surface-default-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-raised-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-muted-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-panel-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-header-bg: color(srgb 0.8667 0.8824 0.9059);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="ultra-5"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="ultra-5"] {
+  --surface-default-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-raised-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-muted-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-panel-bg: color(srgb 0.8667 0.8824 0.9059);
+  --surface-header-bg: color(srgb 0.8667 0.8824 0.9059);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="ultra-6"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="ultra-6"] {
+  --surface-default-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-raised-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-muted-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-panel-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-header-bg: color(srgb 0.8353 0.8549 0.8824);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="ultra-6"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="ultra-6"] {
+  --surface-default-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-raised-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-muted-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-panel-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-header-bg: color(srgb 0.8353 0.8549 0.8824);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="ultra-6"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="ultra-6"] {
+  --surface-default-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-raised-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-muted-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-panel-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-header-bg: color(srgb 0.8353 0.8549 0.8824);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="ultra-6"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="ultra-6"] {
+  --surface-default-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-raised-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-muted-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-panel-bg: color(srgb 0.8353 0.8549 0.8824);
+  --surface-header-bg: color(srgb 0.8353 0.8549 0.8824);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="mid-1"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="mid-1"] {
+  --surface-default-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-raised-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-muted-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-panel-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-header-bg: color(srgb 0.7843 0.8078 0.8392);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="mid-1"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="mid-1"] {
+  --surface-default-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-raised-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-muted-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-panel-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-header-bg: color(srgb 0.7843 0.8078 0.8392);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="mid-1"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="mid-1"] {
+  --surface-default-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-raised-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-muted-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-panel-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-header-bg: color(srgb 0.7843 0.8078 0.8392);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="mid-1"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="mid-1"] {
+  --surface-default-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-raised-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-muted-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-panel-bg: color(srgb 0.7843 0.8078 0.8392);
+  --surface-header-bg: color(srgb 0.7843 0.8078 0.8392);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="mid-2"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="mid-2"] {
+  --surface-default-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-raised-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-muted-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-panel-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-header-bg: color(srgb 0.7216 0.7451 0.7843);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="mid-2"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="mid-2"] {
+  --surface-default-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-raised-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-muted-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-panel-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-header-bg: color(srgb 0.7216 0.7451 0.7843);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="mid-2"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="mid-2"] {
+  --surface-default-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-raised-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-muted-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-panel-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-header-bg: color(srgb 0.7216 0.7451 0.7843);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="mid-2"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="mid-2"] {
+  --surface-default-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-raised-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-muted-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-panel-bg: color(srgb 0.7216 0.7451 0.7843);
+  --surface-header-bg: color(srgb 0.7216 0.7451 0.7843);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="mid-3"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="mid-3"] {
+  --surface-default-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-raised-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-muted-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-panel-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-header-bg: color(srgb 0.6627 0.6902 0.7373);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="mid-3"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="mid-3"] {
+  --surface-default-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-raised-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-muted-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-panel-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-header-bg: color(srgb 0.6627 0.6902 0.7373);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="mid-3"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="mid-3"] {
+  --surface-default-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-raised-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-muted-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-panel-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-header-bg: color(srgb 0.6627 0.6902 0.7373);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="mid-3"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="mid-3"] {
+  --surface-default-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-raised-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-muted-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-panel-bg: color(srgb 0.6627 0.6902 0.7373);
+  --surface-header-bg: color(srgb 0.6627 0.6902 0.7373);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="mid-4"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="mid-4"] {
+  --surface-default-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-raised-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-muted-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-panel-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-header-bg: color(srgb 0.6039 0.6353 0.6902);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="mid-4"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="mid-4"] {
+  --surface-default-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-raised-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-muted-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-panel-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-header-bg: color(srgb 0.6039 0.6353 0.6902);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="mid-4"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="mid-4"] {
+  --surface-default-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-raised-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-muted-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-panel-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-header-bg: color(srgb 0.6039 0.6353 0.6902);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="mid-4"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="mid-4"] {
+  --surface-default-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-raised-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-muted-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-panel-bg: color(srgb 0.6039 0.6353 0.6902);
+  --surface-header-bg: color(srgb 0.6039 0.6353 0.6902);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="mid-5"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="mid-5"] {
+  --surface-default-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-raised-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-muted-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-panel-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-header-bg: color(srgb 0.5412 0.5765 0.6431);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="mid-5"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="mid-5"] {
+  --surface-default-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-raised-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-muted-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-panel-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-header-bg: color(srgb 0.5412 0.5765 0.6431);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="mid-5"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="mid-5"] {
+  --surface-default-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-raised-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-muted-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-panel-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-header-bg: color(srgb 0.5412 0.5765 0.6431);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="mid-5"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="mid-5"] {
+  --surface-default-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-raised-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-muted-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-panel-bg: color(srgb 0.5412 0.5765 0.6431);
+  --surface-header-bg: color(srgb 0.5412 0.5765 0.6431);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="mid-6"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="mid-6"] {
+  --surface-default-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-raised-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-muted-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-panel-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-header-bg: color(srgb 0.4784 0.5137 0.5882);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="mid-6"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="mid-6"] {
+  --surface-default-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-raised-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-muted-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-panel-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-header-bg: color(srgb 0.4784 0.5137 0.5882);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="mid-6"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="mid-6"] {
+  --surface-default-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-raised-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-muted-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-panel-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-header-bg: color(srgb 0.4784 0.5137 0.5882);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="mid-6"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="mid-6"] {
+  --surface-default-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-raised-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-muted-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-panel-bg: color(srgb 0.4784 0.5137 0.5882);
+  --surface-header-bg: color(srgb 0.4784 0.5137 0.5882);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="deep-1"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="deep-1"] {
+  --surface-default-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-raised-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-muted-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-panel-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-header-bg: color(srgb 0.4196 0.4549 0.5373);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="deep-1"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="deep-1"] {
+  --surface-default-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-raised-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-muted-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-panel-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-header-bg: color(srgb 0.4196 0.4549 0.5373);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="deep-1"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="deep-1"] {
+  --surface-default-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-raised-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-muted-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-panel-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-header-bg: color(srgb 0.4196 0.4549 0.5373);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="deep-1"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="deep-1"] {
+  --surface-default-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-raised-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-muted-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-panel-bg: color(srgb 0.4196 0.4549 0.5373);
+  --surface-header-bg: color(srgb 0.4196 0.4549 0.5373);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="deep-2"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="deep-2"] {
+  --surface-default-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-raised-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-muted-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-panel-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-header-bg: color(srgb 0.3529 0.3882 0.4667);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="deep-2"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="deep-2"] {
+  --surface-default-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-raised-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-muted-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-panel-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-header-bg: color(srgb 0.3529 0.3882 0.4667);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="deep-2"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="deep-2"] {
+  --surface-default-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-raised-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-muted-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-panel-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-header-bg: color(srgb 0.3529 0.3882 0.4667);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="deep-2"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="deep-2"] {
+  --surface-default-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-raised-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-muted-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-panel-bg: color(srgb 0.3529 0.3882 0.4667);
+  --surface-header-bg: color(srgb 0.3529 0.3882 0.4667);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="deep-3"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="deep-3"] {
+  --surface-default-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-raised-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-muted-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-panel-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-header-bg: color(srgb 0.2902 0.3255 0.4);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="deep-3"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="deep-3"] {
+  --surface-default-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-raised-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-muted-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-panel-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-header-bg: color(srgb 0.2902 0.3255 0.4);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="deep-3"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="deep-3"] {
+  --surface-default-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-raised-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-muted-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-panel-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-header-bg: color(srgb 0.2902 0.3255 0.4);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="deep-3"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="deep-3"] {
+  --surface-default-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-raised-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-muted-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-panel-bg: color(srgb 0.2902 0.3255 0.4);
+  --surface-header-bg: color(srgb 0.2902 0.3255 0.4);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="deep-4"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="deep-4"] {
+  --surface-default-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-raised-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-muted-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-panel-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-header-bg: color(srgb 0.2314 0.2667 0.3373);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="deep-4"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="deep-4"] {
+  --surface-default-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-raised-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-muted-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-panel-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-header-bg: color(srgb 0.2314 0.2667 0.3373);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="deep-4"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="deep-4"] {
+  --surface-default-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-raised-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-muted-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-panel-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-header-bg: color(srgb 0.2314 0.2667 0.3373);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="deep-4"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="deep-4"] {
+  --surface-default-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-raised-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-muted-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-panel-bg: color(srgb 0.2314 0.2667 0.3373);
+  --surface-header-bg: color(srgb 0.2314 0.2667 0.3373);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="deep-5"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="deep-5"] {
+  --surface-default-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-raised-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-muted-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-panel-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-header-bg: color(srgb 0.1725 0.2078 0.2706);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="deep-5"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="deep-5"] {
+  --surface-default-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-raised-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-muted-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-panel-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-header-bg: color(srgb 0.1725 0.2078 0.2706);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="deep-5"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="deep-5"] {
+  --surface-default-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-raised-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-muted-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-panel-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-header-bg: color(srgb 0.1725 0.2078 0.2706);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="deep-5"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="deep-5"] {
+  --surface-default-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-raised-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-muted-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-panel-bg: color(srgb 0.1725 0.2078 0.2706);
+  --surface-header-bg: color(srgb 0.1725 0.2078 0.2706);
+}
+
+:root[data-theme="serban-light"][data-surface-tone="deep-6"], [data-theme-scope][data-theme="serban-light"][data-surface-tone="deep-6"] {
+  --surface-default-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-raised-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-muted-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-panel-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-header-bg: color(srgb 0.1137 0.1412 0.1882);
+}
+
+:root[data-theme="serban-dark"][data-surface-tone="deep-6"], [data-theme-scope][data-theme="serban-dark"][data-surface-tone="deep-6"] {
+  --surface-default-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-raised-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-muted-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-panel-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-header-bg: color(srgb 0.1137 0.1412 0.1882);
+}
+
+:root[data-theme="serban-hc"][data-surface-tone="deep-6"], [data-theme-scope][data-theme="serban-hc"][data-surface-tone="deep-6"] {
+  --surface-default-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-raised-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-muted-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-panel-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-header-bg: color(srgb 0.1137 0.1412 0.1882);
+}
+
+:root[data-theme="serban-compact"][data-surface-tone="deep-6"], [data-theme-scope][data-theme="serban-compact"][data-surface-tone="deep-6"] {
+  --surface-default-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-raised-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-muted-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-panel-bg: color(srgb 0.1137 0.1412 0.1882);
+  --surface-header-bg: color(srgb 0.1137 0.1412 0.1882);
+}
+
+html {
+  --overlay-intensity-min: 0;
+  --overlay-intensity-max: 60;
+  --overlay-intensity-default: 10;
+  --overlay-opacity-default: 10;
+  --table-surface-bg: var(--surface-table-normal-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+}
+
+:root[data-table-surface-tone="soft"], [data-theme-scope][data-table-surface-tone="soft"] {
+  --table-surface-bg: var(--surface-table-soft-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+}
+
+:root[data-table-surface-tone="strong"], [data-theme-scope][data-table-surface-tone="strong"] {
+  --table-surface-bg: var(--surface-table-strong-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+}
+
+:root[data-table-surface-tone="normal"], [data-theme-scope][data-table-surface-tone="normal"] {
+  --table-surface-bg: var(--surface-table-normal-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+}
+
+:root[data-accent="neutral"], [data-theme-scope][data-accent="neutral"] {
+  --accent-primary: color(srgb 0.0392 0.5176 1);
+  --accent-primary-hover: color(srgb 0 0.4 0.8);
+  --accent-focus: color(srgb 1 0.8431 0);
+  --accent-soft: color(srgb 0.0392 0.5176 1 / 18%);
+}
+
+:root[data-accent="light"], [data-theme-scope][data-accent="light"] {
+  --accent-primary: color(srgb 0.0392 0.5176 1);
+  --accent-primary-hover: color(srgb 0 0.4 0.8);
+  --accent-focus: color(srgb 1 0.8431 0);
+  --accent-soft: color(srgb 0.0392 0.5176 1 / 18%);
+}
+
+:root[data-accent="violet"], [data-theme-scope][data-accent="violet"] {
+  --accent-primary: color(srgb 0.5451 0.3608 0.9647);
+  --accent-primary-hover: color(srgb 0.4275 0.1569 0.851);
+  --accent-focus: color(srgb 0.8784 0.702 1);
+  --accent-soft: color(srgb 0.5451 0.3608 0.9647 / 20%);
+}
+
+:root[data-accent="emerald"], [data-theme-scope][data-accent="emerald"] {
+  --accent-primary: color(srgb 0.1333 0.7725 0.3686);
+  --accent-primary-hover: color(srgb 0.0863 0.6392 0.2902);
+  --accent-focus: color(srgb 0.7333 0.9686 0.8157);
+  --accent-soft: color(srgb 0.1333 0.7725 0.3686 / 20%);
+}
+
+:root[data-accent="sunset"], [data-theme-scope][data-accent="sunset"] {
+  --accent-primary: color(srgb 0.9765 0.451 0.0863);
+  --accent-primary-hover: color(srgb 0.9176 0.3451 0.0471);
+  --accent-focus: color(srgb 1 0.851 0.702);
+  --accent-soft: color(srgb 0.9765 0.451 0.0863 / 20%);
+}
+
+:root[data-accent="ocean"], [data-theme-scope][data-accent="ocean"] {
+  --accent-primary: color(srgb 0.0235 0.7137 0.8314);
+  --accent-primary-hover: color(srgb 0.0314 0.5686 0.698);
+  --accent-focus: color(srgb 0.6471 0.9529 0.9882);
+  --accent-soft: color(srgb 0.0235 0.7137 0.8314 / 20%);
+}
+
+:root[data-accent="graphite"], [data-theme-scope][data-accent="graphite"] {
+  --accent-primary: color(srgb 0.9608 0.9608 0.9608);
+  --accent-primary-hover: color(srgb 0.898 0.9059 0.9216);
+  --accent-focus: color(srgb 1 0.8431 0);
+  --accent-soft: color(srgb 1 1 1 / 24%);
+}
+

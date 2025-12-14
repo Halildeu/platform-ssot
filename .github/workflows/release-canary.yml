@@ -1,0 +1,40 @@
+name: release-canary
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Deployment environment"
+        required: true
+        default: "stage"
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Canary 10/50/100 placeholder
+        run: |
+          echo "release-canary placeholder. Implement traffic weight steps (10→50→100) via ArgoCD/Harbor CLI."
+
+      - name: Guardrail check
+        run: |
+          node backend/scripts/guardrails/check-metrics.mjs --env "${{ github.event.inputs.env || 'stage' }}"
+
+      - name: Rollback placeholder
+        if: failure()
+        run: |
+          echo "Rollback placeholder. Implement ArgoCD revert + flag kill-switch here."

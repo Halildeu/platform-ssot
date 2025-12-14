@@ -1,0 +1,35 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Foundations/Theme Tokens" />
+
+# Theme Tokens
+
+Tema eksenleri (`appearance`, `density`, `radius`, `elevation`, `motion`) CSS değişkenleriyle kök seviyede yönetiliyor. Bu sayfa, token → CSS var → Tailwind/Ant Design köprüsünü ve örnek ekranları tek yerde gösterir.
+
+## Token Haritası
+
+| Token | CSS Var | Tailwind | Ant Design |
+| --- | --- | --- | --- |
+| `color/brand/500` | `--color-brand-500` | `text-brand-500`, `bg-brand-500` | `colorPrimary` |
+| `surface/default/bg` | `--surface-default-bg` | `bg-bg` | `colorBgBase` |
+| `text/primary` | `--text-primary` | `text-text` | `colorTextBase` |
+| `border/subtle` | `--border-subtle` | `border-border` | `colorBorder` |
+| `space/3` | `--space-3` | `gap-3`, `px-3` | `paddingLG` |
+| `table/rowHeight` | `--table-row-height` | (AG Grid via CSS) | `--ag-row-height` |
+
+Kaynak JSON: `apps/mfe-shell/src/app/theme/tokens.raw.json`.
+
+## Appearance × Density Matris
+
+- `Light × Comfortable` — referans görünüm.
+- `Dark × Comfortable` — `data-appearance="dark"`.
+- `High-contrast × Comfortable` — AAA kontrast, `--focus-outline = #FFFF00`.
+- `Light × Compact` — `data-density="compact"` → `--space-*` ve `--table-row-height=40px`.
+
+Story gösterimi: `theme-tokens--preview` bileşeni Shell Top Bar + Filter Panel + AG Grid satırı içerir; Storybook Controls panelinden appearance/density/radius/elevation/motion knob’ları yönetilir.
+
+## Çalıştırma
+
+1. Bağımlılıkları yükle: `npm install`
+2. Storybook’u aç: `npm run storybook -- --docs`
+3. “Foundations / Theme Tokens” hikâyesine gidip her kombinasyon için ekran görüntüsü al; çıktıları `docs/03-delivery/guides/theme/img/` altına koy ve acceptance dosyalarına referansla.

@@ -1,0 +1,39 @@
+# Workflow'un adı
+name: UI Kit - CI Pipeline
+
+# Bu workflow'un ne zaman tetikleneceğini belirler
+on:
+  push:
+    branches: [ main ] # Sadece main branch'ine push yapıldığında çalış
+    paths:
+      - 'mfe-ui-kit/**' # Ama sadece mfe-ui-kit klasörü içinde bir değişiklik varsa
+
+# Çalıştırılacak işler (jobs)
+jobs:
+  build-and-test:
+    # İşin çalışacağı sanal makine
+    runs-on: ubuntu-latest
+
+    # İşin adımları
+    steps:
+      # 1. Adım: Proje kodunu sanal makineye indirir
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Adım: Node.js ortamını kurar
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Kullandığınız Node.js sürümünü belirtebilirsiniz
+
+      # 3. Adım: Bağımlılıkları kurar
+      - name: Install Dependencies
+        run: npm install --prefix mfe-ui-kit
+
+      # 4. Adım: Testleri çalıştırır
+      - name: Run Tests
+        run: npm test --prefix mfe-ui-kit
+
+      # 5. Adım: Üretim için projeyi build eder
+      - name: Build Project
+        run: npm run build --prefix mfe-ui-kit

@@ -1,0 +1,98 @@
+name: Web Playwright Nightly (Passive Schedule)
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Playwright baseUrl override (boşsa secrets.PLAYWRIGHT_BASE_URL kullanılır)"
+        required: false
+        default: ""
+        type: string
+      soft_mode:
+        description: "1: Soft mode (job kırma yok), 0: Hard mode (FAIL -> job fail)"
+        required: false
+        default: "1"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      auth_mode:
+        description: "Auth modu"
+        required: false
+        default: "none"
+        type: choice
+        options:
+          - none
+          - token_injection
+      readonly_enforce:
+        description: "Readonly enforcement (0: kapalı, 1: açık)"
+        required: false
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+
+jobs:
+  pw-nightly:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'schedule' || vars.ENABLE_PW_NIGHTLY == 'true' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Resolve baseUrl (inputs.base_url > secrets.PLAYWRIGHT_BASE_URL)
+        run: |
+          set -euo pipefail
+          INPUT_BASE_URL="${{ inputs.base_url }}"
+          SECRET_BASE_URL="${{ secrets.PLAYWRIGHT_BASE_URL }}"
+          RESOLVED_BASE_URL="${INPUT_BASE_URL:-}"
+          if [ -z "${RESOLVED_BASE_URL}" ]; then
+            RESOLVED_BASE_URL="${SECRET_BASE_URL:-}"
+          fi
+          if [ -z "${RESOLVED_BASE_URL}" ]; then
+            echo "[pw-nightly] HATA: baseUrl çözümlenemedi. inputs.base_url verin veya secrets.PLAYWRIGHT_BASE_URL tanımlayın."
+            exit 1
+          fi
+          if [[ "${RESOLVED_BASE_URL}" == *localhost* ]] || [[ "${RESOLVED_BASE_URL}" == *127.0.0.1* ]]; then
+            echo "[pw-nightly] HATA: CI'da localhost baseUrl kullanılamaz: ${RESOLVED_BASE_URL}"
+            exit 1
+          fi
+          echo "PLAYWRIGHT_BASE_URL=${RESOLVED_BASE_URL}" >> "${GITHUB_ENV}"
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        working-directory: web
+
+      - name: Run Playwright YAML nightly (soft mode)
+        run: npm run pw:nightly
+        working-directory: web
+        env:
+          PW_SOFT_MODE: ${{ inputs.soft_mode || '1' }}
+          PW_AUTH_MODE: ${{ inputs.auth_mode || 'none' }}
+          PW_READONLY_ENFORCE: ${{ inputs.readonly_enforce || '0' }}
+          KEYCLOAK_TOKEN_URL: ${{ secrets.KEYCLOAK_TOKEN_URL }}
+          KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+          KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+          KEYCLOAK_SCOPE: ${{ secrets.KEYCLOAK_SCOPE }}
+
+      - name: Upload reports (pw)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pw-nightly-reports
+          path: web/test-results/pw

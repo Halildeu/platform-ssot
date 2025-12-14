@@ -1,0 +1,227 @@
+{
+  "version": "0.1.0",
+  "generatedAt": "2025-11-29T12:01:55.413Z",
+  "tms": {},
+  "entries": {
+    "en:access": {
+      "locale": "en",
+      "namespace": "access",
+      "sha256": "2221f1a21593cc0f1d438d6ed761de1d40827234896917980037ee6dd34d4ab3",
+      "size": 5502,
+      "keyCount": 94,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.380Z"
+    },
+    "en:common": {
+      "locale": "en",
+      "namespace": "common",
+      "sha256": "057d8b21ac22a33665e00baaa89acc9a7040ebda4e4ac665e2102902d0978312",
+      "size": 3092,
+      "keyCount": 64,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.384Z"
+    },
+    "tr:access": {
+      "locale": "tr",
+      "namespace": "access",
+      "sha256": "2d37eaf7a7f6e733087bf40e79fd769f2a64b248ade677019841d9d8fb8a9f2e",
+      "size": 5646,
+      "keyCount": 94,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.403Z"
+    },
+    "tr:common": {
+      "locale": "tr",
+      "namespace": "common",
+      "sha256": "73dc08d8ccd253d2844c471988c1d2318f2dcc5d2c4ff7826891d332c5b4934b",
+      "size": 3194,
+      "keyCount": 64,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.407Z"
+    },
+    "de:access": {
+      "locale": "de",
+      "namespace": "access",
+      "sha256": "2221f1a21593cc0f1d438d6ed761de1d40827234896917980037ee6dd34d4ab3",
+      "size": 5502,
+      "keyCount": 94,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.359Z"
+    },
+    "de:audit": {
+      "locale": "de",
+      "namespace": "audit",
+      "sha256": "64c8a6146063e202112b38ddd873ca4a1773679f1e0fc1d9ba2eaf95003c8134",
+      "size": 860,
+      "keyCount": 21,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.365Z"
+    },
+    "de:common": {
+      "locale": "de",
+      "namespace": "common",
+      "sha256": "057d8b21ac22a33665e00baaa89acc9a7040ebda4e4ac665e2102902d0978312",
+      "size": 3092,
+      "keyCount": 64,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.369Z"
+    },
+    "de:reports": {
+      "locale": "de",
+      "namespace": "reports",
+      "sha256": "45a48a53d94d14ab5fb3ee4a2b98b85e4b4769c5de57880e0d5cb1d065a682f8",
+      "size": 2282,
+      "keyCount": 47,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.374Z"
+    },
+    "de:users": {
+      "locale": "de",
+      "namespace": "users",
+      "sha256": "f88370a21000c1b4bc716ca2f3202f1c4d1ddf122ff485c20219fc0717725ee3",
+      "size": 5723,
+      "keyCount": 99,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.378Z"
+    },
+    "en:audit": {
+      "locale": "en",
+      "namespace": "audit",
+      "sha256": "64c8a6146063e202112b38ddd873ca4a1773679f1e0fc1d9ba2eaf95003c8134",
+      "size": 860,
+      "keyCount": 21,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.382Z"
+    },
+    "en:reports": {
+      "locale": "en",
+      "namespace": "reports",
+      "sha256": "45a48a53d94d14ab5fb3ee4a2b98b85e4b4769c5de57880e0d5cb1d065a682f8",
+      "size": 2282,
+      "keyCount": 47,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.386Z"
+    },
+    "en:users": {
+      "locale": "en",
+      "namespace": "users",
+      "sha256": "f88370a21000c1b4bc716ca2f3202f1c4d1ddf122ff485c20219fc0717725ee3",
+      "size": 5723,
+      "keyCount": 99,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.388Z"
+    },
+    "es:access": {
+      "locale": "es",
+      "namespace": "access",
+      "sha256": "2221f1a21593cc0f1d438d6ed761de1d40827234896917980037ee6dd34d4ab3",
+      "size": 5502,
+      "keyCount": 94,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.390Z"
+    },
+    "es:audit": {
+      "locale": "es",
+      "namespace": "audit",
+      "sha256": "64c8a6146063e202112b38ddd873ca4a1773679f1e0fc1d9ba2eaf95003c8134",
+      "size": 860,
+      "keyCount": 21,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.393Z"
+    },
+    "es:common": {
+      "locale": "es",
+      "namespace": "common",
+      "sha256": "057d8b21ac22a33665e00baaa89acc9a7040ebda4e4ac665e2102902d0978312",
+      "size": 3092,
+      "keyCount": 64,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.395Z"
+    },
+    "es:reports": {
+      "locale": "es",
+      "namespace": "reports",
+      "sha256": "45a48a53d94d14ab5fb3ee4a2b98b85e4b4769c5de57880e0d5cb1d065a682f8",
+      "size": 2282,
+      "keyCount": 47,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.397Z"
+    },
+    "es:users": {
+      "locale": "es",
+      "namespace": "users",
+      "sha256": "f88370a21000c1b4bc716ca2f3202f1c4d1ddf122ff485c20219fc0717725ee3",
+      "size": 5723,
+      "keyCount": 99,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.400Z"
+    },
+    "tr:audit": {
+      "locale": "tr",
+      "namespace": "audit",
+      "sha256": "843092e528f3cad55ea533b2d7a8872fed76e6df9c37e61364adedbe4024bc6f",
+      "size": 947,
+      "keyCount": 21,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.405Z"
+    },
+    "tr:reports": {
+      "locale": "tr",
+      "namespace": "reports",
+      "sha256": "50728ae16cb6bb1fd1b73ad17d57018c2fac7d670745403e96569fe5b12f801a",
+      "size": 2413,
+      "keyCount": 47,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.410Z"
+    },
+    "tr:users": {
+      "locale": "tr",
+      "namespace": "users",
+      "sha256": "725a156c0362b36ead4f04ac2e7795fbb26129a22bf7beca5e1de6551fa878b9",
+      "size": 5860,
+      "keyCount": 99,
+      "keysAdded": 0,
+      "keysRemoved": 0,
+      "keysChanged": 0,
+      "updatedAt": "2025-11-29T12:01:55.413Z"
+    }
+  }
+}

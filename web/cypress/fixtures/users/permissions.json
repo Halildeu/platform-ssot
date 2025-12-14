@@ -1,0 +1,16 @@
+[
+  {
+    "assignmentId": "assign-001",
+    "moduleKey": "USER_MANAGEMENT",
+    "moduleLabel": "Kullanıcı Modülü",
+    "permissions": [],
+    "active": true
+  },
+  {
+    "assignmentId": "assign-002",
+    "moduleKey": "REPORTING",
+    "moduleLabel": "Raporlama",
+    "permissions": ["VIEW_REPORTS"],
+    "active": true
+  }
+]

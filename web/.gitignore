@@ -1,0 +1,5 @@
+node_modules
+security-reports
+
+*storybook.log
+storybook-static

@@ -1,0 +1,21 @@
+{
+  "mode": "report-only",
+  "directives": {
+    "default-src": ["'self'"],
+    "script-src": ["'self'", "'wasm-unsafe-eval'"],
+    "style-src": ["'self'", "'unsafe-inline'"],
+    "img-src": ["'self'", "data:"],
+    "connect-src": [
+      "'self'",
+      "https://api.platform-security.internal",
+      "https://security-gateway.internal"
+    ],
+    "frame-ancestors": ["'none'"],
+    "report-uri": ["https://security-gateway.internal/api/csp/report"]
+  },
+  "metadata": {
+    "owner": "platform-security",
+    "lastReviewedAt": "2025-11-03",
+    "notes": "İhlal triage süreci tamamlanana kadar report-only modunda. Raporlar Security Gateway (security-gateway.internal/api/csp/report) üzerinden toplanır."
+  }
+}

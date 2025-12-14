@@ -1,0 +1,27 @@
+[
+  {
+    "id": "global-view",
+    "gridId": "reports.users",
+    "name": "Genel Görünüm",
+    "isDefault": false,
+    "isGlobal": true,
+    "isGlobalDefault": true,
+    "isUserDefault": false,
+    "isUserSelected": false,
+    "state": {
+      "filterModel": {
+        "status": { "type": "equals", "filter": "ACTIVE" }
+      },
+      "advancedFilterModel": null,
+      "sortModel": [
+        { "colId": "fullName", "sort": "asc" }
+      ],
+      "quickFilterText": null
+    },
+    "schemaVersion": 1,
+    "isCompatible": true,
+    "sortOrder": 0,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  }
+]

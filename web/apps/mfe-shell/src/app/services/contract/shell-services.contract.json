@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ShellServicesContract",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["auth", "query", "telemetry", "notify", "featureFlags"],
+  "properties": {
+    "auth": {
+      "type": "object",
+      "required": ["getToken", "onTokenChange"],
+      "properties": {
+        "getToken": { "const": "function" },
+        "onTokenChange": { "const": "function" }
+      }
+    },
+    "query": {
+      "type": "string",
+      "const": "QueryClient"
+    },
+    "telemetry": {
+      "type": "object",
+      "required": ["emit"],
+      "properties": {
+        "emit": { "const": "function" }
+      }
+    },
+    "notify": {
+      "type": "object",
+      "required": ["push"],
+      "properties": {
+        "push": { "const": "function" }
+      }
+    },
+    "featureFlags": {
+      "type": "object",
+      "required": ["isEnabled"],
+      "properties": {
+        "isEnabled": { "const": "function" }
+      }
+    }
+  }
+}

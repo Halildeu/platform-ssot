@@ -1,0 +1,24 @@
+/* Elevation axis: bind common shadow utilities to theme vars */
+:root,
+[data-elevation],
+[data-theme-scope] {
+  /* no-op: scope selector holder */
+}
+
+[data-elevation="raised"] .shadow,
+[data-elevation="raised"] .shadow-sm,
+[data-elevation="raised"] .shadow-md,
+[data-elevation="raised"] .shadow-lg,
+[data-elevation="raised"] .shadow-xl,
+[data-elevation="raised"] .shadow-2xl {
+  box-shadow: var(--elevation-surface) !important;
+}
+
+[data-elevation="flat"] .shadow,
+[data-elevation="flat"] .shadow-sm,
+[data-elevation="flat"] .shadow-md,
+[data-elevation="flat"] .shadow-lg,
+[data-elevation="flat"] .shadow-xl,
+[data-elevation="flat"] .shadow-2xl {
+  box-shadow: var(--elevation-surface) !important;
+}

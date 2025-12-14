@@ -1,0 +1,29 @@
+name: Layout QA
+
+on:
+  workflow_dispatch: {}
+  # pull_request:
+  #   paths:
+  #     - "backend/**"
+  #     - "docs/00-handbook/**"
+  #     - "scripts/**"
+  #     - ".github/workflows/layout-qa.yml"
+
+jobs:
+  layout-qa:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run layout scripts
+        run: |
+          set -e
+          python3 scripts/check_backend_service_layout.py
+          python3 scripts/check_web_mfe_layout.py

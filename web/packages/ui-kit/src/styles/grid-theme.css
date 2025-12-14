@@ -1,0 +1,30 @@
+/* AG Grid theming vars (semantic, CSS var tabakası) */
+:root,
+[data-theme],
+[data-theme-scope] {
+  /* Map grid vars to theme tokens so AG Grid follows appearance/accent/hc */
+  --grid-foreground: var(--text-primary);
+  --grid-background: var(--table-surface-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+  --grid-header-bg: var(--data-table-header-bg, var(--surface-panel-bg));
+  --grid-header-fg: var(--data-table-header-text, var(--text-primary));
+  --grid-border: var(--data-table-row-border, var(--border-default));
+  --grid-row-hover: var(--data-table-row-hover, var(--surface-muted));
+  --grid-row-selected: var(--data-table-row-selected, var(--selection-bg));
+  --grid-size: 8px;
+  --grid-radius: var(--radius-surface, 6px);
+  --focus-ring: var(--accent-focus, var(--selection-outline));
+
+  --ag-foreground-color: var(--grid-foreground);
+  --ag-background-color: var(--grid-background);
+  --ag-header-background-color: var(--grid-header-bg);
+  --ag-header-foreground-color: var(--grid-header-fg);
+  --ag-border-color: var(--grid-border);
+  --ag-row-hover-color: var(--grid-row-hover);
+  --ag-selected-row-background-color: var(--grid-row-selected);
+  --ag-font-size: 14px;
+  --ag-grid-size: var(--grid-size);
+  --ag-card-radius: var(--grid-radius);
+  --ag-border-radius: var(--radius-control, 10px);
+  --ag-range-selection-border-color: var(--focus-ring);
+  --ag-range-selection-background-color: color-mix(in srgb, var(--accent-primary, var(--selection-outline)) 14%, transparent);
+}

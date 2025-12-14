@@ -1,0 +1,62 @@
+@import './styles/theme.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hafif reset: margin/padding temizliği ve tema var'larından zemin/metin */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--surface-default-bg);
+  color: var(--text-primary);
+  font-family: var(
+    --font-family-base,
+    'Inter',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif
+  );
+  min-height: 100vh;
+}
+
+/* Radius aksı görünür olsun diye temel rounded sınıflarını tema var'larına bağla */
+[data-radius] .rounded,
+[data-radius] .rounded-sm,
+[data-radius] .rounded-md {
+  border-radius: var(--radius-control, 10px);
+}
+
+[data-radius] .rounded-lg,
+[data-radius] .rounded-xl,
+[data-radius] .rounded-2xl,
+[data-radius] .rounded-3xl {
+  border-radius: var(--radius-surface, 12px);
+}
+
+/* Elevation aksı: tailwind shadow sınıflarını tema gölgelerine bağla */
+[data-elevation="raised"] .shadow,
+[data-elevation="raised"] .shadow-sm,
+[data-elevation="raised"] .shadow-md,
+[data-elevation="raised"] .shadow-lg,
+[data-elevation="raised"] .shadow-xl,
+[data-elevation="raised"] .shadow-2xl {
+  box-shadow: var(--elevation-surface) !important;
+}
+
+[data-elevation="flat"] .shadow,
+[data-elevation="flat"] .shadow-sm,
+[data-elevation="flat"] .shadow-md,
+[data-elevation="flat"] .shadow-lg,
+[data-elevation="flat"] .shadow-xl,
+[data-elevation="flat"] .shadow-2xl {
+  box-shadow: var(--elevation-surface) !important;
+}

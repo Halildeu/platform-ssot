@@ -1,0 +1,46 @@
+[
+  {
+    "id": "global-view",
+    "gridId": "reports.users",
+    "name": "Genel Görünüm",
+    "isDefault": false,
+    "isGlobal": true,
+    "isGlobalDefault": true,
+    "isUserDefault": false,
+    "isUserSelected": false,
+    "state": {
+      "filterModel": {},
+      "advancedFilterModel": null,
+      "sortModel": [],
+      "quickFilterText": null
+    },
+    "schemaVersion": 1,
+    "isCompatible": true,
+    "sortOrder": 0,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "updatedAt": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "team-default",
+    "gridId": "reports.users",
+    "name": "Takımım",
+    "isDefault": false,
+    "isGlobal": false,
+    "isGlobalDefault": false,
+    "isUserDefault": true,
+    "isUserSelected": true,
+    "state": {
+      "filterModel": {
+        "status": { "type": "equals", "filter": "ACTIVE" }
+      },
+      "advancedFilterModel": null,
+      "sortModel": [],
+      "quickFilterText": "Takımım"
+    },
+    "schemaVersion": 1,
+    "isCompatible": true,
+    "sortOrder": 1,
+    "createdAt": "2025-01-02T00:00:00.000Z",
+    "updatedAt": "2025-01-10T00:00:00.000Z"
+  }
+]

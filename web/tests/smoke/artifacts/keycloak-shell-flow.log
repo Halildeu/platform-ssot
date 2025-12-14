@@ -1,0 +1,42 @@
+# QLTY-FE-KEYCLOAK-01 – Keycloak Login / Audit Kanıt Kaydı
+# Tarih: 2025-11-29 18:40Z (local dev stack)
+# Tarayıcı: Chrome 140 (Android emulation) – localhost dev ortamı
+
+[AUTH GUARD STATE]
+{path: '/suggestions', requiredPermissions: undefined, hasPermission: true, userEmail: 'admin@example.com'}
+
+[HTTP] GET http://localhost:8080/api/audit/events?page=0&size=200
+Date: Sat, 29 Nov 2025 18:40:17 GMT
+Status: 200 OK
+Headers: Access-Control-Allow-Origin: http://localhost:3000, X-Trace-Id: 862d64f2-f33e-4a61-b0c4-bbfb32048f28
+Request Headers: Authorization (Bearer …Serban realm token), X-Trace-Id: 862d64f2-f33e-4a61-b0c4-bbfb32048f28
+Body: 32 byte JSON payload (audit event sayfası)
+
+[HTTP] GET http://localhost:8080/api/audit/events?page=0&size=200
+Date: Sat, 29 Nov 2025 18:40:17 GMT
+Status: 200 OK
+Headers: X-Trace-Id: 25c03b06-d618-421e-981c-f3bd6ff8eed6
+Not: Aynı istek ikinci sekmede eş zamanlı çalıştırıldı, BroadcastChannel logout senkronizasyonu sonrası da 200 döndü.
+
+[SSE] GET http://localhost:8080/api/audit/events/live
+Accept: text/event-stream
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJhb1hNVDRRVl9OcXJpY2phZ0h4NXhFTmJMclRUMUotQURQWXR5SXBSZzlnIn0....
+X-Trace-Id: a169c941-fcdd-487a-a849-2d41ce889d0b
+Durum: pending – SSE bağlantısı canlı tutuluyor, istek iptal edilmedikçe "Pending" görünmesi beklenen davranış.
+
+[HTTP] GET http://localhost:8080/api/v1/variants?gridId=mfe-users%2Fusers-grid
+Status: 401 Unauthorized (beklenen; admin token role claim'i variant-service scope’unu içermiyor)
+X-Trace-Id: 0b7cb722-d378-49a8-926d-ef49e9b091c6
+
+[HTTP] GET http://localhost:8080/api/v1/users?page=1&pageSize=50
+Status: 200 OK (aynı token ile Users endpoint erişimi doğrulandı)
+X-Trace-Id: 3973b29b-fc43-4589-a0db-0526ef0ceda0
+
+Notlar:
+- İstekler `@mfe/shared-http` interceptor’ı üzerinden gönderildi; Authorization + X-Trace-Id header’ları otomatik işlendi.
+- PermitAll modu dev ortamında yalnız `VITE_AUTH_MODE=permitAll` olduğunda etkin; bu run prod/test Keycloak modu ile yapıldı.
+[HTTP] GET http://localhost:8080/api/v1/variants?gridId=mfe-users%2Fusers-grid
+Date: Sat, 29 Nov 2025 18:52:18 GMT
+Status: 401 Unauthorized (admin token scope dışı)
+X-Trace-Id: 08f0d660-4dfd-4b00-b794-0c816791e5b2
+Not: Bu örnek, shared-http interceptor’unun Authorization header’ını eklediğini, ancak backend’in RS256/role doğrulaması nedeniyle çağrıyı reddettiğini gösterir.

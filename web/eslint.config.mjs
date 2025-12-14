@@ -1,0 +1,63 @@
+import js from '@eslint/js';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import { rules as semanticThemeRules } from './scripts/lint/eslint-plugin-semantic-theme.mjs';
+
+export default tseslint.config(
+  {
+    ignores: [
+      'dist',
+      'apps/**/dist/**',
+      'packages/**/dist/**',
+      'storybook-static',
+      '.storybook/**',
+      'reports',
+      'coverage',
+      'security-reports',
+      'tests/smoke/**/*.mjs',
+      'node_modules',
+      '**/webpack.*.js',
+      '**/webpack.*.ts',
+      '**/tailwind.config.*',
+      '**/.stylelintrc.*',
+      '**/jest.config.*',
+      '**/babel.config.*',
+      '**/postcss.config.*',
+      'storybook.config.mjs',
+    ],
+  },
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    files: ['**/*.{ts,tsx,js,jsx,mjs}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: ['./tsconfig.eslint.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      'semantic-theme': { rules: semanticThemeRules },
+    },
+    rules: {
+      'semantic-theme/no-inline-color-literals': 'error',
+    },
+  },
+  {
+    files: [
+      '**/__tests__/**/*.{ts,tsx,js,jsx}',
+      '**/*.{spec,test}.{ts,tsx,js,jsx}',
+      'cypress/**/*.{ts,tsx,js,jsx}',
+      'tests/**/*.{ts,tsx,js,jsx}',
+      'docs/tests/**/*.{ts,tsx,js,jsx}',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+);

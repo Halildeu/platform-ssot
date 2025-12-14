@@ -1,0 +1,67 @@
+name: Chromatic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".storybook/**"
+      - "stories/**"
+      - "apps/**"
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".storybook/**"
+      - "stories/**"
+      - "apps/**"
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig.json"
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Chromatic requires full history for baseline detection
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint for Ant Design imports
+        run: npm run lint:no-antd
+
+      - name: Build Storybook
+        run: SENTRY_DSN="" npm run build-storybook
+
+      - name: Run axe on Theme Matrix story
+        env:
+          STORYBOOK_STORY_ID: runtime-themematrix--matrix
+        run: |
+          npx http-server storybook-static -p 6006 --silent &
+          SERVER_PID=$!
+          trap "kill $SERVER_PID" EXIT
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:6006 >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          npx axe "http://127.0.0.1:6006/index.html?path=/story/${STORYBOOK_STORY_ID}" --exit 1
+
+      - name: Publish to Chromatic
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        run: SENTRY_DSN="" npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build-storybook --exit-once-uploaded

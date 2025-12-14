@@ -1,0 +1,30 @@
+# Generated test artifacts (do not commit)
+web/test-results/
+web/test-results/**
+
+# Dev Vault artifacts (do not commit)
+.vault-dev/
+.vault-dev/**
+backend/.vault-dev/
+backend/.vault-dev/**
+
+# Monorepo bootstrap backups (do not commit)
+.legacy-git/
+
+# OS noise
+.DS_Store
+
+# Node / Web build artifacts (do not commit)
+**/node_modules/
+**/dist/
+**/storybook-static/
+**/.lighthouseci/
+
+# Java/Maven build artifacts (do not commit)
+**/target/
+**/.m2/
+
+# Generic output folders (do not commit)
+**/test-results/
+**/logs/
+**/telemetry/

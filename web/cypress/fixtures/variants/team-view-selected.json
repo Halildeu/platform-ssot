@@ -1,0 +1,23 @@
+{
+  "id": "team-view",
+  "gridId": "reports.users",
+  "name": "Takım Görünümü",
+  "isDefault": false,
+  "isGlobal": false,
+  "isGlobalDefault": false,
+  "isUserDefault": false,
+  "isUserSelected": true,
+  "state": {
+    "filterModel": {
+      "status": { "type": "equals", "filter": "INACTIVE" }
+    },
+    "advancedFilterModel": null,
+    "sortModel": [],
+    "quickFilterText": "Takım"
+  },
+  "schemaVersion": 1,
+  "isCompatible": true,
+  "sortOrder": 1,
+  "createdAt": "2025-01-05T00:00:00.000Z",
+  "updatedAt": "2025-01-12T00:00:00.000Z"
+}

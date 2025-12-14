@@ -1,0 +1,17 @@
+﻿{
+	"folders": [
+		{
+			"path": "/Users/halilkocoglu/Documents/dev/backend"
+		},
+		{
+			"path": "/Users/halilkocoglu/Documents/dev/frontend"
+
+
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"chatgpt.openOnStartup": true,
+		"chatgpt.commentCodeLensEnabled": true
+	}
+}

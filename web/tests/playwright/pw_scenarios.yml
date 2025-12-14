@@ -1,0 +1,72 @@
+version: 1
+
+# Varsayılan baseUrl Playwright config’ten gelir (PLAYWRIGHT_BASE_URL).
+# Buradaki değer yalnızca fallback olarak kullanılır.
+baseUrl: http://localhost:3000
+
+defaults:
+  fail_on_console_error: true
+  warn_on_console_warn: true
+
+  # Bazı browser/iframe uyarıları (özellikle Keycloak silent-check) gürültü üretebilir.
+  console_warn_allowlist:
+    - "sandbox attribute can escape its sandboxing"
+
+  console_error_allowlist: []
+
+  # Network allowlist: URL veya status pattern (regex string).
+  network_allowlist:
+    - url: "/silent-check-sso\\.html"
+      status: "200|204"
+
+scenarios:
+  - name: shell_login
+    level: 1
+    auth_required: false
+    steps:
+      - goto: /login
+      - expectVisible: '[data-testid="login-title"]'
+
+  - name: runtime_theme_matrix
+    level: 1
+    auth_required: false
+    steps:
+      - goto: /runtime/theme-matrix
+      - expectVisible: '[data-testid="reporting-preview"]'
+
+  - name: theme_registry_page
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    steps:
+      - goto: /admin/themes
+      - expectVisible: '[data-testid="theme-admin-page"]'
+
+  - name: access_roles_page
+    level: 1
+    auth_required: true
+    permissions:
+      - access-read
+    steps:
+      - goto: /access/roles
+      - waitForSelector: '.ag-center-cols-container'
+
+  - name: audit_events_page
+    level: 1
+    auth_required: true
+    permissions:
+      - audit-read
+    steps:
+      - goto: /audit/events
+      - waitForSelector: '.ag-center-cols-container'
+
+  - name: reporting_users_page
+    level: 1
+    auth_required: true
+    permissions:
+      - VIEW_REPORTS
+    steps:
+      - goto: /admin/reports/users
+      - waitForSelector: '[data-theme-scope="entity-grid"]'
+

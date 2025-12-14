@@ -1,0 +1,177 @@
+name: Security Guardrails
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  id-token: write
+  actions: read
+  packages: read
+
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+
+jobs:
+  guardrails:
+    name: Security Pipeline
+    runs-on: ubuntu-latest
+    env:
+      ZAP_TARGET_URL: ${{ secrets.ZAP_TARGET_URL != '' && secrets.ZAP_TARGET_URL || 'http://host.docker.internal:4173' }}
+      CSP_REPORT_ENDPOINT: ${{ secrets.CSP_REPORT_ENDPOINT != '' && secrets.CSP_REPORT_ENDPOINT || 'https://security-gateway.internal/api/csp/report' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate pseudolocale dictionaries
+        run: |
+          npm run i18n:pseudo
+          git diff --exit-code packages/i18n-dicts/src/locales/pseudo
+
+      - name: Build design tokens
+        run: npm run tokens:build
+
+      - name: Lint styles (Stylelint)
+        run: npm run lint:style
+
+      - name: Lint Tailwind semantic usage
+        run: npm run lint:tailwind
+
+      - name: Lint semantic theme usage
+        run: npm run lint:semantic
+
+      - name: Prepare security workspace
+        run: |
+          mkdir -p security-reports/{sast,sca,sbom,sri,csp,zap}
+
+      - name: Run SonarQube Scan (SAST)
+        if: env.SONAR_TOKEN != ''
+        uses: sonarsource/sonarqube-scan-action@v2
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY || github.repository }}
+            -Dsonar.sources=.
+            -Dsonar.host.url=${{ env.SONAR_HOST_URL }}
+
+      - name: Run Semgrep SAST (fallback)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install semgrep
+          semgrep --config p/ci --severity ERROR --sarif --output security-reports/sast/semgrep.sarif
+        env:
+          SEMGREP_NO_OPT_PREVIEW: '1'
+
+      - name: Upload Semgrep SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: security-reports/sast/semgrep.sarif
+
+      - name: Build remote artefacts for SRI verification
+        run: |
+          npm run build --prefix packages/ui-kit
+          npm run build --prefix apps/mfe-suggestions
+          npm run build --prefix apps/mfe-ethic
+          npm run build --prefix apps/mfe-users
+
+      - name: Verify SRI manifest
+        run: npm run security:sri:check
+
+      - name: Dependency scan (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'sarif'
+          output: 'security-reports/sca/trivy.sarif'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
+          exit-code: '1'
+
+      - name: Upload Trivy SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: security-reports/sca/trivy.sarif
+
+      - name: Generate CycloneDX SBOM
+        run: npx @cyclonedx/cyclonedx-npm --spec-version 1.5 --output-file security-reports/sbom/cyclonedx.json --json
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.4.0
+
+      - name: Sign SBOM artefact
+        env:
+          COSIGN_EXPERIMENTAL: '1'
+        run: >
+          cosign sign-blob
+          --yes
+          --oidc-issuer https://token.actions.githubusercontent.com
+          --output-signature security-reports/sbom/cyclonedx.sig
+          security-reports/sbom/cyclonedx.json
+
+      - name: Build shell for DAST
+        if: ${{ env.ZAP_TARGET_URL == 'http://host.docker.internal:4173' }}
+        run: npm run build --prefix apps/mfe-shell
+
+      - name: Launch static shell server
+        if: ${{ env.ZAP_TARGET_URL == 'http://host.docker.internal:4173' }}
+        run: |
+          npx http-server dist -p 4173 --silent &
+          echo $! > http-server.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then
+              break
+            fi
+            echo "Waiting for shell preview..."
+            sleep 2
+          done
+
+      - name: OWASP ZAP baseline scan (DAST)
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: ${{ env.ZAP_TARGET_URL }}
+          cmd_options: '-a -J zap-report.json -w zap-report.md -x zap-report.xml'
+          allow_issue_writing: false
+          fail_action_on_error: true
+
+      - name: Collect ZAP reports
+        if: always()
+        run: |
+          mkdir -p security-reports/zap
+          if [ -f zap-report.json ]; then mv zap-report.json security-reports/zap/; fi
+          if [ -f zap-report.md ]; then mv zap-report.md security-reports/zap/; fi
+          if [ -f zap-report.xml ]; then mv zap-report.xml security-reports/zap/; fi
+
+      - name: Stop shell server
+        if: ${{ always() && env.ZAP_TARGET_URL == 'http://host.docker.internal:4173' }}
+        run: |
+          if [ -f http-server.pid ]; then kill "$(cat http-server.pid)" || true; fi
+
+      - name: Aggregate CSP reports
+        env:
+          CSP_REPORT_ENDPOINT: ${{ env.CSP_REPORT_ENDPOINT }}
+        run: npm run security:csp:summary
+
+      - name: Upload security artefacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: security-reports

@@ -1,0 +1,45 @@
+name: security-guardrails
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "web/**"
+      - ".github/workflows/security-guardrails.yml"
+      - "scripts/security/**"
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+        working-directory: web
+
+      # Placeholder: SAST (SpotBugs eşleniği yok; FE/BE linter ve dependency check için yer tutucu)
+      - name: Dependency check (NVD API key required)
+        run: |
+          echo "Dependency check placeholder. Add org tool here (e.g., OWASP DC)."
+
+      - name: ZAP baseline (placeholder)
+        run: |
+          echo "ZAP baseline placeholder. Add docker zap-baseline.py invocation with target URL."
+
+      - name: SBOM + cosign (placeholder)
+        run: |
+          echo "SBOM/imza placeholder. Add syft/grype + cosign steps here."
+
+      - name: Gate on critical findings
+        run: |
+          echo "Guardrail gate placeholder. Fail if prior steps report critical findings."

@@ -1,0 +1,496 @@
+{
+  "$ref": "#/definitions/PageManifest",
+  "definitions": {
+    "PageManifest": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "title": {
+              "type": "string"
+            },
+            "i18nKey": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "breadcrumb": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "i18nKey": {
+                    "type": "string"
+                  },
+                  "to": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "permission": {
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "layout": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "default",
+                "settings",
+                "wizard"
+              ],
+              "default": "default"
+            }
+          },
+          "additionalProperties": false
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "i18nKey": {
+                    "type": "string"
+                  },
+                  "defaultValue": {},
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "helpText": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "text"
+                  },
+                  "placeholder": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/key"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/label"
+                  },
+                  "i18nKey": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/i18nKey"
+                  },
+                  "defaultValue": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/defaultValue"
+                  },
+                  "required": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/required"
+                  },
+                  "helpText": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/helpText"
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "select"
+                  },
+                  "options": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": [
+                            "string",
+                            "number",
+                            "boolean"
+                          ]
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "i18nKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "multiple": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "key",
+                  "type",
+                  "options"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/key"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/label"
+                  },
+                  "i18nKey": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/i18nKey"
+                  },
+                  "defaultValue": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/defaultValue"
+                  },
+                  "required": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/required"
+                  },
+                  "helpText": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/helpText"
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "date"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "date",
+                      "datetime",
+                      "range"
+                    ]
+                  }
+                },
+                "required": [
+                  "key",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/key"
+                  },
+                  "label": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/label"
+                  },
+                  "i18nKey": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/i18nKey"
+                  },
+                  "defaultValue": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/defaultValue"
+                  },
+                  "required": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/required"
+                  },
+                  "helpText": {
+                    "$ref": "#/definitions/PageManifest/properties/filters/items/anyOf/0/properties/helpText"
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "boolean"
+                  }
+                },
+                "required": [
+                  "key",
+                  "type"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "grid": {
+          "type": "object",
+          "properties": {
+            "dataSource": {
+              "type": "object",
+              "properties": {
+                "queryKey": {
+                  "type": "array",
+                  "items": {}
+                },
+                "endpoint": {
+                  "type": "string"
+                },
+                "method": {
+                  "type": "string",
+                  "enum": [
+                    "GET",
+                    "POST"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "header": {
+                    "type": "string"
+                  },
+                  "i18nKey": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "text",
+                      "number",
+                      "date",
+                      "status"
+                    ]
+                  },
+                  "sortable": {
+                    "type": "boolean"
+                  },
+                  "filterable": {
+                    "type": "boolean"
+                  },
+                  "width": {
+                    "type": "number",
+                    "minimum": 40
+                  },
+                  "tooltip": {
+                    "type": "string"
+                  },
+                  "formatter": {
+                    "type": "string"
+                  },
+                  "permission": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "initialSort": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "asc",
+                      "desc"
+                    ],
+                    "default": "asc"
+                  }
+                },
+                "required": [
+                  "key"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "columns"
+          ],
+          "additionalProperties": false
+        },
+        "detail": {
+          "type": "object",
+          "properties": {
+            "tabs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "i18nKey": {
+                    "type": "string"
+                  },
+                  "sections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "summary",
+                            "related",
+                            "audit",
+                            "notes",
+                            "custom"
+                          ]
+                        },
+                        "component": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "i18nKey": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "key"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "i18nKey": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "primary",
+                  "default",
+                  "danger"
+                ]
+              },
+              "target": {
+                "type": "string"
+              },
+              "intent": {
+                "type": "string",
+                "enum": [
+                  "open-drawer",
+                  "open-modal",
+                  "mutation",
+                  "navigation"
+                ]
+              },
+              "permission": {
+                "type": "string"
+              },
+              "confirm": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "i18nKey": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "key"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "telemetry": {
+          "type": "object",
+          "properties": {
+            "pageId": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "featureFlags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "meta",
+        "grid"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

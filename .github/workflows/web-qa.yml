@@ -1,0 +1,45 @@
+name: Web QA
+
+on:
+  pull_request:
+    paths:
+      - "web/**"
+      - "scripts/**"
+      - ".github/workflows/web-qa.yml"
+  workflow_dispatch: {}
+
+jobs:
+  web-qa:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Version gates (toolchain/lockfile/ag-grid)
+        run: python3 scripts/check_version_gates.py --mode ci
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Web lint
+        run: bash scripts/run_lint_web.sh
+
+      - name: Web unit tests
+        run: bash scripts/run_tests_web.sh unit
+

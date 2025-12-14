@@ -1,0 +1,18 @@
+$ curl -i -s -H 'X-Trace-Id: smoke-401' http://127.0.0.1:4815/api/v1/users
+HTTP/1.1 401 Unauthorized
+content-type: application/json
+Date: Sat, 29 Nov 2025 18:14:27 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Content-Length: 102
+
+{"path":"/api/v1/users","traceId":"smoke-401","authHeader":"","hasAuth":false,"error":"auth_required"}
+$ curl -i -s -H 'Authorization: Bearer demo-token' -H 'X-Trace-Id: smoke-200' http://127.0.0.1:4815/api/v1/users
+HTTP/1.1 200 OK
+content-type: application/json
+Date: Sat, 29 Nov 2025 18:14:27 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Content-Length: 117
+
+{"path":"/api/v1/users","traceId":"smoke-200","authHeader":"Bearer demo-token","hasAuth":true,"message":"gateway-ok"}

@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2025-11-02T08:26:24.575Z",
+  "remotes": {
+    "mfe-users": {
+      "artifact": "dist/users/remoteEntry.js",
+      "sri": "sha384-vn8U+832Z1kYCkYfWQEzw/8EYiH5cIe0LGUD84mEw6tO7RRzDe2La67zltojH8sG",
+      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+    },
+    "mfe-suggestions": {
+      "artifact": "dist/suggestions/remoteEntry.js",
+      "sri": "sha384-JHHKcBXn3bscPuzhDxEmhQMyLFnqj8LM8FFzfrOzvcigOZ/Gt0ufBIbKTrd8bBCE",
+      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+    },
+    "mfe-ethic": {
+      "artifact": "dist/ethic/remoteEntry.js",
+      "sri": "sha384-xt73dyjcm002GV7d34LC4vvbVsUQIOM6KLbQ+v4J6jAmlIlOPx/S2FyxNYTEvxO3",
+      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+    },
+    "mfe-access": {
+      "artifact": "dist/access/remoteEntry.js",
+      "sri": "sha384-inQ49lXNp9SICPcvBSLoCYKCd6JAuDRrLOhjHMCv04h636/+gzIpcaXnLnVc1aea",
+      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+    },
+    "mfe-ui-kit": {
+      "artifact": "dist/ui-kit/remoteEntry.js",
+      "sri": "sha384-aOIPYsDBx20U8vs7t+K1t0tqFaMbRxRtWTDZJAiyQL3+aEKkFxZMW36Z7WlMV3QS",
+      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+    }
+  }
+}

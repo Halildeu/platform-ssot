@@ -1,0 +1,50 @@
+{
+  "name": "mfe-ethic",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx kill-port 3002 || true && webpack serve --config webpack.dev.js",
+    "build": "webpack --mode=production --config webpack.prod.js",
+    "test": "jest --runInBand --passWithNoTests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@mfe/shared-types": "file:../../packages/shared-types",
+    "@reduxjs/toolkit": "^2.8.2",
+    "clsx": "^2.1.1",
+    "react": "~18.2.0",
+    "react-dom": "~18.2.0",
+    "react-redux": "^9.2.0",
+    "react-router": "^6.27.0",
+    "react-router-dom": "^6.27.0",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.14",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "babel-jest": "^30.0.4",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "jest": "^30.0.4",
+    "jest-environment-jsdom": "^30.0.4",
+    "postcss-loader": "^8.1.1",
+    "style-loader": "^4.0.0",
+    "typescript": "^5.8.3",
+    "webpack": "^5.100.2",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2",
+    "html-webpack-plugin": "^5.6.3"
+  }
+}

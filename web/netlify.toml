@@ -1,0 +1,14 @@
+# Netlify'nin build ayarları
+[build]
+  # Netlify'ın projeyi build etmek için çalıştıracağı komut
+  command = "npm run build"
+  
+  # Build tamamlandığında internette yayınlanacak olan klasör
+  publish = "dist"
+
+# Tek Sayfa Uygulamaları (SPA) için yönlendirme kuralı
+# Bu kural, /ethic gibi adreslere doğrudan gidildiğinde 404 hatası almamızı engeller.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
