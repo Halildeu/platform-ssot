@@ -207,7 +207,7 @@ const NotificationPreview = () => (
 const ReportingPreview = () => (
   <div
     className="rounded-2xl border border-border-subtle bg-surface-panel p-4 shadow-sm"
-    data-testid="reporting-preview"
+    data-testid="reporting-preview-item"
   >
     <div className="mb-3 flex items-center justify-between text-xs font-semibold text-text-secondary">
       <span>Reporting Toolbar</span>
@@ -339,7 +339,7 @@ const ThemeScopeCard = ({
 };
 
 export const ThemeMatrixGallery: React.FC = () => (
-  <div className="flex flex-col gap-8">
+  <div className="flex flex-col gap-8" data-testid="runtime-theme-matrix-root">
     {RUNTIME_THEME_MATRIX_THEMES.map((theme) => (
       <section key={theme} className="flex flex-col gap-4">
         <h3 className="text-lg font-semibold text-text-primary">{theme}</h3>

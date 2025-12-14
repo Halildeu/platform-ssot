@@ -106,7 +106,7 @@ test.describe('Shell theme attributes', () => {
     await expect(accessDrawer.getByRole('button', { name: /Rol Ata/i })).toBeDisabled();
     await expect(accessDrawer.getByRole('button', { name: /Rolleri İncele/i })).toHaveAttribute('aria-readonly', 'true');
 
-    const reportingPreview = page.getByTestId('reporting-preview');
+    const reportingPreview = page.getByTestId('reporting-preview-item').first();
     await expect(reportingPreview.getByRole('button', { name: /Excel \(Tümü\)/i })).toBeDisabled();
     await expect(reportingPreview.getByRole('button', { name: /CSV \(Görünür\)/i })).toHaveAttribute(
       'aria-readonly',

@@ -32,7 +32,7 @@ scenarios:
     auth_required: false
     steps:
       - goto: /runtime/theme-matrix
-      - expectVisible: '[data-testid="reporting-preview"]'
+      - expectVisible: '[data-testid="runtime-theme-matrix-root"]'
 
   - name: theme_registry_page
     level: 1
@@ -69,4 +69,3 @@ scenarios:
     steps:
       - goto: /admin/reports/users
       - waitForSelector: '[data-theme-scope="entity-grid"]'
-
