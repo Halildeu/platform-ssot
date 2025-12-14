@@ -67,7 +67,8 @@ Owner: Frontend
 
 - Önkoşullar (GitHub secrets):
   - `GH_SECRETS_SYNC_TOKEN` (PAT): repo secrets update izni olmalı (GITHUB_TOKEN bunu yapamaz).
-  - Vault AppRole: `VAULT_ADDR`, `VAULT_ROLE_ID`, `VAULT_SECRET_ID`
+  - Self-hosted runner (label: `vault-local`) Vault’a erişebilmeli.
+  - Vault token (header): `VAULT_ADDR`, `VAULT_TOKEN`
 
 - Vault KV v2 varsayılan path/key’ler (value yok):
   - `secret/<env>/web-playwright/config`:
@@ -80,6 +81,9 @@ Owner: Frontend
 
 - Çalıştırma:
   - Actions → “Vault → GitHub Secrets Sync (Manual)”
+  - `env=stage` için default path’ler:
+    - `stage/web-playwright/config`
+    - `stage/web-playwright/keycloak`
   - Önce `dry_run=true` ile sadece FOUND/MISSING key listesini doğrula.
   - Sonra `dry_run=false` ile GitHub secrets’ları güncelle.
 
