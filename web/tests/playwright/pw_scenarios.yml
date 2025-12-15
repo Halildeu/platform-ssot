@@ -51,6 +51,7 @@ scenarios:
     steps:
       - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
+      - expectVisible: '[data-testid="nav-design-lab"]'
       - expectVisible: '[data-testid="design-lab-tree"]'
       - expectVisible: '[data-testid="design-lab-demo"]'
       - expectVisible: '[data-testid="design-lab-usage"]'

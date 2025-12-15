@@ -1258,6 +1258,7 @@ const Header = () => {
 
     if (hasPermission(PERMISSIONS.THEME_ADMIN)) {
       items.push({ key: '/admin/themes', path: '/admin/themes', labelKey: 'shell.nav.themes' });
+      items.push({ key: '/admin/design-lab', path: '/admin/design-lab', labelKey: 'shell.nav.designLab' });
     }
 
     return items;
@@ -1446,15 +1447,16 @@ const Header = () => {
           <div className="flex flex-1 items-center gap-2 min-w-0">
             <nav className="flex flex-1 items-center gap-1 min-w-0">
               <div className="flex flex-1 flex-nowrap items-center gap-2 min-w-0 overflow-hidden">
-                {visibleNavItems.map((item) => {
-                  const isActive = item.key === activeKey;
-                  return (
-                    <Link
-                      key={item.key}
-                      to={item.path}
-                      onClick={handleMenuSelect}
-                      className={
-                        isActive
+	                {visibleNavItems.map((item) => {
+	                  const isActive = item.key === activeKey;
+	                  return (
+	                    <Link
+	                      key={item.key}
+	                      data-testid={item.key === '/admin/design-lab' ? 'nav-design-lab' : undefined}
+	                      to={item.path}
+	                      onClick={handleMenuSelect}
+	                      className={
+	                        isActive
                           ? 'rounded-full px-3 py-1 text-xs font-semibold text-action-primary-text shadow-sm'
                           : 'rounded-full px-3 py-1 text-xs font-medium text-text-secondary'
                       }
@@ -1504,12 +1506,13 @@ const Header = () => {
                         {overflowNavItems.map((item) => {
                           const isActive = item.key === activeKey;
                           return (
-                            <li key={item.key}>
-                              <Link
-                                to={item.path}
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  handleMenuSelect();
+	                            <li key={item.key}>
+	                              <Link
+	                                data-testid={item.key === '/admin/design-lab' ? 'nav-design-lab' : undefined}
+	                                to={item.path}
+	                                onClick={(event) => {
+	                                  event.stopPropagation();
+	                                  handleMenuSelect();
                                   setOverflowOpen(false);
                                 }}
                                 className={
