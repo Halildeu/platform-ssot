@@ -2,7 +2,7 @@
 
 ID: STORY-0044-theme-ssot-single-chain-v1  
 Epic: QLTY-THEME-SSOT  
-Status: Planned  
+Status: Done  
 Owner: @team/frontend  
 Upstream: STORY-0038-theme-runtime-integration, STORY-0022-theme-personalization-v1  
 Downstream: AC-0044, TP-0044, ADR-0002, RB-web-playwright-smoke
@@ -125,38 +125,23 @@ F1.0 Keşif Notu (top offenders, dosya: satır):
 ## 6.2 F2 KICKOFF (PLAN, KOD YOK)
 -------------------------------------------------------------------------------
 
-Not: Mevcut guardrail seti (F1 scope) PASS. F2’de hedef, guardrail scope’unu genişletip “istisna” alanlarını da
-temaya bağlamak (özellikle grid/inline style).
+F2 (dar kapsam) tamamlandı:
+- Grid/inline style kaçakları temizlendi (hex/rgba ve `var(--x, fallback)` yok; token-only).  
+- Reporting typography fallback’leri temizlendi (token-only).  
+- L2 guardrail seti PASS (drift/hardcode/fallback yok).  
 
-Top offenders (keşif):
-- `scripts/check_no_hardcoded_theme_styles.py` → OK (scope: `web/apps` + `web/packages` – istisnalar hariç)
-- `scripts/check_theme_override_allowlist.py` → OK
-- İstisna/legacy alanlarında kalanlar (F2 adayı):
-  - `web/packages/ui-kit/src/components/entity-grid/EntityGridTemplate.tsx`:
-    - `var(--ag-*, fallback)` yoğun (read-only policy için risk), bazı hardcoded hex (excelStyles, icon color)
-  - `web/apps/mfe-reporting/src/styles.css`:
-    - `var(--font-family-base, ...)` fallback (typography token SSOT’a taşınmalı)
-
-Öncelikli 5-10 dosya (hedef + risk):
-- `web/packages/ui-kit/src/components/entity-grid/EntityGridTemplate.tsx`
-  - Hedef: `var(--ag-*, fallback)` ve hardcoded hex’leri kaldır; grid-theme.css + theme.css token’larıyla hizala.
-  - Risk/Test: grid smoke + Playwright `access_roles_page/audit_events_page/reporting_users_page`.
-- `web/apps/mfe-reporting/src/styles.css`
-  - Hedef: `--font-family-base` token’ını theme.css’e taşı ve fallback kaldır (tek zincir).
-  - Risk/Test: mfe-reporting build + smoke.
-- `web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx` (opsiyonel)
-  - Hedef: kontrast hesaplarında hardcoded `#ffffff` yerine theme token bazlı “inverse text” ile ölç.
-  - Risk/Test: yalnız admin UI; görsel değişiklik minimal.
-
-Kısa doğrulama akışı:
-- L2: `python3 scripts/docflow_next.py run STORY-0044 --level L2 --mode local --impact web`
-- L3: `npm -C web run pw:nightly` (auth none + token injection) PASS hedefi korunur.
+Doğrulama:
+- L2: `python3 scripts/docflow_next.py run STORY-0044 --level L2 --mode local --impact web` → PASS
 
 -------------------------------------------------------------------------------
 ## 6.3 F3 DURUMU
 -------------------------------------------------------------------------------
 
-- `/admin/design-lab` admin-only route eklendi (MVP: tree/search + demo tabs + usage placeholder + copy import).  
+- `/admin/design-lab` admin-only route eklendi (MVP: tree/search + demo tabs + copy import).  
+- F3.2: “where used” MVP tamamlandı:
+  - Index üretimi: `npm -C web run designlab:index`  
+  - Output: `web/apps/mfe-shell/src/pages/admin/design-lab.index.json`  
+  - UI: seçili component için dosya listesi + copy path (admin-only).  
 
 -------------------------------------------------------------------------------
 ## 7. LİNKLER (İSTEĞE BAĞLI)
