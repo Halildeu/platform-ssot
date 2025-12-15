@@ -43,6 +43,18 @@ scenarios:
       - goto: /admin/themes
       - expectVisible: '[data-testid="theme-admin-page"]'
 
+  - name: design_lab_page
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    steps:
+      - goto: /admin/design-lab
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - expectVisible: '[data-testid="design-lab-tree"]'
+      - expectVisible: '[data-testid="design-lab-demo"]'
+      - expectVisible: '[data-testid="design-lab-usage"]'
+
   - name: access_roles_page
     level: 1
     auth_required: true
