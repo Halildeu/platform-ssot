@@ -1,92 +1,233 @@
-import rawGroups from './design-lab.groups.json';
+export type DesignLabSubgroup = string;
 
-export type DesignLabGroupsSubgroup = {
+export interface DesignLabGroup {
   id: string;
-  label: string;
-};
+  title: string;
+  subgroups: DesignLabSubgroup[];
+}
 
-export type DesignLabGroupsGroup = {
-  id: string;
-  label: string;
-  subgroups: DesignLabGroupsSubgroup[];
-};
-
-export type DesignLabGroupsSpec = {
-  version: number;
-  fallback: {
-    group: string;
-    subgroup: string;
+export interface DesignLabGroupsSpec {
+  version: '1';
+  defaults: {
+    showEmptyGroups: true;
+    showEmptySubgroups: true;
+    defaultView: 'components';
+    advancedToggleLabel: string;
   };
-  groups: DesignLabGroupsGroup[];
+  groups: DesignLabGroup[];
+}
+
+export const DESIGN_LAB_GROUPS: DesignLabGroupsSpec = {
+  version: '1',
+  defaults: {
+    showEmptyGroups: true,
+    showEmptySubgroups: true,
+    defaultView: 'components',
+    advancedToggleLabel: 'Advanced (Runtime/Utils)',
+  },
+  groups: [
+    {
+      id: 'general',
+      title: 'General',
+      subgroups: [
+        'Typography',
+        'Iconography',
+        'Avatar & Identity',
+        'Badge / Tag / Chip',
+        'Divider',
+        'Copy / Clipboard',
+        'Link',
+      ],
+    },
+    {
+      id: 'layout_surfaces',
+      title: 'Layout & Surfaces',
+      subgroups: [
+        'App Shell Layout (Header/Sidebar/Footer)',
+        'Page Layout / Containers',
+        'Grid / Flex helpers',
+        'Card / Panel / Surface',
+        'Split / Resizable',
+        'Spacing helpers',
+        'Sticky / Affix',
+      ],
+    },
+    {
+      id: 'navigation',
+      title: 'Navigation',
+      subgroups: [
+        'Menu / Navigation rail',
+        'Tabs',
+        'Breadcrumb',
+        'Pagination',
+        'Steps',
+        'Anchor / Table of contents',
+        'Drawer navigation',
+      ],
+    },
+    {
+      id: 'data_entry',
+      title: 'Data Entry',
+      subgroups: [
+        'Text Input / TextArea',
+        'Select / Dropdown / Combobox',
+        'Autocomplete / Typeahead',
+        'Checkbox / Radio',
+        'Switch / Toggle',
+        'Slider',
+        'Date / Time pickers',
+        'Upload / File picker',
+        'Color picker',
+        'Form wrappers (Form, Field, Validation)',
+        'Rich text editor',
+      ],
+    },
+    {
+      id: 'data_display',
+      title: 'Data Display',
+      subgroups: [
+        'Table',
+        'Data Grid (AG Grid / EntityGrid)',
+        'List',
+        'Tree / TreeTable',
+        'Descriptions / Key-Value',
+        'Statistic / KPI cards',
+        'Timeline',
+        'Calendar / Scheduler view',
+        'Media (Image/Carousel)',
+        'Code / JSON viewer',
+      ],
+    },
+    {
+      id: 'feedback',
+      title: 'Feedback',
+      subgroups: [
+        'Alert / Banner',
+        'Toast / Notification',
+        'Modal / Dialog / Confirm',
+        'Popover',
+        'Tooltip',
+        'Progress / Spinner',
+        'Skeleton / Placeholder',
+        'Empty state / No data',
+        'Error boundary / Fallback UI',
+      ],
+    },
+    {
+      id: 'search_filtering',
+      title: 'Search & Filtering',
+      subgroups: [
+        'Search box',
+        'Filter bar',
+        'Facets',
+        'Sort controls',
+        'Saved filters / Views',
+      ],
+    },
+    {
+      id: 'actions',
+      title: 'Actions',
+      subgroups: [
+        'Button',
+        'Icon button',
+        'Button group / Split button',
+        'Context actions (kebab menu)',
+        'Floating action button',
+        'Inline actions',
+      ],
+    },
+    {
+      id: 'overlays_portals',
+      title: 'Overlays & Portals',
+      subgroups: [
+        'Drawer / Side panel',
+        'Modal stack manager',
+        'Context menu',
+        'Command palette',
+        'Tour / Coachmarks',
+      ],
+    },
+    {
+      id: 'tables_grid_addons',
+      title: 'Tables & Grid Add-ons',
+      subgroups: [
+        'Column picker',
+        'Export (CSV/Excel/PDF)',
+        'Row selection / bulk actions',
+        'Inline edit',
+        'Grouping / pivot',
+        'Server-side pagination helpers',
+        'Grid theming bridge (CSS vars)',
+      ],
+    },
+    {
+      id: 'charts_visualization',
+      title: 'Charts & Visualization',
+      subgroups: [
+        'Basic charts (bar/line/pie)',
+        'Time series',
+        'Heatmap',
+        'Sankey / network',
+        'Map',
+        'Dashboard layout widgets',
+      ],
+    },
+    {
+      id: 'theme_tokens',
+      title: 'Theme & Tokens',
+      subgroups: [
+        'Theme registry browser',
+        'Theme editor (axes)',
+        'Token viewer (semantic/raw)',
+        'Theme preview cards',
+        'Contrast / a11y checker',
+        'Density / radius / motion presets',
+        'Overlay intensity tools',
+      ],
+    },
+    {
+      id: 'a11y_i18n',
+      title: 'Accessibility & i18n',
+      subgroups: [
+        'A11y helpers (aria wrappers)',
+        'Focus management',
+        'Keyboard shortcuts',
+        'Localization helpers',
+        'RTL support tools',
+      ],
+    },
+    {
+      id: 'auth_security_ui',
+      title: 'Auth & Security UI',
+      subgroups: [
+        'Login / Register components',
+        'ProtectedRoute guards',
+        'Permission gates',
+        'Session/timeout banners',
+      ],
+    },
+    {
+      id: 'dev_diagnostics',
+      title: 'Dev & Diagnostics',
+      subgroups: [
+        'Design Lab itself',
+        'Component playground',
+        'Where-used explorer',
+        'Hardcode/bypass warnings',
+        'Performance overlays',
+      ],
+    },
+    {
+      id: 'runtime_utilities',
+      title: 'Runtime / Utilities',
+      subgroups: [
+        'Hooks (useX)',
+        'Runtime controllers (theme/auth)',
+        'HTTP helpers',
+        'Storage helpers',
+        'Event bus / BroadcastChannel',
+        'Feature flags',
+      ],
+    },
+  ],
 };
-
-const isNonEmptyString = (value: unknown): value is string =>
-  typeof value === 'string' && value.trim().length > 0;
-
-const validateGroups = (input: unknown): DesignLabGroupsSpec => {
-  if (!input || typeof input !== 'object') {
-    throw new Error('[design-lab.groups] invalid json: expected object');
-  }
-
-  const spec = input as Partial<DesignLabGroupsSpec>;
-
-  if (typeof spec.version !== 'number') {
-    throw new Error('[design-lab.groups] invalid version');
-  }
-
-  if (!spec.fallback || typeof spec.fallback !== 'object') {
-    throw new Error('[design-lab.groups] invalid fallback');
-  }
-
-  if (!isNonEmptyString(spec.fallback.group) || !isNonEmptyString(spec.fallback.subgroup)) {
-    throw new Error('[design-lab.groups] invalid fallback.group/subgroup');
-  }
-
-  if (!Array.isArray(spec.groups)) {
-    throw new Error('[design-lab.groups] invalid groups');
-  }
-
-  const groupIds = new Set<string>();
-  const subgroupPairs = new Set<string>();
-
-  for (const group of spec.groups) {
-    if (!group || typeof group !== 'object') {
-      throw new Error('[design-lab.groups] invalid group');
-    }
-    if (!isNonEmptyString(group.id) || !isNonEmptyString(group.label)) {
-      throw new Error('[design-lab.groups] invalid group id/label');
-    }
-    if (groupIds.has(group.id)) {
-      throw new Error(`[design-lab.groups] duplicate group id: ${group.id}`);
-    }
-    groupIds.add(group.id);
-
-    if (!Array.isArray(group.subgroups)) {
-      throw new Error(`[design-lab.groups] invalid subgroups for group: ${group.id}`);
-    }
-    const subgroupIds = new Set<string>();
-    for (const subgroup of group.subgroups) {
-      if (!subgroup || typeof subgroup !== 'object') {
-        throw new Error(`[design-lab.groups] invalid subgroup for group: ${group.id}`);
-      }
-      if (!isNonEmptyString(subgroup.id) || !isNonEmptyString(subgroup.label)) {
-        throw new Error(`[design-lab.groups] invalid subgroup id/label for group: ${group.id}`);
-      }
-      if (subgroupIds.has(subgroup.id)) {
-        throw new Error(`[design-lab.groups] duplicate subgroup id: ${group.id}/${subgroup.id}`);
-      }
-      subgroupIds.add(subgroup.id);
-      subgroupPairs.add(`${group.id}/${subgroup.id}`);
-    }
-  }
-
-  const fallbackPair = `${spec.fallback.group}/${spec.fallback.subgroup}`;
-  if (!subgroupPairs.has(fallbackPair)) {
-    throw new Error(`[design-lab.groups] fallback not found in groups: ${fallbackPair}`);
-  }
-
-  return spec as DesignLabGroupsSpec;
-};
-
-export const DESIGN_LAB_GROUPS: DesignLabGroupsSpec = validateGroups(rawGroups);
-

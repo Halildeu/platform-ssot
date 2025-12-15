@@ -68,6 +68,71 @@ const TabButton: React.FC<{
   </button>
 );
 
+type ClassifiedDesignLabItem = DesignLabIndexItem & {
+  taxonomyGroupId: string;
+  taxonomySubgroup: string;
+};
+
+const DEFAULT_TAXONOMY_GROUP_ID = 'runtime_utilities';
+const DEFAULT_TAXONOMY_SUBGROUP = 'Runtime controllers (theme/auth)';
+
+const classifyItemToTaxonomy = (item: DesignLabIndexItem): { groupId: string; subgroup: string } => {
+  const legacyKey = `${item.group}/${item.subgroup}`;
+
+  if (legacyKey === 'data-grid/entity-grid' && item.name === 'buildEntityGridQueryParams') {
+    return { groupId: 'tables_grid_addons', subgroup: 'Server-side pagination helpers' };
+  }
+
+  if (legacyKey === 'data-grid/variants') {
+    return item.kind === 'hook'
+      ? { groupId: 'runtime_utilities', subgroup: 'Hooks (useX)' }
+      : { groupId: 'runtime_utilities', subgroup: 'Feature flags' };
+  }
+
+  if (legacyKey === 'theme/runtime') {
+    if (item.name === 'getThemeContract' || item.name === 'resolveThemeModeKey' || item.name === 'getThemeAxes') {
+      return { groupId: 'theme_tokens', subgroup: 'Token viewer (semantic/raw)' };
+    }
+    if (item.name.startsWith('setOverlay')) {
+      return { groupId: 'theme_tokens', subgroup: 'Overlay intensity tools' };
+    }
+    return { groupId: 'theme_tokens', subgroup: 'Theme editor (axes)' };
+  }
+
+  const mapping: Record<string, { groupId: string; subgroup: string }> = {
+    'actions/buttons': { groupId: 'actions', subgroup: 'Button' },
+    'forms/select': { groupId: 'data_entry', subgroup: 'Select / Dropdown / Combobox' },
+    'forms/dropdown': { groupId: 'data_entry', subgroup: 'Select / Dropdown / Combobox' },
+    'forms/inputs': { groupId: 'data_entry', subgroup: 'Text Input / TextArea' },
+    'overlays/modal': { groupId: 'feedback', subgroup: 'Modal / Dialog / Confirm' },
+    'overlays/drawers': { groupId: 'overlays_portals', subgroup: 'Drawer / Side panel' },
+    'feedback/tooltips': { groupId: 'feedback', subgroup: 'Tooltip' },
+    'feedback/badges': { groupId: 'general', subgroup: 'Badge / Tag / Chip' },
+    'feedback/tags': { groupId: 'general', subgroup: 'Badge / Tag / Chip' },
+    'layout/page': { groupId: 'layout_surfaces', subgroup: 'Page Layout / Containers' },
+    'layout/filters': { groupId: 'search_filtering', subgroup: 'Filter bar' },
+    'data-grid/entity-grid': { groupId: 'data_display', subgroup: 'Data Grid (AG Grid / EntityGrid)' },
+    'data-grid/ag-grid-server': { groupId: 'data_display', subgroup: 'Data Grid (AG Grid / EntityGrid)' },
+    'content/text': { groupId: 'general', subgroup: 'Typography' },
+    'empty-states/empty': { groupId: 'feedback', subgroup: 'Empty state / No data' },
+    'theme/preview': { groupId: 'theme_tokens', subgroup: 'Theme preview cards' },
+    'theme/options': { groupId: 'theme_tokens', subgroup: 'Density / radius / motion presets' },
+    'runtime/auth': { groupId: 'runtime_utilities', subgroup: 'Runtime controllers (theme/auth)' },
+    'runtime/access': { groupId: 'auth_security_ui', subgroup: 'Permission gates' },
+  };
+
+  return mapping[legacyKey] ?? { groupId: DEFAULT_TAXONOMY_GROUP_ID, subgroup: DEFAULT_TAXONOMY_SUBGROUP };
+};
+
+const designLabIndexedItems: ClassifiedDesignLabItem[] = (designLabIndex.items ?? []).map((item) => {
+  const taxonomy = classifyItemToTaxonomy(item);
+  return {
+    ...item,
+    taxonomyGroupId: taxonomy.groupId,
+    taxonomySubgroup: taxonomy.subgroup,
+  };
+});
+
 export const DesignLabPage: React.FC = () => {
   const [query, setQuery] = useState('');
   const [activeSection, setActiveSection] = useState<LabSectionKey>('shell');
@@ -81,7 +146,7 @@ export const DesignLabPage: React.FC = () => {
   });
   const [expandedGroups, setExpandedGroups] = useState<string[]>(() => {
     const selected = designLabIndex.items.find((item) => item.name === 'Button') ?? designLabIndex.items[0];
-    const initialGroup = selected?.group ?? designLabGroups.groups[0]?.id ?? 'actions';
+    const initialGroup = selected ? classifyItemToTaxonomy(selected).groupId : (designLabGroups.groups[0]?.id ?? 'actions');
     return [initialGroup];
   });
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
@@ -90,35 +155,25 @@ export const DesignLabPage: React.FC = () => {
 
   const normalizedQuery = query.trim().toLowerCase();
 
-  const groupLabelById = useMemo(() => {
+  const groupTitleById = useMemo(() => {
     const map = new Map<string, string>();
     for (const group of designLabGroups.groups) {
-      map.set(group.id, group.label);
+      map.set(group.id, group.title);
     }
     return map;
-  }, [designLabGroups.groups]);
-
-  const subgroupLabelById = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const group of designLabGroups.groups) {
-      for (const subgroup of group.subgroups) {
-        map.set(`${group.id}/${subgroup.id}`, subgroup.label);
-      }
-    }
-    return map;
-  }, [designLabGroups.groups]);
+  }, []);
 
   const filteredItems = useMemo(() => {
-    const items = designLabIndex.items;
+    const items = designLabIndexedItems;
     if (!normalizedQuery) return items;
     return items.filter((item) => {
-      const groupLabel = groupLabelById.get(item.group) ?? item.group;
-      const subgroupLabel = subgroupLabelById.get(`${item.group}/${item.subgroup}`) ?? item.subgroup;
+      const groupTitle = groupTitleById.get(item.taxonomyGroupId) ?? item.taxonomyGroupId;
+      const subgroupTitle = item.taxonomySubgroup;
       const tags = (item.tags ?? []).join(' ');
-      const haystack = `${item.name} ${groupLabel} ${subgroupLabel} ${tags}`.toLowerCase();
+      const haystack = `${item.name} ${item.kind} ${groupTitle} ${subgroupTitle} ${tags} ${item.group} ${item.subgroup}`.toLowerCase();
       return haystack.includes(normalizedQuery);
     });
-  }, [groupLabelById, normalizedQuery, subgroupLabelById]);
+  }, [groupTitleById, normalizedQuery]);
 
   const selectedItem = useMemo(() => {
     return designLabIndex.items.find((item) => item.name === selectedItemName) ?? null;
@@ -128,11 +183,11 @@ export const DesignLabPage: React.FC = () => {
     return selectedItem?.importStatement ?? '';
   }, [selectedItem?.importStatement]);
 
-  const handleSelectItem = (item: DesignLabIndexItem) => {
+  const handleSelectItem = (item: ClassifiedDesignLabItem) => {
     setSelectedItemName(item.name);
     setCopied(null);
     if (normalizedQuery) return;
-    setExpandedGroups((prev) => (prev.includes(item.group) ? prev : [...prev, item.group]));
+    setExpandedGroups((prev) => (prev.includes(item.taxonomyGroupId) ? prev : [...prev, item.taxonomyGroupId]));
   };
 
   const handleCopySelectedImport = async () => {
@@ -287,7 +342,7 @@ export const DesignLabPage: React.FC = () => {
       map.set(group.id, 0);
     }
     for (const item of filteredItems) {
-      map.set(item.group, (map.get(item.group) ?? 0) + 1);
+      map.set(item.taxonomyGroupId, (map.get(item.taxonomyGroupId) ?? 0) + 1);
     }
     return map;
   }, [filteredItems]);
@@ -302,13 +357,13 @@ export const DesignLabPage: React.FC = () => {
   }, [countByGroup, expandedGroups, normalizedQuery]);
 
   const itemsByGroupAndSubgroup = useMemo(() => {
-    const map = new Map<string, Map<string, DesignLabIndexItem[]>>();
+    const map = new Map<string, Map<string, ClassifiedDesignLabItem[]>>();
     for (const item of filteredItems) {
-      const groupMap = map.get(item.group) ?? new Map<string, DesignLabIndexItem[]>();
-      const list = groupMap.get(item.subgroup) ?? [];
+      const groupMap = map.get(item.taxonomyGroupId) ?? new Map<string, ClassifiedDesignLabItem[]>();
+      const list = groupMap.get(item.taxonomySubgroup) ?? [];
       list.push(item);
-      groupMap.set(item.subgroup, list);
-      map.set(item.group, groupMap);
+      groupMap.set(item.taxonomySubgroup, list);
+      map.set(item.taxonomyGroupId, groupMap);
     }
     for (const groupMap of map.values()) {
       for (const [subgroup, list] of groupMap.entries()) {
@@ -411,7 +466,7 @@ export const DesignLabPage: React.FC = () => {
 	                    } ${normalizedQuery ? 'cursor-default opacity-90' : ''}`}
 	                  >
 	                    <span className="text-sm font-semibold text-text-primary">
-	                      {group.label}
+	                      {group.title}
 	                    </span>
 	                    <span className="text-xs font-semibold text-text-secondary">
 	                      {groupCount}
@@ -421,47 +476,47 @@ export const DesignLabPage: React.FC = () => {
 	                  {expanded ? (
 	                    <div className="mt-2 flex flex-col gap-2">
 	                      {group.subgroups.map((subgroup) => {
-	                        const subgroupItems =
-	                          itemsByGroupAndSubgroup.get(group.id)?.get(subgroup.id) ?? [];
-	                        if (subgroupItems.length === 0) return null;
+	                        const subgroupItems = itemsByGroupAndSubgroup.get(group.id)?.get(subgroup) ?? [];
 	                        return (
-	                          <div key={subgroup.id}>
+	                          <div key={subgroup}>
 	                            <div className="mb-1 flex items-center justify-between px-2">
 	                              <Text as="div" variant="secondary" className="text-xs font-semibold">
-	                                {subgroup.label}
+	                                {subgroup}
 	                              </Text>
 	                              <Text variant="secondary" className="text-xs">
 	                                {subgroupItems.length}
 	                              </Text>
 	                            </div>
-	                            <div className="flex flex-col gap-1">
-	                              {subgroupItems.map((item) => {
-	                                const active = item.name === selectedItemName;
-	                                const unclassified = Boolean(item.tags?.includes('unclassified'));
-	                                return (
-	                                  <button
-	                                    key={item.name}
-	                                    type="button"
-	                                    onClick={() => handleSelectItem(item)}
-	                                    className={`flex w-full items-start justify-between gap-2 rounded-2xl border px-3 py-2 text-left transition ${
-	                                      active
-	                                        ? 'border-border-default bg-surface-default shadow-sm'
-	                                        : 'border-transparent hover:bg-surface-muted'
-	                                    }`}
-	                                  >
-	                                    <span className="flex flex-col gap-0.5">
-	                                      <span className="text-sm font-semibold text-text-primary">
-	                                        {item.name}
+	                            {subgroupItems.length > 0 ? (
+	                              <div className="flex flex-col gap-1">
+	                                {subgroupItems.map((item) => {
+	                                  const active = item.name === selectedItemName;
+	                                  const unclassified = Boolean(item.tags?.includes('unclassified'));
+	                                  return (
+	                                    <button
+	                                      key={item.name}
+	                                      type="button"
+	                                      onClick={() => handleSelectItem(item)}
+	                                      className={`flex w-full items-start justify-between gap-2 rounded-2xl border px-3 py-2 text-left transition ${
+	                                        active
+	                                          ? 'border-border-default bg-surface-default shadow-sm'
+	                                          : 'border-transparent hover:bg-surface-muted'
+	                                      }`}
+	                                    >
+	                                      <span className="flex flex-col gap-0.5">
+	                                        <span className="text-sm font-semibold text-text-primary">
+	                                          {item.name}
+	                                        </span>
+	                                        <span className="text-[11px] text-text-secondary">
+	                                          {item.kind}
+	                                          {unclassified ? ' • unclassified' : ''}
+	                                        </span>
 	                                      </span>
-	                                      <span className="text-[11px] text-text-secondary">
-	                                        {item.kind}
-	                                        {unclassified ? ' • unclassified' : ''}
-	                                      </span>
-	                                    </span>
-	                                  </button>
-	                                );
-	                              })}
-	                            </div>
+	                                    </button>
+	                                  );
+	                                })}
+	                              </div>
+	                            ) : null}
 	                          </div>
 	                        );
 	                      })}
