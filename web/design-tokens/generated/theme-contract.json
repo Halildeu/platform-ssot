@@ -1,0 +1,53 @@
+{
+  "version": "0.1",
+  "defaultMode": "serban-light",
+  "allowedModes": [
+    "serban-light",
+    "serban-dark",
+    "serban-hc",
+    "serban-compact"
+  ],
+  "modes": {
+    "serban-light": {
+      "label": "Light",
+      "appearance": "light"
+    },
+    "serban-dark": {
+      "label": "Dark",
+      "appearance": "dark"
+    },
+    "serban-hc": {
+      "label": "High Contrast",
+      "appearance": "high-contrast",
+      "isHighContrast": true
+    },
+    "serban-compact": {
+      "label": "Compact",
+      "appearance": "light"
+    }
+  },
+  "aliases": {
+    "appearance": {
+      "light": "serban-light",
+      "dark": "serban-dark",
+      "high-contrast": "serban-hc"
+    },
+    "density": {
+      "compact": "serban-compact"
+    }
+  },
+  "coerce": [
+    {
+      "when": {
+        "appearance": "high-contrast"
+      },
+      "mode": "serban-hc"
+    },
+    {
+      "when": {
+        "appearance": "dark"
+      },
+      "mode": "serban-dark"
+    }
+  ]
+}

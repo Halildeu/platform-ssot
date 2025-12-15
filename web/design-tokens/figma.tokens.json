@@ -62,6 +62,13 @@
       "4": { "value": "16px" },
       "6": { "value": "24px" },
       "8": { "value": "32px" }
+    },
+    "typography": {
+      "font": {
+        "family": {
+          "base": { "value": "'Inter', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', sans-serif" }
+        }
+      }
     }
   },
   "semantic": {
@@ -776,6 +783,31 @@
         { "id": "ultra-light", "label": "Ultra Light Neutrals", "tones": ["ultra-1", "ultra-2", "ultra-3", "ultra-4", "ultra-5", "ultra-6"] },
         { "id": "mid-neutral", "label": "Mid Neutrals", "tones": ["mid-1", "mid-2", "mid-3", "mid-4", "mid-5", "mid-6"] },
         { "id": "deep-neutral", "label": "Deep Neutrals", "tones": ["deep-1", "deep-2", "deep-3", "deep-4", "deep-5", "deep-6"] }
+      ]
+    },
+    "themeContract": {
+      "version": "0.1",
+      "defaultMode": "serban-light",
+      "allowedModes": ["serban-light", "serban-dark", "serban-hc", "serban-compact"],
+      "modes": {
+        "serban-light": { "label": "Light", "appearance": "light" },
+        "serban-dark": { "label": "Dark", "appearance": "dark" },
+        "serban-hc": { "label": "High Contrast", "appearance": "high-contrast", "isHighContrast": true },
+        "serban-compact": { "label": "Compact", "appearance": "light" }
+      },
+      "aliases": {
+        "appearance": {
+          "light": "serban-light",
+          "dark": "serban-dark",
+          "high-contrast": "serban-hc"
+        },
+        "density": {
+          "compact": "serban-compact"
+        }
+      },
+      "coerce": [
+        { "when": { "appearance": "high-contrast" }, "mode": "serban-hc" },
+        { "when": { "appearance": "dark" }, "mode": "serban-dark" }
       ]
     }
   }

@@ -73,6 +73,8 @@
   --accent-primary-hover: color(srgb 0 0.4 0.8);
   --accent-focus: color(srgb 1 0.8431 0);
   --accent-soft: color(srgb 0.0392 0.5176 1 / 18%);
+  --font-family-base: 'Inter', -apple-system, 'BlinkMacSystemFont', 'Segoe UI', sans-serif;
+  --surface-page-bg: var(--surface-default-bg);
 }
 
 :root[data-theme="serban-light"], [data-theme-scope][data-theme="serban-light"] {
@@ -988,19 +990,22 @@ html {
   --overlay-intensity-max: 60;
   --overlay-intensity-default: 10;
   --overlay-opacity-default: 10;
-  --table-surface-bg: var(--surface-table-normal-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+  --overlay-intensity: var(--overlay-intensity-default);
+  --overlay-opacity: calc(var(--overlay-opacity-default) / 100);
+  --table-surface-border: var(--border-subtle);
+  --table-surface-bg: var(--surface-table-normal-bg);
 }
 
 :root[data-table-surface-tone="soft"], [data-theme-scope][data-table-surface-tone="soft"] {
-  --table-surface-bg: var(--surface-table-soft-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+  --table-surface-bg: var(--surface-table-soft-bg);
 }
 
 :root[data-table-surface-tone="strong"], [data-theme-scope][data-table-surface-tone="strong"] {
-  --table-surface-bg: var(--surface-table-strong-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+  --table-surface-bg: var(--surface-table-strong-bg);
 }
 
 :root[data-table-surface-tone="normal"], [data-theme-scope][data-table-surface-tone="normal"] {
-  --table-surface-bg: var(--surface-table-normal-bg, var(--surface-panel-bg, color(srgb 1 1 1)));
+  --table-surface-bg: var(--surface-table-normal-bg);
 }
 
 :root[data-accent="neutral"], [data-theme-scope][data-accent="neutral"] {

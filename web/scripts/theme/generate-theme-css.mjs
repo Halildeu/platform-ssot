@@ -15,6 +15,9 @@ const repoRoot = path.resolve(__dirname, '..', '..');
 
 const TOKEN_FILE = path.resolve(repoRoot, 'design-tokens/figma.tokens.json');
 const OUTPUT_CSS = path.resolve(repoRoot, 'apps/mfe-shell/src/styles/theme.css');
+const OUTPUT_CONTRACT = path.resolve(repoRoot, 'design-tokens/generated/theme-contract.json');
+
+const isCheckMode = process.argv.includes('--check');
 
 const AXIS_ATTRIBUTE = {
   radius: 'data-radius',
@@ -24,6 +27,10 @@ const AXIS_ATTRIBUTE = {
 };
 
 const tokens = JSON.parse(fs.readFileSync(TOKEN_FILE, 'utf8'));
+const themeContract = tokens?.meta?.themeContract;
+if (!themeContract || typeof themeContract !== 'object') {
+  throw new Error('⚠️ meta.themeContract missing in figma.tokens.json (required for single-chain).');
+}
 
 const colorTokens = flattenSemantic(tokens.semantic.color, ['color']);
 const axisTokens = {
@@ -52,6 +59,8 @@ if (accentPalettes.length > 0) {
   const [defaultAccent] = accentPalettes;
   rootDeclarations.push(...buildAccentDeclarations(defaultAccent.entry, defaultAccent.key));
 }
+rootDeclarations.push(`  --font-family-base: ${resolveValue('{raw.typography.font.family.base}')};`);
+rootDeclarations.push('  --surface-page-bg: var(--surface-default-bg);');
 pushBlock(':root', rootDeclarations);
 
 for (const theme of appearanceThemes) {
@@ -98,19 +107,22 @@ cssChunks.push(`  --overlay-intensity-min: ${overlayConfig.min};`);
 cssChunks.push(`  --overlay-intensity-max: ${overlayConfig.max};`);
 cssChunks.push(`  --overlay-intensity-default: ${overlayConfig.defaultIntensity};`);
 cssChunks.push(`  --overlay-opacity-default: ${overlayConfig.defaultOpacity};`);
-cssChunks.push('  --table-surface-bg: var(--surface-table-normal-bg, var(--surface-panel-bg, color(srgb 1 1 1)));');
+cssChunks.push('  --overlay-intensity: var(--overlay-intensity-default);');
+cssChunks.push('  --overlay-opacity: calc(var(--overlay-opacity-default) / 100);');
+cssChunks.push('  --table-surface-border: var(--border-subtle);');
+cssChunks.push('  --table-surface-bg: var(--surface-table-normal-bg);');
 cssChunks.push('}');
 cssChunks.push('');
 cssChunks.push(':root[data-table-surface-tone="soft"], [data-theme-scope][data-table-surface-tone="soft"] {');
-cssChunks.push('  --table-surface-bg: var(--surface-table-soft-bg, var(--surface-panel-bg, color(srgb 1 1 1)));');
+cssChunks.push('  --table-surface-bg: var(--surface-table-soft-bg);');
 cssChunks.push('}');
 cssChunks.push('');
 cssChunks.push(':root[data-table-surface-tone="strong"], [data-theme-scope][data-table-surface-tone="strong"] {');
-cssChunks.push('  --table-surface-bg: var(--surface-table-strong-bg, var(--surface-panel-bg, color(srgb 1 1 1)));');
+cssChunks.push('  --table-surface-bg: var(--surface-table-strong-bg);');
 cssChunks.push('}');
 cssChunks.push('');
 cssChunks.push(':root[data-table-surface-tone="normal"], [data-theme-scope][data-table-surface-tone="normal"] {');
-cssChunks.push('  --table-surface-bg: var(--surface-table-normal-bg, var(--surface-panel-bg, color(srgb 1 1 1)));');
+cssChunks.push('  --table-surface-bg: var(--surface-table-normal-bg);');
 cssChunks.push('}');
 cssChunks.push('');
 
@@ -122,8 +134,43 @@ if (accentPalettes.length > 0) {
 }
 
 const cssOutput = cssChunks.filter((line, index) => !(line === '' && cssChunks[index - 1] === '')).join('\n');
-fs.writeFileSync(OUTPUT_CSS, `${cssOutput}\n`);
-console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CSS)} from ${path.relative(repoRoot, TOKEN_FILE)}`);
+const cssWithEol = `${cssOutput}\n`;
+const contractWithEol = `${JSON.stringify(themeContract, null, 2)}\n`;
+
+if (isCheckMode) {
+  const errors = [];
+  try {
+    const existingCss = fs.readFileSync(OUTPUT_CSS, 'utf8');
+    if (existingCss !== cssWithEol) {
+      errors.push(`- Drift: ${path.relative(repoRoot, OUTPUT_CSS)} generated output is not up to date.`);
+    }
+  } catch {
+    errors.push(`- Missing: ${path.relative(repoRoot, OUTPUT_CSS)} does not exist.`);
+  }
+
+  try {
+    const existingContract = fs.readFileSync(OUTPUT_CONTRACT, 'utf8');
+    if (existingContract !== contractWithEol) {
+      errors.push(`- Drift: ${path.relative(repoRoot, OUTPUT_CONTRACT)} generated output is not up to date.`);
+    }
+  } catch {
+    errors.push(`- Missing: ${path.relative(repoRoot, OUTPUT_CONTRACT)} does not exist.`);
+  }
+
+  if (errors.length > 0) {
+    console.error('❌ Theme tokens build drift detected (run: npm -C web run tokens:build)');
+    errors.forEach((line) => console.error(line));
+    process.exit(1);
+  }
+
+  console.log(`✅ tokens:build --check OK (${path.relative(repoRoot, OUTPUT_CSS)}, ${path.relative(repoRoot, OUTPUT_CONTRACT)})`);
+} else {
+  fs.mkdirSync(path.dirname(OUTPUT_CONTRACT), { recursive: true });
+  fs.writeFileSync(OUTPUT_CONTRACT, contractWithEol);
+  fs.writeFileSync(OUTPUT_CSS, cssWithEol);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CSS)} from ${path.relative(repoRoot, TOKEN_FILE)}`);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CONTRACT)} from ${path.relative(repoRoot, TOKEN_FILE)}`);
+}
 
 function flattenSemantic(node, pathSegments = [], acc = []) {
   if (!node || typeof node !== 'object') return acc;
