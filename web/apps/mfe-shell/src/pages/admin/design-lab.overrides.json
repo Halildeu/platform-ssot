@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "overrides": {
+    "THEME_APPEARANCE_OPTIONS": { "group": "theme", "subgroup": "options", "tags": ["advanced"] },
+    "THEME_DENSITY_OPTIONS": { "group": "theme", "subgroup": "options", "tags": ["advanced"] },
+    "THEME_ELEVATION_OPTIONS": { "group": "theme", "subgroup": "options", "tags": ["advanced"] },
+    "THEME_MOTION_OPTIONS": { "group": "theme", "subgroup": "options", "tags": ["advanced"] },
+    "THEME_RADIUS_OPTIONS": { "group": "theme", "subgroup": "options", "tags": ["advanced"] },
+    "getThemeAxes": { "group": "theme", "subgroup": "runtime", "tags": ["advanced"] },
+    "setAppearance": { "group": "theme", "subgroup": "runtime", "tags": ["advanced"] },
+    "setDensity": { "group": "theme", "subgroup": "runtime", "tags": ["advanced"] },
+    "setElevation": { "group": "theme", "subgroup": "runtime", "tags": ["advanced"] },
+    "setMotion": { "group": "theme", "subgroup": "runtime", "tags": ["advanced"] },
+    "setRadius": { "group": "theme", "subgroup": "runtime", "tags": ["advanced"] },
+    "setSurfaceTone": { "group": "theme", "subgroup": "runtime", "tags": ["advanced"] }
+  }
+}
+

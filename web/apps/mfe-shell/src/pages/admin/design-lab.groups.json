@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "fallback": {
+    "group": "runtime",
+    "subgroup": "utilities"
+  },
+  "groups": [
+    {
+      "id": "actions",
+      "label": "Actions",
+      "subgroups": [
+        { "id": "buttons", "label": "Buttons" }
+      ]
+    },
+    {
+      "id": "forms",
+      "label": "Forms",
+      "subgroups": [
+        { "id": "select", "label": "Select" },
+        { "id": "dropdown", "label": "Dropdown" },
+        { "id": "inputs", "label": "Inputs" }
+      ]
+    },
+    {
+      "id": "overlays",
+      "label": "Overlays",
+      "subgroups": [
+        { "id": "modal", "label": "Modal" },
+        { "id": "drawers", "label": "Drawers" }
+      ]
+    },
+    {
+      "id": "feedback",
+      "label": "Feedback",
+      "subgroups": [
+        { "id": "badges", "label": "Badges" },
+        { "id": "tooltips", "label": "Tooltips" },
+        { "id": "tags", "label": "Tags" }
+      ]
+    },
+    {
+      "id": "layout",
+      "label": "Layout",
+      "subgroups": [
+        { "id": "page", "label": "Page Layout" },
+        { "id": "filters", "label": "Filters" }
+      ]
+    },
+    {
+      "id": "data-grid",
+      "label": "Data & Grid",
+      "subgroups": [
+        { "id": "entity-grid", "label": "Entity Grid" },
+        { "id": "ag-grid-server", "label": "AgGrid Server" },
+        { "id": "variants", "label": "Variants" }
+      ]
+    },
+    {
+      "id": "content",
+      "label": "Content & Typography",
+      "subgroups": [
+        { "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "id": "empty-states",
+      "label": "Empty States",
+      "subgroups": [
+        { "id": "empty", "label": "Empty" }
+      ]
+    },
+    {
+      "id": "theme",
+      "label": "Theme & Tokens",
+      "subgroups": [
+        { "id": "preview", "label": "Preview" },
+        { "id": "options", "label": "Options" },
+        { "id": "runtime", "label": "Runtime" }
+      ]
+    },
+    {
+      "id": "runtime",
+      "label": "Runtime (Advanced)",
+      "subgroups": [
+        { "id": "auth", "label": "Auth" },
+        { "id": "access", "label": "Access" },
+        { "id": "utilities", "label": "Utilities" }
+      ]
+    }
+  ]
+}
+

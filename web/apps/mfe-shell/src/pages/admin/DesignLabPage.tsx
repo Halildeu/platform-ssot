@@ -1,74 +1,49 @@
 import React, { useMemo, useState } from 'react';
 import { Button, EntityGridTemplate, Modal, Select, Text } from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
+import designLabGroupsRaw from './design-lab.groups.json';
 
 type LabSectionKey = 'shell' | 'grid' | 'form';
 
-type DesignLabIndexEntry = {
+type DesignLabGroupsSubgroup = {
+  id: string;
+  label: string;
+};
+
+type DesignLabGroupsGroup = {
+  id: string;
+  label: string;
+  subgroups: DesignLabGroupsSubgroup[];
+};
+
+type DesignLabGroups = {
+  version: number;
+  fallback: {
+    group: string;
+    subgroup: string;
+  };
+  groups: DesignLabGroupsGroup[];
+};
+
+type DesignLabIndexItem = {
   name: string;
-  import: string;
-  files: string[];
+  kind: 'component' | 'hook' | 'function' | 'const';
+  importStatement: string;
+  whereUsed: string[];
+  group: string;
+  subgroup: string;
+  tags?: string[];
 };
 
 type DesignLabIndex = {
+  version?: number;
   generatedAt?: string;
   generatedAtUtc?: string;
-  components: DesignLabIndexEntry[];
+  items: DesignLabIndexItem[];
 };
 
 const designLabIndex = designLabIndexRaw as DesignLabIndex;
-
-type LabItem = {
-  id: string;
-  label: string;
-  section: LabSectionKey;
-  importSnippet: string;
-  description: string;
-};
-
-const LAB_ITEMS: LabItem[] = [
-  {
-    id: 'button',
-    label: 'Button',
-    section: 'shell',
-    importSnippet: "import { Button } from 'mfe-ui-kit';",
-    description: 'Primary/secondary/ghost varyantları + access kontrol.',
-  },
-  {
-    id: 'text',
-    label: 'Text',
-    section: 'shell',
-    importSnippet: "import { Text } from 'mfe-ui-kit';",
-    description: 'primary/secondary/muted tipografi örnekleri.',
-  },
-  {
-    id: 'entity-grid',
-    label: 'EntityGridTemplate',
-    section: 'grid',
-    importSnippet: "import { EntityGridTemplate } from 'mfe-ui-kit';",
-    description: 'AG Grid wrapper + theme scope + varyantlar.',
-  },
-  {
-    id: 'modal',
-    label: 'Modal',
-    section: 'form',
-    importSnippet: "import { Modal } from 'mfe-ui-kit';",
-    description: 'Overlay + header + footer yapısı.',
-  },
-  {
-    id: 'select',
-    label: 'Select',
-    section: 'form',
-    importSnippet: "import { Select } from 'mfe-ui-kit';",
-    description: 'Native select wrapper + access kontrol.',
-  },
-];
-
-const SECTION_LABELS: Record<LabSectionKey, string> = {
-  shell: 'Shell',
-  grid: 'Grid',
-  form: 'Form',
-};
+const designLabGroups = designLabGroupsRaw as DesignLabGroups;
 
 const copyToClipboard = async (value: string): Promise<boolean> => {
   if (!value) return false;
@@ -95,15 +70,6 @@ const copyToClipboard = async (value: string): Promise<boolean> => {
   }
 };
 
-const buildSectionToItems = (items: LabItem[]): Record<LabSectionKey, LabItem[]> =>
-  items.reduce(
-    (acc, item) => {
-      acc[item.section].push(item);
-      return acc;
-    },
-    { shell: [], grid: [], form: [] } as Record<LabSectionKey, LabItem[]>,
-  );
-
 const TabButton: React.FC<{
   active: boolean;
   label: string;
@@ -125,41 +91,68 @@ const TabButton: React.FC<{
 export const DesignLabPage: React.FC = () => {
   const [query, setQuery] = useState('');
   const [activeSection, setActiveSection] = useState<LabSectionKey>('shell');
-  const [selectedItemId, setSelectedItemId] = useState<string>('button');
+  const [selectedItemName, setSelectedItemName] = useState<string>(() => {
+    const preferred = ['Button', 'Text', 'EntityGridTemplate', 'Modal', 'Select'];
+    for (const candidate of preferred) {
+      if (designLabIndex.items.some((item) => item.name === candidate)) return candidate;
+    }
+    const firstComponent = designLabIndex.items.find((item) => item.kind === 'component')?.name;
+    return firstComponent ?? designLabIndex.items[0]?.name ?? '';
+  });
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(() => {
+    const selected = designLabIndex.items.find((item) => item.name === 'Button') ?? designLabIndex.items[0];
+    const initialGroup = selected?.group ?? designLabGroups.groups[0]?.id ?? 'actions';
+    return [initialGroup];
+  });
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [formModalOpen, setFormModalOpen] = useState(false);
   const [formSelectValue, setFormSelectValue] = useState('comfortable');
 
   const normalizedQuery = query.trim().toLowerCase();
 
+  const groupLabelById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const group of designLabGroups.groups) {
+      map.set(group.id, group.label);
+    }
+    return map;
+  }, [designLabGroups.groups]);
+
+  const subgroupLabelById = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const group of designLabGroups.groups) {
+      for (const subgroup of group.subgroups) {
+        map.set(`${group.id}/${subgroup.id}`, subgroup.label);
+      }
+    }
+    return map;
+  }, [designLabGroups.groups]);
+
   const filteredItems = useMemo(() => {
-    if (!normalizedQuery) return LAB_ITEMS;
-    return LAB_ITEMS.filter((item) => {
-      const haystack = `${item.label} ${item.description}`.toLowerCase();
+    const items = designLabIndex.items;
+    if (!normalizedQuery) return items;
+    return items.filter((item) => {
+      const groupLabel = groupLabelById.get(item.group) ?? item.group;
+      const subgroupLabel = subgroupLabelById.get(`${item.group}/${item.subgroup}`) ?? item.subgroup;
+      const tags = (item.tags ?? []).join(' ');
+      const haystack = `${item.name} ${groupLabel} ${subgroupLabel} ${tags}`.toLowerCase();
       return haystack.includes(normalizedQuery);
     });
-  }, [normalizedQuery]);
-
-  const filteredSectionToItems = useMemo(() => buildSectionToItems(filteredItems), [filteredItems]);
+  }, [groupLabelById, normalizedQuery, subgroupLabelById]);
 
   const selectedItem = useMemo(() => {
-    const match = LAB_ITEMS.find((item) => item.id === selectedItemId);
-    return match ?? LAB_ITEMS[0];
-  }, [selectedItemId]);
-
-  const selectedIndexEntry = useMemo(() => {
-    const label = selectedItem.label;
-    return designLabIndex.components.find((entry) => entry.name === label) ?? null;
-  }, [selectedItem.label]);
+    return designLabIndex.items.find((item) => item.name === selectedItemName) ?? null;
+  }, [selectedItemName]);
 
   const selectedImportSnippet = useMemo(() => {
-    return selectedIndexEntry?.import ?? selectedItem.importSnippet;
-  }, [selectedIndexEntry?.import, selectedItem.importSnippet]);
+    return selectedItem?.importStatement ?? '';
+  }, [selectedItem?.importStatement]);
 
-  const handleSelectItem = (item: LabItem) => {
-    setActiveSection(item.section);
-    setSelectedItemId(item.id);
+  const handleSelectItem = (item: DesignLabIndexItem) => {
+    setSelectedItemName(item.name);
     setCopied(null);
+    if (normalizedQuery) return;
+    setExpandedGroups((prev) => (prev.includes(item.group) ? prev : [...prev, item.group]));
   };
 
   const handleCopySelectedImport = async () => {
@@ -308,6 +301,51 @@ export const DesignLabPage: React.FC = () => {
     }
   }, [activeSection, formDemo, gridDemo, shellDemo]);
 
+  const countByGroup = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const group of designLabGroups.groups) {
+      map.set(group.id, 0);
+    }
+    for (const item of filteredItems) {
+      map.set(item.group, (map.get(item.group) ?? 0) + 1);
+    }
+    return map;
+  }, [filteredItems]);
+
+  const effectiveExpandedGroups = useMemo(() => {
+    if (normalizedQuery) {
+      return designLabGroups.groups
+        .filter((group) => (countByGroup.get(group.id) ?? 0) > 0)
+        .map((group) => group.id);
+    }
+    return expandedGroups;
+  }, [countByGroup, expandedGroups, normalizedQuery]);
+
+  const itemsByGroupAndSubgroup = useMemo(() => {
+    const map = new Map<string, Map<string, DesignLabIndexItem[]>>();
+    for (const item of filteredItems) {
+      const groupMap = map.get(item.group) ?? new Map<string, DesignLabIndexItem[]>();
+      const list = groupMap.get(item.subgroup) ?? [];
+      list.push(item);
+      groupMap.set(item.subgroup, list);
+      map.set(item.group, groupMap);
+    }
+    for (const groupMap of map.values()) {
+      for (const [subgroup, list] of groupMap.entries()) {
+        groupMap.set(
+          subgroup,
+          [...list].sort((a, b) => a.name.localeCompare(b.name, 'en')),
+        );
+      }
+    }
+    return map;
+  }, [filteredItems]);
+
+  const toggleGroup = (groupId: string) => {
+    if (normalizedQuery) return;
+    setExpandedGroups((prev) => (prev.includes(groupId) ? prev.filter((id) => id !== groupId) : [...prev, groupId]));
+  };
+
   return (
     <div
       data-testid="design-lab-page"
@@ -364,61 +402,101 @@ export const DesignLabPage: React.FC = () => {
         className="grid grid-cols-1 gap-3 p-3 lg:grid-cols-[320px_1fr_320px] lg:gap-4 lg:p-4"
         style={{ height: 'calc(100vh - 220px)' }}
       >
-        <aside
-          data-testid="design-lab-tree"
-          className="min-h-0 rounded-3xl border border-border-subtle bg-surface-panel p-3 shadow-sm"
-        >
-          <div className="mb-2 flex items-center justify-between">
-            <Text as="div" className="font-semibold">
-              Component Tree
-            </Text>
-            <Text variant="secondary">
-              {filteredItems.length}/{LAB_ITEMS.length}
-            </Text>
-          </div>
-          <div className="min-h-0 overflow-auto pr-1">
-            {(Object.keys(SECTION_LABELS) as LabSectionKey[]).map((sectionKey) => {
-              const items = filteredSectionToItems[sectionKey];
-              if (items.length === 0) return null;
-              return (
-                <div key={sectionKey} className="mb-3">
-                  <div className="mb-2 flex items-center justify-between">
-                    <Text as="div" variant="secondary" className="font-semibold">
-                      {SECTION_LABELS[sectionKey]}
-                    </Text>
-                    <Text variant="secondary">{items.length}</Text>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    {items.map((item) => {
-                      const active = item.id === selectedItemId;
-                      return (
-                        <button
-                          key={item.id}
-                          type="button"
-                          onClick={() => handleSelectItem(item)}
-                          className={`flex w-full items-start justify-between gap-2 rounded-2xl border px-3 py-2 text-left transition ${
-                            active
-                              ? 'border-border-default bg-surface-default shadow-sm'
-                              : 'border-transparent hover:bg-surface-muted'
-                          }`}
-                        >
-                          <span className="flex flex-col gap-0.5">
-                            <span className="text-sm font-semibold text-text-primary">
-                              {item.label}
-                            </span>
-                            <span className="text-xs text-text-secondary">
-                              {item.description}
-                            </span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </aside>
+	        <aside
+	          data-testid="design-lab-tree"
+	          className="min-h-0 rounded-3xl border border-border-subtle bg-surface-panel p-3 shadow-sm"
+	        >
+	          <div className="mb-2 flex items-center justify-between">
+	            <Text as="div" className="font-semibold">
+	              Catalog
+	            </Text>
+	            <Text variant="secondary">
+	              {filteredItems.length}/{designLabIndex.items.length}
+	            </Text>
+	          </div>
+	          <div className="min-h-0 overflow-auto pr-1">
+	            {designLabGroups.groups.map((group) => {
+	              const groupCount = countByGroup.get(group.id) ?? 0;
+	              const expanded = effectiveExpandedGroups.includes(group.id);
+	              return (
+	                <div key={group.id} className="mb-3">
+	                  <button
+	                    type="button"
+	                    onClick={() => toggleGroup(group.id)}
+	                    disabled={Boolean(normalizedQuery)}
+	                    className={`flex w-full items-center justify-between rounded-2xl border px-3 py-2 text-left transition ${
+	                      expanded
+	                        ? 'border-border-default bg-surface-default shadow-sm'
+	                        : 'border-transparent hover:bg-surface-muted'
+	                    } ${normalizedQuery ? 'cursor-default opacity-90' : ''}`}
+	                  >
+	                    <span className="text-sm font-semibold text-text-primary">
+	                      {group.label}
+	                    </span>
+	                    <span className="text-xs font-semibold text-text-secondary">
+	                      {groupCount}
+	                    </span>
+	                  </button>
+
+	                  {expanded ? (
+	                    <div className="mt-2 flex flex-col gap-2">
+	                      {group.subgroups.map((subgroup) => {
+	                        const subgroupItems =
+	                          itemsByGroupAndSubgroup.get(group.id)?.get(subgroup.id) ?? [];
+	                        if (subgroupItems.length === 0) return null;
+	                        return (
+	                          <div key={subgroup.id}>
+	                            <div className="mb-1 flex items-center justify-between px-2">
+	                              <Text as="div" variant="secondary" className="text-xs font-semibold">
+	                                {subgroup.label}
+	                              </Text>
+	                              <Text variant="secondary" className="text-xs">
+	                                {subgroupItems.length}
+	                              </Text>
+	                            </div>
+	                            <div className="flex flex-col gap-1">
+	                              {subgroupItems.map((item) => {
+	                                const active = item.name === selectedItemName;
+	                                const unclassified = Boolean(item.tags?.includes('unclassified'));
+	                                return (
+	                                  <button
+	                                    key={item.name}
+	                                    type="button"
+	                                    onClick={() => handleSelectItem(item)}
+	                                    className={`flex w-full items-start justify-between gap-2 rounded-2xl border px-3 py-2 text-left transition ${
+	                                      active
+	                                        ? 'border-border-default bg-surface-default shadow-sm'
+	                                        : 'border-transparent hover:bg-surface-muted'
+	                                    }`}
+	                                  >
+	                                    <span className="flex flex-col gap-0.5">
+	                                      <span className="text-sm font-semibold text-text-primary">
+	                                        {item.name}
+	                                      </span>
+	                                      <span className="text-[11px] text-text-secondary">
+	                                        {item.kind}
+	                                        {unclassified ? ' • unclassified' : ''}
+	                                      </span>
+	                                    </span>
+	                                  </button>
+	                                );
+	                              })}
+	                            </div>
+	                          </div>
+	                        );
+	                      })}
+	                      {groupCount === 0 ? (
+	                        <Text variant="secondary" className="px-2 text-xs">
+	                          Bu grupta eşleşen öğe yok.
+	                        </Text>
+	                      ) : null}
+	                    </div>
+	                  ) : null}
+	                </div>
+	              );
+	            })}
+	          </div>
+	        </aside>
 
         <section
           data-testid="design-lab-demo"
@@ -429,9 +507,9 @@ export const DesignLabPage: React.FC = () => {
               <Text as="div" className="font-semibold">
                 Demo
               </Text>
-              <Text variant="secondary">
-                Seçili: {selectedItem.label}
-              </Text>
+	              <Text variant="secondary">
+	                Seçili: {selectedItem?.name ?? '—'}
+	              </Text>
             </div>
             <div className="flex items-center gap-2">
               <TabButton
@@ -462,9 +540,9 @@ export const DesignLabPage: React.FC = () => {
             <Text as="div" className="font-semibold">
               Usage
             </Text>
-            <Text variant="secondary">
-              {selectedIndexEntry?.files.length ?? 0} file
-            </Text>
+	            <Text variant="secondary">
+	              {selectedItem?.whereUsed.length ?? 0} file
+	            </Text>
           </div>
           <div className="min-h-0 overflow-auto pr-1">
             <div className="rounded-2xl border border-border-subtle bg-surface-default p-3">
@@ -496,13 +574,13 @@ export const DesignLabPage: React.FC = () => {
               <Text as="div" className="mb-2 font-semibold">
                 Where used
               </Text>
-              {selectedIndexEntry && selectedIndexEntry.files.length > 0 ? (
-                <ul className="space-y-2">
-                  {selectedIndexEntry.files.map((filePath) => (
-                    <li
-                      key={filePath}
-                      className="flex items-start justify-between gap-2 rounded-xl border border-border-subtle bg-surface-muted px-3 py-2"
-                    >
+	              {selectedItem && selectedItem.whereUsed.length > 0 ? (
+	                <ul className="space-y-2">
+	                  {selectedItem.whereUsed.map((filePath) => (
+	                    <li
+	                      key={filePath}
+	                      className="flex items-start justify-between gap-2 rounded-xl border border-border-subtle bg-surface-muted px-3 py-2"
+	                    >
                       <span className="min-w-0 break-all text-xs text-text-secondary">
                         {filePath}
                       </span>

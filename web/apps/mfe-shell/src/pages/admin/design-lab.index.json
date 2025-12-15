@@ -1,25 +1,41 @@
 {
-  "generatedAt": "2025-12-15T21:34:23+03:00",
-  "generatedAtUtc": "2025-12-15T18:34:23+00:00",
-  "components": [
+  "version": 1,
+  "generatedAt": "2025-12-15T23:38:20+03:00",
+  "generatedAtUtc": "2025-12-15T20:38:20+00:00",
+  "source": {
+    "package": "mfe-ui-kit",
+    "index": "packages/ui-kit/src/index.ts",
+    "groups": "apps/mfe-shell/src/pages/admin/design-lab.groups.json",
+    "overrides": "apps/mfe-shell/src/pages/admin/design-lab.overrides.json"
+  },
+  "items": [
     {
       "name": "AgGridServer",
-      "import": "import { AgGridServer } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "component",
+      "importStatement": "import { AgGridServer } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "data-grid",
+      "subgroup": "ag-grid-server",
+      "tags": []
     },
     {
       "name": "Badge",
-      "import": "import { Badge } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { Badge } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
-      ]
+      ],
+      "group": "feedback",
+      "subgroup": "badges",
+      "tags": []
     },
     {
       "name": "Button",
-      "import": "import { Button } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { Button } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
         "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
@@ -27,270 +43,469 @@
         "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
         "web/apps/mfe-shell/src/widgets/app-shell/ui/LoginPopover.ui.tsx",
         "web/apps/mfe-suggestions/src/App.tsx"
-      ]
+      ],
+      "group": "actions",
+      "subgroup": "buttons",
+      "tags": []
     },
     {
       "name": "DetailDrawer",
-      "import": "import { DetailDrawer } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { DetailDrawer } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
         "web/apps/mfe-audit/src/app/components/AuditDetailDrawer.tsx",
         "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx"
-      ]
+      ],
+      "group": "overlays",
+      "subgroup": "drawers",
+      "tags": []
     },
     {
       "name": "Dropdown",
-      "import": "import { Dropdown } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "component",
+      "importStatement": "import { Dropdown } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "dropdown",
+      "tags": []
     },
     {
       "name": "Empty",
-      "import": "import { Empty } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { Empty } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
-      ]
+      ],
+      "group": "empty-states",
+      "subgroup": "empty",
+      "tags": []
     },
     {
       "name": "EntityGridTemplate",
-      "import": "import { EntityGridTemplate } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { EntityGridTemplate } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-      ]
+      ],
+      "group": "data-grid",
+      "subgroup": "entity-grid",
+      "tags": []
     },
     {
       "name": "FilterBar",
-      "import": "import { FilterBar } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "component",
+      "importStatement": "import { FilterBar } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "layout",
+      "subgroup": "filters",
+      "tags": []
     },
     {
       "name": "FormDrawer",
-      "import": "import { FormDrawer } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "component",
+      "importStatement": "import { FormDrawer } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "overlays",
+      "subgroup": "drawers",
+      "tags": []
     },
     {
       "name": "Modal",
-      "import": "import { Modal } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { Modal } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-      ]
+      ],
+      "group": "overlays",
+      "subgroup": "modal",
+      "tags": []
     },
     {
       "name": "PageLayout",
-      "import": "import { PageLayout } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { PageLayout } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
         "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
         "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
-      ]
+      ],
+      "group": "layout",
+      "subgroup": "page",
+      "tags": []
     },
     {
       "name": "ReportFilterPanel",
-      "import": "import { ReportFilterPanel } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { ReportFilterPanel } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx"
-      ]
+      ],
+      "group": "layout",
+      "subgroup": "filters",
+      "tags": []
     },
     {
       "name": "Select",
-      "import": "import { Select } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { Select } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-      ]
+      ],
+      "group": "forms",
+      "subgroup": "select",
+      "tags": []
     },
     {
       "name": "THEME_APPEARANCE_OPTIONS",
-      "import": "import { THEME_APPEARANCE_OPTIONS } from 'mfe-ui-kit';",
-      "files": []
-    },
-    {
-      "name": "THEME_DENSITY_OPTIONS",
-      "import": "import { THEME_DENSITY_OPTIONS } from 'mfe-ui-kit';",
-      "files": []
-    },
-    {
-      "name": "THEME_ELEVATION_OPTIONS",
-      "import": "import { THEME_ELEVATION_OPTIONS } from 'mfe-ui-kit';",
-      "files": []
-    },
-    {
-      "name": "THEME_MOTION_OPTIONS",
-      "import": "import { THEME_MOTION_OPTIONS } from 'mfe-ui-kit';",
-      "files": []
-    },
-    {
-      "name": "THEME_RADIUS_OPTIONS",
-      "import": "import { THEME_RADIUS_OPTIONS } from 'mfe-ui-kit';",
-      "files": []
-    },
-    {
-      "name": "Tag",
-      "import": "import { Tag } from 'mfe-ui-kit';",
-      "files": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+      "kind": "const",
+      "importStatement": "import { THEME_APPEARANCE_OPTIONS } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "options",
+      "tags": [
+        "advanced"
       ]
     },
     {
+      "name": "THEME_DENSITY_OPTIONS",
+      "kind": "const",
+      "importStatement": "import { THEME_DENSITY_OPTIONS } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "options",
+      "tags": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "THEME_ELEVATION_OPTIONS",
+      "kind": "const",
+      "importStatement": "import { THEME_ELEVATION_OPTIONS } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "options",
+      "tags": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "THEME_MOTION_OPTIONS",
+      "kind": "const",
+      "importStatement": "import { THEME_MOTION_OPTIONS } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "options",
+      "tags": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "THEME_RADIUS_OPTIONS",
+      "kind": "const",
+      "importStatement": "import { THEME_RADIUS_OPTIONS } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "options",
+      "tags": [
+        "advanced"
+      ]
+    },
+    {
+      "name": "Tag",
+      "kind": "component",
+      "importStatement": "import { Tag } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+      ],
+      "group": "feedback",
+      "subgroup": "tags",
+      "tags": []
+    },
+    {
       "name": "Text",
-      "import": "import { Text } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { Text } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
-      ]
+      ],
+      "group": "content",
+      "subgroup": "text",
+      "tags": []
     },
     {
       "name": "ThemePreviewCard",
-      "import": "import { ThemePreviewCard } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "component",
+      "importStatement": "import { ThemePreviewCard } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
-      ]
+      ],
+      "group": "theme",
+      "subgroup": "preview",
+      "tags": []
     },
     {
       "name": "Tooltip",
-      "import": "import { Tooltip } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "component",
+      "importStatement": "import { Tooltip } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "feedback",
+      "subgroup": "tooltips",
+      "tags": []
     },
     {
       "name": "buildAuthHeaders",
-      "import": "import { buildAuthHeaders } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { buildAuthHeaders } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "auth",
+      "tags": []
     },
     {
       "name": "buildEntityGridQueryParams",
-      "import": "import { buildEntityGridQueryParams } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { buildEntityGridQueryParams } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "data-grid",
+      "subgroup": "entity-grid",
+      "tags": []
     },
     {
       "name": "getResolvedToken",
-      "import": "import { getResolvedToken } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { getResolvedToken } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "auth",
+      "tags": []
     },
     {
       "name": "getThemeAxes",
-      "import": "import { getThemeAxes } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "function",
+      "importStatement": "import { getThemeAxes } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": [
+        "advanced"
       ]
     },
     {
       "name": "getThemeContract",
-      "import": "import { getThemeContract } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "function",
+      "importStatement": "import { getThemeContract } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
         "web/apps/mfe-shell/src/features/theme/theme-matrix.constants.ts"
-      ]
+      ],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": []
     },
     {
       "name": "registerTokenResolver",
-      "import": "import { registerTokenResolver } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { registerTokenResolver } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "auth",
+      "tags": []
     },
     {
       "name": "resetTokenResolver",
-      "import": "import { resetTokenResolver } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { resetTokenResolver } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "auth",
+      "tags": []
     },
     {
       "name": "resolveAccessState",
-      "import": "import { resolveAccessState } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { resolveAccessState } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "access",
+      "tags": []
     },
     {
       "name": "resolveThemeModeKey",
-      "import": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "function",
+      "importStatement": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
-      ]
+      ],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": []
     },
     {
       "name": "setAppearance",
-      "import": "import { setAppearance } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { setAppearance } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": [
+        "advanced"
+      ]
     },
     {
       "name": "setDensity",
-      "import": "import { setDensity } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { setDensity } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": [
+        "advanced"
+      ]
     },
     {
       "name": "setElevation",
-      "import": "import { setElevation } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { setElevation } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": [
+        "advanced"
+      ]
     },
     {
       "name": "setMotion",
-      "import": "import { setMotion } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { setMotion } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": [
+        "advanced"
+      ]
     },
     {
       "name": "setOverlayIntensity",
-      "import": "import { setOverlayIntensity } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "function",
+      "importStatement": "import { setOverlayIntensity } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ]
+      ],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": []
     },
     {
       "name": "setOverlayOpacity",
-      "import": "import { setOverlayOpacity } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { setOverlayOpacity } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": []
     },
     {
       "name": "setRadius",
-      "import": "import { setRadius } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { setRadius } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": [
+        "advanced"
+      ]
     },
     {
       "name": "setSurfaceTone",
-      "import": "import { setSurfaceTone } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { setSurfaceTone } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": [
+        "advanced"
+      ]
     },
     {
       "name": "setTableSurfaceTone",
-      "import": "import { setTableSurfaceTone } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "function",
+      "importStatement": "import { setTableSurfaceTone } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ]
+      ],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": []
     },
     {
       "name": "shouldBlockInteraction",
-      "import": "import { shouldBlockInteraction } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { shouldBlockInteraction } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "access",
+      "tags": []
     },
     {
       "name": "subscribeThemeAxes",
-      "import": "import { subscribeThemeAxes } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "function",
+      "importStatement": "import { subscribeThemeAxes } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ]
+      ],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": []
     },
     {
       "name": "toggleVariantDefault",
-      "import": "import { toggleVariantDefault } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { toggleVariantDefault } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "data-grid",
+      "subgroup": "variants",
+      "tags": []
     },
     {
       "name": "updateThemeAxes",
-      "import": "import { updateThemeAxes } from 'mfe-ui-kit';",
-      "files": [
+      "kind": "function",
+      "importStatement": "import { updateThemeAxes } from 'mfe-ui-kit';",
+      "whereUsed": [
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-      ]
+      ],
+      "group": "theme",
+      "subgroup": "runtime",
+      "tags": []
     },
     {
       "name": "useGridVariants",
-      "import": "import { useGridVariants } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "hook",
+      "importStatement": "import { useGridVariants } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "data-grid",
+      "subgroup": "variants",
+      "tags": []
     },
     {
       "name": "withAccessGuard",
-      "import": "import { withAccessGuard } from 'mfe-ui-kit';",
-      "files": []
+      "kind": "function",
+      "importStatement": "import { withAccessGuard } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "access",
+      "tags": []
     }
   ]
 }
