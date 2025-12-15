@@ -19,7 +19,7 @@ import { store } from './store/store';
 import { useAppDispatch, useAppSelector } from './store/store.hooks';
 import { ThemeProvider, useThemeContext } from './theme/theme-context.provider';
 import UniversalColorPicker from './theme/components/UniversalColorPicker';
-import { ThemePreviewCard, type ThemeAppearance } from 'mfe-ui-kit';
+import { ThemePreviewCard, resolveThemeModeKey, type ThemeAppearance } from 'mfe-ui-kit';
 import { parseAnyColor, rgbaToString, type RgbaColor } from './theme/color-utils';
 import { logout, setKeycloakSession, setAuthInitialized, decodeJwtPayload } from '../features/auth/model/auth.slice';
 import { fetchProducts } from '../features/products/model/products.slice';
@@ -28,6 +28,7 @@ import { RegisterPage } from '../pages/register';
 import { UnauthorizedPage } from '../pages/unauthorized';
 import ThemeMatrixPage from '../pages/runtime/ThemeMatrixPage';
 import ThemeAdminPage from '../pages/admin/ThemeAdminPage';
+import DesignLabPage from '../pages/admin/DesignLabPage';
 import { ProtectedRoute } from '../widgets/app-shell/ui/ProtectedRoute.ui';
 import LoginPopover from '../widgets/app-shell/ui/LoginPopover.ui';
 import AppLauncher from '../widgets/app-shell/ui/AppLauncher.ui';
@@ -493,6 +494,13 @@ const ThemeRuntimePanelButton: React.FC = () => {
   const userThemeCount = userThemes.length;
   const isUserLimitReached = userThemeCount >= userThemeLimit;
   const [pendingGlobalThemeId, setPendingGlobalThemeId] = useState<string | null>(null);
+  const overlayStyle = useMemo(
+    () => ({
+      backgroundColor: `color-mix(in srgb, var(--surface-overlay-bg) ${axes.overlayIntensity}%, transparent)`,
+      opacity: axes.overlayOpacity / 100,
+    }),
+    [axes.overlayIntensity, axes.overlayOpacity],
+  );
   const paletteGlobalThemes = useMemo(() => {
     const preferredAccents = ['light', 'violet', 'emerald', 'sunset', 'ocean', 'graphite'];
     const normalize = (value: unknown) => String(value ?? '').trim().toLowerCase();
@@ -536,11 +544,7 @@ const ThemeRuntimePanelButton: React.FC = () => {
   }, [globalThemes]);
 
   const resolveThemeAttrForPreview = useCallback((appearanceRaw: unknown, densityRaw: unknown) => {
-    const appearance = String(appearanceRaw ?? '').toLowerCase();
-    const density = String(densityRaw ?? '').toLowerCase();
-    if (appearance === 'high-contrast') return 'serban-hc';
-    if (appearance === 'dark') return 'serban-dark';
-    return density === 'compact' ? 'serban-compact' : 'serban-light';
+    return resolveThemeModeKey({ appearance: appearanceRaw, density: densityRaw });
   }, []);
 
   useEffect(() => {
@@ -1048,12 +1052,17 @@ const ThemeRuntimePanelButton: React.FC = () => {
         {userThemeEditorOpen
           ? createPortal(
               <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8"
+                className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8"
                 data-testid="user-theme-editor-overlay"
                 onClick={() => setUserThemeEditorOpen(false)}
               >
                 <div
-                  className="w-full max-w-3xl"
+                  className="absolute inset-0 bg-surface-overlay"
+                  style={overlayStyle}
+                  aria-hidden="true"
+                />
+                <div
+                  className="relative w-full max-w-3xl"
                   data-testid="user-theme-editor"
                   onClick={(event) => event.stopPropagation()}
                 >
@@ -1144,10 +1153,11 @@ const ThemeRuntimePanelButton: React.FC = () => {
         {activeUserThemeColorPicker
           ? createPortal(
               <div
-                className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-4 py-8"
+                className="fixed inset-0 z-[60] flex items-center justify-center px-4 py-8"
                 onClick={() => setActiveUserThemeColorPicker(null)}
               >
-                <div className="w-full max-w-3xl" onClick={(event) => event.stopPropagation()}>
+                <div className="absolute inset-0 bg-surface-overlay" style={overlayStyle} aria-hidden="true" />
+                <div className="relative w-full max-w-3xl" onClick={(event) => event.stopPropagation()}>
                   <div className="mb-2 flex items-center justify-between rounded-2xl border border-border-subtle bg-surface-panel px-4 py-3 shadow-sm">
                     <div className="flex flex-col gap-0.5">
                       <span className="text-xs font-semibold text-text-primary">
@@ -1451,8 +1461,8 @@ const Header = () => {
                       style={{
                         backgroundColor: isActive
                           ? 'var(--accent-primary)'
-                          : 'color-mix(in srgb, var(--surface-panel-bg, transparent) 70%, transparent)',
-                        color: isActive ? 'var(--accent-focus, var(--text-inverse))' : 'var(--text-secondary)',
+                          : 'color-mix(in srgb, var(--surface-panel-bg) 70%, transparent)',
+                        color: isActive ? 'var(--action-primary-text)' : 'var(--text-secondary)',
                         boxShadow: isActive ? 'var(--elevation-surface)' : 'none',
                         border: isActive ? '1px solid var(--accent-primary-hover)' : '1px solid var(--border-subtle)',
                         flexShrink: 0,
@@ -1510,8 +1520,8 @@ const Header = () => {
                                 style={{
                                   backgroundColor: isActive
                                     ? 'var(--accent-primary)'
-                                    : 'color-mix(in srgb, var(--surface-panel-bg, transparent) 70%, transparent)',
-                                  color: isActive ? 'var(--accent-focus, var(--text-inverse))' : 'var(--text-secondary)',
+                                    : 'color-mix(in srgb, var(--surface-panel-bg) 70%, transparent)',
+                                  color: isActive ? 'var(--action-primary-text)' : 'var(--text-secondary)',
                                   boxShadow: isActive ? 'var(--elevation-surface)' : 'none',
                                   border: isActive
                                     ? '1px solid var(--accent-primary-hover)'
@@ -1597,15 +1607,15 @@ const Header = () => {
             <span className="rounded-full border border-border-subtle bg-surface-panel px-3 py-1 text-xs font-semibold text-text-secondary">
               PermitAll modunda giriş gerekmiyor.
             </span>
-          ) : (
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 rounded-full bg-accent-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-accent-500"
-              onClick={() => {
-                setLoginOpen(false);
-                keycloak.login({ redirectUri: window.location.href }).catch(() => {
-                  setLoginOpen(true);
-                });
+	          ) : (
+	            <button
+	              type="button"
+	              className="inline-flex items-center gap-2 rounded-full border border-action-primary-border bg-action-primary px-4 py-2 text-xs font-semibold text-action-primary-text shadow-sm hover:opacity-90"
+	              onClick={() => {
+	                setLoginOpen(false);
+	                keycloak.login({ redirectUri: window.location.href }).catch(() => {
+	                  setLoginOpen(true);
+	                });
               }}
             >
               <span aria-hidden>🔑</span>
@@ -1751,6 +1761,14 @@ const AppLayout = () => {
                   element={(
                     <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
                       <ThemeAdminPage />
+                    </ProtectedRoute>
+                  )}
+                />
+                <Route
+                  path="/admin/design-lab"
+                  element={(
+                    <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
+                      <DesignLabPage />
                     </ProtectedRoute>
                   )}
                 />
