@@ -33,6 +33,7 @@ import { ProtectedRoute } from '../widgets/app-shell/ui/ProtectedRoute.ui';
 import LoginPopover from '../widgets/app-shell/ui/LoginPopover.ui';
 import AppLauncher from '../widgets/app-shell/ui/AppLauncher.ui';
 import NotificationCenter from '../widgets/app-shell/ui/NotificationCenter.ui';
+import { Sidebar } from '../widgets/app-shell/ui/Sidebar.ui';
 import { useAuthorization } from '../features/auth/model/use-authorization.model';
 import { PERMISSIONS } from '../features/auth/lib/permissions.constants';
 import {
@@ -1659,6 +1660,8 @@ const AppLayout = () => {
   const colors = currentTheme.colors;
   const authState = useAppSelector((state) => state.auth);
   const { token, expiresAt } = authState;
+  const permitAllMode = isPermitAllMode();
+  const showSidebar = Boolean(token) || permitAllMode;
   const dispatch = useAppDispatch();
   const { t } = useShellCommonI18n();
   useShellShortcuts();
@@ -1712,7 +1715,9 @@ const AppLayout = () => {
         className="flex min-h-screen flex-col"
       >
         <Header />
-        <main className="flex-1 px-8 py-8">
+        <div className="flex min-h-0 flex-1">
+          {showSidebar ? <Sidebar /> : null}
+          <main className="min-w-0 flex-1 px-8 py-8">
           <div className="flex w-full flex-col gap-6">
             <Suspense fallback={<div>Yükleniyor...</div>}>
               <Routes>
@@ -1781,13 +1786,14 @@ const AppLayout = () => {
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />
                 <Route
                   path="/"
-                  element={<Navigate to="/login" replace />}
+                  element={<Navigate to={(token || permitAllMode) ? '/suggestions' : '/login'} replace />}
                 />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </Suspense>
           </div>
-        </main>
+          </main>
+        </div>
       </div>
     </BrowserRouter>
   );

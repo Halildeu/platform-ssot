@@ -34,6 +34,17 @@ scenarios:
       - goto: /runtime/theme-matrix
       - expectVisible: '[data-testid="runtime-theme-matrix-root"]'
 
+  - name: sidebar_smoke
+    level: 1
+    auth_required: true
+    steps:
+      - goto: /
+      - expectVisible: '[data-testid="sidebar-root"]'
+      - expectVisible: '[data-testid="nav-home"]'
+      - expectVisible: '[data-testid="nav-folders"]'
+      - click: '[data-testid="nav-folders"]'
+      - expectVisible: '[data-testid="nav-folders-recent"]'
+
   - name: theme_registry_page
     level: 1
     auth_required: true
