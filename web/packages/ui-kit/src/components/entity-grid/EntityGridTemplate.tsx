@@ -53,7 +53,7 @@ const toolbarSecondaryButtonClass =
 const variantButtonClass =
   'inline-flex items-center gap-2 rounded-md border border-border-subtle bg-surface-panel px-3 py-1.5 text-xs font-semibold text-text-secondary hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-1 disabled:opacity-50';
 const variantPrimaryButtonClass =
-  'inline-flex items-center gap-2 rounded-md bg-[var(--accent-primary)] px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-[var(--accent-primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-1 disabled:opacity-60';
+  'inline-flex items-center gap-2 rounded-md bg-[var(--accent-primary)] px-3 py-1.5 text-xs font-semibold text-text-inverse shadow-sm hover:bg-[var(--accent-primary-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-1 disabled:opacity-60';
 const variantIconButtonClass =
   'inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle bg-surface-panel text-text-secondary hover:bg-surface-muted hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-1';
 const variantTagClass =
@@ -486,7 +486,6 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
     ],
   );
 
-  const activeIconColor = '#1677ff';
   const exportBaseName = exportConfig?.fileBaseName ?? 'veriler';
   const exportSheetName = exportConfig?.sheetName ?? 'Veriler';
   const exportProcessCellCallback = exportConfig?.processCellCallback;
@@ -529,33 +528,88 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
     [defaultColDef],
   );
 
+  const enableAdvancedFilter = gridOptions?.enableAdvancedFilter ?? true;
+
   const defaultSideBar = useMemo<SideBarDef>(
-    () => ({
-      toolPanels: [
-        {
-          id: 'filters',
-          labelDefault: 'Filtreler',
-          labelKey: 'filters',
-          iconKey: 'filter',
-          toolPanel: 'agFiltersToolPanel',
-        },
-        {
-          id: 'columns',
-          labelDefault: 'Kolonlar',
-          labelKey: 'columns',
-          iconKey: 'columns',
-          toolPanel: 'agColumnsToolPanel',
-          minWidth: 200,
-          maxWidth: 400,
-        },
-      ],
-      defaultToolPanel: 'filters',
-      position: 'right',
-    }),
-    [],
+    () => {
+      const columnsPanel = {
+        id: 'columns',
+        labelDefault: 'Kolonlar',
+        labelKey: 'columns',
+        iconKey: 'columns',
+        toolPanel: 'agColumnsToolPanel',
+        minWidth: 200,
+        maxWidth: 400,
+      } as const;
+
+      if (enableAdvancedFilter) {
+        return {
+          toolPanels: [columnsPanel],
+          defaultToolPanel: 'columns',
+          position: 'right',
+        };
+      }
+
+      return {
+        toolPanels: [
+          {
+            id: 'filters',
+            labelDefault: 'Filtreler',
+            labelKey: 'filters',
+            iconKey: 'filter',
+            toolPanel: 'agFiltersToolPanel',
+          },
+          columnsPanel,
+        ],
+        defaultToolPanel: 'filters',
+        position: 'right',
+      };
+    },
+    [enableAdvancedFilter],
   );
 
-  const resolvedSideBar = sideBar ?? defaultSideBar;
+  const resolvedSideBar = useMemo<SideBarDef>(() => {
+    const base = sideBar ?? defaultSideBar;
+
+    if (!enableAdvancedFilter || !base.toolPanels || base.toolPanels.length === 0) {
+      return base;
+    }
+
+    const filteredPanels = base.toolPanels.filter((panel) => {
+      if (typeof panel === 'string') {
+        return panel !== 'filters';
+      }
+      return panel.toolPanel !== 'agFiltersToolPanel' && panel.id !== 'filters';
+    });
+
+    if (filteredPanels.length === base.toolPanels.length) {
+      return base;
+    }
+
+    if (filteredPanels.length === 0) {
+      return defaultSideBar;
+    }
+
+    const defaultToolPanel = base.defaultToolPanel;
+    const hasDefaultToolPanel = filteredPanels.some((panel) => {
+      if (typeof panel === 'string') {
+        return panel === defaultToolPanel;
+      }
+      return panel.id === defaultToolPanel;
+    });
+
+    const nextDefaultToolPanel = hasDefaultToolPanel
+      ? defaultToolPanel
+      : typeof filteredPanels[0] === 'string'
+        ? filteredPanels[0]
+        : filteredPanels[0].id;
+
+    return {
+      ...base,
+      toolPanels: filteredPanels,
+      defaultToolPanel: nextDefaultToolPanel,
+    };
+  }, [sideBar, defaultSideBar, enableAdvancedFilter]);
 
   const defaultLocaleText = useMemo(
     () => ({
@@ -640,18 +694,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
     if (excelStyles) {
       return excelStyles;
     }
-    return [
-      {
-        id: 'header',
-        font: { color: '#FFFFFF', bold: true },
-        interior: { color: '#305496', pattern: 'Solid' },
-        alignment: { horizontal: 'Center' },
-      },
-      {
-        id: 'oddRow',
-        interior: { color: '#F7F9FC', pattern: 'Solid' },
-      },
-    ];
+    return undefined;
   }, [excelStyles]);
 
   const resolvedGetRowId = useMemo<GridOptions<RowData>['getRowId']>(() => {
@@ -687,7 +730,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
     const base: GridOptions<RowData> = {
       // Theming API (v33+): theme nesnesi verilmelidir (string yerine)
       theme: resolveThemeObject(gridTheme),
-      enableAdvancedFilter: true,
+      enableAdvancedFilter,
       defaultExcelExportParams: {
         sheetName: exportSheetName,
         suppressTextAsCDATA: true,
@@ -714,7 +757,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
       merged.getRowId = resolvedGetRowId;
     }
     return merged;
-  }, [gridOptions, gridTheme, exportSheetName, resolvedGetRowId]);
+  }, [gridOptions, gridTheme, exportSheetName, resolvedGetRowId, enableAdvancedFilter]);
 
   const themeClassName = useMemo(() => `ag-theme-${gridTheme}`, [gridTheme]);
 
@@ -728,12 +771,6 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
     if (!gridApi) return;
     gridApi.setGridOption?.('theme', resolveThemeObject(gridTheme));
   }, [gridApi, gridTheme]);
-
-  // Dil değiştikçe AG Grid localeText değerini güncelle
-  useEffect(() => {
-    if (!gridApi) return;
-    gridApi.setGridOption?.('localeText', resolvedLocaleText);
-  }, [gridApi, resolvedLocaleText]);
 
   const resolvedPageSizeOptions = useMemo(
     () =>
@@ -1945,7 +1982,6 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
       </div>
     );
   }, [
-    activeIconColor,
     handleCancelNewVariant,
     handleCreateNewVariant,
     handleStartNewVariant,
@@ -2147,9 +2183,9 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
-              background: 'var(--table-surface-bg, var(--surface-default, #fff))',
-              border: '1px solid var(--table-surface-border, var(--surface-border, transparent))',
-              borderRadius: 'var(--ag-card-radius, 8px)',
+              background: 'var(--table-surface-bg)',
+              border: '1px solid var(--table-surface-border)',
+              borderRadius: 'var(--ag-card-radius)',
             }}
           >
             <div style={{ flex: 1, minHeight: 0 }}>
@@ -2185,16 +2221,16 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                   alignItems: 'center',
                   justifyContent: 'flex-start',
                   flexWrap: 'wrap',
-                  gap: 'calc(var(--ag-grid-size, 8px) * 2)',
-                  padding: '0 calc(var(--ag-grid-size, 8px) * 2)',
-                  minHeight: 'max(calc(var(--ag-grid-size, 8px) * 6), var(--ag-row-height, 32px))',
-                  borderTop: '1px solid var(--ag-row-border-color, var(--ag-border-color))',
+                  gap: 'calc(var(--ag-grid-size) * 2)',
+                  padding: '0 calc(var(--ag-grid-size) * 2)',
+                  minHeight: 'max(calc(var(--ag-grid-size) * 6), var(--ag-row-height))',
+                  borderTop: '1px solid var(--ag-row-border-color)',
                   borderLeft: '1px solid var(--ag-border-color)',
                   borderRight: '1px solid var(--ag-border-color)',
                   borderBottom: '1px solid var(--ag-border-color)',
-                  background: 'var(--ag-background-color, #fff)',
-                  borderBottomLeftRadius: 'var(--ag-card-radius, 4px)',
-                  borderBottomRightRadius: 'var(--ag-card-radius, 4px)',
+                  background: 'var(--ag-background-color)',
+                  borderBottomLeftRadius: 'var(--ag-card-radius)',
+                  borderBottomRightRadius: 'var(--ag-card-radius)',
                   marginTop: '-1px',
                   boxSizing: 'border-box',
                 }}
@@ -2204,7 +2240,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                     htmlFor={resolvedPageSizeSelectId}
                     style={{
                       fontWeight: 500,
-                      color: 'var(--ag-foreground-color, rgba(0, 0, 0, 0.85))',
+                      color: 'var(--ag-foreground-color)',
                     }}
                   >
                     Sayfa boyutu:
@@ -2215,13 +2251,13 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                     onChange={handlePageSizeChange}
                     style={{
                       minWidth: 80,
-                      height: 'var(--ag-row-height, 32px)',
-                      borderRadius: 'var(--ag-border-radius, 4px)',
+                      height: 'var(--ag-row-height)',
+                      borderRadius: 'var(--ag-border-radius)',
                       border: '1px solid var(--ag-border-color)',
                       padding: '0 8px',
-                      background: 'var(--ag-input-background-color, #fff)',
-                      color: 'var(--ag-foreground-color, rgba(0, 0, 0, 0.85))',
-                      fontSize: 'var(--ag-font-size, 14px)',
+                      background: 'var(--ag-input-background-color)',
+                      color: 'var(--ag-foreground-color)',
+                      fontSize: 'var(--ag-font-size)',
                       fontFamily: 'inherit',
                       cursor: 'pointer',
                     }}
@@ -2239,14 +2275,14 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                     alignItems: 'center',
                     gap: 4,
                     justifyContent: 'flex-start',
-                    color: 'var(--ag-secondary-foreground-color, rgba(0, 0, 0, 0.55))',
+                    color: 'var(--ag-secondary-foreground-color)',
                   }}
                 >
-                  <span style={{ fontWeight: 500, color: 'var(--ag-foreground-color, rgba(0, 0, 0, 0.85))' }}>
+                  <span style={{ fontWeight: 500, color: 'var(--ag-foreground-color)' }}>
                     {formatNumber(recordStart)}
                   </span>
                   <span>-</span>
-                  <span style={{ fontWeight: 500, color: 'var(--ag-foreground-color, rgba(0, 0, 0, 0.85))' }}>
+                  <span style={{ fontWeight: 500, color: 'var(--ag-foreground-color)' }}>
                     {formatNumber(recordEnd)}
                   </span>
                   <span>
@@ -2268,7 +2304,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                       width: 28,
                       height: 28,
                       border: '1px solid var(--ag-border-color)',
-                      borderRadius: 'var(--ag-border-radius, 4px)',
+                      borderRadius: 'var(--ag-border-radius)',
                       background: 'var(--ag-background-color)',
                       cursor: canGoPrevious ? 'pointer' : 'not-allowed',
                       opacity: canGoPrevious ? 1 : 0.45,
@@ -2291,7 +2327,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                       width: 28,
                       height: 28,
                       border: '1px solid var(--ag-border-color)',
-                      borderRadius: 'var(--ag-border-radius, 4px)',
+                      borderRadius: 'var(--ag-border-radius)',
                       background: 'var(--ag-background-color)',
                       cursor: canGoPrevious ? 'pointer' : 'not-allowed',
                       opacity: canGoPrevious ? 1 : 0.45,
@@ -2300,7 +2336,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                   >
                     <span className="ag-icon ag-icon-previous" />
                   </button>
-                  <span style={{ fontWeight: 500, color: 'var(--ag-foreground-color, rgba(0, 0, 0, 0.85))' }}>
+                  <span style={{ fontWeight: 500, color: 'var(--ag-foreground-color)' }}>
                     Sayfa {formatNumber(hasData ? currentPage : 0)} / {formatNumber(hasData ? totalPages : 0)}
                   </span>
                   <button
@@ -2317,7 +2353,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                       width: 28,
                       height: 28,
                       border: '1px solid var(--ag-border-color)',
-                      borderRadius: 'var(--ag-border-radius, 4px)',
+                      borderRadius: 'var(--ag-border-radius)',
                       background: 'var(--ag-background-color)',
                       cursor: canGoNext ? 'pointer' : 'not-allowed',
                       opacity: canGoNext ? 1 : 0.45,
@@ -2340,8 +2376,8 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                       width: 28,
                       height: 28,
                       border: '1px solid var(--ag-border-color)',
-                      borderRadius: 'var(--ag-border-radius, 4px)',
-                      background: 'var(--ag-background-color, #fff)',
+                      borderRadius: 'var(--ag-border-radius)',
+                      background: 'var(--ag-background-color)',
                       cursor: canGoNext ? 'pointer' : 'not-allowed',
                       opacity: canGoNext ? 1 : 0.45,
                       transition: 'background 0.2s, opacity 0.2s',
@@ -2361,8 +2397,8 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
             className="absolute inset-0 bg-surface-overlay"
             style={{
               backgroundColor:
-                'color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity, 10) * 1%), transparent)',
-              opacity: 'var(--overlay-opacity, 0.9)',
+                'color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity) * 1%), transparent)',
+              opacity: 'var(--overlay-opacity)',
             }}
             aria-label="Varyant yöneticisini kapat"
             onClick={handleCloseVariantManager}
