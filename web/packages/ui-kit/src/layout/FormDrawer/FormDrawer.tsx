@@ -54,8 +54,8 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
         className="absolute inset-0 bg-surface-overlay"
         style={{
           backgroundColor:
-            'color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity, 10) * 1%), transparent)',
-          opacity: 'var(--overlay-opacity, 0.9)',
+            'color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity) * 1%), transparent)',
+          opacity: 'var(--overlay-opacity)',
         }}
         aria-hidden="true"
         onClick={onClose}
@@ -65,7 +65,7 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
           className="flex h-full w-full max-w-full flex-col bg-surface"
           style={{
             maxWidth: panelWidth,
-            borderRadius: 'var(--radius-surface, 12px)',
+            borderRadius: 'var(--radius-surface)',
             overflow: 'hidden',
             boxShadow: 'var(--elevation-overlay)',
           }}

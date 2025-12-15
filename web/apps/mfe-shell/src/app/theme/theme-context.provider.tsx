@@ -16,8 +16,10 @@ import {
   setTableSurfaceTone,
   setOverlayIntensity,
   type ThemeSurfaceTone,
+  getThemeContract,
+  resolveThemeModeKey,
 } from 'mfe-ui-kit';
-import { clampRgba, parseAnyColor, rgbaToString, type RgbaColor } from './color-utils';
+import { clampRgba, parseAnyColor, type RgbaColor } from './color-utils';
 import { useAppSelector } from '../store/store.hooks';
 import { isPermitAllMode } from '../auth/auth-config';
 
@@ -100,7 +102,7 @@ type ThemeRegistryEntry = {
 };
 
 const tokens = figmaTokens as FigmaTokenTree;
-const SURFACE_COLOR_STORAGE_KEY = 'mfe.surfaceColor';
+const themeContract = getThemeContract();
 const RESOLVED_THEME_CACHE_KEY_PREFIX = 'mfe.theme.resolved.v1';
 const RESOLVED_THEME_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -149,12 +151,12 @@ const decodeJwtPayload = (token: string): Record<string, unknown> | null => {
   }
 };
 
-const resolveResolvedThemeCacheKey = (): string | null => {
-  const token = resolveAuthToken();
-  if (!token) {
+const resolveResolvedThemeCacheKey = (token?: string | null): string | null => {
+  const resolvedToken = token ?? resolveAuthToken();
+  if (!resolvedToken) {
     return null;
   }
-  const payload = decodeJwtPayload(token);
+  const payload = decodeJwtPayload(resolvedToken);
   const sub = payload?.sub;
   const userKey = typeof sub === 'string' || typeof sub === 'number' ? String(sub) : null;
   if (!userKey) {
@@ -203,11 +205,9 @@ const writeResolvedThemeCache = (storageKey: string, entry: ResolvedThemeCacheEn
 const paletteTokens = tokens.semantic?.theme?.palette ?? {};
 const accentTokens = tokens.semantic?.theme?.accent ?? {};
 const surfaceToneTokens = tokens.semantic?.color?.surface?.tones ?? {};
-const appearanceModes = tokens.semantic?.color?.surface?.default?.bg?.modes ?? {};
-const appearanceModeKeys = Object.keys(appearanceModes);
 const paletteKeys = Object.keys(paletteTokens) as ThemeKey[];
-const defaultAppearanceMode = appearanceModeKeys[0] ?? 'serban-light';
-const hasHighContrastAppearance = Boolean(appearanceModes['serban-hc']);
+const defaultAppearanceMode = themeContract.defaultMode;
+const hasHighContrastAppearance = Boolean(themeContract.aliases?.appearance?.['high-contrast']);
 const fallbackPalette = paletteTokens.light ?? paletteTokens.dark ?? (paletteKeys[0] ? paletteTokens[paletteKeys[0]] : {});
 const surfaceToneMeta = tokens.meta?.surfaceTone ?? {};
 const surfaceToneOptions =
@@ -341,13 +341,16 @@ const buildThemeConfig = (key: ThemeKey, palette: Record<string, TokenValue> | u
 
 const baseThemesFromTokens: ThemeConfig[] = paletteKeys.map((key) => buildThemeConfig(key, paletteTokens[key]));
 
-const buildHighContrastThemeConfig = (): ThemeConfig => {
-  const modeKey = hasHighContrastAppearance ? 'serban-hc' : defaultAppearanceMode;
-  const bg = resolveSemanticModeValue(['semantic', 'color', 'surface', 'default', 'bg'], modeKey) || '#000000';
-  const text = resolveSemanticModeValue(['semantic', 'color', 'text', 'primary'], modeKey) || '#FFFFFF';
-  const accent = resolveSemanticModeValue(['semantic', 'color', 'action', 'primary', 'bg'], modeKey)
-    || resolvePaletteValue(fallbackPalette, 'colorPrimary')
-    || '#1677ff';
+const buildHighContrastThemeConfig = (): ThemeConfig | null => {
+  const modeKey = resolveThemeModeKey({ appearance: 'high-contrast', density: 'comfortable' }) || defaultAppearanceMode;
+  const bg = resolveSemanticModeValue(['semantic', 'color', 'surface', 'default', 'bg'], modeKey);
+  const text = resolveSemanticModeValue(['semantic', 'color', 'text', 'primary'], modeKey);
+  const accent = resolveSemanticModeValue(['semantic', 'color', 'action', 'primary', 'bg'], modeKey);
+
+  if (!bg || !text || !accent) {
+    return null;
+  }
+
   return {
     key: 'high-contrast',
     label: toTitleCase('high-contrast'),
@@ -400,6 +403,7 @@ export type ThemeContextValue = {
   setThemeKey: (key: ThemeKey) => void;
   currentThemeId: string | null;
   setThemeId: (themeId: string | null) => Promise<void>;
+  refreshResolvedTheme: (options?: { force?: boolean }) => Promise<void>;
   cycleTheme: () => void;
   options: ThemeConfig[];
   currentTheme: ThemeRuntimeConfig;
@@ -438,15 +442,19 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
   const [surfaceToneSelection, setSurfaceToneSelection] = useState<string | null>(initialAxes.surfaceTone ?? null);
   const [currentThemeId, setCurrentThemeId] = useState<string | null>(null);
   const [registryByKey, setRegistryByKey] = useState<Record<string, string[]>>({});
+  const mountedRef = useRef(true);
   const appliedRegistryVarsRef = useRef<Set<string>>(new Set());
   const lastResolvedTokensRef = useRef<Record<string, string>>({});
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
   useEffect(() => {
     surfaceColorRef.current = surfaceColor;
   }, [surfaceColor]);
   const currentThemeAttr = useMemo(() => {
-    if (axes.appearance === 'high-contrast') return 'serban-hc';
-    if (axes.appearance === 'dark') return 'serban-dark';
-    return axes.density === 'compact' ? 'serban-compact' : 'serban-light';
+    return resolveThemeModeKey(axes);
   }, [axes.appearance, axes.density]);
   const surfaceToneSwatches: SurfaceToneOption[] = useMemo(() => {
     return surfaceToneOptions.map((opt) => {
@@ -483,32 +491,6 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     return [{ id: 'all', label: undefined, tones: surfaceToneSwatches }];
   }, [surfaceToneGroups, surfaceToneSwatches]);
 
-  const applySurfaceColorOverride = useCallback((rgba: RgbaColor | null) => {
-    if (typeof document === 'undefined') return;
-    const root = document.documentElement;
-    const scopedElements = Array.from(document.querySelectorAll('[data-theme-scope]')).filter(
-      (element) => !element.closest('[data-theme-preview]'),
-    );
-    const targets = [root, ...scopedElements];
-    const targetVars = [
-      '--surface-default-bg',
-      '--surface-raised-bg',
-      '--surface-muted-bg',
-      '--surface-panel-bg',
-      '--surface-header-bg',
-    ];
-    if (!rgba) {
-      targets.forEach((element) => {
-        targetVars.forEach((name) => element.style.removeProperty(name));
-      });
-      return;
-    }
-    const value = rgbaToString(clampRgba(rgba));
-    targets.forEach((element) => {
-      targetVars.forEach((name) => element.style.setProperty(name, value));
-    });
-  }, []);
-
   const applyRegistryOverrides = useCallback(
     (tokens: Record<string, string> | undefined) => {
       if (typeof document === 'undefined') return;
@@ -522,7 +504,6 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
 
       if (tokens) {
         for (const [key, rawValue] of Object.entries(tokens)) {
-          if (key === 'surface.default.bg') continue; // handled by applySurfaceColorOverride
           const value = rawValue?.trim?.() ?? '';
           if (!value) continue;
 
@@ -549,31 +530,6 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     const computed = getComputedStyle(document.documentElement).getPropertyValue('--surface-panel-bg').trim();
     const parsed = parseAnyColor(computed);
     return parsed ?? surfaceColorRef.current;
-  }, []);
-
-  const readSurfaceColorFromStorage = useCallback((): RgbaColor | null => {
-    if (typeof window === 'undefined') return null;
-    try {
-      const stored = window.localStorage.getItem(SURFACE_COLOR_STORAGE_KEY);
-      if (!stored) return null;
-      const parsed = parseAnyColor(stored);
-      return parsed ?? null;
-    } catch {
-      return null;
-    }
-  }, []);
-
-  const writeSurfaceColorToStorage = useCallback((rgba: RgbaColor | null) => {
-    if (typeof window === 'undefined') return;
-    try {
-      if (!rgba) {
-        window.localStorage.removeItem(SURFACE_COLOR_STORAGE_KEY);
-        return;
-      }
-      window.localStorage.setItem(SURFACE_COLOR_STORAGE_KEY, rgbaToString(rgba));
-    } catch {
-      // ignore storage errors
-    }
   }, []);
 
   const applyResolvedTheme = useCallback(
@@ -615,14 +571,61 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
           const clamped = clampRgba(parsed);
           setSurfaceColorState(clamped);
           setSurfaceToneSelection(null);
-          applySurfaceColorOverride(clamped);
-          writeSurfaceColorToStorage(clamped);
         }
       }
 
       applyRegistryOverrides(resolved.tokens);
+      setSurfaceColorState(readSurfaceColorFromCss());
     },
-    [applyRegistryOverrides, applySurfaceColorOverride, writeSurfaceColorToStorage],
+    [applyRegistryOverrides, readSurfaceColorFromCss],
+  );
+
+  const refreshResolvedTheme = useCallback(
+    async (options?: { force?: boolean }) => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      if (isPermitAllMode()) {
+        return;
+      }
+      if (!authInitialized || !authToken) {
+        return;
+      }
+
+      try {
+        const cacheKey = resolveResolvedThemeCacheKey(authToken);
+        const force = options?.force === true;
+        const cached = !force && cacheKey ? readResolvedThemeCache(cacheKey) : null;
+
+        if (cached?.data) {
+          applyResolvedTheme(cached.data);
+        }
+
+        const response = force
+          ? await api.get<ResolvedThemeResponse>('/v1/me/theme/resolved')
+          : await conditionalGet<ResolvedThemeResponse>('/v1/me/theme/resolved', { etag: cached?.etag });
+
+        if (!mountedRef.current) {
+          return;
+        }
+
+        if (!force && response.status === 304) {
+          if (cacheKey && cached) {
+            writeResolvedThemeCache(cacheKey, { ...cached, cachedAt: Date.now() });
+          }
+          return;
+        }
+
+        applyResolvedTheme(response.data);
+        if (cacheKey) {
+          const etag = typeof response.headers?.etag === 'string' ? response.headers.etag : undefined;
+          writeResolvedThemeCache(cacheKey, { cachedAt: Date.now(), etag, data: response.data });
+        }
+      } catch {
+        // Backend tema profili zorunlu değil; local varsayılanlar kullanılmaya devam eder.
+      }
+    },
+    [applyResolvedTheme, authInitialized, authToken],
   );
 
   useEffect(() => {
@@ -665,14 +668,12 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
         // Keep surface color in sync with current token-driven background when using preset tones.
         const cssColor = readSurfaceColorFromCss();
         setSurfaceColorState(cssColor);
-        applySurfaceColorOverride(null);
-        writeSurfaceColorToStorage(null);
       }
     });
     return () => {
       unsubscribe();
     };
-  }, [applySurfaceColorOverride, readSurfaceColorFromCss, writeSurfaceColorToStorage]);
+  }, [readSurfaceColorFromCss]);
 
   const applyPreset = (key: ThemeKey) => {
     const preset = THEME_PRESETS[key] ?? THEME_PRESETS[DEFAULT_THEME_KEY];
@@ -746,8 +747,6 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     const nextAxes = updateThemeAxes({ surfaceTone: tone });
     const toneColor = readSurfaceColorFromCss();
     setSurfaceColorState(toneColor);
-    applySurfaceColorOverride(null);
-    writeSurfaceColorToStorage(null);
     setThemeKeyState(deriveThemeKeyFromAxes(nextAxes));
   };
 
@@ -755,72 +754,16 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     const clamped = clampRgba(color);
     setSurfaceColorState(clamped);
     setSurfaceToneSelection(null);
-    applySurfaceColorOverride(clamped);
-    writeSurfaceColorToStorage(clamped);
   };
 
   useEffect(() => {
-    const stored = readSurfaceColorFromStorage();
-    if (stored) {
-      setSurfaceColorState(stored);
-      applySurfaceColorOverride(stored);
-      setSurfaceToneSelection(null);
-      return;
-    }
     const initial = readSurfaceColorFromCss();
     setSurfaceColorState(initial);
-  }, [applySurfaceColorOverride, readSurfaceColorFromCss, readSurfaceColorFromStorage]);
+  }, [readSurfaceColorFromCss]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    if (isPermitAllMode()) {
-      return;
-    }
-    if (!authInitialized || !authToken) {
-      return;
-    }
-    let cancelled = false;
-
-    const fetchResolvedTheme = async () => {
-      try {
-        const cacheKey = resolveResolvedThemeCacheKey();
-        const cached = cacheKey ? readResolvedThemeCache(cacheKey) : null;
-        if (cached?.data) {
-          applyResolvedTheme(cached.data);
-        }
-
-        const response = await conditionalGet<ResolvedThemeResponse>('/v1/me/theme/resolved', {
-          etag: cached?.etag,
-        });
-        if (cancelled) {
-          return;
-        }
-
-        if (response.status === 304) {
-          if (cacheKey && cached) {
-            writeResolvedThemeCache(cacheKey, { ...cached, cachedAt: Date.now() });
-          }
-          return;
-        }
-
-        applyResolvedTheme(response.data);
-        if (cacheKey) {
-          const etag = typeof response.headers?.etag === 'string' ? response.headers.etag : undefined;
-          writeResolvedThemeCache(cacheKey, { cachedAt: Date.now(), etag, data: response.data });
-        }
-      } catch {
-        // Backend tema profili zorunlu değil; local varsayılanlar kullanılmaya devam eder.
-      }
-    };
-
-    fetchResolvedTheme();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [applyResolvedTheme, authInitialized, authToken]);
+    void refreshResolvedTheme();
+  }, [refreshResolvedTheme]);
 
   const handleSetThemeId = useCallback(
     async (themeId: string | null) => {
@@ -837,7 +780,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
         await api.patch('/v1/me/theme', { themeId });
         const response = await api.get<ResolvedThemeResponse>('/v1/me/theme/resolved');
         applyResolvedTheme(response.data);
-        const cacheKey = resolveResolvedThemeCacheKey();
+        const cacheKey = resolveResolvedThemeCacheKey(authToken);
         if (cacheKey) {
           const etag = typeof response.headers?.etag === 'string' ? response.headers.etag : undefined;
           writeResolvedThemeCache(cacheKey, { cachedAt: Date.now(), etag, data: response.data });
@@ -854,6 +797,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
     setThemeKey: applyPreset,
     currentThemeId,
     setThemeId: handleSetThemeId,
+    refreshResolvedTheme,
     cycleTheme,
     options: BASE_THEMES,
     currentTheme,

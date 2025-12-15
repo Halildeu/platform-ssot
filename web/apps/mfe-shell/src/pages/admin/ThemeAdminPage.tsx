@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { PageLayout, Text, ThemePreviewCard } from 'mfe-ui-kit';
+import { PageLayout, Text, ThemePreviewCard, resolveThemeModeKey } from 'mfe-ui-kit';
 import { api } from '@mfe/shared-http';
 import UniversalColorPicker from '../../app/theme/components/UniversalColorPicker';
 import { useThemeContext } from '../../app/theme/theme-context.provider';
@@ -56,14 +56,49 @@ type ThemeMetaState = {
   };
 };
 
-const groupOrder = ['surface', 'text', 'border', 'accent', 'overlay', 'grid', 'erpAction', 'status'];
+const groupOrder = ['surface', 'text', 'border', 'selection', 'accent', 'overlay', 'grid', 'erpAction', 'status'];
+const groupLabelMap: Record<string, string> = {
+  surface: 'Surface',
+  text: 'Text',
+  border: 'Border',
+  selection: 'Selection',
+  accent: 'Accent',
+  overlay: 'Overlay',
+  grid: 'Grid',
+  erpAction: 'Action',
+  status: 'Status',
+};
+
+const usageHintByKey: Record<string, string> = {
+  'surface.page.bg': 'Uygulama sayfa zemini (body).',
+  'surface.default.bg': 'Genel yüzeyler/kartlar (çoğu container).',
+  'surface.panel.bg': 'Popover/panel container’ları (örn: Uygulamalar menüsü).',
+  'surface.muted.bg': 'Muted/hover yüzeyi (örn: hover:bg-surface-muted, ikon balonları).',
+  'surface.header.bg': 'Header yüzeyi (bg-surface-header).',
+  'surface.raised.bg': 'Yükseltilmiş kart/yüzey (shadow ile).',
+  'overlay.bg': 'Modal/backdrop overlay (bg-surface-overlay).',
+};
+
+const resolveTailwindHint = (key: string): string | null => {
+  if (key === 'overlay.bg') return 'bg-surface-overlay';
+  if (key === 'selection.bg') return 'bg-selection';
+  if (key.startsWith('surface.') && key.endsWith('.bg')) {
+    const suffix = key.replace(/^surface\./, '').replace(/\.bg$/, '');
+    return `bg-surface-${suffix}`;
+  }
+  if (key.startsWith('text.')) {
+    const suffix = key.replace(/^text\./, '');
+    return `text-text-${suffix}`;
+  }
+  if (key.startsWith('border.')) {
+    const suffix = key.replace(/^border\./, '');
+    return `border-border-${suffix}`;
+  }
+  return null;
+};
 
 const resolveThemeAttr = (appearanceRaw: string | undefined | null, densityRaw: string | undefined | null) => {
-  const appearance = (appearanceRaw ?? '').toLowerCase();
-  const density = (densityRaw ?? '').toLowerCase();
-  if (appearance === 'high-contrast') return 'serban-hc';
-  if (appearance === 'dark') return 'serban-dark';
-  return density === 'compact' ? 'serban-compact' : 'serban-light';
+  return resolveThemeModeKey({ appearance: appearanceRaw, density: densityRaw });
 };
 
 const densityOptions = [
@@ -152,7 +187,7 @@ const contrastRatio = (bg: { r: number; g: number; b: number }, fg: { r: number;
 
 // STORY-0022: Theme Personalization v1.0
 const ThemeAdminPage: React.FC = () => {
-  const { currentThemeId } = useThemeContext();
+  const { currentThemeId, refreshResolvedTheme } = useThemeContext();
   const hasManualThemeSelectionRef = useRef(false);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const paletteInitRef = useRef(false);
@@ -181,6 +216,44 @@ const ThemeAdminPage: React.FC = () => {
     label: string;
     color: RgbaColor;
   } | null>(null);
+
+  const resolveHttpErrorMessage = (error: unknown): { message: string | null; status: number | null } => {
+    const anyError = error as { response?: { data?: unknown; status?: number }; message?: unknown };
+    const status = typeof anyError.response?.status === 'number' ? anyError.response?.status ?? null : null;
+    const data = anyError.response?.data;
+
+    if (typeof data === 'string' && data.trim().length > 0) {
+      return { message: data, status };
+    }
+
+    if (typeof data === 'object' && data !== null) {
+      const record = data as Record<string, unknown>;
+      const candidate =
+        (typeof record.message === 'string' && record.message.trim().length > 0 ? record.message : null) ??
+        (typeof record.detail === 'string' && record.detail.trim().length > 0 ? record.detail : null) ??
+        (typeof record.errorCode === 'string' && record.errorCode.trim().length > 0 ? record.errorCode : null) ??
+        (typeof record.title === 'string' && record.title.trim().length > 0 ? record.title : null) ??
+        null;
+      if (candidate) {
+        return { message: candidate, status };
+      }
+    }
+
+    if (typeof anyError.message === 'string' && anyError.message.trim().length > 0) {
+      return { message: anyError.message, status };
+    }
+
+    return { message: null, status };
+  };
+
+  const formatHttpError = (error: unknown, fallback: string): string => {
+    const { message, status } = resolveHttpErrorMessage(error);
+    const resolved = message ?? fallback;
+    if (status) {
+      return `${resolved} (HTTP ${status})`;
+    }
+    return resolved;
+  };
 
   useEffect(() => {
     if (!activeColorPicker) return;
@@ -444,6 +517,45 @@ const ThemeAdminPage: React.FC = () => {
     return sortedGroups.map((id) => ({ id, rows: grouped[id] }));
   }, [registry, overrides]);
 
+  const textAreaGroups = useMemo(() => {
+    const rows: ThemeAdminRow[] = registry.map((entry) => ({
+      ...entry,
+      value: overrides[entry.key],
+    }));
+
+    const byKey = (predicate: (row: ThemeAdminRow) => boolean) =>
+      rows.filter(predicate).sort((a, b) => a.key.localeCompare(b.key));
+
+    return [
+      {
+        id: 'core',
+        label: 'Genel metin (text.*)',
+        rows: byKey((row) => row.key.startsWith('text.')),
+      },
+      {
+        id: 'action',
+        label: 'Buton metinleri (action.*.text)',
+        rows: byKey((row) => row.key.startsWith('action.') && row.key.endsWith('.text')),
+      },
+      {
+        id: 'status',
+        label: 'Durum metinleri (status.*.text)',
+        rows: byKey((row) => row.key.startsWith('status.') && row.key.endsWith('.text')),
+      },
+      {
+        id: 'grid',
+        label: 'Grid metinleri (grid.*.text)',
+        rows: byKey((row) => row.key.startsWith('grid.') && row.key.endsWith('.text')),
+      },
+      {
+        id: 'accent',
+        label: 'Vurgu/link (accent.*) — bazı metinler bunu kullanır',
+        rows: byKey((row) => row.key.startsWith('accent.')),
+      },
+    ]
+      .filter((group) => group.rows.length > 0);
+  }, [registry, overrides]);
+
   const paletteThemes = useMemo(() => {
     const preferredAccents = ['light', 'violet', 'emerald', 'sunset', 'ocean', 'graphite'];
     const normalize = (value: unknown) => String(value ?? '').trim().toLowerCase();
@@ -531,12 +643,17 @@ const ThemeAdminPage: React.FC = () => {
     });
     setSuccess(null);
 
-    if (
-      key.startsWith('action.danger')
-      || key.startsWith('status.danger')
-      || key.startsWith('status.warning')
-      || key.startsWith('status.success')
-    ) {
+    const shouldCheckContrast =
+      key.endsWith('.bg')
+      && (
+        key.startsWith('action.danger')
+        || key.startsWith('status.danger')
+        || key.startsWith('status.warning')
+        || key.startsWith('status.success')
+        || key.startsWith('status.info')
+      );
+
+    if (shouldCheckContrast) {
       if (!trimmed) {
         setContrastWarnings((prev) => {
           const next = { ...prev };
@@ -600,18 +717,9 @@ const ThemeAdminPage: React.FC = () => {
         }),
       );
       setDefaultThemeSuccess('Varsayılan global tema güncellendi.');
+      void refreshResolvedTheme({ force: true });
     } catch (error: unknown) {
-      const anyError = error as { response?: { data?: unknown } };
-      const data = anyError.response?.data;
-      const message =
-        typeof data === 'string'
-          ? data
-          : typeof data === 'object' && data !== null && 'message' in data
-            ? typeof (data as { message?: unknown }).message === 'string'
-              ? (data as { message: string }).message
-              : null
-            : null;
-      setDefaultThemeError(message || 'Varsayılan global tema güncellenemedi.');
+      setDefaultThemeError(formatHttpError(error, 'Varsayılan global tema güncellenemedi.'));
     } finally {
       setDefaultThemeSaving(false);
     }
@@ -651,17 +759,7 @@ const ThemeAdminPage: React.FC = () => {
       );
       setPaletteSuccess('Görünüm paleti başarıyla güncellendi.');
     } catch (error: unknown) {
-      const anyError = error as { response?: { data?: unknown } };
-      const data = anyError.response?.data;
-      const message =
-        typeof data === 'string'
-          ? data
-          : typeof data === 'object' && data !== null && 'message' in data
-            ? typeof (data as { message?: unknown }).message === 'string'
-              ? (data as { message: string }).message
-              : null
-            : null;
-      setPaletteError(message || 'Görünüm paleti güncellenemedi.');
+      setPaletteError(formatHttpError(error, 'Görünüm paleti güncellenemedi.'));
     } finally {
       setPaletteSaving(false);
     }
@@ -688,6 +786,18 @@ const ThemeAdminPage: React.FC = () => {
         }),
         api.put(`/v1/themes/global/${selectedThemeId}`, overrides),
       ]);
+      setThemes((prev) =>
+        prev.map((theme) =>
+          theme.id === selectedThemeId
+            ? {
+                ...theme,
+                appearance: themeMeta.appearance,
+                surfaceTone: themeMeta.surfaceTone,
+                axes: { ...(theme.axes ?? {}), ...themeMeta.axes },
+              }
+            : theme,
+        ),
+      );
       setSelectedTheme((prev) =>
         prev
           ? {
@@ -700,18 +810,9 @@ const ThemeAdminPage: React.FC = () => {
           : prev,
       );
       setSuccess('Tema özellikleri ve registry overrides başarıyla kaydedildi.');
+      void refreshResolvedTheme({ force: true });
     } catch (error: unknown) {
-      const anyError = error as { response?: { data?: unknown } };
-      const data = anyError.response?.data;
-      const message =
-        typeof data === 'string'
-          ? data
-          : typeof data === 'object' && data !== null && 'message' in data
-            ? typeof (data as { message?: unknown }).message === 'string'
-              ? (data as { message: string }).message
-              : null
-            : null;
-      setError(message || 'Tema kayıt edilirken bir hata oluştu.');
+      setError(formatHttpError(error, 'Tema kayıt edilirken bir hata oluştu.'));
     } finally {
       setSaving(false);
     }
@@ -750,6 +851,143 @@ const ThemeAdminPage: React.FC = () => {
     );
   };
 
+  const renderRegistryRow = (row: ThemeAdminRow) => {
+    const isAdminOnly = row.editableBy === 'ADMIN_ONLY';
+    const cssVars = Array.isArray(row.cssVars) ? row.cssVars : [];
+    const resolvedRaw = cssVars.length > 0 ? resolvedPreviewCssVars[cssVars[0]] : '';
+    const resolvedDisplay = cssVars.length > 0 ? resolvedPreviewDisplayCssVars[cssVars[0]] : '';
+    const fallbackRaw = row.key === 'surface.page.bg' ? resolvedPreviewCssVars['--surface-default-bg'] ?? '' : '';
+    const fallbackDisplay = row.key === 'surface.page.bg' ? resolvedPreviewDisplayCssVars['--surface-default-bg'] ?? '' : '';
+    const effectiveResolvedRaw = resolvedRaw || fallbackRaw;
+    const effectiveResolvedDisplay = resolvedDisplay || fallbackDisplay;
+    const overrideValue = row.value?.trim() ? row.value.trim() : '';
+    const swatchColor = overrideValue || effectiveResolvedRaw || 'transparent';
+    const isDangerBg =
+      row.key.endsWith('.bg') &&
+      (row.key.startsWith('action.danger') ||
+        row.key.startsWith('status.danger') ||
+        row.key.startsWith('status.warning') ||
+        row.key.startsWith('status.success') ||
+        row.key.startsWith('status.info'));
+    const contrastWarning = isDangerBg ? contrastWarnings[row.key] : undefined;
+    const tailwindHint = resolveTailwindHint(row.key);
+    const usageHint = usageHintByKey[row.key];
+
+    return (
+      <label
+        key={row.id}
+        className="flex flex-col gap-1 rounded-xl border border-border-subtle bg-surface-panel px-2 py-2 text-[11px]"
+      >
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-semibold text-text-primary">{row.label}</span>
+          <span className="text-[10px] text-text-subtle">{row.key}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            className="h-7 flex-1 rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            value={row.value ?? ''}
+            onChange={(event) => handleValueChange(row.key, event.target.value)}
+            placeholder={row.controlType === 'COLOR' ? effectiveResolvedDisplay || '#rrggbb veya rgba(...)' : ''}
+          />
+          {row.controlType === 'COLOR' ? (
+            <button
+              type="button"
+              className="h-6 w-6 rounded-md border border-border-subtle shadow-sm"
+              style={{ backgroundColor: swatchColor }}
+              aria-label={`${row.label} renk seç`}
+              onClick={() => openColorPicker(row)}
+            />
+          ) : (
+            <span
+              className="h-6 w-6 rounded-md border border-border-subtle"
+              style={{ backgroundColor: swatchColor }}
+              aria-hidden
+            />
+          )}
+        </div>
+        {row.controlType === 'COLOR' && !overrideValue && effectiveResolvedDisplay ? (
+          <div className="text-[10px] text-text-subtle">
+            Varsayılan: <span className="font-mono">{effectiveResolvedDisplay}</span>
+          </div>
+        ) : null}
+        {row.controlType === 'COLOR' && activeColorPicker?.key === row.key ? (
+          <div className="mt-2 rounded-xl border border-border-subtle bg-surface-default p-2">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[10px] font-semibold text-text-secondary">Renk seçici</span>
+                <span className="text-[10px] text-text-subtle">{activeColorPicker.key}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className="inline-flex items-center rounded-md border border-border-subtle bg-surface-muted px-2 py-1 text-[10px] font-semibold text-text-secondary hover:border-text-secondary"
+                  onClick={() => {
+                    handleValueChange(row.key, '');
+                    setActiveColorPicker(null);
+                  }}
+                >
+                  Override’ı kaldır
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center rounded-md border border-border-subtle bg-surface-muted px-2 py-1 text-[10px] font-semibold text-text-secondary hover:border-text-secondary"
+                  onClick={() => setActiveColorPicker(null)}
+                >
+                  Kapat
+                </button>
+              </div>
+            </div>
+            <UniversalColorPicker
+              color={activeColorPicker.color}
+              surfaceTone={null}
+              surfaceTonePresets={[]}
+              surfaceTonePalette={[]}
+              onManualColorChange={(next) => {
+                setActiveColorPicker((prev) => (prev && prev.key === row.key ? { ...prev, color: next } : prev));
+                handleValueChange(row.key, rgbaToString(next));
+              }}
+              onSurfaceToneChange={() => {
+                // no-op (surface tone pickers are not used in admin registry editor)
+              }}
+            />
+          </div>
+        ) : null}
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] text-text-subtle">{row.description ?? row.groupName}</span>
+          <span className={isAdminOnly ? 'text-[10px] font-semibold text-status-warning-text' : 'text-[10px] text-text-subtle'}>
+            {isAdminOnly ? 'ADMIN_ONLY' : 'USER_ALLOWED'}
+          </span>
+        </div>
+        {cssVars.length > 0 ? (
+          <div className="text-[10px] text-text-subtle">
+            CSS: <span className="font-mono">{cssVars.join(', ')}</span>
+          </div>
+        ) : null}
+        {tailwindHint ? (
+          <div className="text-[10px] text-text-subtle">
+            Tailwind: <span className="font-mono">{tailwindHint}</span>
+          </div>
+        ) : null}
+        {usageHint ? (
+          <div className="text-[10px] text-text-subtle">
+            Kullanım: {usageHint}
+          </div>
+        ) : null}
+        {isDangerBg ? (
+          <>
+            <span className="text-[10px] text-status-warning-text">
+              ERP action/status arka planı – kontrast ve a11y kurallarına dikkat edin.
+            </span>
+            {contrastWarning ? (
+              <span className="text-[10px] text-status-danger-text">{contrastWarning}</span>
+            ) : null}
+          </>
+        ) : null}
+      </label>
+    );
+  };
+
   const title = 'Tema Registry (Admin)';
   const description =
     'GLOBAL temaların registry tabanlı semantik alanlarını (surface/text/border/accent/overlay/status) THEME_ADMIN yetkisiyle düzenleyin.';
@@ -768,7 +1006,11 @@ const ThemeAdminPage: React.FC = () => {
           <Text variant="secondary">Tema registry yükleniyor…</Text>
 	        ) : (
 	          <>
-	            {error ? <Text variant="danger">{error}</Text> : null}
+	            {error ? (
+	              <div className="rounded-xl border border-status-danger-border bg-status-danger px-3 py-2 text-[11px] font-semibold text-status-danger-text">
+	                {error}
+	              </div>
+	            ) : null}
 	            {success ? <Text variant="success">{success}</Text> : null}
 	            <div className="grid gap-4 lg:grid-cols-2">
 	              <div className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-3">
@@ -800,15 +1042,17 @@ const ThemeAdminPage: React.FC = () => {
 	                        {label}
 	                      </option>
 	                    );
-	                  })}
-	                </select>
-	                {defaultThemeError ? (
-	                  <div className="mt-2 text-[11px] text-status-danger-text">{defaultThemeError}</div>
-	                ) : null}
-	                {defaultThemeSuccess ? (
-	                  <div className="mt-2 text-[11px] text-status-success-text">{defaultThemeSuccess}</div>
-	                ) : null}
-	              </div>
+		                  })}
+		                </select>
+		                {defaultThemeError ? (
+		                  <div className="mt-2 rounded-xl border border-status-danger-border bg-status-danger px-3 py-2 text-[11px] font-semibold text-status-danger-text">
+		                    {defaultThemeError}
+		                  </div>
+		                ) : null}
+		                {defaultThemeSuccess ? (
+		                  <div className="mt-2 text-[11px] text-status-success-text">{defaultThemeSuccess}</div>
+		                ) : null}
+		              </div>
 
 	              <div className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-3">
 	                <div className="flex items-center justify-between gap-2">
@@ -823,15 +1067,19 @@ const ThemeAdminPage: React.FC = () => {
 	                    className="inline-flex items-center rounded-full border border-border-subtle bg-surface-default px-3 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary disabled:cursor-not-allowed disabled:text-text-subtle"
 	                    onClick={() => void handlePaletteSave()}
 	                    disabled={paletteSaving || !paletteDirty}
-	                  >
-	                    {paletteSaving ? 'Kaydediliyor…' : 'Paleti kaydet'}
-	                  </button>
-	                </div>
-	                {paletteError ? <div className="mt-2 text-[11px] text-status-danger-text">{paletteError}</div> : null}
-	                {paletteSuccess ? (
-	                  <div className="mt-2 text-[11px] text-status-success-text">{paletteSuccess}</div>
-	                ) : null}
-	                <div className="mt-2 grid gap-2 sm:grid-cols-2">
+		                  >
+		                    {paletteSaving ? 'Kaydediliyor…' : 'Paleti kaydet'}
+		                  </button>
+		                </div>
+		                {paletteError ? (
+		                  <div className="mt-2 rounded-xl border border-status-danger-border bg-status-danger px-3 py-2 text-[11px] font-semibold text-status-danger-text">
+		                    {paletteError}
+		                  </div>
+		                ) : null}
+		                {paletteSuccess ? (
+		                  <div className="mt-2 text-[11px] text-status-success-text">{paletteSuccess}</div>
+		                ) : null}
+		                <div className="mt-2 grid gap-2 sm:grid-cols-2">
 	                  {themes.map((theme) => {
 	                    const label = theme.name.replace(/^Global\s+/i, '');
 	                    const checked = Boolean(paletteDraft[theme.id]);
@@ -1027,10 +1275,35 @@ const ThemeAdminPage: React.FC = () => {
 		                  Registry renkleri
 		                </summary>
 	                <div className="mt-3 flex flex-col gap-4">
+	                  {textAreaGroups.length > 0 ? (
+	                    <details open className="rounded-2xl border border-border-subtle bg-surface-default px-3 py-2">
+	                      <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-text-secondary">
+	                        Metin renkleri (alan bazlı)
+	                      </summary>
+	                      <div className="mt-2 flex flex-col gap-3">
+	                        {textAreaGroups.map((group) => (
+	                          <details
+	                            key={group.id}
+	                            className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2"
+	                          >
+	                            <summary className="cursor-pointer select-none text-[11px] font-semibold text-text-secondary">
+	                              {group.label}
+	                            </summary>
+	                            <div className="mt-2 flex flex-col gap-2">
+	                              {group.rows.map((row) => renderRegistryRow(row))}
+	                            </div>
+	                          </details>
+	                        ))}
+	                        <div className="text-[10px] text-text-subtle">
+	                          Not: “Hepsini kırmızı yaptım ama bazı metinler farklı” durumu çoğunlukla <span className="font-semibold">action/status/accent</span> token’larından kaynaklanır.
+	                        </div>
+	                      </div>
+	                    </details>
+	                  ) : null}
                   {rowsByGroup.map((group) => (
                     <details key={group.id} className="rounded-2xl border border-border-subtle bg-surface-default px-3 py-2">
                       <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-text-secondary">
-                        {group.id}
+                        {groupLabelMap[group.id] ?? group.id}
                       </summary>
                       <div className="mt-2 flex flex-col gap-2">
                         {group.rows.map((row) => {
@@ -1041,10 +1314,12 @@ const ThemeAdminPage: React.FC = () => {
                           const overrideValue = row.value?.trim() ? row.value.trim() : '';
                           const swatchColor = overrideValue || resolvedRaw || 'transparent';
                           const isDangerKey =
-                            row.key.startsWith('action.danger') ||
-                            row.key.startsWith('status.danger') ||
-                            row.key.startsWith('status.warning') ||
-                            row.key.startsWith('status.success');
+                            row.key.endsWith('.bg') &&
+                            (row.key.startsWith('action.danger') ||
+                              row.key.startsWith('status.danger') ||
+                              row.key.startsWith('status.warning') ||
+                              row.key.startsWith('status.success') ||
+                              row.key.startsWith('status.info'));
                           const contrastWarning = isDangerKey ? contrastWarnings[row.key] : undefined;
                           return (
                             <label
@@ -1239,7 +1514,7 @@ const ThemeAdminPage: React.FC = () => {
 	                  </div>
 	                  <div
                       ref={previewRef}
-	                    className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default"
+	                    className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-page"
 	                    data-theme-scope
 	                    data-theme={previewThemeAttr}
 	                    data-accent={themeMeta?.axes.accent ?? selectedTheme?.axes?.accent}

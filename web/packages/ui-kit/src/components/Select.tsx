@@ -62,7 +62,7 @@ export const Select: React.FC<SelectProps> = ({
       className={`h-9 rounded-md border border-border-default bg-surface-panel px-3 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
       style={{
         color: 'var(--text-primary)',
-        backgroundColor: 'var(--surface-panel-bg, var(--surface-bg, transparent))',
+        backgroundColor: 'var(--surface-panel-bg)',
         borderColor: 'var(--border-default)',
       }}
     >

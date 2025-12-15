@@ -52,7 +52,7 @@ const AppLauncher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const overlayStyle = useMemo(
     () => ({
       backgroundColor:
-        `color-mix(in srgb, var(--surface-overlay-bg, rgba(15, 23, 42, 0.85)) ${axes.overlayIntensity}%, transparent)`,
+        `color-mix(in srgb, var(--surface-overlay-bg) ${axes.overlayIntensity}%, transparent)`,
       opacity: axes.overlayOpacity / 100,
     }),
     [axes.overlayOpacity, axes.overlayIntensity],
@@ -76,7 +76,7 @@ const AppLauncher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         aria-hidden="true"
         onClick={onClose}
       />
-      <div className="absolute left-6 top-16 w-[360px] rounded-2xl border border-border-subtle bg-surface-default shadow-xl">
+      <div className="absolute left-6 top-16 w-[360px] rounded-2xl border border-border-subtle bg-surface-panel shadow-xl">
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-2">
           <span className="text-sm font-semibold text-text-primary">
             🧩 {t('shell.launcher.title')}

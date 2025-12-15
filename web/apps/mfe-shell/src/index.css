@@ -14,7 +14,7 @@
 }
 
 body {
-  background-color: var(--surface-default-bg);
+  background-color: var(--surface-page-bg);
   color: var(--text-primary);
   font-family: var(
     --font-family-base,
@@ -32,14 +32,14 @@ body {
 [data-radius] .rounded,
 [data-radius] .rounded-sm,
 [data-radius] .rounded-md {
-  border-radius: var(--radius-control, 10px);
+  border-radius: var(--radius-control);
 }
 
 [data-radius] .rounded-lg,
 [data-radius] .rounded-xl,
 [data-radius] .rounded-2xl,
 [data-radius] .rounded-3xl {
-  border-radius: var(--radius-surface, 12px);
+  border-radius: var(--radius-surface);
 }
 
 /* Elevation aksı: tailwind shadow sınıflarını tema gölgelerine bağla */

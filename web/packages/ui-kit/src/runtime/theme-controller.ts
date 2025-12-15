@@ -1,4 +1,5 @@
 import tokens from '../../../../design-tokens/figma.tokens.json';
+import { getThemeContract, resolveThemeModeKey } from './theme-contract';
 
 export type ThemeAppearance = 'light' | 'dark' | 'high-contrast';
 export type ThemeAccent = string;
@@ -34,6 +35,7 @@ type ThemeTokens = {
 };
 
 const tokenTree = tokens as ThemeTokens;
+const themeContract = getThemeContract();
 
 const STORAGE_KEY = 'themeAxes';
 
@@ -59,27 +61,7 @@ const defaultAccentFromTokens = (() => {
   return (pick as ThemeAccent) || ('light' as ThemeAccent);
 })();
 
-const appearanceModes = tokenTree.semantic?.color?.surface?.default?.bg?.modes ?? {};
-const appearanceKeys = Object.keys(appearanceModes);
-const fallbackAppearanceKey = appearanceKeys[0] ?? 'serban-light';
-
-const pickAppearanceMode = (...candidates: string[]) => {
-  for (const candidate of candidates) {
-    if (candidate && appearanceModes[candidate]) {
-      return candidate;
-    }
-  }
-  return fallbackAppearanceKey;
-};
-
-const appearanceToTheme: Record<ThemeAppearance, string | undefined> = {
-  light: pickAppearanceMode('serban-light', 'light'),
-  dark: pickAppearanceMode('serban-dark', 'dark'),
-  'high-contrast': pickAppearanceMode('serban-hc', 'high-contrast', 'hc'),
-};
-
-const compactTheme = pickAppearanceMode('serban-compact', 'compact') ?? appearanceToTheme.light ?? fallbackAppearanceKey;
-const fallbackTheme = appearanceToTheme.light ?? compactTheme ?? fallbackAppearanceKey;
+const fallbackTheme = themeContract.defaultMode;
 
 const DEFAULT_ACCENT: ThemeAccent = defaultAccentFromTokens;
 const surfaceToneMeta = tokenTree.meta?.surfaceTone ?? {};
@@ -88,7 +70,7 @@ const surfaceToneOptions =
   Object.keys(tokenTree.semantic?.color?.surface?.tones ?? {});
 const DEFAULT_SURFACE_TONE: ThemeSurfaceTone = surfaceToneMeta.default ?? surfaceToneOptions[0] ?? 'soft-1';
 
-const overlayFromTokens = getOverlayConfigFromTokens(appearanceToTheme.light ?? fallbackAppearanceKey);
+const overlayFromTokens = getOverlayConfigFromTokens(resolveThemeModeKey({ appearance: 'light', density: 'comfortable' }));
 const defaultAxes: ThemeAxes = {
   appearance: 'light',
   density: 'comfortable',
@@ -130,7 +112,7 @@ function getOverlayConfigFromTokens(preferredAppearance?: string) {
     const modes = node?.modes;
     if (modes && Object.keys(modes).length > 0) {
       const candidate =
-        (preferredAppearance && modes[preferredAppearance]) ?? modes[fallbackAppearanceKey] ?? Object.values(modes)[0];
+        (preferredAppearance && modes[preferredAppearance]) ?? modes[fallbackTheme] ?? Object.values(modes)[0];
       const raw = candidate?.value;
       const num = typeof raw === 'number' ? raw : Number.parseFloat(String(raw ?? ''));
       if (Number.isFinite(num)) {
@@ -162,16 +144,7 @@ const overlayOpacityRange = {
 };
 
 const resolveThemeAttr = (axes: ThemeAxes): string => {
-  if (axes.appearance === 'high-contrast' && appearanceToTheme['high-contrast']) {
-    return appearanceToTheme['high-contrast'] as string;
-  }
-  if (axes.appearance === 'dark' && appearanceToTheme.dark) {
-    return appearanceToTheme.dark as string;
-  }
-  if (axes.density === 'compact' && compactTheme) {
-    return compactTheme;
-  }
-  return fallbackTheme;
+  return resolveThemeModeKey(axes);
 };
 
 const loadStoredAxes = (): Partial<ThemeAxes> => {
@@ -234,7 +207,7 @@ const applyAxes = (axes: ThemeAxes) => {
     return;
   }
   root.setAttribute(attributeMap.appearance, axes.appearance);
-  root.setAttribute('data-mode', axes.appearance === 'dark' ? 'dark' : 'light');
+  root.setAttribute('data-mode', axes.appearance === 'dark' || axes.appearance === 'high-contrast' ? 'dark' : 'light');
   root.setAttribute(attributeMap.density, axes.density);
   root.setAttribute(attributeMap.radius, axes.radius);
   root.setAttribute(attributeMap.elevation, axes.elevation);
@@ -303,9 +276,8 @@ applyAxes(currentAxes);
 
 export const THEME_APPEARANCE_OPTIONS: ThemeAppearance[] = (['light', 'dark', 'high-contrast'] as ThemeAppearance[]).filter(
   (option) => {
-    if (option === 'light') return Boolean(appearanceToTheme.light);
-    if (option === 'dark') return Boolean(appearanceToTheme.dark);
-    return Boolean(appearanceToTheme['high-contrast']);
+    const resolved = themeContract.aliases?.appearance?.[option];
+    return Boolean(resolved && themeContract.modes?.[resolved]);
   },
 );
 export const THEME_DENSITY_OPTIONS: ThemeDensity[] = ['comfortable', 'compact'];

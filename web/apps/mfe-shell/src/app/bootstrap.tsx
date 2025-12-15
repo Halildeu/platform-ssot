@@ -5,12 +5,14 @@ import React from 'react';
 import 'ag-grid-enterprise';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import { AllEnterpriseModule, ServerSideRowModelModule, ServerSideRowModelApiModule } from 'ag-grid-enterprise';
+import { setupAgGridLicense } from 'mfe-ui-kit/src/lib/ag-grid-license';
 ModuleRegistry.registerModules([
   AllCommunityModule,
   ServerSideRowModelModule,
   ServerSideRowModelApiModule,
   AllEnterpriseModule,
 ]);
+setupAgGridLicense();
 import { createRoot } from 'react-dom/client';
 import ShellApp from './ShellApp.ui';
 

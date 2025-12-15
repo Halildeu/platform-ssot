@@ -10,14 +10,6 @@ module.exports = {
     './apps/mfe-reporting/src/**/*.{js,ts,jsx,tsx}',
     './packages/ui-kit/src/**/*.{js,ts,jsx,tsx}',
   ],
-  // YENİ BÖLÜM: safelist eklendi
-  safelist: [
-    'text-4xl',
-    'font-extrabold',
-    'text-purple-700',
-    'bg-yellow-200',
-    'p-4',
-  ],
   theme: {
     extend: {
       borderRadius: {
@@ -47,6 +39,8 @@ module.exports = {
       colors: {
         surface: {
           DEFAULT: 'var(--surface-default-bg)',
+          default: 'var(--surface-default-bg)',
+          page: 'var(--surface-page-bg)',
           raised: 'var(--surface-raised-bg)',
           muted: 'var(--surface-muted-bg)',
           panel: 'var(--surface-panel-bg)',
@@ -62,6 +56,7 @@ module.exports = {
         border: {
           subtle: 'var(--border-subtle)',
           DEFAULT: 'var(--border-default)',
+          default: 'var(--border-default)',
           bold: 'var(--border-bold)',
         },
         selection: {
@@ -94,21 +89,52 @@ module.exports = {
         state: {
           info: {
             DEFAULT: 'var(--state-info-bg)',
+            bg: 'var(--state-info-bg)',
             text: 'var(--state-info-text)',
             border: 'var(--state-info-border)',
           },
           success: {
             DEFAULT: 'var(--state-success-bg)',
+            bg: 'var(--state-success-bg)',
             text: 'var(--state-success-text)',
             border: 'var(--state-success-border)',
           },
           warning: {
             DEFAULT: 'var(--state-warning-bg)',
+            bg: 'var(--state-warning-bg)',
             text: 'var(--state-warning-text)',
             border: 'var(--state-warning-border)',
           },
           danger: {
             DEFAULT: 'var(--state-danger-bg)',
+            bg: 'var(--state-danger-bg)',
+            text: 'var(--state-danger-text)',
+            border: 'var(--state-danger-border)',
+          },
+        },
+        // Alias: UI code uses `status-*`, tokens are `--state-*`.
+        status: {
+          info: {
+            DEFAULT: 'var(--state-info-bg)',
+            bg: 'var(--state-info-bg)',
+            text: 'var(--state-info-text)',
+            border: 'var(--state-info-border)',
+          },
+          success: {
+            DEFAULT: 'var(--state-success-bg)',
+            bg: 'var(--state-success-bg)',
+            text: 'var(--state-success-text)',
+            border: 'var(--state-success-border)',
+          },
+          warning: {
+            DEFAULT: 'var(--state-warning-bg)',
+            bg: 'var(--state-warning-bg)',
+            text: 'var(--state-warning-text)',
+            border: 'var(--state-warning-border)',
+          },
+          danger: {
+            DEFAULT: 'var(--state-danger-bg)',
+            bg: 'var(--state-danger-bg)',
             text: 'var(--state-danger-text)',
             border: 'var(--state-danger-border)',
           },

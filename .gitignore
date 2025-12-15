@@ -20,6 +20,10 @@ backend/.vault-dev/**
 **/storybook-static/
 **/.lighthouseci/
 
+# Local env files (do not commit)
+**/.env.local
+**/.env.*.local
+
 # Java/Maven build artifacts (do not commit)
 **/target/
 **/.m2/

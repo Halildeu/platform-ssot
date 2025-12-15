@@ -451,14 +451,14 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                           </option>
                         ))}
                       </select>
-                      {(showNoneWarning || showScopeHint) && (
-                        <div
-                          data-testid={warningTestId}
-                          className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800"
-                        >
-                          {showNoneWarning
-                            ? t('users.detail.noAccessWarning')
-                            : t('users.detail.userManagementScopeHint')}
+	                      {(showNoneWarning || showScopeHint) && (
+	                        <div
+	                          data-testid={warningTestId}
+	                          className="rounded-xl border border-status-warning-border bg-status-warning px-3 py-2 text-xs font-semibold text-status-warning-text"
+	                        >
+	                          {showNoneWarning
+	                            ? t('users.detail.noAccessWarning')
+	                            : t('users.detail.userManagementScopeHint')}
                         </div>
                       )}
                       {isUpdatingThisModule && (

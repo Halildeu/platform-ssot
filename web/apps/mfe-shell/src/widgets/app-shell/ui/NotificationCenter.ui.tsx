@@ -32,7 +32,7 @@ const NotificationCenter: React.FC = () => {
   const overlayStyle = useMemo(
     () => ({
       backgroundColor:
-        `color-mix(in srgb, var(--surface-overlay-bg, rgba(15, 23, 42, 0.85)) ${axes.overlayIntensity}%, transparent)`,
+        `color-mix(in srgb, var(--surface-overlay-bg) ${axes.overlayIntensity}%, transparent)`,
       opacity: axes.overlayOpacity / 100,
     }),
     [axes.overlayOpacity, axes.overlayIntensity],
@@ -65,7 +65,7 @@ const NotificationCenter: React.FC = () => {
       >
         <span aria-hidden>🔔</span>
         {state.unreadCount > 0 && (
-          <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-state-danger-text px-1 text-center text-[10px] font-semibold text-surface-default">
+          <span className="absolute -right-1 -top-1 min-w-[18px] rounded-full bg-state-danger-text px-1 text-center text-[10px] font-semibold text-text-inverse">
             {state.unreadCount > 99 ? '99+' : state.unreadCount}
           </span>
         )}

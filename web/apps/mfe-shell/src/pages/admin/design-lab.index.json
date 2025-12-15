@@ -1,0 +1,296 @@
+{
+  "generatedAt": "2025-12-15T21:34:23+03:00",
+  "generatedAtUtc": "2025-12-15T18:34:23+00:00",
+  "components": [
+    {
+      "name": "AgGridServer",
+      "import": "import { AgGridServer } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "Badge",
+      "import": "import { Badge } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
+      ]
+    },
+    {
+      "name": "Button",
+      "import": "import { Button } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
+        "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
+        "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
+        "web/apps/mfe-shell/src/widgets/app-shell/ui/LoginPopover.ui.tsx",
+        "web/apps/mfe-suggestions/src/App.tsx"
+      ]
+    },
+    {
+      "name": "DetailDrawer",
+      "import": "import { DetailDrawer } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
+        "web/apps/mfe-audit/src/app/components/AuditDetailDrawer.tsx",
+        "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx"
+      ]
+    },
+    {
+      "name": "Dropdown",
+      "import": "import { Dropdown } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "Empty",
+      "import": "import { Empty } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+      ]
+    },
+    {
+      "name": "EntityGridTemplate",
+      "import": "import { EntityGridTemplate } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ]
+    },
+    {
+      "name": "FilterBar",
+      "import": "import { FilterBar } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "FormDrawer",
+      "import": "import { FormDrawer } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "Modal",
+      "import": "import { Modal } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ]
+    },
+    {
+      "name": "PageLayout",
+      "import": "import { PageLayout } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
+        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
+        "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
+      ]
+    },
+    {
+      "name": "ReportFilterPanel",
+      "import": "import { ReportFilterPanel } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx"
+      ]
+    },
+    {
+      "name": "Select",
+      "import": "import { Select } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ]
+    },
+    {
+      "name": "THEME_APPEARANCE_OPTIONS",
+      "import": "import { THEME_APPEARANCE_OPTIONS } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "THEME_DENSITY_OPTIONS",
+      "import": "import { THEME_DENSITY_OPTIONS } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "THEME_ELEVATION_OPTIONS",
+      "import": "import { THEME_ELEVATION_OPTIONS } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "THEME_MOTION_OPTIONS",
+      "import": "import { THEME_MOTION_OPTIONS } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "THEME_RADIUS_OPTIONS",
+      "import": "import { THEME_RADIUS_OPTIONS } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "Tag",
+      "import": "import { Tag } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+      ]
+    },
+    {
+      "name": "Text",
+      "import": "import { Text } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
+      ]
+    },
+    {
+      "name": "ThemePreviewCard",
+      "import": "import { ThemePreviewCard } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
+      ]
+    },
+    {
+      "name": "Tooltip",
+      "import": "import { Tooltip } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "buildAuthHeaders",
+      "import": "import { buildAuthHeaders } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "buildEntityGridQueryParams",
+      "import": "import { buildEntityGridQueryParams } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "getResolvedToken",
+      "import": "import { getResolvedToken } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "getThemeAxes",
+      "import": "import { getThemeAxes } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "getThemeContract",
+      "import": "import { getThemeContract } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
+        "web/apps/mfe-shell/src/features/theme/theme-matrix.constants.ts"
+      ]
+    },
+    {
+      "name": "registerTokenResolver",
+      "import": "import { registerTokenResolver } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "resetTokenResolver",
+      "import": "import { resetTokenResolver } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "resolveAccessState",
+      "import": "import { resolveAccessState } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "resolveThemeModeKey",
+      "import": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
+      ]
+    },
+    {
+      "name": "setAppearance",
+      "import": "import { setAppearance } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "setDensity",
+      "import": "import { setDensity } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "setElevation",
+      "import": "import { setElevation } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "setMotion",
+      "import": "import { setMotion } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "setOverlayIntensity",
+      "import": "import { setOverlayIntensity } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "setOverlayOpacity",
+      "import": "import { setOverlayOpacity } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "setRadius",
+      "import": "import { setRadius } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "setSurfaceTone",
+      "import": "import { setSurfaceTone } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "setTableSurfaceTone",
+      "import": "import { setTableSurfaceTone } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "shouldBlockInteraction",
+      "import": "import { shouldBlockInteraction } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "subscribeThemeAxes",
+      "import": "import { subscribeThemeAxes } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "toggleVariantDefault",
+      "import": "import { toggleVariantDefault } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "updateThemeAxes",
+      "import": "import { updateThemeAxes } from 'mfe-ui-kit';",
+      "files": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "useGridVariants",
+      "import": "import { useGridVariants } from 'mfe-ui-kit';",
+      "files": []
+    },
+    {
+      "name": "withAccessGuard",
+      "import": "import { withAccessGuard } from 'mfe-ui-kit';",
+      "files": []
+    }
+  ]
+}

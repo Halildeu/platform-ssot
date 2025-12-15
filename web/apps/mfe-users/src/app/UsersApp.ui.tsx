@@ -7,8 +7,6 @@ import {
   QueryClientContext,
 } from '@tanstack/react-query';
 import UsersPage from '../pages/users/UsersPage.ui';
-import './setup-ag-grid-license.lib';
-
 
 const createStandaloneStore = () =>
   configureStore({

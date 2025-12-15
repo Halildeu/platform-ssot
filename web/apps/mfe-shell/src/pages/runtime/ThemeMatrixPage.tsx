@@ -13,8 +13,8 @@ export const ThemeMatrixPage: React.FC = () => (
   >
     <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
       <Text variant="secondary">
-        Bu sayfa, Playwright ve Chromatic/axe testleri için 4 resmi tema (serban-light/dark/hc/compact) ×
-        2 yoğunluk (comfortable/compact) kombinasyonlarını ve Button/Select/Tag gibi bileşenlerin
+        Bu sayfa, Playwright ve Chromatic/axe testleri için resmi tema modları × yoğunluk
+        (comfortable/compact) kombinasyonlarını ve Button/Select/Tag gibi bileşenlerin
         `access=full|readonly|disabled|hidden` davranışlarını gözlemlemek amacıyla hazırlanmıştır.
       </Text>
     </div>

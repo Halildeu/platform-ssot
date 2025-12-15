@@ -188,8 +188,13 @@ export const AuditEventFeed: React.FC = () => {
     maxBlocksInCache: 3,
     pagination: true,
     paginationPageSize: PAGE_SIZE,
+    paginationPageSizeSelector: [50, 100, PAGE_SIZE],
     animateRows: true,
-    rowSelection: 'single',
+    rowSelection: {
+      mode: 'singleRow',
+      enableClickSelection: true,
+      checkboxes: false,
+    },
     getRowId: ({ data }) => data?.id ?? '',
     onRowClicked: (event) => {
       setSelected(event.data ?? null);

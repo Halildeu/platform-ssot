@@ -1,7 +1,7 @@
 import React from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import type { AgGridReact as AgGridReactType } from 'ag-grid-react';
-import type { ColDef } from 'ag-grid-community';
+import type { ColDef, SelectionColumnDef } from 'ag-grid-community';
 import type { AccessRole, AccessLevel } from '../../../features/access-management/model/access.types';
 
 export interface AccessGridColumn {
@@ -29,6 +29,17 @@ const defaultColumnDef: ColDef = {
   minWidth: 150
 };
 
+const selectionColumnDef: SelectionColumnDef = {
+  width: 48,
+  minWidth: 48,
+  maxWidth: 64,
+  pinned: 'left',
+  sortable: false,
+  resizable: false,
+  suppressHeaderMenuButton: true,
+  suppressHeaderContextMenu: true,
+};
+
 const AccessGrid: React.FC<AccessGridProps> = ({
   rows,
   columns,
@@ -41,22 +52,6 @@ const AccessGrid: React.FC<AccessGridProps> = ({
   const gridRef = React.useRef<AgGridReactType<AccessRole>>(null);
 
   const columnDefs = React.useMemo<ColDef[]>(() => {
-    const selectionCol: ColDef = {
-      ...defaultColumnDef,
-      headerName: '',
-      field: '__selection__',
-      checkboxSelection: true,
-      headerCheckboxSelection: true,
-      width: 48,
-      minWidth: 48,
-      maxWidth: 64,
-      pinned: 'left',
-      suppressMenu: true,
-      sortable: false,
-      resizable: false,
-      flex: undefined
-    };
-
     const mappedCols = columns.map((column) => ({
       ...defaultColumnDef,
       headerName: column.headerName,
@@ -86,7 +81,7 @@ const AccessGrid: React.FC<AccessGridProps> = ({
       }
     }));
 
-    return [selectionCol, ...mappedCols];
+    return mappedCols;
   }, [columns, formatDate, t]);
 
   React.useEffect(() => {
@@ -111,9 +106,14 @@ const AccessGrid: React.FC<AccessGridProps> = ({
         rowData={rows}
         columnDefs={columnDefs}
         defaultColDef={defaultColumnDef}
-        rowSelection="multiple"
-        rowMultiSelectWithClick={false}
-        suppressRowClickSelection
+        selectionColumnDef={selectionColumnDef}
+        rowSelection={{
+          mode: 'multiRow',
+          enableClickSelection: false,
+          enableSelectionWithoutKeys: false,
+          checkboxes: true,
+          headerCheckbox: true,
+        }}
         onSelectionChanged={(event) => {
           const ids = event.api
             .getSelectedNodes()

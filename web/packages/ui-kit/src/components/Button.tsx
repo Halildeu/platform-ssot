@@ -16,11 +16,11 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
 const variantClassNames: Record<ButtonVariant, string> = {
   primary:
-    'border-transparent bg-[var(--accent-primary)] text-white shadow-sm hover:bg-[var(--accent-primary-hover)] focus-visible:ring-[var(--accent-focus)]',
+    'border-transparent bg-[var(--accent-primary)] text-text-inverse shadow-sm hover:bg-[var(--accent-primary-hover)] focus-visible:ring-[var(--accent-focus)]',
   secondary:
     'border-border-default bg-surface-panel text-text-primary shadow-sm hover:bg-surface-muted focus-visible:ring-[var(--accent-focus)]',
   ghost:
-    'border-transparent bg-transparent text-text-secondary hover:bg-[var(--accent-soft,var(--surface-muted-bg))] focus-visible:ring-[var(--accent-focus)]',
+    'border-transparent bg-transparent text-text-secondary hover:bg-accent-soft focus-visible:ring-[var(--accent-focus)]',
 };
 
 export interface ButtonProps

@@ -37,9 +37,16 @@ jobs:
         run: npm ci
         working-directory: web
 
+      - name: Theme guardrails (contract + no-fallback)
+        run: |
+          npm -C web run tokens:build -- --check
+          python3 scripts/check_theme_contract_consistency.py
+          python3 scripts/check_tailwind_token_map.py
+          python3 scripts/check_theme_override_allowlist.py
+          python3 scripts/check_no_hardcoded_theme_styles.py
+
       - name: Web lint
         run: bash scripts/run_lint_web.sh
 
       - name: Web unit tests
         run: bash scripts/run_tests_web.sh unit
-

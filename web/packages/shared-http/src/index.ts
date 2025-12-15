@@ -155,8 +155,14 @@ const extractErrorCode = (error: AxiosError): string | null => {
     if (typeof structured.message === 'string') {
       return structured.message;
     }
+    if (typeof structured.detail === 'string') {
+      return structured.detail;
+    }
     if (typeof structured.errorCode === 'string') {
       return structured.errorCode;
+    }
+    if (typeof structured.title === 'string') {
+      return structured.title;
     }
   }
   return null;

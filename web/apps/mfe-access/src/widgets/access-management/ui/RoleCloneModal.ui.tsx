@@ -70,8 +70,8 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
       <div
         className="absolute inset-0 bg-surface-overlay"
         style={{
-          backgroundColor: 'var(--surface-overlay-bg, rgba(15, 23, 42, 0.85))',
-          opacity: 'var(--overlay-opacity, 0.9)',
+          backgroundColor: 'var(--surface-overlay-bg)',
+          opacity: 'var(--overlay-opacity)',
         }}
         aria-label={t('access.clone.cancelText')}
         onClick={onCancel}

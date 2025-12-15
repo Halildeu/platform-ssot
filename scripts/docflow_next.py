@@ -1093,6 +1093,17 @@ def build_level_commands(story_id: str, level: str, *, mode: str, evidence_mode:
         except SystemExit:
             pass
 
+        if impact_normalized in {"all", "web"}:
+            commands.extend(
+                [
+                    ["npm", "-C", "web", "run", "tokens:build", "--", "--check"],
+                    ["python3", "scripts/check_theme_contract_consistency.py"],
+                    ["python3", "scripts/check_tailwind_token_map.py"],
+                    ["python3", "scripts/check_theme_override_allowlist.py"],
+                    ["python3", "scripts/check_no_hardcoded_theme_styles.py"],
+                ]
+            )
+
         if impact_normalized in {"all", "backend"}:
             commands.append(["python3", "scripts/check_backend_service_layout.py"])
         if impact_normalized in {"all", "web"}:

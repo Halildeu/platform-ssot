@@ -1,7 +1,22 @@
 import React, { useMemo, useState } from 'react';
 import { Button, EntityGridTemplate, Modal, Select, Text } from 'mfe-ui-kit';
+import designLabIndexRaw from './design-lab.index.json';
 
 type LabSectionKey = 'shell' | 'grid' | 'form';
+
+type DesignLabIndexEntry = {
+  name: string;
+  import: string;
+  files: string[];
+};
+
+type DesignLabIndex = {
+  generatedAt?: string;
+  generatedAtUtc?: string;
+  components: DesignLabIndexEntry[];
+};
+
+const designLabIndex = designLabIndexRaw as DesignLabIndex;
 
 type LabItem = {
   id: string;
@@ -132,6 +147,15 @@ export const DesignLabPage: React.FC = () => {
     return match ?? LAB_ITEMS[0];
   }, [selectedItemId]);
 
+  const selectedIndexEntry = useMemo(() => {
+    const label = selectedItem.label;
+    return designLabIndex.components.find((entry) => entry.name === label) ?? null;
+  }, [selectedItem.label]);
+
+  const selectedImportSnippet = useMemo(() => {
+    return selectedIndexEntry?.import ?? selectedItem.importSnippet;
+  }, [selectedIndexEntry?.import, selectedItem.importSnippet]);
+
   const handleSelectItem = (item: LabItem) => {
     setActiveSection(item.section);
     setSelectedItemId(item.id);
@@ -139,7 +163,7 @@ export const DesignLabPage: React.FC = () => {
   };
 
   const handleCopySelectedImport = async () => {
-    const ok = await copyToClipboard(selectedItem.importSnippet);
+    const ok = await copyToClipboard(selectedImportSnippet);
     setCopied(ok ? 'ok' : 'fail');
     window.setTimeout(() => setCopied(null), 1500);
   };
@@ -438,13 +462,20 @@ export const DesignLabPage: React.FC = () => {
             <Text as="div" className="font-semibold">
               Usage
             </Text>
-            <Text variant="secondary">MVP</Text>
+            <Text variant="secondary">
+              {selectedIndexEntry?.files.length ?? 0} file
+            </Text>
           </div>
           <div className="min-h-0 overflow-auto pr-1">
             <div className="rounded-2xl border border-border-subtle bg-surface-default p-3">
               <Text variant="secondary">
-                F3.1: statik placeholder. F3.2’de otomatik index JSON ile “where used” listesi üretilecek.
+                Bu liste `npm -C web run designlab:index` çıktısı olan `design-lab.index.json` üzerinden üretilir.
               </Text>
+              {designLabIndex.generatedAt ? (
+                <Text variant="secondary" className="mt-2 block text-xs">
+                  Son index: {designLabIndex.generatedAt}
+                </Text>
+              ) : null}
             </div>
 
             <div className="mt-3 rounded-2xl border border-border-subtle bg-surface-default p-3">
@@ -452,7 +483,7 @@ export const DesignLabPage: React.FC = () => {
                 Copy import
               </Text>
               <pre className="whitespace-pre-wrap rounded-xl border border-border-subtle bg-surface-muted p-3 text-xs text-text-primary">
-                {selectedItem.importSnippet}
+                {selectedImportSnippet}
               </pre>
               <div className="mt-2 flex justify-end">
                 <Button variant="ghost" onClick={handleCopySelectedImport}>
@@ -463,13 +494,33 @@ export const DesignLabPage: React.FC = () => {
 
             <div className="mt-3 rounded-2xl border border-border-subtle bg-surface-default p-3">
               <Text as="div" className="mb-2 font-semibold">
-                Where used (placeholder)
+                Where used
               </Text>
-              <ul className="list-disc space-y-1 pl-5 text-sm text-text-secondary">
-                <li>F3.2: `rg \"{selectedItem.label}\" web/` bazlı index üretimi</li>
-                <li>F3.2: `var(--...)` kullanım listesi</li>
-                <li>F3.2: bypass/hardcode sinyali</li>
-              </ul>
+              {selectedIndexEntry && selectedIndexEntry.files.length > 0 ? (
+                <ul className="space-y-2">
+                  {selectedIndexEntry.files.map((filePath) => (
+                    <li
+                      key={filePath}
+                      className="flex items-start justify-between gap-2 rounded-xl border border-border-subtle bg-surface-muted px-3 py-2"
+                    >
+                      <span className="min-w-0 break-all text-xs text-text-secondary">
+                        {filePath}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        onClick={() => copyToClipboard(filePath)}
+                        className="shrink-0"
+                      >
+                        Copy
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <Text variant="secondary">
+                  Kullanım bulunamadı.
+                </Text>
+              )}
             </div>
           </div>
         </aside>

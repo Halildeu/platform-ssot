@@ -169,11 +169,6 @@ export const authenticateAndNavigate = async (
   const session = await buildAuthSession(permissions);
   const root = baseURL ?? 'http://localhost:3000';
   await page.goto(`${root}/login`, { waitUntil: 'domcontentloaded' });
-  await applyAuthState(page, session);
-  await page.goto(`${root}${targetPath}`, { waitUntil: 'domcontentloaded' });
-  // Bazı senaryolarda BroadcastChannel dinleyicisi geç abone olabildiğinden,
-  // hedef rotada da auth durumunu yayınlayarak garantili hale getiriyoruz.
-  await applyAuthState(page, session);
   await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: 30_000 });
   await page.evaluate(
     ({ token, user, ttl }) => {
@@ -194,5 +189,10 @@ export const authenticateAndNavigate = async (
     },
     { token: session.token, user: session.user, ttl: SESSION_TTL_MS },
   );
+  // Bazı senaryolarda BroadcastChannel dinleyicisi geç abone olabildiğinden,
+  // auth durumunu hem login ekranında hem hedef rotada yayınlayarak garantili hale getiriyoruz.
+  await applyAuthState(page, session);
+  await page.goto(`${root}${targetPath}`, { waitUntil: 'domcontentloaded' });
+  await applyAuthState(page, session);
   return { session, root };
 };

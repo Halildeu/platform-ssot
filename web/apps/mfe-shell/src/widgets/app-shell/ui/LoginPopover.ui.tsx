@@ -23,7 +23,7 @@ const LoginPopover: React.FC<LoginPopoverProps> = ({ onClose, onNavigate }) => {
   const overlayStyle = useMemo(
     () => ({
       backgroundColor:
-        `color-mix(in srgb, var(--surface-overlay-bg, rgba(15, 23, 42, 0.85)) ${axes.overlayIntensity}%, transparent)`,
+        `color-mix(in srgb, var(--surface-overlay-bg) ${axes.overlayIntensity}%, transparent)`,
       opacity: axes.overlayOpacity / 100,
     }),
     [axes.overlayOpacity, axes.overlayIntensity],

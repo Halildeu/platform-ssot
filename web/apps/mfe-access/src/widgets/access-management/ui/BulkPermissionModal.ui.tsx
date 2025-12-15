@@ -80,8 +80,8 @@ const BulkPermissionModal: React.FC<BulkPermissionModalProps> = ({
       <div
         className="absolute inset-0 bg-surface-overlay"
         style={{
-          backgroundColor: 'var(--surface-overlay-bg, rgba(15, 23, 42, 0.85))',
-          opacity: 'var(--overlay-opacity, 0.9)',
+          backgroundColor: 'var(--surface-overlay-bg)',
+          opacity: 'var(--overlay-opacity)',
         }}
         aria-hidden="true"
         onClick={onCancel}

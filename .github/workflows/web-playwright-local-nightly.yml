@@ -1,0 +1,142 @@
+name: Web Playwright Local Nightly (Integration)
+
+on:
+  schedule:
+    # 02:30 TR (UTC+3) => 23:30 UTC
+    - cron: "30 23 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: web-playwright-local-nightly
+  cancel-in-progress: true
+
+jobs:
+  local-integration-e2e:
+    runs-on: [self-hosted, vault-local]
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Start backend (docker compose)
+        run: |
+          set -euo pipefail
+
+          docker compose -f backend/docker-compose.yml down --remove-orphans || true
+
+          # docker-compose.yml içinde default'u olmayan env'leri deterministik hale getiriyoruz.
+          export PERMISSION_SERVICE_BASE_URL="http://permission-service:8084"
+          export EUREKA_SERVER_URL="http://discovery-server:8761/eureka"
+          export VARIANT_DB_URL="jdbc:postgresql://postgres-db:5432/users"
+          export VARIANT_DB_USERNAME="postgres"
+          export VARIANT_DB_PASSWORD="postgres"
+
+          docker compose -f backend/docker-compose.yml up -d --build
+
+      - name: Start web MFEs (background)
+        run: |
+          set -euo pipefail
+
+          mkdir -p web/test-results/ops/logs web/test-results/ops/pids
+
+          # Önce tüm MFE portlarını temizle (web/package.json prestart).
+          npm -C web run prestart
+
+          start_mfe() {
+            local name="$1"; shift
+            local logfile="web/test-results/ops/logs/${name}.log"
+            local pidfile="web/test-results/ops/pids/${name}.pid"
+
+            echo "[local-nightly] starting ${name}"
+            nohup "$@" > "${logfile}" 2>&1 &
+            echo "$!" > "${pidfile}"
+          }
+
+          start_mfe mfe-shell npm -C web/apps/mfe-shell start
+          start_mfe mfe-access npm -C web/apps/mfe-access start
+          start_mfe mfe-audit npm -C web/apps/mfe-audit start
+          start_mfe mfe-reporting npm -C web/apps/mfe-reporting start
+          start_mfe mfe-users npm -C web/apps/mfe-users start
+
+      - name: Healthcheck (shell)
+        run: |
+          set -euo pipefail
+
+          for i in $(seq 1 60); do
+            if curl -sf "http://localhost:3000/login" >/dev/null; then
+              echo "[health] OK"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "[health] FAIL: http://localhost:3000/login hazır değil"
+          exit 1
+
+      - name: Install Playwright browsers (Chromium)
+        run: npx playwright install chromium
+        working-directory: web
+
+      - name: Run Playwright nightly (localhost)
+        run: npm run pw:nightly
+        working-directory: web
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+          PW_BASE_URL: http://localhost:3000
+          PW_ALLOW_LOCALHOST: "1"
+          PW_SOFT_MODE: "1"
+          PW_AUTH_MODE: token_injection
+          PW_READONLY_ENFORCE: "1"
+          KEYCLOAK_TOKEN_URL: ${{ secrets.KEYCLOAK_TOKEN_URL }}
+          KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+          KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+          KEYCLOAK_SCOPE: ${{ secrets.KEYCLOAK_SCOPE }}
+
+      - name: Upload reports (pw)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pw-local-nightly-reports
+          path: web/test-results/pw
+
+      - name: Upload reports (ops)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ops-local-nightly-reports
+          path: web/test-results/ops
+
+      - name: Cleanup (always)
+        if: always()
+        run: |
+          set +e
+
+          # Web MFEs (best-effort) durdur.
+          for pidfile in web/test-results/ops/pids/*.pid; do
+            [ -f "${pidfile}" ] || continue
+            pid="$(cat "${pidfile}" 2>/dev/null)"
+            if [ -n "${pid}" ]; then
+              kill "${pid}" 2>/dev/null || true
+            fi
+          done
+
+          sleep 2
+
+          # Portları temizle (best-effort).
+          npx -C web kill-port 3000 3004 3005 3006 3007 2>/dev/null || true
+
+          # Backend stack'i kaldır.
+          docker compose -f backend/docker-compose.yml down --remove-orphans || true
+

@@ -93,6 +93,25 @@ Owner: Frontend
   3) `.github/workflows/web-playwright-nightly.yml` (workflow_dispatch) ile koşumu doğrula
 
 -------------------------------------------------------------------------------
+3.3 LOCAL INTEGRATION NIGHTLY (SELF-HOSTED)
+-------------------------------------------------------------------------------
+
+- Workflow: `.github/workflows/web-playwright-local-nightly.yml`
+  - Amaç: “staging olmadan” localhost üzerinde nightly integration e2e çalıştırmak.
+  - Self-hosted runner üzerinde çalışır (label: `vault-local`).
+  - Job kendi içinde backend docker-compose + web MFE’leri ayağa kaldırır, Playwright koşar, sonra cleanup yapar.
+
+- Planlama (cron):
+  - GitHub Actions cron UTC’dir.
+  - 02:30 Türkiye (UTC+3) için: `23:30 UTC` (`30 23 * * *`).
+
+- Operasyon notları:
+  - Runner’ın (Mac) uykuya geçmemesi gerekir (Energy settings).
+  - Artefact’lar:
+    - `web/test-results/pw/**` (pw-summary dahil)
+    - `web/test-results/ops/**` (MFE log/pid dosyaları dahil)
+
+-------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
 -------------------------------------------------------------------------------
 

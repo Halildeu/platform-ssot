@@ -69,7 +69,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         className="inline-flex items-center justify-center rounded-md border border-border-subtle bg-surface-panel px-3 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
         style={{
           color: 'var(--text-primary)',
-          backgroundColor: 'var(--surface-panel-bg, var(--surface-bg, transparent))',
+          backgroundColor: 'var(--surface-panel-bg)',
           borderColor: 'var(--border-subtle)',
         }}
         aria-disabled={resolvedDisabled || isReadonly || undefined}
@@ -85,7 +85,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             align === 'right' ? 'right-0' : 'left-0'
           }`}
           style={{
-            backgroundColor: 'var(--surface-panel-bg, var(--surface-bg, #fff))',
+            backgroundColor: 'var(--surface-panel-bg)',
             borderColor: 'var(--border-subtle)',
             color: 'var(--text-primary)',
             boxShadow: 'var(--elevation-overlay)',
@@ -107,7 +107,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   }`}
                   style={{
                     color: 'var(--text-primary)',
-                    backgroundColor: 'var(--surface-panel-bg, transparent)',
+                    backgroundColor: 'transparent',
                   }}
                 >
                   {item.label}

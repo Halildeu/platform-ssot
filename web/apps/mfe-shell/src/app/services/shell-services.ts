@@ -64,6 +64,7 @@ let queryClientRef: QueryClient | null = null;
 let tokenCache: string | null = null;
 let getAuthTokenImpl: () => string | null = () => tokenCache;
 let fallbackQueryClient: QueryClient | null = null;
+let warnedUnconfigured = false;
 
 const defaultNotify = (entry: ShellNotificationEntry) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -115,7 +116,10 @@ export const getShellServices = (): ShellServices => {
       if (!fallbackQueryClient) {
         fallbackQueryClient = new QueryClient();
       }
-      console.warn('[shell] Shell servisleri henüz konfigüre edilmedi; fallback noop döndürülüyor.');
+      if (!warnedUnconfigured) {
+        console.debug('[shell] Shell servisleri henüz konfigüre edilmedi; fallback noop döndürülüyor.');
+        warnedUnconfigured = true;
+      }
       return createShellServices(fallbackQueryClient);
     }
     throw new Error('[shell] configureShellServices önce çağrılmalıdır.');

@@ -228,6 +228,10 @@ const captureRequestFailed = (
   const resourceType = request.resourceType();
   if (!isXhrOrFetch(resourceType)) return null;
   const failureText = request.failure()?.errorText ?? 'requestfailed';
+  // Navigasyon kaynaklı iptaller gürültü üretir (özellikle auth bootstrap sırasında).
+  if (/net::err_aborted/i.test(failureText)) {
+    return null;
+  }
   const url = sanitizeUrl(request.url());
   const method = request.method();
   const allowed = isNetworkAllowed(compiledAllowlists, { url, status: undefined, method });

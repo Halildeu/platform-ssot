@@ -44,8 +44,8 @@ export const Modal: React.FC<ModalProps> = ({
         className="absolute inset-0 bg-surface-overlay"
         style={{
           backgroundColor:
-            'color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity, 10) * 1%), transparent)',
-          opacity: 'var(--overlay-opacity, 0.9)',
+            'color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity) * 1%), transparent)',
+          opacity: 'var(--overlay-opacity)',
         }}
         onClick={guardedClose}
         role="presentation"
