@@ -1,29 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { Button, EntityGridTemplate, Modal, Select, Text } from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
-import designLabGroupsRaw from './design-lab.groups.json';
+import { DESIGN_LAB_GROUPS } from './design-lab.groups';
 
 type LabSectionKey = 'shell' | 'grid' | 'form';
-
-type DesignLabGroupsSubgroup = {
-  id: string;
-  label: string;
-};
-
-type DesignLabGroupsGroup = {
-  id: string;
-  label: string;
-  subgroups: DesignLabGroupsSubgroup[];
-};
-
-type DesignLabGroups = {
-  version: number;
-  fallback: {
-    group: string;
-    subgroup: string;
-  };
-  groups: DesignLabGroupsGroup[];
-};
 
 type DesignLabIndexItem = {
   name: string;
@@ -43,7 +23,7 @@ type DesignLabIndex = {
 };
 
 const designLabIndex = designLabIndexRaw as DesignLabIndex;
-const designLabGroups = designLabGroupsRaw as DesignLabGroups;
+const designLabGroups = DESIGN_LAB_GROUPS;
 
 const copyToClipboard = async (value: string): Promise<boolean> => {
   if (!value) return false;
