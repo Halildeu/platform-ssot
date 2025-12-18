@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "generatedAt": "2025-12-15T23:38:20+03:00",
-  "generatedAtUtc": "2025-12-15T20:38:20+00:00",
+  "generatedAt": "2025-12-18T23:49:21+03:00",
+  "generatedAtUtc": "2025-12-18T20:49:21+00:00",
   "source": {
     "package": "mfe-ui-kit",
     "index": "packages/ui-kit/src/index.ts",
@@ -16,7 +16,26 @@
       "whereUsed": [],
       "group": "data-grid",
       "subgroup": "ag-grid-server",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "grid"
+    },
+    {
+      "name": "AnchorToc",
+      "kind": "component",
+      "importStatement": "import { AnchorToc } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
     },
     {
       "name": "Badge",
@@ -29,7 +48,26 @@
       ],
       "group": "feedback",
       "subgroup": "badges",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
+    },
+    {
+      "name": "Breadcrumb",
+      "kind": "component",
+      "importStatement": "import { Breadcrumb } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
     },
     {
       "name": "Button",
@@ -38,6 +76,8 @@
       "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
         "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
         "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
         "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
@@ -46,7 +86,82 @@
       ],
       "group": "actions",
       "subgroup": "buttons",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
+    },
+    {
+      "name": "Checkbox",
+      "kind": "component",
+      "importStatement": "import { Checkbox } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
+    },
+    {
+      "name": "CommandPalette",
+      "kind": "component",
+      "importStatement": "import { CommandPalette } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "ContextMenu",
+      "kind": "component",
+      "importStatement": "import { ContextMenu } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "DatePicker",
+      "kind": "component",
+      "importStatement": "import { DatePicker } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
+    },
+    {
+      "name": "Descriptions",
+      "kind": "component",
+      "importStatement": "import { Descriptions } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
     },
     {
       "name": "DetailDrawer",
@@ -59,7 +174,11 @@
       ],
       "group": "overlays",
       "subgroup": "drawers",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
     },
     {
       "name": "Dropdown",
@@ -68,7 +187,11 @@
       "whereUsed": [],
       "group": "forms",
       "subgroup": "dropdown",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
     },
     {
       "name": "Empty",
@@ -79,7 +202,11 @@
       ],
       "group": "empty-states",
       "subgroup": "empty",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
     },
     {
       "name": "EntityGridTemplate",
@@ -90,7 +217,11 @@
       ],
       "group": "data-grid",
       "subgroup": "entity-grid",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "grid"
     },
     {
       "name": "FilterBar",
@@ -99,7 +230,11 @@
       "whereUsed": [],
       "group": "layout",
       "subgroup": "filters",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
     },
     {
       "name": "FormDrawer",
@@ -108,7 +243,41 @@
       "whereUsed": [],
       "group": "overlays",
       "subgroup": "drawers",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
+    },
+    {
+      "name": "JsonViewer",
+      "kind": "component",
+      "importStatement": "import { JsonViewer } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "List",
+      "kind": "component",
+      "importStatement": "import { List } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
     },
     {
       "name": "Modal",
@@ -119,7 +288,11 @@
       ],
       "group": "overlays",
       "subgroup": "modal",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
     },
     {
       "name": "PageLayout",
@@ -129,12 +302,61 @@
         "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
         "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
         "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
       ],
       "group": "layout",
       "subgroup": "page",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
+    },
+    {
+      "name": "Pagination",
+      "kind": "component",
+      "importStatement": "import { Pagination } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "Popover",
+      "kind": "component",
+      "importStatement": "import { Popover } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "Radio",
+      "kind": "component",
+      "importStatement": "import { Radio } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
     },
     {
       "name": "ReportFilterPanel",
@@ -145,7 +367,11 @@
       ],
       "group": "layout",
       "subgroup": "filters",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
     },
     {
       "name": "Select",
@@ -157,7 +383,52 @@
       ],
       "group": "forms",
       "subgroup": "select",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
+    },
+    {
+      "name": "Slider",
+      "kind": "component",
+      "importStatement": "import { Slider } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
+    },
+    {
+      "name": "Steps",
+      "kind": "component",
+      "importStatement": "import { Steps } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "Switch",
+      "kind": "component",
+      "importStatement": "import { Switch } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
     },
     {
       "name": "THEME_APPEARANCE_OPTIONS",
@@ -168,7 +439,11 @@
       "subgroup": "options",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "THEME_DENSITY_OPTIONS",
@@ -179,7 +454,11 @@
       "subgroup": "options",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "THEME_ELEVATION_OPTIONS",
@@ -190,7 +469,11 @@
       "subgroup": "options",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "THEME_MOTION_OPTIONS",
@@ -201,7 +484,11 @@
       "subgroup": "options",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "THEME_RADIUS_OPTIONS",
@@ -212,18 +499,58 @@
       "subgroup": "options",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
+    },
+    {
+      "name": "TableSimple",
+      "kind": "component",
+      "importStatement": "import { TableSimple } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "Tabs",
+      "kind": "component",
+      "importStatement": "import { Tabs } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
     },
     {
       "name": "Tag",
       "kind": "component",
       "importStatement": "import { Tag } from 'mfe-ui-kit';",
       "whereUsed": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx"
       ],
       "group": "feedback",
       "subgroup": "tags",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
     },
     {
       "name": "Text",
@@ -233,23 +560,72 @@
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
+        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
       ],
       "group": "content",
       "subgroup": "text",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
+    },
+    {
+      "name": "TextArea",
+      "kind": "component",
+      "importStatement": "import { TextArea } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
+    },
+    {
+      "name": "TextInput",
+      "kind": "component",
+      "importStatement": "import { TextInput } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
     },
     {
       "name": "ThemePreviewCard",
       "kind": "component",
       "importStatement": "import { ThemePreviewCard } from 'mfe-ui-kit';",
       "whereUsed": [
-        "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/widgets/shell/ShellRuntimePanel.tsx"
       ],
       "group": "theme",
       "subgroup": "preview",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
+    },
+    {
+      "name": "TimePicker",
+      "kind": "component",
+      "importStatement": "import { TimePicker } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
     },
     {
       "name": "Tooltip",
@@ -258,7 +634,54 @@
       "whereUsed": [],
       "group": "feedback",
       "subgroup": "tooltips",
-      "tags": []
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "shell"
+    },
+    {
+      "name": "Tree",
+      "kind": "component",
+      "importStatement": "import { Tree } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "TreeTable",
+      "kind": "component",
+      "importStatement": "import { TreeTable } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "runtime",
+      "subgroup": "utilities",
+      "tags": [
+        "unclassified"
+      ],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "beta",
+      "demoType": "shell"
+    },
+    {
+      "name": "Upload",
+      "kind": "component",
+      "importStatement": "import { Upload } from 'mfe-ui-kit';",
+      "whereUsed": [],
+      "group": "forms",
+      "subgroup": "inputs",
+      "tags": [],
+      "hasDemo": true,
+      "hasSpec": true,
+      "status": "stable",
+      "demoType": "form"
     },
     {
       "name": "buildAuthHeaders",
@@ -267,7 +690,11 @@
       "whereUsed": [],
       "group": "runtime",
       "subgroup": "auth",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "buildEntityGridQueryParams",
@@ -276,7 +703,11 @@
       "whereUsed": [],
       "group": "data-grid",
       "subgroup": "entity-grid",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "getResolvedToken",
@@ -285,7 +716,11 @@
       "whereUsed": [],
       "group": "runtime",
       "subgroup": "auth",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "getThemeAxes",
@@ -298,7 +733,11 @@
       "subgroup": "runtime",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "getThemeContract",
@@ -310,7 +749,11 @@
       ],
       "group": "theme",
       "subgroup": "runtime",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "registerTokenResolver",
@@ -319,7 +762,11 @@
       "whereUsed": [],
       "group": "runtime",
       "subgroup": "auth",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "resetTokenResolver",
@@ -328,7 +775,11 @@
       "whereUsed": [],
       "group": "runtime",
       "subgroup": "auth",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "resolveAccessState",
@@ -337,20 +788,28 @@
       "whereUsed": [],
       "group": "runtime",
       "subgroup": "access",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "resolveThemeModeKey",
       "kind": "function",
       "importStatement": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
       "whereUsed": [
-        "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/widgets/shell/ShellRuntimePanel.tsx"
       ],
       "group": "theme",
       "subgroup": "runtime",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setAppearance",
@@ -361,7 +820,11 @@
       "subgroup": "runtime",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setDensity",
@@ -372,7 +835,11 @@
       "subgroup": "runtime",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setElevation",
@@ -383,7 +850,11 @@
       "subgroup": "runtime",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setMotion",
@@ -394,7 +865,11 @@
       "subgroup": "runtime",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setOverlayIntensity",
@@ -405,7 +880,11 @@
       ],
       "group": "theme",
       "subgroup": "runtime",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setOverlayOpacity",
@@ -414,7 +893,11 @@
       "whereUsed": [],
       "group": "theme",
       "subgroup": "runtime",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setRadius",
@@ -425,7 +908,11 @@
       "subgroup": "runtime",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setSurfaceTone",
@@ -436,7 +923,11 @@
       "subgroup": "runtime",
       "tags": [
         "advanced"
-      ]
+      ],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "setTableSurfaceTone",
@@ -447,7 +938,11 @@
       ],
       "group": "theme",
       "subgroup": "runtime",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "shouldBlockInteraction",
@@ -456,7 +951,11 @@
       "whereUsed": [],
       "group": "runtime",
       "subgroup": "access",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "subscribeThemeAxes",
@@ -467,7 +966,11 @@
       ],
       "group": "theme",
       "subgroup": "runtime",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "toggleVariantDefault",
@@ -476,7 +979,11 @@
       "whereUsed": [],
       "group": "data-grid",
       "subgroup": "variants",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "updateThemeAxes",
@@ -487,7 +994,11 @@
       ],
       "group": "theme",
       "subgroup": "runtime",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "useGridVariants",
@@ -496,7 +1007,11 @@
       "whereUsed": [],
       "group": "data-grid",
       "subgroup": "variants",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     },
     {
       "name": "withAccessGuard",
@@ -505,7 +1020,11 @@
       "whereUsed": [],
       "group": "runtime",
       "subgroup": "access",
-      "tags": []
+      "tags": [],
+      "hasDemo": false,
+      "hasSpec": false,
+      "status": "beta",
+      "demoType": "none"
     }
   ]
 }

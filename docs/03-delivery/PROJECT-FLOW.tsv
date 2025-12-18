@@ -43,6 +43,10 @@ STORY-0041	0041	FE Docs Refactor	QLTY-FE-DOCS	—	WEB-PROJECT-LAYOUT / WEB-ARCH	
 STORY-0042	0042	Access Permission Bulk-Assign API v2	QLTY-BE-AUTHZ-SCOPE	—	QLTY-BE-AUTHZ-SCOPE-01, QLTY-BE-AUTHZ-SCOPE-03	AC-0042	⏳ Pending	2025-01-XX	@team/backend	M1	M1	M1	L0	—
 STORY-0043	0043	MF UI Kit Model Unification (Docs Migration)	QLTY-MF-UIKIT	(SPEC-legacy)	QLTY-MF-UIKIT-01, QLTY-MF-UIKIT-01-	AC-0043	⏳ Pending	2025-01-XX	@team/frontend	M1	M1	M1	L0	—
 STORY-0044	9993	Theme SSOT Single-Chain v1	QLTY-THEME-SSOT	✓ (ADR-0002)	—	AC-0044	🟩 Done	2025-12-15	@team/frontend	M3	M3	M3	L3	—
+STORY-0045	0045	Invoice Approval v1 (AI Suggestions + Deterministic Decision)	EPIC-APPROVAL-SYSTEM	✓ (ADR-0003, ADR-0004, ADR-0005, ADR-0006)	SPEC-0001, SPEC-0002, SPEC-0003, SPEC-0004	✓ (AC-0045)	⏳ Pending	2025-12-16	@team/platform	M1	M1	M1	L1	—
+STORY-0046	0046	AI-Native Component Standard v1 (Intent + UI Contract)	EPIC-UI-PLATFORM-AI	✓ (ADR-0007)	SPEC-0005, SPEC-0006, SPEC-0007	✓ (AC-0046)	⏳ Pending	2025-12-16	@team/platform	M1	M1	M1	L0	L1
+STORY-0047	0047	UI Kit Component Test Factory v1 (Docs + Gates)	QLTY-UIKIT-FACTORY	—	SPEC-0008	✓ (AC-0047)	⏳ Pending	2025-12-16	@team/frontend	M1	M1	M1	L0	L1
+STORY-0048	0048	UI Kit P2 Expansion v1 (NAV/FORM/DATA/OVERLAY)	QLTY-UIKIT-P2	—	SPEC-0008	✓ (AC-0048)	🟩 Done	2025-12-18	@team/frontend	M3	M3	M3	L2	—
 STORY-0101	0101	Login API Rate Limiting	EPIC-01	EPIC-01	✓	✓                                  AC-0101	⏳ Pending	2025-01-18	Halil K.	M1	M1	M1	L0	—
 STORY-0102	0102	User Profile Photo Upload	EPIC-01	—	✓	🔧 (AC-0102)	⏳ Pending	2025-01-17	Halil K.	M1	M1	M1	L0	—
 STORY-0201	0201	Budget Report Grid V2	EPIC-02	✓	🔧 Taslak	AC-0201	🟦 Design	2025-01-22	Sezar	M1	M1	M1	L0	—
