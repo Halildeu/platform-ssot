@@ -5,6 +5,8 @@ PROJECT-FLOW ↔ STORY / AC / TP tutarlılık kontrolü.
 Kullanım:
   python3 scripts/check_story_links.py
   python3 scripts/check_story_links.py STORY-0007
+  python3 scripts/check_story_links.py -h
+  python3 scripts/check_story_links.py --help
 
 Kontroller:
 - PROJECT-FLOW tablosundaki her STORY satırı için:
@@ -16,6 +18,7 @@ Kontroller:
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from dataclasses import dataclass
@@ -33,6 +36,19 @@ class StoryRow:
     story_id: str
     acceptance_id: Optional[str]
     raw_line: str
+
+
+def parse_cli_args(argv: List[str]) -> Optional[str]:
+    parser = argparse.ArgumentParser(
+        description="PROJECT-FLOW ↔ STORY / AC / TP tutarlılık kontrolü.",
+    )
+    parser.add_argument(
+        "story_id",
+        nargs="?",
+        help="Sadece verilen STORY-ID için kontrol et (örn. STORY-0007).",
+    )
+    args = parser.parse_args(argv[1:])
+    return args.story_id
 
 
 def parse_project_flow(target_story: Optional[str] = None) -> List[StoryRow]:
@@ -250,9 +266,7 @@ def check_story_link(row: StoryRow) -> List[str]:
 
 
 def main(argv: List[str]) -> int:
-    target_story: Optional[str] = None
-    if len(argv) == 2:
-        target_story = argv[1]
+    target_story = parse_cli_args(argv)
 
     rows = parse_project_flow(target_story)
     if target_story and not rows:
