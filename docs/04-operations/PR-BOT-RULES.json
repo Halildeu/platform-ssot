@@ -1,0 +1,29 @@
+{
+  "version": "0.1",
+  "base_branch": "main",
+  "branch_patterns": ["fix/**", "wip/**"],
+  "draft_policy": { "wip/**": true },
+  "comment_marker": "<!-- pr-bot:rules -->",
+  "comment_templates": {
+    "merge-order": "docs/04-operations/pr-bot-templates/merge-order.md",
+    "evidence-note-0049": "docs/04-operations/pr-bot-templates/evidence-note-0049.md"
+  },
+  "rules": [
+    {
+      "match": "fix/check-story-links-help",
+      "draft": false,
+      "template": "merge-order",
+      "notes": ["Merge order: 1) fix/... 2) wip/... (optional)"]
+    },
+    {
+      "match": "wip/0049-docs",
+      "draft": true,
+      "template": "evidence-note-0049",
+      "expect_story_links_fail": true,
+      "notes": [
+        "docs-only PR",
+        "check_story_links STORY-0049 expected FAIL until added to PROJECT-FLOW.tsv"
+      ]
+    }
+  ]
+}
