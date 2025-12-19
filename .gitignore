@@ -20,6 +20,10 @@ backend/.vault-dev/**
 **/storybook-static/
 **/.lighthouseci/
 
+# Python bytecode (do not commit)
+**/__pycache__/
+**/*.pyc
+
 # Local env files (do not commit)
 **/.env.local
 **/.env.*.local
