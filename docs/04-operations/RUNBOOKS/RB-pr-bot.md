@@ -12,13 +12,14 @@ Owner: @team/platform
 - `fix/**` ve `wip/**` branch push’larında PR yoksa `main`’e PR açmak.
 - PR üzerinde tek bir marker comment’ini idempotent şekilde upsert etmek.
 - `wip/**` için PR’ı Draft yapmak (mümkünse).
+- Rule `auto_merge=true` ise PR için auto-merge enable etmek (best-effort).
 
 -------------------------------------------------------------------------------
 2. KAPSAM
 -------------------------------------------------------------------------------
 
 - Trigger scope:
-  - push: `fix/**`, `wip/**`
+  - push: `fix/**`, `wip/**`, `docs/**`, `ops/**`
   - manuel: `workflow_dispatch`
 - SSOT:
   - Kurallar: `docs/04-operations/PR-BOT-RULES.json`
@@ -74,6 +75,13 @@ Owner: @team/platform
     Then:
     - Draft dönüşümü “best-effort” olarak kalır; comment upsert devam eder.
     - Gerekirse PR’a “draft” niyetini belirten bir label/comment eklenir (fallback).
+
+- [ ] Arıza senaryosu 4 – Auto-merge enable edilemiyor:
+  - Given: Rule `auto_merge=true` ve PR draft değil.  
+    When: Repo ayarında “Allow auto-merge” kapalı veya permission yetersiz.  
+    Then:
+    - Repo Settings → Pull Requests → “Allow auto-merge” açık mı kontrol et.
+    - Permission/policy kısıtında `GH_PR_BOT_TOKEN` fallback’i değerlendir.
 
 -------------------------------------------------------------------------------
 6. ÖZET

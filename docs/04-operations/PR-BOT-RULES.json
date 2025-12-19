@@ -1,10 +1,11 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "base_branch": "main",
-  "branch_patterns": ["fix/**", "wip/**"],
+  "branch_patterns": ["fix/**", "wip/**", "docs/**", "ops/**"],
   "draft_policy": { "wip/**": true },
   "comment_marker": "<!-- pr-bot:rules -->",
   "comment_templates": {
+    "default": "docs/04-operations/pr-bot-templates/default.md",
     "merge-order": "docs/04-operations/pr-bot-templates/merge-order.md",
     "evidence-note-0049": "docs/04-operations/pr-bot-templates/evidence-note-0049.md"
   },
@@ -12,18 +13,34 @@
     {
       "match": "fix/check-story-links-help",
       "draft": false,
+      "auto_merge": false,
       "template": "merge-order",
       "notes": ["Merge order: 1) fix/... 2) wip/... (optional)"]
     },
     {
       "match": "wip/0049-docs",
       "draft": true,
+      "auto_merge": false,
       "template": "evidence-note-0049",
       "expect_story_links_fail": true,
       "notes": [
         "docs-only PR",
         "check_story_links STORY-0049 expected FAIL until added to PROJECT-FLOW.tsv"
       ]
+    },
+    {
+      "match": "docs/**",
+      "draft": false,
+      "auto_merge": true,
+      "template": "default",
+      "notes": ["docs/** PR'ları için default template + auto-merge (best-effort)"]
+    },
+    {
+      "match": "ops/**",
+      "draft": false,
+      "auto_merge": false,
+      "template": "default",
+      "notes": ["ops/** PR'ları için default template (auto-merge kapalı)"]
     }
   ]
 }

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-PR Bot (v0.1)
+PR Bot (v0.2)
 
 Amaç:
-- fix/** ve wip/** branch push'larında PR yoksa PR aç
+- fix/**, wip/**, docs/**, ops/** branch push'larında PR yoksa PR aç
 - PR üzerinde tek bir marker comment'ini idempotent şekilde upsert et
 - wip/** için PR'ı draft yapmak (best-effort)
+- Rule auto-merge açıksa PR için auto-merge enable et (best-effort)
 
 Notlar:
 - SSOT: docs/04-operations/PR-BOT-RULES.json
@@ -31,7 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REST_API_BASE = "https://api.github.com"
 GRAPHQL_API = "https://api.github.com/graphql"
 API_VERSION = "2022-11-28"
-USER_AGENT = "platform-ssot-pr-bot/0.1"
+USER_AGENT = "platform-ssot-pr-bot/0.2"
 
 
 EXIT_OK = 0
@@ -46,6 +47,7 @@ class Rule:
     match: str
     template_key: str
     draft: Optional[bool]
+    auto_merge: bool
 
 
 class GitHubApiError(RuntimeError):
@@ -82,29 +84,65 @@ def match_any(branch: str, patterns: Iterable[str]) -> bool:
     return False
 
 
-def select_rule(config: Dict[str, Any], branch: str) -> Optional[Rule]:
+def parse_rule(raw: Dict[str, Any]) -> Rule:
+    match = raw.get("match")
+    if not isinstance(match, str) or not match.strip():
+        raise SystemExit("Rule match eksik/geçersiz.")
+
+    template_key = raw.get("template")
+    if not isinstance(template_key, str) or not template_key.strip():
+        raise SystemExit(f"Rule template eksik/geçersiz: match={match}")
+
+    draft_val = raw.get("draft")
+    draft: Optional[bool]
+    if isinstance(draft_val, bool):
+        draft = draft_val
+    elif draft_val is None:
+        draft = None
+    else:
+        raise SystemExit(f"Rule draft bool olmalı: match={match}")
+
+    auto_merge_val = raw.get("auto_merge")
+    if auto_merge_val is None:
+        auto_merge = False
+    elif isinstance(auto_merge_val, bool):
+        auto_merge = auto_merge_val
+    else:
+        raise SystemExit(f"Rule auto_merge bool olmalı: match={match}")
+
+    return Rule(match=match, template_key=template_key, draft=draft, auto_merge=auto_merge)
+
+
+def select_rule(config: Dict[str, Any], branch: str) -> Rule:
     rules = config.get("rules") or []
     if not isinstance(rules, list):
         raise SystemExit("PR-BOT-RULES.json: rules list değil.")
 
+    parsed: List[Rule] = []
     for raw in rules:
         if not isinstance(raw, dict):
             continue
-        if raw.get("match") == branch:
-            template_key = raw.get("template")
-            if not isinstance(template_key, str) or not template_key.strip():
-                raise SystemExit(f"Rule template eksik/geçersiz: match={branch}")
-            draft_val = raw.get("draft")
-            draft: Optional[bool]
-            if isinstance(draft_val, bool):
-                draft = draft_val
-            elif draft_val is None:
-                draft = None
-            else:
-                raise SystemExit(f"Rule draft bool olmalı: match={branch}")
-            return Rule(match=branch, template_key=template_key, draft=draft)
+        parsed.append(parse_rule(raw))
 
-    return None
+    # 1) Önce exact match
+    for rule in parsed:
+        if rule.match == branch:
+            return rule
+
+    # 2) Sonra pattern match (fnmatch)
+    for rule in parsed:
+        if fnmatch.fnmatch(branch, rule.match):
+            return rule
+
+    # 3) Fallback: default template (SSOT)
+    templates = config.get("comment_templates") or {}
+    if not isinstance(templates, dict):
+        raise SystemExit("PR-BOT-RULES.json: comment_templates dict değil.")
+    if "default" not in templates:
+        raise SystemExit(
+            f"Rule bulunamadı ve default template yok: branch={branch} (comment_templates.default bekleniyor)."
+        )
+    return Rule(match="(default)", template_key="default", draft=None, auto_merge=False)
 
 
 def desired_draft_state(config: Dict[str, Any], branch: str, rule: Rule) -> bool:
@@ -143,6 +181,9 @@ def build_comment_body(config: Dict[str, Any], template_key: str) -> str:
         raise SystemExit("PR-BOT-RULES.json: comment_marker eksik/geçersiz.")
 
     template = read_template(config, template_key)
+    # Template marker içeriyorsa tekrar prepend etmeyelim.
+    if marker in template:
+        return template
     return f"{marker}\n{template}"
 
 
@@ -305,6 +346,21 @@ mutation($prId: ID!) {
         return False, f"fail: {e}"
 
 
+def enable_auto_merge_best_effort(token: str, pr_node_id: str, merge_method: str) -> Tuple[bool, str]:
+    query = """
+mutation($prId: ID!, $mergeMethod: PullRequestMergeMethod!) {
+  enablePullRequestAutoMerge(input: { pullRequestId: $prId, mergeMethod: $mergeMethod }) {
+    pullRequest { id isDraft url }
+  }
+}
+""".strip()
+    try:
+        graphql_mutation(token, query, {"prId": pr_node_id, "mergeMethod": merge_method})
+        return True, "ok"
+    except GitHubApiError as e:
+        return False, f"fail: {e}"
+
+
 def write_step_summary(lines: List[str]) -> None:
     path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not path:
@@ -362,9 +418,6 @@ def main(argv: List[str]) -> int:
             return EXIT_OK
 
     rule = select_rule(config, args.branch)
-    if not rule:
-        print(f"[pr-bot] noop: rule yok: {args.branch}")
-        return EXIT_OK
 
     marker = config.get("comment_marker") or ""
     if not isinstance(marker, str) or not marker.strip():
@@ -378,19 +431,24 @@ def main(argv: List[str]) -> int:
         return EXIT_CONFIG
 
     want_draft = desired_draft_state(config, args.branch, rule)
+    want_auto_merge = bool(rule.auto_merge)
 
     if args.dry_run:
         print("[pr-bot] dry-run")
         print(f"- repo:   {owner}/{repo}")
         print(f"- branch: {args.branch}")
         print(f"- base:   {base_branch}")
-        print(f"- rule:   match={rule.match} template={rule.template_key} draft={want_draft}")
+        print(
+            f"- rule:   match={rule.match} template={rule.template_key} draft={want_draft} auto_merge={want_auto_merge}"
+        )
         print(f"- comment_marker: {marker}")
         print("- actions:")
         print("  - ensure PR exists (create if missing)")
         if want_draft:
             print("  - ensure PR is draft (best-effort)")
         print("  - upsert marker comment")
+        if want_auto_merge and not want_draft:
+            print("  - enable auto-merge (best-effort)")
         return EXIT_OK
 
     token = os.environ.get(args.token_env) or os.environ.get("GITHUB_TOKEN")
@@ -404,7 +462,7 @@ def main(argv: List[str]) -> int:
     summary.append(f"- Repo: `{owner}/{repo}`")
     summary.append(f"- Branch: `{args.branch}`")
     summary.append(f"- Base: `{base_branch}`")
-    summary.append(f"- Rule: `{rule.template_key}` (draft={want_draft})")
+    summary.append(f"- Rule: `{rule.template_key}` (draft={want_draft}, auto_merge={want_auto_merge})")
 
     try:
         pr = find_open_pr(owner, repo, args.branch, base_branch, token)
@@ -447,6 +505,19 @@ def main(argv: List[str]) -> int:
         if comment_url:
             summary.append(f"  - {comment_url}")
         print(f"[pr-bot] Comment: {comment_action}")
+
+        auto_merge_action = "skipped"
+        if want_auto_merge:
+            if pr_is_draft is True or want_draft:
+                auto_merge_action = "skipped (draft)"
+            elif pr_node_id and isinstance(pr_node_id, str):
+                ok, msg = enable_auto_merge_best_effort(token, pr_node_id, merge_method="SQUASH")
+                auto_merge_action = "enabled" if ok else f"warn ({msg})"
+            else:
+                auto_merge_action = "skipped (missing node_id)"
+        summary.append(f"- Auto-merge: {auto_merge_action}")
+        if want_auto_merge:
+            print(f"[pr-bot] Auto-merge: {auto_merge_action}")
 
         write_step_summary(summary)
         return EXIT_OK

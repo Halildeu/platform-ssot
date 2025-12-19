@@ -2,7 +2,7 @@ name: PR Bot
 
 on:
   push:
-    branches: ["fix/**", "wip/**"]
+    branches: ["fix/**", "wip/**", "docs/**", "ops/**"]
   workflow_dispatch: {}
 
 permissions:
