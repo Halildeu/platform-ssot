@@ -32,3 +32,6 @@ backend/.vault-dev/**
 **/test-results/
 **/logs/
 **/telemetry/
+
+# security
+/token.txt
