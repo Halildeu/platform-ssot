@@ -178,13 +178,17 @@ def flags_from_paths(paths: Sequence[str]) -> ChangeFlags:
         )
 
     def is_workflows_path(p: str) -> bool:
-        return p.startswith(".github/workflows/") or p == "scripts/ci_gate.py"
+        return (
+            p.startswith(".github/workflows/")
+            or p == "scripts/ci_gate.py"
+            or p.startswith("scripts/ci_gate.")
+        )
 
     docs_changed = any(is_docs_path(p) for p in paths)
     web_changed = any(p.startswith("web/") for p in paths)
     backend_changed = any(p.startswith("backend/") for p in paths)
     workflows_changed = any(is_workflows_path(p) for p in paths)
-    meta_changed = any(p == ".gitignore" for p in paths)
+    meta_changed = any(p in {".gitignore", ".editorconfig"} for p in paths)
     return ChangeFlags(
         docs_changed=docs_changed,
         web_changed=web_changed,
@@ -253,8 +257,8 @@ def main(argv: List[str]) -> int:
 
     results: List[GateResult] = []
 
-    docs_gate_needed = flags.workflows_changed or flags.docs_changed or flags.meta_changed
-    layout_gate_needed = flags.workflows_changed or flags.backend_changed or flags.web_changed or flags.meta_changed
+    docs_gate_needed = flags.workflows_changed or flags.docs_changed
+    layout_gate_needed = flags.workflows_changed or flags.backend_changed or flags.web_changed
     web_gate_needed = flags.workflows_changed or flags.web_changed or flags.meta_changed
     backend_gate_needed = flags.workflows_changed or flags.backend_changed
 
