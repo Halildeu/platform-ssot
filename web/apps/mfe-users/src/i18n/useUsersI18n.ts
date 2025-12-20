@@ -87,16 +87,15 @@ export const useUsersI18n = () => {
   }, [resolvedManager]);
 
   const ready = resolvedManager.hasDictionary(NAMESPACE);
+  const locale = resolvedManager.getLocale();
 
   const t = React.useCallback(
     (key: string, params?: Record<string, unknown>) => {
       const namespace = key.startsWith('shell.') ? COMMON_NAMESPACE : NAMESPACE;
       return resolvedManager.translateSync(key, params ?? {}, namespace);
     },
-    [resolvedManager],
+    [resolvedManager, locale],
   );
-
-  const locale = resolvedManager.getLocale();
 
   return {
     t,

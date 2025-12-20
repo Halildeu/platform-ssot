@@ -9,6 +9,7 @@ type ScenarioStep =
   | { goto: string }
   | { click: string }
   | { fill: { selector: string; value: string } | [string, string] }
+  | { select: { selector: string; value: string } | [string, string] }
   | { waitForURL: string }
   | { waitForSelector: string }
   | { expectVisible: string };
@@ -403,6 +404,13 @@ const runStep = async (
     const selector = Array.isArray(raw) ? raw[0] : raw.selector;
     const value = Array.isArray(raw) ? raw[1] : raw.value;
     await page.locator(selector).fill(value);
+    return;
+  }
+  if ('select' in step) {
+    const raw = step.select;
+    const selector = Array.isArray(raw) ? raw[0] : raw.selector;
+    const value = Array.isArray(raw) ? raw[1] : raw.value;
+    await page.locator(selector).selectOption(value);
     return;
   }
   if ('waitForURL' in step) {
