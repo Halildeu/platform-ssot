@@ -34,6 +34,7 @@ class ChangeFlags:
     web_changed: bool
     backend_changed: bool
     workflows_changed: bool
+    meta_changed: bool
 
 
 @dataclass(frozen=True)
@@ -142,7 +143,18 @@ def read_github_event() -> Optional[dict]:
 
 
 def compute_changed_files(base_ref: str, head_ref: str) -> List[str]:
-    # 1) PR merge commit ise (2 parent), doğrudan parent diff ile en deterministik yol.
+    # 1) GitHub PR event payload varsa base/head sha ile diff al (en deterministik yol).
+    event = read_github_event()
+    pr = (event or {}).get("pull_request")
+    if isinstance(pr, dict):
+        base_sha = ((pr.get("base") or {}) if isinstance(pr.get("base"), dict) else {}).get("sha")
+        head_sha = ((pr.get("head") or {}) if isinstance(pr.get("head"), dict) else {}).get("sha")
+        if isinstance(base_sha, str) and isinstance(head_sha, str):
+            ok2, out2 = try_git_capture(["diff", "--name-only", f"{base_sha}..{head_sha}"])
+            if ok2:
+                return [l.strip() for l in out2.splitlines() if l.strip()]
+
+    # 2) PR merge commit ise (2 parent), doğrudan parent diff (checkout merge ref için).
     ok, parents_line = try_git_capture(["rev-list", "--parents", "-n", "1", head_ref])
     if ok:
         parts = parents_line.strip().split()
@@ -150,17 +162,6 @@ def compute_changed_files(base_ref: str, head_ref: str) -> List[str]:
             _, p1, p2 = parts
             out = git_capture(["diff", "--name-only", p1, p2])
             return [l.strip() for l in out.splitlines() if l.strip()]
-
-    # 2) GitHub event payload varsa base/head sha ile diff dene.
-    event = read_github_event()
-    pr = (event or {}).get("pull_request")
-    if isinstance(pr, dict):
-        base_sha = ((pr.get("base") or {}) if isinstance(pr.get("base"), dict) else {}).get("sha")
-        head_sha = ((pr.get("head") or {}) if isinstance(pr.get("head"), dict) else {}).get("sha")
-        if isinstance(base_sha, str) and isinstance(head_sha, str):
-            ok2, out2 = try_git_capture(["diff", "--name-only", base_sha, head_sha])
-            if ok2:
-                return [l.strip() for l in out2.splitlines() if l.strip()]
 
     # 3) Local/fallback: merge-base diff (A...B)
     out = git_capture(["diff", "--name-only", f"{base_ref}...{head_ref}"])
@@ -176,15 +177,20 @@ def flags_from_paths(paths: Sequence[str]) -> ChangeFlags:
             or p == "NUMARALANDIRMA-STANDARDI.md"
         )
 
+    def is_workflows_path(p: str) -> bool:
+        return p.startswith(".github/workflows/") or p == "scripts/ci_gate.py"
+
     docs_changed = any(is_docs_path(p) for p in paths)
     web_changed = any(p.startswith("web/") for p in paths)
     backend_changed = any(p.startswith("backend/") for p in paths)
-    workflows_changed = any(p.startswith(".github/workflows/") for p in paths)
+    workflows_changed = any(is_workflows_path(p) for p in paths)
+    meta_changed = any(p == ".gitignore" for p in paths)
     return ChangeFlags(
         docs_changed=docs_changed,
         web_changed=web_changed,
         backend_changed=backend_changed,
         workflows_changed=workflows_changed,
+        meta_changed=meta_changed,
     )
 
 
@@ -197,6 +203,7 @@ def write_github_outputs(flags: ChangeFlags) -> None:
         f"web_changed={'true' if flags.web_changed else 'false'}",
         f"backend_changed={'true' if flags.backend_changed else 'false'}",
         f"workflows_changed={'true' if flags.workflows_changed else 'false'}",
+        f"meta_changed={'true' if flags.meta_changed else 'false'}",
     ]
     Path(out_path).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -238,6 +245,7 @@ def main(argv: List[str]) -> int:
     print(f"- web_changed={flags.web_changed}")
     print(f"- backend_changed={flags.backend_changed}")
     print(f"- workflows_changed={flags.workflows_changed}")
+    print(f"- meta_changed={flags.meta_changed}")
 
     if args.emit_github_outputs:
         write_github_outputs(flags)
@@ -245,10 +253,10 @@ def main(argv: List[str]) -> int:
 
     results: List[GateResult] = []
 
-    docs_gate_needed = flags.docs_changed or flags.workflows_changed
-    layout_gate_needed = flags.backend_changed or flags.web_changed or flags.workflows_changed
-    web_gate_needed = flags.web_changed or flags.workflows_changed
-    backend_gate_needed = flags.backend_changed or flags.workflows_changed
+    docs_gate_needed = flags.workflows_changed or flags.docs_changed or flags.meta_changed
+    layout_gate_needed = flags.workflows_changed or flags.backend_changed or flags.web_changed or flags.meta_changed
+    web_gate_needed = flags.workflows_changed or flags.web_changed or flags.meta_changed
+    backend_gate_needed = flags.workflows_changed or flags.backend_changed
 
     if docs_gate_needed:
         results.append(
@@ -324,6 +332,7 @@ def main(argv: List[str]) -> int:
         f"- web_changed: `{flags.web_changed}`",
         f"- backend_changed: `{flags.backend_changed}`",
         f"- workflows_changed: `{flags.workflows_changed}`",
+        f"- meta_changed: `{flags.meta_changed}`",
         "",
         "## Gates",
     ]
