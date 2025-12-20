@@ -1,0 +1,40 @@
+name: Log Digest
+
+on:
+  workflow_run:
+    workflows:
+      - ci-gate
+      - Web QA
+      - Layout QA
+      - Doc QA
+      - security-guardrails
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: log-digest-${{ github.event.workflow_run.id }}
+  cancel-in-progress: true
+
+jobs:
+  log-digest:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'success' && github.event.workflow_run.event == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Post failure digest comment
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          python3 scripts/log_digest.py --run-id "${{ github.event.workflow_run.id }}" --repo "${{ github.repository }}"
