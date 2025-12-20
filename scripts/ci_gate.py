@@ -16,8 +16,10 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shlex
 import subprocess
 import sys
+from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence, Tuple
@@ -41,9 +43,66 @@ class GateResult:
     exit_code: int
 
 
-def run_cmd(argv: Sequence[str], cwd: Optional[Path] = None) -> int:
-    proc = subprocess.run(list(argv), cwd=str(cwd) if cwd else None)
-    return proc.returncode
+def run_cmd(argv: Sequence[str], *, gate: str, cwd: Optional[Path] = None) -> int:
+    cmd = shlex.join(list(argv))
+    print(f"[ci-gate] RUN: {cmd}")
+
+    tail = deque(maxlen=200)
+
+    try:
+        proc = subprocess.Popen(
+            list(argv),
+            cwd=str(cwd) if cwd else None,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+    except FileNotFoundError:
+        msg = f"[ci-gate] FAIL: gate={gate} (command not found): {cmd}"
+        print(msg)
+        append_step_summary(f"### ci-gate failure ({gate})\n\n{msg}\n")
+        return 127
+
+    assert proc.stdout is not None
+    for line in proc.stdout:
+        sys.stdout.write(line)
+        sys.stdout.flush()
+        tail.append(line.rstrip("\n"))
+
+    proc.wait()
+    code = int(proc.returncode or 0)
+
+    if code != 0:
+        tail_text = "\n".join(tail)
+        header = f"[ci-gate] FAIL: gate={gate} code={code} cmd={cmd}"
+        print(header)
+        print("[ci-gate] last 200 lines:")
+        if tail_text:
+            print(tail_text)
+        else:
+            print("(no output)")
+
+        append_step_summary(
+            "\n".join(
+                [
+                    f"### ci-gate failure ({gate})",
+                    "",
+                    f"- exit_code: `{code}`",
+                    "",
+                    "```",
+                    cmd,
+                    "```",
+                    "",
+                    "Last 200 lines:",
+                    "```",
+                    tail_text or "(no output)",
+                    "```",
+                    "",
+                ]
+            )
+        )
+
+    return code
 
 
 def git_capture(argv: Sequence[str]) -> str:
@@ -154,7 +213,7 @@ def append_step_summary(text: str) -> None:
 
 def run_gate(name: str, commands: List[Tuple[List[str], Optional[Path]]]) -> GateResult:
     for argv, cwd in commands:
-        code = run_cmd(argv, cwd=cwd)
+        code = run_cmd(argv, gate=name, cwd=cwd)
         if code != 0:
             return GateResult(name=name, status="FAIL", exit_code=code)
     return GateResult(name=name, status="PASS", exit_code=0)
@@ -287,4 +346,3 @@ def main(argv: List[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv))
-
