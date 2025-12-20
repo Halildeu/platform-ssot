@@ -506,9 +506,9 @@ def main(argv: List[str]) -> int:
             print(f"  - ensure label: {merge_label} (best-effort)")
         return EXIT_OK
 
-    token = os.environ.get(args.token_env) or os.environ.get("GITHUB_TOKEN")
+    token = os.environ.get(args.token_env) or os.environ.get("GH_SECRETS_SYNC_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if not token:
-        eprint(f"HATA: token bulunamadı. env:{args.token_env} (fallback: GITHUB_TOKEN)")
+        eprint(f"HATA: token bulunamadı. env:{args.token_env} (fallback: GH_SECRETS_SYNC_TOKEN, GITHUB_TOKEN)")
         return EXIT_AUTH
 
     summary: List[str] = []

@@ -28,7 +28,7 @@ jobs:
 
       - name: Run PR bot (create PR + upsert comment)
         env:
-          GH_TOKEN: ${{ secrets.GH_PR_BOT_TOKEN || github.token }}
+          GH_TOKEN: ${{ secrets.GH_PR_BOT_TOKEN || secrets.GH_SECRETS_SYNC_TOKEN || github.token }}
         run: |
           set -e
           python3 scripts/pr_bot.py --rules-path docs/04-operations/PR-BOT-RULES.json

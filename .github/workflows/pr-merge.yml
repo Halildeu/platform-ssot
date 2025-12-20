@@ -31,7 +31,7 @@ jobs:
 
       - name: Merge ready PR (label-gated)
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_PR_BOT_TOKEN || secrets.GH_SECRETS_SYNC_TOKEN || github.token }}
         run: |
           set -e
           python3 scripts/pr_merge.py --rules-path docs/04-operations/PR-BOT-RULES.json
