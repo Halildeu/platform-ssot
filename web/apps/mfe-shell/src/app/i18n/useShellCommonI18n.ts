@@ -35,7 +35,7 @@ export const useShellCommonI18n = () => {
   const t = React.useCallback(
     (key: string, params?: Record<string, unknown>) =>
       manager.translateSync(key, params ?? {}, NAMESPACE),
-    [manager],
+    [manager, locale],
   );
 
   return { t, ready, manager, locale };

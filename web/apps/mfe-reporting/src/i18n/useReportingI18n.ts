@@ -63,10 +63,11 @@ export const useReportingI18n = () => {
   }, [resolvedManager]);
 
   const ready = resolvedManager.hasDictionary(NAMESPACE);
+  const locale = resolvedManager.getLocale();
 
   const t = React.useCallback(
     (key: string, params?: Record<string, unknown>) => resolvedManager.translateSync(key, params ?? {}, NAMESPACE),
-    [resolvedManager],
+    [resolvedManager, locale],
   );
 
   return {

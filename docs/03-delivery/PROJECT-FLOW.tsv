@@ -47,6 +47,7 @@ STORY-0045	0045	Invoice Approval v1 (AI Suggestions + Deterministic Decision)	EP
 STORY-0046	0046	AI-Native Component Standard v1 (Intent + UI Contract)	EPIC-UI-PLATFORM-AI	✓ (ADR-0007)	SPEC-0005, SPEC-0006, SPEC-0007	✓ (AC-0046)	⏳ Pending	2025-12-16	@team/platform	M1	M1	M1	L0	L1
 STORY-0047	0047	UI Kit Component Test Factory v1 (Docs + Gates)	QLTY-UIKIT-FACTORY	—	SPEC-0008	✓ (AC-0047)	⏳ Pending	2025-12-16	@team/frontend	M1	M1	M1	L0	L1
 STORY-0048	0048	UI Kit P2 Expansion v1 (NAV/FORM/DATA/OVERLAY)	QLTY-UIKIT-P2	—	SPEC-0008	✓ (AC-0048)	🟩 Done	2025-12-18	@team/frontend	M3	M3	M3	L2	—
+STORY-0050	0050	i18n Locale Propagation Fix v1 (Stale UI)	UX-GLOBAL-A11Y	—	—	✓ (AC-0050)	🟩 Done	2025-12-20	@team/frontend	M1	M1	M1	L3	—
 STORY-0101	0101	Login API Rate Limiting	EPIC-01	EPIC-01	✓	✓                                  AC-0101	⏳ Pending	2025-01-18	Halil K.	M1	M1	M1	L0	—
 STORY-0102	0102	User Profile Photo Upload	EPIC-01	—	✓	🔧 (AC-0102)	⏳ Pending	2025-01-17	Halil K.	M1	M1	M1	L0	—
 STORY-0201	0201	Budget Report Grid V2	EPIC-02	✓	🔧 Taslak	AC-0201	🟦 Design	2025-01-22	Sezar	M1	M1	M1	L0	—

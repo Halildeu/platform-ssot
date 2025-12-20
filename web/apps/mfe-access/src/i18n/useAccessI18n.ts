@@ -79,22 +79,23 @@ export const useAccessI18n = (options?: UseAccessI18nOptions) => {
   }, [manager]);
 
   const ready = manager.hasDictionary(NAMESPACE);
+  const locale = manager.getLocale();
 
   const t = React.useCallback(
     (key: string, params?: Record<string, unknown>) =>
       manager.translateSync(key, params ?? {}, NAMESPACE),
-    [manager],
+    [manager, locale],
   );
 
   const formatNumber = React.useCallback(
     (value: number, options?: Intl.NumberFormatOptions) => manager.formatNumber(value, options),
-    [manager],
+    [manager, locale],
   );
 
   const formatDate = React.useCallback(
     (value: Date | number, options?: Intl.DateTimeFormatOptions) =>
       manager.formatDate(value, options),
-    [manager],
+    [manager, locale],
   );
 
   return { t, ready, formatNumber, formatDate };

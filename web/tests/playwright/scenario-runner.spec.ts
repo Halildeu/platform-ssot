@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { load as loadYaml } from 'js-yaml';
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type Route } from '@playwright/test';
 import { authenticateAndNavigate } from './utils/auth';
 import { createTelemetryCollector, type TelemetryAllowlists, type TelemetryResult } from './utils/pw_telemetry';
 
@@ -9,6 +9,7 @@ type ScenarioStep =
   | { goto: string }
   | { click: string }
   | { fill: { selector: string; value: string } | [string, string] }
+  | { select: { selector: string; value: string } | [string, string] }
   | { waitForURL: string }
   | { waitForSelector: string }
   | { expectVisible: string };
@@ -65,6 +66,14 @@ const parseAuthMode = () => (process.env.PW_AUTH_MODE ?? 'none').trim().toLowerC
 const parseReadonlyEnforce = () => (process.env.PW_READONLY_ENFORCE ?? '').trim() === '1';
 
 const parseReadonlyPathRegex = () => (process.env.PW_READONLY_PATH_REGEX ?? '/api/').trim() || '/api/';
+
+const parseMockThemeRegistry = () => {
+  const raw = (process.env.PW_MOCK_THEME_REGISTRY ?? '1').trim().toLowerCase();
+  if (raw === '0' || raw === 'false' || raw === 'no') return false;
+  return raw === '1' || raw === 'true' || raw === 'yes';
+};
+
+const parseMockApi = () => (process.env.PW_MOCK_API ?? '').trim() === '1';
 
 const hasInjectedToken = () => Boolean((process.env.PW_TEST_TOKEN ?? '').trim());
 
@@ -239,6 +248,7 @@ const writeScenarioReport = (result: ScenarioRunResult) => {
   lines.push('| Metrik | Count |');
   lines.push('|---|---:|');
   const s = result.telemetry.summary;
+  const mockedCount = result.telemetry.network.filter((item) => item.headers?.['x-pw-mocked'] === '1').length;
   lines.push(`| console.error (allowlist hariç) | ${s.consoleErrors} |`);
   lines.push(`| console.warn (allowlist hariç) | ${s.consoleWarns} |`);
   lines.push(`| pageerror | ${s.pageErrors} |`);
@@ -246,6 +256,7 @@ const writeScenarioReport = (result: ScenarioRunResult) => {
   lines.push(`| xhr/fetch 403 (allowlist hariç) | ${s.network403} |`);
   lines.push(`| xhr/fetch 5xx (allowlist hariç) | ${s.network5xx} |`);
   lines.push(`| xhr/fetch requestfailed (allowlist hariç) | ${s.networkFailures} |`);
+  lines.push(`| xhr/fetch mocked (x-pw-mocked=1) | ${mockedCount} |`);
   lines.push(`| readonly violations (non-GET/HEAD, allowlist hariç) | ${s.readonlyViolations ?? 0} |`);
   lines.push('');
 
@@ -405,6 +416,13 @@ const runStep = async (
     await page.locator(selector).fill(value);
     return;
   }
+  if ('select' in step) {
+    const raw = step.select;
+    const selector = Array.isArray(raw) ? raw[0] : raw.selector;
+    const value = Array.isArray(raw) ? raw[1] : raw.value;
+    await page.locator(selector).selectOption(value);
+    return;
+  }
   if ('waitForURL' in step) {
     await page.waitForURL(step.waitForURL);
     return;
@@ -418,6 +436,73 @@ const runStep = async (
     return;
   }
   console.warn('[pw_runner] unsupported step', step);
+};
+
+const mockJson = async (route: Route, body: unknown) => {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    headers: {
+      'x-pw-mocked': '1',
+      'cache-control': 'no-store',
+    },
+    body: JSON.stringify(body),
+  });
+};
+
+const installThemeRegistryMock = async (page: Page) => {
+  await page.route(/\/api\/v1\/theme-registry(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, []);
+  });
+};
+
+const installApiMocks = async (page: Page) => {
+  await page.route(/\/api\/v1\/me\/theme\/resolved(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, { themeId: 'pw-default', type: 'GLOBAL', appearance: 'light', tokens: {} });
+  });
+
+  await page.route(/\/api\/v1\/roles(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, { items: [], total: 0 });
+  });
+
+  await page.route(/\/api\/v1\/users(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    const url = new URL(request.url());
+    const pageNumber = Number(url.searchParams.get('page') ?? 1) || 1;
+    const pageSize = Number(url.searchParams.get('pageSize') ?? 20) || 20;
+    await mockJson(route, { items: [], total: 0, page: pageNumber, pageSize });
+  });
+
+  await page.route(/\/manifest\/v1\/manifest\.json(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, { pages: {} });
+  });
+
+  await page.route(/\/manifest\/v1\/page-(users|access)\.layout\.json(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, {});
+  });
 };
 
 const evaluateOutcome = (
@@ -477,6 +562,8 @@ test.describe('Playwright YAML scenario runner', () => {
   const authMode = parseAuthMode();
   const readonlyEnforce = parseReadonlyEnforce();
   const readonlyPathRegex = parseReadonlyPathRegex();
+  const mockThemeRegistry = parseMockThemeRegistry();
+  const mockApi = parseMockApi();
   const readonlyAllowlistEnv = parseReadonlyAllowlistFromEnv(softMode);
 
   if (!softMode) {
@@ -504,6 +591,13 @@ test.describe('Playwright YAML scenario runner', () => {
       const failReasons: string[] = [];
       const warnReasons: string[] = [];
       let telemetry: TelemetryResult;
+
+      if (mockThemeRegistry) {
+        await installThemeRegistryMock(page);
+      }
+      if (mockApi) {
+        await installApiMocks(page);
+      }
 
       const authRequired = Boolean(scenario.auth_required);
       if (authRequired) {
