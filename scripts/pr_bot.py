@@ -235,6 +235,50 @@ def rest_url(owner: str, repo: str, path: str, query: Optional[Dict[str, str]] =
         return base
     return f"{base}?{urlencode(query)}"
 
+def detect_is_fork_repo() -> Optional[bool]:
+    """
+    GitHub Actions event payload'ından repo'nun fork olup olmadığını best-effort tespit eder.
+    Local koşumda `GITHUB_EVENT_PATH` genelde yoktur → None döner.
+    """
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    if not event_path:
+        return None
+    try:
+        data = json.loads(Path(event_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+    repo = data.get("repository")
+    if not isinstance(repo, dict):
+        return None
+    fork = repo.get("fork")
+    return fork if isinstance(fork, bool) else None
+
+
+def normalize_branch_and_head(owner: str, branch: str) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Dönüş:
+      (branch_name, head_ref)
+
+    Kurallar:
+    - Normal durumda branch="docs/x" → head="OWNER:docs/x"
+    - Eğer branch "other:docs/x" gibi owner prefix içeriyorsa:
+      - prefix owner değilse noop (None, None)
+      - prefix owner ise normalize edip branch="docs/x" yap
+    """
+    if ":" not in branch:
+        return branch, f"{owner}:{branch}"
+
+    head_owner, head_branch = branch.split(":", 1)
+    head_owner = head_owner.strip()
+    head_branch = head_branch.strip()
+    if not head_owner or not head_branch:
+        return None, None
+    if head_owner != owner:
+        print(f"[pr-bot] noop: head başka owner'a ait: head={head_owner}:{head_branch} expected_owner={owner}")
+        return None, None
+    return head_branch, f"{owner}:{head_branch}"
+
 
 def find_open_pr(owner: str, repo: str, branch: str, base: str, token: str) -> Optional[Dict[str, Any]]:
     url = rest_url(
@@ -258,7 +302,9 @@ def find_open_pr(owner: str, repo: str, branch: str, base: str, token: str) -> O
 
 def create_pr(owner: str, repo: str, branch: str, base: str, draft: bool, token: str) -> Dict[str, Any]:
     url = rest_url(owner, repo, "/pulls")
-    body = {"title": branch, "head": branch, "base": base, "draft": bool(draft)}
+    head = f"{owner}:{branch}"
+    print(f"[pr-bot] create_pr base={base} head={head}")
+    body = {"title": branch, "head": head, "base": base, "draft": bool(draft)}
     pr = api_request_json("POST", url, token, body=body)
     if not isinstance(pr, dict):
         raise GitHubApiError(status=0, message="PR create response dict olmalı.", response_body=str(pr))
@@ -444,7 +490,17 @@ def main(argv: List[str]) -> int:
         eprint("HATA: --branch verilmeli veya GITHUB_REF_NAME set olmalı.")
         return EXIT_CONFIG
 
+    if not args.dry_run:
+        is_fork = detect_is_fork_repo()
+        if is_fork is True:
+            print("[pr-bot] noop: fork repo")
+            return EXIT_OK
+
     owner, repo = args.repo.split("/", 1)
+    normalized_branch, _head_ref = normalize_branch_and_head(owner, args.branch)
+    if not normalized_branch:
+        return EXIT_OK
+    args.branch = normalized_branch
     rules_path = resolve_repo_path(args.rules_path)
 
     try:
