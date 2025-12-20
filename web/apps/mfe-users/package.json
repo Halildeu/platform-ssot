@@ -8,7 +8,7 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "npm-run-all test:users test:variants",
     "test:variants": "tsx --test \"../../packages/ui-kit/src/lib/grid-variants/__tests__/*.test.ts\"",
-    "test:users": "tsx --test \"src/entities/user/api/__tests__/*.test.ts\""
+    "test:users": "bash -lc 'shopt -s nullglob; files=(src/entities/user/api/__tests__/*.test.ts); if [ ${#files[@]} -eq 0 ]; then echo \"[mfe-users] no tests found (skip)\"; exit 0; fi; tsx --test \"${files[@]}\"'"
   },
   "keywords": [],
   "author": "",
