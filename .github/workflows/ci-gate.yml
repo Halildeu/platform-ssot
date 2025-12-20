@@ -1,0 +1,46 @@
+name: ci-gate
+
+on:
+  pull_request: {}
+
+concurrency:
+  group: ci-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Detect change flags
+        id: changes
+        run: python3 scripts/ci_gate.py --emit-github-outputs
+
+      - uses: actions/setup-node@v4
+        if: steps.changes.outputs.web_changed == 'true' || steps.changes.outputs.workflows_changed == 'true'
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - uses: actions/setup-java@v4
+        if: steps.changes.outputs.backend_changed == 'true' || steps.changes.outputs.workflows_changed == 'true'
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Run ci-gate
+        run: python3 scripts/ci_gate.py
+
