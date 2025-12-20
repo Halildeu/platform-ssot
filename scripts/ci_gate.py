@@ -27,6 +27,7 @@ from typing import List, Optional, Sequence, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 IS_GITHUB_ACTIONS = os.environ.get("GITHUB_ACTIONS") == "true"
+CI_GATE_REPORT_PATH = ROOT / "artifacts" / "ci-gate-report.md"
 
 
 def gha_escape_data(value: str) -> str:
@@ -106,7 +107,7 @@ def run_cmd(argv: Sequence[str], *, gate: str, cwd: Optional[Path] = None) -> in
         msg = f"[ci-gate] FAIL: gate={gate} (command not found): {cmd}"
         print(msg)
         gha_error(title=f"ci-gate {gate}", message=f"command not found: {cmd}")
-        append_step_summary(f"### ci-gate failure ({gate})\n\n{msg}\n")
+        append_ci_gate_markdown(f"### ci-gate failure ({gate})\n\n{msg}\n")
         return 127
 
     assert proc.stdout is not None
@@ -129,7 +130,7 @@ def run_cmd(argv: Sequence[str], *, gate: str, cwd: Optional[Path] = None) -> in
         else:
             print("(no output)")
 
-        append_step_summary(
+        append_ci_gate_markdown(
             "\n".join(
                 [
                     f"### ci-gate failure ({gate})",
@@ -268,6 +269,24 @@ def append_step_summary(text: str) -> None:
             f.write("\n")
 
 
+def reset_ci_gate_report() -> None:
+    CI_GATE_REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CI_GATE_REPORT_PATH.write_text("", encoding="utf-8")
+
+
+def append_ci_gate_report(text: str) -> None:
+    CI_GATE_REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(CI_GATE_REPORT_PATH, "a", encoding="utf-8") as f:
+        f.write(text)
+        if not text.endswith("\n"):
+            f.write("\n")
+
+
+def append_ci_gate_markdown(text: str) -> None:
+    append_step_summary(text)
+    append_ci_gate_report(text)
+
+
 def run_gate(name: str, commands: List[Tuple[List[str], Optional[Path]]]) -> GateResult:
     gha_group(f"{name} gate")
     try:
@@ -292,6 +311,8 @@ def main(argv: List[str]) -> int:
     )
     args = parser.parse_args(argv[1:])
 
+    reset_ci_gate_report()
+
     changed_files = compute_changed_files(base_ref=args.base_ref, head_ref=args.head_ref)
     flags = flags_from_paths(changed_files)
 
@@ -304,6 +325,26 @@ def main(argv: List[str]) -> int:
 
     if args.emit_github_outputs:
         write_github_outputs(flags)
+        append_ci_gate_report(
+            "\n".join(
+                [
+                    "# ci-gate report",
+                    "",
+                    "_Mode: emit-github-outputs (flags only)_",
+                    "",
+                    "## Flags",
+                    "",
+                    "| Flag | Value |",
+                    "| --- | --- |",
+                    f"| docs_changed | `{flags.docs_changed}` |",
+                    f"| web_changed | `{flags.web_changed}` |",
+                    f"| backend_changed | `{flags.backend_changed}` |",
+                    f"| workflows_changed | `{flags.workflows_changed}` |",
+                    f"| meta_changed | `{flags.meta_changed}` |",
+                    "",
+                ]
+            )
+        )
         return 0
 
     results: List[GateResult] = []
@@ -424,7 +465,7 @@ def main(argv: List[str]) -> int:
         for r in failed_cmds:
             summary_lines.append(f"- `{r.name}`: exit `{r.exit_code}` → `{r.fail_cmd}`")
 
-    append_step_summary("\n".join(summary_lines) + "\n")
+    append_ci_gate_markdown("\n".join(summary_lines) + "\n")
 
     print("\n[ci-gate] results:")
     for r in results:
