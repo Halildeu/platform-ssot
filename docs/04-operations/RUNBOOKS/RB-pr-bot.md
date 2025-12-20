@@ -1,4 +1,4 @@
-# RB-pr-bot – PR Bot (Auto PR + Comment Upsert)
+# RB-pr-bot – PR Automation (PR Bot + Merge Bot)
 
 ID: RB-pr-bot  
 Service: github-actions-pr-bot  
@@ -12,7 +12,8 @@ Owner: @team/platform
 - `fix/**` ve `wip/**` branch push’larında PR yoksa `main`’e PR açmak.
 - PR üzerinde tek bir marker comment’ini idempotent şekilde upsert etmek.
 - `wip/**` için PR’ı Draft yapmak (mümkünse).
-- Rule `auto_merge=true` ise PR için auto-merge enable etmek (best-effort).
+- `merge_policy=bot_squash` ise (PR draft değilse) PR’a `pr-bot/ready-to-merge` label’ını eklemek.
+- Merge-Bot ile (label + QA PASS) koşullarında PR’ı `squash merge` etmek.
 
 -------------------------------------------------------------------------------
 2. KAPSAM
@@ -25,6 +26,8 @@ Owner: @team/platform
   - Kurallar: `docs/04-operations/PR-BOT-RULES.json`
   - Template’ler: `docs/04-operations/pr-bot-templates/*.md`
   - Marker: `<!-- pr-bot:rules -->`
+  - Merge gate label: `pr-bot/ready-to-merge`
+  - Merge policy: `merge_policy` (örn. `bot_squash` / `none`)
 - Kapsam dışı:
   - Fork repo’larda otomasyon (güvenlik nedeniyle koşmaz).
   - PAT zorunluluğu (yalnız org/repo policy `GITHUB_TOKEN write` kısıtlıysa opsiyonel fallback).
@@ -34,11 +37,12 @@ Owner: @team/platform
 -------------------------------------------------------------------------------
 
 - Başlatma (otomatik):
-  - `fix/**` veya `wip/**` branch’ine push → workflow tetiklenir.
+  - `fix/**`, `wip/**`, `docs/**`, `ops/**` branch’lerine push → PR Bot tetiklenir.
+  - QA workflow’ları SUCCESS olunca → Merge-Bot tetiklenir (workflow_run).
 - Başlatma (manuel):
   - GitHub Actions → “PR Bot” → Run workflow.
 - Durdurma / devre dışı bırakma:
-  - `.github/workflows/pr-bot.yml` workflow’u disable et veya branch filter’ını kaldır.
+  - `.github/workflows/pr-bot.yml` ve `.github/workflows/pr-merge.yml` workflow’larını disable et veya branch filter’larını kaldır.
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
@@ -46,7 +50,7 @@ Owner: @team/platform
 
 - Gözlem:
   - GitHub Actions run logs.
-  - Job “Step Summary” içinde PR URL ve yapılan aksiyonlar (create/update/noop).
+  - Job “Step Summary” içinde PR URL ve yapılan aksiyonlar (create/update/noop/merge).
 - Kritik sinyaller:
   - 401/403: auth/permission sorunu (token veya org policy).
   - 4xx/5xx: GitHub API hata dönüşleri (rate limit, permission, invalid payload).
@@ -76,12 +80,20 @@ Owner: @team/platform
     - Draft dönüşümü “best-effort” olarak kalır; comment upsert devam eder.
     - Gerekirse PR’a “draft” niyetini belirten bir label/comment eklenir (fallback).
 
-- [ ] Arıza senaryosu 4 – Auto-merge enable edilemiyor:
-  - Given: Rule `auto_merge=true` ve PR draft değil.  
-    When: Repo ayarında “Allow auto-merge” kapalı veya permission yetersiz.  
+- [ ] Arıza senaryosu 4 – Ready label eklenemiyor:
+  - Given: `merge_policy=bot_squash` ama PR’da `pr-bot/ready-to-merge` yok.  
+    When: Label create/add API’si permission/policy nedeniyle fail oluyor.  
     Then:
-    - Repo Settings → Pull Requests → “Allow auto-merge” açık mı kontrol et.
-    - Permission/policy kısıtında `GH_PR_BOT_TOKEN` fallback’i değerlendir.
+    - `.github/workflows/pr-bot.yml` içinde `issues: write` olduğundan emin ol.
+    - Label’ı repo’da bir kez manuel oluştur (fallback) ve tekrar dene.
+
+- [ ] Arıza senaryosu 5 – Merge-Bot merge etmiyor:
+  - Given: QA PASS ama PR merge olmuyor.  
+    When: PR draft, label eksik, head SHA değişti veya `mergeable_state != clean`.  
+    Then:
+    - PR’da `pr-bot/ready-to-merge` label’ı var mı kontrol et.
+    - PR’ın son commit’i için tüm check’ler “success” mı kontrol et.
+    - Repo branch rules “required reviews” istiyorsa insansız merge mümkün olmayabilir.
 
 -------------------------------------------------------------------------------
 6. ÖZET
@@ -95,6 +107,7 @@ Owner: @team/platform
 -------------------------------------------------------------------------------
 
 - Workflow: .github/workflows/pr-bot.yml
+- Workflow: .github/workflows/pr-merge.yml
 - SSOT: docs/04-operations/PR-BOT-RULES.json
 - Templates: docs/04-operations/pr-bot-templates/
 - SLO/SLA: docs/04-operations/SLO-SLA.md

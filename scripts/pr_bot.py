@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-PR Bot (v0.2)
+PR Bot (v0.3)
 
 Amaç:
 - fix/**, wip/**, docs/**, ops/** branch push'larında PR yoksa PR aç
 - PR üzerinde tek bir marker comment'ini idempotent şekilde upsert et
 - wip/** için PR'ı draft yapmak (best-effort)
-- Rule auto-merge açıksa PR için auto-merge enable et (best-effort)
+- merge_policy=bot_squash ise (ve PR draft değilse) "pr-bot/ready-to-merge" label'ını ensure et (best-effort)
 
 Notlar:
 - SSOT: docs/04-operations/PR-BOT-RULES.json
@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REST_API_BASE = "https://api.github.com"
 GRAPHQL_API = "https://api.github.com/graphql"
 API_VERSION = "2022-11-28"
-USER_AGENT = "platform-ssot-pr-bot/0.2"
+USER_AGENT = "platform-ssot-pr-bot/0.3"
 
 
 EXIT_OK = 0
@@ -47,7 +47,13 @@ class Rule:
     match: str
     template_key: str
     draft: Optional[bool]
-    auto_merge: bool
+    merge_policy: str
+
+
+MERGE_POLICY_NONE = "none"
+MERGE_POLICY_BOT_SQUASH = "bot_squash"
+MERGE_POLICIES = {MERGE_POLICY_NONE, MERGE_POLICY_BOT_SQUASH}
+DEFAULT_READY_TO_MERGE_LABEL = "pr-bot/ready-to-merge"
 
 
 class GitHubApiError(RuntimeError):
@@ -102,15 +108,22 @@ def parse_rule(raw: Dict[str, Any]) -> Rule:
     else:
         raise SystemExit(f"Rule draft bool olmalı: match={match}")
 
-    auto_merge_val = raw.get("auto_merge")
-    if auto_merge_val is None:
-        auto_merge = False
-    elif isinstance(auto_merge_val, bool):
-        auto_merge = auto_merge_val
+    merge_policy_val = raw.get("merge_policy")
+    if merge_policy_val is None:
+        # Backward-compatible: eski config'lerde auto_merge vardı.
+        auto_merge_val = raw.get("auto_merge")
+        merge_policy = MERGE_POLICY_BOT_SQUASH if auto_merge_val is True else MERGE_POLICY_NONE
+    elif isinstance(merge_policy_val, str):
+        merge_policy = merge_policy_val.strip()
     else:
-        raise SystemExit(f"Rule auto_merge bool olmalı: match={match}")
+        raise SystemExit(f"Rule merge_policy string olmalı: match={match}")
 
-    return Rule(match=match, template_key=template_key, draft=draft, auto_merge=auto_merge)
+    if merge_policy not in MERGE_POLICIES:
+        raise SystemExit(
+            f"Rule merge_policy geçersiz: match={match} (beklenen: {sorted(MERGE_POLICIES)}, gelen: {merge_policy})"
+        )
+
+    return Rule(match=match, template_key=template_key, draft=draft, merge_policy=merge_policy)
 
 
 def select_rule(config: Dict[str, Any], branch: str) -> Rule:
@@ -142,7 +155,7 @@ def select_rule(config: Dict[str, Any], branch: str) -> Rule:
         raise SystemExit(
             f"Rule bulunamadı ve default template yok: branch={branch} (comment_templates.default bekleniyor)."
         )
-    return Rule(match="(default)", template_key="default", draft=None, auto_merge=False)
+    return Rule(match="(default)", template_key="default", draft=None, merge_policy=MERGE_POLICY_NONE)
 
 
 def desired_draft_state(config: Dict[str, Any], branch: str, rule: Rule) -> bool:
@@ -345,20 +358,55 @@ mutation($prId: ID!) {
     except GitHubApiError as e:
         return False, f"fail: {e}"
 
+def ready_to_merge_label(config: Dict[str, Any]) -> str:
+    raw = config.get("ready_to_merge_label")
+    if raw is None:
+        return DEFAULT_READY_TO_MERGE_LABEL
+    if not isinstance(raw, str) or not raw.strip():
+        raise SystemExit("PR-BOT-RULES.json: ready_to_merge_label string olmalı.")
+    return raw.strip()
 
-def enable_auto_merge_best_effort(token: str, pr_node_id: str, merge_method: str) -> Tuple[bool, str]:
-    query = """
-mutation($prId: ID!, $mergeMethod: PullRequestMergeMethod!) {
-  enablePullRequestAutoMerge(input: { pullRequestId: $prId, mergeMethod: $mergeMethod }) {
-    pullRequest { id isDraft url }
-  }
-}
-""".strip()
+
+def create_label_best_effort(owner: str, repo: str, token: str, label_name: str) -> Tuple[bool, str]:
+    url = rest_url(owner, repo, "/labels")
+    body = {
+        "name": label_name,
+        "color": "0E8A16",
+        "description": "PR Bot gate: merge-bot (ready-to-merge)",
+    }
     try:
-        graphql_mutation(token, query, {"prId": pr_node_id, "mergeMethod": merge_method})
+        api_request_json("POST", url, token, body=body)
+        return True, "created"
+    except GitHubApiError as e:
+        # Label zaten varsa GitHub 422 dönebilir.
+        if e.status == 422:
+            return True, "exists"
+        return False, f"fail: {e}"
+
+
+def ensure_issue_label_best_effort(
+    owner: str,
+    repo: str,
+    issue_number: int,
+    token: str,
+    label_name: str,
+) -> Tuple[bool, str]:
+    url = rest_url(owner, repo, f"/issues/{issue_number}/labels")
+    try:
+        api_request_json("POST", url, token, body={"labels": [label_name]})
         return True, "ok"
     except GitHubApiError as e:
-        return False, f"fail: {e}"
+        # Label yoksa GitHub 404/422 dönebilir.
+        if e.status in (404, 422):
+            ok, msg = create_label_best_effort(owner, repo, token, label_name)
+            if not ok:
+                return False, f"create-label {msg}"
+            try:
+                api_request_json("POST", url, token, body={"labels": [label_name]})
+                return True, "ok"
+            except GitHubApiError as e2:
+                return False, f"add-label fail: {e2}"
+        return False, f"add-label fail: {e}"
 
 
 def write_step_summary(lines: List[str]) -> None:
@@ -431,7 +479,14 @@ def main(argv: List[str]) -> int:
         return EXIT_CONFIG
 
     want_draft = desired_draft_state(config, args.branch, rule)
-    want_auto_merge = bool(rule.auto_merge)
+    want_merge_policy = rule.merge_policy
+    want_ready_label = want_merge_policy == MERGE_POLICY_BOT_SQUASH
+
+    try:
+        merge_label = ready_to_merge_label(config)
+    except SystemExit as e:
+        eprint(str(e))
+        return EXIT_CONFIG
 
     if args.dry_run:
         print("[pr-bot] dry-run")
@@ -439,7 +494,7 @@ def main(argv: List[str]) -> int:
         print(f"- branch: {args.branch}")
         print(f"- base:   {base_branch}")
         print(
-            f"- rule:   match={rule.match} template={rule.template_key} draft={want_draft} auto_merge={want_auto_merge}"
+            f"- rule:   match={rule.match} template={rule.template_key} draft={want_draft} merge_policy={want_merge_policy}"
         )
         print(f"- comment_marker: {marker}")
         print("- actions:")
@@ -447,8 +502,8 @@ def main(argv: List[str]) -> int:
         if want_draft:
             print("  - ensure PR is draft (best-effort)")
         print("  - upsert marker comment")
-        if want_auto_merge and not want_draft:
-            print("  - enable auto-merge (best-effort)")
+        if want_ready_label and not want_draft:
+            print(f"  - ensure label: {merge_label} (best-effort)")
         return EXIT_OK
 
     token = os.environ.get(args.token_env) or os.environ.get("GITHUB_TOKEN")
@@ -462,7 +517,7 @@ def main(argv: List[str]) -> int:
     summary.append(f"- Repo: `{owner}/{repo}`")
     summary.append(f"- Branch: `{args.branch}`")
     summary.append(f"- Base: `{base_branch}`")
-    summary.append(f"- Rule: `{rule.template_key}` (draft={want_draft}, auto_merge={want_auto_merge})")
+    summary.append(f"- Rule: `{rule.template_key}` (draft={want_draft}, merge_policy={want_merge_policy})")
 
     try:
         pr = find_open_pr(owner, repo, args.branch, base_branch, token)
@@ -484,13 +539,17 @@ def main(argv: List[str]) -> int:
         summary.append(f"- PR: {pr_url}")
         summary.append(f"- PR action: {'created' if pr_created else 'exists'}")
 
+        is_draft_now = pr_is_draft is True
         draft_action = "skipped"
         if want_draft and pr_node_id and isinstance(pr_node_id, str):
-            if pr_is_draft is True:
+            if is_draft_now:
                 draft_action = "noop (already draft)"
             else:
                 ok, msg = convert_pr_to_draft_best_effort(token, pr_node_id)
+                is_draft_now = ok
                 draft_action = "updated" if ok else f"warn ({msg})"
+        elif want_draft and not (pr_node_id and isinstance(pr_node_id, str)):
+            draft_action = "warn (missing node_id)"
         summary.append(f"- Draft: {draft_action}")
 
         comment_action, comment_url = upsert_marker_comment(
@@ -506,18 +565,15 @@ def main(argv: List[str]) -> int:
             summary.append(f"  - {comment_url}")
         print(f"[pr-bot] Comment: {comment_action}")
 
-        auto_merge_action = "skipped"
-        if want_auto_merge:
-            if pr_is_draft is True or want_draft:
-                auto_merge_action = "skipped (draft)"
-            elif pr_node_id and isinstance(pr_node_id, str):
-                ok, msg = enable_auto_merge_best_effort(token, pr_node_id, merge_method="SQUASH")
-                auto_merge_action = "enabled" if ok else f"warn ({msg})"
+        label_action = "skipped"
+        if want_ready_label:
+            if is_draft_now or want_draft:
+                label_action = "skipped (draft)"
             else:
-                auto_merge_action = "skipped (missing node_id)"
-        summary.append(f"- Auto-merge: {auto_merge_action}")
-        if want_auto_merge:
-            print(f"[pr-bot] Auto-merge: {auto_merge_action}")
+                ok, msg = ensure_issue_label_best_effort(owner, repo, pr_number, token, merge_label)
+                label_action = "ensured" if ok else f"warn ({msg})"
+            summary.append(f"- Ready label: `{merge_label}` ({label_action})")
+            print(f"[pr-bot] Ready label: {label_action} ({merge_label})")
 
         write_step_summary(summary)
         return EXIT_OK
