@@ -26,6 +26,49 @@ from typing import List, Optional, Sequence, Tuple
 
 
 ROOT = Path(__file__).resolve().parents[1]
+IS_GITHUB_ACTIONS = os.environ.get("GITHUB_ACTIONS") == "true"
+
+
+def gha_escape_data(value: str) -> str:
+    return value.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+
+
+def gha_escape_property(value: str) -> str:
+    return gha_escape_data(value).replace(":", "%3A").replace(",", "%2C")
+
+
+def gha_group(title: str) -> None:
+    if not IS_GITHUB_ACTIONS:
+        return
+    print(f"::group::{gha_escape_data(title)}")
+
+
+def gha_endgroup() -> None:
+    if not IS_GITHUB_ACTIONS:
+        return
+    print("::endgroup::")
+
+
+def gha_error(title: str, message: str) -> None:
+    if not IS_GITHUB_ACTIONS:
+        return
+    print(
+        f"::error title={gha_escape_property(title)}::{gha_escape_data(message)}",
+    )
+
+
+def gha_notice(title: str, message: str) -> None:
+    if not IS_GITHUB_ACTIONS:
+        return
+    print(
+        f"::notice title={gha_escape_property(title)}::{gha_escape_data(message)}",
+    )
+
+
+def gha_add_mask(value: str) -> None:
+    if not IS_GITHUB_ACTIONS:
+        return
+    print(f"::add-mask::{gha_escape_data(value)}")
 
 
 @dataclass(frozen=True)
@@ -42,6 +85,7 @@ class GateResult:
     name: str
     status: str  # PASS | FAIL | SKIP
     exit_code: int
+    fail_cmd: Optional[str] = None
 
 
 def run_cmd(argv: Sequence[str], *, gate: str, cwd: Optional[Path] = None) -> int:
@@ -61,6 +105,7 @@ def run_cmd(argv: Sequence[str], *, gate: str, cwd: Optional[Path] = None) -> in
     except FileNotFoundError:
         msg = f"[ci-gate] FAIL: gate={gate} (command not found): {cmd}"
         print(msg)
+        gha_error(title=f"ci-gate {gate}", message=f"command not found: {cmd}")
         append_step_summary(f"### ci-gate failure ({gate})\n\n{msg}\n")
         return 127
 
@@ -77,6 +122,7 @@ def run_cmd(argv: Sequence[str], *, gate: str, cwd: Optional[Path] = None) -> in
         tail_text = "\n".join(tail)
         header = f"[ci-gate] FAIL: gate={gate} code={code} cmd={cmd}"
         print(header)
+        gha_error(title=f"ci-gate {gate}", message=f"exit_code={code}, cmd={cmd}")
         print("[ci-gate] last 200 lines:")
         if tail_text:
             print(tail_text)
@@ -223,11 +269,16 @@ def append_step_summary(text: str) -> None:
 
 
 def run_gate(name: str, commands: List[Tuple[List[str], Optional[Path]]]) -> GateResult:
-    for argv, cwd in commands:
-        code = run_cmd(argv, gate=name, cwd=cwd)
-        if code != 0:
-            return GateResult(name=name, status="FAIL", exit_code=code)
-    return GateResult(name=name, status="PASS", exit_code=0)
+    gha_group(f"{name} gate")
+    try:
+        for argv, cwd in commands:
+            cmd = shlex.join(list(argv))
+            code = run_cmd(argv, gate=name, cwd=cwd)
+            if code != 0:
+                return GateResult(name=name, status="FAIL", exit_code=code, fail_cmd=cmd)
+        return GateResult(name=name, status="PASS", exit_code=0)
+    finally:
+        gha_endgroup()
 
 
 def main(argv: List[str]) -> int:
@@ -328,22 +379,51 @@ def main(argv: List[str]) -> int:
     failed = [r for r in results if r.status == "FAIL"]
     overall = "PASS" if not failed else "FAIL"
 
+    ran_gates = [r.name for r in results if r.status != "SKIP"]
+    skipped_gates = [r.name for r in results if r.status == "SKIP"]
+    failed_cmds = [r for r in results if r.status == "FAIL" and r.fail_cmd]
+
     summary_lines = [
         "# ci-gate summary",
         "",
+        "## Overall",
+        f"`{overall}`",
+        "",
         "## Flags",
-        f"- docs_changed: `{flags.docs_changed}`",
-        f"- web_changed: `{flags.web_changed}`",
-        f"- backend_changed: `{flags.backend_changed}`",
-        f"- workflows_changed: `{flags.workflows_changed}`",
-        f"- meta_changed: `{flags.meta_changed}`",
+        "",
+        "| Flag | Value |",
+        "| --- | --- |",
+        f"| docs_changed | `{flags.docs_changed}` |",
+        f"| web_changed | `{flags.web_changed}` |",
+        f"| backend_changed | `{flags.backend_changed}` |",
+        f"| workflows_changed | `{flags.workflows_changed}` |",
+        f"| meta_changed | `{flags.meta_changed}` |",
         "",
         "## Gates",
+        "",
+        "| Gate | Status |",
+        "| --- | --- |",
     ]
     for r in results:
-        summary_lines.append(f"- {r.name}: `{r.status}`")
-    summary_lines.append("")
-    summary_lines.append(f"## Overall: `{overall}`")
+        summary_lines.append(f"| {r.name} | `{r.status}` |")
+
+    summary_lines.extend(["", "## Ran gates", ""])
+    if ran_gates:
+        summary_lines.extend([f"- `{g}`" for g in ran_gates])
+    else:
+        summary_lines.append("- (none)")
+
+    summary_lines.extend(["", "## Skipped gates", ""])
+    if skipped_gates:
+        summary_lines.extend([f"- `{g}`" for g in skipped_gates])
+    else:
+        summary_lines.append("- (none)")
+
+    if failed_cmds:
+        summary_lines.extend(["", "## Failing commands", ""])
+        for r in failed_cmds:
+            summary_lines.append(f"- `{r.name}`: exit `{r.exit_code}` → `{r.fail_cmd}`")
+
     append_step_summary("\n".join(summary_lines) + "\n")
 
     print("\n[ci-gate] results:")
