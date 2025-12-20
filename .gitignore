@@ -35,3 +35,6 @@ backend/.vault-dev/**
 
 # security
 /token.txt
+# Telemetry source modules (tracked)
+!**/src/**/telemetry/
+!**/src/**/telemetry/**
