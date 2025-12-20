@@ -1,6 +1,6 @@
 # DOC-HIERARCHY – Doküman Hiyerarşisi ve Rol Özeti
 
-Bu dosya, repodaki tüm önemli `.md` doküman türlerinin **ne işe yaradığını**
+Bu dosya, repo'daki tüm önemli `.md` doküman türlerinin **ne işe yaradığını**
 ve **hangi durumda hangisine bakılması gerektiğini** özetler.
 
 ---
