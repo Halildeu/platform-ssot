@@ -5,7 +5,7 @@ halinde tanımlar. Amaç, her iş tipinde (WEB, MOB, BE, DATA, AI, DOC) aynı
 süreç mantığının uygulanmasını sağlamaktır.
 
 Süreç 6 adımdan oluşur:
-Discover → Shape → Design → Build → Validate → Operate
+Discover → Shape → Design → Build → Validate → Operate.
 
 -------------------------------------------------------------------------------
 1. DISCOVER – Problemi Anla
