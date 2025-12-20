@@ -55,7 +55,10 @@ class RunInfo:
     run_id: int
     html_url: str
     head_sha: str
+    head_branch: str
+    head_owner: str
     name: str
+    event: str
     conclusion: str
     pull_requests: List[dict]
 
@@ -182,26 +185,88 @@ def get_run_info(token: str, repo: str, run_id: int) -> Optional[RunInfo]:
         eprint(f"[log-digest] Cannot fetch run details: http={code}")
         return None
 
+    default_owner = repo.split("/", 1)[0] if "/" in repo else ""
+    head_owner = default_owner
+    head_repo = data.get("head_repository")
+    if isinstance(head_repo, dict):
+        head_owner_obj = head_repo.get("owner") or {}
+        if isinstance(head_owner_obj, dict) and isinstance(head_owner_obj.get("login"), str):
+            head_owner = head_owner_obj["login"]
+
     return RunInfo(
         repo=repo,
         run_id=run_id,
         html_url=str(data.get("html_url") or ""),
         head_sha=str(data.get("head_sha") or ""),
+        head_branch=str(data.get("head_branch") or ""),
+        head_owner=head_owner,
         name=str(data.get("name") or ""),
+        event=str(data.get("event") or ""),
         conclusion=str(data.get("conclusion") or ""),
         pull_requests=list(data.get("pull_requests") or []),
     )
 
+def github_graphql(token: str, query: str, variables: dict) -> Tuple[int, dict]:
+    payload = {"query": query, "variables": variables}
+    code, _hdrs, raw = http_request(
+        "POST",
+        f"{API_BASE}/graphql",
+        headers={**build_headers(token), "Content-Type": "application/json"},
+        body=json.dumps(payload).encode("utf-8"),
+    )
+    if not raw:
+        return code, {}
+    try:
+        data = json.loads(raw.decode("utf-8"))
+        return code, data if isinstance(data, dict) else {}
+    except json.JSONDecodeError:
+        return code, {}
 
-def find_pr_number(token: str, run: RunInfo) -> Optional[int]:
+
+def find_pr_number_via_graphql(token: str, run: RunInfo) -> Optional[int]:
+    if not run.head_sha or "/" not in run.repo:
+        return None
+    owner, name = run.repo.split("/", 1)
+    q = """
+query($owner:String!, $name:String!, $oid:GitObjectID!) {
+  repository(owner: $owner, name: $name) {
+    object(oid: $oid) {
+      ... on Commit {
+        associatedPullRequests(first: 10) {
+          nodes { number state }
+        }
+      }
+    }
+  }
+}
+""".strip()
+    code, data = github_graphql(token, q, {"owner": owner, "name": name, "oid": run.head_sha})
+    if code != 200:
+        return None
+    if data.get("errors"):
+        return None
+    repo_obj = (data.get("data") or {}).get("repository") or {}
+    obj = repo_obj.get("object") or {}
+    apr = obj.get("associatedPullRequests") or {}
+    nodes = apr.get("nodes") or []
+    if not isinstance(nodes, list) or not nodes:
+        return None
+    open_nodes = [n for n in nodes if isinstance(n, dict) and n.get("state") == "OPEN"]
+    cand = open_nodes[0] if open_nodes else nodes[0]
+    num = cand.get("number") if isinstance(cand, dict) else None
+    return num if isinstance(num, int) else None
+
+
+def find_pr_number(token: str, run: RunInfo) -> Tuple[Optional[int], str]:
     if run.pull_requests:
         pr0 = run.pull_requests[0]
         num = pr0.get("number")
         if isinstance(num, int):
-            return num
+            return num, "run.pull_requests[0]"
+        return None, "run.pull_requests present but number missing"
 
     if not run.head_sha:
-        return None
+        return None, "missing head_sha"
 
     # List PRs associated with a commit (preview header historically required).
     code, prs = github_get_json(
@@ -209,14 +274,28 @@ def find_pr_number(token: str, run: RunInfo) -> Optional[int]:
         f"/repos/{run.repo}/commits/{run.head_sha}/pulls",
         accept="application/vnd.github+json, application/vnd.github.groot-preview+json",
     )
-    if code != 200 or not isinstance(prs, list) or not prs:
-        return None
+    if code == 200 and isinstance(prs, list) and prs:
+        open_prs = [p for p in prs if isinstance(p, dict) and p.get("state") == "open"]
+        cand = open_prs[0] if open_prs else prs[0]
+        num = cand.get("number") if isinstance(cand, dict) else None
+        return (num if isinstance(num, int) else None), "commit_pulls"
 
-    # Tercih: open PR.
-    open_prs = [p for p in prs if isinstance(p, dict) and p.get("state") == "open"]
-    cand = open_prs[0] if open_prs else prs[0]
-    num = cand.get("number") if isinstance(cand, dict) else None
-    return num if isinstance(num, int) else None
+    gql_num = find_pr_number_via_graphql(token, run)
+    if gql_num:
+        return gql_num, "graphql.associatedPullRequests"
+
+    if run.head_branch:
+        head_ref = f"{run.head_owner}:{run.head_branch}" if run.head_owner else run.head_branch
+        code2, prs2 = github_get_json(
+            token,
+            f"/repos/{run.repo}/pulls?state=open&head={head_ref}",
+        )
+        if code2 == 200 and isinstance(prs2, list) and prs2:
+            cand2 = prs2[0]
+            num2 = cand2.get("number") if isinstance(cand2, dict) else None
+            return (num2 if isinstance(num2, int) else None), "pulls?head=owner:branch"
+
+    return None, f"no PR found (commit_pulls http={code})"
 
 
 def list_failing_jobs(token: str, run: RunInfo) -> List[JobInfo]:
@@ -374,7 +453,7 @@ def truncate_comment(body: str) -> str:
     return body[:keep].rstrip() + trailer
 
 
-def upsert_pr_comment(token: str, repo: str, pr_number: int, body: str) -> None:
+def upsert_pr_comment(token: str, repo: str, pr_number: int, body: str) -> Tuple[str, int]:
     existing_id: Optional[int] = None
     for c in paginate(token, f"/repos/{repo}/issues/{pr_number}/comments"):
         c_body = c.get("body")
@@ -388,10 +467,12 @@ def upsert_pr_comment(token: str, repo: str, pr_number: int, body: str) -> None:
         code, _ = github_patch_json(token, f"/repos/{repo}/issues/comments/{existing_id}", {"body": body})
         if code not in (200, 201):
             eprint(f"[log-digest] Comment update failed: http={code}")
-    else:
-        code, _ = github_post_json(token, f"/repos/{repo}/issues/{pr_number}/comments", {"body": body})
-        if code not in (200, 201):
-            eprint(f"[log-digest] Comment create failed: http={code}")
+        return "updated", code
+
+    code, _ = github_post_json(token, f"/repos/{repo}/issues/{pr_number}/comments", {"body": body})
+    if code not in (200, 201):
+        eprint(f"[log-digest] Comment create failed: http={code}")
+    return "created", code
 
 
 def main(argv: Sequence[str]) -> int:
@@ -409,15 +490,26 @@ def main(argv: Sequence[str]) -> int:
     if not run:
         return 0
 
-    pr_number = find_pr_number(token=token, run=run)
+    print(
+        "[log-digest] run"
+        f" id={run.run_id}"
+        f" workflow={run.name!r}"
+        f" event={run.event!r}"
+        f" conclusion={run.conclusion!r}"
+        f" head_branch={run.head_branch!r}"
+        f" head_sha={run.head_sha}"
+    )
+
+    pr_number, pr_reason = find_pr_number(token=token, run=run)
     if not pr_number:
-        print("[log-digest] No PR found for this run; noop.")
+        print(f"[log-digest] No PR found for this run; noop. reason={pr_reason}")
         return 0
 
     failing_jobs = list_failing_jobs(token=token, run=run)
     if not failing_jobs:
         print("[log-digest] No failing jobs found; noop.")
         return 0
+    print(f"[log-digest] failing_jobs={len(failing_jobs)} pr_number={pr_number} (via {pr_reason})")
 
     digests: List[JobDigest] = []
     for job in failing_jobs:
@@ -437,7 +529,8 @@ def main(argv: Sequence[str]) -> int:
         digests.append(JobDigest(job=job, commands=cmds, snippet_title=title, snippet=snippet))
 
     body = build_digest_markdown(run=run, pr_number=pr_number, jobs=digests)
-    upsert_pr_comment(token=token, repo=run.repo, pr_number=pr_number, body=body)
+    action, code = upsert_pr_comment(token=token, repo=run.repo, pr_number=pr_number, body=body)
+    print(f"[log-digest] comment {action} http={code}")
 
     print("[log-digest] OK")
     return 0
