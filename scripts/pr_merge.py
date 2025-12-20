@@ -31,6 +31,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REST_API_BASE = "https://api.github.com"
 API_VERSION = "2022-11-28"
 USER_AGENT = "platform-ssot-pr-merge-bot/0.3"
+RESULT_PREFIX = "[pr-merge] RESULT "
 
 
 EXIT_OK = 0
@@ -61,6 +62,19 @@ class GitHubApiError(RuntimeError):
 
 def eprint(msg: str) -> None:
     print(msg, file=sys.stderr)
+
+
+def emit_result(payload: Dict[str, Any]) -> None:
+    try:
+        raw = json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    except TypeError:
+        raw = json.dumps(
+            {"result": "error", "reason": "result_payload_not_serializable"},
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        )
+    print(f"{RESULT_PREFIX}{raw}")
 
 
 def load_json(path: Path) -> Dict[str, Any]:
@@ -338,6 +352,7 @@ def main(argv: List[str]) -> int:
     head_sha = wr.get("head_sha")
     head_branch = wr.get("head_branch")
     conclusion = wr.get("conclusion")
+    run_url = wr.get("html_url")
     if not isinstance(head_sha, str) or not head_sha.strip():
         eprint("HATA: workflow_run.head_sha eksik/geçersiz.")
         return EXIT_INVARIANT
@@ -345,11 +360,33 @@ def main(argv: List[str]) -> int:
         eprint("HATA: workflow_run.head_branch eksik/geçersiz.")
         return EXIT_INVARIANT
     if conclusion != "success":
+        emit_result(
+            {
+                "base": base_branch,
+                "branch": head_branch,
+                "pr": None,
+                "reason": f"workflow_run conclusion={conclusion}",
+                "result": "noop",
+                "run_url": run_url if isinstance(run_url, str) else None,
+                "sha": head_sha,
+            }
+        )
         print(f"[merge-bot] noop: workflow_run conclusion={conclusion}")
         return EXIT_OK
 
     rule = select_rule(config, head_branch)
     if rule.merge_policy != MERGE_POLICY_BOT_SQUASH:
+        emit_result(
+            {
+                "base": base_branch,
+                "branch": head_branch,
+                "pr": None,
+                "reason": f"merge_policy={rule.merge_policy}",
+                "result": "noop",
+                "run_url": run_url if isinstance(run_url, str) else None,
+                "sha": head_sha,
+            }
+        )
         print(f"[merge-bot] noop: merge_policy={rule.merge_policy} (branch={head_branch})")
         return EXIT_OK
 
@@ -367,11 +404,33 @@ def main(argv: List[str]) -> int:
         print(f"- head: {head_owner}:{head_branch}")
         print(f"- sha:  {head_sha}")
         print(f"- label gate: {gate_label}")
+        emit_result(
+            {
+                "base": base_branch,
+                "branch": head_branch,
+                "pr": None,
+                "reason": "dry-run",
+                "result": "noop",
+                "run_url": run_url if isinstance(run_url, str) else None,
+                "sha": head_sha,
+            }
+        )
         return EXIT_OK
 
     token = os.environ.get(args.token_env) or os.environ.get("GITHUB_TOKEN")
     if not token:
         eprint(f"HATA: token bulunamadı. env:{args.token_env} (fallback: GITHUB_TOKEN)")
+        emit_result(
+            {
+                "base": base_branch,
+                "branch": head_branch,
+                "pr": None,
+                "reason": f"missing token env:{args.token_env} (fallback: GITHUB_TOKEN)",
+                "result": "error",
+                "run_url": run_url if isinstance(run_url, str) else None,
+                "sha": head_sha,
+            }
+        )
         return EXIT_AUTH
 
     summary: List[str] = []
@@ -388,6 +447,17 @@ def main(argv: List[str]) -> int:
         if not pr:
             summary.append("- Result: noop (no open PR)")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "pr": None,
+                    "reason": "no open PR",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             print("[merge-bot] noop: no open PR")
             return EXIT_OK
 
@@ -408,33 +478,114 @@ def main(argv: List[str]) -> int:
         if pr_state != "open":
             summary.append(f"- Result: noop (state={pr_state})")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "pr": pr_number,
+                    "reason": f"state={pr_state}",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
         if pr_base != base_branch:
             summary.append(f"- Result: noop (base={pr_base})")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "pr": pr_number,
+                    "reason": f"base={pr_base}",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
         if pr_draft is True:
             summary.append("- Result: noop (draft)")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "pr": pr_number,
+                    "reason": "draft",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
         if pr_head != head_sha:
             summary.append(f"- Result: noop (head sha changed: pr={pr_head})")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "pr": pr_number,
+                    "reason": f"head sha changed: pr={pr_head}",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
 
         issue = get_issue(owner, repo, pr_number, token)
         if not has_label(issue, gate_label):
             summary.append("- Result: noop (missing ready label)")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "label": gate_label,
+                    "pr": pr_number,
+                    "reason": "missing ready label",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
 
         if pr_mergeable is not True:
             summary.append(f"- Result: noop (mergeable={pr_mergeable}, state={pr_mergeable_state})")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "mergeable": pr_mergeable,
+                    "mergeable_state": pr_mergeable_state,
+                    "pr": pr_number,
+                    "reason": f"mergeable={pr_mergeable}, state={pr_mergeable_state}",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
         if pr_mergeable_state not in ("clean", "has_hooks"):
             summary.append(f"- Result: noop (mergeable_state={pr_mergeable_state})")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "mergeable_state": pr_mergeable_state,
+                    "pr": pr_number,
+                    "reason": f"mergeable_state={pr_mergeable_state}",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
 
         check_runs = list_check_runs(owner, repo, head_sha, token)
@@ -443,6 +594,18 @@ def main(argv: List[str]) -> int:
         if not ok:
             summary.append("- Result: noop (checks not green)")
             write_step_summary(summary)
+            emit_result(
+                {
+                    "base": base_branch,
+                    "branch": head_branch,
+                    "checks": msg,
+                    "pr": pr_number,
+                    "reason": f"checks not green: {msg}",
+                    "result": "noop",
+                    "run_url": run_url if isinstance(run_url, str) else None,
+                    "sha": head_sha,
+                }
+            )
             return EXIT_OK
 
         try:
@@ -452,12 +615,34 @@ def main(argv: List[str]) -> int:
             if e.status in (405, 409, 422):
                 summary.append(f"- Merge: skipped (api {e.status})")
                 write_step_summary(summary)
+                emit_result(
+                    {
+                        "base": base_branch,
+                        "branch": head_branch,
+                        "pr": pr_number,
+                        "reason": f"merge api {e.status}",
+                        "result": "noop",
+                        "run_url": run_url if isinstance(run_url, str) else None,
+                        "sha": head_sha,
+                    }
+                )
                 return EXIT_OK
             raise
 
         merged = resp.get("merged")
         summary.append(f"- Merge: {'merged' if merged is True else 'unknown'} (method=squash)")
         write_step_summary(summary)
+        emit_result(
+            {
+                "base": base_branch,
+                "branch": head_branch,
+                "pr": pr_number,
+                "reason": None,
+                "result": "merged" if merged is True else "noop",
+                "run_url": run_url if isinstance(run_url, str) else None,
+                "sha": head_sha,
+            }
+        )
 
         print(f"[merge-bot] merged: {pr_url}" if merged is True else f"[merge-bot] done: {pr_url}")
         return EXIT_OK
@@ -466,6 +651,17 @@ def main(argv: List[str]) -> int:
         eprint(f"[merge-bot] HATA: {e}")
         if e.response_body:
             eprint(e.response_body)
+        emit_result(
+            {
+                "base": base_branch,
+                "branch": head_branch,
+                "pr": None,
+                "reason": f"api {e.status}",
+                "result": "error",
+                "run_url": run_url if isinstance(run_url, str) else None,
+                "sha": head_sha,
+            }
+        )
         if e.status in (401, 403):
             return EXIT_AUTH
         return EXIT_API
@@ -473,4 +669,3 @@ def main(argv: List[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-
