@@ -1,13 +1,14 @@
 name: Layout QA
 
 on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "web/**"
+      - "docs/00-handbook/**"
+      - "scripts/**"
+      - ".github/workflows/layout-qa.yml"
   workflow_dispatch: {}
-  # pull_request:
-  #   paths:
-  #     - "backend/**"
-  #     - "docs/00-handbook/**"
-  #     - "scripts/**"
-  #     - ".github/workflows/layout-qa.yml"
 
 jobs:
   layout-qa:

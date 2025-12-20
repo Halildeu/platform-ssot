@@ -1,0 +1,76 @@
+name: Repo Policy Report
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report repo policy (auto-merge, workflow perms, branch protection, rulesets)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          API: https://api.github.com
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          HDR_AUTH="Authorization: Bearer ${GH_TOKEN}"
+          HDR_ACC="Accept: application/vnd.github+json"
+
+          echo "A) Repo flags"
+          curl -sS -H "$HDR_AUTH" -H "$HDR_ACC" "$API/repos/$REPO" | python3 - <<'PY'
+          import sys, json
+          r=json.load(sys.stdin)
+          keys=["private","default_branch","allow_auto_merge","allow_squash_merge","allow_merge_commit","allow_rebase_merge",
+                "delete_branch_on_merge","archived","disabled"]
+          print(json.dumps({k:r.get(k) for k in keys}, indent=2, ensure_ascii=False))
+          PY
+
+          DEFAULT_BRANCH="$(curl -sS -H "$HDR_AUTH" -H "$HDR_ACC" "$API/repos/$REPO" | python3 -c "import sys,json; print(json.load(sys.stdin).get('default_branch','main'))")"
+          echo ""
+          echo "B) Actions workflow permissions"
+          curl -sS -H "$HDR_AUTH" -H "$HDR_ACC" "$API/repos/$REPO/actions/permissions/workflow" | python3 -m json.tool
+
+          echo ""
+          echo "C) Branch protection (default branch=$DEFAULT_BRANCH)"
+          CODE="$(curl -sS -o /tmp/bp.json -w "%{http_code}" -H "$HDR_AUTH" -H "$HDR_ACC" "$API/repos/$REPO/branches/$DEFAULT_BRANCH/protection" || true)"
+          echo "http=$CODE"
+          if [ "$CODE" = "200" ]; then
+            python3 - <<'PY'
+            import json
+            bp=json.load(open("/tmp/bp.json","r"))
+            out={
+              "required_status_checks": bp.get("required_status_checks"),
+              "enforce_admins": (bp.get("enforce_admins") or {}).get("enabled"),
+              "required_pull_request_reviews": bp.get("required_pull_request_reviews"),
+              "restrictions": bp.get("restrictions"),
+              "required_linear_history": (bp.get("required_linear_history") or {}).get("enabled"),
+              "allow_force_pushes": (bp.get("allow_force_pushes") or {}).get("enabled"),
+              "allow_deletions": (bp.get("allow_deletions") or {}).get("enabled"),
+              "block_creations": (bp.get("block_creations") or {}).get("enabled"),
+            }
+            print(json.dumps(out, indent=2, ensure_ascii=False))
+            PY
+          else
+            echo "No protection or not accessible (404/403)."
+          fi
+
+          echo ""
+          echo "D) Rulesets"
+          CODE2="$(curl -sS -o /tmp/rulesets.json -w "%{http_code}" -H "$HDR_AUTH" -H "$HDR_ACC" "$API/repos/$REPO/rulesets" || true)"
+          echo "http=$CODE2"
+          if [ "$CODE2" = "200" ]; then
+            python3 - <<'PY'
+            import json
+            rs=json.load(open("/tmp/rulesets.json","r"))
+            print("count=", len(rs))
+            for r in rs[:20]:
+              print("-", r.get("name"), "| target:", r.get("target"), "| enforcement:", r.get("enforcement"))
+            PY
+          else
+            echo "Not accessible or not enabled."
+          fi
+
