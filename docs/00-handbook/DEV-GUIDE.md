@@ -137,7 +137,7 @@ Operate → Runbook + Monitoring + Release Notes
 Tüm bu adımlar DOCS-PROJECT-LAYOUT içinde tanımlanan dosya yapısına göre üretilir.
 
 -------------------------------------------------------------------------------
-8. AGENT DAVRANIŞİ (GENEL)
+8. AGENT DAVRANIŞI (GENEL)
 -------------------------------------------------------------------------------
 
 Her iş tipinde agent şu sırayı izler:
