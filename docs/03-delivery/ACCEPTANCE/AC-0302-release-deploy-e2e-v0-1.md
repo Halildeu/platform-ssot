@@ -38,18 +38,29 @@ Owner: @team/platform
     - Script: `python3 scripts/check_story_links.py STORY-0302`  
     - Script: `python3 scripts/check_doc_chain.py STORY-0302`  
 
+- [ ] Senaryo 2 – CI Gate tek required check:
+  - Given: `ci-gate` always-run bir workflow’dur ve main için tek required check olarak tanımlıdır.  
+  - When: PR açılır.  
+  - Then: `ci-gate` PASS olmadan merge edilememelidir (missing check olmadan tek PASS/FAIL sinyali).  
+
+- [ ] Senaryo 3 – Merge label gate:
+  - Given: PR üzerinde `pr-bot/ready-to-merge` label’ı yoktur.  
+  - When: Merge-Bot merge denemesi yapar.  
+  - Then: Merge yapılmamalıdır (noop; fail-safe davranış).  
+
 ### Web
 
-- [ ] Senaryo 2 – Publish bundle contract (canonical `web/dist`):
+- [ ] Senaryo 4 – Publish bundle contract (canonical `web/dist`):
   - Given: `web/netlify.toml` publish root “dist” olarak tanımlıdır.  
   - When: Web build + publish bundle çalıştırılır.  
   - Then: `web/dist` altında required artefacts bulunur (index.html + remoteEntry.js + remotes).  
+  - Not (v0.1 default): Shell prod remotes referanslıysa `REQUIRE_AUDIT=1` ve `REQUIRE_REPORTS=1` varsayılır; audit/reports opsiyonel kalacaksa shell prod config’ten referanslar kaldırılmalıdır.  
   - Kanıt/Evidence (önerilen):
     - Dosya: `web/netlify.toml`  
     - Komut: `npm -C web ci && npm -C web run build`  
     - Komut: `npm -C web run publish:bundle`  
 
-- [ ] Senaryo 3 – Prod remote contract (localhost yok):
+- [ ] Senaryo 5 – Prod remote contract (localhost yok):
   - Given: Prod webpack config’leri repoda bulunur.  
   - When: “localhost” taraması yapılır.  
   - Then: Prod config’te localhost remote URL kalmamalıdır.  
@@ -60,7 +71,7 @@ Owner: @team/platform
 
 ### Backend
 
-- [ ] Senaryo 4 – Deploy sonrası healthcheck:
+- [ ] Senaryo 6 – Deploy sonrası healthcheck:
   - Given: Backend servisleri health endpoint sunar (Spring Actuator).  
   - When: Deploy tamamlandıktan sonra healthcheck çağrıları yapılır.  
   - Then: Kritik servisler “UP” dönmelidir (gateway/auth/user/permission).  
@@ -70,7 +81,7 @@ Owner: @team/platform
 
 ### Operations / E2E
 
-- [ ] Senaryo 5 – Post-deploy web smoke:
+- [ ] Senaryo 7 – Post-deploy web smoke:
   - Given: Web smoke runbook’u tanımlıdır.  
   - When: Deploy sonrası smoke senaryoları çalıştırılır.  
   - Then: Smoke PASS olmalıdır (kritik route’lar açılır, konsol error=0 hedefi).  
@@ -84,6 +95,7 @@ Owner: @team/platform
 
 - “Breaking migration” durumunda geri alma yerine forward-fix varsayımı (expand/contract) dokümante edilmelidir.  
 - Publish bundle ve prod remote contract, hosting sağlayıcısından bağımsız (relative path) olmalıdır.  
+- v0.1 default: Shell prod remotes `/audit/remoteEntry.js` ve `/reports/remoteEntry.js` referanslıysa `REQUIRE_AUDIT=1` ve `REQUIRE_REPORTS=1` zorunlu kabul edilir; opsiyonel olacaksa shell prod config referansları kaldırılmalıdır.  
 
 -------------------------------------------------------------------------------
 ## 5. ÖZET
@@ -172,4 +184,3 @@ Owner: @team/platform
 - `web/apps/mfe-users/webpack.prod.js` → `mfe_reporting` remote path’ini `/reports/remoteEntry.js` yap
 - `web/security/sri-manifest.json` → (SRI required olacaksa) `audit`/`reports` artefact kayıtlarını ekle + rotasyon akışını netleştir
 - `.github/workflows/ci-gate.yml` (veya mevcut `web-qa.yml`) → web gate’e `build + publish bundle + artefact assert` adımını ekle
-

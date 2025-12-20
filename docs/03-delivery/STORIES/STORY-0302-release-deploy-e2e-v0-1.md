@@ -30,6 +30,7 @@ Dahil (v0.1):
 - PR-Bot + Merge-Bot: auto-merge olmadan label gate + squash merge.  
 - WEB publish bundle: canonical root `web/dist` + required artefacts + URL contract.  
 - WEB prod remote contract: localhost remotes yok; same-origin relative path contract.  
+- URL şablonu (format sabit): app.<env>.<domain>, api.<env>.<domain>  
 - Backend deploy: GHCR + self-hosted runner + prod compose sözleşmesi (tag/rollback/healthcheck).  
 - DB migrations: Flyway expand/contract policy + breaking-change lint yaklaşımı.  
 - Post-deploy validation: Web smoke (Playwright) + Backend healthchecks + minimum guardrail metrikleri.  
@@ -148,4 +149,3 @@ Kapsam dışı (v0.1):
 - `web/apps/mfe-users/webpack.prod.js` → `mfe_reporting` remote path’ini `/reports/remoteEntry.js` yap
 - `web/security/sri-manifest.json` → (SRI required olacaksa) `audit`/`reports` artefact kayıtlarını ekle + rotasyon akışını netleştir
 - `.github/workflows/ci-gate.yml` (veya mevcut `web-qa.yml`) → web gate’e `build + publish bundle + artefact assert` adımını ekle
-

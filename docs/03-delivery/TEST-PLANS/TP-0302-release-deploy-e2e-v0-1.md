@@ -51,6 +51,11 @@ Owner: @team/platform
 - [ ] Senaryo 6 – Rollback testi:
   - Beklenen: önceki artefact/image tag’a dönüş sonrası healthcheck + smoke tekrar PASS.  
 
+- [ ] Senaryo 7 – Negatif: path filter nedeniyle bazı workflow’lar tetiklenmese bile “missing check” yok:
+  - Given: Bazı workflow’lar `paths:` filtresi nedeniyle PR’da koşmayabilir.  
+  - When: PR merge kapısı değerlendirilir.  
+  - Then: Required check olarak `ci-gate` tek PASS/FAIL sinyali üretir; “missing check” nedeniyle bloklanma olmamalıdır.  
+
 -------------------------------------------------------------------------------
 ## 5. ÇEVRE VE ARAÇLAR
 -------------------------------------------------------------------------------
@@ -153,4 +158,3 @@ Owner: @team/platform
 - `web/apps/mfe-users/webpack.prod.js` → `mfe_reporting` remote path’ini `/reports/remoteEntry.js` yap
 - `web/security/sri-manifest.json` → (SRI required olacaksa) `audit`/`reports` artefact kayıtlarını ekle + rotasyon akışını netleştir
 - `.github/workflows/ci-gate.yml` (veya mevcut `web-qa.yml`) → web gate’e `build + publish bundle + artefact assert` adımını ekle
-
