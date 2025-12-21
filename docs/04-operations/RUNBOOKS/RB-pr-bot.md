@@ -85,7 +85,7 @@ Owner: @team/platform
     When: Label create/add API’si permission/policy nedeniyle fail oluyor.  
     Then:
     - `.github/workflows/pr-bot.yml` içinde `issues: write` olduğundan emin ol.
-    - Label’ı repo’da bir kez manuel oluştur (fallback) ve tekrar dene.
+    - Label’ı repo'da bir kez manuel oluştur (fallback) ve tekrar dene.
 
 - [ ] Arıza senaryosu 5 – Merge-Bot merge etmiyor:
   - Given: QA PASS ama PR merge olmuyor.  
