@@ -51,6 +51,13 @@
       "notes": ["fix/** PR'ları için default template + merge-bot label (best-effort)."]
     },
     {
+      "match": "ops/auto-fix-doc-id-from-templates",
+      "draft": false,
+      "merge_policy": "bot_squash",
+      "template": "default",
+      "notes": ["allowlist: ops/auto-fix-doc-id-from-templates PR'ı için merge-bot açık."]
+    },
+    {
       "match": "ops/**",
       "draft": false,
       "merge_policy": "none",
