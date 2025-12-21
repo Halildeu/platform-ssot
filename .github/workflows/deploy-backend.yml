@@ -1,0 +1,76 @@
+name: deploy-backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy-backend.yml"
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Deployment environment (informational)"
+        required: true
+        default: "stage"
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: deploy-backend-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build & push images (kill-switch, best-effort)
+        env:
+          DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
+          GHCR_OWNER: ${{ github.repository_owner }}
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+
+          if [ "${DEPLOY_ENABLED:-}" != "true" ]; then
+            echo "::notice title=deploy-backend::DEPLOY_ENABLED != true; skipping image build/push."
+            exit 0
+          fi
+
+          echo "::add-mask::${GH_TOKEN}"
+          echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+
+          echo "::group::docker compose build (backend/docker-compose.yml)"
+          docker compose -f backend/docker-compose.yml build
+          echo "::endgroup::"
+
+          short_sha="${SHA:0:7}"
+          stable_tag="main-stable"
+
+          echo "::group::tag + push (serban-* -> ghcr.io/${GHCR_OWNER}/...)"
+          images="$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^serban-' || true)"
+          if [ -z "${images}" ]; then
+            echo "::notice title=deploy-backend::No serban-* images found; skipping push."
+            exit 0
+          fi
+
+          while IFS= read -r img; do
+            name="${img%%:*}"
+            svc="${name#serban-}"
+            target="ghcr.io/${GHCR_OWNER}/platform-ssot-${svc}"
+
+            docker tag "${img}" "${target}:sha-${short_sha}"
+            docker tag "${img}" "${target}:${stable_tag}"
+            docker push "${target}:sha-${short_sha}"
+            docker push "${target}:${stable_tag}"
+          done <<< "${images}"
+          echo "::endgroup::"

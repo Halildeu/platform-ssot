@@ -1,0 +1,66 @@
+name: deploy-web
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - ".github/workflows/deploy-web.yml"
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "Deployment environment (informational)"
+        required: true
+        default: "stage"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-web-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-web:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Build web
+        run: npm run build
+        working-directory: web
+
+      - name: Deploy web (kill-switch, best-effort)
+        env:
+          DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
+          WEB_DEPLOY_HOOK_URL: ${{ secrets.WEB_DEPLOY_HOOK_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${DEPLOY_ENABLED:-}" != "true" ]; then
+            echo "::notice title=deploy-web::DEPLOY_ENABLED != true; skipping deploy."
+            exit 0
+          fi
+
+          if [ -z "${WEB_DEPLOY_HOOK_URL:-}" ]; then
+            echo "::notice title=deploy-web::WEB_DEPLOY_HOOK_URL missing; skipping deploy."
+            exit 0
+          fi
+
+          echo "::notice title=deploy-web::Triggering deploy hook (URL hidden)."
+          curl -fsS -X POST "${WEB_DEPLOY_HOOK_URL}"
+
