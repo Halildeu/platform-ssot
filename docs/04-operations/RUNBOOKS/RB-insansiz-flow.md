@@ -82,6 +82,8 @@ Owner: @team/platform
     - `AUTO_FIX_ENABLED` (true/false)
     - `DEPLOY_ENABLED` (true/false)
     - `ROLLBACK_ENABLED` (true/false)
+    - Kaynak: Vault KV v2 (SSOT) → GitHub Secrets (Actions) sync: `.github/workflows/vault-secrets-sync.yml` (`mode=killswitch`).
+    - Değer formatı: string `"true"` / `"false"` (hardening uyumu).
   - Parametre zorunluluğu (hardening):
     - `DEPLOY_ENABLED=true` iken:
       - Web deploy için `WEB_DEPLOY_HOOK_URL` zorunludur (yoksa `deploy-web` FAIL).
