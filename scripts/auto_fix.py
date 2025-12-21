@@ -51,8 +51,12 @@ ERROR_RE = re.compile(
     r"(\[ci-gate\]\s+FAIL:|Traceback|Process completed with exit code|npm ERR!|Module not found|ERROR\b|Error:|FAILED\b|Exception)",
     re.IGNORECASE,
 )
-DOC_ID_ERROR_PATH_RE = re.compile(r"^- HATA:\s+(.+?\.md)\s*$", re.MULTILINE)
+DOC_ID_ERROR_PATH_RE = re.compile(r"^\s*-\s*HATA:\s+(.+?\.md)\s*$", re.MULTILINE)
 DOC_ID_STEM_EXPECTED_RE = re.compile(r"stem prefix beklentisi:\s*([A-Za-z0-9][A-Za-z0-9_-]*)", re.IGNORECASE)
+DOC_ID_MISMATCH_LINE_RE = re.compile(
+    r"ID meta '([^']+)' dosya adıyla uyumlu değil\s*\(stem prefix beklentisi:\s*([^)]+)\)",
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -322,6 +326,23 @@ def expected_id_for_doc(rel_path: str) -> Optional[str]:
     if m:
         return m.group(1)
     m = re.match(r"^(RB-[A-Za-z0-9-]+)$", stem)
+    if m:
+        return m.group(1)
+    return None
+
+
+def expected_id_for_stem_prefix(stem_prefix: str) -> Optional[str]:
+    stem_prefix = stem_prefix.strip()
+    m = re.match(r"^(AC-\d{4})\b", stem_prefix)
+    if m:
+        return m.group(1)
+    m = re.match(r"^(TP-\d{4})\b", stem_prefix)
+    if m:
+        return m.group(1)
+    m = re.match(r"^(STORY-\d{4}-.+)$", stem_prefix)
+    if m:
+        return m.group(1)
+    m = re.match(r"^(RB-[A-Za-z0-9-]+)$", stem_prefix)
     if m:
         return m.group(1)
     return None
@@ -690,17 +711,37 @@ def main(argv: Sequence[str]) -> int:
     planned_doc_id_fix: Optional[Tuple[str, str]] = None
     need_telemetry_stub = False
 
-    # Plan 1: docs ID meta line mismatch (from check_doc_ids output)
-    m = DOC_ID_ERROR_PATH_RE.search(all_logs_text)
-    if m:
-        raw_path = m.group(1)
-        rel = to_repo_relative_path(raw_path)
+    # Plan 1: docs ID meta line mismatch (from check_doc_templates / check_doc_ids output)
+    # Prefer the actual mismatch line, and associate it with the closest preceding "- HATA: <path>".
+    current_doc_rel: Optional[str] = None
+    for line in all_logs_text.splitlines():
+        m_path = DOC_ID_ERROR_PATH_RE.match(line)
+        if m_path:
+            raw_path = m_path.group(1)
+            current_doc_rel = to_repo_relative_path(raw_path) or raw_path.strip()
+            continue
+
+        m_mismatch = DOC_ID_MISMATCH_LINE_RE.search(line)
+        if not m_mismatch:
+            continue
+
+        stem_prefix = (m_mismatch.group(2) or "").strip()
+        expected = expected_id_for_stem_prefix(stem_prefix)
+        if not expected:
+            continue
+
+        rel = current_doc_rel
+        if not rel and stem_prefix:
+            candidates = sorted((ROOT / "docs").glob(f"**/{stem_prefix}.md"))
+            if len(candidates) == 1:
+                rel = str(candidates[0].relative_to(ROOT)).replace("\\", "/")
+
         if rel and rel.startswith("docs/"):
-            expected = expected_id_for_doc(rel)
-            if expected:
-                planned_doc_id_fix = (rel, expected)
-    else:
-        # Fallback: bazı log'larda path satırı kaçabilir; "stem prefix beklentisi" üzerinden dosyayı bul.
+            planned_doc_id_fix = (rel, expected)
+            break
+
+    # Fallback: bazı log'larda mismatch satırı kaçabilir; "stem prefix beklentisi" üzerinden dosyayı bul.
+    if not planned_doc_id_fix:
         m2 = DOC_ID_STEM_EXPECTED_RE.search(all_logs_text)
         if m2:
             stem = m2.group(1)
