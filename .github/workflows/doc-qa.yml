@@ -38,6 +38,7 @@ jobs:
           python3 scripts/docflow_next.py render-flow --check
           python3 scripts/check_doc_templates.py
           python3 scripts/check_doc_ids.py
+          python3 scripts/check_unique_delivery_ids.py
           python3 scripts/check_doc_locations.py
           python3 scripts/check_acceptance_evidence.py
           python3 scripts/check_story_links.py
