@@ -52,7 +52,7 @@ head = data.get("head") or {}
 sha = head.get("sha", "")
 ref = head.get("ref", "")
 url = data.get("html_url", "")
-print(f"{sha}\\t{ref}\\t{url}")
+print(f"{sha}\t{ref}\t{url}")
 PY
 )"
 
@@ -67,9 +67,14 @@ fi
 
 RUNS_JSON="$(gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=20")"
 
-RUN_INFO="$(python3 - <<'PY'
-import json,sys
-runs=(json.load(sys.stdin).get('workflow_runs') or [])
+RUN_INFO="$(RUNS_JSON="${RUNS_JSON}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("RUNS_JSON", "")
+try:
+  data = json.loads(raw) if raw.strip() else {}
+except json.JSONDecodeError:
+  data = {}
+runs=(data.get('workflow_runs') or [])
 # Prefer latest non-success; fallback to first run
 picked=None
 for r in runs:
@@ -87,7 +92,7 @@ print("%s\t%s\t%s\t%s" % (
   picked.get('name','')
 ))
 PY
-<<<"${RUNS_JSON}")"
+)"
 
 if [[ -z "${RUN_INFO}" ]]; then
   FAILURE_MD="${OUT_PR_DIR}/FAILURE.md"
