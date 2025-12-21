@@ -45,6 +45,7 @@ MERGE_POLICY_NONE = "none"
 MERGE_POLICY_BOT_SQUASH = "bot_squash"
 MERGE_POLICIES = {MERGE_POLICY_NONE, MERGE_POLICY_BOT_SQUASH}
 DEFAULT_READY_TO_MERGE_LABEL = "pr-bot/ready-to-merge"
+REQUIRED_CHECK_CI_GATE = "ci-gate"
 
 
 @dataclass(frozen=True)
@@ -288,6 +289,46 @@ def checks_all_green(check_runs: List[Dict[str, Any]]) -> Tuple[bool, str]:
             name = r.get("name") or "unknown"
             return False, f"not-green: {name} ({conclusion})"
     return True, "ok"
+
+
+def ci_gate_is_success(check_runs: List[Dict[str, Any]]) -> Tuple[bool, str]:
+    """
+    Required check (v0.1): sadece `ci-gate`.
+
+    Not:
+    - Check run name GitHub Actions job adıyla gelir (workflow+job: ci-gate/ci-gate).
+    - Aynı SHA için birden fazla ci-gate run olabilir (re-run). En yeni olanı değerlendiririz.
+    """
+
+    candidates: List[Dict[str, Any]] = []
+    for r in check_runs:
+        name = r.get("name")
+        if not isinstance(name, str):
+            continue
+        if name == REQUIRED_CHECK_CI_GATE or name.startswith(f"{REQUIRED_CHECK_CI_GATE}"):
+            candidates.append(r)
+
+    if not candidates:
+        return False, "ci-gate check-run not found"
+
+    def sort_key(it: Dict[str, Any]) -> Tuple[str, str, str]:
+        completed_at = it.get("completed_at")
+        started_at = it.get("started_at")
+        run_id = it.get("id")
+        return (
+            completed_at if isinstance(completed_at, str) else "",
+            started_at if isinstance(started_at, str) else "",
+            str(run_id) if run_id is not None else "",
+        )
+
+    picked = max(candidates, key=sort_key)
+    status = picked.get("status")
+    conclusion = picked.get("conclusion")
+    if status != "completed":
+        return False, f"ci-gate status={status}"
+    if conclusion != "success":
+        return False, f"ci-gate conclusion={conclusion}"
+    return True, "ci-gate success"
 
 
 def squash_merge(owner: str, repo: str, pr_number: int, sha: str, token: str) -> Dict[str, Any]:
@@ -571,6 +612,35 @@ def main(argv: List[str]) -> int:
                 }
             )
             return EXIT_OK
+
+        if pr_mergeable_state == "unstable":
+            # GitHub bazen kısa süreli "unstable" döndürür; retry ile deterministik hale getir.
+            for _ in range(6):
+                time.sleep(5)
+                pr_detail = get_pr_details_with_retry(owner, repo, pr_number, token)
+                pr_head = (pr_detail.get("head") or {}).get("sha")
+                pr_mergeable = pr_detail.get("mergeable")
+                pr_mergeable_state = pr_detail.get("mergeable_state")
+                if pr_head != head_sha:
+                    break
+                if pr_mergeable_state != "unstable":
+                    break
+            if pr_head != head_sha:
+                summary.append(f"- Result: noop (head sha changed: pr={pr_head})")
+                write_step_summary(summary)
+                emit_result(
+                    {
+                        "base": base_branch,
+                        "branch": head_branch,
+                        "pr": pr_number,
+                        "reason": f"head sha changed: pr={pr_head}",
+                        "result": "noop",
+                        "run_url": run_url if isinstance(run_url, str) else None,
+                        "sha": head_sha,
+                    }
+                )
+                return EXIT_OK
+
         if pr_mergeable_state not in ("clean", "has_hooks"):
             summary.append(f"- Result: noop (mergeable_state={pr_mergeable_state})")
             write_step_summary(summary)
@@ -589,10 +659,11 @@ def main(argv: List[str]) -> int:
             return EXIT_OK
 
         check_runs = list_check_runs(owner, repo, head_sha, token)
-        ok, msg = checks_all_green(check_runs)
-        summary.append(f"- Checks: {msg}")
+        ok, msg = ci_gate_is_success(check_runs)
+        summary.append(f"- Required check: {REQUIRED_CHECK_CI_GATE}")
+        summary.append(f"- {msg}")
         if not ok:
-            summary.append("- Result: noop (checks not green)")
+            summary.append("- Result: noop (ci-gate not green)")
             write_step_summary(summary)
             emit_result(
                 {
@@ -600,7 +671,7 @@ def main(argv: List[str]) -> int:
                     "branch": head_branch,
                     "checks": msg,
                     "pr": pr_number,
-                    "reason": f"checks not green: {msg}",
+                    "reason": f"ci-gate not green: {msg}",
                     "result": "noop",
                     "run_url": run_url if isinstance(run_url, str) else None,
                     "sha": head_sha,
