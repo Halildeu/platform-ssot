@@ -38,3 +38,7 @@ backend/.vault-dev/**
 # Telemetry source modules (tracked)
 !**/src/**/telemetry/
 !**/src/**/telemetry/**
+
+# Python artifacts (do not commit)
+**/__pycache__/
+**/*.pyc

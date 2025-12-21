@@ -30,6 +30,13 @@
       ]
     },
     {
+      "match": "bot/fix-*",
+      "draft": false,
+      "merge_policy": "bot_squash",
+      "template": "default",
+      "notes": ["auto-fix bot PR'ları: merge-bot açık (ci-gate PASS + label gate)."]
+    },
+    {
       "match": "docs/**",
       "draft": false,
       "merge_policy": "bot_squash",

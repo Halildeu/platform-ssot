@@ -1,0 +1,67 @@
+name: post-deploy-validate
+
+on:
+  workflow_run:
+    workflows: ["deploy-web", "deploy-backend"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: post-deploy-validate-${{ github.event.workflow_run.id }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.event == 'push'
+      && secrets.DEPLOY_ENABLED == 'true'
+
+    steps:
+      - name: Validate (required)
+        env:
+          WEB_SMOKE_URL: ${{ secrets.WEB_SMOKE_URL }}
+          BACKEND_HEALTH_URLS: ${{ secrets.BACKEND_HEALTH_URLS }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+
+          if [ -z "${WEB_SMOKE_URL:-}" ]; then
+            echo "::error title=post-deploy-validate::WEB_SMOKE_URL missing; refusing to validate."
+            exit 1
+          fi
+
+          if [ -z "${BACKEND_HEALTH_URLS:-}" ]; then
+            echo "::error title=post-deploy-validate::BACKEND_HEALTH_URLS missing; refusing to validate."
+            exit 1
+          fi
+
+          echo "::warning title=post-deploy-validate::Guardrail metrics not configured (v0.1); skipping."
+
+          fail=0
+
+          echo "::group::web smoke"
+          curl -fsS "${WEB_SMOKE_URL}" >/dev/null || fail=1
+          echo "::endgroup::"
+
+          echo "::group::backend healthchecks"
+          IFS=',' read -r -a urls <<< "${BACKEND_HEALTH_URLS}"
+          for u in "${urls[@]}"; do
+            u="$(echo "${u}" | xargs)"
+            [ -n "${u}" ] || continue
+            curl -fsS "${u}" >/dev/null || fail=1
+          done
+          echo "::endgroup::"
+
+          if [ "${fail}" = "1" ]; then
+            echo "::error title=post-deploy-validate::Validation failed."
+            exit 1
+          fi
+
+          echo "::notice title=post-deploy-validate::PASS"

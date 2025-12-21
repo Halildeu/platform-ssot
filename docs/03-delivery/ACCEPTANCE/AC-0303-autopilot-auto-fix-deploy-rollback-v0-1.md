@@ -16,8 +16,8 @@ Owner: @team/platform
 -------------------------------------------------------------------------------
 
 - `ci-gate` failure → auto-fix PR üretimi (guardrails + allowlist + marker comment).  
-- `main` push → deploy-web/deploy-backend (kill-switch ile).  
-- Deploy sonrası doğrulama + FAIL durumunda rollback + incident kaydı.  
+- `main` push → deploy-web/deploy-backend (DEPLOY_ENABLED job-level gate).  
+- Deploy sonrası doğrulama + FAIL durumunda rollback + incident kaydı (parametreler zorunlu; silent PASS yok).  
 
 -------------------------------------------------------------------------------
 ## 3. GIVEN / WHEN / THEN SENARYOLARI
@@ -44,7 +44,7 @@ Owner: @team/platform
 - [ ] Senaryo 3 – Kill switch: DEPLOY kapalıysa noop:
   - Given: `DEPLOY_ENABLED` repo secret’ı `false/empty` konumundadır.  
   - When: main’e merge olur.  
-  - Then: Deploy workflow’ları “build/validate” yapabilir ama gerçek deploy adımı çalışmamalıdır (noop + summary).  
+  - Then: Deploy/validate job’ları **çalışmamalı (skip)**; “silent PASS” üretilmemelidir.  
 
 ### Operations – Auto-Fix
 
@@ -69,7 +69,10 @@ Owner: @team/platform
 ### Operations – Deploy / Validate / Rollback
 
 - [ ] Senaryo 6 – main → deploy-web ve post-deploy validate:
-  - Given: `DEPLOY_ENABLED=true` ve web deploy hedef secrets’ları tanımlıdır.  
+  - Given: `DEPLOY_ENABLED=true` ve aşağıdaki secrets’lar tanımlıdır:
+    - `WEB_DEPLOY_HOOK_URL`
+    - `WEB_SMOKE_URL`
+    - `BACKEND_HEALTH_URLS`
   - When: Web değişikliği `main`’e merge olur.  
   - Then: `deploy-web` build+deploy yapmalı, ardından `post-deploy-validate` web smoke PASS olmalıdır.  
 
@@ -81,14 +84,16 @@ Owner: @team/platform
 - [ ] Senaryo 8 – post-deploy FAIL → rollback + incident:
   - Given: Deploy sonrası doğrulama FAIL olur.  
   - When: rollback workflow’u tetiklenir.  
-  - Then: Rollback uygulanmalı ve incident marker comment yazılmalıdır: `<!-- incident:v1 -->`.  
+  - Then:
+    - `ROLLBACK_ENABLED=true` ise rollback uygulanmalı,  
+    - incident marker comment yazılmalıdır: `<!-- incident:v1 -->`.  
 
 -------------------------------------------------------------------------------
 ## 4. NOTLAR / KISITLAR
 -------------------------------------------------------------------------------
 
 - Auto-fix v0.1 yalnız allowlist + rule-based fix setini uygular; bilinmeyen hatalarda noop + digest yazmak tercih edilir.  
-- Deploy/rollback adımları secrets olmadan noop kalır; SSOT sözleşme korunur, yanlışlıkla prod deploy yapılmaz.  
+- Deploy/validate/rollback hardening: `DEPLOY_ENABLED=true` iken zorunlu parametreler eksikse workflow FAIL eder (silent PASS yok).  
 
 -------------------------------------------------------------------------------
 ## 5. ÖZET
