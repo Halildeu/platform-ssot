@@ -528,11 +528,20 @@ def main(argv: Sequence[str]) -> int:
         for job in failing_jobs:
             code, zbytes = github_get_bytes(token, f"/repos/{run.repo}/actions/jobs/{job.id}/logs")
             if code != 200:
+                if code in (401, 403):
+                    title = (
+                        f"Logs not downloaded: http={code} (unauthorized). "
+                        "Check workflow permissions (`actions: read`) / org policy."
+                    )
+                elif code == 404:
+                    title = "Logs not downloaded: http=404 (not found)."
+                else:
+                    title = f"Cannot download logs (http={code})."
                 digests.append(
                     JobDigest(
                         job=job,
                         commands=[],
-                        snippet_title=f"Cannot download logs (http={code}).",
+                        snippet_title=title,
                         snippet="",
                     )
                 )
