@@ -102,8 +102,29 @@ Owner: @team/platform
 - Merge otomatik (Merge Bot) kalır.
 - `log-digest` sadece teşhis (digest) yazar.
 - Örnek token export (değer loglanmaz):
-  - `export GH_TOKEN="$(vault kv get -field=GH_SECRETS_SYNC_TOKEN 'secret/stage/ops/github')"`
+  - `export GH_TOKEN="$(vault kv get -field=GH_LOCAL_AUTOPILOT_TOKEN 'secret/stage/ops/github')"`
   - Not: gerçek Vault path kurumunuzdaki SSOT’a göre değişebilir.
+
+-------------------------------------------------------------------------------
+3.2 LOCAL AUTOPILOT PR ANNOTATIONS
+-------------------------------------------------------------------------------
+
+- Amaç: Local autopilot sonucu PR Conversation’da deterministik görünür olsun (spam yok).
+- Token gereksinimi:
+  - `GH_LOCAL_AUTOPILOT_TOKEN` (fine-grained) → PR comment + label yazmak için **`Issues: Read and write`** gerekir.
+  - Read ihtiyaçları için: `Actions: Read`, `Pull requests: Read`, `Contents: Read`, `Metadata: Read`.
+- Comment marker’ları (idempotent upsert):
+  - `<!-- local-autopilot:failure -->`:
+    - `FAILURE.md` içinden ilk 120 satır + `ci-gate` run linki.
+  - `<!-- local-autopilot:status -->`:
+    - Durum: `failing` / `fix-sent` / `passed` / `needs-human` + attempt bilgisi.
+- Label seti (yoksa ilk seferde repo’da oluşturulur; `autopilot/*`):
+  - `autopilot/failing`
+  - `autopilot/fix-sent`
+  - `autopilot/passed`
+  - `autopilot/needs-human`
+- Dry-run:
+  - `scripts/autopilot_local.sh --dry-run-pr-updates` → PR’a yazmaz; sadece “would comment/label” çıktısı verir.
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
