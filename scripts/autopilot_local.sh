@@ -6,6 +6,10 @@ PR=""
 MAX_ATTEMPTS=5
 OUT_DIR="artifacts/ci-logs"
 FIX_CMD="${AUTOPILOT_FIX_CMD:-}"
+ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+AUTOPILOT_TMP="${ROOT_DIR}/.autopilot-tmp"
+CI_PULL_LOGS_SRC="${ROOT_DIR}/scripts/ci_pull_logs.sh"
+CI_PULL_LOGS_BIN="${AUTOPILOT_TMP}/ci_pull_logs.sh"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--max N] [--out dir]"
@@ -26,6 +30,12 @@ done
 
 if [[ -z "${REPO}" || -z "${PR}" ]]; then
   usage; exit 2
+fi
+
+mkdir -p "${AUTOPILOT_TMP}"
+if [[ -x "${CI_PULL_LOGS_SRC}" ]]; then
+  cp "${CI_PULL_LOGS_SRC}" "${CI_PULL_LOGS_BIN}"
+  chmod +x "${CI_PULL_LOGS_BIN}"
 fi
 
 if ! command -v gh >/dev/null 2>&1; then
@@ -77,7 +87,13 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   fi
 
   echo "[autopilot] FAIL. downloading logs..."
-  ./scripts/ci_pull_logs.sh --repo "${REPO}" --pr "${PR}" --out "${OUT_DIR}" || true
+  if [[ -x "${CI_PULL_LOGS_SRC}" ]]; then
+    "${CI_PULL_LOGS_SRC}" --repo "${REPO}" --pr "${PR}" --out "${OUT_DIR}" || true
+  elif [[ -x "${CI_PULL_LOGS_BIN}" ]]; then
+    "${CI_PULL_LOGS_BIN}" --repo "${REPO}" --pr "${PR}" --out "${OUT_DIR}" || true
+  else
+    echo "[autopilot] ci_pull_logs.sh not found; skipping log download."
+  fi
   FAILURE_MD="${OUT_DIR}/pr-${PR}/FAILURE.md"
   echo "[autopilot] failure bundle: ${FAILURE_MD}"
 
