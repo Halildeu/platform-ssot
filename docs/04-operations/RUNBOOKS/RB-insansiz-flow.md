@@ -170,3 +170,4 @@ Edge-case tablosu (v0.1):
 - STORY: docs/03-delivery/STORIES/STORY-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
 - TEST-PLAN: docs/03-delivery/TEST-PLANS/TP-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
+- Related: docs/03-delivery/STORIES/STORY-0304-autopilot-auto-fix-deploy-rollback-v0-1.md
