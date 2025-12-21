@@ -35,6 +35,12 @@ Owner: Frontend
 - Konfigürasyon (opsiyonel):
   - Base URL override: `PW_BASE_URL=http://localhost:3000`
   - Senaryo dosyası override: `PW_TARGETS=tests/playwright/pw_scenarios.yml`
+  - Rule of thumb (mock gate):
+    - Ne zaman: Backend/gateway erişimi olmadığı için auth-required smoke senaryoları flaky ise.
+    - Neden: Telemetry `requestfailed/5xx` false-negative üretir ve smoke sinyalini bozar.
+    - Nasıl: `PW_MOCK_API` default `0`; sadece gerekli GET endpoint’leri için `PW_MOCK_API=1` aç (mock’lar `x-pw-mocked=1`).
+    - Örnek (public): `PW_MOCK_THEME_REGISTRY=1 PW_MOCK_API=0 pnpm -C web run pw:nightly --grep shell_login`
+    - Örnek (auth): `PW_MOCK_THEME_REGISTRY=1 PW_MOCK_API=1 PW_AUTH_MODE=token_injection PW_TEST_TOKEN=... pnpm -C web run pw:nightly --grep story_0050_locale_switch_propagation`
 
 - Durdurma:
   - Test süreci (`playwright test`) sonlandırılır (Ctrl+C).
