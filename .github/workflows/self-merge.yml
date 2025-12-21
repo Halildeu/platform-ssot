@@ -1,0 +1,156 @@
+name: Self Merge
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Merge edilecek PR numarası (örn: 52)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+concurrency:
+  group: self-merge-${{ inputs.pr_number }}
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Merge PR (squash, ci-gate gated)
+        uses: actions/github-script@v7
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+          REQUIRED_CHECK: ci-gate
+          REQUIRED_BASE: main
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const prNumber = Number.parseInt(process.env.PR_NUMBER || '', 10);
+            if (!Number.isInteger(prNumber) || prNumber <= 0) {
+              core.setFailed(`Invalid pr_number: ${process.env.PR_NUMBER}`);
+              return;
+            }
+
+            const requiredCheck = (process.env.REQUIRED_CHECK || 'ci-gate').trim();
+            const requiredBase = (process.env.REQUIRED_BASE || 'main').trim();
+
+            const { owner, repo } = context.repo;
+            const prUrl = `${context.serverUrl}/${owner}/${repo}/pull/${prNumber}`;
+
+            const summary = core.summary;
+            await summary.addHeading('Self Merge', 2);
+            await summary.addList([`PR: ${prUrl}`]);
+
+            const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+            let pr = null;
+            for (let i = 0; i < 8; i++) {
+              const resp = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
+              pr = resp.data;
+              if (pr && pr.mergeable !== null) break;
+              await sleep(2000);
+            }
+
+            if (!pr) {
+              core.setFailed('Cannot load PR details.');
+              return;
+            }
+
+            const labels = Array.isArray(pr.labels) ? pr.labels.map((l) => l && l.name).filter(Boolean) : [];
+            await summary.addHeading('PR Snapshot', 3);
+            await summary.addTable([
+              [{ data: 'Field', header: true }, { data: 'Value', header: true }],
+              ['state', String(pr.state)],
+              ['draft', String(pr.draft)],
+              ['base', String(pr.base && pr.base.ref)],
+              ['head', String(pr.head && pr.head.ref)],
+              ['head_sha', String(pr.head && pr.head.sha)],
+              ['mergeable', String(pr.mergeable)],
+              ['mergeable_state', String(pr.mergeable_state)],
+              ['labels', labels.length ? labels.join(', ') : '(none)'],
+            ]);
+
+            if (String(pr.state) !== 'open') {
+              core.setFailed(`PR is not open (state=${pr.state}).`);
+              return;
+            }
+
+            if (pr.draft === true) {
+              core.setFailed('PR is draft; refusing to merge.');
+              return;
+            }
+
+            if (!pr.base || pr.base.ref !== requiredBase) {
+              core.setFailed(`Base branch mismatch (expected=${requiredBase}, got=${pr.base && pr.base.ref}).`);
+              return;
+            }
+
+            const headRepo = pr.head && pr.head.repo;
+            if (!headRepo || headRepo.fork === true || headRepo.full_name !== `${owner}/${repo}`) {
+              core.setFailed('Refusing to merge PRs from forks / external head repos.');
+              return;
+            }
+
+            const headSha = pr.head && pr.head.sha;
+            if (!headSha) {
+              core.setFailed('Missing head SHA.');
+              return;
+            }
+
+            const checksResp = await github.rest.checks.listForRef({ owner, repo, ref: headSha, per_page: 100 });
+            const checkRuns = Array.isArray(checksResp.data && checksResp.data.check_runs) ? checksResp.data.check_runs : [];
+            const ciGate = checkRuns.find((cr) => cr && cr.name === requiredCheck);
+
+            if (!ciGate) {
+              core.setFailed(`Required check not found: ${requiredCheck}`);
+              return;
+            }
+
+            await summary.addHeading('Required Check', 3);
+            await summary.addTable([
+              [{ data: 'Check', header: true }, { data: 'status', header: true }, { data: 'conclusion', header: true }],
+              [requiredCheck, String(ciGate.status), String(ciGate.conclusion)],
+            ]);
+
+            if (ciGate.status !== 'completed' || ciGate.conclusion !== 'success') {
+              core.setFailed(`Required check is not green: ${requiredCheck} (${ciGate.status}/${ciGate.conclusion})`);
+              return;
+            }
+
+            const badStates = new Set(['dirty', 'behind', 'blocked', 'unknown']);
+            if (typeof pr.mergeable_state === 'string' && badStates.has(pr.mergeable_state)) {
+              core.setFailed(`PR is not mergeable (mergeable_state=${pr.mergeable_state}).`);
+              return;
+            }
+
+            try {
+              const mergeResp = await github.rest.pulls.merge({
+                owner,
+                repo,
+                pull_number: prNumber,
+                merge_method: 'squash',
+                sha: headSha,
+              });
+
+              const merged = Boolean(mergeResp.data && mergeResp.data.merged);
+              await summary.addHeading('Result', 3);
+              if (merged) {
+                await summary.addList([`Result: merged`, `Method: squash`]);
+                core.notice(`Merged PR #${prNumber} (squash).`);
+              } else {
+                await summary.addList([`Result: not merged`]);
+                core.setFailed(`Merge endpoint returned merged=false for PR #${prNumber}.`);
+              }
+            } catch (e) {
+              const msg = e && e.message ? e.message : String(e);
+              await summary.addHeading('Result', 3);
+              await summary.addList([`Result: failed`, `Error: ${msg}`]);
+              core.setFailed(`Merge failed: ${msg}`);
+            }
+
