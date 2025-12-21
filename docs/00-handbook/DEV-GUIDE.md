@@ -161,4 +161,5 @@ Bu doküman tüm iş tipleri için standart geliştirme sürecini tanımlar:
 - Discover → Shape → Design → Build → Validate → Operate
 - Doküman üretimi, kodlama ve agent çıktıları bu yapıya göre uyumlu hale gelir.
 
+Geliştirme süreci için tek doğruluk kaynağıdır.
 Geliştirme süreci için tek doğruluk kaynağıdır (SSOT).
