@@ -113,15 +113,19 @@ Yeni doküman açarken:
    - En büyük numarayı bul, +1 yap:  
      - Örn: `STORY-0001`, `STORY-0002` varsa sıradaki `STORY-0003` olur.
 
-4. **Slug belirle**  
+4. **ID registry rezervasyonu yap (SSOT)**  
+   - Yeni STORY başlamadan önce `docs/03-delivery/ID-REGISTRY.tsv` içinde ilgili NUM (XXXX) rezerve edilmelidir.  
+   - Bu registry, aynı NUM’un farklı branch’lerde çakışmasını önlemek için kullanılır.  
+
+5. **Slug belirle**  
    - Konuya göre kısa ve açıklayıcı bir slug kullan:  
      - Örn: `STORY-0003-backend-keycloak-jwt-hardening.md`
 
-5. **Çakışma kontrolü yap**  
+6. **Çakışma kontrolü yap**  
    - `rg "STORY-0003" docs` gibi bir arama ile aynı ID’nin başka dosyada
      kullanılmadığını doğrula.
 
-6. **ID’yi dosya içine yaz**  
+7. **ID’yi dosya içine yaz**  
    - Dokümanın ilk satırlarında `ID: STORY-0003` vb. alanıyla ID’yi sabitle.  
    - Bu alan yazıldıktan sonra ID değiştirilemez; yalnızca slug gerektiğinde
      düzeltilebilir.

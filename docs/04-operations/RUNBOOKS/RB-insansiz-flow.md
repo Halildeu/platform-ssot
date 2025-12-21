@@ -29,6 +29,8 @@ Owner: @team/platform
   - `ops/**` → default `merge_policy=none` (merge kapalı)
 - SSOT kaynakları:
   - Flow: `docs/03-delivery/PROJECT-FLOW.tsv` (+ render: `docs/03-delivery/PROJECT-FLOW.md`)
+  - ID rezervasyonu: `docs/03-delivery/ID-REGISTRY.tsv`
+    - Kural: Yeni STORY başlamadan önce ilgili `STORY/AC/TP` NUM (XXXX) bu registry’de rezerve edilir.
   - Delivery zinciri: `docs/03-delivery/STORIES/`, `docs/03-delivery/ACCEPTANCE/`, `docs/03-delivery/TEST-PLANS/`
   - PR bot kuralları: `docs/04-operations/PR-BOT-RULES.json`
   - Runbook’lar: bu doküman + `RB-pr-bot` + `RB-log-digest`

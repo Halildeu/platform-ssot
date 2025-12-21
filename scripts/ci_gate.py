@@ -362,6 +362,7 @@ def main(argv: List[str]) -> int:
                     (["python3", "scripts/docflow_next.py", "render-flow", "--check"], ROOT),
                     (["python3", "scripts/check_doc_templates.py"], ROOT),
                     (["python3", "scripts/check_doc_ids.py"], ROOT),
+                    (["python3", "scripts/check_id_registry.py"], ROOT),
                     (["python3", "scripts/check_doc_locations.py"], ROOT),
                     (["python3", "scripts/check_acceptance_evidence.py"], ROOT),
                     (["python3", "scripts/check_story_links.py"], ROOT),
