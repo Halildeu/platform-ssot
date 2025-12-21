@@ -402,9 +402,10 @@ def build_digest_markdown(run: RunInfo, pr_number: int, jobs: List[JobDigest]) -
         f"- Conclusion: `{run.conclusion}`",
         f"- Run: {run.html_url}",
         f"- Head SHA: `{run.head_sha}`",
-        "",
-        "### Failing jobs",
     ]
+    if run.conclusion.lower() == "cancelled":
+        lines.append("- Note: Logs not downloaded: run cancelled.")
+    lines.extend(["", "### Failing jobs"])
     if not jobs:
         lines.append("- (none found)")
     else:
@@ -512,21 +513,33 @@ def main(argv: Sequence[str]) -> int:
     print(f"[log-digest] failing_jobs={len(failing_jobs)} pr_number={pr_number} (via {pr_reason})")
 
     digests: List[JobDigest] = []
-    for job in failing_jobs:
-        code, zbytes = github_get_bytes(token, f"/repos/{run.repo}/actions/jobs/{job.id}/logs")
-        if code != 200:
+    if run.conclusion.lower() == "cancelled":
+        print("[log-digest] run cancelled; skipping log download")
+        for job in failing_jobs:
             digests.append(
                 JobDigest(
                     job=job,
                     commands=[],
-                    snippet_title=f"Cannot download logs (http={code}).",
+                    snippet_title="Logs not downloaded: run cancelled.",
                     snippet="",
                 )
             )
-            continue
+    else:
+        for job in failing_jobs:
+            code, zbytes = github_get_bytes(token, f"/repos/{run.repo}/actions/jobs/{job.id}/logs")
+            if code != 200:
+                digests.append(
+                    JobDigest(
+                        job=job,
+                        commands=[],
+                        snippet_title=f"Cannot download logs (http={code}).",
+                        snippet="",
+                    )
+                )
+                continue
 
-        cmds, title, snippet = digest_job_logs(zbytes)
-        digests.append(JobDigest(job=job, commands=cmds, snippet_title=title, snippet=snippet))
+            cmds, title, snippet = digest_job_logs(zbytes)
+            digests.append(JobDigest(job=job, commands=cmds, snippet_title=title, snippet=snippet))
 
     body = build_digest_markdown(run=run, pr_number=pr_number, jobs=digests)
     action, code = upsert_pr_comment(token=token, repo=run.repo, pr_number=pr_number, body=body)
