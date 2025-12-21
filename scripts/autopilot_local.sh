@@ -408,9 +408,9 @@ CI Failure Digest (local)
 
 Run: ${CI_GATE_RUN_URL}
 
-```text
+~~~text
 ${FAIL_SNIP}
-```
+~~~
 EOF
 )" || true
 
