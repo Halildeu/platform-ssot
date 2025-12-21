@@ -29,7 +29,7 @@ Owner: @team/platform
   - Merge gate label: `pr-bot/ready-to-merge`
   - Merge policy: `merge_policy` (örn. `bot_squash` / `none`)
 - Kapsam dışı:
-  - Fork repo’larda otomasyon (güvenlik nedeniyle koşmaz).
+- Fork repo'larda otomasyon (güvenlik nedeniyle koşmaz).
   - PAT zorunluluğu (yalnız org/repo policy `GITHUB_TOKEN write` kısıtlıysa opsiyonel fallback).
 
 -------------------------------------------------------------------------------
