@@ -39,53 +39,89 @@ fi
 OUT_PR_DIR="${OUT_DIR}/pr-${PR}"
 mkdir -p "${OUT_PR_DIR}"
 
-PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
+if ! PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}" 2>/dev/null)"; then
+  FAILURE_MD="${OUT_PR_DIR}/FAILURE.md"
+  {
+    echo "# CI Failure Digest (local)"
+    echo ""
+    echo "- PR: #${PR}"
+    echo "- Run: (not found)"
+    echo ""
+    echo "Cannot fetch PR details via GitHub API (gh api pulls/${PR})."
+    echo "Check GH_TOKEN permissions: Pull requests (read), Metadata (read)."
+  } > "${FAILURE_MD}"
+  echo "[ci-logs] Cannot fetch PR JSON; wrote ${FAILURE_MD}"
+  exit 3
+fi
 
-HEAD_SHA="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('sha',''))
+PR_META="$(PR_JSON="${PR_JSON}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("PR_JSON","")
+try:
+  data = json.loads(raw) if raw.strip() else {}
+except json.JSONDecodeError:
+  data = {}
+head = data.get("head") or {}
+print("%s\t%s\t%s" % (
+  head.get("sha",""),
+  head.get("ref",""),
+  data.get("html_url",""),
+))
 PY
-<<<"${PR_JSON}")"
+)"
 
-HEAD_REF="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('ref',''))
-PY
-<<<"${PR_JSON}")"
-
-PR_URL="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('html_url',''))
-PY
-<<<"${PR_JSON}")"
+HEAD_SHA="${PR_META%%$'\t'*}"
+REST="${PR_META#*$'\t'}"
+HEAD_REF="${REST%%$'\t'*}"
+PR_URL="${REST#*$'\t'}"
 
 if [[ -z "${HEAD_SHA}" ]]; then
   echo "[ci-logs] Cannot read head SHA for PR #${PR}."; exit 3
 fi
 
-RUNS_JSON="$(gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=20")"
+if ! RUNS_JSON="$(gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=20" 2>/dev/null)"; then
+  FAILURE_MD="${OUT_PR_DIR}/FAILURE.md"
+  {
+    echo "# CI Failure Digest (local)"
+    echo ""
+    echo "- PR: ${PR_URL}"
+    echo "- Head: ${HEAD_REF}@${HEAD_SHA}"
+    echo "- Run: (not found)"
+    echo ""
+    echo "Cannot fetch Actions runs via GitHub API (actions/runs)."
+    echo "Check GH_TOKEN permissions: Actions (read), Metadata (read)."
+  } > "${FAILURE_MD}"
+  echo "[ci-logs] Cannot fetch workflow runs; wrote ${FAILURE_MD}"
+  exit 3
+fi
 
-RUN_INFO="$(python3 - <<'PY'
-import json,sys
-runs=(json.load(sys.stdin).get('workflow_runs') or [])
+RUN_INFO="$(RUNS_JSON="${RUNS_JSON}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("RUNS_JSON", "")
+try:
+  runs = (json.loads(raw).get("workflow_runs") or []) if raw.strip() else []
+except json.JSONDecodeError:
+  runs = []
+
 # Prefer latest non-success; fallback to first run
-picked=None
+picked = None
 for r in runs:
-  if r.get('conclusion') and r.get('conclusion') != 'success':
-    picked=r; break
+  if r.get("conclusion") and r.get("conclusion") != "success":
+    picked = r
+    break
 if picked is None and runs:
-  picked=runs[0]
+  picked = runs[0]
 if not picked:
-  print('')
+  print("")
   raise SystemExit(0)
 print("%s\t%s\t%s\t%s" % (
-  picked.get('id',''),
-  picked.get('html_url',''),
-  picked.get('conclusion',''),
-  picked.get('name','')
+  picked.get("id",""),
+  picked.get("html_url",""),
+  picked.get("conclusion",""),
+  picked.get("name",""),
 ))
 PY
-<<<"${RUNS_JSON}")"
+)"
 
 if [[ -z "${RUN_INFO}" ]]; then
   FAILURE_MD="${OUT_PR_DIR}/FAILURE.md"
