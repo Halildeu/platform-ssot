@@ -44,6 +44,7 @@ USER_AGENT = "platform-ssot-auto-fix/0.1"
 
 BOT_BRANCH_PREFIX = "bot/fix-"
 AUTO_FIX_MARKER = "<!-- auto-fix:v1 -->"
+AUTO_FIX_STATUS_MARKER = "<!-- auto-fix:status -->"
 
 
 ERROR_RE = re.compile(
@@ -51,6 +52,7 @@ ERROR_RE = re.compile(
     re.IGNORECASE,
 )
 DOC_ID_ERROR_PATH_RE = re.compile(r"^- HATA:\s+(.+?\.md)\s*$", re.MULTILINE)
+DOC_ID_STEM_EXPECTED_RE = re.compile(r"stem prefix beklentisi:\s*([A-Za-z0-9][A-Za-z0-9_-]*)", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -516,6 +518,63 @@ def build_pr_body(
     return "\n".join(lines).strip() + "\n"
 
 
+def build_status_body(
+    *,
+    run: RunInfo,
+    source_pr_number: Optional[int],
+    enabled: bool,
+    result: str,
+    reason: str,
+    planned_fixes: List[str],
+    fix_pr_number: Optional[int] = None,
+    fix_pr_url: str = "",
+    pr_reason: str = "",
+) -> str:
+    lines: List[str] = [
+        AUTO_FIX_STATUS_MARKER,
+        "## Auto-fix Status",
+        "",
+        f"- Enabled: `{enabled}`",
+        f"- Result: `{result}`",
+        f"- Reason: {reason or '—'}",
+        f"- Run: {run.html_url}",
+    ]
+    if source_pr_number:
+        lines.append(f"- Source PR: `#{source_pr_number}`{f' ({pr_reason})' if pr_reason else ''}")
+    if run.head_sha:
+        lines.append(f"- Head SHA: `{run.head_sha}`")
+
+    if planned_fixes:
+        lines.extend(["", "### Planned fixes"])
+        for f in planned_fixes[:10]:
+            lines.append(f"- {f}")
+
+    if fix_pr_number:
+        lines.extend(["", "### Fix PR", f"- PR: `#{fix_pr_number}`"])
+        if fix_pr_url:
+            lines.append(f"- URL: {fix_pr_url}")
+
+    return "\n".join(lines).strip() + "\n"
+
+
+def upsert_marker_comment(token: str, repo: str, pr_number: int, marker: str, body: str) -> Tuple[str, int]:
+    existing_id: Optional[int] = None
+    for c in paginate(token, f"/repos/{repo}/issues/{pr_number}/comments"):
+        c_body = c.get("body")
+        if isinstance(c_body, str) and marker in c_body:
+            cid = c.get("id")
+            if isinstance(cid, int):
+                existing_id = cid
+                break
+
+    if existing_id:
+        code, _ = github_patch_json(token, f"/repos/{repo}/issues/comments/{existing_id}", {"body": body})
+        return "updated", code
+
+    code, _ = github_post_json(token, f"/repos/{repo}/issues/{pr_number}/comments", {"body": body})
+    return "created", code
+
+
 def main(argv: Sequence[str]) -> int:
     parser = argparse.ArgumentParser(prog="auto_fix.py")
     parser.add_argument("--repo", required=True, help="owner/repo")
@@ -523,11 +582,6 @@ def main(argv: Sequence[str]) -> int:
     parser.add_argument("--base", default="main", help="base branch (default: main)")
     parser.add_argument("--dry-run", action="store_true", help="no git push / no PR create")
     args = parser.parse_args(list(argv)[1:])
-
-    enabled = (os.environ.get("AUTO_FIX_ENABLED") or "").strip().lower()
-    if enabled not in ("1", "true", "yes", "on"):
-        print("[auto-fix] AUTO_FIX_ENABLED is not enabled; noop.")
-        return 0
 
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
     if not token:
@@ -562,9 +616,55 @@ def main(argv: Sequence[str]) -> int:
     else:
         print(f"[auto-fix] source_pr not found (reason={pr_reason})")
 
+    enabled_raw = (os.environ.get("AUTO_FIX_ENABLED") or "").strip().lower()
+    enabled = enabled_raw in ("1", "true", "yes", "on")
+
+    def try_upsert_status(
+        *,
+        result: str,
+        reason: str,
+        planned_fixes: List[str],
+        fix_pr_number: Optional[int] = None,
+        fix_pr_url: str = "",
+    ) -> None:
+        if not source_pr_number:
+            return
+        body = build_status_body(
+            run=run,
+            source_pr_number=source_pr_number,
+            enabled=enabled,
+            result=result,
+            reason=reason,
+            planned_fixes=planned_fixes,
+            fix_pr_number=fix_pr_number,
+            fix_pr_url=fix_pr_url,
+            pr_reason=pr_reason,
+        )
+        try:
+            action, code = upsert_marker_comment(
+                token=token,
+                repo=args.repo,
+                pr_number=source_pr_number,
+                marker=AUTO_FIX_STATUS_MARKER,
+                body=body,
+            )
+            print(f"[auto-fix] status comment {action} http={code}")
+        except Exception as exc:
+            eprint(f"[auto-fix] status comment failed (best-effort): {exc!r}")
+
+    if not enabled:
+        print("[auto-fix] AUTO_FIX_ENABLED is not enabled; noop.")
+        try_upsert_status(
+            result="noop",
+            reason="AUTO_FIX_ENABLED is not enabled (expected: true/1/yes/on).",
+            planned_fixes=[],
+        )
+        return 0
+
     failing_jobs = list_failing_jobs(token=token, run=run)
     if not failing_jobs:
         print("[auto-fix] no failing jobs; noop.")
+        try_upsert_status(result="noop", reason="No failing jobs found.", planned_fixes=[])
         return 0
 
     all_logs_text = ""
@@ -599,13 +699,32 @@ def main(argv: Sequence[str]) -> int:
             expected = expected_id_for_doc(rel)
             if expected:
                 planned_doc_id_fix = (rel, expected)
+    else:
+        # Fallback: bazı log'larda path satırı kaçabilir; "stem prefix beklentisi" üzerinden dosyayı bul.
+        m2 = DOC_ID_STEM_EXPECTED_RE.search(all_logs_text)
+        if m2:
+            stem = m2.group(1)
+            candidates = sorted((ROOT / "docs").glob(f"**/{stem}.md"))
+            if len(candidates) == 1:
+                rel2 = str(candidates[0].relative_to(ROOT)).replace("\\", "/")
+                expected2 = expected_id_for_doc(rel2)
+                if expected2:
+                    planned_doc_id_fix = (rel2, expected2)
 
     # Plan 2: mfe-shell telemetry-client missing module (known historical)
     if "telemetry/telemetry-client" in all_logs_text or "telemetry-client" in all_logs_text:
         need_telemetry_stub = True
 
+    planned_desc: List[str] = []
+    if planned_doc_id_fix:
+        rel, expected = planned_doc_id_fix
+        planned_desc.append(f"Set ID meta for `{rel}` → `{expected}`")
+    if need_telemetry_stub:
+        planned_desc.append("Add missing mfe-shell telemetry-client stub")
+
     if not planned_doc_id_fix and not need_telemetry_stub:
         print("[auto-fix] No safe fix rules matched; noop.")
+        try_upsert_status(result="noop", reason="No safe fix rules matched.", planned_fixes=planned_desc)
         return 0
 
     # Prepare bot branch from base
@@ -632,21 +751,29 @@ def main(argv: Sequence[str]) -> int:
 
     if not fixes:
         print("[auto-fix] Planned fixes already satisfied; noop.")
+        try_upsert_status(result="noop", reason="Planned fixes already satisfied.", planned_fixes=planned_desc)
         return 0
 
     files = changed_files()
     ok, reason = enforce_allowlist(files, allowed_prefixes=("docs/", "web/"))
     if not ok:
         eprint(f"[auto-fix] Allowlist violation; abort. reason={reason}")
+        try_upsert_status(result="noop", reason=f"Allowlist violation: {reason}", planned_fixes=fixes or planned_desc)
         return 0
 
     num_files, added, deleted = diff_numstat()
     if num_files > 20 or (added + deleted) > 500:
         eprint(f"[auto-fix] Change too large; abort. files={num_files} lines={added+deleted}")
+        try_upsert_status(
+            result="noop",
+            reason=f"Change too large: files={num_files}, lines={added + deleted} (limit: 20 files / 500 lines).",
+            planned_fixes=fixes or planned_desc,
+        )
         return 0
 
     if not files:
         print("[auto-fix] No changes after rebasing; noop.")
+        try_upsert_status(result="noop", reason="No changes after applying planned fixes.", planned_fixes=fixes or planned_desc)
         return 0
 
     git("config", "user.name", "platform-ssot-auto-fix")
@@ -671,6 +798,7 @@ def main(argv: Sequence[str]) -> int:
     if args.dry_run:
         print("[auto-fix] dry-run: skip git push / PR create")
         print(pr_body)
+        try_upsert_status(result="noop", reason="dry-run: skip git push / PR create.", planned_fixes=fixes)
         return 0
 
     # Push branch
@@ -678,6 +806,7 @@ def main(argv: Sequence[str]) -> int:
         git("push", "-u", "origin", f"{bot_branch}:{bot_branch}")
     except Exception as exc:
         eprint(f"[auto-fix] git push failed; noop. err={exc}")
+        try_upsert_status(result="noop", reason="git push failed (see auto-fix run logs).", planned_fixes=fixes)
         return 0
 
     # Upsert PR (create or update)
@@ -699,6 +828,14 @@ def main(argv: Sequence[str]) -> int:
 
     if pr_number:
         ensure_label(token=token, repo=args.repo, pr_number=pr_number, label="pr-bot/ready-to-merge")
+
+    try_upsert_status(
+        result="updated_pr" if existing and isinstance(existing.get("number"), int) else "created_pr",
+        reason="Fix PR created/updated.",
+        planned_fixes=fixes,
+        fix_pr_number=pr_number,
+        fix_pr_url=pr_url,
+    )
 
     print("[auto-fix] OK")
     return 0

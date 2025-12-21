@@ -32,6 +32,17 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Preflight (AUTO_FIX_ENABLED set?)
+        env:
+          AUTO_FIX_ENABLED: ${{ secrets.AUTO_FIX_ENABLED }}
+        run: |
+          set -euo pipefail
+          if [ -n "${AUTO_FIX_ENABLED:-}" ]; then
+            echo "::notice title=auto-fix::AUTO_FIX_ENABLED is set"
+          else
+            echo "::notice title=auto-fix::AUTO_FIX_ENABLED is missing"
+          fi
+
       - name: Run auto-fix (rule-based, fail-safe)
         env:
           GITHUB_TOKEN: ${{ github.token }}
