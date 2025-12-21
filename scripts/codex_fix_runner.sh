@@ -38,4 +38,4 @@ cat "${FAILURE_MD}" >> "${PROMPT}"
 CODEX_CMD="${CODEX_CMD:-codex}"
 
 echo "[codex-fix] Running: ${CODEX_CMD} exec (prompt: ${PROMPT})"
-"${CODEX_CMD}" exec - < "${PROMPT}"
+"${CODEX_CMD}" exec --sandbox danger-full-access - < "${PROMPT}"
