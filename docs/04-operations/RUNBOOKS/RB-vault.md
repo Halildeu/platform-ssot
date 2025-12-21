@@ -50,13 +50,26 @@ Owner: @team/platform
 -------------------------------------------------------------------------------
 
 - Lokal geliştirmede `backend/docker-compose.yml` içindeki `vault` servisi kalıcı raft storage ile çalışır.
-- İlk kurulum: `bash backend/scripts/vault/dev_init.sh` → `bash backend/scripts/vault/dev_unseal.sh`
+- İlk kurulum: `bash backend/scripts/vault/dev_init.sh`
+  - Bu adım init çıktısını `backend/.vault-dev/` altına yazar (git’e girmez).
+  - Ayrıca `vault-unseal-key` / `vault-root-token` helper dosyalarını üretir.
+- Unseal:
+  - Otomatik (önerilen): `backend/docker-compose.yml` içindeki `vault-unseal` sidecar servis’i
+    Vault restart sonrası sealed durumu görür ve unseal eder.
+  - Manuel (fallback): `bash backend/scripts/vault/dev_unseal.sh`
 - KV v2 mount: `secret/` (enable: `bash backend/scripts/vault/dev_enable_kv.sh`)
 - `vault server -dev` / inmem mod kullanılmaz; state `vault-data` volume’da tutulur.
 - Init/unseal çıktıları repo’ya yazılmaz; `backend/.vault-dev/` altında tutulur (.gitignore).
-- Dev vault restart sonrası unseal gerekir (`bash backend/scripts/vault/dev_unseal.sh`).
+- Dev vault restart sonrası:
+  - `vault-unseal` çalışıyorsa otomatik unseal beklenir.
+  - `vault-unseal` yoksa manuel unseal gerekir (`bash backend/scripts/vault/dev_unseal.sh`).
 - SSOT seed: `bash backend/scripts/vault/seed-web-playwright-stage.sh` (Playwright staging config).
 - Sonra `vault-secrets-sync` workflow’unu `dry_run=true` ile çalıştırıp FOUND/MISSING kontrol et.
+- KV v2 “key kaybı” şüphesi (izleme):
+  - Key list (value yok): `vault kv get -format=json secret/<env>/<path> | jq -r '.data.data | keys[]'`
+  - Version history: `vault kv metadata get secret/<env>/<path>`
+  - Geri alma: `vault kv rollback -version=<N> secret/<env>/<path>`
+  - Not: “put” (tam yazım) secret’ı overwrite eder; tek bir alan güncellemek için `vault kv patch` tercih edilir.
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
