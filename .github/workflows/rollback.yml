@@ -17,13 +17,14 @@ concurrency:
 jobs:
   rollback:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion != 'success' && github.event.workflow_run.event == 'push'
+    if: >-
+      github.event.workflow_run.conclusion != 'success'
+      && github.event.workflow_run.event == 'push'
+      && secrets.ROLLBACK_ENABLED == 'true'
 
     steps:
-      - name: Rollback (kill-switch, best-effort)
+      - name: Rollback (required)
         env:
-          DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
-          ROLLBACK_ENABLED: ${{ secrets.ROLLBACK_ENABLED }}
           WEB_ROLLBACK_HOOK_URL: ${{ secrets.WEB_ROLLBACK_HOOK_URL }}
           BACKEND_ROLLBACK_HOOK_URL: ${{ secrets.BACKEND_ROLLBACK_HOOK_URL }}
         shell: bash
@@ -31,29 +32,27 @@ jobs:
           set -euo pipefail
           set +x
 
-          if [ "${DEPLOY_ENABLED:-}" != "true" ]; then
-            echo "::notice title=rollback::DEPLOY_ENABLED != true; skipping rollback."
-            exit 0
+          missing=0
+
+          if [ -z "${WEB_ROLLBACK_HOOK_URL:-}" ]; then
+            echo "::error title=rollback::WEB_ROLLBACK_HOOK_URL missing; refusing to rollback."
+            missing=1
           fi
 
-          if [ "${ROLLBACK_ENABLED:-}" != "true" ]; then
-            echo "::notice title=rollback::ROLLBACK_ENABLED != true; skipping rollback."
-            exit 0
+          if [ -z "${BACKEND_ROLLBACK_HOOK_URL:-}" ]; then
+            echo "::error title=rollback::BACKEND_ROLLBACK_HOOK_URL missing; refusing to rollback."
+            missing=1
           fi
 
-          if [ -n "${WEB_ROLLBACK_HOOK_URL:-}" ]; then
-            echo "::notice title=rollback::Triggering WEB rollback hook (URL hidden)."
-            curl -fsS -X POST "${WEB_ROLLBACK_HOOK_URL}" || true
-          else
-            echo "::notice title=rollback::WEB_ROLLBACK_HOOK_URL not set; skipping web rollback."
+          if [ "${missing}" = "1" ]; then
+            exit 1
           fi
 
-          if [ -n "${BACKEND_ROLLBACK_HOOK_URL:-}" ]; then
-            echo "::notice title=rollback::Triggering BACKEND rollback hook (URL hidden)."
-            curl -fsS -X POST "${BACKEND_ROLLBACK_HOOK_URL}" || true
-          else
-            echo "::notice title=rollback::BACKEND_ROLLBACK_HOOK_URL not set; skipping backend rollback."
-          fi
+          echo "::notice title=rollback::Triggering WEB rollback hook (URL hidden)."
+          curl -fsS -X POST "${WEB_ROLLBACK_HOOK_URL}"
+
+          echo "::notice title=rollback::Triggering BACKEND rollback hook (URL hidden)."
+          curl -fsS -X POST "${BACKEND_ROLLBACK_HOOK_URL}"
 
       - name: Incident comment (best-effort)
         if: always()
@@ -130,4 +129,3 @@ jobs:
               body,
             });
             core.notice('Created incident comment.');
-

@@ -36,8 +36,8 @@ Dahil (v0.1):
     - Boş test glob nedeniyle CI fail → “skip when no tests” wrapper patch’i (allowlist içinde).  
 
 - Deploy bot (main push):
-  - Web: build + publish bundle assert (canonical publish root) + deploy (kill-switch ile).  
-  - Backend: build image + push GHCR (sha tag) + deploy (opsiyonel, kill-switch ile).  
+  - Web: build + deploy (DEPLOY_ENABLED job-level gate).  
+  - Backend: build image + push GHCR (sha tag) (DEPLOY_ENABLED job-level gate).  
 
 - Post-deploy validate + rollback:
   - Deploy workflow’ları sonrası doğrulama (web smoke + backend healthcheck).  
@@ -45,7 +45,9 @@ Dahil (v0.1):
 
 Kapsam dışı (v0.1):
 - LLM tabanlı patch üretimi (yalnız rule-based fix seti).  
-- Prod altyapı detaylarının (sunucu/hosting) tam implementasyonu; workflow’lar kill-switch ile güvenli/noop çalışır.  
+- Prod altyapı detaylarının (sunucu/hosting) tam implementasyonu; workflow’lar kill-switch ile güvenli çalışır:
+  - `DEPLOY_ENABLED!=true` ise deploy/validate job’ları skip olur,
+  - `DEPLOY_ENABLED=true` ise zorunlu parametreler eksikse FAIL eder (silent PASS yok).  
 - İnsan onayı gerektiren branch rules (required reviews) altında “tam insansız merge” garantisi.  
 
 -------------------------------------------------------------------------------

@@ -24,15 +24,15 @@ concurrency:
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
+    if: ${{ secrets.DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Build & push images (kill-switch, best-effort)
+      - name: Build & push images (required)
         env:
-          DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
           GHCR_OWNER: ${{ github.repository_owner }}
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ github.sha }}
@@ -40,11 +40,6 @@ jobs:
         run: |
           set -euo pipefail
           set +x
-
-          if [ "${DEPLOY_ENABLED:-}" != "true" ]; then
-            echo "::notice title=deploy-backend::DEPLOY_ENABLED != true; skipping image build/push."
-            exit 0
-          fi
 
           echo "::add-mask::${GH_TOKEN}"
           echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
@@ -59,8 +54,8 @@ jobs:
           echo "::group::tag + push (serban-* -> ghcr.io/${GHCR_OWNER}/...)"
           images="$(docker image ls --format '{{.Repository}}:{{.Tag}}' | grep -E '^serban-' || true)"
           if [ -z "${images}" ]; then
-            echo "::notice title=deploy-backend::No serban-* images found; skipping push."
-            exit 0
+            echo "::error title=deploy-backend::No serban-* images found; failing deploy-backend."
+            exit 1
           fi
 
           while IFS= read -r img; do
