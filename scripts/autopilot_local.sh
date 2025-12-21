@@ -41,11 +41,17 @@ if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; t
 fi
 
 PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
-HEAD_REF="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('ref',''))
+HEAD_REF="$(PR_JSON="${PR_JSON}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("PR_JSON", "")
+try:
+    data = json.loads(raw) if raw.strip() else {}
+except json.JSONDecodeError:
+    data = {}
+head = data.get("head") or {}
+print(head.get("ref", ""))
 PY
-<<<"${PR_JSON}")"
+)"
 
 if [[ -z "${HEAD_REF}" ]]; then
   echo "[autopilot] Cannot read PR head ref."; exit 2
