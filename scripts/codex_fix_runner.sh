@@ -23,7 +23,7 @@ Rules (mandatory):
 - Do NOT print or request any secrets/tokens.
 - Only change files required to fix the failure.
 - Run the failing command(s) locally after the fix.
-- If PASS: commit with a clear message, then push the current branch.
+- Do NOT commit or push (the caller will handle git commit/push).
 - If you cannot safely fix: explain why and exit non-zero.
 
 Input failure report (FAILURE.md) is attached below.
@@ -37,5 +37,5 @@ cat "${FAILURE_MD}" >> "${PROMPT}"
 # Örn: export CODEX_CMD='codex' veya 'openai codex ...' vs.
 CODEX_CMD="${CODEX_CMD:-codex}"
 
-echo "[codex-fix] Running: ${CODEX_CMD} (prompt: ${PROMPT})"
-"${CODEX_CMD}" "${PROMPT}"
+echo "[codex-fix] Running: ${CODEX_CMD} exec (prompt: ${PROMPT})"
+"${CODEX_CMD}" exec - < "${PROMPT}"
