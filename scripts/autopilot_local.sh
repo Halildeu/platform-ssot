@@ -54,6 +54,82 @@ if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; t
   echo "[autopilot] gh not authenticated and GH_TOKEN not set."; exit 2
 fi
 
+ci_gate_state() {
+  local head_sha="$1"
+  local runs_json
+  local out
+
+  runs_json="$(gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${head_sha}&per_page=50" 2>/dev/null || true)"
+  out="$(RUNS_JSON="${runs_json}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("RUNS_JSON", "")
+try:
+  data = json.loads(raw) if raw.strip() else {}
+except json.JSONDecodeError:
+  data = {}
+runs = data.get("workflow_runs") or []
+picked = None
+for r in runs:
+  if (r.get("name") or "") == "ci-gate":
+    picked = r
+    break
+if not picked:
+  print("")
+  raise SystemExit(0)
+print("%s\t%s\t%s\t%s" % (
+  picked.get("status",""),
+  picked.get("conclusion",""),
+  picked.get("id",""),
+  picked.get("html_url",""),
+))
+PY
+)"
+
+  if [[ -z "${out}" ]]; then
+    echo ""
+    return 0
+  fi
+  echo "${out}"
+}
+
+wait_ci_gate() {
+  local head_sha="$1"
+  local sleep_s=10
+  local state=""
+  local status=""
+  local conclusion=""
+  local run_id=""
+  local run_url=""
+
+  while true; do
+    state="$(ci_gate_state "${head_sha}")"
+    if [[ -z "${state}" ]]; then
+      echo "[autopilot] ci-gate: run not found yet for head_sha=${head_sha:0:7}; waiting..."
+      sleep "${sleep_s}"
+      continue
+    fi
+
+    status="${state%%$'\t'*}"
+    rest="${state#*$'\t'}"
+    conclusion="${rest%%$'\t'*}"
+    rest2="${rest#*$'\t'}"
+    run_id="${rest2%%$'\t'*}"
+    run_url="${rest2#*$'\t'}"
+
+    echo "[autopilot] ci-gate: status=${status} conclusion=${conclusion:-none} run_id=${run_id} run=${run_url}"
+
+    if [[ "${status}" != "completed" ]]; then
+      sleep "${sleep_s}"
+      continue
+    fi
+
+    if [[ "${conclusion}" = "success" ]]; then
+      return 0
+    fi
+    return 1
+  done
+}
+
 PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
 HEAD_REF="$(PR_JSON="${PR_JSON}" python3 - <<'PY'
 import json, os
@@ -83,10 +159,36 @@ fi
 
 attempt=1
 while [[ $attempt -le $MAX_ATTEMPTS ]]; do
-  echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching checks..."
-  if gh pr checks "${PR}" -R "${REPO}" --watch; then
-    state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state || echo unknown)"
-    echo "[autopilot] PASS. PR state=${state}"
+  PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
+  HEAD_SHA="$(PR_JSON="${PR_JSON}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("PR_JSON", "")
+try:
+  data = json.loads(raw) if raw.strip() else {}
+except json.JSONDecodeError:
+  data = {}
+head = data.get("head") or {}
+print(head.get("sha", ""))
+PY
+)"
+
+  if [[ -z "${HEAD_SHA}" ]]; then
+    echo "[autopilot] Cannot read PR head sha."; exit 2
+  fi
+
+  echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching ci-gate (head_sha=${HEAD_SHA:0:7})..."
+  if wait_ci_gate "${HEAD_SHA}"; then
+    pr_state="$(PR_JSON="${PR_JSON}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("PR_JSON", "")
+try:
+  data = json.loads(raw) if raw.strip() else {}
+except json.JSONDecodeError:
+  data = {}
+print(data.get("state","unknown"))
+PY
+)"
+    echo "[autopilot] PASS. PR state=${pr_state}"
     exit 0
   fi
 

@@ -111,7 +111,9 @@ Owner: @team/platform
   - Not: `scripts/autopilot_local.sh` ve `scripts/ci_pull_logs.sh` GH_TOKEN yoksa bu değeri kullanır.
   - Not: gerçek Vault path kurumunuzdaki SSOT’a göre değişebilir.
 - `GH_LOCAL_AUTOPILOT_TOKEN` (fine-grained PAT) minimum öneri:
-  - `Actions: Read`, `Checks: Read`, `Pull requests: Read`, `Contents: Read`, `Metadata: Read`
+  - `Actions: Read`, `Pull requests: Read`, `Contents: Read`, `Metadata: Read`
+  - Not: `gh pr checks` GraphQL bazı kurulumlarda fine-grained PAT ile “resource not accessible” dönebiliyor.
+    Bu nedenle local autopilot `ci-gate` durumunu Actions run’larından okur (ci-gate workflow run).
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
