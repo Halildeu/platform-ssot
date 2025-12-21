@@ -10,11 +10,16 @@ ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 AUTOPILOT_TMP="${ROOT_DIR}/.autopilot-tmp"
 CI_PULL_LOGS_SRC="${ROOT_DIR}/scripts/ci_pull_logs.sh"
 CI_PULL_LOGS_BIN="${AUTOPILOT_TMP}/ci_pull_logs.sh"
+AUTOPILOT_UPSERT_COMMENT="${AUTOPILOT_UPSERT_COMMENT:-}"
+AUTOPILOT_LABELS="${AUTOPILOT_LABELS:-}"
+AUTOPILOT_COMMENT_MARKER="<!-- local-autopilot:v1 -->"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--max N] [--out dir]"
   echo "Env: GH_TOKEN (or GH_LOCAL_AUTOPILOT_TOKEN) must be set or gh auth login; token value not printed."
   echo "Env: AUTOPILOT_FIX_CMD optional (command that applies a fix locally)."
+  echo "Env: AUTOPILOT_UPSERT_COMMENT=1 (optional) upserts a single PR comment (marker-based)."
+  echo "Env: AUTOPILOT_LABELS=\"label1,label2\" (optional) adds labels to the PR (best-effort)."
 }
 
 while [[ $# -gt 0 ]]; do
@@ -53,6 +58,87 @@ fi
 if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; then
   echo "[autopilot] gh not authenticated and GH_TOKEN not set."; exit 2
 fi
+
+autopilot_enabled() {
+  local v="${1:-}"
+  v="$(printf '%s' "${v}" | tr '[:upper:]' '[:lower:]')"
+  if [[ "${v}" = "1" || "${v}" = "true" || "${v}" = "yes" ]]; then
+    return 0
+  fi
+  return 1
+}
+
+trim() {
+  local s="$1"
+  s="${s#"${s%%[![:space:]]*}"}"
+  s="${s%"${s##*[![:space:]]}"}"
+  printf '%s' "${s}"
+}
+
+autopilot_upsert_pr_comment() {
+  local pr_number="$1"
+  local body="$2"
+
+  if ! autopilot_enabled "${AUTOPILOT_UPSERT_COMMENT}"; then
+    return 0
+  fi
+
+  local comments_json comment_id
+  comments_json="$(gh api "repos/${REPO}/issues/${pr_number}/comments?per_page=100" 2>/dev/null || true)"
+
+  comment_id="$(COMMENTS_JSON="${comments_json}" MARKER="${AUTOPILOT_COMMENT_MARKER}" python3 - <<'PY'
+import json, os
+raw = os.environ.get("COMMENTS_JSON", "")
+marker = os.environ.get("MARKER", "")
+try:
+  data = json.loads(raw) if raw.strip() else []
+except json.JSONDecodeError:
+  data = []
+for c in data if isinstance(data, list) else []:
+  b = c.get("body")
+  if isinstance(b, str) and marker in b:
+    print(c.get("id") or "")
+    raise SystemExit(0)
+print("")
+PY
+)"
+
+  if [[ -n "${comment_id}" ]]; then
+    if gh api -X PATCH "repos/${REPO}/issues/comments/${comment_id}" -f body="${body}" >/dev/null 2>&1; then
+      echo "[autopilot] comment updated (marker ${AUTOPILOT_COMMENT_MARKER})"
+    else
+      echo "[autopilot] WARN: comment update failed (marker ${AUTOPILOT_COMMENT_MARKER})"
+    fi
+    return 0
+  fi
+
+  if gh api -X POST "repos/${REPO}/issues/${pr_number}/comments" -f body="${body}" >/dev/null 2>&1; then
+    echo "[autopilot] comment created (marker ${AUTOPILOT_COMMENT_MARKER})"
+  else
+    echo "[autopilot] WARN: comment create failed (marker ${AUTOPILOT_COMMENT_MARKER})"
+  fi
+}
+
+autopilot_add_labels() {
+  local pr_number="$1"
+
+  if [[ -z "${AUTOPILOT_LABELS}" ]]; then
+    return 0
+  fi
+
+  IFS=',' read -r -a raw_labels <<< "${AUTOPILOT_LABELS}"
+  for l in "${raw_labels[@]}"; do
+    l="$(trim "${l}")"
+    if [[ -z "${l}" ]]; then
+      continue
+    fi
+    if gh api -X POST "repos/${REPO}/issues/${pr_number}/labels" -f labels[]="${l}" >/dev/null 2>&1; then
+      echo "[autopilot] label ensured: ${l}"
+    else
+      echo "[autopilot] WARN: label add failed: ${l}"
+    fi
+  done
+}
 
 ci_gate_state() {
   local head_sha="$1"
@@ -147,6 +233,8 @@ if [[ -z "${HEAD_REF}" ]]; then
   echo "[autopilot] Cannot read PR head ref."; exit 2
 fi
 
+autopilot_add_labels "${PR}" || true
+
 echo "[autopilot] repo=${REPO} pr=#${PR} head_ref=${HEAD_REF} max=${MAX_ATTEMPTS}"
 
 # head branch'e geç (local branch yoksa fetch)
@@ -176,6 +264,8 @@ PY
     echo "[autopilot] Cannot read PR head sha."; exit 2
   fi
 
+  autopilot_add_labels "${PR}" || true
+
   echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching ci-gate (head_sha=${HEAD_SHA:0:7})..."
   if wait_ci_gate "${HEAD_SHA}"; then
     pr_state="$(PR_JSON="${PR_JSON}" python3 - <<'PY'
@@ -188,9 +278,29 @@ except json.JSONDecodeError:
 print(data.get("state","unknown"))
 PY
 )"
+    autopilot_upsert_pr_comment "${PR}" "${AUTOPILOT_COMMENT_MARKER}
+Local Autopilot (local SSOT)
+
+Result: PASS
+PR: #${PR}
+Head: ${HEAD_REF}@${HEAD_SHA:0:7}
+Attempt: ${attempt}/${MAX_ATTEMPTS}
+ci-gate: success
+" || true
     echo "[autopilot] PASS. PR state=${pr_state}"
     exit 0
   fi
+
+  autopilot_upsert_pr_comment "${PR}" "${AUTOPILOT_COMMENT_MARKER}
+Local Autopilot (local SSOT)
+
+Result: FAIL
+PR: #${PR}
+Head: ${HEAD_REF}@${HEAD_SHA:0:7}
+Attempt: ${attempt}/${MAX_ATTEMPTS}
+ci-gate: failure
+Next: generate local digest (ci_pull_logs) and apply fix locally, then push.
+" || true
 
   echo "[autopilot] FAIL. downloading logs..."
   if [[ -x "${CI_PULL_LOGS_SRC}" ]]; then
@@ -202,6 +312,17 @@ PY
   fi
   FAILURE_MD="${OUT_DIR}/pr-${PR}/FAILURE.md"
   echo "[autopilot] failure bundle: ${FAILURE_MD}"
+
+  autopilot_upsert_pr_comment "${PR}" "${AUTOPILOT_COMMENT_MARKER}
+Local Autopilot (local SSOT)
+
+Result: FAIL
+PR: #${PR}
+Head: ${HEAD_REF}@${HEAD_SHA:0:7}
+Attempt: ${attempt}/${MAX_ATTEMPTS}
+ci-gate: failure
+Local digest: ${FAILURE_MD}
+" || true
 
   if [[ -z "${FIX_CMD}" ]]; then
     echo "[autopilot] No AUTOPILOT_FIX_CMD set. Stop here so you can run Codex manually using FAILURE.md."
@@ -219,7 +340,20 @@ PY
 
   git add -A
   git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
+  NEW_SHA="$(git rev-parse --short HEAD 2>/dev/null || true)"
   git push -u origin HEAD
+
+  autopilot_upsert_pr_comment "${PR}" "${AUTOPILOT_COMMENT_MARKER}
+Local Autopilot (local SSOT)
+
+Result: FIX_PUSHED
+PR: #${PR}
+Head: ${HEAD_REF}@${HEAD_SHA:0:7}
+Attempt: ${attempt}/${MAX_ATTEMPTS}
+Pushed: ${NEW_SHA}
+Next: wait for ci-gate on new head SHA.
+" || true
+
   attempt=$((attempt+1))
 done
 

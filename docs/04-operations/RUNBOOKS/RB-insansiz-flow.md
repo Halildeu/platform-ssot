@@ -114,6 +114,11 @@ Owner: @team/platform
   - `Actions: Read`, `Pull requests: Read`, `Contents: Read`, `Metadata: Read`
   - Not: `gh pr checks` GraphQL bazı kurulumlarda fine-grained PAT ile “resource not accessible” dönebiliyor.
     Bu nedenle local autopilot `ci-gate` durumunu Actions run’larından okur (ci-gate workflow run).
+  - Eğer local autopilot PR’a comment/label yazacaksa (opsiyonel):
+    - `Issues: Read and write` (PR comment + label için)
+- Local autopilot opsiyonel davranışlar:
+  - `AUTOPILOT_UPSERT_COMMENT=1` → PR’a marker’lı tek comment upsert eder: `<!-- local-autopilot:v1 -->`
+  - `AUTOPILOT_LABELS="pr-bot/ready-to-merge"` → PR’a label ekler (best-effort; merge policy SSOT’a uygun kullanılmalı)
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
