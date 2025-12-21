@@ -101,9 +101,17 @@ Owner: @team/platform
   - `scripts/autopilot_local.sh`
 - Merge otomatik (Merge Bot) kalır.
 - `log-digest` sadece teşhis (digest) yazar.
-- Örnek token export (değer loglanmaz):
-  - `export GH_TOKEN="$(vault kv get -field=GH_SECRETS_SYNC_TOKEN 'secret/stage/ops/github')"`
+- Vault SSOT (tokenlar):
+  - Path: `secret/<env>/ops/github` (KV v2)
+  - `GH_SECRETS_SYNC_TOKEN`: Vault → GitHub Secrets sync için (Secrets write).
+  - `GH_LOCAL_AUTOPILOT_TOKEN`: local autopilot (`ci_pull_logs`/`autopilot_local`) için (read-only).
+  - Not: KV v2’de `vault kv put` tüm secret’i overwrite eder; tek alan güncellemek için `vault kv patch` kullanın.
+- Örnek export (değer loglanmaz):
+  - `export GH_LOCAL_AUTOPILOT_TOKEN="$(vault kv get -field=GH_LOCAL_AUTOPILOT_TOKEN 'secret/stage/ops/github')"`
+  - Not: `scripts/autopilot_local.sh` ve `scripts/ci_pull_logs.sh` GH_TOKEN yoksa bu değeri kullanır.
   - Not: gerçek Vault path kurumunuzdaki SSOT’a göre değişebilir.
+- `GH_LOCAL_AUTOPILOT_TOKEN` (fine-grained PAT) minimum öneri:
+  - `Actions: Read`, `Checks: Read`, `Pull requests: Read`, `Contents: Read`, `Metadata: Read`
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER

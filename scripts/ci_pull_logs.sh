@@ -7,7 +7,7 @@ OUT_DIR="artifacts/ci-logs"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--out dir]"
-  echo "Env: GH_TOKEN or gh auth login required (token value never printed)."
+  echo "Env: GH_TOKEN (or GH_LOCAL_AUTOPILOT_TOKEN) or gh auth login required (token value never printed)."
 }
 
 while [[ $# -gt 0 ]]; do
@@ -30,6 +30,10 @@ fi
 
 if [[ -n "${GITHUB_TOKEN:-}" && -z "${GH_TOKEN:-}" ]]; then
   export GH_TOKEN="${GITHUB_TOKEN}"
+fi
+
+if [[ -n "${GH_LOCAL_AUTOPILOT_TOKEN:-}" && -z "${GH_TOKEN:-}" ]]; then
+  export GH_TOKEN="${GH_LOCAL_AUTOPILOT_TOKEN}"
 fi
 
 if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; then

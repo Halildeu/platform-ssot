@@ -2,6 +2,10 @@
 web/test-results/
 web/test-results/**
 
+# Local automation artifacts (do not commit)
+.autopilot-tmp/
+artifacts/
+
 # Dev Vault artifacts (do not commit)
 .vault-dev/
 .vault-dev/**

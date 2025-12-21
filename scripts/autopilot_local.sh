@@ -13,7 +13,7 @@ CI_PULL_LOGS_BIN="${AUTOPILOT_TMP}/ci_pull_logs.sh"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--max N] [--out dir]"
-  echo "Env: GH_TOKEN must be set or gh auth login; token value not printed."
+  echo "Env: GH_TOKEN (or GH_LOCAL_AUTOPILOT_TOKEN) must be set or gh auth login; token value not printed."
   echo "Env: AUTOPILOT_FIX_CMD optional (command that applies a fix locally)."
 }
 
@@ -44,6 +44,10 @@ fi
 
 if [[ -n "${GITHUB_TOKEN:-}" && -z "${GH_TOKEN:-}" ]]; then
   export GH_TOKEN="${GITHUB_TOKEN}"
+fi
+
+if [[ -n "${GH_LOCAL_AUTOPILOT_TOKEN:-}" && -z "${GH_TOKEN:-}" ]]; then
+  export GH_TOKEN="${GH_LOCAL_AUTOPILOT_TOKEN}"
 fi
 
 if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; then
