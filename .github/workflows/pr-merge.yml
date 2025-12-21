@@ -78,6 +78,13 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
 
+            const hasExplicitNullPr =
+              resultJson && Object.prototype.hasOwnProperty.call(resultJson, 'pr') && resultJson.pr === null;
+            if (hasExplicitNullPr) {
+              core.notice('PR Merge Bot: no target PR (result pr=null); skipping PR comment.');
+              return;
+            }
+
             let prNumber = resultJson && Number.isInteger(resultJson.pr) ? resultJson.pr : null;
             if (!prNumber && Array.isArray(run.pull_requests) && run.pull_requests.length > 0) {
               prNumber = run.pull_requests[0].number;
@@ -94,9 +101,8 @@ jobs:
 
                 const prs = Array.isArray(resp.data) ? resp.data : [];
                 const open = prs.find((p) => p && p.state === 'open');
-                const picked = open || prs[0];
-                if (picked && Number.isInteger(picked.number)) {
-                  prNumber = picked.number;
+                if (open && Number.isInteger(open.number)) {
+                  prNumber = open.number;
                 }
               } catch (e) {
                 core.notice(`PR lookup via commit->pulls failed: ${e.message}`);
@@ -108,19 +114,22 @@ jobs:
               return;
             }
 
-            let resultText = 'unknown';
-            if (resultJson && typeof resultJson.result === 'string') {
-              resultText = resultJson.result;
-              if (typeof resultJson.reason === 'string' && resultJson.reason.trim()) {
-                resultText += ` (${resultJson.reason.trim()})`;
-              }
-            }
+            const resultText = resultJson && typeof resultJson.result === 'string' ? resultJson.result : 'unknown';
+            const reasonText =
+              resultJson && typeof resultJson.reason === 'string' ? resultJson.reason.trim() : '';
 
             const bodyLines = [];
             bodyLines.push(marker);
             bodyLines.push(`Result: ${resultText}`);
+            if (reasonText) {
+              bodyLines.push(`Reason: ${reasonText}`);
+            }
             if (runUrl) {
               bodyLines.push(`Run: ${runUrl}`);
+            }
+            bodyLines.push(`PR: #${prNumber}`);
+            if (sha) {
+              bodyLines.push(`Head: ${String(sha).slice(0, 7)}`);
             }
 
             if (resultLine) {
