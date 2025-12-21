@@ -1,52 +1,17 @@
 name: Auto Fix
 
 on:
-  workflow_run:
-    workflows: ["ci-gate"]
-    types: [completed]
+  workflow_dispatch: {}
 
 permissions:
-  actions: read
-  contents: write
-  pull-requests: write
-  issues: write
-
-concurrency:
-  group: auto-fix-${{ github.event.workflow_run.id }}
-  cancel-in-progress: true
+  contents: read
 
 jobs:
   auto-fix:
     runs-on: ubuntu-latest
-    if: >-
-      github.event.workflow_run.conclusion == 'failure'
-      && github.event.workflow_run.event == 'pull_request'
-      && github.event.workflow_run.head_repository.fork == false
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Preflight (AUTO_FIX_ENABLED set?)
-        env:
-          AUTO_FIX_ENABLED: ${{ secrets.AUTO_FIX_ENABLED }}
+      - name: Disabled by Local SSOT Policy
         run: |
           set -euo pipefail
-          if [ -n "${AUTO_FIX_ENABLED:-}" ]; then
-            echo "::notice title=auto-fix::AUTO_FIX_ENABLED is set"
-          else
-            echo "::notice title=auto-fix::AUTO_FIX_ENABLED is missing"
-          fi
-
-      - name: Run auto-fix (rule-based, fail-safe)
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          AUTO_FIX_ENABLED: ${{ secrets.AUTO_FIX_ENABLED }}
-        run: |
-          set -euo pipefail
-          python3 scripts/auto_fix.py --run-id "${{ github.event.workflow_run.id }}" --repo "${{ github.repository }}"
+          echo "::notice title=auto-fix::disabled by Local SSOT policy (use local autopilot scripts)"

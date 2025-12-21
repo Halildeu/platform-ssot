@@ -20,6 +20,7 @@ Owner: @team/platform
 - Kapsanan workflow’lar: `ci-gate`, `Web QA`, `Layout QA`, `Doc QA`, `security-guardrails`.
 - Ortamlar: GitHub Actions.
 - Sorumlu ekip: Platform.
+- Local SSOT policy: Fix/patch işlemleri yalnızca lokal yapılır (bkz. RB-insansiz-flow).
 
 -------------------------------------------------------------------------------
 3. BAŞLATMA / DURDURMA
