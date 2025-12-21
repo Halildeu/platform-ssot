@@ -25,7 +25,7 @@ Owner: @team/platform
 3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
 
-- Başlatma: `.github/workflows/log-digest.yml` repo’da enabled olduğunda otomatik çalışır.
+- Başlatma: `.github/workflows/log-digest.yml` repo'da enabled olduğunda otomatik çalışır.
 - Durdurma (kill switch):
   - Workflow’u GitHub UI’dan disable et, veya
   - `.github/workflows/log-digest.yml` içindeki `workflow_run.workflows` listesinden workflow adlarını çıkar.
