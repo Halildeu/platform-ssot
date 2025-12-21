@@ -25,7 +25,9 @@ Owner: @team/platform
 
 - v0.1 stratejisi “deterministik + fail-safe”:
   - Auto-fix yalnız bilinen pattern’lerde küçük patch üretir; aksi durumda noop + digest ile görünürlük sağlar.  
-  - Deploy/rollback gerçek altyapı hazır olana kadar kill-switch ile noop kalır; build/validate adımları yine PASS/FAIL sinyali üretir.  
+  - Deploy/validate/rollback:
+    - `DEPLOY_ENABLED!=true` ise job’lar skip olur (deploy yok).
+    - `DEPLOY_ENABLED=true` ise gerekli parametreler zorunludur; eksikse workflow FAIL eder (silent PASS yok).
 
 -------------------------------------------------------------------------------
 ## 4. TEST SENARYOLARI ÖZETİ
@@ -43,10 +45,11 @@ Owner: @team/platform
   - Hedef: Bot branch’inde fail üretildiğinde auto-fix yeniden PR açmamalı (noop).  
 
 - [ ] Senaryo 4 – Deploy (kill-switch OFF):
-  - Hedef: `DEPLOY_ENABLED` kapalıyken main push sonrası deploy workflow’ları noop; build/validate PASS/FAIL sinyali üretir.  
+  - Hedef: `DEPLOY_ENABLED` kapalıyken main push sonrası deploy/validate job’ları **skip** olmalıdır.  
 
 - [ ] Senaryo 5 – Deploy + validate + rollback (kill-switch ON, opsiyonel):
   - Hedef: `DEPLOY_ENABLED=true` ile deploy + post-deploy validate koşar.  
+  - Ön koşul: `WEB_DEPLOY_HOOK_URL`, `WEB_SMOKE_URL`, `BACKEND_HEALTH_URLS` tanımlıdır.
   - Beklenen: validate FAIL olursa rollback tetiklenir ve `<!-- incident:v1 -->` comment’i yazılır.  
 
 -------------------------------------------------------------------------------
@@ -57,8 +60,9 @@ Owner: @team/platform
   - Workflows: `ci-gate`, `log-digest`, `auto-fix`, `deploy-web`, `deploy-backend`, `post-deploy-validate`, `rollback`  
 - Secrets (örnek isimler; değerler burada yok):
   - `AUTO_FIX_ENABLED`, `DEPLOY_ENABLED`  
-  - Web deploy hedef secrets (mode’a göre)  
-  - Backend deploy secrets (GHCR + host erişimi, mode’a göre)  
+  - Web: `WEB_DEPLOY_HOOK_URL`, `WEB_SMOKE_URL`  
+  - Backend: `BACKEND_HEALTH_URLS` (+ GHCR erişimi `github.token` ile)  
+  - Rollback (opsiyonel): `ROLLBACK_ENABLED`, `WEB_ROLLBACK_HOOK_URL`, `BACKEND_ROLLBACK_HOOK_URL`
 
 -------------------------------------------------------------------------------
 ## 6. RİSKLER / ÖNCELİKLER

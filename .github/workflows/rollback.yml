@@ -24,6 +24,14 @@ jobs:
         env:
           DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
           ROLLBACK_ENABLED: ${{ secrets.ROLLBACK_ENABLED }}
+    if: >-
+      github.event.workflow_run.conclusion != 'success'
+      && github.event.workflow_run.event == 'push'
+      && secrets.ROLLBACK_ENABLED == 'true'
+
+    steps:
+      - name: Rollback (required)
+        env:
           WEB_ROLLBACK_HOOK_URL: ${{ secrets.WEB_ROLLBACK_HOOK_URL }}
           BACKEND_ROLLBACK_HOOK_URL: ${{ secrets.BACKEND_ROLLBACK_HOOK_URL }}
         shell: bash
@@ -54,6 +62,28 @@ jobs:
           else
             echo "::notice title=rollback::BACKEND_ROLLBACK_HOOK_URL not set; skipping backend rollback."
           fi
+
+          missing=0
+
+          if [ -z "${WEB_ROLLBACK_HOOK_URL:-}" ]; then
+            echo "::error title=rollback::WEB_ROLLBACK_HOOK_URL missing; refusing to rollback."
+            missing=1
+          fi
+
+          if [ -z "${BACKEND_ROLLBACK_HOOK_URL:-}" ]; then
+            echo "::error title=rollback::BACKEND_ROLLBACK_HOOK_URL missing; refusing to rollback."
+            missing=1
+          fi
+
+          if [ "${missing}" = "1" ]; then
+            exit 1
+          fi
+
+          echo "::notice title=rollback::Triggering WEB rollback hook (URL hidden)."
+          curl -fsS -X POST "${WEB_ROLLBACK_HOOK_URL}"
+
+          echo "::notice title=rollback::Triggering BACKEND rollback hook (URL hidden)."
+          curl -fsS -X POST "${BACKEND_ROLLBACK_HOOK_URL}"
 
       - name: Incident comment (best-effort)
         if: always()

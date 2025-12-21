@@ -36,6 +36,9 @@ Owner: @team/platform
   - Fork repo’larda otomasyon (güvenlik nedeniyle çalışmaz).
   - Branch rules “required reviews” gibi manuel onay gerektiren policy’ler (insansız merge’i bloklar).
   - Prod deploy hedeflerinin detayları (hook/ssh/runner) secrets ile yönetilir; secrets yoksa deploy noop kalır.
+  - Prod deploy hedeflerinin detayları (hook/ssh/runner) secrets ile yönetilir.
+    - `DEPLOY_ENABLED=true` iken gerekli deploy/validate parametreleri eksikse workflow FAIL eder (silent PASS yok).
+    - `DEPLOY_ENABLED!=true` ise deploy/validate job’ları **skip** olur.
 
 -------------------------------------------------------------------------------
 3. BAŞLATMA / DURDURMA
@@ -60,6 +63,10 @@ Owner: @team/platform
      - Backend değiştiyse: `deploy-backend` çalışır (kill-switch ile).
   7) Deploy sonrası:
      - `post-deploy-validate` çalışır (kill-switch ile).
+     - Web değiştiyse: `deploy-web` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
+     - Backend değiştiyse: `deploy-backend` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
+  7) Deploy sonrası:
+     - `post-deploy-validate` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
      - FAIL ise `rollback` tetiklenir ve `<!-- incident:v1 -->` comment’i basar.
 
 - Durdurma / kill switch:
@@ -78,6 +85,12 @@ Owner: @team/platform
     - `AUTO_FIX_ENABLED` (true/false)
     - `DEPLOY_ENABLED` (true/false)
     - `ROLLBACK_ENABLED` (true/false)
+  - Parametre zorunluluğu (hardening):
+    - `DEPLOY_ENABLED=true` iken:
+      - Web deploy için `WEB_DEPLOY_HOOK_URL` zorunludur (yoksa `deploy-web` FAIL).
+      - Post-deploy validate için `WEB_SMOKE_URL` ve `BACKEND_HEALTH_URLS` zorunludur (yoksa `post-deploy-validate` FAIL).
+    - `ROLLBACK_ENABLED=true` iken:
+      - `WEB_ROLLBACK_HOOK_URL` ve `BACKEND_ROLLBACK_HOOK_URL` zorunludur (yoksa `rollback` FAIL).
 
 -------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
@@ -109,6 +122,7 @@ Edge-case tablosu (v0.1):
 | Cancelled run | log-digest comment içinde “run cancelled” notu | log-digest comment | İlgili check’i rerun et; asıl FAIL run linkinden doğrula |
 | Auto-fix disabled | Auto-fix workflow run: noop | (comment yok) | `AUTO_FIX_ENABLED=true` ayarla → ci-gate rerun |
 | Deploy disabled | Deploy workflow: noop | (comment yok) | `DEPLOY_ENABLED=true` ayarla |
+| Deploy disabled | Deploy job’ları skip | (comment yok) | `DEPLOY_ENABLED=true` ayarla |
 | Validate FAIL | rollback workflow tetiklenir | `<!-- incident:v1 -->` | Hedef URL/secrets kontrol et; ardından deploy/validate rerun |
 
 - [ ] Arıza senaryosu 1 – Ready label eksik:

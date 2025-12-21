@@ -23,6 +23,7 @@ concurrency:
 jobs:
   deploy-web:
     runs-on: ubuntu-latest
+    if: ${{ secrets.DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -46,6 +47,8 @@ jobs:
       - name: Deploy web (kill-switch, best-effort)
         env:
           DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
+      - name: Validate deploy config (required)
+        env:
           WEB_DEPLOY_HOOK_URL: ${{ secrets.WEB_DEPLOY_HOOK_URL }}
         shell: bash
         run: |
@@ -64,3 +67,16 @@ jobs:
           echo "::notice title=deploy-web::Triggering deploy hook (URL hidden)."
           curl -fsS -X POST "${WEB_DEPLOY_HOOK_URL}"
 
+          if [ -z "${WEB_DEPLOY_HOOK_URL:-}" ]; then
+            echo "::error title=deploy-web::WEB_DEPLOY_HOOK_URL missing; refusing to deploy."
+            exit 1
+          fi
+
+      - name: Deploy web (hook)
+        env:
+          WEB_DEPLOY_HOOK_URL: ${{ secrets.WEB_DEPLOY_HOOK_URL }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "::notice title=deploy-web::Triggering deploy hook (URL hidden)."
+          curl -fsS -X POST "${WEB_DEPLOY_HOOK_URL}"
