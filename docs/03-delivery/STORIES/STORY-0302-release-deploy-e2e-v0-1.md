@@ -1,6 +1,6 @@
 # STORY-0302 – Release & Deploy E2E v0.1 (Canlıya Alma ve Son Kullanıcıya Sunum)
 
-ID: STORY-9999-release-deploy-e2e-v0-1  
+ID: STORY-0302-release-deploy-e2e-v0-1  
 Epic: OPS-RELEASE-E2E  
 Status: Planned  
 Owner: @team/platform  
