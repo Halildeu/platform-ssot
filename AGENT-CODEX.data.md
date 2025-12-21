@@ -166,7 +166,7 @@ Agent, STYLE-DATA-001.md’ye göre en az şu kuralları gözetmelidir:
   - İlgili TECH-DESIGN ve DATA-MODEL dokümanlarını kontrol edip, çelişki yaratmadığından emin olmalıdır.
 
 -------------------------------------------------------------------------------
-9. AGENT DAVRANIŞİNDA SINIRLAR
+9. AGENT DAVRANIŞINDA SINIRLAR
 -------------------------------------------------------------------------------
 
 - Agent, production ortamında veri silme veya destructive DDL (DROP TABLE vb.)

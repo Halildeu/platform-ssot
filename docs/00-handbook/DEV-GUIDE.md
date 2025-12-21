@@ -5,7 +5,7 @@ halinde tanımlar. Amaç, her iş tipinde (WEB, MOB, BE, DATA, AI, DOC) aynı
 süreç mantığının uygulanmasını sağlamaktır.
 
 Süreç 6 adımdan oluşur:
-Discover → Shape → Design → Build → Validate → Operate
+Discover → Shape → Design → Build → Validate → Operate.
 
 -------------------------------------------------------------------------------
 1. DISCOVER – Problemi Anla
@@ -162,3 +162,4 @@ Bu doküman tüm iş tipleri için standart geliştirme sürecini tanımlar:
 - Doküman üretimi, kodlama ve agent çıktıları bu yapıya göre uyumlu hale gelir.
 
 Geliştirme süreci için tek doğruluk kaynağıdır.
+Geliştirme süreci için tek doğruluk kaynağıdır (SSOT).

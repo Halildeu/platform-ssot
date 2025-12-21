@@ -1,0 +1,61 @@
+{
+  "version": "0.3",
+  "base_branch": "main",
+  "branch_patterns": ["fix/**", "wip/**", "docs/**", "ops/**"],
+  "draft_policy": { "wip/**": true },
+  "comment_marker": "<!-- pr-bot:rules -->",
+  "ready_to_merge_label": "pr-bot/ready-to-merge",
+  "comment_templates": {
+    "default": "docs/04-operations/pr-bot-templates/default.md",
+    "merge-order": "docs/04-operations/pr-bot-templates/merge-order.md",
+    "evidence-note-0049": "docs/04-operations/pr-bot-templates/evidence-note-0049.md"
+  },
+  "rules": [
+    {
+      "match": "fix/check-story-links-help",
+      "draft": false,
+      "merge_policy": "bot_squash",
+      "template": "merge-order",
+      "notes": ["Merge order: 1) fix/... 2) wip/... (optional)."]
+    },
+    {
+      "match": "wip/0049-docs",
+      "draft": true,
+      "merge_policy": "none",
+      "template": "evidence-note-0049",
+      "expect_story_links_fail": true,
+      "notes": [
+        "docs-only PR",
+        "check_story_links STORY-0049 expected FAIL until added to PROJECT-FLOW.tsv"
+      ]
+    },
+    {
+      "match": "docs/**",
+      "draft": false,
+      "merge_policy": "bot_squash",
+      "template": "default",
+      "notes": ["docs/** PR'ları için default template + merge-bot label (best-effort)."]
+    },
+    {
+      "match": "fix/**",
+      "draft": false,
+      "merge_policy": "bot_squash",
+      "template": "default",
+      "notes": ["fix/** PR'ları için default template + merge-bot label (best-effort)."]
+    },
+    {
+      "match": "ops/**",
+      "draft": false,
+      "merge_policy": "none",
+      "template": "default",
+      "notes": ["ops/** PR'ları için default template (merge-bot kapalı)."]
+    },
+    {
+      "match": "wip/**",
+      "draft": true,
+      "merge_policy": "none",
+      "template": "default",
+      "notes": ["wip/** PR'ları draft; merge-bot kapalı."]
+    }
+  ]
+}

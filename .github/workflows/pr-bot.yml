@@ -1,0 +1,108 @@
+name: PR Bot
+
+on:
+  push:
+    branches: ["fix/**", "wip/**", "docs/**", "ops/**"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: pr-bot-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  pr-bot:
+    runs-on: ubuntu-latest
+    if: github.event.repository.fork == false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Token preflight (safe)
+        env:
+          TOKEN_SOURCE: ${{ secrets.GH_PR_BOT_TOKEN && 'GH_PR_BOT_TOKEN' || secrets.GH_SECRETS_SYNC_TOKEN && 'GH_SECRETS_SYNC_TOKEN' || 'github.token' }}
+          GH_TOKEN: ${{ secrets.GH_PR_BOT_TOKEN || secrets.GH_SECRETS_SYNC_TOKEN || github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+
+          echo "::notice title=PR Bot Token Source::${TOKEN_SOURCE}"
+
+          API="https://api.github.com"
+          HDR_AUTH="Authorization: Bearer ${GH_TOKEN}"
+          HDR_ACC="Accept: application/vnd.github+json"
+
+          echo "::add-mask::${GH_TOKEN}"
+
+          tmp_user="$(mktemp)"
+          curl -sS -H "${HDR_AUTH}" -H "${HDR_ACC}" "${API}/user" -o "${tmp_user}" || true
+          login="$(python3 -c 'import json,sys; print((json.load(open(sys.argv[1], \"r\", encoding=\"utf-8\")).get(\"login\") or \"\"))' \"${tmp_user}\" 2>/dev/null || true)"
+          rm -f "${tmp_user}" || true
+          if [ -n "${login}" ]; then
+            echo "::notice title=PR Bot Token Login::${login}"
+          else
+            echo "::notice title=PR Bot Token Login::(unknown)"
+          fi
+
+          ref_url="${API}/repos/${GITHUB_REPOSITORY}/git/ref/heads/${GITHUB_REF_NAME}"
+          code="$(curl -sS -o /dev/null -w "%{http_code}" -H "${HDR_AUTH}" -H "${HDR_ACC}" "${ref_url}" || echo "000")"
+          echo "::notice title=PR Bot Ref Check::${code} heads/${GITHUB_REF_NAME}"
+
+      - name: Run PR bot (create PR + upsert comment)
+        id: pr_bot
+        env:
+          GH_TOKEN: ${{ secrets.GH_PR_BOT_TOKEN || secrets.GH_SECRETS_SYNC_TOKEN || github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          python3 scripts/pr_bot.py --rules-path docs/04-operations/PR-BOT-RULES.json 2>&1 | tee artifacts/pr-bot.log
+
+      - name: PR Bot failure summary
+        if: failure()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+          LAST_ERR=""
+          if [ -f artifacts/pr-bot.log ]; then
+            LAST_ERR="$(grep -E '\\[pr-bot\\] HATA:|GitHub API HTTP|not all refs are readable|^HATA:' artifacts/pr-bot.log | tail -n 1 || true)"
+          fi
+          if [ -z "${LAST_ERR}" ]; then
+            LAST_ERR="PR Bot step failed. See logs for details."
+          fi
+
+          # Annotation (token yok; tek satır; GitHub escaping)
+          esc="${LAST_ERR//%/%25}"
+          esc="${esc//$'\\n'/%0A}"
+          esc="${esc//$'\\r'/%0D}"
+          echo "::error title=PR Bot Failed::${esc}"
+
+          if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+            {
+              echo "## PR Bot Failure"
+              echo ""
+              echo "- Run: ${RUN_URL}"
+              echo "- Last error: \`${LAST_ERR}\`"
+              echo ""
+              echo "### Tail (artifacts/pr-bot.log)"
+              echo '```text'
+              if [ -f artifacts/pr-bot.log ]; then
+                tail -n 120 artifacts/pr-bot.log || true
+              else
+                echo "(artifacts/pr-bot.log not found)"
+              fi
+              echo '```'
+            } >> "${GITHUB_STEP_SUMMARY}"
+          fi

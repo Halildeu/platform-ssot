@@ -46,6 +46,12 @@ components/, hooks/, services/, utils/
 - Domain state: feature içindeki özel hook’lar (örn: useUserList)
 - App-level global state: app/store (tema, session vb.)
 - Komponent sadece data + handler alır; business logic içermez.
+- Rule of thumb (i18n + memo invalidation):
+  - Ne zaman: Locale switch sonrası UI güncellenmiyorsa (stale UI) ve memo/cache kullanımı varsa.
+  - Neden: `useMemo`/`useCallback` sadece dependency referansı değişince invalid olur.
+  - Nasıl: i18n hook’larında `t/formatNumber/formatDate` callback’lerini `locale` dependency’sine bağla; UI tarafında `useMemo([t])` kullan.
+  - Örnek: `const t = useCallback(..., [manager, locale])`
+  - Örnek: `const labels = useMemo(() => ..., [t])`
 
 -------------------------------------------------------------------------------
 4. API KULLANIM STANDARTLARI

@@ -97,5 +97,5 @@ Owner: @team/security
 - TECH-DESIGN: docs/02-architecture/services/auth-service/TECH-DESIGN-*.md (varsa)
 - STORY: docs/03-delivery/STORIES/STORY-0002-backend-keycloak-jwt-hardening.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0002-backend-keycloak-jwt-hardening.md
-- TEST-PLAN: docs/03-delivery/TEST-PLANS/TP-0002-backend-keycloak-jwt.md
+- TEST-PLAN: docs/03-delivery/TEST-PLANS/TP-0002-backend-keycloak-jwt-hardening.md
 - SLO/SLA: docs/04-operations/SLO-SLA.md

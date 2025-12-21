@@ -93,3 +93,20 @@ scenarios:
     steps:
       - goto: /admin/reports/users
       - waitForSelector: '[data-theme-scope="entity-grid"]'
+
+  - name: story_0050_locale_switch_propagation
+    level: 1
+    auth_required: true
+    permissions:
+      - user-read
+    steps:
+      - goto: /admin/users
+      - expectVisible: 'select[aria-label="Dil seçimi"]'
+      - select:
+          selector: 'select[aria-label="Dil seçimi"]'
+          value: tr
+      - expectVisible: 'text=Kullanıcıları Yenile'
+      - select:
+          selector: 'select[aria-label="Dil seçimi"]'
+          value: en
+      - expectVisible: 'text=Refresh users'
