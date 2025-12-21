@@ -72,6 +72,7 @@ Owner: @team/platform
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
+- Doğal akış: docs/04-operations/RUNBOOKS/RB-insansiz-flow.md
 - STORY: docs/03-delivery/STORIES/STORY-0302-release-deploy-e2e-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0302-release-deploy-e2e-v0-1.md
 - Workflow: .github/workflows/log-digest.yml

@@ -106,6 +106,7 @@ Owner: @team/platform
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
+- Doğal akış: docs/04-operations/RUNBOOKS/RB-insansiz-flow.md
 - Workflow: .github/workflows/pr-bot.yml
 - Workflow: .github/workflows/pr-merge.yml
 - SSOT: docs/04-operations/PR-BOT-RULES.json
