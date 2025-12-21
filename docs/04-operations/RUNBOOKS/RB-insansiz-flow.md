@@ -35,7 +35,6 @@ Owner: @team/platform
 - Kapsam dışı:
   - Fork repo’larda otomasyon (güvenlik nedeniyle çalışmaz).
   - Branch rules “required reviews” gibi manuel onay gerektiren policy’ler (insansız merge’i bloklar).
-  - Prod deploy hedeflerinin detayları (hook/ssh/runner) secrets ile yönetilir; secrets yoksa deploy noop kalır.
   - Prod deploy hedeflerinin detayları (hook/ssh/runner) secrets ile yönetilir.
     - `DEPLOY_ENABLED=true` iken gerekli deploy/validate parametreleri eksikse workflow FAIL eder (silent PASS yok).
     - `DEPLOY_ENABLED!=true` ise deploy/validate job’ları **skip** olur.
@@ -59,10 +58,6 @@ Owner: @team/platform
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
   6) Merge sonrası (push main):
-     - Web değiştiyse: `deploy-web` çalışır (kill-switch ile).
-     - Backend değiştiyse: `deploy-backend` çalışır (kill-switch ile).
-  7) Deploy sonrası:
-     - `post-deploy-validate` çalışır (kill-switch ile).
      - Web değiştiyse: `deploy-web` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
      - Backend değiştiyse: `deploy-backend` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
   7) Deploy sonrası:
@@ -121,7 +116,6 @@ Edge-case tablosu (v0.1):
 | Behind / out-of-date | `noop (mergeable_state=behind)` veya PR “Update branch” uyarısı | pr-merge result comment | PR → Update branch → `ci-gate` rerun |
 | Cancelled run | log-digest comment içinde “run cancelled” notu | log-digest comment | İlgili check’i rerun et; asıl FAIL run linkinden doğrula |
 | Auto-fix disabled | Auto-fix workflow run: noop | (comment yok) | `AUTO_FIX_ENABLED=true` ayarla → ci-gate rerun |
-| Deploy disabled | Deploy workflow: noop | (comment yok) | `DEPLOY_ENABLED=true` ayarla |
 | Deploy disabled | Deploy job’ları skip | (comment yok) | `DEPLOY_ENABLED=true` ayarla |
 | Validate FAIL | rollback workflow tetiklenir | `<!-- incident:v1 -->` | Hedef URL/secrets kontrol et; ardından deploy/validate rerun |
 
@@ -184,4 +178,3 @@ Edge-case tablosu (v0.1):
 - STORY: docs/03-delivery/STORIES/STORY-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
 - TEST-PLAN: docs/03-delivery/TEST-PLANS/TP-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
-- Related: docs/03-delivery/STORIES/STORY-0304-autopilot-auto-fix-deploy-rollback-v0-1.md

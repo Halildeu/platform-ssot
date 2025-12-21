@@ -44,28 +44,12 @@ jobs:
         run: npm run build
         working-directory: web
 
-      - name: Deploy web (kill-switch, best-effort)
-        env:
-          DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
       - name: Validate deploy config (required)
         env:
           WEB_DEPLOY_HOOK_URL: ${{ secrets.WEB_DEPLOY_HOOK_URL }}
         shell: bash
         run: |
           set -euo pipefail
-
-          if [ "${DEPLOY_ENABLED:-}" != "true" ]; then
-            echo "::notice title=deploy-web::DEPLOY_ENABLED != true; skipping deploy."
-            exit 0
-          fi
-
-          if [ -z "${WEB_DEPLOY_HOOK_URL:-}" ]; then
-            echo "::notice title=deploy-web::WEB_DEPLOY_HOOK_URL missing; skipping deploy."
-            exit 0
-          fi
-
-          echo "::notice title=deploy-web::Triggering deploy hook (URL hidden)."
-          curl -fsS -X POST "${WEB_DEPLOY_HOOK_URL}"
 
           if [ -z "${WEB_DEPLOY_HOOK_URL:-}" ]; then
             echo "::error title=deploy-web::WEB_DEPLOY_HOOK_URL missing; refusing to deploy."

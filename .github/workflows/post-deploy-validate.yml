@@ -17,12 +17,6 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
-
-    steps:
-      - name: Validate (kill-switch)
-        env:
-          DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
     if: >-
       github.event.workflow_run.conclusion == 'success'
       && github.event.workflow_run.event == 'push'
@@ -38,33 +32,6 @@ jobs:
           set -euo pipefail
           set +x
 
-          if [ "${DEPLOY_ENABLED:-}" != "true" ]; then
-            echo "::notice title=post-deploy-validate::DEPLOY_ENABLED != true; skipping validation."
-            exit 0
-          fi
-
-          fail=0
-
-          if [ -n "${WEB_SMOKE_URL:-}" ]; then
-            echo "::group::web smoke"
-            curl -fsS "${WEB_SMOKE_URL}" >/dev/null || fail=1
-            echo "::endgroup::"
-          else
-            echo "::notice title=post-deploy-validate::WEB_SMOKE_URL not set; skipping web smoke."
-          fi
-
-          if [ -n "${BACKEND_HEALTH_URLS:-}" ]; then
-            echo "::group::backend healthchecks"
-            IFS=',' read -r -a urls <<< "${BACKEND_HEALTH_URLS}"
-            for u in "${urls[@]}"; do
-              u="$(echo "${u}" | xargs)"
-              [ -n "${u}" ] || continue
-              curl -fsS "${u}" >/dev/null || fail=1
-            done
-            echo "::endgroup::"
-          else
-            echo "::notice title=post-deploy-validate::BACKEND_HEALTH_URLS not set; skipping backend healthchecks."
-          fi
           if [ -z "${WEB_SMOKE_URL:-}" ]; then
             echo "::error title=post-deploy-validate::WEB_SMOKE_URL missing; refusing to validate."
             exit 1
@@ -98,4 +65,3 @@ jobs:
           fi
 
           echo "::notice title=post-deploy-validate::PASS"
-
