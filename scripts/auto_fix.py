@@ -52,6 +52,7 @@ ERROR_RE = re.compile(
     re.IGNORECASE,
 )
 DOC_ID_ERROR_PATH_RE = re.compile(r"^- HATA:\s+(.+?\.md)\s*$", re.MULTILINE)
+DOC_ID_STEM_EXPECTED_RE = re.compile(r"stem prefix beklentisi:\s*([A-Za-z0-9][A-Za-z0-9_-]*)", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -698,6 +699,17 @@ def main(argv: Sequence[str]) -> int:
             expected = expected_id_for_doc(rel)
             if expected:
                 planned_doc_id_fix = (rel, expected)
+    else:
+        # Fallback: bazı log'larda path satırı kaçabilir; "stem prefix beklentisi" üzerinden dosyayı bul.
+        m2 = DOC_ID_STEM_EXPECTED_RE.search(all_logs_text)
+        if m2:
+            stem = m2.group(1)
+            candidates = sorted((ROOT / "docs").glob(f"**/{stem}.md"))
+            if len(candidates) == 1:
+                rel2 = str(candidates[0].relative_to(ROOT)).replace("\\", "/")
+                expected2 = expected_id_for_doc(rel2)
+                if expected2:
+                    planned_doc_id_fix = (rel2, expected2)
 
     # Plan 2: mfe-shell telemetry-client missing module (known historical)
     if "telemetry/telemetry-client" in all_logs_text or "telemetry-client" in all_logs_text:
