@@ -244,7 +244,7 @@ Build / Validate aşamasında agent’ın tetikleyebileceği başlıca script se
   - Delta: `currentLevel=state.lastSuccessLevel` (yoksa L0), `nextLevel=current+1`; `nextLevel<=maxAllowedLevel` ise çalışır; değilse skip; `--force` ile delta bypass (maxAllowedLevel aşılmaz)
   - Not: `min(M_STORY,M_AC,M_TP)` artmadıkça bir üst seviye koşmaz; `--force` yalnız istisnai durumdur.
   - STOP/BLOCKED kontrat eksikliğidir; FAIL gerçek hatadır.
-  - State/summary çıktıları `web/test-results/ops/` altındadır (repo’ya commit edilmez)
+  - State/summary çıktıları `web/test-results/ops/` altındadır (repo'ya commit edilmez)
   - L2 scope seçimi: `--impact all|auto|web|backend` (local default `all`, ci default `auto`; diff okunamazsa `all`).
   - Log capture (best-effort): `--capture-logs on-fail|always|never` (default `on-fail`, çıktı: `web/test-results/ops/logs/**`).
   - Playwright (L3) env: `PW_AUTH_MODE=token_injection` iken token `PW_TEST_TOKEN` veya `KEYCLOAK_TOKEN_URL/CLIENT_ID/CLIENT_SECRET`; `PW_READONLY_ENFORCE=1` iken `/api/` write istekleri violation sayılır.
