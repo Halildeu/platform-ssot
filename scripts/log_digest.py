@@ -484,8 +484,8 @@ def main(argv: Sequence[str]) -> int:
 
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
     if not token:
-        eprint("[log-digest] Missing token env (GITHUB_TOKEN/GH_TOKEN).")
-        return 2
+        eprint("[log-digest] Missing token env (GITHUB_TOKEN/GH_TOKEN); noop.")
+        return 0
 
     run = get_run_info(token=token, repo=args.repo, run_id=args.run_id)
     if not run:
