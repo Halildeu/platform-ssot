@@ -462,7 +462,7 @@ EOF
     exit 4
   fi
 
-  git add -A -- . ":!${OUT_DIR%%/*}" ":!${AUTOPILOT_TMP##*/}"
+  git add -A
   git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
   add_labels "${PR}" "${LABEL_FIX_SENT}" || true
   remove_labels "${PR}" "${LABEL_PASSED}" || true
