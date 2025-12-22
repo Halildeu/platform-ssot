@@ -10,6 +10,8 @@ ROOT_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 AUTOPILOT_TMP="${ROOT_DIR}/.autopilot-tmp"
 CI_PULL_LOGS_SRC="${ROOT_DIR}/scripts/ci_pull_logs.sh"
 CI_PULL_LOGS_BIN="${AUTOPILOT_TMP}/ci_pull_logs.sh"
+CODEX_FIX_RUNNER_SRC="${ROOT_DIR}/scripts/codex_fix_runner.sh"
+CODEX_FIX_RUNNER_BIN="${AUTOPILOT_TMP}/codex_fix_runner.sh"
 
 DRY_RUN_PR_UPDATES="false"
 
@@ -70,6 +72,15 @@ mkdir -p "${AUTOPILOT_TMP}"
 if [[ -f "${CI_PULL_LOGS_SRC}" ]]; then
   cp "${CI_PULL_LOGS_SRC}" "${CI_PULL_LOGS_BIN}" || true
   chmod +x "${CI_PULL_LOGS_BIN}" || true
+fi
+if [[ -f "${CODEX_FIX_RUNNER_SRC}" ]]; then
+  cp "${CODEX_FIX_RUNNER_SRC}" "${CODEX_FIX_RUNNER_BIN}" || true
+  chmod +x "${CODEX_FIX_RUNNER_BIN}" || true
+
+  if [[ -n "${FIX_CMD}" ]]; then
+    FIX_CMD="${FIX_CMD//.\/scripts\/codex_fix_runner\.sh/${CODEX_FIX_RUNNER_BIN}}"
+    FIX_CMD="${FIX_CMD//scripts\/codex_fix_runner\.sh/${CODEX_FIX_RUNNER_BIN}}"
+  fi
 fi
 
 urlencode() {
@@ -451,7 +462,7 @@ EOF
     exit 4
   fi
 
-  git add -A
+  git add -A -- . ":!${OUT_DIR%%/*}" ":!${AUTOPILOT_TMP##*/}"
   git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
   add_labels "${PR}" "${LABEL_FIX_SENT}" || true
   remove_labels "${PR}" "${LABEL_PASSED}" || true
