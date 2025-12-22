@@ -34,7 +34,19 @@ Owner: @team/platform
   - Delivery zinciri: `docs/03-delivery/STORIES/`, `docs/03-delivery/ACCEPTANCE/`, `docs/03-delivery/TEST-PLANS/`
   - PR bot kuralları: `docs/04-operations/PR-BOT-RULES.json`
   - Runbook’lar: bu doküman + `RB-pr-bot` + `RB-log-digest`
-- Kapsam dışı:
+- Local SSOT Policy (Mandatory):
+  - SSOT = lokal repo working tree (fix/patch yalnızca burada üretilir).
+  - GitHub = doğrulama/raporlama/otomatik merge (Actions check + comment/label + merge-bot).
+  - GitHub Actions hiçbir koşulda fix commit’i üretmez (`auto-fix` workflow disabled).
+  - Fix döngüsü: push → `ci-gate` watch → log pull (`scripts/ci_pull_logs.sh`) → local fix (Codex) → push → `ci-gate` PASS.
+  - PR görünürlüğü:
+    - Markers: `<!-- local-autopilot:status -->`, `<!-- local-autopilot:failure -->`
+    - Labels: `autopilot/failing`, `autopilot/fix-sent`, `autopilot/passed`, `autopilot/needs-human`
+  - Token SSOT: Vault KV v2 (ör. `secret/stage/ops/github`):
+    - `GH_SECRETS_SYNC_TOKEN`: Vault → GitHub secrets sync (write token; Actions secrets yazma).
+    - `GH_LOCAL_AUTOPILOT_TOKEN`: local CI watcher + PR comment/label (read token; Issues write gerekir).
+    - Local export (token value yazdırmaz): `export GH_TOKEN="$(vault kv get -field=GH_LOCAL_AUTOPILOT_TOKEN secret/stage/ops/github)"`
+  - Kapsam dışı:
   - Fork repo’larda otomasyon (güvenlik nedeniyle çalışmaz).
   - Branch rules “required reviews” gibi manuel onay gerektiren policy’ler (insansız merge’i bloklar).
   - Prod deploy hedeflerinin detayları (hook/ssh/runner) secrets ile yönetilir.
