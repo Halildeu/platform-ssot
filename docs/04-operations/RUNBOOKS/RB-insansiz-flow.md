@@ -41,6 +41,40 @@ Owner: @team/platform
     - `DEPLOY_ENABLED=true` iken gerekli deploy/validate parametreleri eksikse workflow FAIL eder (silent PASS yok).
     - `DEPLOY_ENABLED!=true` ise deploy/validate job’ları **skip** olur.
 
+### Local SSOT Policy (Mandatory)
+
+Zorunlu kural: Düzeltme/patch yalnızca local çalışma kopyasında üretilir; GitHub Actions hiçbir koşulda fix commit/branch/PR üretmez.
+
+İstisnalar (policy değişmez; sadece süreç):
+- Local erişim yoksa “insansız akış” durdurulur; insan müdahalesi ile incident prosedürü çalıştırılır.
+- Token rotasyonu / Vault→GitHub Secrets sync gibi ops işleri yapılabilir (repo içeriğine fix commit üretmez).
+
+Token modeli (Vault SSOT):
+- Vault KV v2 path: `secret/<env>/ops/github`
+- Fields:
+  - `GH_SECRETS_SYNC_TOKEN`: Vault→GitHub Secrets sync (write) token.
+  - `GH_LOCAL_AUTOPILOT_TOKEN`: Local autopilot için `gh` CLI token (read + comment/label).
+- KV v2 güncelleme kuralı:
+  - Tek field güncelle: `vault kv patch ... KEY="..."` (mevcut field’ları ezmez).
+  - `vault kv put` tüm secret’i overwrite eder; yalnız bilinçli “tam replace” için kullanılır.
+
+Local autopilot stop koşulları (v0.1):
+- `GH_TOKEN` yok / `gh auth status` FAIL → stop.
+- `AUTOPILOT_FIX_CMD` yok → stop (FAILURE.md üretilmiş olur).
+- Fix sonrası git diff yok → stop (noop).
+- `--max` deneme bitti → stop.
+
+Local autopilot PR annotation sözleşmesi (opsiyonel; token `Issues: write` gerektirir):
+
+| Tür | Anahtar | Anlam | Kaynak |
+|---|---|---|---|
+| Comment marker | `<!-- local-autopilot:status -->` | Son durum (PASS/FAIL/stop reason) | local |
+| Comment marker | `<!-- local-autopilot:failure -->` | FAILURE.md özeti (ilk hata bloğu) | local |
+| Label | `autopilot/failing` | CI FAIL tespit edildi | local |
+| Label | `autopilot/fix-sent` | Fix push edildi (yeni attempt) | local |
+| Label | `autopilot/passed` | CI PASS ve döngü tamamlandı | local |
+| Label | `autopilot/needs-human` | Güvenli otomatik fix yok / manuel karar gerekli | local |
+
 -------------------------------------------------------------------------------
 3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------

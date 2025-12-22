@@ -31,7 +31,7 @@ Owner: @team/platform
 - Kapsam dışı:
 - Fork repo'larda otomasyon (güvenlik nedeniyle koşmaz).
   - PAT zorunluluğu (yalnız org/repo policy `GITHUB_TOKEN write` kısıtlıysa opsiyonel fallback).
-- Local SSOT policy: Fix/patch işlemleri yalnızca lokal yapılır (bkz. RB-insansiz-flow).
+- Local SSOT policy (Mandatory): Fix/patch işlemleri yalnızca localde yapılır (bkz. docs/04-operations/RUNBOOKS/RB-insansiz-flow.md → “Local SSOT Policy (Mandatory)”).
 
 -------------------------------------------------------------------------------
 3. BAŞLATMA / DURDURMA
