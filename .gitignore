@@ -11,6 +11,9 @@ backend/.vault-dev/**
 # Monorepo bootstrap backups (do not commit)
 .legacy-git/
 
+# Local autopilot scratch (do not commit)
+.autopilot-tmp/
+
 # OS noise
 .DS_Store
 

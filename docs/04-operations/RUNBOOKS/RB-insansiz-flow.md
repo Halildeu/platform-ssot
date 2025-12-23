@@ -117,6 +117,13 @@ Owner: @team/platform
 - Ek kanıtlar:
   - PR checks: `ci-gate` (required check).
   - GitHub Actions “Step Summary” (PR Bot / PR Merge Bot).
+- PR takip (TSV, local):
+  - Dosya: `.autopilot-tmp/pr-tracker/PR-TRACKER.tsv` (gitignored; Local SSOT).
+  - Komutlar:
+    - `python3 scripts/pr_tracker_tsv.py add --pr <N>`
+    - `python3 scripts/pr_tracker_tsv.py sync`
+    - `python3 scripts/pr_tracker_tsv.py sync --watch 60`
+  - Token: `GH_TOKEN` (öneri: Vault field `GH_LOCAL_AUTOPILOT_TOKEN`).
 - Minimum metrikler (manuel gözlem):
   - `ci-gate` success rate
   - “time-to-merge”: `ci-gate` PASS → squash merge
