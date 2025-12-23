@@ -47,7 +47,7 @@ ensure_vault_dev_artifacts() {
     search_root="$(cd "${REPO_ROOT}/.." && pwd)"
     local found
     found="$(find "${search_root}" -maxdepth 6 -type f \
-      \\( -name "vault-unseal-key" -o -name "vault-init.json" \\) \
+      \( -name "vault-unseal-key" -o -name "vault-init.json" \) \
       -path "*/backend/.vault-dev/*" 2>/dev/null | head -n 1 || true)"
     if [ -n "${found:-}" ]; then
       source_dir="$(dirname "${found}")"
