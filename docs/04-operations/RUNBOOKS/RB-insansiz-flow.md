@@ -56,6 +56,9 @@ Owner: @team/platform
   4) FAIL ise:
      - log-digest workflow’u tetiklenir ve `<!-- log-digest:v1 -->` comment’ini upsert eder.
      - Local autopilot devreye alınır: `scripts/ci_pull_logs.sh` → `scripts/autopilot_local.sh`.
+       - Varsayılan: sadece required check’leri izler (`ci-gate`).
+       - Opsiyonel (any-fail): `AUTOPILOT_ANY_FAIL=1` ile **herhangi bir failing check** fix döngüsünü tetikler.
+       - Codex dispatcher (önerilen): `AUTOPILOT_FIX_CMD="bash scripts/codex_fix_runner.sh"` (allowlist + limit guardrails).
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
@@ -164,7 +167,9 @@ Edge-case tablosu (v0.1):
     Then:
     - `log-digest` comment’inden “ilk hata bloğu”nu al.
     - `scripts/ci_pull_logs.sh` ile `FAILURE.md` üret.
+      - v0.1: PR head SHA için **tüm failing workflow run** loglarını indirir ve tek digest üretir.
     - `scripts/autopilot_local.sh` ile fix döngüsünü sürdür.
+      - opsiyonel: `AUTOPILOT_ANY_FAIL=1` (ci-gate dışı fail’leri de fix döngüsüne dahil eder).
 
 -------------------------------------------------------------------------------
 6. ÖZET
@@ -193,6 +198,10 @@ Edge-case tablosu (v0.1):
 - Workflow: .github/workflows/rollback.yml
 - Script: scripts/ci_pull_logs.sh
 - Script: scripts/autopilot_local.sh
+- Script: scripts/codex_fix_runner.sh
+- Script: scripts/pr_tracker_tsv.py
+- Script: scripts/autopilot_queue.py
+- Script: scripts/autopilot_orchestrator.py
 - STORY: docs/03-delivery/STORIES/STORY-0302-release-deploy-e2e-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0302-release-deploy-e2e-v0-1.md
 - STORY: docs/03-delivery/STORIES/STORY-0303-autopilot-auto-fix-deploy-rollback-v0-1.md

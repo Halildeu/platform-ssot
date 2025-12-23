@@ -6,11 +6,13 @@ PR=""
 MAX_ATTEMPTS=5
 OUT_DIR="artifacts/ci-logs"
 FIX_CMD="${AUTOPILOT_FIX_CMD:-}"
+ANY_FAIL="${AUTOPILOT_ANY_FAIL:-}"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--max N] [--out dir]"
   echo "Env: GH_TOKEN must be set or gh auth login; token value not printed."
   echo "Env: AUTOPILOT_FIX_CMD optional (command that applies a fix locally)."
+  echo "Env: AUTOPILOT_ANY_FAIL=1 optional (treat any failing check as failure; default watches required checks only)."
 }
 
 while [[ $# -gt 0 ]]; do
@@ -52,6 +54,11 @@ if [[ -z "${HEAD_REF}" ]]; then
 fi
 
 echo "[autopilot] repo=${REPO} pr=#${PR} head_ref=${HEAD_REF} max=${MAX_ATTEMPTS}"
+if [[ "${ANY_FAIL}" == "1" ]]; then
+  echo "[autopilot] mode=any-fail (all checks)"
+else
+  echo "[autopilot] mode=required-only (default)"
+fi
 
 # head branch'e geç (local branch yoksa fetch)
 git fetch --all --prune
@@ -64,7 +71,13 @@ fi
 attempt=1
 while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching checks..."
-  if gh pr checks "${PR}" -R "${REPO}" --watch; then
+  if [[ "${ANY_FAIL}" == "1" ]]; then
+    CHECKS_ARGS=(--watch)
+  else
+    CHECKS_ARGS=(--required --watch)
+  fi
+
+  if gh pr checks "${PR}" -R "${REPO}" "${CHECKS_ARGS[@]}"; then
     state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state || echo unknown)"
     echo "[autopilot] PASS. PR state=${state}"
     exit 0
@@ -80,17 +93,26 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
     exit 3
   fi
 
+  BEFORE_SHA="$(git rev-parse HEAD)"
   echo "[autopilot] running fix command (token not printed)..."
   export FAILURE_MD
   bash -lc "${FIX_CMD}"
 
+  AFTER_SHA="$(git rev-parse HEAD)"
+
   if git diff --quiet && git diff --cached --quiet; then
-    echo "[autopilot] no changes after fix. stopping."
-    exit 4
+    if [[ "${AFTER_SHA}" != "${BEFORE_SHA}" ]]; then
+      echo "[autopilot] fix command created a commit (no working tree diff)."
+    else
+      echo "[autopilot] no changes after fix. stopping."
+      exit 4
+    fi
   fi
 
-  git add -A
-  git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
+  if ! (git diff --quiet && git diff --cached --quiet); then
+    git add -A
+    git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
+  fi
   git push -u origin HEAD
   attempt=$((attempt+1))
 done
