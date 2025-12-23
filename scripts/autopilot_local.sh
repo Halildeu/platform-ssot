@@ -53,7 +53,8 @@ fi
 
 PR_STATE="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.state' 2>/dev/null || true)"
 PR_STATE="$(printf '%s' "${PR_STATE}" | tr -d '\r' | sed -E 's/^"//; s/"$//; s/^[[:space:]]+//; s/[[:space:]]+$//')"
-if [[ -n "${PR_STATE}" && "${PR_STATE,,}" != "open" ]]; then
+PR_STATE_LC="$(printf '%s' "${PR_STATE}" | tr '[:upper:]' '[:lower:]')"
+if [[ -n "${PR_STATE_LC}" && "${PR_STATE_LC}" != "open" ]]; then
   echo "[autopilot] PR is not open (state=${PR_STATE}); noop."
   exit 0
 fi
