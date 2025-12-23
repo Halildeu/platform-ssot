@@ -369,6 +369,16 @@ def main(argv: List[str]) -> int:
                     (["python3", "scripts/check_story_links.py"], ROOT),
                     (["python3", "scripts/check_doc_chain.py"], ROOT),
                     (["python3", "scripts/check_governance_migration.py"], ROOT),
+                    # v0.1: non-blocking rubric report (semantik skor yok; sadece proxy sinyaller).
+                    (
+                        [
+                            "python3",
+                            "scripts/check_doc_maturity_rubric.py",
+                            "--flow-path",
+                            "docs/03-delivery/PROJECT-FLOW.tsv",
+                        ],
+                        ROOT,
+                    ),
                 ],
             )
         )
