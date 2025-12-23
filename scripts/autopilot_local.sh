@@ -107,6 +107,9 @@ if lowest:
 PY
 }
 
+# Local PR tracker (gitignored). No-op on errors.
+python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
+
 # head branch'e geç (local branch yoksa fetch)
 git fetch --all --prune
 if git show-ref --verify --quiet "refs/heads/${HEAD_REF}"; then
@@ -121,6 +124,7 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   if gh pr checks "${PR}" -R "${REPO}" --watch; then
     state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state || echo unknown)"
     echo "[autopilot] PASS. PR state=${state}"
+    python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
     maybe_semantic_lint || true
     exit 0
   fi
@@ -129,6 +133,7 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   ./scripts/ci_pull_logs.sh --repo "${REPO}" --pr "${PR}" --out "${OUT_DIR}" || true
   FAILURE_MD="${OUT_DIR}/pr-${PR}/FAILURE.md"
   echo "[autopilot] failure bundle: ${FAILURE_MD}"
+  python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
 
   if [[ -z "${FIX_CMD}" ]]; then
     echo "[autopilot] No AUTOPILOT_FIX_CMD set. Stop here so you can run Codex manually using FAILURE.md."
@@ -149,6 +154,7 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   git add -A
   git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
   git push -u origin HEAD
+  python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
   attempt=$((attempt+1))
 done
 
