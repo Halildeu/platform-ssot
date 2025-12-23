@@ -106,6 +106,24 @@ Owner: @team/platform
   - Not: gerçek Vault path kurumunuzdaki SSOT’a göre değişebilir.
 
 -------------------------------------------------------------------------------
+3.2 PR TRACKER (TSV)
+-------------------------------------------------------------------------------
+
+- Amaç: Local autopilot sırasında PR durumunu tek dosyada takip etmek (git’e girmez).
+- Dosya (gitignored): `.autopilot-tmp/pr-tracker/PR-TRACKER.tsv`
+- Komutlar:
+  - Satır ekle/güncelle: `python3 scripts/pr_tracker_tsv.py add --pr <PR_NO>`
+  - Toplu güncelle: `python3 scripts/pr_tracker_tsv.py sync`
+  - Snapshot rapor: `python3 scripts/pr_tracker_tsv.py report --out .autopilot-tmp/pr-tracker/STATUS.md`
+- Autopilot entegrasyonu (best-effort):
+  - `scripts/autopilot_local.sh` başlangıçta ve PASS/FAIL sonrası `add` çağırır.
+  - `AUTOPILOT_TRACKER_REPORT=1` ise `STATUS.md` üretir.
+- Token modeli (Vault SSOT):
+  - Path: `secret/<env>/ops/github` (KV v2)
+  - Alan: `GH_LOCAL_AUTOPILOT_TOKEN` (local tracking)
+    - Minimum izinler: Actions Read + Pull requests Read (+ Issues Write opsiyonel)
+
+-------------------------------------------------------------------------------
 4. GÖZLEMLEME / LOG / METRİKLER
 -------------------------------------------------------------------------------
 

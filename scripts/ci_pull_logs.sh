@@ -39,53 +39,24 @@ fi
 OUT_PR_DIR="${OUT_DIR}/pr-${PR}"
 mkdir -p "${OUT_PR_DIR}"
 
-PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
-
-HEAD_SHA="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('sha',''))
-PY
-<<<"${PR_JSON}")"
-
-HEAD_REF="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('ref',''))
-PY
-<<<"${PR_JSON}")"
-
-PR_URL="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('html_url',''))
-PY
-<<<"${PR_JSON}")"
+PR_INFO="$(gh api "repos/${REPO}/pulls/${PR}" --jq '[.head.sha, .head.ref, .html_url] | @tsv' 2>/dev/null || true)"
+PR_INFO="$(printf '%s' "${PR_INFO}" | tr -d '\r')"
+HEAD_SHA=""
+HEAD_REF=""
+PR_URL=""
+IFS=$'\t' read -r HEAD_SHA HEAD_REF PR_URL <<<"${PR_INFO}"
 
 if [[ -z "${HEAD_SHA}" ]]; then
   echo "[ci-logs] Cannot read head SHA for PR #${PR}."; exit 3
 fi
 
-RUNS_JSON="$(gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=20")"
-
-RUN_INFO="$(python3 - <<'PY'
-import json,sys
-runs=(json.load(sys.stdin).get('workflow_runs') or [])
-# Prefer latest non-success; fallback to first run
-picked=None
-for r in runs:
-  if r.get('conclusion') and r.get('conclusion') != 'success':
-    picked=r; break
-if picked is None and runs:
-  picked=runs[0]
-if not picked:
-  print('')
-  raise SystemExit(0)
-print("%s\t%s\t%s\t%s" % (
-  picked.get('id',''),
-  picked.get('html_url',''),
-  picked.get('conclusion',''),
-  picked.get('name','')
-))
-PY
-<<<"${RUNS_JSON}")"
+RUN_INFO="$(
+  gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=50" 2>/dev/null \
+    --jq '(.workflow_runs | map(select(.conclusion != null and .conclusion != "success"))[0] // .workflow_runs[0] // empty)
+          | [.id, .html_url, (.conclusion // ""), (.name // "")] | @tsv' \
+    | tr -d '\r' \
+    | head -n 1
+)"
 
 if [[ -z "${RUN_INFO}" ]]; then
   FAILURE_MD="${OUT_PR_DIR}/FAILURE.md"

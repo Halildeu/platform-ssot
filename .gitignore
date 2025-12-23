@@ -42,3 +42,7 @@ backend/.vault-dev/**
 # Python artifacts (do not commit)
 **/__pycache__/
 **/*.pyc
+
+# Local autopilot artifacts (do not commit)
+.autopilot-tmp/
+.autopilot-tmp/**
