@@ -50,7 +50,7 @@ COLUMNS = [
 
 
 def utc_now() -> str:
-    return dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+    return dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def eprint(msg: str) -> None:
@@ -72,7 +72,7 @@ def parse_owner_repo_from_origin() -> Optional[str]:
     if proc.returncode != 0:
         return None
     url = (proc.stdout or "").strip()
-    m = re.search(r"github\\.com[:/](.+?)/(.+?)(?:\\.git)?$", url)
+    m = re.search(r"github\.com[:/](.+?)/(.+?)(?:\.git)?$", url)
     if not m:
         return None
     return f"{m.group(1)}/{m.group(2)}"
