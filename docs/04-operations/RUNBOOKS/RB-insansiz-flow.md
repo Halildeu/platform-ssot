@@ -30,6 +30,8 @@ Owner: @team/platform
 - SSOT kaynakları:
   - Flow: `docs/03-delivery/PROJECT-FLOW.tsv` (+ render: `docs/03-delivery/PROJECT-FLOW.md`)
   - Doc maturity rubric: `docs/00-handbook/DOC-MATURITY-RUBRIC.md` (non-blocking rapor)
+  - Semantic lint lexicon: `docs/00-handbook/DOC-SEMANTIC-LINT-LEXICON.md` (local-only, non-blocking)
+  - Semantic lint script: `scripts/check_doc_semantic_lint.py` (local-only rapor)
   - ID rezervasyonu: `docs/03-delivery/ID-REGISTRY.tsv`
     - Kural: Yeni STORY başlamadan önce ilgili `STORY/AC/TP` NUM (XXXX) bu registry’de rezerve edilir.
   - Delivery zinciri: `docs/03-delivery/STORIES/`, `docs/03-delivery/ACCEPTANCE/`, `docs/03-delivery/TEST-PLANS/`
@@ -57,6 +59,7 @@ Owner: @team/platform
   4) FAIL ise:
      - log-digest workflow’u tetiklenir ve `<!-- log-digest:v1 -->` comment’ini upsert eder.
      - Local autopilot devreye alınır: `scripts/ci_pull_logs.sh` → `scripts/autopilot_local.sh`.
+       - Opsiyonel (local-only): `AUTOPILOT_SEMANTIC_LINT=1` ile semantic lint raporu üretir (`.autopilot-tmp/doc-lint/`).
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
@@ -196,6 +199,8 @@ Edge-case tablosu (v0.1):
 - Script: scripts/autopilot_local.sh
 - Handbook: docs/00-handbook/DOC-MATURITY-RUBRIC.md
 - Script: scripts/check_doc_maturity_rubric.py
+- Handbook: docs/00-handbook/DOC-SEMANTIC-LINT-LEXICON.md
+- Script: scripts/check_doc_semantic_lint.py
 - STORY: docs/03-delivery/STORIES/STORY-0302-release-deploy-e2e-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0302-release-deploy-e2e-v0-1.md
 - STORY: docs/03-delivery/STORIES/STORY-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
