@@ -44,14 +44,10 @@ if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; t
   echo "[autopilot] gh not authenticated and GH_TOKEN not set."; exit 2
 fi
 
-PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
-HEAD_REF="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('ref',''))
-PY
-<<<"${PR_JSON}")"
+HEAD_REF="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.head.ref' 2>/dev/null || true)"
+HEAD_REF="$(printf '%s' "${HEAD_REF}" | tr -d '\r' | sed -E 's/^"//; s/"$//; s/^[[:space:]]+//; s/[[:space:]]+$//')"
 
-if [[ -z "${HEAD_REF}" ]]; then
+if [[ -z "${HEAD_REF}" || "${HEAD_REF}" == "null" ]]; then
   echo "[autopilot] Cannot read PR head ref."; exit 2
 fi
 
