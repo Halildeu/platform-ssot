@@ -18,6 +18,68 @@ cd "$REPO_ROOT"
 COMPOSE_FILE="$(scripts/ops/find_compose_with_vault.sh)"
 echo "[ops] compose_file=$COMPOSE_FILE"
 
+COMPOSE_DIR="$(cd "$(dirname "$COMPOSE_FILE")" && pwd)"
+
+# Ensure Vault dev artifacts exist for the vault-unseal sidecar.
+# Compose mounts (relative to COMPOSE_DIR):
+#   ./ .vault-dev -> /vault-dev (ro)
+# Required files (one of):
+#   - vault-unseal-key
+#   - vault-init.json
+#
+# Worktree note:
+# - backend/.vault-dev is gitignored and may not exist in secondary worktrees.
+# - If missing, we try to link it from another local worktree (searching for backend/.vault-dev).
+VAULT_DEV_MOUNT_DIR="${COMPOSE_DIR}/.vault-dev"
+
+ensure_vault_dev_artifacts() {
+  if [ -f "${VAULT_DEV_MOUNT_DIR}/vault-unseal-key" ] || [ -f "${VAULT_DEV_MOUNT_DIR}/vault-init.json" ]; then
+    return 0
+  fi
+
+  local source_dir=""
+  if [ -n "${VAULT_DEV_SOURCE_DIR:-}" ]; then
+    source_dir="${VAULT_DEV_SOURCE_DIR}"
+  elif [ -n "${VAULT_DEV_DIR:-}" ]; then
+    source_dir="${VAULT_DEV_DIR}"
+  else
+    local search_root
+    search_root="$(cd "${REPO_ROOT}/.." && pwd)"
+    local found
+    found="$(find "${search_root}" -maxdepth 6 -type f \
+      \\( -name "vault-unseal-key" -o -name "vault-init.json" \\) \
+      -path "*/backend/.vault-dev/*" 2>/dev/null | head -n 1 || true)"
+    if [ -n "${found:-}" ]; then
+      source_dir="$(dirname "${found}")"
+    fi
+  fi
+
+  if [ -n "${source_dir:-}" ]; then
+    if [ -f "${source_dir}/vault-unseal-key" ] || [ -f "${source_dir}/vault-init.json" ]; then
+      if [ ! -e "${VAULT_DEV_MOUNT_DIR}" ]; then
+        ln -s "${source_dir}" "${VAULT_DEV_MOUNT_DIR}"
+        echo "[ops] linked vault dev dir: ${VAULT_DEV_MOUNT_DIR} -> ${source_dir}"
+      elif [ -d "${VAULT_DEV_MOUNT_DIR}" ]; then
+        # If directory exists in this worktree, copy the minimum required files.
+        for f in vault-unseal-key vault-init.json vault-root-token; do
+          if [ -f "${source_dir}/${f}" ] && [ ! -f "${VAULT_DEV_MOUNT_DIR}/${f}" ]; then
+            cp "${source_dir}/${f}" "${VAULT_DEV_MOUNT_DIR}/${f}"
+          fi
+        done
+        echo "[ops] ensured vault dev files in: ${VAULT_DEV_MOUNT_DIR}"
+      fi
+    fi
+  fi
+
+  if [ ! -f "${VAULT_DEV_MOUNT_DIR}/vault-unseal-key" ] && [ ! -f "${VAULT_DEV_MOUNT_DIR}/vault-init.json" ]; then
+    echo "[error] Vault unseal artifacts not found at ${VAULT_DEV_MOUNT_DIR} (expected vault-unseal-key or vault-init.json)." >&2
+    echo "[error] Run: bash backend/scripts/vault/dev_init.sh (or set VAULT_DEV_SOURCE_DIR to an existing backend/.vault-dev directory)." >&2
+    exit 7
+  fi
+}
+
+ensure_vault_dev_artifacts
+
 docker compose -f "$COMPOSE_FILE" up -d vault vault-unseal
 
 export VAULT_ADDR="${VAULT_ADDR:-http://127.0.0.1:8200}"
@@ -47,9 +109,12 @@ fi
 # - Prefer existing VAULT_TOKEN env (worktree-friendly).
 # - Otherwise read from a local token file (dev init output).
 if [ -z "${VAULT_TOKEN:-}" ]; then
-  TOKEN_FILE="$(find . -maxdepth 6 -type f -name "vault-root-token" | head -n 1 || true)"
+  TOKEN_FILE="${VAULT_DEV_MOUNT_DIR}/vault-root-token"
+  if [ ! -f "${TOKEN_FILE}" ]; then
+    TOKEN_FILE="$(find . -maxdepth 6 -type f -name "vault-root-token" | head -n 1 || true)"
+  fi
   if [ -z "${TOKEN_FILE:-}" ]; then
-    echo "[error] VAULT_TOKEN not set and vault-root-token file not found. Export VAULT_TOKEN or run dev init once (backend/.vault-dev/dev_init.sh)." >&2
+    echo "[error] VAULT_TOKEN not set and vault-root-token file not found. Export VAULT_TOKEN or run dev init once (backend/scripts/vault/dev_init.sh)." >&2
     exit 3
   fi
   export VAULT_TOKEN="$(cat "$TOKEN_FILE")"
