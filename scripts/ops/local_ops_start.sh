@@ -33,7 +33,16 @@ COMPOSE_DIR="$(cd "$(dirname "$COMPOSE_FILE")" && pwd)"
 VAULT_DEV_MOUNT_DIR="${COMPOSE_DIR}/.vault-dev"
 
 ensure_vault_dev_artifacts() {
-  if [ -f "${VAULT_DEV_MOUNT_DIR}/vault-unseal-key" ] || [ -f "${VAULT_DEV_MOUNT_DIR}/vault-init.json" ]; then
+  local has_unseal_key="0"
+  local has_init="0"
+  local has_root_token="0"
+
+  [ -f "${VAULT_DEV_MOUNT_DIR}/vault-unseal-key" ] && has_unseal_key="1"
+  [ -f "${VAULT_DEV_MOUNT_DIR}/vault-init.json" ] && has_init="1"
+  [ -f "${VAULT_DEV_MOUNT_DIR}/vault-root-token" ] && has_root_token="1"
+
+  # Fast path: everything is already available in this worktree.
+  if [ "${has_unseal_key}" = "1" ] && [ "${has_root_token}" = "1" ]; then
     return 0
   fi
 
@@ -115,13 +124,26 @@ fi
 if [ -z "${VAULT_TOKEN:-}" ]; then
   TOKEN_FILE="${VAULT_DEV_MOUNT_DIR}/vault-root-token"
   if [ ! -f "${TOKEN_FILE}" ]; then
-    TOKEN_FILE="$(find . -maxdepth 6 -type f -name "vault-root-token" | head -n 1 || true)"
+    # Fallback: derive root token from vault-init.json (preferred over broad find).
+    if [ -f "${VAULT_DEV_MOUNT_DIR}/vault-init.json" ]; then
+      export VAULT_TOKEN="$(python3 - <<'PY'
+import json, pathlib
+p=pathlib.Path("backend/.vault-dev/vault-init.json")
+d=json.loads(p.read_text(encoding="utf-8"))
+print(d.get("root_token",""))
+PY
+)"
+    else
+      TOKEN_FILE="$(find . -maxdepth 6 -type f -name "vault-root-token" | head -n 1 || true)"
+    fi
   fi
   if [ -z "${TOKEN_FILE:-}" ]; then
     echo "[error] VAULT_TOKEN not set and vault-root-token file not found. Export VAULT_TOKEN or run dev init once (backend/scripts/vault/dev_init.sh)." >&2
     exit 3
   fi
-  export VAULT_TOKEN="$(cat "$TOKEN_FILE")"
+  if [ -z "${VAULT_TOKEN:-}" ]; then
+    export VAULT_TOKEN="$(cat "$TOKEN_FILE")"
+  fi
 fi
 
 # GH token from Vault (value not printed)
