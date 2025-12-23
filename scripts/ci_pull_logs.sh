@@ -41,23 +41,17 @@ mkdir -p "${OUT_PR_DIR}"
 
 PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
 
-HEAD_SHA="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('sha',''))
-PY
-<<<"${PR_JSON}")"
+HEAD_SHA="$(
+  python3 -c 'import json,sys; print((json.load(sys.stdin).get("head",{}) or {}).get("sha",""))' <<<"${PR_JSON}"
+)"
 
-HEAD_REF="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('ref',''))
-PY
-<<<"${PR_JSON}")"
+HEAD_REF="$(
+  python3 -c 'import json,sys; print((json.load(sys.stdin).get("head",{}) or {}).get("ref",""))' <<<"${PR_JSON}"
+)"
 
-PR_URL="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('html_url',''))
-PY
-<<<"${PR_JSON}")"
+PR_URL="$(
+  python3 -c 'import json,sys; print(json.load(sys.stdin).get("html_url",""))' <<<"${PR_JSON}"
+)"
 
 if [[ -z "${HEAD_SHA}" ]]; then
   echo "[ci-logs] Cannot read head SHA for PR #${PR}."; exit 3
