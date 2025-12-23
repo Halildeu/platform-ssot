@@ -50,7 +50,8 @@ COLUMNS = [
 
 
 def utc_now() -> str:
-    return dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+    # Python 3.12+: datetime.utcnow() deprecated; keep timezone-aware UTC string.
+    return dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def eprint(msg: str) -> None:
