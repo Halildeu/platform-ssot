@@ -22,6 +22,27 @@ docker compose -f "$COMPOSE_FILE" up -d vault vault-unseal
 
 export VAULT_ADDR="${VAULT_ADDR:-http://127.0.0.1:8200}"
 
+# Wait for Vault to be ready & unsealed (vault-unseal sidecar may need a few seconds)
+wait_for_vault_unsealed() {
+  local max_attempts=30
+  local sleep_s=1
+  local i
+  for ((i = 1; i <= max_attempts; i++)); do
+    local status
+    status="$(vault status 2>/dev/null || true)"
+    if printf '%s\n' "$status" | grep -qiE '^Sealed.*false'; then
+      return 0
+    fi
+    sleep "$sleep_s"
+  done
+  return 1
+}
+
+if ! wait_for_vault_unsealed; then
+  echo "[error] Vault is still sealed or not ready (VAULT_ADDR=${VAULT_ADDR}). Check vault/vault-unseal container logs." >&2
+  exit 6
+fi
+
 # Vault token
 # - Prefer existing VAULT_TOKEN env (worktree-friendly).
 # - Otherwise read from a local token file (dev init output).
