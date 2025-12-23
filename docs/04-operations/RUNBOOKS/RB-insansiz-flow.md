@@ -60,6 +60,11 @@ Owner: @team/platform
      - log-digest workflow’u tetiklenir ve `<!-- log-digest:v1 -->` comment’ini upsert eder.
      - Local autopilot devreye alınır: `scripts/ci_pull_logs.sh` → `scripts/autopilot_local.sh`.
        - Opsiyonel (local-only): `AUTOPILOT_SEMANTIC_LINT=1` ile semantic lint raporu üretir (`.autopilot-tmp/doc-lint/`).
+       - Opsiyonel (local-only): Queue + Orchestrator (tek worker, idle-no-query)
+         - Queue: `.autopilot-tmp/queue/queue.tsv` (gitignored)
+         - Lock: `.autopilot-tmp/locks/autopilot.lock`
+         - Queue add/list: `python3 scripts/autopilot_queue.py add --pr 53 --reason "ci-gate fail"` / `python3 scripts/autopilot_queue.py list`
+         - Orchestrator: `python3 scripts/autopilot_orchestrator.py --repo Halildeu/platform-ssot --max-attempts 5 --semantic --fix-cmd "bash scripts/codex_fix_runner.sh"`
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
