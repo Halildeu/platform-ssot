@@ -44,6 +44,21 @@ if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; t
   echo "[autopilot] gh not authenticated and GH_TOKEN not set."; exit 2
 fi
 
+# If this script checks out other refs, make sure we can return to the starting ref
+# so the ops scripts remain available in the worktree.
+BASE_BRANCH="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+cleanup_restore_branch() {
+  if [[ -z "${BASE_BRANCH}" ]]; then
+    return 0
+  fi
+
+  # Only restore if worktree is clean; otherwise keep state for debugging.
+  if git diff --quiet && git diff --cached --quiet; then
+    git checkout "${BASE_BRANCH}" >/dev/null 2>&1 || true
+  fi
+}
+trap cleanup_restore_branch EXIT
+
 HEAD_REF="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.head.ref' 2>/dev/null || true)"
 HEAD_REF="$(printf '%s' "${HEAD_REF}" | tr -d '\r' | sed -E 's/^"//; s/"$//; s/^[[:space:]]+//; s/[[:space:]]+$//')"
 
@@ -117,7 +132,13 @@ python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2
 # Checkout PR head safely (worktree-friendly):
 # - Do NOT checkout the PR branch name directly, because it may be checked out in another worktree.
 # - Also avoid using a fixed local scratch branch name, because it can be checked out in another worktree too.
-# - Use detached HEAD at the remote ref and push back to the original PR branch ref explicitly.
+# - Use a worktree-specific scratch branch and push back to the original PR branch ref explicitly.
+WORKTREE_TAG="$(basename "$(pwd)" | tr -c '[:alnum:]._-' '-')"
+WORKTREE_TAG="$(printf '%s' "${WORKTREE_TAG}" | sed -E 's/^-+//; s/-+$//')"
+if [[ -z "${WORKTREE_TAG}" ]]; then
+  WORKTREE_TAG="wt"
+fi
+SCRATCH_BRANCH="autopilot/pr-${PR}-${WORKTREE_TAG}"
 REMOTE_REF="origin/${HEAD_REF}"
 
 git fetch --all --prune
@@ -127,7 +148,7 @@ if ! git show-ref --verify --quiet "refs/remotes/${REMOTE_REF}"; then
   exit 0
 fi
 
-git checkout --detach "${REMOTE_REF}"
+git checkout -B "${SCRATCH_BRANCH}" "${REMOTE_REF}"
 
 watch_ci_gate() {
   local poll_s=5
