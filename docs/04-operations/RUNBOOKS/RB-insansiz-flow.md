@@ -65,6 +65,10 @@ Owner: @team/platform
          - Lock: `.autopilot-tmp/locks/autopilot.lock`
          - Queue add/list: `python3 scripts/autopilot_queue.py add --pr 53 --reason "ci-gate fail"` / `python3 scripts/autopilot_queue.py list`
          - Orchestrator: `python3 scripts/autopilot_orchestrator.py --repo Halildeu/platform-ssot --max-attempts 5 --semantic --fix-cmd "bash scripts/codex_fix_runner.sh"`
+         - Tracker Watch + Orchestrator Scan:
+           - Terminal-1: `python3 scripts/pr_tracker_tsv.py sync --watch 30`
+           - Terminal-2: `python3 scripts/autopilot_orchestrator.py --repo Halildeu/platform-ssot --scan-tracker --tracker-path .autopilot-tmp/pr-tracker/PR-TRACKER.tsv --scan-interval 30 --max-attempts 5 --semantic --fix-cmd "bash scripts/codex_fix_runner.sh"`
+           - Not: idle-no-query korunur; GitHub sorgusu yalnız tracker watch ve autopilot_local çalışırken yapılır.
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
