@@ -71,17 +71,105 @@ fi
 attempt=1
 while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching checks..."
-  if [[ "${ANY_FAIL}" == "1" ]]; then
-    CHECKS_ARGS=(--watch)
-  else
-    CHECKS_ARGS=(--required --watch)
+  # Fine-grained tokens may not have access to GraphQL statusCheckRollup (gh pr checks).
+  # This watcher uses Actions runs (REST) only.
+  HEAD_SHA="$(python3 - <<'PY'
+import json,sys
+print(json.load(sys.stdin).get('head',{}).get('sha',''))
+PY
+<<<"${PR_JSON}")"
+
+  if [[ -z "${HEAD_SHA}" ]]; then
+    echo "[autopilot] Cannot read PR head SHA." >&2
+    exit 2
   fi
 
-  if gh pr checks "${PR}" -R "${REPO}" "${CHECKS_ARGS[@]}"; then
-    state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state || echo unknown)"
-    echo "[autopilot] PASS. PR state=${state}"
-    exit 0
-  fi
+  POLL_SECS="${AUTOPILOT_POLL_SECS:-10}"
+  TIMEOUT_SECS="${AUTOPILOT_WATCH_TIMEOUT_SECS:-3600}"
+  waited=0
+
+  while true; do
+    RUNS_JSON="$(gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=100")"
+
+    CI_STATUS=""
+    CI_CONCLUSION=""
+    CI_URL=""
+    FAIL_COUNT="0"
+    FAIL_LIST=""
+
+    while IFS='=' read -r k v; do
+      case "$k" in
+        ci_gate_status) CI_STATUS="$v" ;;
+        ci_gate_conclusion) CI_CONCLUSION="$v" ;;
+        ci_gate_url) CI_URL="$v" ;;
+        fail_count) FAIL_COUNT="$v" ;;
+        fail_list) FAIL_LIST="$v" ;;
+      esac
+    done < <(python3 - <<'PY'
+import json,sys
+
+data=json.loads(sys.stdin.read() or "{}")
+runs=data.get("workflow_runs") or []
+if not isinstance(runs, list):
+    runs=[]
+
+def is_completed(r):
+    return r.get("status")=="completed"
+
+def is_failing(r):
+    if not is_completed(r):
+        return False
+    c=r.get("conclusion")
+    return isinstance(c,str) and c not in ("success","skipped")
+
+ci=None
+for r in runs:
+    name=r.get("name")
+    if isinstance(name,str) and name.strip().lower()=="ci-gate":
+        ci=r
+        break
+
+fail=[r for r in runs if is_failing(r)]
+fail_names=[]
+for r in fail:
+    n=r.get("name")
+    if isinstance(n,str) and n.strip():
+        fail_names.append(n.strip())
+
+def s(v): return "" if v is None else str(v)
+
+print(f"ci_gate_status={s(ci.get('status') if isinstance(ci,dict) else '')}")
+print(f"ci_gate_conclusion={s(ci.get('conclusion') if isinstance(ci,dict) else '')}")
+print(f"ci_gate_url={s(ci.get('html_url') if isinstance(ci,dict) else '')}")
+print(f"fail_count={len(fail)}")
+print("fail_list="+",".join(fail_names))
+PY
+<<<"${RUNS_JSON}")
+
+    echo "[autopilot] ci-gate: status=${CI_STATUS:-?} conclusion=${CI_CONCLUSION:-?} run=${CI_URL:-n/a} | failing_runs=${FAIL_COUNT} ${FAIL_LIST:+(${FAIL_LIST})}"
+
+    if [[ "${ANY_FAIL}" == "1" && "${FAIL_COUNT}" != "0" ]]; then
+      echo "[autopilot] FAIL (any-fail): found failing workflow runs."
+      break
+    fi
+
+    if [[ "${CI_STATUS}" == "completed" ]]; then
+      if [[ "${CI_CONCLUSION}" == "success" ]]; then
+        state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state 2>/dev/null || echo unknown)"
+        echo "[autopilot] PASS. PR state=${state}"
+        exit 0
+      fi
+      echo "[autopilot] FAIL (ci-gate): conclusion=${CI_CONCLUSION:-unknown}"
+      break
+    fi
+
+    if (( waited >= TIMEOUT_SECS )); then
+      echo "[autopilot] FAIL: watch timeout after ${TIMEOUT_SECS}s (ci-gate not completed)." >&2
+      break
+    fi
+    sleep "${POLL_SECS}"
+    waited=$((waited + POLL_SECS))
+  done
 
   echo "[autopilot] FAIL. downloading logs..."
   ./scripts/ci_pull_logs.sh --repo "${REPO}" --pr "${PR}" --out "${OUT_DIR}" || true
