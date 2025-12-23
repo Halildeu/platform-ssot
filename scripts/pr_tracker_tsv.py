@@ -345,6 +345,66 @@ def cmd_sync(args: argparse.Namespace) -> int:
         return 0
 
 
+def cmd_report(args: argparse.Namespace) -> int:
+    tracker_path = Path(args.tracker_path).resolve()
+    repo = resolve_repo(args.repo)
+
+    rows = read_tracker_rows(tracker_path)
+    out_path = Path(args.out).resolve()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    lines: List[str] = []
+    lines.append("# PR Tracker Status")
+    lines.append("")
+    lines.append(f"- Repo: `{repo}`")
+    lines.append(f"- Updated: `{utc_now()}`")
+    lines.append("")
+    lines.append("| PR | Branch | State | ci-gate | Mergeable | Labels | Note |")
+    lines.append("|---:|---|---|---|---|---|---|")
+
+    for r in rows:
+        pr_raw = (r.get("PR") or "").strip()
+        if not pr_raw.isdigit():
+            continue
+
+        pr_num = int(pr_raw)
+        pr_url = f"https://github.com/{repo}/pull/{pr_num}"
+
+        branch = (r.get("BRANCH") or "").strip()
+        state = (r.get("STATE") or "").strip() or "unknown"
+        mergeable = (r.get("MERGEABLE_STATE") or "").strip() or "unknown"
+        labels = (r.get("LABELS") or "").strip()
+        note = (r.get("NOTE") or "").strip()
+
+        ci_gate = (r.get("CI_GATE") or "").strip() or "unknown"
+        ci_gate_url = (r.get("CI_GATE_RUN_URL") or "").strip()
+        if ci_gate_url:
+            ci_gate_cell = f"[{ci_gate}]({ci_gate_url})"
+        else:
+            ci_gate_cell = ci_gate
+
+        lines.append(
+            "| "
+            + f"[#{pr_num}]({pr_url})"
+            + " | "
+            + f"`{sanitize_cell(branch)}`"
+            + " | "
+            + f"`{sanitize_cell(state)}`"
+            + " | "
+            + ci_gate_cell
+            + " | "
+            + f"`{sanitize_cell(mergeable)}`"
+            + " | "
+            + f"`{sanitize_cell(labels)}`"
+            + " | "
+            + f"{sanitize_cell(note)}"
+            + " |"
+        )
+
+    out_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return 0
+
+
 def main(argv: List[str]) -> int:
     ap = argparse.ArgumentParser(prog="pr_tracker_tsv.py")
     ap.add_argument("--repo", help="owner/repo (default: origin remote veya GITHUB_REPOSITORY)")
@@ -365,10 +425,17 @@ def main(argv: List[str]) -> int:
     sync.add_argument("--watch", type=int, default=0, help="Seconds (polling). 0: single run.")
     sync.set_defaults(func=cmd_sync)
 
+    report = sub.add_parser("report", help="TSV'den STATUS.md üret (local-only)")
+    report.add_argument(
+        "--out",
+        default=str(ROOT / ".autopilot-tmp" / "pr-tracker" / "STATUS.md"),
+        help="Output markdown path (default: .autopilot-tmp/pr-tracker/STATUS.md)",
+    )
+    report.set_defaults(func=cmd_report)
+
     args = ap.parse_args(argv)
     return int(args.func(args))
 
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-
