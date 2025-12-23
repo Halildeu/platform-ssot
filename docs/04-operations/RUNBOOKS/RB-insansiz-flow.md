@@ -29,6 +29,7 @@ Owner: @team/platform
   - `ops/**` → default `merge_policy=none` (merge kapalı)
 - SSOT kaynakları:
   - Flow: `docs/03-delivery/PROJECT-FLOW.tsv` (+ render: `docs/03-delivery/PROJECT-FLOW.md`)
+  - Doc maturity rubric: `docs/00-handbook/DOC-MATURITY-RUBRIC.md` (non-blocking rapor)
   - ID rezervasyonu: `docs/03-delivery/ID-REGISTRY.tsv`
     - Kural: Yeni STORY başlamadan önce ilgili `STORY/AC/TP` NUM (XXXX) bu registry’de rezerve edilir.
   - Delivery zinciri: `docs/03-delivery/STORIES/`, `docs/03-delivery/ACCEPTANCE/`, `docs/03-delivery/TEST-PLANS/`
@@ -193,6 +194,8 @@ Edge-case tablosu (v0.1):
 - Workflow: .github/workflows/rollback.yml
 - Script: scripts/ci_pull_logs.sh
 - Script: scripts/autopilot_local.sh
+- Handbook: docs/00-handbook/DOC-MATURITY-RUBRIC.md
+- Script: scripts/check_doc_maturity_rubric.py
 - STORY: docs/03-delivery/STORIES/STORY-0302-release-deploy-e2e-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0302-release-deploy-e2e-v0-1.md
 - STORY: docs/03-delivery/STORIES/STORY-0303-autopilot-auto-fix-deploy-rollback-v0-1.md
