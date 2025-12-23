@@ -39,7 +39,8 @@ ROOT = Path(__file__).resolve().parents[1]
 EXIT_OK = 0
 EXIT_CONFIG = 2
 EXIT_GUARDRAIL = 3
-EXIT_GIT = 4
+EXIT_VALIDATE_FAIL = 4
+EXIT_GIT = 5
 
 
 def eprint(msg: str) -> None:
@@ -192,6 +193,37 @@ def resolve_conflicts(files: Iterable[str]) -> None:
 def abort_merge_best_effort() -> None:
     run(["git", "merge", "--abort"], capture=True)
 
+def run_ci_gate_validate() -> bool:
+    """
+    Local doğrulama: ci-gate
+
+    Not:
+    - Bu adım hiçbir secret/token değeri yazmaz.
+    - FAIL olursa push yapılmaz (needs-human).
+    """
+    cmd = [
+        sys.executable,
+        "scripts/ci_gate.py",
+        "--base-ref",
+        "origin/main",
+        "--head-ref",
+        "HEAD",
+    ]
+    proc = run(cmd, capture=True)
+    if proc.returncode == 0:
+        return True
+
+    eprint("[resolve] STOP: local ci-gate validate FAIL (push yapılmayacak; needs-human)")
+    combined = "\n".join(
+        [x for x in [(proc.stdout or "").strip(), (proc.stderr or "").strip()] if x]
+    )
+    if combined:
+        tail = "\n".join(combined.splitlines()[-200:])
+        eprint("---- ci-gate (tail) ----")
+        eprint(tail)
+        eprint("------------------------")
+    return False
+
 
 def merge_main_into_branch() -> Tuple[bool, str]:
     """
@@ -254,6 +286,8 @@ def main(argv: Sequence[str]) -> int:
     ok, msg = merge_main_into_branch()
     if ok:
         # Conflict yok; merge commit zaten oluştu.
+        if not run_ci_gate_validate():
+            return EXIT_VALIDATE_FAIL
         try:
             push_branch(branch)
         except subprocess.CalledProcessError as exc:
@@ -294,6 +328,8 @@ def main(argv: Sequence[str]) -> int:
 
         try:
             run(["git", "commit", "-m", str(args.commit_message)], check=True)
+            if not run_ci_gate_validate():
+                return EXIT_VALIDATE_FAIL
             push_branch(branch)
         except subprocess.CalledProcessError as exc:
             eprint(f"HATA: commit/push başarısız: {exc}")
@@ -310,4 +346,3 @@ def main(argv: Sequence[str]) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-
