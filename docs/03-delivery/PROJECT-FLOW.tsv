@@ -18,7 +18,7 @@ STORY-0016	0016	Robot Task Management Console	OPS-ROBOTICS	—	FR-010	AC-0016	�
 STORY-0017	0017	Dashboard Builder v1.0	BI-SELF-SERVICE	—	FR-011	AC-0017	⏳ Pending	2025-01-XX	@team/bi	M1	M1	M1	L0	—
 STORY-0018	0018	ERP User Provisioning	QLTY-ERP-PROVISIONING	—	FR-012	AC-0018	⏳ Pending	2025-01-XX	@team/backend	M1	M1	M1	L0	—
 STORY-0019	0019	Permission Registry v1.0	QLTY-AUTHZ-SCOPE	(SPEC-legacy)	QLTY-BE-AUTHZ-SCOPE-01	AC-0019	⏳ Pending	2025-01-XX	@team/backend	M1	M1	M1	L0	—
-STORY-0020	9999	Theme Accent & Focus Standardization	E03-THEME-SYSTEM	—	E03-S01-S01, E03-S01-S01.1, E03-S01-S01-, E03-S01-S01-1-	AC-0020	⏳ Pending	2025-01-XX	@team/frontend	M1	M1	M1	L1	—
+STORY-0020	9999	Theme Accent & Focus Standardization	E03-THEME-SYSTEM	—	E03-S01-S01, E03-S01-S01.1, E03-S01-S01-, E03-S01-S01-1-	✓ (AC-0020)	🟩 Done	2025-12-23	@team/frontend	M1	M1	M1	L1	—
 STORY-0021	9998	Header Navigation & Overflow	E03-THEME-SYSTEM	—	E03-S04	AC-0021	⏳ Pending	2025-01-XX	@team/frontend	M1	M1	M1	L1	—
 STORY-0022	9997	Theme Personalization v1.0	E03-THEME-SYSTEM	—	E03-S05	AC-0022	⏳ Pending	2025-01-XX	@team/frontend	M1	M1	M1	L0	—
 STORY-0023	0023	AuthZ Company Scope Filter	QLTY-AUTHZ-SCOPE	—	QLTY-BE-AUTHZ-SCOPE-03	AC-0023	⏳ Pending	2025-01-XX	@team/backend	M1	M1	M1	L0	—
