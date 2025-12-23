@@ -55,7 +55,7 @@ nohup python3 -u scripts/pr_tracker_tsv.py sync --watch 30 \
 REPO="${GITHUB_REPOSITORY:-}"
 if [ -z "${REPO:-}" ]; then
   ORIGIN_URL="$(git remote get-url origin 2>/dev/null || true)"
-  if [[ "${ORIGIN_URL}" =~ github\.com[:/](.+?)/(.+?)(\.git)?$ ]]; then
+  if [[ "${ORIGIN_URL}" =~ github\.com[:/]([^/]+)/([^/]+)(\.git)?$ ]]; then
     REPO="${BASH_REMATCH[1]}/${BASH_REMATCH[2]}"
     REPO="${REPO%.git}"
   fi
@@ -82,4 +82,3 @@ echo "[ops] orchestrator pid=$(cat .autopilot-tmp/pids/orchestrator.pid)"
 
 python3 scripts/pr_tracker_tsv.py report --out .autopilot-tmp/pr-tracker/STATUS.md >/dev/null 2>&1 || true
 echo "[ops] status written: .autopilot-tmp/pr-tracker/STATUS.md"
-
