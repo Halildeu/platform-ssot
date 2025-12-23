@@ -116,8 +116,8 @@ python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2
 
 # Checkout PR head safely (worktree-friendly):
 # - Do NOT checkout the PR branch name directly, because it may be checked out in another worktree.
-# - Use a local scratch branch and push back to the original PR branch ref explicitly.
-SCRATCH_BRANCH="autopilot/pr-${PR}"
+# - Also avoid using a fixed local scratch branch name, because it can be checked out in another worktree too.
+# - Use detached HEAD at the remote ref and push back to the original PR branch ref explicitly.
 REMOTE_REF="origin/${HEAD_REF}"
 
 git fetch --all --prune
@@ -127,7 +127,7 @@ if ! git show-ref --verify --quiet "refs/remotes/${REMOTE_REF}"; then
   exit 0
 fi
 
-git checkout -B "${SCRATCH_BRANCH}" "${REMOTE_REF}"
+git checkout --detach "${REMOTE_REF}"
 
 watch_ci_gate() {
   local poll_s=5
@@ -209,7 +209,7 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
 
   git add -A
   git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
-  git push -u origin HEAD:"${HEAD_REF}"
+  git push origin HEAD:"${HEAD_REF}"
   python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
   attempt=$((attempt+1))
 done
