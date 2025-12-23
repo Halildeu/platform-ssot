@@ -22,13 +22,17 @@ docker compose -f "$COMPOSE_FILE" up -d vault vault-unseal
 
 export VAULT_ADDR="${VAULT_ADDR:-http://127.0.0.1:8200}"
 
-# Find vault root token file (do not print token)
-TOKEN_FILE="$(find . -maxdepth 6 -type f -name "vault-root-token" | head -n 1 || true)"
-if [ -z "${TOKEN_FILE:-}" ]; then
-  echo "[error] vault-root-token file not found. Run dev init once (backend/.vault-dev/dev_init.sh)." >&2
-  exit 3
+# Vault token
+# - Prefer existing VAULT_TOKEN env (worktree-friendly).
+# - Otherwise read from a local token file (dev init output).
+if [ -z "${VAULT_TOKEN:-}" ]; then
+  TOKEN_FILE="$(find . -maxdepth 6 -type f -name "vault-root-token" | head -n 1 || true)"
+  if [ -z "${TOKEN_FILE:-}" ]; then
+    echo "[error] VAULT_TOKEN not set and vault-root-token file not found. Export VAULT_TOKEN or run dev init once (backend/.vault-dev/dev_init.sh)." >&2
+    exit 3
+  fi
+  export VAULT_TOKEN="$(cat "$TOKEN_FILE")"
 fi
-export VAULT_TOKEN="$(cat "$TOKEN_FILE")"
 
 # GH token from Vault (value not printed)
 export GH_TOKEN="$(vault kv get -field=GH_LOCAL_AUTOPILOT_TOKEN secret/stage/ops/github)"
