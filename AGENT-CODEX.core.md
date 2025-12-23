@@ -46,3 +46,10 @@ Bu tip işlemler gerekiyorsa:
 
 - Kullanıcı “sırada ne var / devam edelim” dediğinde, `docs/03-delivery/PROJECT-FLOW.md` içindeki Story tablosu esas alınır.
 - Seçim kuralı: `Öncelik` en yüksek (DESC) ve `Durum != 🟩 Done` olan Story önce gelir.
+
+## 6. Çözüm Sırası (SSOT)
+
+- 1) Deterministik kontroller: repo scriptleri/QA gate’leri (ci-gate, doc QA, tracker, orchestrator)
+- 2) Yetmezse: Codex (AI) ile düzeltme (yalnız allowlist + limitler içinde)
+- 3) Local validate → commit → push (GitHub-side auto-fix yok)
+- Not: “needs-human” (token/permission/approval/infra) sınıfında Codex yalnız teşhis/kanıt üretir; fix için durur.

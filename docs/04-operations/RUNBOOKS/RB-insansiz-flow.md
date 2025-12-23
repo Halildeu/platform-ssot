@@ -101,6 +101,13 @@ Owner: @team/platform
   - `scripts/autopilot_local.sh`
 - Merge otomatik (Merge Bot) kalır.
 - `log-digest` sadece teşhis (digest) yazar.
+
+### Çözüm Sırası (SSOT)
+- 1) Deterministik kontroller: repo scriptleri/QA gate’leri (ci-gate, doc QA, tracker, orchestrator)
+- 2) Yetmezse: Codex (AI) ile düzeltme (yalnız allowlist + limitler içinde)
+- 3) Local validate → commit → push (GitHub-side auto-fix yok)
+- Not: “needs-human” (token/permission/approval/infra) sınıfında Codex yalnız teşhis/kanıt üretir; fix için durur.
+
 - Örnek token export (değer loglanmaz):
   - `export GH_TOKEN="$(vault kv get -field=GH_SECRETS_SYNC_TOKEN 'secret/stage/ops/github')"`
   - Not: gerçek Vault path kurumunuzdaki SSOT’a göre değişebilir.
