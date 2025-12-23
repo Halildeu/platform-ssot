@@ -6,11 +6,15 @@ PR=""
 MAX_ATTEMPTS=5
 OUT_DIR="artifacts/ci-logs"
 FIX_CMD="${AUTOPILOT_FIX_CMD:-}"
+SEMANTIC_LINT_ENABLED="${AUTOPILOT_SEMANTIC_LINT:-}"
+SEMANTIC_JSON_OUT="${AUTOPILOT_SEMANTIC_JSON_OUT:-.autopilot-tmp/doc-lint/semantic-report.json}"
+SEMANTIC_TSV_OUT="${AUTOPILOT_SEMANTIC_TSV_OUT:-.autopilot-tmp/doc-lint/semantic-report.tsv}"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--max N] [--out dir]"
   echo "Env: GH_TOKEN must be set or gh auth login; token value not printed."
   echo "Env: AUTOPILOT_FIX_CMD optional (command that applies a fix locally)."
+  echo "Env: AUTOPILOT_SEMANTIC_LINT=1 optional (local-only semantic lint report)."
 }
 
 while [[ $# -gt 0 ]]; do
@@ -53,6 +57,56 @@ fi
 
 echo "[autopilot] repo=${REPO} pr=#${PR} head_ref=${HEAD_REF} max=${MAX_ATTEMPTS}"
 
+collect_changed_docs() {
+  {
+    git diff --name-only
+    git diff --name-only --cached
+    git diff --name-only origin/main...HEAD 2>/dev/null || true
+  } | sed -n -E '/^docs\\//p' | sed -n -E '/\\.md$/p' | sort -u
+}
+
+maybe_semantic_lint() {
+  if [[ "${SEMANTIC_LINT_ENABLED}" != "1" ]]; then
+    return 0
+  fi
+
+  local changed_docs
+  changed_docs="$(collect_changed_docs || true)"
+  if [[ -z "${changed_docs}" ]]; then
+    echo "[autopilot] semantic-lint: no docs changes detected; skip"
+    return 0
+  fi
+
+  echo "[autopilot] semantic-lint: running (non-blocking)"
+  python3 scripts/check_doc_semantic_lint.py \
+    --paths ${changed_docs} \
+    --json-out "${SEMANTIC_JSON_OUT}" \
+    --tsv-out "${SEMANTIC_TSV_OUT}" \
+    >/dev/null 2>&1 || true
+
+  SEMANTIC_JSON_OUT="${SEMANTIC_JSON_OUT}" python3 - <<'PY' || true
+import json
+import os
+from pathlib import Path
+
+json_out = Path(os.environ.get("SEMANTIC_JSON_OUT", ".autopilot-tmp/doc-lint/semantic-report.json"))
+if not json_out.exists():
+    raise SystemExit(0)
+
+d = json.loads(json_out.read_text(encoding="utf-8"))
+s = d.get("summary") or {}
+sc = s.get("severity_counts") or {}
+avg = s.get("avg_score")
+
+files = d.get("files") or []
+lowest = sorted((f.get("score", 0), f.get("path", "")) for f in files)[:3]
+
+print("[autopilot] semantic-lint: avg_score=", avg, "counts=", sc)
+if lowest:
+    print("[autopilot] semantic-lint: lowest=", ", ".join(f"{p}:{score}" for score, p in lowest if p))
+PY
+}
+
 # head branch'e geç (local branch yoksa fetch)
 git fetch --all --prune
 if git show-ref --verify --quiet "refs/heads/${HEAD_REF}"; then
@@ -67,6 +121,7 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   if gh pr checks "${PR}" -R "${REPO}" --watch; then
     state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state || echo unknown)"
     echo "[autopilot] PASS. PR state=${state}"
+    maybe_semantic_lint || true
     exit 0
   fi
 
@@ -88,6 +143,8 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
     echo "[autopilot] no changes after fix. stopping."
     exit 4
   fi
+
+  maybe_semantic_lint || true
 
   git add -A
   git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
