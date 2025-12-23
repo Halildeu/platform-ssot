@@ -46,3 +46,10 @@ Bu tip işlemler gerekiyorsa:
 
 - Kullanıcı “sırada ne var / devam edelim” dediğinde, `docs/03-delivery/PROJECT-FLOW.md` içindeki Story tablosu esas alınır.
 - Seçim kuralı: `Öncelik` en yüksek (DESC) ve `Durum != 🟩 Done` olan Story önce gelir.
+
+## 6. Genel İş Yapış (SSOT)
+
+- Önce deterministik scriptler: kontrol/rapor/gate/queue/tracker (tekrar üretilebilir sonuç).
+- Yetmezse Codex: yalnız allowlist + limitler içinde düzenleme/implementasyon.
+- Her fix localde yapılır: local validate → commit → push. (GitHub-side auto-fix yok.)
+- needs-human (token/permission/infra/approval): Codex yalnız teşhis/kanıt üretir, otomatik fix yapmaz.
