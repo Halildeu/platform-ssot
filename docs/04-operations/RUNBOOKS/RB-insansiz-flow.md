@@ -69,6 +69,11 @@ Owner: @team/platform
            - Terminal-1: `python3 scripts/pr_tracker_tsv.py sync --watch 30`
            - Terminal-2: `python3 scripts/autopilot_orchestrator.py --repo Halildeu/platform-ssot --scan-tracker --tracker-path .autopilot-tmp/pr-tracker/PR-TRACKER.tsv --scan-interval 30 --max-attempts 5 --semantic --fix-cmd "bash scripts/codex_fix_runner.sh"`
            - Not: idle-no-query korunur; GitHub sorgusu yalnız tracker watch ve autopilot_local çalışırken yapılır.
+         - Local Ops Start/Stop (tek komut, UI yok):
+           - Start: `bash scripts/ops/local_ops_start.sh`
+           - Status: `bash scripts/ops/local_ops_status.sh`
+           - Stop: `bash scripts/ops/local_ops_stop.sh`
+           - Not: Token değerleri loglanmaz; Vault SSOT path: `secret/stage/ops/github` (field: `GH_LOCAL_AUTOPILOT_TOKEN`).
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
