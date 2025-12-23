@@ -114,11 +114,78 @@ else
   git checkout -b "${HEAD_REF}" "origin/${HEAD_REF}"
 fi
 
+watch_ci_gate() {
+  local poll_s=5
+  local max_polls=180
+
+  local head_sha
+  head_sha="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.head.sha' 2>/dev/null || true)"
+  head_sha="$(printf '%s' "${head_sha}" | tr -d '\r' | sed -E 's/^"//; s/"$//; s/^[[:space:]]+//; s/[[:space:]]+$//')"
+  if [[ -z "${head_sha}" || "${head_sha}" == "null" ]]; then
+    echo "[autopilot] ci-gate: Cannot read PR head sha."
+    return 2
+  fi
+
+  local i
+  for ((i = 1; i <= max_polls; i++)); do
+    local run_info
+    run_info="$(
+      gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${head_sha}&per_page=50" 2>/dev/null \
+        | python3 - <<'PY' || true
+import json
+import sys
+
+runs = (json.load(sys.stdin).get("workflow_runs") or [])
+picked = None
+for r in runs:
+    if r.get("name") == "ci-gate":
+        picked = r
+        break
+if not picked:
+    print("")
+    raise SystemExit(0)
+print(
+    "%s\t%s\t%s\t%s"
+    % (
+        picked.get("id", ""),
+        picked.get("html_url", ""),
+        picked.get("status", ""),
+        picked.get("conclusion") or "",
+    )
+)
+PY
+    )"
+
+    if [[ -z "${run_info}" ]]; then
+      echo "[autopilot] ci-gate: waiting for run (head_sha=${head_sha:0:7})..."
+      sleep "${poll_s}"
+      continue
+    fi
+
+    local run_id run_url status conclusion
+    IFS=$'\t' read -r run_id run_url status conclusion <<<"${run_info}"
+
+    if [[ "${status}" != "completed" ]]; then
+      echo "[autopilot] ci-gate: run=${run_id} status=${status} (${run_url})"
+      sleep "${poll_s}"
+      continue
+    fi
+
+    echo "[autopilot] ci-gate: run=${run_id} conclusion=${conclusion} (${run_url})"
+    [[ "${conclusion}" == "success" ]]
+    return
+  done
+
+  echo "[autopilot] ci-gate: timeout waiting for completion (head_sha=${head_sha:0:7})."
+  return 1
+}
+
 attempt=1
 while [[ $attempt -le $MAX_ATTEMPTS ]]; do
-  echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching checks..."
-  if gh pr checks "${PR}" -R "${REPO}" --watch; then
-    state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state || echo unknown)"
+  echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: waiting for ci-gate..."
+  if watch_ci_gate; then
+    state="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.state' 2>/dev/null || echo unknown)"
+    state="$(printf '%s' "${state}" | tr -d '\r' | sed -E 's/^"//; s/"$//; s/^[[:space:]]+//; s/[[:space:]]+$//')"
     echo "[autopilot] PASS. PR state=${state}"
     python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
     maybe_semantic_lint || true
