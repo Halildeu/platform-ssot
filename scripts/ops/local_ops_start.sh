@@ -46,9 +46,13 @@ ensure_vault_dev_artifacts() {
     local search_root
     search_root="$(cd "${REPO_ROOT}/.." && pwd)"
     local found
+    # Prefer a directory that has the plain-text unseal key.
     found="$(find "${search_root}" -maxdepth 6 -type f \
-      \( -name "vault-unseal-key" -o -name "vault-init.json" \) \
-      -path "*/backend/.vault-dev/*" 2>/dev/null | head -n 1 || true)"
+      -path "*/backend/.vault-dev/vault-unseal-key" 2>/dev/null | head -n 1 || true)"
+    if [ -z "${found:-}" ]; then
+      found="$(find "${search_root}" -maxdepth 6 -type f \
+        -path "*/backend/.vault-dev/vault-init.json" 2>/dev/null | head -n 1 || true)"
+    fi
     if [ -n "${found:-}" ]; then
       source_dir="$(dirname "${found}")"
     fi
