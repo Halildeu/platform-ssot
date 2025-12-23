@@ -58,7 +58,7 @@ collect_changed_docs() {
     git diff --name-only
     git diff --name-only --cached
     git diff --name-only origin/main...HEAD 2>/dev/null || true
-  } | sed -n -E '/^docs\\//p' | sed -n -E '/\\.md$/p' | sort -u
+  } | grep -E '^docs/' | grep -E '\.md$' | sort -u
 }
 
 maybe_semantic_lint() {
@@ -131,29 +131,7 @@ watch_ci_gate() {
     local run_info
     run_info="$(
       gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${head_sha}&per_page=50" 2>/dev/null \
-        | python3 - <<'PY' || true
-import json
-import sys
-
-runs = (json.load(sys.stdin).get("workflow_runs") or [])
-picked = None
-for r in runs:
-    if r.get("name") == "ci-gate":
-        picked = r
-        break
-if not picked:
-    print("")
-    raise SystemExit(0)
-print(
-    "%s\t%s\t%s\t%s"
-    % (
-        picked.get("id", ""),
-        picked.get("html_url", ""),
-        picked.get("status", ""),
-        picked.get("conclusion") or "",
-    )
-)
-PY
+        | python3 -c $'import json,sys\ntry:\n    data=json.load(sys.stdin)\nexcept Exception:\n    raise SystemExit(0)\nruns=(data.get(\"workflow_runs\") or [])\npicked=None\nfor r in runs:\n    if r.get(\"name\")==\"ci-gate\":\n        picked=r\n        break\nif not picked:\n    raise SystemExit(0)\nprint(\"%s\\t%s\\t%s\\t%s\" % (picked.get(\"id\",\"\"), picked.get(\"html_url\",\"\"), picked.get(\"status\",\"\"), picked.get(\"conclusion\") or \"\"))' 2>/dev/null || true
     )"
 
     if [[ -z "${run_info}" ]]; then

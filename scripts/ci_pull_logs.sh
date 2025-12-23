@@ -52,34 +52,7 @@ fi
 
 RUN_INFO="$(
   gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=50" 2>/dev/null \
-    | python3 - <<'PY' || true
-import json
-import sys
-
-runs = (json.load(sys.stdin).get("workflow_runs") or [])
-
-# Prefer latest non-success; fallback to first run.
-picked = None
-for r in runs:
-    if r.get("conclusion") and r.get("conclusion") != "success":
-        picked = r
-        break
-if picked is None and runs:
-    picked = runs[0]
-if not picked:
-    print("")
-    raise SystemExit(0)
-
-print(
-    "%s\t%s\t%s\t%s"
-    % (
-        picked.get("id", ""),
-        picked.get("html_url", ""),
-        picked.get("conclusion", "") or "",
-        picked.get("name", "") or "",
-    )
-)
-PY
+    | python3 -c $'import json,sys\ntry:\n    data=json.load(sys.stdin)\nexcept Exception:\n    raise SystemExit(0)\nruns=(data.get(\"workflow_runs\") or [])\npicked=None\nfor r in runs:\n    c=r.get(\"conclusion\")\n    if c and c!=\"success\":\n        picked=r\n        break\nif picked is None and runs:\n    picked=runs[0]\nif not picked:\n    raise SystemExit(0)\nprint(\"%s\\t%s\\t%s\\t%s\" % (picked.get(\"id\",\"\"), picked.get(\"html_url\",\"\"), picked.get(\"conclusion\") or \"\", picked.get(\"name\") or \"\"))' 2>/dev/null || true
 )"
 
 if [[ -z "${RUN_INFO}" ]]; then
