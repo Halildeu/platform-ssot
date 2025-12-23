@@ -7,12 +7,14 @@ MAX_ATTEMPTS=5
 OUT_DIR="artifacts/ci-logs"
 FIX_CMD="${AUTOPILOT_FIX_CMD:-}"
 ANY_FAIL="${AUTOPILOT_ANY_FAIL:-}"
+AUTO_CONFLICT="${AUTOPILOT_AUTO_CONFLICT:-}"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--max N] [--out dir]"
   echo "Env: GH_TOKEN must be set or gh auth login; token value not printed."
   echo "Env: AUTOPILOT_FIX_CMD optional (command that applies a fix locally)."
   echo "Env: AUTOPILOT_ANY_FAIL=1 optional (treat any failing check as failure; default watches required checks only)."
+  echo "Env: AUTOPILOT_AUTO_CONFLICT=1 optional (mergeable_state=dirty ise main ile auto-resolve dener; allowlist scope)."
 }
 
 while [[ $# -gt 0 ]]; do
@@ -58,6 +60,22 @@ if [[ "${ANY_FAIL}" == "1" ]]; then
   echo "[autopilot] mode=any-fail (all checks)"
 else
   echo "[autopilot] mode=required-only (default)"
+fi
+
+if [[ "${AUTO_CONFLICT}" == "1" ]]; then
+  MERGEABLE_STATE="$(python3 - <<'PY'
+import json,sys
+d=json.load(sys.stdin)
+print((d.get("mergeable_state") or "").strip())
+PY
+<<<"${PR_JSON}")"
+  if [[ "${MERGEABLE_STATE}" == "dirty" ]]; then
+    echo "[autopilot] mergeable_state=dirty -> attempting auto conflict resolve with main..."
+    python3 scripts/resolve_merge_conflicts.py --repo "${REPO}" --pr "${PR}" || {
+      echo "[autopilot] STOP: auto conflict resolve failed (needs-human)."
+      exit 6
+    }
+  fi
 fi
 
 # head branch'e geç (local branch yoksa fetch)
