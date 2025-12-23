@@ -28,8 +28,8 @@ jobs:
 
       - name: Token preflight (safe)
         env:
-          TOKEN_SOURCE: ${{ secrets.GH_PR_BOT_TOKEN && 'GH_PR_BOT_TOKEN' || secrets.GH_SECRETS_SYNC_TOKEN && 'GH_SECRETS_SYNC_TOKEN' || 'github.token' }}
-          GH_TOKEN: ${{ secrets.GH_PR_BOT_TOKEN || secrets.GH_SECRETS_SYNC_TOKEN || github.token }}
+          TOKEN_SOURCE: github.token
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
@@ -40,8 +40,6 @@ jobs:
           API="https://api.github.com"
           HDR_AUTH="Authorization: Bearer ${GH_TOKEN}"
           HDR_ACC="Accept: application/vnd.github+json"
-
-          echo "::add-mask::${GH_TOKEN}"
 
           tmp_user="$(mktemp)"
           curl -sS -H "${HDR_AUTH}" -H "${HDR_ACC}" "${API}/user" -o "${tmp_user}" || true
@@ -60,7 +58,7 @@ jobs:
       - name: Run PR bot (create PR + upsert comment)
         id: pr_bot
         env:
-          GH_TOKEN: ${{ secrets.GH_PR_BOT_TOKEN || secrets.GH_SECRETS_SYNC_TOKEN || github.token }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
