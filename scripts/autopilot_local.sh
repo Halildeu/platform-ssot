@@ -51,6 +51,13 @@ if [[ -z "${HEAD_REF}" || "${HEAD_REF}" == "null" ]]; then
   echo "[autopilot] Cannot read PR head ref."; exit 2
 fi
 
+PR_STATE="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.state' 2>/dev/null || true)"
+PR_STATE="$(printf '%s' "${PR_STATE}" | tr -d '\r' | sed -E 's/^"//; s/"$//; s/^[[:space:]]+//; s/[[:space:]]+$//')"
+if [[ -n "${PR_STATE}" && "${PR_STATE,,}" != "open" ]]; then
+  echo "[autopilot] PR is not open (state=${PR_STATE}); noop."
+  exit 0
+fi
+
 echo "[autopilot] repo=${REPO} pr=#${PR} head_ref=${HEAD_REF} max=${MAX_ATTEMPTS}"
 
 collect_changed_docs() {
@@ -106,13 +113,20 @@ PY
 # Local PR tracker (gitignored). No-op on errors.
 python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
 
-# head branch'e geç (local branch yoksa fetch)
+# Checkout PR head safely (worktree-friendly):
+# - Do NOT checkout the PR branch name directly, because it may be checked out in another worktree.
+# - Use a local scratch branch and push back to the original PR branch ref explicitly.
+SCRATCH_BRANCH="autopilot/pr-${PR}"
+REMOTE_REF="origin/${HEAD_REF}"
+
 git fetch --all --prune
-if git show-ref --verify --quiet "refs/heads/${HEAD_REF}"; then
-  git checkout "${HEAD_REF}"
-else
-  git checkout -b "${HEAD_REF}" "origin/${HEAD_REF}"
+
+if ! git show-ref --verify --quiet "refs/remotes/${REMOTE_REF}"; then
+  echo "[autopilot] remote ref not found: ${REMOTE_REF}; noop."
+  exit 0
 fi
+
+git checkout -B "${SCRATCH_BRANCH}" "${REMOTE_REF}"
 
 watch_ci_gate() {
   local poll_s=5
@@ -194,7 +208,7 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
 
   git add -A
   git commit -m "fix(autopilot): attempt ${attempt} for PR #${PR}" || true
-  git push -u origin HEAD
+  git push -u origin HEAD:"${HEAD_REF}"
   python3 scripts/pr_tracker_tsv.py add --repo "${REPO}" --pr "${PR}" >/dev/null 2>&1 || true
   attempt=$((attempt+1))
 done
