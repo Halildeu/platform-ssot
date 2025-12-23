@@ -23,9 +23,6 @@ import re
 import subprocess
 import sys
 import time
-import urllib.error
-import urllib.parse
-import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -118,39 +115,31 @@ def resolve_token() -> Optional[str]:
     return os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
 
 
-def github_get_json(token: str, path: str) -> Dict[str, Any]:
-    api = "https://api.github.com"
-    url = f"{api}{path}"
-    req = urllib.request.Request(
-        url=url,
-        method="GET",
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-            "User-Agent": "platform-ssot-pr-tracker",
-        },
-    )
+def gh_api_json(path: str) -> Dict[str, Any]:
+    """
+    Use GitHub CLI as the HTTP client to avoid local Python SSL/CA issues.
+    Token değeri asla yazdırılmaz; gh CLI, GH_TOKEN/GITHUB_TOKEN veya lokal auth ile çalışır.
+    """
+
     try:
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            payload = resp.read()
-            return json.loads(payload.decode("utf-8", errors="replace"))
-    except urllib.error.HTTPError as e:
-        body = ""
-        try:
-            body = e.read().decode("utf-8", errors="replace")
-        except Exception:
-            body = ""
-        msg = f"http={e.code}"
-        if body:
-            try:
-                parsed = json.loads(body)
-                if isinstance(parsed, dict) and parsed.get("message"):
-                    msg = f"{msg} message={parsed.get('message')}"
-            except Exception:
-                pass
-        raise GitHubApiError(msg, http_code=getattr(e, "code", None))
-    except urllib.error.URLError as e:
-        raise GitHubApiError(f"url_error={e.reason}")
+        proc = subprocess.run(
+            ["gh", "api", path],
+            cwd=ROOT,
+            check=False,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    except FileNotFoundError:
+        raise GitHubApiError("gh_not_found")
+
+    if proc.returncode != 0:
+        msg = (proc.stderr or proc.stdout or "").strip()
+        last = msg.splitlines()[-1] if msg else "unknown_error"
+        raise GitHubApiError(f"gh_api_error: {sanitize_cell(last)}")
+
+    try:
+        return json.loads(proc.stdout or "{}")
     except json.JSONDecodeError:
         raise GitHubApiError("invalid_json")
 
@@ -205,10 +194,10 @@ def upsert_row(rows: List[Dict[str, str]], new_row: Dict[str, str]) -> None:
     rows.append(new_row)
 
 
-def get_ci_gate_status(repo: str, head_sha: str, token: str, workflow_name: str) -> Tuple[str, str, str]:
+def get_ci_gate_status(repo: str, head_sha: str, workflow_name: str) -> Tuple[str, str, str]:
     # Runs endpoint: head_sha + event=pull_request.
-    query = urllib.parse.urlencode({"event": "pull_request", "head_sha": head_sha, "per_page": "100"})
-    data = github_get_json(token, f"/repos/{repo}/actions/runs?{query}")
+    query = f"event=pull_request&head_sha={head_sha}&per_page=100"
+    data = gh_api_json(f"repos/{repo}/actions/runs?{query}")
     runs = data.get("workflow_runs") or []
     candidates: List[Dict[str, Any]] = []
     for r in runs:
@@ -228,17 +217,12 @@ def get_ci_gate_status(repo: str, head_sha: str, token: str, workflow_name: str)
     return conclusion, run_url, run_id
 
 
-def build_row_from_pr(repo: str, pr_number: int, token: Optional[str], workflow_name: str) -> Dict[str, str]:
+def build_row_from_pr(repo: str, pr_number: int, workflow_name: str) -> Dict[str, str]:
     base_row: Dict[str, str] = {col: "" for col in COLUMNS}
     base_row["PR"] = str(pr_number)
     base_row["LAST_UPDATE"] = utc_now()
 
-    if not token:
-        base_row["CI_GATE"] = "unknown"
-        base_row["NOTE"] = "error: token_missing(GH_TOKEN)"
-        return base_row
-
-    pr = github_get_json(token, f"/repos/{repo}/pulls/{pr_number}")
+    pr = gh_api_json(f"repos/{repo}/pulls/{pr_number}")
     title = str(pr.get("title") or "")
     state = str(pr.get("state") or "")
     head = pr.get("head") or {}
@@ -259,7 +243,7 @@ def build_row_from_pr(repo: str, pr_number: int, token: Optional[str], workflow_
     base_row["LABELS"] = sanitize_cell(",".join(label_names))
 
     if head_sha:
-        conclusion, run_url, _run_id = get_ci_gate_status(repo, head_sha, token, workflow_name)
+        conclusion, run_url, _run_id = get_ci_gate_status(repo, head_sha, workflow_name)
         base_row["CI_GATE"] = sanitize_cell(conclusion)
         base_row["CI_GATE_RUN_URL"] = sanitize_cell(run_url)
     else:
@@ -271,10 +255,9 @@ def build_row_from_pr(repo: str, pr_number: int, token: Optional[str], workflow_
 def cmd_add(args: argparse.Namespace) -> int:
     tracker_path = Path(args.tracker_path).resolve()
     repo = resolve_repo(args.repo)
-    token = resolve_token()
     rows = read_tracker_rows(tracker_path)
     try:
-        new_row = build_row_from_pr(repo, args.pr, token, args.workflow_name)
+        new_row = build_row_from_pr(repo, args.pr, args.workflow_name)
     except GitHubApiError as e:
         new_row = {col: "" for col in COLUMNS}
         new_row["PR"] = str(args.pr)
@@ -293,7 +276,7 @@ def cmd_add(args: argparse.Namespace) -> int:
     return 0
 
 
-def sync_once(tracker_path: Path, repo: str, token: Optional[str], workflow_name: str) -> int:
+def sync_once(tracker_path: Path, repo: str, workflow_name: str) -> int:
     rows = read_tracker_rows(tracker_path)
     updated_rows: List[Dict[str, str]] = []
     for r in rows:
@@ -311,7 +294,7 @@ def sync_once(tracker_path: Path, repo: str, token: Optional[str], workflow_name
             continue
 
         try:
-            rr = build_row_from_pr(repo, pr_num, token, workflow_name)
+            rr = build_row_from_pr(repo, pr_num, workflow_name)
         except GitHubApiError as e:
             rr = dict(r)
             rr["LAST_UPDATE"] = utc_now()
@@ -332,14 +315,13 @@ def sync_once(tracker_path: Path, repo: str, token: Optional[str], workflow_name
 def cmd_sync(args: argparse.Namespace) -> int:
     tracker_path = Path(args.tracker_path).resolve()
     repo = resolve_repo(args.repo)
-    token = resolve_token()
     if args.watch <= 0:
-        return sync_once(tracker_path, repo, token, args.workflow_name)
+        return sync_once(tracker_path, repo, args.workflow_name)
 
     # watch loop (exit 0 on Ctrl+C)
     try:
         while True:
-            sync_once(tracker_path, repo, token, args.workflow_name)
+            sync_once(tracker_path, repo, args.workflow_name)
             time.sleep(args.watch)
     except KeyboardInterrupt:
         return 0
