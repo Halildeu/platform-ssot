@@ -56,6 +56,12 @@ Owner: @team/platform
   4) FAIL ise:
      - log-digest workflow’u tetiklenir ve `<!-- log-digest:v1 -->` comment’ini upsert eder.
      - Local autopilot devreye alınır: `scripts/ci_pull_logs.sh` → `scripts/autopilot_local.sh`.
+     - (Opsiyonel) Tracker (göz) + Dispatcher (el):
+       - TSV: `.autopilot-tmp/pr-tracker/PR-TRACKER.tsv` (gitignored)
+       - Dispatcher: `python3 scripts/autopilot_dispatcher.py` (failing PR seçer → local autopilot çalıştırır)
+       - Lock: `.autopilot-tmp/locks/autopilot-dispatcher.lock`
+       - Dry-run: `python3 scripts/autopilot_dispatcher.py --dry-run`
+       - Repo override: `python3 scripts/autopilot_dispatcher.py --repo Halildeu/platform-ssot --max 1`
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
