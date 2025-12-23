@@ -42,14 +42,9 @@ if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; t
   echo "[autopilot] gh not authenticated and GH_TOKEN not set."; exit 2
 fi
 
-PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
-HEAD_REF="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('ref',''))
-PY
-<<<"${PR_JSON}")"
+HEAD_REF="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.head.ref')"
 
-if [[ -z "${HEAD_REF}" ]]; then
+if [[ -z "${HEAD_REF}" || "${HEAD_REF}" == "null" ]]; then
   echo "[autopilot] Cannot read PR head ref."; exit 2
 fi
 
@@ -73,13 +68,9 @@ while [[ $attempt -le $MAX_ATTEMPTS ]]; do
   echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching checks..."
   # Fine-grained tokens may not have access to GraphQL statusCheckRollup (gh pr checks).
   # This watcher uses Actions runs (REST) only.
-  HEAD_SHA="$(python3 - <<'PY'
-import json,sys
-print(json.load(sys.stdin).get('head',{}).get('sha',''))
-PY
-<<<"${PR_JSON}")"
+  HEAD_SHA="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.head.sha')"
 
-  if [[ -z "${HEAD_SHA}" ]]; then
+  if [[ -z "${HEAD_SHA}" || "${HEAD_SHA}" == "null" ]]; then
     echo "[autopilot] Cannot read PR head SHA." >&2
     exit 2
   fi
@@ -105,46 +96,9 @@ PY
         fail_count) FAIL_COUNT="$v" ;;
         fail_list) FAIL_LIST="$v" ;;
       esac
-    done < <(python3 - <<'PY'
-import json,sys
-
-data=json.loads(sys.stdin.read() or "{}")
-runs=data.get("workflow_runs") or []
-if not isinstance(runs, list):
-    runs=[]
-
-def is_completed(r):
-    return r.get("status")=="completed"
-
-def is_failing(r):
-    if not is_completed(r):
-        return False
-    c=r.get("conclusion")
-    return isinstance(c,str) and c not in ("success","skipped")
-
-ci=None
-for r in runs:
-    name=r.get("name")
-    if isinstance(name,str) and name.strip().lower()=="ci-gate":
-        ci=r
-        break
-
-fail=[r for r in runs if is_failing(r)]
-fail_names=[]
-for r in fail:
-    n=r.get("name")
-    if isinstance(n,str) and n.strip():
-        fail_names.append(n.strip())
-
-def s(v): return "" if v is None else str(v)
-
-print(f"ci_gate_status={s(ci.get('status') if isinstance(ci,dict) else '')}")
-print(f"ci_gate_conclusion={s(ci.get('conclusion') if isinstance(ci,dict) else '')}")
-print(f"ci_gate_url={s(ci.get('html_url') if isinstance(ci,dict) else '')}")
-print(f"fail_count={len(fail)}")
-print("fail_list="+",".join(fail_names))
-PY
-<<<"${RUNS_JSON}")
+    done < <(
+      python3 -c $'import json,sys\n\ndata=json.loads(sys.stdin.read() or \"{}\")\nruns=data.get(\"workflow_runs\") or []\nif not isinstance(runs, list):\n    runs=[]\n\ndef is_completed(r):\n    return r.get(\"status\")==\"completed\"\n\ndef is_failing(r):\n    if not is_completed(r):\n        return False\n    c=r.get(\"conclusion\")\n    return isinstance(c,str) and c not in (\"success\",\"skipped\")\n\nci=None\nfor r in runs:\n    name=r.get(\"name\")\n    if isinstance(name,str) and name.strip().lower()==\"ci-gate\":\n        ci=r\n        break\n\nfail=[r for r in runs if is_failing(r)]\nfail_names=[]\nfor r in fail:\n    n=r.get(\"name\")\n    if isinstance(n,str) and n.strip():\n        fail_names.append(n.strip())\n\ndef s(v):\n    return \"\" if v is None else str(v)\n\nprint(f\"ci_gate_status={s(ci.get(\'status\') if isinstance(ci,dict) else \'\')}\")\nprint(f\"ci_gate_conclusion={s(ci.get(\'conclusion\') if isinstance(ci,dict) else \'\')}\")\nprint(f\"ci_gate_url={s(ci.get(\'html_url\') if isinstance(ci,dict) else \'\')}\")\nprint(f\"fail_count={len(fail)}\")\nprint(\"fail_list=\"+\",\".join(fail_names))\n' <<<"${RUNS_JSON}"
+    )
 
     echo "[autopilot] ci-gate: status=${CI_STATUS:-?} conclusion=${CI_CONCLUSION:-?} run=${CI_URL:-n/a} | failing_runs=${FAIL_COUNT} ${FAIL_LIST:+(${FAIL_LIST})}"
 
@@ -155,8 +109,8 @@ PY
 
     if [[ "${CI_STATUS}" == "completed" ]]; then
       if [[ "${CI_CONCLUSION}" == "success" ]]; then
-        state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state 2>/dev/null || echo unknown)"
-        echo "[autopilot] PASS. PR state=${state}"
+        pr_state="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.state' 2>/dev/null || echo unknown)"
+        echo "[autopilot] PASS. PR state=${pr_state}"
         exit 0
       fi
       echo "[autopilot] FAIL (ci-gate): conclusion=${CI_CONCLUSION:-unknown}"
