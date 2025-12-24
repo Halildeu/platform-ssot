@@ -47,6 +47,8 @@ Eksiler / Riskler:
 ## Linkler
 
 - SPEC: `docs/03-delivery/SPECS/SPEC-0009-doc-repair-loop-v0-1.md`
+- Reason map (SSOT): `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+- Plan generator (plan-only): `scripts/doc_repair_plan.py`
+- Runbook: `docs/04-operations/RUNBOOKS/RB-doc-repair-loop.md`
 - Gate: `.github/workflows/doc-qa.yml`
 - Engine: `scripts/docflow_next.py`
-

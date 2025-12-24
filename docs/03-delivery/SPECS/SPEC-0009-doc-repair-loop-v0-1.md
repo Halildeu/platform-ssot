@@ -112,3 +112,8 @@ yalnız güvenli (allowlist) değişikliklerle doküman zincirini PASS seviyesin
 - Next ID: repo taramasıyla `AC-\\d{4}` ve `TP-\\d{4}` max+1 bulunur.
 - v0.2: ID-REGISTRY authoritative hale getirilebilir.
 
+## 7. LİNKLER
+
+- Reason map (SSOT): `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+- Plan generator (plan-only): `scripts/doc_repair_plan.py`
+- Runbook: `docs/04-operations/RUNBOOKS/RB-doc-repair-loop.md`
