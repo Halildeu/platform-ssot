@@ -163,10 +163,6 @@ for name in tracker orchestrator; do
   fi
 done
 
-# Start tracker watch (unbuffered)
-nohup python3 -u scripts/pr_tracker_tsv.py sync --watch 30 \
-  > .autopilot-tmp/pids/tracker.log 2>&1 & echo $! > .autopilot-tmp/pids/tracker.pid
-
 # Determine owner/repo from origin remote URL (fallback: env GITHUB_REPOSITORY)
 REPO="${GITHUB_REPOSITORY:-}"
 if [ -z "${REPO:-}" ]; then
@@ -180,6 +176,10 @@ if [ -z "${REPO:-}" ]; then
   echo "[error] Cannot detect repo (owner/repo). Set GITHUB_REPOSITORY or configure origin remote." >&2
   exit 5
 fi
+
+# Start tracker watch (unbuffered) – explicit repo (no origin-parse dependency)
+nohup python3 -u scripts/pr_tracker_tsv.py --repo "${REPO}" sync --watch 30 \
+  > .autopilot-tmp/pids/tracker.log 2>&1 & echo $! > .autopilot-tmp/pids/tracker.pid
 
 AUTOPILOT_FIX_CMD="${AUTOPILOT_FIX_CMD:-bash scripts/codex_fix_runner.sh}"
 
