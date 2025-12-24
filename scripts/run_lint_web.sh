@@ -23,6 +23,13 @@ fi
 
 cd "$ROOT_DIR/web"
 
+if [[ "${NODE_OPTIONS:-}" != *"--max-old-space-size="* ]]; then
+  export NODE_OPTIONS="${NODE_OPTIONS:-} --max-old-space-size=6144"
+fi
+if [[ "${NODE_OPTIONS:-}" =~ --max-old-space-size=([0-9]+) ]]; then
+  echo "[run_lint_web] Node memory: --max-old-space-size=${BASH_REMATCH[1]}"
+fi
+
 echo "[run_lint_web] npm run lint:style"
 npm run lint:style
 
@@ -36,4 +43,3 @@ echo "[run_lint_web] npm run lint:no-antd"
 npm run lint:no-antd
 
 echo "[run_lint_web] Tüm WEB lint adımları başarıyla tamamlandı ✅"
-
