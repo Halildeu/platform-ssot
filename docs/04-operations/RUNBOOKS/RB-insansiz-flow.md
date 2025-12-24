@@ -141,7 +141,10 @@ Owner: @team/platform
     - `python3 scripts/pr_tracker_tsv.py add --pr <N>`
     - `python3 scripts/pr_tracker_tsv.py sync`
     - `python3 scripts/pr_tracker_tsv.py sync --watch 60`
+    - `python3 scripts/pr_tracker_tsv.py report --out .autopilot-tmp/pr-tracker/STATUS.md`
   - Token: `GH_TOKEN` (öneri: Vault field `GH_LOCAL_AUTOPILOT_TOKEN`).
+  - v0.3 teşhis kolonları (özet): `DRAFT`, `MERGEABLE_STATE`, `MERGE_POLICY`, `READY_LABEL`, `FAIL_WORKFLOWS`, `NEXT_ACTION`.
+  - `NEXT_ACTION`: `DRAFT` / `RESOLVE_CONFLICTS` / `WAIT_CI_GATE` / `FIX_CI` / `POLICY_NO_MERGE` / `ADD_READY_LABEL` / `FIX_OTHER_FAIL` / `WAIT_MERGEABLE` / `READY`.
 - Minimum metrikler (manuel gözlem):
   - `ci-gate` success rate
   - “time-to-merge”: `ci-gate` PASS → squash merge
