@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """
-Doc-Repair Apply (v0.2) — safe doc patch applier.
+Doc-Repair Apply (v0.3) — safe doc patch applier.
 
 Amaç:
 - `artifacts/doc-repair/plan.json` içindeki reason_code’lara göre deterministik doküman patch’leri üretmek.
 - Varsayılan: dry-run (dosya sistemi değişmez). `--apply` ile `docs/**` altında apply.
 
-v0.2 Supported reason codes:
+v0.3 Supported reason codes:
 - STORY_LINKS_SECTION_MISSING
 - AC_MISSING / AC_FILE_MISSING
 - TP_MISSING / TP_FILE_MISSING
+- API_DOC_MISSING (verify-only)
 
 Çıktılar:
 - artifacts/doc-repair/patch.diff
@@ -44,6 +45,8 @@ TEST_PLANS_DIR = ROOT / "docs" / "03-delivery" / "TEST-PLANS"
 RE_STORY_ID = re.compile(r"\bSTORY-(\d{4})\b")
 RE_AC_ID = re.compile(r"\bAC-(\d{4})\b")
 RE_TP_ID = re.compile(r"\bTP-(\d{4})\b")
+RE_API_DOC_PATH = re.compile(r"docs/03-delivery/api/[A-Za-z0-9][A-Za-z0-9_.-]*\.api\.md")
+RE_API_DOC_NAME = re.compile(r"\b([A-Za-z0-9][A-Za-z0-9_.-]*\.api\.md)\b")
 
 
 SUPPORTED_REASON_CODES = {
@@ -52,6 +55,7 @@ SUPPORTED_REASON_CODES = {
     "AC_FILE_MISSING",
     "TP_MISSING",
     "TP_FILE_MISSING",
+    "API_DOC_MISSING",
 }
 
 
@@ -67,6 +71,7 @@ class ApplyResult:
     story_id: str
     reason_code: str
     status: str  # OK | NOOP | SKIP | ERROR
+    internal_code: str
     detail: str
 
 
@@ -249,6 +254,10 @@ def ensure_links_entries(story_text: str, additions: List[str]) -> str:
 
     to_add: List[str] = []
     for add in additions:
+        m_path = re.search(r"(docs/[^`\s]+\.md)", add)
+        if m_path and m_path.group(1) in section_text:
+            continue
+
         add_id = None
         m_ac = RE_AC_ID.search(add)
         m_tp = RE_TP_ID.search(add)
@@ -271,6 +280,24 @@ def ensure_links_entries(story_text: str, additions: List[str]) -> str:
 
     new_lines = lines[:insert_at] + to_add + lines[insert_at:]
     return "\n".join(new_lines) + ("\n" if story_text.endswith("\n") else "")
+
+
+def extract_existing_api_doc_paths(story_text: str) -> List[str]:
+    """
+    STORY içeriğindeki *.api.md referanslarını toplar ve repoda var olanları döner.
+    v0.3 guardrail: dosya üretmez; yalnızca mevcut dosyaları linkler.
+    """
+    candidates: List[str] = []
+    candidates.extend(RE_API_DOC_PATH.findall(story_text))
+    for name in RE_API_DOC_NAME.findall(story_text):
+        candidates.append(f"docs/03-delivery/api/{name}")
+
+    uniq_sorted = sorted(set(candidates))
+    existing: List[str] = []
+    for rel in uniq_sorted:
+        if (ROOT / rel).exists():
+            existing.append(rel)
+    return existing
 
 
 def build_acceptance_doc(*, ac_id: str, story_stem: str, story_title: str, owner: str) -> str:
@@ -360,12 +387,28 @@ def main(argv: List[str]) -> int:
             continue
 
         if reason_code not in SUPPORTED_REASON_CODES:
-            results.append(ApplyResult(story_id=story_id, reason_code=reason_code, status="SKIP", detail="Not supported in v0.2"))
+            results.append(
+                ApplyResult(
+                    story_id=story_id,
+                    reason_code=reason_code,
+                    status="SKIP",
+                    internal_code="SKIP_UNSUPPORTED_REASON",
+                    detail="Not supported in v0.3",
+                )
+            )
             continue
 
         story_path = find_story_file(story_id)
         if not story_path:
-            results.append(ApplyResult(story_id=story_id, reason_code=reason_code, status="ERROR", detail="STORY file not found"))
+            results.append(
+                ApplyResult(
+                    story_id=story_id,
+                    reason_code=reason_code,
+                    status="ERROR",
+                    internal_code="ERROR_STORY_FILE_NOT_FOUND",
+                    detail="STORY file not found",
+                )
+            )
             continue
 
         story_text = read_text(story_path)
@@ -391,9 +434,34 @@ def main(argv: List[str]) -> int:
                 additions.append(f"- Test Plan: docs/03-delivery/TEST-PLANS/{tp_id}-{story_slug}.md")
             planned_story_text = ensure_links_entries(planned_story_text, additions)
 
+        if reason_code == "API_DOC_MISSING":
+            api_paths = extract_existing_api_doc_paths(story_text)
+            if not api_paths:
+                results.append(
+                    ApplyResult(
+                        story_id=story_id,
+                        reason_code=reason_code,
+                        status="SKIP",
+                        internal_code="SKIP_API_DOC_NOT_FOUND",
+                        detail="No existing *.api.md found for story (verify-only).",
+                    )
+                )
+                continue
+
+            additions = [f"- API: {p}" for p in api_paths]
+            planned_story_text = ensure_links_entries(planned_story_text, additions)
+
         if reason_code in {"AC_MISSING", "AC_FILE_MISSING"}:
             if not ac_id:
-                results.append(ApplyResult(story_id=story_id, reason_code=reason_code, status="ERROR", detail="Cannot derive AC id"))
+                results.append(
+                    ApplyResult(
+                        story_id=story_id,
+                        reason_code=reason_code,
+                        status="ERROR",
+                        internal_code="ERROR_DERIVE_AC_ID",
+                        detail="Cannot derive AC id",
+                    )
+                )
                 continue
 
             planned_story_text = ensure_downstream_token(planned_story_text, ac_id)
@@ -415,7 +483,15 @@ def main(argv: List[str]) -> int:
 
         if reason_code in {"TP_MISSING", "TP_FILE_MISSING"}:
             if not tp_id:
-                results.append(ApplyResult(story_id=story_id, reason_code=reason_code, status="ERROR", detail="Cannot derive TP id"))
+                results.append(
+                    ApplyResult(
+                        story_id=story_id,
+                        reason_code=reason_code,
+                        status="ERROR",
+                        internal_code="ERROR_DERIVE_TP_ID",
+                        detail="Cannot derive TP id",
+                    )
+                )
                 continue
 
             planned_story_text = ensure_downstream_token(planned_story_text, tp_id)
@@ -446,21 +522,32 @@ def main(argv: List[str]) -> int:
                     story_id=story_id,
                     reason_code=reason_code,
                     status="OK",
+                    internal_code="OK",
                     detail=", ".join(planned_doc_changes),
                 )
             )
         else:
-            results.append(ApplyResult(story_id=story_id, reason_code=reason_code, status="NOOP", detail="No changes"))
+            results.append(
+                ApplyResult(
+                    story_id=story_id,
+                    reason_code=reason_code,
+                    status="NOOP",
+                    internal_code="NOOP",
+                    detail="No changes",
+                )
+            )
 
     diff_text = unified_diff(file_changes.values())
     (out_dir / "patch.diff").write_text(diff_text, encoding="utf-8")
 
-    report_lines = ["# Doc Repair Apply Report (v0.2)", ""]
-    report_lines.append(f"- mode: {'APPLY' if args.apply else 'DRY_RUN'}")
+    report_lines = ["# Doc Repair Apply Report (v0.3)", ""]
+        report_lines.append(f"- mode: {'APPLY' if args.apply else 'DRY_RUN'}")
     report_lines.append(f"- plan: `{relative(plan_path)}`")
     report_lines.append("")
     for r in results:
-        report_lines.append(f"- {r.story_id} | `{r.reason_code}` | {r.status} | {r.detail}")
+        report_lines.append(
+            f"- {r.story_id} | `{r.reason_code}` | {r.status} | `{r.internal_code}` | {r.detail}"
+        )
     report_lines.append("")
     (out_dir / "apply-report.md").write_text("\n".join(report_lines), encoding="utf-8")
 

@@ -62,6 +62,7 @@ def parse_autopilot_summary(text: str) -> List[SummaryItem]:
       - STORY-0001: <reason>
     """
     in_blocked = False
+    started_list = False
     items: List[SummaryItem] = []
 
     blocked_line = re.compile(r"^-\s*(STORY-\d{4})\s*:\s*(.*)\s*$")
@@ -79,9 +80,13 @@ def parse_autopilot_summary(text: str) -> List[SummaryItem]:
         if not in_blocked:
             continue
 
+        if started_list and not line.strip():
+            break
+
         m = blocked_line.match(line.strip())
         if not m:
             continue
+        started_list = True
         story_id = m.group(1)
         reason = m.group(2).strip() or None
         items.append(SummaryItem(story_id=story_id, blocked_reason=reason))
