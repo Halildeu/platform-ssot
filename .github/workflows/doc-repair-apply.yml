@@ -1,0 +1,40 @@
+name: doc-repair-apply (dry-run)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 3 * * 1" # Pazartesi 03:35 UTC (plan’dan sonra)
+
+permissions:
+  contents: read
+
+jobs:
+  apply_dry_run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: docflow_next autopilot (dry-run, deterministic summary)
+        run: |
+          python3 scripts/docflow_next.py autopilot --dry-run --max-run 100 --summary-path summary.md
+
+      - name: Generate doc-repair plan
+        run: |
+          python3 scripts/doc_repair_plan.py --summary summary.md --out-dir artifacts/doc-repair
+
+      - name: Apply (dry-run only)
+        run: |
+          python3 scripts/doc_repair_apply.py --plan artifacts/doc-repair/plan.json --out-dir artifacts/doc-repair
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-repair-apply-dry-run
+          path: artifacts/doc-repair/
+          if-no-files-found: ignore
