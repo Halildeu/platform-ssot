@@ -111,6 +111,12 @@ Owner: @team/platform
 - Her fix localde yapılır: local validate → commit → push. (GitHub-side auto-fix yok.)
 - needs-human (token/permission/infra/approval): Codex yalnız teşhis/kanıt üretir, otomatik fix yapmaz.
 
+### Auto Merge Conflict Resolve (Local)
+- `mergeable_state=dirty` = PR branch’i `main` ile conflict’te (CI kırılabilir / merge mümkün değil).
+- Opsiyonel: `AUTOPILOT_AUTO_CONFLICT=1` → `scripts/resolve_merge_conflicts.py` otomatik çözüm dener.
+- Allowlist dışı conflict (örn. `web/**`, `backend/**`) → otomatik çözülmez → **needs-human** (manuel çözüm).
+- Kural seti (v0.1): `docs/**, scripts/**` (ours), `.github/workflows/**` (theirs), `.gitignore` (union).
+
 - Örnek token export (değer loglanmaz):
   - `export GH_TOKEN="$(vault kv get -field=GH_SECRETS_SYNC_TOKEN 'secret/stage/ops/github')"`
   - Not: gerçek Vault path kurumunuzdaki SSOT’a göre değişebilir.

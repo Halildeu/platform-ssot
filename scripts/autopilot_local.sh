@@ -7,12 +7,14 @@ MAX_ATTEMPTS=5
 OUT_DIR="artifacts/ci-logs"
 FIX_CMD="${AUTOPILOT_FIX_CMD:-}"
 ANY_FAIL="${AUTOPILOT_ANY_FAIL:-}"
+AUTO_CONFLICT="${AUTOPILOT_AUTO_CONFLICT:-}"
 
 usage() {
   echo "Usage: $0 --pr <num> [--repo owner/repo] [--max N] [--out dir]"
   echo "Env: GH_TOKEN must be set or gh auth login; token value not printed."
   echo "Env: AUTOPILOT_FIX_CMD optional (command that applies a fix locally)."
   echo "Env: AUTOPILOT_ANY_FAIL=1 optional (treat any failing check as failure; default watches required checks only)."
+  echo "Env: AUTOPILOT_AUTO_CONFLICT=1 optional (mergeable_state=dirty ise main ile auto-resolve dener; allowlist scope)."
 }
 
 while [[ $# -gt 0 ]]; do
@@ -42,9 +44,12 @@ if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; t
   echo "[autopilot] gh not authenticated and GH_TOKEN not set."; exit 2
 fi
 
-HEAD_REF="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.head.ref')"
+PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
+HEAD_REF="$(
+  python3 -c 'import json,sys; print((json.load(sys.stdin).get("head",{}) or {}).get("ref",""))' <<<"${PR_JSON}"
+)"
 
-if [[ -z "${HEAD_REF}" || "${HEAD_REF}" == "null" ]]; then
+if [[ -z "${HEAD_REF}" ]]; then
   echo "[autopilot] Cannot read PR head ref."; exit 2
 fi
 
@@ -54,6 +59,134 @@ if [[ "${ANY_FAIL}" == "1" ]]; then
 else
   echo "[autopilot] mode=required-only (default)"
 fi
+
+if [[ "${AUTO_CONFLICT}" == "1" ]]; then
+  MERGEABLE_STATE="$(
+    python3 -c 'import json,sys; print((json.load(sys.stdin).get("mergeable_state") or "").strip())' <<<"${PR_JSON}"
+  )"
+  if [[ "${MERGEABLE_STATE}" == "dirty" ]]; then
+    echo "[autopilot] mergeable_state=dirty -> attempting auto conflict resolve with main..."
+    python3 scripts/resolve_merge_conflicts.py --repo "${REPO}" --pr "${PR}" || {
+      echo "[autopilot] STOP: auto conflict resolve failed (needs-human)."
+      exit 6
+    }
+  fi
+fi
+
+wait_for_workflows() {
+  local head_sha="$1"
+  local mode="$2" # required|any
+
+  local max_wait_sec="${AUTOPILOT_WAIT_MAX_SEC:-1800}"
+  local sleep_sec="${AUTOPILOT_WAIT_INTERVAL_SEC:-10}"
+  local start_ts
+  start_ts="$(date +%s)"
+
+  local out_dir="${OUT_DIR}/pr-${PR}"
+  mkdir -p "${out_dir}"
+  local runs_pages="${out_dir}/runs-pages.json"
+
+  while true; do
+    gh api --paginate --slurp \
+      "repos/${REPO}/actions/runs?event=pull_request&head_sha=${head_sha}&per_page=100" \
+      > "${runs_pages}"
+
+    # Exit codes:
+    #  0 = PASS
+    #  1 = FAIL
+    #  2 = WAIT (pending / not ready)
+    python3 - "${runs_pages}" "${mode}" <<'PY'
+import json
+import sys
+
+path = sys.argv[1]
+mode = sys.argv[2]
+
+pages = json.load(open(path, "r", encoding="utf-8"))
+if not isinstance(pages, list):
+    pages = [pages]
+
+all_runs = []
+for page in pages:
+    if not isinstance(page, dict):
+        continue
+    runs = page.get("workflow_runs") or []
+    if isinstance(runs, list):
+        all_runs.extend([r for r in runs if isinstance(r, dict)])
+
+# Newest-first already; pick latest run per workflow name.
+latest_by_name = {}
+for r in all_runs:
+    name = r.get("name")
+    if not isinstance(name, str) or not name.strip():
+        continue
+    if name in latest_by_name:
+        continue
+    latest_by_name[name] = r
+
+ci = latest_by_name.get("ci-gate")
+if not isinstance(ci, dict):
+    print("[autopilot] ci-gate: missing (waiting)")
+    raise SystemExit(2)
+
+ci_status = ci.get("status") or ""
+ci_conclusion = ci.get("conclusion") or ""
+ci_url = ci.get("html_url") or ""
+
+if ci_status != "completed":
+    print(f"[autopilot] ci-gate: {ci_status} (waiting) {ci_url}")
+    raise SystemExit(2)
+
+def ok_conclusion(c: str) -> bool:
+    # "neutral"/"skipped" are not failures for our local loop.
+    return c in ("success", "neutral", "skipped", "")
+
+pending = []
+failing = []
+for name, r in latest_by_name.items():
+    status = r.get("status") or ""
+    if status != "completed":
+        pending.append(name)
+        continue
+    conclusion = str(r.get("conclusion") or "")
+    if not ok_conclusion(conclusion):
+        failing.append(name)
+
+pending.sort()
+failing.sort()
+
+if mode == "any":
+    if pending:
+        print(f"[autopilot] pending workflows: {', '.join(pending)} (waiting)")
+        raise SystemExit(2)
+    if failing:
+        print(f"[autopilot] FAIL workflows: {', '.join(failing)}")
+        raise SystemExit(1)
+    print(f"[autopilot] PASS all workflows (ci-gate={ci_conclusion})")
+    raise SystemExit(0)
+
+# required-only: only ci-gate matters
+if ci_conclusion == "success":
+    print(f"[autopilot] PASS ci-gate {ci_url}")
+    raise SystemExit(0)
+
+print(f"[autopilot] FAIL ci-gate (conclusion={ci_conclusion}) {ci_url}")
+raise SystemExit(1)
+PY
+    local rc=$?
+    if [[ $rc -ne 2 ]]; then
+      return $rc
+    fi
+
+    local now_ts
+    now_ts="$(date +%s)"
+    if (( now_ts - start_ts >= max_wait_sec )); then
+      echo "[autopilot] STOP: wait timeout (${max_wait_sec}s) for workflows on head_sha=${head_sha}"
+      return 7
+    fi
+    sleep "${sleep_sec}"
+  done
+}
 
 # head branch'e geç (local branch yoksa fetch)
 git fetch --all --prune
@@ -65,65 +198,28 @@ fi
 
 attempt=1
 while [[ $attempt -le $MAX_ATTEMPTS ]]; do
-  echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: watching checks..."
-  # Fine-grained tokens may not have access to GraphQL statusCheckRollup (gh pr checks).
-  # This watcher uses Actions runs (REST) only.
-  HEAD_SHA="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.head.sha')"
-
-  if [[ -z "${HEAD_SHA}" || "${HEAD_SHA}" == "null" ]]; then
-    echo "[autopilot] Cannot read PR head SHA." >&2
-    exit 2
+  PR_JSON="$(gh api "repos/${REPO}/pulls/${PR}")"
+  HEAD_SHA="$(
+    python3 -c 'import json,sys; print((json.load(sys.stdin).get("head",{}) or {}).get("sha",""))' <<<"${PR_JSON}"
+  )"
+  if [[ -z "${HEAD_SHA}" ]]; then
+    echo "[autopilot] Cannot read PR head sha."; exit 2
   fi
 
-  POLL_SECS="${AUTOPILOT_POLL_SECS:-10}"
-  TIMEOUT_SECS="${AUTOPILOT_WATCH_TIMEOUT_SECS:-3600}"
-  waited=0
+  echo "[autopilot] attempt ${attempt}/${MAX_ATTEMPTS}: waiting workflows for head_sha=${HEAD_SHA}..."
+  MODE="required"
+  [[ "${ANY_FAIL}" == "1" ]] && MODE="any"
 
-  while true; do
-    RUNS_JSON="$(gh api "repos/${REPO}/actions/runs?event=pull_request&head_sha=${HEAD_SHA}&per_page=100")"
-
-    CI_STATUS=""
-    CI_CONCLUSION=""
-    CI_URL=""
-    FAIL_COUNT="0"
-    FAIL_LIST=""
-
-    while IFS='=' read -r k v; do
-      case "$k" in
-        ci_gate_status) CI_STATUS="$v" ;;
-        ci_gate_conclusion) CI_CONCLUSION="$v" ;;
-        ci_gate_url) CI_URL="$v" ;;
-        fail_count) FAIL_COUNT="$v" ;;
-        fail_list) FAIL_LIST="$v" ;;
-      esac
-    done < <(
-      python3 -c $'import json,sys\n\ndata=json.loads(sys.stdin.read() or \"{}\")\nruns=data.get(\"workflow_runs\") or []\nif not isinstance(runs, list):\n    runs=[]\n\ndef is_completed(r):\n    return r.get(\"status\")==\"completed\"\n\ndef is_failing(r):\n    if not is_completed(r):\n        return False\n    c=r.get(\"conclusion\")\n    return isinstance(c,str) and c not in (\"success\",\"skipped\")\n\nci=None\nfor r in runs:\n    name=r.get(\"name\")\n    if isinstance(name,str) and name.strip().lower()==\"ci-gate\":\n        ci=r\n        break\n\nfail=[r for r in runs if is_failing(r)]\nfail_names=[]\nfor r in fail:\n    n=r.get(\"name\")\n    if isinstance(n,str) and n.strip():\n        fail_names.append(n.strip())\n\ndef s(v):\n    return \"\" if v is None else str(v)\n\nprint(f\"ci_gate_status={s(ci.get(\'status\') if isinstance(ci,dict) else \'\')}\")\nprint(f\"ci_gate_conclusion={s(ci.get(\'conclusion\') if isinstance(ci,dict) else \'\')}\")\nprint(f\"ci_gate_url={s(ci.get(\'html_url\') if isinstance(ci,dict) else \'\')}\")\nprint(f\"fail_count={len(fail)}\")\nprint(\"fail_list=\"+\",\".join(fail_names))\n' <<<"${RUNS_JSON}"
-    )
-
-    echo "[autopilot] ci-gate: status=${CI_STATUS:-?} conclusion=${CI_CONCLUSION:-?} run=${CI_URL:-n/a} | failing_runs=${FAIL_COUNT} ${FAIL_LIST:+(${FAIL_LIST})}"
-
-    if [[ "${ANY_FAIL}" == "1" && "${FAIL_COUNT}" != "0" ]]; then
-      echo "[autopilot] FAIL (any-fail): found failing workflow runs."
-      break
-    fi
-
-    if [[ "${CI_STATUS}" == "completed" ]]; then
-      if [[ "${CI_CONCLUSION}" == "success" ]]; then
-        pr_state="$(gh api "repos/${REPO}/pulls/${PR}" --jq '.state' 2>/dev/null || echo unknown)"
-        echo "[autopilot] PASS. PR state=${pr_state}"
-        exit 0
-      fi
-      echo "[autopilot] FAIL (ci-gate): conclusion=${CI_CONCLUSION:-unknown}"
-      break
-    fi
-
-    if (( waited >= TIMEOUT_SECS )); then
-      echo "[autopilot] FAIL: watch timeout after ${TIMEOUT_SECS}s (ci-gate not completed)." >&2
-      break
-    fi
-    sleep "${POLL_SECS}"
-    waited=$((waited + POLL_SECS))
-  done
+  wait_for_workflows "${HEAD_SHA}" "${MODE}"
+  RC=$?
+  if [[ $RC -eq 0 ]]; then
+    state="$(gh pr view "${PR}" -R "${REPO}" --json state -q .state || echo unknown)"
+    echo "[autopilot] PASS. PR state=${state}"
+    exit 0
+  elif [[ $RC -ne 1 ]]; then
+    # timeout / invariant
+    exit "$RC"
+  fi
 
   echo "[autopilot] FAIL. downloading logs..."
   ./scripts/ci_pull_logs.sh --repo "${REPO}" --pr "${PR}" --out "${OUT_DIR}" || true

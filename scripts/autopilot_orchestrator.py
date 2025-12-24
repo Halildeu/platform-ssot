@@ -97,6 +97,14 @@ def queue_pop() -> Optional[int]:
     return int(pr)
 
 
+def tracker_row_for_pr(tracker_path: Path, pr: int) -> Optional[Dict[str, str]]:
+    pr_s = str(pr)
+    for row in read_tracker_rows(tracker_path):
+        if (row.get("PR") or "").strip() == pr_s:
+            return row
+    return None
+
+
 def should_enqueue(row: Dict[str, str]) -> bool:
     state = (row.get("STATE") or "").strip().lower()
     if state and state != "open":
@@ -107,6 +115,10 @@ def should_enqueue(row: Dict[str, str]) -> bool:
         return False
     if "autopilot/passed" in labels:
         return False
+
+    mergeable_state = (row.get("MERGEABLE_STATE") or "").strip().lower()
+    if mergeable_state == "dirty":
+        return True
 
     fail_wf = (row.get("FAIL_WORKFLOWS") or "").strip()
     return bool(fail_wf)
@@ -121,7 +133,14 @@ def scan_tracker_and_enqueue(tracker_path: Path) -> int:
             continue
         if not should_enqueue(row):
             continue
-        reason = f"fail_workflows={row.get('FAIL_WORKFLOWS','').strip()}"
+        mergeable_state = (row.get("MERGEABLE_STATE") or "").strip().lower()
+        fail_wf = (row.get("FAIL_WORKFLOWS") or "").strip()
+        if mergeable_state == "dirty":
+            reason = "merge-conflict"
+            if fail_wf:
+                reason = f"{reason};fail_workflows={fail_wf}"
+        else:
+            reason = f"fail_workflows={fail_wf}"
         queue_add(int(pr), reason=reason)
         count += 1
     return count
@@ -219,6 +238,38 @@ def main(argv: Sequence[str]) -> int:
         print(f"[orchestrator] picked PR #{pr}")
         lock_write(pr)
         try:
+            if args.scan_tracker:
+                row = tracker_row_for_pr(args.tracker_path, pr)
+                mergeable_state = (row or {}).get("MERGEABLE_STATE", "").strip().lower()
+                if mergeable_state == "dirty":
+                    print(f"[orchestrator] mergeable_state=dirty for PR #{pr}; resolving conflicts with main...")
+                    rc_resolve = run(
+                        [
+                            sys.executable,
+                            "scripts/resolve_merge_conflicts.py",
+                            "--repo",
+                            args.repo,
+                            "--pr",
+                            str(pr),
+                        ],
+                        env=env,
+                    )
+                    if rc_resolve != 0:
+                        print(
+                            f"[orchestrator] resolve_merge_conflicts STOP for PR #{pr} rc={rc_resolve} (needs-human)",
+                            file=sys.stderr,
+                        )
+                        # Best-effort: PR'a needs-human label basmayı dener; başarısızsa sessiz geç.
+                        run(
+                            [
+                                "bash",
+                                "-lc",
+                                f"gh api -X POST repos/{args.repo}/issues/{pr}/labels -f labels[]=autopilot/needs-human >/dev/null 2>&1 || true",
+                            ],
+                            env=env,
+                        )
+                        continue
+
             cmd = [
                 "bash",
                 "scripts/autopilot_local.sh",

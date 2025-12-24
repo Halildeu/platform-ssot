@@ -50,6 +50,7 @@ COLUMNS = [
 
 
 def utc_now() -> str:
+    # Python 3.12+: datetime.utcnow() deprecated; keep timezone-aware UTC string.
     return dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
@@ -72,7 +73,7 @@ def parse_owner_repo_from_origin() -> Optional[str]:
     if proc.returncode != 0:
         return None
     url = (proc.stdout or "").strip()
-    m = re.search(r"github\.com[:/](.+?)/(.+?)(?:\.git)?$", url)
+    m = re.search(r"github\\.com[:/](.+?)/(.+?)(?:\\.git)?$", url)
     if not m:
         return None
     return f"{m.group(1)}/{m.group(2)}"
