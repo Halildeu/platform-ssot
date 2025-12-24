@@ -224,7 +224,6 @@ def run_ci_gate_validate() -> bool:
         eprint("------------------------")
     return False
 
-
 def merge_main_into_branch() -> Tuple[bool, str]:
     """
     Dönüş:
