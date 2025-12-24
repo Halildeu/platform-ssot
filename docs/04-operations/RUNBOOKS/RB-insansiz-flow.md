@@ -59,6 +59,9 @@ Owner: @team/platform
   4) FAIL ise:
      - log-digest workflow’u tetiklenir ve `<!-- log-digest:v1 -->` comment’ini upsert eder.
      - Local autopilot devreye alınır: `scripts/ci_pull_logs.sh` → `scripts/autopilot_local.sh`.
+       - Varsayılan: sadece required check’leri izler (`ci-gate`).
+       - Opsiyonel (any-fail): `AUTOPILOT_ANY_FAIL=1` ile **herhangi bir failing check** fix döngüsünü tetikler.
+       - Codex dispatcher: `AUTOPILOT_FIX_CMD="bash scripts/codex_fix_runner.sh"` (allowlist + limit guardrails).
        - Opsiyonel (local-only): `AUTOPILOT_SEMANTIC_LINT=1` ile semantic lint raporu üretir (`.autopilot-tmp/doc-lint/`).
        - Opsiyonel (local-only): Queue + Orchestrator (tek worker, idle-no-query)
          - Queue: `.autopilot-tmp/queue/queue.tsv` (gitignored)
@@ -69,11 +72,10 @@ Owner: @team/platform
            - Terminal-1: `python3 scripts/pr_tracker_tsv.py sync --watch 30`
            - Terminal-2: `python3 scripts/autopilot_orchestrator.py --repo Halildeu/platform-ssot --scan-tracker --tracker-path .autopilot-tmp/pr-tracker/PR-TRACKER.tsv --scan-interval 30 --max-attempts 5 --semantic --fix-cmd "bash scripts/codex_fix_runner.sh"`
            - Not: idle-no-query korunur; GitHub sorgusu yalnız tracker watch ve autopilot_local çalışırken yapılır.
-         - Local Ops Start/Stop (tek komut, UI yok):
-           - Start: `bash scripts/ops/local_ops_start.sh`
-           - Status: `bash scripts/ops/local_ops_status.sh`
-           - Stop: `bash scripts/ops/local_ops_stop.sh`
-           - Not: Token değerleri loglanmaz; Vault SSOT path: `secret/stage/ops/github` (field: `GH_LOCAL_AUTOPILOT_TOKEN`).
+       - Local Ops Start/Stop (tek komut, UI yok):
+         - Start: `bash scripts/ops/local_ops_start.sh`
+         - Status: `bash scripts/ops/local_ops_status.sh`
+         - Stop: `bash scripts/ops/local_ops_stop.sh`
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
@@ -141,7 +143,10 @@ Owner: @team/platform
     - `python3 scripts/pr_tracker_tsv.py add --pr <N>`
     - `python3 scripts/pr_tracker_tsv.py sync`
     - `python3 scripts/pr_tracker_tsv.py sync --watch 60`
+    - `python3 scripts/pr_tracker_tsv.py report --out .autopilot-tmp/pr-tracker/STATUS.md`
   - Token: `GH_TOKEN` (öneri: Vault field `GH_LOCAL_AUTOPILOT_TOKEN`).
+  - v0.3 teşhis kolonları (özet): `DRAFT`, `MERGEABLE_STATE`, `MERGE_POLICY`, `READY_LABEL`, `FAIL_WORKFLOWS`, `NEXT_ACTION`.
+  - `NEXT_ACTION`: `DRAFT` / `RESOLVE_CONFLICTS` / `WAIT_CI_GATE` / `FIX_CI` / `POLICY_NO_MERGE` / `ADD_READY_LABEL` / `FIX_OTHER_FAIL` / `WAIT_MERGEABLE` / `READY`.
 - Minimum metrikler (manuel gözlem):
   - `ci-gate` success rate
   - “time-to-merge”: `ci-gate` PASS → squash merge
