@@ -31,6 +31,11 @@ jobs:
         run: |
           python3 scripts/doc_repair_apply.py --plan artifacts/doc-repair/plan.json --out-dir artifacts/doc-repair
 
+      - name: Generate metrics
+        if: always()
+        run: |
+          python3 scripts/doc_repair_metrics.py --out-dir artifacts/doc-repair
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
