@@ -21,12 +21,21 @@ jobs:
 
       - name: docflow_next autopilot (dry-run)
         run: |
-          python3 scripts/docflow_next.py autopilot --dry-run --max-run 100
+          python3 scripts/docflow_next.py autopilot --dry-run --max-run 100 --summary-path artifacts/doc-repair/summary.md
 
       - name: Generate doc-repair plan
         run: |
           set -euo pipefail
-          SUM="$(find . -maxdepth 6 -type f -name "summary.md" | head -n 1 || true)"
+          SUM="$(python3 - <<'PY'
+          import pathlib
+          c = list(pathlib.Path(".").rglob("summary.md"))
+          if not c:
+              print("")
+          else:
+              c.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+              print(str(c[0]))
+          PY
+          )"
           echo "SUMMARY=$SUM"
           if [ -z "${SUM}" ]; then
             echo "No summary.md found. Exiting 0 (non-blocking)."
