@@ -66,10 +66,15 @@ if [[ "${AUTO_CONFLICT}" == "1" ]]; then
   )"
   if [[ "${MERGEABLE_STATE}" == "dirty" ]]; then
     echo "[autopilot] mergeable_state=dirty -> attempting auto conflict resolve with main..."
-    python3 scripts/resolve_merge_conflicts.py --repo "${REPO}" --pr "${PR}" || {
-      echo "[autopilot] STOP: auto conflict resolve failed (needs-human)."
+    if ! python3 scripts/resolve_merge_conflicts.py --repo "${REPO}" --pr "${PR}"; then
+      RC=$?
+      if [[ $RC -eq 4 ]]; then
+        echo "[autopilot] STOP: conflict auto-resolve done but local ci-gate validate FAILED (needs-human)."
+      else
+        echo "[autopilot] STOP: auto conflict resolve failed (needs-human) rc=${RC}."
+      fi
       exit 6
-    }
+    fi
   fi
 fi
 

@@ -255,8 +255,11 @@ def main(argv: Sequence[str]) -> int:
                         env=env,
                     )
                     if rc_resolve != 0:
+                        reason = "needs-human"
+                        if rc_resolve == 4:
+                            reason = "needs-human (local ci-gate validate failed)"
                         print(
-                            f"[orchestrator] resolve_merge_conflicts STOP for PR #{pr} rc={rc_resolve} (needs-human)",
+                            f"[orchestrator] resolve_merge_conflicts STOP for PR #{pr} rc={rc_resolve} ({reason})",
                             file=sys.stderr,
                         )
                         # Best-effort: PR'a needs-human label basmayı dener; başarısızsa sessiz geç.
