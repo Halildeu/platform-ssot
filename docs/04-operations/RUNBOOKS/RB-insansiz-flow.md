@@ -59,6 +59,10 @@ Owner: @team/platform
        - Varsayılan: sadece required check’leri izler (`ci-gate`).
        - Opsiyonel (any-fail): `AUTOPILOT_ANY_FAIL=1` ile **herhangi bir failing check** fix döngüsünü tetikler.
        - Codex dispatcher (önerilen): `AUTOPILOT_FIX_CMD="bash scripts/codex_fix_runner.sh"` (allowlist + limit guardrails).
+     - Local Ops Start/Stop (tek komut, UI yok):
+       - Start: `bash scripts/ops/local_ops_start.sh`
+       - Status: `bash scripts/ops/local_ops_status.sh`
+       - Stop: `bash scripts/ops/local_ops_stop.sh`
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
