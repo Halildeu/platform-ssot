@@ -20,15 +20,16 @@
 
 ## 3. Cevap formatı
 
-Her görevde varsayılan yapı:
+Her görevde varsayılan yapı (sıra zorunlu):
 
-- WORK LOG – UI Mirror
-- WORK LOG – Summary (opsiyonel)
-- Keşif Özeti
-- Tasarım
-- Uygulama Adımları
+1) WORK LOG – UI Mirror (zorunlu)
+2) WORK LOG – Summary (opsiyonel)
+3) RESULT (zorunlu)
+4) EVIDENCE POINTERS (zorunlu)
+5) Uygulanan Değişiklikler (zorunlu)
+6) NEXT (zorunlu)
 
-**WORK LOG (ZORUNLU, 2 KATMAN)**
+### 3.1 WORK LOG (ZORUNLU, 2 KATMAN)
 1) **WORK LOG – UI Mirror (Zorunlu)**
    - UI’daki listeyi metin olarak yansıtır: `Ran ...`, `Edited ... +x -y`, `Reviewed ...`, `Considering ...` vb.
    - 10–40 satır arası olabilir; kısa ve ham olmalı (paraphrase yok).
@@ -39,7 +40,24 @@ Her görevde varsayılan yapı:
 
 Not: WORK LOG token/secret içermez.
 
-**DOC-QA LOCAL STANDARDI (ZORUNLU)**
+### 3.2 RESULT (ZORUNLU)
+- “Ne çıktı?” sorusuna cevap verir.
+- 1–5 madde, geçmiş zaman (eklendi/güncellendi/çıkarıldı).
+- Emir kipi yok.
+
+### 3.3 EVIDENCE POINTERS (ZORUNLU)
+- “Bunu nereden doğrularım?” sorusuna cevap verir.
+- Asgari alanlar:
+  - `gate: PASS|FAIL`
+  - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+  - `chatlog: .autopilot-tmp/codex-chatlog/YYYYMMDD.md` (veya `latest.md`)
+- Varsa eklenir:
+  - `branch: <name>`
+  - `sha: <short>`
+  - `commit: <sha>`
+  - `pr: <url>`
+
+### 3.4 DOC-QA LOCAL STANDARDI (ZORUNLU)
 - Local doğrulama/gate koşulacaksa varsayılan komut:
   - `python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log`
 - Bu komut:
@@ -48,11 +66,18 @@ Not: WORK LOG token/secret içermez.
 - Tek tek `check_doc_*` komutları yalnızca hedefli debug için kullanılmalıdır.
 - WORK LOG – UI Mirror içinde bu komut `Ran python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log` olarak görünmelidir.
 
-`Uygulama Adımları` sadece:
-- `dosya yolu` + `değişiklik` içermelidir.
-  - Değişiklik bu görevde uygulandıysa: geçmiş zaman (örn. “eklendi/güncellendi/silindi”) yazılır.
-  - Değişiklik uygulanmadıysa: planlanan değişiklik açıkça belirtilir.
-- Tam implementasyon / uzun kod gövdeleri bu seviyede üretilmez.
+### 3.5 Uygulanan Değişiklikler (ZORUNLU)
+- Sadece “dosya yolu + değişiklik” içerir.
+- Değişiklik bu görevde uygulandıysa: geçmiş zaman (örn. “eklendi/güncellendi/silindi”) yazılır.
+- Emir kipi yok; “→ ekle/hizala/çalıştır” kullanılmaz.
+
+Örnek:
+- `AGENT-CODEX.core.md:51 — Dil kuralı güncellendi (yapılan vs planlanan ayrımı).`
+
+### 3.6 NEXT (ZORUNLU)
+- Sırada gerçek iş varsa 1–5 madde.
+- Yoksa: `NEXT: none`
+
 
 ## 4. Riskli komutlar
 
