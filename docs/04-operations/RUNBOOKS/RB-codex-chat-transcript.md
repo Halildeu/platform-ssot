@@ -85,13 +85,14 @@ Owner: @team/platform
 - Template: `docs/99-templates/RUNBOOK.template.md`
 
 -------------------------------------------------------------------------------
-X. EVIDENCE POINTERS (LITERAL PATH)
+X. EVIDENCE POINTERS (STRICT)
 -------------------------------------------------------------------------------
 
-- Evidence pointer satırları açıklama değil **literal full path** olmalıdır.
-  - Yanlış: `execution-log.md (full path)`
-  - Doğru: `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-- Örnek:
-  - `gate: PASS`
-  - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-  - `chatlog: .autopilot-tmp/codex-chatlog/latest.md`
+- Format zorunlu: `key: <literal full path>`
+- KISALTMA YASAK:
+  - Yanlış: `execution-log.md`, `latest.md`, `flow-report.md`
+  - Doğru:
+    - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+    - `chatlog: .autopilot-tmp/codex-chatlog/latest.md`
+    - (koştuysa) `flow_report: .autopilot-tmp/flow-mining/flow-report.md`
+    - (koştuysa) `flow_stats: .autopilot-tmp/flow-mining/flow-stats.json`

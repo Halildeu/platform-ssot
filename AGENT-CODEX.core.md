@@ -48,20 +48,21 @@ Not: WORK LOG token/secret içermez.
 
 ### 3.3 EVIDENCE POINTERS (ZORUNLU)
 - “Bunu nereden doğrularım?” sorusuna cevap verir.
-- **Format zorunlu**: her satır `key: <literal value>` şeklinde yazılır.
-  - Yanlış: `execution-log.md (full path)`
-  - Doğru: `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+- Format **zorunlu**: her satır `key: <literal full path>` şeklindedir.
+- **KISALTMA YASAK**:
+  - Yanlış: `execution-log.md`, `latest.md`, `flow-report.md`
+  - Doğru: aşağıdaki satırlar **birebir** yazılır.
 
-Zorunlu anahtarlar:
+Zorunlu satırlar:
 - `gate: PASS|FAIL`
 - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-- `chatlog: .autopilot-tmp/codex-chatlog/latest.md`
+- `chatlog: .autopilot-tmp/codex-chatlog/latest.md` (veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`)
 
-Koşullu (çalıştırıldıysa ekle):
+Koşullu satırlar (komut çalıştırıldıysa eklenir):
 - `flow_report: .autopilot-tmp/flow-mining/flow-report.md`
 - `flow_stats: .autopilot-tmp/flow-mining/flow-stats.json`
 
-Varsa eklenir:
+Opsiyonel meta:
 - `branch: <name>`
 - `sha: <short>`
 - `commit: <sha>`
