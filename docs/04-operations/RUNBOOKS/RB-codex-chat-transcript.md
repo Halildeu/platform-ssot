@@ -16,7 +16,8 @@ otomatik olarak yerel bir transcript dosyasında biriktirmek.
 2. NEREDE?
 -------------------------------------------------------------------------------
 
-- Transcript: `.autopilot-tmp/codex-chatlog/latest.md` (gitignored)
+- Günlük transcript: `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` (gitignored)
+- Pointer: `.autopilot-tmp/codex-chatlog/latest.md` → bugünün dosyası
 
 -------------------------------------------------------------------------------
 3. KURAL
@@ -25,7 +26,8 @@ otomatik olarak yerel bir transcript dosyasında biriktirmek.
 Codex her yanıtının sonunda:
 - yanıtın TAM METNİNİ
 - zaman damgası ile
-- `.autopilot-tmp/codex-chatlog/latest.md` dosyasına append eder.
+- `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` dosyasına append eder (UTC).
+- `latest.md` bugünün dosyasını gösterecek şekilde güncel tutulur (opsiyonel helper: `bash scripts/ops/codex_chatlog_set_latest.sh`).
 
 -------------------------------------------------------------------------------
 4. GİZLİLİK
