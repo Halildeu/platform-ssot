@@ -39,6 +39,15 @@ Her görevde varsayılan yapı:
 
 Not: WORK LOG token/secret içermez.
 
+**DOC-QA LOCAL STANDARDI (ZORUNLU)**
+- Local doğrulama/gate koşulacaksa varsayılan komut:
+  - `python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log`
+- Bu komut:
+  - doc-qa check setini çalıştırır
+  - `.autopilot-tmp/execution-log/` altında `execution-log.md` ve `checks.json` üretir (raw loglar: `raw/`)
+- Tek tek `check_doc_*` komutları yalnızca hedefli debug için kullanılmalıdır.
+- WORK LOG – UI Mirror içinde bu komut `Ran python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log` olarak görünmelidir.
+
 `Uygulama Adımları` sadece:
 - `dosya yolu` + `yapılacak değişiklik` içermelidir.
 - Tam implementasyon / uzun kod gövdeleri bu seviyede üretilmez.

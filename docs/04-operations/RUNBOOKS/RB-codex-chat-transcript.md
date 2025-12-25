@@ -1,75 +1,85 @@
 # RB-codex-chat-transcript – Codex Chat Transcript (Local-only)
 
-ID: RB-codex-chat-transcript
-Service: ops-local
-Status: Draft
+ID: RB-codex-chat-transcript  
+Service: ops-local  
+Status: Draft  
 Owner: @team/platform
 
 -------------------------------------------------------------------------------
 1. AMAÇ
 -------------------------------------------------------------------------------
 
-Codex’in chat’te yazdığı tüm metni (Keşif/Tasarım/Uygulama adımları dahil) kopyalamadan
-otomatik olarak yerel bir transcript dosyasında biriktirmek.
+- Codex’in chat’te yazdığı tüm metni kopyalamadan, yerel transcript olarak biriktirmek.
+- Transcript formatı: verbatim + `BEGIN_CODEX_RESPONSE`/`END_CODEX_RESPONSE` + `WORK LOG – UI Mirror`.
 
 -------------------------------------------------------------------------------
-2. NEREDE?
+2. KAPSAM
 -------------------------------------------------------------------------------
 
-- Günlük transcript: `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` (gitignored)
-- Pointer: `.autopilot-tmp/codex-chatlog/latest.md` → bugünün dosyası
+- Local-only: `.autopilot-tmp/codex-chatlog/` (gitignored).
+- Günlük transcript: `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` (UTC).
+- Pointer: `.autopilot-tmp/codex-chatlog/latest.md` → bugünün dosyası.
+- Kapsam dışı:
+  - Token/secret/credential içeren metinlerin transcript’e yazdırılması (yasak).
+  - Transcript’in repo’ya commit edilmesi (yasak; gitignored olmalı).
 
 -------------------------------------------------------------------------------
-3. KURAL
+3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
 
-Codex her yanıtının sonunda:
-- yanıtın TAM METNİNİ
-- zaman damgası ile
-- `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` dosyasına append eder (UTC).
-- `latest.md` bugünün dosyasını gösterecek şekilde güncel tutulur (opsiyonel helper: `bash scripts/ops/codex_chatlog_set_latest.sh`).
+- Başlat (günlük rotasyon/pointer):
+  - `bash scripts/ops/codex_chatlog_set_latest.sh`
+  - Beklenen: `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` oluşur ve `latest.md` bugünü gösterir.
+- Durdurma (local):
+  - Bu mekanizma local-only’dir; istenmiyorsa `.autopilot-tmp/codex-chatlog/` dizini silinebilir veya ignore edilerek kullanılmayabilir.
+- Legacy ayrıştırma:
+  - Verbatim kuralı devreye girerken eski `latest.md` arşivlenir ve temiz `latest.md` başlatılır.
 
 -------------------------------------------------------------------------------
-4. GİZLİLİK
+4. GÖZLEMLEME / LOG / METRİKLER
 -------------------------------------------------------------------------------
 
-Bu dosya repoya girmez (gitignored).
-Yine de token/secret içeren metinler yazdırılmamalıdır.
+- Hızlı kontrol:
+  - `tail -n 200 .autopilot-tmp/codex-chatlog/latest.md`
+  - `rg -n \"BEGIN_CODEX_RESPONSE|END_CODEX_RESPONSE\" .autopilot-tmp/codex-chatlog/latest.md`
+- Beklenen minimum:
+  - Her yanıtta `WORK LOG – UI Mirror` bloğu vardır.
+  - Komut çalıştıysa `Ran <cmd>` satırı vardır.
+  - Dosya değiştiyse `Edited <path> +a -b` satırı vardır.
+- Local doc-qa standardı (execution log):
+  - `python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log`
 
 -------------------------------------------------------------------------------
-X. VERBATIM FORMAT
+5. ARIZA DURUMLARI VE ADIMLAR
 -------------------------------------------------------------------------------
 
-- Transcript’e yazılan ana blok birebir (verbatim) olmalıdır:
-  - `--- ts_utc / branch / sha ---`
-  - `BEGIN_CODEX_RESPONSE` / `END_CODEX_RESPONSE` marker’ları arasında
-  - Codex yanıtı Undo/Review dahil aynen yer alır.
-- Opsiyonel: RAW bloğundan sonra “Keşif Özeti / Tasarım / Uygulama Adımları” gibi yapısal özet eklenebilir; ancak RAW yerine geçmez.
+- [ ] Arıza senaryosu 1 – `latest.md` bugünü göstermiyor:
+  - Given: `latest.md` yok veya yanlış güne bağlı.
+  - When: transcript “günlük dosya” yerine eski/boş dosyaya yazılıyor.
+  - Then:
+    - `bash scripts/ops/codex_chatlog_set_latest.sh` çalıştır.
+    - `ls -la .autopilot-tmp/codex-chatlog` ile `latest.md -> YYYYMMDD.md` doğrula.
+
+- [ ] Arıza senaryosu 2 – Verbatim marker eksik:
+  - Given: transcript içinde `BEGIN_CODEX_RESPONSE`/`END_CODEX_RESPONSE` yok.
+  - When: yanıtlar tamlık kuralına uymuyor.
+  - Then:
+    - `AGENT-CODEX.core.md` içindeki “VERBATIM ZORUNLULUK / TAMLIK KURALI” kuralını doğrula.
+    - Yeni yanıtla tekrar dene; problem sürerse rule enforcement mekanizmasını gözden geçir.
 
 -------------------------------------------------------------------------------
-X. WORK LOG – UI MIRROR (ZORUNLU)
+6. ÖZET
 -------------------------------------------------------------------------------
 
-- Transcript’te WORK LOG, UI’daki “Ran/Edited/Reviewed/Considering” listesini metin olarak yansıtır.
-- Minimum beklenen:
-  - Komut çalıştıysa: `Ran <cmd>`
-  - Dosya değiştiyse: `Edited <file> +x -y`
-- Opsiyonel: `WORK LOG – Summary` (kısa özet).
-- Bu blok secrets içermez.
+- Transcript local-only’dir ve gitignored kalmalıdır.
+- Her yanıt verbatim + marker’lı + `WORK LOG – UI Mirror` içermelidir.
+- Günlük rotasyon/pointer için helper: `bash scripts/ops/codex_chatlog_set_latest.sh`.
 
 -------------------------------------------------------------------------------
-X. LEGACY NOTU
+7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- Verbatim kuralı devreye girmeden önce `latest.md` içinde marker’sız eski format kayıtlar olabilir.
-- Öneri: kural devreye alındığında `latest.md` arşivlenir ve temiz `latest.md` başlatılır (legacy ayrıştırma).
-
--------------------------------------------------------------------------------
-X. GÜNLÜK ROTASYON (UTC)
--------------------------------------------------------------------------------
-
-- Günlük transcript dosyası: `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`
-- `latest.md` bugünün dosyasını gösterir.
-- Örnek:
-  - Bugün: `.autopilot-tmp/codex-chatlog/20251225.md`
-  - Hızlı bakış: `tail -n 200 .autopilot-tmp/codex-chatlog/latest.md`
+- Core rules: `AGENT-CODEX.core.md`
+- Helper: `scripts/ops/codex_chatlog_set_latest.sh`
+- Doc-qa local runner: `scripts/run_doc_qa_execution_log_local.py`
+- Template: `docs/99-templates/RUNBOOK.template.md`
