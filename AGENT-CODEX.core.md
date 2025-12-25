@@ -48,26 +48,24 @@ Not: WORK LOG token/secret içermez.
 
 ### 3.3 EVIDENCE POINTERS (ZORUNLU)
 - “Bunu nereden doğrularım?” sorusuna cevap verir.
-- Asgari alanlar:
-  - `gate: PASS|FAIL`
-  - `execution_log: .autopilot-tmp/execution-log/execution-log.md` (full path)
-  - `chatlog: .autopilot-tmp/codex-chatlog/latest.md` veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` (full path)
-- Varsa eklenir:
-  - `branch: <name>`
-  - `sha: <short>`
-  - `commit: <sha>`
-  - `pr: <url>`
-
-- **Literal full path zorunlu**: değerler açıklama değil dosya yolu olmalı.
+- **Format zorunlu**: her satır `key: <literal value>` şeklinde yazılır.
   - Yanlış: `execution-log.md (full path)`
   - Doğru: `execution_log: .autopilot-tmp/execution-log/execution-log.md`
 
-Örnek (tam):
-- `gate: PASS`
+Zorunlu anahtarlar:
+- `gate: PASS|FAIL`
 - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-- `chatlog: .autopilot-tmp/codex-chatlog/latest.md` (veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`)
+- `chatlog: .autopilot-tmp/codex-chatlog/latest.md`
+
+Koşullu (çalıştırıldıysa ekle):
+- `flow_report: .autopilot-tmp/flow-mining/flow-report.md`
+- `flow_stats: .autopilot-tmp/flow-mining/flow-stats.json`
+
+Varsa eklenir:
 - `branch: <name>`
 - `sha: <short>`
+- `commit: <sha>`
+- `pr: <url>`
 
 
 ### 3.4 DOC-QA LOCAL STANDARDI (ZORUNLU)
@@ -89,8 +87,10 @@ Not: WORK LOG token/secret içermez.
 - `AGENT-CODEX.core.md:51 — Dil kuralı güncellendi (yapılan vs planlanan ayrımı).`
 
 ### 3.6 NEXT (ZORUNLU)
-- Sırada gerçek iş varsa 1–5 madde.
-- Yoksa: `NEXT: none`
+- NEXT satır formatı zorunlu:
+  - `NEXT: none`
+  - veya `NEXT: optional — <kısa açıklama> — <link/komut>`
+- 1–5 madde olabilir; her madde ayrı bir `NEXT: optional — ...` satırı olarak yazılır.
 
 
 ## 4. Riskli komutlar
