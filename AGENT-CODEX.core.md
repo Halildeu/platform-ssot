@@ -34,6 +34,7 @@ Her görevde varsayılan yapı (sıra zorunlu):
    - UI’daki listeyi metin olarak yansıtır: `Ran ...`, `Edited ... +x -y`, `Reviewed ...`, `Considering ...` vb.
    - 10–40 satır arası olabilir; kısa ve ham olmalı (paraphrase yok).
    - Komut çalıştırıldıysa: en az 1 `Ran <cmd>` satırı zorunlu.
+   - `Ran` satırı komutun tamamını içerir (kısaltma/truncate yok).
    - Dosya değiştiyse: en az 1 `Edited <path> +a -b` satırı zorunlu.
 2) **WORK LOG – Summary (Opsiyonel)**
    - 3–8 satırlık özet (insan okuması için).
@@ -49,8 +50,8 @@ Not: WORK LOG token/secret içermez.
 - “Bunu nereden doğrularım?” sorusuna cevap verir.
 - Asgari alanlar:
   - `gate: PASS|FAIL`
-  - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-  - `chatlog: .autopilot-tmp/codex-chatlog/YYYYMMDD.md` (veya `latest.md`)
+  - `execution_log: .autopilot-tmp/execution-log/execution-log.md` (full path)
+  - `chatlog: .autopilot-tmp/codex-chatlog/latest.md` veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` (full path)
 - Varsa eklenir:
   - `branch: <name>`
   - `sha: <short>`
@@ -70,6 +71,7 @@ Not: WORK LOG token/secret içermez.
 - Sadece “dosya yolu + değişiklik” içerir.
 - Değişiklik bu görevde uygulandıysa: geçmiş zaman (örn. “eklendi/güncellendi/silindi”) yazılır.
 - Emir kipi yok; “→ ekle/hizala/çalıştır” kullanılmaz.
+- Format: `dosya:line — değişiklik` (parantezli `(line N)` kullanılmaz).
 
 Örnek:
 - `AGENT-CODEX.core.md:51 — Dil kuralı güncellendi (yapılan vs planlanan ayrımı).`
