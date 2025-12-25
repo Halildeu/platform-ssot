@@ -22,9 +22,17 @@
 
 Her görevde varsayılan yapı:
 
+- WORK LOG
 - Keşif Özeti
 - Tasarım
 - Uygulama Adımları
+
+**WORK LOG (ZORUNLU)**
+- Codex her yanıtının en üstünde `WORK LOG` bloğu üretir.
+- Bu blok, UI’daki “Finished working / Considering / Implementing …” listesinin metin karşılığıdır.
+- Format: 5–20 kısa satır; fiil + nesne şeklinde (örn. “Checking doc-qa gates”, “Editing runbook wording”).
+- Ardından `Keşif Özeti / Tasarım / Uygulama Adımları` gelir.
+- WORK LOG içinde token/secret bulunmaz.
 
 `Uygulama Adımları` sadece:
 - `dosya yolu` + `yapılacak değişiklik` içermelidir.

@@ -47,6 +47,13 @@ X. VERBATIM FORMAT
 - Opsiyonel: RAW bloğundan sonra “Keşif Özeti / Tasarım / Uygulama Adımları” gibi yapısal özet eklenebilir; ancak RAW yerine geçmez.
 
 -------------------------------------------------------------------------------
+X. WORK LOG (UI LİSTESİ METİN KARŞILIĞI)
+-------------------------------------------------------------------------------
+
+- Yanıtın üst bölümünde `WORK LOG` bloğu zorunludur.
+- Bu blok UI’daki “Finished working / Considering…” görev listesinin metin versiyonudur.
+
+-------------------------------------------------------------------------------
 X. LEGACY NOTU
 -------------------------------------------------------------------------------
 
