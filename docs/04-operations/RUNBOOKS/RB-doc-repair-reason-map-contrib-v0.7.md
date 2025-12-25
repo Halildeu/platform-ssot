@@ -92,3 +92,5 @@ Owner: Halil K.
 - Workflow (dry-run): `.github/workflows/doc-repair-apply.yml`
 - SPEC: `docs/03-delivery/SPECS/SPEC-0009-doc-repair-loop-v0-1.md`
 - ADR: `docs/02-architecture/services/backend-docs/ADR/ADR-0002-doc-repair-loop-v0-1.md`
+
+Kabul kriteri: Reason-map değişikliği sonrası `doc-repair-apply (dry-run)` çıktısında `unknown_reason_ratio` artmamalıdır; artıyorsa PR açıklamasında neden (false positive / yeni format / yeni reason) belirtilmelidir.
