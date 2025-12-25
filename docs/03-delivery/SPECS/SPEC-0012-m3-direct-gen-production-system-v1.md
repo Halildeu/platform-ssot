@@ -220,3 +220,4 @@ SSOT (v1):
 - BM Pack (ETHICS): `docs/01-product/BUSINESS-MASTERS/ETHICS/`
 - Benchmark Pack (ETHICS): `docs/01-product/BENCHMARKS/ETHICS/`
 - Trace Pack (ETHICS): `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
+- Runbook: `docs/04-operations/RUNBOOKS/RB-trace-quality-policy-enable.md`
