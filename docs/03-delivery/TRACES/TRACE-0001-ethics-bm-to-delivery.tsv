@@ -45,3 +45,13 @@ BM-0001-MET-KPI-007	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD repo
 BM-0001-MET-KPI-008	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
 BM-0001-MET-KPI-009	MET	STORY	STORY-0312	mapping_quality: refined; topic: closure-quality-score; also: PRD-0004; SPEC-0013; AC-0312
 BM-0001-MET-KPI-009	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Search & Reporting (closure quality score reporting)
+BM-0001-CTRL-GRD-002	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: COI Engine
+BM-0001-CTRL-GRD-007	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Evidence / Attachment
+BM-0001-CTRL-GRD-008	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Evidence / Attachment
+BM-0001-MET-KPI-001	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Search & Reporting
+BM-0001-MET-KPI-002	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Search & Reporting
+BM-0001-MET-KPI-003	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Search & Reporting
+BM-0001-MET-KPI-005	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Search & Reporting
+BM-0001-MET-KPI-006	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Search & Reporting
+BM-0001-MET-KPI-007	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Search & Reporting
+BM-0001-MET-KPI-008	MET	PLATFORM_SPEC	SPEC-0014	mapping_quality: coarse; platform_capability: Search & Reporting
