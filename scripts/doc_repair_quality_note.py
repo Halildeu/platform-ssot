@@ -25,9 +25,15 @@ def main() -> int:
         note.append(
             "WARNING: unknown_reason_ratio > 10% (reason-map coverage düşük; yeni pattern eklenmeli)"
         )
+        note.append(
+            "Bkz: docs/04-operations/RUNBOOKS/RB-doc-repair-reason-map-contrib-v0.7.md (Kabul Kriteri)"
+        )
     elif plan_items > 0 and ratio > 0.05:
         note.append("")
         note.append("INFO: unknown_reason_ratio > 5% (reason-map iyileştirilebilir)")
+        note.append(
+            "Bkz: docs/04-operations/RUNBOOKS/RB-doc-repair-reason-map-contrib-v0.7.md (Kabul Kriteri)"
+        )
 
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_path:
