@@ -56,3 +56,4 @@ backend/.vault-dev/**
 **/*.pyc
 .autopilot-tmp/execution-log/**
 .autopilot-tmp/codex-chatlog/**
+.autopilot-tmp/flow-mining/**
