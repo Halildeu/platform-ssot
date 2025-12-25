@@ -58,6 +58,18 @@ Not: WORK LOG token/secret içermez.
   - `commit: <sha>`
   - `pr: <url>`
 
+- **Literal full path zorunlu**: değerler açıklama değil dosya yolu olmalı.
+  - Yanlış: `execution-log.md (full path)`
+  - Doğru: `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+
+Örnek (tam):
+- `gate: PASS`
+- `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+- `chatlog: .autopilot-tmp/codex-chatlog/latest.md` (veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`)
+- `branch: <name>`
+- `sha: <short>`
+
+
 ### 3.4 DOC-QA LOCAL STANDARDI (ZORUNLU)
 - Local doğrulama/gate koşulacaksa varsayılan komut:
   - `python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log`

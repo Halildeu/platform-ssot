@@ -83,3 +83,15 @@ Owner: @team/platform
 - Helper: `scripts/ops/codex_chatlog_set_latest.sh`
 - Doc-qa local runner: `scripts/run_doc_qa_execution_log_local.py`
 - Template: `docs/99-templates/RUNBOOK.template.md`
+
+-------------------------------------------------------------------------------
+X. EVIDENCE POINTERS (LITERAL PATH)
+-------------------------------------------------------------------------------
+
+- Evidence pointer satırları açıklama değil **literal full path** olmalıdır.
+  - Yanlış: `execution-log.md (full path)`
+  - Doğru: `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+- Örnek:
+  - `gate: PASS`
+  - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+  - `chatlog: .autopilot-tmp/codex-chatlog/latest.md`
