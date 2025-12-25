@@ -7,6 +7,8 @@ web/test-results/**
 .autopilot-tmp/**
 artifacts/ci-logs/
 artifacts/ci-logs/**
+artifacts/doc-repair/
+artifacts/doc-repair/**
 
 # Dev Vault artifacts (do not commit)
 .vault-dev/
