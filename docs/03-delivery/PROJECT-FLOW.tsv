@@ -56,3 +56,6 @@ STORY-0302	0302	Release & Deploy E2E v0.1 (Canlıya Alma ve Son Kullanıcıya Su
 STORY-0303	0303	Autopilot Auto-Fix + Deploy + Rollback v0.1	OPS-RELEASE-E2E	—	—	✓ (AC-0303)	⏳ Pending	2025-12-21	@team/platform	M1	M1	M1	L0	—
 STORY-0304	0304	Autopilot Auto-Fix + Deploy + Rollback v0.1 (0304)	OPS-RELEASE-E2E	—	—	✓ (AC-0304)	⏳ Pending	2025-12-21	@team/platform	M1	M1	M1	L0	—
 STORY-0305	0305	M3 Direct-Gen Üretim Sistemi v1	DOCS-PRODUCTION	—	SPEC-0012	✓ (AC-0305)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
+STORY-0306	0306	Ethics: Intake & Case Mailbox (MVP)	ETHICS-MVP	—	SPEC-0013	✓ (AC-0306)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
+STORY-0307	0307	Ethics: COI & Access Boundary (MVP)	ETHICS-MVP	✓ (ADR-0003)	SPEC-0013	✓ (AC-0307)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
+STORY-0308	0308	Ethics: Audit Trail & Evidence Handling (MVP)	ETHICS-MVP	✓ (ADR-0004)	SPEC-0013	✓ (AC-0308)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1

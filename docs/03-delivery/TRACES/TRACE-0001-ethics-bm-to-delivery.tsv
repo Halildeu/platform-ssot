@@ -1,10 +1,20 @@
 BM_ITEM_ID	BM_SECTION	TARGET_TYPE	TARGET_ID	NOTES
-BM-0001-CORE-DEC-001	Anonimlik kararı	SPEC	TBD	Karar → SPEC/ADR maddesi (anonimlik politikası)
+BM-0001-CORE-DEC-001	Anonimlik kararı	SPEC	SPEC-0013	Karar → kontrat/spec (anonimlik politikası)
 BM-0001-CORE-DEC-001	Anonimlik kararı	PB	PB-0004	Problem framing (anonimlik politikası)
+BM-0001-CORE-DEC-001	Anonimlik kararı	STORY	STORY-0306	Delivery scope (intake)
 BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	PRD	PRD-0004	Karar → ürün gereksinimi
-BM-0001-CTRL-GRD-001	COI erişim engeli	AC	TBD	Guardrail → negatif acceptance (COI access deny)
+BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	SPEC	SPEC-0013	Karar → kontrat/spec (case mailbox)
+BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	STORY	STORY-0306	Delivery scope (case mailbox)
+BM-0001-CTRL-GRD-001	COI erişim engeli	AC	AC-0307	Guardrail → negatif acceptance (COI access deny)
 BM-0001-CTRL-GRD-001	COI erişim engeli	PB	PB-0004	Problem framing (COI riski)
-BM-0001-CTRL-GRD-003	Delil immutability	ADR	TBD	Karar/guardrail → delil zinciri ADR
+BM-0001-CTRL-GRD-001	COI erişim engeli	ADR	ADR-0003	Karar → COI access boundary
+BM-0001-CTRL-GRD-001	COI erişim engeli	STORY	STORY-0307	Delivery scope (COI + access boundary)
+BM-0001-CTRL-GRD-003	Delil immutability	ADR	ADR-0004	Karar/guardrail → delil immutability policy
 BM-0001-CTRL-GRD-003	Delil immutability	PB	PB-0004	Problem framing (delil disiplini)
+BM-0001-CTRL-GRD-003	Delil immutability	STORY	STORY-0308	Delivery scope (evidence handling)
+BM-0001-CTRL-GRD-004	Audit log zorunlu	ADR	ADR-0004	Karar/guardrail → audit trail zorunluluğu
+BM-0001-CTRL-GRD-004	Audit log zorunlu	AC	AC-0308	Guardrail → acceptance (audit trail)
+BM-0001-CTRL-GRD-004	Audit log zorunlu	STORY	STORY-0308	Delivery scope (audit trail)
 BM-0001-MET-KPI-009	Kapanış kalite skoru	OBS	TBD	Metric → dashboard/rapor gereksinimi
 BM-0001-MET-KPI-009	Kapanış kalite skoru	PB	PB-0004	Problem framing (başarı ölçümü)
+BM-0001-MET-KPI-009	Kapanış kalite skoru	SPEC	SPEC-0013	Kontrat → kapanış kalite skoru gereksinimi
