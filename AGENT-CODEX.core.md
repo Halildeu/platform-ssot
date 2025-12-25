@@ -56,5 +56,18 @@ Bu tip işlemler gerekiyorsa:
 
 ## 7. Local Chat Transcript (Kopyasız)
 
-- Codex her yanıtının sonunda, yanıtın **tam metnini** UTC zaman damgası ile `.autopilot-tmp/codex-chatlog/latest.md` dosyasına append eder.
+- Transcript dosyası: `.autopilot-tmp/codex-chatlog/latest.md` (gitignored).
+- Codex her yanıtının sonunda, kullanıcıya gönderdiği yanıtın **tam metnini** (verbatim) transcript’e append eder.
+  - Yeniden biçimlendirme, paraphrase, kısaltma yapılmaz.
+  - “Undo/Review” benzeri bloklar dahil, kullanıcıya giden metin ne ise aynen yazılır.
+
+**VERBATIM ZORUNLULUK (Kopyasız / Birebir)**
+- Transcript’e yazılan ana blok aşağıdaki formatta olmak zorundadır:
+  - `--- ts_utc / branch / sha ---`
+  - `BEGIN_CODEX_RESPONSE`
+  - (yanıtın aynısı, satır satır)
+  - `END_CODEX_RESPONSE`
+- İstersen ayrıca *ikinci bir bölüm* olarak “Keşif Özeti / Tasarım / Uygulama Adımları” yapısal özet eklenebilir; ancak bu **RAW yerine geçmez**.
+
+**Gizlilik**
 - Bu dosya gitignored olsa bile **token/secret/credential** içeren metinler yazdırılmaz.
