@@ -4,6 +4,16 @@ ID: SPEC-0012
 Status: Draft  
 Owner: TBD
 
+## LOCKED (Governance)
+
+Bu doküman **M3 Direct-Gen üretim sisteminin SSOT’u** olarak kilitlenmiştir.
+
+### Değişiklik Politikası
+
+- Bu dokümanda “kural değişikliği” yapılmaz.
+- Yeni/iyileştirilmiş kurallar için **yeni bir SPEC versiyonu** açılır (örn. `SPEC-0016-...`).
+- Örnek (exemplar) iyileştirmeleri (BM/BENCH/TRACE) bu SPEC’i değiştirmeden yapılabilir; ancak sistem kuralı etkileniyorsa yeni SPEC gerekir.
+
 ## 1. AMAÇ
 
 Her konu için aynı mantık ve aynı kalite barıyla çalışan üretim hattı kurmak:

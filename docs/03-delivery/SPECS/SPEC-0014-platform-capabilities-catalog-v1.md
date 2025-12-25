@@ -524,6 +524,21 @@ Filtreleme, export ve dashboard KPI üretimini ortaklaştırmak; permission-awar
 - NC: KPI (due date, backlog) raporları; export daha açık olabilir.
 - Incident: yüksek hacimli sorgular; performans knobs kritik.
 
+## Contract Change Policy (Governance)
+
+Bu doküman platform capability sözleşmelerini tanımlar ve domain’ler için bağımlılık noktasıdır.
+
+### Değişiklik Sınıfları
+
+- Patch: açıklama düzeltmeleri, örnek ekleri (sözleşmeyi değiştirmeyen)
+- Minor: geriye uyumlu ekler (yeni policy knob, yeni telemetry alanı)
+- Major: geriye uyumsuz değişiklik (mevcut knob/semantik değişimi, zorunlu alan değişimi)
+
+### Uygulama Kuralı
+
+- Minor/Major değişikliklerde yeni bir SPEC versiyonu açılır (örn. `SPEC-0016-...`).
+- Domain kontratları (`SPEC-0013`, `SPEC-0015` vb.) yeni versiyona planlı geçiş yapar.
+
 ## 4) Links
 
 - Üretim sistemi kuralları: `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
