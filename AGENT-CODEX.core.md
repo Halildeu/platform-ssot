@@ -53,3 +53,8 @@ Bu tip işlemler gerekiyorsa:
 - Yetmezse Codex: yalnız allowlist + limitler içinde düzenleme/implementasyon.
 - Her fix localde yapılır: local validate → commit → push. (GitHub-side auto-fix yok.)
 - needs-human (token/permission/infra/approval): Codex yalnız teşhis/kanıt üretir, otomatik fix yapmaz.
+
+## 7. Local Chat Transcript (Kopyasız)
+
+- Codex her yanıtının sonunda, yanıtın **tam metnini** UTC zaman damgası ile `.autopilot-tmp/codex-chatlog/latest.md` dosyasına append eder.
+- Bu dosya gitignored olsa bile **token/secret/credential** içeren metinler yazdırılmaz.

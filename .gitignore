@@ -55,3 +55,4 @@ backend/.vault-dev/**
 **/__pycache__/
 **/*.pyc
 .autopilot-tmp/execution-log/**
+.autopilot-tmp/codex-chatlog/**
