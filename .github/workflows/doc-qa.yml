@@ -44,5 +44,6 @@ jobs:
           python3 scripts/check_story_links.py
           python3 scripts/check_spec_refs.py
           python3 scripts/check_doc_repair_reason_map.py
+          python3 scripts/check_doc_repair_autopr_policy.py
           python3 scripts/check_doc_chain.py
           python3 scripts/check_governance_migration.py
