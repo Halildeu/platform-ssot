@@ -83,14 +83,15 @@ Trace Pack, BM maddelerinin Delivery hedeflerine izlenebilir dönüşümünü ta
 
 - `BM_ITEM_ID` (zorunlu)
 - `BM_SECTION`
-- `TARGET_TYPE` (`PB`/`PRD`/`SPEC`/`ADR`/`STORY`/`AC`/`TP`/`RB`/`OBS` vb.)
+- `TARGET_TYPE` (`PB`/`PRD`/`PLATFORM_SPEC`/`SPEC`/`ADR`/`STORY`/`AC`/`TP`/`RB`/`OBS` vb.)
 - `TARGET_ID`
 - `NOTES`
 
 Kurallar (minimum):
-- Her `DEC` maddesi en az 1 `SPEC` veya `ADR` hedefiyle eşleşir.
+- Her `DEC` maddesi en az 1 `PLATFORM_SPEC` veya `SPEC` veya `ADR` hedefiyle eşleşir.
 - Her `GRD` maddesi en az 1 negatif acceptance senaryosuna (`AC`) eşleşir.
 - Her `KPI` maddesi en az 1 observability/dashboard hedefiyle (`OBS`) eşleşir.
+  - Not: `PLATFORM_SPEC` hedefleri için `TARGET_ID` bir `SPEC-XXXX` ID’sidir; `NOTES` içinde ilgili capability adı yazılır.
 
 ### 3.4 Trace Coverage Standardı
 
@@ -103,6 +104,31 @@ Reference exemplar olarak işaretlenen konularda Trace Pack %100 kapsama sahip o
 Notlar:
 - Eşleme “program-level” (`PB`/`PRD`/`SPEC`) veya “delivery-level” (`ADR`/`STORY`/`AC`/`TP`/`RB`/`OBS`) olabilir.
 - Bu kural ilk örnek için Ethics üzerinde uygulanır: `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`.
+
+### 3.5 Shared Capability First (Zorunlu)
+
+Yeni bir domain ihtiyacı geldiğinde varsayılan yaklaşım: önce “shared platform capability” olarak ele al, sonra gerekirse domain içine indir.
+
+#### Extraction kriterleri (hepsi sağlanmalı)
+
+- **2+ domain**: en az iki bağımsız domain/use-case tarafından tekrar kullanılacağı net (mevcut veya çok yakın roadmap).
+- **Stabil kontrat**: giriş/çıkış, hata semantiği, versiyonlama ve yetki sınırları net; domain’e özel detaylar extension/policy olarak taşınabilir.
+- **Doğru bağımlılık yönü**: domain’ler capability’ye bağımlı olur; capability domain’e bağımlı olmaz (platform → domain değil, domain → platform).
+
+#### Kural: Delivery SPEC’lerde “Platform Dependencies” zorunlu
+
+Her delivery-level `SPEC-XXXX` dokümanında aşağıdaki bölüm **zorunludur**:
+- `Platform Dependencies`: bu delivery’nin çalışması için gerekli capability’lerin listesi (yoksa `None`).
+
+#### Trace kuralı
+
+Trace Pack içinde capability bağlantısı gerekiyorsa:
+- `TARGET_TYPE=PLATFORM_SPEC`
+- `TARGET_ID=<SPEC-XXXX>` (capability kataloğu / capability spec)
+- `NOTES` içinde `platform_capability: <name>` alanı bulunur.
+
+SSOT (v1):
+- Platform capability kataloğu: `docs/03-delivery/SPECS/SPEC-0014-platform-capabilities-catalog-v1.md`.
 
 ## 4. YERLEŞİM VE İSİM STANDARDI
 

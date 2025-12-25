@@ -20,6 +20,18 @@ Owner: TBD
 - BENCH: `BENCH-0001` (matrix + gaps/trends/ai)
 - TRACE: `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
 
+## 2.1 PLATFORM DEPENDENCIES
+
+Bu delivery kontratı aşağıdaki ortak (shared) yetenekleri “platform dependency” olarak kabul eder (SSOT: `SPEC-0014`).
+
+- Notification & Communications: case mailbox / check-in bildirimleri, delivery status, redaksiyon/policy hook.
+- Case / Work Item Engine: state machine, assignment, timeline, vaka tipi ve visibility policy, retaliation vakası açma.
+- SLA & Calendar: business day/holiday/timezone semantiği ve breach/escalation kuralları.
+- Audit Trail & View Log: who-did-what + who-viewed-what, append-only beklentisi.
+- Evidence / Attachment: versioning, immutability beklentisi, access logging entegrasyonu.
+- COI Engine: COI tespiti, erişim engeli ve bağımsız reassignment.
+- Search & Reporting: KPI/closure quality score raporlama, permission-aware sorgulama.
+
 ## 3. DOMAIN SINIRLARI
 
 - Vaka tipleri (minimum): Etik / İK / InfoSec / Finans / Misilleme.
@@ -76,3 +88,4 @@ Owner: TBD
 - PRD: `docs/01-product/PRD/PRD-0004-ethics-speakup-and-case-management-mvp.md`
 - BM Pack: `docs/01-product/BUSINESS-MASTERS/ETHICS/`
 - BENCH Pack: `docs/01-product/BENCHMARKS/ETHICS/`
+- Platform Capabilities: `docs/03-delivery/SPECS/SPEC-0014-platform-capabilities-catalog-v1.md`
