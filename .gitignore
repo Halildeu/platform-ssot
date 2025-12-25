@@ -54,3 +54,4 @@ backend/.vault-dev/**
 # Python artifacts (do not commit)
 **/__pycache__/
 **/*.pyc
+.autopilot-tmp/execution-log/**
