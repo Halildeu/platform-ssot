@@ -47,3 +47,5 @@ jobs:
           python3 scripts/check_doc_repair_autopr_policy.py
           python3 scripts/check_doc_chain.py
           python3 scripts/check_governance_migration.py
+          python3 scripts/check_trace_quality.py
+          python3 scripts/check_prd_complexity.py
