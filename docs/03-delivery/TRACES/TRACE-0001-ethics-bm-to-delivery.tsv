@@ -1,6 +1,10 @@
 BM_ITEM_ID	BM_SECTION	TARGET_TYPE	TARGET_ID	NOTES
 BM-0001-CORE-DEC-001	Anonimlik kararı	SPEC	TBD	Karar → SPEC/ADR maddesi (anonimlik politikası)
-BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	PRD	TBD	Karar → ürün gereksinimi
+BM-0001-CORE-DEC-001	Anonimlik kararı	PB	PB-0004	Problem framing (anonimlik politikası)
+BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	PRD	PRD-0004	Karar → ürün gereksinimi
 BM-0001-CTRL-GRD-001	COI erişim engeli	AC	TBD	Guardrail → negatif acceptance (COI access deny)
+BM-0001-CTRL-GRD-001	COI erişim engeli	PB	PB-0004	Problem framing (COI riski)
 BM-0001-CTRL-GRD-003	Delil immutability	ADR	TBD	Karar/guardrail → delil zinciri ADR
+BM-0001-CTRL-GRD-003	Delil immutability	PB	PB-0004	Problem framing (delil disiplini)
 BM-0001-MET-KPI-009	Kapanış kalite skoru	OBS	TBD	Metric → dashboard/rapor gereksinimi
+BM-0001-MET-KPI-009	Kapanış kalite skoru	PB	PB-0004	Problem framing (başarı ölçümü)

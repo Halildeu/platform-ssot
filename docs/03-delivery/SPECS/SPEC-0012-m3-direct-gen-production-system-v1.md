@@ -125,6 +125,8 @@ Kurallar (minimum):
 
 ### 5.3 Delivery Pack
 
+- `docs/01-product/PROBLEM-BRIEFS/PB-0004-ethics-speakup-and-case-management.md`
+- `docs/01-product/PRD/PRD-0004-ethics-speakup-and-case-management-mvp.md`
 - `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
 - `docs/03-delivery/STORIES/STORY-0305-m3-direct-gen-production-system-v1.md`
 - `docs/03-delivery/ACCEPTANCE/AC-0305-m3-direct-gen-production-system-v1.md`
@@ -165,6 +167,8 @@ Kurallar (minimum):
 - Story: `docs/03-delivery/STORIES/STORY-0305-m3-direct-gen-production-system-v1.md`
 - Acceptance: `docs/03-delivery/ACCEPTANCE/AC-0305-m3-direct-gen-production-system-v1.md`
 - Test Plan: `docs/03-delivery/TEST-PLANS/TP-0305-m3-direct-gen-production-system-v1.md`
+- Problem Brief: `docs/01-product/PROBLEM-BRIEFS/PB-0004-ethics-speakup-and-case-management.md`
+- PRD: `docs/01-product/PRD/PRD-0004-ethics-speakup-and-case-management-mvp.md`
 - BM Pack (ETHICS): `docs/01-product/BUSINESS-MASTERS/ETHICS/`
 - Benchmark Pack (ETHICS): `docs/01-product/BENCHMARKS/ETHICS/`
 - Trace Pack (ETHICS): `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
