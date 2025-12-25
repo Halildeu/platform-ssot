@@ -62,6 +62,12 @@ Bu tip işlemler gerekiyorsa:
   - “Undo/Review” benzeri bloklar dahil, kullanıcıya giden metin ne ise aynen yazılır.
 
 **VERBATIM ZORUNLULUK (Kopyasız / Birebir)**
+
+**TAMLIK KURALI (NO DROP)**
+- Verbatim blok, kullanıcıya görünen yanıt metninin *tamamını* içerir: `Undo`, `Review`, dosya listeleri, diff özetleri, linkler, boş satırlar dahil.
+- Hiçbir satır atlanmaz, yeniden sıralanmaz, yeniden biçimlendirilmez.
+- Her yanıt için `BEGIN_CODEX_RESPONSE` / `END_CODEX_RESPONSE` marker’ları zorunludur (opsiyonel değildir).
+
 - Transcript’e yazılan ana blok aşağıdaki formatta olmak zorundadır:
   - `--- ts_utc / branch / sha ---`
   - `BEGIN_CODEX_RESPONSE`

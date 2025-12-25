@@ -43,3 +43,10 @@ X. VERBATIM FORMAT
   - `BEGIN_CODEX_RESPONSE` / `END_CODEX_RESPONSE` marker’ları arasında
   - Codex yanıtı Undo/Review dahil aynen yer alır.
 - Opsiyonel: RAW bloğundan sonra “Keşif Özeti / Tasarım / Uygulama Adımları” gibi yapısal özet eklenebilir; ancak RAW yerine geçmez.
+
+-------------------------------------------------------------------------------
+X. LEGACY NOTU
+-------------------------------------------------------------------------------
+
+- Verbatim kuralı devreye girmeden önce `latest.md` içinde marker’sız eski format kayıtlar olabilir.
+- Öneri: kural devreye alındığında `latest.md` arşivlenir ve temiz `latest.md` başlatılır (legacy ayrıştırma).
