@@ -50,3 +50,13 @@ X. LEGACY NOTU
 
 - Verbatim kuralı devreye girmeden önce `latest.md` içinde marker’sız eski format kayıtlar olabilir.
 - Öneri: kural devreye alındığında `latest.md` arşivlenir ve temiz `latest.md` başlatılır (legacy ayrıştırma).
+
+-------------------------------------------------------------------------------
+X. GÜNLÜK ROTASYON (UTC)
+-------------------------------------------------------------------------------
+
+- Günlük transcript dosyası: `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`
+- `latest.md` bugünün dosyasını gösterir.
+- Örnek:
+  - Bugün: `.autopilot-tmp/codex-chatlog/20251225.md`
+  - Hızlı bakış: `tail -n 200 .autopilot-tmp/codex-chatlog/latest.md`

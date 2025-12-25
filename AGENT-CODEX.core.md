@@ -56,12 +56,20 @@ Bu tip işlemler gerekiyorsa:
 
 ## 7. Local Chat Transcript (Kopyasız)
 
-- Transcript dosyası: `.autopilot-tmp/codex-chatlog/latest.md` (gitignored).
+- Transcript dizini: `.autopilot-tmp/codex-chatlog/` (gitignored).
 - Codex her yanıtının sonunda, kullanıcıya gönderdiği yanıtın **tam metnini** (verbatim) transcript’e append eder.
   - Yeniden biçimlendirme, paraphrase, kısaltma yapılmaz.
   - “Undo/Review” benzeri bloklar dahil, kullanıcıya giden metin ne ise aynen yazılır.
 
 **VERBATIM ZORUNLULUK (Kopyasız / Birebir)**
+
+**GÜNLÜK ROTASYON (UTC)**
+- Transcript hedef dosyası: `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` (UTC tarih).
+- `latest.md` her zaman bugünün dosyasını gösterir (pointer/symlink). Yerel helper:
+  - `bash scripts/ops/codex_chatlog_set_latest.sh`
+- Her yanıt append akışı:
+  1) `bash scripts/ops/codex_chatlog_set_latest.sh` (latest güncel)
+  2) Bugünün dosyasına `--- ts_utc/branch/sha --- + BEGIN/END + verbatim` bloğunu append et.
 
 **TAMLIK KURALI (NO DROP)**
 - Verbatim blok, kullanıcıya görünen yanıt metninin *tamamını* içerir: `Undo`, `Review`, dosya listeleri, diff özetleri, linkler, boş satırlar dahil.
