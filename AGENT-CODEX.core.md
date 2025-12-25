@@ -22,17 +22,22 @@
 
 Her görevde varsayılan yapı:
 
-- WORK LOG
+- WORK LOG – UI Mirror
+- WORK LOG – Summary (opsiyonel)
 - Keşif Özeti
 - Tasarım
 - Uygulama Adımları
 
-**WORK LOG (ZORUNLU)**
-- Codex her yanıtının en üstünde `WORK LOG` bloğu üretir.
-- Bu blok, UI’daki “Finished working / Considering / Implementing …” listesinin metin karşılığıdır.
-- Format: 5–20 kısa satır; fiil + nesne şeklinde (örn. “Checking doc-qa gates”, “Editing runbook wording”).
-- Ardından `Keşif Özeti / Tasarım / Uygulama Adımları` gelir.
-- WORK LOG içinde token/secret bulunmaz.
+**WORK LOG (ZORUNLU, 2 KATMAN)**
+1) **WORK LOG – UI Mirror (Zorunlu)**
+   - UI’daki listeyi metin olarak yansıtır: `Ran ...`, `Edited ... +x -y`, `Reviewed ...`, `Considering ...` vb.
+   - 10–40 satır arası olabilir; kısa ve ham olmalı (paraphrase yok).
+   - Komut çalıştırıldıysa: en az 1 `Ran <cmd>` satırı zorunlu.
+   - Dosya değiştiyse: en az 1 `Edited <path> +a -b` satırı zorunlu.
+2) **WORK LOG – Summary (Opsiyonel)**
+   - 3–8 satırlık özet (insan okuması için).
+
+Not: WORK LOG token/secret içermez.
 
 `Uygulama Adımları` sadece:
 - `dosya yolu` + `yapılacak değişiklik` içermelidir.

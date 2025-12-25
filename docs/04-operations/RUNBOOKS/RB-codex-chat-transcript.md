@@ -47,11 +47,15 @@ X. VERBATIM FORMAT
 - Opsiyonel: RAW bloğundan sonra “Keşif Özeti / Tasarım / Uygulama Adımları” gibi yapısal özet eklenebilir; ancak RAW yerine geçmez.
 
 -------------------------------------------------------------------------------
-X. WORK LOG (UI LİSTESİ METİN KARŞILIĞI)
+X. WORK LOG – UI MIRROR (ZORUNLU)
 -------------------------------------------------------------------------------
 
-- Yanıtın üst bölümünde `WORK LOG` bloğu zorunludur.
-- Bu blok UI’daki “Finished working / Considering…” görev listesinin metin versiyonudur.
+- Transcript’te WORK LOG, UI’daki “Ran/Edited/Reviewed/Considering” listesini metin olarak yansıtır.
+- Minimum beklenen:
+  - Komut çalıştıysa: `Ran <cmd>`
+  - Dosya değiştiyse: `Edited <file> +x -y`
+- Opsiyonel: `WORK LOG – Summary` (kısa özet).
+- Bu blok secrets içermez.
 
 -------------------------------------------------------------------------------
 X. LEGACY NOTU
