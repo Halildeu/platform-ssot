@@ -1,37 +1,37 @@
 BM_ITEM_ID	BM_SECTION	TARGET_TYPE	TARGET_ID	NOTES
-BM-0001-CORE-ASM-001	CORE	PRD	PRD-0004	ASM -> PRD assumptions/validation/risk register
-BM-0001-CORE-ASM-002	CORE	PRD	PRD-0004	ASM -> PRD assumptions/validation/risk register
-BM-0001-CORE-DEC-001	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
-BM-0001-CORE-DEC-002	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
-BM-0001-CORE-DEC-003	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
-BM-0001-CORE-DEC-004	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
-BM-0001-CORE-GRD-001	CORE	AC	AC-0306	Guardrail -> negative acceptance (intake)
-BM-0001-CORE-GRD-002	CORE	AC	AC-0306	Guardrail -> negative acceptance (intake)
-BM-0001-CORE-GRD-003	CORE	AC	AC-0306	Guardrail -> negative acceptance (intake)
-BM-0001-CORE-RSK-001	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
-BM-0001-CORE-RSK-002	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
-BM-0001-CORE-RSK-003	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
-BM-0001-CORE-RSK-004	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
-BM-0001-CORE-RSK-005	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
-BM-0001-CORE-VAL-001	CORE	PRD	PRD-0004	VAL -> PRD assumptions/validation/risk register
-BM-0001-CORE-VAL-002	CORE	PRD	PRD-0004	VAL -> PRD assumptions/validation/risk register
-BM-0001-CTRL-DEC-001	CTRL	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
-BM-0001-CTRL-DEC-002	CTRL	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
-BM-0001-CTRL-DEC-003	CTRL	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
-BM-0001-CTRL-GRD-001	CTRL	AC	AC-0307	Guardrail -> negative acceptance (COI/access)
-BM-0001-CTRL-GRD-002	CTRL	AC	AC-0307	Guardrail -> negative acceptance (COI/access)
-BM-0001-CTRL-GRD-003	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
-BM-0001-CTRL-GRD-004	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
-BM-0001-CTRL-GRD-005	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
-BM-0001-CTRL-GRD-006	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
-BM-0001-CTRL-GRD-007	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
-BM-0001-CTRL-GRD-008	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
-BM-0001-MET-KPI-001	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-002	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-003	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-004	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-005	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-006	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-007	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-008	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
-BM-0001-MET-KPI-009	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-CORE-ASM-001	CORE	PRD	PRD-0004	mapping_quality: coarse; ASM -> PRD assumptions/validation/risk register
+BM-0001-CORE-ASM-002	CORE	PRD	PRD-0004	mapping_quality: coarse; ASM -> PRD assumptions/validation/risk register
+BM-0001-CORE-DEC-001	CORE	STORY	STORY-0306	mapping_quality: refined; topic: anonymity; also: PRD-0004; SPEC-0013; AC-0306
+BM-0001-CORE-DEC-002	CORE	STORY	STORY-0306	mapping_quality: refined; topic: case-mailbox; also: PRD-0004; SPEC-0013; AC-0306
+BM-0001-CORE-DEC-003	CORE	STORY	STORY-0309	mapping_quality: refined; topic: triage-routing; also: SPEC-0013; AC-0309
+BM-0001-CORE-DEC-004	CORE	PRD	PRD-0004	mapping_quality: coarse; Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CORE-GRD-001	CORE	AC	AC-0306	mapping_quality: coarse; Guardrail -> negative acceptance (intake)
+BM-0001-CORE-GRD-002	CORE	AC	AC-0306	mapping_quality: coarse; Guardrail -> negative acceptance (intake)
+BM-0001-CORE-GRD-003	CORE	AC	AC-0306	mapping_quality: coarse; Guardrail -> negative acceptance (intake)
+BM-0001-CORE-RSK-001	CORE	PRD	PRD-0004	mapping_quality: coarse; RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-002	CORE	PRD	PRD-0004	mapping_quality: coarse; RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-003	CORE	PRD	PRD-0004	mapping_quality: coarse; RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-004	CORE	PRD	PRD-0004	mapping_quality: coarse; RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-005	CORE	PRD	PRD-0004	mapping_quality: coarse; RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-VAL-001	CORE	PRD	PRD-0004	mapping_quality: coarse; VAL -> PRD assumptions/validation/risk register
+BM-0001-CORE-VAL-002	CORE	PRD	PRD-0004	mapping_quality: coarse; VAL -> PRD assumptions/validation/risk register
+BM-0001-CTRL-DEC-001	CTRL	PRD	PRD-0004	mapping_quality: coarse; Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CTRL-DEC-002	CTRL	PRD	PRD-0004	mapping_quality: coarse; Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CTRL-DEC-003	CTRL	PRD	PRD-0004	mapping_quality: coarse; Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CTRL-GRD-001	CTRL	STORY	STORY-0307	mapping_quality: refined; topic: COI; also: ADR-0003; SPEC-0013; AC-0307
+BM-0001-CTRL-GRD-002	CTRL	AC	AC-0307	mapping_quality: coarse; Guardrail -> negative acceptance (COI/access)
+BM-0001-CTRL-GRD-003	CTRL	STORY	STORY-0308	mapping_quality: refined; topic: evidence-immutability; also: ADR-0004; SPEC-0013; AC-0308
+BM-0001-CTRL-GRD-004	CTRL	STORY	STORY-0308	mapping_quality: refined; topic: audit-view-log; also: ADR-0004; SPEC-0013; AC-0308
+BM-0001-CTRL-GRD-005	CTRL	STORY	STORY-0311	mapping_quality: refined; topic: retaliation-checkin; also: PRD-0004; SPEC-0013; AC-0311
+BM-0001-CTRL-GRD-006	CTRL	STORY	STORY-0311	mapping_quality: refined; topic: retaliation-new-case; also: PRD-0004; SPEC-0013; AC-0311
+BM-0001-CTRL-GRD-007	CTRL	AC	AC-0308	mapping_quality: coarse; Guardrail -> negative acceptance (audit/evidence)
+BM-0001-CTRL-GRD-008	CTRL	AC	AC-0308	mapping_quality: coarse; Guardrail -> negative acceptance (audit/evidence)
+BM-0001-MET-KPI-001	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-002	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-003	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-004	MET	STORY	STORY-0310	mapping_quality: refined; topic: SLA-escalation; also: ADR-0005; SPEC-0013; AC-0310
+BM-0001-MET-KPI-005	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-006	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-007	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-008	MET	PRD	PRD-0004	mapping_quality: coarse; Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-009	MET	STORY	STORY-0312	mapping_quality: refined; topic: closure-quality-score; also: PRD-0004; SPEC-0013; AC-0312

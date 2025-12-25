@@ -59,3 +59,7 @@ STORY-0305	0305	M3 Direct-Gen Üretim Sistemi v1	DOCS-PRODUCTION	—	SPEC-0012	�
 STORY-0306	0306	Ethics: Intake & Case Mailbox (MVP)	ETHICS-MVP	—	SPEC-0013	✓ (AC-0306)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
 STORY-0307	0307	Ethics: COI & Access Boundary (MVP)	ETHICS-MVP	✓ (ADR-0003)	SPEC-0013	✓ (AC-0307)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
 STORY-0308	0308	Ethics: Audit Trail & Evidence Handling (MVP)	ETHICS-MVP	✓ (ADR-0004)	SPEC-0013	✓ (AC-0308)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
+STORY-0309	0309	Ethics: Triage Routing Policy (MVP)	ETHICS-MVP	—	SPEC-0013	✓ (AC-0309)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
+STORY-0310	0310	Ethics: SLA & Escalation Rules (MVP)	ETHICS-MVP	✓ (ADR-0005)	SPEC-0013	✓ (AC-0310)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
+STORY-0311	0311	Ethics: Retaliation Check-in & Protection (MVP)	ETHICS-MVP	—	SPEC-0013	✓ (AC-0311)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
+STORY-0312	0312	Ethics: Closure Quality Score (MVP)	ETHICS-MVP	—	SPEC-0013	✓ (AC-0312)	🟦 Design	2025-12-25	TBD	M1	M1	M1	L0	L1
