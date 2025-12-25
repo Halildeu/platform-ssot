@@ -3,6 +3,10 @@ name: doc-repair auto-pr (guarded)
 on:
   workflow_dispatch:
 
+concurrency:
+  group: doc-repair-autopr
+  cancel-in-progress: false
+
 permissions:
   contents: write
   pull-requests: write
@@ -126,8 +130,42 @@ jobs:
         run: |
           echo "Policy thresholds not met; exiting (no PR)."
 
-      - name: Run doc-qa gates
+      - name: PR anti-spam check (existing open PR)
+        id: pr_spam
         if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const titlePrefix = "docs(auto): doc-repair apply";
+            const branchPrefix = "docs/auto/doc-repair-";
+
+            const prs = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: "open",
+              per_page: 100,
+            });
+
+            const matches = prs.filter((pr) =>
+              (pr.title || "").startsWith(titlePrefix) || (pr.head?.ref || "").startsWith(branchPrefix)
+            );
+
+            if (matches.length > 0) {
+              core.info(`Found existing open doc-repair PR(s): ${matches.map((pr) => `#${pr.number}`).join(", ")}`);
+              core.setOutput("skip_pr", "true");
+            } else {
+              core.setOutput("skip_pr", "false");
+            }
+
+      - name: Skip (existing PR found)
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true' && steps.pr_spam.outputs.skip_pr == 'true'
+        run: |
+          echo "Existing open doc-repair PR found; exiting (no PR)."
+
+      - name: Run doc-qa gates
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true' && steps.pr_spam.outputs.skip_pr != 'true'
         run: |
           set -e
           python3 scripts/docflow_next.py render-flow --check
@@ -144,7 +182,7 @@ jobs:
           python3 scripts/check_governance_migration.py
 
       - name: Create branch + commit
-        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true'
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true' && steps.pr_spam.outputs.skip_pr != 'true'
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -161,7 +199,7 @@ jobs:
           echo "BRANCH=$BR" >> "$GITHUB_ENV"
 
       - name: Open PR
-        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true'
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true' && steps.pr_spam.outputs.skip_pr != 'true'
         uses: actions/github-script@v7
         with:
           script: |
