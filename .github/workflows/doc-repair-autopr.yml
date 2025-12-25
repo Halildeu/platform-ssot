@@ -1,0 +1,187 @@
+name: doc-repair auto-pr (guarded)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  autopr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate auto-pr policy SSOT
+        run: |
+          python3 scripts/check_doc_repair_autopr_policy.py
+
+      - name: Read policy
+        id: policy
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path("docs/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json")
+          d = json.loads(p.read_text(encoding="utf-8"))
+          enabled = bool(d.get("enabled", False))
+          print(f"enabled={enabled}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"enabled={'true' if enabled else 'false'}\n")
+          PY
+
+      - name: Skip (policy disabled)
+        if: steps.policy.outputs.enabled != 'true'
+        run: |
+          echo "Policy enabled=false; exiting (no-op)."
+
+      - name: docflow_next autopilot (dry-run)
+        if: steps.policy.outputs.enabled == 'true'
+        run: |
+          python3 scripts/docflow_next.py autopilot --dry-run --max-run 100 --summary-path summary.md
+
+      - name: Generate plan
+        if: steps.policy.outputs.enabled == 'true'
+        run: |
+          python3 scripts/doc_repair_plan.py --summary summary.md --out-dir artifacts/doc-repair
+
+      - name: Apply (working tree)
+        if: steps.policy.outputs.enabled == 'true'
+        run: |
+          python3 scripts/doc_repair_apply.py --plan artifacts/doc-repair/plan.json --out-dir artifacts/doc-repair --apply
+
+      - name: Compute diff stats
+        if: steps.policy.outputs.enabled == 'true'
+        run: |
+          set -euo pipefail
+          git add -N .
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+          d = subprocess.check_output(["git", "diff", "--numstat"], text=True)
+          files = [l for l in d.splitlines() if l.strip()]
+          changed_files = len(files)
+          diff_lines = 0
+          for l in files:
+              a, b, _ = l.split("\t", 2)
+              if a.isdigit():
+                  diff_lines += int(a)
+              if b.isdigit():
+                  diff_lines += int(b)
+          out = Path("artifacts/doc-repair/diff-stats.json")
+          out.parent.mkdir(parents=True, exist_ok=True)
+          out.write_text(
+              json.dumps({"changed_files": changed_files, "diff_lines": diff_lines}, indent=2),
+              encoding="utf-8",
+          )
+          print(f"changed_files={changed_files} diff_lines={diff_lines}")
+          PY
+
+      - name: Metrics + quality notes
+        if: steps.policy.outputs.enabled == 'true'
+        run: |
+          python3 scripts/doc_repair_metrics.py --out-dir artifacts/doc-repair
+          python3 scripts/doc_repair_quality_note.py
+          python3 scripts/doc_repair_unknowns.py --out artifacts/doc-repair/unknowns.md
+
+      - name: Enforce policy thresholds
+        id: eligibility
+        if: steps.policy.outputs.enabled == 'true'
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          pol = json.loads(Path("docs/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json").read_text(encoding="utf-8"))
+          th = pol["thresholds"]
+          met = json.loads(Path("artifacts/doc-repair/metrics.json").read_text(encoding="utf-8"))
+          ds = json.loads(Path("artifacts/doc-repair/diff-stats.json").read_text(encoding="utf-8"))
+          ok = True
+          failures = []
+          if float(met.get("unknown_reason_ratio", 0.0)) > float(th["max_unknown_reason_ratio"]):
+              ok = False
+              failures.append("unknown_reason_ratio")
+          if int(ds.get("changed_files", 0)) > int(th["max_changed_files"]):
+              ok = False
+              failures.append("changed_files")
+          if int(ds.get("diff_lines", 0)) > int(th["max_diff_lines"]):
+              ok = False
+              failures.append("diff_lines")
+          eligible = "true" if ok else "false"
+          print(f"eligible={eligible} failures={failures}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"eligible={eligible}\n")
+          PY
+
+      - name: Skip (thresholds not met)
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible != 'true'
+        run: |
+          echo "Policy thresholds not met; exiting (no PR)."
+
+      - name: Run doc-qa gates
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true'
+        run: |
+          set -e
+          python3 scripts/docflow_next.py render-flow --check
+          python3 scripts/check_doc_templates.py
+          python3 scripts/check_doc_ids.py
+          python3 scripts/check_unique_delivery_ids.py
+          python3 scripts/check_doc_locations.py
+          python3 scripts/check_acceptance_evidence.py
+          python3 scripts/check_story_links.py
+          python3 scripts/check_spec_refs.py
+          python3 scripts/check_doc_repair_reason_map.py
+          python3 scripts/check_doc_repair_autopr_policy.py
+          python3 scripts/check_doc_chain.py
+          python3 scripts/check_governance_migration.py
+
+      - name: Create branch + commit
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          BR="docs/auto/doc-repair-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BR"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit; exiting."
+            exit 0
+          fi
+          git commit -m "docs(auto): doc-repair apply"
+          git push origin "$BR"
+          echo "BRANCH=$BR" >> "$GITHUB_ENV"
+
+      - name: Open PR
+        if: steps.policy.outputs.enabled == 'true' && steps.eligibility.outputs.eligible == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = process.env.BRANCH;
+            if (!branch) { core.info("No branch set; skip PR."); return; }
+            const title = "docs(auto): doc-repair apply";
+            const body = "Automated doc-repair apply (policy-gated). See artifacts for plan/metrics/diff.";
+            await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              head: branch,
+              base: "main",
+              body
+            });
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-repair-autopr
+          path: artifacts/doc-repair/
+          if-no-files-found: ignore
