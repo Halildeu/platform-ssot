@@ -31,3 +31,16 @@ Dünyadaki çözümleri “kanıtlanabilir kapabilite” kriterleriyle kıyaslam
 - Özetleme/triage önerisi/benzer vaka
 - Redaksiyon/çeviri
 - İzinli-yasaklı kullanım sınırları (AI governance)
+
+## Kanıt Standardı (Zorunlu)
+Benchmark doldurulurken her kriter için aşağıdaki alanlar tutulur:
+- Kanıt Türü: `doc` / `demo` / `referans` / `sertifika` / `whitepaper` / `kontrat`
+- Kaynak: link veya repo içi referans
+- Tarih: `YYYY-MM`
+- Not: kısa gözlem
+
+## Matrix (Doldurma Şablonu)
+
+| Alan | Kapabilite | Kanıt Türü | Kaynak | Tarih | Not |
+|---|---|---|---|---|---|
+| Intake | (örn. anonim + iki yönlü iletişim) | doc/demo | TBD | TBD | TBD |

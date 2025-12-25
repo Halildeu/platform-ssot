@@ -4,16 +4,17 @@
 Programın etkinliğini ölçmek ve sürekli iyileştirme döngüsünü kurmak.
 
 ## KPI/KRI Seti (Örnek)
-- Intake hacmi (kanal bazlı)
-- Triage süresi (p50/p95)
-- Kapanış süresi (p50/p95)
-- SLA ihlal oranı
-- Tekrar eden vaka oranı (kategori bazlı)
-- Reopen oranı
-- Misilleme sinyali (check-in sonuçları)
-- Kapanış kalite skoru ortalaması
+- BM-0001-MET-KPI-001: Intake hacmi (kanal bazlı)
+- BM-0001-MET-KPI-002: Triage süresi (p50/p95)
+- BM-0001-MET-KPI-003: Kapanış süresi (p50/p95)
+- BM-0001-MET-KPI-004: SLA ihlal oranı
+- BM-0001-MET-KPI-005: Tekrar eden vaka oranı (kategori bazlı)
+- BM-0001-MET-KPI-006: Reopen oranı
+- BM-0001-MET-KPI-007: Misilleme sinyali (check-in sonuçları)
+- BM-0001-MET-KPI-008: Kapanış kalite skoru ortalaması
 
 ## Kapanış Kalite Skoru (M3 imzası)
+BM-0001-MET-KPI-009: Kapanış kalite skoru modeli
 Kapanış “tamamlandı” demek değildir; aşağıdakiler puanlanır:
 - Doğru sınıflandırma yapıldı mı?
 - Bulgular dayanaklı mı?

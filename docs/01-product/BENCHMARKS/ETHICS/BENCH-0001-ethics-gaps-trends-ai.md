@@ -28,3 +28,10 @@ Sektörün gittiği yönü ve “biz neyi farklı/iyi yapacağız?” fırsatlar
 ## Guardrail Önerileri
 - Human-in-the-loop zorunlu
 - AI çıktısı “öneri” olarak etiketlenir ve audit’e düşer
+
+## AI Risk Kontrolleri (Minimum Set)
+- Veri sınıfı sınırı: hangi veri AI’ye asla gitmez (PII/özel nitelikli vb.)
+- Human-in-the-loop: karar/sonuç insan onayı olmadan ilerlemez
+- Açıklanabilirlik: AI önerisi “neden/ipuçları” ile sunulur
+- Audit: AI önerileri loglanır, versiyon/model bilgisi kaydedilir
+- Redaksiyon: PII maskesi / güvenli özetleme

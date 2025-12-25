@@ -28,27 +28,27 @@ Güvenli bildirim → tarafsız ele alma → koruma → ölçülebilir iyileşti
 7) Öğrenme & İyileştirme
 
 ## Karar Noktaları (E/H + Gerekçe)
-- Anonim bildirim kabul edilecek mi?
-- İki yönlü güvenli iletişim (case mailbox) olacak mı?
-- Hangi vaka tipleri etik sisteminde kalır, hangileri yönlendirilir? (etik/İK/InfoSec/Finans vb.)
-- Komite karar şablonu standart mı olacak?
+- BM-0001-CORE-DEC-001: Anonim bildirim kabul edilecek mi?
+- BM-0001-CORE-DEC-002: İki yönlü güvenli iletişim (case mailbox) olacak mı?
+- BM-0001-CORE-DEC-003: Hangi vaka tipleri etik sisteminde kalır, hangileri yönlendirilir? (etik/İK/InfoSec/Finans vb.)
+- BM-0001-CORE-DEC-004: Komite karar şablonu standart mı olacak?
 
 ## Guardrail’ler
-- Çıkar çatışması olan kişi vakaya erişemez / atanamaz.
-- “Need-to-know” prensibi: yalnız gereken kadar görünürlük.
-- Kapanış “kapandı” değil: kalite kontrol zorunlu.
+- BM-0001-CORE-GRD-001: Çıkar çatışması olan kişi vakaya erişemez / atanamaz.
+- BM-0001-CORE-GRD-002: Need-to-know prensibi: yalnız gereken kadar görünürlük.
+- BM-0001-CORE-GRD-003: Kapanış “kapandı” değil: kalite kontrol zorunlu.
 
 ## Varsayımlar
-- Etik komite/karar mekanizması mevcut veya kurulacak.
-- En az bir güvenli kanal (web/telefon) işletilecek.
+- BM-0001-CORE-ASM-001: Etik komite/karar mekanizması mevcut veya kurulacak.
+- BM-0001-CORE-ASM-002: En az bir güvenli kanal (web/telefon) işletilecek.
 
 ## Doğrulama Planı
-- 4 haftalık pilot (1 lokasyon): triage kalitesi + SLA + erişim sınırları
-- 10 senaryolu COI testi: yanlış atama/erişim denemeleri
+- BM-0001-CORE-VAL-001: 4 haftalık pilot (1 lokasyon): triage kalitesi + SLA + erişim sınırları
+- BM-0001-CORE-VAL-002: 10 senaryolu COI testi: yanlış atama/erişim denemeleri
 
 ## Top 10 Sürpriz Önleyici
-- Yanlış atama (COI) → bağımsız atama + kontrol
-- Gizlilik ihlali → erişim sınırları + görüntüleme logu
-- “Kapatmış gibi” kapanış → kalite kontrol
-- Misilleme görünmezliği → kapanış sonrası check-in
-- Aşırı anonim suistimal → triage filtresi + trend analizi
+- BM-0001-CORE-RSK-001: Yanlış atama (COI) → bağımsız atama + kontrol
+- BM-0001-CORE-RSK-002: Gizlilik ihlali → erişim sınırları + görüntüleme logu
+- BM-0001-CORE-RSK-003: “Kapatmış gibi” kapanış → kalite kontrol
+- BM-0001-CORE-RSK-004: Misilleme görünmezliği → kapanış sonrası check-in
+- BM-0001-CORE-RSK-005: Aşırı anonim suistimal → triage filtresi + trend analizi

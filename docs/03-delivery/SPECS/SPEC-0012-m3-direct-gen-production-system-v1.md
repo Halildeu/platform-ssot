@@ -57,6 +57,41 @@ BM/Benchmark çıktıları delivery dokümanlarına deterministik şekilde türe
 5) NFR + reliability: performans/ölçek/timeout-retry/idempotency/rate limit/data lifecycle  
 6) Operasyon + test + rollout/rollback + gözlemlenebilirlik  
 
+### 3.2 BM Item ID Standardı (Zorunlu)
+
+BM dokümanlarında “Karar / Guardrail / Ölçüm” maddeleri **ID’li** yazılır.
+Amaç: izlenebilir türetme (Trace Pack) ve mekanik kalite kontrol.
+
+#### ID Formatı
+
+- `BM-<BM_NO>-<DOC>-<TYPE>-<SEQ>`
+  - `<BM_NO>`: BM dosya numarası (`0001`)
+  - `<DOC>`: `CORE` / `CTRL` / `MET`
+  - `<TYPE>`: `DEC` / `GRD` / `KPI` / `RSK` / `ASM` / `VAL`
+  - `<SEQ>`: `001..999`
+
+Örnekler:
+- `BM-0001-CORE-DEC-001` (Core / Decision)
+- `BM-0001-CTRL-GRD-002` (Controls / Guardrail)
+- `BM-0001-MET-KPI-003` (Metrics / KPI)
+
+### 3.3 Trace Pack Formatı (Zorunlu)
+
+Trace Pack, BM maddelerinin Delivery hedeflerine izlenebilir dönüşümünü taşır.
+
+#### TRACE TSV kolonları
+
+- `BM_ITEM_ID` (zorunlu)
+- `BM_SECTION`
+- `TARGET_TYPE` (`PB`/`PRD`/`SPEC`/`ADR`/`STORY`/`AC`/`TP`/`RB`/`OBS` vb.)
+- `TARGET_ID`
+- `NOTES`
+
+Kurallar (minimum):
+- Her `DEC` maddesi en az 1 `SPEC` veya `ADR` hedefiyle eşleşir.
+- Her `GRD` maddesi en az 1 negatif acceptance senaryosuna (`AC`) eşleşir.
+- Her `KPI` maddesi en az 1 observability/dashboard hedefiyle (`OBS`) eşleşir.
+
 ## 4. YERLEŞİM VE İSİM STANDARDI
 
 ### 4.1 Klasör yerleşimi
