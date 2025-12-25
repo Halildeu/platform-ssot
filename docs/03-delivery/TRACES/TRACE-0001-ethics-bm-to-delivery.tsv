@@ -1,0 +1,4 @@
+BM_ITEM_ID	BM_SECTION	TARGET_TYPE	TARGET_ID	NOTES
+BM-0001-CORE-DEC-001	Anonimlik kararı	SPEC	(TBD)	Karar → SPEC/ADR maddesi
+BM-0001-CTRL-GRD-001	COI erişim engeli	AC	(TBD)	Guardrail → negatif acceptance
+BM-0001-MET-KPI-001	Kapanış kalite skoru	OBS	(TBD)	Ölçüm → observability/dashboard

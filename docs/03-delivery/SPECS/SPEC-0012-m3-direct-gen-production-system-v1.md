@@ -57,21 +57,47 @@ BM/Benchmark çıktıları delivery dokümanlarına deterministik şekilde türe
 5) NFR + reliability: performans/ölçek/timeout-retry/idempotency/rate limit/data lifecycle  
 6) Operasyon + test + rollout/rollback + gözlemlenebilirlik  
 
-## 4. ÇIKTI PAKETLERİ
+## 4. YERLEŞİM VE İSİM STANDARDI
 
-- BM Pack (Core/Controls/Metrics)
-- Benchmark Pack (Matrix + Trends + Gaps)
-- Delivery Pack (PB/PRD + SPEC + ADR + STORY/AC/TP + Runbook)
-- Trace Pack (BM maddesi → türeyen doküman referansları)
+### 4.1 Klasör yerleşimi
 
-## 5. YERLEŞİM STANDARDI (Repo uyumu)
-
+- BM Pack: `docs/01-product/BUSINESS-MASTERS/<TOPIC>/`
+- Benchmark Pack: `docs/01-product/BENCHMARKS/<TOPIC>/`
+- Trace Pack: `docs/03-delivery/TRACES/`
 - Delivery: `docs/03-delivery/**` (mevcut)
 - Runbook: `docs/04-operations/RUNBOOKS/**` (`check_doc_locations` kuralı)
-- BM/Benchmark için Product altında yeni alt alan açma kararı (öneri):
-  - `docs/01-product/BUSINESS-MASTERS/`
-  - `docs/01-product/BENCHMARKS/`
-  - Not: `check_doc_locations` uyumu doğrulanmadan uygulanmaz; gerekirse `docs/03-delivery/guides/` altında geçici konum kullanılır.
+
+### 4.2 Dosya isim standardı
+
+- BM: `BM-0001-<topic>-<kısa-açıklama>.md`
+- BENCH: `BENCH-0001-<topic>-<kısa-açıklama>.md`
+- TRACE: `TRACE-0001-<topic>-bm-to-delivery.tsv`
+- `<topic>` slug: `kebab-case` (örn. `ethics`); konu klasörü `ETHICS` gibi uppercase olabilir.
+- Trace TSV: ilk satır header; her satır “BM maddesi → hedef doküman” eşlemesidir.
+
+## 5. ÇIKTI PAKETLERİ (SOMUT)
+
+### 5.1 BM Pack (ETHICS)
+
+- `docs/01-product/BUSINESS-MASTERS/ETHICS/BM-0001-ethics-core-operating-model.md`
+- `docs/01-product/BUSINESS-MASTERS/ETHICS/BM-0001-ethics-controls-trust-protection.md`
+- `docs/01-product/BUSINESS-MASTERS/ETHICS/BM-0001-ethics-metrics-improvement.md`
+
+### 5.2 Benchmark Pack (ETHICS)
+
+- `docs/01-product/BENCHMARKS/ETHICS/BENCH-0001-ethics-capability-matrix.md`
+- `docs/01-product/BENCHMARKS/ETHICS/BENCH-0001-ethics-gaps-trends-ai.md`
+
+### 5.3 Delivery Pack
+
+- `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
+- `docs/03-delivery/STORIES/STORY-0305-m3-direct-gen-production-system-v1.md`
+- `docs/03-delivery/ACCEPTANCE/AC-0305-m3-direct-gen-production-system-v1.md`
+- `docs/03-delivery/TEST-PLANS/TP-0305-m3-direct-gen-production-system-v1.md`
+
+### 5.4 Trace Pack (ETHICS)
+
+- `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
 
 ## 6. APPENDIX A — Etik konusu üzerinden örnek
 
@@ -104,3 +130,6 @@ BM/Benchmark çıktıları delivery dokümanlarına deterministik şekilde türe
 - Story: `docs/03-delivery/STORIES/STORY-0305-m3-direct-gen-production-system-v1.md`
 - Acceptance: `docs/03-delivery/ACCEPTANCE/AC-0305-m3-direct-gen-production-system-v1.md`
 - Test Plan: `docs/03-delivery/TEST-PLANS/TP-0305-m3-direct-gen-production-system-v1.md`
+- BM Pack (ETHICS): `docs/01-product/BUSINESS-MASTERS/ETHICS/`
+- Benchmark Pack (ETHICS): `docs/01-product/BENCHMARKS/ETHICS/`
+- Trace Pack (ETHICS): `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
