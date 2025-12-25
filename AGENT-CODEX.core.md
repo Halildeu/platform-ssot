@@ -49,7 +49,9 @@ Not: WORK LOG token/secret içermez.
 - WORK LOG – UI Mirror içinde bu komut `Ran python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log` olarak görünmelidir.
 
 `Uygulama Adımları` sadece:
-- `dosya yolu` + `yapılacak değişiklik` içermelidir.
+- `dosya yolu` + `değişiklik` içermelidir.
+  - Değişiklik bu görevde uygulandıysa: geçmiş zaman (örn. “eklendi/güncellendi/silindi”) yazılır.
+  - Değişiklik uygulanmadıysa: planlanan değişiklik açıkça belirtilir.
 - Tam implementasyon / uzun kod gövdeleri bu seviyede üretilmez.
 
 ## 4. Riskli komutlar
