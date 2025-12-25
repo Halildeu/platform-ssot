@@ -1,1 +1,4 @@
 TYPE	NUM	ID	BRANCH	OWNER	CREATED_AT	STATUS
+STORY	0315	STORY-0315-fleet-operations-management	docs/fleet-operations-management-chain	TBD	2025-12-25T22:52:14+03:00	reserved
+AC	0315	AC-0315	docs/fleet-operations-management-chain	TBD	2025-12-25T22:52:14+03:00	reserved
+TP	0315	TP-0315	docs/fleet-operations-management-chain	TBD	2025-12-25T22:52:14+03:00	reserved

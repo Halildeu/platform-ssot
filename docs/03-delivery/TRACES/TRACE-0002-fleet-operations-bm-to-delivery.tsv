@@ -1,0 +1,69 @@
+BM_ITEM_ID	BM_SECTION	TARGET_TYPE	TARGET_ID	NOTES
+BM-0003-CORE-DEC-001	CORE	ADR	ADR-0001	mapping_quality: refined; vehicle identity (VIN/plate history) SSOT
+BM-0003-CORE-DEC-001	CORE	SPEC	SPEC-0016	mapping_quality: refined; Vehicle entity contract (canonical vehicle_id)
+BM-0003-CORE-DEC-002	CORE	PRD	PRD-0006	mapping_quality: coarse; onboarding/import strategy defined at PRD level
+BM-0003-CORE-DEC-003	CORE	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: SLA & Calendar
+BM-0003-CORE-DEC-003	CORE	SPEC	SPEC-0016	mapping_quality: refined; due-date & escalation semantics
+BM-0003-CORE-DEC-004	CORE	ADR	ADR-0001	mapping_quality: refined; document immutability + versioning
+BM-0003-CORE-DEC-004	CORE	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Evidence / Attachment
+BM-0003-CORE-DEC-005	CORE	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Case / Work Item Engine
+BM-0003-CORE-DEC-005	CORE	SPEC	SPEC-0016	mapping_quality: refined; work item types and lifecycle
+
+BM-0003-CORE-GRD-001	CORE	AC	AC-0315	mapping_quality: coarse; Guardrail -> negative acceptance (no delete)
+BM-0003-CORE-GRD-002	CORE	AC	AC-0315	mapping_quality: coarse; Guardrail -> negative acceptance (document no delete)
+BM-0003-CORE-GRD-003	CORE	SPEC	SPEC-0016	mapping_quality: coarse; timezone + due-date rule
+BM-0003-CORE-GRD-004	CORE	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Notification & Communications
+BM-0003-CORE-GRD-004	CORE	AC	AC-0315	mapping_quality: coarse; Guardrail -> platform reuse acceptance
+BM-0003-CORE-GRD-005	CORE	AC	AC-0315	mapping_quality: refined; Guardrail -> negative acceptance (odometer monotonic)
+
+BM-0003-CORE-ASM-001	CORE	PRD	PRD-0006	mapping_quality: coarse; assumptions/dependencies section
+BM-0003-CORE-ASM-002	CORE	PRD	PRD-0006	mapping_quality: coarse; assumptions/dependencies section
+BM-0003-CORE-ASM-003	CORE	PRD	PRD-0006	mapping_quality: coarse; assumptions/dependencies section
+BM-0003-CORE-ASM-004	CORE	PRD	PRD-0006	mapping_quality: coarse; KPI/reporting needs
+
+BM-0003-CORE-VAL-001	CORE	TP	TP-0315	mapping_quality: coarse; pilot validation
+BM-0003-CORE-VAL-002	CORE	TP	TP-0315	mapping_quality: coarse; due-date reminder validation
+BM-0003-CORE-VAL-003	CORE	TP	TP-0315	mapping_quality: coarse; data quality test scenarios
+BM-0003-CORE-VAL-004	CORE	TP	TP-0315	mapping_quality: coarse; audit/evidence validation
+
+BM-0003-CORE-RSK-001	CORE	PRD	PRD-0006	mapping_quality: coarse; risk register (dedup/idempotency)
+BM-0003-CORE-RSK-002	CORE	PRD	PRD-0006	mapping_quality: coarse; compliance risk + escalation
+BM-0003-CORE-RSK-003	CORE	PRD	PRD-0006	mapping_quality: coarse; document completeness
+BM-0003-CORE-RSK-004	CORE	AC	AC-0315	mapping_quality: coarse; negative scenario (odometer monotonic)
+BM-0003-CORE-RSK-005	CORE	PRD	PRD-0006	mapping_quality: coarse; fuel anomaly
+BM-0003-CORE-RSK-006	CORE	PRD	PRD-0006	mapping_quality: coarse; integration drift
+BM-0003-CORE-RSK-007	CORE	SPEC	SPEC-0016	mapping_quality: coarse; timezone/calendar drift prevention
+BM-0003-CORE-RSK-008	CORE	PRD	PRD-0006	mapping_quality: coarse; RBAC/audit dependency
+BM-0003-CORE-RSK-009	CORE	PRD	PRD-0006	mapping_quality: coarse; data classification
+BM-0003-CORE-RSK-010	CORE	PRD	PRD-0006	mapping_quality: coarse; reporting consistency
+
+BM-0003-CTRL-DEC-001	CTRL	PRD	PRD-0006	mapping_quality: coarse; RBAC expectations
+BM-0003-CTRL-DEC-002	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Audit Trail & View Log
+BM-0003-CTRL-DEC-003	CTRL	SPEC	SPEC-0016	mapping_quality: coarse; retention policy requirement
+
+BM-0003-CTRL-GRD-001	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Audit Trail & View Log
+BM-0003-CTRL-GRD-002	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Evidence / Attachment
+BM-0003-CTRL-GRD-003	CTRL	PRD	PRD-0006	mapping_quality: coarse; authorization boundary (finance role)
+BM-0003-CTRL-GRD-004	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Search & Reporting (permission boundary)
+BM-0003-CTRL-GRD-005	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: SLA & Calendar
+BM-0003-CTRL-GRD-006	CTRL	PLATFORM_SPEC	SPEC-0014	mapping_quality: refined; platform_capability: Notification & Communications (template allowlist)
+BM-0003-CTRL-GRD-007	CTRL	PRD	PRD-0006	mapping_quality: coarse; source-of-truth + reconcile
+BM-0003-CTRL-GRD-008	CTRL	PRD	PRD-0006	mapping_quality: coarse; masking/redaction policy
+
+BM-0003-CTRL-ASM-001	CTRL	PRD	PRD-0006	mapping_quality: coarse; org/role model assumption
+BM-0003-CTRL-ASM-002	CTRL	PRD	PRD-0006	mapping_quality: coarse; retention/audit assumption
+
+BM-0003-CTRL-VAL-001	CTRL	TP	TP-0315	mapping_quality: coarse; RBAC validation
+BM-0003-CTRL-VAL-002	CTRL	TP	TP-0315	mapping_quality: coarse; audit/evidence validation
+
+BM-0003-MET-KPI-001	MET	PRD	PRD-0006	mapping_quality: coarse; reporting requirements
+BM-0003-MET-KPI-002	MET	PRD	PRD-0006	mapping_quality: coarse; compliance reporting requirements
+BM-0003-MET-KPI-003	MET	PRD	PRD-0006	mapping_quality: coarse; compliance reporting requirements
+BM-0003-MET-KPI-004	MET	PRD	PRD-0006	mapping_quality: coarse; maintenance overdue reporting
+BM-0003-MET-KPI-005	MET	PRD	PRD-0006	mapping_quality: coarse; lead time reporting (p50/p95)
+BM-0003-MET-KPI-006	MET	PRD	PRD-0006	mapping_quality: coarse; fuel consumption reporting
+BM-0003-MET-KPI-007	MET	PRD	PRD-0006	mapping_quality: coarse; fuel anomaly reporting
+BM-0003-MET-KPI-008	MET	PRD	PRD-0006	mapping_quality: coarse; fine cost & closure reporting
+BM-0003-MET-KPI-009	MET	PRD	PRD-0006	mapping_quality: coarse; document completeness reporting
+BM-0003-MET-KPI-010	MET	PRD	PRD-0006	mapping_quality: coarse; notification delivery reporting
+
