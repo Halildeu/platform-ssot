@@ -92,6 +92,18 @@ Kurallar (minimum):
 - Her `GRD` maddesi en az 1 negatif acceptance senaryosuna (`AC`) eşleşir.
 - Her `KPI` maddesi en az 1 observability/dashboard hedefiyle (`OBS`) eşleşir.
 
+### 3.4 Trace Coverage Standardı
+
+#### Full Coverage (Reference Exemplar)
+
+Reference exemplar olarak işaretlenen konularda Trace Pack %100 kapsama sahip olmalıdır:
+- BM dokümanlarında tanımlı tüm `BM_ITEM_ID` değerleri, `TRACE` TSV’de en az bir hedef (`TARGET_TYPE/TARGET_ID`) ile eşleşir.
+- Amaç: uçtan uca izlenebilirlik ve türetme disiplininin “altın standart” örneğini oluşturmak.
+
+Notlar:
+- Eşleme “program-level” (`PB`/`PRD`/`SPEC`) veya “delivery-level” (`ADR`/`STORY`/`AC`/`TP`/`RB`/`OBS`) olabilir.
+- Bu kural ilk örnek için Ethics üzerinde uygulanır: `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`.
+
 ## 4. YERLEŞİM VE İSİM STANDARDI
 
 ### 4.1 Klasör yerleşimi

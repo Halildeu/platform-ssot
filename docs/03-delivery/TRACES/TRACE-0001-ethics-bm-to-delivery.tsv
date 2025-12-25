@@ -1,20 +1,37 @@
 BM_ITEM_ID	BM_SECTION	TARGET_TYPE	TARGET_ID	NOTES
-BM-0001-CORE-DEC-001	Anonimlik kararı	SPEC	SPEC-0013	Karar → kontrat/spec (anonimlik politikası)
-BM-0001-CORE-DEC-001	Anonimlik kararı	PB	PB-0004	Problem framing (anonimlik politikası)
-BM-0001-CORE-DEC-001	Anonimlik kararı	STORY	STORY-0306	Delivery scope (intake)
-BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	PRD	PRD-0004	Karar → ürün gereksinimi
-BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	SPEC	SPEC-0013	Karar → kontrat/spec (case mailbox)
-BM-0001-CORE-DEC-002	Case mailbox (iki yönlü iletişim)	STORY	STORY-0306	Delivery scope (case mailbox)
-BM-0001-CTRL-GRD-001	COI erişim engeli	AC	AC-0307	Guardrail → negatif acceptance (COI access deny)
-BM-0001-CTRL-GRD-001	COI erişim engeli	PB	PB-0004	Problem framing (COI riski)
-BM-0001-CTRL-GRD-001	COI erişim engeli	ADR	ADR-0003	Karar → COI access boundary
-BM-0001-CTRL-GRD-001	COI erişim engeli	STORY	STORY-0307	Delivery scope (COI + access boundary)
-BM-0001-CTRL-GRD-003	Delil immutability	ADR	ADR-0004	Karar/guardrail → delil immutability policy
-BM-0001-CTRL-GRD-003	Delil immutability	PB	PB-0004	Problem framing (delil disiplini)
-BM-0001-CTRL-GRD-003	Delil immutability	STORY	STORY-0308	Delivery scope (evidence handling)
-BM-0001-CTRL-GRD-004	Audit log zorunlu	ADR	ADR-0004	Karar/guardrail → audit trail zorunluluğu
-BM-0001-CTRL-GRD-004	Audit log zorunlu	AC	AC-0308	Guardrail → acceptance (audit trail)
-BM-0001-CTRL-GRD-004	Audit log zorunlu	STORY	STORY-0308	Delivery scope (audit trail)
-BM-0001-MET-KPI-009	Kapanış kalite skoru	OBS	TBD	Metric → dashboard/rapor gereksinimi
-BM-0001-MET-KPI-009	Kapanış kalite skoru	PB	PB-0004	Problem framing (başarı ölçümü)
-BM-0001-MET-KPI-009	Kapanış kalite skoru	SPEC	SPEC-0013	Kontrat → kapanış kalite skoru gereksinimi
+BM-0001-CORE-ASM-001	CORE	PRD	PRD-0004	ASM -> PRD assumptions/validation/risk register
+BM-0001-CORE-ASM-002	CORE	PRD	PRD-0004	ASM -> PRD assumptions/validation/risk register
+BM-0001-CORE-DEC-001	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CORE-DEC-002	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CORE-DEC-003	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CORE-DEC-004	CORE	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CORE-GRD-001	CORE	AC	AC-0306	Guardrail -> negative acceptance (intake)
+BM-0001-CORE-GRD-002	CORE	AC	AC-0306	Guardrail -> negative acceptance (intake)
+BM-0001-CORE-GRD-003	CORE	AC	AC-0306	Guardrail -> negative acceptance (intake)
+BM-0001-CORE-RSK-001	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-002	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-003	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-004	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-RSK-005	CORE	PRD	PRD-0004	RSK -> PRD assumptions/validation/risk register
+BM-0001-CORE-VAL-001	CORE	PRD	PRD-0004	VAL -> PRD assumptions/validation/risk register
+BM-0001-CORE-VAL-002	CORE	PRD	PRD-0004	VAL -> PRD assumptions/validation/risk register
+BM-0001-CTRL-DEC-001	CTRL	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CTRL-DEC-002	CTRL	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CTRL-DEC-003	CTRL	PRD	PRD-0004	Decision -> PRD scope; see SPEC-0013/ADR as needed
+BM-0001-CTRL-GRD-001	CTRL	AC	AC-0307	Guardrail -> negative acceptance (COI/access)
+BM-0001-CTRL-GRD-002	CTRL	AC	AC-0307	Guardrail -> negative acceptance (COI/access)
+BM-0001-CTRL-GRD-003	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
+BM-0001-CTRL-GRD-004	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
+BM-0001-CTRL-GRD-005	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
+BM-0001-CTRL-GRD-006	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
+BM-0001-CTRL-GRD-007	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
+BM-0001-CTRL-GRD-008	CTRL	AC	AC-0308	Guardrail -> negative acceptance (audit/evidence)
+BM-0001-MET-KPI-001	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-002	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-003	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-004	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-005	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-006	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-007	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-008	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
+BM-0001-MET-KPI-009	MET	PRD	PRD-0004	Metric -> PRD reporting/observability requirement (OBS story later)
