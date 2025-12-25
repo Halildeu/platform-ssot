@@ -64,3 +64,8 @@ Hariç:
 - SPEC: docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0306-ethics-intake-and-case-mailbox.md
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0306-ethics-intake-and-case-mailbox.md
+
+## Platform Dependencies
+- Platform Spec: `SPEC-0014`
+- Notification & Communications
+- Case / Work Item Engine

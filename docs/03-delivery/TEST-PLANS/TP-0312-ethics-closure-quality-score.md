@@ -41,3 +41,6 @@ Owner: TBD
 
 - Story: docs/03-delivery/STORIES/STORY-0312-ethics-closure-quality-score.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0312-ethics-closure-quality-score.md  
+
+## Platform Contract
+- Capability contract uyumu doğrulanır (`SPEC-0014`).

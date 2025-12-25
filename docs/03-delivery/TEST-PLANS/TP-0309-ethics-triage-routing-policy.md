@@ -41,3 +41,6 @@ Owner: TBD
 
 - Story: docs/03-delivery/STORIES/STORY-0309-ethics-triage-routing-policy.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0309-ethics-triage-routing-policy.md  
+
+## Platform Contract
+- Capability contract uyumu doğrulanır (`SPEC-0014`).

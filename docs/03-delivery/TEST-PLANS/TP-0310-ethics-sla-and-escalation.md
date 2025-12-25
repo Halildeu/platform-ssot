@@ -42,3 +42,6 @@ Owner: TBD
 - Story: docs/03-delivery/STORIES/STORY-0310-ethics-sla-and-escalation.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0310-ethics-sla-and-escalation.md  
 - ADR: docs/02-architecture/services/ethics-case-management/ADR/ADR-0005-ethics-sla-calendar-semantics.md  
+
+## Platform Contract
+- Capability contract uyumu doğrulanır (`SPEC-0014`).

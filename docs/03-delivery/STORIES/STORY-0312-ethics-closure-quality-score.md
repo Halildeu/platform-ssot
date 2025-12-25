@@ -60,3 +60,9 @@ Hariç:
 - SPEC: docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0312-ethics-closure-quality-score.md
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0312-ethics-closure-quality-score.md
+
+## Platform Dependencies
+- Platform Spec: `SPEC-0014`
+- Search & Reporting
+- Case / Work Item Engine
+- Audit Trail & View Log

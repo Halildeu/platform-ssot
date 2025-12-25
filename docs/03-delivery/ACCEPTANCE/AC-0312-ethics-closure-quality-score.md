@@ -42,6 +42,12 @@ Owner: TBD
   - `python3 scripts/check_story_links.py STORY-0312`
   - `python3 scripts/check_doc_chain.py STORY-0312`
 
+### Senaryo 3 – Platform capability reuse (anti-pattern guardrail)
+
+- [ ] Given: `SPEC-0014` vardır.  
+  When: implementasyon yaklaşımı planlanır.  
+  Then: Custom implementation yapılmayacak; ilgili capability sözleşmesine uyulacak (Platform Spec: SPEC-0014).
+
 -------------------------------------------------------------------------------
 ## 4. NOTLAR / KISITLAR
 -------------------------------------------------------------------------------

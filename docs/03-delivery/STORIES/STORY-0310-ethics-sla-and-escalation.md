@@ -63,3 +63,8 @@ Hariç:
 - ADR: docs/02-architecture/services/ethics-case-management/ADR/ADR-0005-ethics-sla-calendar-semantics.md
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0310-ethics-sla-and-escalation.md
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0310-ethics-sla-and-escalation.md
+
+## Platform Dependencies
+- Platform Spec: `SPEC-0014`
+- SLA & Calendar
+- Case / Work Item Engine

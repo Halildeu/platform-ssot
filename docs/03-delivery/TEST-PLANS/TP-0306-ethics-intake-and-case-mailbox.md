@@ -44,3 +44,6 @@ Owner: TBD
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0306-ethics-intake-and-case-mailbox.md  
 - PRD: docs/01-product/PRD/PRD-0004-ethics-speakup-and-case-management-mvp.md  
 - SPEC: docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md  
+
+## Platform Contract
+- Capability contract uyumu doğrulanır (`SPEC-0014`).

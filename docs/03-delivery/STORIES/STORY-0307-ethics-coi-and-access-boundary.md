@@ -64,3 +64,9 @@ Hariç:
 - ADR: docs/02-architecture/services/ethics-case-management/ADR/ADR-0003-ethics-coi-access-boundary.md
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0307-ethics-coi-and-access-boundary.md
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0307-ethics-coi-and-access-boundary.md
+
+## Platform Dependencies
+- Platform Spec: `SPEC-0014`
+- COI Engine
+- Case / Work Item Engine
+- Audit Trail & View Log

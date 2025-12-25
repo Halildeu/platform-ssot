@@ -64,3 +64,8 @@ Hariç:
 - ADR: docs/02-architecture/services/ethics-case-management/ADR/ADR-0004-ethics-evidence-immutability-policy.md
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0308-ethics-audit-trail-and-evidence-handling.md
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0308-ethics-audit-trail-and-evidence-handling.md
+
+## Platform Dependencies
+- Platform Spec: `SPEC-0014`
+- Evidence / Attachment
+- Audit Trail & View Log

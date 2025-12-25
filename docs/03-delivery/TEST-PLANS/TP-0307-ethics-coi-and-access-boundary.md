@@ -44,3 +44,6 @@ Owner: TBD
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0307-ethics-coi-and-access-boundary.md  
 - ADR: docs/02-architecture/services/ethics-case-management/ADR/ADR-0003-ethics-coi-access-boundary.md  
 - SPEC: docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md  
+
+## Platform Contract
+- Capability contract uyumu doğrulanır (`SPEC-0014`).

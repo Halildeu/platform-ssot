@@ -41,3 +41,6 @@ Owner: TBD
 
 - Story: docs/03-delivery/STORIES/STORY-0311-ethics-retaliation-checkin.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0311-ethics-retaliation-checkin.md  
+
+## Platform Contract
+- Capability contract uyumu doğrulanır (`SPEC-0014`).

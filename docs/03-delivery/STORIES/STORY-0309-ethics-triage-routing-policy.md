@@ -63,3 +63,8 @@ Hariç:
 - SPEC: docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0309-ethics-triage-routing-policy.md
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0309-ethics-triage-routing-policy.md
+
+## Platform Dependencies
+- Platform Spec: `SPEC-0014`
+- Case / Work Item Engine
+- Search & Reporting

@@ -44,3 +44,6 @@ Owner: TBD
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0308-ethics-audit-trail-and-evidence-handling.md  
 - ADR: docs/02-architecture/services/ethics-case-management/ADR/ADR-0004-ethics-evidence-immutability-policy.md  
 - SPEC: docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md  
+
+## Platform Contract
+- Capability contract uyumu doğrulanır (`SPEC-0014`).
