@@ -108,3 +108,12 @@ flow_stats: .autopilot-tmp/flow-mining/flow-stats.json
 SELF-CHECK (ZORUNLU)
 - Yanıt gönderilmeden önce EVIDENCE POINTERS code block satırlarında `.autopilot-tmp/` geçtiği doğrulanır (en az `execution_log` ve `chatlog`).
 - Eğer geçmiyorsa: EVIDENCE POINTERS yanlış yazılmış demektir ve düzeltilmeden yanıt gönderilmez.
+
+-------------------------------------------------------------------------------
+X. MODE (DONE/PLAN/READ_ONLY)
+-------------------------------------------------------------------------------
+
+- Her yanıtın en üstünde MODE satırı bulunur:
+  - `MODE: DONE` | `MODE: PLAN` | `MODE: READ_ONLY`
+- MODE != PLAN iken “plan dili” görünmez; “Planlanan Değişiklikler” bölümü yazılmaz.
+- MODE = PLAN iken “Uygulanan Değişiklikler” yazılmaz; bunun yerine opsiyonel “Planlanan Değişiklikler” yazılır.

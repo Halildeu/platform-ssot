@@ -28,7 +28,9 @@ RE_BRANCH = re.compile(r"(?m)^branch:\s*(?P<branch>\S+)\s*$")
 RE_SHA = re.compile(r"(?m)^sha:\s*(?P<sha>[0-9a-f]{7,40})\s*$", re.I)
 
 RE_BOLD_HDR = re.compile(r"(?m)^\*\*[^*]+\*\*\s*$")
+RE_MODE = re.compile(r"(?m)^MODE:\s*(?P<mode>DONE|PLAN|READ_ONLY)\s*$")
 RE_EVIDENCE_HDR = re.compile(r"(?m)^\*\*EVIDENCE POINTERS\*\*\s*$")
+RE_APPLIED_CHANGES_HDR = re.compile(r"(?m)^\*\*Uygulanan Değişiklikler\*\*\s*$")
 RE_CODEBLOCK_TEXT = re.compile(r"(?ms)^```text\s*\n(?P<body>.*?)\n```$")
 
 RE_KV = re.compile(r"(?m)^(?P<key>[a-z_]+):\s*(?P<value>.+?)\s*$")
@@ -96,16 +98,20 @@ def extract_section_body(body: str, header_re: re.Pattern[str]) -> str | None:
 def lint_session(s: Session) -> list[str]:
     issues: list[str] = []
 
-    required_sections = [
-        "WORK LOG – UI Mirror",
-        "RESULT",
-        "EVIDENCE POINTERS",
-        "Uygulanan Değişiklikler",
-        "NEXT",
-    ]
+    mode_m = RE_MODE.search(s.body)
+    mode = mode_m.group("mode") if mode_m else None
+    if mode is None:
+        issues.append("missing_mode")
+
+    required_sections = ["WORK LOG – UI Mirror", "RESULT", "EVIDENCE POINTERS", "NEXT"]
+    if mode in {None, "DONE", "READ_ONLY"}:
+        required_sections.append("Uygulanan Değişiklikler")
     for sec in required_sections:
         if sec not in s.body:
             issues.append(f"missing_section: {sec}")
+
+    if mode == "PLAN" and "Uygulanan Değişiklikler" in s.body:
+        issues.append("unexpected_section_in_plan: Uygulanan Değişiklikler")
 
     evidence_section = extract_section_body(s.body, RE_EVIDENCE_HDR)
     if evidence_section is None:
@@ -156,6 +162,14 @@ def lint_session(s: Session) -> list[str]:
         val = (kv.get(key) or "").strip()
         if val and not val.startswith(".autopilot-tmp/"):
             issues.append(f"evidence_abbrev_or_non_autopilot_path: {key}")
+
+    applied_section = extract_section_body(s.body, RE_APPLIED_CHANGES_HDR)
+    if applied_section:
+        banned_patterns = [r"→", r"\bekle\b", r"\bhizala\b", r"\bçalıştır\b", r"\brun\b"]
+        for pat in banned_patterns:
+            if re.search(pat, applied_section, flags=re.IGNORECASE):
+                issues.append(f"imperative_in_applied_changes: {pat}")
+                break
 
     return issues
 
@@ -218,4 +232,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
