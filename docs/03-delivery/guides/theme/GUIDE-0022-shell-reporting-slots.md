@@ -1,3 +1,5 @@
+# GUIDE-0022: shell reporting slots
+
 ---
 title: "Tema — Shell & Reporting Slotları"
 status: in_progress
@@ -85,3 +87,24 @@ Bir sonraki denemede Cypress cache’i temizleyip (`npx cypress cache clear && n
 - Shell alanlarının tamamı semantik sınıflarla (bg/text/border) render olur.
 - Density geçişinde filter/table satır yüksekliği güncellenir.
 - HC modunda başlık/CTA/ikon kontrastı AAA.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

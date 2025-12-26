@@ -1,3 +1,5 @@
+# GUIDE-0020: figma variables export
+
 ---
 title: "Tema — Figma Variables & Modes Export"
 status: draft
@@ -12,3 +14,23 @@ Kapsam
 Acceptance
 - Export otomasyonu çalışır; mapping tabloları güncel.
 
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

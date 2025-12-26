@@ -1,4 +1,4 @@
-# GLOSSARY-GUIDE – Terim Sözlüğü Kullanım Rehberi
+# GUIDE-0004: GLOSSARY-GUIDE – Terim Sözlüğü Kullanım Rehberi
 
 Bu doküman, proje genelindeki terim sözlüğü (glossary) girişlerinin nasıl
 yazılacağını ve nerede kullanılacağını özetler.
@@ -48,3 +48,20 @@ Yeni glossary girdileri için:
 - Yeni glossary girişleri için yalnızca bu rehber ve yeni docs/ yapısı referans
   alınmalıdır.
 
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

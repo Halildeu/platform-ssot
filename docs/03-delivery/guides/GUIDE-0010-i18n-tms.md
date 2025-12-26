@@ -1,3 +1,5 @@
+# GUIDE-0010: i18n tms
+
 ## i18n TMS Entegrasyonu
 
 ### Amaç
@@ -30,5 +32,26 @@
 - Pseudolocale render gate çalışır; fallback telemetrisi panolarda görünür.
 
 ### Bağlantılar
-- `docs/03-delivery/guides/documentation-workflow.md`
+- `docs/03-delivery/guides/GUIDE-0007-documentation-workflow.md`
 - `docs/01-architecture/01-system/02-frontend-architecture.md`
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

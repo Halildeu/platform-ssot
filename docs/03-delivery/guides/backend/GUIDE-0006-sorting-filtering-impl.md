@@ -1,3 +1,5 @@
+# GUIDE-0006: sorting filtering impl
+
 ## Sıralama & Gelişmiş Filtre Uygulama Rehberi (Spring Data)
 
 Amaç
@@ -52,3 +54,24 @@ Güvenlik Notları
  Bağlantılar
 - `backend/docs/legacy/root/03-delivery/api/users.api.md`
 - `backend/docs/legacy/root/agents/06-advanced-filter-whitelist.md`
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

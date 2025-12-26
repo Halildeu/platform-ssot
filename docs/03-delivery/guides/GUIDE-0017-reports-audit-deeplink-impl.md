@@ -1,3 +1,5 @@
+# GUIDE-0017: reports audit deeplink impl
+
 ---
 title: "FE-06 — Reports/Audit Deep-Link Uygulama Planı"
 status: in_review
@@ -53,3 +55,24 @@ Kapanış (Acceptance)
 
 Durum
 - Cypress spec eklendi ve komuta dahil edildi (`cypress:reports`). Lokal ortamda Cypress binary doğrulaması başarısız olduğu için CI koşusu bekleniyor.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

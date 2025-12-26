@@ -1,4 +1,4 @@
-# CODEX-CONTEXT-TEST-GUIDE – Codex Doküman Kullanımı Test Rehberi
+# GUIDE-0002: CODEX-CONTEXT-TEST-GUIDE – Codex Doküman Kullanımı Test Rehberi
 
 Bu rehber, `TP-0005 – Codex Doküman/Context Kullanımı Test Planı`na göre
 Codex’in doküman mimarisini parça parça okuyup doğru davranıp davranmadığını
@@ -137,3 +137,21 @@ elle test etmek için örnek prompt ve beklenen çıktı iskeletlerini içerir.
     - `docs/03-delivery/STORIES/STORY-00XX-vault-maintenance.md` oluştur.  
     - `docs/03-delivery/ACCEPTANCE/AC-00XX-vault-maintenance.md` oluştur.  
     - Gerekirse PROJECT-FLOW’a satır ekle.
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

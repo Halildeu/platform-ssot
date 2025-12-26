@@ -1,4 +1,4 @@
-# User-Service Rollout Checklist (Service Token Secret)
+# GUIDE-0025: User-Service Rollout Checklist (Service Token Secret)
 
 Amaç: Stage/prod deployment’larında `user-service`’in Auth Service’e aynı client credential ile bağlandığını doğrulamak. Client secret kaynağı Vault (tercih) veya acil durumda env değişkeni olabilir.
 
@@ -32,3 +32,24 @@ Amaç: Stage/prod deployment’larında `user-service`’in Auth Service’e ayn
   3. Gerekirse fallback env ile yeniden deploy edin, ancak ardından Vault erişimi düzeltilmelidir.
 
 Bu checklist’i release runbook’unuza ekleyin; böylece client secret kaynağı değiştiğinde bile user-service rollout’larının davranışı deterministik kalır. 
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

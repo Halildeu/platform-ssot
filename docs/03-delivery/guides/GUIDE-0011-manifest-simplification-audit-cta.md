@@ -1,3 +1,5 @@
+# GUIDE-0011: manifest simplification audit cta
+
 ---
 title: "MFE Manifest Sadeleştirme + Audit CTA Akışları"
 status: draft
@@ -47,3 +49,24 @@ Manifest Notları
 Kabul
 - Başarılı mutasyonlarda toast ve audit deep-link çalışır.
 - Shell Notification Center ile tutarlı görünüm.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

@@ -1,3 +1,5 @@
+# GUIDE-0023: toggle and persistence
+
 ---
 title: "Tema — Toggle ve Kalıcılık"
 status: draft
@@ -47,5 +49,26 @@ related_tickets: [ALPHA-05]
 
 ## 6) Acceptance
 - Toggle reflow’u sınırlı; SSR uyumlu; state kalıcı.
-- URL parametresi / feature flag override’ı documented (`docs/03-delivery/guides/theme/toggle-and-persistence.md#url-override` bölümü eklenecek implementasyonla).
+- URL parametresi / feature flag override’ı documented (`docs/03-delivery/guides/theme/GUIDE-0023-toggle-and-persistence.md#url-override` bölümü eklenecek implementasyonla).
 - QA: appearance×density kombinasyonunu Playwright smoke senaryosu tetikler.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

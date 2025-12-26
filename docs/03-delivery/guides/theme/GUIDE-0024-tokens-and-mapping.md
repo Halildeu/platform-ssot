@@ -1,3 +1,5 @@
+# GUIDE-0024: tokens and mapping
+
 ---
 title: "Tema — Token Sözleşmesi ve Tailwind/AntD Eşleme"
 status: in_progress
@@ -169,7 +171,7 @@ const antTokens = {
 ## 6) Dosya Yapısı
 - `apps/mfe-shell/src/app/theme/tokens.css`
 - `packages/ui-kit/src/styles/tokens.css` (paylaşılan grid/theme bileşenleri)
-- Style Dictionary/Tokens Studio JSON export → `docs/03-delivery/guides/theme/tokens-and-mapping.md#token-taksonomisi`
+- Style Dictionary/Tokens Studio JSON export → `docs/03-delivery/guides/theme/GUIDE-0024-tokens-and-mapping.md#token-taksonomisi`
 
 ## 7) Acceptance
 - [x] Token JSON (raw + semantic) repoda
@@ -179,7 +181,7 @@ const antTokens = {
 - [x] Storybook/Docs: “Theme Tokens” sayfası (light/dark/high-contrast + compact) — görseller `img/theme-tokens-*.png`, `.storybook` yapılandırması hazır
 
 ## 8) Storybook/Docs — Theme Tokens
-- Konum: `frontend/docs/theme/theme-tokens.stories.mdx` (Storybook `Foundations / Theme Tokens` hikâyesi) + `docs/03-delivery/guides/theme/tokens-and-mapping.md`.
+- Konum: `frontend/docs/theme/theme-tokens.stories.mdx` (Storybook `Foundations / Theme Tokens` hikâyesi) + `docs/03-delivery/guides/theme/GUIDE-0024-tokens-and-mapping.md`.
 - İçerik:
   1. `Raw Tokens` tablosu (brand, neutral, semantic eşlemeler).
   2. Appearance (light/dark/high-contrast) × Density (comfortable/compact) kombinasyonları için örnek kart (Top Bar + Filter + Table satırı).
@@ -189,5 +191,26 @@ const antTokens = {
 - Kabul: sayfa token değerini, CSS var adını ve karşılık gelen Tailwind util’ini aynı tabloda gösteriyor (örn. `space/3 → --space-3 → gap-3`), HC/compact ekran görüntüleri `docs/03-delivery/guides/theme/img/` altına ekleniyor.
 
 ## 9) Referanslar
-- docs/03-delivery/guides/figma-shell-layout.md (Tema Mimarisi)
+- docs/03-delivery/guides/GUIDE-0008-figma-shell-layout.md (Tema Mimarisi)
 - docs/03-delivery/guides/theme/*.md (diğer ALPHA kartları)
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

@@ -1,3 +1,5 @@
+# GUIDE-0012: manifest simplification pr checklist
+
 ---
 title: "Manifest Sadeleştirme — PR Checklist (mfe-users / mfe-access)"
 status: draft
@@ -17,8 +19,28 @@ Checklist
 - [ ] Build boyutu: gereksiz kütüphane veya duplike paylaşımlar yok; MF share konfigleri temiz.
 - [ ] Dark/Light uyumu: UI Kit tema değişkenleri kullanılıyor; raw renk yok.
 - [ ] E2E: ilgili rota/flow için en az 1 smoke senaryo var; CI yeşil.
-- [ ] Belgeleme: değişiklikler `docs/03-delivery/guides/manifest-simplification-audit-cta.md` referanslı.
+- [ ] Belgeleme: değişiklikler `docs/03-delivery/guides/GUIDE-0011-manifest-simplification-audit-cta.md` referanslı.
 
 Notlar
 - Paylaşım/pinning değişiklikleri sonrası shell ve remote dev server’ları birlikte ayağa kaldırıp smoke test yapın.
 
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

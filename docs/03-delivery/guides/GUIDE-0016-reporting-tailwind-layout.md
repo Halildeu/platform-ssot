@@ -1,3 +1,5 @@
+# GUIDE-0016: reporting tailwind layout
+
 ---
 title: "Reporting – Tailwind Layout & Storybook Notları"
 status: draft
@@ -94,3 +96,24 @@ Bu yapı Storybook senaryosunda görünür, QA ve tasarım ekipleri hiyerarşi d
 - `backend/docs/legacy/root/01-architecture/01-system/02-frontend-architecture.md`
 
 Bu rehber ilerleyen akışlarda hiyerarşik tab davranışı veya yeni layout varyantları eklendiğinde güncellenecektir.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

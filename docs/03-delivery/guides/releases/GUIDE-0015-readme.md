@@ -1,4 +1,4 @@
-# Release Notes & Checklist’ler
+# GUIDE-0015: Release Notes & Checklist’ler
 
 - Yeni bir sürüm planlarken `docs/99-templates/TEST-PLAN.template.md` veya örnek olarak `docs/03-delivery/TEST-PLANS/TP-0001-release-template.md` dokümanını kopyalayın.
 - Release tamamlandığında change-log ve müşteri duyurularını burada arşivleyin.
@@ -52,3 +52,24 @@ Script:
 Release checklist’inde:
 - [ ] Güncel metrik snapshot’ı alındı (metrics.json)
 - [ ] `check_slo_sla.py` çalıştırıldı ve kritik SLO’lar PASS durumda
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

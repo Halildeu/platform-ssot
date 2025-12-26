@@ -5,7 +5,7 @@ owner: "@team/platform-fe"
 release_window: 2025-11-10
 ---
 
-# 1. Ön Hazırlık
+# GUIDE-0014: 1. Ön Hazırlık
 - [ ] Roadmap / changelog güncellendi (`docs/03-delivery/PROJECT-FLOW.md`, ilgili `docs/03-delivery/STORIES/*` ve (legacy için) `backend/docs/legacy/root/05-governance/01-epics/`, `backend/docs/legacy/root/05-governance/02-stories/` dosyaları)
 - [ ] Özellik bayrakları doğrulandı:
   - `access_mutation_write = true`
@@ -41,3 +41,24 @@ release_window: 2025-11-10
 # 6. Lessons & Follow-up
 - [ ] Telemetry olayları (audit link tıklanma, mutation success) raporlandı mı?
 - [ ] `mfe-audit` deep-link POC için flow 3 hazırlığı
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

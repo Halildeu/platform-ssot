@@ -1,3 +1,5 @@
+# GUIDE-0007: documentation workflow
+
 ---
 title: Documentation Workflow
 status: draft
@@ -25,7 +27,7 @@ last_review: YYYY-MM-DD
 - Markdown lint & broken link checker (CI guardrail)
 - `npm run i18n:pull` / `i18n:pseudo` script’leri → i18n dokümanlarının güncelliği
 - Backstage (planlanıyor) → Runbook ve servis dokümanlarının kataloglanması
-- `docs/03-delivery/guides/a11y-checklist.md` → SR/keyboard/kontrast checklist + axe smoke referansı
+- `docs/03-delivery/guides/GUIDE-0005-a11y-checklist.md` → SR/keyboard/kontrast checklist + axe smoke referansı
 
 ## 5. Sık Sorulanlar
 - **Yeni kategori gerekli mi?** Yeni bir ihtiyacı önce uygun Story altında takip et; yalnızca doküman kategorisi ekleme ihtiyacı varsa geçiş sürecinde `backend/docs/legacy/root/05-governance/FEATURE_REQUESTS.md` içine ekle, hygiene toplantısında karar verelim.
@@ -39,3 +41,24 @@ last_review: YYYY-MM-DD
 2. `node scripts/permissions/validate-permission-registry.mjs` komutu ile manifest/permission constant senkronunu doğrula (CI aynı komutu çalıştırır, PR öncesi lokale almak hatayı erken yakalar).
 3. Registry değişikliği Access MFE veya ilgili runbook’ı etkiliyorsa Story/Acceptance referanslarını güncelle ve session-log’a kayıt düş.
 4. PR açıklamasına “Permission registry güncellendi, generator + validator çalıştırıldı” notunu ekle (PR şablonuna yeni checkbox eklendi).
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

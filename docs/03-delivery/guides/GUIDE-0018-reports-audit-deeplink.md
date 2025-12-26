@@ -1,3 +1,5 @@
+# GUIDE-0018: reports audit deeplink
+
 ---
 title: "Reports ↔ Audit Çift Yönlü Deep-Link"
 status: in_progress
@@ -24,4 +26,25 @@ Kabul Kriterleri
 Notlar
 - i18n ve breadcrumb anahtarlarını ekleyin; kontrat için `03-reporting-schema-contract.md` dokümanını izleyin.
 
-Uygulama ayrıntıları ve E2E planı: `docs/03-delivery/guides/reports-audit-deeplink-impl.md`
+Uygulama ayrıntıları ve E2E planı: `docs/03-delivery/guides/GUIDE-0017-reports-audit-deeplink-impl.md`
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

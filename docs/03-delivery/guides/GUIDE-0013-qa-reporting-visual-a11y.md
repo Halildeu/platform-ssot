@@ -17,7 +17,7 @@ Plan
 
 Lokal Çalıştırma
 ```bash
-# 1) Shell + Reporting
+# GUIDE-0013: 1) Shell + Reporting
 npm run start:reports
 # 2) Playwright testleri (ayrı terminal)
 npx playwright install --with-deps
@@ -33,3 +33,24 @@ Kabul
 - CI job’ları yeşil (2 ardışık koşu); farklar onay/talep akışına bağlı
 - A11y ihlalleri eşik altında; rapor arşivleniyor
 - Artefakt: `playwright-report/` Actions altında mevcut
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

@@ -1,3 +1,5 @@
+# GUIDE-0005: a11y checklist
+
 ---
 title: "A11y Checklist & Axe Smoke"
 status: draft
@@ -22,4 +24,25 @@ last_review: 2025-11-29
 
 ## 4. Raporlama
 - QA-02 kabul dosyasındaki tabloya aşağıdaki alanlar eklenir: test tarihi, kullanılan tema, SR notları, keyboard notları, axe severity listesi.
-- Her sprint sonunda `docs/03-delivery/guides/documentation-workflow.md` içinden bu checklist’e link verilerek hygiene toplantısında durum gözden geçirilir.
+- Her sprint sonunda `docs/03-delivery/guides/GUIDE-0007-documentation-workflow.md` içinden bu checklist’e link verilerek hygiene toplantısında durum gözden geçirilir.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

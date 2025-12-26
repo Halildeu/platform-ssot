@@ -1,4 +1,4 @@
-# API İstemcileri Güncelleme Rehberi
+# GUIDE-0001: API İstemcileri Güncelleme Rehberi
 
 Amaç: İstemcilerin (FE, Postman, 3rd‑party) yeni güvenlik ve başlık sözleşmelerine uyumlu şekilde API çağrılarını güncellemesi.
 
@@ -94,3 +94,24 @@ if (!pm.environment.get('JWT')) {
 - Auth API: `backend/docs/legacy/root/03-delivery/api/auth.api.md`
 - Kimlik (client_credentials): `backend/docs/legacy/root/01-architecture/04-security/identity/02-client-credentials-jwt.md`
 - Runbook/izleme: `docs/04-operations/RUNBOOKS/`, `docs/04-operations/MONITORING/`
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

@@ -5,9 +5,9 @@ owner: "@team/platform-docs"
 last_review: 2025-11-03
 ---
 
-# Platform Glossary
+# GUIDE-0009: Platform Glossary
 
-Bu sözlük; mikro-frontend platformunda sık kullanılan terimlerin herkes tarafından aynı anlamla kullanılmasını sağlar. Her terim için kısa tanım, pratik kullanım örneği ve ilgili doküman referansları yer alır. Yeni terim eklerken `docs/03-delivery/guides/GLOSSARY-GUIDE.md` içindeki kuralları ve (gerektiğinde) `backend/docs/legacy/03-delivery/templates/06-glossary/glossary-entry.md` iskeletini kullanın.
+Bu sözlük; mikro-frontend platformunda sık kullanılan terimlerin herkes tarafından aynı anlamla kullanılmasını sağlar. Her terim için kısa tanım, pratik kullanım örneği ve ilgili doküman referansları yer alır. Yeni terim eklerken `docs/03-delivery/guides/GUIDE-0004-glossary-guide.md` içindeki kuralları ve (gerektiğinde) `backend/docs/legacy/03-delivery/templates/06-glossary/glossary-entry.md` iskeletini kullanın.
 
 ## 1. Mimari & Ürün Terimleri
 
@@ -57,3 +57,24 @@ Bu sözlük; mikro-frontend platformunda sık kullanılan terimlerin herkes tara
 - **TTI:** Time to Interactive (baz performans metriği; TTFA ile birlikte izlenir).
 
 > Güncelleme notu: Yeni terim eklendiğinde bu sözlükte alfabetik sırayı koruyun ve ilgili doküman linklerini eklemeyi unutmayın.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

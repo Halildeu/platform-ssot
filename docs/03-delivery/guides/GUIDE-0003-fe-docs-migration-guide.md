@@ -1,4 +1,4 @@
-# FE-DOCS-MIGRATION-GUIDE – Web Doküman Envanteri ve Mapping
+# GUIDE-0003: FE-DOCS-MIGRATION-GUIDE – Web Doküman Envanteri ve Mapping
 
 Bu rehber, `web/docs/**` altındaki mevcut web frontend dokümanlarını
 envanterleyip yeni `docs/` mimarisi ile ilişkilendirir.
@@ -24,7 +24,7 @@ referans olarak kullanılmalıdır.
 | `web/docs/mf-check.md`                                              | MF health check     | WEB-ARCH (Routing & MF Router), STORY-0025/0035                      | MF check süreçleri yeni sistemde routing/version pin Story’leri ile bağlanır. |
 | `web/docs/mf-troubleshooting.md`                                    | MF sorun giderme    | WEB-ARCH, RUNBOOKS (RB-mfe-access, RB-keycloak vb.)                  | Operasyonel troubleshooting runbook’larla birlikte okunur. |
 | `web/docs/02-security/01-auth/01-frontend-vault-integration.md`     | FE Vault entegrasyonu | WEB-ARCH (Auth & Security), `docs/04-operations/RUNBOOKS/RB-vault.md` | FE’nin Vault ile entegrasyonu; kanonik runbook RB-vault, bu dosya FE perspektifidir. |
-| `web/docs/03-deploy/01-ci/01-security-guardrails.md`                | CI security guardrails | `web/docs/ci/security-guardrails.md`, `docs/03-delivery/guides/releases/README.md` | Security guardrail prensipleri; ileride `docs/03-delivery/guides/SECURITY-GUARDRAILS-FE.md` ile özetlenebilir. |
+| `web/docs/03-deploy/01-ci/01-security-guardrails.md`                | CI security guardrails | `web/docs/ci/security-guardrails.md`, `docs/03-delivery/guides/releases/GUIDE-0015-readme.md` | Security guardrail prensipleri; ileride `docs/03-delivery/guides/SECURITY-GUARDRAILS-FE.md` ile özetlenebilir. |
 | `web/docs/ci/security-guardrails.md`                                | CI security guardrails (genel) | WEB-ARCH (Auth & Security), releases rehberleri                     | CI pipeline güvenlik kontrolleri; şu an için web/docs altında detaylıdır. |
 | `web/docs/examples/routes/shell-routes.tsx`                         | Route örnek kodu    | WEB-ARCH (Routing), STORY-0025/0035                                  | Örnek kod; asıl kararlar routing Story’leri ve WEB-ARCH’tedir. |
 | `web/docs/tests/README.md`                                          | Test stratejisi özet | WEB-ARCH (Test stratejisi), TP-0101 vb.                              | Test stratejisi kanonik olarak test planları ve WEB-ARCH’te; bu dosya tarihçedir. |
@@ -63,3 +63,23 @@ referans olarak kullanılmalıdır.
     - Gerekirse yeni kanonik `docs/` dokümanı oluştur (guide, runbook, STORY).  
     - Bu tabloya satır ekleyerek legacy → yeni mapping’i kaydet.  
 
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

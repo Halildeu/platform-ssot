@@ -1,3 +1,5 @@
+# GUIDE-0019: reports routing contract
+
 ---
 title: "Reports Route Guard & Deep-Link Contract"
 status: in_review
@@ -53,9 +55,30 @@ last_review: 2025-11-12
 - **Query → filtre eşlemesi**: Reporting MFE’nin `module.createInitialFilters()` fonksiyonlarına `userId` ve `search` binding’i eklenmeli. Bu çalışma FE-03 uygulama aşaması.
 - **Deep-link audit**: `/admin/users` → `/admin/reports/users?userId=...` yönlendirmesi için telemetry event’i (örn. `reports.deep_link`) eklenmeli mi? Ops karar bekleniyor.
 - **Yeni modüller**: `/admin/reports/<module>` listesine yeni kayıt eklerken:
-  1. `docs/03-delivery/guides/reports-routing-contract.md` içindeki path tablosuna satır ekleyin.
+  1. `docs/03-delivery/guides/GUIDE-0019-reports-routing-contract.md` içindeki path tablosuna satır ekleyin.
   2. Shell menüsünde izin kontrolünü güncelleyin (`PERMISSIONS` sabitine yeni anahtar ekleyin).
   3. Reporting modül dosyasında (`apps/mfe-reporting/src/modules/<modul>/index.tsx`) `createInitialFilters(params)` imzasını takip edin; gerekli query paramlarını whitelist’e alın.
   4. Guard regressions: Cypress senaryosu ve CI workflow’una yeni modülün deep-link testini ekleyin (`cypress/e2e/reports-*.cy.ts`).
 
 Bu sözleşme uygulanana kadar FE-03 kartı “planned” statüsünde kalacaktır. Implementasyon bittiğinde `Board.json` ve ilgili dökümanlar “done” olarak güncellenecek.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

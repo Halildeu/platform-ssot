@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "enabled": false,
+  "enabled": true,
   "scope": {
     "guides_root": "docs/03-delivery/guides"
   },

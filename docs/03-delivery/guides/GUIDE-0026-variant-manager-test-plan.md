@@ -1,3 +1,5 @@
+# GUIDE-0026: variant manager test plan
+
 ---
 title: "Variant Manager Test Plan"
 status: in_review
@@ -65,3 +67,24 @@ Lokal hızlı deneme: `pnpm --filter frontend cypress open --e2e`.
 4. CI job eklemeleri (GitHub Actions `frontend-e2e.yml`).
 
 Bu plan tamamlandığında QA-01 kartı “in-progress/done” akışına alınacaktır.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD

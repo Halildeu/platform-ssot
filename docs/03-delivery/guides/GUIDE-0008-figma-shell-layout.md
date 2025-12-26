@@ -5,7 +5,7 @@ owner: "@team/design-system"
 last_review: 2025-11-04
 ---
 
-# Figma Kit – Shell Layout (v1.0)
+# GUIDE-0008: Figma Kit – Shell Layout (v1.0)
 
 > React + Ant Design + Tailwind tabanlı ERP kabuğu için Figma Kit iskeleti. Tasarım ↔ kod senkronu; token mimarisi; component/pattern/layout hiyerarşisi; erişilebilirlik, tema ve yayınlama kuralları.
 
@@ -86,3 +86,24 @@ last_review: 2025-11-04
 - 00_Overview changelog, semantic stil sözleşmesi donmuş, tema değişiklikleri küçük paketler halinde, rollback planlı.
 
 > Sonuç: Bu iskelet, tasarımcı ve geliştiricinin aynı token/tema sözlüğüyle çalışmasını sağlar; değişiklikler güvenle yayımlanır.
+
+1. AMAÇ
+TBD
+
+2. KAPSAM
+TBD
+
+3. KAPSAM DIŞI
+TBD
+
+4. BAĞLAM / ARKA PLAN
+TBD
+
+5. ADIM ADIM (KULLANIM)
+TBD
+
+6. SIK HATALAR / EDGE-CASE
+TBD
+
+7. LİNKLER
+TBD
