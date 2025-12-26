@@ -9,7 +9,7 @@ DRY_RUN="1"
 
 usage() {
   cat <<'EOF'
-Usage: bash scripts/ops/git_setup_push_auth.sh [--remote origin] [--dry-run 0|1]
+Usage: bash scripts/ops/git_setup_push_auth.sh [--remote origin] [--dry-run [0|1]] [--no-dry-run]
 
 Goal:
 - Make `git push` reliable for local SSOT loops (autopilot_local.sh pushes fixes).
@@ -27,7 +27,17 @@ EOF
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --remote) REMOTE="$2"; shift 2;;
-    --dry-run) DRY_RUN="$2"; shift 2;;
+    --dry-run)
+      # Support both: `--dry-run` (defaults to 1) and `--dry-run 0|1`.
+      if [[ $# -ge 2 && "${2:-}" != -* ]]; then
+        DRY_RUN="$2"
+        shift 2
+      else
+        DRY_RUN="1"
+        shift 1
+      fi
+      ;;
+    --no-dry-run) DRY_RUN="0"; shift 1;;
     -h|--help) usage; exit 0;;
     *) echo "Unknown arg: $1"; usage; exit 2;;
   esac

@@ -35,6 +35,23 @@ Local SSOT prensibiyle PR’ı uçtan uca sonuçlandırmak:
 3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
 
+### 3.0 GOLDEN COMMAND (TEK DOĞRU YOL)
+
+Amaç: PR’ı local SSOT ile uçtan uca koşturmak (CI fail → local fix → push → merge bot → deploy/validate/rollback izleme).
+
+```bash
+# 0) Kopyasız GH auth (token asla yazdırılmaz)
+bash scripts/ops/gh_auth_with_token.sh
+
+# 1) Git push auth (stabilizasyon) – dry-run
+bash scripts/ops/git_setup_push_auth.sh --dry-run
+
+# 2) Merge/Deploy orchestrator (manual fix loop)
+export ALLOW_DIRECT_MERGE=0
+export MERGE_BOT_DISPATCH=1
+bash scripts/ops/local_merge_deploy_orchestrator.sh --head docs/guides-migration-v0.1 --base main --fix-mode manual
+```
+
 ### 3.1 Ön koşullar (kopyasız auth)
 
 1) GH auth (token asla yazdırılmaz):

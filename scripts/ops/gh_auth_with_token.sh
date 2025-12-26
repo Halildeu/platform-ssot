@@ -58,9 +58,13 @@ if [ -n "${GH_TOKEN:-}" ]; then
   TOKEN="${GH_TOKEN}"
 elif [ -n "${GITHUB_TOKEN:-}" ]; then
   TOKEN="${GITHUB_TOKEN}"
-elif command -v security >/dev/null 2>&1; then
+fi
+
+if [ -z "${TOKEN}" ] && command -v security >/dev/null 2>&1; then
   TOKEN="$(security find-generic-password -a "$KEYCHAIN_ACCOUNT" -s "$KEYCHAIN_SERVICE" -w 2>/dev/null || true)"
-elif command -v vault >/dev/null 2>&1 && [ -n "${GH_AUTH_VAULT_PATH:-}" ] && [ -n "${GH_AUTH_VAULT_FIELD:-}" ]; then
+fi
+
+if [ -z "${TOKEN}" ] && command -v vault >/dev/null 2>&1 && [ -n "${GH_AUTH_VAULT_PATH:-}" ] && [ -n "${GH_AUTH_VAULT_FIELD:-}" ]; then
   TOKEN="$(vault kv get -field="$GH_AUTH_VAULT_FIELD" "$GH_AUTH_VAULT_PATH" 2>/dev/null || true)"
 fi
 
