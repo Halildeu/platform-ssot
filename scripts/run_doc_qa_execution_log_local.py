@@ -42,6 +42,7 @@ CHECKS = [
     ["python3", "scripts/check_guides_prefix.py"],
     ["python3", "scripts/check_nonprefix_naming_policy.py"],
     ["python3", "scripts/check_doc_folder_file_naming.py"],
+    ["python3", "scripts/check_local_orchestrator_guardrails.py"],
     ["python3", "scripts/check_doc_cross_mix_report.py"],
     ["python3", "scripts/check_doc_content_boundary_policy.py"],
     ["python3", "scripts/check_doc_content_boundaries.py"],
