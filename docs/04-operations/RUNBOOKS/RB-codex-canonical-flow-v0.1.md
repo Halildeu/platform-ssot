@@ -110,3 +110,12 @@ Owner: @team/platform
 - Local outputs:
   - `.autopilot-tmp/execution-log/execution-log.md`
   - `.autopilot-tmp/flow-mining/flow-report.md`
+
+-------------------------------------------------------------------------------
+X. CHAT FORMAT LINT (LOCAL, NON-BLOCKING)
+-------------------------------------------------------------------------------
+
+- Günlük chatlog formatını doğrulamak için:
+  - `python3 scripts/ops/lint_codex_chat_format.py`
+- Rapor:
+  - `.autopilot-tmp/flow-mining/chat-format-report.md`
