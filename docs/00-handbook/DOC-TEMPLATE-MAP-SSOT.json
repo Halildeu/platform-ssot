@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "templates_dir": "docs/99-templates",
+  "numbered_heading_style": true,
+  "map": {
+    "PB": {
+      "template": "PROBLEM-BRIEF.template.md",
+      "doc_glob": "docs/01-product/PROBLEM-BRIEFS/PB-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. SORUN TANIMI",
+        "4. HEDEF VE BAŞARI KRİTERLERİ",
+        "5. VARSAYIMLAR / RİSKLER",
+        "6. ÖZET",
+        "7. LİNKLER / SONRAKİ ADIMLAR"
+      ]
+    },
+    "PRD": {
+      "template": "PRD.template.md",
+      "doc_glob": "docs/01-product/PRD/PRD-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. KULLANICI SENARYOLARI",
+        "4. DAVRANIŞ / GEREKSİNİMLER",
+        "5. NON-GOALS (KAPSAM DIŞI)",
+        "6. ACCEPTANCE KRİTERLERİ ÖZETİ",
+        "7. RİSKLER / BAĞIMLILIKLAR",
+        "8. ÖZET",
+        "9. LİNKLER / SONRAKİ ADIMLAR"
+      ]
+    },
+    "STORY": {
+      "template": "STORY.template.md",
+      "doc_glob": "docs/03-delivery/STORIES/STORY-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. TANIM",
+        "3. KAPSAM VE SINIRLAR",
+        "4. ACCEPTANCE KRİTERLERİ",
+        "5. BAĞIMLILIKLAR",
+        "6. ÖZET",
+        "7. LİNKLER (İSTEĞE BAĞLI)"
+      ]
+    },
+    "AC": {
+      "template": "ACCEPTANCE.template.md",
+      "doc_glob": "docs/03-delivery/ACCEPTANCE/AC-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. GIVEN / WHEN / THEN SENARYOLARI",
+        "4. NOTLAR / KISITLAR",
+        "5. ÖZET",
+        "6. LİNKLER (İSTEĞE BAĞLI)"
+      ]
+    },
+    "TP": {
+      "template": "TEST-PLAN.template.md",
+      "doc_glob": "docs/03-delivery/TEST-PLANS/TP-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. STRATEJİ",
+        "4. TEST SENARYOLARI ÖZETİ"
+      ]
+    },
+    "RB": {
+      "template": "RUNBOOK.template.md",
+      "doc_glob": "docs/04-operations/RUNBOOKS/RB-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. BAŞLATMA / DURDURMA",
+        "4. GÖZLEMLEME / LOG / METRİKLER",
+        "5. ARIZA DURUMLARI VE ADIMLAR",
+        "6. ÖZET",
+        "7. LİNKLER (İSTEĞE BAĞLI)"
+      ]
+    },
+    "SPEC": {
+      "template": "SPEC.template.md",
+      "doc_glob": "docs/03-delivery/SPECS/SPEC-*.md",
+      "optional": true
+    },
+    "ADR": {
+      "template": "ADR.template.md",
+      "doc_glob": "docs/02-architecture/services/**/ADR/ADR-*.md",
+      "optional": true
+    },
+    "DATA-CARD": {
+      "template": "DATA-CARD.template.md",
+      "doc_glob": "docs/05-ml-ai/DATA-CARDS/DATA-CARD-*.md",
+      "optional": true
+    },
+    "MODEL-CARD": {
+      "template": "MODEL-CARD.template.md",
+      "doc_glob": "docs/05-ml-ai/MODEL-CARDS/MODEL-CARD-*.md",
+      "optional": true
+    },
+    "INTERFACE-CONTRACT": {
+      "template": "INTERFACE-CONTRACT.template.md",
+      "doc_glob": "docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-*.md",
+      "optional": true
+    }
+  },
+  "notes": [
+    "Template base isimleri ID prefix ile birebir eşleşmeyebilir (örn. AC -> ACCEPTANCE.template.md).",
+    "optional=true: template dosyası yoksa hard gate fail etmez; template eklendiğinde otomatik devreye girer.",
+    "BM/BENCH/TRACE için template henüz yok; bu SSOT bu tipleri kapsamıyor."
+  ]
+}

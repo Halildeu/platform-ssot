@@ -46,6 +46,9 @@ jobs:
           python3 scripts/check_doc_routing_strict.py
           python3 scripts/check_bm_bench_pack_integrity.py
           python3 scripts/check_runbook_required_sections.py
+          python3 scripts/check_doc_template_map_policy.py
+          python3 scripts/check_doc_heading_contract.py
+          python3 scripts/check_doc_cross_mix_report.py
           python3 scripts/check_doc_repair_reason_map.py
           python3 scripts/check_doc_repair_autopr_policy.py
           python3 scripts/check_doc_chain.py
