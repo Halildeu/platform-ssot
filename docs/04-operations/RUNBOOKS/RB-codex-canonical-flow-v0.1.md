@@ -26,6 +26,11 @@ Owner: @team/platform
 -------------------------------------------------------------------------------
 
 ### 3.1 Kanonik Happy Path (v0.1)
+0) **MODE** (`DONE|PLAN|READ_ONLY`)
+   - Her yanıt `MODE: DONE|PLAN|READ_ONLY` ile başlar.
+   - MODE != PLAN iken plan dili görünmez; “Planlanan Değişiklikler” yazılmaz.
+   - MODE = PLAN iken “Uygulanan Değişiklikler” yazılmaz.
+
 1) **WORK LOG – UI Mirror**
    - `Ran/Edited/Reviewed/Considering` satırları ile yapılan işleri ham şekilde yansıt.
 
