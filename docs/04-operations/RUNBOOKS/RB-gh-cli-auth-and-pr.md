@@ -1,0 +1,105 @@
+# RB-gh-cli-auth-and-pr – GH CLI Token Auth + PR Create (Kopyasız)
+
+ID: RB-gh-cli-auth-and-pr  
+Service: github-cli  
+Status: Draft  
+Owner: @team/platform
+
+-------------------------------------------------------------------------------
+1. AMAÇ
+-------------------------------------------------------------------------------
+
+GitHub PR açma işlemini kopyalama yapmadan CLI üzerinden çalıştırmak:
+- `gh auth login` (token ile, non-interactive)
+- `gh pr create` (body-file ile)
+
+-------------------------------------------------------------------------------
+2. KAPSAM
+-------------------------------------------------------------------------------
+
+- Host: `github.com`
+- Tooling: `gh` CLI
+- Token scope minimumu:
+  - `repo`, `read:org`, `gist`
+- Script’ler:
+  - `scripts/ops/gh_auth_with_token.sh`
+  - `scripts/ops/gh_pr_create_from_body.sh`
+
+-------------------------------------------------------------------------------
+3. BAŞLATMA / DURDURMA
+-------------------------------------------------------------------------------
+
+### 3.1 Auth (Token ile, kopyasız)
+
+Token kaynağı önceliği:
+1) Env: `GH_TOKEN` (session only)
+2) Env: `GITHUB_TOKEN`
+3) macOS Keychain: service=`github.com`, account=`$USER`
+
+Komut:
+- `bash scripts/ops/gh_auth_with_token.sh`
+
+Keychain’e kaydet (interactive) + login:
+- `bash scripts/ops/gh_auth_with_token.sh --store-keychain`
+
+### 3.2 PR Create (body-file ile)
+
+Body dosyası hazırla:
+- `/tmp/pr_body.md`
+
+PR aç:
+- `bash scripts/ops/gh_pr_create_from_body.sh --repo Halildeu/platform-ssot --base main --head <branch> --title "<title>" --body-file /tmp/pr_body.md`
+
+### 3.3 Logout (opsiyonel)
+
+- `gh auth logout --hostname github.com`
+
+-------------------------------------------------------------------------------
+4. GÖZLEMLEME / LOG / METRİKLER
+-------------------------------------------------------------------------------
+
+- Auth doğrulama:
+  - `gh auth status`
+- PR doğrulama:
+  - `gh pr view --repo <owner/repo> --head <branch>`
+  - `gh pr list --repo <owner/repo> --head <branch>`
+- Lokal kanıt (gate):
+  - `.autopilot-tmp/execution-log/execution-log.md`
+
+-------------------------------------------------------------------------------
+5. ARIZA DURUMLARI VE ADIMLAR
+-------------------------------------------------------------------------------
+
+- [ ] Arıza senaryosu 1 – Token bulunamadı:
+  - Given: `GH_TOKEN/GITHUB_TOKEN` set değil ve Keychain entry yok  
+    When: `bash scripts/ops/gh_auth_with_token.sh`  
+    Then: Script fail eder → çözüm:
+    - `export GH_TOKEN="..."` (session) veya
+    - `bash scripts/ops/gh_auth_with_token.sh --store-keychain`
+
+- [ ] Arıza senaryosu 2 – gh authenticated değil:
+  - Given: `gh auth status` “Logged in” değil  
+    When: `bash scripts/ops/gh_pr_create_from_body.sh ...`  
+    Then: PR açılmaz → önce auth:
+    - `bash scripts/ops/gh_auth_with_token.sh`
+
+- [ ] Arıza senaryosu 3 – PR zaten var:
+  - Given: aynı `--head <branch>` için açık PR vardır  
+    When: `bash scripts/ops/gh_pr_create_from_body.sh ...`  
+    Then: Script mevcut PR URL’ini yazıp exit 0 döner.
+
+-------------------------------------------------------------------------------
+6. ÖZET
+-------------------------------------------------------------------------------
+
+- Token asla echo/print/loglanmaz; sadece stdin ile `gh auth login --with-token` komutuna verilir.
+- PR `--body-file` ile açılır; token yoksa UI fallback kullanılır.
+
+-------------------------------------------------------------------------------
+7. LİNKLER (İSTEĞE BAĞLI)
+-------------------------------------------------------------------------------
+
+- Template: `docs/99-templates/RUNBOOK.template.md`
+- Script: `scripts/ops/gh_auth_with_token.sh`
+- Script: `scripts/ops/gh_pr_create_from_body.sh`
+- Compare (örnek): `https://github.com/Halildeu/platform-ssot/compare/main...docs/guides-migration-v0.1?expand=1`
