@@ -54,6 +54,7 @@ Kanıt:
 
 Merge kuralı (SSOT):
 - Varsayılan: merge kararı **Merge Bot** (label gate + checks) ile verilir.
+- Merge Bot çalışmadıysa/kaçırdıysa orchestrator `pr-merge.yml` için `workflow_dispatch` ile “kick” dener (varsayılan: `MERGE_BOT_DISPATCH=1`, ref: `MERGE_BOT_DISPATCH_REF=main`).
 - Orchestrator direct merge fallback’i **varsayılan kapalıdır**.
   - Break-glass: `--allow-direct-merge` (veya `export ALLOW_DIRECT_MERGE=1`) ile explicit açılır.
 

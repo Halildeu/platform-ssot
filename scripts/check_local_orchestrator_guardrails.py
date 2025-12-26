@@ -8,6 +8,7 @@ POL = Path("docs/04-operations/LOCAL-ORCHESTRATOR-POLICY.v1.json")
 ORCH = Path("scripts/ops/local_merge_deploy_orchestrator.sh")
 RB = Path("docs/04-operations/RUNBOOKS/RB-local-merge-deploy-orchestrator.md")
 INS = Path("docs/04-operations/RUNBOOKS/RB-insansiz-flow.md")
+PR_MERGE = Path(".github/workflows/pr-merge.yml")
 ROLL = Path(".github/workflows/rollback.yml")
 
 
@@ -30,6 +31,8 @@ def main() -> int:
 
     pol = json.loads(POL.read_text(encoding="utf-8"))
     allow_direct_default = bool(pol.get("allow_direct_merge_default", False))
+    merge_bot_dispatch_default = bool(pol.get("merge_bot_dispatch_enabled_default", False))
+    merge_dispatch_confirm = bool(pol.get("merge_dispatch_requires_confirm", False))
     rollback_confirm = bool(pol.get("rollback_manual_requires_confirm", False))
 
     orch = read_text(ORCH)
@@ -61,6 +64,32 @@ def main() -> int:
                     break
             if not ok:
                 return die('MERGE_MODE="direct" assignment not guarded by ALLOW_DIRECT_MERGE')
+
+    # 1.1) Merge bot dispatch fallback should exist when enabled by default.
+    if merge_bot_dispatch_default:
+        if "MERGE_BOT_DISPATCH" not in orch:
+            return die("orchestrator missing MERGE_BOT_DISPATCH flag/env")
+        if 'PR_MERGE_WORKFLOW_FILE="pr-merge.yml"' not in orch:
+            return die('orchestrator missing PR_MERGE_WORKFLOW_FILE="pr-merge.yml"')
+        if (
+            "actions/workflows/${PR_MERGE_WORKFLOW_FILE}/dispatches" not in orch
+            and "actions/workflows/pr-merge.yml/dispatches" not in orch
+        ):
+            return die("orchestrator missing pr-merge workflow dispatch call")
+
+    # 1.2) pr-merge workflow should require explicit confirm for workflow_dispatch.
+    if merge_dispatch_confirm:
+        if not PR_MERGE.exists():
+            return die(f"missing workflow: {PR_MERGE}")
+        pr_merge = read_text(PR_MERGE)
+        if "workflow_dispatch:" not in pr_merge:
+            return die("pr-merge.yml missing workflow_dispatch trigger")
+        if re.search(r"^[ \t]+confirm:[ \t]*$", pr_merge, re.M) is None:
+            return die("pr-merge.yml missing workflow_dispatch input: confirm")
+        if re.search(r"^[ \t]+pr_number:[ \t]*$", pr_merge, re.M) is None:
+            return die("pr-merge.yml missing workflow_dispatch input: pr_number")
+        if "confirm must be MERGE" not in pr_merge and re.search(r"inputs\\.confirm.*MERGE", pr_merge) is None:
+            return die("pr-merge.yml missing confirm=MERGE gate")
 
     # 2) Rollback guardrails (policy-aware)
     if rollback_confirm:

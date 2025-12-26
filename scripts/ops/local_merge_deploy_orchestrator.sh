@@ -22,6 +22,9 @@ FORCE_MERGE="0"
 MERGE_WAIT_SEC=180
 DELETE_BRANCH="0"
 ALLOW_DIRECT_MERGE="${ALLOW_DIRECT_MERGE:-0}" # 0|1 (hard guardrail)
+MERGE_BOT_DISPATCH="${MERGE_BOT_DISPATCH:-1}" # 0|1 (default: 1)
+MERGE_BOT_DISPATCH_REF="${MERGE_BOT_DISPATCH_REF:-${BASE_BRANCH}}"
+PR_MERGE_WORKFLOW_FILE="pr-merge.yml"
 
 DEPLOY_MODE="auto" # auto|dispatch|skip
 DEPLOY_ENV="stage"
@@ -54,6 +57,8 @@ Options:
   --merge auto|direct|skip     (default: auto)
   --merge-wait-sec N           (default: 180; auto mode wait for merge-bot)
   --allow-direct-merge         (explicitly allow direct merge fallback / --merge direct)
+  (env) MERGE_BOT_DISPATCH=1   (default: 1; allow local dispatch kick to merge-bot)
+  (env) MERGE_BOT_DISPATCH_REF (default: main; workflow_dispatch ref for pr-merge workflow)
   --force-merge                (override merge_policy=none)
   --delete-branch              (delete remote branch after merge; only for direct merge)
 
@@ -141,6 +146,23 @@ pr_create() {
   else
     gh pr create --repo "${repo}" --base "${base}" --head "${head}" --title "${title}" --body "Local SSOT: PR created via CLI (copy-free). See local execution-log for evidence." >/dev/null
   fi
+}
+
+dispatch_merge_bot_best_effort() {
+  local repo="$1"
+  local pr="$2"
+
+  if [[ "${MERGE_BOT_DISPATCH}" != "1" ]]; then
+    return 1
+  fi
+
+  echo "[local-e2e] merge: dispatching merge-bot workflow (pr=${pr})..."
+  gh api "repos/${repo}/actions/workflows/${PR_MERGE_WORKFLOW_FILE}/dispatches" \
+    -f ref="${MERGE_BOT_DISPATCH_REF}" \
+    -f "inputs[pr_number]=${pr}" \
+    -f "inputs[confirm]=MERGE" >/dev/null 2>&1 || return 1
+
+  return 0
 }
 
 merge_policy_for_branch() {
@@ -445,12 +467,21 @@ if [[ "${MERGE_MODE}" != "skip" ]]; then
     if wait_for_pr_merged "${REPO}" "${PR_NUMBER}" "${MERGE_WAIT_SEC}" >/dev/null 2>&1; then
       echo "[local-e2e] merge: merged by bot"
     else
-      if [[ "${ALLOW_DIRECT_MERGE}" == "1" ]]; then
-        echo "[local-e2e] merge: bot not merged (or slow) -> direct merge (explicitly allowed)"
+      if dispatch_merge_bot_best_effort "${REPO}" "${PR_NUMBER}"; then
+        echo "[local-e2e] merge: waiting ${MERGE_WAIT_SEC}s for merge-bot (after dispatch)..."
+        if wait_for_pr_merged "${REPO}" "${PR_NUMBER}" "${MERGE_WAIT_SEC}" >/dev/null 2>&1; then
+          echo "[local-e2e] merge: merged by bot (after dispatch)"
+        fi
+      fi
+
+      if wait_for_pr_merged "${REPO}" "${PR_NUMBER}" 1 >/dev/null 2>&1; then
+        echo "[local-e2e] merge: merged by bot"
+      elif [[ "${ALLOW_DIRECT_MERGE}" == "1" ]]; then
+        echo "[local-e2e] merge: bot not merged -> direct merge (explicitly allowed)"
         MERGE_MODE="direct"
       else
-        echo "[local-e2e] merge: bot not merged (or slow). Direct merge is disabled by default."
-        echo "[local-e2e] merge: re-run with --merge-wait-sec <N> to wait longer, or --allow-direct-merge to allow fallback."
+        echo "[local-e2e] merge: bot not merged. Direct merge is disabled by default."
+        echo "[local-e2e] merge: try waiting longer (--merge-wait-sec), or allow fallback (--allow-direct-merge)."
         exit 9
       fi
     fi

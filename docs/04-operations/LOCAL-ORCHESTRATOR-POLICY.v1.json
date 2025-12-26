@@ -1,9 +1,12 @@
 {
   "version": "1.0",
   "allow_direct_merge_default": false,
+  "merge_bot_dispatch_enabled_default": true,
+  "merge_dispatch_requires_confirm": true,
   "rollback_manual_requires_confirm": true,
   "notes": [
     "Direct merge yalnız break-glass (explicit flag/env) ile.",
+    "Merge Bot local'den workflow_dispatch ile tetiklenebilir; confirm zorunludur.",
     "Rollback yalnız failure|timed_out (workflow_run) veya workflow_dispatch + confirm=ROLLBACK ile."
   ]
 }
