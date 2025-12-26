@@ -36,10 +36,19 @@ Owner: @team/platform
    - “Ne çıktı?” (1–5 madde, geçmiş zaman).
 
 4) **EVIDENCE POINTERS**
-   - `gate: PASS|FAIL`
-   - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-   - `chatlog: .autopilot-tmp/codex-chatlog/latest.md` veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`
-   - varsa: `branch`, `sha`, `commit`, `pr`
+   - Serbest metin yok; EVIDENCE POINTERS yalnız code block içinde yazılır.
+   - Minimum:
+     ```text
+     gate: PASS|FAIL
+     execution_log: .autopilot-tmp/execution-log/execution-log.md
+     chatlog: .autopilot-tmp/codex-chatlog/latest.md
+     ```
+   - Koşullu (çalıştırıldıysa, aynı code block içine):
+     ```text
+     flow_report: .autopilot-tmp/flow-mining/flow-report.md
+     flow_stats: .autopilot-tmp/flow-mining/flow-stats.json
+     ```
+   - Opsiyonel meta (aynı code block içine): `branch`, `sha`, `commit`, `pr`
 
 5) **Uygulanan Değişiklikler**
    - `dosya:line — ... eklendi/güncellendi/hizalandı` (emir kipi yok).
@@ -101,4 +110,3 @@ Owner: @team/platform
 - Local outputs:
   - `.autopilot-tmp/execution-log/execution-log.md`
   - `.autopilot-tmp/flow-mining/flow-report.md`
-

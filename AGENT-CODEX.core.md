@@ -48,25 +48,33 @@ Not: WORK LOG token/secret içermez.
 
 ### 3.3 EVIDENCE POINTERS (ZORUNLU)
 - “Bunu nereden doğrularım?” sorusuna cevap verir.
-- Format **zorunlu**: her satır `key: <literal full path>` şeklindedir.
-- **KISALTMA YASAK**:
-  - Yanlış: `execution-log.md`, `latest.md`, `flow-report.md`
-  - Doğru: aşağıdaki satırlar **birebir** yazılır.
+- **Serbest metin yok.** EVIDENCE POINTERS içeriği **yalnızca** code block içinde yazılır.
+- **KISALTMA YASAK**: `execution-log.md`, `latest.md`, `flow-report.md` gibi kısaltmalar kullanılmaz; path değerleri `.autopilot-tmp/` ile başlayan full path olur.
 
-Zorunlu satırlar:
-- `gate: PASS|FAIL`
-- `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-- `chatlog: .autopilot-tmp/codex-chatlog/latest.md` (veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`)
+Zorunlu code block (minimum satırlar):
+```text
+gate: PASS|FAIL
+execution_log: .autopilot-tmp/execution-log/execution-log.md
+chatlog: .autopilot-tmp/codex-chatlog/latest.md
+```
 
-Koşullu satırlar (komut çalıştırıldıysa eklenir):
-- `flow_report: .autopilot-tmp/flow-mining/flow-report.md`
-- `flow_stats: .autopilot-tmp/flow-mining/flow-stats.json`
+Koşullu satırlar (komut çalıştırıldıysa, aynı code block içine eklenir):
+```text
+flow_report: .autopilot-tmp/flow-mining/flow-report.md
+flow_stats: .autopilot-tmp/flow-mining/flow-stats.json
+```
 
-Opsiyonel meta:
-- `branch: <name>`
-- `sha: <short>`
-- `commit: <sha>`
-- `pr: <url>`
+Opsiyonel meta (aynı code block içine eklenir):
+```text
+branch: <name>
+sha: <short>
+commit: <sha>
+pr: <url>
+```
+
+SELF-CHECK (ZORUNLU)
+- Yanıt gönderilmeden önce EVIDENCE POINTERS code block satırlarında `.autopilot-tmp/` geçtiği doğrulanır (en az `execution_log` ve `chatlog`).
+- Eğer geçmiyorsa: EVIDENCE POINTERS yanlış yazılmış demektir ve düzeltilmeden yanıt gönderilmez.
 
 
 ### 3.4 DOC-QA LOCAL STANDARDI (ZORUNLU)
