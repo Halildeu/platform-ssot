@@ -41,7 +41,7 @@ Amaç: PR’ı local SSOT ile uçtan uca koşturmak (CI fail → local fix → p
 
 ```bash
 # 1) Vault preflight
-vault status
+vault status # PASS beklenir
 
 # 2) Kopyasız GH auth (token asla yazdırılmaz)
 # SSOT pointer: docs/04-operations/GH-AUTH-VAULT-POINTERS.md
