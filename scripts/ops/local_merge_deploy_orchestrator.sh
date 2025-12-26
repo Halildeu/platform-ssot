@@ -21,6 +21,7 @@ MERGE_MODE="auto" # auto|direct|skip
 FORCE_MERGE="0"
 MERGE_WAIT_SEC=180
 DELETE_BRANCH="0"
+ALLOW_DIRECT_MERGE="${ALLOW_DIRECT_MERGE:-0}" # 0|1 (hard guardrail)
 
 DEPLOY_MODE="auto" # auto|dispatch|skip
 DEPLOY_ENV="stage"
@@ -34,7 +35,7 @@ Usage: bash scripts/ops/local_merge_deploy_orchestrator.sh [options]
 Goal (local SSOT):
 - Ensure PR exists
 - Wait/fix CI locally (via scripts/autopilot_local.sh)
-- Merge (auto: prefer bot, fallback to direct merge)
+- Merge (default: bot; direct merge only if explicitly allowed)
 - Deploy (GitHub Actions) + watch validate/rollback
 - Pull logs for deploy chain
 
@@ -51,7 +52,8 @@ Options:
   --auto-conflict 0|1          (default: 0; 1 => try local conflict auto-resolve)
 
   --merge auto|direct|skip     (default: auto)
-  --merge-wait-sec N           (default: 180; auto mode wait for merge-bot before fallback)
+  --merge-wait-sec N           (default: 180; auto mode wait for merge-bot)
+  --allow-direct-merge         (explicitly allow direct merge fallback / --merge direct)
   --force-merge                (override merge_policy=none)
   --delete-branch              (delete remote branch after merge; only for direct merge)
 
@@ -341,6 +343,7 @@ while [[ $# -gt 0 ]]; do
     --auto-conflict) AUTO_CONFLICT="$2"; shift 2;;
     --merge) MERGE_MODE="$2"; shift 2;;
     --merge-wait-sec) MERGE_WAIT_SEC="$2"; shift 2;;
+    --allow-direct-merge) ALLOW_DIRECT_MERGE="1"; shift 1;;
     --force-merge) FORCE_MERGE="1"; shift 1;;
     --delete-branch) DELETE_BRANCH="1"; shift 1;;
     --deploy) DEPLOY_MODE="$2"; shift 2;;
@@ -433,13 +436,23 @@ fi
 
 # Merge
 if [[ "${MERGE_MODE}" != "skip" ]]; then
+  if [[ "${MERGE_MODE}" == "direct" && "${ALLOW_DIRECT_MERGE}" != "1" ]]; then
+    die "merge=direct requested but ALLOW_DIRECT_MERGE!=1. Re-run with --allow-direct-merge (or export ALLOW_DIRECT_MERGE=1)."
+  fi
+
   if [[ "${MERGE_MODE}" == "auto" ]]; then
     echo "[local-e2e] merge: waiting ${MERGE_WAIT_SEC}s for merge-bot..."
     if wait_for_pr_merged "${REPO}" "${PR_NUMBER}" "${MERGE_WAIT_SEC}" >/dev/null 2>&1; then
       echo "[local-e2e] merge: merged by bot"
     else
-      echo "[local-e2e] merge: bot not merged (or slow) -> direct merge"
-      MERGE_MODE="direct"
+      if [[ "${ALLOW_DIRECT_MERGE}" == "1" ]]; then
+        echo "[local-e2e] merge: bot not merged (or slow) -> direct merge (explicitly allowed)"
+        MERGE_MODE="direct"
+      else
+        echo "[local-e2e] merge: bot not merged (or slow). Direct merge is disabled by default."
+        echo "[local-e2e] merge: re-run with --merge-wait-sec <N> to wait longer, or --allow-direct-merge to allow fallback."
+        exit 9
+      fi
     fi
   fi
 

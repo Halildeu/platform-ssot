@@ -52,6 +52,11 @@ CI fail olursa script durur ve `FAILURE.md` üretir; fix’i sen yaparsın, sonr
 Kanıt:
 - `artifacts/ci-logs/pr-<PR>/FAILURE.md`
 
+Merge kuralı (SSOT):
+- Varsayılan: merge kararı **Merge Bot** (label gate + checks) ile verilir.
+- Orchestrator direct merge fallback’i **varsayılan kapalıdır**.
+  - Break-glass: `--allow-direct-merge` (veya `export ALLOW_DIRECT_MERGE=1`) ile explicit açılır.
+
 ### 3.3 Orchestrator (auto fix – opsiyonel)
 
 Local autopilot fix komutu ile loop:
