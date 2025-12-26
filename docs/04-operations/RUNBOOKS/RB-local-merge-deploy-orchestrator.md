@@ -52,6 +52,22 @@ export MERGE_BOT_DISPATCH=1
 bash scripts/ops/local_merge_deploy_orchestrator.sh --head docs/guides-migration-v0.1 --base main --fix-mode manual
 ```
 
+-------------------------------------------------------------------------------
+Y. PRE-FLIGHT (ZORUNLU)
+-------------------------------------------------------------------------------
+
+1) Vault login hazır olmalı:
+- `vault status` PASS olmalı (VAULT_ADDR/VAULT_TOKEN kurum standardına göre set).
+
+2) GH auth (kopyasız):
+- SSOT pointer: `docs/04-operations/GH-AUTH-VAULT-POINTERS.md`
+
+```bash
+export GH_AUTH_VAULT_PATH="secret/stage/ops/github"
+export GH_AUTH_VAULT_FIELD="GH_LOCAL_AUTOPILOT_TOKEN"
+bash scripts/ops/gh_auth_with_token.sh
+```
+
 ### 3.1 Ön koşullar (kopyasız auth)
 
 1) GH auth (token asla yazdırılmaz):
