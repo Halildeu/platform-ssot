@@ -1,0 +1,135 @@
+# RB-local-merge-deploy-orchestrator – Local SSOT: Merge + Deploy Orchestrator
+
+ID: RB-local-merge-deploy-orchestrator  
+Service: ops-local  
+Status: Draft  
+Owner: @team/platform
+
+-------------------------------------------------------------------------------
+1. AMAÇ
+-------------------------------------------------------------------------------
+
+Local SSOT prensibiyle PR’ı uçtan uca sonuçlandırmak:
+- PR varsa bul / yoksa aç
+- CI FAIL ise log çek → local fix → push
+- CI PASS ise merge’i tetikle (bot veya direct)
+- Deploy/validate/rollback GitHub Actions’ta çalışsın ama local’den tetiklenebilsin
+- Tüm kanıt (log/digest) localde toplansın
+
+-------------------------------------------------------------------------------
+2. KAPSAM
+-------------------------------------------------------------------------------
+
+- Repo: `Halildeu/platform-ssot`
+- Local orchestrator:
+  - `scripts/ops/local_merge_deploy_orchestrator.sh`
+- CI log + digest:
+  - PR CI: `scripts/ci_pull_logs.sh` (autopilot içinde çağrılır)
+  - Deploy chain: `scripts/ops/ci_pull_deploy_chain_logs.sh`
+  - Tek run: `scripts/ops/gh_pull_run_logs.sh`
+- Git push credential stabilizasyonu:
+  - `scripts/ops/git_setup_push_auth.sh`
+- Not: Deploy/validate/rollback workflow’ları GitHub Secrets üzerinden çalışır; Vault “login” GitHub-hosted runner’da yapılmaz.
+
+-------------------------------------------------------------------------------
+3. BAŞLATMA / DURDURMA
+-------------------------------------------------------------------------------
+
+### 3.1 Ön koşullar (kopyasız auth)
+
+1) GH auth (token asla yazdırılmaz):
+- `bash scripts/ops/gh_auth_with_token.sh`
+
+2) Git push auth (autopilot push stabil olsun):
+- `bash scripts/ops/git_setup_push_auth.sh`
+
+### 3.2 Orchestrator (manual fix)
+
+CI fail olursa script durur ve `FAILURE.md` üretir; fix’i sen yaparsın, sonra aynı komutu tekrar çalıştırırsın.
+
+- `bash scripts/ops/local_merge_deploy_orchestrator.sh --fix-mode manual`
+
+Kanıt:
+- `artifacts/ci-logs/pr-<PR>/FAILURE.md`
+
+### 3.3 Orchestrator (auto fix – opsiyonel)
+
+Local autopilot fix komutu ile loop:
+- `bash scripts/ops/local_merge_deploy_orchestrator.sh --fix-mode auto --fix-cmd "bash scripts/codex_fix_runner.sh"`
+
+### 3.4 Deploy tetikleme (local → GitHub Actions)
+
+Varsayılan: merge sonrası push-trigger deploy’ları bekler; run görünmezse `workflow_dispatch` ile tetikler.
+
+Zorla workflow_dispatch:
+- `bash scripts/ops/local_merge_deploy_orchestrator.sh --deploy dispatch`
+
+Deploy skip:
+- `bash scripts/ops/local_merge_deploy_orchestrator.sh --deploy skip`
+
+-------------------------------------------------------------------------------
+4. GÖZLEMLEME / LOG / METRİKLER
+-------------------------------------------------------------------------------
+
+- Local CI kanıtı:
+  - `artifacts/ci-logs/pr-<PR>/FAILURE.md`
+  - `artifacts/ci-logs/run-<RUN_ID>/DIGEST.md`
+- Deploy chain raporu:
+  - `artifacts/ci-logs/main-<SHA7>/DEPLOY-CHAIN.md`
+- PR/Run URL’leri:
+  - `gh pr view --repo <owner/repo> --head <branch>`
+  - `gh run list --repo <owner/repo> --branch main --limit 20`
+
+-------------------------------------------------------------------------------
+5. ARIZA DURUMLARI VE ADIMLAR
+-------------------------------------------------------------------------------
+
+- [ ] Arıza senaryosu 1 – gh auth yok:
+  - Given: `gh auth status` logged-in değil  
+    When: orchestrator çalışır  
+    Then: durur → çözüm:
+    - `bash scripts/ops/gh_auth_with_token.sh`
+
+- [ ] Arıza senaryosu 2 – git push fail:
+  - Given: `autopilot_local.sh` push aşamasında hata verir  
+    When: fix commit üretildi  
+    Then: PR güncellenmez → çözüm:
+    - `bash scripts/ops/git_setup_push_auth.sh`
+    - (SSH kullanıyorsan) ssh-agent/keychain kontrolü
+
+- [ ] Arıza senaryosu 3 – CI FAIL (manual fix):
+  - Given: `ci-gate` FAIL  
+    When: `--fix-mode manual` ile orchestrator çalışır  
+    Then: `artifacts/ci-logs/pr-<PR>/FAILURE.md` üretilir → fix yap → tekrar çalıştır.
+
+- [ ] Arıza senaryosu 4 – mergeable_state=behind:
+  - Given: PR behind/out-of-date  
+    When: orchestrator merge dener  
+    Then: merge durur → çözüm:
+    - `git fetch origin && git merge origin/main && git push`
+
+- [ ] Arıza senaryosu 5 – deploy chain görünmüyor:
+  - Given: web/backend değişti ama deploy run yok  
+    When: orchestrator deploy bekler  
+    Then: fallback olarak `workflow_dispatch` tetikler (deploy-web/deploy-backend).
+
+-------------------------------------------------------------------------------
+6. ÖZET
+-------------------------------------------------------------------------------
+
+- Local SSOT: hata analizi ve fix localde; GitHub Actions sadece deterministic executor.
+- Merge bot GitHub’da kalabilir; local orchestrator gerektiğinde merge/deploy tetikler.
+- Kanıtlar localde: `artifacts/ci-logs/**`.
+
+-------------------------------------------------------------------------------
+7. LİNKLER (İSTEĞE BAĞLI)
+-------------------------------------------------------------------------------
+
+- Runbook template: `docs/99-templates/RUNBOOK.template.md`
+- Flow SSOT: `docs/04-operations/RUNBOOKS/RB-insansiz-flow.md`
+- Script: `scripts/autopilot_local.sh`
+- Script: `scripts/ci_pull_logs.sh`
+- Script: `scripts/ops/local_merge_deploy_orchestrator.sh`
+- Script: `scripts/ops/ci_pull_deploy_chain_logs.sh`
+- Script: `scripts/ops/gh_pull_run_logs.sh`
+- Script: `scripts/ops/git_setup_push_auth.sh`
