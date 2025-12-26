@@ -22,7 +22,7 @@ bu başlıkların altını doldurabilir.
 
 - AGENT-CODEX.* dokümanları, DOCS-WORKFLOW, DOCS-PROJECT-LAYOUT,
   NUMARALANDIRMA-STANDARDI.  
-- CODEX-CONTEXT-TEST-GUIDE.md ve `~/.codex/config.toml`.
+- GUIDE-0002-codex-context-test-guide.md ve `~/.codex/config.toml`.
 
 -------------------------------------------------------------------------------
 ## 3. STRATEJİ

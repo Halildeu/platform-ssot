@@ -1,9 +1,24 @@
 # BENCH-0002: Fleet Operations Management — Capability Matrix (v0.1)
 
-## Amaç
+-------------------------------------------------------------------------------
+1. AMAÇ
+-------------------------------------------------------------------------------
+
 Filo yönetimi çözümlerini “kanıtlanabilir kapabilite” kriterleriyle kıyaslamak ve gap analizi için SSOT üretmek.
 
-## Matrix Boyutları (Kriter Seti)
+-------------------------------------------------------------------------------
+2. KAPSAM
+-------------------------------------------------------------------------------
+
+- Bu doküman BENCH pack’in “capability matrix + kanıt standardı” kısmıdır.
+- Trend/gap/AI analizi BENCH pack’in ikinci dokümanında tutulur.
+
+-------------------------------------------------------------------------------
+3. CAPABILITY MATRIX (KANIT STANDARDI)
+-------------------------------------------------------------------------------
+
+Matrix Boyutları (Kriter Seti):
+
 ### Vehicle Registry
 - VIN/plaka kimliği ve plaka geçmişi
 - Durum yaşam döngüsü (active/inactive/sold)
@@ -36,16 +51,43 @@ Filo yönetimi çözümlerini “kanıtlanabilir kapabilite” kriterleriyle kı
 - API/CSV import/export
 - Idempotency/retry ve veri tutarlılığı
 
-## Kanıt Standardı (Zorunlu)
-Benchmark doldurulurken her kriter için aşağıdaki alanlar tutulur:
+Kanıt Standardı (Zorunlu):
 - Kanıt Türü: `doc` / `demo` / `referans` / `sertifika` / `whitepaper` / `kontrat`
 - Kaynak: link veya repo içi referans
 - Tarih: `YYYY-MM`
 - Not: kısa gözlem
 
-## Matrix (Doldurma Şablonu)
+Matrix (Doldurma Şablonu):
 
 | Alan | Kapabilite | Kanıt Türü | Kaynak | Tarih | Not |
 |---|---|---|---|---|---|
 | Vehicle Registry | (örn. VIN + plaka history) | doc/demo | TBD | TBD | TBD |
 
+-------------------------------------------------------------------------------
+4. TRENDLER
+-------------------------------------------------------------------------------
+
+Bu bölüm BENCH pack’in ikinci dokümanında tutulur:
+- `docs/01-product/BENCHMARKS/FLEET/BENCH-0002-fleet-operations-gaps-trends-ai.md`
+
+-------------------------------------------------------------------------------
+5. BOŞLUKLAR (GAPS)
+-------------------------------------------------------------------------------
+
+Bu bölüm BENCH pack’in ikinci dokümanında tutulur:
+- `docs/01-product/BENCHMARKS/FLEET/BENCH-0002-fleet-operations-gaps-trends-ai.md`
+
+-------------------------------------------------------------------------------
+6. AI YAPILABİLİRLİK + RİSK KONTROLLERİ
+-------------------------------------------------------------------------------
+
+Bu bölüm BENCH pack’in ikinci dokümanında tutulur:
+- `docs/01-product/BENCHMARKS/FLEET/BENCH-0002-fleet-operations-gaps-trends-ai.md`
+
+-------------------------------------------------------------------------------
+7. LİNKLER / KAYNAKLAR
+-------------------------------------------------------------------------------
+
+- BENCH Pack (2. doküman): `docs/01-product/BENCHMARKS/FLEET/BENCH-0002-fleet-operations-gaps-trends-ai.md`
+- BM Pack: `docs/01-product/BUSINESS-MASTERS/FLEET/`
+- PRD: `docs/01-product/PRD/PRD-0006-fleet-operations-management-mvp.md`

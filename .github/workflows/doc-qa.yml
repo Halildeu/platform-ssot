@@ -43,9 +43,22 @@ jobs:
           python3 scripts/check_acceptance_evidence.py
           python3 scripts/check_story_links.py
           python3 scripts/check_spec_refs.py
+          python3 scripts/check_doc_routing_strict.py
+          python3 scripts/check_bm_bench_pack_integrity.py
+          python3 scripts/check_runbook_required_sections.py
+          python3 scripts/check_doc_template_map_policy.py
+          python3 scripts/check_doc_heading_contract.py
+          python3 scripts/check_guides_policy.py
+          python3 scripts/check_guides_prefix.py
+          python3 scripts/check_nonprefix_naming_policy.py
+          python3 scripts/check_doc_folder_file_naming.py
+          python3 scripts/check_doc_cross_mix_report.py
+          python3 scripts/check_doc_content_boundary_policy.py
+          python3 scripts/check_doc_content_boundaries.py
           python3 scripts/check_doc_repair_reason_map.py
           python3 scripts/check_doc_repair_autopr_policy.py
           python3 scripts/check_doc_chain.py
           python3 scripts/check_governance_migration.py
+          python3 scripts/check_trace_quality_policy.py
           python3 scripts/check_trace_quality.py
           python3 scripts/check_prd_complexity.py
