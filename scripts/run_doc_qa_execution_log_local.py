@@ -39,6 +39,8 @@ CHECKS = [
     ["python3", "scripts/check_doc_template_map_policy.py"],
     ["python3", "scripts/check_doc_heading_contract.py"],
     ["python3", "scripts/check_doc_cross_mix_report.py"],
+    ["python3", "scripts/check_doc_content_boundary_policy.py"],
+    ["python3", "scripts/check_doc_content_boundaries.py"],
     ["python3", "scripts/check_doc_chain.py"],
     ["python3", "scripts/check_governance_migration.py"],
     ["python3", "scripts/check_doc_repair_reason_map.py"],
