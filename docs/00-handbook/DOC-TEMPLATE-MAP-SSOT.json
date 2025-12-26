@@ -31,6 +31,14 @@
         "9. LİNKLER / SONRAKİ ADIMLAR"
       ]
     },
+    "BM": {
+      "template": "BM.template.md",
+      "doc_glob": "docs/01-product/BUSINESS-MASTERS/**/*.md"
+    },
+    "BENCH": {
+      "template": "BENCH.template.md",
+      "doc_glob": "docs/01-product/BENCHMARKS/**/*.md"
+    },
     "STORY": {
       "template": "STORY.template.md",
       "doc_glob": "docs/03-delivery/STORIES/STORY-*.md",
@@ -79,6 +87,11 @@
         "7. LİNKLER (İSTEĞE BAĞLI)"
       ]
     },
+    "TRACE": {
+      "template": "TRACE.template.md",
+      "doc_glob": "docs/03-delivery/TRACES/TRACE-*.tsv",
+      "optional": true
+    },
     "SPEC": {
       "template": "SPEC.template.md",
       "doc_glob": "docs/03-delivery/SPECS/SPEC-*.md",
@@ -108,6 +121,6 @@
   "notes": [
     "Template base isimleri ID prefix ile birebir eşleşmeyebilir (örn. AC -> ACCEPTANCE.template.md).",
     "optional=true: template dosyası yoksa hard gate fail etmez; template eklendiğinde otomatik devreye girer.",
-    "BM/BENCH/TRACE için template henüz yok; bu SSOT bu tipleri kapsamıyor."
+    "TRACE dosyaları .tsv olduğu için heading-contract gate kapsamında değildir; trace kalite kontrolü ayrı check'lerle yapılır."
   ]
 }

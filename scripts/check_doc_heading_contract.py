@@ -80,6 +80,11 @@ def main() -> int:
     warnings: list[str] = []
 
     for entry in entries:
+        # Non-md docs (örn. TRACE *.tsv) heading-contract kapsamında değildir.
+        if ".tsv" in entry.doc_glob:
+            warnings.append(f"[SKIP] {entry.doc_type}: non-md docs (tsv) -> heading contract not applied")
+            continue
+
         tmpl_path = templates_dir / entry.template
         if not tmpl_path.exists():
             if entry.optional:
