@@ -40,13 +40,19 @@ Local SSOT prensibiyle PR’ı uçtan uca sonuçlandırmak:
 Amaç: PR’ı local SSOT ile uçtan uca koşturmak (CI fail → local fix → push → merge bot → deploy/validate/rollback izleme).
 
 ```bash
-# 0) Kopyasız GH auth (token asla yazdırılmaz)
+# 1) Vault preflight
+vault status
+
+# 2) Kopyasız GH auth (token asla yazdırılmaz)
+# SSOT pointer: docs/04-operations/GH-AUTH-VAULT-POINTERS.md
+export GH_AUTH_VAULT_PATH="secret/stage/ops/github"
+export GH_AUTH_VAULT_FIELD="GH_LOCAL_AUTOPILOT_TOKEN"
 bash scripts/ops/gh_auth_with_token.sh
 
-# 1) Git push auth (stabilizasyon) – dry-run
+# 3) Git push auth (stabilizasyon) – dry-run
 bash scripts/ops/git_setup_push_auth.sh --dry-run
 
-# 2) Merge/Deploy orchestrator (manual fix loop)
+# 4) Merge/Deploy orchestrator (manual fix loop)
 export ALLOW_DIRECT_MERGE=0
 export MERGE_BOT_DISPATCH=1
 bash scripts/ops/local_merge_deploy_orchestrator.sh --head docs/guides-migration-v0.1 --base main --fix-mode manual
