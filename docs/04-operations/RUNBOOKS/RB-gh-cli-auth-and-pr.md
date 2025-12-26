@@ -35,12 +35,18 @@ Token kaynağı önceliği:
 1) Env: `GH_TOKEN` (session only)
 2) Env: `GITHUB_TOKEN`
 3) macOS Keychain: service=`github.com`, account=`$USER`
+4) Vault KV v2 (opsiyonel): `GH_AUTH_VAULT_PATH` + `GH_AUTH_VAULT_FIELD`
 
 Komut:
 - `bash scripts/ops/gh_auth_with_token.sh`
 
 Keychain’e kaydet (interactive) + login:
 - `bash scripts/ops/gh_auth_with_token.sh --store-keychain`
+
+Vault (KV v2) ile (kopyasız) login:
+- `export GH_AUTH_VAULT_PATH="secret/stage/ops/github"`
+- `export GH_AUTH_VAULT_FIELD="GH_TOKEN"` (veya kurumunuzdaki field adı)
+- `bash scripts/ops/gh_auth_with_token.sh`
 
 ### 3.2 PR Create (body-file ile)
 
@@ -76,6 +82,7 @@ PR aç:
     Then: Script fail eder → çözüm:
     - `export GH_TOKEN="..."` (session) veya
     - `bash scripts/ops/gh_auth_with_token.sh --store-keychain`
+    - (Vault) `export GH_AUTH_VAULT_PATH=... GH_AUTH_VAULT_FIELD=...` + `bash scripts/ops/gh_auth_with_token.sh`
 
 - [ ] Arıza senaryosu 2 – gh authenticated değil:
   - Given: `gh auth status` “Logged in” değil  

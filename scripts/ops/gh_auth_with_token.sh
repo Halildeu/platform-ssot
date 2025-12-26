@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Prevent xtrace from leaking secrets even if invoked with `bash -x`.
+set +x
 set -euo pipefail
 
 HOSTNAME="github.com"
@@ -16,6 +18,7 @@ Token source priority:
   1) env: GH_TOKEN
   2) env: GITHUB_TOKEN
   3) macOS Keychain: service=github.com, account=$USER
+  4) Vault (KV v2): GH_AUTH_VAULT_PATH + GH_AUTH_VAULT_FIELD (optional)
 
 Security:
   - Token is never printed; only piped to `gh auth login --with-token` via stdin.
@@ -57,12 +60,15 @@ elif [ -n "${GITHUB_TOKEN:-}" ]; then
   TOKEN="${GITHUB_TOKEN}"
 elif command -v security >/dev/null 2>&1; then
   TOKEN="$(security find-generic-password -a "$KEYCHAIN_ACCOUNT" -s "$KEYCHAIN_SERVICE" -w 2>/dev/null || true)"
+elif command -v vault >/dev/null 2>&1 && [ -n "${GH_AUTH_VAULT_PATH:-}" ] && [ -n "${GH_AUTH_VAULT_FIELD:-}" ]; then
+  TOKEN="$(vault kv get -field="$GH_AUTH_VAULT_FIELD" "$GH_AUTH_VAULT_PATH" 2>/dev/null || true)"
 fi
 
 if [ -z "$TOKEN" ]; then
-  echo "[gh_auth_with_token] No token found (env/keychain)."
+  echo "[gh_auth_with_token] No token found (env/keychain/vault)."
   echo "  - Option A: export GH_TOKEN=... (session only)"
   echo "  - Option B (macOS): bash scripts/ops/gh_auth_with_token.sh --store-keychain"
+  echo "  - Option C (Vault): export GH_AUTH_VAULT_PATH=... GH_AUTH_VAULT_FIELD=...; then run this script"
   exit 1
 fi
 
