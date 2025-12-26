@@ -74,6 +74,19 @@
         "4. TEST SENARYOLARI ÖZETİ"
       ]
     },
+    "GUIDE": {
+      "template": "GUIDE.template.md",
+      "doc_glob": "docs/03-delivery/guides/**/GUIDE-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. KAPSAM DIŞI",
+        "4. BAĞLAM / ARKA PLAN",
+        "5. ADIM ADIM (KULLANIM)",
+        "6. SIK HATALAR / EDGE-CASE",
+        "7. LİNKLER"
+      ]
+    },
     "RB": {
       "template": "RUNBOOK.template.md",
       "doc_glob": "docs/04-operations/RUNBOOKS/RB-*.md",
@@ -121,6 +134,7 @@
   "notes": [
     "Template base isimleri ID prefix ile birebir eşleşmeyebilir (örn. AC -> ACCEPTANCE.template.md).",
     "optional=true: template dosyası yoksa hard gate fail etmez; template eklendiğinde otomatik devreye girer.",
+    "GUIDE: docs/03-delivery/guides/** altında guide dokümanları için hedef format GUIDE-XXXX-*.md + GUIDE.template.md; migration sürecinde guides-policy enabled=false (non-blocking) tutulur.",
     "TRACE dosyaları .tsv olduğu için heading-contract gate kapsamında değildir; trace kalite kontrolü ayrı check'lerle yapılır."
   ]
 }

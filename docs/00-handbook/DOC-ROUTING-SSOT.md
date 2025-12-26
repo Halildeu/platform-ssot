@@ -13,9 +13,9 @@ Aynı tip dokümanların tek kanonik konumda durmasını zorunlu kılmak.
 - `STORY-*.md` → `docs/03-delivery/STORIES/`
 - `AC-*.md` → `docs/03-delivery/ACCEPTANCE/`
 - `TP-*.md` → `docs/03-delivery/TEST-PLANS/`
+- `GUIDE-*.md` → `docs/03-delivery/guides/`
 - `RB-*.md` → `docs/04-operations/RUNBOOKS/`
 - `ADR-*.md` → `docs/02-architecture/services/<SERVICE>/ADR/` (**service-local**)
 
 ## Kural
 Yanlış konumdaki dosya **FAIL** sayılır (strict).
-

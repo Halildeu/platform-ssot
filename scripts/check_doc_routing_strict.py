@@ -14,6 +14,7 @@ RULES = [
     ("STORY", re.compile(r"^STORY-\d{4}.*\.md$"), Path("docs/03-delivery/STORIES")),
     ("AC", re.compile(r"^AC-\d{4}.*\.md$"), Path("docs/03-delivery/ACCEPTANCE")),
     ("TP", re.compile(r"^TP-\d{4}.*\.md$"), Path("docs/03-delivery/TEST-PLANS")),
+    ("GUIDE", re.compile(r"^GUIDE-\d{4}.*\.md$"), Path("docs/03-delivery/guides")),
     ("RB", re.compile(r"^RB-.*\.md$"), Path("docs/04-operations/RUNBOOKS")),
     ("TRACE", re.compile(r"^TRACE-\d{4}.*\.tsv$"), Path("docs/03-delivery/TRACES")),
 ]
@@ -66,4 +67,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
