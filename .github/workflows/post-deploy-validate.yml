@@ -20,14 +20,16 @@ jobs:
     if: >-
       github.event.workflow_run.conclusion == 'success'
       && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')
+    env:
+      DEPLOY_ENABLED: ${{ secrets.DEPLOY_ENABLED }}
 
     steps:
       - name: Skip if deploy disabled
-        if: ${{ secrets.DEPLOY_ENABLED != 'true' }}
+        if: ${{ env.DEPLOY_ENABLED != 'true' }}
         run: echo "::notice title=post-deploy-validate::DEPLOY_ENABLED!=true; skipping."
 
       - name: Validate (required)
-        if: ${{ secrets.DEPLOY_ENABLED == 'true' }}
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
         env:
           WEB_SMOKE_URL: ${{ secrets.WEB_SMOKE_URL }}
           BACKEND_HEALTH_URLS: ${{ secrets.BACKEND_HEALTH_URLS }}
