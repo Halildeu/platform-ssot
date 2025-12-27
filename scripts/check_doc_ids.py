@@ -116,6 +116,25 @@ def extract_story_number(story_ref: str) -> str | None:
     return m.group(1) if m else None
 
 
+def extract_adr_service(path: Path) -> str:
+    """
+    ADR dosya yolundan servis adını çıkarır.
+    Beklenen örnek:
+      docs/02-architecture/services/<servis>/ADR/ADR-0001-*.md
+    """
+    try:
+        rel = path.relative_to(ROOT)
+    except Exception:
+        return "<unknown>"
+
+    parts = rel.parts
+    try:
+        idx = parts.index("services")
+        return parts[idx + 1]
+    except (ValueError, IndexError):
+        return "<unknown>"
+
+
 def check_rule(rule: IdRule) -> Tuple[int, Dict[str, List[Path]]]:
     print(f"\n== {rule.name} dosyaları için ID kontrolü ==")
     matched_files = sorted(ROOT.glob(rule.glob))
@@ -173,12 +192,31 @@ def check_rule(rule: IdRule) -> Tuple[int, Dict[str, List[Path]]]:
     # Çakışan ID'ler
     collisions = {k: v for k, v in id_usage.items() if len(v) > 1}
     if collisions:
-        print("\nID ÇAKIŞMALARI:")
-        for value, paths in collisions.items():
-            total_errors += 1
-            print(f"- ID '{value}' birden fazla dosyada kullanılmış:")
-            for p in paths:
-                print(f"    • {p}")
+        if rule.name == "ADR":
+            adr_collisions: Dict[Tuple[str, str], List[Path]] = {}
+            for value, paths in collisions.items():
+                by_service: Dict[str, List[Path]] = {}
+                for p in paths:
+                    by_service.setdefault(extract_adr_service(p), []).append(p)
+
+                for service, service_paths in by_service.items():
+                    if len(service_paths) > 1:
+                        adr_collisions[(service, value)] = service_paths
+
+            if adr_collisions:
+                print("\nID ÇAKIŞMALARI (servis bazlı ADR havuzu):")
+                for (service, value), paths in sorted(adr_collisions.items()):
+                    total_errors += 1
+                    print(f"- {service}: ID '{value}' birden fazla dosyada kullanılmış:")
+                    for p in paths:
+                        print(f"    • {p}")
+        else:
+            print("\nID ÇAKIŞMALARI:")
+            for value, paths in collisions.items():
+                total_errors += 1
+                print(f"- ID '{value}' birden fazla dosyada kullanılmış:")
+                for p in paths:
+                    print(f"    • {p}")
 
     if total_errors == 0:
         print(f"✓ {rule.name} için tüm ID kontrolleri başarılı.")

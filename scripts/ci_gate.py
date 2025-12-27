@@ -349,6 +349,8 @@ def main(argv: List[str]) -> int:
 
     results: List[GateResult] = []
 
+    version_gates_mode = "ci" if IS_GITHUB_ACTIONS else "local"
+
     docs_gate_needed = flags.workflows_changed or flags.docs_changed
     layout_gate_needed = flags.workflows_changed or flags.backend_changed or flags.web_changed
     web_gate_needed = flags.workflows_changed or flags.web_changed or flags.meta_changed
@@ -369,6 +371,16 @@ def main(argv: List[str]) -> int:
                     (["python3", "scripts/check_story_links.py"], ROOT),
                     (["python3", "scripts/check_doc_chain.py"], ROOT),
                     (["python3", "scripts/check_governance_migration.py"], ROOT),
+                    # v0.1: non-blocking rubric report (semantik skor yok; sadece proxy sinyaller).
+                    (
+                        [
+                            "python3",
+                            "scripts/check_doc_maturity_rubric.py",
+                            "--flow-path",
+                            "docs/03-delivery/PROJECT-FLOW.tsv",
+                        ],
+                        ROOT,
+                    ),
                 ],
             )
         )
@@ -393,7 +405,7 @@ def main(argv: List[str]) -> int:
             run_gate(
                 "web",
                 [
-                    (["python3", "scripts/check_version_gates.py", "--mode", "ci"], ROOT),
+                    (["python3", "scripts/check_version_gates.py", "--mode", version_gates_mode], ROOT),
                     (["npm", "-C", "web", "ci"], ROOT),
                     (["npm", "-C", "web", "run", "tokens:build", "--", "--check"], ROOT),
                     (["bash", "scripts/run_lint_web.sh"], ROOT),

@@ -29,6 +29,9 @@ Owner: @team/platform
   - `ops/**` → default `merge_policy=none` (merge kapalı)
 - SSOT kaynakları:
   - Flow: `docs/03-delivery/PROJECT-FLOW.tsv` (+ render: `docs/03-delivery/PROJECT-FLOW.md`)
+  - Doc maturity rubric: `docs/00-handbook/DOC-MATURITY-RUBRIC.md` (non-blocking rapor)
+  - Semantic lint lexicon: `docs/00-handbook/DOC-SEMANTIC-LINT-LEXICON.md` (local-only, non-blocking)
+  - Semantic lint script: `scripts/check_doc_semantic_lint.py` (local-only rapor)
   - ID rezervasyonu: `docs/03-delivery/ID-REGISTRY.tsv`
     - Kural: Yeni STORY başlamadan önce ilgili `STORY/AC/TP` NUM (XXXX) bu registry’de rezerve edilir.
   - Delivery zinciri: `docs/03-delivery/STORIES/`, `docs/03-delivery/ACCEPTANCE/`, `docs/03-delivery/TEST-PLANS/`
@@ -58,14 +61,25 @@ Owner: @team/platform
      - Local autopilot devreye alınır: `scripts/ci_pull_logs.sh` → `scripts/autopilot_local.sh`.
        - Varsayılan: sadece required check’leri izler (`ci-gate`).
        - Opsiyonel (any-fail): `AUTOPILOT_ANY_FAIL=1` ile **herhangi bir failing check** fix döngüsünü tetikler.
-       - Codex dispatcher (önerilen): `AUTOPILOT_FIX_CMD="bash scripts/codex_fix_runner.sh"` (allowlist + limit guardrails).
-     - Local Ops Start/Stop (tek komut, UI yok):
-       - Start: `bash scripts/ops/local_ops_start.sh`
-       - Status: `bash scripts/ops/local_ops_status.sh`
-       - Stop: `bash scripts/ops/local_ops_stop.sh`
+       - Codex dispatcher: `AUTOPILOT_FIX_CMD="bash scripts/codex_fix_runner.sh"` (allowlist + limit guardrails).
+       - Opsiyonel (local-only): `AUTOPILOT_SEMANTIC_LINT=1` ile semantic lint raporu üretir (`.autopilot-tmp/doc-lint/`).
+       - Opsiyonel (local-only): Queue + Orchestrator (tek worker, idle-no-query)
+         - Queue: `.autopilot-tmp/queue/queue.tsv` (gitignored)
+         - Lock: `.autopilot-tmp/locks/autopilot.lock`
+         - Queue add/list: `python3 scripts/autopilot_queue.py add --pr 53 --reason "ci-gate fail"` / `python3 scripts/autopilot_queue.py list`
+         - Orchestrator: `python3 scripts/autopilot_orchestrator.py --repo Halildeu/platform-ssot --max-attempts 5 --semantic --fix-cmd "bash scripts/codex_fix_runner.sh"`
+         - Tracker Watch + Orchestrator Scan:
+           - Terminal-1: `python3 scripts/pr_tracker_tsv.py sync --watch 30`
+           - Terminal-2: `python3 scripts/autopilot_orchestrator.py --repo Halildeu/platform-ssot --scan-tracker --tracker-path .autopilot-tmp/pr-tracker/PR-TRACKER.tsv --scan-interval 30 --max-attempts 5 --semantic --fix-cmd "bash scripts/codex_fix_runner.sh"`
+           - Not: idle-no-query korunur; GitHub sorgusu yalnız tracker watch ve autopilot_local çalışırken yapılır.
+       - Local Ops Start/Stop (tek komut, UI yok):
+         - Start: `bash scripts/ops/local_ops_start.sh`
+         - Status: `bash scripts/ops/local_ops_status.sh`
+         - Stop: `bash scripts/ops/local_ops_stop.sh`
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
+     - Eğer workflow_run tetiklenmezse: local orchestrator `pr-merge.yml` için `workflow_dispatch` ile Merge Bot’u “kick” edebilir; direct merge yalnız break-glass (`--allow-direct-merge`).
   6) Merge sonrası (push main):
      - Web değiştiyse: `deploy-web` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
      - Backend değiştiyse: `deploy-backend` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
@@ -107,20 +121,10 @@ Owner: @team/platform
   - `scripts/ci_pull_logs.sh`
   - `scripts/autopilot_local.sh`
 - Merge otomatik (Merge Bot) kalır.
+- Local orchestrator (SSOT): `scripts/ops/local_merge_deploy_orchestrator.sh`
+  - Amaç: PR/CI kanıtı toplamak, local fix-loop’u çalıştırmak ve deploy/validate/rollback zinciri loglarını localde çekmek.
+  - Kural: varsayılan merge kararı bot’tur; direct merge fallback **varsayılan kapalıdır** (break-glass: `--allow-direct-merge`).
 - `log-digest` sadece teşhis (digest) yazar.
-
-### Genel İş Yapış (SSOT)
-- Önce deterministik scriptler: kontrol/rapor/gate/queue/tracker (tekrar üretilebilir sonuç).
-- Yetmezse Codex: yalnız allowlist + limitler içinde düzenleme/implementasyon.
-- Her fix localde yapılır: local validate → commit → push. (GitHub-side auto-fix yok.)
-- needs-human (token/permission/infra/approval): Codex yalnız teşhis/kanıt üretir, otomatik fix yapmaz.
-
-### Auto Merge Conflict Resolve (Local)
-- `mergeable_state=dirty` = PR branch’i `main` ile conflict’te (CI kırılabilir / merge mümkün değil).
-- Opsiyonel: `AUTOPILOT_AUTO_CONFLICT=1` → `scripts/resolve_merge_conflicts.py` otomatik çözüm dener.
-- Allowlist dışı conflict (örn. `web/**`, `backend/**`) → otomatik çözülmez → **needs-human** (manuel çözüm).
-- Kural seti (v0.1): `docs/**, scripts/**` (ours), `.github/workflows/**` (theirs), `.gitignore` (union).
-
 - Örnek token export (değer loglanmaz):
   - `export GH_TOKEN="$(vault kv get -field=GH_SECRETS_SYNC_TOKEN 'secret/stage/ops/github')"`
   - Not: gerçek Vault path kurumunuzdaki SSOT’a göre değişebilir.
@@ -137,6 +141,16 @@ Owner: @team/platform
 - Ek kanıtlar:
   - PR checks: `ci-gate` (required check).
   - GitHub Actions “Step Summary” (PR Bot / PR Merge Bot).
+- PR takip (TSV, local):
+  - Dosya: `.autopilot-tmp/pr-tracker/PR-TRACKER.tsv` (gitignored; Local SSOT).
+  - Komutlar:
+    - `python3 scripts/pr_tracker_tsv.py add --pr <N>`
+    - `python3 scripts/pr_tracker_tsv.py sync`
+    - `python3 scripts/pr_tracker_tsv.py sync --watch 60`
+    - `python3 scripts/pr_tracker_tsv.py report --out .autopilot-tmp/pr-tracker/STATUS.md`
+  - Token: `GH_TOKEN` (öneri: Vault field `GH_LOCAL_AUTOPILOT_TOKEN`).
+  - v0.3 teşhis kolonları (özet): `DRAFT`, `MERGEABLE_STATE`, `MERGE_POLICY`, `READY_LABEL`, `FAIL_WORKFLOWS`, `NEXT_ACTION`.
+  - `NEXT_ACTION`: `DRAFT` / `RESOLVE_CONFLICTS` / `WAIT_CI_GATE` / `FIX_CI` / `POLICY_NO_MERGE` / `ADD_READY_LABEL` / `FIX_OTHER_FAIL` / `WAIT_MERGEABLE` / `READY`.
 - Minimum metrikler (manuel gözlem):
   - `ci-gate` success rate
   - “time-to-merge”: `ci-gate` PASS → squash merge
@@ -151,6 +165,7 @@ Edge-case tablosu (v0.1):
 |---|---|---|---|
 | Missing label | `<!-- pr-merge:result -->` → `noop (missing ready label)` | pr-merge result comment | `pr-bot/ready-to-merge` label ekle → `ci-gate` rerun |
 | Behind / out-of-date | `noop (mergeable_state=behind)` veya PR “Update branch” uyarısı | pr-merge result comment | PR → Update branch → `ci-gate` rerun |
+| Merge bot tetiklenmedi | `ci-gate` PASS ama merge olmuyor / pr-merge sonucu yok | (comment yok) | Local orchestrator ile `pr-merge.yml` `workflow_dispatch` (inputs: `pr_number`, `confirm=MERGE`) |
 | Cancelled run | log-digest comment içinde “run cancelled” notu | log-digest comment | İlgili check’i rerun et; asıl FAIL run linkinden doğrula |
 | Local policy | Auto-fix workflow disabled | (comment yok) | Local autopilot kullan |
 | Deploy disabled | Deploy job’ları skip | (comment yok) | `DEPLOY_ENABLED=true` ayarla |
@@ -184,9 +199,7 @@ Edge-case tablosu (v0.1):
     Then:
     - `log-digest` comment’inden “ilk hata bloğu”nu al.
     - `scripts/ci_pull_logs.sh` ile `FAILURE.md` üret.
-      - v0.1: PR head SHA için **tüm failing workflow run** loglarını indirir ve tek digest üretir.
     - `scripts/autopilot_local.sh` ile fix döngüsünü sürdür.
-      - opsiyonel: `AUTOPILOT_ANY_FAIL=1` (ci-gate dışı fail’leri de fix döngüsüne dahil eder).
 
 -------------------------------------------------------------------------------
 6. ÖZET
@@ -215,10 +228,15 @@ Edge-case tablosu (v0.1):
 - Workflow: .github/workflows/rollback.yml
 - Script: scripts/ci_pull_logs.sh
 - Script: scripts/autopilot_local.sh
-- Script: scripts/codex_fix_runner.sh
-- Script: scripts/pr_tracker_tsv.py
-- Script: scripts/autopilot_queue.py
-- Script: scripts/autopilot_orchestrator.py
+- Runbook: docs/04-operations/RUNBOOKS/RB-local-merge-deploy-orchestrator.md
+- Script: scripts/ops/local_merge_deploy_orchestrator.sh
+- Script: scripts/ops/ci_pull_deploy_chain_logs.sh
+- Script: scripts/ops/gh_pull_run_logs.sh
+- Script: scripts/ops/git_setup_push_auth.sh
+- Handbook: docs/00-handbook/DOC-MATURITY-RUBRIC.md
+- Script: scripts/check_doc_maturity_rubric.py
+- Handbook: docs/00-handbook/DOC-SEMANTIC-LINT-LEXICON.md
+- Script: scripts/check_doc_semantic_lint.py
 - STORY: docs/03-delivery/STORIES/STORY-0302-release-deploy-e2e-v0-1.md
 - ACCEPTANCE: docs/03-delivery/ACCEPTANCE/AC-0302-release-deploy-e2e-v0-1.md
 - STORY: docs/03-delivery/STORIES/STORY-0303-autopilot-auto-fix-deploy-rollback-v0-1.md

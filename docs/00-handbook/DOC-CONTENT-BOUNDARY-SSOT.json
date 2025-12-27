@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "notes": [
+    "Amaç: doc type’lar arasında içerik başlıklarının/terimlerinin karışmasını yakalamak.",
+    "Başlangıç minimaldir; false-positive görürsek SSOT üzerinden ayarlanır."
+  ],
+  "rules": {
+    "PB": {
+      "forbidden_h2": ["Given", "When", "Then", "Kanıt", "Evidence", "Test Senaryoları"],
+      "forbidden_terms": ["## Given", "## When", "## Then"]
+    },
+    "PRD": {
+      "forbidden_h2": ["Given", "When", "Then", "Kanıt", "Evidence", "Test Senaryoları"],
+      "forbidden_terms": ["## Given", "## When", "## Then"]
+    },
+    "STORY": {
+      "forbidden_h2": ["Given", "When", "Then"],
+      "forbidden_terms": ["## Given", "## When", "## Then"]
+    },
+    "AC": {
+      "forbidden_num": ["KAPSAM DIŞI", "TASARIM", "UYGULAMA ADIMLARI"]
+    },
+    "TP": {
+      "forbidden_h2": ["Given", "When", "Then"],
+      "forbidden_terms": ["## Given", "## When", "## Then"]
+    },
+    "BM": {
+      "forbidden_h2": ["Given", "When", "Then"],
+      "forbidden_terms": ["## Given", "## When", "## Then"]
+    },
+    "BENCH": {
+      "forbidden_h2": ["Given", "When", "Then"],
+      "forbidden_terms": ["## Given", "## When", "## Then"]
+    }
+  }
+}

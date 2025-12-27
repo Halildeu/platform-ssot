@@ -1,0 +1,20 @@
+{
+  "version": "0.6",
+  "enabled": false,
+  "thresholds": {
+    "max_unknown_reason_ratio": 0.05,
+    "max_changed_files": 10,
+    "max_diff_lines": 300
+  },
+  "allowed_reason_codes": [
+    "STORY_LINKS_SECTION_MISSING",
+    "AC_FILE_MISSING",
+    "TP_FILE_MISSING",
+    "API_DOC_MISSING"
+  ],
+  "notes": [
+    "Auto-PR yalnız policy enabled=true iken çalışır.",
+    "Apply yalnız docs/** allowlist ile sınırlıdır.",
+    "Gate: doc-qa PASS olmadan PR açılmaz."
+  ]
+}

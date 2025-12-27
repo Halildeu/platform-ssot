@@ -1,0 +1,52 @@
+name: doc-repair-plan
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 3 * * 1" # Pazartesi 03:15 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: docflow_next autopilot (dry-run)
+        run: |
+          python3 scripts/docflow_next.py autopilot --dry-run --max-run 100 --summary-path artifacts/doc-repair/summary.md
+
+      - name: Generate doc-repair plan
+        run: |
+          set -euo pipefail
+          SUM="$(python3 - <<'PY'
+          import pathlib
+          c = list(pathlib.Path(".").rglob("summary.md"))
+          if not c:
+              print("")
+          else:
+              c.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+              print(str(c[0]))
+          PY
+          )"
+          echo "SUMMARY=$SUM"
+          if [ -z "${SUM}" ]; then
+            echo "No summary.md found. Exiting 0 (non-blocking)."
+            exit 0
+          fi
+          python3 scripts/doc_repair_plan.py --summary "${SUM}" --out-dir artifacts/doc-repair
+
+      - name: Upload doc-repair artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: doc-repair-plan
+          path: artifacts/doc-repair/
+          if-no-files-found: ignore

@@ -18,7 +18,7 @@ Owner: @team/platform-arch
 
 - AGENT-CODEX.* dokümanları.  
 - DOCS-WORKFLOW.md, DOCS-PROJECT-LAYOUT.md, NUMARALANDIRMA-STANDARDI.md.  
-- CODEX-CONTEXT-TEST-GUIDE.md ve `~/.codex/config.toml`.
+- GUIDE-0002-codex-context-test-guide.md ve `~/.codex/config.toml`.
 
 -------------------------------------------------------------------------------
 ## 3. GIVEN / WHEN / THEN SENARYOLARI
