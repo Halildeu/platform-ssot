@@ -2,8 +2,8 @@
 
 ID: TP-0305  
 Story: STORY-0305-m3-direct-gen-production-system-v1  
-Status: Draft  
-Owner: TBD
+Status: Done  
+Owner: @team/platform
 
 -------------------------------------------------------------------------------
 ## 1. AMAÇ
@@ -29,12 +29,13 @@ Owner: TBD
 ## 4. TEST SENARYOLARI ÖZETİ
 -------------------------------------------------------------------------------
 
-- [ ] Senaryo 1 – `python3 scripts/docflow_next.py render-flow --check` PASS.  
-- [ ] Senaryo 2 – `python3 scripts/check_doc_templates.py` PASS.  
-- [ ] Senaryo 3 – `python3 scripts/check_doc_ids.py` ve `python3 scripts/check_unique_delivery_ids.py` PASS.  
-- [ ] Senaryo 4 – `python3 scripts/check_doc_locations.py` PASS.  
-- [ ] Senaryo 5 – `python3 scripts/check_story_links.py STORY-0305` PASS.  
-- [ ] Senaryo 6 – `python3 scripts/check_doc_chain.py STORY-0305` PASS.  
+- [x] Senaryo 1 – `python3 scripts/docflow_next.py render-flow --check` PASS.  
+- [x] Senaryo 2 – `python3 scripts/check_doc_templates.py` PASS.  
+- [x] Senaryo 3 – `python3 scripts/check_doc_ids.py` ve `python3 scripts/check_unique_delivery_ids.py` PASS.  
+- [x] Senaryo 4 – `python3 scripts/check_doc_locations.py` PASS.  
+- [x] Senaryo 5 – `python3 scripts/check_story_links.py STORY-0305` PASS.  
+- [x] Senaryo 6 – `python3 scripts/check_doc_chain.py STORY-0305` PASS.  
+- [x] Senaryo 7 – Negatif: PROJECT-FLOW drift `python3 scripts/docflow_next.py render-flow --check` ile yakalanır.  
 
 -------------------------------------------------------------------------------
 ## 5. ÇEVRE VE ARAÇLAR
@@ -48,6 +49,8 @@ Owner: TBD
 -------------------------------------------------------------------------------
 
 - En kritik risk: `PROJECT-FLOW.md` drift (mitigasyon: `render-flow`).
+- post-deploy doğrulama (docs): PR/merge sonrası CI `Doc QA` workflow PASS olmalıdır (`.github/workflows/doc-qa.yml`).
+- rollback / geri alma: gerekiyorsa ilgili commit revert edilerek doküman zinciri rollback yapılır.
 
 -------------------------------------------------------------------------------
 ## 7. ÖZET

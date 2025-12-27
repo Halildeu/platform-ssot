@@ -2,8 +2,8 @@
 
 ID: STORY-0305-m3-direct-gen-production-system-v1  
 Epic: DOCS-PRODUCTION  
-Status: Design  
-Owner: TBD  
+Status: Done  
+Owner: @team/platform  
 Upstream: docs/00-handbook/DEV-GUIDE.md, docs/00-handbook/DOCS-WORKFLOW.md, docs/00-handbook/DOC-MATURITY-RUBRIC.md, docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md  
 Downstream: AC-0305, TP-0305
 
@@ -34,13 +34,17 @@ Hariç:
 - Auto-PR enable/policy değişimi (bu story: dokümantasyon sistemi).
 - Kod üretimi entegrasyonu (sonraki story).
 
+Not (Risk/Varsayım):
+- Varsayım: BM/BENCH/TRACE örnekleri “exemplar” olarak repo içinde tutulur.
+- Risk: SSOT dışı kural değişiklikleri versionlanmazsa (yeni SPEC açılmadan) drift ve sürpriz oranı artar.
+
 -------------------------------------------------------------------------------
 ## 4. ACCEPTANCE KRİTERLERİ
 -------------------------------------------------------------------------------
 
-- [ ] Given: `SPEC-0012`, `STORY-0305`, `AC-0305`, `TP-0305` eklidir. When: doc-qa gate koşulur. Then: PASS olmalıdır.
-- [ ] Given: `SPEC-0012` okunur. When: üretim hattı bölümleri kontrol edilir. Then: BM→Benchmark→Türetme + M3 (6 parça) + türetme kuralları + Appendix A mevcut olmalıdır.
-- [ ] Given: yerleşim kuralı (RUNBOOKS path). When: BM/Benchmark yerleşim önerisi değerlendirilir. Then: gate ihlali yaratmadan “öneri” olarak dokümante edilmelidir.
+- [x] Given: `SPEC-0012`, `STORY-0305`, `AC-0305`, `TP-0305` eklidir. When: doc-qa gate koşulur. Then: PASS olmalıdır.
+- [x] Given: `SPEC-0012` okunur. When: üretim hattı bölümleri kontrol edilir. Then: BM→Benchmark→Türetme + M3 (6 parça) + türetme kuralları + Appendix A mevcut olmalıdır.
+- [x] Given: yerleşim kuralı (RUNBOOKS path). When: BM/Benchmark yerleşim önerisi değerlendirilir. Then: gate ihlali yaratmadan “öneri” olarak dokümante edilmelidir.
 
 -------------------------------------------------------------------------------
 ## 5. BAĞIMLILIKLAR
@@ -64,3 +68,4 @@ Hariç:
 - SPEC: docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0305-m3-direct-gen-production-system-v1.md
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0305-m3-direct-gen-production-system-v1.md
+- Runbook: docs/04-operations/RUNBOOKS/RB-insansiz-flow.md
