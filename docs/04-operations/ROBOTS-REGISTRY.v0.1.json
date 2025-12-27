@@ -323,23 +323,30 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(doc-repair-autopr)",
+        "git_push(branch docs/auto/doc-repair-*)",
+        "create_pull_request(base=main)",
+        "upload_artifact(name=doc-repair-autopr)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "DOC_REPAIR_AUTOPR_POLICY_PATH"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "ref=main",
+        "policy_file=docs/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json"
       ],
       "outputs": [
-        "TBD"
+        "artifact: doc-repair-autopr (artifacts/doc-repair/**)",
+        "branch: docs/auto/doc-repair-* (optional)",
+        "pull_request: docs(auto): doc-repair apply (optional)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "Guarded: exits no-op unless doc-repair-autopr-policy enabled=true and thresholds met."
       ]
     },
     {
@@ -353,23 +360,25 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(doc-repair-plan)",
+        "schedule(cron)",
+        "upload_artifact(name=doc-repair-plan)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "ref=main"
       ],
       "outputs": [
-        "TBD"
+        "artifact: doc-repair-plan (artifacts/doc-repair/**)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "Dry-run only: produces plan/report artifacts; no repo writes."
       ]
     },
     {
@@ -383,23 +392,24 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "pull_request_check(layout-qa)",
+        "workflow_dispatch(layout-qa)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "pull_request(paths filter) or workflow_dispatch"
       ],
       "outputs": [
-        "TBD"
+        "check-run: Layout QA (pass/fail)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "Runs layout validators (backend/web/docs/scripts)."
       ]
     },
     {
@@ -413,23 +423,26 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_run(post-deploy-validate)",
+        "http_smoke_checks(web + backend)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "DEPLOY_ENABLED",
+        "WEB_SMOKE_URL",
+        "BACKEND_HEALTH_URLS"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "trigger: workflow_run(deploy-web|deploy-backend completed success)"
       ],
       "outputs": [
-        "TBD"
+        "check-run: post-deploy-validate (pass/fail)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "Guarded: runs only when secrets.DEPLOY_ENABLED==\"true\"."
       ]
     },
     {
@@ -443,23 +456,29 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "push_trigger(pr-bot)",
+        "workflow_dispatch(pr-bot)",
+        "create_or_update_pull_request",
+        "upsert_comment(marker pr-bot:rules)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GITHUB_TOKEN (github.token)",
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "ref (push: fix/**|wip/**|docs/**|ops/**) or workflow_dispatch",
+        "rules_path=docs/04-operations/PR-BOT-RULES.json"
       ],
       "outputs": [
-        "TBD"
+        "artifacts/pr-bot.log (workflow artifact/log)",
+        "pull_request: created/updated (optional)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "Runs PR bot: creates PR and upserts marker comment; best-effort ready label."
       ]
     },
     {
