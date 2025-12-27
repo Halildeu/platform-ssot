@@ -86,3 +86,11 @@ ID: PB-0003
   için sonraki adımda hazırlanacak PRD + teknik tasarım + Story/Acceptance
   zinciri için temel girdi olacaktır.
 
+-------------------------------------------------------------------------------
+7. LİNKLER / SONRAKİ ADIMLAR
+-------------------------------------------------------------------------------
+
+- PRD: `docs/01-product/PRD/PRD-0003-access-permission-bulk-assign-api-v2.md`
+- Story: `docs/03-delivery/STORIES/STORY-0042-access-permission-bulk-assign-api-v2.md`
+- Acceptance: `docs/03-delivery/ACCEPTANCE/AC-0042-access-permission-bulk-assign-api-v2.md`
+- Test Plan: `docs/03-delivery/TEST-PLANS/TP-0042-access-permission-bulk-assign-api-v2.md`

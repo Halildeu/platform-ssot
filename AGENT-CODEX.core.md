@@ -20,14 +20,25 @@
 
 ## 3. Cevap formatı
 
+### 3.0 MODE (ZORUNLU)
+Yanıtın en üstünde tek satır MODE yazılır:
+- `MODE: DONE` (değişiklik yapıldı)
+- `MODE: PLAN` (sadece plan/öneri; değişiklik yapılmadı)
+- `MODE: READ_ONLY` (keşif/rapor; repo değişmedi)
+
+Kural:
+- MODE != PLAN iken “plan dili” görünmez; “Planlanan Değişiklikler” bölümü yazılmaz.
+- MODE = PLAN iken “Uygulanan Değişiklikler” yazılmaz; bunun yerine opsiyonel “Planlanan Değişiklikler” yazılır.
+
 Her görevde varsayılan yapı (sıra zorunlu):
 
-1) WORK LOG – UI Mirror (zorunlu)
-2) WORK LOG – Summary (opsiyonel)
-3) RESULT (zorunlu)
-4) EVIDENCE POINTERS (zorunlu)
-5) Uygulanan Değişiklikler (zorunlu)
-6) NEXT (zorunlu)
+1) MODE: DONE|PLAN|READ_ONLY (zorunlu)
+2) WORK LOG – UI Mirror (zorunlu)
+3) WORK LOG – Summary (opsiyonel)
+4) RESULT (zorunlu)
+5) EVIDENCE POINTERS (zorunlu)
+6) Uygulanan Değişiklikler (MODE=DONE|READ_ONLY)
+7) NEXT (zorunlu)
 
 ### 3.1 WORK LOG (ZORUNLU, 2 KATMAN)
 1) **WORK LOG – UI Mirror (Zorunlu)**
@@ -48,26 +59,33 @@ Not: WORK LOG token/secret içermez.
 
 ### 3.3 EVIDENCE POINTERS (ZORUNLU)
 - “Bunu nereden doğrularım?” sorusuna cevap verir.
-- Asgari alanlar:
-  - `gate: PASS|FAIL`
-  - `execution_log: .autopilot-tmp/execution-log/execution-log.md` (full path)
-  - `chatlog: .autopilot-tmp/codex-chatlog/latest.md` veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md` (full path)
-- Varsa eklenir:
-  - `branch: <name>`
-  - `sha: <short>`
-  - `commit: <sha>`
-  - `pr: <url>`
+- **Serbest metin yok.** EVIDENCE POINTERS içeriği **yalnızca** code block içinde yazılır.
+- **KISALTMA YASAK**: `execution-log.md`, `latest.md`, `flow-report.md` gibi kısaltmalar kullanılmaz; path değerleri `.autopilot-tmp/` ile başlayan full path olur.
 
-- **Literal full path zorunlu**: değerler açıklama değil dosya yolu olmalı.
-  - Yanlış: `execution-log.md (full path)`
-  - Doğru: `execution_log: .autopilot-tmp/execution-log/execution-log.md`
+Zorunlu code block (minimum satırlar):
+```text
+gate: PASS|FAIL
+execution_log: .autopilot-tmp/execution-log/execution-log.md
+chatlog: .autopilot-tmp/codex-chatlog/latest.md
+```
 
-Örnek (tam):
-- `gate: PASS`
-- `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-- `chatlog: .autopilot-tmp/codex-chatlog/latest.md` (veya `.autopilot-tmp/codex-chatlog/YYYYMMDD.md`)
-- `branch: <name>`
-- `sha: <short>`
+Koşullu satırlar (komut çalıştırıldıysa, aynı code block içine eklenir):
+```text
+flow_report: .autopilot-tmp/flow-mining/flow-report.md
+flow_stats: .autopilot-tmp/flow-mining/flow-stats.json
+```
+
+Opsiyonel meta (aynı code block içine eklenir):
+```text
+branch: <name>
+sha: <short>
+commit: <sha>
+pr: <url>
+```
+
+SELF-CHECK (ZORUNLU)
+- Yanıt gönderilmeden önce EVIDENCE POINTERS code block satırlarında `.autopilot-tmp/` geçtiği doğrulanır (en az `execution_log` ve `chatlog`).
+- Eğer geçmiyorsa: EVIDENCE POINTERS yanlış yazılmış demektir ve düzeltilmeden yanıt gönderilmez.
 
 
 ### 3.4 DOC-QA LOCAL STANDARDI (ZORUNLU)
@@ -79,18 +97,26 @@ Not: WORK LOG token/secret içermez.
 - Tek tek `check_doc_*` komutları yalnızca hedefli debug için kullanılmalıdır.
 - WORK LOG – UI Mirror içinde bu komut `Ran python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log` olarak görünmelidir.
 
-### 3.5 Uygulanan Değişiklikler (ZORUNLU)
+### 3.5 Uygulanan Değişiklikler (MODE=DONE|READ_ONLY)
 - Sadece “dosya yolu + değişiklik” içerir.
 - Değişiklik bu görevde uygulandıysa: geçmiş zaman (örn. “eklendi/güncellendi/silindi”) yazılır.
 - Emir kipi yok; “→ ekle/hizala/çalıştır” kullanılmaz.
 - Format: `dosya:line — değişiklik` (parantezli `(line N)` kullanılmaz).
+- MODE = PLAN iken bu bölüm yazılmaz.
 
 Örnek:
 - `AGENT-CODEX.core.md:51 — Dil kuralı güncellendi (yapılan vs planlanan ayrımı).`
 
+### 3.5.1 Planlanan Değişiklikler (MODE=PLAN, OPSİYONEL)
+- Sadece MODE = PLAN iken yazılır.
+- “dosya yolu + planlanan değişiklik” içerir.
+- Emir kipi yok; “→ ekle/hizala/çalıştır” kullanılmaz.
+
 ### 3.6 NEXT (ZORUNLU)
-- Sırada gerçek iş varsa 1–5 madde.
-- Yoksa: `NEXT: none`
+- NEXT satır formatı zorunlu:
+  - `NEXT: none`
+  - veya `NEXT: optional — <kısa açıklama> — <link/komut>`
+- 1–5 madde olabilir; her madde ayrı bir `NEXT: optional — ...` satırı olarak yazılır.
 
 
 ## 4. Riskli komutlar

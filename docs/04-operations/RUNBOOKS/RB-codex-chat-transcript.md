@@ -85,13 +85,35 @@ Owner: @team/platform
 - Template: `docs/99-templates/RUNBOOK.template.md`
 
 -------------------------------------------------------------------------------
-X. EVIDENCE POINTERS (LITERAL PATH)
+X. EVIDENCE POINTERS (CODE BLOCK, STRICT)
 -------------------------------------------------------------------------------
 
-- Evidence pointer satırları açıklama değil **literal full path** olmalıdır.
-  - Yanlış: `execution-log.md (full path)`
-  - Doğru: `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-- Örnek:
-  - `gate: PASS`
-  - `execution_log: .autopilot-tmp/execution-log/execution-log.md`
-  - `chatlog: .autopilot-tmp/codex-chatlog/latest.md`
+- EVIDENCE POINTERS serbest metin değildir; içerik yalnız code block içinde literal path satırlarıyla yazılır.
+- KISALTMA YASAK: `execution-log.md`, `latest.md`, `flow-report.md` gibi kısaltmalar kullanılmaz.
+- Path değerleri `.autopilot-tmp/` ile başlayan full path olur.
+
+Zorunlu code block (minimum satırlar):
+```text
+gate: PASS|FAIL
+execution_log: .autopilot-tmp/execution-log/execution-log.md
+chatlog: .autopilot-tmp/codex-chatlog/latest.md
+```
+
+Koşullu satırlar (komut çalıştırıldıysa, aynı code block içine eklenir):
+```text
+flow_report: .autopilot-tmp/flow-mining/flow-report.md
+flow_stats: .autopilot-tmp/flow-mining/flow-stats.json
+```
+
+SELF-CHECK (ZORUNLU)
+- Yanıt gönderilmeden önce EVIDENCE POINTERS code block satırlarında `.autopilot-tmp/` geçtiği doğrulanır (en az `execution_log` ve `chatlog`).
+- Eğer geçmiyorsa: EVIDENCE POINTERS yanlış yazılmış demektir ve düzeltilmeden yanıt gönderilmez.
+
+-------------------------------------------------------------------------------
+X. MODE (DONE/PLAN/READ_ONLY)
+-------------------------------------------------------------------------------
+
+- Her yanıtın en üstünde MODE satırı bulunur:
+  - `MODE: DONE` | `MODE: PLAN` | `MODE: READ_ONLY`
+- MODE != PLAN iken “plan dili” görünmez; “Planlanan Değişiklikler” bölümü yazılmaz.
+- MODE = PLAN iken “Uygulanan Değişiklikler” yazılmaz; bunun yerine opsiyonel “Planlanan Değişiklikler” yazılır.

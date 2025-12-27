@@ -46,7 +46,7 @@ Owner: @team/backend
 ### Operasyonel Kriterler
 
 - [x] Given: API istemci güncelleme rehberi güncellenmiştir.  
-      When: `docs/03-delivery/guides/API_CLIENT_UPDATES.md` incelenir.  
+      When: `docs/03-delivery/guides/GUIDE-0001-api-client-updates.md` incelenir.  
       Then: Referans verdiği API paths `docs/03-delivery/api/*.md` ile
       uyumludur; legacy path’ler yalnız backend/docs/legacy altında tutulur.
 

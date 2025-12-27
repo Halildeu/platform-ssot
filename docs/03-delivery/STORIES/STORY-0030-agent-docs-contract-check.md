@@ -4,7 +4,7 @@ ID: STORY-0030-agent-docs-contract-check
 Epic: QLTY-DOC-QA  
 Status: Planned  
 Owner: @team/platform-arch  
-Upstream: AGENT-CODEX.core.md, AGENT-CODEX.docs.md, CODEX-CONTEXT-TEST-GUIDE.md, DOCS-WORKFLOW.md  
+Upstream: AGENT-CODEX.core.md, AGENT-CODEX.docs.md, GUIDE-0002-codex-context-test-guide.md, DOCS-WORKFLOW.md  
 Downstream: AC-0030, TP-0030
 
 -------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ Downstream: AC-0030, TP-0030
 Dahil:
 - AGENT-CODEX.core.md, AGENT-CODEX.docs.md ve diğer AGENT-CODEX.* dosyaları.  
 - DOCS-WORKFLOW.md, DOCS-PROJECT-LAYOUT.md, NUMARALANDIRMA-STANDARDI.md.  
-- CODEX-CONTEXT-TEST-GUIDE.md ve `~/.codex/config.toml` içindeki
+- GUIDE-0002-codex-context-test-guide.md ve `~/.codex/config.toml` içindeki
   `project_doc_fallback_filenames` listesi.  
 - Bu dokümanlardaki dosya adı, path ve komut tiplerinin (örn. “Bu projeye
   başla”, “Bu projeyi test et”, “Sadece Doc QA çalıştır”) script ile
@@ -67,7 +67,7 @@ Hariç:
 - docs/00-handbook/DOCS-WORKFLOW.md  
 - docs/00-handbook/DOCS-PROJECT-LAYOUT.md  
 - NUMARALANDIRMA-STANDARDI.md  
-- docs/03-delivery/guides/CODEX-CONTEXT-TEST-GUIDE.md  
+- docs/03-delivery/guides/GUIDE-0002-codex-context-test-guide.md  
 - `~/.codex/config.toml`
 
 -------------------------------------------------------------------------------

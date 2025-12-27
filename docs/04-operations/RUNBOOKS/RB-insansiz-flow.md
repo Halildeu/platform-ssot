@@ -120,6 +120,9 @@ Owner: @team/platform
   - `scripts/ci_pull_logs.sh`
   - `scripts/autopilot_local.sh`
 - Merge otomatik (Merge Bot) kalır.
+- Local orchestrator (SSOT): `scripts/ops/local_merge_deploy_orchestrator.sh`
+  - Amaç: PR/CI kanıtı toplamak, local fix-loop’u çalıştırmak ve deploy/validate/rollback zinciri loglarını localde çekmek.
+  - Kural: varsayılan merge kararı bot’tur; direct merge fallback **varsayılan kapalıdır** (break-glass: `--allow-direct-merge`).
 - `log-digest` sadece teşhis (digest) yazar.
 - Örnek token export (değer loglanmaz):
   - `export GH_TOKEN="$(vault kv get -field=GH_SECRETS_SYNC_TOKEN 'secret/stage/ops/github')"`
@@ -161,6 +164,7 @@ Edge-case tablosu (v0.1):
 |---|---|---|---|
 | Missing label | `<!-- pr-merge:result -->` → `noop (missing ready label)` | pr-merge result comment | `pr-bot/ready-to-merge` label ekle → `ci-gate` rerun |
 | Behind / out-of-date | `noop (mergeable_state=behind)` veya PR “Update branch” uyarısı | pr-merge result comment | PR → Update branch → `ci-gate` rerun |
+| Merge bot tetiklenmedi | `ci-gate` PASS ama merge olmuyor / pr-merge sonucu yok | (comment yok) | Local orchestrator ile `pr-merge.yml` `workflow_dispatch` (inputs: `pr_number`, `confirm=MERGE`) |
 | Cancelled run | log-digest comment içinde “run cancelled” notu | log-digest comment | İlgili check’i rerun et; asıl FAIL run linkinden doğrula |
 | Local policy | Auto-fix workflow disabled | (comment yok) | Local autopilot kullan |
 | Deploy disabled | Deploy job’ları skip | (comment yok) | `DEPLOY_ENABLED=true` ayarla |
@@ -223,6 +227,11 @@ Edge-case tablosu (v0.1):
 - Workflow: .github/workflows/rollback.yml
 - Script: scripts/ci_pull_logs.sh
 - Script: scripts/autopilot_local.sh
+- Runbook: docs/04-operations/RUNBOOKS/RB-local-merge-deploy-orchestrator.md
+- Script: scripts/ops/local_merge_deploy_orchestrator.sh
+- Script: scripts/ops/ci_pull_deploy_chain_logs.sh
+- Script: scripts/ops/gh_pull_run_logs.sh
+- Script: scripts/ops/git_setup_push_auth.sh
 - Handbook: docs/00-handbook/DOC-MATURITY-RUBRIC.md
 - Script: scripts/check_doc_maturity_rubric.py
 - Handbook: docs/00-handbook/DOC-SEMANTIC-LINT-LEXICON.md

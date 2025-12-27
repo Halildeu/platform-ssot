@@ -25,7 +25,7 @@ Dahil:
 - Mevcut API dokümanlarının (`users.api.md`, `auth.api.md`, `permission.api.md`,
   `audit-events.api.md`, `common-headers.md`) en güncel halinin yeni docs/
   hiyerarşisinde tanımlanması.
-- `docs/03-delivery/guides/API_CLIENT_UPDATES.md` ve ilgili backend/front-end
+- `docs/03-delivery/guides/GUIDE-0001-api-client-updates.md` ve ilgili backend/front-end
   rehberlerinin yeni path’lerle çalışır hale getirilmesi.
 - Legacy API dokümanlarının `backend/docs/legacy/**` altında arşiv olarak
   korunması; yeni geliştirme için yalnız `docs/03-delivery/api/*.md` dizisinin

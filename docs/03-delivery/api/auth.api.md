@@ -140,4 +140,4 @@ FE davranışı (özet):
 -------------------------------------------------------------------------------
 
 - docs/03-delivery/api/common-headers.md  
-- docs/03-delivery/guides/API_CLIENT_UPDATES.md  
+- docs/03-delivery/guides/GUIDE-0001-api-client-updates.md  

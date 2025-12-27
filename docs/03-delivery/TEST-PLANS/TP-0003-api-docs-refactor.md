@@ -42,7 +42,7 @@ Owner: @team/backend
 - [x] `docs/03-delivery/api/*.api.md` dosyaları mevcut ve okunabilir.  
 - [x] `common-headers.md` tüm API sözleşmelerinde referanslanır.  
 - [x] Legacy path referansları yalnız tarihçe amaçlıdır (günlük kullanım için şart değildir).  
-- [x] `docs/03-delivery/guides/API_CLIENT_UPDATES.md` yeni path’lerle uyumludur.  
+- [x] `docs/03-delivery/guides/GUIDE-0001-api-client-updates.md` yeni path’lerle uyumludur.  
 
 -------------------------------------------------------------------------------
 5. ÇEVRE VE ARAÇLAR
