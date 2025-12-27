@@ -55,6 +55,7 @@ CHECKS = [
     ["python3", "scripts/check_local_orchestrator_guardrails.py"],
     ["python3", "scripts/check_robots_policy.py"],
     ["python3", "scripts/check_robots_drift.py"],
+    ["python3", "scripts/check_robots_tbd_coverage.py"],
     # non-blocking (report-only): workflow model SSOT sanity
     ["python3", "scripts/check_workflow_model_ssot.py"],
     # non-blocking (local-only): chat transcript format compliance
