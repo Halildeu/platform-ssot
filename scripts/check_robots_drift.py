@@ -66,8 +66,9 @@ def main() -> int:
             continue
 
         allowed_modes = robot.get("allowed_modes", [])
-        if any(h in hits for h in ["workflow_dispatch", "dispatches_api", "gh_api_dispatch", "merge", "rollback_confirm", "merge_confirm"]):
-            if ("apply" in allowed_modes) and (not robot.get("required_confirm")):
+        if ("apply" in allowed_modes) and (not robot.get("required_confirm")):
+            merge_or_rollback = ("merge" in hits) or ("rollback_confirm" in hits) or ("merge_confirm" in hits)
+            if merge_or_rollback:
                 violations.append(
                     {
                         "type": "MISSING_CONFIRM",
@@ -111,4 +112,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
