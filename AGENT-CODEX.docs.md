@@ -23,14 +23,22 @@ Bu dosya, **[DOC]** tipindeki görevler için geçerlidir.
 2. `AGENTS.md`
 3. `docs/00-handbook/DOC-HIERARCHY.md`
 4. `docs/00-handbook/STYLE-DOCS-001.md`
-5. `docs/00-handbook/NUMARALANDIRMA-STANDARDI.md`
+5. `NUMARALANDIRMA-STANDARDI.md`
 6. Uygun şablonlar:
    - `docs/99-templates/PROBLEM-BRIEF.template.md`
    - `docs/99-templates/PRD.template.md`
    - `docs/99-templates/TECH-DESIGN.template.md`
+   - `docs/99-templates/INTERFACE-CONTRACT.template.md`
    - `docs/99-templates/STORY.template.md`
    - `docs/99-templates/ACCEPTANCE.template.md`
+   - `docs/99-templates/TEST-PLAN.template.md`
    - `docs/99-templates/RUNBOOK.template.md`
+   - `docs/99-templates/GUIDE.template.md`
+   - `docs/99-templates/BM.template.md`
+   - `docs/99-templates/BENCH.template.md`
+   - `docs/99-templates/TRACE.template.md`
+   - `docs/99-templates/DATA-CARD.template.md`
+   - `docs/99-templates/MODEL-CARD.template.md`
 
 Not: Yeni bir doküman (PB, PRD, STORY, AC, TP, ADR, RB, DATA, MODEL) açarken:
 - ID türü ve formatı için her zaman `NUMARALANDIRMA-STANDARDI.md` içindeki akışı,
