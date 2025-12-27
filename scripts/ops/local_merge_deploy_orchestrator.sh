@@ -101,14 +101,31 @@ detect_repo_from_origin() {
 }
 
 gh_ensure_auth() {
-  if gh auth status -h github.com >/dev/null 2>&1; then
+  if gh api rate_limit >/dev/null 2>&1; then
     return 0
   fi
-  if [ -f "scripts/ops/gh_auth_with_token.sh" ]; then
-    bash scripts/ops/gh_auth_with_token.sh >/dev/null 2>&1 || true
+
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+  # SSOT: Auth is OK if `gh api rate_limit` works (persist login OR env/Vault token).
+  if [ -f "${script_dir}/gh_token_preflight.sh" ]; then
+    # shellcheck source=/dev/null
+    source "${script_dir}/gh_token_preflight.sh"
+    gh_token_preflight >/dev/null 2>&1 || true
   fi
-  if ! gh auth status -h github.com >/dev/null 2>&1; then
-    die "gh not authenticated. Run: bash scripts/ops/gh_auth_with_token.sh (GH_TOKEN never printed)."
+
+  if gh api rate_limit >/dev/null 2>&1; then
+    return 0
+  fi
+
+  # Fallback: try persisting auth via gh (keychain/env/vault) if available.
+  if [ -f "${script_dir}/gh_auth_with_token.sh" ]; then
+    bash "${script_dir}/gh_auth_with_token.sh" >/dev/null 2>&1 || true
+  fi
+
+  if ! gh api rate_limit >/dev/null 2>&1; then
+    die "gh token auth not available. Ensure GH_TOKEN/GITHUB_TOKEN is set (or GH_AUTH_VAULT_PATH/FIELD is configured), then retry."
   fi
 }
 
