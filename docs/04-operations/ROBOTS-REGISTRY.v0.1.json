@@ -492,23 +492,22 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(release-canary)",
+        "deploy_canary(placeholder)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "DEPLOY_ENABLED"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "env(stage|prod)"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0110/report.md"
       ]
     },
     {
@@ -522,23 +521,21 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(repo-policy-report)",
+        "github_api_read(repo_policy)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "none"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0111/report.md"
       ]
     },
     {
@@ -552,23 +549,24 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(rollback)",
+        "rollback_hooks(POST)",
+        "incident_comment(best_effort)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "ROLLBACK_ENABLED"
       ],
-      "required_confirm": null,
+      "required_confirm": "ROLLBACK",
       "inputs": [
-        "TBD"
+        "confirm=ROLLBACK",
+        "reason(optional)"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0112/report.md"
       ]
     },
     {
@@ -582,23 +580,21 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(security-guardrails)",
+        "pull_request_gate(security-guardrails)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "none"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0113/report.md"
       ]
     },
     {
@@ -612,23 +608,31 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(vault-secrets-sync)",
+        "vault_kv_read",
+        "github_secrets_write(if dry_run=false)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "VAULT_ADDR",
+        "VAULT_TOKEN",
+        "GH_SECRETS_SYNC_TOKEN"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "mode(web-playwright|killswitch|all)",
+        "env(stage|prod)",
+        "kv_mount(optional)",
+        "config_path(optional)",
+        "keycloak_path(optional)",
+        "killswitch_path(optional)",
+        "dry_run(true|false)"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0114/report.md"
       ]
     },
     {
@@ -642,23 +646,24 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "schedule(web-playwright-local-nightly)",
+        "workflow_dispatch(web-playwright-local-nightly)",
+        "runs_self_hosted(vault-local)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "VAULT_ADDR",
+        "VAULT_TOKEN"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "none"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0115/report.md"
       ]
     },
     {
@@ -672,23 +677,25 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "schedule(web-playwright-nightly)",
+        "workflow_dispatch(web-playwright-nightly)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "ENABLE_PW_NIGHTLY"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "base_url(optional)",
+        "soft_mode(0|1)",
+        "auth_mode(none|token_injection)",
+        "readonly_enforce(0|1)"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0116/report.md"
       ]
     },
     {
@@ -702,23 +709,25 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(web-playwright-smoke)",
+        "runs_playwright_smoke"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "mode(ci|nightly)",
+        "soft_mode(0|1)",
+        "auth_mode(none|token_injection)",
+        "readonly_enforce(0|1)",
+        "base_url(required)"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0117/report.md"
       ]
     },
     {
@@ -732,23 +741,21 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(web-qa)",
+        "pull_request_gate(web-qa)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "none"
       ],
       "outputs": [
-        "TBD"
-      ],
-      "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        ".autopilot-tmp/robots/ROB-0118/report.md"
       ]
     },
     {
