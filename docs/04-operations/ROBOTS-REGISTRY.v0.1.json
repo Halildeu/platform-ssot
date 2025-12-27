@@ -144,6 +144,32 @@
       "outputs": []
     },
     {
+      "id": "ROB-0006",
+      "name": "gh-token-preflight",
+      "kind": "script",
+      "path": "scripts/ops/gh_token_preflight.sh",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "github_api(rate_limit)",
+        "vault_kv_get(optional)"
+      ],
+      "required_auth_refs": [],
+      "required_env": [
+        "GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "GH_TOKEN|GITHUB_TOKEN (optional)",
+        "GH_AUTH_VAULT_PATH (optional)",
+        "GH_AUTH_VAULT_FIELD (optional)"
+      ],
+      "outputs": []
+    },
+    {
       "id": "ROB-0100",
       "name": "auto-fix",
       "kind": "workflow",

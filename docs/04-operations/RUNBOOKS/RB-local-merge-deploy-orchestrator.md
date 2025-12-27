@@ -37,8 +37,9 @@ Local SSOT prensibiyle PR’ı uçtan uca sonuçlandırmak:
 
 ### 3.1 Ön koşullar (kopyasız auth)
 
-1) GH auth (token asla yazdırılmaz):
-- `bash scripts/ops/gh_auth_with_token.sh`
+1) GH auth (SSOT):
+- `bash scripts/ops/gh_token_preflight.sh` PASS olmalı (kopyasız; token yazdırılmaz).
+- Opsiyonel (persist login): `bash scripts/ops/gh_auth_with_token.sh`
 
 2) Git push auth (autopilot push stabil olsun):
 - `bash scripts/ops/git_setup_push_auth.sh`
@@ -98,10 +99,11 @@ Deploy skip:
 -------------------------------------------------------------------------------
 
 - [ ] Arıza senaryosu 1 – gh auth yok:
-  - Given: `gh auth status` logged-in değil  
+  - Given: `gh api rate_limit` FAIL (token yok/çalışmıyor)  
     When: orchestrator çalışır  
     Then: durur → çözüm:
-    - `bash scripts/ops/gh_auth_with_token.sh`
+    - `bash scripts/ops/gh_token_preflight.sh` (GH_TOKEN/GITHUB_TOKEN/Vault pointer) veya
+    - `bash scripts/ops/gh_auth_with_token.sh` (persist login)
 
 - [ ] Arıza senaryosu 2 – git push fail:
   - Given: `autopilot_local.sh` push aşamasında hata verir  
