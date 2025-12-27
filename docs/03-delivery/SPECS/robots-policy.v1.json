@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "enabled": false,
+  "default_mode": "observe",
+  "allow_apply": false,
+  "apply_requires_confirm": true,
+  "confirm_values": {
+    "merge_kick": "MERGE",
+    "rollback": "ROLLBACK"
+  },
+  "notes": [
+    "enabled=false: checker’lar rapor üretir (non-blocking).",
+    "enabled=true: drift/guardrail ihlali hard gate olabilir."
+  ]
+}

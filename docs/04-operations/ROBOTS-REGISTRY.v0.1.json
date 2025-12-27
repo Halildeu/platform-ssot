@@ -1,0 +1,80 @@
+{
+  "version": "0.1",
+  "notes": [
+    "Her robot: mode=observe|plan|apply sözleşmesine tabidir.",
+    "apply (side-effect) yalnız explicit confirm/flag ile çalışır.",
+    "Bu dosya tek SSOT’tur: robotun auth pointer’ı, inputs/outputs ve guardrail’leri burada yaşar."
+  ],
+  "robots": [
+    {
+      "id": "ROB-0001",
+      "name": "pr-tracker-sync",
+      "kind": "script",
+      "path": "scripts/pr_tracker_tsv.py",
+      "default_mode": "observe",
+      "allowed_modes": ["observe", "plan"],
+      "side_effects": ["local_write(.autopilot-tmp/pr-tracker/**)"],
+      "required_auth_refs": ["TOK-0001"],
+      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "required_confirm": null,
+      "inputs": ["repo", "watch", "tracker_path", "out_dir"],
+      "outputs": [".autopilot-tmp/pr-tracker/PR-TRACKER.tsv", ".autopilot-tmp/pr-tracker/STATUS.md"]
+    },
+    {
+      "id": "ROB-0002",
+      "name": "gh-run-logs-pull",
+      "kind": "script",
+      "path": "scripts/ops/gh_pull_run_logs.sh",
+      "default_mode": "observe",
+      "allowed_modes": ["observe"],
+      "side_effects": ["local_write(artifacts/ci-logs/**)"],
+      "required_auth_refs": ["TOK-0001"],
+      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "required_confirm": null,
+      "inputs": ["run_id", "out_dir"],
+      "outputs": ["artifacts/ci-logs/**"]
+    },
+    {
+      "id": "ROB-0003",
+      "name": "deploy-chain-sync",
+      "kind": "script",
+      "path": "scripts/ops/ci_pull_deploy_chain_logs.sh",
+      "default_mode": "observe",
+      "allowed_modes": ["observe"],
+      "side_effects": ["local_write(artifacts/ci-logs/main-<sha7>/**)"],
+      "required_auth_refs": ["TOK-0001"],
+      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "required_confirm": null,
+      "inputs": ["sha", "out_dir"],
+      "outputs": ["artifacts/ci-logs/main-<sha7>/**"]
+    },
+    {
+      "id": "ROB-0004",
+      "name": "merge-bot-kick",
+      "kind": "workflow",
+      "path": ".github/workflows/pr-merge.yml",
+      "default_mode": "plan",
+      "allowed_modes": ["plan", "apply"],
+      "side_effects": ["workflow_dispatch(pr-merge)"],
+      "required_auth_refs": ["TOK-0001"],
+      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "required_confirm": "MERGE",
+      "inputs": ["pr_number", "confirm=MERGE", "ref=main"],
+      "outputs": [".autopilot-tmp/robots/merge-kick/report.md"]
+    },
+    {
+      "id": "ROB-0005",
+      "name": "gh-auth-with-token",
+      "kind": "script",
+      "path": "scripts/ops/gh_auth_with_token.sh",
+      "default_mode": "plan",
+      "allowed_modes": ["plan"],
+      "side_effects": ["local_write(gh_auth_state)"],
+      "required_auth_refs": [],
+      "required_env": ["GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD|Keychain"],
+      "required_confirm": null,
+      "inputs": ["GH_AUTH_VAULT_PATH", "GH_AUTH_VAULT_FIELD"],
+      "outputs": []
+    }
+  ]
+}
