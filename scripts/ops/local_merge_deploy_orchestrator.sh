@@ -23,6 +23,13 @@ MERGE_WAIT_SEC=180
 DELETE_BRANCH="0"
 ALLOW_DIRECT_MERGE="${ALLOW_DIRECT_MERGE:-0}" # 0|1 (hard guardrail)
 
+# Merge-bot dispatch fallback (default ON; direct merge still break-glass).
+MERGE_BOT_DISPATCH="${MERGE_BOT_DISPATCH:-1}" # 0|1
+MERGE_BOT_DISPATCH_REF="${MERGE_BOT_DISPATCH_REF:-main}"
+MERGE_BOT_DISPATCH_WORKFLOW_FILE="${MERGE_BOT_DISPATCH_WORKFLOW_FILE:-pr-merge.yml}"
+MERGE_BOT_DISPATCH_WAIT_SEC="${MERGE_BOT_DISPATCH_WAIT_SEC:-120}"
+MERGE_BOT_DISPATCH_CONFIRM="MERGE"
+
 DEPLOY_MODE="auto" # auto|dispatch|skip
 DEPLOY_ENV="stage"
 DEPLOY_TRIGGER_WAIT_SEC=120
@@ -65,6 +72,10 @@ Options:
 Notes:
 - Token values are never printed.
 - Deploy runs on GitHub Actions (recommended).
+- Merge-bot dispatch fallback:
+  - export MERGE_BOT_DISPATCH=1
+  - export MERGE_BOT_DISPATCH_REF=main
+  - export MERGE_BOT_DISPATCH_WORKFLOW_FILE=pr-merge.yml
 EOF
 }
 
@@ -240,6 +251,18 @@ wait_for_pr_merged() {
     fi
     sleep 5
   done
+}
+
+dispatch_merge_bot() {
+  local repo="$1"
+  local pr="$2"
+  local ref="$3"
+
+  # Token is never printed; gh handles auth.
+  gh api -X POST "repos/${repo}/actions/workflows/${MERGE_BOT_DISPATCH_WORKFLOW_FILE}/dispatches" \
+    -f "ref=${ref}" \
+    -f "inputs[pr_number]=${pr}" \
+    -f "inputs[confirm]=${MERGE_BOT_DISPATCH_CONFIRM}" >/dev/null
 }
 
 changed_flags_for_head() {
@@ -442,16 +465,34 @@ if [[ "${MERGE_MODE}" != "skip" ]]; then
 
   if [[ "${MERGE_MODE}" == "auto" ]]; then
     echo "[local-e2e] merge: waiting ${MERGE_WAIT_SEC}s for merge-bot..."
+    merged_by_bot="0"
     if wait_for_pr_merged "${REPO}" "${PR_NUMBER}" "${MERGE_WAIT_SEC}" >/dev/null 2>&1; then
       echo "[local-e2e] merge: merged by bot"
+      merged_by_bot="1"
     else
-      if [[ "${ALLOW_DIRECT_MERGE}" == "1" ]]; then
-        echo "[local-e2e] merge: bot not merged (or slow) -> direct merge (explicitly allowed)"
-        MERGE_MODE="direct"
-      else
-        echo "[local-e2e] merge: bot not merged (or slow). Direct merge is disabled by default."
-        echo "[local-e2e] merge: re-run with --merge-wait-sec <N> to wait longer, or --allow-direct-merge to allow fallback."
-        exit 9
+      if [[ "${MERGE_BOT_DISPATCH}" == "1" ]]; then
+        echo "[local-e2e] merge: bot not merged (or slow) -> dispatching merge-bot workflow (break-glass confirm=${MERGE_BOT_DISPATCH_CONFIRM})"
+        if dispatch_merge_bot "${REPO}" "${PR_NUMBER}" "${MERGE_BOT_DISPATCH_REF}" >/dev/null 2>&1; then
+          echo "[local-e2e] merge: dispatched; waiting ${MERGE_BOT_DISPATCH_WAIT_SEC}s for merge result..."
+          if wait_for_pr_merged "${REPO}" "${PR_NUMBER}" "${MERGE_BOT_DISPATCH_WAIT_SEC}" >/dev/null 2>&1; then
+            echo "[local-e2e] merge: merged by bot (dispatch)"
+            merged_by_bot="1"
+          else
+            echo "[local-e2e] merge: dispatch did not merge within ${MERGE_BOT_DISPATCH_WAIT_SEC}s"
+          fi
+        else
+          echo "[local-e2e] merge: dispatch failed (no token logged)."
+        fi
+      fi
+      if [[ "${merged_by_bot}" != "1" ]]; then
+        if [[ "${ALLOW_DIRECT_MERGE}" == "1" ]]; then
+          echo "[local-e2e] merge: bot not merged (or slow) -> direct merge (explicitly allowed)"
+          MERGE_MODE="direct"
+        else
+          echo "[local-e2e] merge: bot not merged (or slow). Direct merge is disabled by default."
+          echo "[local-e2e] merge: re-run with --merge-wait-sec <N> to wait longer, or --allow-direct-merge to allow fallback."
+          exit 9
+        fi
       fi
     fi
   fi
