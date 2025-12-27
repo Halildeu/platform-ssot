@@ -21,7 +21,8 @@ Usage:
     [--draft]
 
 Notes:
-  - Requires `gh` authenticated (run: bash scripts/ops/gh_auth_with_token.sh)
+  - SSOT: Auth is OK if `gh api rate_limit` works (persist auth OR GH_TOKEN/GITHUB_TOKEN OR Vault pointer).
+  - Helper: `bash scripts/ops/gh_token_preflight.sh`
   - Idempotent: if PR already exists for `--head`, prints URL and exits 0.
 EOF
 }
@@ -50,9 +51,16 @@ if [ -z "$REPO" ] || [ -z "$HEAD" ] || [ -z "$TITLE" ]; then
   exit 1
 fi
 
-if ! gh auth status --hostname "$HOSTNAME" 2>/dev/null | grep -q "Logged in to $HOSTNAME"; then
-  echo "[gh_pr_create_from_body] gh not authenticated. Run: bash scripts/ops/gh_auth_with_token.sh"
-  exit 1
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "${script_dir}/gh_token_preflight.sh" ]; then
+  # shellcheck source=/dev/null
+  source "${script_dir}/gh_token_preflight.sh"
+fi
+if ! gh api rate_limit >/dev/null 2>&1; then
+  gh_token_preflight >/dev/null 2>&1 || {
+    echo "[gh_pr_create_from_body] GH auth unavailable. Fix: set GH_TOKEN/GITHUB_TOKEN (or GH_AUTH_VAULT_PATH/FIELD) and retry."
+    exit 1
+  }
 fi
 
 if [ -n "$BODY_FILE" ] && [ ! -f "$BODY_FILE" ]; then
@@ -61,8 +69,8 @@ if [ -n "$BODY_FILE" ] && [ ! -f "$BODY_FILE" ]; then
 fi
 
 # If PR exists, print and exit 0 (no duplicates).
-if gh pr view --repo "$REPO" --head "$HEAD" --json url -q .url >/dev/null 2>&1; then
-  url="$(gh pr view --repo "$REPO" --head "$HEAD" --json url -q .url)"
+url="$(gh pr list --repo "$REPO" --head "$HEAD" --state open --json url --jq '.[0].url // ""' 2>/dev/null || true)"
+if [ -n "$url" ]; then
   echo "[gh_pr_create_from_body] PR already exists: $url"
   exit 0
 fi

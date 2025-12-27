@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "allow_direct_merge_default": false,
+  "merge_bot_dispatch_enabled_default": true,
+  "merge_dispatch_requires_confirm": true,
+  "merge_dispatch_confirm_value": "MERGE",
+  "merge_dispatch_required_inputs": ["pr_number", "confirm"],
+  "notes": [
+    "Direct merge yalnız break-glass ile (explicit flag/env) açılır.",
+    "Merge Bot normalde workflow_run ile tetiklenir; local orchestrator gerekirse workflow_dispatch ile merge bot'u 'kick' eder.",
+    "workflow_dispatch path'inde confirm=MERGE zorunludur.",
+    "Bu policy drift'e karşı checker ile kilitlenir (doc-qa hard gate)."
+  ]
+}

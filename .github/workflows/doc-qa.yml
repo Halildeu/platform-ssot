@@ -62,4 +62,9 @@ jobs:
           python3 scripts/check_trace_quality_policy.py
           python3 scripts/check_trace_quality.py
           python3 scripts/check_prd_complexity.py
+          python3 scripts/check_local_orchestrator_guardrails.py
+          python3 scripts/check_robots_policy.py
+          python3 scripts/check_robots_drift.py
+          python3 scripts/check_robots_tbd_coverage.py
+          python3 scripts/check_auth_registry.py
           python3 scripts/check_workflow_model_ssot.py
