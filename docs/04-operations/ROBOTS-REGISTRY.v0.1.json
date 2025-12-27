@@ -148,29 +148,29 @@
       "name": "auto-fix",
       "kind": "workflow",
       "path": ".github/workflows/auto-fix.yml",
-      "default_mode": "observe",
+      "default_mode": "plan",
       "allowed_modes": [
-        "observe",
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch(auto-fix)",
+        "notice_only (disabled by Local SSOT policy)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "ref=main"
       ],
       "outputs": [
-        "TBD"
+        "artifacts/ci-logs/run-<id>/* (via scripts/ops/gh_pull_run_logs.sh)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "refined: risky_top5 v0.1"
       ]
     },
     {
@@ -178,29 +178,35 @@
       "name": "deploy-backend",
       "kind": "workflow",
       "path": ".github/workflows/deploy-backend.yml",
-      "default_mode": "observe",
+      "default_mode": "plan",
       "allowed_modes": [
-        "observe",
-        "plan"
+        "plan",
+        "apply"
       ],
       "side_effects": [
-        "TBD"
+        "push(main) triggers deploy-backend",
+        "workflow_dispatch(deploy-backend)",
+        "docker_build_push(ghcr.io) via GitHub Actions runner"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "DEPLOY_ENABLED (GitHub secret, must be \"true\")"
       ],
-      "required_confirm": null,
+      "required_confirm": "DEPLOY",
       "inputs": [
-        "TBD"
+        "ref=main",
+        "workflow_dispatch.inputs.env (default: stage)"
       ],
       "outputs": [
-        "TBD"
+        "ghcr.io/<owner>/platform-ssot-<svc>:sha-<sha7>",
+        "ghcr.io/<owner>/platform-ssot-<svc>:main-stable",
+        "artifacts/ci-logs/main-<sha7>/* (via scripts/ops/ci_pull_deploy_chain_logs.sh)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "refined: risky_top5 v0.1"
       ]
     },
     {
@@ -208,29 +214,35 @@
       "name": "deploy-web",
       "kind": "workflow",
       "path": ".github/workflows/deploy-web.yml",
-      "default_mode": "observe",
+      "default_mode": "plan",
       "allowed_modes": [
-        "observe",
-        "plan"
+        "plan",
+        "apply"
       ],
       "side_effects": [
-        "TBD"
+        "push(main) triggers deploy-web",
+        "workflow_dispatch(deploy-web)",
+        "curl_post(WEB_DEPLOY_HOOK_URL)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "DEPLOY_ENABLED (GitHub secret, must be \"true\")",
+        "WEB_DEPLOY_HOOK_URL (GitHub secret)"
       ],
-      "required_confirm": null,
+      "required_confirm": "DEPLOY",
       "inputs": [
-        "TBD"
+        "ref=main",
+        "workflow_dispatch.inputs.env (default: stage)"
       ],
       "outputs": [
-        "TBD"
+        "deploy hook triggered (external)",
+        "artifacts/ci-logs/main-<sha7>/* (via scripts/ops/ci_pull_deploy_chain_logs.sh)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "refined: risky_top5 v0.1"
       ]
     },
     {
@@ -244,23 +256,25 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "pull_request triggers doc-qa gate",
+        "workflow_dispatch(doc-qa)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "ref=<pr-branch-or-sha>"
       ],
       "outputs": [
-        "TBD"
+        "required check: Doc QA (PASS/FAIL)",
+        "artifacts/ci-logs/run-<id>/* (via scripts/ops/gh_pull_run_logs.sh)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "refined: risky_top5 v0.1"
       ]
     },
     {
@@ -274,23 +288,26 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "schedule(cron)",
+        "workflow_dispatch(doc-repair-apply)",
+        "artifact_upload(doc-repair-apply-dry-run)"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "ref=main"
       ],
       "outputs": [
-        "TBD"
+        "GitHub artifact: doc-repair-apply-dry-run",
+        "artifacts/ci-logs/run-<id>/* (via scripts/ops/gh_pull_run_logs.sh)"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "refined: risky_top5 v0.1"
       ]
     },
     {
