@@ -57,6 +57,14 @@ Merge kuralı (SSOT):
 - Orchestrator direct merge fallback’i **varsayılan kapalıdır**.
   - Break-glass: `--allow-direct-merge` (veya `export ALLOW_DIRECT_MERGE=1`) ile explicit açılır.
 
+Merge Bot dispatch fallback (önerilen, varsayılan açık):
+- Orchestrator `MERGE_WAIT_SEC` boyunca Merge Bot’un merge yapmasını bekler.
+- PR hâlâ merged değilse ve `MERGE_BOT_DISPATCH=1` ise `pr-merge.yml` workflow’unu `workflow_dispatch` ile tetikler:
+  - inputs: `pr_number=<PR>` + `confirm=MERGE`
+  - `MERGE_BOT_DISPATCH_WAIT_SEC` kadar sonucu gözler.
+- Bu fallback label gate / checks kurallarını bypass etmez; Merge Bot aynı gate’leri uygular.
+- Disable: `export MERGE_BOT_DISPATCH=0`
+
 ### 3.3 Orchestrator (auto fix – opsiyonel)
 
 Local autopilot fix komutu ile loop:

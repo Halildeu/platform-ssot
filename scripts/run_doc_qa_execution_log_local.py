@@ -52,6 +52,14 @@ CHECKS = [
     ["python3", "scripts/check_trace_quality_policy.py"],
     ["python3", "scripts/check_trace_quality.py"],
     ["python3", "scripts/check_prd_complexity.py"],
+    ["python3", "scripts/check_local_orchestrator_guardrails.py"],
+    ["python3", "scripts/check_robots_policy.py"],
+    ["python3", "scripts/check_robots_drift.py"],
+    ["python3", "scripts/check_robots_tbd_coverage.py"],
+    # non-blocking (report-only): auth/secret registry coverage
+    ["python3", "scripts/check_auth_registry.py"],
+    # non-blocking (report-only): workflow model SSOT sanity
+    ["python3", "scripts/check_workflow_model_ssot.py"],
     # non-blocking (local-only): chat transcript format compliance
     ["python3", "scripts/ops/lint_codex_chat_format.py"],
 ]
