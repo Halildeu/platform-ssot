@@ -165,6 +165,7 @@ Edge-case tablosu (v0.1):
 |---|---|---|---|
 | Missing label | `<!-- pr-merge:result -->` → `noop (missing ready label)` | pr-merge result comment | `pr-bot/ready-to-merge` label ekle → `ci-gate` rerun |
 | Behind / out-of-date | `noop (mergeable_state=behind)` veya PR “Update branch” uyarısı | pr-merge result comment | PR → Update branch → `ci-gate` rerun |
+| Merge bot tetiklenmedi | `ci-gate` PASS ama merge olmuyor / pr-merge sonucu yok | (comment yok) | Local orchestrator ile `pr-merge.yml` `workflow_dispatch` (inputs: `pr_number`, `confirm=MERGE`) |
 | Cancelled run | log-digest comment içinde “run cancelled” notu | log-digest comment | İlgili check’i rerun et; asıl FAIL run linkinden doğrula |
 | Local policy | Auto-fix workflow disabled | (comment yok) | Local autopilot kullan |
 | Deploy disabled | Deploy job’ları skip | (comment yok) | `DEPLOY_ENABLED=true` ayarla |
