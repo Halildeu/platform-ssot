@@ -58,10 +58,14 @@ if [ -n "${GH_TOKEN:-}" ]; then
   TOKEN="${GH_TOKEN}"
 elif [ -n "${GITHUB_TOKEN:-}" ]; then
   TOKEN="${GITHUB_TOKEN}"
-elif command -v security >/dev/null 2>&1; then
-  TOKEN="$(security find-generic-password -a "$KEYCHAIN_ACCOUNT" -s "$KEYCHAIN_SERVICE" -w 2>/dev/null || true)"
-elif command -v vault >/dev/null 2>&1 && [ -n "${GH_AUTH_VAULT_PATH:-}" ] && [ -n "${GH_AUTH_VAULT_FIELD:-}" ]; then
-  TOKEN="$(vault kv get -field="$GH_AUTH_VAULT_FIELD" "$GH_AUTH_VAULT_PATH" 2>/dev/null || true)"
+else
+  if command -v security >/dev/null 2>&1; then
+    TOKEN="$(security find-generic-password -a "$KEYCHAIN_ACCOUNT" -s "$KEYCHAIN_SERVICE" -w 2>/dev/null || true)"
+  fi
+
+  if [ -z "$TOKEN" ] && command -v vault >/dev/null 2>&1 && [ -n "${GH_AUTH_VAULT_PATH:-}" ] && [ -n "${GH_AUTH_VAULT_FIELD:-}" ]; then
+    TOKEN="$(vault kv get -field="$GH_AUTH_VAULT_FIELD" "$GH_AUTH_VAULT_PATH" 2>/dev/null || true)"
+  fi
 fi
 
 if [ -z "$TOKEN" ]; then
@@ -75,5 +79,9 @@ fi
 printf "%s" "$TOKEN" | gh auth login --hostname "$HOSTNAME" --git-protocol "$GIT_PROTOCOL" --with-token >/dev/null
 unset TOKEN
 
-gh auth status --hostname "$HOSTNAME" || true
-echo "[gh_auth_with_token] OK"
+LOGIN="$(gh api user -q .login 2>/dev/null || true)"
+if [ -n "$LOGIN" ]; then
+  echo "[gh_auth_with_token] OK (login=$LOGIN)"
+else
+  echo "[gh_auth_with_token] OK"
+fi

@@ -79,6 +79,7 @@ Owner: @team/platform
   5) PASS ise:
      - PR Merge Bot workflow’u tetiklenir, label gate + checks yeşil ise squash merge dener.
      - `<!-- pr-merge:result -->` comment’i sonucu yazar (merged/noop + reason + run link).
+     - Eğer workflow_run tetiklenmezse: local orchestrator `pr-merge.yml` için `workflow_dispatch` ile Merge Bot’u “kick” edebilir; direct merge yalnız break-glass (`--allow-direct-merge`).
   6) Merge sonrası (push main):
      - Web değiştiyse: `deploy-web` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
      - Backend değiştiyse: `deploy-backend` çalışır (**DEPLOY_ENABLED=true** ise; aksi halde job skip).
