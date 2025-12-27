@@ -43,13 +43,16 @@ if ! command -v gh >/dev/null 2>&1; then
   exit 2
 fi
 
-if [[ -n "${GITHUB_TOKEN:-}" && -z "${GH_TOKEN:-}" ]]; then
-  export GH_TOKEN="${GITHUB_TOKEN}"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "${script_dir}/gh_token_preflight.sh" ]; then
+  # shellcheck source=/dev/null
+  source "${script_dir}/gh_token_preflight.sh"
 fi
-
-if ! gh auth status -h github.com >/dev/null 2>&1 && [[ -z "${GH_TOKEN:-}" ]]; then
-  echo "[gh-pull-run-logs] gh not authenticated and GH_TOKEN not set."
-  exit 2
+if ! gh api rate_limit >/dev/null 2>&1; then
+  gh_token_preflight >/dev/null 2>&1 || {
+    echo "[gh-pull-run-logs] GH auth unavailable. Fix: set GH_TOKEN/GITHUB_TOKEN (or GH_AUTH_VAULT_PATH/FIELD) and retry."
+    exit 2
+  }
 fi
 
 OUT_RUN_DIR="${OUT_DIR}/run-${RUN_ID}"

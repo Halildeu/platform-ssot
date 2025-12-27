@@ -35,49 +35,11 @@ Local SSOT prensibiyle PR’ı uçtan uca sonuçlandırmak:
 3. BAŞLATMA / DURDURMA
 -------------------------------------------------------------------------------
 
-### 3.0 GOLDEN COMMAND (TEK DOĞRU YOL)
-
-Amaç: PR’ı local SSOT ile uçtan uca koşturmak (CI fail → local fix → push → merge bot → deploy/validate/rollback izleme).
-
-```bash
-# 1) Vault preflight
-vault status # PASS beklenir
-
-# 2) Kopyasız GH auth (token asla yazdırılmaz)
-# SSOT pointer: docs/04-operations/GH-AUTH-VAULT-POINTERS.md
-export GH_AUTH_VAULT_PATH="secret/stage/ops/github"
-export GH_AUTH_VAULT_FIELD="GH_LOCAL_AUTOPILOT_TOKEN"
-bash scripts/ops/gh_auth_with_token.sh
-
-# 3) Git push auth (stabilizasyon) – dry-run
-bash scripts/ops/git_setup_push_auth.sh --dry-run
-
-# 4) Merge/Deploy orchestrator (manual fix loop)
-export ALLOW_DIRECT_MERGE=0
-export MERGE_BOT_DISPATCH=1
-bash scripts/ops/local_merge_deploy_orchestrator.sh --head docs/guides-migration-v0.1 --base main --fix-mode manual
-```
-
--------------------------------------------------------------------------------
-Y. PRE-FLIGHT (ZORUNLU)
--------------------------------------------------------------------------------
-
-1) Vault login hazır olmalı:
-- `vault status` PASS olmalı (VAULT_ADDR/VAULT_TOKEN kurum standardına göre set).
-
-2) GH auth (kopyasız):
-- SSOT pointer: `docs/04-operations/GH-AUTH-VAULT-POINTERS.md`
-
-```bash
-export GH_AUTH_VAULT_PATH="secret/stage/ops/github"
-export GH_AUTH_VAULT_FIELD="GH_LOCAL_AUTOPILOT_TOKEN"
-bash scripts/ops/gh_auth_with_token.sh
-```
-
 ### 3.1 Ön koşullar (kopyasız auth)
 
-1) GH auth (token asla yazdırılmaz):
-- `bash scripts/ops/gh_auth_with_token.sh`
+1) GH auth (SSOT):
+- `bash scripts/ops/gh_token_preflight.sh` PASS olmalı (kopyasız; token yazdırılmaz).
+- Opsiyonel (persist login): `bash scripts/ops/gh_auth_with_token.sh`
 
 2) Git push auth (autopilot push stabil olsun):
 - `bash scripts/ops/git_setup_push_auth.sh`
@@ -93,9 +55,16 @@ Kanıt:
 
 Merge kuralı (SSOT):
 - Varsayılan: merge kararı **Merge Bot** (label gate + checks) ile verilir.
-- Merge Bot çalışmadıysa/kaçırdıysa orchestrator `pr-merge.yml` için `workflow_dispatch` ile “kick” dener (varsayılan: `MERGE_BOT_DISPATCH=1`, ref: `MERGE_BOT_DISPATCH_REF=main`).
 - Orchestrator direct merge fallback’i **varsayılan kapalıdır**.
   - Break-glass: `--allow-direct-merge` (veya `export ALLOW_DIRECT_MERGE=1`) ile explicit açılır.
+
+Merge Bot dispatch fallback (önerilen, varsayılan açık):
+- Orchestrator `MERGE_WAIT_SEC` boyunca Merge Bot’un merge yapmasını bekler.
+- PR hâlâ merged değilse ve `MERGE_BOT_DISPATCH=1` ise `pr-merge.yml` workflow’unu `workflow_dispatch` ile tetikler:
+  - inputs: `pr_number=<PR>` + `confirm=MERGE`
+  - `MERGE_BOT_DISPATCH_WAIT_SEC` kadar sonucu gözler.
+- Bu fallback label gate / checks kurallarını bypass etmez; Merge Bot aynı gate’leri uygular.
+- Disable: `export MERGE_BOT_DISPATCH=0`
 
 ### 3.3 Orchestrator (auto fix – opsiyonel)
 
@@ -130,10 +99,11 @@ Deploy skip:
 -------------------------------------------------------------------------------
 
 - [ ] Arıza senaryosu 1 – gh auth yok:
-  - Given: `gh auth status` logged-in değil  
+  - Given: `gh api rate_limit` FAIL (token yok/çalışmıyor)  
     When: orchestrator çalışır  
     Then: durur → çözüm:
-    - `bash scripts/ops/gh_auth_with_token.sh`
+    - `bash scripts/ops/gh_token_preflight.sh` (GH_TOKEN/GITHUB_TOKEN/Vault pointer) veya
+    - `bash scripts/ops/gh_auth_with_token.sh` (persist login)
 
 - [ ] Arıza senaryosu 2 – git push fail:
   - Given: `autopilot_local.sh` push aşamasında hata verir  
