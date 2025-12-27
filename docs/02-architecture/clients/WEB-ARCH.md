@@ -83,4 +83,4 @@ Detaylı rehberler:
   - `docs/00-handbook/STYLE-WEB-001.md`  
   - `docs/00-handbook/DOCS-PROJECT-LAYOUT.md`  
   - `docs/03-delivery/PROJECT-FLOW.md`  
-  - `docs/03-delivery/guides/FE-DOCS-MIGRATION-GUIDE.md`  
+  - `docs/03-delivery/guides/GUIDE-0003-fe-docs-migration-guide.md`  
