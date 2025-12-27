@@ -24,14 +24,20 @@ concurrency:
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
-    if: ${{ secrets.DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
 
     steps:
+      - name: Skip if deploy disabled
+        if: ${{ secrets.DEPLOY_ENABLED != 'true' }}
+        run: echo "::notice title=deploy-backend::DEPLOY_ENABLED!=true; skipping."
+
       - uses: actions/checkout@v4
+        if: ${{ secrets.DEPLOY_ENABLED == 'true' }}
         with:
           fetch-depth: 0
 
       - name: Build & push images (required)
+        if: ${{ secrets.DEPLOY_ENABLED == 'true' }}
         env:
           GHCR_OWNER: ${{ github.repository_owner }}
           GH_TOKEN: ${{ github.token }}
