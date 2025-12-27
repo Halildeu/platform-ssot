@@ -56,6 +56,8 @@ CHECKS = [
     ["python3", "scripts/check_robots_policy.py"],
     ["python3", "scripts/check_robots_drift.py"],
     ["python3", "scripts/check_robots_tbd_coverage.py"],
+    # non-blocking (report-only): auth/secret registry coverage
+    ["python3", "scripts/check_auth_registry.py"],
     # non-blocking (report-only): workflow model SSOT sanity
     ["python3", "scripts/check_workflow_model_ssot.py"],
     # non-blocking (local-only): chat transcript format compliance

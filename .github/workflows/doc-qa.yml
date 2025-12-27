@@ -67,3 +67,4 @@ jobs:
           python3 scripts/check_robots_policy.py
           python3 scripts/check_robots_drift.py
           python3 scripts/check_robots_tbd_coverage.py
+          python3 scripts/check_auth_registry.py
