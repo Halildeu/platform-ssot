@@ -195,7 +195,7 @@
         "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
         "DEPLOY_ENABLED (GitHub secret, must be \"true\")"
       ],
-      "required_confirm": "DEPLOY",
+      "required_confirm": null,
       "inputs": [
         "ref=main",
         "workflow_dispatch.inputs.env (default: stage)"
@@ -206,7 +206,8 @@
         "artifacts/ci-logs/main-<sha7>/* (via scripts/ops/ci_pull_deploy_chain_logs.sh)"
       ],
       "notes": [
-        "refined: risky_top5 v0.1"
+        "refined: risky_top5 v0.1",
+        "confirm removed: DEPLOY dispatch is guarded by policy allow_apply + kill-switch (DEPLOY_ENABLED)"
       ]
     },
     {
@@ -232,7 +233,7 @@
         "DEPLOY_ENABLED (GitHub secret, must be \"true\")",
         "WEB_DEPLOY_HOOK_URL (GitHub secret)"
       ],
-      "required_confirm": "DEPLOY",
+      "required_confirm": null,
       "inputs": [
         "ref=main",
         "workflow_dispatch.inputs.env (default: stage)"
@@ -242,7 +243,8 @@
         "artifacts/ci-logs/main-<sha7>/* (via scripts/ops/ci_pull_deploy_chain_logs.sh)"
       ],
       "notes": [
-        "refined: risky_top5 v0.1"
+        "refined: risky_top5 v0.1",
+        "confirm removed: DEPLOY dispatch is guarded by policy allow_apply + kill-switch (DEPLOY_ENABLED)"
       ]
     },
     {

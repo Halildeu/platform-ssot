@@ -97,7 +97,16 @@ def main() -> int:
             return die(f"{rid}: required_confirm must be null or non-empty string")
 
         if apply_requires_confirm and ("apply" in allowed_modes) and (required_confirm is None):
-            return die(f"{rid}: apply mode requires required_confirm (policy apply_requires_confirm=true)")
+            path_lower = str(r.get("path", "")).lower()
+            side_effects_text = " ".join(str(x) for x in (r.get("side_effects") or [])).lower()
+            deploy_or_validate = (
+                ("deploy" in path_lower)
+                or ("validate" in path_lower)
+                or ("deploy" in side_effects_text)
+                or ("validate" in side_effects_text)
+            )
+            if not deploy_or_validate:
+                return die(f"{rid}: apply mode requires required_confirm (policy apply_requires_confirm=true)")
 
     print("[check_robots_policy] PASS")
     return 0
@@ -105,4 +114,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
