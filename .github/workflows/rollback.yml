@@ -27,14 +27,18 @@ jobs:
   rollback:
     runs-on: ubuntu-latest
     if: >-
-      secrets.ROLLBACK_ENABLED == 'true'
-      && (
-        (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm == 'ROLLBACK')
-        || (github.event_name == 'workflow_run' && (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out'))
-      )
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.confirm == 'ROLLBACK')
+      || (github.event_name == 'workflow_run' && (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out'))
+    env:
+      ROLLBACK_ENABLED: ${{ secrets.ROLLBACK_ENABLED }}
 
     steps:
+      - name: Skip if rollback disabled
+        if: ${{ env.ROLLBACK_ENABLED != 'true' }}
+        run: echo "::notice title=rollback::ROLLBACK_ENABLED!=true; skipping rollback."
+
       - name: Rollback (required)
+        if: ${{ env.ROLLBACK_ENABLED == 'true' }}
         env:
           WEB_ROLLBACK_HOOK_URL: ${{ secrets.WEB_ROLLBACK_HOOK_URL }}
           BACKEND_ROLLBACK_HOOK_URL: ${{ secrets.BACKEND_ROLLBACK_HOOK_URL }}
@@ -75,6 +79,7 @@ jobs:
             const run = context.payload.workflow_run || {};
             const sha = run.head_sha || '';
             const runUrl = run.html_url || '';
+            const rollbackEnabled = process.env.ROLLBACK_ENABLED === 'true';
             const { owner, repo } = context.repo;
 
             let prNumber = null;
@@ -108,10 +113,11 @@ jobs:
               '## Incident (auto)',
               '',
               `- Trigger: post-deploy validation failed`,
+              `- Rollback enabled: ${rollbackEnabled ? 'true' : 'false'}`,
               `- Run: ${runUrl}`,
               `- Head: ${String(sha).slice(0, 7)}`,
               '',
-              '_Rollback attempted (best-effort). See workflow logs for details._',
+              `_${rollbackEnabled ? 'Rollback attempted' : 'Rollback skipped'} (best-effort). See workflow logs for details._`,
             ].join('\n');
 
             const comments = await github.paginate('GET /repos/{owner}/{repo}/issues/{issue_number}/comments', {
