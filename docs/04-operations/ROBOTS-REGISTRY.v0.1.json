@@ -12,13 +12,30 @@
       "kind": "script",
       "path": "scripts/pr_tracker_tsv.py",
       "default_mode": "observe",
-      "allowed_modes": ["observe", "plan"],
-      "side_effects": ["local_write(.autopilot-tmp/pr-tracker/**)"],
-      "required_auth_refs": ["TOK-0001"],
-      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "local_write(.autopilot-tmp/pr-tracker/**)"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
+      ],
       "required_confirm": null,
-      "inputs": ["repo", "watch", "tracker_path", "out_dir"],
-      "outputs": [".autopilot-tmp/pr-tracker/PR-TRACKER.tsv", ".autopilot-tmp/pr-tracker/STATUS.md"]
+      "inputs": [
+        "repo",
+        "watch",
+        "tracker_path",
+        "out_dir"
+      ],
+      "outputs": [
+        ".autopilot-tmp/pr-tracker/PR-TRACKER.tsv",
+        ".autopilot-tmp/pr-tracker/STATUS.md"
+      ]
     },
     {
       "id": "ROB-0002",
@@ -26,13 +43,26 @@
       "kind": "script",
       "path": "scripts/ops/gh_pull_run_logs.sh",
       "default_mode": "observe",
-      "allowed_modes": ["observe"],
-      "side_effects": ["local_write(artifacts/ci-logs/**)"],
-      "required_auth_refs": ["TOK-0001"],
-      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "allowed_modes": [
+        "observe"
+      ],
+      "side_effects": [
+        "local_write(artifacts/ci-logs/**)"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
+      ],
       "required_confirm": null,
-      "inputs": ["run_id", "out_dir"],
-      "outputs": ["artifacts/ci-logs/**"]
+      "inputs": [
+        "run_id",
+        "out_dir"
+      ],
+      "outputs": [
+        "artifacts/ci-logs/**"
+      ]
     },
     {
       "id": "ROB-0003",
@@ -40,13 +70,26 @@
       "kind": "script",
       "path": "scripts/ops/ci_pull_deploy_chain_logs.sh",
       "default_mode": "observe",
-      "allowed_modes": ["observe"],
-      "side_effects": ["local_write(artifacts/ci-logs/main-<sha7>/**)"],
-      "required_auth_refs": ["TOK-0001"],
-      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "allowed_modes": [
+        "observe"
+      ],
+      "side_effects": [
+        "local_write(artifacts/ci-logs/main-<sha7>/**)"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
+      ],
       "required_confirm": null,
-      "inputs": ["sha", "out_dir"],
-      "outputs": ["artifacts/ci-logs/main-<sha7>/**"]
+      "inputs": [
+        "sha",
+        "out_dir"
+      ],
+      "outputs": [
+        "artifacts/ci-logs/main-<sha7>/**"
+      ]
     },
     {
       "id": "ROB-0004",
@@ -54,13 +97,28 @@
       "kind": "workflow",
       "path": ".github/workflows/pr-merge.yml",
       "default_mode": "plan",
-      "allowed_modes": ["plan", "apply"],
-      "side_effects": ["workflow_dispatch(pr-merge)"],
-      "required_auth_refs": ["TOK-0001"],
-      "required_env": ["GH_TOKEN|GITHUB_TOKEN|VaultPointer"],
+      "allowed_modes": [
+        "plan",
+        "apply"
+      ],
+      "side_effects": [
+        "workflow_dispatch(pr-merge)"
+      ],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
+      "required_env": [
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
+      ],
       "required_confirm": "MERGE",
-      "inputs": ["pr_number", "confirm=MERGE", "ref=main"],
-      "outputs": [".autopilot-tmp/robots/merge-kick/report.md"]
+      "inputs": [
+        "pr_number",
+        "confirm=MERGE",
+        "ref=main"
+      ],
+      "outputs": [
+        ".autopilot-tmp/robots/merge-kick/report.md"
+      ]
     },
     {
       "id": "ROB-0005",
@@ -68,13 +126,862 @@
       "kind": "script",
       "path": "scripts/ops/gh_auth_with_token.sh",
       "default_mode": "plan",
-      "allowed_modes": ["plan"],
-      "side_effects": ["local_write(gh_auth_state)"],
+      "allowed_modes": [
+        "plan"
+      ],
+      "side_effects": [
+        "local_write(gh_auth_state)"
+      ],
       "required_auth_refs": [],
-      "required_env": ["GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD|Keychain"],
+      "required_env": [
+        "GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD|Keychain"
+      ],
       "required_confirm": null,
-      "inputs": ["GH_AUTH_VAULT_PATH", "GH_AUTH_VAULT_FIELD"],
+      "inputs": [
+        "GH_AUTH_VAULT_PATH",
+        "GH_AUTH_VAULT_FIELD"
+      ],
       "outputs": []
+    },
+    {
+      "id": "ROB-0100",
+      "name": "auto-fix",
+      "kind": "workflow",
+      "path": ".github/workflows/auto-fix.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0101",
+      "name": "deploy-backend",
+      "kind": "workflow",
+      "path": ".github/workflows/deploy-backend.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0102",
+      "name": "deploy-web",
+      "kind": "workflow",
+      "path": ".github/workflows/deploy-web.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0103",
+      "name": "doc-qa",
+      "kind": "workflow",
+      "path": ".github/workflows/doc-qa.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0104",
+      "name": "doc-repair-apply",
+      "kind": "workflow",
+      "path": ".github/workflows/doc-repair-apply.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0105",
+      "name": "doc-repair-autopr",
+      "kind": "workflow",
+      "path": ".github/workflows/doc-repair-autopr.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0106",
+      "name": "doc-repair-plan",
+      "kind": "workflow",
+      "path": ".github/workflows/doc-repair-plan.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0107",
+      "name": "layout-qa",
+      "kind": "workflow",
+      "path": ".github/workflows/layout-qa.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0108",
+      "name": "post-deploy-validate",
+      "kind": "workflow",
+      "path": ".github/workflows/post-deploy-validate.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0109",
+      "name": "pr-bot",
+      "kind": "workflow",
+      "path": ".github/workflows/pr-bot.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0110",
+      "name": "release-canary",
+      "kind": "workflow",
+      "path": ".github/workflows/release-canary.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0111",
+      "name": "repo-policy-report",
+      "kind": "workflow",
+      "path": ".github/workflows/repo-policy-report.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0112",
+      "name": "rollback",
+      "kind": "workflow",
+      "path": ".github/workflows/rollback.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0113",
+      "name": "security-guardrails",
+      "kind": "workflow",
+      "path": ".github/workflows/security-guardrails.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0114",
+      "name": "vault-secrets-sync",
+      "kind": "workflow",
+      "path": ".github/workflows/vault-secrets-sync.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0115",
+      "name": "web-playwright-local-nightly",
+      "kind": "workflow",
+      "path": ".github/workflows/web-playwright-local-nightly.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0116",
+      "name": "web-playwright-nightly",
+      "kind": "workflow",
+      "path": ".github/workflows/web-playwright-nightly.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0117",
+      "name": "web-playwright-smoke",
+      "kind": "workflow",
+      "path": ".github/workflows/web-playwright-smoke.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0118",
+      "name": "web-qa",
+      "kind": "workflow",
+      "path": ".github/workflows/web-qa.yml",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0119",
+      "name": "auto_fix",
+      "kind": "script",
+      "path": "scripts/auto_fix.py",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0120",
+      "name": "autopilot_local",
+      "kind": "script",
+      "path": "scripts/autopilot_local.sh",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0121",
+      "name": "check_local_orchestrator_guardrails",
+      "kind": "script",
+      "path": "scripts/check_local_orchestrator_guardrails.py",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0122",
+      "name": "check_robots_drift",
+      "kind": "script",
+      "path": "scripts/check_robots_drift.py",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0123",
+      "name": "analyze_codex_flow",
+      "kind": "script",
+      "path": "scripts/ops/analyze_codex_flow.py",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0124",
+      "name": "git_setup_push_auth",
+      "kind": "script",
+      "path": "scripts/ops/git_setup_push_auth.sh",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0125",
+      "name": "local_merge_deploy_orchestrator",
+      "kind": "script",
+      "path": "scripts/ops/local_merge_deploy_orchestrator.sh",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0126",
+      "name": "local_ops_start",
+      "kind": "script",
+      "path": "scripts/ops/local_ops_start.sh",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
+    },
+    {
+      "id": "ROB-0127",
+      "name": "pr_merge",
+      "kind": "script",
+      "path": "scripts/pr_merge.py",
+      "default_mode": "observe",
+      "allowed_modes": [
+        "observe",
+        "plan"
+      ],
+      "side_effects": [
+        "TBD"
+      ],
+      "required_auth_refs": [
+        "TBD"
+      ],
+      "required_env": [
+        "TBD"
+      ],
+      "required_confirm": null,
+      "inputs": [
+        "TBD"
+      ],
+      "outputs": [
+        "TBD"
+      ],
+      "notes": [
+        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+      ]
     }
   ]
 }
