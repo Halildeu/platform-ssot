@@ -8,7 +8,7 @@ Kullanım:
 Kontroller:
 - ~/.codex/config.toml içindeki `project_doc_fallback_filenames` listesinde
   adı geçen tüm dosyaların repo içinde gerçekten var olup olmadığını kontrol eder.
-- AGENT-CODEX.docs.md ve CODEX-CONTEXT-TEST-GUIDE.md içinde, desteklenen
+- AGENT-CODEX.docs.md ve GUIDE-0002-codex-context-test-guide.md içinde, desteklenen
   doğal komut tiplerinin ("Bu projeye başla", "Bu projeyi test et",
   "Sadece Doc QA çalıştır") geçtiğini doğrular.
 
@@ -33,7 +33,7 @@ AGENT_DOCS = [
     ROOT / "AGENT-CODEX.docs.md",
 ]
 
-CONTEXT_GUIDE = ROOT / "docs/03-delivery/guides/CODEX-CONTEXT-TEST-GUIDE.md"
+CONTEXT_GUIDE = ROOT / "docs/03-delivery/guides/GUIDE-0002-codex-context-test-guide.md"
 
 
 def read_text(path: Path) -> str:

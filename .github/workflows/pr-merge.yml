@@ -4,6 +4,17 @@ on:
   workflow_run:
     workflows: ["ci-gate", "Doc QA", "Layout QA", "Web QA", "security-guardrails"]
     types: [completed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "PR number to merge"
+        required: true
+        type: string
+      confirm:
+        description: "Type MERGE to confirm"
+        required: true
+        default: "NO"
+        type: string
 
 permissions:
   contents: write
@@ -12,13 +23,20 @@ permissions:
   issues: write
 
 concurrency:
-  group: pr-merge-${{ github.event.workflow_run.head_sha }}
+  group: pr-merge
   cancel-in-progress: false
 
 jobs:
   merge:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.head_repository.fork == false
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || (
+        github.event_name == 'workflow_run'
+        && github.event.workflow_run.conclusion == 'success'
+        && github.event.workflow_run.event == 'pull_request'
+        && github.event.workflow_run.head_repository.fork == false
+      )
 
     steps:
       - name: Checkout repository
@@ -29,6 +47,20 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Confirm workflow_dispatch (break-glass)
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ inputs.confirm }}" != "MERGE" ]; then
+            echo "::error title=pr-merge::confirm must be MERGE"
+            exit 1
+          fi
+          if ! [[ "${{ inputs.pr_number }}" =~ ^[0-9]+$ ]]; then
+            echo "::error title=pr-merge::pr_number must be numeric"
+            exit 1
+          fi
+
       - name: Merge ready PR (label-gated)
         id: pr-merge
         env:
@@ -36,7 +68,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p artifacts
-          python3 scripts/pr_merge.py --rules-path docs/04-operations/PR-BOT-RULES.json | tee artifacts/pr-merge.log
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 scripts/pr_merge.py --rules-path docs/04-operations/PR-BOT-RULES.json --pr "${{ inputs.pr_number }}" | tee artifacts/pr-merge.log
+          else
+            python3 scripts/pr_merge.py --rules-path docs/04-operations/PR-BOT-RULES.json | tee artifacts/pr-merge.log
+          fi
 
       - name: Upsert PR comment (merge result)
         if: always()

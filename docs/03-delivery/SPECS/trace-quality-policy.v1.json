@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "enabled": false,
+  "rules": {
+    "require_mapping_quality_column": true,
+    "min_refined_ratio": 0.20
+  },
+  "notes": [
+    "enabled=false iken checker non-blocking rapor üretir ve exit 0 döner.",
+    "enabled=true iken eşikler sağlanmazsa exit 1 döner (hard gate).",
+    "min_refined_ratio zamanla kademeli artırılmalıdır."
+  ]
+}
+
