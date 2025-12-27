@@ -65,7 +65,9 @@ PR aç:
 -------------------------------------------------------------------------------
 
 - Auth doğrulama:
-  - `gh auth status`
+  - `bash scripts/ops/gh_token_preflight.sh`
+  - (alternatif) `gh api rate_limit`
+  - Not: `gh auth status` “not logged in” görünebilir; bu tek başına hata değildir.
 - PR doğrulama:
   - `gh pr view --repo <owner/repo> --head <branch>`
   - `gh pr list --repo <owner/repo> --head <branch>`
@@ -85,10 +87,11 @@ PR aç:
     - (Vault) `export GH_AUTH_VAULT_PATH=... GH_AUTH_VAULT_FIELD=...` + `bash scripts/ops/gh_auth_with_token.sh`
 
 - [ ] Arıza senaryosu 2 – gh authenticated değil:
-  - Given: `gh auth status` “Logged in” değil  
+  - Given: `bash scripts/ops/gh_token_preflight.sh` FAIL (veya `gh api rate_limit` FAIL)  
     When: `bash scripts/ops/gh_pr_create_from_body.sh ...`  
     Then: PR açılmaz → önce auth:
-    - `bash scripts/ops/gh_auth_with_token.sh`
+    - `bash scripts/ops/gh_auth_with_token.sh` (persist login) veya
+    - `export GH_TOKEN=...` / Vault pointer set ederek `bash scripts/ops/gh_token_preflight.sh` PASS
 
 - [ ] Arıza senaryosu 3 – PR zaten var:
   - Given: aynı `--head <branch>` için açık PR vardır  
