@@ -66,3 +66,4 @@ jobs:
           python3 scripts/check_local_orchestrator_guardrails.py
           python3 scripts/check_robots_policy.py
           python3 scripts/check_robots_drift.py
+          python3 scripts/check_robots_tbd_coverage.py
