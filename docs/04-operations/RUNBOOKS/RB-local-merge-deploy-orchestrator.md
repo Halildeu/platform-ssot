@@ -44,10 +44,6 @@ Local SSOT prensibiyle PR’ı uçtan uca sonuçlandırmak:
 2) Git push auth (autopilot push stabil olsun):
 - `bash scripts/ops/git_setup_push_auth.sh`
 
-3) PR ensure (idempotent; manuel PR açma adımını kaldırır):
-- `bash scripts/ops/gh_pr_ensure_open.sh --repo Halildeu/platform-ssot --base main --head <branch> --body-file /tmp/pr_body.md`
-- Not: Vault pointer default’ları `docs/00-handbook/GH-AUTH-VAULT-POINTERS.md` ile aynıdır.
-
 ### 3.2 Orchestrator (manual fix)
 
 CI fail olursa script durur ve `FAILURE.md` üretir; fix’i sen yaparsın, sonra aynı komutu tekrar çalıştırırsın.
