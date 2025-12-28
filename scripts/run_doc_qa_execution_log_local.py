@@ -38,6 +38,8 @@ CHECKS = [
     ["python3", "scripts/check_runbook_required_sections.py"],
     ["python3", "scripts/check_doc_template_map_policy.py"],
     ["python3", "scripts/check_doc_heading_contract.py"],
+    ["python3", "scripts/check_template_control_coverage.py"],
+    ["python3", "scripts/check_doc_template_strictness.py"],
     ["python3", "scripts/check_tp_risk_policy.py"],
     ["python3", "scripts/check_guides_policy.py"],
     ["python3", "scripts/check_guides_prefix.py"],
