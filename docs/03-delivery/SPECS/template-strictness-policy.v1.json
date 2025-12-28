@@ -8,7 +8,7 @@
     "SPEC": "report",
     "BM": "report",
     "BENCH": "report",
-    "GUIDE": "report",
+    "GUIDE": "subset",
     "DATA-CARD": "report",
     "MODEL-CARD": "report",
     "INTERFACE-CONTRACT": "report",

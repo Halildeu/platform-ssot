@@ -46,7 +46,12 @@ def extract_numbered_headings(path: str) -> list[str]:
 def has_adr_shape(path: str) -> bool:
     txt = Path(path).read_text(encoding="utf-8", errors="ignore").casefold()
 
-    meta_ok = all(x in txt for x in ["id:", "status:", "owner:"])
+    meta_ok = (
+        ("id:" in txt)
+        and ("status:" in txt)
+        and (("owner:" in txt) or ("sahip:" in txt))
+        and (("date:" in txt) or ("tarih:" in txt))
+    )
     sec_ok = all(normalize(x) in txt for x in ADR_REQUIRED_SECTIONS) and (
         "links" in txt or "linkler" in txt or "li̇nkler" in txt
     )
