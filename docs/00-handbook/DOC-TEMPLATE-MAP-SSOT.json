@@ -72,7 +72,8 @@
         "2. KAPSAM",
         "3. STRATEJİ",
         "4. TEST SENARYOLARI ÖZETİ"
-      ]
+      ],
+      "heading_contract_mode": "subset"
     },
     "GUIDE": {
       "template": "GUIDE.template.md",
@@ -108,7 +109,19 @@
     "SPEC": {
       "template": "SPEC.template.md",
       "doc_glob": "docs/03-delivery/SPECS/SPEC-*.md",
-      "optional": true
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. KONTRAT (SSOT)",
+        "4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)",
+        "5. LİNKLER"
+      ]
+    },
+    "TECH-DESIGN": {
+      "template": "TECH-DESIGN.template.md",
+      "doc_glob": "docs/02-architecture/services/**/TECH-DESIGN-*.md",
+      "optional": true,
+      "heading_contract_mode": "disabled"
     },
     "ADR": {
       "template": "ADR.template.md",

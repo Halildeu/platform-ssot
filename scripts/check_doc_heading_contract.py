@@ -38,6 +38,7 @@ class MapEntry:
     doc_glob: str
     optional: bool
     required_headings: list[str] | None
+    heading_contract_mode: str | None
 
 
 def load_policy() -> tuple[Path, list[MapEntry]]:
@@ -48,6 +49,7 @@ def load_policy() -> tuple[Path, list[MapEntry]]:
     templates_dir = Path(data["templates_dir"])
     entries: list[MapEntry] = []
     for doc_type, cfg in data["map"].items():
+        mode = cfg.get("heading_contract_mode")
         entries.append(
             MapEntry(
                 doc_type=str(doc_type),
@@ -57,6 +59,7 @@ def load_policy() -> tuple[Path, list[MapEntry]]:
                 required_headings=[str(x) for x in cfg.get("required_headings", [])]
                 if cfg.get("required_headings") is not None
                 else None,
+                heading_contract_mode=str(mode) if mode is not None else None,
             )
         )
     return templates_dir, entries
@@ -80,6 +83,13 @@ def main() -> int:
     warnings: list[str] = []
 
     for entry in entries:
+        mode = entry.heading_contract_mode or (
+            "subset" if entry.required_headings is not None else "template_as_contract"
+        )
+        if mode == "disabled":
+            warnings.append(f"[SKIP] {entry.doc_type}: heading contract disabled by policy")
+            continue
+
         # Non-md docs (örn. TRACE *.tsv) heading-contract kapsamında değildir.
         if ".tsv" in entry.doc_glob:
             warnings.append(f"[SKIP] {entry.doc_type}: non-md docs (tsv) -> heading contract not applied")
@@ -99,14 +109,23 @@ def main() -> int:
             warnings.append(f"[SKIP] {entry.doc_type}: template has no numbered headings: {tmpl_path}")
             continue
 
-        required_raw = entry.required_headings or template_headings_raw
+        if mode == "subset":
+            if entry.required_headings is None:
+                failures.append(f"[POLICY_INVALID] {entry.doc_type}: heading_contract_mode=subset requires required_headings")
+                continue
+            required_raw = entry.required_headings
+        elif mode == "template_as_contract":
+            required_raw = template_headings_raw
+        else:
+            failures.append(f"[POLICY_INVALID] {entry.doc_type}: unknown heading_contract_mode={mode!r}")
+            continue
         required = [normalize_heading(h) for h in required_raw]
         if not required:
             warnings.append(f"[SKIP] {entry.doc_type}: required headings empty (policy/template)")
             continue
 
         # If required list is provided by policy, ensure it exists in template (drift guard)
-        if entry.required_headings is not None:
+        if entry.required_headings is not None and mode == "subset":
             missing_from_template = [h for h in required if h not in template_headings]
             if missing_from_template:
                 failures.append(

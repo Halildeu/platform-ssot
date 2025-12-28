@@ -4,14 +4,23 @@ ID: SPEC-0007
 Status: Draft (stub)  
 Owner: TBD
 
-## Amaç
+## 1. AMAÇ
 
 Bu SPEC, şu an yalnızca repo içi referans bütünlüğünü sağlamak için oluşturulmuş bir placeholder’dır.
 
-## Durum
+## 2. KAPSAM
 
-Draft (stub)
+- Bu doküman bir “stub”tır; içerik genişletmesi yapılmaz.
+- Amaç: repo içi referans bütünlüğü.
 
-## Linkler
+## 3. KONTRAT (SSOT)
+
+- None (stub).
+
+## 4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)
+
+- Kontrat değişikliği bu dosyada yapılmaz; gerçek kontrat için yeni SPEC açılır.
+
+## 5. LİNKLER
 
 - `docs/03-delivery/PROJECT-FLOW.tsv`
