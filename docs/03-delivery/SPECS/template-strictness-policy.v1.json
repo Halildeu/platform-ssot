@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "enabled": false,
+  "enabled": true,
   "default_mode": "report",
   "modes": {
     "PB": "report",
