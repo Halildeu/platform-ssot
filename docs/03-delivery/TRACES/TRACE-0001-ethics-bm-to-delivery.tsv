@@ -55,3 +55,26 @@ BM-0001-MET-KPI-005	MET	PLATFORM_SPEC	SPEC-0014	coarse	mapping_quality: coarse; 
 BM-0001-MET-KPI-006	MET	PLATFORM_SPEC	SPEC-0014	coarse	mapping_quality: coarse; platform_capability: Search & Reporting
 BM-0001-MET-KPI-007	MET	PLATFORM_SPEC	SPEC-0014	coarse	mapping_quality: coarse; platform_capability: Search & Reporting
 BM-0001-MET-KPI-008	MET	PLATFORM_SPEC	SPEC-0014	coarse	mapping_quality: coarse; platform_capability: Search & Reporting
+BM-0001-CTRL-ASM-001	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: ASM -> PRD assumptions/validation/risk register
+BM-0001-CTRL-ASM-002	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: ASM -> PRD assumptions/validation/risk register
+BM-0001-CTRL-GRD-009	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: GRD -> PRD guardrails/register (AC mapping later)
+BM-0001-CTRL-GRD-010	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: GRD -> PRD guardrails/register (AC mapping later)
+BM-0001-CTRL-RSK-001	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-CTRL-RSK-002	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-CTRL-RSK-003	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-CTRL-RSK-004	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-CTRL-VAL-001	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: VAL -> PRD assumptions/validation/risk register
+BM-0001-CTRL-VAL-002	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: VAL -> PRD assumptions/validation/risk register
+BM-0001-CTRL-VAL-003	CTRL	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: VAL -> PRD assumptions/validation/risk register
+BM-0001-MET-ASM-001	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: ASM -> PRD assumptions/validation/risk register
+BM-0001-MET-ASM-002	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: ASM -> PRD assumptions/validation/risk register
+BM-0001-MET-DEC-001	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: DEC -> PRD/SPEC decomposition (delivery-level mapping later)
+BM-0001-MET-DEC-002	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: DEC -> PRD/SPEC decomposition (delivery-level mapping later)
+BM-0001-MET-GRD-001	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: GRD -> PRD guardrails/register (AC/OBS mapping later)
+BM-0001-MET-GRD-002	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: GRD -> PRD guardrails/register (AC/OBS mapping later)
+BM-0001-MET-RSK-001	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-MET-RSK-002	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-MET-RSK-003	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-MET-RSK-004	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: RSK -> PRD assumptions/validation/risk register
+BM-0001-MET-VAL-001	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: VAL -> PRD assumptions/validation/risk register
+BM-0001-MET-VAL-002	MET	PRD	PRD-0004	coarse	mapping_quality: coarse; full_coverage: VAL -> PRD assumptions/validation/risk register

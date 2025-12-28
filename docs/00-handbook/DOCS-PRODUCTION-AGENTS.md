@@ -99,6 +99,8 @@ Amaç: BM item’ları delivery hedeflerine izlenebilir şekilde bağlar.
 - Okur: BM + BENCH + Delivery hedef ID seti
 - Yazar:
   - TRACE TSV (header + mapping_quality dahil)
+  - (Opsiyonel) Hızlı başlangıç generator:
+    - `python3 scripts/doc_production_generate.py trace-pack --topic <TOPIC> --slug <slug> --trace <0001> --bm <0001> --default-target-type PRD --default-target-id PRD-0004`
 - Done:
   - `BM_ITEM_ID` → `TARGET_TYPE/TARGET_ID` bağlantıları mevcut; “coarse/refined” seçimi tutarlı.
 

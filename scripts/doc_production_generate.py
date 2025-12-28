@@ -23,7 +23,24 @@ from typing import Any
 
 BM_ROOT = Path("docs/01-product/BUSINESS-MASTERS")
 BENCH_ROOT = Path("docs/01-product/BENCHMARKS")
+TRACE_ROOT = Path("docs/03-delivery/TRACES")
 DEFAULT_VERSION = "v0.1"
+
+RE_BM_ITEM_ID = re.compile(r"\bBM-(?P<bm>\d{4})-(?P<doc>CORE|CTRL|MET)-(?P<typ>DEC|GRD|KPI|RSK|ASM|VAL)-(?P<seq>\d{3})\b")
+
+TRACE_ALLOWED_TARGET_TYPES = {
+    "PB",
+    "PRD",
+    "PLATFORM_SPEC",
+    "SPEC",
+    "ADR",
+    "STORY",
+    "AC",
+    "TP",
+    "RB",
+    "OBS",
+}
+TRACE_ALLOWED_MAPPING_QUALITY = {"coarse", "refined"}
 
 
 def die(msg: str) -> int:
@@ -763,6 +780,151 @@ def cmd_bench_pack(args: argparse.Namespace) -> int:
     return 0
 
 
+@dataclass(frozen=True)
+class TraceMapping:
+    target_type: str
+    target_id: str
+    mapping_quality: str
+    notes: str
+
+
+def sanitize_tsv_field(s: str) -> str:
+    return str(s).replace("\t", " ").replace("\n", " ").strip()
+
+
+def extract_bm_item_ids_for_pack(topic: str, bm_num: str) -> list[str]:
+    topic_dir = BM_ROOT / topic
+    if not topic_dir.exists():
+        raise FileNotFoundError(topic_dir)
+
+    items: set[str] = set()
+    for p in sorted(topic_dir.glob(f"BM-{bm_num}-*.md")):
+        if not p.is_file():
+            continue
+        txt = p.read_text(encoding="utf-8", errors="ignore")
+        for m in RE_BM_ITEM_ID.finditer(txt):
+            if m.group("bm") == bm_num:
+                items.add(m.group(0))
+    return sorted(items)
+
+
+def load_trace_overrides(seed: dict[str, Any]) -> dict[str, list[TraceMapping]]:
+    raw = seed.get("trace.overrides")
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        raise ValueError("seed.trace.overrides must be an object (BM_ITEM_ID -> list[mapping])")
+
+    out: dict[str, list[TraceMapping]] = {}
+    for bm_item_id, mappings in raw.items():
+        if not isinstance(bm_item_id, str) or not bm_item_id.strip():
+            raise ValueError("seed.trace.overrides keys must be non-empty strings (BM_ITEM_ID)")
+        if not isinstance(mappings, list) or not mappings:
+            raise ValueError(f"seed.trace.overrides[{bm_item_id}] must be a non-empty list")
+
+        row_list: list[TraceMapping] = []
+        for i, m in enumerate(mappings, start=1):
+            if not isinstance(m, dict):
+                raise ValueError(f"seed.trace.overrides[{bm_item_id}][{i}] must be an object")
+            target_type = sanitize_tsv_field(m.get("target_type", "")).upper()
+            target_id = sanitize_tsv_field(m.get("target_id", ""))
+            mapping_quality = sanitize_tsv_field(m.get("mapping_quality", "")).lower()
+            notes = sanitize_tsv_field(m.get("notes", ""))
+
+            if target_type not in TRACE_ALLOWED_TARGET_TYPES:
+                raise ValueError(f"seed.trace.overrides[{bm_item_id}][{i}].target_type invalid: {target_type!r}")
+            if not target_id:
+                raise ValueError(f"seed.trace.overrides[{bm_item_id}][{i}].target_id empty")
+            if mapping_quality not in TRACE_ALLOWED_MAPPING_QUALITY:
+                raise ValueError(f"seed.trace.overrides[{bm_item_id}][{i}].mapping_quality invalid: {mapping_quality!r}")
+            if not notes:
+                raise ValueError(f"seed.trace.overrides[{bm_item_id}][{i}].notes empty")
+
+            row_list.append(
+                TraceMapping(
+                    target_type=target_type,
+                    target_id=target_id,
+                    mapping_quality=mapping_quality,
+                    notes=notes,
+                )
+            )
+
+        out[bm_item_id.strip()] = row_list
+    return out
+
+
+def cmd_trace_pack(args: argparse.Namespace) -> int:
+    try:
+        topic = norm_topic_folder(args.topic)
+        slug = norm_slug(args.slug)
+        trace_num = norm_num4(args.trace)
+        bm_num = norm_num4(args.bm)
+    except Exception as e:
+        return die(str(e))
+
+    default_target_type = sanitize_tsv_field(args.default_target_type).upper()
+    default_target_id = sanitize_tsv_field(args.default_target_id)
+    default_mapping_quality = sanitize_tsv_field(args.mapping_quality).lower() or "coarse"
+    notes_base = sanitize_tsv_field(args.notes)
+
+    if default_target_type not in TRACE_ALLOWED_TARGET_TYPES:
+        return die(f"default_target_type must be one of {sorted(TRACE_ALLOWED_TARGET_TYPES)}")
+    if not default_target_id:
+        return die("default_target_id is required")
+    if default_mapping_quality not in TRACE_ALLOWED_MAPPING_QUALITY:
+        return die(f"mapping_quality must be one of {sorted(TRACE_ALLOWED_MAPPING_QUALITY)}")
+
+    try:
+        seed = load_seed(Path(args.seed)) if args.seed else {}
+    except Exception as e:
+        return die(f"seed load failed: {e}")
+
+    try:
+        overrides = load_trace_overrides(seed)
+    except Exception as e:
+        return die(f"trace overrides invalid: {e}")
+
+    try:
+        bm_items = extract_bm_item_ids_for_pack(topic, bm_num)
+    except Exception as e:
+        return die(f"BM pack read failed: {e}")
+    if not bm_items:
+        return die(f"no BM_ITEM_ID found for BM-{bm_num} under {BM_ROOT / topic}")
+
+    out_path = TRACE_ROOT / f"TRACE-{trace_num}-{slug}-bm-to-delivery.tsv"
+
+    header = "BM_ITEM_ID\tBM_SECTION\tTARGET_TYPE\tTARGET_ID\tmapping_quality\tNOTES"
+    rows: list[tuple[str, str, str, str, str, str]] = []
+
+    for bm_item_id in bm_items:
+        mm = RE_BM_ITEM_ID.search(bm_item_id)
+        if not mm:
+            return die(f"internal error: cannot parse BM_ITEM_ID: {bm_item_id}")
+        bm_section = mm.group("doc")
+
+        if bm_item_id in overrides:
+            for m in overrides[bm_item_id]:
+                rows.append((bm_item_id, bm_section, m.target_type, m.target_id, m.mapping_quality, m.notes))
+            continue
+
+        if not notes_base:
+            notes = (
+                f"mapping_quality: {default_mapping_quality}; generated: trace-pack; "
+                f"default {default_target_type}/{default_target_id}"
+            )
+        else:
+            notes = notes_base
+
+        rows.append((bm_item_id, bm_section, default_target_type, default_target_id, default_mapping_quality, notes))
+
+    rows.sort(key=lambda r: (r[0], r[2], r[3]))
+    content = header + "\n" + "\n".join("\t".join(r) for r in rows) + "\n"
+    write_file(out_path, content, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    print("[doc_production_generate] PASS")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="doc_production_generate")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -787,6 +949,19 @@ def build_parser() -> argparse.ArgumentParser:
     p_bench.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
     p_bench.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")
 
+    p_trace = sub.add_parser("trace-pack", help="Generate TRACE pack doc (BM -> delivery mapping TSV)")
+    p_trace.add_argument("--topic", required=True, help="Topic folder (UPPERCASE), e.g. ETHICS")
+    p_trace.add_argument("--slug", required=True, help="Topic slug (kebab-case), e.g. ethics")
+    p_trace.add_argument("--trace", required=True, help="TRACE number (4 digits), e.g. 0001")
+    p_trace.add_argument("--bm", required=True, help="BM pack number to cover (4 digits), e.g. 0001")
+    p_trace.add_argument("--default-target-type", required=True, help="Default TARGET_TYPE (e.g. PRD)")
+    p_trace.add_argument("--default-target-id", required=True, help="Default TARGET_ID (e.g. PRD-0004)")
+    p_trace.add_argument("--mapping-quality", default="coarse", help="mapping_quality (coarse|refined)")
+    p_trace.add_argument("--notes", default="", help="Optional NOTES (if empty, a default note is generated)")
+    p_trace.add_argument("--seed", default="", help="Optional seed json file (advanced; supports trace.overrides)")
+    p_trace.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
+    p_trace.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")
+
     return ap
 
 
@@ -798,6 +973,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_bm_pack(args)
     if args.cmd == "bench-pack":
         return cmd_bench_pack(args)
+    if args.cmd == "trace-pack":
+        return cmd_trace_pack(args)
     return die(f"unknown cmd: {args.cmd}")
 
 
