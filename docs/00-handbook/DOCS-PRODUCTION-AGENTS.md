@@ -87,6 +87,8 @@ Amaç: capability matrix + trend/gap/AI yapılabilirlik çıktısını üretir.
 - Yazar:
   - BENCH capability matrix
   - BENCH gaps/trends/AI
+  - (Opsiyonel) Hızlı başlangıç generator:
+    - `python3 scripts/doc_production_generate.py bench-pack --topic <TOPIC> --slug <slug> --bench <0001> --title "<Başlık>"`
 - Done:
   - En az 3–7 trend + net gap listesi (her gap: etki + risk + öneri).
 

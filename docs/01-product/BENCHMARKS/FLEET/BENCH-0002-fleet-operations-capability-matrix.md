@@ -61,7 +61,16 @@ Matrix (Doldurma Şablonu):
 
 | Alan | Kapabilite | Kanıt Türü | Kaynak | Tarih | Not |
 |---|---|---|---|---|---|
-| Vehicle Registry | (örn. VIN + plaka history) | doc/demo | TBD | TBD | TBD |
+| Vehicle Registry | VIN/plaka kimliği ve plaka geçmişi | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Vehicle Registry | Durum yaşam döngüsü (active/inactive/sold) | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Vehicle Registry | Doküman yönetimi (ruhsat/sigorta/muayene) | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Maintenance | Planlı bakım planı + hatırlatma | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Compliance | Due-date takibi + escalation | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Takvim semantiği (timezone/iş günü) benchmark kritik. |
+| Traffic Fines | Ceza kaydı + doğrulama | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Fuel | Tüketim ve anomali sinyali | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Fraud/kalite sinyali benchmark kritik. |
+| Search & Reporting | KPI dashboard + export | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Export policy + redaksiyon değerlendirilir. |
+| Integrations & Audit | Audit trail derinliği | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | who-did-what + değişiklik izi. |
+| Integrations & Audit | API/CSV import/export | doc | docs/01-product/BUSINESS-MASTERS/FLEET/ | 2025-12 | Import idempotency/retry değerlendirilir. |
 
 -------------------------------------------------------------------------------
 4. TRENDLER

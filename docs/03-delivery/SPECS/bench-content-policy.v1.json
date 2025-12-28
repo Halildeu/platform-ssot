@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "rules": {
+    "require_sections_1_to_7": true,
+    "forbid_tbd_anywhere": true,
+    "require_matrix_table_header": true,
+    "min_matrix_rows": 7,
+    "min_trends": 3,
+    "min_gaps": 3,
+    "min_ai_suitable": 2,
+    "min_ai_risky": 2,
+    "min_ai_controls": 3
+  },
+  "notes": [
+    "Amaç: BENCH pack dokümanlarında yalnız formatı değil, minimum içerik doluluğunu da hard gate ile korumak.",
+    "Bu gate 'benchmark doğruluğunu' doğrulamaz; matrix/gap/trend/AI bölümlerinin boş kalmamasını zorunlu kılar.",
+    "Eşikler zamanla (özellikle min_matrix_rows ve AI kontrol seti) kademeli artırılabilir."
+  ]
+}

@@ -15,13 +15,13 @@ NC/CAPA süreçleri için dünyadaki uygulamaları “kanıtlanabilir kapabilite
 
 | Alan | Kapabilite | Kanıt Türü | Kaynak | Tarih | Not |
 |---|---|---|---|---|---|
-| Intake | Sahadan hızlı NC kaydı | TBD | TBD | TBD | TBD |
-| RCA | 5 Why / Ishikawa şablonları | TBD | TBD | TBD | TBD |
-| CAPA | Aksiyon/owner/due/verify | TBD | TBD | TBD | TBD |
-| Evidence | Attachment + immutability beklentisi | TBD | TBD | TBD | TBD |
-| Audit | who-did-what + who-viewed-what | TBD | TBD | TBD | TBD |
-| SLA | iş günü / tatil / eskalasyon | TBD | TBD | TBD | TBD |
-| Reporting | tekrar oranı / trend / export | TBD | TBD | TBD | TBD |
+| Intake | Sahadan hızlı NC kaydı | doc | docs/01-product/BUSINESS-MASTERS/NC/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| RCA | 5 Why / Ishikawa şablonları | doc | docs/01-product/BUSINESS-MASTERS/NC/ | 2025-12 | RCA standardı benchmark kritik. |
+| CAPA | Aksiyon/owner/due/verify | doc | docs/01-product/BUSINESS-MASTERS/NC/ | 2025-12 | CAPA takip + doğrulama benchmark kritik. |
+| Evidence | Attachment + immutability beklentisi | doc | docs/01-product/BUSINESS-MASTERS/NC/ | 2025-12 | Evidence sürümleme/immutability değerlendirilir. |
+| Audit | who-did-what + who-viewed-what | doc | docs/01-product/BUSINESS-MASTERS/NC/ | 2025-12 | Audit derinliği + view log benchmark kritik. |
+| SLA | iş günü / tatil / eskalasyon | doc | docs/01-product/BUSINESS-MASTERS/NC/ | 2025-12 | Takvim semantiği benchmark kritik. |
+| Reporting | tekrar oranı / trend / export | doc | docs/01-product/BUSINESS-MASTERS/NC/ | 2025-12 | Trend→backlog bağlanabilirliği değerlendirilir. |
 
 4. TRENDLER
 Bkz: `BENCH-0003-nc-capa-gaps-trends-ai.md`.
