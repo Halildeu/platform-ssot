@@ -1,0 +1,145 @@
+# DOCS-PRODUCTION – Direct-Gen Doküman Üretim Akışı (Agent Rolleri) v0.1
+
+Bu doküman, **doküman üretim akışını** (BM → BENCH → TRACE → Delivery Pack) agent rolleriyle
+standartlaştırır. `PROJECT-FLOW` tablosu bu dokümanın konusu değildir.
+
+## 1. SSOT Referansları
+
+- Üretim kontratı: `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
+- Template map: `docs/00-handbook/DOC-TEMPLATE-MAP-SSOT.json`
+- Şablonlar: `docs/99-templates/*.template.md`
+
+## 2. Üretim Kontratı (Girdi → Çıktı)
+
+### 2.1 Girdiler (minimum)
+
+- Topic (konu):
+  - Topic klasörü: `docs/01-product/BUSINESS-MASTERS/<TOPIC>/` (canonical: UPPERCASE)
+  - Topic slug: `kebab-case` (örn. `ethics`)
+- ID seti (kural: aynı konu için tutarlı ve benzersiz):
+  - BM pack: `BM-0001`
+  - BENCH pack: `BENCH-0001`
+  - TRACE: `TRACE-0001`
+  - PB/PRD: `PB-0004`, `PRD-0004`
+  - Delivery: `SPEC-00XX`, `STORY-0XXX`, `AC-0XXX`, `TP-0XXX`
+
+Not: ID üretimi bu dokümanın kapsamı değildir; ID standardı için `NUMARALANDIRMA-STANDARDI.md` ve
+repo’daki mevcut ID registry/kurallar referans alınır.
+
+### 2.2 Çıktılar (minimum)
+
+Bu üretim hattı aşağıdaki seti hedefler (SSOT: SPEC-0012):
+
+- BM Pack:
+  - `docs/01-product/BUSINESS-MASTERS/<TOPIC>/BM-0001-<topic>-core-*.md`
+  - `docs/01-product/BUSINESS-MASTERS/<TOPIC>/BM-0001-<topic>-controls-*.md`
+  - `docs/01-product/BUSINESS-MASTERS/<TOPIC>/BM-0001-<topic>-metrics-*.md`
+- BENCH Pack:
+  - `docs/01-product/BENCHMARKS/<TOPIC>/BENCH-0001-<topic>-capability-matrix.md`
+  - `docs/01-product/BENCHMARKS/<TOPIC>/BENCH-0001-<topic>-gaps-trends-ai.md`
+- TRACE Pack:
+  - `docs/03-delivery/TRACES/TRACE-0001-<topic>-bm-to-delivery.tsv`
+- Delivery Pack (minimum):
+  - `docs/01-product/PROBLEM-BRIEFS/PB-0004-<topic>-*.md`
+  - `docs/01-product/PRD/PRD-0004-<topic>-*.md`
+  - `docs/03-delivery/SPECS/SPEC-00XX-<topic>-*.md`
+  - `docs/03-delivery/STORIES/STORY-0XXX-<topic>-*.md`
+  - `docs/03-delivery/ACCEPTANCE/AC-0XXX-<topic>-*.md`
+  - `docs/03-delivery/TEST-PLANS/TP-0XXX-<topic>-*.md`
+- Operations Pack (koşullu ama önerilen):
+  - `docs/04-operations/RUNBOOKS/RB-<servis>.md`
+
+## 3. Agent Rolleri (MVP)
+
+Bu bölümdeki roller, aynı işin farklı parçalarını **ayrı sorumluluklarla** üretir. Her rol:
+- kendi çıktısını “tamamlanmış” saymak için net bir Done kriterine sahiptir,
+- bir sonraki role deterministik girdi bırakır.
+
+### 3.1 DP-01 – Intake & Scoping Agent
+
+Amaç: konuyu netleştirir ve üretim sınırlarını kilitler.
+
+- Okur:
+  - `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
+  - (varsa) ilgili PB/PRD/SPEC/STORY seti
+- Yazar (çıktı):
+  - “Topic + ID seti + scope/out-of-scope” kararı (PB/PRD/SPEC için upstream notu)
+- Done:
+  - Topic klasörü ve ID seti net; “kapsam dışı” maddeleri yazılı.
+
+### 3.2 DP-02 – BM Pack Agent
+
+Amaç: BM karar/guardrail/ölçüm sinyallerini **ID’li** şekilde üretir.
+
+- Okur: DP-01 çıktısı + domain bağlamı
+- Yazar:
+  - BM core/controls/metrics dokümanları (pack bütünlüğü)
+  - (Opsiyonel) Hızlı başlangıç generator:
+    - `python3 scripts/doc_production_generate.py bm-pack --topic <TOPIC> --slug <slug> --bm <0001> --title "<Başlık>"`
+- Done:
+  - Her BM maddesi ID’li (DEC/GRD/KPI/RSK/ASM/VAL) ve “Top 10 sürpriz önleyici” dolu.
+
+### 3.3 DP-03 – BENCH Pack Agent
+
+Amaç: capability matrix + trend/gap/AI yapılabilirlik çıktısını üretir.
+
+- Okur: BM pack (minimum) + mevcut ürün/mimari bağlam
+- Yazar:
+  - BENCH capability matrix
+  - BENCH gaps/trends/AI
+  - (Opsiyonel) Hızlı başlangıç generator:
+    - `python3 scripts/doc_production_generate.py bench-pack --topic <TOPIC> --slug <slug> --bench <0001> --title "<Başlık>"`
+- Done:
+  - En az 3–7 trend + net gap listesi (her gap: etki + risk + öneri).
+
+### 3.4 DP-04 – TRACE Pack Agent
+
+Amaç: BM item’ları delivery hedeflerine izlenebilir şekilde bağlar.
+
+- Okur: BM + BENCH + Delivery hedef ID seti
+- Yazar:
+  - TRACE TSV (header + mapping_quality dahil)
+- Done:
+  - `BM_ITEM_ID` → `TARGET_TYPE/TARGET_ID` bağlantıları mevcut; “coarse/refined” seçimi tutarlı.
+
+### 3.5 DP-05 – Delivery Pack Agent
+
+Amaç: PB/PRD/SPEC/STORY/AC/TP setini template’lere göre üretir ve zinciri bağlar.
+
+- Okur: TRACE + BM/BENCH özetleri
+- Yazar:
+  - PB/PRD (Discover/Shape)
+  - SPEC (kontrat/SSOT)
+  - STORY/AC/TP (delivery zinciri)
+  - (koşullu) ADR/RUNBOOK
+- Done:
+  - STORY “LİNKLER” bölümü zinciri doğru path’lerle bağlıyor.
+  - TP, risk seviyesine göre subset/strict kurallarıyla uyumlu.
+
+### 3.6 DP-06 – Doc-QA & Repair Agent
+
+Amaç: kalite gate’lerini koşar, ihlali raporlar ve deterministik repair uygular.
+
+- Okur: tüm üretilen doküman seti
+- Çalıştırır (default):
+  - `python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log`
+- Done:
+  - Gate PASS ve evidence pointer seti mevcut (`.autopilot-tmp/execution-log/`).
+
+## 4. Orkestrasyon (BM → BENCH → TRACE → Delivery)
+
+Önerilen sıra:
+
+1) DP-01 (Intake) → Topic + ID seti + scope kilitle
+2) DP-02 (BM Pack) → karar/guardrail/ölçüm (ID’li)
+3) DP-03 (BENCH Pack) → matrix + gaps/trends/AI
+4) DP-04 (TRACE Pack) → BM item → hedef mapping
+5) DP-05 (Delivery Pack) → PB/PRD/SPEC/STORY/AC/TP
+6) DP-06 (Doc-QA) → gate + deterministik repair
+
+## 5. Guardrails (üretim kalitesi)
+
+- Varsayım uydurulmaz: bilinmeyenler `TBD` + doğrulama planı olarak yazılır.
+- Dokümanlar canonical klasörlerinden taşınmaz (lokasyon/routing gate’leri kırılır).
+- Şablon başlıkları korunur; agent sadece başlık altını doldurur.
+- İzlenebilirlik: BM_ITEM_ID → TRACE → Delivery hedefleri zinciri korunur.
