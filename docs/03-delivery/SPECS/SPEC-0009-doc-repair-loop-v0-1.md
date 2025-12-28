@@ -9,15 +9,23 @@ Owner: Halil K.
 Doc-qa gate ve `docflow_next` “BLOCKED/FAIL” sinyallerinden deterministik bir onarım planı üretip,
 yalnız güvenli (allowlist) değişikliklerle doküman zincirini PASS seviyesine taşımak.
 
-## 2. GİRDİLER
+## 2. KAPSAM
 
-### 2.1 `docflow_next` sinyali
+- Girdiler: `docflow_next` sinyali + doc-qa gate çıktı seti.
+- Çıktılar: onarım planı (makine okunur) + onarım raporu (insan okunur).
+- Guardrails: yalnız allowlist içinde deterministik doküman patch’leri.
+
+## 3. KONTRAT (SSOT)
+
+### Girdiler
+
+#### `docflow_next` sinyali
 
 - `decision`: RUN/SKIP/STOP
 - `result`: PASS/FAIL/BLOCKED
 - `blockedReason`: serbest metin (normalize edilecek)
 
-### 2.2 doc-qa gate sinyali
+#### doc-qa gate sinyali
 
 - Script exit code + stdout formatı.
 - Parse edilecek script seti (gate):
@@ -30,9 +38,9 @@ yalnız güvenli (allowlist) değişikliklerle doküman zincirini PASS seviyesin
   - `check_doc_chain.py`
   - `check_governance_migration.py`
 
-## 3. ÇIKTILAR
+### Çıktılar
 
-### 3.1 Repair Plan (makine okunur)
+#### Repair Plan (makine okunur)
 
 - Format: JSON (`plan.json`)
 - Şema (v0.1):
@@ -40,12 +48,12 @@ yalnız güvenli (allowlist) değişikliklerle doküman zincirini PASS seviyesin
   - `reason_code` (kanonik)
   - `actions[]`: `{ file_path, op (create/patch), summary, constraints[] }`
 
-### 3.2 Repair Report (insan okunur)
+#### Repair Report (insan okunur)
 
 - Format: Markdown (`report.md`)
 - “Reason → Patch → Gate sonucu” tablosu.
 
-## 4. REASON CATALOGUE (NORMALIZE)
+### Reason Catalogue (Normalize)
 
 `blockedReason` + doc-qa hataları aşağıdaki kanonik kodlara map edilir:
 
@@ -99,20 +107,24 @@ yalnız güvenli (allowlist) değişikliklerle doküman zincirini PASS seviyesin
   - Fix:
     - `check_doc_locations.py` ve `DOCS-PROJECT-LAYOUT`’a göre path düzelt (move/rename).
 
-## 5. GUARDRAILS
+### Guardrails
 
 - Allowlist: varsayılan `docs/**`; `scripts/**` yalnız parse/normalize/plan için.
 - Patch-first: başlık sırası/meta/link/ID/evidence düzeltmeleri.
 - No-fabrication: template + mevcut STORY bağlamı dışında içerik uydurma yok.
 - PASS kontratı: doc-qa PASS olmadan onarım “tamamlandı” sayılmaz.
 
-## 6. ID STRATEJİSİ (v0.1)
+### ID Stratejisi (v0.1)
 
 `docs/03-delivery/ID-REGISTRY.tsv` boşsa:
 - Next ID: repo taramasıyla `AC-\\d{4}` ve `TP-\\d{4}` max+1 bulunur.
 - v0.2: ID-REGISTRY authoritative hale getirilebilir.
 
-## 7. LİNKLER
+## 4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)
+
+- Kural/format değişiklikleri yeni SPEC versiyonu ile yapılır (örn. v0.2 → `SPEC-0010`).
+
+## 5. LİNKLER
 
 - Reason map (SSOT): `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
 - Plan generator (plan-only): `scripts/doc_repair_plan.py`

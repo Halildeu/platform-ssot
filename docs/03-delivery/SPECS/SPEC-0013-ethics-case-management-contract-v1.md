@@ -12,7 +12,15 @@ Owner: TBD
 - COI (çıkar çatışması) ve audit/evidence ilkeleri
 - AI kullanım sınırları (governance)
 
-## 2. KAYNAKLAR (TRACE)
+## 2. KAPSAM
+
+- Ethics case lifecycle (intake → triage → inceleme → karar → aksiyon → kapanış) için business-level kontrat.
+- Need-to-know görünürlük, COI, audit/evidence ve AI governance minimum seti.
+- Kapsam dışı: endpoint/DTO alan bazında tanımlar (INTERFACE-CONTRACT alanı) ve implementasyon adımları (Tech-Design/STORY alanı).
+
+## 3. KONTRAT (SSOT)
+
+### Kaynaklar (Trace)
 
 - PB: `PB-0004`
 - PRD: `PRD-0004`
@@ -20,7 +28,7 @@ Owner: TBD
 - BENCH: `BENCH-0001` (matrix + gaps/trends/ai)
 - TRACE: `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
 
-## 2.1 PLATFORM DEPENDENCIES
+### Platform Dependencies
 
 Bu delivery kontratı aşağıdaki ortak (shared) yetenekleri “platform dependency” olarak kabul eder (SSOT: `SPEC-0014`).
 
@@ -32,7 +40,7 @@ Bu delivery kontratı aşağıdaki ortak (shared) yetenekleri “platform depend
 - COI Engine: COI tespiti, erişim engeli ve bağımsız reassignment.
 - Search & Reporting: KPI/closure quality score raporlama, permission-aware sorgulama.
 
-## 3. DOMAIN SINIRLARI
+### Domain Sınırları
 
 - Vaka tipleri (minimum): Etik / İK / InfoSec / Finans / Misilleme.
 - Yönlendirme:
@@ -41,7 +49,7 @@ Bu delivery kontratı aşağıdaki ortak (shared) yetenekleri “platform depend
 - Misilleme:
   - Misilleme iddiaları ayrı vaka tipi olarak ele alınabilir (BM-0001-CTRL-GRD-006).
 
-## 4. YETKİ İLKELERİ (NEED-TO-KNOW)
+### Yetki İlkeleri (Need-to-know)
 
 - Reporter (bildiren):
   - vaka oluşturma
@@ -55,24 +63,24 @@ Bu delivery kontratı aşağıdaki ortak (shared) yetenekleri “platform depend
   - read-only görünürlük
   - audit log erişimi
 
-## 5. COI (ÇIKAR ÇATIŞMASI)
+### COI (Çıkar Çatışması)
 
 - `BM-0001-CTRL-GRD-001` zorunlu:
   - atama öncesi COI kontrolü
   - COI varsa erişim engeli
   - bağımsız atama zorunluluğu
 
-## 6. EVIDENCE / DELİL POLİTİKASI (BUSINESS-LEVEL)
+### Evidence / Delil Politikası (Business-level)
 
 - `BM-0001-CTRL-GRD-003`: Delil silinmez; yeni sürüm/ek olarak eklenir.
 - `BM-0001-CTRL-GRD-004`: Görüntüleme/değiştirme audit log zorunlu.
 
-## 7. KAPANIŞ KALİTESİ
+### Kapanış Kalitesi
 
 - `BM-0001-MET-KPI-009` modeli MVP’de uygulanır.
 - MVP minimum kriter seti: en az 5 kriterin puanlanması ve raporlanması.
 
-## 8. AI KULLANIM SINIRLARI (GOVERNANCE)
+### AI Kullanım Sınırları (Governance)
 
 - İzinli (asistan rolü):
   - özetleme, triage önerisi, PII redaksiyon (kontrollü)
@@ -82,7 +90,11 @@ Bu delivery kontratı aşağıdaki ortak (shared) yetenekleri “platform depend
   - insan onayı olmadan karar üretimi
 - Risk kontrolleri: `BENCH-0001` içindeki “AI Risk Kontrolleri (Minimum Set)” ile uyumlu olmalı.
 
-## 9. LİNKLER
+## 4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)
+
+- Breaking kontrat değişiklikleri yeni SPEC versiyonu ile yapılır.
+
+## 5. LİNKLER
 
 - PB: `docs/01-product/PROBLEM-BRIEFS/PB-0004-ethics-speakup-and-case-management.md`
 - PRD: `docs/01-product/PRD/PRD-0004-ethics-speakup-and-case-management-mvp.md`

@@ -25,13 +25,15 @@ Bu dosya, **[DOC]** tipindeki görevler için geçerlidir.
 4. `docs/00-handbook/STYLE-DOCS-001.md`
 5. `NUMARALANDIRMA-STANDARDI.md`
 6. Uygun şablonlar:
-   - `docs/99-templates/PROBLEM-BRIEF.template.md`
-   - `docs/99-templates/PRD.template.md`
-   - `docs/99-templates/TECH-DESIGN.template.md`
-   - `docs/99-templates/INTERFACE-CONTRACT.template.md`
-   - `docs/99-templates/STORY.template.md`
-   - `docs/99-templates/ACCEPTANCE.template.md`
-   - `docs/99-templates/TEST-PLAN.template.md`
+	   - `docs/99-templates/PROBLEM-BRIEF.template.md`
+	   - `docs/99-templates/PRD.template.md`
+	   - `docs/99-templates/SPEC.template.md`
+	   - `docs/99-templates/ADR.template.md`
+	   - `docs/99-templates/TECH-DESIGN.template.md`
+	   - `docs/99-templates/INTERFACE-CONTRACT.template.md`
+	   - `docs/99-templates/STORY.template.md`
+	   - `docs/99-templates/ACCEPTANCE.template.md`
+	   - `docs/99-templates/TEST-PLAN.template.md`
    - `docs/99-templates/RUNBOOK.template.md`
    - `docs/99-templates/GUIDE.template.md`
    - `docs/99-templates/BM.template.md`

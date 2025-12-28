@@ -70,6 +70,18 @@ def main() -> int:
                 if not isinstance(h, str) or not h.strip():
                     return fail(f"map.{doc_type}.required_headings[{i}] must be non-empty string")
 
+        heading_contract_mode = cfg.get("heading_contract_mode")
+        if heading_contract_mode is not None:
+            if not isinstance(heading_contract_mode, str) or not heading_contract_mode.strip():
+                return fail(f"map.{doc_type}.heading_contract_mode must be non-empty string")
+            allowed = {"subset", "disabled", "template_as_contract"}
+            if heading_contract_mode not in allowed:
+                return fail(
+                    f"map.{doc_type}.heading_contract_mode must be one of {sorted(allowed)} (got: {heading_contract_mode!r})"
+                )
+            if heading_contract_mode == "subset" and required_headings is None:
+                return fail(f"map.{doc_type}: heading_contract_mode=subset requires required_headings")
+
     print(f"[check_doc_template_map_policy] PASS: {POLICY_PATH}")
     return 0
 
