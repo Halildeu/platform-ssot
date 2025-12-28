@@ -132,7 +132,9 @@
       "side_effects": [
         "local_write(gh_auth_state)"
       ],
-      "required_auth_refs": [],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
       "required_env": [
         "GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD|Keychain"
       ],
@@ -141,7 +143,9 @@
         "GH_AUTH_VAULT_PATH",
         "GH_AUTH_VAULT_FIELD"
       ],
-      "outputs": []
+      "outputs": [
+        ".autopilot-tmp/**"
+      ]
     },
     {
       "id": "ROB-0006",
@@ -157,7 +161,9 @@
         "github_api(rate_limit)",
         "vault_kv_get(optional)"
       ],
-      "required_auth_refs": [],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
       "required_env": [
         "GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD"
       ],
@@ -167,7 +173,9 @@
         "GH_AUTH_VAULT_PATH (optional)",
         "GH_AUTH_VAULT_FIELD (optional)"
       ],
-      "outputs": []
+      "outputs": [
+        ".autopilot-tmp/**"
+      ]
     },
     {
       "id": "ROB-0100",
@@ -798,7 +806,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -808,7 +816,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -828,7 +836,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -838,7 +846,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -858,7 +866,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -868,7 +876,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -888,7 +896,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -898,7 +906,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -918,7 +926,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -928,7 +936,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -948,7 +956,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -958,7 +966,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -978,7 +986,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -988,7 +996,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -1008,7 +1016,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -1018,7 +1026,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
@@ -1038,7 +1046,7 @@
         "TBD"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
         "TBD"
@@ -1048,7 +1056,7 @@
         "TBD"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
         "AUTO-STUB: fill side_effects/auth/inputs/outputs"
