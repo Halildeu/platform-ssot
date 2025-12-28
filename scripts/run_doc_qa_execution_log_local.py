@@ -38,6 +38,8 @@ CHECKS = [
     ["python3", "scripts/check_bm_content_policy.py"],
     ["python3", "scripts/check_bench_content_policy.py"],
     ["python3", "scripts/check_trace_content_policy.py"],
+    ["python3", "scripts/check_prd_content_policy.py"],
+    ["python3", "scripts/check_spec_content_policy.py"],
     ["python3", "scripts/check_runbook_required_sections.py"],
     ["python3", "scripts/check_doc_template_map_policy.py"],
     ["python3", "scripts/check_doc_heading_contract.py"],

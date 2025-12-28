@@ -3,8 +3,12 @@
 DOCS-PRODUCTION generator (v0.1)
 
 Amaç:
-- Direct-Gen doküman üretim akışında "BM pack" üretimini hızlandırmak.
-- Çıktılar non-TBD starter content üretir (bm-content-policy ile uyumlu).
+- Direct-Gen doküman üretim akışında "pack" üretimini hızlandırmak:
+  - BM pack
+  - BENCH pack
+  - TRACE pack
+  - Delivery pack (PB/PRD/SPEC/STORY/AC/TP skeleton)
+- Çıktılar non-TBD starter content üretir (content-policy gate’leri ile uyumlu).
 
 Usage (example):
   python3 scripts/doc_production_generate.py bm-pack --topic ETHICS --slug ethics --bm 0007 --title "Etik Programı"
@@ -24,6 +28,12 @@ from typing import Any
 BM_ROOT = Path("docs/01-product/BUSINESS-MASTERS")
 BENCH_ROOT = Path("docs/01-product/BENCHMARKS")
 TRACE_ROOT = Path("docs/03-delivery/TRACES")
+PB_ROOT = Path("docs/01-product/PROBLEM-BRIEFS")
+PRD_ROOT = Path("docs/01-product/PRD")
+SPEC_ROOT = Path("docs/03-delivery/SPECS")
+STORY_ROOT = Path("docs/03-delivery/STORIES")
+AC_ROOT = Path("docs/03-delivery/ACCEPTANCE")
+TP_ROOT = Path("docs/03-delivery/TEST-PLANS")
 DEFAULT_VERSION = "v0.1"
 
 RE_BM_ITEM_ID = re.compile(r"\bBM-(?P<bm>\d{4})-(?P<doc>CORE|CTRL|MET)-(?P<typ>DEC|GRD|KPI|RSK|ASM|VAL)-(?P<seq>\d{3})\b")
@@ -41,6 +51,8 @@ TRACE_ALLOWED_TARGET_TYPES = {
     "OBS",
 }
 TRACE_ALLOWED_MAPPING_QUALITY = {"coarse", "refined"}
+
+SEP = "-------------------------------------------------------------------------------"
 
 
 def die(msg: str) -> int:
@@ -67,6 +79,25 @@ def norm_num4(s: str) -> str:
     if not re.fullmatch(r"\d{4}", s):
         raise ValueError("number must be 4 digits (e.g. 0001)")
     return s
+
+
+def norm_risk_level(s: str) -> str:
+    s = s.strip().lower()
+    if s not in {"low", "medium", "high"}:
+        raise ValueError("Risk_Level must be one of: low|medium|high")
+    return s
+
+
+def topic_slug_from_folder(topic: str) -> str:
+    # Best-effort normalization: ETHICS -> ethics, MY_TOPIC -> my-topic
+    return topic.strip().lower().replace("_", "-")
+
+
+def ensure_owner(owner: str) -> str:
+    owner = owner.strip()
+    if not owner:
+        raise ValueError("Owner is required (e.g. @team/platform)")
+    return owner
 
 
 def ensure_parent(path: Path, dry_run: bool) -> None:
@@ -925,6 +956,638 @@ def cmd_trace_pack(args: argparse.Namespace) -> int:
     return 0
 
 
+def render_pb_doc(
+    *,
+    pb_id: str,
+    title: str,
+    owner: str,
+    prd_path: str | None,
+    trace_path: str | None,
+    bm_topic_dir: str | None,
+    bench_topic_dir: str | None,
+) -> str:
+    lines: list[str] = []
+    lines.append(f"# {pb_id} – {title}")
+    lines.append("")
+    lines.append(f"ID: {pb_id}  ")
+    lines.append("Status: Draft  ")
+    lines.append(f"Owner: {owner}")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("1. AMAÇ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Kısa problem tanımı ve iş etkisi.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("2. KAPSAM")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Hangi ürün/süreç/ekran veya servis etkilenecek?")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("3. SORUN TANIMI")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Mevcut durum")
+    lines.append("- Problemin belirtileri")
+    lines.append("- Kimler etkileniyor?")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("4. HEDEF VE BAŞARI KRİTERLERİ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Ölçülebilir hedefler (metrikler).")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("5. VARSAYIMLAR / RİSKLER")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Bilinen varsayımlar")
+    lines.append("- Öne çıkan riskler")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("6. ÖZET")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- 2–3 madde ile problemin özeti.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("7. LİNKLER / SONRAKİ ADIMLAR")
+    lines.append(SEP)
+    lines.append("")
+    if prd_path:
+        lines.append(f"- PRD: `{prd_path}`")
+    if bm_topic_dir:
+        lines.append(f"- BM Pack: `{bm_topic_dir}`")
+    if bench_topic_dir:
+        lines.append(f"- BENCH Pack: `{bench_topic_dir}`")
+    if trace_path:
+        lines.append(f"- TRACE: `{trace_path}`")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def render_prd_doc(
+    *,
+    prd_id: str,
+    title: str,
+    owner: str,
+    pb_id: str | None,
+    pb_path: str | None,
+    trace_path: str | None,
+    bm_topic_dir: str | None,
+    bench_topic_dir: str | None,
+    spec_path: str | None,
+) -> str:
+    lines: list[str] = []
+    lines.append(f"# {prd_id} – {title}")
+    lines.append("")
+    lines.append(f"ID: {prd_id}  ")
+    lines.append("Status: Draft  ")
+    lines.append(f"Owner: {owner}  ")
+    if pb_id:
+        lines.append(f"Problem Brief: {pb_id}")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 1. AMAÇ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Feature/ürünün amacı ve iş hedefi.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 2. KAPSAM")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Dahil olan akışlar, kullanıcı tipleri, servisler.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 3. KULLANICI SENARYOLARI")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Senaryo 1")
+    lines.append("- Senaryo 2")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 4. DAVRANIŞ / GEREKSİNİMLER")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Fonksiyonel gereksinimler")
+    lines.append("- Non-functional gereksinimler")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 5. NON-GOALS (KAPSAM DIŞI)")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Bu release’te özellikle yapılmayacaklar.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 6. ACCEPTANCE KRİTERLERİ ÖZETİ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- PRD ile uyumlu yüksek seviye kriterler.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 7. RİSKLER / BAĞIMLILIKLAR")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Diğer sistemlere/ekiplere bağımlılıklar, riskler.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 8. ÖZET")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Feature’ın 2–3 maddelik özeti.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 9. LİNKLER / SONRAKİ ADIMLAR")
+    lines.append(SEP)
+    lines.append("")
+    if pb_path:
+        lines.append(f"- PB: `{pb_path}`")
+    if bm_topic_dir:
+        lines.append(f"- BM Pack: `{bm_topic_dir}`")
+    if bench_topic_dir:
+        lines.append(f"- BENCH Pack: `{bench_topic_dir}`")
+    if trace_path:
+        lines.append(f"- TRACE: `{trace_path}`")
+    if spec_path:
+        lines.append(f"- Delivery SPEC: `{spec_path}`")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def render_spec_doc(
+    *,
+    spec_id: str,
+    title: str,
+    owner: str,
+    pb_id: str | None,
+    prd_id: str | None,
+    bm_num: str | None,
+    bench_num: str | None,
+    trace_path: str | None,
+    pb_path: str | None,
+    prd_path: str | None,
+    bm_topic_dir: str | None,
+    bench_topic_dir: str | None,
+) -> str:
+    lines: list[str] = []
+    lines.append(f"# {spec_id}: {title}")
+    lines.append("")
+    lines.append(f"ID: {spec_id}  ")
+    lines.append("Status: Draft  ")
+    lines.append(f"Owner: {owner}")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 1. AMAÇ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Bu SPEC’in SSOT olarak tanımladığı konu (1–3 madde).")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 2. KAPSAM")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- In-scope: hangi alt akışlar/entitiler/kontrat yüzeyi.")
+    lines.append("- Out-of-scope: (varsa) özellikle yapılmayacaklar / dışarıda bırakılanlar.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 3. KONTRAT (SSOT)")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("### Kaynaklar / Trace (varsa)")
+    lines.append("")
+    if pb_id:
+        lines.append(f"- PB: `{pb_id}`")
+    if prd_id:
+        lines.append(f"- PRD: `{prd_id}`")
+    if bm_num:
+        lines.append(f"- BM: `BM-{bm_num}`")
+    if bench_num:
+        lines.append(f"- BENCH: `BENCH-{bench_num}`")
+    if trace_path:
+        lines.append(f"- TRACE: `{trace_path}`")
+    lines.append("")
+    lines.append("### Platform Dependencies (None dahil)")
+    lines.append("")
+    lines.append("- Platform capability kataloğu (SSOT): `docs/03-delivery/SPECS/SPEC-0014-platform-capabilities-catalog-v1.md`")
+    lines.append("- Bu kontratın kullandığı capability listesi burada tutulur (None dahil).")
+    lines.append("")
+    lines.append("### Domain / Policy Kontratı (MVP)")
+    lines.append("")
+    lines.append("- Domain sınırları, minimum entity alanları, state/flow, policy knobs.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Breaking kontrat değişiklikleri yeni SPEC versiyonu ile yapılır.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 5. LİNKLER")
+    lines.append(SEP)
+    lines.append("")
+    if pb_path:
+        lines.append(f"- PB: `{pb_path}`")
+    if prd_path:
+        lines.append(f"- PRD: `{prd_path}`")
+    if bm_topic_dir:
+        lines.append(f"- BM Pack: `{bm_topic_dir}`")
+    if bench_topic_dir:
+        lines.append(f"- BENCH Pack: `{bench_topic_dir}`")
+    if trace_path:
+        lines.append(f"- TRACE: `{trace_path}`")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def render_story_doc(
+    *,
+    story_id: str,
+    slug: str,
+    title: str,
+    owner: str,
+    epic: str,
+    risk_level: str,
+    pb_id: str | None,
+    prd_id: str | None,
+    spec_id: str | None,
+    story_path: str,
+    ac_path: str,
+    tp_path: str,
+    prd_path: str | None,
+    spec_path: str | None,
+) -> str:
+    lines: list[str] = []
+    lines.append(f"# {story_id} – {title}")
+    lines.append("")
+    lines.append(f"ID: {story_id}-{slug}  ")
+    lines.append(f"Epic: {epic}  ")
+    lines.append("Status: Planned  ")
+    lines.append(f"Owner: {owner}  ")
+    lines.append(f"Risk_Level: {risk_level}  ")
+    ups: list[str] = []
+    if pb_id:
+        ups.append(pb_id)
+    if prd_id:
+        ups.append(prd_id)
+    if spec_id:
+        ups.append(spec_id)
+    if ups:
+        lines.append(f"Upstream: {', '.join(ups)}  ")
+    lines.append(f"Downstream: AC-{story_id.split('-')[1]}, TP-{story_id.split('-')[1]}")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 1. AMAÇ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- İş hedefi ve beklenen çıktılar.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 2. TANIM")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Kısa story tanımı (rol/istek/fayda):")
+    lines.append("  - Bir <rol> olarak, <istek> istiyorum; böylece <fayda>.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 3. KAPSAM VE SINIRLAR")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Neler dahil, neler kapsam dışı?")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 4. ACCEPTANCE KRİTERLERİ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- [ ] Given ..., When ..., Then ...")
+    lines.append("- [ ] Given ..., When ..., Then ...")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 5. BAĞIMLILIKLAR")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Related PRD, SPEC, Tech-Design ve diğer story’ler (varsa).")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 6. ÖZET")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Story’nin 2–3 maddelik özeti.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 7. LİNKLER (İSTEĞE BAĞLI)")
+    lines.append(SEP)
+    lines.append("")
+    lines.append(f"- Story: `{story_path}`")
+    lines.append(f"- Acceptance: `{ac_path}`")
+    lines.append(f"- Test Plan: `{tp_path}`")
+    if prd_path:
+        lines.append(f"- PRD: `{prd_path}`")
+    if spec_path:
+        lines.append(f"- SPEC: `{spec_path}`")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def render_acceptance_doc(
+    *,
+    ac_id: str,
+    title: str,
+    owner: str,
+    story_id: str,
+    story_path: str,
+    tp_path: str,
+) -> str:
+    lines: list[str] = []
+    lines.append(f"# {ac_id} – {title}")
+    lines.append("")
+    lines.append(f"ID: {ac_id}  ")
+    lines.append(f"Story: {story_id}  ")
+    lines.append("Status: Planned  ")
+    lines.append(f"Owner: {owner}")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 1. AMAÇ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Test edilebilir kabul kriterlerini tanımlamak.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 2. KAPSAM")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Hangi story/PRD maddeleri için geçerli?")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 3. GIVEN / WHEN / THEN SENARYOLARI")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("### Ortak")
+    lines.append("")
+    lines.append("- [ ] Senaryo 1 – Given ..., When ..., Then ...")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 4. NOTLAR / KISITLAR")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Özellikle belirtilmesi gereken durumlar.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 5. ÖZET")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- En kritik kabul kriterlerinin özeti.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 6. LİNKLER (İSTEĞE BAĞLI)")
+    lines.append(SEP)
+    lines.append("")
+    lines.append(f"- Story: `{story_path}`")
+    lines.append(f"- Test Plan: `{tp_path}`")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def render_test_plan_doc(
+    *,
+    tp_id: str,
+    title: str,
+    owner: str,
+    story_id: str,
+    story_path: str,
+    ac_path: str,
+) -> str:
+    lines: list[str] = []
+    lines.append(f"# {tp_id} – {title}")
+    lines.append("")
+    lines.append(f"ID: {tp_id}  ")
+    lines.append(f"Story: {story_id}  ")
+    lines.append("Status: Planned  ")
+    lines.append(f"Owner: {owner}")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 1. AMAÇ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Test stratejisi ve kapsamı.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 2. KAPSAM")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Dahil test tipleri (unit, integration, e2e, perf).")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 3. STRATEJİ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Neyi nasıl test ediyoruz?")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 4. TEST SENARYOLARI ÖZETİ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- [ ] Senaryo grubu 1 – ...")
+    lines.append("- [ ] Senaryo grubu 2 – ...")
+    lines.append("")
+
+    # Additional sections (optional for subset contract)
+    lines.append(SEP)
+    lines.append("## 5. ÇEVRE VE ARAÇLAR")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Ortamlar, tool’lar, veri setleri.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 6. RİSKLER / ÖNCELİKLER")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- En kritik risk ve öncelikler.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 7. ÖZET")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Test planının kısa özeti.")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 8. LİNKLER (İSTEĞE BAĞLI)")
+    lines.append(SEP)
+    lines.append("")
+    lines.append(f"- Story: `{story_path}`")
+    lines.append(f"- Acceptance: `{ac_path}`")
+    lines.append("")
+
+    lines.append("## Doğrulama (Doc-QA)")
+    lines.append("- `python3 scripts/run_doc_qa_execution_log_local.py --out-dir .autopilot-tmp/execution-log`")
+    lines.append("- Beklenen: PASS (`.autopilot-tmp/execution-log/execution-log.md`)")
+    lines.append("")
+
+    return "\n".join(lines) + "\n"
+
+
+def cmd_delivery_pack(args: argparse.Namespace) -> int:
+    try:
+        topic = norm_topic_folder(args.topic)
+        slug = norm_slug(args.slug)
+        pb_num = norm_num4(args.pb)
+        prd_num = norm_num4(args.prd)
+        spec_num = norm_num4(args.spec)
+        story_num = norm_num4(args.story)
+        risk_level = norm_risk_level(args.risk_level)
+        owner = ensure_owner(args.owner)
+    except Exception as e:
+        return die(str(e))
+
+    title = (args.title or slug.replace("-", " ").title()).strip()
+    epic = (args.epic or "DOCS-PRODUCTION").strip() or "DOCS-PRODUCTION"
+
+    bm_num = norm_num4(args.bm) if args.bm else None
+    bench_num = norm_num4(args.bench) if args.bench else None
+    trace_num = norm_num4(args.trace) if args.trace else None
+    trace_slug = norm_slug(args.trace_slug) if args.trace_slug else topic_slug_from_folder(topic)
+
+    pb_id = f"PB-{pb_num}"
+    prd_id = f"PRD-{prd_num}"
+    spec_id = f"SPEC-{spec_num}"
+    story_id = f"STORY-{story_num}"
+    ac_id = f"AC-{story_num}"
+    tp_id = f"TP-{story_num}"
+
+    pb_path = (PB_ROOT / f"{pb_id}-{slug}.md").as_posix()
+    prd_path = (PRD_ROOT / f"{prd_id}-{slug}.md").as_posix()
+    spec_path = (SPEC_ROOT / f"{spec_id}-{slug}.md").as_posix()
+    story_path = (STORY_ROOT / f"{story_id}-{slug}.md").as_posix()
+    ac_path = (AC_ROOT / f"{ac_id}-{slug}.md").as_posix()
+    tp_path = (TP_ROOT / f"{tp_id}-{slug}.md").as_posix()
+
+    trace_path = (
+        (TRACE_ROOT / f"TRACE-{trace_num}-{trace_slug}-bm-to-delivery.tsv").as_posix() if trace_num else None
+    )
+    bm_topic_dir = (BM_ROOT / topic).as_posix() + "/" if (BM_ROOT / topic).exists() else f"docs/01-product/BUSINESS-MASTERS/{topic}/"
+    bench_topic_dir = (BENCH_ROOT / topic).as_posix() + "/" if (BENCH_ROOT / topic).exists() else f"docs/01-product/BENCHMARKS/{topic}/"
+
+    pb_doc = render_pb_doc(
+        pb_id=pb_id,
+        title=title,
+        owner=owner,
+        prd_path=prd_path,
+        trace_path=trace_path,
+        bm_topic_dir=bm_topic_dir,
+        bench_topic_dir=bench_topic_dir,
+    )
+    prd_doc = render_prd_doc(
+        prd_id=prd_id,
+        title=title,
+        owner=owner,
+        pb_id=pb_id,
+        pb_path=pb_path,
+        trace_path=trace_path,
+        bm_topic_dir=bm_topic_dir,
+        bench_topic_dir=bench_topic_dir,
+        spec_path=spec_path,
+    )
+    spec_doc = render_spec_doc(
+        spec_id=spec_id,
+        title=title,
+        owner=owner,
+        pb_id=pb_id,
+        prd_id=prd_id,
+        bm_num=bm_num,
+        bench_num=bench_num,
+        trace_path=trace_path,
+        pb_path=pb_path,
+        prd_path=prd_path,
+        bm_topic_dir=bm_topic_dir,
+        bench_topic_dir=bench_topic_dir,
+    )
+    story_doc = render_story_doc(
+        story_id=story_id,
+        slug=slug,
+        title=title,
+        owner=owner,
+        epic=epic,
+        risk_level=risk_level,
+        pb_id=pb_id,
+        prd_id=prd_id,
+        spec_id=spec_id,
+        story_path=story_path,
+        ac_path=ac_path,
+        tp_path=tp_path,
+        prd_path=prd_path,
+        spec_path=spec_path,
+    )
+    ac_doc = render_acceptance_doc(
+        ac_id=ac_id,
+        title=title,
+        owner=owner,
+        story_id=f"{story_id}-{slug}",
+        story_path=story_path,
+        tp_path=tp_path,
+    )
+    tp_doc = render_test_plan_doc(
+        tp_id=tp_id,
+        title=title,
+        owner=owner,
+        story_id=f"{story_id}-{slug}",
+        story_path=story_path,
+        ac_path=ac_path,
+    )
+
+    write_file(Path(pb_path), pb_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(prd_path), prd_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(spec_path), spec_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(story_path), story_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(ac_path), ac_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(tp_path), tp_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    print("[doc_production_generate] PASS")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="doc_production_generate")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -962,6 +1625,28 @@ def build_parser() -> argparse.ArgumentParser:
     p_trace.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
     p_trace.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")
 
+    p_del = sub.add_parser("delivery-pack", help="Generate Delivery pack docs (PB/PRD/SPEC/STORY/AC/TP skeleton)")
+    p_del.add_argument("--topic", required=True, help="Topic folder (UPPERCASE), e.g. ETHICS")
+    p_del.add_argument("--slug", required=True, help="Delivery slug (kebab-case), e.g. ethics-case-mailbox-mvp")
+    p_del.add_argument("--title", default="", help="Human title (optional)")
+    p_del.add_argument("--pb", required=True, help="PB number (4 digits), e.g. 0004")
+    p_del.add_argument("--prd", required=True, help="PRD number (4 digits), e.g. 0004")
+    p_del.add_argument("--spec", required=True, help="SPEC number (4 digits), e.g. 0013")
+    p_del.add_argument("--story", required=True, help="STORY/AC/TP number (4 digits), e.g. 0306")
+    p_del.add_argument("--bm", default="", help="BM number (4 digits, optional) for references")
+    p_del.add_argument("--bench", default="", help="BENCH number (4 digits, optional) for references")
+    p_del.add_argument("--trace", default="", help="TRACE number (4 digits, optional) for references")
+    p_del.add_argument(
+        "--trace-slug",
+        default="",
+        help="TRACE slug (kebab-case, optional). Default: topic folder lowercased (ETHICS -> ethics).",
+    )
+    p_del.add_argument("--owner", default="@team/platform", help="Owner value (default: @team/platform)")
+    p_del.add_argument("--epic", default="DOCS-PRODUCTION", help="Epic label (default: DOCS-PRODUCTION)")
+    p_del.add_argument("--risk-level", default="medium", help="Risk_Level (low|medium|high, default: medium)")
+    p_del.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
+    p_del.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")
+
     return ap
 
 
@@ -975,6 +1660,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_bench_pack(args)
     if args.cmd == "trace-pack":
         return cmd_trace_pack(args)
+    if args.cmd == "delivery-pack":
+        return cmd_delivery_pack(args)
     return die(f"unknown cmd: {args.cmd}")
 
 

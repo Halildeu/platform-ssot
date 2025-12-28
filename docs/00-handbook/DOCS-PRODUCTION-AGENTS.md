@@ -114,6 +114,8 @@ Amaç: PB/PRD/SPEC/STORY/AC/TP setini template’lere göre üretir ve zinciri b
   - SPEC (kontrat/SSOT)
   - STORY/AC/TP (delivery zinciri)
   - (koşullu) ADR/RUNBOOK
+  - (Opsiyonel) Hızlı başlangıç generator:
+    - `python3 scripts/doc_production_generate.py delivery-pack --topic <TOPIC> --slug <slug> --pb <0004> --prd <0004> --spec <0013> --story <0306> --trace <0001> --trace-slug <ethics> --owner @team/platform --risk-level medium --title "<Başlık>" --dry-run`
 - Done:
   - STORY “LİNKLER” bölümü zinciri doğru path’lerle bağlıyor.
   - TP, risk seviyesine göre subset/strict kurallarıyla uyumlu.
@@ -141,7 +143,7 @@ Amaç: kalite gate’lerini koşar, ihlali raporlar ve deterministik repair uygu
 
 ## 5. Guardrails (üretim kalitesi)
 
-- Varsayım uydurulmaz: bilinmeyenler `TBD` + doğrulama planı olarak yazılır.
+- Varsayım uydurulmaz: bilinmeyenler “açık soru” + doğrulama planı olarak yazılır (hard gate olan dokümanlarda `TBD` token’ı kullanılmaz).
 - Dokümanlar canonical klasörlerinden taşınmaz (lokasyon/routing gate’leri kırılır).
 - Şablon başlıkları korunur; agent sadece başlık altını doldurur.
 - İzlenebilirlik: BM_ITEM_ID → TRACE → Delivery hedefleri zinciri korunur.

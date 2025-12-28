@@ -2,7 +2,7 @@
 
 ID: PRD-0005  
 Status: Draft  
-Owner: TBD  
+Owner: @team/platform  
 Problem Brief: PB-0005
 
 -------------------------------------------------------------------------------

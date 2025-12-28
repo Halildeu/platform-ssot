@@ -2,7 +2,7 @@
 
 ID: SPEC-0005  
 Status: Draft (stub)  
-Owner: TBD
+Owner: @team/platform
 
 ## 1. AMAÇ
 
