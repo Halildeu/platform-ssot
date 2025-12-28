@@ -101,6 +101,10 @@ detect_repo_from_origin() {
 }
 
 gh_ensure_auth() {
+  # SSOT defaults (Vault pointer) – only if caller didn't set them.
+  : "${GH_AUTH_VAULT_PATH:=secret/stage/ops/github}"
+  : "${GH_AUTH_VAULT_FIELD:=GH_LOCAL_AUTOPILOT_TOKEN}"
+
   if gh api rate_limit >/dev/null 2>&1; then
     return 0
   fi
@@ -161,14 +165,13 @@ pr_create() {
   local title="$4"
   local body_file="${5:-}"
 
-  # Ensure remote branch exists
-  git push -u origin "${head}" >/dev/null 2>&1 || true
-
+  local args=(--repo "${repo}" --base "${base}" --head "${head}" --title "${title}")
   if [[ -n "${body_file}" && -f "${body_file}" ]]; then
-    gh pr create --repo "${repo}" --base "${base}" --head "${head}" --title "${title}" --body-file "${body_file}" >/dev/null
-  else
-    gh pr create --repo "${repo}" --base "${base}" --head "${head}" --title "${title}" --body "Local SSOT: PR created via CLI (copy-free). See local execution-log for evidence." >/dev/null
+    args+=(--body-file "${body_file}")
   fi
+
+  # Central SSOT helper: ensure open PR exists (idempotent).
+  bash scripts/ops/gh_pr_ensure_open.sh "${args[@]}"
 }
 
 merge_policy_for_branch() {
@@ -436,6 +439,15 @@ if [[ -z "${PR_NUMBER}" ]]; then
   echo "[local-e2e] no open PR for head=${HEAD_BRANCH}; creating..."
   pr_create "${REPO}" "${BASE_BRANCH}" "${HEAD_BRANCH}" "${HEAD_BRANCH}" "${PR_BODY_FILE:-}"
   PR_NUMBER="$(pr_find_open_for_head "${REPO}" "${HEAD_BRANCH}")"
+  if [[ -z "${PR_NUMBER}" ]]; then
+    # If the head commit is already in base, there is nothing to orchestrate.
+    git fetch origin "${BASE_BRANCH}" -q || true
+    head_commit="$(git rev-parse "${HEAD_BRANCH}" 2>/dev/null || true)"
+    if [[ -n "${head_commit}" ]] && git merge-base --is-ancestor "${head_commit}" "origin/${BASE_BRANCH}" 2>/dev/null; then
+      echo "[local-e2e] noop: ${HEAD_BRANCH} (${head_commit:0:7}) is already in origin/${BASE_BRANCH} (no PR needed)."
+      exit 0
+    fi
+  fi
 fi
 [[ -n "${PR_NUMBER}" ]] || die "cannot find or create PR for branch=${HEAD_BRANCH}"
 
