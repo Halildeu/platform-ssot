@@ -1,0 +1,21 @@
+NAME	TYPE	OWNER	SOURCE	MIN_SCOPE_OR_PERMISSIONS	USED_IN	NOTES
+BACKEND_HEALTH_URLS	github_secret	@team/platform	GitHub Actions secret	HTTP(S) endpoint list (comma-separated)	.github/workflows/post-deploy-validate.yml	Healthcheck list for backend validate.
+BACKEND_ROLLBACK_HOOK_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) POST endpoint	.github/workflows/rollback.yml	Backend rollback hook.
+DEPLOY_ENABLED	github_secret	@team/platform	GitHub Actions secret	string "true"/"false"	.github/workflows/deploy-web.yml,.github/workflows/deploy-backend.yml,.github/workflows/post-deploy-validate.yml	Kill-switch: deploy chain.
+GH_AUTH_VAULT_FIELD	env	@team/platform	Env var / Vault pointer	Vault KV field name	docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Points to a Vault KV field that stores a GitHub token.
+GH_AUTH_VAULT_PATH	env	@team/platform	Env var / Vault pointer	Vault KV v2 path	docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Points to a Vault KV path that stores a GitHub token.
+GH_LOCAL_AUTOPILOT_TOKEN	vault_field	@team/platform	Vault KV v2 field	GitHub token (PAT / fine-grained)	docs/00-handbook/GH-AUTH-VAULT-POINTERS.md,scripts/ops/local_ops_start.sh	Local autopilot token; value never logged.
+GH_SECRETS_SYNC_TOKEN	github_secret	@team/platform	GitHub Actions secret	PAT/fine-grained token that can update repo secrets	.github/workflows/vault-secrets-sync.yml	Used only for writing GitHub Secrets (GITHUB_TOKEN cannot).
+GH_TOKEN	env	@team/platform	Env var	GitHub token injected for gh/CLI	GitHub Actions + local ops	Preferred session token for `gh` CLI.
+GITHUB_TOKEN	github_token	@team/platform	GitHub Actions built-in token	Controlled by workflow `permissions:` blocks	GitHub Actions	Do not store as secret; permissions must be explicit per workflow.
+KEYCLOAK_CLIENT_ID	github_secret	@team/platform	GitHub Actions secret	OIDC client id	.github/workflows/vault-secrets-sync.yml	Playwright Keycloak config.
+KEYCLOAK_CLIENT_SECRET	github_secret	@team/platform	GitHub Actions secret	OIDC client secret	.github/workflows/vault-secrets-sync.yml	Playwright Keycloak config.
+KEYCLOAK_SCOPE	github_secret	@team/platform	GitHub Actions secret	optional OAuth scope	.github/workflows/vault-secrets-sync.yml	Optional.
+KEYCLOAK_TOKEN_URL	github_secret	@team/platform	GitHub Actions secret	OIDC token endpoint URL	.github/workflows/vault-secrets-sync.yml	Playwright Keycloak config.
+PLAYWRIGHT_BASE_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) base URL	.github/workflows/web-playwright-nightly.yml	Base URL for Playwright tests (dispatch can override).
+ROLLBACK_ENABLED	github_secret	@team/platform	GitHub Actions secret	string "true"/"false"	.github/workflows/rollback.yml	Kill-switch: rollback workflow.
+VAULT_ADDR	github_secret	@team/platform	GitHub Actions secret	Vault address URL	.github/workflows/vault-secrets-sync.yml,docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Vault endpoint.
+VAULT_TOKEN	github_secret	@team/platform	GitHub Actions secret	Vault token	.github/workflows/vault-secrets-sync.yml,docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Vault auth token; masked.
+WEB_DEPLOY_HOOK_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) POST endpoint	.github/workflows/deploy-web.yml	Web deploy hook.
+WEB_ROLLBACK_HOOK_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) POST endpoint	.github/workflows/rollback.yml	Web rollback hook.
+WEB_SMOKE_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) URL	.github/workflows/post-deploy-validate.yml	Web smoke endpoint for validate.
