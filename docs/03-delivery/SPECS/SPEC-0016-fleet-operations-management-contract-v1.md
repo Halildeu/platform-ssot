@@ -4,7 +4,7 @@ ID: SPEC-0016
 Status: Draft  
 Owner: TBD
 
-## 0) Amaç
+## 1. AMAÇ
 
 `PRD-0006` kapsamındaki Fleet Operations Management (MVP) için “uygulanabilir kontrat” seviyesinde ortak beklentileri tanımlamak.
 
@@ -12,14 +12,21 @@ Hedef:
 - Araç kayıt + doküman + bakım + uyum + ceza + yakıt süreçlerini tek sözleşmede netleştirmek.
 - Shared capability first ile bildirim/audit/evidence/reporting tekrarını engellemek.
 
-## 1) Kaynaklar
+## 2. KAPSAM
+
+- Fleet domain (araç, doküman, bakım, uyum, ceza, yakıt) için MVP kontrat yüzeyi.
+- Kapsam dışı: endpoint/DTO alan bazında tanım (INTERFACE-CONTRACT) ve implementasyon adımları (STORY/Tech-Design).
+
+## 3. KONTRAT (SSOT)
+
+### Kaynaklar
 
 - PB: `PB-0006`
 - PRD: `PRD-0006`
 - BM Pack: `BM-0003` (FLEET)
 - Platform Spec: `SPEC-0014`
 
-## 2) Platform Dependencies (Zorunlu)
+### Platform Dependencies (Zorunlu)
 
 - Platform Spec: `SPEC-0014`
 - Case / Work Item Engine
@@ -29,7 +36,7 @@ Hedef:
 - Notification & Communications
 - Search & Reporting
 
-## 3) Domain Kontratı (MVP)
+### Domain Kontratı (MVP)
 
 ### 3.1 Entity: Vehicle (Araç)
 
@@ -93,7 +100,7 @@ Minimum alanlar:
 Minimum rapor:
 - tüketim (L/100km) ve basit anomali sinyali (BM-0003-CORE-RSK-005).
 
-## 4) Bildirim Sözleşmesi (Policy-first)
+### Bildirim Sözleşmesi (Policy-first)
 
 Kural:
 - Domain içi custom bildirim implementasyonu yoktur; `Notification & Communications` capability kullanılır.
@@ -103,7 +110,7 @@ Minimum bildirimler (MVP):
 - bakım due-date yaklaşan/geçen
 - ceza durum değişimi (kayıt, ödeme, itiraz sonucu)
 
-## 5) Raporlama & Observability (Minimum)
+### Raporlama & Observability (Minimum)
 
 Raporlama SSOT:
 - KPI seti: `BM-0003-MET-KPI-001..010`
@@ -114,16 +121,19 @@ Minimum:
 - Maliyet raporu: yakıt + ceza (aylık)
 - Bildirim delivery metriği (kanal bazlı)
 
-## 6) Anti-patterns
+### Anti-patterns
 
 - Domain’in kendi SMTP/SMS/notification kodunu yazması.
 - “İş günü hesabı”nın modül bazlı çoğaltılması.
 - Kritik kayıtların silinmesi veya sürümsüz doküman yönetimi.
 
-## 7) Linkler
+## 4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)
+
+- Breaking kontrat değişiklikleri yeni SPEC versiyonu ile yapılır.
+
+## 5. LİNKLER
 
 - PB: `docs/01-product/PROBLEM-BRIEFS/PB-0006-fleet-operations-management.md`
 - PRD: `docs/01-product/PRD/PRD-0006-fleet-operations-management-mvp.md`
 - BM Pack: `docs/01-product/BUSINESS-MASTERS/FLEET/`
 - Story: `docs/03-delivery/STORIES/STORY-0315-fleet-operations-management.md`
-

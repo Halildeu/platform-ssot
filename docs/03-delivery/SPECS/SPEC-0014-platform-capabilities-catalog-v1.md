@@ -4,7 +4,7 @@ ID: SPEC-0014
 Status: Draft  
 Owner: TBD
 
-## 0) Amaç
+## 1. AMAÇ
 
 Birden fazla domain’in (Ethics, Nonconformity/NC, Incident vb.) tekrar eden ihtiyaçlarını **ortak yetenekler (capabilities)** üzerinden karşılamak.
 
@@ -16,6 +16,13 @@ Bu doküman:
 - business + kontrat seviyesinde SSOT’tur (kod içermez),
 - delivery-level SPEC’lerde “Platform Dependencies” bölümüne referans edilir,
 - Trace Pack içinde `TARGET_TYPE=PLATFORM_SPEC` hedefi olarak kullanılabilir.
+
+## 2. KAPSAM
+
+- Çoklu domain tarafından tekrar kullanılacak platform capability sözleşmeleri.
+- Kapsam dışı: domain’e özgü iş kuralları ve implementasyon detayları (domain SPEC / ADR / Tech-Design alanı).
+
+## 3. KONTRAT (SSOT)
 
 ## 1) Extraction Kuralı (Shared Capability First)
 
@@ -524,7 +531,7 @@ Filtreleme, export ve dashboard KPI üretimini ortaklaştırmak; permission-awar
 - NC: KPI (due date, backlog) raporları; export daha açık olabilir.
 - Incident: yüksek hacimli sorgular; performans knobs kritik.
 
-## Contract Change Policy (Governance)
+## 4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)
 
 Bu doküman platform capability sözleşmelerini tanımlar ve domain’ler için bağımlılık noktasıdır.
 
@@ -539,7 +546,7 @@ Bu doküman platform capability sözleşmelerini tanımlar ve domain’ler için
 - Minor/Major değişikliklerde yeni bir SPEC versiyonu açılır (örn. `SPEC-0016-...`).
 - Domain kontratları (`SPEC-0013`, `SPEC-0015` vb.) yeni versiyona planlı geçiş yapar.
 
-## 4) Links
+## 5. LİNKLER
 
 - Üretim sistemi kuralları: `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
 - Ethics delivery kontratı: `docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md`

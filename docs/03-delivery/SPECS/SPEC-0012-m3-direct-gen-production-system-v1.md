@@ -4,16 +4,6 @@ ID: SPEC-0012
 Status: Draft  
 Owner: TBD
 
-## LOCKED (Governance)
-
-Bu doküman **M3 Direct-Gen üretim sisteminin SSOT’u** olarak kilitlenmiştir.
-
-### Değişiklik Politikası
-
-- Bu dokümanda “kural değişikliği” yapılmaz.
-- Yeni/iyileştirilmiş kurallar için **yeni bir SPEC versiyonu** açılır (örn. `SPEC-0016-...`).
-- Örnek (exemplar) iyileştirmeleri (BM/BENCH/TRACE) bu SPEC’i değiştirmeden yapılabilir; ancak sistem kuralı etkileniyorsa yeni SPEC gerekir.
-
 ## 1. AMAÇ
 
 Her konu için aynı mantık ve aynı kalite barıyla çalışan üretim hattı kurmak:
@@ -23,7 +13,15 @@ Hedef:
 - Codex’in production-grade kod üretmesi için gereken kritik detayları tek bir zincirde toplamak.
 - “Sürpriz” oranını düşürmek (net kararlar, guardrail’ler, ölçüm sinyalleri).
 
-## 2. ÜRETİM HATTI (3 FAZ)
+## 2. KAPSAM
+
+- BM → BENCH → TRACE → delivery dokümanları için deterministik üretim hattı ve kalite standardı.
+- Kontrat seviyesi SSOT: kurallar, türetme mantığı, izlenebilirlik (Trace Pack), yerleşim/isim standardı.
+- Kapsam dışı: servis bazlı implementasyon adımları ve dosya değişiklik listeleri (Tech-Design/STORY/AC/TP alanı).
+
+## 3. KONTRAT (SSOT)
+
+### ÜRETİM HATTI (3 FAZ)
 
 ### 2.1 Faz 1: Business Master Doc (BM)
 
@@ -56,7 +54,7 @@ BM/Benchmark çıktıları delivery dokümanlarına deterministik şekilde türe
 - BM’deki her **Ölçüm sinyali** → observability gereksinimi + rapor maddesi
 - Benchmark’taki her **Gap** → roadmap veya explicit out-of-scope
 
-## 3. M3 KALİTE STANDARDI (Template doluluğu değil)
+### M3 KALİTE STANDARDI (Template doluluğu değil)
 
 ### 3.1 Zorunlu 6 Parça (her konu için)
 
@@ -140,7 +138,7 @@ Trace Pack içinde capability bağlantısı gerekiyorsa:
 SSOT (v1):
 - Platform capability kataloğu: `docs/03-delivery/SPECS/SPEC-0014-platform-capabilities-catalog-v1.md`.
 
-## 4. YERLEŞİM VE İSİM STANDARDI
+### YERLEŞİM VE İSİM STANDARDI
 
 ### 4.1 Klasör yerleşimi
 
@@ -158,7 +156,7 @@ SSOT (v1):
 - `<topic>` slug: `kebab-case` (örn. `ethics`); konu klasörü `ETHICS` gibi uppercase olabilir.
 - Trace TSV: ilk satır header; her satır “BM maddesi → hedef doküman” eşlemesidir.
 
-## 5. ÇIKTI PAKETLERİ (SOMUT)
+### ÇIKTI PAKETLERİ (SOMUT)
 
 ### 5.1 BM Pack (ETHICS)
 
@@ -184,7 +182,7 @@ SSOT (v1):
 
 - `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
 
-## 6. APPENDIX A — Etik konusu üzerinden örnek
+### APPENDIX A — Etik konusu üzerinden örnek
 
 ### A1) BM örnek iskeleti (kodsuz)
 
@@ -210,7 +208,17 @@ SSOT (v1):
 - Guardrail → negatif acceptance
 - Ölçüm → observability + dashboard
 
-## 7. LİNKLER
+## 4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)
+
+Bu doküman **M3 Direct-Gen üretim sisteminin SSOT’u** olarak kilitlenmiştir.
+
+### Değişiklik Politikası
+
+- Bu dokümanda “kural değişikliği” yapılmaz.
+- Yeni/iyileştirilmiş kurallar için **yeni bir SPEC versiyonu** açılır (örn. `SPEC-0016-...`).
+- Örnek (exemplar) iyileştirmeleri (BM/BENCH/TRACE) bu SPEC’i değiştirmeden yapılabilir; ancak sistem kuralı etkileniyorsa yeni SPEC gerekir.
+
+## 5. LİNKLER
 
 - Story: `docs/03-delivery/STORIES/STORY-0305-m3-direct-gen-production-system-v1.md`
 - Acceptance: `docs/03-delivery/ACCEPTANCE/AC-0305-m3-direct-gen-production-system-v1.md`
