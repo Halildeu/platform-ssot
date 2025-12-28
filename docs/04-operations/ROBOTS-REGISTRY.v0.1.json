@@ -1114,46 +1114,6 @@
       "notes": [
         "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
-    },
-    {
-      "id": "ROB-0128",
-      "name": "gh_pr_ensure_open",
-      "kind": "script",
-      "path": "scripts/ops/gh_pr_ensure_open.sh",
-      "default_mode": "observe",
-      "allowed_modes": [
-        "observe",
-        "plan"
-      ],
-      "side_effects": [
-        "git_push",
-        "github_api",
-        "pr_create"
-      ],
-      "required_auth_refs": [
-        "TOK-0001"
-      ],
-      "required_env": [
-        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
-        "GH_AUTH_VAULT_PATH",
-        "GH_AUTH_VAULT_FIELD"
-      ],
-      "required_confirm": null,
-      "inputs": [
-        "repo",
-        "base",
-        "head",
-        "title",
-        "body_file",
-        "body",
-        "draft"
-      ],
-      "outputs": [
-        "pull_request: created/updated (optional)"
-      ],
-      "notes": [
-        "PR ensure helper (idempotent): open PR yoksa create; head zaten main'de ise noop."
-      ]
     }
   ]
 }
