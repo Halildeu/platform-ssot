@@ -35,6 +35,7 @@ CHECKS = [
     ["python3", "scripts/check_spec_refs.py"],
     ["python3", "scripts/check_doc_routing_strict.py"],
     ["python3", "scripts/check_bm_bench_pack_integrity.py"],
+    ["python3", "scripts/check_bm_content_policy.py"],
     ["python3", "scripts/check_runbook_required_sections.py"],
     ["python3", "scripts/check_doc_template_map_policy.py"],
     ["python3", "scripts/check_doc_heading_contract.py"],
