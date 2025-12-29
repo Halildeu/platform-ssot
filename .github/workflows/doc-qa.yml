@@ -42,6 +42,7 @@ jobs:
           python3 scripts/check_doc_locations.py
           python3 scripts/check_acceptance_evidence.py
           python3 scripts/check_story_links.py
+          python3 scripts/check_story_downstream_optional.py
           python3 scripts/check_spec_refs.py
           python3 scripts/check_doc_routing_strict.py
           python3 scripts/check_bm_bench_pack_integrity.py
