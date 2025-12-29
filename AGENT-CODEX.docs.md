@@ -24,7 +24,10 @@ Bu dosya, **[DOC]** tipindeki görevler için geçerlidir.
 3. `docs/00-handbook/DOC-HIERARCHY.md`
 4. `docs/00-handbook/STYLE-DOCS-001.md`
 5. `NUMARALANDIRMA-STANDARDI.md`
-6. Uygun şablonlar:
+6. (DOCS-PRODUCTION / Direct-Gen ise) üretim kontratı:
+   - `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
+   - `docs/00-handbook/DOCS-PRODUCTION-AGENTS.md`
+7. Uygun şablonlar:
 	   - `docs/99-templates/PROBLEM-BRIEF.template.md`
 	   - `docs/99-templates/PRD.template.md`
 	   - `docs/99-templates/SPEC.template.md`
@@ -45,6 +48,15 @@ Bu dosya, **[DOC]** tipindeki görevler için geçerlidir.
 Not: Yeni bir doküman (PB, PRD, STORY, AC, TP, ADR, RB, DATA, MODEL) açarken:
 - ID türü ve formatı için her zaman `NUMARALANDIRMA-STANDARDI.md` içindeki akışı,
 - Klasör seçimi için `DOCS-PROJECT-LAYOUT.md` içindeki dizin yapısını kullan.
+
+## 3.1 DOCS-PRODUCTION (Direct-Gen) Notu
+
+Bu repo’daki “doküman üretim akışı”, `PROJECT-FLOW` tablosundan bağımsız olarak:
+BM → BENCH → TRACE → Delivery Pack (PB/PRD/SPEC/STORY/AC/TP) zinciridir.
+
+SSOT:
+- Kontrat: `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
+- Rol dağılımı: `docs/00-handbook/DOCS-PRODUCTION-AGENTS.md`
 
 ## 4. Cevap Formatı
 

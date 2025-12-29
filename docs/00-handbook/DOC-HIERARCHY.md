@@ -56,6 +56,9 @@ ve **hangi durumda hangisine bakılması gerektiğini** özetler.
 - `DOCS-PROJECT-LAYOUT.md`
   - `docs/` altındaki 00–99 klasör yapısı ve hangi klasörde ne tür doküman tutulacağı.
 
+- `DOCS-PRODUCTION-AGENTS.md`
+  - Direct-Gen doküman üretim akışı (BM → BENCH → TRACE → Delivery Pack) ve agent rol dağılımı.
+
 - `STYLE-BE-001.md`
   - Backend kod stili, best practice’ler.
 

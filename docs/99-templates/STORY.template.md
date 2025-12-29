@@ -4,6 +4,7 @@ ID: STORY-XXXX-<slug>
 Epic: EPIC-XXX  
 Status: Planned | In-Progress | Done  
 Owner: <isim>  
+Risk_Level: low|medium|high  
 Upstream: PB-XXXX, PRD-XXXX  
 Downstream: AC-XXXX, TP-XXXX, ADR-XXXX, RB-<servis>
 
