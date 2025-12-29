@@ -1402,11 +1402,11 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
 
         today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
         adr_rx = re.compile(
-            r"^(?P<id>ADR-\\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
+            r"^(?P<id>ADR-\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
             re.IGNORECASE,
         )
         guide_rx = re.compile(
-            r"^(?P<id>GUIDE-\\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
+            r"^(?P<id>GUIDE-\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
             re.IGNORECASE,
         )
 
