@@ -99,6 +99,8 @@ Amaç: BM item’ları delivery hedeflerine izlenebilir şekilde bağlar.
 - Okur: BM + BENCH + Delivery hedef ID seti
 - Yazar:
   - TRACE TSV (header + mapping_quality dahil)
+  - (Opsiyonel) Hızlı başlangıç generator:
+    - `python3 scripts/doc_production_generate.py trace-pack --topic <TOPIC> --slug <slug> --trace <0001> --bm <0001> --default-target-type PRD --default-target-id PRD-0004`
 - Done:
   - `BM_ITEM_ID` → `TARGET_TYPE/TARGET_ID` bağlantıları mevcut; “coarse/refined” seçimi tutarlı.
 
@@ -112,6 +114,8 @@ Amaç: PB/PRD/SPEC/STORY/AC/TP setini template’lere göre üretir ve zinciri b
   - SPEC (kontrat/SSOT)
   - STORY/AC/TP (delivery zinciri)
   - (koşullu) ADR/RUNBOOK
+  - (Opsiyonel) Hızlı başlangıç generator:
+    - `python3 scripts/doc_production_generate.py delivery-pack --topic <TOPIC> --slug <slug> --pb <0004> --prd <0004> --spec <0013> --story <0306> --trace <0001> --trace-slug <ethics> --owner @team/platform --risk-level medium --title "<Başlık>" --dry-run`
 - Done:
   - STORY “LİNKLER” bölümü zinciri doğru path’lerle bağlıyor.
   - TP, risk seviyesine göre subset/strict kurallarıyla uyumlu.
@@ -137,9 +141,103 @@ Amaç: kalite gate’lerini koşar, ihlali raporlar ve deterministik repair uygu
 5) DP-05 (Delivery Pack) → PB/PRD/SPEC/STORY/AC/TP
 6) DP-06 (Doc-QA) → gate + deterministik repair
 
+### 4.1 Tek komut (Default tam set)
+
+Bu repo’da “uçtan uca doküman zinciri üret” komutu şu seti üretir:
+- BM Pack (3 dosya)
+- BENCH Pack (2 dosya)
+- TRACE Pack (1 dosya, `.tsv`)
+- Delivery Pack (6 dosya: PB/PRD/SPEC/STORY/AC/TP)
+- Runbook (1 dosya: `RB-*`, varsayılan açık)
+- Auto-Optional Pack (koşullu; sinyal varsa):
+  - ADR (`ADR-*`)
+  - TECH-DESIGN (`TECH-DESIGN-*`)
+  - GUIDE (`GUIDE-*`)
+  - INTERFACE-CONTRACT (`INTERFACE-CONTRACT-*`)
+  - DATA-CARD (`DATA-CARD-*`)
+  - MODEL-CARD (`MODEL-CARD-*`)
+
+Generator (tek komut):
+
+- `python3 scripts/doc_production_generate.py e2e-pack --topic <TOPIC> --delivery-slug <slug> --bm <0001> --bench <0001> --trace <0001> --pb <0004> --prd <0004> --spec <0013> --story <0306> --owner @team/platform --risk-level medium --dry-run`
+- Runbook üretimini kapatmak için: `--no-runbook`
+- Auto-optional üretimi kapatmak için: `--no-auto-optional`
+- Mevcut zincirde yalnız auto-optional üretmek için: `--only-auto-optional` (BM/BENCH/TRACE/Delivery yazmaz)
+
+### 4.2 Auto-Optional (Sinyal Sözleşmesi)
+
+Amaç: Bazı şablonlar her işte zorunlu değildir; yalnız “gerektiğinde” üretilir. Bu ihtiyaç
+deterministik bir sinyalle ifade edilir (LLM tahmini yok).
+
+Sinyal kaynakları:
+
+1) **STORY meta `Downstream:`**
+   - Format: `Downstream: AC-0XXX, TP-0XXX, <opsiyonel-tokenler>`
+   - Desteklenen token örnekleri:
+     - `ADR-0003` veya `ADR-0003-<kebab-slug>`
+     - `TECH-DESIGN` veya (paylaşımlı tasarım için) `TECH-DESIGN=<kebab-slug>`
+     - `GUIDE` (ID otomatik seçilir) veya `GUIDE-0001` / `GUIDE-0001-<kebab-slug>`
+     - `INTERFACE-CONTRACT` veya (çoklu/paylaşımlı kontrat için) `INTERFACE-CONTRACT=<kebab-slug>`
+     - `DATA-CARD` veya `DATA-CARD=<kebab-slug>`
+     - `MODEL-CARD` veya `MODEL-CARD=<kebab-slug>`
+   - Service-scoped dokümanlar için opsiyonel service sinyali:
+     - `svc=<service>` veya `service=<service>` (kebab-case)
+
+2) **Seed JSON (`--seed`)**
+   - `optional.generate`: yukarıdaki token’ların listesi
+   - `optional.service`: service-scoped dokümanlar için `docs/02-architecture/services/<service>/` klasör adı
+
+Önemli kurallar:
+- ADR ve TECH-DESIGN “service-scoped” olduğu için `optional.service` (veya `Downstream: svc=<service>`) olmadan üretim hataya düşer.
+- GUIDE token’ı ID içermiyorsa generator mevcut guide’ları tarar ve bir sonraki `GUIDE-XXXX` numarasını seçer.
+
+Auto-optional çıktılarının kanonik yolları:
+- ADR: `docs/02-architecture/services/<service>/ADR/ADR-0001-*.md`
+- TECH-DESIGN: `docs/02-architecture/services/<service>/TECH-DESIGN-<delivery-slug>.md`
+- GUIDE: `docs/03-delivery/guides/<delivery-slug>/GUIDE-0001-*.md`
+- INTERFACE-CONTRACT: `docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-<delivery-slug>.md`
+- DATA-CARD: `docs/05-ml-ai/DATA-CARDS/DATA-CARD-<delivery-slug>.md`
+- MODEL-CARD: `docs/05-ml-ai/MODEL-CARDS/MODEL-CARD-<delivery-slug>.md`
+
+### 4.3 Ürün Odaklı Çoklu Story (PRD Delivery Items SSOT)
+
+Amaç: “kaç STORY olacak?” kararını LLM tahminiyle değil, **PRD içindeki deterministik SSOT** ile vermek.
+
+SSOT kaynağı:
+- PRD içinde `10. DELIVERY ITEMS (SSOT)` bölümündeki JSON (`ssot=PRD_DELIVERY_ITEMS_V1`).
+
+Kural seti:
+- Default: `1 delivery_item -> 1 STORY` (vertical slice).
+- `split_by=stream` verilirse: `streams` başına STORY üretilir (örn. `web/backend/mobile`).
+- Paylaşımlı doküman bağlama yok: her STORY kendi slug’ı ile kendi setini üretir (gerekliyse).
+
+JSON alanları (minimum):
+- `id`, `title`, `slug` (kebab-case)
+- `split_by`: `none|stream`
+- `streams`: `split_by=stream` için dolu olmalı
+- `services`: (opsiyonel) `svc=<service>` sinyali için; ADR/TECH-DESIGN üretiminde gerekir
+- `optional_docs`: (opsiyonel) `ADR|TECH-DESIGN|GUIDE|INTERFACE-CONTRACT|DATA-CARD|MODEL-CARD`
+
+Opsiyonel deterministik alanlar:
+- `story_id`: `0306` gibi 4 hane (item tek story ise)
+- `story_ids`: `{ "web": "0310", "backend": "0311" }` (stream split varsa)
+- `spec`: `0013` veya `SPEC-0013` (item bazlı SPEC override)
+- `risk_level`: `low|medium|high` (item bazlı override)
+
+Generator:
+- `python3 scripts/doc_production_generate.py delivery-items-pack --prd <0004> --spec <0013> --dry-run`
+- PB otomatik bulunur (PRD meta `Problem Brief:` satırından); istersen override: `--pb <0004>`
+- STORY ID otomatik seçilir; istersen başlangıç: `--story-start <0310>`
+
+Çıktılar (her story için):
+- `docs/03-delivery/STORIES/STORY-0XXX-<story-slug>.md`
+- `docs/03-delivery/ACCEPTANCE/AC-0XXX-<story-slug>.md`
+- `docs/03-delivery/TEST-PLANS/TP-0XXX-<story-slug>.md`
+- (koşullu) Auto-Optional seti (ADR/GUIDE ID otomatik, diğerleri story slug ile)
+
 ## 5. Guardrails (üretim kalitesi)
 
-- Varsayım uydurulmaz: bilinmeyenler `TBD` + doğrulama planı olarak yazılır.
+- Varsayım uydurulmaz: bilinmeyenler “açık soru” + doğrulama planı olarak yazılır (hard gate olan dokümanlarda `TBD` token’ı kullanılmaz).
 - Dokümanlar canonical klasörlerinden taşınmaz (lokasyon/routing gate’leri kırılır).
 - Şablon başlıkları korunur; agent sadece başlık altını doldurur.
 - İzlenebilirlik: BM_ITEM_ID → TRACE → Delivery hedefleri zinciri korunur.

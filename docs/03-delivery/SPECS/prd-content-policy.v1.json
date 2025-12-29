@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "rules": {
+    "forbid_tbd_anywhere": true,
+    "require_sections_1_to_9": true,
+    "min_user_scenarios": 2,
+    "min_requirements": 2,
+    "min_acceptance_summary": 1,
+    "min_risks_or_dependencies": 1,
+    "min_docs_refs_in_links": 1
+  },
+  "notes": [
+    "Amaç: PRD dokümanlarında minimum içerik doluluğunu hard gate ile korumak (başlık contract'ı dışında).",
+    "Bu gate 'ürün doğruluğu' doğrulamaz; boş/tek satırlık PRD'leri ve TBD drift'ini yakalar.",
+    "Kural seti başlangıçta düşük eşiklerle başlar; zamanla kademeli sıkılaştırılabilir."
+  ]
+}
+

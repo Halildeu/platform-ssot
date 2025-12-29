@@ -2,7 +2,7 @@
 
 ID: SPEC-0008  
 Status: Draft (stub)  
-Owner: TBD
+Owner: @team/frontend
 
 ## 1. AMAÇ
 

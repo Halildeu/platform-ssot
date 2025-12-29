@@ -2,7 +2,7 @@
 
 ID: SPEC-0016  
 Status: Draft  
-Owner: TBD
+Owner: @team/platform
 
 ## 1. AMAÇ
 

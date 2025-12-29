@@ -2,7 +2,7 @@
 
 ID: PRD-0006
 Status: Draft
-Owner: TBD
+Owner: @team/platform
 Problem Brief: PB-0006
 
 Not: Aşağıdaki başlıklar ve sıralama **zorunludur**.
@@ -109,4 +109,3 @@ Non-functional (business-level):
 - Story: `docs/03-delivery/STORIES/STORY-0315-fleet-operations-management.md`
 - Acceptance: `docs/03-delivery/ACCEPTANCE/AC-0315-fleet-operations-management.md`
 - Test Plan: `docs/03-delivery/TEST-PLANS/TP-0315-fleet-operations-management.md`
-

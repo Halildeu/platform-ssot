@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "rules": {
+    "forbid_tbd_anywhere": true,
+    "require_sections_1_to_5": true,
+    "min_contract_bullets_non_stub": 3,
+    "min_governance_bullets": 1,
+    "min_docs_refs_in_links": 1,
+    "allow_stub_specs": true
+  },
+  "notes": [
+    "Amaç: SPEC dokümanlarında minimum kontrat (SSOT) doluluğunu hard gate ile korumak.",
+    "Stub SPEC'ler, referans bütünlüğü için izinli kabul edilir; ancak TBD drift'i yine engellenir.",
+    "Bu gate kontratın içerik doğruluğunu garanti etmez; kontrat bölümünün boş kalmasını ve link/SSOT kopmalarını yakalar."
+  ]
+}
+

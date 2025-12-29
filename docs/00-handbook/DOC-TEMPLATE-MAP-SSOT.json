@@ -131,17 +131,43 @@
     "DATA-CARD": {
       "template": "DATA-CARD.template.md",
       "doc_glob": "docs/05-ml-ai/DATA-CARDS/DATA-CARD-*.md",
-      "optional": true
+      "optional": true,
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAYNAK VE KAPSAM",
+        "3. KALİTE / KISITLAR",
+        "4. GİZLİLİK VE ETİK",
+        "5. KULLANIM NOTLARI",
+        "6. ÖZET"
+      ]
     },
     "MODEL-CARD": {
       "template": "MODEL-CARD.template.md",
       "doc_glob": "docs/05-ml-ai/MODEL-CARDS/MODEL-CARD-*.md",
-      "optional": true
+      "optional": true,
+      "required_headings": [
+        "1. AMAÇ",
+        "2. MODEL VE VERİ ÖZETİ",
+        "3. METRİKLER VE PERFORMANS",
+        "4. RİSKLER VE BIAS",
+        "5. KULLANIM VE SINIRLAR",
+        "6. MONITORING VE DRIFT",
+        "7. ÖZET"
+      ]
     },
     "INTERFACE-CONTRACT": {
       "template": "INTERFACE-CONTRACT.template.md",
       "doc_glob": "docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-*.md",
-      "optional": true
+      "optional": true,
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. ENDPOINT / ARAYÜZ TANIMI",
+        "4. DAVRANIŞ VE HATA DURUMLARI",
+        "5. GÜVENLİK VE VERSİYONLAMA",
+        "6. ÖZET",
+        "7. LİNKLER / SONRAKİ ADIMLAR"
+      ]
     }
   },
   "notes": [

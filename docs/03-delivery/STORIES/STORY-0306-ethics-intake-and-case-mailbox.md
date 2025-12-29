@@ -5,7 +5,7 @@ Epic: ETHICS-MVP
 Status: Design  
 Owner: TBD  
 Upstream: `PB-0004`, `PRD-0004`, `SPEC-0013`  
-Downstream: AC-0306, TP-0306
+Downstream: AC-0306, TP-0306, ADR-0999, TECH-DESIGN, GUIDE, INTERFACE-CONTRACT, DATA-CARD, MODEL-CARD, svc=ethics-case-management
 
 -------------------------------------------------------------------------------
 ## 1. AMAÇ
