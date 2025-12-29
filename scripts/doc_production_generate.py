@@ -2791,6 +2791,19 @@ def cmd_delivery_items_pack(args: argparse.Namespace) -> int:
         adr_cursor += 1
         return out
 
+    def find_existing_story_num_by_slug(slug: str) -> str | None:
+        if not STORY_ROOT.exists():
+            return None
+        rx_slug = re.compile(rf"^STORY-(?P<num>\d{{4}})-{re.escape(slug)}\.md$", re.IGNORECASE)
+        nums: list[str] = []
+        for p in STORY_ROOT.glob("STORY-*.md"):
+            m = rx_slug.match(p.name)
+            if m:
+                nums.append(m.group("num"))
+        if len(nums) > 1:
+            raise ValueError(f"multiple STORY docs match slug={slug}: {sorted(nums)}")
+        return nums[0] if nums else None
+
     for it in items:
         item_id = it["id"]
         item_title = it["title"]
@@ -2837,6 +2850,11 @@ def cmd_delivery_items_pack(args: argparse.Namespace) -> int:
                 story_num = it["story_ids"].get(stream or "")
             if split_by != "stream" and it.get("story_id"):
                 story_num = it["story_id"]
+            if not story_num:
+                try:
+                    story_num = find_existing_story_num_by_slug(story_slug)
+                except Exception as e:
+                    return die(f"{item_id}: slug-based STORY lookup failed: {e}")
             try:
                 story_num = alloc_story_num(story_num)
             except Exception as e:
