@@ -141,6 +141,20 @@ Amaç: kalite gate’lerini koşar, ihlali raporlar ve deterministik repair uygu
 5) DP-05 (Delivery Pack) → PB/PRD/SPEC/STORY/AC/TP
 6) DP-06 (Doc-QA) → gate + deterministik repair
 
+### 4.1 Tek komut (Default tam set)
+
+Bu repo’da “uçtan uca doküman zinciri üret” komutu şu seti üretir:
+- BM Pack (3 dosya)
+- BENCH Pack (2 dosya)
+- TRACE Pack (1 dosya, `.tsv`)
+- Delivery Pack (6 dosya: PB/PRD/SPEC/STORY/AC/TP)
+- Runbook (1 dosya: `RB-*`, varsayılan açık)
+
+Generator (tek komut):
+
+- `python3 scripts/doc_production_generate.py e2e-pack --topic <TOPIC> --delivery-slug <slug> --bm <0001> --bench <0001> --trace <0001> --pb <0004> --prd <0004> --spec <0013> --story <0306> --owner @team/platform --risk-level medium --dry-run`
+- Runbook üretimini kapatmak için: `--no-runbook`
+
 ## 5. Guardrails (üretim kalitesi)
 
 - Varsayım uydurulmaz: bilinmeyenler “açık soru” + doğrulama planı olarak yazılır (hard gate olan dokümanlarda `TBD` token’ı kullanılmaz).

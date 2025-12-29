@@ -12,6 +12,7 @@ Amaç:
 
 Usage (example):
   python3 scripts/doc_production_generate.py bm-pack --topic ETHICS --slug ethics --bm 0007 --title "Etik Programı"
+  python3 scripts/doc_production_generate.py e2e-pack --topic ETHICS --delivery-slug ethics-speakup-and-case-management-mvp --bm 0001 --bench 0001 --trace 0001 --pb 0004 --prd 0004 --spec 0013 --story 0306
 """
 
 from __future__ import annotations
@@ -28,6 +29,7 @@ from typing import Any
 BM_ROOT = Path("docs/01-product/BUSINESS-MASTERS")
 BENCH_ROOT = Path("docs/01-product/BENCHMARKS")
 TRACE_ROOT = Path("docs/03-delivery/TRACES")
+RUNBOOK_ROOT = Path("docs/04-operations/RUNBOOKS")
 PB_ROOT = Path("docs/01-product/PROBLEM-BRIEFS")
 PRD_ROOT = Path("docs/01-product/PRD")
 SPEC_ROOT = Path("docs/03-delivery/SPECS")
@@ -839,6 +841,14 @@ def extract_bm_item_ids_for_pack(topic: str, bm_num: str) -> list[str]:
     return sorted(items)
 
 
+def extract_bm_item_ids_from_text(text: str, bm_num: str) -> set[str]:
+    items: set[str] = set()
+    for m in RE_BM_ITEM_ID.finditer(text):
+        if m.group("bm") == bm_num:
+            items.add(m.group(0))
+    return items
+
+
 def load_trace_overrides(seed: dict[str, Any]) -> dict[str, list[TraceMapping]]:
     raw = seed.get("trace.overrides")
     if raw is None:
@@ -951,6 +961,401 @@ def cmd_trace_pack(args: argparse.Namespace) -> int:
     rows.sort(key=lambda r: (r[0], r[2], r[3]))
     content = header + "\n" + "\n".join("\t".join(r) for r in rows) + "\n"
     write_file(out_path, content, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    print("[doc_production_generate] PASS")
+    return 0
+
+
+def render_runbook_doc(
+    *,
+    runbook_id: str,
+    title: str,
+    service: str,
+    owner: str,
+    story_path: str | None,
+    ac_path: str | None,
+    tp_path: str | None,
+    spec_path: str | None,
+    trace_path: str | None,
+) -> str:
+    lines: list[str] = []
+    lines.append(f"# {runbook_id} – {title} (Runbook)")
+    lines.append("")
+    lines.append(f"ID: {runbook_id}  ")
+    lines.append(f"Service: {service}  ")
+    lines.append("Status: Draft  ")
+    lines.append(f"Owner: {owner}")
+    lines.append("")
+    lines.append(SEP)
+    lines.append("1. AMAÇ")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Servisin nasıl işletileceğini tarif etmek.")
+    lines.append("")
+    lines.append(SEP)
+    lines.append("2. KAPSAM")
+    lines.append(SEP)
+    lines.append("")
+    lines.append(f"- Bu runbook `{service}` için başlangıç setidir.")
+    lines.append("- Ortamlar: stage/prod (ops policy ile).")
+    lines.append("")
+    lines.append(SEP)
+    lines.append("3. BAŞLATMA / DURDURMA")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Başlatma: deploy workflow ile (Release/Deploy runbook’ları).")
+    lines.append("- Durdurma: rollback veya bakım modu (policy ile).")
+    lines.append("")
+    lines.append(SEP)
+    lines.append("4. GÖZLEMLEME / LOG / METRİKLER")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Log index: `logs-<servis>-*` (örn. `logs-ethics-*`).")
+    lines.append("- Dashboard: `service-overview/<servis>` (örn. Grafana).")
+    lines.append("- Temel metrikler: error_rate, p95_latency, availability, queue_depth (varsa).")
+    lines.append("")
+    lines.append(SEP)
+    lines.append("5. ARIZA DURUMLARI VE ADIMLAR")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- [ ] Arıza senaryosu 1: artan error_rate → son deploy SHA + log korelasyonu + rollback kararı.")
+    lines.append("- [ ] Arıza senaryosu 2: queue/backlog büyüyor → consumer health + retry/dlq + throttling kontrolü.")
+    lines.append("")
+    lines.append(SEP)
+    lines.append("6. ÖZET")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Kritik not: değişiklikler PR + doc-qa gate ile taşınır; doğrudan main’e yazılmaz.")
+    lines.append("")
+    lines.append(SEP)
+    lines.append("7. LİNKLER (İSTEĞE BAĞLI)")
+    lines.append(SEP)
+    lines.append("")
+    if spec_path:
+        lines.append(f"- SPEC: `{spec_path}`")
+    if story_path:
+        lines.append(f"- STORY: `{story_path}`")
+    if ac_path:
+        lines.append(f"- ACCEPTANCE: `{ac_path}`")
+    if tp_path:
+        lines.append(f"- TEST PLAN: `{tp_path}`")
+    if trace_path:
+        lines.append(f"- TRACE: `{trace_path}`")
+    lines.append("- TECH-DESIGN: `docs/02-architecture/services/<servis>/TECH-DESIGN-*.md`")
+    lines.append("- SLO/SLA: `docs/04-operations/SLO-SLA.md`")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def cmd_e2e_pack(args: argparse.Namespace) -> int:
+    try:
+        topic = norm_topic_folder(args.topic)
+        topic_slug = norm_slug(args.topic_slug) if args.topic_slug else topic_slug_from_folder(topic)
+        delivery_slug = norm_slug(args.delivery_slug)
+        bm_num = norm_num4(args.bm)
+        bench_num = norm_num4(args.bench)
+        trace_num = norm_num4(args.trace)
+        pb_num = norm_num4(args.pb)
+        prd_num = norm_num4(args.prd)
+        spec_num = norm_num4(args.spec)
+        story_num = norm_num4(args.story)
+        risk_level = norm_risk_level(args.risk_level)
+        owner = ensure_owner(args.owner)
+    except Exception as e:
+        return die(str(e))
+
+    title = (args.title or delivery_slug.replace("-", " ").title()).strip()
+    epic = (args.epic or "DOCS-PRODUCTION").strip() or "DOCS-PRODUCTION"
+    version = (args.version or DEFAULT_VERSION).strip()
+
+    trace_slug = norm_slug(args.trace_slug) if args.trace_slug else topic_slug
+
+    # Seed (shared for bm/bench/trace packs)
+    try:
+        seed = load_seed(Path(args.seed)) if args.seed else {}
+    except Exception as e:
+        return die(f"seed load failed: {e}")
+
+    # BM pack
+    bm_seed = build_seed(title, topic_slug, seed)
+    bm_out_dir = BM_ROOT / topic
+
+    def pick_bm_part_path(*, token: str, default_filename: str) -> Path:
+        if not args.overwrite and bm_out_dir.exists():
+            existing = sorted(
+                [
+                    p
+                    for p in bm_out_dir.glob(f"BM-{bm_num}-{topic_slug}-*.md")
+                    if p.is_file() and token in p.name.casefold()
+                ]
+            )
+            if existing:
+                return existing[0]
+        return bm_out_dir / default_filename
+
+    bm_core_path = pick_bm_part_path(
+        token="core",
+        default_filename=f"BM-{bm_num}-{topic_slug}-core-operating-model.md",
+    )
+    bm_ctrl_path = pick_bm_part_path(
+        token="controls",
+        default_filename=f"BM-{bm_num}-{topic_slug}-controls-compliance-risk.md",
+    )
+    bm_met_path = pick_bm_part_path(
+        token="metrics",
+        default_filename=f"BM-{bm_num}-{topic_slug}-metrics-improvement.md",
+    )
+
+    bm_core = render_bm_doc(
+        bm_num=bm_num,
+        topic_title=title,
+        section_title="Core İşletim Modeli",
+        doc_code="CORE",
+        version=version,
+        scope_lines=["Konu kapsamı ve core işletim modeli", "Minimum domain akışı ve state/flow"],
+        operating_model_lines=["Intake → triage → karar/aksiyon → kapanış", "Sürekli iyileştirme: trend → backlog"],
+        decisions=bm_seed.core_dec,
+        guardrails=bm_seed.core_grd,
+        assumptions=bm_seed.core_asm,
+        validations=bm_seed.core_val,
+        risks=bm_seed.core_rsk,
+        links=None,
+    )
+    bm_ctrl = render_bm_doc(
+        bm_num=bm_num,
+        topic_title=title,
+        section_title="Controls (Uyum, Risk, Denetim)",
+        doc_code="CTRL",
+        version=version,
+        scope_lines=["Yetki sınırları, audit, evidence, export/bildirim kontrolleri", "Permission boundary (need-to-know)"],
+        operating_model_lines=["Kontroller domain akışında gating olarak çalışır", "Kritik aksiyonlar ayrı yetki + audit ile korunur"],
+        decisions=bm_seed.ctrl_dec,
+        guardrails=bm_seed.ctrl_grd,
+        assumptions=bm_seed.ctrl_asm,
+        validations=bm_seed.ctrl_val,
+        risks=bm_seed.ctrl_rsk,
+        links=[f"BM Core: `{bm_core_path.as_posix()}`"],
+    )
+    bm_met = render_bm_doc(
+        bm_num=bm_num,
+        topic_title=title,
+        section_title="Metrics & Improvement",
+        doc_code="MET",
+        version=version,
+        scope_lines=["Minimum KPI/KRI seti", "Trend ve raporlama sinyalleri"],
+        operating_model_lines=["Haftalık KPI review", "Aylık trend review", "Çeyreklik program review (drift kontrolü)"],
+        decisions=bm_seed.met_dec,
+        guardrails=bm_seed.met_grd,
+        assumptions=bm_seed.met_asm,
+        validations=bm_seed.met_val,
+        risks=bm_seed.met_rsk,
+        kpis=bm_seed.met_kpi,
+        links=[f"BM Core: `{bm_core_path.as_posix()}`"],
+    )
+
+    # BENCH pack
+    bench_version = version.strip().lstrip("v")
+    bench_out_dir = BENCH_ROOT / topic
+    bench_matrix_path = bench_out_dir / f"BENCH-{bench_num}-{topic_slug}-capability-matrix.md"
+    bench_gaps_path = bench_out_dir / f"BENCH-{bench_num}-{topic_slug}-gaps-trends-ai.md"
+
+    bm_dir_for_links = (BM_ROOT / topic).as_posix() + "/"
+    bench_seed = build_bench_seed(title, seed=seed, bm_topic_dir=bm_dir_for_links)
+    bench_matrix_doc = render_bench_matrix_doc(
+        bench_num=bench_num,
+        title=title,
+        version=bench_version,
+        gaps_doc_path=bench_gaps_path.as_posix(),
+        bm_dir=bm_dir_for_links,
+        seed=bench_seed,
+    )
+    bench_gaps_doc = render_bench_gaps_doc(
+        bench_num=bench_num,
+        title=title,
+        version=bench_version,
+        matrix_doc_path=bench_matrix_path.as_posix(),
+        bm_dir=bm_dir_for_links,
+        seed=bench_seed,
+    )
+
+    # TRACE pack (BM items: prefer disk if not overwriting, else generated BM docs)
+    bm_items: set[str] = set()
+    if not args.overwrite:
+        try:
+            bm_items |= set(extract_bm_item_ids_for_pack(topic, bm_num))
+        except Exception:
+            bm_items = set()
+    if not bm_items:
+        bm_items |= extract_bm_item_ids_from_text(bm_core, bm_num)
+        bm_items |= extract_bm_item_ids_from_text(bm_ctrl, bm_num)
+        bm_items |= extract_bm_item_ids_from_text(bm_met, bm_num)
+    if not bm_items:
+        return die(f"no BM_ITEM_ID found for BM-{bm_num} (topic={topic})")
+
+    default_target_type = sanitize_tsv_field(args.default_target_type).upper()
+    default_target_id = sanitize_tsv_field(args.default_target_id) if args.default_target_id else f"PRD-{prd_num}"
+    default_mapping_quality = sanitize_tsv_field(args.mapping_quality).lower() or "coarse"
+    notes_base = sanitize_tsv_field(args.notes)
+
+    if default_target_type not in TRACE_ALLOWED_TARGET_TYPES:
+        return die(f"default_target_type must be one of {sorted(TRACE_ALLOWED_TARGET_TYPES)}")
+    if not default_target_id:
+        return die("default_target_id is required")
+    if default_mapping_quality not in TRACE_ALLOWED_MAPPING_QUALITY:
+        return die(f"mapping_quality must be one of {sorted(TRACE_ALLOWED_MAPPING_QUALITY)}")
+
+    try:
+        overrides = load_trace_overrides(seed)
+    except Exception as e:
+        return die(f"trace overrides invalid: {e}")
+
+    trace_path = TRACE_ROOT / f"TRACE-{trace_num}-{trace_slug}-bm-to-delivery.tsv"
+
+    header = "BM_ITEM_ID\tBM_SECTION\tTARGET_TYPE\tTARGET_ID\tmapping_quality\tNOTES"
+    rows: list[tuple[str, str, str, str, str, str]] = []
+
+    for bm_item_id in sorted(bm_items):
+        mm = RE_BM_ITEM_ID.search(bm_item_id)
+        if not mm:
+            return die(f"internal error: cannot parse BM_ITEM_ID: {bm_item_id}")
+        bm_section = mm.group("doc")
+
+        if bm_item_id in overrides:
+            for m in overrides[bm_item_id]:
+                rows.append((bm_item_id, bm_section, m.target_type, m.target_id, m.mapping_quality, m.notes))
+            continue
+
+        if not notes_base:
+            notes = (
+                f"mapping_quality: {default_mapping_quality}; generated: e2e-pack; "
+                f"default {default_target_type}/{default_target_id}"
+            )
+        else:
+            notes = notes_base
+
+        rows.append((bm_item_id, bm_section, default_target_type, default_target_id, default_mapping_quality, notes))
+
+    rows.sort(key=lambda r: (r[0], r[2], r[3]))
+    trace_doc = header + "\n" + "\n".join("\t".join(r) for r in rows) + "\n"
+
+    # Delivery pack (PB/PRD/SPEC/STORY/AC/TP)
+    pb_id = f"PB-{pb_num}"
+    prd_id = f"PRD-{prd_num}"
+    spec_id = f"SPEC-{spec_num}"
+    story_id = f"STORY-{story_num}"
+    ac_id = f"AC-{story_num}"
+    tp_id = f"TP-{story_num}"
+
+    pb_path = (PB_ROOT / f"{pb_id}-{delivery_slug}.md").as_posix()
+    prd_path = (PRD_ROOT / f"{prd_id}-{delivery_slug}.md").as_posix()
+    spec_path = (SPEC_ROOT / f"{spec_id}-{delivery_slug}.md").as_posix()
+    story_path = (STORY_ROOT / f"{story_id}-{delivery_slug}.md").as_posix()
+    ac_path = (AC_ROOT / f"{ac_id}-{delivery_slug}.md").as_posix()
+    tp_path = (TP_ROOT / f"{tp_id}-{delivery_slug}.md").as_posix()
+
+    bm_topic_dir = (BM_ROOT / topic).as_posix() + "/"
+    bench_topic_dir = (BENCH_ROOT / topic).as_posix() + "/"
+
+    pb_doc = render_pb_doc(
+        pb_id=pb_id,
+        title=title,
+        owner=owner,
+        prd_path=prd_path,
+        trace_path=trace_path.as_posix(),
+        bm_topic_dir=bm_topic_dir,
+        bench_topic_dir=bench_topic_dir,
+    )
+    prd_doc = render_prd_doc(
+        prd_id=prd_id,
+        title=title,
+        owner=owner,
+        pb_id=pb_id,
+        pb_path=pb_path,
+        trace_path=trace_path.as_posix(),
+        bm_topic_dir=bm_topic_dir,
+        bench_topic_dir=bench_topic_dir,
+        spec_path=spec_path,
+    )
+    spec_doc = render_spec_doc(
+        spec_id=spec_id,
+        title=title,
+        owner=owner,
+        pb_id=pb_id,
+        prd_id=prd_id,
+        bm_num=bm_num,
+        bench_num=bench_num,
+        trace_path=trace_path.as_posix(),
+        pb_path=pb_path,
+        prd_path=prd_path,
+        bm_topic_dir=bm_topic_dir,
+        bench_topic_dir=bench_topic_dir,
+    )
+    story_doc = render_story_doc(
+        story_id=story_id,
+        slug=delivery_slug,
+        title=title,
+        owner=owner,
+        epic=epic,
+        risk_level=risk_level,
+        pb_id=pb_id,
+        prd_id=prd_id,
+        spec_id=spec_id,
+        story_path=story_path,
+        ac_path=ac_path,
+        tp_path=tp_path,
+        prd_path=prd_path,
+        spec_path=spec_path,
+    )
+    ac_doc = render_acceptance_doc(
+        ac_id=ac_id,
+        title=title,
+        owner=owner,
+        story_id=f"{story_id}-{delivery_slug}",
+        story_path=story_path,
+        tp_path=tp_path,
+    )
+    tp_doc = render_test_plan_doc(
+        tp_id=tp_id,
+        title=title,
+        owner=owner,
+        story_id=f"{story_id}-{delivery_slug}",
+        story_path=story_path,
+        ac_path=ac_path,
+    )
+
+    # Runbook (default: enabled; name derived from delivery slug)
+    if args.include_runbook:
+        runbook_id = f"RB-{delivery_slug}"
+        runbook_path = (RUNBOOK_ROOT / f"{runbook_id}.md").as_posix()
+        runbook_doc = render_runbook_doc(
+            runbook_id=runbook_id,
+            title=title,
+            service=delivery_slug,
+            owner=owner,
+            story_path=story_path,
+            ac_path=ac_path,
+            tp_path=tp_path,
+            spec_path=spec_path,
+            trace_path=trace_path.as_posix(),
+        )
+        write_file(Path(runbook_path), runbook_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    # Write files
+    write_file(bm_core_path, bm_core, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(bm_ctrl_path, bm_ctrl, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(bm_met_path, bm_met, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    write_file(bench_matrix_path, bench_matrix_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(bench_gaps_path, bench_gaps_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    write_file(trace_path, trace_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    write_file(Path(pb_path), pb_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(prd_path), prd_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(spec_path), spec_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(story_path), story_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(ac_path), ac_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+    write_file(Path(tp_path), tp_doc, dry_run=args.dry_run, overwrite=args.overwrite)
 
     print("[doc_production_generate] PASS")
     return 0
@@ -1592,6 +1997,56 @@ def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="doc_production_generate")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
+    p_e2e = sub.add_parser("e2e-pack", help="Generate full chain (BM+BENCH+TRACE+Delivery, optional Runbook)")
+    p_e2e.add_argument("--topic", required=True, help="Topic folder (UPPERCASE), e.g. ETHICS")
+    p_e2e.add_argument(
+        "--topic-slug",
+        default="",
+        help="Topic slug (kebab-case, optional). Default: topic lowercased (ETHICS -> ethics).",
+    )
+    p_e2e.add_argument(
+        "--delivery-slug",
+        "--slug",
+        dest="delivery_slug",
+        required=True,
+        help="Delivery slug (kebab-case), e.g. ethics-case-mailbox-mvp",
+    )
+    p_e2e.add_argument("--title", default="", help="Human title (optional)")
+    p_e2e.add_argument("--version", default=DEFAULT_VERSION, help=f"Version label (default: {DEFAULT_VERSION})")
+    p_e2e.add_argument("--seed", default="", help="Optional seed json file (advanced)")
+    p_e2e.add_argument("--bm", required=True, help="BM number (4 digits), e.g. 0001")
+    p_e2e.add_argument("--bench", required=True, help="BENCH number (4 digits), e.g. 0001")
+    p_e2e.add_argument("--trace", required=True, help="TRACE number (4 digits), e.g. 0001")
+    p_e2e.add_argument("--pb", required=True, help="PB number (4 digits), e.g. 0004")
+    p_e2e.add_argument("--prd", required=True, help="PRD number (4 digits), e.g. 0004")
+    p_e2e.add_argument("--spec", required=True, help="SPEC number (4 digits), e.g. 0013")
+    p_e2e.add_argument("--story", required=True, help="STORY/AC/TP number (4 digits), e.g. 0306")
+    p_e2e.add_argument(
+        "--trace-slug",
+        default="",
+        help="TRACE slug (kebab-case, optional). Default: topic slug.",
+    )
+    p_e2e.add_argument("--default-target-type", default="PRD", help="Default TARGET_TYPE for TRACE rows (default: PRD)")
+    p_e2e.add_argument(
+        "--default-target-id",
+        default="",
+        help="Default TARGET_ID for TRACE rows (default: PRD-<prd>).",
+    )
+    p_e2e.add_argument("--mapping-quality", default="coarse", help="mapping_quality (coarse|refined, default: coarse)")
+    p_e2e.add_argument("--notes", default="", help="Optional NOTES for TRACE rows (if empty, a default note is generated)")
+    p_e2e.add_argument("--owner", default="@team/platform", help="Owner value (default: @team/platform)")
+    p_e2e.add_argument("--epic", default="DOCS-PRODUCTION", help="Epic label (default: DOCS-PRODUCTION)")
+    p_e2e.add_argument("--risk-level", default="medium", help="Risk_Level (low|medium|high, default: medium)")
+    p_e2e.add_argument(
+        "--no-runbook",
+        dest="include_runbook",
+        action="store_false",
+        default=True,
+        help="Do not generate RB-<delivery-slug>.md (default: generate)",
+    )
+    p_e2e.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
+    p_e2e.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")
+
     p_bm = sub.add_parser("bm-pack", help="Generate BM pack docs (CORE/CTRL/MET)")
     p_bm.add_argument("--topic", required=True, help="Topic folder (UPPERCASE), e.g. ETHICS")
     p_bm.add_argument("--slug", required=True, help="Topic slug (kebab-case), e.g. ethics")
@@ -1654,6 +2109,8 @@ def main(argv: list[str] | None = None) -> int:
     ap = build_parser()
     args = ap.parse_args(argv)
 
+    if args.cmd == "e2e-pack":
+        return cmd_e2e_pack(args)
     if args.cmd == "bm-pack":
         return cmd_bm_pack(args)
     if args.cmd == "bench-pack":
