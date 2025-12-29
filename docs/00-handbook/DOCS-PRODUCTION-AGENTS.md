@@ -199,6 +199,42 @@ Auto-optional çıktılarının kanonik yolları:
 - DATA-CARD: `docs/05-ml-ai/DATA-CARDS/DATA-CARD-<delivery-slug>.md`
 - MODEL-CARD: `docs/05-ml-ai/MODEL-CARDS/MODEL-CARD-<delivery-slug>.md`
 
+### 4.3 Ürün Odaklı Çoklu Story (PRD Delivery Items SSOT)
+
+Amaç: “kaç STORY olacak?” kararını LLM tahminiyle değil, **PRD içindeki deterministik SSOT** ile vermek.
+
+SSOT kaynağı:
+- PRD içinde `10. DELIVERY ITEMS (SSOT)` bölümündeki JSON (`ssot=PRD_DELIVERY_ITEMS_V1`).
+
+Kural seti:
+- Default: `1 delivery_item -> 1 STORY` (vertical slice).
+- `split_by=stream` verilirse: `streams` başına STORY üretilir (örn. `web/backend/mobile`).
+- Paylaşımlı doküman bağlama yok: her STORY kendi slug’ı ile kendi setini üretir (gerekliyse).
+
+JSON alanları (minimum):
+- `id`, `title`, `slug` (kebab-case)
+- `split_by`: `none|stream`
+- `streams`: `split_by=stream` için dolu olmalı
+- `services`: (opsiyonel) `svc=<service>` sinyali için; ADR/TECH-DESIGN üretiminde gerekir
+- `optional_docs`: (opsiyonel) `ADR|TECH-DESIGN|GUIDE|INTERFACE-CONTRACT|DATA-CARD|MODEL-CARD`
+
+Opsiyonel deterministik alanlar:
+- `story_id`: `0306` gibi 4 hane (item tek story ise)
+- `story_ids`: `{ "web": "0310", "backend": "0311" }` (stream split varsa)
+- `spec`: `0013` veya `SPEC-0013` (item bazlı SPEC override)
+- `risk_level`: `low|medium|high` (item bazlı override)
+
+Generator:
+- `python3 scripts/doc_production_generate.py delivery-items-pack --prd <0004> --spec <0013> --dry-run`
+- PB otomatik bulunur (PRD meta `Problem Brief:` satırından); istersen override: `--pb <0004>`
+- STORY ID otomatik seçilir; istersen başlangıç: `--story-start <0310>`
+
+Çıktılar (her story için):
+- `docs/03-delivery/STORIES/STORY-0XXX-<story-slug>.md`
+- `docs/03-delivery/ACCEPTANCE/AC-0XXX-<story-slug>.md`
+- `docs/03-delivery/TEST-PLANS/TP-0XXX-<story-slug>.md`
+- (koşullu) Auto-Optional seti (ADR/GUIDE ID otomatik, diğerleri story slug ile)
+
 ## 5. Guardrails (üretim kalitesi)
 
 - Varsayım uydurulmaz: bilinmeyenler “açık soru” + doğrulama planı olarak yazılır (hard gate olan dokümanlarda `TBD` token’ı kullanılmaz).

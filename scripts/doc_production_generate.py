@@ -197,6 +197,430 @@ def next_guide_num() -> str:
     return f"{nxt:04d}"
 
 
+def next_adr_num() -> str:
+    rx = re.compile(r"^ADR-(?P<num>\d{4})-", re.IGNORECASE)
+    nums: list[int] = []
+    if SERVICES_ROOT.exists():
+        for p in SERVICES_ROOT.glob("*/ADR/ADR-*.md"):
+            if not p.is_file():
+                continue
+            m = rx.match(p.name)
+            if m:
+                nums.append(int(m.group("num")))
+    nxt = (max(nums) + 1) if nums else 1
+    if nxt > 9999:
+        raise ValueError("ADR id overflow (max=9999)")
+    return f"{nxt:04d}"
+
+
+RE_PRD_DELIVERY_ITEMS_SSOT = re.compile(r"```json\s*(?P<body>.*?)\s*```", re.IGNORECASE | re.DOTALL)
+RE_PRD_PB_META = re.compile(r"(?mi)^Problem Brief:\s*(?P<pb>PB-\d{4})\b")
+RE_PRD_TITLE = re.compile(r"(?m)^#\s*PRD-\d{4}\s*[–-]\s*(?P<title>.+?)\s*$")
+RE_PRD_FILENAME_SLUG = re.compile(
+    r"^PRD-(?P<num>\d{4})-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*)\.md$", re.IGNORECASE
+)
+
+
+def parse_prd_title(prd_text: str) -> str | None:
+    m = RE_PRD_TITLE.search(prd_text)
+    if not m:
+        return None
+    return m.group("title").strip()
+
+
+def parse_prd_pb_id(prd_text: str) -> str | None:
+    m = RE_PRD_PB_META.search(prd_text)
+    if not m:
+        return None
+    return m.group("pb").upper()
+
+
+def slug_from_prd_filename(prd_path: Path) -> str | None:
+    m = RE_PRD_FILENAME_SLUG.match(prd_path.name)
+    if not m:
+        return None
+    return norm_slug(m.group("slug"))
+
+
+def extract_prd_delivery_items_ssot(prd_text: str) -> dict[str, Any] | None:
+    for m in RE_PRD_DELIVERY_ITEMS_SSOT.finditer(prd_text):
+        body = m.group("body").strip()
+        if not body.startswith("{"):
+            continue
+        try:
+            data = json.loads(body)
+        except Exception:
+            continue
+        if isinstance(data, dict) and data.get("ssot") == "PRD_DELIVERY_ITEMS_V1":
+            return data
+    return None
+
+
+def normalize_optional_doc_token(raw: str) -> str:
+    s = raw.strip()
+    if not s:
+        raise ValueError("empty optional_docs token")
+    return s.upper().replace("_", "-")
+
+
+def load_prd_delivery_items_or_die(prd_path: Path) -> list[dict[str, Any]]:
+    prd_text = prd_path.read_text(encoding="utf-8", errors="ignore")
+    data = extract_prd_delivery_items_ssot(prd_text)
+    if not data:
+        raise ValueError("PRD_DELIVERY_ITEMS_V1 JSON block not found (see PRD.template.md section 10)")
+    items = data.get("delivery_items")
+    if not isinstance(items, list):
+        raise ValueError("delivery_items must be a list")
+
+    normalized: list[dict[str, Any]] = []
+    seen_ids: set[str] = set()
+    seen_slugs: set[str] = set()
+
+    for it in items:
+        if not isinstance(it, dict):
+            raise ValueError("each delivery_item must be an object")
+        item_id = str(it.get("id", "")).strip()
+        title = str(it.get("title", "")).strip()
+        slug = str(it.get("slug", "")).strip()
+        if not item_id or not title or not slug:
+            raise ValueError("delivery_item requires: id, title, slug")
+        slug = norm_slug(slug)
+        if item_id in seen_ids:
+            raise ValueError(f"duplicate delivery_item.id: {item_id}")
+        if slug in seen_slugs:
+            raise ValueError(f"duplicate delivery_item.slug: {slug}")
+        seen_ids.add(item_id)
+        seen_slugs.add(slug)
+
+        split_by = str(it.get("split_by") or "none").strip().lower()
+        if split_by not in {"none", "stream"}:
+            raise ValueError(f"{item_id}: split_by must be none|stream")
+
+        streams_raw = it.get("streams") or []
+        if not isinstance(streams_raw, list):
+            raise ValueError(f"{item_id}: streams must be a list")
+        streams: list[str] = []
+        for s in streams_raw:
+            if not isinstance(s, str) or not s.strip():
+                raise ValueError(f"{item_id}: streams must contain non-empty strings")
+            streams.append(norm_slug(s))
+        if split_by == "stream" and not streams:
+            raise ValueError(f"{item_id}: split_by=stream requires non-empty streams")
+
+        services_raw = it.get("services") or []
+        if not isinstance(services_raw, list):
+            raise ValueError(f"{item_id}: services must be a list")
+        services: list[str] = []
+        for s in services_raw:
+            if not isinstance(s, str) or not s.strip():
+                raise ValueError(f"{item_id}: services must contain non-empty strings")
+            services.append(norm_slug(s))
+
+        spec_raw = it.get("spec")
+        spec_num: str | None = None
+        if spec_raw:
+            s = str(spec_raw).strip().upper()
+            if s.startswith("SPEC-"):
+                s = s.split("-", 1)[1]
+            spec_num = norm_num4(s)
+
+        risk_raw = it.get("risk_level")
+        risk_level: str | None = None
+        if risk_raw:
+            risk_level = norm_risk_level(str(risk_raw))
+
+        optional_raw = it.get("optional_docs") or []
+        if not isinstance(optional_raw, list):
+            raise ValueError(f"{item_id}: optional_docs must be a list")
+        optional_docs = [normalize_optional_doc_token(str(x)) for x in optional_raw if str(x).strip()]
+
+        story_id_raw = it.get("story_id")
+        story_id: str | None = None
+        if story_id_raw:
+            story_id = norm_num4(str(story_id_raw).strip().replace("STORY-", "").replace("STORY_", ""))
+
+        story_ids_raw = it.get("story_ids")
+        story_ids: dict[str, str] | None = None
+        if story_ids_raw is not None:
+            if not isinstance(story_ids_raw, dict):
+                raise ValueError(f"{item_id}: story_ids must be an object (stream->id)")
+            story_ids = {}
+            for k, v in story_ids_raw.items():
+                if not isinstance(k, str) or not k.strip():
+                    raise ValueError(f"{item_id}: story_ids keys must be non-empty strings")
+                if not isinstance(v, str) or not v.strip():
+                    raise ValueError(f"{item_id}: story_ids values must be non-empty strings")
+                story_ids[norm_slug(k)] = norm_num4(v.strip().replace("STORY-", ""))
+
+        normalized.append(
+            {
+                "id": item_id,
+                "title": title,
+                "slug": slug,
+                "split_by": split_by,
+                "streams": streams,
+                "services": services,
+                "spec": spec_num,
+                "risk_level": risk_level,
+                "optional_docs": optional_docs,
+                "story_id": story_id,
+                "story_ids": story_ids,
+            }
+        )
+
+    return normalized
+
+
+def plan_auto_optional_docs(
+    *,
+    seed: dict[str, Any],
+    story_signals_path: Path,
+    delivery_slug: str,
+    title: str,
+    owner: str,
+    spec_link_path: Path,
+    trace_path: Path | None,
+    include_runbook_link: bool,
+    runbook_path: Path | None,
+) -> tuple[list[str], list[tuple[Path, str]]]:
+    """
+    Auto-optional plan:
+    - signals: seed.optional.generate + STORY Downstream tokens
+    - outputs: downstream_extra tokens (for STORY meta) + optional docs to write
+    """
+    downstream_extra: list[str] = []
+    optional_writes: list[tuple[Path, str]] = []
+
+    try:
+        tokens = get_list(seed, "optional.generate") + read_story_downstream_tokens(story_signals_path)
+        service = get_str(seed, "optional.service")
+    except Exception as e:
+        raise ValueError(f"optional signals invalid: {e}") from e
+
+    svc_rx = re.compile(r"^(?:svc|service)=(?P<svc>[a-z0-9]+(?:-[a-z0-9]+)*)$", re.IGNORECASE)
+    cleaned: list[str] = []
+    for tok in tokens:
+        t = tok.strip()
+        if not t:
+            continue
+        m = svc_rx.match(t)
+        if m:
+            service = service or m.group("svc")
+            continue
+        cleaned.append(t)
+
+    try:
+        service_slug = norm_slug(service) if service else ""
+    except Exception as e:
+        raise ValueError(f"optional.service invalid: {e}") from e
+
+    if service_slug:
+        downstream_extra.append(f"svc={service_slug}")
+
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    adr_rx = re.compile(
+        r"^(?P<id>ADR-\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
+        re.IGNORECASE,
+    )
+    guide_rx = re.compile(
+        r"^(?P<id>GUIDE-\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
+        re.IGNORECASE,
+    )
+    typed_slug_rx = re.compile(
+        r"^(?P<typ>TECH-DESIGN|TECH_DESIGN|INTERFACE-CONTRACT|INTERFACE_CONTRACT|DATA-CARD|MODEL-CARD)\s*=\s*(?P<slug>[A-Za-z0-9-]+)$",
+        re.IGNORECASE,
+    )
+
+    adr_stems: list[str] = []
+    guide_stems: list[str] = []
+    tech_design_slugs: list[str] = []
+    interface_contract_slugs: list[str] = []
+    data_card_slugs: list[str] = []
+    model_card_slugs: list[str] = []
+
+    wants_tech_design_default = False
+    wants_interface_contract_default = False
+    wants_data_card_default = False
+    wants_model_card_default = False
+    wants_guide_auto = False
+    wants_adr_auto = False
+
+    for tok in cleaned:
+        m = typed_slug_rx.match(tok)
+        if m:
+            typ = m.group("typ").strip().upper().replace("_", "-")
+            slug_raw = m.group("slug").strip()
+            try:
+                slug_norm = norm_slug(slug_raw)
+            except Exception as e:
+                raise ValueError(f"{typ} slug invalid: {tok}: {e}") from e
+            typed_token = f"{typ}={slug_norm}"
+            if typ == "TECH-DESIGN":
+                tech_design_slugs.append(slug_norm)
+                downstream_extra.append(typed_token)
+            elif typ == "INTERFACE-CONTRACT":
+                interface_contract_slugs.append(slug_norm)
+                downstream_extra.append(typed_token)
+            elif typ == "DATA-CARD":
+                data_card_slugs.append(slug_norm)
+                downstream_extra.append(typed_token)
+            elif typ == "MODEL-CARD":
+                model_card_slugs.append(slug_norm)
+                downstream_extra.append(typed_token)
+            continue
+
+        m = adr_rx.match(tok)
+        if m:
+            adr_id = m.group("id").upper()
+            suffix = m.group("slug")
+            if suffix:
+                try:
+                    suffix = norm_slug(suffix)
+                except Exception as e:
+                    raise ValueError(f"ADR slug invalid: {tok}: {e}") from e
+                stem = f"{adr_id}-{suffix}"
+            else:
+                stem = f"{adr_id}-{delivery_slug}"
+            adr_stems.append(stem)
+            downstream_extra.append(adr_id)
+            continue
+
+        m = guide_rx.match(tok)
+        if m:
+            guide_id = m.group("id").upper()
+            suffix = m.group("slug")
+            if suffix:
+                try:
+                    suffix = norm_slug(suffix)
+                except Exception as e:
+                    raise ValueError(f"GUIDE slug invalid: {tok}: {e}") from e
+                stem = f"{guide_id}-{suffix}"
+            else:
+                stem = f"{guide_id}-{delivery_slug}"
+            guide_stems.append(stem)
+            downstream_extra.append(guide_id)
+            continue
+
+        up = tok.strip().upper()
+        if up == "ADR":
+            wants_adr_auto = True
+            continue
+        if up in {"TECH-DESIGN", "TECH_DESIGN"}:
+            wants_tech_design_default = True
+            downstream_extra.append("TECH-DESIGN")
+            continue
+        if up == "GUIDE":
+            wants_guide_auto = True
+            continue
+        if up in {"INTERFACE-CONTRACT", "INTERFACE_CONTRACT"}:
+            wants_interface_contract_default = True
+            downstream_extra.append("INTERFACE-CONTRACT")
+            continue
+        if up == "DATA-CARD":
+            wants_data_card_default = True
+            downstream_extra.append("DATA-CARD")
+            continue
+        if up == "MODEL-CARD":
+            wants_model_card_default = True
+            downstream_extra.append("MODEL-CARD")
+            continue
+
+    if wants_guide_auto and not guide_stems:
+        guide_dir = GUIDES_ROOT / delivery_slug
+        existing_guides = sorted([p for p in guide_dir.glob("GUIDE-*.md") if p.is_file()])
+        if existing_guides:
+            stem = existing_guides[0].stem
+            guide_stems.append(stem)
+            m = re.match(r"^(GUIDE-\d{4})", stem, re.IGNORECASE)
+            if m:
+                downstream_extra.append(m.group(1).upper())
+        else:
+            new_num = next_guide_num()
+            guide_id = f"GUIDE-{new_num}"
+            guide_stems.append(f"{guide_id}-{delivery_slug}")
+            downstream_extra.append(guide_id)
+
+    if wants_adr_auto and not adr_stems:
+        new_num = next_adr_num()
+        adr_id = f"ADR-{new_num}"
+        adr_stems.append(f"{adr_id}-{delivery_slug}")
+        downstream_extra.append(adr_id)
+
+    tech_design_targets = set(tech_design_slugs)
+    if wants_tech_design_default:
+        tech_design_targets.add(delivery_slug)
+
+    interface_contract_targets = set(interface_contract_slugs)
+    if wants_interface_contract_default:
+        interface_contract_targets.add(delivery_slug)
+
+    data_card_targets = set(data_card_slugs)
+    if wants_data_card_default:
+        data_card_targets.add(delivery_slug)
+
+    model_card_targets = set(model_card_slugs)
+    if wants_model_card_default:
+        model_card_targets.add(delivery_slug)
+
+    # ADR / TECH-DESIGN are service-scoped; require explicit service.
+    if (adr_stems or tech_design_targets) and not service_slug:
+        raise ValueError("auto-optional requested ADR/TECH-DESIGN but optional.service is missing")
+
+    runbook_path_s = runbook_path.as_posix() if runbook_path else ""
+
+    if adr_stems:
+        adr_links = [f"SPEC: `{spec_link_path.as_posix()}`", f"STORY: `{story_signals_path.as_posix()}`"]
+        if trace_path:
+            adr_links.append(f"TRACE: `{trace_path.as_posix()}`")
+        if include_runbook_link and runbook_path_s:
+            adr_links.append(f"RUNBOOK: `{runbook_path_s}`")
+        for stem in sorted(set(adr_stems)):
+            adr_id = stem.split("-", 2)[0] + "-" + stem.split("-", 2)[1]
+            adr_doc = render_adr_doc(
+                adr_id=adr_id,
+                title=title,
+                owner=owner,
+                date=today,
+                links=adr_links,
+            )
+            adr_path = SERVICES_ROOT / service_slug / "ADR" / f"{stem}.md"
+            optional_writes.append((adr_path, adr_doc))
+
+    if tech_design_targets:
+        for td_slug in sorted(tech_design_targets):
+            td_doc = render_tech_design_doc(title=title)
+            td_path = SERVICES_ROOT / service_slug / f"TECH-DESIGN-{td_slug}.md"
+            optional_writes.append((td_path, td_doc))
+
+    if guide_stems:
+        for stem in sorted(set(guide_stems)):
+            guide_id = stem.split("-", 2)[0] + "-" + stem.split("-", 2)[1]
+            guide_doc = render_guide_doc(guide_id=guide_id, title=title)
+            guide_path = GUIDES_ROOT / delivery_slug / f"{stem}.md"
+            optional_writes.append((guide_path, guide_doc))
+
+    if interface_contract_targets:
+        for ic_slug in sorted(interface_contract_targets):
+            ic_id = f"IC-{ic_slug}"
+            ic_doc = render_interface_contract_doc(title=title, ic_id=ic_id)
+            ic_path = INTERFACE_CONTRACT_ROOT / f"INTERFACE-CONTRACT-{ic_slug}.md"
+            optional_writes.append((ic_path, ic_doc))
+
+    if data_card_targets:
+        for dc_slug in sorted(data_card_targets):
+            dc_doc = render_data_card_doc(title=title)
+            dc_path = DATA_CARD_ROOT / f"DATA-CARD-{dc_slug}.md"
+            optional_writes.append((dc_path, dc_doc))
+
+    if model_card_targets:
+        for mc_slug in sorted(model_card_targets):
+            mc_doc = render_model_card_doc(title=title)
+            mc_path = MODEL_CARD_ROOT / f"MODEL-CARD-{mc_slug}.md"
+            optional_writes.append((mc_path, mc_doc))
+
+    return downstream_extra, optional_writes
+
+
 def find_existing_doc_by_id(*, root: Path, doc_id: str, preferred_slug: str = "", ext: str) -> Path | None:
     candidates = sorted([p for p in root.glob(f"{doc_id}-*.{ext}") if p.is_file()])
     if not candidates:
@@ -1431,223 +1855,22 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
             or Path(spec_path)
         )
 
+        runbook_path_p = RUNBOOK_ROOT / f"RB-{delivery_slug}.md"
+        include_runbook_link = args.include_runbook and (not args.only_auto_optional or runbook_path_p.exists())
         try:
-            tokens = get_list(seed, "optional.generate") + read_story_downstream_tokens(story_signals_path)
-            service = get_str(seed, "optional.service")
+            downstream_extra, optional_writes = plan_auto_optional_docs(
+                seed=seed,
+                story_signals_path=story_signals_path,
+                delivery_slug=delivery_slug,
+                title=title,
+                owner=owner,
+                spec_link_path=spec_link_path,
+                trace_path=trace_path,
+                include_runbook_link=include_runbook_link,
+                runbook_path=runbook_path_p,
+            )
         except Exception as e:
-            return die(f"optional signals invalid: {e}")
-
-        svc_rx = re.compile(r"^(?:svc|service)=(?P<svc>[a-z0-9]+(?:-[a-z0-9]+)*)$", re.IGNORECASE)
-        cleaned: list[str] = []
-        for tok in tokens:
-            t = tok.strip()
-            if not t:
-                continue
-            m = svc_rx.match(t)
-            if m:
-                service = service or m.group("svc")
-                continue
-            cleaned.append(t)
-
-        try:
-            service_slug = norm_slug(service) if service else ""
-        except Exception as e:
-            return die(f"optional.service invalid: {e}")
-
-        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        adr_rx = re.compile(
-            r"^(?P<id>ADR-\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
-            re.IGNORECASE,
-        )
-        guide_rx = re.compile(
-            r"^(?P<id>GUIDE-\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
-            re.IGNORECASE,
-        )
-        typed_slug_rx = re.compile(
-            r"^(?P<typ>TECH-DESIGN|TECH_DESIGN|INTERFACE-CONTRACT|INTERFACE_CONTRACT|DATA-CARD|MODEL-CARD)\s*=\s*(?P<slug>[A-Za-z0-9-]+)$",
-            re.IGNORECASE,
-        )
-
-        adr_stems: list[str] = []
-        guide_stems: list[str] = []
-        tech_design_slugs: list[str] = []
-        interface_contract_slugs: list[str] = []
-        data_card_slugs: list[str] = []
-        model_card_slugs: list[str] = []
-
-        wants_tech_design_default = False
-        wants_interface_contract_default = False
-        wants_data_card_default = False
-        wants_model_card_default = False
-        wants_guide_auto = False
-
-        for tok in cleaned:
-            m = typed_slug_rx.match(tok)
-            if m:
-                typ = m.group("typ").strip().upper().replace("_", "-")
-                slug_raw = m.group("slug").strip()
-                try:
-                    slug_norm = norm_slug(slug_raw)
-                except Exception as e:
-                    return die(f"{typ} slug invalid: {tok}: {e}")
-                if typ == "TECH-DESIGN":
-                    tech_design_slugs.append(slug_norm)
-                    downstream_extra.append("TECH-DESIGN")
-                elif typ == "INTERFACE-CONTRACT":
-                    interface_contract_slugs.append(slug_norm)
-                    downstream_extra.append("INTERFACE-CONTRACT")
-                elif typ == "DATA-CARD":
-                    data_card_slugs.append(slug_norm)
-                    downstream_extra.append("DATA-CARD")
-                elif typ == "MODEL-CARD":
-                    model_card_slugs.append(slug_norm)
-                    downstream_extra.append("MODEL-CARD")
-                continue
-
-            m = adr_rx.match(tok)
-            if m:
-                adr_id = m.group("id").upper()
-                suffix = m.group("slug")
-                if suffix:
-                    try:
-                        suffix = norm_slug(suffix)
-                    except Exception as e:
-                        return die(f"ADR slug invalid: {tok}: {e}")
-                    stem = f"{adr_id}-{suffix}"
-                else:
-                    stem = f"{adr_id}-{delivery_slug}"
-                adr_stems.append(stem)
-                downstream_extra.append(adr_id)
-                continue
-
-            m = guide_rx.match(tok)
-            if m:
-                guide_id = m.group("id").upper()
-                suffix = m.group("slug")
-                if suffix:
-                    try:
-                        suffix = norm_slug(suffix)
-                    except Exception as e:
-                        return die(f"GUIDE slug invalid: {tok}: {e}")
-                    stem = f"{guide_id}-{suffix}"
-                else:
-                    stem = f"{guide_id}-{delivery_slug}"
-                guide_stems.append(stem)
-                downstream_extra.append(guide_id)
-                continue
-
-            up = tok.strip().upper()
-            if up in {"TECH-DESIGN", "TECH_DESIGN"}:
-                wants_tech_design_default = True
-                downstream_extra.append("TECH-DESIGN")
-                continue
-            if up == "GUIDE":
-                wants_guide_auto = True
-                continue
-            if up in {"INTERFACE-CONTRACT", "INTERFACE_CONTRACT"}:
-                wants_interface_contract_default = True
-                downstream_extra.append("INTERFACE-CONTRACT")
-                continue
-            if up == "DATA-CARD":
-                wants_data_card_default = True
-                downstream_extra.append("DATA-CARD")
-                continue
-            if up == "MODEL-CARD":
-                wants_model_card_default = True
-                downstream_extra.append("MODEL-CARD")
-                continue
-
-        if wants_guide_auto and not guide_stems:
-            guide_dir = GUIDES_ROOT / delivery_slug
-            existing_guides = sorted([p for p in guide_dir.glob("GUIDE-*.md") if p.is_file()])
-            if existing_guides:
-                stem = existing_guides[0].stem
-                guide_stems.append(stem)
-                m = re.match(r"^(GUIDE-\d{4})", stem, re.IGNORECASE)
-                if m:
-                    downstream_extra.append(m.group(1).upper())
-            else:
-                try:
-                    new_num = next_guide_num()
-                except Exception as e:
-                    return die(str(e))
-                guide_id = f"GUIDE-{new_num}"
-                guide_stems.append(f"{guide_id}-{delivery_slug}")
-                downstream_extra.append(guide_id)
-
-        tech_design_targets = set(tech_design_slugs)
-        if wants_tech_design_default:
-            tech_design_targets.add(delivery_slug)
-
-        interface_contract_targets = set(interface_contract_slugs)
-        if wants_interface_contract_default:
-            interface_contract_targets.add(delivery_slug)
-
-        data_card_targets = set(data_card_slugs)
-        if wants_data_card_default:
-            data_card_targets.add(delivery_slug)
-
-        model_card_targets = set(model_card_slugs)
-        if wants_model_card_default:
-            model_card_targets.add(delivery_slug)
-
-        # ADR / TECH-DESIGN are service-scoped; require explicit service.
-        if (adr_stems or tech_design_targets) and not service_slug:
-            return die("auto-optional requested ADR/TECH-DESIGN but optional.service is missing")
-
-        runbook_path = (RUNBOOK_ROOT / f"RB-{delivery_slug}.md").as_posix()
-
-        if adr_stems:
-            adr_links = [
-                f"SPEC: `{spec_link_path.as_posix()}`",
-                f"STORY: `{story_signals_path.as_posix()}`",
-                f"TRACE: `{trace_path.as_posix()}`",
-            ]
-            if args.include_runbook and (not args.only_auto_optional or Path(runbook_path).exists()):
-                adr_links.append(f"RUNBOOK: `{runbook_path}`")
-            for stem in sorted(set(adr_stems)):
-                adr_id = stem.split("-", 2)[0] + "-" + stem.split("-", 2)[1]
-                adr_doc = render_adr_doc(
-                    adr_id=adr_id,
-                    title=title,
-                    owner=owner,
-                    date=today,
-                    links=adr_links,
-                )
-                adr_path = SERVICES_ROOT / service_slug / "ADR" / f"{stem}.md"
-                optional_writes.append((adr_path, adr_doc))
-
-        if tech_design_targets:
-            for td_slug in sorted(tech_design_targets):
-                td_doc = render_tech_design_doc(title=title)
-                td_path = SERVICES_ROOT / service_slug / f"TECH-DESIGN-{td_slug}.md"
-                optional_writes.append((td_path, td_doc))
-
-        if guide_stems:
-            for stem in sorted(set(guide_stems)):
-                guide_id = stem.split("-", 2)[0] + "-" + stem.split("-", 2)[1]
-                guide_doc = render_guide_doc(guide_id=guide_id, title=title)
-                guide_path = GUIDES_ROOT / delivery_slug / f"{stem}.md"
-                optional_writes.append((guide_path, guide_doc))
-
-        if interface_contract_targets:
-            for ic_slug in sorted(interface_contract_targets):
-                ic_id = f"IC-{ic_slug}"
-                ic_doc = render_interface_contract_doc(title=title, ic_id=ic_id)
-                ic_path = INTERFACE_CONTRACT_ROOT / f"INTERFACE-CONTRACT-{ic_slug}.md"
-                optional_writes.append((ic_path, ic_doc))
-
-        if data_card_targets:
-            for dc_slug in sorted(data_card_targets):
-                dc_doc = render_data_card_doc(title=title)
-                dc_path = DATA_CARD_ROOT / f"DATA-CARD-{dc_slug}.md"
-                optional_writes.append((dc_path, dc_doc))
-
-        if model_card_targets:
-            for mc_slug in sorted(model_card_targets):
-                mc_doc = render_model_card_doc(title=title)
-                mc_path = MODEL_CARD_ROOT / f"MODEL-CARD-{mc_slug}.md"
-                optional_writes.append((mc_path, mc_doc))
+            return die(str(e))
 
     if args.only_auto_optional:
         if not args.include_auto_optional:
@@ -1942,6 +2165,18 @@ def render_prd_doc(
         lines.append(f"- TRACE: `{trace_path}`")
     if spec_path:
         lines.append(f"- Delivery SPEC: `{spec_path}`")
+    lines.append("")
+
+    lines.append(SEP)
+    lines.append("## 10. DELIVERY ITEMS (SSOT)")
+    lines.append(SEP)
+    lines.append("")
+    lines.append("- Ürün odaklı delivery breakdown için deterministik SSOT JSON’u.")
+    lines.append("- Default: 1 delivery_item → 1 STORY (vertical). split_by=stream verilirse streams başına STORY üretilir.")
+    lines.append("")
+    lines.append("```json")
+    lines.append(json.dumps({"ssot": "PRD_DELIVERY_ITEMS_V1", "delivery_items": []}, ensure_ascii=False, indent=2))
+    lines.append("```")
     lines.append("")
     return "\n".join(lines) + "\n"
 
@@ -2413,6 +2648,305 @@ def cmd_delivery_pack(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_delivery_items_pack(args: argparse.Namespace) -> int:
+    """
+    Product-oriented STORY production from PRD SSOT (section 10 JSON).
+
+    Rules:
+    - Default: 1 delivery_item -> 1 STORY (vertical)
+    - split_by=stream => streams başına STORY
+    """
+    try:
+        prd_num = norm_num4(args.prd)
+        default_spec_num = norm_num4(args.spec)
+        risk_level_default = norm_risk_level(args.risk_level)
+        owner = ensure_owner(args.owner)
+    except Exception as e:
+        return die(str(e))
+
+    if args.overwrite:
+        print(
+            "[doc_production_generate] WARN: delivery-items-pack is non-destructive; "
+            "--overwrite is ignored (existing docs are never overwritten)."
+        )
+
+    prd_id = f"PRD-{prd_num}"
+    prd_path_p = find_existing_doc_by_id(root=PRD_ROOT, doc_id=prd_id, preferred_slug="", ext="md")
+    if not prd_path_p:
+        return die(f"PRD doc not found for {prd_id} under {PRD_ROOT}")
+
+    prd_text = prd_path_p.read_text(encoding="utf-8", errors="ignore")
+    prd_slug = slug_from_prd_filename(prd_path_p)
+    if not prd_slug:
+        return die(f"cannot derive PRD slug from filename: {prd_path_p}")
+
+    title_base = (args.title or parse_prd_title(prd_text) or prd_slug.replace("-", " ").title()).strip()
+    epic = (args.epic or "DOCS-PRODUCTION").strip() or "DOCS-PRODUCTION"
+
+    pb_id = f"PB-{norm_num4(args.pb)}" if args.pb else (parse_prd_pb_id(prd_text) or "")
+    if not pb_id:
+        return die(f"PB id not provided and not found in PRD meta (Problem Brief:) for {prd_path_p}")
+    pb_num = pb_id.split("-", 1)[1]
+
+    pb_path_p = find_existing_doc_by_id(root=PB_ROOT, doc_id=pb_id, preferred_slug=prd_slug, ext="md") or (
+        PB_ROOT / f"{pb_id}-{prd_slug}.md"
+    )
+
+    def spec_id(num4: str) -> str:
+        return f"SPEC-{num4}"
+
+    default_spec_id = spec_id(default_spec_num)
+    default_spec_path_p = find_existing_doc_by_id(
+        root=SPEC_ROOT, doc_id=default_spec_id, preferred_slug=prd_slug, ext="md"
+    ) or (SPEC_ROOT / f"{default_spec_id}-{prd_slug}.md")
+
+    # Ensure PB/SPEC exist (to keep chain consistent for new stories).
+    pb_doc = render_pb_doc(
+        pb_id=pb_id,
+        title=title_base,
+        owner=owner,
+        prd_path=prd_path_p.as_posix(),
+        trace_path=None,
+        bm_topic_dir=None,
+        bench_topic_dir=None,
+    )
+    write_file(pb_path_p, pb_doc, dry_run=args.dry_run, overwrite=False)
+
+    default_spec_doc = render_spec_doc(
+        spec_id=default_spec_id,
+        title=title_base,
+        owner=owner,
+        pb_id=pb_id,
+        prd_id=prd_id,
+        bm_num=None,
+        bench_num=None,
+        trace_path=None,
+        pb_path=pb_path_p.as_posix(),
+        prd_path=prd_path_p.as_posix(),
+        bm_topic_dir=None,
+        bench_topic_dir=None,
+    )
+    write_file(default_spec_path_p, default_spec_doc, dry_run=args.dry_run, overwrite=False)
+
+    # Load delivery items SSOT from PRD.
+    try:
+        items = load_prd_delivery_items_or_die(prd_path_p)
+    except Exception as e:
+        return die(str(e))
+
+    if not items:
+        print("[doc_production_generate] WARN: PRD delivery_items empty; nothing to generate")
+        print("[doc_production_generate] PASS")
+        return 0
+
+    # Next IDs (deterministic for one run; avoids duplicates even in dry-run).
+    existing_nums: set[int] = set()
+    reserved_nums: set[int] = set()
+    rx = re.compile(r"^(?:STORY|AC|TP)-(?P<num>\d{4})\b", re.IGNORECASE)
+    for base, prefix in [(STORY_ROOT, "STORY"), (AC_ROOT, "AC"), (TP_ROOT, "TP")]:
+        if not base.exists():
+            continue
+        for p in base.glob(f"{prefix}-*.md"):
+            m = rx.match(p.name)
+            if m:
+                existing_nums.add(int(m.group("num")))
+
+    story_cursor = int(args.story_start) if args.story_start else (max(existing_nums) + 1 if existing_nums else 1)
+    if story_cursor < 1 or story_cursor > 9999:
+        return die("story_start out of range (1..9999)")
+
+    guide_cursor = int(next_guide_num())
+    adr_cursor = int(next_adr_num())
+
+    def alloc_story_num(preferred: str | None = None) -> str:
+        nonlocal story_cursor
+        if preferred:
+            n = int(preferred)
+            if n in reserved_nums:
+                raise ValueError(f"duplicate STORY id in delivery_items: {n:04d}")
+            reserved_nums.add(n)
+            return f"{n:04d}"
+        while story_cursor in existing_nums or story_cursor in reserved_nums:
+            story_cursor += 1
+        if story_cursor > 9999:
+            raise ValueError("STORY id overflow (max=9999)")
+        n = story_cursor
+        reserved_nums.add(n)
+        story_cursor += 1
+        return f"{n:04d}"
+
+    def alloc_guide_id() -> str:
+        nonlocal guide_cursor
+        if guide_cursor < 1 or guide_cursor > 9999:
+            raise ValueError("GUIDE id overflow (max=9999)")
+        out = f"GUIDE-{guide_cursor:04d}"
+        guide_cursor += 1
+        return out
+
+    def alloc_adr_id() -> str:
+        nonlocal adr_cursor
+        if adr_cursor < 1 or adr_cursor > 9999:
+            raise ValueError("ADR id overflow (max=9999)")
+        out = f"ADR-{adr_cursor:04d}"
+        adr_cursor += 1
+        return out
+
+    for it in items:
+        item_id = it["id"]
+        item_title = it["title"]
+        item_slug = it["slug"]
+        split_by = it["split_by"]
+        streams: list[str] = it["streams"]
+        services: list[str] = it["services"]
+        item_spec_num = it["spec"] or default_spec_num
+        item_risk = it["risk_level"] or risk_level_default
+
+        item_spec_id = spec_id(item_spec_num)
+        item_spec_path_p = find_existing_doc_by_id(
+            root=SPEC_ROOT, doc_id=item_spec_id, preferred_slug=prd_slug, ext="md"
+        ) or (SPEC_ROOT / f"{item_spec_id}-{prd_slug}.md")
+
+        if item_spec_id != default_spec_id and not item_spec_path_p.exists():
+            item_spec_doc = render_spec_doc(
+                spec_id=item_spec_id,
+                title=title_base,
+                owner=owner,
+                pb_id=pb_id,
+                prd_id=prd_id,
+                bm_num=None,
+                bench_num=None,
+                trace_path=None,
+                pb_path=pb_path_p.as_posix(),
+                prd_path=prd_path_p.as_posix(),
+                bm_topic_dir=None,
+                bench_topic_dir=None,
+            )
+            write_file(item_spec_path_p, item_spec_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+
+        # Determine stories for this item.
+        plans: list[tuple[str | None, str]] = []
+        if split_by == "stream":
+            for s in streams:
+                plans.append((s, f"{item_slug}-{s}"))
+        else:
+            plans.append((None, item_slug))
+
+        for stream, story_slug in plans:
+            story_num = None
+            if split_by == "stream" and it.get("story_ids"):
+                story_num = it["story_ids"].get(stream or "")
+            if split_by != "stream" and it.get("story_id"):
+                story_num = it["story_id"]
+            try:
+                story_num = alloc_story_num(story_num)
+            except Exception as e:
+                return die(f"{item_id}: story id allocation failed: {e}")
+
+            story_id = f"STORY-{story_num}"
+            ac_id = f"AC-{story_num}"
+            tp_id = f"TP-{story_num}"
+
+            story_path_p = find_existing_doc_by_id(
+                root=STORY_ROOT, doc_id=story_id, preferred_slug=story_slug, ext="md"
+            ) or (STORY_ROOT / f"{story_id}-{story_slug}.md")
+            m = re.match(
+                r"^STORY-(?:\d{4})-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*)\.md$",
+                story_path_p.name,
+                re.IGNORECASE,
+            )
+            if m:
+                try:
+                    story_slug = norm_slug(m.group("slug"))
+                except Exception:
+                    pass
+
+            ac_path_p = find_existing_doc_by_id(
+                root=AC_ROOT, doc_id=ac_id, preferred_slug=story_slug, ext="md"
+            ) or (AC_ROOT / f"{ac_id}-{story_slug}.md")
+            tp_path_p = find_existing_doc_by_id(
+                root=TP_ROOT, doc_id=tp_id, preferred_slug=story_slug, ext="md"
+            ) or (TP_ROOT / f"{tp_id}-{story_slug}.md")
+
+            # Build optional signals (deterministic; allocate IDs if needed).
+            tokens: list[str] = []
+            for raw in it["optional_docs"]:
+                tok = normalize_optional_doc_token(raw)
+                if tok == "ADR":
+                    tokens.append(alloc_adr_id())
+                    continue
+                if tok == "GUIDE":
+                    tokens.append(alloc_guide_id())
+                    continue
+                tokens.append(tok)
+
+            # Auto-optional plan (signals: PRD optional_docs + existing STORY Downstream).
+            seed_local: dict[str, Any] = {}
+            if services:
+                seed_local["optional.service"] = services[0]
+            if tokens:
+                seed_local["optional.generate"] = tokens
+
+            include_runbook_link = False
+            try:
+                downstream_extra, optional_writes = plan_auto_optional_docs(
+                    seed=seed_local,
+                    story_signals_path=story_path_p,
+                    delivery_slug=story_slug,
+                    title=title_base,
+                    owner=owner,
+                    spec_link_path=item_spec_path_p,
+                    trace_path=None,
+                    include_runbook_link=include_runbook_link,
+                    runbook_path=None,
+                )
+            except Exception as e:
+                return die(f"{item_id}: auto-optional plan failed: {e}")
+
+            story_title = item_title if not stream else f"{item_title} ({stream})"
+            story_doc = render_story_doc(
+                story_id=story_id,
+                slug=story_slug,
+                title=story_title,
+                owner=owner,
+                epic=epic,
+                risk_level=item_risk,
+                pb_id=pb_id,
+                prd_id=prd_id,
+                spec_id=item_spec_id,
+                story_path=story_path_p.as_posix(),
+                ac_path=ac_path_p.as_posix(),
+                tp_path=tp_path_p.as_posix(),
+                prd_path=prd_path_p.as_posix(),
+                spec_path=item_spec_path_p.as_posix(),
+                downstream_extra=downstream_extra,
+            )
+            ac_doc = render_acceptance_doc(
+                ac_id=ac_id,
+                title=story_title,
+                owner=owner,
+                story_id=f"{story_id}-{story_slug}",
+                story_path=story_path_p.as_posix(),
+                tp_path=tp_path_p.as_posix(),
+            )
+            tp_doc = render_test_plan_doc(
+                tp_id=tp_id,
+                title=story_title,
+                owner=owner,
+                story_id=f"{story_id}-{story_slug}",
+                story_path=story_path_p.as_posix(),
+                ac_path=ac_path_p.as_posix(),
+            )
+
+            write_file(story_path_p, story_doc, dry_run=args.dry_run, overwrite=False)
+            write_file(ac_path_p, ac_doc, dry_run=args.dry_run, overwrite=False)
+            write_file(tp_path_p, tp_doc, dry_run=args.dry_run, overwrite=False)
+            for p, doc in optional_writes:
+                write_file(p, doc, dry_run=args.dry_run, overwrite=False)
+
+    print("[doc_production_generate] PASS")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="doc_production_generate")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -2536,6 +3070,21 @@ def build_parser() -> argparse.ArgumentParser:
     p_del.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
     p_del.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")
 
+    p_items = sub.add_parser(
+        "delivery-items-pack",
+        help="Generate STORY/AC/TP (+optional) from PRD delivery_items SSOT (product-oriented)",
+    )
+    p_items.add_argument("--prd", required=True, help="PRD number (4 digits), e.g. 0004")
+    p_items.add_argument("--spec", required=True, help="Default SPEC number (4 digits), e.g. 0013")
+    p_items.add_argument("--pb", default="", help="PB number (4 digits, optional; if empty, parse from PRD meta)")
+    p_items.add_argument("--title", default="", help="Title override (optional; default: PRD title)")
+    p_items.add_argument("--owner", default="@team/platform", help="Owner value (default: @team/platform)")
+    p_items.add_argument("--epic", default="DOCS-PRODUCTION", help="Epic label (default: DOCS-PRODUCTION)")
+    p_items.add_argument("--risk-level", default="medium", help="Default Risk_Level (low|medium|high, default: medium)")
+    p_items.add_argument("--story-start", default="", help="Optional STORY start number (4 digits), e.g. 0310")
+    p_items.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
+    p_items.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")
+
     return ap
 
 
@@ -2553,6 +3102,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_trace_pack(args)
     if args.cmd == "delivery-pack":
         return cmd_delivery_pack(args)
+    if args.cmd == "delivery-items-pack":
+        return cmd_delivery_items_pack(args)
     return die(f"unknown cmd: {args.cmd}")
 
 

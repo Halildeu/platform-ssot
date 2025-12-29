@@ -61,3 +61,37 @@ altını doldurabilir.
 -------------------------------------------------------------------------------
 
 - İlgili PB / STORY / ACCEPTANCE / TEST PLAN / API dokümanları (varsa).
+
+-------------------------------------------------------------------------------
+10. DELIVERY ITEMS (SSOT)
+-------------------------------------------------------------------------------
+
+Bu bölüm **ürün odaklı** delivery breakdown için deterministik SSOT’tur.
+Generator bu JSON’u okuyarak:
+- Default: `1 delivery_item -> 1 STORY` (vertical slice)
+- Yalnız `split_by=stream` verilirse: `streams` başına STORY üretir.
+
+Kurallar:
+- `slug` kebab-case olmalı (dosya slug’ı olarak kullanılır).
+- `optional_docs` yalnız ihtiyaç olduğunda eklenir (tahmin yok). `ADR` istenirse ADR ID otomatik seçilir.
+
+```json
+{
+  "ssot": "PRD_DELIVERY_ITEMS_V1",
+  "delivery_items": [
+    {
+      "id": "DI-0001",
+      "title": "Örnek vertical slice",
+      "slug": "example-slice",
+      "split_by": "none",
+      "streams": [],
+      "services": [],
+      "story_id": null,
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    }
+  ]
+}
+```

@@ -100,3 +100,120 @@ Bağımlılıklar:
 - BENCH Pack: `docs/01-product/BENCHMARKS/ETHICS/`
 - TRACE: `docs/03-delivery/TRACES/TRACE-0001-ethics-bm-to-delivery.tsv`
 - Delivery SPEC: `docs/03-delivery/SPECS/SPEC-0013-ethics-case-management-contract-v1.md`
+
+-------------------------------------------------------------------------------
+## 10. DELIVERY ITEMS (SSOT)
+-------------------------------------------------------------------------------
+
+```json
+{
+  "ssot": "PRD_DELIVERY_ITEMS_V1",
+  "delivery_items": [
+    {
+      "id": "DI-0004-01",
+      "title": "Ethics: Intake & Case Mailbox (MVP)",
+      "slug": "ethics-intake-and-case-mailbox",
+      "split_by": "none",
+      "streams": [],
+      "services": [
+        "ethics-case-management"
+      ],
+      "story_id": "0306",
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    },
+    {
+      "id": "DI-0004-02",
+      "title": "Ethics: COI & Access Boundary (MVP)",
+      "slug": "ethics-coi-and-access-boundary",
+      "split_by": "none",
+      "streams": [],
+      "services": [
+        "ethics-case-management"
+      ],
+      "story_id": "0307",
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    },
+    {
+      "id": "DI-0004-03",
+      "title": "Ethics: Audit Trail & Evidence Handling (MVP)",
+      "slug": "ethics-audit-trail-and-evidence-handling",
+      "split_by": "none",
+      "streams": [],
+      "services": [
+        "ethics-case-management"
+      ],
+      "story_id": "0308",
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    },
+    {
+      "id": "DI-0004-04",
+      "title": "Ethics: Triage Routing Policy (MVP)",
+      "slug": "ethics-triage-routing-policy",
+      "split_by": "none",
+      "streams": [],
+      "services": [
+        "ethics-case-management"
+      ],
+      "story_id": "0309",
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    },
+    {
+      "id": "DI-0004-05",
+      "title": "Ethics: SLA & Escalation Rules (MVP)",
+      "slug": "ethics-sla-and-escalation",
+      "split_by": "none",
+      "streams": [],
+      "services": [
+        "ethics-case-management"
+      ],
+      "story_id": "0310",
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    },
+    {
+      "id": "DI-0004-06",
+      "title": "Ethics: Retaliation Check-in & Protection (MVP)",
+      "slug": "ethics-retaliation-checkin",
+      "split_by": "none",
+      "streams": [],
+      "services": [
+        "ethics-case-management"
+      ],
+      "story_id": "0311",
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    },
+    {
+      "id": "DI-0004-07",
+      "title": "Ethics: Closure Quality Score (MVP)",
+      "slug": "ethics-closure-quality-score",
+      "split_by": "none",
+      "streams": [],
+      "services": [
+        "ethics-case-management"
+      ],
+      "story_id": "0312",
+      "story_ids": null,
+      "spec": null,
+      "risk_level": "medium",
+      "optional_docs": []
+    }
+  ]
+}
+```
