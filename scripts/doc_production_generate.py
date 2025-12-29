@@ -182,7 +182,7 @@ def load_template_text(template_filename: str) -> str:
 
 
 def next_guide_num() -> str:
-    rx = re.compile(r"^GUIDE-(?P<num>\\d{4})-", re.IGNORECASE)
+    rx = re.compile(r"^GUIDE-(?P<num>\d{4})-", re.IGNORECASE)
     nums: list[int] = []
     if GUIDES_ROOT.exists():
         for p in GUIDES_ROOT.rglob("GUIDE-*.md"):
@@ -195,6 +195,20 @@ def next_guide_num() -> str:
     if nxt > 9999:
         raise ValueError("GUIDE id overflow (max=9999)")
     return f"{nxt:04d}"
+
+
+def find_existing_doc_by_id(*, root: Path, doc_id: str, preferred_slug: str = "", ext: str) -> Path | None:
+    candidates = sorted([p for p in root.glob(f"{doc_id}-*.{ext}") if p.is_file()])
+    if not candidates:
+        return None
+    if preferred_slug:
+        preferred = root / f"{doc_id}-{preferred_slug}.{ext}"
+        if preferred in candidates:
+            return preferred
+        by_contains = [p for p in candidates if preferred_slug in p.name]
+        if by_contains:
+            return by_contains[0]
+    return candidates[0]
 
 
 @dataclass(frozen=True)
@@ -1111,14 +1125,14 @@ def render_adr_doc(
     links: list[str] | None,
 ) -> str:
     txt = load_template_text("ADR.template.md")
-    txt = re.sub(r"(?m)^#\\s+ADR-XXXX:\\s+.*$", f"# {adr_id}: {title}", txt, count=1)
-    txt = re.sub(r"(?m)^ID:\\s+ADR-XXXX\\s*$", f"ID: {adr_id}  ", txt, count=1)
-    txt = re.sub(r"(?m)^Owner:\\s+.*$", f"Owner: {owner}", txt, count=1)
-    txt = re.sub(r"(?m)^Date:\\s+.*$", f"Date: {date}  ", txt, count=1)
+    txt = re.sub(r"(?m)^#\s+ADR-XXXX:\s+.*$", f"# {adr_id}: {title}", txt, count=1)
+    txt = re.sub(r"(?m)^ID:\s+ADR-XXXX\s*$", f"ID: {adr_id}  ", txt, count=1)
+    txt = re.sub(r"(?m)^Owner:\s+.*$", f"Owner: {owner}", txt, count=1)
+    txt = re.sub(r"(?m)^Date:\s+.*$", f"Date: {date}  ", txt, count=1)
     if links:
         bullets = "\n".join([f"- {x}" for x in links])
         txt = re.sub(
-            r"(?m)^-\\s+İlgili\\s+SPEC\\s+/\\s+STORY\\s+/\\s+RUNBOOK\\s+/\\s+referanslar\\s*$",
+            r"(?m)^-\s+İlgili\s+SPEC\s+/\s+STORY\s+/\s+RUNBOOK\s+/\s+referanslar\s*$",
             bullets,
             txt,
             count=1,
@@ -1128,14 +1142,14 @@ def render_adr_doc(
 
 def render_tech_design_doc(*, title: str) -> str:
     txt = load_template_text("TECH-DESIGN.template.md")
-    txt = re.sub(r"(?m)^#\\s+TECH-DESIGN\\s+–\\s+.*$", f"# TECH-DESIGN – {title}", txt, count=1)
+    txt = re.sub(r"(?m)^#\s+TECH-DESIGN\s+–\s+.*$", f"# TECH-DESIGN – {title}", txt, count=1)
     return txt.rstrip() + "\n"
 
 
 def render_guide_doc(*, guide_id: str, title: str) -> str:
     # Template headings are the contract; we keep them and add minimal bullets.
     tmpl = load_template_text("GUIDE.template.md")
-    headings = [ln.strip() for ln in tmpl.splitlines() if re.match(r"^\\s*\\d+\\.\\s+", ln)]
+    headings = [ln.strip() for ln in tmpl.splitlines() if re.match(r"^\s*\d+\.\s+", ln)]
 
     out: list[str] = []
     out.append(f"# {guide_id}: {title}")
@@ -1150,20 +1164,20 @@ def render_guide_doc(*, guide_id: str, title: str) -> str:
 
 def render_interface_contract_doc(*, title: str, ic_id: str) -> str:
     txt = load_template_text("INTERFACE-CONTRACT.template.md")
-    txt = re.sub(r"(?m)^#\\s+INTERFACE-CONTRACT\\s+–\\s+.*$", f"# INTERFACE-CONTRACT – {title}", txt, count=1)
-    txt = re.sub(r"(?m)^ID:\\s+.*$", f"ID: {ic_id}", txt, count=1)
+    txt = re.sub(r"(?m)^#\s+INTERFACE-CONTRACT\s+–\s+.*$", f"# INTERFACE-CONTRACT – {title}", txt, count=1)
+    txt = re.sub(r"(?m)^ID:\s+.*$", f"ID: {ic_id}", txt, count=1)
     return txt.rstrip() + "\n"
 
 
 def render_data_card_doc(*, title: str) -> str:
     txt = load_template_text("DATA-CARD.template.md")
-    txt = re.sub(r"(?m)^#\\s+DATA-CARD\\s+–\\s+.*$", f"# DATA-CARD – {title}", txt, count=1)
+    txt = re.sub(r"(?m)^#\s+DATA-CARD\s+–\s+.*$", f"# DATA-CARD – {title}", txt, count=1)
     return txt.rstrip() + "\n"
 
 
 def render_model_card_doc(*, title: str) -> str:
     txt = load_template_text("MODEL-CARD.template.md")
-    txt = re.sub(r"(?m)^#\\s+MODEL-CARD\\s+–\\s+.*$", f"# MODEL-CARD – {title}", txt, count=1)
+    txt = re.sub(r"(?m)^#\s+MODEL-CARD\s+–\s+.*$", f"# MODEL-CARD – {title}", txt, count=1)
     return txt.rstrip() + "\n"
 
 
@@ -1377,8 +1391,17 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
     downstream_extra: list[str] = []
     optional_writes: list[tuple[Path, str]] = []
     if args.include_auto_optional:
+        story_signals_path = (
+            find_existing_doc_by_id(root=STORY_ROOT, doc_id=story_id, preferred_slug=delivery_slug, ext="md")
+            or Path(story_path)
+        )
+        spec_link_path = (
+            find_existing_doc_by_id(root=SPEC_ROOT, doc_id=spec_id, preferred_slug=delivery_slug, ext="md")
+            or Path(spec_path)
+        )
+
         try:
-            tokens = get_list(seed, "optional.generate") + read_story_downstream_tokens(Path(story_path))
+            tokens = get_list(seed, "optional.generate") + read_story_downstream_tokens(story_signals_path)
             service = get_str(seed, "optional.service")
         except Exception as e:
             return die(f"optional signals invalid: {e}")
@@ -1473,13 +1496,22 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
                 continue
 
         if wants_guide_auto and not guide_stems:
-            try:
-                new_num = next_guide_num()
-            except Exception as e:
-                return die(str(e))
-            guide_id = f"GUIDE-{new_num}"
-            guide_stems.append(f"{guide_id}-{delivery_slug}")
-            downstream_extra.append(guide_id)
+            guide_dir = GUIDES_ROOT / delivery_slug
+            existing_guides = sorted([p for p in guide_dir.glob("GUIDE-*.md") if p.is_file()])
+            if existing_guides:
+                stem = existing_guides[0].stem
+                guide_stems.append(stem)
+                m = re.match(r"^(GUIDE-\d{4})", stem, re.IGNORECASE)
+                if m:
+                    downstream_extra.append(m.group(1).upper())
+            else:
+                try:
+                    new_num = next_guide_num()
+                except Exception as e:
+                    return die(str(e))
+                guide_id = f"GUIDE-{new_num}"
+                guide_stems.append(f"{guide_id}-{delivery_slug}")
+                downstream_extra.append(guide_id)
 
         # ADR / TECH-DESIGN are service-scoped; require explicit service.
         if (adr_stems or wants_tech_design) and not service_slug:
@@ -1489,11 +1521,11 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
 
         if adr_stems:
             adr_links = [
-                f"SPEC: `{spec_path}`",
-                f"STORY: `{story_path}`",
+                f"SPEC: `{spec_link_path.as_posix()}`",
+                f"STORY: `{story_signals_path.as_posix()}`",
                 f"TRACE: `{trace_path.as_posix()}`",
             ]
-            if args.include_runbook:
+            if args.include_runbook and (not args.only_auto_optional or Path(runbook_path).exists()):
                 adr_links.append(f"RUNBOOK: `{runbook_path}`")
             for stem in sorted(set(adr_stems)):
                 adr_id = stem.split("-", 2)[0] + "-" + stem.split("-", 2)[1]
@@ -1534,6 +1566,14 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
             mc_doc = render_model_card_doc(title=title)
             mc_path = MODEL_CARD_ROOT / f"MODEL-CARD-{delivery_slug}.md"
             optional_writes.append((mc_path, mc_doc))
+
+    if args.only_auto_optional:
+        if not args.include_auto_optional:
+            print("[doc_production_generate] NOTE: only-auto-optional: auto-optional disabled; nothing to do")
+        for p, doc in optional_writes:
+            write_file(p, doc, dry_run=args.dry_run, overwrite=args.overwrite)
+        print("[doc_production_generate] PASS")
+        return 0
 
     bm_topic_dir = (BM_ROOT / topic).as_posix() + "/"
     bench_topic_dir = (BENCH_ROOT / topic).as_posix() + "/"
@@ -2348,6 +2388,13 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_false",
         default=True,
         help="Do not auto-generate optional docs based on STORY Downstream / seed (default: enabled)",
+    )
+    p_e2e.add_argument(
+        "--only-auto-optional",
+        dest="only_auto_optional",
+        action="store_true",
+        default=False,
+        help="Only generate auto-optional docs (skip BM/BENCH/TRACE/Delivery/Runbook writes).",
     )
     p_e2e.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
     p_e2e.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")

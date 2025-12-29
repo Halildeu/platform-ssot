@@ -162,6 +162,7 @@ Generator (tek komut):
 - `python3 scripts/doc_production_generate.py e2e-pack --topic <TOPIC> --delivery-slug <slug> --bm <0001> --bench <0001> --trace <0001> --pb <0004> --prd <0004> --spec <0013> --story <0306> --owner @team/platform --risk-level medium --dry-run`
 - Runbook üretimini kapatmak için: `--no-runbook`
 - Auto-optional üretimi kapatmak için: `--no-auto-optional`
+- Mevcut zincirde yalnız auto-optional üretmek için: `--only-auto-optional` (BM/BENCH/TRACE/Delivery yazmaz)
 
 ### 4.2 Auto-Optional (Sinyal Sözleşmesi)
 
