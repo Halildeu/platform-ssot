@@ -225,6 +225,10 @@ def main() -> int:
 
             # story_id/story_ids are optional; if provided, docs must exist (keeps SSOT deterministic).
             story_id = it.get("story_id")
+            if split_by != "stream" and story_id is None:
+                warnings.append(
+                    f"{prd_path}: {item_id}: story_id is null (not pinned); pin after first generation to prevent duplicate STORY IDs"
+                )
             if story_id is not None:
                 if not isinstance(story_id, str) or not re.fullmatch(r"\d{4}", story_id.strip()):
                     violations.append(f"{prd_path}: {item_id}: story_id must be 4 digits or null")
@@ -234,6 +238,10 @@ def main() -> int:
                         violations.append(f"{prd_path}: {item_id}: STORY/AC/TP missing for story_id={num4}")
 
             story_ids = it.get("story_ids")
+            if split_by == "stream" and story_ids is None:
+                warnings.append(
+                    f"{prd_path}: {item_id}: split_by=stream but story_ids is null (not pinned); pin after first generation to prevent duplicate STORY IDs"
+                )
             if story_ids is not None:
                 if not isinstance(story_ids, dict):
                     violations.append(f"{prd_path}: {item_id}: story_ids must be object or null")
