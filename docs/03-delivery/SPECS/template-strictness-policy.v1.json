@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "default_mode": "report",
+  "modes": {
+    "PB": "report",
+    "PRD": "report",
+    "SPEC": "report",
+    "BM": "report",
+    "BENCH": "report",
+    "GUIDE": "subset",
+    "DATA-CARD": "report",
+    "MODEL-CARD": "report",
+    "INTERFACE-CONTRACT": "report",
+    "STORY": "strict",
+    "AC": "strict",
+    "TP": "subset",
+    "RB": "strict",
+    "ADR": "shape_only",
+    "TECH-DESIGN": "disabled",
+    "TRACE": "disabled"
+  },
+  "notes": [
+    "enabled=false: ihlalleri raporlar ama gate kırmaz.",
+    "enabled=true: report/strict/subset/shape_only modlarında ihlal varsa exit 1.",
+    "ADR/TECH-DESIGN/TRACE bilinçli istisna; ayrı minimal kontrol uygulanır."
+  ]
+}

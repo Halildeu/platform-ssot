@@ -132,7 +132,9 @@
       "side_effects": [
         "local_write(gh_auth_state)"
       ],
-      "required_auth_refs": [],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
       "required_env": [
         "GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD|Keychain"
       ],
@@ -141,7 +143,9 @@
         "GH_AUTH_VAULT_PATH",
         "GH_AUTH_VAULT_FIELD"
       ],
-      "outputs": []
+      "outputs": [
+        ".autopilot-tmp/**"
+      ]
     },
     {
       "id": "ROB-0006",
@@ -157,7 +161,9 @@
         "github_api(rate_limit)",
         "vault_kv_get(optional)"
       ],
-      "required_auth_refs": [],
+      "required_auth_refs": [
+        "TOK-0001"
+      ],
       "required_env": [
         "GH_TOKEN|GITHUB_TOKEN|GH_AUTH_VAULT_PATH|GH_AUTH_VAULT_FIELD"
       ],
@@ -167,7 +173,9 @@
         "GH_AUTH_VAULT_PATH (optional)",
         "GH_AUTH_VAULT_FIELD (optional)"
       ],
-      "outputs": []
+      "outputs": [
+        ".autopilot-tmp/**"
+      ]
     },
     {
       "id": "ROB-0100",
@@ -795,23 +803,28 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "git_push",
+        "github_api",
+        "pr_create"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "repo",
+        "run_id",
+        "base",
+        "dry_run"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -825,23 +838,30 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "local_write(.autopilot-tmp/**)",
+        "local_write(artifacts/**)",
+        "git_push",
+        "github_api"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "GH_AUTH_VAULT_PATH"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "repo",
+        "pr",
+        "max",
+        "out"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -855,23 +875,23 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "none"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "none"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -885,23 +905,24 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "local_write(.autopilot-tmp/**)",
+        "workflow_dispatch"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "none"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "none"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -915,23 +936,25 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "local_write(.autopilot-tmp/**)",
+        "git_push"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "none"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "days",
+        "out_dir"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -945,23 +968,26 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "git_push",
+        "github_api",
+        "local_git_config"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "remote",
+        "dry_run"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -975,23 +1001,47 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "local_write(artifacts/**)",
+        "git_push",
+        "workflow_dispatch",
+        "github_api",
+        "pr_create",
+        "merge"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "DEPLOY_ENABLED",
+        "GH_AUTH_VAULT_PATH"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "repo",
+        "base",
+        "head",
+        "pr",
+        "fix_mode",
+        "fix_cmd",
+        "max_fix",
+        "any_fail",
+        "auto_conflict",
+        "merge",
+        "merge_wait_sec",
+        "allow_direct_merge",
+        "force_merge",
+        "delete_branch",
+        "deploy",
+        "deploy_env",
+        "deploy_trigger_wait_sec",
+        "deploy_wait_max_sec"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -1005,23 +1055,28 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "local_write(.autopilot-tmp/**)",
+        "vault_kv_get",
+        "docker_compose_up"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer",
+        "GH_LOCAL_AUTOPILOT_TOKEN",
+        "VAULT_ADDR",
+        "VAULT_TOKEN"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "none"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     },
     {
@@ -1035,23 +1090,29 @@
         "plan"
       ],
       "side_effects": [
-        "TBD"
+        "workflow_dispatch",
+        "github_api"
       ],
       "required_auth_refs": [
-        "TBD"
+        "TOK-0001"
       ],
       "required_env": [
-        "TBD"
+        "GH_TOKEN|GITHUB_TOKEN|VaultPointer"
       ],
       "required_confirm": null,
       "inputs": [
-        "TBD"
+        "repo",
+        "event_path",
+        "token_env",
+        "rules_path",
+        "pr",
+        "dry_run"
       ],
       "outputs": [
-        "TBD"
+        ".autopilot-tmp/**"
       ],
       "notes": [
-        "AUTO-STUB: fill side_effects/auth/inputs/outputs"
+        "AUTO-STUB: resolved (auto-inferred fields from robots_tbd_plan)"
       ]
     }
   ]

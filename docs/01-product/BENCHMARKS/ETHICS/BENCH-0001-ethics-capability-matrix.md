@@ -57,7 +57,16 @@ Matrix (Doldurma Şablonu):
 
 | Alan | Kapabilite | Kanıt Türü | Kaynak | Tarih | Not |
 |---|---|---|---|---|---|
-| Intake | (örn. anonim + iki yönlü iletişim) | doc/demo | TBD | TBD | TBD |
+| Intake | Çok kanallı giriş (web/e-posta/telefon) | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Intake | Anonim + iki yönlü güvenli iletişim | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Triage ve İş Akışı | Vaka tipleri ve yönlendirme | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Triage ve İş Akışı | SLA yönetimi | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Triage ve İş Akışı | COI kontrolü ve bağımsız atama | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| İnceleme | Delil/ek yönetimi | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| İnceleme | Rol bazlı görünürlük + audit trail derinliği | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Koruma | Misilleme süreci (check-in) | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| Ölçüm | Trend/tekrar/kapanış kalitesi ölçümü | doc | docs/01-product/BUSINESS-MASTERS/ETHICS/ | 2025-12 | Baseline kriter seti (repo içi SSOT). |
+| AI (Governance) | Özetleme/triage önerisi/benzer vaka | doc | docs/01-product/BENCHMARKS/ETHICS/BENCH-0001-ethics-gaps-trends-ai.md | 2025-12 | Asistan rolü + guardrail ile değerlendirilir. |
 
 -------------------------------------------------------------------------------
 4. TRENDLER

@@ -2,7 +2,7 @@
 """
 Non-blocking auth/secret registry coverage report.
 
-- If `docs/04-operations/AUTH-REGISTRY.tsv` is missing: SKIP and exit 0.
+- If `docs/00-handbook/AUTH-REGISTRY.tsv` is missing: SKIP and exit 0.
 - Otherwise:
   - scans workflows for `secrets.<NAME>` usage
   - scans repo for a small allowlisted set of env/secrets identifiers
@@ -16,7 +16,7 @@ import re
 import sys
 from pathlib import Path
 
-REGISTRY = Path("docs/04-operations/AUTH-REGISTRY.tsv")
+REGISTRY = Path("docs/00-handbook/AUTH-REGISTRY.tsv")
 WORKFLOWS_DIR = Path(".github/workflows")
 
 # Keep this list explicit to limit false positives and keep the scanner deterministic.
