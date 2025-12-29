@@ -1215,7 +1215,7 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
     bm_out_dir = BM_ROOT / topic
 
     def pick_bm_part_path(*, token: str, default_filename: str) -> Path:
-        if not args.overwrite and bm_out_dir.exists():
+        if bm_out_dir.exists():
             existing = sorted(
                 [
                     p
@@ -1290,8 +1290,28 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
     # BENCH pack
     bench_version = version.strip().lstrip("v")
     bench_out_dir = BENCH_ROOT / topic
-    bench_matrix_path = bench_out_dir / f"BENCH-{bench_num}-{topic_slug}-capability-matrix.md"
-    bench_gaps_path = bench_out_dir / f"BENCH-{bench_num}-{topic_slug}-gaps-trends-ai.md"
+
+    def pick_bench_part_path(*, token: str, default_filename: str) -> Path:
+        if bench_out_dir.exists():
+            existing = sorted(
+                [
+                    p
+                    for p in bench_out_dir.glob(f"BENCH-{bench_num}-{topic_slug}-*.md")
+                    if p.is_file() and token in p.name.casefold()
+                ]
+            )
+            if existing:
+                return existing[0]
+        return bench_out_dir / default_filename
+
+    bench_matrix_path = pick_bench_part_path(
+        token="capability",
+        default_filename=f"BENCH-{bench_num}-{topic_slug}-capability-matrix.md",
+    )
+    bench_gaps_path = pick_bench_part_path(
+        token="gaps",
+        default_filename=f"BENCH-{bench_num}-{topic_slug}-gaps-trends-ai.md",
+    )
 
     bm_dir_for_links = (BM_ROOT / topic).as_posix() + "/"
     bench_seed = build_bench_seed(title, seed=seed, bm_topic_dir=bm_dir_for_links)
@@ -1343,7 +1363,11 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
     except Exception as e:
         return die(f"trace overrides invalid: {e}")
 
-    trace_path = TRACE_ROOT / f"TRACE-{trace_num}-{trace_slug}-bm-to-delivery.tsv"
+    preferred_trace_path = TRACE_ROOT / f"TRACE-{trace_num}-{trace_slug}-bm-to-delivery.tsv"
+    trace_candidates = sorted(
+        [p for p in TRACE_ROOT.glob(f"TRACE-{trace_num}-*-bm-to-delivery.tsv") if p.is_file()]
+    )
+    trace_path = preferred_trace_path if preferred_trace_path in trace_candidates else (trace_candidates[0] if trace_candidates else preferred_trace_path)
 
     header = "BM_ITEM_ID\tBM_SECTION\tTARGET_TYPE\tTARGET_ID\tmapping_quality\tNOTES"
     rows: list[tuple[str, str, str, str, str, str]] = []
@@ -1380,12 +1404,19 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
     ac_id = f"AC-{story_num}"
     tp_id = f"TP-{story_num}"
 
-    pb_path = (PB_ROOT / f"{pb_id}-{delivery_slug}.md").as_posix()
-    prd_path = (PRD_ROOT / f"{prd_id}-{delivery_slug}.md").as_posix()
-    spec_path = (SPEC_ROOT / f"{spec_id}-{delivery_slug}.md").as_posix()
-    story_path = (STORY_ROOT / f"{story_id}-{delivery_slug}.md").as_posix()
-    ac_path = (AC_ROOT / f"{ac_id}-{delivery_slug}.md").as_posix()
-    tp_path = (TP_ROOT / f"{tp_id}-{delivery_slug}.md").as_posix()
+    pb_path_p = find_existing_doc_by_id(root=PB_ROOT, doc_id=pb_id, preferred_slug=delivery_slug, ext="md") or (PB_ROOT / f"{pb_id}-{delivery_slug}.md")
+    prd_path_p = find_existing_doc_by_id(root=PRD_ROOT, doc_id=prd_id, preferred_slug=delivery_slug, ext="md") or (PRD_ROOT / f"{prd_id}-{delivery_slug}.md")
+    spec_path_p = find_existing_doc_by_id(root=SPEC_ROOT, doc_id=spec_id, preferred_slug=delivery_slug, ext="md") or (SPEC_ROOT / f"{spec_id}-{delivery_slug}.md")
+    story_path_p = find_existing_doc_by_id(root=STORY_ROOT, doc_id=story_id, preferred_slug=delivery_slug, ext="md") or (STORY_ROOT / f"{story_id}-{delivery_slug}.md")
+    ac_path_p = find_existing_doc_by_id(root=AC_ROOT, doc_id=ac_id, preferred_slug=delivery_slug, ext="md") or (AC_ROOT / f"{ac_id}-{delivery_slug}.md")
+    tp_path_p = find_existing_doc_by_id(root=TP_ROOT, doc_id=tp_id, preferred_slug=delivery_slug, ext="md") or (TP_ROOT / f"{tp_id}-{delivery_slug}.md")
+
+    pb_path = pb_path_p.as_posix()
+    prd_path = prd_path_p.as_posix()
+    spec_path = spec_path_p.as_posix()
+    story_path = story_path_p.as_posix()
+    ac_path = ac_path_p.as_posix()
+    tp_path = tp_path_p.as_posix()
 
     # Auto-optional docs (signals: STORY Downstream + seed.optional.generate)
     downstream_extra: list[str] = []
