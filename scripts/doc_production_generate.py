@@ -30,6 +30,11 @@ BM_ROOT = Path("docs/01-product/BUSINESS-MASTERS")
 BENCH_ROOT = Path("docs/01-product/BENCHMARKS")
 TRACE_ROOT = Path("docs/03-delivery/TRACES")
 RUNBOOK_ROOT = Path("docs/04-operations/RUNBOOKS")
+GUIDES_ROOT = Path("docs/03-delivery/guides")
+INTERFACE_CONTRACT_ROOT = Path("docs/03-delivery/INTERFACE-CONTRACTS")
+DATA_CARD_ROOT = Path("docs/05-ml-ai/DATA-CARDS")
+MODEL_CARD_ROOT = Path("docs/05-ml-ai/MODEL-CARDS")
+SERVICES_ROOT = Path("docs/02-architecture/services")
 PB_ROOT = Path("docs/01-product/PROBLEM-BRIEFS")
 PRD_ROOT = Path("docs/01-product/PRD")
 SPEC_ROOT = Path("docs/03-delivery/SPECS")
@@ -37,6 +42,7 @@ STORY_ROOT = Path("docs/03-delivery/STORIES")
 AC_ROOT = Path("docs/03-delivery/ACCEPTANCE")
 TP_ROOT = Path("docs/03-delivery/TEST-PLANS")
 DEFAULT_VERSION = "v0.1"
+TEMPLATES_ROOT = Path("docs/99-templates")
 
 RE_BM_ITEM_ID = re.compile(r"\bBM-(?P<bm>\d{4})-(?P<doc>CORE|CTRL|MET)-(?P<typ>DEC|GRD|KPI|RSK|ASM|VAL)-(?P<seq>\d{3})\b")
 
@@ -46,10 +52,15 @@ TRACE_ALLOWED_TARGET_TYPES = {
     "PLATFORM_SPEC",
     "SPEC",
     "ADR",
+    "TECH-DESIGN",
+    "GUIDE",
+    "INTERFACE-CONTRACT",
     "STORY",
     "AC",
     "TP",
     "RB",
+    "DATA-CARD",
+    "MODEL-CARD",
     "OBS",
 }
 TRACE_ALLOWED_MAPPING_QUALITY = {"coarse", "refined"}
@@ -140,6 +151,50 @@ def get_list(seed: dict[str, Any], key: str) -> list[str]:
     if not isinstance(val, list) or any((not isinstance(x, str) or not x.strip()) for x in val):
         raise ValueError(f"seed.{key} must be non-empty strings list")
     return [x.strip() for x in val]
+
+
+def get_str(seed: dict[str, Any], key: str) -> str | None:
+    val = seed.get(key)
+    if val is None:
+        return None
+    if not isinstance(val, str) or not val.strip():
+        raise ValueError(f"seed.{key} must be non-empty string")
+    return val.strip()
+
+
+def read_story_downstream_tokens(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()[:25]
+    for line in lines:
+        if line.strip().startswith("Downstream:"):
+            raw = line.split(":", 1)[1]
+            tokens = [t.strip() for t in re.split(r"[,\s]+", raw) if t.strip()]
+            return tokens
+    return []
+
+
+def load_template_text(template_filename: str) -> str:
+    path = TEMPLATES_ROOT / template_filename
+    if not path.exists():
+        raise FileNotFoundError(path)
+    return path.read_text(encoding="utf-8", errors="ignore")
+
+
+def next_guide_num() -> str:
+    rx = re.compile(r"^GUIDE-(?P<num>\\d{4})-", re.IGNORECASE)
+    nums: list[int] = []
+    if GUIDES_ROOT.exists():
+        for p in GUIDES_ROOT.rglob("GUIDE-*.md"):
+            if not p.is_file():
+                continue
+            m = rx.match(p.name)
+            if m:
+                nums.append(int(m.group("num")))
+    nxt = (max(nums) + 1) if nums else 1
+    if nxt > 9999:
+        raise ValueError("GUIDE id overflow (max=9999)")
+    return f"{nxt:04d}"
 
 
 @dataclass(frozen=True)
@@ -1047,6 +1102,71 @@ def render_runbook_doc(
     return "\n".join(lines) + "\n"
 
 
+def render_adr_doc(
+    *,
+    adr_id: str,
+    title: str,
+    owner: str,
+    date: str,
+    links: list[str] | None,
+) -> str:
+    txt = load_template_text("ADR.template.md")
+    txt = re.sub(r"(?m)^#\\s+ADR-XXXX:\\s+.*$", f"# {adr_id}: {title}", txt, count=1)
+    txt = re.sub(r"(?m)^ID:\\s+ADR-XXXX\\s*$", f"ID: {adr_id}  ", txt, count=1)
+    txt = re.sub(r"(?m)^Owner:\\s+.*$", f"Owner: {owner}", txt, count=1)
+    txt = re.sub(r"(?m)^Date:\\s+.*$", f"Date: {date}  ", txt, count=1)
+    if links:
+        bullets = "\n".join([f"- {x}" for x in links])
+        txt = re.sub(
+            r"(?m)^-\\s+İlgili\\s+SPEC\\s+/\\s+STORY\\s+/\\s+RUNBOOK\\s+/\\s+referanslar\\s*$",
+            bullets,
+            txt,
+            count=1,
+        )
+    return txt.rstrip() + "\n"
+
+
+def render_tech_design_doc(*, title: str) -> str:
+    txt = load_template_text("TECH-DESIGN.template.md")
+    txt = re.sub(r"(?m)^#\\s+TECH-DESIGN\\s+–\\s+.*$", f"# TECH-DESIGN – {title}", txt, count=1)
+    return txt.rstrip() + "\n"
+
+
+def render_guide_doc(*, guide_id: str, title: str) -> str:
+    # Template headings are the contract; we keep them and add minimal bullets.
+    tmpl = load_template_text("GUIDE.template.md")
+    headings = [ln.strip() for ln in tmpl.splitlines() if re.match(r"^\\s*\\d+\\.\\s+", ln)]
+
+    out: list[str] = []
+    out.append(f"# {guide_id}: {title}")
+    out.append("")
+    for h in headings:
+        out.append(h)
+        out.append("")
+        out.append("- (kısa açıklama)")
+        out.append("")
+    return "\n".join(out).rstrip() + "\n"
+
+
+def render_interface_contract_doc(*, title: str, ic_id: str) -> str:
+    txt = load_template_text("INTERFACE-CONTRACT.template.md")
+    txt = re.sub(r"(?m)^#\\s+INTERFACE-CONTRACT\\s+–\\s+.*$", f"# INTERFACE-CONTRACT – {title}", txt, count=1)
+    txt = re.sub(r"(?m)^ID:\\s+.*$", f"ID: {ic_id}", txt, count=1)
+    return txt.rstrip() + "\n"
+
+
+def render_data_card_doc(*, title: str) -> str:
+    txt = load_template_text("DATA-CARD.template.md")
+    txt = re.sub(r"(?m)^#\\s+DATA-CARD\\s+–\\s+.*$", f"# DATA-CARD – {title}", txt, count=1)
+    return txt.rstrip() + "\n"
+
+
+def render_model_card_doc(*, title: str) -> str:
+    txt = load_template_text("MODEL-CARD.template.md")
+    txt = re.sub(r"(?m)^#\\s+MODEL-CARD\\s+–\\s+.*$", f"# MODEL-CARD – {title}", txt, count=1)
+    return txt.rstrip() + "\n"
+
+
 def cmd_e2e_pack(args: argparse.Namespace) -> int:
     try:
         topic = norm_topic_folder(args.topic)
@@ -1253,6 +1373,168 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
     ac_path = (AC_ROOT / f"{ac_id}-{delivery_slug}.md").as_posix()
     tp_path = (TP_ROOT / f"{tp_id}-{delivery_slug}.md").as_posix()
 
+    # Auto-optional docs (signals: STORY Downstream + seed.optional.generate)
+    downstream_extra: list[str] = []
+    optional_writes: list[tuple[Path, str]] = []
+    if args.include_auto_optional:
+        try:
+            tokens = get_list(seed, "optional.generate") + read_story_downstream_tokens(Path(story_path))
+            service = get_str(seed, "optional.service")
+        except Exception as e:
+            return die(f"optional signals invalid: {e}")
+
+        svc_rx = re.compile(r"^(?:svc|service)=(?P<svc>[a-z0-9]+(?:-[a-z0-9]+)*)$", re.IGNORECASE)
+        cleaned: list[str] = []
+        for tok in tokens:
+            t = tok.strip()
+            if not t:
+                continue
+            m = svc_rx.match(t)
+            if m:
+                service = service or m.group("svc")
+                continue
+            cleaned.append(t)
+
+        try:
+            service_slug = norm_slug(service) if service else ""
+        except Exception as e:
+            return die(f"optional.service invalid: {e}")
+
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        adr_rx = re.compile(
+            r"^(?P<id>ADR-\\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
+            re.IGNORECASE,
+        )
+        guide_rx = re.compile(
+            r"^(?P<id>GUIDE-\\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
+            re.IGNORECASE,
+        )
+
+        adr_stems: list[str] = []
+        guide_stems: list[str] = []
+        wants_tech_design = False
+        wants_interface_contract = False
+        wants_data_card = False
+        wants_model_card = False
+        wants_guide_auto = False
+
+        for tok in cleaned:
+            m = adr_rx.match(tok)
+            if m:
+                adr_id = m.group("id").upper()
+                suffix = m.group("slug")
+                if suffix:
+                    try:
+                        suffix = norm_slug(suffix)
+                    except Exception as e:
+                        return die(f"ADR slug invalid: {tok}: {e}")
+                    stem = f"{adr_id}-{suffix}"
+                else:
+                    stem = f"{adr_id}-{delivery_slug}"
+                adr_stems.append(stem)
+                downstream_extra.append(adr_id)
+                continue
+
+            m = guide_rx.match(tok)
+            if m:
+                guide_id = m.group("id").upper()
+                suffix = m.group("slug")
+                if suffix:
+                    try:
+                        suffix = norm_slug(suffix)
+                    except Exception as e:
+                        return die(f"GUIDE slug invalid: {tok}: {e}")
+                    stem = f"{guide_id}-{suffix}"
+                else:
+                    stem = f"{guide_id}-{delivery_slug}"
+                guide_stems.append(stem)
+                downstream_extra.append(guide_id)
+                continue
+
+            up = tok.strip().upper()
+            if up in {"TECH-DESIGN", "TECH_DESIGN"}:
+                wants_tech_design = True
+                downstream_extra.append("TECH-DESIGN")
+                continue
+            if up == "GUIDE":
+                wants_guide_auto = True
+                continue
+            if up in {"INTERFACE-CONTRACT", "INTERFACE_CONTRACT"}:
+                wants_interface_contract = True
+                downstream_extra.append("INTERFACE-CONTRACT")
+                continue
+            if up == "DATA-CARD":
+                wants_data_card = True
+                downstream_extra.append("DATA-CARD")
+                continue
+            if up == "MODEL-CARD":
+                wants_model_card = True
+                downstream_extra.append("MODEL-CARD")
+                continue
+
+        if wants_guide_auto and not guide_stems:
+            try:
+                new_num = next_guide_num()
+            except Exception as e:
+                return die(str(e))
+            guide_id = f"GUIDE-{new_num}"
+            guide_stems.append(f"{guide_id}-{delivery_slug}")
+            downstream_extra.append(guide_id)
+
+        # ADR / TECH-DESIGN are service-scoped; require explicit service.
+        if (adr_stems or wants_tech_design) and not service_slug:
+            return die("auto-optional requested ADR/TECH-DESIGN but optional.service is missing")
+
+        runbook_path = (RUNBOOK_ROOT / f"RB-{delivery_slug}.md").as_posix()
+
+        if adr_stems:
+            adr_links = [
+                f"SPEC: `{spec_path}`",
+                f"STORY: `{story_path}`",
+                f"TRACE: `{trace_path.as_posix()}`",
+            ]
+            if args.include_runbook:
+                adr_links.append(f"RUNBOOK: `{runbook_path}`")
+            for stem in sorted(set(adr_stems)):
+                adr_id = stem.split("-", 2)[0] + "-" + stem.split("-", 2)[1]
+                adr_doc = render_adr_doc(
+                    adr_id=adr_id,
+                    title=title,
+                    owner=owner,
+                    date=today,
+                    links=adr_links,
+                )
+                adr_path = SERVICES_ROOT / service_slug / "ADR" / f"{stem}.md"
+                optional_writes.append((adr_path, adr_doc))
+
+        if wants_tech_design:
+            td_doc = render_tech_design_doc(title=title)
+            td_path = SERVICES_ROOT / service_slug / f"TECH-DESIGN-{delivery_slug}.md"
+            optional_writes.append((td_path, td_doc))
+
+        if guide_stems:
+            for stem in sorted(set(guide_stems)):
+                guide_id = stem.split("-", 2)[0] + "-" + stem.split("-", 2)[1]
+                guide_doc = render_guide_doc(guide_id=guide_id, title=title)
+                guide_path = GUIDES_ROOT / delivery_slug / f"{stem}.md"
+                optional_writes.append((guide_path, guide_doc))
+
+        if wants_interface_contract:
+            ic_id = f"IC-{delivery_slug}"
+            ic_doc = render_interface_contract_doc(title=title, ic_id=ic_id)
+            ic_path = INTERFACE_CONTRACT_ROOT / f"INTERFACE-CONTRACT-{delivery_slug}.md"
+            optional_writes.append((ic_path, ic_doc))
+
+        if wants_data_card:
+            dc_doc = render_data_card_doc(title=title)
+            dc_path = DATA_CARD_ROOT / f"DATA-CARD-{delivery_slug}.md"
+            optional_writes.append((dc_path, dc_doc))
+
+        if wants_model_card:
+            mc_doc = render_model_card_doc(title=title)
+            mc_path = MODEL_CARD_ROOT / f"MODEL-CARD-{delivery_slug}.md"
+            optional_writes.append((mc_path, mc_doc))
+
     bm_topic_dir = (BM_ROOT / topic).as_posix() + "/"
     bench_topic_dir = (BENCH_ROOT / topic).as_posix() + "/"
 
@@ -1305,6 +1587,7 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
         tp_path=tp_path,
         prd_path=prd_path,
         spec_path=spec_path,
+        downstream_extra=downstream_extra,
     )
     ac_doc = render_acceptance_doc(
         ac_id=ac_id,
@@ -1356,6 +1639,9 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
     write_file(Path(story_path), story_doc, dry_run=args.dry_run, overwrite=args.overwrite)
     write_file(Path(ac_path), ac_doc, dry_run=args.dry_run, overwrite=args.overwrite)
     write_file(Path(tp_path), tp_doc, dry_run=args.dry_run, overwrite=args.overwrite)
+
+    for p, doc in optional_writes:
+        write_file(p, doc, dry_run=args.dry_run, overwrite=args.overwrite)
 
     print("[doc_production_generate] PASS")
     return 0
@@ -1644,6 +1930,7 @@ def render_story_doc(
     tp_path: str,
     prd_path: str | None,
     spec_path: str | None,
+    downstream_extra: list[str] | None = None,
 ) -> str:
     lines: list[str] = []
     lines.append(f"# {story_id} – {title}")
@@ -1662,7 +1949,18 @@ def render_story_doc(
         ups.append(spec_id)
     if ups:
         lines.append(f"Upstream: {', '.join(ups)}  ")
-    lines.append(f"Downstream: AC-{story_id.split('-')[1]}, TP-{story_id.split('-')[1]}")
+    story_num = story_id.split("-", 1)[1]
+    downstream = [f"AC-{story_num}", f"TP-{story_num}"]
+    seen = {x.casefold() for x in downstream}
+    for x in downstream_extra or []:
+        tok = str(x).strip()
+        if not tok:
+            continue
+        if tok.casefold() in seen:
+            continue
+        downstream.append(tok)
+        seen.add(tok.casefold())
+    lines.append(f"Downstream: {', '.join(downstream)}")
     lines.append("")
 
     lines.append(SEP)
@@ -2043,6 +2341,13 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_false",
         default=True,
         help="Do not generate RB-<delivery-slug>.md (default: generate)",
+    )
+    p_e2e.add_argument(
+        "--no-auto-optional",
+        dest="include_auto_optional",
+        action="store_false",
+        default=True,
+        help="Do not auto-generate optional docs based on STORY Downstream / seed (default: enabled)",
     )
     p_e2e.add_argument("--overwrite", action="store_true", help="Overwrite existing files")
     p_e2e.add_argument("--dry-run", action="store_true", help="Do not write; only print planned outputs")

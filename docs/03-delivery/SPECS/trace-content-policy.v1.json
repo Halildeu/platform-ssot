@@ -17,10 +17,15 @@
       "PLATFORM_SPEC",
       "SPEC",
       "ADR",
+      "TECH-DESIGN",
+      "GUIDE",
+      "INTERFACE-CONTRACT",
       "STORY",
       "AC",
       "TP",
       "RB",
+      "DATA-CARD",
+      "MODEL-CARD",
       "OBS"
     ],
     "allowed_mapping_quality": [

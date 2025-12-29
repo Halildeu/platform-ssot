@@ -149,11 +149,54 @@ Bu repo’da “uçtan uca doküman zinciri üret” komutu şu seti üretir:
 - TRACE Pack (1 dosya, `.tsv`)
 - Delivery Pack (6 dosya: PB/PRD/SPEC/STORY/AC/TP)
 - Runbook (1 dosya: `RB-*`, varsayılan açık)
+- Auto-Optional Pack (koşullu; sinyal varsa):
+  - ADR (`ADR-*`)
+  - TECH-DESIGN (`TECH-DESIGN-*`)
+  - GUIDE (`GUIDE-*`)
+  - INTERFACE-CONTRACT (`INTERFACE-CONTRACT-*`)
+  - DATA-CARD (`DATA-CARD-*`)
+  - MODEL-CARD (`MODEL-CARD-*`)
 
 Generator (tek komut):
 
 - `python3 scripts/doc_production_generate.py e2e-pack --topic <TOPIC> --delivery-slug <slug> --bm <0001> --bench <0001> --trace <0001> --pb <0004> --prd <0004> --spec <0013> --story <0306> --owner @team/platform --risk-level medium --dry-run`
 - Runbook üretimini kapatmak için: `--no-runbook`
+- Auto-optional üretimi kapatmak için: `--no-auto-optional`
+
+### 4.2 Auto-Optional (Sinyal Sözleşmesi)
+
+Amaç: Bazı şablonlar her işte zorunlu değildir; yalnız “gerektiğinde” üretilir. Bu ihtiyaç
+deterministik bir sinyalle ifade edilir (LLM tahmini yok).
+
+Sinyal kaynakları:
+
+1) **STORY meta `Downstream:`**
+   - Format: `Downstream: AC-0XXX, TP-0XXX, <opsiyonel-tokenler>`
+   - Desteklenen token örnekleri:
+     - `ADR-0003` veya `ADR-0003-<kebab-slug>`
+     - `TECH-DESIGN`
+     - `GUIDE` (ID otomatik seçilir) veya `GUIDE-0001` / `GUIDE-0001-<kebab-slug>`
+     - `INTERFACE-CONTRACT`
+     - `DATA-CARD`
+     - `MODEL-CARD`
+   - Service-scoped dokümanlar için opsiyonel service sinyali:
+     - `svc=<service>` veya `service=<service>` (kebab-case)
+
+2) **Seed JSON (`--seed`)**
+   - `optional.generate`: yukarıdaki token’ların listesi
+   - `optional.service`: service-scoped dokümanlar için `docs/02-architecture/services/<service>/` klasör adı
+
+Önemli kurallar:
+- ADR ve TECH-DESIGN “service-scoped” olduğu için `optional.service` (veya `Downstream: svc=<service>`) olmadan üretim hataya düşer.
+- GUIDE token’ı ID içermiyorsa generator mevcut guide’ları tarar ve bir sonraki `GUIDE-XXXX` numarasını seçer.
+
+Auto-optional çıktılarının kanonik yolları:
+- ADR: `docs/02-architecture/services/<service>/ADR/ADR-0001-*.md`
+- TECH-DESIGN: `docs/02-architecture/services/<service>/TECH-DESIGN-<delivery-slug>.md`
+- GUIDE: `docs/03-delivery/guides/<delivery-slug>/GUIDE-0001-*.md`
+- INTERFACE-CONTRACT: `docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-<delivery-slug>.md`
+- DATA-CARD: `docs/05-ml-ai/DATA-CARDS/DATA-CARD-<delivery-slug>.md`
+- MODEL-CARD: `docs/05-ml-ai/MODEL-CARDS/MODEL-CARD-<delivery-slug>.md`
 
 ## 5. Guardrails (üretim kalitesi)
 
