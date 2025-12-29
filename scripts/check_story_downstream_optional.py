@@ -9,11 +9,11 @@ Goal:
 
 Supported tokens (case-insensitive):
 - ADR-0001 (or ADR-0001-<slug>)
-- TECH-DESIGN
+- TECH-DESIGN (or TECH-DESIGN=<slug>)
 - GUIDE (or GUIDE-0001 / GUIDE-0001-<slug>)
-- INTERFACE-CONTRACT
-- DATA-CARD
-- MODEL-CARD
+- INTERFACE-CONTRACT (or INTERFACE-CONTRACT=<slug>)
+- DATA-CARD (or DATA-CARD=<slug>)
+- MODEL-CARD (or MODEL-CARD=<slug>)
 - svc=<service> / service=<service> (kebab-case)
 
 Canonical paths (DOCS-PRODUCTION):
@@ -47,6 +47,10 @@ RX_DOWNSTREAM = re.compile(r"(?mi)^\s*Downstream:\s*(?P<value>.+?)\s*$")
 RX_SVC = re.compile(r"\b(?:svc|service)=(?P<svc>[a-z0-9]+(?:-[a-z0-9]+)*)\b", re.IGNORECASE)
 RX_ADR = re.compile(r"\bADR-(?P<num>\d{4})(?:-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*))?\b", re.IGNORECASE)
 RX_GUIDE = re.compile(r"\bGUIDE-(?P<num>\d{4})(?:-(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*))?\b", re.IGNORECASE)
+RX_TYPED = re.compile(
+    r"\b(?P<typ>TECH-DESIGN|INTERFACE-CONTRACT|DATA-CARD|MODEL-CARD)=(?P<slug>[a-z0-9]+(?:-[a-z0-9]+)*)\b",
+    re.IGNORECASE,
+)
 
 
 def story_id_and_slug_from_filename(path: Path) -> tuple[str, str] | None:
@@ -92,12 +96,33 @@ def main() -> int:
 
         adr_matches = list(RX_ADR.finditer(downstream))
         guide_matches = list(RX_GUIDE.finditer(downstream))
+        typed_matches = list(RX_TYPED.finditer(downstream))
 
-        wants_tech_design = bool(re.search(r"\bTECH-DESIGN\b", downstream, re.IGNORECASE))
+        wants_tech_design_default = bool(re.search(r"\bTECH-DESIGN\b", downstream, re.IGNORECASE))
         wants_guide_auto = bool(re.search(r"\bGUIDE\b", downstream, re.IGNORECASE)) and not guide_matches
-        wants_interface_contract = bool(re.search(r"\bINTERFACE-CONTRACT\b", downstream, re.IGNORECASE))
-        wants_data_card = bool(re.search(r"\bDATA-CARD\b", downstream, re.IGNORECASE))
-        wants_model_card = bool(re.search(r"\bMODEL-CARD\b", downstream, re.IGNORECASE))
+        wants_interface_contract_default = bool(re.search(r"\bINTERFACE-CONTRACT\b", downstream, re.IGNORECASE))
+        wants_data_card_default = bool(re.search(r"\bDATA-CARD\b", downstream, re.IGNORECASE))
+        wants_model_card_default = bool(re.search(r"\bMODEL-CARD\b", downstream, re.IGNORECASE))
+
+        typed_targets: dict[str, set[str]] = {
+            "TECH-DESIGN": set(),
+            "INTERFACE-CONTRACT": set(),
+            "DATA-CARD": set(),
+            "MODEL-CARD": set(),
+        }
+        for m in typed_matches:
+            typ = m.group("typ").strip().upper()
+            slug = m.group("slug").strip().lower()
+            typed_targets[typ].add(slug)
+
+        if wants_tech_design_default and not typed_targets["TECH-DESIGN"]:
+            typed_targets["TECH-DESIGN"].add(delivery_slug)
+        if wants_interface_contract_default and not typed_targets["INTERFACE-CONTRACT"]:
+            typed_targets["INTERFACE-CONTRACT"].add(delivery_slug)
+        if wants_data_card_default and not typed_targets["DATA-CARD"]:
+            typed_targets["DATA-CARD"].add(delivery_slug)
+        if wants_model_card_default and not typed_targets["MODEL-CARD"]:
+            typed_targets["MODEL-CARD"].add(delivery_slug)
 
         # ADR tokens
         for m in adr_matches:
@@ -119,9 +144,9 @@ def main() -> int:
                 if not ok:
                     violations.append(f"{story_id}: missing ADR doc for {adr_id} (svc={service_slug or 'any'})")
 
-        # TECH-DESIGN token (service-scoped if svc provided; otherwise best-effort global lookup)
-        if wants_tech_design:
-            expected_name = f"TECH-DESIGN-{delivery_slug}.md"
+        # TECH-DESIGN tokens (service-scoped if svc provided; otherwise best-effort global lookup)
+        for td_slug in sorted(typed_targets["TECH-DESIGN"]):
+            expected_name = f"TECH-DESIGN-{td_slug}.md"
             if service_slug:
                 if not (SERVICES_DIR / service_slug / expected_name).exists():
                     violations.append(f"{story_id}: missing TECH-DESIGN: services/{service_slug}/{expected_name}")
@@ -147,19 +172,19 @@ def main() -> int:
                 if not exists_any(f"docs/03-delivery/guides/**/{expected_name}"):
                     violations.append(f"{story_id}: missing GUIDE doc: {expected_name}")
 
-        # Delivery-slug scoped optional docs
-        if wants_interface_contract:
-            expected = INTERFACE_CONTRACT_DIR / f"INTERFACE-CONTRACT-{delivery_slug}.md"
+        # Delivery-slug scoped optional docs (can be explicit via TYPE=<slug>)
+        for ic_slug in sorted(typed_targets["INTERFACE-CONTRACT"]):
+            expected = INTERFACE_CONTRACT_DIR / f"INTERFACE-CONTRACT-{ic_slug}.md"
             if not expected.exists():
                 violations.append(f"{story_id}: missing INTERFACE-CONTRACT: {expected.as_posix()}")
 
-        if wants_data_card:
-            expected = DATA_CARD_DIR / f"DATA-CARD-{delivery_slug}.md"
+        for dc_slug in sorted(typed_targets["DATA-CARD"]):
+            expected = DATA_CARD_DIR / f"DATA-CARD-{dc_slug}.md"
             if not expected.exists():
                 violations.append(f"{story_id}: missing DATA-CARD: {expected.as_posix()}")
 
-        if wants_model_card:
-            expected = MODEL_CARD_DIR / f"MODEL-CARD-{delivery_slug}.md"
+        for mc_slug in sorted(typed_targets["MODEL-CARD"]):
+            expected = MODEL_CARD_DIR / f"MODEL-CARD-{mc_slug}.md"
             if not expected.exists():
                 violations.append(f"{story_id}: missing MODEL-CARD: {expected.as_posix()}")
 
@@ -187,4 +212,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

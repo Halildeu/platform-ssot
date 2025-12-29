@@ -175,11 +175,11 @@ Sinyal kaynakları:
    - Format: `Downstream: AC-0XXX, TP-0XXX, <opsiyonel-tokenler>`
    - Desteklenen token örnekleri:
      - `ADR-0003` veya `ADR-0003-<kebab-slug>`
-     - `TECH-DESIGN`
+     - `TECH-DESIGN` veya (paylaşımlı tasarım için) `TECH-DESIGN=<kebab-slug>`
      - `GUIDE` (ID otomatik seçilir) veya `GUIDE-0001` / `GUIDE-0001-<kebab-slug>`
-     - `INTERFACE-CONTRACT`
-     - `DATA-CARD`
-     - `MODEL-CARD`
+     - `INTERFACE-CONTRACT` veya (çoklu/paylaşımlı kontrat için) `INTERFACE-CONTRACT=<kebab-slug>`
+     - `DATA-CARD` veya `DATA-CARD=<kebab-slug>`
+     - `MODEL-CARD` veya `MODEL-CARD=<kebab-slug>`
    - Service-scoped dokümanlar için opsiyonel service sinyali:
      - `svc=<service>` veya `service=<service>` (kebab-case)
 

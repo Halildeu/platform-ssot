@@ -1463,16 +1463,47 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
             r"^(?P<id>GUIDE-\d{4})(?:-(?P<slug>[A-Za-z0-9-]+))?$",
             re.IGNORECASE,
         )
+        typed_slug_rx = re.compile(
+            r"^(?P<typ>TECH-DESIGN|TECH_DESIGN|INTERFACE-CONTRACT|INTERFACE_CONTRACT|DATA-CARD|MODEL-CARD)\s*=\s*(?P<slug>[A-Za-z0-9-]+)$",
+            re.IGNORECASE,
+        )
 
         adr_stems: list[str] = []
         guide_stems: list[str] = []
-        wants_tech_design = False
-        wants_interface_contract = False
-        wants_data_card = False
-        wants_model_card = False
+        tech_design_slugs: list[str] = []
+        interface_contract_slugs: list[str] = []
+        data_card_slugs: list[str] = []
+        model_card_slugs: list[str] = []
+
+        wants_tech_design_default = False
+        wants_interface_contract_default = False
+        wants_data_card_default = False
+        wants_model_card_default = False
         wants_guide_auto = False
 
         for tok in cleaned:
+            m = typed_slug_rx.match(tok)
+            if m:
+                typ = m.group("typ").strip().upper().replace("_", "-")
+                slug_raw = m.group("slug").strip()
+                try:
+                    slug_norm = norm_slug(slug_raw)
+                except Exception as e:
+                    return die(f"{typ} slug invalid: {tok}: {e}")
+                if typ == "TECH-DESIGN":
+                    tech_design_slugs.append(slug_norm)
+                    downstream_extra.append("TECH-DESIGN")
+                elif typ == "INTERFACE-CONTRACT":
+                    interface_contract_slugs.append(slug_norm)
+                    downstream_extra.append("INTERFACE-CONTRACT")
+                elif typ == "DATA-CARD":
+                    data_card_slugs.append(slug_norm)
+                    downstream_extra.append("DATA-CARD")
+                elif typ == "MODEL-CARD":
+                    model_card_slugs.append(slug_norm)
+                    downstream_extra.append("MODEL-CARD")
+                continue
+
             m = adr_rx.match(tok)
             if m:
                 adr_id = m.group("id").upper()
@@ -1507,22 +1538,22 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
 
             up = tok.strip().upper()
             if up in {"TECH-DESIGN", "TECH_DESIGN"}:
-                wants_tech_design = True
+                wants_tech_design_default = True
                 downstream_extra.append("TECH-DESIGN")
                 continue
             if up == "GUIDE":
                 wants_guide_auto = True
                 continue
             if up in {"INTERFACE-CONTRACT", "INTERFACE_CONTRACT"}:
-                wants_interface_contract = True
+                wants_interface_contract_default = True
                 downstream_extra.append("INTERFACE-CONTRACT")
                 continue
             if up == "DATA-CARD":
-                wants_data_card = True
+                wants_data_card_default = True
                 downstream_extra.append("DATA-CARD")
                 continue
             if up == "MODEL-CARD":
-                wants_model_card = True
+                wants_model_card_default = True
                 downstream_extra.append("MODEL-CARD")
                 continue
 
@@ -1544,8 +1575,24 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
                 guide_stems.append(f"{guide_id}-{delivery_slug}")
                 downstream_extra.append(guide_id)
 
+        tech_design_targets = set(tech_design_slugs)
+        if wants_tech_design_default:
+            tech_design_targets.add(delivery_slug)
+
+        interface_contract_targets = set(interface_contract_slugs)
+        if wants_interface_contract_default:
+            interface_contract_targets.add(delivery_slug)
+
+        data_card_targets = set(data_card_slugs)
+        if wants_data_card_default:
+            data_card_targets.add(delivery_slug)
+
+        model_card_targets = set(model_card_slugs)
+        if wants_model_card_default:
+            model_card_targets.add(delivery_slug)
+
         # ADR / TECH-DESIGN are service-scoped; require explicit service.
-        if (adr_stems or wants_tech_design) and not service_slug:
+        if (adr_stems or tech_design_targets) and not service_slug:
             return die("auto-optional requested ADR/TECH-DESIGN but optional.service is missing")
 
         runbook_path = (RUNBOOK_ROOT / f"RB-{delivery_slug}.md").as_posix()
@@ -1570,10 +1617,11 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
                 adr_path = SERVICES_ROOT / service_slug / "ADR" / f"{stem}.md"
                 optional_writes.append((adr_path, adr_doc))
 
-        if wants_tech_design:
-            td_doc = render_tech_design_doc(title=title)
-            td_path = SERVICES_ROOT / service_slug / f"TECH-DESIGN-{delivery_slug}.md"
-            optional_writes.append((td_path, td_doc))
+        if tech_design_targets:
+            for td_slug in sorted(tech_design_targets):
+                td_doc = render_tech_design_doc(title=title)
+                td_path = SERVICES_ROOT / service_slug / f"TECH-DESIGN-{td_slug}.md"
+                optional_writes.append((td_path, td_doc))
 
         if guide_stems:
             for stem in sorted(set(guide_stems)):
@@ -1582,21 +1630,24 @@ def cmd_e2e_pack(args: argparse.Namespace) -> int:
                 guide_path = GUIDES_ROOT / delivery_slug / f"{stem}.md"
                 optional_writes.append((guide_path, guide_doc))
 
-        if wants_interface_contract:
-            ic_id = f"IC-{delivery_slug}"
-            ic_doc = render_interface_contract_doc(title=title, ic_id=ic_id)
-            ic_path = INTERFACE_CONTRACT_ROOT / f"INTERFACE-CONTRACT-{delivery_slug}.md"
-            optional_writes.append((ic_path, ic_doc))
+        if interface_contract_targets:
+            for ic_slug in sorted(interface_contract_targets):
+                ic_id = f"IC-{ic_slug}"
+                ic_doc = render_interface_contract_doc(title=title, ic_id=ic_id)
+                ic_path = INTERFACE_CONTRACT_ROOT / f"INTERFACE-CONTRACT-{ic_slug}.md"
+                optional_writes.append((ic_path, ic_doc))
 
-        if wants_data_card:
-            dc_doc = render_data_card_doc(title=title)
-            dc_path = DATA_CARD_ROOT / f"DATA-CARD-{delivery_slug}.md"
-            optional_writes.append((dc_path, dc_doc))
+        if data_card_targets:
+            for dc_slug in sorted(data_card_targets):
+                dc_doc = render_data_card_doc(title=title)
+                dc_path = DATA_CARD_ROOT / f"DATA-CARD-{dc_slug}.md"
+                optional_writes.append((dc_path, dc_doc))
 
-        if wants_model_card:
-            mc_doc = render_model_card_doc(title=title)
-            mc_path = MODEL_CARD_ROOT / f"MODEL-CARD-{delivery_slug}.md"
-            optional_writes.append((mc_path, mc_doc))
+        if model_card_targets:
+            for mc_slug in sorted(model_card_targets):
+                mc_doc = render_model_card_doc(title=title)
+                mc_path = MODEL_CARD_ROOT / f"MODEL-CARD-{mc_slug}.md"
+                optional_writes.append((mc_path, mc_doc))
 
     if args.only_auto_optional:
         if not args.include_auto_optional:
