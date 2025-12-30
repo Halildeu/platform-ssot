@@ -205,7 +205,7 @@ def apply_intent_to_request(request: dict[str, Any], intent: str) -> dict[str, A
     return out
 
 
-def governor_plan(request: dict[str, Any], markdown_path: str, repo: Path) -> dict[str, Any]:
+def governor_plan(request: dict[str, Any], markdown_path: str, repo: Path, config_root: Path) -> dict[str, Any]:
     budget = request.get("budget")
     budget = budget if isinstance(budget, dict) else {}
 
@@ -213,6 +213,10 @@ def governor_plan(request: dict[str, Any], markdown_path: str, repo: Path) -> di
     estimated_tokens: int | None = None
     try:
         md_abs = safe_resolve_under(repo, markdown_path)
+        if not md_abs.exists():
+            md_alt = safe_resolve_under(config_root, markdown_path)
+            if md_alt.exists():
+                md_abs = md_alt
         if md_abs.exists():
             md_size_bytes = md_abs.stat().st_size
             estimated_tokens = int(md_size_bytes / 4)
@@ -348,8 +352,18 @@ def run_mod_a(run: RunContext, markdown_path: str) -> dict[str, Any]:
 
     gw = ToolGateway(repo_root=run.repo_root, run_dir=run.run_dir, node_id=node_id, capabilities=capabilities, security_policy=security_policy)
 
+    md_repo_rel = markdown_path
     try:
-        content, file_info = gw.read_text(markdown_path)
+        md_abs = safe_resolve_under(run.repo_root, markdown_path)
+        if not md_abs.exists():
+            md_alt = safe_resolve_under(run.config_root, markdown_path)
+            if md_alt.exists():
+                md_repo_rel = posix_relpath(run.repo_root, md_alt)
+    except Exception:
+        md_repo_rel = markdown_path
+
+    try:
+        content, file_info = gw.read_text(md_repo_rel)
     except PermissionError as exc:
         return make_node_output_base(
             node_id=node_id,
@@ -387,7 +401,7 @@ def run_mod_a(run: RunContext, markdown_path: str) -> dict[str, Any]:
         preview = preview[:max_preview_chars].rstrip() + "\n...[truncated]"
 
     summary = {
-        "markdown_path": markdown_path,
+        "markdown_path": md_repo_rel,
         "sha256": sha256_bytes(content.encode("utf-8", errors="ignore")),
         "stats": {
             "line_count": len(content.splitlines()),
@@ -791,7 +805,7 @@ def main() -> int:
     markdown_path = str(inputs.get("markdown_path") or "")
     output_path = str(inputs.get("output_path") or ".autopilot-tmp/autonomous-pipeline-v2/out/analysis_summary.json")
 
-    governor = governor_plan(request, markdown_path, repo)
+    governor = governor_plan(request, markdown_path, repo, config_root)
     write_json(run_dir / "governor.json", governor)
     trace(f"governor mode={governor.get('mode')} reasons={','.join(governor.get('reasons') or [])}")
 

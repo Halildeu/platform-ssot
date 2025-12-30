@@ -19,7 +19,7 @@
     }
   },
   "inputs": {
-    "markdown_path": "AGENT-CODEX.core.md",
+    "markdown_path": "README.md",
     "output_path": "outputs/analysis_summary_low_budget.json"
   }
 }
