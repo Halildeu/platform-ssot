@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Request Envelope (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "idempotency_key",
+    "tenant_id",
+    "workflow",
+    "inputs"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "request.envelope.v1"
+    },
+    "request_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128
+    },
+    "tenant_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^WF-[A-Z0-9_-]+$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^v[0-9]+$"
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_tokens": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "dry_run": {
+      "type": "boolean",
+      "default": false
+    },
+    "risk_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "side_effect_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default_mode"
+      ],
+      "properties": {
+        "default_mode": {
+          "type": "string",
+          "enum": [
+            "deny",
+            "draft",
+            "commit"
+          ]
+        },
+        "effects": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "file_write": {
+              "type": "string",
+              "enum": [
+                "deny",
+                "draft",
+                "commit"
+              ]
+            },
+            "http_request": {
+              "type": "string",
+              "enum": [
+                "deny",
+                "allow"
+              ]
+            },
+            "message_publish": {
+              "type": "string",
+              "enum": [
+                "deny",
+                "commit"
+              ]
+            }
+          }
+        },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "file_write": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "allowed_paths": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            },
+            "http_request": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "allowlist_hosts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "requester": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "examples": [
+    {
+      "schema_version": "request.envelope.v1",
+      "request_id": "00000000-0000-0000-0000-000000000000",
+      "idempotency_key": "req_0000000000000000",
+      "tenant_id": "tenant_001",
+      "workflow": {
+        "id": "WF-CORE",
+        "version": "v1"
+      },
+      "dry_run": true,
+      "side_effect_policy": {
+        "default_mode": "deny",
+        "effects": {
+          "file_write": "draft"
+        }
+      },
+      "inputs": {
+        "markdown_path": "README.md"
+      }
+    }
+  ]
+}

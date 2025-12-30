@@ -1,0 +1,101 @@
+{
+  "schema_version": "workflow.v1",
+  "id": "WF-CORE",
+  "version": "v1",
+  "entrypoint": "MOD-A",
+  "policy_refs": [
+    "policy.security@v1",
+    "policy.ethics@v1"
+  ],
+  "io_contracts": {
+    "request_envelope_schema": "schemas/request.envelope.schema.json",
+    "node_output_base_schema": "schemas/node.output.base.schema.json",
+    "approval_policy_schema": "schemas/approval.policy.schema.json",
+    "quality_criteria_schema": "schemas/quality.criteria.schema.json",
+    "registry_item_schema": "schemas/registry.item.schema.json"
+  },
+  "nodes": [
+    {
+      "id": "MOD-A",
+      "type": "module",
+      "capabilities": {
+        "allowed_tools": [
+          "fs.read_text"
+        ],
+        "fs": {
+          "read_allowlist": [
+            "*.md",
+            "**/*.md"
+          ]
+        }
+      },
+      "executor": {
+        "kind": "ai",
+        "model_ref": "model:llm-primary@v2025-12-30"
+      },
+      "inputs": {
+        "markdown_path": "$.inputs.markdown_path"
+      },
+      "outputs": {
+        "analysis_summary": "$.outputs.analysis_summary"
+      }
+    },
+    {
+      "id": "APPROVAL",
+      "type": "approval",
+      "capabilities": {
+        "allowed_tools": []
+      },
+      "executor": {
+        "kind": "deterministic"
+      },
+      "inputs": {
+        "risk_score": "$.risk_score"
+      },
+      "outputs": {
+        "approved": "$.outputs.approved"
+      },
+      "policy": {
+        "schema_version": "approval.policy.v1",
+        "thresholds": {
+          "auto_approve_max": 0.3,
+          "human_review_max": 0.7
+        },
+        "timeout_ms": 600000
+      }
+    },
+    {
+      "id": "MOD-B",
+      "type": "module",
+      "capabilities": {
+        "allowed_tools": [
+          "fs.write_file"
+        ]
+      },
+      "executor": {
+        "kind": "deterministic"
+      },
+      "inputs": {
+        "analysis_summary": "$.nodes.MOD-A.outputs.analysis_summary",
+        "output_path": "$.inputs.output_path"
+      },
+      "side_effects": [
+        {
+          "type": "file_write",
+          "policy_ref": "$.side_effect_policy"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "MOD-A",
+      "to": "APPROVAL"
+    },
+    {
+      "from": "APPROVAL",
+      "to": "MOD-B",
+      "when": "$.nodes.APPROVAL.outputs.approved == true"
+    }
+  ]
+}

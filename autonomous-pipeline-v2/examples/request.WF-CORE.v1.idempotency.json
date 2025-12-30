@@ -1,0 +1,22 @@
+{
+  "schema_version": "request.envelope.v1",
+  "request_id": "00000000-0000-0000-0000-000000000000",
+  "idempotency_key": "demo_wf_core_idempotency_001",
+  "tenant_id": "tenant_demo",
+  "workflow": {
+    "id": "WF-CORE",
+    "version": "v1"
+  },
+  "risk_score": 0.2,
+  "dry_run": false,
+  "side_effect_policy": {
+    "default_mode": "deny",
+    "effects": {
+      "file_write": "draft"
+    }
+  },
+  "inputs": {
+    "markdown_path": "AGENT-CODEX.core.md",
+    "output_path": "outputs/analysis_summary_idempotency.json"
+  }
+}

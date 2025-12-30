@@ -1,0 +1,187 @@
+{
+  "schema_version": "registry.v1",
+  "generated_at": "2025-12-30T00:00:00Z",
+  "constraints": {
+    "forbid_latest": true
+  },
+  "items": [
+    {
+      "id": "policy.security@v1",
+      "kind": "policy",
+      "name": "policy.security",
+      "version": "v1",
+      "path": "policies/policy.security.v1.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:b6f79c35773aa8f50e04649444cfc34d3ef96ef96caa120b403b8670be69ac93",
+        "signature_ref": "signatures/policy.security_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "policy.ethics@v1",
+      "kind": "policy",
+      "name": "policy.ethics",
+      "version": "v1",
+      "path": "policies/policy.ethics.v1.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:eb1453f1e255bd0a675c60ecfbdee9e3731ab3ad4a3b6c2dbb24d7818e35c111",
+        "signature_ref": "signatures/policy.ethics_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "workflow:WF-CORE@v1",
+      "kind": "workflow",
+      "name": "WF-CORE",
+      "version": "v1",
+      "path": "workflows/WF-CORE.v1.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:8dc90fd4a28c1030ff56f8b4e4c52eb51eb320c3855efcf4c82e3d132cf6414d",
+        "signature_ref": "signatures/workflow_WF-CORE_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "module:MOD-A@v1",
+      "kind": "module",
+      "name": "MOD-A",
+      "version": "v1",
+      "path": "workflows/WF-CORE.v1.json",
+      "status": "active",
+      "metadata": {
+        "workflow_ref": "workflow:WF-CORE@v1",
+        "node_id": "MOD-A"
+      },
+      "integrity": {
+        "digest": "sha256:8dc90fd4a28c1030ff56f8b4e4c52eb51eb320c3855efcf4c82e3d132cf6414d",
+        "signature_ref": "signatures/module_MOD-A_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "module:MOD-B@v1",
+      "kind": "module",
+      "name": "MOD-B",
+      "version": "v1",
+      "path": "workflows/WF-CORE.v1.json",
+      "status": "active",
+      "metadata": {
+        "workflow_ref": "workflow:WF-CORE@v1",
+        "node_id": "MOD-B"
+      },
+      "integrity": {
+        "digest": "sha256:8dc90fd4a28c1030ff56f8b4e4c52eb51eb320c3855efcf4c82e3d132cf6414d",
+        "signature_ref": "signatures/module_MOD-B_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "model:llm-primary@v2025-12-30",
+      "kind": "model",
+      "name": "llm-primary",
+      "version": "v2025-12-30",
+      "path": "workflows/WF-CORE.v1.json",
+      "status": "active",
+      "metadata": {
+        "referenced_by": [
+          "workflow:WF-CORE@v1"
+        ]
+      },
+      "integrity": {
+        "digest": "sha256:8dc90fd4a28c1030ff56f8b4e4c52eb51eb320c3855efcf4c82e3d132cf6414d",
+        "signature_ref": "signatures/model_llm-primary_v2025-12-30.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "schema:request.envelope@v1",
+      "kind": "schema",
+      "name": "request.envelope",
+      "version": "v1",
+      "path": "schemas/request.envelope.schema.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:26e60868a88f8d40a0828c6c2f0482400de0c59ff362dfd282db378241d09ca7",
+        "signature_ref": "signatures/schema_request.envelope_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "schema:node.output.base@v1",
+      "kind": "schema",
+      "name": "node.output.base",
+      "version": "v1",
+      "path": "schemas/node.output.base.schema.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:4deb7a7e34e254c26b966a99cf5d9592b910ccda6a03ba4852f481f1123adbec",
+        "signature_ref": "signatures/schema_node.output.base_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "schema:bias.report@v1",
+      "kind": "schema",
+      "name": "bias.report",
+      "version": "v1",
+      "path": "schemas/bias_report.v1.schema.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:553b596f8c3116d9cdf6c6c551bfd8d1c756d3e3af4681d6c5686369cd0a572d",
+        "signature_ref": "signatures/schema_bias.report_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "schema:registry.item@v1",
+      "kind": "schema",
+      "name": "registry.item",
+      "version": "v1",
+      "path": "schemas/registry.item.schema.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:586cbfe36aeb30e4e9b63fac0b723f1b566a89628e029cb95cb9ae15bb71cafc",
+        "signature_ref": "signatures/schema_registry.item_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "schema:quality.criteria@v1",
+      "kind": "schema",
+      "name": "quality.criteria",
+      "version": "v1",
+      "path": "schemas/quality.criteria.schema.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:a55bf5c6afb6ce28c208af49d1d4f73554881ffafdeb2ed4c3554bba730a381d",
+        "signature_ref": "signatures/schema_quality.criteria_v1.sig",
+        "signed": false
+      }
+    },
+    {
+      "id": "schema:approval.policy@v1",
+      "kind": "schema",
+      "name": "approval.policy",
+      "version": "v1",
+      "path": "schemas/approval.policy.schema.json",
+      "status": "active",
+      "metadata": {},
+      "integrity": {
+        "digest": "sha256:6958af68b9883bc895ae91007df069efecb3b8064fae5c87fe49e5ad85e188fa",
+        "signature_ref": "signatures/schema_approval.policy_v1.sig",
+        "signed": false
+      }
+    }
+  ]
+}

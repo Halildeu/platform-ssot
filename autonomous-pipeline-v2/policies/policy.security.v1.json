@@ -1,0 +1,154 @@
+{
+  "schema_version": "policy.security.v1",
+  "policy_id": "policy.security",
+  "version": "v1",
+  "kill_switch": {
+    "enabled": false,
+    "reason": ""
+  },
+  "filesystem": {
+    "default_mode": "deny",
+    "forbidden_paths": [
+      ".git/**",
+      ".vault-dev/**",
+      "**/.env",
+      "**/.env.*",
+      "**/*secret*",
+      "**/*credential*"
+    ]
+  },
+  "network": {
+    "default_mode": "deny",
+    "allowlist_hosts": [],
+    "http_request": {
+      "allowed_schemes": [
+        "https"
+      ],
+      "allowed_ports": [
+        443
+      ],
+      "allowed_methods": [
+        "GET",
+        "POST"
+      ],
+      "timeout_ms": 5000,
+      "max_bytes_in": 65536,
+      "max_bytes_out": 1048576,
+      "allowed_content_types": [
+        "application/json",
+        "text/plain"
+      ]
+    }
+  },
+  "ci_gates": {
+    "secret_scanning": {
+      "required": true,
+      "block_on_findings": true
+    },
+    "sast": {
+      "required": true,
+      "tool": "semgrep",
+      "baseline": "default"
+    }
+  },
+  "supply_chain": {
+    "cve_scanning": {
+      "required": true,
+      "scopes": [
+        "prod"
+      ],
+      "enforcement_points": [
+        {
+          "stage": "build",
+          "where": "ci",
+          "what": [
+            "dependencies",
+            "container_image"
+          ],
+          "must_pass": true,
+          "block_on_severity_gte": "high",
+          "exceptions": {
+            "allowed": true,
+            "require_ticket": true,
+            "require_expiry_days_max": 30
+          }
+        },
+        {
+          "stage": "deploy",
+          "where": "deploy_gate",
+          "what": [
+            "container_image",
+            "model_artifact"
+          ],
+          "must_pass": true,
+          "require_scan_attestation": true,
+          "max_attestation_age_days": 7
+        }
+      ],
+      "on_failure": {
+        "action": "block"
+      }
+    },
+    "artifact_signing": {
+      "required": true,
+      "scopes": [
+        "prod"
+      ],
+      "artifacts": [
+        "container_image",
+        "model_artifact",
+        "sbom",
+        "policy_config",
+        "workflow_config",
+        "module_artifact"
+      ],
+      "enforcement_points": [
+        {
+          "stage": "build",
+          "where": "ci",
+          "what": [
+            "container_image",
+            "sbom",
+            "module_artifact",
+            "policy_config",
+            "workflow_config",
+            "model_artifact"
+          ],
+          "must_sign": true
+        },
+        {
+          "stage": "deploy",
+          "where": "deploy_gate",
+          "what": [
+            "container_image",
+            "model_artifact",
+            "policy_config",
+            "workflow_config"
+          ],
+          "must_verify": true,
+          "block_on_missing_signature": true
+        },
+        {
+          "stage": "runtime",
+          "where": "orchestrator_and_executor",
+          "what": [
+            "model_artifact"
+          ],
+          "must_verify_on_startup": true,
+          "must_verify_on_download": true
+        }
+      ],
+      "key_management": {
+        "allowed_key_sources": [
+          "kms",
+          "hsm"
+        ],
+        "public_key_refs": [],
+        "certificate_identities": []
+      },
+      "on_failure": {
+        "action": "block"
+      }
+    }
+  }
+}

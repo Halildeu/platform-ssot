@@ -1,0 +1,86 @@
+{
+  "schema_version": "policy.ethics.v1",
+  "policy_id": "policy.ethics",
+  "version": "v1",
+  "fail_behavior": "fail_closed",
+  "bias_detection": {
+    "required": true,
+    "enforcement": {
+      "stages": [
+        {
+          "stage": "pre_release_eval",
+          "required": true
+        },
+        {
+          "stage": "prod_monitoring",
+          "required": true,
+          "window_days": 30
+        }
+      ],
+      "on_missing_measurement_inputs": {
+        "action": "human_review",
+        "escalate_to_human_review": true
+      },
+      "on_error": {
+        "action": "block",
+        "escalate_to_human_review": true
+      }
+    },
+    "protected_attributes": [
+      "gender",
+      "age",
+      "ethnicity",
+      "location"
+    ],
+    "measurement": {
+      "unit_of_analysis": "individual_decision",
+      "aggregation": "max_abs_diff_over_groups",
+      "grouping": {
+        "unknown_bucket": "unknown",
+        "min_total_n": 200,
+        "min_group_n": 30,
+        "max_groups_per_attribute": 20
+      },
+      "required_evidence_fields": [
+        "dataset_ref",
+        "window",
+        "group_counts",
+        "metrics"
+      ]
+    },
+    "metrics": [
+      "demographic_parity_diff",
+      "equalized_odds_diff"
+    ],
+    "thresholds": {
+      "default": {
+        "max_abs_diff": 0.05
+      },
+      "by_metric": {
+        "demographic_parity_diff": {
+          "max_abs_diff": 0.05
+        },
+        "equalized_odds_diff": {
+          "max_abs_diff": 0.05
+        }
+      }
+    },
+    "on_insufficient_data": {
+      "action": "human_review",
+      "escalate_to_human_review": true
+    },
+    "on_violation": {
+      "action": "block",
+      "escalate_to_human_review": true,
+      "record_evidence": true
+    }
+  },
+  "prompt_injection": {
+    "required": true,
+    "fail_on_suspicion": true
+  },
+  "data_poisoning": {
+    "required": true,
+    "fail_on_suspicion": true
+  }
+}
