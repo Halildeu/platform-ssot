@@ -1,0 +1,35 @@
+name: gate-schema
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  validate-schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps (optional)
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          else
+            echo "requirements-dev.txt bulunamadi; portable gate mode."
+          fi
+
+      - name: Validate schemas (portable)
+        run: |
+          if [ -f ci/validate_schemas.py ]; then
+            python3 ci/validate_schemas.py
+          else
+            echo "ci/validate_schemas.py yok; baseline standards checks ile devam."
+            python3 ci/check_standards_lock.py
+            python3 ci/check_module_delivery_lanes.py --strict
+          fi
