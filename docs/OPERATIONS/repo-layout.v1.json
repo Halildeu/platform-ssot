@@ -3,7 +3,6 @@
   "allowed_top_level_dirs": [
     ".codex",
     ".git",
-    ".gemini",
     ".github",
     "capabilities",
     "ci",
