@@ -1,0 +1,67 @@
+{
+  "version": "v1",
+  "kind": "module-delivery-lane-override-matrix",
+  "generated_at": "2026-03-04T00:21:45Z",
+  "repo": {
+    "repo_slug": "platform-ssot/dev",
+    "repo_root": "/Users/halilkocoglu/Documents/dev-clean-onboarding",
+    "managed_repo_profile": "python-default",
+    "execution_sequence": [],
+    "scope_lane_map": {}
+  },
+  "lanes": {
+    "unit": {
+      "scope": "",
+      "command": "python3 -m py_compile ci/check_module_delivery_lanes.py ci/run_module_delivery_lane.py",
+      "timeout_seconds": 600,
+      "override_allowed": true,
+      "override_key": "lanes.unit.command"
+    },
+    "contract": {
+      "scope": "",
+      "command": "python3 ci/check_standards_lock.py",
+      "timeout_seconds": 600,
+      "override_allowed": true,
+      "override_key": "lanes.contract.command"
+    },
+    "integration": {
+      "scope": "",
+      "command": "python3 ci/check_module_delivery_lanes.py --strict",
+      "timeout_seconds": 900,
+      "override_allowed": true,
+      "override_key": "lanes.integration.command"
+    },
+    "e2e": {
+      "scope": "",
+      "command": "python3 scripts/sync_managed_repo_standards.py --target-repo-root . --include-self",
+      "timeout_seconds": 900,
+      "override_allowed": true,
+      "override_key": "lanes.e2e.command"
+    }
+  },
+  "override_policy": {
+    "config_file": "ci/module_delivery_lanes.v1.json",
+    "preserve_existing_paths": [
+      "ci/module_delivery_lanes.v1.json"
+    ],
+    "validation_commands": [
+      "python3 ci/check_module_delivery_lanes.py --strict",
+      "python3 ci/check_standards_lock.py"
+    ],
+    "notes": [
+      "Repo bazlı lane command override izinlidir.",
+      "Zorunlu lane sırası backend->frontend->integration->e2e korunur.",
+      "merge_requires_all_green=true kalmalıdır."
+    ]
+  },
+  "gate_policy": {
+    "merge_requires_all_green": true,
+    "required_checks": [
+      "module-delivery-gate",
+      "enforcement-check",
+      "validate-schemas",
+      "policy-dry-run",
+      "gitleaks"
+    ]
+  }
+}
