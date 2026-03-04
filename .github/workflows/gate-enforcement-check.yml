@@ -35,6 +35,15 @@ jobs:
         run: |
           python3 ci/check_module_delivery_lanes.py --strict
 
+      - name: Solo branch policy guard (advisory)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/check_branch_protection_solo_policy.py \
+            --repo-slug "${{ github.repository }}" \
+            --mode warn \
+            --out .cache/reports/branch_protection_solo_policy_ci.v1.json
+
       - name: Detect enforcement runtime
         id: detect-enforcement-runtime
         run: |
@@ -78,5 +87,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: enforcement-check-evidence
-          path: .cache/ws_customer_default/.cache/reports/enf_ci
+          path: |
+            .cache/ws_customer_default/.cache/reports/enf_ci
+            .cache/reports/branch_protection_solo_policy_ci.v1.json
           if-no-files-found: warn
