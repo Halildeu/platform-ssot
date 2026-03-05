@@ -1,4 +1,4 @@
-# Backend Monolitine Giris
+# Backend Mikroservislerine Giris
 
 Bu depo, Spring Boot 3.2 ve Java 21 kullanilarak gelistirilmis mikro servis tabanli bir arka uc mimarisini saklar. Her servis kendi Maven projesi olarak ayakta durur ve Eureka ile servis kesfi, Postgres ile kalici katman ve Docker Compose ile orkestrasyon kullanir.
 
@@ -9,6 +9,7 @@ Bu depo, Spring Boot 3.2 ve Java 21 kullanilarak gelistirilmis mikro servis taba
 - `user-service`: Kullanici profili, roller ve iliskili CRUD islemleri.
 - `variant-service`: Urun varyantlarini ve bagimli verileri yoneten servis.
 - `permission-service`: Yetkilendirme, rol ve izin kontrolleri.
+- `core-data-service`: Sirket ana veri servisi.
 - `file-service`, `mail-service`, `notification-service`: Yardimci servisler (dosya, e-posta, bildirim).
 - `discovery-server`: Eureka servis kesfi sunucusu.
 - `docker-compose.yml`: Gelistirme ortaminda tum servisleri hizlica calistirmak icin kompozisyon tanimi.
@@ -24,13 +25,13 @@ Bu depo, Spring Boot 3.2 ve Java 21 kullanilarak gelistirilmis mikro servis taba
 
 ## Frontend Çalışma Dizini
 
-- Mikrofrontend uygulamalari artik tek bir repoda toplanmistir: `/Users/halilkocoglu/Documents/dev/frontend`. Tum React/MFE gelistirmelerini, build/test komutlarini ve dokumanlarini **yalnizca** bu dizin altinda yuruttugunuzdan emin olun.
-- Bu depodaki `frontend/` ve `apps/mfe-users` klasorleri yalnizca arsiv/reference icindir; build/CI pipeline’lari onlari kullanmaz.
+- Mikrofrontend uygulamalari bu repo icinde `web/` altinda toplanmistir.
+- Tum React/MFE gelistirmelerini, build/test komutlarini ve dokumanlarini `web/` dizini altinda yuruttugunuzdan emin olun.
 
 ## Calistirma Adimlari
 
 1. `.env` dosyasinda veya ortam degiskenlerinde Postgres ve servis ayarlarinin tanimli oldugundan emin olun.
-2. Taban bagimliliklari icin Docker yagli degilse calistirin: `docker compose up -d postgres-db`.
+2. Taban bagimliliklari icin `docker compose up -d postgres-db discovery-server keycloak vault`.
 3. Servisleri ayaga kaldirmek icin: `docker compose up --build`.
 4. Her servisi tek tek calistirmak isterseniz `mvn spring-boot:run` komutunu ilgili servis klasorunde kullanabilirsiniz.
 
