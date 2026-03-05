@@ -209,6 +209,29 @@ class DesignLabIndexItem(TypedDict, total=False):
     group: str
     subgroup: str
     tags: list[str]
+    availability: str
+    lifecycle: str
+    taxonomyGroupId: str
+    taxonomySubgroup: str
+    demoMode: str
+    description: str
+    sectionIds: list[str]
+    qualityGates: list[str]
+
+
+class ComponentRegistryItem(TypedDict, total=False):
+    name: str
+    kind: str
+    availability: str
+    lifecycle: str
+    group: str
+    subgroup: str
+    taxonomyGroupId: str
+    taxonomySubgroup: str
+    demoMode: str
+    description: str
+    sectionIds: list[str]
+    qualityGates: list[str]
 
 
 def classify_kind(name: str) -> str:
@@ -320,6 +343,28 @@ def build_design_lab_index(web_root: Path) -> dict:
         web_root / "apps" / "mfe-shell" / "src" / "pages" / "admin" / "design-lab.overrides.json"
     )
     overrides = load_json(overrides_path) if overrides_path.is_file() else {"version": 1, "overrides": {}}
+    registry_path = web_root / "packages" / "ui-kit" / "src" / "catalog" / "component-registry.v1.json"
+    if not registry_path.is_file():
+        raise SystemExit(f"[designlab:index] component registry not found: {registry_path}")
+    registry_obj = load_json(registry_path)
+    registry_entries = registry_obj.get("items") if isinstance(registry_obj.get("items"), list) else []
+    if not registry_entries:
+        raise SystemExit("[designlab:index] component registry is empty")
+
+    registry_by_name: dict[str, ComponentRegistryItem] = {}
+    for idx, raw_entry in enumerate(registry_entries):
+        if not isinstance(raw_entry, dict):
+            raise SystemExit(f"[designlab:index] invalid registry entry at index {idx}")
+        name = str(raw_entry.get("name") or "").strip()
+        if not name:
+            raise SystemExit(f"[designlab:index] registry entry missing name at index {idx}")
+        if name in registry_by_name:
+            raise SystemExit(f"[designlab:index] duplicate registry entry: {name}")
+        group = str(raw_entry.get("group") or "").strip()
+        subgroup = str(raw_entry.get("subgroup") or "").strip()
+        if not group or not subgroup or (group, subgroup) not in valid_pairs:
+            raise SystemExit(f"[designlab:index] invalid registry group/subgroup for {name}: {group}/{subgroup}")
+        registry_by_name[name] = raw_entry
 
     exported_names: Set[str] = set()
     origin_by_name: dict[str, str] = {}
@@ -334,18 +379,36 @@ def build_design_lab_index(web_root: Path) -> dict:
 
     usage = collect_ui_kit_import_usage(web_root=web_root, exported_names=exported_names)
 
-    items: list[DesignLabIndexItem] = []
-    for name in sorted(exported_names):
-        import_snippet = f"import {{ {name} }} from 'mfe-ui-kit';"
-        files = sorted(usage.get(name, set()))
-        kind = classify_kind(name)
-        group, subgroup, tags = resolve_group_for_item(
-            name=name,
-            origin=origin_by_name.get(name),
-            groups=groups,
-            overrides=overrides,
-            valid_pairs=valid_pairs,
+    missing_registry = sorted(name for name in exported_names if name not in registry_by_name)
+    if missing_registry:
+        raise SystemExit(f"[designlab:index] exported names missing from registry: {', '.join(missing_registry)}")
+
+    exported_but_not_real = sorted(
+        name
+        for name, entry in registry_by_name.items()
+        if str(entry.get("availability") or "").strip() == "exported" and name not in exported_names
+    )
+    if exported_but_not_real:
+        raise SystemExit(
+            "[designlab:index] registry marks exported but runtime export missing: "
+            + ", ".join(exported_but_not_real)
         )
+
+    items: list[DesignLabIndexItem] = []
+    for name in sorted(registry_by_name):
+        registry_entry = registry_by_name[name]
+        availability = str(registry_entry.get("availability") or "planned").strip()
+        files = sorted(usage.get(name, set()))
+        kind = str(registry_entry.get("kind") or "").strip() or classify_kind(name)
+        group = str(registry_entry.get("group") or "").strip()
+        subgroup = str(registry_entry.get("subgroup") or "").strip()
+        tags = [str(tag).strip() for tag in registry_entry.get("tags", []) if str(tag).strip()] if isinstance(registry_entry.get("tags"), list) else []
+        override_entry = overrides.get("overrides", {}).get(name)
+        override_tags = []
+        if isinstance(override_entry, dict) and isinstance(override_entry.get("tags"), list):
+            override_tags = [str(tag).strip() for tag in override_entry.get("tags", []) if str(tag).strip()]
+        tags = sorted(set(tags + override_tags))
+        import_snippet = f"import {{ {name} }} from 'mfe-ui-kit';" if availability == "exported" else ""
 
         items.append(
             {
@@ -356,10 +419,24 @@ def build_design_lab_index(web_root: Path) -> dict:
                 "group": group,
                 "subgroup": subgroup,
                 "tags": tags,
+                "availability": availability,
+                "lifecycle": str(registry_entry.get("lifecycle") or "planned"),
+                "taxonomyGroupId": str(registry_entry.get("taxonomyGroupId") or ""),
+                "taxonomySubgroup": str(registry_entry.get("taxonomySubgroup") or ""),
+                "demoMode": str(registry_entry.get("demoMode") or "inspector"),
+                "description": str(registry_entry.get("description") or ""),
+                "sectionIds": [str(value).strip() for value in registry_entry.get("sectionIds", []) if str(value).strip()]
+                if isinstance(registry_entry.get("sectionIds"), list)
+                else [],
+                "qualityGates": [str(value).strip() for value in registry_entry.get("qualityGates", []) if str(value).strip()]
+                if isinstance(registry_entry.get("qualityGates"), list)
+                else [],
             }
         )
 
     timestamp_tr = now_tr()
+    exported_count = sum(1 for item in items if item.get("availability") == "exported")
+    planned_count = sum(1 for item in items if item.get("availability") == "planned")
     return {
         "version": 1,
         "generatedAt": format_ts(timestamp_tr),
@@ -367,8 +444,16 @@ def build_design_lab_index(web_root: Path) -> dict:
         "source": {
             "package": "mfe-ui-kit",
             "index": "packages/ui-kit/src/index.ts",
+            "registry": "packages/ui-kit/src/catalog/component-registry.v1.json",
             "groups": "apps/mfe-shell/src/pages/admin/design-lab.groups.json",
             "overrides": "apps/mfe-shell/src/pages/admin/design-lab.overrides.json",
+        },
+        "summary": {
+            "total": len(items),
+            "exported": exported_count,
+            "planned": planned_count,
+            "liveDemo": sum(1 for item in items if item.get("demoMode") == "live"),
+            "inspector": sum(1 for item in items if item.get("demoMode") == "inspector"),
         },
         "items": items,
     }

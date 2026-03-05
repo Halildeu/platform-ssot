@@ -1,0 +1,1618 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "library_id": "mfe-ui-kit",
+  "package_entry": "web/packages/ui-kit/src/index.ts",
+  "preview_route": "/admin/design-lab",
+  "purpose": "mfe-ui-kit paketinin kanonik component registry kaynagi; export gercegi, planned backlog ve preview davranisi buradan yonetilir.",
+  "ux_contract": {
+    "catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "alignment_reference": "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "rollout_mode": "mandatory_for_new_or_modified_entries",
+    "required_for_new_entries": [
+      "ux_primary_theme_id",
+      "ux_primary_subtheme_id"
+    ]
+  },
+  "quality_gates": [
+    "single_ui_library",
+    "design_token_chain",
+    "a11y_keyboard_support",
+    "state_feedback_consistency",
+    "preview_visibility",
+    "registry_export_sync",
+    "no_runtime_antd_material",
+    "ux_catalog_alignment"
+  ],
+  "north_star_sections": [
+    {
+      "section_id": "component_library_management",
+      "title_tr": "Bileşen Kütüphanesi Yönetimi"
+    },
+    {
+      "section_id": "design_token_management",
+      "title_tr": "Tasarım Token Yönetimi"
+    },
+    {
+      "section_id": "documentation_standards",
+      "title_tr": "Dokümantasyon Standartları"
+    },
+    {
+      "section_id": "accessibility_compliance",
+      "title_tr": "Erişilebilirlik Uyumu"
+    },
+    {
+      "section_id": "governance_contribution",
+      "title_tr": "Yönetişim ve Katkı Süreçleri"
+    },
+    {
+      "section_id": "integration_distribution",
+      "title_tr": "Entegrasyon ve Dağıtım"
+    },
+    {
+      "section_id": "navigation_patterns",
+      "title_tr": "Navigasyon Kalıpları"
+    },
+    {
+      "section_id": "overlay_components",
+      "title_tr": "Örtü Bileşenleri"
+    },
+    {
+      "section_id": "responsive_layout",
+      "title_tr": "Duyarlı Düzen Sistemi"
+    },
+    {
+      "section_id": "state_feedback",
+      "title_tr": "Durum ve Geri Bildirim"
+    },
+    {
+      "section_id": "table_data_display",
+      "title_tr": "Tablo ve Veri Görüntüleme"
+    },
+    {
+      "section_id": "theming_customization",
+      "title_tr": "Tema ve Özelleştirme"
+    },
+    {
+      "section_id": "utility_components",
+      "title_tr": "Yardımcı Bileşenler"
+    },
+    {
+      "section_id": "visualization_charts",
+      "title_tr": "Görselleştirme ve Grafikler"
+    }
+  ],
+  "tracks": {
+    "implemented": [
+      "AgGridServer",
+      "Badge",
+      "Button",
+      "DetailDrawer",
+      "Dropdown",
+      "Empty",
+      "EntityGridTemplate",
+      "FilterBar",
+      "FormDrawer",
+      "Modal",
+      "PageLayout",
+      "ReportFilterPanel",
+      "Select",
+      "THEME_APPEARANCE_OPTIONS",
+      "THEME_DENSITY_OPTIONS",
+      "THEME_ELEVATION_OPTIONS",
+      "THEME_MOTION_OPTIONS",
+      "THEME_RADIUS_OPTIONS",
+      "Tag",
+      "Text",
+      "ThemePreviewCard",
+      "Tooltip",
+      "buildAuthHeaders",
+      "buildEntityGridQueryParams",
+      "getResolvedToken",
+      "getThemeAxes",
+      "getThemeContract",
+      "registerTokenResolver",
+      "resetTokenResolver",
+      "resolveAccessState",
+      "resolveThemeModeKey",
+      "setAppearance",
+      "setDensity",
+      "setElevation",
+      "setMotion",
+      "setOverlayIntensity",
+      "setOverlayOpacity",
+      "setRadius",
+      "setSurfaceTone",
+      "setTableSurfaceTone",
+      "shouldBlockInteraction",
+      "subscribeThemeAxes",
+      "toggleVariantDefault",
+      "updateThemeAxes",
+      "useGridVariants",
+      "withAccessGuard"
+    ],
+    "planned_p2": [
+      "AnchorToc",
+      "Breadcrumb",
+      "Checkbox",
+      "CommandPalette",
+      "ContextMenu",
+      "DatePicker",
+      "Descriptions",
+      "JsonViewer",
+      "List",
+      "Pagination",
+      "Popover",
+      "Radio",
+      "Slider",
+      "Steps",
+      "Switch",
+      "TableSimple",
+      "Tabs",
+      "TextArea",
+      "TextInput",
+      "TimePicker",
+      "TourCoachmarks",
+      "Tree",
+      "TreeTable",
+      "Upload"
+    ]
+  },
+  "items": [
+    {
+      "name": "AgGridServer",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "data-grid",
+      "subgroup": "ag-grid-server",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Data Grid (AG Grid / EntityGrid)",
+      "demoMode": "live",
+      "description": "Server-side AG Grid wrapperi; standard options ve overlay davranisini toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "table_data_display",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Badge",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "feedback",
+      "subgroup": "badges",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Badge / Tag / Chip",
+      "demoMode": "live",
+      "description": "Durum, sayi ve kisa sinyal gosteren hafif etiket bileşeni.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "buildAuthHeaders",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "runtime",
+      "subgroup": "auth",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "Shared auth token resolver zincirinden header üreten helper.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "buildEntityGridQueryParams",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "data-grid",
+      "subgroup": "entity-grid",
+      "taxonomyGroupId": "tables_grid_addons",
+      "taxonomySubgroup": "Server-side pagination helpers",
+      "demoMode": "inspector",
+      "description": "Grid state bilgisini backend query param’lerine ceviren helper.",
+      "sectionIds": [
+        "table_data_display",
+        "utility_components",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Button",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "actions",
+      "subgroup": "buttons",
+      "taxonomyGroupId": "actions",
+      "taxonomySubgroup": "Button",
+      "demoMode": "live",
+      "description": "Birincil, ikincil ve ghost aksiyonlari tek token zincirinden veren temel aksiyon bileşeni.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "DetailDrawer",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "overlays",
+      "subgroup": "drawers",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Drawer / Side panel",
+      "demoMode": "live",
+      "description": "Kayit detay ve sekmeli inceleme akislari icin ortak drawer yapisi.",
+      "sectionIds": [
+        "component_library_management",
+        "overlay_components",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Dropdown",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "forms",
+      "subgroup": "dropdown",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Select / Dropdown / Combobox",
+      "demoMode": "live",
+      "description": "Kebab ve context action menu ihtiyacini kapsayan acilir menu primitivei.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Empty",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "empty-states",
+      "subgroup": "empty",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Empty state / No data",
+      "demoMode": "live",
+      "description": "Bos durum ve no-data ekranlari icin ortak fallback yuzeyi.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "EntityGridTemplate",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "data-grid",
+      "subgroup": "entity-grid",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Data Grid (AG Grid / EntityGrid)",
+      "demoMode": "live",
+      "description": "ERP liste ekranlari icin ana grid kompoziti.",
+      "sectionIds": [
+        "component_library_management",
+        "table_data_display",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "FilterBar",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "layout",
+      "subgroup": "filters",
+      "taxonomyGroupId": "search_filtering",
+      "taxonomySubgroup": "Filter bar",
+      "demoMode": "live",
+      "description": "Liste ve grid filtreleme aksiyonlari icin ortak toolbar satiri.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "table_data_display"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "FormDrawer",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "overlays",
+      "subgroup": "drawers",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Drawer / Side panel",
+      "demoMode": "live",
+      "description": "Form odakli side-panel akislari icin standart drawer yapisi.",
+      "sectionIds": [
+        "component_library_management",
+        "overlay_components",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "getResolvedToken",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "runtime",
+      "subgroup": "auth",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "getResolvedToken için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "getThemeAxes",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Token viewer (semantic/raw)",
+      "demoMode": "inspector",
+      "description": "Aktif theme axes değerlerini okur.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "getThemeContract",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Token viewer (semantic/raw)",
+      "demoMode": "inspector",
+      "description": "Aktif semantic theme contract bilgisini okur.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Modal",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "overlays",
+      "subgroup": "modal",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Modal / Dialog / Confirm",
+      "demoMode": "live",
+      "description": "Dialog ve confirm akislari icin token zincirine bagli overlay primitivei.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "PageLayout",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "layout",
+      "subgroup": "page",
+      "taxonomyGroupId": "layout_surfaces",
+      "taxonomySubgroup": "Page Layout / Containers",
+      "demoMode": "live",
+      "description": "Route seviyesinde baslik, breadcrumb, actions ve detail alanlarini standardize eder.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "registerTokenResolver",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "runtime",
+      "subgroup": "auth",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "registerTokenResolver için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "ReportFilterPanel",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "layout",
+      "subgroup": "filters",
+      "taxonomyGroupId": "search_filtering",
+      "taxonomySubgroup": "Filter bar",
+      "demoMode": "live",
+      "description": "Rapor filtreleri ve submit/reset aksiyonlarini tek panelde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "table_data_display"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "resetTokenResolver",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "runtime",
+      "subgroup": "auth",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "resetTokenResolver için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "resolveAccessState",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "runtime",
+      "subgroup": "access",
+      "taxonomyGroupId": "auth_security_ui",
+      "taxonomySubgroup": "Permission gates",
+      "demoMode": "inspector",
+      "description": "Permission/access seviyesini render davranisina cevirir.",
+      "sectionIds": [
+        "utility_components",
+        "accessibility_compliance",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "resolveThemeModeKey",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Token viewer (semantic/raw)",
+      "demoMode": "inspector",
+      "description": "resolveThemeModeKey için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Select",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "forms",
+      "subgroup": "select",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Select / Dropdown / Combobox",
+      "demoMode": "live",
+      "description": "Temel secim ve dropdown alanlarini ortak stil ve access guard ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setAppearance",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setAppearance için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setDensity",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setDensity için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setElevation",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setElevation için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setMotion",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setMotion için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setOverlayIntensity",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Overlay intensity tools",
+      "demoMode": "inspector",
+      "description": "setOverlayIntensity için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setOverlayOpacity",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Overlay intensity tools",
+      "demoMode": "inspector",
+      "description": "setOverlayOpacity için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setRadius",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setRadius için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setSurfaceTone",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setSurfaceTone için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "setTableSurfaceTone",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setTableSurfaceTone için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "shouldBlockInteraction",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "runtime",
+      "subgroup": "access",
+      "taxonomyGroupId": "auth_security_ui",
+      "taxonomySubgroup": "Permission gates",
+      "demoMode": "inspector",
+      "description": "shouldBlockInteraction için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "accessibility_compliance",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "subscribeThemeAxes",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "subscribeThemeAxes için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Tag",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "feedback",
+      "subgroup": "tags",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Badge / Tag / Chip",
+      "demoMode": "live",
+      "description": "Kategori, statü ve filtre sinyalleri icin kullanılan kapsul etiket.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Text",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "content",
+      "subgroup": "text",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Typography",
+      "demoMode": "live",
+      "description": "Tipografi primitivei; semantic renk ve boyut tokenlarini tek yerden verir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "THEME_APPEARANCE_OPTIONS",
+      "kind": "const",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "options",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_APPEARANCE_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "THEME_DENSITY_OPTIONS",
+      "kind": "const",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "options",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_DENSITY_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "THEME_ELEVATION_OPTIONS",
+      "kind": "const",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "options",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_ELEVATION_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "THEME_MOTION_OPTIONS",
+      "kind": "const",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "options",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_MOTION_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "THEME_RADIUS_OPTIONS",
+      "kind": "const",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "options",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_RADIUS_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "ThemePreviewCard",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "theme",
+      "subgroup": "preview",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme preview cards",
+      "demoMode": "live",
+      "description": "Tema varyasyonlarini minik kartlar halinde karsilastiran preview primitivei.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "toggleVariantDefault",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "data-grid",
+      "subgroup": "variants",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Feature flags",
+      "demoMode": "inspector",
+      "description": "Grid default varyantini belirleyen utility.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Tooltip",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "feedback",
+      "subgroup": "tooltips",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Tooltip",
+      "demoMode": "live",
+      "description": "Native title tabanli hafif yardim metni primitivei.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "updateThemeAxes",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "Theme axes patch uygulayan runtime controller.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "useGridVariants",
+      "kind": "hook",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "data-grid",
+      "subgroup": "variants",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Hooks (useX)",
+      "demoMode": "inspector",
+      "description": "Grid varyantlarini kullanip durum yoneten hook.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "withAccessGuard",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "runtime",
+      "subgroup": "access",
+      "taxonomyGroupId": "auth_security_ui",
+      "taxonomySubgroup": "Permission gates",
+      "demoMode": "inspector",
+      "description": "Readonly/disabled guard davranisini event handler seviyesinde uygular.",
+      "sectionIds": [
+        "utility_components",
+        "accessibility_compliance",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "AnchorToc",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "AnchorToc P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Breadcrumb",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Breadcrumb P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Checkbox",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Checkbox P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "CommandPalette",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "CommandPalette P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "ContextMenu",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "ContextMenu P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "DatePicker",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "DatePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Descriptions",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Descriptions P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "JsonViewer",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "JsonViewer P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "List",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "List P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Pagination",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Pagination P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Popover",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Popover P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Radio",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Radio P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Slider",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Slider P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Steps",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Steps P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Switch",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Switch P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TableSimple",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "TableSimple P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Tabs P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TextArea",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "TextArea P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TextInput",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "TextInput P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TimePicker",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "TimePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TourCoachmarks",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Tour / Coachmarks",
+      "demoMode": "planned",
+      "description": "TourCoachmarks P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "overlay_components",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Tree",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Tree P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TreeTable",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "TreeTable P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Upload",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Upload P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    }
+  ]
+}

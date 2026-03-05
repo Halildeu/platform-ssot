@@ -1,0 +1,476 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-governance-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "title": "UI Library Governance Contract",
+  "purpose": "Modern, yalın, performanslı, ölçeklenebilir, AI ile uyumlu ve kurumsal kalite beklentilerine uygun tasarım kütüphanesini tek kanonik kontrat altında yönetmek.",
+  "scope": {
+    "primary_modules": [
+      "web/packages/ui-kit",
+      "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+      "web/design-tokens",
+      "web/scripts/build_design_lab_index.py"
+    ],
+    "connected_modules": [
+      "web/packages/shared-http",
+      "web/.storybook",
+      "web/stories",
+      "variant-service",
+      "permission-service"
+    ],
+    "non_goals": [
+      "runtime antd veya @mui dependency eklemek",
+      "apps/** altında parallel UI framework kurmak",
+      "preview ve release sürecini network bağımlı yapmak"
+    ]
+  },
+  "benchmark_references": [
+    {
+      "id": "ant-design-values",
+      "title": "Ant Design Design Values",
+      "source_url": "https://4x.ant.design/docs/spec/values",
+      "retrieved_on": "2026-03-06",
+      "applied_as": "dogal, belirgin, anlamli ve gelisebilir tasarim kararlarinda referans"
+    },
+    {
+      "id": "ant-design-theme-customization",
+      "title": "Ant Design Customize Theme",
+      "source_url": "https://4x.ant.design/docs/react/customize-theme",
+      "retrieved_on": "2026-03-06",
+      "applied_as": "token tabanli tema özelleştirme ve theme axis yönetimi referansi"
+    },
+    {
+      "id": "mui-theming",
+      "title": "Material UI Theming",
+      "source_url": "https://mui.com/material-ui/customization/theming/",
+      "retrieved_on": "2026-03-06",
+      "applied_as": "theme object kapsamı, css variable üretimi ve consistency referansi"
+    },
+    {
+      "id": "mui-bundle-size",
+      "title": "Material UI Minimizing Bundle Size",
+      "source_url": "https://mui.com/material-ui/guides/minimizing-bundle-size/",
+      "retrieved_on": "2026-03-06",
+      "applied_as": "bundle budget, import disiplini ve dev-time performans referansi"
+    },
+    {
+      "id": "dtcg-json-format",
+      "title": "Design Tokens Community Group",
+      "source_url": "https://www.designtokens.org/",
+      "retrieved_on": "2026-03-06",
+      "applied_as": "token formatinin JSON-first, araçlar arası taşınabilir ve interoperable olması"
+    },
+    {
+      "id": "wcag-22",
+      "title": "WCAG 2.2",
+      "source_url": "https://www.w3.org/TR/WCAG22/",
+      "retrieved_on": "2026-03-06",
+      "applied_as": "erişilebilirlik için minimum kurumsal eşik"
+    },
+    {
+      "id": "wai-aria-apg",
+      "title": "WAI-ARIA Authoring Practices Guide",
+      "source_url": "https://www.w3.org/WAI/ARIA/apg/",
+      "retrieved_on": "2026-03-06",
+      "applied_as": "interactive widget patternleri için davranış kontratı"
+    }
+  ],
+  "north_star": {
+    "product_shape": [
+      "modern",
+      "yalin",
+      "performansli",
+      "olceklenebilir",
+      "ai_uyumlu",
+      "entegre",
+      "kurumsal"
+    ],
+    "design_values": [
+      "dogal etkileşim",
+      "belirginlik ve görev netligi",
+      "anlamli ve sonuc odakli akış",
+      "buyumeye uygun sistem mantigi"
+    ],
+    "operating_principles": [
+      "Token-first",
+      "UI-kit-first",
+      "Preview-first",
+      "JSON-first",
+      "Fail-closed quality gates",
+      "Deterministic demos",
+      "Measure before release"
+    ]
+  },
+  "architecture_contract": {
+    "visual_ssot": [
+      "web/design-tokens/figma.tokens.json",
+      "web/design-tokens/generated/theme-contract.json"
+    ],
+    "component_runtime_owner": "web/packages/ui-kit",
+    "preview_runtime_owner": "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "secondary_docs_owner": "web/.storybook + web/stories",
+    "theme_runtime_owner": "web/packages/ui-kit/src/runtime/theme-controller.ts",
+    "theme_persistence_owner": "variant-service",
+    "http_owner": "web/packages/shared-http",
+    "access_owner": "permission-service + ui-kit access controller",
+    "tailwind_mode": "tailwind-assisted",
+    "release_source_of_truth": [
+      "web/packages/ui-kit/src/catalog/component-registry.v1.json",
+      "web/apps/mfe-shell/src/pages/admin/design-lab.index.json"
+    ]
+  },
+  "ux_catalog_alignment": {
+    "catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "ui_alignment_reference": "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "mandatory_for_design_library": true,
+    "rules": [
+      "UI kit backlog ve component family'leri ux_katalogu tema/subtheme setleriyle hizalanir.",
+      "Yeni veya degisen ortak component en az bir primary UX theme/subtheme baglanti karari alir.",
+      "Interactive widget davranisları WAI-ARIA APG ve ilgili UX subtheme ile birlikte degerlendirilir.",
+      "UX catalog alignment olmadan ortak component release edilmez."
+    ]
+  },
+  "component_operating_model": {
+    "artifact_chain": [
+      "governance contract",
+      "ui-library-system context",
+      "component registry",
+      "taxonomy",
+      "component source",
+      "preview",
+      "tests",
+      "release evidence"
+    ],
+    "required_component_artifacts": [
+      "registry entry",
+      "typed component API",
+      "deterministic preview",
+      "usage notes",
+      "test evidence",
+      "accessibility notes",
+      "theme compatibility declaration"
+    ],
+    "maturity_model": [
+      {
+        "state": "planned",
+        "entry_rule": "registry ve taxonomy var, runtime export yok"
+      },
+      {
+        "state": "beta",
+        "entry_rule": "runtime export, preview, unit test ve accessibility smoke var"
+      },
+      {
+        "state": "stable",
+        "entry_rule": "adoption var, regression evidence var, open blocker yok"
+      },
+      {
+        "state": "deprecated",
+        "entry_rule": "replacement tanimli, migration path var, release note var"
+      }
+    ]
+  },
+  "quality_attribute_contract": [
+    {
+      "attribute_id": "kalite_dogruluk",
+      "goal": "Component davranışı ve görünümü doğru, beklenen kontrata uygun olmalı.",
+      "mandatory_rules": [
+        "Her ortak component typed prop API ile gelir.",
+        "Component export bilgisi registry ile birebir eşleşir.",
+        "Preview çıktısı deterministic local demo üretir.",
+        "Component ilgili UX theme/subtheme hedefiyle hizalanir."
+      ],
+      "measures": [
+        "unit/component test pass",
+        "designlab:index pass",
+        "registry/export consistency = 0 drift"
+      ]
+    },
+    {
+      "attribute_id": "deterministiklik_tekrarlanabilirlik",
+      "goal": "Aynı input aynı artifact ve aynı preview sonucunu üretmeli.",
+      "mandatory_rules": [
+        "Preview network bağımlısı olmaz.",
+        "Registry-driven index tek canonical kaynaktır.",
+        "Component factory ve demo inputları versioned JSON ile yönetilir.",
+        "UX alignment karari JSON artefact ile saklanir."
+      ],
+      "measures": [
+        "non-deterministic demo count = 0",
+        "preview data source = local fixture only",
+        "index regeneration drift = 0"
+      ]
+    },
+    {
+      "attribute_id": "gozlemlenebilirlik_izleme_olcme",
+      "goal": "Kütüphane kullanımı, hata ve performans sinyalleri ölçülebilir olmalı.",
+      "mandatory_rules": [
+        "Design Lab summary exported/planned/live counts üretir.",
+        "UI kit build/test/bundle evidence saklanır.",
+        "Kritik componentler için render, interaction veya error telemetry noktaları tanımlanır."
+        ,
+        "Task-critical componentlerde UX KPI ölçüm bağı açıkça tanımlanır."
+      ],
+      "measures": [
+        "component count trend",
+        "preview smoke trend",
+        "bundle size delta",
+        "runtime error rate"
+      ]
+    },
+    {
+      "attribute_id": "entegrasyon_birlikte_calisabilirlik",
+      "goal": "MFE'ler, backend tema servisi ve shared packages ile uyum bozulmadan çalışmalı.",
+      "mandatory_rules": [
+        "Frontend API çağrıları shared-http üzerinden geçer.",
+        "Theme persistence variant-service sahibi dışına taşınmaz.",
+        "Ortak componentler module-federation tüketim modelini bozmadan export edilir.",
+        "UX catalog web-mobile parity ve adaptive davranis hedefleriyle çelişen component API üretilmez."
+      ],
+      "measures": [
+        "consumer MFE breakage count = 0",
+        "theme contract mismatch = 0",
+        "integration smoke pass"
+      ]
+    },
+    {
+      "attribute_id": "uygunluk_risk_guvence_kontrol",
+      "goal": "Release öncesi kurallar açık ve denetlenebilir olmalı.",
+      "mandatory_rules": [
+        "Registry, preview, test ve lint zinciri tek patch içinde kapanır.",
+        "Forbidden dependency ve forbidden pattern kapıları çalışır.",
+        "Açık riskler backlog veya ADR ile izlenir.",
+        "UX alignment artifact'i bulunmayan ortak component release edilmez."
+      ],
+      "measures": [
+        "required gate success",
+        "open critical risk count",
+        "policy exception count"
+      ]
+    },
+    {
+      "attribute_id": "sureklilik_dayaniklilik",
+      "goal": "Kütüphane değişimleri consumer MFE'leri gereksiz kırmamalı.",
+      "mandatory_rules": [
+        "Semver ve deprecation yaklaşımı açık olmalı.",
+        "Stable componentlerde breaking change release note olmadan yapılamaz.",
+        "Fallback ve empty state davranışları component kontratında tanımlı olmalı."
+      ],
+      "measures": [
+        "breaking change incident count",
+        "rollback readiness",
+        "deprecated without replacement count = 0"
+      ]
+    },
+    {
+      "attribute_id": "olceklenebilirlik",
+      "goal": "Component sayısı ve consumer sayısı arttığında bakım maliyeti patlamamalı.",
+      "mandatory_rules": [
+        "Prop explosion yerine slot/composition tercih edilir.",
+        "Duplicate primitive üretimi yasaktır.",
+        "Theme axis ve variant modeli yatay büyümeyi destekler."
+      ],
+      "measures": [
+        "duplicate primitive count = 0",
+        "component API breaking churn",
+        "composition reuse ratio"
+      ]
+    },
+    {
+      "attribute_id": "maliyet_verimlilik_kaynak",
+      "goal": "Aynı bileşen tekrar tekrar yazılmamalı, bundle ve bakım maliyeti kontrol altında kalmalı.",
+      "mandatory_rules": [
+        "Yeni componentten önce mevcut registry taranır.",
+        "Bundle budget ve import disiplini korunur.",
+        "Reference benchmark için Ant/MUI incelenir ama runtime dependency eklenmez."
+      ],
+      "measures": [
+        "bundle size budget pass",
+        "duplicate build effort count",
+        "reuse before create evidence"
+      ]
+    },
+    {
+      "attribute_id": "ai_otomasyon",
+      "goal": "AI aynı kuralla tekrar tekrar üretim yapabilmeli.",
+      "mandatory_rules": [
+        "AI önce repo-context-pack, governance contract, ui-library context ve blueprint okur.",
+        "Registry ve taxonomy güncellenmeden ortak component geliştirmesi başlamaz.",
+        "AI planned/exported ayrımını bozamaz."
+      ],
+      "measures": [
+        "AI patch drift count",
+        "missing contract artifact count",
+        "reproducible generation rate"
+      ]
+    },
+    {
+      "attribute_id": "baglam_uyum",
+      "goal": "Geliştirme repo gerçekliği, domain ve current architecture ile uyumlu olmalı.",
+      "mandatory_rules": [
+        "UI library işi repo-context-pack üzerinden başlar.",
+        "Yeni ihtiyaç mevcut domain sahipliği ile çelişiyorsa önce karar güncellenir.",
+        "Context dışı paralel UI katmanı açılmaz."
+      ],
+      "measures": [
+        "context violation count",
+        "architecture review fail count",
+        "unmapped component change count"
+      ]
+    },
+    {
+      "attribute_id": "paydas_memnuniyeti_deger",
+      "goal": "Tasarım, geliştirme ve ürün ekipleri aynı kütüphaneden net değer almalı.",
+      "mandatory_rules": [
+        "Component discoverability Design Lab üzerinden sağlanır.",
+        "Usage guidance ve import contract görünür olmalı.",
+        "Componentler task completion ve cognitive load açısından yalın kalmalı."
+      ],
+      "measures": [
+        "adoption count",
+        "support/question count",
+        "time-to-first-use"
+      ]
+    },
+    {
+      "attribute_id": "surdurulebilirlik_esg_isg_etik",
+      "goal": "Kütüphane erişilebilir, etik ve gereksiz kaynak tüketimini azaltan bir yaklaşım izlemeli.",
+      "mandatory_rules": [
+        "Dark pattern veya deceptive interaction üretilmez.",
+        "Reduced motion ve accessibility ihtiyaçları dikkate alınır.",
+        "Gereksiz JS/CSS yükü arttıran duplicate çözüm yazılmaz."
+      ],
+      "measures": [
+        "wcag violation count",
+        "motion opt-out support",
+        "bundle waste ratio"
+      ]
+    },
+    {
+      "attribute_id": "surec_etkinligi_olgunluk",
+      "goal": "Component üretim süreci net, kısa ve olgun olmalı.",
+      "mandatory_rules": [
+        "planned -> beta -> stable geçiş kuralları zorunludur.",
+        "Definition of Ready ve Definition of Done artifact zinciri tamamlanır.",
+        "Release evidence olmadan component stable olmaz."
+      ],
+      "measures": [
+        "cycle time",
+        "rework count",
+        "maturity stage leakage"
+      ]
+    },
+    {
+      "attribute_id": "zaman_hiz_ceviklik",
+      "goal": "Hızlı üretim mümkün olmalı ama standart bozulmamalı.",
+      "mandatory_rules": [
+        "Yeni component akışı registry-first başlar.",
+        "Preview-first yaklaşımı zorunludur.",
+        "Tek patch içinde contract, component, preview ve gate kapanışı hedeflenir.",
+        "UX alignment family kararı koddan once verilir."
+      ],
+      "measures": [
+        "component lead time",
+        "preview availability lead time",
+        "hotfix rate"
+      ]
+    },
+    {
+      "attribute_id": "guvenlik",
+      "goal": "Kütüphane güvenli varsayılanlarla gelmeli.",
+      "mandatory_rules": [
+        "Unsafe HTML injection default davranış olmaz.",
+        "CSP uyumsuz inline script ihtiyacı doğurulmaz.",
+        "Permission ve access-aware UI davranışı bypass edilmez."
+      ],
+      "measures": [
+        "security finding count",
+        "unsafe render surface count",
+        "csp violation count"
+      ]
+    },
+    {
+      "attribute_id": "gizlilik",
+      "goal": "Kütüphane PII ve hassas veriyi sızdırmayan defaults ile gelir.",
+      "mandatory_rules": [
+        "Telemetry ve preview datasında gerçek hassas veri kullanılmaz.",
+        "Component log/trace payload'larında PII tutulmaz.",
+        "Demo fixtures anonimize veya sentetik olmalıdır."
+      ],
+      "measures": [
+        "pii leak incident count",
+        "sensitive fixture count = 0",
+        "privacy review fail count"
+      ]
+    }
+  ],
+  "delivery_gates": {
+    "mandatory_checks": [
+      "python3 scripts/check_ui_library_ux_alignment.py",
+      "npm -C web run designlab:index",
+      "npm -C web run lint:tailwind",
+      "npm -C web run lint:no-antd",
+      "npm -C web run test:ui-kit"
+    ],
+    "release_readiness_rules": [
+      "registry drift = 0",
+      "planned component exported gibi gösterilmez",
+      "preview deterministic",
+      "ux alignment present",
+      "wcag/apg ilgili pattern notu yazili",
+      "theme compatibility deklarasyonu var"
+    ],
+    "recommended_checks": [
+      "ui-kit build",
+      "consumer smoke",
+      "bundle budget snapshot",
+      "a11y smoke"
+    ]
+  },
+  "ai_execution_contract": {
+    "must_read_before_code": [
+      "docs/02-architecture/context/repo-context-pack.v1.json",
+      "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+      "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+      "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+      "docs/02-architecture/context/ui-library-system.context.v1.json",
+      "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+      "docs/00-handbook/STYLE-WEB-001.md",
+      "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+    ],
+    "must_update_when_component_changes": [
+      "docs/02-architecture/context/ui-library-ux-alignment.v1.json if family mapping changes",
+      "component-registry.v1.json",
+      "design-lab.index.json",
+      "DesignLabPage.tsx if preview surface changes"
+    ],
+    "forbidden_moves": [
+      "apps/** altinda ortak primitive üretmek",
+      "registry guncellemeden export eklemek",
+      "preview olmayan ortak component release etmek",
+      "token disi görsel karar eklemek",
+      "ux_katalogu alignment karari olmadan ortak component olusturmak"
+    ]
+  },
+  "observability_contract": {
+    "minimum_release_evidence": [
+      "component count summary",
+      "planned/exported/live demo summary",
+      "test result summary",
+      "bundle delta if runtime code changed",
+      "a11y note if interactive widget changed"
+    ],
+    "suggested_operational_metrics": [
+      "component adoption count",
+      "design lab page usage",
+      "ui-kit bundle size trend",
+      "consumer error trend"
+    ]
+  },
+  "decision_policy": {
+    "prefer_reuse_before_create": true,
+    "prefer_composition_before_new_primitive": true,
+    "prefer_token_extension_before_hardcoded_value": true,
+    "prefer_preview_first": true,
+    "prefer_json_first": true
+  }
+}

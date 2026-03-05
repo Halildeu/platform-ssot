@@ -1,9 +1,29 @@
-import React, { useMemo, useState } from 'react';
-import { Button, EntityGridTemplate, Modal, Select, Text } from 'mfe-ui-kit';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  AgGridServer,
+  Badge,
+  Button,
+  DetailDrawer,
+  Dropdown,
+  Empty,
+  EntityGridTemplate,
+  FilterBar,
+  FormDrawer,
+  Modal,
+  PageLayout,
+  ReportFilterPanel,
+  Select,
+  Tag,
+  Text,
+  ThemePreviewCard,
+  Tooltip,
+} from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
-import { DESIGN_LAB_GROUPS } from './design-lab.groups';
+import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
 
-type LabSectionKey = 'shell' | 'grid' | 'form';
+type DesignLabLifecycle = 'stable' | 'beta' | 'planned';
+type DesignLabAvailability = 'exported' | 'planned';
+type DesignLabDemoMode = 'live' | 'inspector' | 'planned';
 
 type DesignLabIndexItem = {
   name: string;
@@ -13,26 +33,56 @@ type DesignLabIndexItem = {
   group: string;
   subgroup: string;
   tags?: string[];
+  availability: DesignLabAvailability;
+  lifecycle: DesignLabLifecycle;
+  taxonomyGroupId: string;
+  taxonomySubgroup: string;
+  demoMode: DesignLabDemoMode;
+  description: string;
+  sectionIds: string[];
+  qualityGates: string[];
 };
 
 type DesignLabIndex = {
   version?: number;
   generatedAt?: string;
   generatedAtUtc?: string;
+  summary?: {
+    total: number;
+    exported: number;
+    planned: number;
+    liveDemo: number;
+    inspector: number;
+  };
   items: DesignLabIndexItem[];
 };
 
+type DesignLabTaxonomyGroup = {
+  id: string;
+  title: string;
+  subgroups: string[];
+};
+
+type DesignLabTaxonomy = {
+  version: string;
+  defaults: {
+    showEmptyGroups: boolean;
+    showEmptySubgroups: boolean;
+    defaultView: string;
+    advancedToggleLabel: string;
+  };
+  groups: DesignLabTaxonomyGroup[];
+};
+
 const designLabIndex = designLabIndexRaw as DesignLabIndex;
-const designLabGroups = DESIGN_LAB_GROUPS;
+const designLabTaxonomy = designLabTaxonomyRaw as DesignLabTaxonomy;
 
 const copyToClipboard = async (value: string): Promise<boolean> => {
   if (!value) return false;
-
   try {
     await navigator.clipboard.writeText(value);
     return true;
   } catch {
-    // Fallback (older browsers / non-secure context)
     try {
       const textarea = document.createElement('textarea');
       textarea.value = value;
@@ -50,594 +100,627 @@ const copyToClipboard = async (value: string): Promise<boolean> => {
   }
 };
 
-const TabButton: React.FC<{
-  active: boolean;
-  label: string;
-  onClick: () => void;
-}> = ({ active, label, onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={`inline-flex items-center rounded-xl border px-3 py-2 text-sm font-semibold transition ${
-      active
-        ? 'border-border-default bg-surface-panel text-text-primary shadow-sm'
-        : 'border-transparent bg-transparent text-text-secondary hover:bg-surface-muted'
-    }`}
-  >
+const statusToneClass: Record<DesignLabLifecycle, string> = {
+  stable: 'text-state-success-text',
+  beta: 'text-state-warning-text',
+  planned: 'text-state-info-text',
+};
+
+const statusLabel: Record<DesignLabLifecycle, string> = {
+  stable: 'Stable',
+  beta: 'Beta',
+  planned: 'Planned',
+};
+
+const availabilityLabel: Record<DesignLabAvailability, string> = {
+  exported: 'Exported',
+  planned: 'Roadmap',
+};
+
+const demoModeLabel: Record<DesignLabDemoMode, string> = {
+  live: 'Live Preview',
+  inspector: 'Inspector',
+  planned: 'Planned',
+};
+
+const SectionBadge: React.FC<{ label: string }> = ({ label }) => (
+  <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-muted px-2.5 py-1 text-[11px] font-semibold text-text-secondary">
     {label}
-  </button>
+  </span>
 );
 
-type ClassifiedDesignLabItem = DesignLabIndexItem & {
-  taxonomyGroupId: string;
-  taxonomySubgroup: string;
-};
+const SummaryCard: React.FC<{ label: string; value: number; note: string }> = ({ label, value, note }) => (
+  <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
+    <Text as="div" variant="secondary" className="text-xs font-semibold uppercase tracking-[0.18em]">
+      {label}
+    </Text>
+    <div className="mt-2 text-3xl font-semibold text-text-primary">{value}</div>
+    <Text variant="secondary" className="mt-1 block text-xs">
+      {note}
+    </Text>
+  </div>
+);
 
-const DEFAULT_TAXONOMY_GROUP_ID = 'runtime_utilities';
-const DEFAULT_TAXONOMY_SUBGROUP = 'Runtime controllers (theme/auth)';
+const DetailLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+    {children}
+  </Text>
+);
 
-const classifyItemToTaxonomy = (item: DesignLabIndexItem): { groupId: string; subgroup: string } => {
-  const legacyKey = `${item.group}/${item.subgroup}`;
-
-  if (legacyKey === 'data-grid/entity-grid' && item.name === 'buildEntityGridQueryParams') {
-    return { groupId: 'tables_grid_addons', subgroup: 'Server-side pagination helpers' };
-  }
-
-  if (legacyKey === 'data-grid/variants') {
-    return item.kind === 'hook'
-      ? { groupId: 'runtime_utilities', subgroup: 'Hooks (useX)' }
-      : { groupId: 'runtime_utilities', subgroup: 'Feature flags' };
-  }
-
-  if (legacyKey === 'theme/runtime') {
-    if (item.name === 'getThemeContract' || item.name === 'resolveThemeModeKey' || item.name === 'getThemeAxes') {
-      return { groupId: 'theme_tokens', subgroup: 'Token viewer (semantic/raw)' };
-    }
-    if (item.name.startsWith('setOverlay')) {
-      return { groupId: 'theme_tokens', subgroup: 'Overlay intensity tools' };
-    }
-    return { groupId: 'theme_tokens', subgroup: 'Theme editor (axes)' };
-  }
-
-  const mapping: Record<string, { groupId: string; subgroup: string }> = {
-    'actions/buttons': { groupId: 'actions', subgroup: 'Button' },
-    'forms/select': { groupId: 'data_entry', subgroup: 'Select / Dropdown / Combobox' },
-    'forms/dropdown': { groupId: 'data_entry', subgroup: 'Select / Dropdown / Combobox' },
-    'forms/inputs': { groupId: 'data_entry', subgroup: 'Text Input / TextArea' },
-    'overlays/modal': { groupId: 'feedback', subgroup: 'Modal / Dialog / Confirm' },
-    'overlays/drawers': { groupId: 'overlays_portals', subgroup: 'Drawer / Side panel' },
-    'feedback/tooltips': { groupId: 'feedback', subgroup: 'Tooltip' },
-    'feedback/badges': { groupId: 'general', subgroup: 'Badge / Tag / Chip' },
-    'feedback/tags': { groupId: 'general', subgroup: 'Badge / Tag / Chip' },
-    'layout/page': { groupId: 'layout_surfaces', subgroup: 'Page Layout / Containers' },
-    'layout/filters': { groupId: 'search_filtering', subgroup: 'Filter bar' },
-    'data-grid/entity-grid': { groupId: 'data_display', subgroup: 'Data Grid (AG Grid / EntityGrid)' },
-    'data-grid/ag-grid-server': { groupId: 'data_display', subgroup: 'Data Grid (AG Grid / EntityGrid)' },
-    'content/text': { groupId: 'general', subgroup: 'Typography' },
-    'empty-states/empty': { groupId: 'feedback', subgroup: 'Empty state / No data' },
-    'theme/preview': { groupId: 'theme_tokens', subgroup: 'Theme preview cards' },
-    'theme/options': { groupId: 'theme_tokens', subgroup: 'Density / radius / motion presets' },
-    'runtime/auth': { groupId: 'runtime_utilities', subgroup: 'Runtime controllers (theme/auth)' },
-    'runtime/access': { groupId: 'auth_security_ui', subgroup: 'Permission gates' },
-  };
-
-  return mapping[legacyKey] ?? { groupId: DEFAULT_TAXONOMY_GROUP_ID, subgroup: DEFAULT_TAXONOMY_SUBGROUP };
-};
-
-const designLabIndexedItems: ClassifiedDesignLabItem[] = (designLabIndex.items ?? []).map((item) => {
-  const taxonomy = classifyItemToTaxonomy(item);
-  return {
-    ...item,
-    taxonomyGroupId: taxonomy.groupId,
-    taxonomySubgroup: taxonomy.subgroup,
-  };
-});
-
-export const DesignLabPage: React.FC = () => {
+const DesignLabPage: React.FC = () => {
   const [query, setQuery] = useState('');
-  const [activeSection, setActiveSection] = useState<LabSectionKey>('shell');
   const [selectedItemName, setSelectedItemName] = useState<string>(() => {
-    const preferred = ['Button', 'Text', 'EntityGridTemplate', 'Modal', 'Select'];
-    for (const candidate of preferred) {
-      if (designLabIndex.items.some((item) => item.name === candidate)) return candidate;
-    }
-    const firstComponent = designLabIndex.items.find((item) => item.kind === 'component')?.name;
-    return firstComponent ?? designLabIndex.items[0]?.name ?? '';
+    const button = designLabIndex.items.find((item) => item.name === 'Button');
+    return button?.name ?? designLabIndex.items[0]?.name ?? '';
   });
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(() => {
-    const selected = designLabIndex.items.find((item) => item.name === 'Button') ?? designLabIndex.items[0];
-    const initialGroup = selected ? classifyItemToTaxonomy(selected).groupId : (designLabGroups.groups[0]?.id ?? 'actions');
-    return [initialGroup];
-  });
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['actions', 'data_entry', 'data_display']);
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
-  const [formModalOpen, setFormModalOpen] = useState(false);
-  const [formSelectValue, setFormSelectValue] = useState('comfortable');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formDrawerOpen, setFormDrawerOpen] = useState(false);
+  const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
+  const [selectValue, setSelectValue] = useState('comfortable');
+  const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
+  const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
+
+  useEffect(() => {
+    setModalOpen(false);
+    setFormDrawerOpen(false);
+    setDetailDrawerOpen(false);
+  }, [selectedItemName]);
 
   const normalizedQuery = query.trim().toLowerCase();
 
-  const groupTitleById = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const group of designLabGroups.groups) {
-      map.set(group.id, group.title);
-    }
-    return map;
-  }, []);
-
   const filteredItems = useMemo(() => {
-    const items = designLabIndexedItems;
-    if (!normalizedQuery) return items;
-    return items.filter((item) => {
-      const groupTitle = groupTitleById.get(item.taxonomyGroupId) ?? item.taxonomyGroupId;
-      const subgroupTitle = item.taxonomySubgroup;
-      const tags = (item.tags ?? []).join(' ');
-      const haystack = `${item.name} ${item.kind} ${groupTitle} ${subgroupTitle} ${tags} ${item.group} ${item.subgroup}`.toLowerCase();
+    if (!normalizedQuery) return designLabIndex.items;
+    return designLabIndex.items.filter((item) => {
+      const haystack = [
+        item.name,
+        item.kind,
+        item.lifecycle,
+        item.availability,
+        item.taxonomyGroupId,
+        item.taxonomySubgroup,
+        item.description,
+        ...(item.sectionIds ?? []),
+        ...(item.qualityGates ?? []),
+        ...((item.tags ?? []) as string[]),
+      ]
+        .join(' ')
+        .toLowerCase();
       return haystack.includes(normalizedQuery);
     });
-  }, [groupTitleById, normalizedQuery]);
+  }, [normalizedQuery]);
 
-  const selectedItem = useMemo(() => {
-    return designLabIndex.items.find((item) => item.name === selectedItemName) ?? null;
-  }, [selectedItemName]);
-
-  const selectedImportSnippet = useMemo(() => {
-    return selectedItem?.importStatement ?? '';
-  }, [selectedItem?.importStatement]);
-
-  const handleSelectItem = (item: ClassifiedDesignLabItem) => {
-    setSelectedItemName(item.name);
-    setCopied(null);
-    if (normalizedQuery) return;
-    setExpandedGroups((prev) => (prev.includes(item.taxonomyGroupId) ? prev : [...prev, item.taxonomyGroupId]));
-  };
-
-  const handleCopySelectedImport = async () => {
-    const ok = await copyToClipboard(selectedImportSnippet);
-    setCopied(ok ? 'ok' : 'fail');
-    window.setTimeout(() => setCopied(null), 1500);
-  };
-
-  const gridDemo = useMemo(() => {
-    type Row = { id: string; name: string; status: string; updatedAt: string };
-    const now = new Date();
-    const rows: Row[] = Array.from({ length: 8 }).map((_, index) => ({
-      id: String(index + 1),
-      name: `Kayıt ${index + 1}`,
-      status: index % 3 === 0 ? 'Active' : index % 3 === 1 ? 'Pending' : 'Disabled',
-      updatedAt: new Date(now.getTime() - index * 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
-    }));
-
-    return (
-      <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
-        <Text variant="secondary" className="mb-3 block">
-          EntityGridTemplate tema zinciri ile uyumlu çalışmalı; hardcoded/fallback yok.
-        </Text>
-        <div className="h-[420px]">
-          <EntityGridTemplate<Row>
-            gridId="design-lab-grid"
-            gridSchemaVersion={1}
-            dataSourceMode="client"
-            rowData={rows}
-            total={rows.length}
-            page={1}
-            pageSize={25}
-            columnDefs={[
-              { field: 'name', headerName: 'İsim', flex: 1 },
-              { field: 'status', headerName: 'Durum', width: 140 },
-              { field: 'updatedAt', headerName: 'Güncelleme', width: 140 },
-            ]}
-          />
-        </div>
-      </div>
-    );
-  }, []);
-
-  const shellDemo = (
-    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <Text as="div" size="lg" className="font-semibold">
-            Shell Demo
-          </Text>
-          <Text variant="secondary">
-            Header/panel/button/input örnekleri.
-          </Text>
-        </div>
-        <Button variant="secondary">Action</Button>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <Button>Primary</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="ghost">Ghost</Button>
-      </div>
-
-      <div className="mt-4">
-        <label className="text-xs font-semibold text-text-secondary" htmlFor="design-lab-input">
-          Input
-        </label>
-        <input
-          id="design-lab-input"
-          placeholder="Örn: arama..."
-          className="mt-2 h-10 w-full rounded-xl border border-border-default bg-surface-default px-3 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
-        />
-      </div>
-    </div>
+  const selectedItem = useMemo(
+    () => filteredItems.find((item) => item.name === selectedItemName) ?? designLabIndex.items.find((item) => item.name === selectedItemName) ?? null,
+    [filteredItems, selectedItemName],
   );
-
-  const formDemo = (
-    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <Text as="div" size="lg" className="font-semibold">
-            Form Demo
-          </Text>
-          <Text variant="secondary">
-            Modal/select örnekleri.
-          </Text>
-        </div>
-        <Button variant="secondary" onClick={() => setFormModalOpen(true)}>
-          Modal aç
-        </Button>
-      </div>
-
-      <div className="mt-4 flex flex-col gap-2">
-        <Text variant="secondary">Select</Text>
-        <Select
-          value={formSelectValue}
-          onChange={setFormSelectValue}
-          options={[
-            { value: 'comfortable', label: 'Comfortable' },
-            { value: 'compact', label: 'Compact' },
-          ]}
-        />
-      </div>
-
-      <Modal
-        open={formModalOpen}
-        title="Design Lab Modal"
-        onClose={() => setFormModalOpen(false)}
-        footer={(
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" onClick={() => setFormModalOpen(false)}>
-              Kapat
-            </Button>
-            <Button onClick={() => setFormModalOpen(false)}>
-              Kaydet
-            </Button>
-          </div>
-        )}
-      >
-        <div className="flex flex-col gap-3">
-          <Text variant="secondary">
-            Bu modal yalnızca demo amaçlıdır.
-          </Text>
-          <label className="text-xs font-semibold text-text-secondary" htmlFor="design-lab-modal-input">
-            Input
-          </label>
-          <input
-            id="design-lab-modal-input"
-            placeholder="Örn: değer..."
-            className="h-10 rounded-xl border border-border-default bg-surface-default px-3 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
-          />
-        </div>
-      </Modal>
-    </div>
-  );
-
-  const demoContent = useMemo(() => {
-    switch (activeSection) {
-      case 'grid':
-        return gridDemo;
-      case 'form':
-        return formDemo;
-      case 'shell':
-      default:
-        return shellDemo;
-    }
-  }, [activeSection, formDemo, gridDemo, shellDemo]);
 
   const countByGroup = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const group of designLabGroups.groups) {
-      map.set(group.id, 0);
-    }
+    const counts = new Map<string, number>();
+    for (const group of designLabTaxonomy.groups) counts.set(group.id, 0);
     for (const item of filteredItems) {
-      map.set(item.taxonomyGroupId, (map.get(item.taxonomyGroupId) ?? 0) + 1);
+      counts.set(item.taxonomyGroupId, (counts.get(item.taxonomyGroupId) ?? 0) + 1);
+    }
+    return counts;
+  }, [filteredItems]);
+
+  const itemsByGroupAndSubgroup = useMemo(() => {
+    const map = new Map<string, Map<string, DesignLabIndexItem[]>>();
+    for (const item of filteredItems) {
+      const subgroupMap = map.get(item.taxonomyGroupId) ?? new Map<string, DesignLabIndexItem[]>();
+      const list = subgroupMap.get(item.taxonomySubgroup) ?? [];
+      list.push(item);
+      subgroupMap.set(item.taxonomySubgroup, [...list].sort((a, b) => a.name.localeCompare(b.name, 'en')));
+      map.set(item.taxonomyGroupId, subgroupMap);
     }
     return map;
   }, [filteredItems]);
 
   const effectiveExpandedGroups = useMemo(() => {
     if (normalizedQuery) {
-      return designLabGroups.groups
-        .filter((group) => (countByGroup.get(group.id) ?? 0) > 0)
-        .map((group) => group.id);
+      return designLabTaxonomy.groups.filter((group) => (countByGroup.get(group.id) ?? 0) > 0).map((group) => group.id);
     }
     return expandedGroups;
   }, [countByGroup, expandedGroups, normalizedQuery]);
 
-  const itemsByGroupAndSubgroup = useMemo(() => {
-    const map = new Map<string, Map<string, ClassifiedDesignLabItem[]>>();
-    for (const item of filteredItems) {
-      const groupMap = map.get(item.taxonomyGroupId) ?? new Map<string, ClassifiedDesignLabItem[]>();
-      const list = groupMap.get(item.taxonomySubgroup) ?? [];
-      list.push(item);
-      groupMap.set(item.taxonomySubgroup, list);
-      map.set(item.taxonomyGroupId, groupMap);
-    }
-    for (const groupMap of map.values()) {
-      for (const [subgroup, list] of groupMap.entries()) {
-        groupMap.set(
-          subgroup,
-          [...list].sort((a, b) => a.name.localeCompare(b.name, 'en')),
-        );
-      }
-    }
-    return map;
-  }, [filteredItems]);
+  const summary = useMemo(() => {
+    const items = designLabIndex.items;
+    return {
+      total: items.length,
+      exported: items.filter((item) => item.availability === 'exported').length,
+      planned: items.filter((item) => item.availability === 'planned').length,
+      stable: items.filter((item) => item.lifecycle === 'stable').length,
+      beta: items.filter((item) => item.lifecycle === 'beta').length,
+      liveDemo: items.filter((item) => item.demoMode === 'live').length,
+    };
+  }, []);
 
-  const toggleGroup = (groupId: string) => {
-    if (normalizedQuery) return;
-    setExpandedGroups((prev) => (prev.includes(groupId) ? prev.filter((id) => id !== groupId) : [...prev, groupId]));
+  const handleCopy = async (value: string) => {
+    const ok = await copyToClipboard(value);
+    setCopied(ok ? 'ok' : 'fail');
+    window.setTimeout(() => setCopied(null), 1500);
+  };
+
+  const gridRows = useMemo(() => {
+    const now = new Date();
+    return Array.from({ length: 8 }).map((_, index) => ({
+      id: String(index + 1),
+      name: `Kayıt ${index + 1}`,
+      status: index % 3 === 0 ? 'Active' : index % 3 === 1 ? 'Pending' : 'Disabled',
+      updatedAt: new Date(now.getTime() - index * 86_400_000).toISOString().slice(0, 10),
+    }));
+  }, []);
+
+  const serverGridRows = useMemo(
+    () => [
+      { id: 'CMP-001', name: 'Companies', owner: 'core-data-service' },
+      { id: 'USR-001', name: 'Users', owner: 'user-service' },
+      { id: 'PRM-001', name: 'Permissions', owner: 'permission-service' },
+      { id: 'VAR-001', name: 'Variants', owner: 'variant-service' },
+    ],
+    [],
+  );
+
+  const renderLivePreview = (item: DesignLabIndexItem) => {
+    switch (item.name) {
+      case 'Button':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="flex flex-wrap items-center gap-3">
+              <Button>Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="ghost">Ghost</Button>
+            </div>
+          </div>
+        );
+      case 'Badge':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="default">Default</Badge>
+              <Badge tone="info">Info</Badge>
+              <Badge tone="success">Success</Badge>
+              <Badge tone="warning">Warning</Badge>
+              <Badge tone="danger">Danger</Badge>
+            </div>
+          </div>
+        );
+      case 'Tag':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="flex flex-wrap gap-2">
+              <Tag>Neutral</Tag>
+              <Tag tone="success">Approved</Tag>
+              <Tag tone="warning">Pending</Tag>
+              <Tag tone="danger">Blocked</Tag>
+            </div>
+          </div>
+        );
+      case 'Text':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="flex flex-col gap-2">
+              <Text size="lg" className="font-semibold">Başlık metni</Text>
+              <Text>Body text</Text>
+              <Text variant="secondary">Secondary copy</Text>
+              <Text variant="muted">Muted helper text</Text>
+            </div>
+          </div>
+        );
+      case 'Select':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="max-w-sm">
+              <Select
+                value={selectValue}
+                onChange={setSelectValue}
+                options={[
+                  { value: 'comfortable', label: 'Comfortable' },
+                  { value: 'compact', label: 'Compact' },
+                  { value: 'sharp', label: 'Sharp' },
+                ]}
+              />
+            </div>
+            <Text variant="secondary" className="mt-3 block">Aktif değer: {selectValue}</Text>
+          </div>
+        );
+      case 'Dropdown':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="flex items-center gap-3">
+              <Dropdown
+                trigger={<span>Aksiyon Menüsü</span>}
+                items={[
+                  { key: 'publish', label: 'Publish' },
+                  { key: 'duplicate', label: 'Duplicate' },
+                  { key: 'archive', label: 'Archive' },
+                ]}
+                onSelect={setDropdownAction}
+              />
+              <Text variant="secondary">Seçim: {dropdownAction}</Text>
+            </div>
+          </div>
+        );
+      case 'Tooltip':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <Tooltip text="Tooltip örneği">
+              <Button variant="secondary">Hover / Focus</Button>
+            </Tooltip>
+          </div>
+        );
+      case 'Empty':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <Empty description="Bu katalog grubunda henüz kayıt yok." />
+          </div>
+        );
+      case 'Modal':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <Button onClick={() => setModalOpen(true)}>Modal aç</Button>
+            <Modal
+              open={modalOpen}
+              title="UI Kit Demo Modal"
+              onClose={() => setModalOpen(false)}
+              footer={(
+                <div className="flex justify-end gap-2">
+                  <Button variant="ghost" onClick={() => setModalOpen(false)}>İptal</Button>
+                  <Button onClick={() => setModalOpen(false)}>Kaydet</Button>
+                </div>
+              )}
+            >
+              <Text variant="secondary">Token zincirine bağlı dialog preview.</Text>
+            </Modal>
+          </div>
+        );
+      case 'ThemePreviewCard':
+        return (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <ThemePreviewCard />
+            <ThemePreviewCard selected />
+            <ThemePreviewCard />
+          </div>
+        );
+      case 'PageLayout':
+        return (
+          <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+            <PageLayout
+              title="User Directory"
+              description="Route-level layout composition example"
+              breadcrumbItems={[
+                { title: 'Admin', path: '#' },
+                { title: 'Users' },
+              ]}
+              actions={<Button variant="secondary">Yeni kayıt</Button>}
+              filterBar={<FilterBar onReset={() => undefined} onSaveView={() => undefined}><div className="h-10 rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Filter slot</div></FilterBar>}
+              detail={<div className="rounded-2xl border border-border-subtle bg-surface-default p-4 text-sm text-text-secondary">Detail panel</div>}
+            >
+              <div className="rounded-2xl border border-border-subtle bg-surface-default p-4 text-sm text-text-secondary">Main content</div>
+            </PageLayout>
+          </div>
+        );
+      case 'FilterBar':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <FilterBar onReset={() => undefined} onSaveView={() => undefined}>
+              <div className="min-w-[220px] rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Search</div>
+              <div className="min-w-[220px] rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Status</div>
+            </FilterBar>
+          </div>
+        );
+      case 'FormDrawer':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <Button onClick={() => setFormDrawerOpen(true)}>Drawer aç</Button>
+            <FormDrawer open={formDrawerOpen} title="Yeni kayıt" onClose={() => setFormDrawerOpen(false)}>
+              <div className="flex flex-col gap-3">
+                <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Field 1</div>
+                <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Field 2</div>
+              </div>
+            </FormDrawer>
+          </div>
+        );
+      case 'DetailDrawer':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <Button onClick={() => setDetailDrawerOpen(true)}>Detail aç</Button>
+            <DetailDrawer
+              open={detailDrawerOpen}
+              title="Kayıt detay"
+              onClose={() => setDetailDrawerOpen(false)}
+              sections={[
+                { key: 'summary', title: 'Summary', description: 'Drawer section example', content: <Text variant="secondary">Kısa detay içeriği.</Text> },
+                { key: 'audit', title: 'Audit', description: 'Metadata block', content: <Text variant="secondary">Updated 2026-03-06</Text> },
+              ]}
+            />
+          </div>
+        );
+      case 'ReportFilterPanel':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <ReportFilterPanel onSubmit={() => setReportStatus('Filtre uygulandı')} onReset={() => setReportStatus('Filtre sıfırlandı')}>
+              <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Date range</div>
+              <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Owner</div>
+            </ReportFilterPanel>
+            <Text variant="secondary" className="mt-3 block">Durum: {reportStatus}</Text>
+          </div>
+        );
+      case 'EntityGridTemplate':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
+            <div className="h-[420px]">
+              <EntityGridTemplate<Record<string, unknown>>
+                gridId="design-lab-grid"
+                gridSchemaVersion={1}
+                dataSourceMode="client"
+                rowData={gridRows}
+                total={gridRows.length}
+                page={1}
+                pageSize={25}
+                columnDefs={[
+                  { field: 'name', headerName: 'İsim', flex: 1 },
+                  { field: 'status', headerName: 'Durum', width: 140 },
+                  { field: 'updatedAt', headerName: 'Güncelleme', width: 140 },
+                ]}
+              />
+            </div>
+          </div>
+        );
+      case 'AgGridServer':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
+            <div className="h-[360px]">
+              <AgGridServer
+                height={320}
+                columnDefs={[
+                  { field: 'id', headerName: 'ID', width: 120 },
+                  { field: 'name', headerName: 'Kaynak', flex: 1 },
+                  { field: 'owner', headerName: 'Owner', width: 180 },
+                ]}
+                getData={async () => ({ rows: serverGridRows, total: serverGridRows.length })}
+              />
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <Text as="div" className="font-semibold">Inspector preview</Text>
+            <Text variant="secondary" className="mt-2 block">
+              Bu export çalışma anında canlı UI yerine davranış ve contract seviyesinde izlenir.
+            </Text>
+            <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Registry notu</DetailLabel>
+              <Text variant="secondary" className="mt-2 block">{item.description}</Text>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  const renderPreview = (item: DesignLabIndexItem | null) => {
+    if (!item) {
+      return (
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-6 shadow-sm">
+          <Text variant="secondary">Seçili bileşen yok.</Text>
+        </div>
+      );
+    }
+    if (item.availability === 'planned' || item.demoMode === 'planned') {
+      return (
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-6 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <Text as="div" className="text-xl font-semibold">{item.name}</Text>
+              <Text variant="secondary" className="mt-2 block max-w-2xl">{item.description}</Text>
+            </div>
+            <Tag tone="info">Roadmap item</Tag>
+          </div>
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Release gate</DetailLabel>
+              <Text variant="secondary" className="mt-2 block">Implementation, registry sync, live preview ve package export tamamlanmadan exported duruma gecmez.</Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>North Star sections</DetailLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {item.sectionIds.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />)}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    if (item.demoMode === 'live') {
+      return renderLivePreview(item);
+    }
+    return renderLivePreview(item);
   };
 
   return (
-    <div
-      data-testid="design-lab-page"
-      className="rounded-3xl border border-border-subtle bg-surface-default shadow-sm"
-    >
-      <div
-        data-testid="design-lab-toolbar"
-        className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle bg-surface-default px-4 py-3"
-      >
-        <div className="flex min-w-[240px] flex-1 items-center gap-3">
+    <div data-testid="design-lab-page" className="space-y-4">
+      <section className="rounded-[32px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl">
+            <Text as="div" className="text-3xl font-semibold">UI Kütüphane Sistemi</Text>
+            <Text variant="secondary" className="mt-2 block">
+              `mfe-ui-kit` paketinin kanonik katalog ve preview yüzeyi. Export edilen component, utility ve planned backlog aynı JSON registry’den okunur.
+            </Text>
+          </div>
+          <div className="flex items-center gap-2">
+            <Tag tone="success">Package-only model</Tag>
+            <Tag tone="info">JSON-first catalog</Tag>
+          </div>
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-6">
+          <SummaryCard label="Total" value={summary.total} note="Katalog girdisi" />
+          <SummaryCard label="Exported" value={summary.exported} note="Gerçek package export" />
+          <SummaryCard label="Planned" value={summary.planned} note="Roadmap backlog" />
+          <SummaryCard label="Stable" value={summary.stable} note="Üretimde güvenilir" />
+          <SummaryCard label="Beta" value={summary.beta} note="Gelişen export" />
+          <SummaryCard label="Live Demo" value={summary.liveDemo} note="Canlı preview hazır" />
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[320px_1fr_360px]">
+        <aside className="min-h-0 rounded-[28px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <Text as="div" className="font-semibold">Catalog</Text>
+            <Text variant="secondary">{filteredItems.length}/{designLabIndex.items.length}</Text>
+          </div>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Ara (Button, Grid, Modal...)"
-            className="h-10 w-full rounded-xl border border-border-default bg-surface-panel px-3 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
+            placeholder="Ara: Button, Grid, Theme..."
+            className="mb-4 h-11 w-full rounded-2xl border border-border-default bg-surface-default px-3 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
             aria-label="Design lab arama"
           />
-          <div className="hidden items-center gap-2 sm:flex">
-            <TabButton
-              active={activeSection === 'shell'}
-              label="Shell"
-              onClick={() => setActiveSection('shell')}
-            />
-            <TabButton
-              active={activeSection === 'grid'}
-              label="Grid"
-              onClick={() => setActiveSection('grid')}
-            />
-            <TabButton
-              active={activeSection === 'form'}
-              label="Form"
-              onClick={() => setActiveSection('form')}
-            />
+          <div className="max-h-[calc(100vh-310px)] overflow-auto pr-1">
+            {designLabTaxonomy.groups.map((group) => {
+              const groupCount = countByGroup.get(group.id) ?? 0;
+              const expanded = effectiveExpandedGroups.includes(group.id);
+              return (
+                <div key={group.id} className="mb-3">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedGroups((prev) => (prev.includes(group.id) ? prev.filter((id) => id !== group.id) : [...prev, group.id]))}
+                    disabled={Boolean(normalizedQuery)}
+                    className={`flex w-full items-center justify-between rounded-2xl border px-3 py-2 text-left transition ${expanded ? 'border-border-default bg-surface-default shadow-sm' : 'border-transparent hover:bg-surface-muted'} ${normalizedQuery ? 'cursor-default opacity-90' : ''}`}
+                  >
+                    <span className="text-sm font-semibold text-text-primary">{group.title}</span>
+                    <span className="text-xs font-semibold text-text-secondary">{groupCount}</span>
+                  </button>
+                  {expanded ? (
+                    <div className="mt-2 space-y-2">
+                      {group.subgroups.map((subgroup) => {
+                        const subgroupItems = itemsByGroupAndSubgroup.get(group.id)?.get(subgroup) ?? [];
+                        return (
+                          <div key={subgroup}>
+                            <div className="mb-1 flex items-center justify-between px-2">
+                              <Text as="div" variant="secondary" className="text-xs font-semibold">{subgroup}</Text>
+                              <Text variant="secondary" className="text-xs">{subgroupItems.length}</Text>
+                            </div>
+                            {subgroupItems.length > 0 ? (
+                              <div className="space-y-1">
+                                {subgroupItems.map((item) => {
+                                  const active = item.name === selectedItem?.name;
+                                  return (
+                                    <button
+                                      key={item.name}
+                                      type="button"
+                                      onClick={() => setSelectedItemName(item.name)}
+                                      className={`flex w-full items-start justify-between gap-3 rounded-2xl border px-3 py-2 text-left transition ${active ? 'border-border-default bg-surface-default shadow-sm' : 'border-transparent hover:bg-surface-muted'}`}
+                                    >
+                                      <span className="min-w-0">
+                                        <span className="block text-sm font-semibold text-text-primary">{item.name}</span>
+                                        <span className="block text-[11px] text-text-secondary">{availabilityLabel[item.availability]} • {statusLabel[item.lifecycle]}</span>
+                                      </span>
+                                      <span className={`shrink-0 text-[11px] font-semibold ${statusToneClass[item.lifecycle]}`}>{demoModeLabel[item.demoMode]}</span>
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            ) : (
+                              <Text variant="secondary" className="px-2 text-xs">Bu alt grupta öğe yok.</Text>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
-        </div>
+        </aside>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            onClick={handleCopySelectedImport}
-            title="Seçili bileşenin import satırını kopyala"
-          >
-            Copy import
-          </Button>
-          {copied === 'ok' ? (
-            <Text variant="secondary">Kopyalandı</Text>
-          ) : copied === 'fail' ? (
-            <Text variant="secondary">Kopyalanamadı</Text>
-          ) : null}
-        </div>
-      </div>
-
-      <div
-        className="grid grid-cols-1 gap-3 p-3 lg:grid-cols-[320px_1fr_320px] lg:gap-4 lg:p-4"
-        style={{ height: 'calc(100vh - 220px)' }}
-      >
-	        <aside
-	          data-testid="design-lab-tree"
-	          className="min-h-0 rounded-3xl border border-border-subtle bg-surface-panel p-3 shadow-sm"
-	        >
-	          <div className="mb-2 flex items-center justify-between">
-	            <Text as="div" className="font-semibold">
-	              Catalog
-	            </Text>
-	            <Text variant="secondary">
-	              {filteredItems.length}/{designLabIndex.items.length}
-	            </Text>
-	          </div>
-	          <div className="min-h-0 overflow-auto pr-1">
-	            {designLabGroups.groups.map((group) => {
-	              const groupCount = countByGroup.get(group.id) ?? 0;
-	              const expanded = effectiveExpandedGroups.includes(group.id);
-	              return (
-	                <div key={group.id} className="mb-3">
-	                  <button
-	                    type="button"
-	                    onClick={() => toggleGroup(group.id)}
-	                    disabled={Boolean(normalizedQuery)}
-	                    className={`flex w-full items-center justify-between rounded-2xl border px-3 py-2 text-left transition ${
-	                      expanded
-	                        ? 'border-border-default bg-surface-default shadow-sm'
-	                        : 'border-transparent hover:bg-surface-muted'
-	                    } ${normalizedQuery ? 'cursor-default opacity-90' : ''}`}
-	                  >
-	                    <span className="text-sm font-semibold text-text-primary">
-	                      {group.title}
-	                    </span>
-	                    <span className="text-xs font-semibold text-text-secondary">
-	                      {groupCount}
-	                    </span>
-	                  </button>
-
-	                  {expanded ? (
-	                    <div className="mt-2 flex flex-col gap-2">
-	                      {group.subgroups.map((subgroup) => {
-	                        const subgroupItems = itemsByGroupAndSubgroup.get(group.id)?.get(subgroup) ?? [];
-	                        return (
-	                          <div key={subgroup}>
-	                            <div className="mb-1 flex items-center justify-between px-2">
-	                              <Text as="div" variant="secondary" className="text-xs font-semibold">
-	                                {subgroup}
-	                              </Text>
-	                              <Text variant="secondary" className="text-xs">
-	                                {subgroupItems.length}
-	                              </Text>
-	                            </div>
-	                            {subgroupItems.length > 0 ? (
-	                              <div className="flex flex-col gap-1">
-	                                {subgroupItems.map((item) => {
-	                                  const active = item.name === selectedItemName;
-	                                  const unclassified = Boolean(item.tags?.includes('unclassified'));
-	                                  return (
-	                                    <button
-	                                      key={item.name}
-	                                      type="button"
-	                                      onClick={() => handleSelectItem(item)}
-	                                      className={`flex w-full items-start justify-between gap-2 rounded-2xl border px-3 py-2 text-left transition ${
-	                                        active
-	                                          ? 'border-border-default bg-surface-default shadow-sm'
-	                                          : 'border-transparent hover:bg-surface-muted'
-	                                      }`}
-	                                    >
-	                                      <span className="flex flex-col gap-0.5">
-	                                        <span className="text-sm font-semibold text-text-primary">
-	                                          {item.name}
-	                                        </span>
-	                                        <span className="text-[11px] text-text-secondary">
-	                                          {item.kind}
-	                                          {unclassified ? ' • unclassified' : ''}
-	                                        </span>
-	                                      </span>
-	                                    </button>
-	                                  );
-	                                })}
-	                              </div>
-	                            ) : null}
-	                          </div>
-	                        );
-	                      })}
-	                      {groupCount === 0 ? (
-	                        <Text variant="secondary" className="px-2 text-xs">
-	                          Bu grupta eşleşen öğe yok.
-	                        </Text>
-	                      ) : null}
-	                    </div>
-	                  ) : null}
-	                </div>
-	              );
-	            })}
-	          </div>
-	        </aside>
-
-        <section
-          data-testid="design-lab-demo"
-          className="min-h-0 overflow-auto rounded-3xl border border-border-subtle bg-surface-default p-3 shadow-sm lg:p-4"
-        >
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-col gap-1">
-              <Text as="div" className="font-semibold">
-                Demo
-              </Text>
-	              <Text variant="secondary">
-	                Seçili: {selectedItem?.name ?? '—'}
-	              </Text>
+        <section className="min-h-0 rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Text as="div" className="text-xl font-semibold">{selectedItem?.name ?? '—'}</Text>
+                {selectedItem ? <Badge tone={selectedItem.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[selectedItem.availability]}</Badge> : null}
+                {selectedItem ? <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>{statusLabel[selectedItem.lifecycle]}</Badge> : null}
+              </div>
+              {selectedItem ? <Text variant="secondary" className="mt-2 block max-w-3xl">{selectedItem.description}</Text> : null}
             </div>
-            <div className="flex items-center gap-2">
-              <TabButton
-                active={activeSection === 'shell'}
-                label="Shell"
-                onClick={() => setActiveSection('shell')}
-              />
-              <TabButton
-                active={activeSection === 'grid'}
-                label="Grid"
-                onClick={() => setActiveSection('grid')}
-              />
-              <TabButton
-                active={activeSection === 'form'}
-                label="Form"
-                onClick={() => setActiveSection('form')}
-              />
-            </div>
+            {selectedItem?.importStatement ? (
+              <Button variant="secondary" onClick={() => handleCopy(selectedItem.importStatement)}>Copy import</Button>
+            ) : null}
           </div>
-          {demoContent}
+          {copied === 'ok' ? <Text variant="secondary" className="mb-3 block">Kopyalandı</Text> : null}
+          {copied === 'fail' ? <Text variant="secondary" className="mb-3 block">Kopyalanamadı</Text> : null}
+          {renderPreview(selectedItem)}
         </section>
 
-        <aside
-          data-testid="design-lab-usage"
-          className="min-h-0 rounded-3xl border border-border-subtle bg-surface-panel p-3 shadow-sm"
-        >
-          <div className="mb-2 flex items-center justify-between">
-            <Text as="div" className="font-semibold">
-              Usage
-            </Text>
-	            <Text variant="secondary">
-	              {selectedItem?.whereUsed.length ?? 0} file
-	            </Text>
+        <aside className="min-h-0 rounded-[28px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <Text as="div" className="font-semibold">Detail</Text>
+            <Text variant="secondary">{selectedItem?.whereUsed.length ?? 0} kullanım</Text>
           </div>
-          <div className="min-h-0 overflow-auto pr-1">
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-3">
-              <Text variant="secondary">
-                Bu liste `npm -C web run designlab:index` çıktısı olan `design-lab.index.json` üzerinden üretilir.
-              </Text>
-              {designLabIndex.generatedAt ? (
-                <Text variant="secondary" className="mt-2 block text-xs">
-                  Son index: {designLabIndex.generatedAt}
-                </Text>
-              ) : null}
-            </div>
-
-            <div className="mt-3 rounded-2xl border border-border-subtle bg-surface-default p-3">
-              <Text as="div" className="mb-2 font-semibold">
-                Copy import
-              </Text>
-              <pre className="whitespace-pre-wrap rounded-xl border border-border-subtle bg-surface-muted p-3 text-xs text-text-primary">
-                {selectedImportSnippet}
-              </pre>
-              <div className="mt-2 flex justify-end">
-                <Button variant="ghost" onClick={handleCopySelectedImport}>
-                  Kopyala
-                </Button>
+          <div className="max-h-[calc(100vh-310px)] space-y-3 overflow-auto pr-1">
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Registry</DetailLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedItem ? (
+                  <>
+                    <SectionBadge label={selectedItem.kind} />
+                    <SectionBadge label={demoModeLabel[selectedItem.demoMode]} />
+                    <SectionBadge label={selectedItem.taxonomyGroupId} />
+                  </>
+                ) : null}
               </div>
             </div>
 
-            <div className="mt-3 rounded-2xl border border-border-subtle bg-surface-default p-3">
-              <Text as="div" className="mb-2 font-semibold">
-                Where used
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>North Star sections</DetailLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedItem?.sectionIds?.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />) ?? <Text variant="secondary">Yok</Text>}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Quality gates</DetailLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedItem?.qualityGates?.map((gate) => <SectionBadge key={gate} label={gate} />) ?? <Text variant="secondary">Yok</Text>}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Import</DetailLabel>
+              <pre className="mt-3 whitespace-pre-wrap rounded-2xl border border-border-subtle bg-surface-muted p-3 text-xs text-text-primary">
+                {selectedItem?.importStatement || 'Planned item — import kapalı'}
+              </pre>
+            </div>
+
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Where used</DetailLabel>
+              <div className="mt-3 space-y-2">
+                {selectedItem && selectedItem.whereUsed.length > 0 ? selectedItem.whereUsed.map((filePath) => (
+                  <div key={filePath} className="rounded-2xl border border-border-subtle bg-surface-muted px-3 py-2">
+                    <div className="break-all text-xs text-text-secondary">{filePath}</div>
+                    <div className="mt-2 flex justify-end">
+                      <Button variant="ghost" onClick={() => handleCopy(filePath)}>Copy</Button>
+                    </div>
+                  </div>
+                )) : <Text variant="secondary">Kullanım bulunamadı.</Text>}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Index state</DetailLabel>
+              <Text variant="secondary" className="mt-3 block">
+                Bu panel `component-registry.v1.json` + `designlab:index` çıktısını birlikte kullanır.
               </Text>
-	              {selectedItem && selectedItem.whereUsed.length > 0 ? (
-	                <ul className="space-y-2">
-	                  {selectedItem.whereUsed.map((filePath) => (
-	                    <li
-	                      key={filePath}
-	                      className="flex items-start justify-between gap-2 rounded-xl border border-border-subtle bg-surface-muted px-3 py-2"
-	                    >
-                      <span className="min-w-0 break-all text-xs text-text-secondary">
-                        {filePath}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        onClick={() => copyToClipboard(filePath)}
-                        className="shrink-0"
-                      >
-                        Copy
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <Text variant="secondary">
-                  Kullanım bulunamadı.
-                </Text>
-              )}
+              {designLabIndex.generatedAt ? (
+                <Text variant="secondary" className="mt-2 block text-xs">Son index: {designLabIndex.generatedAt}</Text>
+              ) : null}
             </div>
           </div>
         </aside>
-      </div>
+      </section>
     </div>
   );
 };

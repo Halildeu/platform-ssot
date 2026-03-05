@@ -1,0 +1,243 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "ux_subject_id": "ux_katalogu",
+  "catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+  "purpose": "UI kutuphanesi backlog, component family ve release kurallarini UX Katalogu temalari ile hizalamak.",
+  "mandatory_policy": {
+    "new_or_modified_component_entries_require_ux_mapping": true,
+    "rollout_mode": "mandatory_for_new_or_modified_entries",
+    "required_registry_fields_for_new_entries": [
+      "ux_primary_theme_id",
+      "ux_primary_subtheme_id"
+    ],
+    "optional_registry_fields": [
+      "ux_secondary_theme_ids",
+      "ux_secondary_subtheme_ids",
+      "ux_measure_ids"
+    ]
+  },
+  "family_alignment": [
+    {
+      "family_id": "foundation_primitives",
+      "targets": [
+        {
+          "ux_theme_id": "consistency_and_pattern_governance",
+          "ux_subtheme_ids": [
+            "single_component_source_of_truth",
+            "behavior_contracts_across_modules",
+            "component_naming_conventions"
+          ]
+        },
+        {
+          "ux_theme_id": "accessibility_and_inclusive_design",
+          "ux_subtheme_ids": [
+            "contrast_typography_readability",
+            "keyboard_only_task_completion",
+            "screen_reader_semantic_structure"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "navigation_components",
+      "targets": [
+        {
+          "ux_theme_id": "navigation_information_scent",
+          "ux_subtheme_ids": [
+            "domain_based_information_architecture",
+            "orientation_and_wayfinding",
+            "contextual_quick_actions"
+          ]
+        },
+        {
+          "ux_theme_id": "task_completion_architecture",
+          "ux_subtheme_ids": [
+            "critical_path_minimization",
+            "progressive_disclosure_by_complexity"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "form_input_components",
+      "targets": [
+        {
+          "ux_theme_id": "data_entry_validation_recovery",
+          "ux_subtheme_ids": [
+            "inline_validation_before_submit",
+            "dependency_aware_form_guidance",
+            "input_error_prevention_patterns",
+            "multi_step_wizard_progress"
+          ]
+        },
+        {
+          "ux_theme_id": "feedback_state_and_visibility",
+          "ux_subtheme_ids": [
+            "loading_empty_error_success_patterns",
+            "actionable_error_messages"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "feedback_and_status_components",
+      "targets": [
+        {
+          "ux_theme_id": "feedback_state_and_visibility",
+          "ux_subtheme_ids": [
+            "deterministic_state_model",
+            "response_time_budget_feedback",
+            "confirmation_receipts_and_traceability"
+          ]
+        },
+        {
+          "ux_theme_id": "ux_writing_and_microcopy",
+          "ux_subtheme_ids": [
+            "error_message_language",
+            "confirmation_and_success_copy",
+            "empty_state_guidance_copy"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "overlay_and_confirmation_components",
+      "targets": [
+        {
+          "ux_theme_id": "trust_privacy_security_ux",
+          "ux_subtheme_ids": [
+            "high_risk_action_confirmation",
+            "least_privilege_interaction_design"
+          ]
+        },
+        {
+          "ux_theme_id": "feedback_state_and_visibility",
+          "ux_subtheme_ids": [
+            "confirmation_receipts_and_traceability",
+            "actionable_error_messages"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "data_display_and_grid_components",
+      "targets": [
+        {
+          "ux_theme_id": "task_completion_architecture",
+          "ux_subtheme_ids": [
+            "role_goal_task_mapping",
+            "critical_path_minimization"
+          ]
+        },
+        {
+          "ux_theme_id": "performance_resilience_experience",
+          "ux_subtheme_ids": [
+            "perceived_performance_optimization",
+            "graceful_degradation_under_latency"
+          ]
+        },
+        {
+          "ux_theme_id": "measurement_kpi_and_experimentation",
+          "ux_subtheme_ids": [
+            "task_completion_time_p50_p95",
+            "user_error_per_transaction",
+            "a11y_consistency_violation_gate"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "ai_assisted_components",
+      "targets": [
+        {
+          "ux_theme_id": "ai_assisted_decision_experience",
+          "ux_subtheme_ids": [
+            "contextual_recommendation_cards",
+            "confidence_and_source_transparency",
+            "explainable_ai_rationale",
+            "human_approval_checkpoints",
+            "safe_prompt_templates_and_scope",
+            "ai_fallback_to_manual_flow",
+            "ai_action_audit_trail"
+          ]
+        },
+        {
+          "ux_theme_id": "ux_writing_and_microcopy",
+          "ux_subtheme_ids": [
+            "ai_message_tone_guardrails"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "security_privacy_components",
+      "targets": [
+        {
+          "ux_theme_id": "trust_privacy_security_ux",
+          "ux_subtheme_ids": [
+            "sensitive_data_masking_and_redaction",
+            "consent_and_data_usage_notice",
+            "secure_session_step_up_authentication",
+            "user_visible_audit_log",
+            "privacy_by_design_defaults"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "personalization_theme_components",
+      "targets": [
+        {
+          "ux_theme_id": "personalization_and_adaptive_productivity",
+          "ux_subtheme_ids": [
+            "adaptive_density_layout_preferences",
+            "saved_filters_and_views",
+            "preference_sync_cross_device",
+            "dashboard_widget_customization"
+          ]
+        },
+        {
+          "ux_theme_id": "omnichannel_web_mobile_parity",
+          "ux_subtheme_ids": [
+            "responsive_process_parity",
+            "platform_specific_capability_fallback"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "help_onboarding_components",
+      "targets": [
+        {
+          "ux_theme_id": "onboarding_help_and_learnability",
+          "ux_subtheme_ids": [
+            "first_run_guided_onboarding",
+            "contextual_help_and_assistive_hints",
+            "process_tours_for_critical_flows",
+            "inline_examples_templates"
+          ]
+        }
+      ]
+    },
+    {
+      "family_id": "mobile_parity_components",
+      "targets": [
+        {
+          "ux_theme_id": "omnichannel_web_mobile_parity",
+          "ux_subtheme_ids": [
+            "responsive_process_parity",
+            "touch_keyboard_input_parity",
+            "channel_transition_without_data_loss"
+          ]
+        }
+      ]
+    }
+  ],
+  "release_requirements": [
+    "Yeni veya degisen ortak component bir family_alignment hedefine baglanir.",
+    "Interactive componentlerde ilgili WAI-ARIA pattern davranisi not edilir.",
+    "Task-critical componentlerde measurement_kpi_and_experimentation baglantisi dusunulur.",
+    "Guvenlik/gizlilik etkili componentlerde trust_privacy_security_ux baglantisi zorunludur."
+  ]
+}

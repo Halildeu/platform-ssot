@@ -6,6 +6,10 @@
   "json_first_rule": true,
   "canonical_read_order": [
     "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
     "docs/02-architecture/system-overview.v1.json",
     "docs/02-architecture/domain-map.v1.json",
     "docs/02-architecture/runtime/service-communication-matrix.v1.json",
@@ -14,10 +18,16 @@
     "docs/02-architecture/runtime/database-isolation-plan.v1.json",
     "docs/02-architecture/runtime/runtime-alignment-backlog.v1.json",
     "docs/02-architecture/blueprints/backend-service-blueprint.v1.json",
+    "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
     "docs/02-architecture/blueprints/shared-library-blueprint.v1.json",
-    "docs/02-architecture/blueprints/mfe-blueprint.v1.json"
+    "docs/02-architecture/blueprints/mfe-blueprint.v1.json",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json",
+    "web/apps/mfe-shell/src/pages/admin/design-lab.taxonomy.v1.json"
   ],
   "secondary_human_sources": [
+    "docs/00-handbook/WEB-PROJECT-LAYOUT.md",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.md",
     "docs/02-architecture/INDEX.md",
     "docs/02-architecture/SYSTEM-OVERVIEW.md",
     "docs/02-architecture/DOMAIN-MAP.md",
@@ -27,6 +37,10 @@
   "feature_start_requirements": [
     "Önce domain seçilir.",
     "Sonra target service, shared library veya MFE blueprint seçilir.",
+    "UI library degisikliginde governance contract okunmadan component işi başlamaz.",
+    "UI library degisikliginde UX katalog referansi ve alignment kontrati okunur.",
+    "UI library degisikliginde ui-library-system context ve component registry birlikte okunur.",
+    "Web UI degisikliginde STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak okunur.",
     "Yeni iç servis çağrısı varsa communication matrix güncellenir.",
     "Yeni secret/config ihtiyacı varsa secret source matrix güncellenir.",
     "Yeni runtime bileşeni varsa dependency matrix güncellenir.",
@@ -73,6 +87,10 @@
     "JSON kanonik kaynaktır; Markdown yalnız açıklayıcı ikinci kaynaktır.",
     "Blueprint seçmeden yeni service, shared library veya MFE açılmaz.",
     "Mevcut domain map dışına taşan feature önce karar güncellemesi ister.",
-    "Cross-service SQL veya duplicate HTTP/UI katmanı üretilmez."
+    "Cross-service SQL veya duplicate HTTP/UI katmanı üretilmez.",
+    "Web tarafında yeni ortak primitive yalnız packages/ui-kit altinda doğar; apps/** yalnız composition katmanıdır.",
+    "Tailwind görsel kararın kaynağı değil, token ve ui-kit kontratını render eden yardımcı katmandır.",
+    "UI library feature'larında governance contract -> UX reference -> alignment -> context -> blueprint -> registry sırası korunur.",
+    "UX Kataloğu ile hizalanmayan ortak component kararı tamamlanmış sayılmaz."
   ]
 }

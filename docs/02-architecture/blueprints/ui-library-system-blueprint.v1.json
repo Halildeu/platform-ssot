@@ -1,0 +1,72 @@
+{
+  "version": "1.0",
+  "applies_to": "ui-library-system",
+  "location_pattern": "web/packages/ui-kit + web/apps/mfe-shell/src/pages/admin",
+  "implementation_layers": {
+    "visual_ssot": "design-tokens -> generated contract -> css vars",
+    "component_layer": "packages/ui-kit",
+    "preview_layer": "mfe-shell/admin/design-lab",
+    "consumer_layer": "apps/* route/page composition"
+  },
+  "tailwind_contract": {
+    "default_mode": "ui-kit-first + token-first + tailwind-assisted",
+    "ui_kit_allowed": [
+      "token tabanli component implementasyonu",
+      "variant ve size API'sini render etmek",
+      "semantic class + var(--...) odakli styling"
+    ],
+    "apps_allowed": [
+      "page layout",
+      "responsive composition",
+      "screen-level arrangement",
+      "demo scaffolding"
+    ],
+    "apps_forbidden": [
+      "duplicate primitive olusturmak",
+      "packages/ui-kit yerine yerel ortak component yazmak"
+    ],
+    "visual_forbidden": [
+      "raw color hex/rgb/hsl class",
+      "antd veya @mui runtime primitive dependency",
+      "registry disi ortak UI export"
+    ]
+  },
+  "required_rules": [
+    "Yeni component once component-registry.v1.json icinde tanimlanir.",
+    "Yeni veya degisen ortak component ilgili UX family alignment karariyla eslestirilir.",
+    "Registry entry availability=planned ise import/export claim uretilmez.",
+    "Her component icin preview_mode tanimlanir: live, inspector veya planned.",
+    "MFE shell Design Lab yeni componenti gorunur kilmadan is tamamlanmis sayilmaz.",
+    "UI davranisi design token zincirine ve mevcut mfe-ui-kit import modeline uyar.",
+    "Ayni isi yapan duplicate primitive apps/** icinde uretilmez.",
+    "Tailwind kararlari component API'si yerine gecmez; token ve ui-kit kontrati once gelir."
+  ],
+  "required_contracts": [
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json guncel kalir",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json referans olarak korunur",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json guncel kalir",
+    "docs/02-architecture/context/ui-library-system.context.v1.json guncel kalir",
+    "docs/00-handbook/STYLE-WEB-001.md ile uyum korunur",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json guncellenir",
+    "web/apps/mfe-shell/src/pages/admin/design-lab.index.json yeniden uretilir",
+    "Preview degisimi varsa DesignLabPage ayni patch icinde guncellenir"
+  ],
+  "forbidden_patterns": [
+    "antd veya @mui runtime dependency eklemek",
+    "ui-kit disinda ortak primitive yazmak",
+    "registry disi export yapmak",
+    "preview sayfasinda olmayan ortak component release etmek",
+    "hardcoded token bypass etmek",
+    "apps/** altinda component library gibi yeni stil katmani olusturmak",
+    "ux_katalogu alignment karari olmadan ortak component tasarlamak"
+  ],
+  "test_rules": [
+    "python3 scripts/check_ui_library_governance_contract.py",
+    "python3 scripts/check_ui_library_ux_alignment.py",
+    "designlab:index",
+    "lint:tailwind",
+    "ui-kit package tests",
+    "no-antd dependency guard",
+    "preview smoke veya deterministik inspector"
+  ]
+}

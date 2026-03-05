@@ -1,0 +1,106 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "title": "UI Kutuphane Sistemi",
+  "purpose": "mfe-ui-kit paketini sistemin tek profesyonel UI kutuphanesi olarak buyutmek, preview/demo yuzeyini zorunlu kilmak ve yeni component uretimini JSON-first kontratla deterministik hale getirmek.",
+  "governance_contract": "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+  "ux_catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+  "ux_alignment_contract": "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+  "canonical_modules": [
+    "web/packages/ui-kit",
+    "web/apps/mfe-shell/src/pages/admin",
+    "web/scripts/build_design_lab_index.py"
+  ],
+  "canonical_inputs": [
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json",
+    "web/apps/mfe-shell/src/pages/admin/design-lab.taxonomy.v1.json",
+    "web/apps/mfe-shell/src/pages/admin/design-lab.groups.json",
+    "web/apps/mfe-shell/src/pages/admin/design-lab.overrides.json"
+  ],
+  "canonical_outputs": [
+    "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ],
+  "styling_stack": {
+    "visual_ssot": [
+      "web/design-tokens/figma.tokens.json",
+      "web/design-tokens/generated/theme-contract.json"
+    ],
+    "component_layer": "web/packages/ui-kit",
+    "runtime_preview_layer": "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "secondary_docs_layer": "web/.storybook + web/stories",
+    "theme_runtime_owner": "web/packages/ui-kit/src/runtime/theme-controller.ts",
+    "theme_persistence_owner": "variant-service"
+  },
+  "tailwind_policy": {
+    "role": "Tailwind render/layout utility katmanidir; tasarim sistemi degildir.",
+    "ui_kit_usage": "Ortak component implementasyonu ve token tabanli variant/composition icin kullanilir.",
+    "app_usage": "Route/page composition, responsive layout ve demo scaffolding icin kullanilir.",
+    "forbidden_in_apps": [
+      "apps/** altinda ortak primitive veya duplicate composite olusturmak",
+      "packages/ui-kit yerine yerel Button/Input/Card/Badge primitive'i yazmak"
+    ],
+    "forbidden_visual_patterns": [
+      "bg-[#...]",
+      "text-[#...]",
+      "border-[#...]",
+      "rgb(...) / hsl(...) tabanli raw color class",
+      "antd veya @mui runtime dependency ile UI primitive tasimak"
+    ],
+    "allowed_exceptions": [
+      "Tek seferlik page/layout olculeri token karsiligi yoksa ve tekrar etmiyorsa apps/** icinde kalabilir.",
+      "Demo/preview scaffolding olculeri ortak component API'sine donusmeyecekse local kalabilir."
+    ]
+  },
+  "hard_rules": [
+    "Yeni ortak UI primitive veya composite component sadece web/packages/ui-kit altina eklenir.",
+    "UI kutuphanesi ux_katalogu tema/subtheme standartlariyla hizali uretime tabidir.",
+    "Tailwind tasarim sistemi olarak degil, ui-kit-first render/layout yardimcisi olarak kullanilir.",
+    "apps/** icinde yeni ortak primitive uretilmez; yalniz ekran/layout compose edilir.",
+    "Design Lab registry entry olmadan component export edilmez.",
+    "Planned backlog item export ediliyormus gibi gosterilmez; availability planned olarak kalir.",
+    "Ant Design ve Material UI runtime dependency olarak urune eklenmez; yalniz referans benchmark olarak kullanilir.",
+    "Preview/demo business network bagimlisi olmaz; deterministik local demo kullanilir.",
+    "Hardcoded renk, radius, spacing ve typography token disi kullanilmaz.",
+    "Yeni component eklenince registry, preview ve designlab:index ayni patch icinde guncellenir.",
+    "Design Lab'te gorunmeyen ortak component release edilmez.",
+    "Tema persistence ihtiyaci variant-service sahibi disinda ikinci bir local mekanizma ile cozulmez.",
+    "Yeni veya degisen ortak component UX primary theme/subtheme baglanti karari almadan release edilmez."
+  ],
+  "quality_gates": [
+    "python3 scripts/check_ui_library_governance_contract.py",
+    "python3 scripts/check_ui_library_ux_alignment.py",
+    "npm -C web run designlab:index",
+    "npm -C web run lint:tailwind",
+    "npm -C web run lint:no-antd",
+    "npm -C web run test:ui-kit"
+  ],
+  "north_star_sections": [
+    { "section_id": "component_library_management", "title_tr": "Bileşen Kütüphanesi Yönetimi" },
+    { "section_id": "design_token_management", "title_tr": "Tasarım Token Yönetimi" },
+    { "section_id": "documentation_standards", "title_tr": "Dokümantasyon Standartları" },
+    { "section_id": "accessibility_compliance", "title_tr": "Erişilebilirlik Uyumu" },
+    { "section_id": "governance_contribution", "title_tr": "Yönetişim ve Katkı Süreçleri" },
+    { "section_id": "integration_distribution", "title_tr": "Entegrasyon ve Dağıtım" },
+    { "section_id": "navigation_patterns", "title_tr": "Navigasyon Kalıpları" },
+    { "section_id": "overlay_components", "title_tr": "Örtü Bileşenleri" },
+    { "section_id": "responsive_layout", "title_tr": "Duyarlı Düzen Sistemi" },
+    { "section_id": "state_feedback", "title_tr": "Durum ve Geri Bildirim" },
+    { "section_id": "table_data_display", "title_tr": "Tablo ve Veri Görüntüleme" },
+    { "section_id": "theming_customization", "title_tr": "Tema ve Özelleştirme" },
+    { "section_id": "utility_components", "title_tr": "Yardımcı Bileşenler" },
+    { "section_id": "visualization_charts", "title_tr": "Görselleştirme ve Grafikler" }
+  ],
+  "feature_start_order": [
+    "Repo context pack okunur.",
+    "UI library governance contract okunur.",
+    "UX katalog referansi ve UI-library UX alignment kontrati okunur.",
+    "UI library system context okunur.",
+    "STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak kontrol edilir.",
+    "Component registry ve taxonomy okunur.",
+    "Yeni is mevcut component genisletmesi mi, yeni component mi, planned backlog item implementasyonu mu ayrilir.",
+    "Is ui-kit component mi, app-level composition mi, theme/runtime integration mi netlestirilir.",
+    "Preview/demo kurali tanimlanir.",
+    "Kodlama ancak bundan sonra baslar."
+  ]
+}

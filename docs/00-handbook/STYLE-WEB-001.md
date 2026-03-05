@@ -67,10 +67,41 @@ components/, hooks/, services/, utils/
 -------------------------------------------------------------------------------
 5. DESIGN TOKENS & TAILWIND
 -------------------------------------------------------------------------------
-- Hard-coded renk, spacing, font, radius yasaktır.
-- Tüm görsel değerler design-tokens/ üzerinden gelir.
-- Tailwind config token kaynaklarına bağlıdır.
-- Component içinde mümkün olduğunca token sınıfları kullanılır.
+- Görsel SSOT: `web/design-tokens/**` + generated theme contract + CSS variables zinciridir.
+- `packages/ui-kit` ortak component katmanıdır; Button/Input/Drawer/Grid gibi paylaşılan primitive veya composite burada doğar.
+- Tailwind tasarım sistemi değildir; render ve layout yardımcı katmandır.
+- Uygulama akışı:
+  1. design token kararı
+  2. `packages/ui-kit` component API'si
+  3. Tailwind utility ile render/layout compose
+- Hard-coded renk/gradient/shadow/ring/focus değeri yasaktır.
+- Tailwind config token kaynaklarına bağlıdır; semantic class veya `var(--...)` dışı görsel değer kullanılmaz.
+- `apps/**` altında yeni ortak primitive yazılmaz; sayfa/layout compose yapılır.
+- Aynı işi yapan Button/Input/Card/Badge primitive'i `apps/**` altında tekrar üretilmez.
+- `Design Lab` kanonik canlı preview yüzeyidir; Storybook ikincil dokümantasyon yüzeyidir.
+- `Design Lab`te görünmeyen ortak component release edilmez.
+- `variant-service` tema ve kişiselleştirme backend sahibidir; frontend tema persistence mantığı paralel bir local sistem kurmaz.
+
+5.1 Tailwind kullanım sınırı
+- `packages/ui-kit` içinde Tailwind kullanılabilir; amaç component implementasyonudur.
+- `apps/**` içinde Tailwind kullanılabilir; amaç ekran compose, responsive grid, spacing akışı ve sayfa yerleşimidir.
+- `apps/**` içinde Tailwind ile ortak primitive inşa etmek yasaktır.
+- Raw color class (`bg-[#...]`, `text-[#...]`, `rgb(...)`, `hsl(...)`) yasaktır.
+- Raw spacing/radius/font-size gibi arbitrary class'lar yeni ortak component API'sine dönüşmesi gereken tekrar eden görsel kararlar için kullanılmaz.
+- Tek seferlik layout ölçüleri sadece sayfa compose veya demo scaffolding ihtiyacında, token karşılığı yoksa ve tekrar etmiyorsa kullanılabilir.
+
+5.2 UI kit release kuralı
+- Yeni ortak component önce `web/packages/ui-kit/src/catalog/component-registry.v1.json` içine eklenir.
+- Ardından export yüzeyi güncellenir.
+- Ardından `designlab:index` yeniden üretilir.
+- Ardından `DesignLabPage` üstünde görünür/denetlenebilir hale gelir.
+- Bu zincir tek patch içinde kapanmadan component tamamlanmış sayılmaz.
+
+5.3 Anti-drift kuralları
+- Runtime dependency olarak `antd`, `@mui/material` veya benzeri UI framework eklenmez.
+- Bu kütüphaneler yalnız benchmark/referans olarak değerlendirilir.
+- `shared-http` dışından frontend API istemcisi yazılmaz.
+- Tema kararı `design-tokens -> generated contract -> ui-kit runtime theme controller` zinciri dışından verilmez.
 
 -------------------------------------------------------------------------------
 6. IMPORT SIRASI
