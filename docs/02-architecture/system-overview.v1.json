@@ -1,0 +1,65 @@
+{
+  "version": "1.0",
+  "repo_id": "dev-subcontractor-runtime",
+  "last_verified": "2026-03-06",
+  "workspaces": [
+    {
+      "id": "backend",
+      "stack": ["java21", "spring-boot-3.2", "spring-cloud", "postgres", "flyway"],
+      "role": "microservice-runtime"
+    },
+    {
+      "id": "web",
+      "stack": ["react18", "typescript", "webpack5", "module-federation"],
+      "role": "micro-frontend-runtime"
+    }
+  ],
+  "request_flow": [
+    "browser",
+    "mfe-shell",
+    "api-gateway",
+    "discovery-server",
+    "target-backend-service"
+  ],
+  "platform_dependencies": [
+    "postgres-db",
+    "keycloak",
+    "vault",
+    "observability-prometheus",
+    "observability-grafana"
+  ],
+  "active_backend_components": [
+    {"id": "api-gateway", "kind": "service", "role": "edge", "port": 8080},
+    {"id": "discovery-server", "kind": "service", "role": "service-registry", "port": 8761},
+    {"id": "auth-service", "kind": "service", "role": "identity-and-service-auth", "port": 8088},
+    {"id": "user-service", "kind": "service", "role": "user-management", "port": 8089},
+    {"id": "permission-service", "kind": "service", "role": "authorization-and-audit", "port": 8084},
+    {"id": "variant-service", "kind": "service", "role": "personalization-and-theme", "port": 8091},
+    {"id": "core-data-service", "kind": "service", "role": "master-data", "port": 8092},
+    {"id": "common-auth", "kind": "library", "role": "shared-auth-kernel"}
+  ],
+  "active_frontend_components": [
+    {"id": "mfe-shell", "kind": "host", "role": "shell-auth-layout"},
+    {"id": "mfe-users", "kind": "remote", "role": "user-ui"},
+    {"id": "mfe-access", "kind": "remote", "role": "access-ui"},
+    {"id": "mfe-audit", "kind": "remote", "role": "audit-ui"},
+    {"id": "mfe-reporting", "kind": "remote", "role": "reporting-ui"},
+    {"id": "mfe-ethic", "kind": "remote", "role": "ethics-ui"},
+    {"id": "mfe-suggestions", "kind": "remote", "role": "suggestions-ui"},
+    {"id": "packages/ui-kit", "kind": "package", "role": "shared-ui"},
+    {"id": "packages/shared-http", "kind": "package", "role": "shared-http"}
+  ],
+  "architecture_rules": [
+    "Tarayıcı yalnız api-gateway ile konuşur.",
+    "Remote MFE'ler auth lifecycle başlatmaz; bu sorumluluk mfe-shell'dedir.",
+    "Yeni service-to-service HTTP çağrıları WebClient ile yazılır.",
+    "Yeni backend servis kendi schema ownership alanına sahip olur.",
+    "Yeni frontend akışı shared-http ve ui-kit üzerinden ilerler.",
+    "Yeni feature önce domain map içinde konumlandırılır, sonra servis veya MFE kararı verilir."
+  ],
+  "secondary_human_sources": [
+    "docs/02-architecture/INDEX.md",
+    "docs/02-architecture/SYSTEM-OVERVIEW.md",
+    "docs/02-architecture/DOMAIN-MAP.md"
+  ]
+}

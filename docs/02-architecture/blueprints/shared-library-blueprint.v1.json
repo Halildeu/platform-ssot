@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "applies_to": "new-shared-library",
+  "variants": [
+    {
+      "id": "backend-common-module",
+      "location_patterns": ["backend/common-*", "backend/packages/*"],
+      "use_for": [
+        "shared auth",
+        "shared dto",
+        "shared utils",
+        "cross-service client abstraction"
+      ],
+      "rules": [
+        "business flow burada yaşamaz",
+        "service-specific controller/repository entity barındırmaz",
+        "servisler yalnız dependency ile kullanır"
+      ]
+    },
+    {
+      "id": "frontend-shared-package",
+      "location_patterns": ["web/packages/*"],
+      "use_for": [
+        "ui-kit",
+        "shared-http",
+        "shared-types",
+        "i18n dictionaries"
+      ],
+      "rules": [
+        "feature-specific screen logic burada yaşamaz",
+        "direct backend service url hardcode edilmez",
+        "public API index seviyesinde sabitlenir"
+      ]
+    }
+  ],
+  "required_contracts": [
+    "hangi servislerin veya MFE'lerin bu kütüphaneyi tüketeceği tanımlanır",
+    "breaking-change etkisi varsa dependent surface listesi güncellenir",
+    "kütüphane reuse kararı domain map ve system overview ile çelişmez"
+  ]
+}

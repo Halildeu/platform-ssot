@@ -1,0 +1,97 @@
+{
+  "version": "1.0",
+  "last_verified": "2026-03-06",
+  "domains": [
+    {
+      "id": "identity_session",
+      "name": "Kimlik ve Oturum",
+      "status": "active",
+      "owner_components": ["auth-service", "keycloak", "common-auth"],
+      "responsibilities": [
+        "kullanıcı oturumu",
+        "registration ve password reset",
+        "service token minting",
+        "service JWKS"
+      ]
+    },
+    {
+      "id": "authorization_audit",
+      "name": "Yetki ve Denetim",
+      "status": "active",
+      "owner_components": ["permission-service", "mfe-access", "mfe-audit"],
+      "responsibilities": [
+        "roles",
+        "permissions",
+        "authz scope",
+        "audit event"
+      ],
+      "design_note": "Domain kapsamı geniştir; orta vadede bölünme adayıdır."
+    },
+    {
+      "id": "user_management",
+      "name": "Kullanıcı Yönetimi",
+      "status": "active",
+      "owner_components": ["user-service", "mfe-users"],
+      "responsibilities": [
+        "kullanıcı CRUD",
+        "aktivasyon",
+        "internal provisioning",
+        "profil ve tercih alanları"
+      ]
+    },
+    {
+      "id": "personalization_theme",
+      "name": "Kişiselleştirme ve Tema",
+      "status": "active",
+      "owner_components": ["variant-service", "mfe-reporting", "packages/ui-kit"],
+      "responsibilities": [
+        "grid variant",
+        "görünüm tercihleri",
+        "tema",
+        "theme registry"
+      ],
+      "design_note": "Theme alanı şu an ayrı servis değil, variant-service içine gömülüdür."
+    },
+    {
+      "id": "reference_data",
+      "name": "Referans Veri",
+      "status": "active",
+      "owner_components": ["core-data-service"],
+      "responsibilities": [
+        "company master data"
+      ]
+    },
+    {
+      "id": "edge_platform_routing",
+      "name": "Edge ve Platform Yönlendirme",
+      "status": "active",
+      "owner_components": ["api-gateway", "discovery-server"],
+      "responsibilities": [
+        "ingress",
+        "route yönlendirme",
+        "service discovery"
+      ]
+    },
+    {
+      "id": "presentation_shell",
+      "name": "Sunum Katmanı",
+      "status": "active",
+      "owner_components": ["mfe-shell", "remote-mfe-set", "packages/shared-http", "packages/ui-kit"],
+      "responsibilities": [
+        "route",
+        "auth lifecycle",
+        "ortak UI",
+        "ortak HTTP istemcisi"
+      ]
+    }
+  ],
+  "plan_only_domains": [
+    {"id": "approval_system", "name": "approval-system"},
+    {"id": "ethics_case_management", "name": "ethics-case-management"},
+    {"id": "theme_system", "name": "theme-system"},
+    {"id": "fleet_operations", "name": "fleet-operations"},
+    {"id": "ops", "name": "ops"}
+  ],
+  "feature_placement_rule": "Yeni geliştirme önce bu domain map içinde konumlandırılır; daha sonra target service, target MFE veya shared library kararı verilir.",
+  "secondary_human_source": "docs/02-architecture/DOMAIN-MAP.md"
+}

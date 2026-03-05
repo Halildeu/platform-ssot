@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "applies_to": "new-remote-mfe",
+  "location_pattern": "web/apps/mfe-<name>",
+  "required_rules": [
+    "Auth lifecycle shell merkezlidir; remote MFE kendi auth bootstrap'ını başlatmaz.",
+    "HTTP katmanı packages/shared-http üzerinden kullanılır.",
+    "Ortak UI ve token/ui davranışı packages/ui-kit üzerinden kullanılır.",
+    "Backend erişimi doğrudan service url ile değil gateway üzerinden yapılır.",
+    "Remote kayıt ve route entegrasyonu mfe-shell contract'ına göre yapılır."
+  ],
+  "required_contracts": [
+    "docs/02-architecture/system-overview.v1.json güncellenecek",
+    "docs/02-architecture/domain-map.v1.json güncellenecek",
+    "docs/02-architecture/runtime/runtime-dependency-matrix.v1.json güncellenecek",
+    "hangi backend servisleri tüketeceği service-communication-matrix.v1.json seviyesinde görünür olacak"
+  ],
+  "forbidden_patterns": [
+    "direct Keycloak bootstrap in remote",
+    "duplicate HTTP client implementation",
+    "duplicate UI primitives outside ui-kit",
+    "hardcoded absolute backend base URL"
+  ],
+  "test_rules": [
+    "shell mount smoke",
+    "shared-http integration",
+    "ui-kit compliance",
+    "route and auth guard smoke"
+  ]
+}

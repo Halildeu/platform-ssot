@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "applies_to": "new-backend-microservice",
+  "location_pattern": "backend/<service-name>-service",
+  "required_layout": [
+    "src/main/java/com/example/<service>/config",
+    "src/main/java/com/example/<service>/controller",
+    "src/main/java/com/example/<service>/dto",
+    "src/main/java/com/example/<service>/model",
+    "src/main/java/com/example/<service>/repository",
+    "src/main/java/com/example/<service>/service",
+    "src/main/java/com/example/<service>/security",
+    "src/test/java/com/example/<service>",
+    "src/main/resources/application.properties",
+    "Dockerfile",
+    "pom.xml"
+  ],
+  "required_runtime_contracts": [
+    "docs/02-architecture/domain-map.v1.json güncellenecek",
+    "docs/02-architecture/system-overview.v1.json güncellenecek",
+    "docs/02-architecture/runtime/service-communication-matrix.v1.json güncellenecek",
+    "docs/02-architecture/runtime/secret-source-matrix.v1.json güncellenecek",
+    "docs/02-architecture/runtime/runtime-dependency-matrix.v1.json güncellenecek",
+    "docs/02-architecture/services/service-doc-status.v1.json güncellenecek",
+    "docs/02-architecture/services/<service>/TECH-DESIGN-*.md eklenecek"
+  ],
+  "database_rules": [
+    "Her servis kendi schema ownership alanını tanımlar.",
+    "Her servis kendi Flyway history tablosunu kullanır.",
+    "Gerekirse db/migration_schema_owned hattı açılır.",
+    "Başka servise ait tabloya migration ile dokunulmaz."
+  ],
+  "http_rules": [
+    "Yeni service-to-service HTTP çağrılarında WebClient kullanılır.",
+    "Discovery/load-balanced akışlarda istemci standardı bölünmez.",
+    "Servisler birbirlerinin src kodunu import etmez."
+  ],
+  "test_rules": [
+    "unit test",
+    "integration test",
+    "/actuator/health smoke",
+    "gateway route smoke gerekiyorsa",
+    "schema/flyway etkisi varsa migration smoke"
+  ],
+  "forbidden_patterns": [
+    "new RestTemplate",
+    "cross-service table write",
+    "service-to-service src import",
+    "gateway dışı frontend erişim yüzeyi"
+  ],
+  "creation_flow": [
+    "domain map içinde konumlandır",
+    "service ownership ve schema kararını ver",
+    "servis iskeletini oluştur",
+    "gateway ve runtime matrislerini güncelle",
+    "test ve smoke kanıtını ekle"
+  ]
+}

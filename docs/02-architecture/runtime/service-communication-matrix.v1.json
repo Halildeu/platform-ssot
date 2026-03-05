@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "last_verified": "2026-03-06",
+  "rows": [
+    {"source": "browser_or_mfe", "target": "api-gateway", "channel": "http-rest", "discovery": false, "auth_model": "bearer-jwt-or-permitall-dev", "note": "Frontend yalnız gateway ile konuşur."},
+    {"source": "mfe-shell", "target": "remote-mfe-set", "channel": "module-federation", "discovery": false, "auth_model": "shell-auth-state-share", "note": "mfe-shell host katmandır."},
+    {"source": "api-gateway", "target": "auth-service", "channel": "gateway-route", "discovery": true, "auth_model": "user-jwt-verify-and-forward", "note": "/api/auth/**, /api/v1/auth/**"},
+    {"source": "api-gateway", "target": "user-service", "channel": "gateway-route", "discovery": true, "auth_model": "user-jwt-verify-and-forward", "note": "/api/users/**, /api/v1/users/**"},
+    {"source": "api-gateway", "target": "permission-service", "channel": "gateway-route", "discovery": true, "auth_model": "user-jwt-verify-and-forward", "note": "roles, permissions, audit"},
+    {"source": "api-gateway", "target": "variant-service", "channel": "gateway-route", "discovery": true, "auth_model": "user-jwt-verify-and-forward", "note": "variants, themes, registry"},
+    {"source": "api-gateway", "target": "core-data-service", "channel": "gateway-route", "discovery": true, "auth_model": "user-jwt-verify-and-forward", "note": "/api/v1/companies/**"},
+    {"source": "auth-service", "target": "user-service", "channel": "rest-client", "discovery": true, "auth_model": "service-token-internal-auth", "note": "WebClient + ortak timeout"},
+    {"source": "auth-service", "target": "permission-service", "channel": "rest-client", "discovery": true, "auth_model": "service-token-internal-auth", "note": "WebClient + ortak timeout"},
+    {"source": "user-service", "target": "permission-service", "channel": "rest-client", "discovery": true, "auth_model": "service-token-internal-auth", "note": "WebClient + ortak timeout"},
+    {"source": "user-service", "target": "auth-service", "channel": "rest-client", "discovery": false, "auth_model": "service-token-mint", "note": "direct/service-url üzerinden /oauth2/token"},
+    {"source": "variant-service", "target": "permission-service", "channel": "rest-client", "discovery": true, "auth_model": "authz-context-lookup", "note": "WebClient baseline"},
+    {"source": "backend-service-set", "target": "discovery-server", "channel": "eureka-client", "discovery": false, "auth_model": "service-registration", "note": "ayağa kalkış bağımlılığı"},
+    {"source": "backend-service-set", "target": "postgres-db", "channel": "jdbc", "discovery": false, "auth_model": "db-credential", "note": "servis bazlı schema ownership"},
+    {"source": "backend-service-set", "target": "keycloak", "channel": "jwks-issuer-validation", "discovery": false, "auth_model": "user-jwt-validation", "note": "resource server katmanı"}
+  ],
+  "rules": [
+    "Yeni dış istek hattı gateway üzerinden açılır.",
+    "Yeni iç servis çağrısı bu matrise eklenmeden merge edilmez.",
+    "Yeni service-to-service HTTP kodu WebClient kullanır."
+  ],
+  "secondary_human_source": "docs/02-architecture/runtime/service-communication-matrix.md"
+}

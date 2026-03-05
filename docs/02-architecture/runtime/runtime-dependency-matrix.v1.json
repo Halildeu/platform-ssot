@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "last_verified": "2026-03-06",
+  "rows": [
+    {"component": "mfe-shell", "direct_dependencies": ["api-gateway", "keycloak", "remote-mfe-set"], "dependency_type": ["http", "module-federation"], "boot_required": true, "impact": "shell açılmazsa kullanıcı akışı bozulur"},
+    {"component": "mfe-users", "direct_dependencies": ["mfe-shell", "api-gateway", "user-service"], "dependency_type": ["module-federation", "http"], "boot_required": true, "impact": "kullanıcı yönetimi açılamaz"},
+    {"component": "mfe-access", "direct_dependencies": ["mfe-shell", "api-gateway", "permission-service"], "dependency_type": ["module-federation", "http"], "boot_required": true, "impact": "rol/yetki ekranı açılamaz"},
+    {"component": "mfe-audit", "direct_dependencies": ["mfe-shell", "api-gateway", "permission-service"], "dependency_type": ["module-federation", "http"], "boot_required": true, "impact": "audit görünümü çalışmaz"},
+    {"component": "mfe-reporting", "direct_dependencies": ["mfe-shell", "api-gateway", "variant-service"], "dependency_type": ["module-federation", "http"], "boot_required": true, "impact": "reporting ve variant görünümü çalışmaz"},
+    {"component": "api-gateway", "direct_dependencies": ["discovery-server", "auth-service", "user-service", "permission-service", "variant-service", "core-data-service"], "dependency_type": ["route", "registry"], "boot_required": true, "impact": "tek giriş hattı düşer"},
+    {"component": "auth-service", "direct_dependencies": ["discovery-server", "postgres-db", "vault-or-env", "user-service", "permission-service"], "dependency_type": ["db", "registry", "internal-service"], "boot_required": true, "impact": "login ve service token akışı durur"},
+    {"component": "user-service", "direct_dependencies": ["discovery-server", "postgres-db", "permission-service", "auth-service"], "dependency_type": ["db", "registry", "internal-service"], "boot_required": true, "impact": "kullanıcı işlemleri durur"},
+    {"component": "permission-service", "direct_dependencies": ["discovery-server", "postgres-db", "keycloak-or-vault"], "dependency_type": ["db", "registry", "jwt"], "boot_required": true, "impact": "yetki ve audit akışı durur"},
+    {"component": "variant-service", "direct_dependencies": ["discovery-server", "postgres-db", "permission-service"], "dependency_type": ["db", "registry", "internal-service"], "boot_required": true, "impact": "theme ve variant akışı durur"},
+    {"component": "core-data-service", "direct_dependencies": ["discovery-server", "postgres-db", "keycloak"], "dependency_type": ["db", "registry", "jwt"], "boot_required": true, "impact": "company master data erişimi durur"},
+    {"component": "discovery-server", "direct_dependencies": [], "dependency_type": ["registry"], "boot_required": true, "impact": "service discovery zinciri bozulur"},
+    {"component": "postgres-db", "direct_dependencies": ["volume-storage"], "dependency_type": ["stateful-db"], "boot_required": true, "impact": "backend kalıcılığı durur"},
+    {"component": "keycloak", "direct_dependencies": ["internal-db-storage"], "dependency_type": ["auth-provider"], "boot_required": true, "impact": "kullanıcı JWT akışı durur"},
+    {"component": "vault", "direct_dependencies": ["config", "unseal"], "dependency_type": ["secret-store"], "boot_required": false, "impact": "localde zorunlu değildir; hedef mimaride kritiktir"}
+  ],
+  "rules": [
+    "Yeni runtime bileşeni bu matrise girilmeden kabul edilmez.",
+    "Boot için zorunlu bağımlılık health-gated veya açıkça dokümante edilmiş olmalıdır."
+  ],
+  "secondary_human_source": "docs/02-architecture/runtime/runtime-dependency-matrix.md"
+}

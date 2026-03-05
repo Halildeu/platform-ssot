@@ -1,0 +1,78 @@
+{
+  "version": "1.0",
+  "pack_id": "dev-repo-context-pack",
+  "last_verified": "2026-03-06",
+  "purpose": "AI ve insan için feature geliştirme öncesi okunacak kanonik bağlam paketi.",
+  "json_first_rule": true,
+  "canonical_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/system-overview.v1.json",
+    "docs/02-architecture/domain-map.v1.json",
+    "docs/02-architecture/runtime/service-communication-matrix.v1.json",
+    "docs/02-architecture/runtime/secret-source-matrix.v1.json",
+    "docs/02-architecture/runtime/runtime-dependency-matrix.v1.json",
+    "docs/02-architecture/runtime/database-isolation-plan.v1.json",
+    "docs/02-architecture/runtime/runtime-alignment-backlog.v1.json",
+    "docs/02-architecture/blueprints/backend-service-blueprint.v1.json",
+    "docs/02-architecture/blueprints/shared-library-blueprint.v1.json",
+    "docs/02-architecture/blueprints/mfe-blueprint.v1.json"
+  ],
+  "secondary_human_sources": [
+    "docs/02-architecture/INDEX.md",
+    "docs/02-architecture/SYSTEM-OVERVIEW.md",
+    "docs/02-architecture/DOMAIN-MAP.md",
+    "docs/02-architecture/runtime/*.md",
+    "docs/02-architecture/services/**/TECH-DESIGN-*.md"
+  ],
+  "feature_start_requirements": [
+    "Önce domain seçilir.",
+    "Sonra target service, shared library veya MFE blueprint seçilir.",
+    "Yeni iç servis çağrısı varsa communication matrix güncellenir.",
+    "Yeni secret/config ihtiyacı varsa secret source matrix güncellenir.",
+    "Yeni runtime bileşeni varsa dependency matrix güncellenir.",
+    "Teknik borç veya drift ile çelişen geliştirme varsa önce karar verilir."
+  ],
+  "known_debts": [
+    {
+      "id": "legacy-user-service-v6-v8-cross-service-sql",
+      "severity": "medium",
+      "state": "tracked-not-blocking",
+      "source": "docs/02-architecture/runtime/database-isolation-plan.v1.json"
+    },
+    {
+      "id": "permission-service-wide-boundary",
+      "severity": "medium",
+      "state": "tracked-design-debt",
+      "source": "docs/02-architecture/domain-map.v1.json"
+    },
+    {
+      "id": "variant-service-theme-coupling",
+      "severity": "medium",
+      "state": "tracked-design-debt",
+      "source": "docs/02-architecture/domain-map.v1.json"
+    },
+    {
+      "id": "vault-vs-env-runtime-asymmetry",
+      "severity": "low",
+      "state": "tracked-runtime-asymmetry",
+      "source": "docs/02-architecture/runtime/secret-source-matrix.v1.json"
+    }
+  ],
+  "downstream_usage": {
+    "orchestrator": [
+      "feature_execution_contract input",
+      "delivery_session_packet input"
+    ],
+    "repo_local": [
+      "architecture review",
+      "new service blueprint selection",
+      "drift control"
+    ]
+  },
+  "hard_rules_for_ai": [
+    "JSON kanonik kaynaktır; Markdown yalnız açıklayıcı ikinci kaynaktır.",
+    "Blueprint seçmeden yeni service, shared library veya MFE açılmaz.",
+    "Mevcut domain map dışına taşan feature önce karar güncellemesi ister.",
+    "Cross-service SQL veya duplicate HTTP/UI katmanı üretilmez."
+  ]
+}
