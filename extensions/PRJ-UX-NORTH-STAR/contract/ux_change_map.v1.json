@@ -1,0 +1,27 @@
+{
+  "version": "v1",
+  "subject_id": "ux_katalogu",
+  "generated_at": "2026-03-05T00:00:00Z",
+  "entries": [
+    {
+      "path": "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+      "ux_theme_id": "navigation_information_scent",
+      "ux_subtheme_id": "role_based_navigation_paths"
+    },
+    {
+      "path": "web/apps/mfe-shell/src/app/bootstrap.tsx",
+      "ux_theme_id": "feedback_state_and_visibility",
+      "ux_subtheme_id": "loading_empty_error_success_patterns"
+    },
+    {
+      "path": "web/apps/mfe-ethic/src/App.tsx",
+      "ux_theme_id": "task_completion_architecture",
+      "ux_subtheme_id": "role_goal_task_mapping"
+    },
+    {
+      "path": "web/apps/mfe-ethic/src/bootstrap.tsx",
+      "ux_theme_id": "trust_privacy_security_ux",
+      "ux_subtheme_id": "high_risk_action_confirmation"
+    }
+  ]
+}
