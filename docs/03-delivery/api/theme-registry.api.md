@@ -178,3 +178,40 @@ Body:
 - ADR: docs/02-architecture/services/theme-system/ADR/ADR-0002-theme-contract-v0-1.md  
 - STYLE-API-001: docs/00-handbook/STYLE-API-001.md
 
+-------------------------------------------------------------------------------
+10) Security
+-------------------------------------------------------------------------------
+
+- `GET /api/v1/theme-registry`:
+  - Auth optional. Public route kullanımında anonim erişim mümkün olmalıdır.
+- `GET /api/v1/themes?scope=global`:
+  - Auth optional, read-only.
+- `GET /api/v1/themes?scope=user` ve `/api/v1/me/theme/**`:
+  - Auth required (`401` yetkisiz).
+- `PUT /api/v1/themes/global/**`:
+  - Role required: `THEME_ADMIN` veya `SYSTEM_CONFIGURE` (`403` yetkisiz rol).
+- Token/credential asla response içine yazılmaz; audit trace id response header ile taşınır.
+
+-------------------------------------------------------------------------------
+11) Hata Modeli (ErrorResponse)
+-------------------------------------------------------------------------------
+
+Tüm endpointler aşağıdaki ErrorResponse sözleşmesiyle döner:
+
+```json
+{
+  "timestamp": "2026-03-05T17:00:00Z",
+  "status": 400,
+  "error": "Bad Request",
+  "code": "THEME_REGISTRY_VALIDATION",
+  "message": "Unknown semantic key: surface.unknown",
+  "path": "/api/v1/themes/global/123"
+}
+```
+
+Hata kodları:
+- `400 THEME_REGISTRY_VALIDATION`: allowlist dışı semantic key, hatalı payload.
+- `401 AUTH_REQUIRED`: `/api/v1/me/**` veya user-scope çağrılarında auth yok.
+- `403 ROLE_REQUIRED`: admin endpointine yetkisiz rol ile erişim.
+- `404 THEME_NOT_FOUND`: hedef tema bulunamadı.
+- `409 THEME_VERSION_CONFLICT`: eşzamanlı güncelleme çakışması.
