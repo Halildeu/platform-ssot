@@ -49,6 +49,8 @@ export * from './components/Skeleton';
 export * from './components/Spinner';
 export * from './components/Avatar';
 export * from './components/Divider';
+export * from './components/Tabs';
+export * from './components/Breadcrumb';
 export * from './components/theme/ThemePreviewCard';
 export * from './layout/PageLayout';
 export * from './layout/FilterBar';

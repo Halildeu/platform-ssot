@@ -1,0 +1,284 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "wave_id": "wave_2_navigation",
+  "family_id": "navigation",
+  "status": "in_progress",
+  "purpose": "Navigation dalgasi icin Tabs, Breadcrumb, Pagination, Steps ve AnchorToc component ailesinin acceptance, UX eslesmesi, preview ve evidence kontratini tek kanonik pakette toplamak.",
+  "baseline": {
+    "governance_lock_commit": "0900750",
+    "roadmap_lock_commit": "2393148",
+    "wave_1_completion_commit": "863f480",
+    "registry_snapshot": {
+      "exported_count": 52,
+      "planned_count": 24,
+      "live_demo_count": 21
+    }
+  },
+  "required_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+    "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
+    "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+  ],
+  "implementation_batches": [
+    {
+      "batch_id": "batch_1_primary_navigation",
+      "status": "completed",
+      "objective": "Yuksek kullanimli navigation primitives olan Tabs ve Breadcrumb yuzeyini profesyonel seviyede acmak.",
+      "components": [
+        "Tabs",
+        "Breadcrumb"
+      ]
+    },
+    {
+      "batch_id": "batch_2_flow_navigation",
+      "status": "planned",
+      "objective": "Sayfalama ve cok-adimli akislari ortak primitive katmanina tasimak.",
+      "components": [
+        "Pagination",
+        "Steps"
+      ]
+    },
+    {
+      "batch_id": "batch_3_contextual_navigation",
+      "status": "planned",
+      "objective": "Uzun sayfa ve dokuman navigasyonunu anchor/toC primitive ile tamamlamak.",
+      "components": [
+        "AnchorToc"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "component_name": "Tabs",
+      "implementation_order": 1,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Tabs.tsx",
+          "web/packages/ui-kit/src/components/Tabs.test.tsx"
+        ],
+        "target_taxonomy_group": "navigation",
+        "target_taxonomy_subgroup": "Tabs"
+      },
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "orientation_and_wayfinding",
+      "acceptance_criteria": [
+        "controlled ve uncontrolled sekme secimi ortak API ile sunulur",
+        "arrow key, home/end ve manual activation davranisi APG ile uyumludur",
+        "underline ve pill gorunumleri token-first sekilde calisir",
+        "horizontal ve vertical orientation ayni primitive icinde desteklenir",
+        "disabled veya readonly state secim drift uretmez"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "tabs-controlled-underline",
+          "title": "Controlled underline tabs"
+        },
+        {
+          "id": "tabs-vertical-manual",
+          "title": "Vertical manual activation"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_2_navigation.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_ui_library_governance_contract.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Tabs icin guncellenir",
+        "Design Lab live preview eklenir",
+        "keyboard navigation testi gecer",
+        "PageLayout veya consumer preview ile navigation reuse kaniti olusur"
+      ]
+    },
+    {
+      "component_name": "Breadcrumb",
+      "implementation_order": 2,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Breadcrumb.tsx",
+          "web/packages/ui-kit/src/components/Breadcrumb.test.tsx",
+          "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx"
+        ],
+        "target_taxonomy_group": "navigation",
+        "target_taxonomy_subgroup": "Breadcrumb"
+      },
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "domain_based_information_architecture",
+      "acceptance_criteria": [
+        "current page semantigi ve aria-current deterministic sekilde gelir",
+        "href, onClick, disabled ve collapsed state ayni API ile yonetilir",
+        "uzun path senaryolarinda middle collapse davranisi vardir",
+        "LinkInline ve Text primitive reuse edilerek duplicate navigation kodu uretilmez",
+        "PageLayout breadcrumb rendering yeni primitive uzerinden calisir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "breadcrumb-basic",
+          "title": "Basic path"
+        },
+        {
+          "id": "breadcrumb-collapsed",
+          "title": "Collapsed long path"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_2_navigation.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_ui_library_governance_contract.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Breadcrumb icin guncellenir",
+        "Design Lab live preview eklenir",
+        "collapse ve current-page testi gecer",
+        "PageLayout reuse kaniti uretilir"
+      ]
+    },
+    {
+      "component_name": "Pagination",
+      "implementation_order": 3,
+      "source_state": "planned_registry",
+      "registry_action": "preserve_planned_entry",
+      "target_maturity": "beta",
+      "preview_mode": "planned",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Pagination.tsx"
+        ],
+        "target_taxonomy_group": "navigation",
+        "target_taxonomy_subgroup": "Pagination"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "critical_path_minimization",
+      "acceptance_criteria": [
+        "server-side ve client-side sayfalama primitive ayni component API etrafinda kurulur",
+        "yoğun dataset senaryolarinda compact ama okunur navigation sunulur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "pagination-matrix",
+          "title": "Pagination matrix"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_2_navigation.py"
+      ],
+      "evidence_requirements": [
+        "planned registry entry korunur"
+      ]
+    },
+    {
+      "component_name": "Steps",
+      "implementation_order": 4,
+      "source_state": "planned_registry",
+      "registry_action": "preserve_planned_entry",
+      "target_maturity": "beta",
+      "preview_mode": "planned",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Steps.tsx"
+        ],
+        "target_taxonomy_group": "navigation",
+        "target_taxonomy_subgroup": "Steps"
+      },
+      "ux_primary_theme_id": "data_entry_validation_recovery",
+      "ux_primary_subtheme_id": "multi_step_wizard_progress",
+      "acceptance_criteria": [
+        "step state ve progress semantikleri ortak state modeli ile gelir",
+        "wizard route ve form akislari ayni primitive reuse eder"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "steps-progress",
+          "title": "Steps progress"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_2_navigation.py"
+      ],
+      "evidence_requirements": [
+        "planned registry entry korunur"
+      ]
+    },
+    {
+      "component_name": "AnchorToc",
+      "implementation_order": 5,
+      "source_state": "planned_registry",
+      "registry_action": "preserve_planned_entry",
+      "target_maturity": "beta",
+      "preview_mode": "inspector",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/AnchorToc.tsx"
+        ],
+        "target_taxonomy_group": "navigation",
+        "target_taxonomy_subgroup": "Anchor / Table of contents"
+      },
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "deep_link_and_shareable_state",
+      "acceptance_criteria": [
+        "uzun sayfa ve policy/dokuman ekranlarinda paylasilabilir state saglar",
+        "active heading tracking ve deep-link davranisi ayni primitive etrafinda toplanir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "anchor-toc-outline",
+          "title": "Anchor toc outline"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_2_navigation.py"
+      ],
+      "evidence_requirements": [
+        "planned registry entry korunur"
+      ]
+    }
+  ],
+  "wave_exit_criteria": [
+    "Tabs ve Breadcrumb stable export + preview + test + UX alignment ile tamamlanir",
+    "Pagination, Steps ve AnchorToc icin planned backlog kontrati korunur",
+    "navigation family registry drift = 0 olur",
+    "keyboard navigation / current-page a11y evidence yazili ve testlenmis olur"
+  ],
+  "progress_summary": {
+    "completed_components": [
+      "Tabs",
+      "Breadcrumb"
+    ],
+    "remaining_components": [
+      "Pagination",
+      "Steps",
+      "AnchorToc"
+    ],
+    "notes": [
+      "Batch 1 navigation primitives export edildi.",
+      "PageLayout breadcrumb rendering yeni Breadcrumb primitive uzerinden calisiyor."
+    ]
+  }
+}

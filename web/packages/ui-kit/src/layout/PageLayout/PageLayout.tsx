@@ -4,6 +4,7 @@ import {
   resolveAccessState,
   type AccessControlledProps,
 } from '../../runtime/access-controller';
+import { Breadcrumb } from '../../components/Breadcrumb';
 
 export interface PageBreadcrumbItem {
   title: React.ReactNode;
@@ -59,26 +60,16 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       <header className="mfe-page-layout__header flex flex-col gap-4 px-6 py-4 bg-transparent">
         <div className="flex flex-col gap-2 flex-1">
           {hasBreadcrumbs && (
-            <nav aria-label="breadcrumb" className="mfe-page-layout__breadcrumb text-xs text-text-subtle">
-              <ol className="flex flex-wrap items-center gap-2">
-                {breadcrumbItems!.map((item, index) => (
-                  <li key={index} className="flex items-center gap-2">
-                    {index > 0 && <span className="text-text-subtle">/</span>}
-                    {item.path ? (
-                      <a
-                        href={item.path}
-                        onClick={item.onClick}
-                        className="transition-colors hover:text-text-primary"
-                      >
-                        {item.title}
-                      </a>
-                    ) : (
-                      <span className="font-medium text-text-secondary">{item.title}</span>
-                    )}
-                  </li>
-                ))}
-              </ol>
-            </nav>
+            <Breadcrumb
+              className="mfe-page-layout__breadcrumb"
+              size="sm"
+              items={breadcrumbItems!.map((item, index) => ({
+                label: item.title,
+                href: item.path,
+                onClick: item.onClick,
+                current: index === breadcrumbItems!.length - 1,
+              }))}
+            />
           )}
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex flex-col gap-2 flex-1 min-w-[200px]">

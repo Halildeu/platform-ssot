@@ -48,6 +48,17 @@
       ]
     },
     {
+      "id": "navigation",
+      "label": "Navigation",
+      "subgroups": [
+        { "id": "tabs", "label": "Tabs" },
+        { "id": "breadcrumb", "label": "Breadcrumb" },
+        { "id": "pagination", "label": "Pagination" },
+        { "id": "steps", "label": "Steps" },
+        { "id": "anchor-toc", "label": "Anchor / Table of contents" }
+      ]
+    },
+    {
       "id": "data-grid",
       "label": "Data & Grid",
       "subgroups": [

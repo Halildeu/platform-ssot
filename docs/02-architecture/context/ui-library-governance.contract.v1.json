@@ -206,8 +206,7 @@
       "mandatory_rules": [
         "Design Lab summary exported/planned/live counts üretir.",
         "UI kit build/test/bundle evidence saklanır.",
-        "Kritik componentler için render, interaction veya error telemetry noktaları tanımlanır."
-        ,
+        "Kritik componentler için render, interaction veya error telemetry noktaları tanımlanır.",
         "Task-critical componentlerde UX KPI ölçüm bağı açıkça tanımlanır."
       ],
       "measures": [
@@ -407,6 +406,7 @@
     "mandatory_checks": [
       "python3 scripts/check_ui_library_ux_alignment.py",
       "python3 scripts/check_ui_library_component_roadmap.py",
+      "python3 scripts/check_ui_library_wave_2_navigation.py",
       "npm -C web run designlab:index",
       "npm -C web run lint:tailwind",
       "npm -C web run lint:no-antd",
@@ -434,6 +434,7 @@
       "docs/02-architecture/context/ux-katalogu.reference.v1.json",
       "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
       "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+      "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json",
       "docs/02-architecture/context/ui-library-system.context.v1.json",
       "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
       "docs/00-handbook/STYLE-WEB-001.md",

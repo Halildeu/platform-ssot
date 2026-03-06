@@ -137,10 +137,11 @@
       "ux_alignment_family_id": "navigation_components",
       "purpose": "Yol bulma, bilgi kokusu ve cok adimli akislarda kullanilan ortak navigation pattern'lerini standartlastirmak.",
       "current_state": {
-        "implemented_now": [],
-        "gaps": [
+        "implemented_now": [
           "Tabs",
-          "Breadcrumb",
+          "Breadcrumb"
+        ],
+        "gaps": [
           "Pagination",
           "Steps",
           "AnchorToc"
@@ -716,7 +717,7 @@
     {
       "wave_id": "wave_2_navigation",
       "title_tr": "Navigation",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Sekme, breadcrumb ve ilerleme kaliplarini standardize et.",
       "families": [
         "navigation"

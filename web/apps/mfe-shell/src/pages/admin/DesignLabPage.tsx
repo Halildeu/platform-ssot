@@ -18,10 +18,12 @@ import {
   Skeleton,
   Spinner,
   Tag,
+  Tabs,
   Text,
   ThemePreviewCard,
   Tooltip,
   Avatar,
+  Breadcrumb,
   Divider,
 } from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
@@ -181,6 +183,7 @@ const DesignLabPage: React.FC = () => {
   const [selectValue, setSelectValue] = useState('comfortable');
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
+  const [tabsValue, setTabsValue] = useState('overview');
 
   useEffect(() => {
     setModalOpen(false);
@@ -492,6 +495,121 @@ const DesignLabPage: React.FC = () => {
                   <Text>Sağ</Text>
                   <Divider label="veya" className="flex-1" />
                 </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Tabs':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Underline / controlled">
+                <Tabs
+                  value={tabsValue}
+                  onValueChange={setTabsValue}
+                  items={[
+                    {
+                      value: 'overview',
+                      label: 'Overview',
+                      badge: <Badge tone="info">4</Badge>,
+                      content: (
+                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                          <Text preset="title">Overview panel</Text>
+                          <Text variant="secondary" className="mt-2 block">
+                            Route-aware, keyboard navigable ve token-first sekme davranisi.
+                          </Text>
+                        </div>
+                      ),
+                    },
+                    {
+                      value: 'activity',
+                      label: 'Activity',
+                      content: (
+                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                          <Text preset="title">Activity panel</Text>
+                          <Text variant="secondary" className="mt-2 block">
+                            Live preview icin controlled state ile shell tarafindan yonetiliyor.
+                          </Text>
+                        </div>
+                      ),
+                    },
+                    {
+                      value: 'settings',
+                      label: 'Settings',
+                      disabled: true,
+                      content: null,
+                    },
+                  ]}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Pill / vertical manual">
+                <Tabs
+                  appearance="pill"
+                  orientation="vertical"
+                  activationMode="manual"
+                  defaultValue="tokens"
+                  items={[
+                    {
+                      value: 'tokens',
+                      label: 'Tokens',
+                      icon: <span aria-hidden="true">◈</span>,
+                      description: 'Tema eksenleri ve semantic token kararlarini gosteren panel.',
+                      content: (
+                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                          <Text preset="body">Semantic token mapping</Text>
+                        </div>
+                      ),
+                    },
+                    {
+                      value: 'density',
+                      label: 'Density',
+                      icon: <span aria-hidden="true">≋</span>,
+                      content: (
+                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                          <Text preset="body">Comfortable, compact ve sharp density gorunumu.</Text>
+                        </div>
+                      ),
+                    },
+                    {
+                      value: 'motion',
+                      label: 'Motion',
+                      icon: <span aria-hidden="true">↻</span>,
+                      content: (
+                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                          <Text preset="body">Transition hizlari ve focus-visible davranisi.</Text>
+                        </div>
+                      ),
+                    },
+                  ]}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Breadcrumb':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Basic path">
+                <Breadcrumb
+                  items={[
+                    { label: 'Admin', href: '#admin' },
+                    { label: 'UI Kit', href: '#ui-kit' },
+                    { label: 'Navigation' },
+                  ]}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Collapsed long path">
+                <Breadcrumb
+                  maxItems={4}
+                  items={[
+                    { label: 'Workspace', href: '#workspace' },
+                    { label: 'Cockpit', href: '#cockpit' },
+                    { label: 'Libraries', href: '#libraries' },
+                    { label: 'UI System', href: '#ui-system' },
+                    { label: 'Tabs' },
+                  ]}
+                />
               </PreviewPanel>
             </div>
           </div>

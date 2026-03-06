@@ -39,9 +39,10 @@ Kanonik kaynak:
 ### 2. Navigation
 
 - Amaç: yön bulma ve bilgi kokusu kalıplarını standardize etmek
-- Hedef:
+- Mevcut:
   - `Tabs`
   - `Breadcrumb`
+- Hedef:
   - `Pagination`
   - `Steps`
   - `AnchorToc`
@@ -158,6 +159,7 @@ Minimum evidence:
 
 ### Wave 2
 
+- `in_progress`
 - `Navigation`
 - hedef:
   - `Tabs`

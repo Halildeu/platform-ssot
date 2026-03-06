@@ -9,10 +9,10 @@
   },
   "summary": {
     "total": 76,
-    "exported": 52,
-    "planned": 24,
-    "liveDemo": 21,
-    "inspector": 31
+    "exported": 54,
+    "planned": 22,
+    "liveDemo": 23,
+    "inspector": 32
   },
   "items": [
     {
@@ -51,28 +51,35 @@
       "kind": "component",
       "importStatement": "",
       "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
+      "group": "navigation",
+      "subgroup": "anchor-toc",
+      "tags": [
+        "navigation",
+        "planned",
+        "wave-2"
+      ],
       "availability": "planned",
       "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Anchor / Table of contents",
+      "demoMode": "inspector",
       "description": "AnchorToc P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
+        "component_library_management",
+        "navigation_patterns",
         "governance_contribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "deep_link_and_shareable_state",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Avatar",
@@ -147,30 +154,39 @@
     {
       "name": "Breadcrumb",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Breadcrumb P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { Breadcrumb } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "navigation",
+      "subgroup": "breadcrumb",
+      "tags": [
+        "navigation",
+        "stable",
+        "wave-2"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Breadcrumb",
+      "demoMode": "live",
+      "description": "Breadcrumb primitivei; route-aware yol izi, collapse ve current-page davranisini tek API ile sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
+        "component_library_management",
+        "navigation_patterns",
         "governance_contribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "domain_based_information_architecture",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Button",
@@ -786,28 +802,35 @@
       "kind": "component",
       "importStatement": "",
       "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
+      "group": "navigation",
+      "subgroup": "pagination",
+      "tags": [
+        "navigation",
+        "planned",
+        "wave-2"
+      ],
       "availability": "planned",
       "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Pagination",
       "demoMode": "planned",
       "description": "Pagination P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
+        "component_library_management",
+        "navigation_patterns",
         "governance_contribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Popover",
@@ -1037,28 +1060,35 @@
       "kind": "component",
       "importStatement": "",
       "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
+      "group": "navigation",
+      "subgroup": "steps",
+      "tags": [
+        "navigation",
+        "planned",
+        "wave-2"
+      ],
       "availability": "planned",
       "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Steps",
       "demoMode": "planned",
       "description": "Steps P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
+        "component_library_management",
+        "navigation_patterns",
         "governance_contribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "multi_step_wizard_progress",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Switch",
@@ -1264,30 +1294,39 @@
     {
       "name": "Tabs",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Tabs P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { Tabs } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "navigation",
+      "subgroup": "tabs",
+      "tags": [
+        "navigation",
+        "stable",
+        "wave-2"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Tabs",
+      "demoMode": "live",
+      "description": "Tabs navigation primitivei; controlled/uncontrolled state, keyboard navigation ve token-first tablist davranisini tek API ile sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
+        "component_library_management",
+        "navigation_patterns",
         "governance_contribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "orientation_and_wayfinding",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Tag",
