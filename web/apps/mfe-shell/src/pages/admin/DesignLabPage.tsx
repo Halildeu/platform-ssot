@@ -41,6 +41,11 @@ type DesignLabIndexItem = {
   description: string;
   sectionIds: string[];
   qualityGates: string[];
+  tags?: string[];
+  uxPrimaryThemeId?: string;
+  uxPrimarySubthemeId?: string;
+  roadmapWaveId?: string;
+  acceptanceContractId?: string;
 };
 
 type DesignLabIndex = {
@@ -138,6 +143,15 @@ const SummaryCard: React.FC<{ label: string; value: number; note: string }> = ({
     <Text variant="secondary" className="mt-1 block text-xs">
       {note}
     </Text>
+  </div>
+);
+
+const PreviewPanel: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+    <Text as="div" variant="secondary" className="text-xs font-semibold uppercase tracking-[0.18em]">
+      {title}
+    </Text>
+    <div className="mt-3">{children}</div>
   </div>
 );
 
@@ -267,10 +281,29 @@ const DesignLabPage: React.FC = () => {
       case 'Button':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="flex flex-wrap items-center gap-3">
-              <Button>Primary</Button>
-              <Button variant="secondary">Secondary</Button>
-              <Button variant="ghost">Ghost</Button>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+              <PreviewPanel title="Varyant matrisi">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button>Primary</Button>
+                  <Button variant="secondary">Secondary</Button>
+                  <Button variant="ghost">Ghost</Button>
+                  <Button variant="destructive">Destructive</Button>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Boyut ve icon slot">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button size="sm" leadingVisual={<span aria-hidden="true">+</span>}>Small</Button>
+                  <Button size="md" trailingVisual={<span aria-hidden="true">→</span>}>Medium</Button>
+                  <Button size="lg" leadingVisual={<span aria-hidden="true">★</span>}>Large</Button>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Durumlar">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button loading loadingLabel="Kaydediliyor">Kaydet</Button>
+                  <Button disabled variant="secondary">Disabled</Button>
+                  <Button access="readonly" variant="ghost">Readonly</Button>
+                </div>
+              </PreviewPanel>
             </div>
           </div>
         );
@@ -300,11 +333,40 @@ const DesignLabPage: React.FC = () => {
       case 'Text':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="flex flex-col gap-2">
-              <Text size="lg" className="font-semibold">Başlık metni</Text>
-              <Text>Body text</Text>
-              <Text variant="secondary">Secondary copy</Text>
-              <Text variant="muted">Muted helper text</Text>
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+              <PreviewPanel title="Semantic preset">
+                <div className="flex flex-col gap-2">
+                  <Text as="h2" preset="display">Display metni</Text>
+                  <Text as="h3" preset="heading">Heading metni</Text>
+                  <Text preset="title">Title metni</Text>
+                  <Text preset="body">Body text</Text>
+                  <Text preset="caption">Caption</Text>
+                  <Text preset="mono">MONO-1024</Text>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Tone ve emphasis">
+                <div className="flex flex-col gap-2">
+                  <Text weight="semibold">Primary emphasis</Text>
+                  <Text variant="secondary">Secondary copy</Text>
+                  <Text variant="muted">Muted helper text</Text>
+                  <Text variant="success">Success state</Text>
+                  <Text variant="danger">Danger state</Text>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Clamp ve truncate">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="max-w-[240px]">
+                    <Text truncate title="Bu başlık tek satırda truncate edilir ve hover ile tam hali görülebilir.">
+                      Bu başlık tek satırda truncate edilir ve hover ile tam hali görülebilir.
+                    </Text>
+                  </div>
+                  <div className="max-w-[240px]">
+                    <Text clampLines={2}>
+                      Uzun açıklama metni iki satıra clamp edilir; layout taşması üretmez ve typography kontratını korur.
+                    </Text>
+                  </div>
+                </div>
+              </PreviewPanel>
             </div>
           </div>
         );
@@ -669,8 +731,17 @@ const DesignLabPage: React.FC = () => {
                     <SectionBadge label={selectedItem.kind} />
                     <SectionBadge label={demoModeLabel[selectedItem.demoMode]} />
                     <SectionBadge label={selectedItem.taxonomyGroupId} />
+                    {selectedItem.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
                   </>
                 ) : null}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>UX alignment</DetailLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedItem?.uxPrimaryThemeId ? <SectionBadge label={selectedItem.uxPrimaryThemeId} /> : <Text variant="secondary">Yok</Text>}
+                {selectedItem?.uxPrimarySubthemeId ? <SectionBadge label={selectedItem.uxPrimarySubthemeId} /> : null}
               </div>
             </div>
 
@@ -686,6 +757,18 @@ const DesignLabPage: React.FC = () => {
               <div className="mt-3 flex flex-wrap gap-2">
                 {selectedItem?.qualityGates?.map((gate) => <SectionBadge key={gate} label={gate} />) ?? <Text variant="secondary">Yok</Text>}
               </div>
+            </div>
+
+            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Contract</DetailLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedItem?.acceptanceContractId ? <SectionBadge label={selectedItem.acceptanceContractId} /> : <Text variant="secondary">Yok</Text>}
+              </div>
+              {selectedItem?.tags?.length ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {selectedItem.tags.map((tag) => <SectionBadge key={tag} label={tag} />)}
+                </div>
+              ) : null}
             </div>
 
             <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">

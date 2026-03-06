@@ -1,35 +1,58 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-// DOĞRU YÖNTEM
-export default Button;
+import Button from './Button';
 
-// Testleri bir 'describe' bloğu ile gruplıyoruz
-describe('Button Bileşeni', () => {
+describe('Button', () => {
+  test('type belirtilmezse button olarak render edilir', () => {
+    render(<Button>Kaydet</Button>);
 
-  // 1. Test: Butonun doğru metinle render edilip edilmediğini kontrol et
-  test('içindeki metin ile doğru bir şekilde render edilir', () => {
-    render(<Button>Tıkla Bana</Button>);
-
-    // Ekranda "Tıkla Bana" metnini içeren bir element ara
-    const buttonElement = screen.getByText(/Tıkla Bana/i);
-    
-    // Elementin ekranda olduğunu doğrula
-    expect(buttonElement).toBeInTheDocument();
+    const button = screen.getByRole('button', { name: 'Kaydet' });
+    expect(button).toHaveAttribute('type', 'button');
   });
 
-  // 2. Test: Butona tıklandığında onClick fonksiyonunun çağrılıp çağrılmadığını kontrol et
-  test('tıklandığında onClick fonksiyonunu çağırır', async () => {
+  test('aktif durumdayken onClick fonksiyonunu çağırır', async () => {
     const user = userEvent.setup();
-    const handleClick = jest.fn(); // Jest'in sahte (mock) fonksiyonunu oluştur
+    const handleClick = jest.fn();
 
-    render(<Button onClick={handleClick}>Tıkla Bana</Button>);
+    render(<Button onClick={handleClick}>Kaydet</Button>);
 
-    // Butonu bul ve tıkla
-    const buttonElement = screen.getByText(/Tıkla Bana/i);
-    await user.click(buttonElement);
-
-    // handleClick fonksiyonunun 1 kez çağrıldığını doğrula
+    await user.click(screen.getByRole('button', { name: 'Kaydet' }));
     expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  test('loading durumunda spinner ve busy state ile render edilir ve click bloklanır', async () => {
+    const user = userEvent.setup();
+    const handleClick = jest.fn();
+
+    render(
+      <Button loading loadingLabel="Kaydediliyor" onClick={handleClick}>
+        Kaydet
+      </Button>,
+    );
+
+    const button = screen.getByRole('button', { name: 'Kaydediliyor' });
+    expect(button).toHaveAttribute('aria-busy', 'true');
+    expect(button).toHaveAttribute('data-loading', 'true');
+
+    await user.click(button);
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  test('readonly access durumunda click bloklanir ve aria-readonly set edilir', async () => {
+    const user = userEvent.setup();
+    const handleClick = jest.fn();
+
+    render(
+      <Button access="readonly" onClick={handleClick}>
+        İncele
+      </Button>,
+    );
+
+    const button = screen.getByRole('button', { name: 'İncele' });
+    expect(button).toHaveAttribute('aria-readonly', 'true');
+
+    await user.click(button);
+    expect(handleClick).not.toHaveBeenCalled();
   });
 });

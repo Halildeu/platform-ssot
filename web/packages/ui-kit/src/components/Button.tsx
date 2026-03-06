@@ -12,7 +12,8 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive';
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 const variantClassNames: Record<ButtonVariant, string> = {
   primary:
@@ -21,34 +22,73 @@ const variantClassNames: Record<ButtonVariant, string> = {
     'border-border-default bg-surface-panel text-text-primary shadow-sm hover:bg-surface-muted focus-visible:ring-[var(--accent-focus)]',
   ghost:
     'border-transparent bg-transparent text-text-secondary hover:bg-accent-soft focus-visible:ring-[var(--accent-focus)]',
+  destructive:
+    'border-state-danger-border bg-state-danger text-state-danger-text shadow-sm hover:opacity-95 focus-visible:ring-[var(--accent-focus)]',
+};
+
+const sizeClassNames: Record<ButtonSize, string> = {
+  sm: 'min-h-9 gap-1.5 rounded-lg px-3 py-2 text-sm',
+  md: 'min-h-10 gap-2 rounded-xl px-4 py-2.5 text-sm',
+  lg: 'min-h-12 gap-2.5 rounded-xl px-5 py-3 text-base',
+};
+
+const spinnerSizeClassNames: Record<ButtonSize, string> = {
+  sm: 'h-3.5 w-3.5 border-[1.5px]',
+  md: 'h-4 w-4 border-2',
+  lg: 'h-4.5 w-4.5 border-2',
 };
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'>,
     AccessControlledProps {
   children: React.ReactNode;
   variant?: ButtonVariant;
-  access?: AccessLevel;
-  accessReason?: string;
+  size?: ButtonSize;
+  loading?: boolean;
+  loadingLabel?: string;
+  leadingVisual?: React.ReactNode;
+  trailingVisual?: React.ReactNode;
+  fullWidth?: boolean;
 }
 
-export const Button = ({
-  children,
-  className,
-  variant = 'primary',
-  access = 'full',
-  accessReason,
-  disabled,
-  onClick,
-  title,
-  ...props
-}: ButtonProps) => {
+const LoadingSpinner: React.FC<{ size: ButtonSize }> = ({ size }) => (
+  <span
+    aria-hidden="true"
+    className={cn(
+      'inline-flex animate-spin rounded-full border-current border-t-transparent',
+      spinnerSizeClassNames[size],
+    )}
+  />
+);
+
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  {
+    children,
+    className,
+    variant = 'primary',
+    size = 'md',
+    loading = false,
+    loadingLabel = 'Yükleniyor',
+    leadingVisual,
+    trailingVisual,
+    fullWidth = false,
+    access = 'full',
+    accessReason,
+    disabled,
+    onClick,
+    title,
+    type,
+    ...props
+  },
+  ref,
+) {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
   }
+
   const isReadonly = accessState.isReadonly;
-  const resolvedDisabled = disabled || accessState.isDisabled;
+  const resolvedDisabled = disabled || accessState.isDisabled || loading;
   const interactionState: AccessLevel = resolvedDisabled
     ? 'disabled'
     : isReadonly
@@ -59,23 +99,39 @@ export const Button = ({
     onClick,
     resolvedDisabled,
   );
+  const titleText = accessReason ?? title;
+  const visualLeading = loading ? <LoadingSpinner size={size} /> : leadingVisual;
 
   return (
     <button
+      {...props}
+      ref={ref}
+      type={type ?? 'button'}
       data-access-state={accessState.state}
+      data-variant={variant}
+      data-size={size}
+      data-loading={loading ? 'true' : 'false'}
       className={cn(
-        'inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50',
+        'inline-flex shrink-0 items-center justify-center whitespace-nowrap border font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50',
+        sizeClassNames[size],
         variantClassNames[variant],
+        fullWidth && 'w-full',
         className,
       )}
       aria-readonly={isReadonly || undefined}
       aria-disabled={resolvedDisabled || isReadonly || undefined}
+      aria-busy={loading || undefined}
       disabled={resolvedDisabled}
       onClick={handleClick}
-      title={accessReason ?? title}
-      {...props}
+      title={titleText}
     >
-      {children}
+      {visualLeading ? <span className="inline-flex items-center justify-center">{visualLeading}</span> : null}
+      <span className="inline-flex items-center justify-center">{loading ? loadingLabel : children}</span>
+      {!loading && trailingVisual ? (
+        <span className="inline-flex items-center justify-center">{trailingVisual}</span>
+      ) : null}
     </button>
   );
-};
+});
+
+export default Button;

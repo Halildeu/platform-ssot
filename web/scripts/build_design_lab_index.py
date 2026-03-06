@@ -200,6 +200,11 @@ class DesignLabIndexItem(TypedDict, total=False):
     description: str
     sectionIds: list[str]
     qualityGates: list[str]
+    tags: list[str]
+    uxPrimaryThemeId: str
+    uxPrimarySubthemeId: str
+    roadmapWaveId: str
+    acceptanceContractId: str
 
 
 class ComponentRegistryItem(TypedDict, total=False):
@@ -215,6 +220,11 @@ class ComponentRegistryItem(TypedDict, total=False):
     description: str
     sectionIds: list[str]
     qualityGates: list[str]
+    tags: list[str]
+    uxPrimaryThemeId: str
+    uxPrimarySubthemeId: str
+    roadmapWaveId: str
+    acceptanceContractId: str
 
 
 def classify_kind(name: str) -> str:
@@ -414,6 +424,10 @@ def build_design_lab_index(web_root: Path) -> dict:
                 "qualityGates": [str(value).strip() for value in registry_entry.get("qualityGates", []) if str(value).strip()]
                 if isinstance(registry_entry.get("qualityGates"), list)
                 else [],
+                "uxPrimaryThemeId": str(registry_entry.get("uxPrimaryThemeId") or ""),
+                "uxPrimarySubthemeId": str(registry_entry.get("uxPrimarySubthemeId") or ""),
+                "roadmapWaveId": str(registry_entry.get("roadmapWaveId") or ""),
+                "acceptanceContractId": str(registry_entry.get("acceptanceContractId") or ""),
             }
         )
 

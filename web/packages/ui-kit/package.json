@@ -7,7 +7,7 @@
     "start": "npx kill-port 3003 || true && webpack serve --config webpack.dev.js",
     "build": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "test": "tsx --test src/lib/grid-variants/__tests__/*.test.ts"
+    "test": "tsx --test src/lib/grid-variants/__tests__/*.test.ts && jest --runInBand --config jest.config.js src/components/*.test.tsx"
   },
   "keywords": [],
   "author": "",
