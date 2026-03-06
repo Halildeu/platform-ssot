@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "description": "MFE Kök Dizini",
+  "description": "MFE K\u00f6k Dizini",
   "private": true,
   "engines": {
     "node": "20.x"
@@ -61,7 +61,7 @@
     "test:e2e:users": "npx playwright test tests/playwright/admin-users.auth.spec.ts",
     "test:e2e": "cypress run",
     "test:e2e:auth-sync": "npx playwright test tests/playwright/auth.sync.spec.ts --config tests/playwright/playwright.config.ts --project=chromium --workers=1",
-    "test:a11y": "npx playwright test tests/playwright/axe/axe.smoke.spec.ts --config tests/playwright/playwright.config.ts --project=chromium --workers=1",
+    "test:a11y": "axe --tags wcag2a,wcag2aa --exit 1 apps/mfe-audit/dist/index.html",
     "cypress:reports": "cypress run --spec \"cypress/e2e/reports-routing.cy.ts,cypress/e2e/reports-audit-deeplink.cy.ts,cypress/e2e/variants/global-default.cy.ts,cypress/e2e/users/permissions-inline.cy.ts\"",
     "smoke:playwright": "npx playwright test --config tests/playwright/playwright.config.ts tests/playwright/reporting.a11y.spec.ts tests/playwright/access.toast.spec.ts tests/playwright/shell.i18n.spec.ts",
     "pw:ci": "PW_MODE=ci npx playwright test --config tests/playwright/playwright.config.ts tests/playwright/scenario-runner.spec.ts --project=chromium --workers=1",
@@ -69,7 +69,6 @@
     "quality:audit:build": "npm run build:audit",
     "test:bundle": "size-limit",
     "test:perf": "lhci autorun --config=apps/mfe-audit/lighthouserc.json",
-    "test:a11y": "axe --tags wcag2a,wcag2aa --exit 1 apps/mfe-audit/dist/index.html",
     "test:quality": "npm run quality:audit:build && npm run test:bundle && npm run test:perf && npm run test:a11y",
     "i18n:pull": "npm run pull --prefix packages/i18n-dicts",
     "i18n:pull:ci": "npm run pull:ci --prefix packages/i18n-dicts",
@@ -79,7 +78,9 @@
     "security:sri:rotate": "node ./scripts/security/verify-sri.mjs --write",
     "security:csp:summary": "node ./scripts/security/aggregate-csp.mjs --output security-reports/csp/summary.json",
     "storybook": "storybook dev -p 6006",
-    "lint:no-antd": "node ./scripts/check-no-antd.mjs"
+    "lint:no-antd": "node ./scripts/check-no-antd.mjs",
+    "publish:bundle": "bash ./scripts/ci/publish_bundle.sh",
+    "security:build-bundle": "npm run build && npm run publish:bundle"
   },
   "keywords": [],
   "author": "",

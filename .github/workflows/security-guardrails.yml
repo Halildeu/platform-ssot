@@ -6,15 +6,28 @@ on:
     paths:
       - "backend/**"
       - "web/**"
+      - "scripts/**"
       - ".github/workflows/security-guardrails.yml"
-      - "scripts/security/**"
 
 jobs:
   guardrails:
     runs-on: ubuntu-latest
+    env:
+      ZAP_TARGET_URL: ${{ secrets.ZAP_TARGET_URL }}
+      COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -23,23 +36,37 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
 
-      - name: Install root dependencies
+      - name: Install web dependencies
         run: npm ci
         working-directory: web
 
-      # Placeholder: SAST (SpotBugs eşleniği yok; FE/BE linter ve dependency check için yer tutucu)
-      - name: Dependency check (NVD API key required)
-        run: |
-          echo "Dependency check placeholder. Add org tool here (e.g., OWASP DC)."
+      - name: Baseline security checks
+        run: python3 scripts/check_security_all.py
 
-      - name: ZAP baseline (placeholder)
-        run: |
-          echo "ZAP baseline placeholder. Add docker zap-baseline.py invocation with target URL."
+      - name: Backend SAST
+        run: bash backend/scripts/ci/security/run-sast.sh
 
-      - name: SBOM + cosign (placeholder)
-        run: |
-          echo "SBOM/imza placeholder. Add syft/grype + cosign steps here."
+      - name: Dependency scan
+        run: bash backend/scripts/ci/security/run-dependency-scan.sh
 
-      - name: Gate on critical findings
-        run: |
-          echo "Guardrail gate placeholder. Fail if prior steps report critical findings."
+      - name: SBOM + signing
+        run: bash backend/scripts/ci/security/generate-sbom-and-sign.sh
+
+      - name: Feature flag health
+        run: ruby backend/scripts/ci/security/export-flag-health.rb
+
+      - name: ZAP baseline
+        if: ${{ env.ZAP_TARGET_URL != '' }}
+        run: bash backend/scripts/ci/security/run-dast.sh
+
+      - name: Skip ZAP baseline if target missing
+        if: ${{ env.ZAP_TARGET_URL == '' }}
+        run: echo "::notice title=security-guardrails::ZAP_TARGET_URL missing; DAST skipped."
+
+      - name: Upload security artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: test-results/security/**
+          if-no-files-found: warn

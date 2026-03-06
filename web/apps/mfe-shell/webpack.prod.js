@@ -15,6 +15,7 @@ const prodConfig = {
   plugins: [
     new ModuleFederationPlugin({
       name: 'mfe_shell',
+      filename: 'remoteEntry.js',
       remotes: {
         mfe_suggestions: 'mfe_suggestions@/suggestions/remoteEntry.js',
         mfe_ethic: 'mfe_ethic@/ethic/remoteEntry.js',

@@ -18,7 +18,7 @@ const prodConfig = {
       filename: 'remoteEntry.js',
       remotes: {
         mfe_shell: 'mfe_shell@/remoteEntry.js',
-        mfe_reporting: 'mfe_reporting@/remoteEntry.js',
+        mfe_reporting: 'mfe_reporting@/reports/remoteEntry.js',
       },
       exposes: {
         './UsersApp': './src/app/UsersApp.ui.tsx',

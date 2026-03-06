@@ -1,40 +1,99 @@
 name: release-canary
 
 on:
+  workflow_run:
+    workflows: ["deploy-web", "deploy-backend"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       env:
         description: "Deployment environment"
         required: true
         default: "stage"
+      mode:
+        description: "Canary mode"
+        required: true
+        default: "sample"
+        type: choice
+        options:
+          - sample
+          - live
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-canary-${{ github.event.workflow_run.id || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   canary:
     runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || (
+        github.event_name == 'workflow_run'
+        && github.event.workflow_run.conclusion == 'success'
+        && (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch')
+      )
+    env:
+      CANARY_ENABLED: ${{ secrets.CANARY_ENABLED }}
+      DEFAULT_MODE: ${{ vars.CANARY_DEFAULT_MODE || 'live' }}
+      DEFAULT_ENV: ${{ vars.CANARY_DEFAULT_ENV || 'stage' }}
+      CANARY_PROM_URL: ${{ secrets.CANARY_PROM_URL }}
+      GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }}
+      CANARY_API_KEY: ${{ secrets.CANARY_API_KEY }}
+      CANARY_TTFB_QUERY: ${{ vars.CANARY_TTFB_QUERY }}
+      CANARY_ERROR_QUERY: ${{ vars.CANARY_ERROR_QUERY }}
+      CANARY_SENTRY_QUERY: ${{ vars.CANARY_SENTRY_QUERY }}
+      CANARY_AUDIT_FILTER_QUERY: ${{ vars.CANARY_AUDIT_FILTER_QUERY }}
+      CANARY_AUDIT_TOTAL_QUERY: ${{ vars.CANARY_AUDIT_TOTAL_QUERY }}
+      CANARY_APPLY_WEIGHT_HOOK_URL: ${{ secrets.CANARY_APPLY_WEIGHT_HOOK_URL }}
+      CANARY_WEIGHT_10_HOOK_URL: ${{ secrets.CANARY_WEIGHT_10_HOOK_URL }}
+      CANARY_WEIGHT_50_HOOK_URL: ${{ secrets.CANARY_WEIGHT_50_HOOK_URL }}
+      CANARY_WEIGHT_100_HOOK_URL: ${{ secrets.CANARY_WEIGHT_100_HOOK_URL }}
+      CANARY_ROLLBACK_HOOK_URL: ${{ secrets.CANARY_ROLLBACK_HOOK_URL }}
+      CANARY_WEB_SMOKE_URL: ${{ secrets.CANARY_WEB_SMOKE_URL }}
+      CANARY_BACKEND_HEALTH_URLS: ${{ secrets.CANARY_BACKEND_HEALTH_URLS }}
+
     steps:
+      - name: Resolve canary mode and env
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          mode="${{ github.event.inputs.mode || '' }}"
+          env_name="${{ github.event.inputs.env || '' }}"
+          if [ -z "${mode}" ]; then mode="${DEFAULT_MODE}"; fi
+          if [ -z "${env_name}" ]; then env_name="${DEFAULT_ENV}"; fi
+          echo "mode=${mode}" >> "$GITHUB_OUTPUT"
+          echo "env_name=${env_name}" >> "$GITHUB_OUTPUT"
+
+      - name: Skip live canary if disabled
+        if: ${{ steps.resolve.outputs.mode == 'live' && env.CANARY_ENABLED != 'true' }}
+        run: echo "::notice title=release-canary::CANARY_ENABLED!=true; skipping live canary."
+
       - name: Checkout
+        if: ${{ steps.resolve.outputs.mode == 'sample' || env.CANARY_ENABLED == 'true' }}
         uses: actions/checkout@v4
 
       - name: Setup Node
+        if: ${{ steps.resolve.outputs.mode == 'sample' || env.CANARY_ENABLED == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: web/package-lock.json
 
-      - name: Install root dependencies
-        run: npm ci
-        working-directory: web
+      - name: Run canary orchestration
+        if: ${{ steps.resolve.outputs.mode == 'sample' || env.CANARY_ENABLED == 'true' }}
+        run: >-
+          node backend/scripts/ops/release-canary.mjs
+          --mode "${{ steps.resolve.outputs.mode }}"
+          --env "${{ steps.resolve.outputs.env_name }}"
 
-      - name: Canary 10/50/100 placeholder
-        run: |
-          echo "release-canary placeholder. Implement traffic weight steps (10→50→100) via ArgoCD/Harbor CLI."
-
-      - name: Guardrail check
-        run: |
-          node backend/scripts/guardrails/check-metrics.mjs --env "${{ github.event.inputs.env || 'stage' }}"
-
-      - name: Rollback placeholder
-        if: failure()
-        run: |
-          echo "Rollback placeholder. Implement ArgoCD revert + flag kill-switch here."
+      - name: Upload canary artifacts
+        if: ${{ always() && (steps.resolve.outputs.mode == 'sample' || env.CANARY_ENABLED == 'true') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-canary-${{ steps.resolve.outputs.mode }}-${{ steps.resolve.outputs.env_name }}
+          path: backend/test-results/canary/**
+          if-no-files-found: warn

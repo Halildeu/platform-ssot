@@ -2,11 +2,13 @@ const { merge } = require('webpack-merge');
 const { ModuleFederationPlugin } = require('webpack').container;
 const commonConfig = require('./webpack.common.js');
 const deps = require('./package.json').dependencies;
+const path = require('path');
 
 const prodConfig = {
   mode: 'production',
   output: {
-    publicPath: 'auto',
+    path: path.resolve(__dirname, '../dist/reports'),
+    publicPath: '/reports/',
     clean: true,
   },
   plugins: [
@@ -14,7 +16,7 @@ const prodConfig = {
       name: 'mfe_reporting',
       filename: 'remoteEntry.js',
       remotes: {
-        mfe_shell: 'mfe_shell@http://localhost:3000/remoteEntry.js',
+        mfe_shell: 'mfe_shell@/remoteEntry.js',
       },
       exposes: {
         './ReportingApp': './src/App.tsx',

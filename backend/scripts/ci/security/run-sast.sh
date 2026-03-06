@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 REPORT_DIR="${ROOT_DIR}/test-results/security"
 mkdir -p "${REPORT_DIR}"
+cd "${ROOT_DIR}"
 
 SPOTBUGS_VERSION="${SPOTBUGS_VERSION:-4.8.6.2}"
 echo "[security][sast] Running SpotBugs scan with version ${SPOTBUGS_VERSION}"

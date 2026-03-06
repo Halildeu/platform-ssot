@@ -1,17 +1,12 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
-// Canary guardrail placeholder script.
-// Amaç: Grafana/Sentry API’lerinden metrik çekip eşik kontrolü yapmak.
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 
-import process from 'node:process';
-
-const env = process.argv.includes('--env')
-  ? process.argv[process.argv.indexOf('--env') + 1]
-  : 'stage';
-
-console.log(`[guardrails] Env: ${env}`);
-console.log('[guardrails] Placeholder: burada Grafana/Sentry API çağrısı yapın ve eşikleri kontrol edin.');
-console.log('[guardrails] Örnek eşikler: TTFA < 3000ms, error rate < 2%, Sentry issue spike yok.');
-
-// TODO: HTTP çağrıları ekleyip eşik ihlalinde process.exit(1) yap.
-process.exit(0);
+const repoRoot = path.resolve(new URL('.', import.meta.url).pathname, '..', '..', '..');
+const target = path.join(repoRoot, 'backend', 'scripts', 'ci', 'canary', 'guardrail-check.mjs');
+const result = spawnSync(process.execPath, [target, ...process.argv.slice(2)], {
+  cwd: repoRoot,
+  stdio: 'inherit',
+  env: process.env,
+});
+process.exit(result.status ?? 1);

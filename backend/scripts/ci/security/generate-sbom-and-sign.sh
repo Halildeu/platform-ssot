@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 REPORT_DIR="${ROOT_DIR}/test-results/security/sbom"
 mkdir -p "${REPORT_DIR}"
+cd "${ROOT_DIR}"
 
 CYCLONEDX_VERSION="${CYCLONEDX_VERSION:-2.7.9}"
 SBOM_FORMAT="${SBOM_FORMAT:-json}"
