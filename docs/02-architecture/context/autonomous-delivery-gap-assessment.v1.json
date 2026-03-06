@@ -1,0 +1,227 @@
+{
+  "version": "1.0",
+  "assessment_id": "autonomous-delivery-gap-assessment-v1",
+  "subject_id": "humanless_end_to_end_delivery_readiness",
+  "last_verified": "2026-03-06",
+  "goal": "Fikirden son kullanıcıya teslimata kadar sürecin insan hata raporu taşımadan, kanıt üreterek, gate'lerle ve geri alma mekanizmalarıyla yönetilebilme seviyesini ölçmek.",
+  "scale": {
+    "ready": "Kanonik kontrat, otomasyon ve evidence zinciri var; günlük kullanım için yeterli.",
+    "partial": "Parça parça mekanizma var ama tek akışta kapanmıyor veya kritik boşluk barındırıyor.",
+    "missing": "Kanonik mekanizma yok; insan müdahalesi olmadan güvenli yürütülemez.",
+    "blocked": "Yol biliniyor ama üst sistem/politika kilidi nedeniyle uygulanamıyor."
+  },
+  "lifecycle_matrix": [
+    {
+      "capability_id": "intent_to_execution_contract",
+      "title": "İş isteği → execution contract",
+      "status": "ready",
+      "why": "Repo context pack, governance contract, UX alignment, roadmap ve wave kontratları feature başlamadan okunacak kanonik kaynaklar olarak tanımlı.",
+      "evidence": [
+        "docs/02-architecture/context/repo-context-pack.v1.json",
+        "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+        "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+        "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json"
+      ]
+    },
+    {
+      "capability_id": "code_generation_guardrails",
+      "title": "Kod üretimi guardrail'leri",
+      "status": "ready",
+      "why": "UI kit, UX katalog, Tailwind ve shared-library/service blueprint kuralları JSON-first tanımlı.",
+      "evidence": [
+        "docs/02-architecture/context/ui-library-system.context.v1.json",
+        "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+        "docs/00-handbook/STYLE-WEB-001.md",
+        "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+      ]
+    },
+    {
+      "capability_id": "browser_visible_failure_detection",
+      "title": "Tarayıcıda görülebilen hata yakalama",
+      "status": "ready",
+      "why": "pageerror, console, xhr/fetch, requestfailed, resource load failure, unhandled rejection, runtime overlay ve click-walk tek doctor akışında birleşti.",
+      "evidence": [
+        "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
+        "web/scripts/ops/frontend-doctor.mjs",
+        "web/tests/playwright/scenario-runner.spec.ts",
+        "web/tests/playwright/utils/pw_telemetry.ts"
+      ]
+    },
+    {
+      "capability_id": "public_route_browser_coverage",
+      "title": "Auth gerektirmeyen kritik route coverage",
+      "status": "ready",
+      "why": "login, runtime theme matrix ve UI library route'ları doctor preset altında senaryo ve click-walk ile korunuyor.",
+      "evidence": [
+        "web/tests/playwright/pw_scenarios.yml",
+        "web/test-results/diagnostics/frontend-doctor/2026-03-06T02-20-41-777Z/frontend-doctor.summary.v1.json"
+      ]
+    },
+    {
+      "capability_id": "auth_required_route_browser_coverage",
+      "title": "Auth-required route browser coverage",
+      "status": "partial",
+      "why": "Theme admin route mock-backed token injection ile korunuyor. Access, audit ve reporting route'larında yalnız açılış smoke var; click-walk ve richer UI evidence eksik.",
+      "evidence": [
+        "web/tests/playwright/pw_scenarios.yml",
+        "web/test-results/diagnostics/frontend-doctor/2026-03-06T02-20-11-661Z/frontend-doctor.summary.v1.json"
+      ],
+      "gaps": [
+        "access_roles_page için click-walk eksik",
+        "audit_events_page için click-walk eksik",
+        "reporting_users_page için click-walk eksik",
+        "auth-required preset'lerin hepsi frontend-doctor preset listesinde ayrı ayrı tanımlı değil"
+      ]
+    },
+    {
+      "capability_id": "backend_runtime_smoke",
+      "title": "Backend runtime smoke ve canlı doğrulama",
+      "status": "partial",
+      "why": "Service schema cutover, compose smoke ve health kanıtları var; ancak frontend-doctor benzeri tek komutlu backend-doctor katmanı yok.",
+      "evidence": [
+        "docs/02-architecture/runtime/database-isolation-plan.v1.json",
+        "docs/04-operations/RUNBOOKS/RB-live-service-schema-cutover.md",
+        "backend/.autopilot-tmp/runtime-smoke/compose-ps-summary.json"
+      ],
+      "gaps": [
+        "tek girişli backend-doctor yok",
+        "service bazlı smoke preset'leri JSON-first registry altında birleşmemiş"
+      ]
+    },
+    {
+      "capability_id": "full_business_journey_e2e",
+      "title": "Uçtan uca iş akışı e2e",
+      "status": "partial",
+      "why": "Playwright gece koşuları ve smoke zinciri var; ama katalog bazlı gerçek business journey'ler henüz sistematik değil.",
+      "evidence": [
+        ".github/workflows/web-playwright-local-nightly.yml",
+        "docs/03-delivery/TEST-PLANS"
+      ],
+      "gaps": [
+        "katalog konusu bazlı e2e journey envanteri yok",
+        "her feature için zorunlu user-journey smoke matrisi yok"
+      ]
+    },
+    {
+      "capability_id": "ci_triage_and_evidence_bundle",
+      "title": "CI triage, digest ve evidence bundle",
+      "status": "ready",
+      "why": "PR merge, log digest ve doctor summary ile ilk hata bloğu ve kanıt paketleri üretilebiliyor.",
+      "evidence": [
+        ".github/workflows/log-digest.yml",
+        ".github/workflows/pr-merge.yml",
+        "docs/04-operations/RUNBOOKS/RB-log-digest.md"
+      ]
+    },
+    {
+      "capability_id": "auto_fix_loop",
+      "title": "Otomatik fix döngüsü",
+      "status": "partial",
+      "why": "Auto-fix workflow var ama Local SSOT policy gereği disabled. Lokal autopilot akışı var, fakat kanonik otomatik fix pipeline kapalı.",
+      "evidence": [
+        ".github/workflows/auto-fix.yml",
+        "docs/04-operations/RUNBOOKS/RB-insansiz-flow.md"
+      ],
+      "gaps": [
+        "CI içinde kontrollü auto-fix kapalı",
+        "auto-fix için policy-driven scope/gate matrisi ayrı tanımlanmamış"
+      ]
+    },
+    {
+      "capability_id": "release_canary_and_guardrail",
+      "title": "Release canary ve guardrail",
+      "status": "partial",
+      "why": "Workflow, post-deploy validate ve rollback hattı var; release-canary ve security-guardrails içinde placeholder adımlar duruyor.",
+      "evidence": [
+        ".github/workflows/release-canary.yml",
+        ".github/workflows/post-deploy-validate.yml",
+        ".github/workflows/rollback.yml",
+        ".github/workflows/security-guardrails.yml"
+      ],
+      "gaps": [
+        "canary 10/50/100 adımları placeholder",
+        "guardrail metrics gerçek entegrasyon değil",
+        "security scans placeholder",
+        "deploy sonrası gerçek ürün davranışı smoke matrisi dar"
+      ]
+    },
+    {
+      "capability_id": "secrets_and_token_plumbing",
+      "title": "Secrets ve token plumbing",
+      "status": "partial",
+      "why": "Vault sync ve Keycloak secret yüzeyi var. Ancak auth-required route diagnostics çoğunlukla mock-backed sentetik token ile ilerliyor; gerçek non-secret dev credential stratejisi standardize değil.",
+      "evidence": [
+        ".github/workflows/vault-secrets-sync.yml",
+        "docs/00-handbook/AUTH-REGISTRY.tsv",
+        "web/tests/playwright/utils/auth.ts"
+      ],
+      "gaps": [
+        "local non-secret dev token stratejisi kanonik değil",
+        "auth-required preset'ler için token source matrisi JSON-first değil"
+      ]
+    },
+    {
+      "capability_id": "orchestrator_core_adoption",
+      "title": "Taşeron substrate'in orchestrator core'a alınması",
+      "status": "blocked",
+      "why": "Taşıma köprüsü tanımlı ama core unlock kapalı. Bu yüzden taşeron FE/BE substrate'i orchestrator core içinde canlı entegrasyona alınmadı.",
+      "evidence": [
+        "docs/02-architecture/context/orchestrator-adoption-bridge.v1.json"
+      ],
+      "gaps": [
+        "CORE_UNLOCK penceresi yok",
+        "core tarafında route/shell/substrate adoption patch'i uygulanmadı"
+      ]
+    }
+  ],
+  "missing_mechanisms_to_add_next": [
+    {
+      "priority": "P0",
+      "id": "access-audit-reporting-click-walk-presets",
+      "title": "Auth-required route click-walk preset'leri",
+      "reason": "Browser-visible hata yakalama theme-admin için var, diğer admin/business route'larda açılış smoke düzeyinde kalıyor."
+    },
+    {
+      "priority": "P0",
+      "id": "backend-doctor",
+      "title": "Tek girişli backend doctor",
+      "reason": "Frontend tarafındaki doctor olgunluğuna karşılık backend runtime/health/log/smoke katmanı tek komutta birleşmiyor."
+    },
+    {
+      "priority": "P1",
+      "id": "business-journey-scenario-catalog",
+      "title": "Katalog bazlı user-journey senaryo kataloğu",
+      "reason": "Feature bazlı gerçek uçtan uca teslimat için route smoke yetmez; iş akışı smoke zinciri gerekir."
+    },
+    {
+      "priority": "P1",
+      "id": "release-guardrail-implementation",
+      "title": "Gerçek canary/guardrail implementation",
+      "reason": "Workflow var ama placeholder. Son kullanıcıya insansız teslimat için kritik."
+    },
+    {
+      "priority": "P1",
+      "id": "security-guardrail-implementation",
+      "title": "Gerçek security scan ve gate implementation",
+      "reason": "Dependency/ZAP/SBOM/cosign placeholder durumda."
+    },
+    {
+      "priority": "P2",
+      "id": "autofix-policy-loop",
+      "title": "Kontrollü auto-fix policy loop",
+      "reason": "İlk tanılama ve triage otomatik; ama güvenli otomatik düzeltme kanonik değil."
+    }
+  ],
+  "recommended_execution_order": [
+    "auth-required route click-walk preset'lerini tamamlama",
+    "backend-doctor ekleme",
+    "katalog bazlı user-journey e2e matrisi ekleme",
+    "release canary + guardrail placeholder'larını gerçek entegrasyona çevirme",
+    "security-guardrails placeholder'larını gerçek gate'e çevirme",
+    "orchestrator core unlock sonrası substrate adoption"
+  ],
+  "current_verdict": {
+    "status": "partial-but-advancing",
+    "summary": "Browser-visible frontend hata yakalama artık güçlü. Tam insansız teslimat için en kritik açıklar auth-required business route walk coverage, backend-doctor, gerçek release/security guardrail entegrasyonu ve business-journey e2e kataloğudur."
+  }
+}
