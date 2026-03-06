@@ -11,6 +11,8 @@ Alt içerikler:
 - context/ui-library-ux-alignment.v1.json → UI kütüphanesi ile UX Kataloğu eşleme kontratı
 - context/ui-library-component-roadmap.v1.json → component family matrix, maturity hedefi ve release wave planı
 - context/ui-library-component-roadmap.v1.md → roadmap özet görünümü
+- context/ui-library-wave-1-foundation-primitives.v1.json → ilk component dalgasi icin component bazli execution contract
+- context/ui-library-wave-1-foundation-primitives.v1.md → ilk dalganin insan okunur ozeti
 - context/ui-library-system.context.v1.json → UI kit / Design Lab geliştirme kontratı
 - blueprints/ui-library-system-blueprint.v1.json → yeni ortak component üretim blueprint'i
 - system-overview.v1.json → makinece okunur sistem özeti
@@ -30,17 +32,18 @@ Okuma sırası:
 3. `context/ux-katalogu.reference.v1.json` (UI kit / Design Lab işi varsa)
 4. `context/ui-library-ux-alignment.v1.json` (UI kit / Design Lab işi varsa)
 5. `context/ui-library-component-roadmap.v1.json` (UI kit / Design Lab işi varsa)
-6. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
-7. `system-overview.v1.json`
-8. `domain-map.v1.json`
-9. `runtime/*.v1.json`
-10. `blueprints/*.v1.json`
-11. `INDEX.md`
-12. `SYSTEM-OVERVIEW.md`
-13. `DOMAIN-MAP.md`
-14. `runtime/*.md`
-15. `services/*`
-16. `clients/*`
+6. `context/ui-library-wave-1-foundation-primitives.v1.json` (aktif wave bu ise)
+7. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
+8. `system-overview.v1.json`
+9. `domain-map.v1.json`
+10. `runtime/*.v1.json`
+11. `blueprints/*.v1.json`
+12. `INDEX.md`
+13. `SYSTEM-OVERVIEW.md`
+14. `DOMAIN-MAP.md`
+15. `runtime/*.md`
+16. `services/*`
+17. `clients/*`
 
 Kural:
 - AI önce JSON kanonik katmanı okur.

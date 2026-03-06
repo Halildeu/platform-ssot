@@ -1,0 +1,394 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "wave_id": "wave_1_foundation_primitives",
+  "family_id": "foundation_primitives",
+  "status": "planned_for_implementation",
+  "purpose": "Foundation primitives dalgasi icin component bazli acceptance, UX eslesmesi, preview senaryolari ve gate/evidence planini tek kanonik pakette toplamak.",
+  "baseline": {
+    "governance_lock_commit": "0900750",
+    "roadmap_lock_commit": "2393148",
+    "registry_snapshot": {
+      "exported_count": 46,
+      "planned_count": 24,
+      "live_demo_count": 17
+    }
+  },
+  "required_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+    "docs/02-architecture/context/ui-library-wave-1-foundation-primitives.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
+    "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+  ],
+  "implementation_batches": [
+    {
+      "batch_id": "batch_1_existing_upgrades",
+      "objective": "Mevcut stable primitive'leri yeni governance ve UX standardina hizalamak.",
+      "components": ["Button", "Text"]
+    },
+    {
+      "batch_id": "batch_2_interactive_primitives",
+      "objective": "Link ve icon-aksi yonlu primitive'leri ortak API ile eklemek.",
+      "components": ["LinkInline", "IconButton"]
+    },
+    {
+      "batch_id": "batch_3_feedback_loading",
+      "objective": "Loading ve waiting state primitive'lerini token-first sekilde eklemek.",
+      "components": ["Skeleton", "Spinner"]
+    },
+    {
+      "batch_id": "batch_4_support_primitives",
+      "objective": "Identity ve separation primitive'lerini tamamlamak.",
+      "components": ["Avatar", "Divider"]
+    }
+  ],
+  "components": [
+    {
+      "component_name": "Button",
+      "implementation_order": 1,
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Button.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Button.tsx"
+        ],
+        "target_taxonomy_group": "actions",
+        "target_taxonomy_subgroup": "Button"
+      },
+      "ux_primary_theme_id": "consistency_and_pattern_governance",
+      "ux_primary_subtheme_id": "single_component_source_of_truth",
+      "acceptance_criteria": [
+        "primary, secondary, ghost ve destructive varyantlari ortak API ile sunulur",
+        "sm, md ve lg boyutlari density token zinciri ile uyumlu calisir",
+        "disabled ve loading durumlari deterministic state modeliyle gelir",
+        "leading/trailing icon slot davranisi layout jump uretmez",
+        "keyboard activation ve focus-visible davranisi APG beklentisiyle uyumludur"
+      ],
+      "preview_scenarios": [
+        {"id": "button-variants", "title": "Varyant matrisi"},
+        {"id": "button-density", "title": "Density ve size matrisi"},
+        {"id": "button-states", "title": "Disabled, loading ve destructive durumlari"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari guncellenir",
+        "Design Lab live preview eklentisi gorunur olur",
+        "Button regression/test ozeti uretilir",
+        "a11y note: keyboard + focus-visible"
+      ]
+    },
+    {
+      "component_name": "Text",
+      "implementation_order": 2,
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Text.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Text.tsx"
+        ],
+        "target_taxonomy_group": "general",
+        "target_taxonomy_subgroup": "Typography"
+      },
+      "ux_primary_theme_id": "accessibility_and_inclusive_design",
+      "ux_primary_subtheme_id": "contrast_typography_readability",
+      "acceptance_criteria": [
+        "heading, body, caption ve mono varyantlari tek tip semantic API ile gelir",
+        "tone ve emphasis kararlari semantic token seviyesinde tanimlanir",
+        "truncate, clamp ve wrap davranislari layout sapmasi uretmez",
+        "dark/light veya theme axis gecislerinde contrast kurali bozulmaz",
+        "copy ve long-content senaryolari okunabilirlik hedefini korur"
+      ],
+      "preview_scenarios": [
+        {"id": "text-scale", "title": "Typography scale ve semantic varyantlar"},
+        {"id": "text-tone", "title": "Tone ve emphasis matrisi"},
+        {"id": "text-truncation", "title": "Clamp, truncate ve long-content gorunumu"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari guncellenir",
+        "Design Lab typography preview guncellenir",
+        "Text regression/test ozeti uretilir",
+        "contrast/readability notu eklenir"
+      ]
+    },
+    {
+      "component_name": "LinkInline",
+      "implementation_order": 3,
+      "source_state": "roadmap_only",
+      "registry_action": "create_new_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/LinkInline.tsx"
+        ],
+        "target_taxonomy_group": "general",
+        "target_taxonomy_subgroup": "Link"
+      },
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "orientation_and_wayfinding",
+      "acceptance_criteria": [
+        "internal, external ve current-state link varyantlari ortak API ile gelir",
+        "external link davranisi target rel guvenlik default'lariyla gelir",
+        "underline ve emphasis davranisi token-first olur",
+        "disabled veya blocked gorunumu normal text ile karismaz",
+        "focus-visible ve visited davranisi erişilebilirlik kontratini bozmadan calisir"
+      ],
+      "preview_scenarios": [
+        {"id": "link-inline-basic", "title": "Internal ve external link varyantlari"},
+        {"id": "link-inline-states", "title": "Current, disabled ve hover/focus durumlari"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "yeni registry entry olusturulur",
+        "Design Lab live preview eklenir",
+        "unit/component test ozeti uretilir",
+        "a11y note: focus-visible + external-link safety"
+      ]
+    },
+    {
+      "component_name": "IconButton",
+      "implementation_order": 4,
+      "source_state": "roadmap_only",
+      "registry_action": "create_new_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/IconButton.tsx"
+        ],
+        "target_taxonomy_group": "actions",
+        "target_taxonomy_subgroup": "Icon button"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "critical_path_minimization",
+      "acceptance_criteria": [
+        "icon-only aksiyonlar zorunlu accessible name ile gelir",
+        "size, tone ve intent varyantlari Button ile tutarli olur",
+        "selected, disabled ve loading durumlari semantik sekilde ayrisir",
+        "hit area mobil/web beklentisini karsilar",
+        "tooltip veya label fallback karari deterministic olur"
+      ],
+      "preview_scenarios": [
+        {"id": "icon-button-sizes", "title": "Size ve intent matrisi"},
+        {"id": "icon-button-a11y", "title": "Label, tooltip ve selected durumlari"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "yeni registry entry olusturulur",
+        "Design Lab live preview eklenir",
+        "unit/component test ozeti uretilir",
+        "a11y note: accessible name + hit area"
+      ]
+    },
+    {
+      "component_name": "Skeleton",
+      "implementation_order": 5,
+      "source_state": "roadmap_only",
+      "registry_action": "create_new_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Skeleton.tsx"
+        ],
+        "target_taxonomy_group": "feedback",
+        "target_taxonomy_subgroup": "Skeleton / Placeholder"
+      },
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "loading_empty_error_success_patterns",
+      "acceptance_criteria": [
+        "text, avatar, card ve table-row placeholder varyantlari tek API ile gelir",
+        "motion azaltma tercihi respect edilir",
+        "layout reflow uretmeden content yerini korur",
+        "color/tone semantik surface token'larindan gelir",
+        "empty state ile karismayan loading anlatimi verir"
+      ],
+      "preview_scenarios": [
+        {"id": "skeleton-text-card", "title": "Text ve card placeholder varyantlari"},
+        {"id": "skeleton-table-row", "title": "Table row ve list loading"},
+        {"id": "skeleton-reduced-motion", "title": "Reduced motion davranisi"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "yeni registry entry olusturulur",
+        "Design Lab live preview eklenir",
+        "unit/component test ozeti uretilir",
+        "a11y note: reduced motion + loading semantics"
+      ]
+    },
+    {
+      "component_name": "Spinner",
+      "implementation_order": 6,
+      "source_state": "roadmap_only",
+      "registry_action": "create_new_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Spinner.tsx"
+        ],
+        "target_taxonomy_group": "feedback",
+        "target_taxonomy_subgroup": "Progress / Spinner"
+      },
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "response_time_budget_feedback",
+      "acceptance_criteria": [
+        "inline, block ve overlay spinner varyantlari ayrik davranisla gelir",
+        "size ve tone varyantlari semantic token'larla tanimlanir",
+        "loading text/label destegi screen reader uyumlu olur",
+        "overlay varyanti kullanıcıyı gereksiz bloklamaz",
+        "skeleton ile kullanilacak senaryolar net ayrilir"
+      ],
+      "preview_scenarios": [
+        {"id": "spinner-inline-block", "title": "Inline ve block spinner varyantlari"},
+        {"id": "spinner-overlay", "title": "Overlay ve section-loading senaryosu"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "yeni registry entry olusturulur",
+        "Design Lab live preview eklenir",
+        "unit/component test ozeti uretilir",
+        "a11y note: status/label semantics"
+      ]
+    },
+    {
+      "component_name": "Avatar",
+      "implementation_order": 7,
+      "source_state": "roadmap_only",
+      "registry_action": "create_new_entry",
+      "target_maturity": "beta",
+      "preview_mode": "inspector",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Avatar.tsx"
+        ],
+        "target_taxonomy_group": "general",
+        "target_taxonomy_subgroup": "Avatar & Identity"
+      },
+      "ux_primary_theme_id": "trust_privacy_security_ux",
+      "ux_primary_subtheme_id": "privacy_by_design_defaults",
+      "acceptance_criteria": [
+        "image, initials ve icon fallback davranisi deterministic olur",
+        "fallback algoritmasi sentetik demo veride tutarli calisir",
+        "size varyantlari density kurallariyla uyumlu olur",
+        "kullanici kimligi gereksiz veri sızdırmadan temsil edilir",
+        "broken-image durumunda layout collapse uretmez"
+      ],
+      "preview_scenarios": [
+        {"id": "avatar-fallbacks", "title": "Image, initials ve icon fallback durumlari"},
+        {"id": "avatar-sizes", "title": "Size ve density varyantlari"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "yeni registry entry olusturulur",
+        "Design Lab inspector preview eklenir",
+        "unit/component test ozeti uretilir",
+        "privacy note: sentetik/fallback identity davranisi"
+      ]
+    },
+    {
+      "component_name": "Divider",
+      "implementation_order": 8,
+      "source_state": "roadmap_only",
+      "registry_action": "create_new_entry",
+      "target_maturity": "beta",
+      "preview_mode": "inspector",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Divider.tsx"
+        ],
+        "target_taxonomy_group": "general",
+        "target_taxonomy_subgroup": "Divider"
+      },
+      "ux_primary_theme_id": "consistency_and_pattern_governance",
+      "ux_primary_subtheme_id": "behavior_contracts_across_modules",
+      "acceptance_criteria": [
+        "horizontal ve vertical varyantlar tek API ile gelir",
+        "with-label veya text-divider kullanimi spacing token zincirini bozmaz",
+        "surface ve border tone semantic token'larla gelir",
+        "ornamental ve semantic ayrimi net olur",
+        "layout separator olarak tekrar kullanilabilir ve low-noise kalir"
+      ],
+      "preview_scenarios": [
+        {"id": "divider-basic", "title": "Horizontal ve vertical varyantlar"},
+        {"id": "divider-with-label", "title": "Label ile ayrim ve spacing davranisi"}
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run test:ui-kit"
+      ],
+      "evidence_requirements": [
+        "yeni registry entry olusturulur",
+        "Design Lab inspector preview eklenir",
+        "unit/component test ozeti uretilir",
+        "spacing + semantics notu eklenir"
+      ]
+    }
+  ],
+  "wave_exit_criteria": [
+    "Tum 8 component icin acceptance, preview ve gate evidence maddeleri patch icinde temsil edilir.",
+    "Button ve Text stable olarak korunur; diger 6 component en az beta cikis kriterine ulasir.",
+    "Registry/preview/UX alignment drift = 0 olur.",
+    "Raw visual bypass ve duplicate primitive count = 0 olur."
+  ]
+}
