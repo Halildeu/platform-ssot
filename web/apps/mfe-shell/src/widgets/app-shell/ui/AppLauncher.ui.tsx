@@ -43,6 +43,14 @@ const baseLauncherItems = [
     to: '/admin/users',
     requiredPermission: PERMISSIONS.USER_MANAGEMENT_MODULE,
   },
+  {
+    key: 'ui-library',
+    icon: <span aria-hidden>🧩</span>,
+    titleKey: 'shell.nav.designLab',
+    descriptionKey: 'shell.launcher.uiLibrary.description',
+    to: '/admin/ui-library',
+    requiredPermission: PERMISSIONS.THEME_ADMIN,
+  },
 ];
 
 const AppLauncher: React.FC<{ onClose: () => void }> = ({ onClose }) => {

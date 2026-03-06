@@ -12,7 +12,7 @@ const common = {
   'shell.nav.audit': 'Denetim',
   'shell.nav.users': 'Kullanıcılar',
   'shell.nav.themes': 'Temalar',
-  'shell.nav.designLab': 'Design Lab',
+  'shell.nav.designLab': 'UI Library',
   'shell.nav.more': 'Daha Fazla',
   'shell.nav.welcome': 'Ana Sayfaya Hoş Geldiniz',
   'shell.header.language': 'Dil',
@@ -38,6 +38,7 @@ const common = {
   'shell.launcher.ethic.description': 'Etik raporlama modülü',
   'shell.launcher.access.description': 'Rol & policy yönetimi',
   'shell.launcher.users.description': 'Kullanıcı yönetimi',
+  'shell.launcher.uiLibrary.description': 'UI bileşenleri, kullanım bilgisi ve canlı demolar',
 
   // Login / register
   'auth.login.title': 'Giriş Yap',

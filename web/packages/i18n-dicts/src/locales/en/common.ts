@@ -12,7 +12,7 @@ const common = {
   'shell.nav.audit': 'Audit',
   'shell.nav.users': 'Users',
   'shell.nav.themes': 'Themes',
-  'shell.nav.designLab': 'Design Lab',
+  'shell.nav.designLab': 'UI Library',
   'shell.nav.more': 'More',
   'shell.nav.welcome': 'Welcome to the Home Page',
   'shell.header.language': 'Language',
@@ -38,6 +38,7 @@ const common = {
   'shell.launcher.ethic.description': 'Ethics reporting module',
   'shell.launcher.access.description': 'Role & policy management',
   'shell.launcher.users.description': 'User management',
+  'shell.launcher.uiLibrary.description': 'UI components, usage details and live demos',
 
   // Login / register
   'auth.login.title': 'Sign In',

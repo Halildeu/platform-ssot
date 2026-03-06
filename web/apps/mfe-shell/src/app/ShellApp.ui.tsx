@@ -1259,7 +1259,7 @@ const Header = () => {
 
     if (hasPermission(PERMISSIONS.THEME_ADMIN)) {
       items.push({ key: '/admin/themes', path: '/admin/themes', labelKey: 'shell.nav.themes' });
-      items.push({ key: '/admin/design-lab', path: '/admin/design-lab', labelKey: 'shell.nav.designLab' });
+      items.push({ key: '/admin/ui-library', path: '/admin/ui-library', labelKey: 'shell.nav.designLab' });
     }
 
     return items;
@@ -1453,7 +1453,7 @@ const Header = () => {
 	                  return (
 	                    <Link
 	                      key={item.key}
-	                      data-testid={item.key === '/admin/design-lab' ? 'nav-design-lab' : undefined}
+	                      data-testid={item.key === '/admin/ui-library' ? 'nav-design-lab' : undefined}
 	                      to={item.path}
 	                      onClick={handleMenuSelect}
 	                      className={
@@ -1509,7 +1509,7 @@ const Header = () => {
                           return (
 	                            <li key={item.key}>
 	                              <Link
-	                                data-testid={item.key === '/admin/design-lab' ? 'nav-design-lab' : undefined}
+	                                data-testid={item.key === '/admin/ui-library' ? 'nav-design-lab' : undefined}
 	                                to={item.path}
 	                                onClick={(event) => {
 	                                  event.stopPropagation();
@@ -1773,13 +1773,14 @@ const AppLayout = () => {
                   )}
                 />
                 <Route
-                  path="/admin/design-lab"
+                  path="/admin/ui-library"
                   element={(
                     <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
                       <DesignLabPage />
                     </ProtectedRoute>
                   )}
                 />
+                <Route path="/admin/design-lab" element={<Navigate to="/admin/ui-library" replace />} />
                 <Route path="/runtime/theme-matrix" element={<ThemeMatrixPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
