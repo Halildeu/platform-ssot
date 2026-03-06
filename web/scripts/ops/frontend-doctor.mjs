@@ -28,12 +28,13 @@ const preset = getArg('--preset', 'ui-library');
 const baseUrl = getArg('--base-url', process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000');
 const softMode = getArg('--soft-mode', process.env.PW_SOFT_MODE || '0');
 const authMode = getArg('--auth-mode', process.env.PW_AUTH_MODE || 'none');
+const defaultInjectedToken = 'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJwZXJtaXNzaW9ucyI6WyJUSEVNRV9BRE1JTiJdLCJzZXNzaW9uVGltZW91dE1pbnV0ZXMiOjYwfQ.shell';
 
 const presetMap = {
   'ui-library': {
     description: 'UI Library vitrini ve login/gateway smoke denetimi',
     route: '/ui-library',
-    playwrightGrep: 'ui_library_page',
+    playwrightGrep: 'ui_library_page|ui_library_navigation_walk',
     steps: [
       {
         id: 'shell_build',
@@ -60,7 +61,7 @@ const presetMap = {
         id: 'playwright_ui_library',
         label: 'Playwright UI Library scenario',
         cmd: 'npx',
-        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'ui_library_page'],
+        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'ui_library_page|ui_library_navigation_walk'],
         cwd: webRoot,
         env: {
           PLAYWRIGHT_BASE_URL: baseUrl,
@@ -81,7 +82,7 @@ const presetMap = {
   'shell-public': {
     description: 'Login, runtime theme matrix ve UI Library icin kamuya acik shell route denetimi',
     route: '/login,/runtime/theme-matrix,/ui-library',
-    playwrightGrep: 'shell_login|runtime_theme_matrix|ui_library_page',
+    playwrightGrep: 'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk',
     steps: [
       {
         id: 'shell_build',
@@ -108,7 +109,7 @@ const presetMap = {
         id: 'playwright_shell_public',
         label: 'Playwright public shell scenarios',
         cmd: 'npx',
-        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'shell_login|runtime_theme_matrix|ui_library_page'],
+        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk'],
         cwd: webRoot,
         env: {
           PLAYWRIGHT_BASE_URL: baseUrl,
@@ -129,7 +130,7 @@ const presetMap = {
   'theme-admin': {
     description: 'Auth gerekli admin theme registry route denetimi',
     route: '/admin/themes',
-    playwrightGrep: 'theme_registry_page',
+    playwrightGrep: 'theme_registry_page|theme_admin_navigation_walk',
     steps: [
       {
         id: 'shell_build',
@@ -149,13 +150,16 @@ const presetMap = {
         id: 'playwright_theme_admin',
         label: 'Playwright theme admin scenario',
         cmd: 'npx',
-        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'theme_registry_page'],
+        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'theme_registry_page|theme_admin_navigation_walk'],
         cwd: webRoot,
         env: {
           PLAYWRIGHT_BASE_URL: baseUrl,
           PW_MODE: 'ci',
           PW_SOFT_MODE: softMode,
-          PW_AUTH_MODE: authMode,
+          PW_AUTH_MODE: authMode === 'none' ? 'token_injection' : authMode,
+          PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
+          PW_MOCK_THEME_REGISTRY: process.env.PW_MOCK_THEME_REGISTRY || '1',
+          PW_MOCK_API: process.env.PW_MOCK_API || '1',
         },
       },
       {
@@ -209,6 +213,33 @@ const findRecentArtifacts = (rootDir, matcher, sinceMs) => {
   }
 };
 
+const findRecentArtifactsRecursive = (rootDir, matcher, sinceMs) => {
+  const results = [];
+  const walk = (dir) => {
+    let entries = [];
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+        continue;
+      }
+      if (!matcher(entry.name)) continue;
+      try {
+        if (statSync(fullPath).mtimeMs >= sinceMs) results.push(fullPath);
+      } catch {
+        // noop
+      }
+    }
+  };
+  walk(rootDir);
+  return results.sort();
+};
+
 const runStep = (step) => {
   const startedAt = new Date();
   const env = { ...process.env, ...(step.env || {}) };
@@ -252,6 +283,11 @@ const main = async () => {
 
   const pwArtifacts = findRecentArtifacts(pwRoot, (name) => name.startsWith('pw-') && name.endsWith('.md'), doctorStartedMs - 2000)
     .map((fullPath) => path.relative(repoRoot, fullPath));
+  const pwEvidenceArtifacts = findRecentArtifactsRecursive(
+    path.join(pwRoot, 'artifacts'),
+    (name) => name.endsWith('.png') || name.endsWith('.html') || name.endsWith('.json'),
+    doctorStartedMs - 2000,
+  ).map((fullPath) => path.relative(repoRoot, fullPath));
   const gatewayArtifact = path.join(smokeRoot, 'gateway-smoke.log');
   const gatewayArtifacts = statSafe(gatewayArtifact, doctorStartedMs - 2000)
     ? [path.relative(repoRoot, gatewayArtifact)]
@@ -277,6 +313,7 @@ const main = async () => {
     steps,
     artifacts: {
       playwright_reports: pwArtifacts,
+      playwright_evidence: pwEvidenceArtifacts,
       gateway_smoke: gatewayArtifacts,
       logs_dir: path.relative(repoRoot, logDir),
     },
@@ -309,6 +346,9 @@ const main = async () => {
   lines.push('');
   lines.push('## Artifacts');
   for (const artifact of pwArtifacts) {
+    lines.push(`- ${artifact}`);
+  }
+  for (const artifact of pwEvidenceArtifacts) {
     lines.push(`- ${artifact}`);
   }
   for (const artifact of gatewayArtifacts) {

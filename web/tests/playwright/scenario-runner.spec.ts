@@ -3,7 +3,14 @@ import path from 'node:path';
 import { load as loadYaml } from 'js-yaml';
 import { test, expect, type Page, type Route } from '@playwright/test';
 import { authenticateAndNavigate } from './utils/auth';
-import { createTelemetryCollector, type TelemetryAllowlists, type TelemetryResult } from './utils/pw_telemetry';
+import {
+  createTelemetryCollector,
+  type TelemetryAllowlists,
+  type TelemetryResourceFailureEntry,
+  type TelemetryResult,
+  type TelemetryRuntimeOverlayEntry,
+  type TelemetryUnhandledRejectionEntry,
+} from './utils/pw_telemetry';
 
 type ScenarioStep =
   | { goto: string }
@@ -12,7 +19,8 @@ type ScenarioStep =
   | { select: { selector: string; value: string } | [string, string] }
   | { waitForURL: string }
   | { waitForSelector: string }
-  | { expectVisible: string };
+  | { expectVisible: string }
+  | { waitForLoadState: 'load' | 'domcontentloaded' | 'networkidle' };
 
 type ExpectedStatusMatrix = Record<string, number[]>;
 
@@ -51,6 +59,11 @@ type ScenarioRunResult = {
   blockedReasons: string[];
   telemetry: TelemetryResult;
   reportPath: string;
+  artifacts: {
+    screenshotPath?: string;
+    htmlPath?: string;
+    stepJournalPath?: string;
+  };
 };
 
 const webRoot = path.resolve(__dirname, '../..');
@@ -215,6 +228,202 @@ const ensureOutputDir = () => {
   fs.mkdirSync(outputRoot, { recursive: true });
 };
 
+type ScenarioStepJournalEntry = {
+  index: number;
+  label: string;
+  status: 'PASS' | 'FAIL';
+  error?: string;
+};
+
+const describeStep = (step: ScenarioStep) => {
+  if ('goto' in step) return `goto:${step.goto}`;
+  if ('click' in step) return `click:${step.click}`;
+  if ('fill' in step) {
+    const raw = step.fill;
+    const selector = Array.isArray(raw) ? raw[0] : raw.selector;
+    return `fill:${selector}`;
+  }
+  if ('select' in step) {
+    const raw = step.select;
+    const selector = Array.isArray(raw) ? raw[0] : raw.selector;
+    return `select:${selector}`;
+  }
+  if ('waitForURL' in step) return `waitForURL:${step.waitForURL}`;
+  if ('waitForSelector' in step) return `waitForSelector:${step.waitForSelector}`;
+  if ('expectVisible' in step) return `expectVisible:${step.expectVisible}`;
+  if ('waitForLoadState' in step) return `waitForLoadState:${step.waitForLoadState}`;
+  return 'unknown-step';
+};
+
+const installBrowserRuntimeObservers = async (page: Page) => {
+  await page.addInitScript(() => {
+    const win = window as typeof window & {
+      __pwRuntimeObserverInstalled?: boolean;
+      __pwResourceFailures?: Array<{
+        ts: string;
+        url: string;
+        tagName?: string;
+        resourceType?: string;
+        message?: string;
+      }>;
+      __pwUnhandledRejections?: Array<{ ts: string; message: string; stack?: string }>;
+    };
+
+    if (win.__pwRuntimeObserverInstalled) return;
+    win.__pwRuntimeObserverInstalled = true;
+    win.__pwResourceFailures = [];
+    win.__pwUnhandledRejections = [];
+
+    window.addEventListener(
+      'error',
+      (event) => {
+        const target = event.target as (HTMLElement & { src?: string; href?: string; currentSrc?: string }) | null;
+        if (!target || target === window) return;
+        const url = String(target.currentSrc || target.src || target.href || window.location.href || '');
+        const tagName = String(target.tagName || '').toLowerCase();
+        if (!url && !tagName) return;
+        win.__pwResourceFailures?.push({
+          ts: new Date().toISOString(),
+          url,
+          tagName,
+          resourceType: tagName,
+          message: event.message || `resource_error:${tagName || 'unknown'}`,
+        });
+      },
+      true,
+    );
+
+    window.addEventListener('unhandledrejection', (event) => {
+      const reason = event.reason as { message?: string; stack?: string } | string | undefined;
+      const message =
+        typeof reason === 'string'
+          ? reason
+          : typeof reason?.message === 'string'
+            ? reason.message
+            : String(reason ?? 'Unhandled promise rejection');
+      const stack = typeof reason === 'object' && reason && typeof reason.stack === 'string' ? reason.stack : undefined;
+      win.__pwUnhandledRejections?.push({
+        ts: new Date().toISOString(),
+        message,
+        stack,
+      });
+    });
+  });
+};
+
+const collectBrowserRuntimeObservers = async (
+  page: Page,
+): Promise<{
+  resourceFailures: TelemetryResourceFailureEntry[];
+  unhandledRejections: TelemetryUnhandledRejectionEntry[];
+}> => {
+  try {
+    return await page.evaluate(() => {
+      const win = window as typeof window & {
+        __pwResourceFailures?: TelemetryResourceFailureEntry[];
+        __pwUnhandledRejections?: TelemetryUnhandledRejectionEntry[];
+      };
+      return {
+        resourceFailures: [...(win.__pwResourceFailures ?? [])],
+        unhandledRejections: [...(win.__pwUnhandledRejections ?? [])],
+      };
+    });
+  } catch {
+    return {
+      resourceFailures: [],
+      unhandledRejections: [],
+    };
+  }
+};
+
+const detectRuntimeOverlays = async (page: Page): Promise<TelemetryRuntimeOverlayEntry[]> => {
+  try {
+    return await page.evaluate(() => {
+      const candidates: Array<{ detector: string; selector: string }> = [
+        { detector: 'webpack_dev_server_overlay', selector: '#webpack-dev-server-client-overlay' },
+        { detector: 'webpack_dev_server_overlay_iframe', selector: 'iframe[src*="webpack-dev-server"], iframe[id*="webpack"]' },
+        { detector: 'vite_error_overlay', selector: 'vite-error-overlay' },
+        { detector: 'nextjs_overlay', selector: 'nextjs-portal, [data-nextjs-dialog-overlay]' },
+      ];
+
+      const isVisible = (element: Element | null) => {
+        if (!element) return false;
+        const rect = (element as HTMLElement).getBoundingClientRect?.();
+        const style = window.getComputedStyle(element as HTMLElement);
+        return Boolean(rect && rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none');
+      };
+
+      const overlays: TelemetryRuntimeOverlayEntry[] = [];
+      for (const candidate of candidates) {
+        const element = document.querySelector(candidate.selector);
+        if (!isVisible(element)) continue;
+        overlays.push({
+          ts: new Date().toISOString(),
+          detector: candidate.detector,
+          snippet: ((element as HTMLElement | null)?.innerText || (element as HTMLElement | null)?.textContent || candidate.selector)
+            .trim()
+            .replace(/\s+/g, ' ')
+            .slice(0, 240),
+        });
+      }
+
+      const bodyText = (document.body?.innerText || '').replace(/\s+/g, ' ').trim();
+      const overlayHints = [/uncaught runtime errors?:/i, /\bscript error\b/i, /element type is invalid/i];
+      if (bodyText && overlayHints.some((pattern) => pattern.test(bodyText))) {
+        overlays.push({
+          ts: new Date().toISOString(),
+          detector: 'body_text_runtime_overlay',
+          snippet: bodyText.slice(0, 240),
+        });
+      }
+
+      return overlays;
+    });
+  } catch {
+    return [];
+  }
+};
+
+const captureScenarioArtifacts = async (page: Page, scenarioName: string, stamp: string) => {
+  ensureOutputDir();
+  const artifactsDir = path.join(outputRoot, 'artifacts', `${safeName(scenarioName)}-${stamp}`);
+  fs.mkdirSync(artifactsDir, { recursive: true });
+  const screenshotPath = path.join(artifactsDir, 'final.png');
+  const htmlPath = path.join(artifactsDir, 'final.html');
+
+  try {
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+  } catch {
+    // noop
+  }
+
+  try {
+    fs.writeFileSync(htmlPath, await page.content(), 'utf8');
+  } catch {
+    // noop
+  }
+
+  return {
+    screenshotPath: fs.existsSync(screenshotPath) ? screenshotPath : undefined,
+    htmlPath: fs.existsSync(htmlPath) ? htmlPath : undefined,
+  };
+};
+
+const filterAllowedResourceFailures = (
+  entries: TelemetryResourceFailureEntry[],
+  allowlists: TelemetryAllowlists,
+) => {
+  const patterns = [
+    ...(allowlists.console_error_allowlist ?? []),
+    ...((allowlists.network_allowlist ?? []).flatMap((rule) => (rule.url ? [rule.url] : []))),
+  ].map((pattern) => new RegExp(pattern));
+  if (patterns.length === 0) return entries;
+  return entries.filter((entry) => {
+    const probe = `${entry.url} ${entry.message ?? ''} ${entry.tagName ?? ''}`;
+    return !patterns.some((regex) => regex.test(entry.url) || regex.test(probe));
+  });
+};
+
 const writeScenarioReport = (result: ScenarioRunResult) => {
   ensureOutputDir();
   const lines: string[] = [];
@@ -256,8 +465,11 @@ const writeScenarioReport = (result: ScenarioRunResult) => {
   lines.push(`| xhr/fetch 403 (allowlist hariç) | ${s.network403} |`);
   lines.push(`| xhr/fetch 5xx (allowlist hariç) | ${s.network5xx} |`);
   lines.push(`| xhr/fetch requestfailed (allowlist hariç) | ${s.networkFailures} |`);
+  lines.push(`| resource load failure | ${s.resourceFailures ?? 0} |`);
   lines.push(`| xhr/fetch mocked (x-pw-mocked=1) | ${mockedCount} |`);
   lines.push(`| readonly violations (non-GET/HEAD, allowlist hariç) | ${s.readonlyViolations ?? 0} |`);
+  lines.push(`| unhandled rejection | ${s.unhandledRejections ?? 0} |`);
+  lines.push(`| runtime overlay | ${s.runtimeOverlays ?? 0} |`);
   lines.push('');
 
   const consoleErrors = result.telemetry.consoleErrors.filter((item) => !item.allowed).slice(0, 10);
@@ -323,6 +535,48 @@ const writeScenarioReport = (result: ScenarioRunResult) => {
       const status = item.status === undefined ? 'n/a' : String(item.status);
       lines.push(`- ${item.method} ${status} ${item.url}`);
     });
+    lines.push('');
+  }
+
+  const resourceFailures = result.telemetry.resourceFailures.slice(0, 20);
+  if (resourceFailures.length > 0) {
+    lines.push('## Resource Failures');
+    resourceFailures.forEach((item) => {
+      lines.push(`- ${item.tagName ?? item.resourceType ?? 'resource'} ${item.url} ${item.message ? `(${item.message})` : ''}`.trim());
+    });
+    lines.push('');
+  }
+
+  const unhandledRejections = result.telemetry.unhandledRejections.slice(0, 10);
+  if (unhandledRejections.length > 0) {
+    lines.push('## Unhandled Rejections');
+    unhandledRejections.forEach((item) => {
+      lines.push(`- ${item.message}`);
+      if (item.stack) {
+        lines.push('');
+        lines.push('```');
+        lines.push(item.stack);
+        lines.push('```');
+      }
+    });
+    lines.push('');
+  }
+
+  const runtimeOverlays = result.telemetry.runtimeOverlays.slice(0, 10);
+  if (runtimeOverlays.length > 0) {
+    lines.push('## Runtime Overlays');
+    runtimeOverlays.forEach((item) => {
+      lines.push(`- ${item.detector}: ${item.snippet}`);
+    });
+    lines.push('');
+  }
+
+  const artifactLines = [result.artifacts.screenshotPath, result.artifacts.htmlPath, result.artifacts.stepJournalPath]
+    .filter(Boolean)
+    .map((artifact) => path.relative(webRoot, artifact as string));
+  if (artifactLines.length > 0) {
+    lines.push('## Evidence Artifacts');
+    artifactLines.forEach((artifact) => lines.push(`- ${artifact}`));
     lines.push('');
   }
 
@@ -392,6 +646,28 @@ const writeSummaryReport = (stamp: string, results: ScenarioRunResult[]) => {
     lines.push('');
   }
 
+  const topResourceFailures = results
+    .flatMap((r) => r.telemetry.resourceFailures.map((item) => ({ r, item })))
+    .slice(0, 10);
+  if (topResourceFailures.length > 0) {
+    lines.push('## İlk 10 resource failure');
+    topResourceFailures.forEach(({ r, item }) => {
+      lines.push(`- ${r.name}: ${item.tagName ?? item.resourceType ?? 'resource'} ${item.url}`);
+    });
+    lines.push('');
+  }
+
+  const topOverlays = results
+    .flatMap((r) => r.telemetry.runtimeOverlays.map((item) => ({ r, item })))
+    .slice(0, 10);
+  if (topOverlays.length > 0) {
+    lines.push('## İlk 10 runtime overlay');
+    topOverlays.forEach(({ r, item }) => {
+      lines.push(`- ${r.name}: ${item.detector} ${item.snippet}`);
+    });
+    lines.push('');
+  }
+
   fs.writeFileSync(summaryPath, lines.join('\n'), 'utf8');
 };
 
@@ -435,6 +711,10 @@ const runStep = async (
     await expect(page.locator(step.expectVisible)).toBeVisible();
     return;
   }
+  if ('waitForLoadState' in step) {
+    await page.waitForLoadState(step.waitForLoadState);
+    return;
+  }
   console.warn('[pw_runner] unsupported step', step);
 };
 
@@ -450,13 +730,121 @@ const mockJson = async (route: Route, body: unknown) => {
   });
 };
 
+const mockThemeRegistryEntries = [
+  {
+    id: 'reg-surface-page-bg',
+    key: 'surface.page.bg',
+    label: 'Page Background',
+    groupName: 'surface',
+    controlType: 'COLOR',
+    editableBy: 'ADMIN_ONLY',
+    cssVars: ['--surface-page-bg'],
+    description: 'Shell ana sayfa zemini.',
+  },
+  {
+    id: 'reg-text-primary',
+    key: 'text.primary',
+    label: 'Primary Text',
+    groupName: 'text',
+    controlType: 'COLOR',
+    editableBy: 'ADMIN_ONLY',
+    cssVars: ['--text-primary'],
+    description: 'Birincil metin rengi.',
+  },
+  {
+    id: 'reg-accent-primary',
+    key: 'accent.primary',
+    label: 'Primary Accent',
+    groupName: 'accent',
+    controlType: 'COLOR',
+    editableBy: 'ADMIN_ONLY',
+    cssVars: ['--accent-primary'],
+    description: 'Ana vurgu rengi.',
+  },
+];
+
+const mockThemeSummaries = [
+  {
+    id: 'pw-light',
+    name: 'Global Light',
+    type: 'GLOBAL',
+    appearance: 'light',
+    surfaceTone: 'ultra-2',
+    activeFlag: true,
+    visibility: 'VISIBLE',
+    axes: {
+      accent: 'neutral',
+      density: 'comfortable',
+      radius: 'rounded',
+      elevation: 'raised',
+      motion: 'standard',
+    },
+  },
+  {
+    id: 'pw-ocean',
+    name: 'Global Ocean',
+    type: 'GLOBAL',
+    appearance: 'light',
+    surfaceTone: 'mid-2',
+    activeFlag: true,
+    visibility: 'VISIBLE',
+    axes: {
+      accent: 'ocean',
+      density: 'comfortable',
+      radius: 'rounded',
+      elevation: 'raised',
+      motion: 'standard',
+    },
+  },
+  {
+    id: 'pw-graphite',
+    name: 'Global Graphite',
+    type: 'GLOBAL',
+    appearance: 'dark',
+    surfaceTone: 'deep-2',
+    activeFlag: false,
+    visibility: 'VISIBLE',
+    axes: {
+      accent: 'graphite',
+      density: 'compact',
+      radius: 'sharp',
+      elevation: 'flat',
+      motion: 'reduced',
+    },
+  },
+];
+
+const mockThemeDetailsById = Object.fromEntries(
+  mockThemeSummaries.map((theme) => [
+    theme.id,
+    {
+      ...theme,
+      overrides:
+        theme.id === 'pw-ocean'
+          ? {
+              'accent.primary': '#0ea5e9',
+              'surface.page.bg': '#f5fbff',
+            }
+          : theme.id === 'pw-graphite'
+            ? {
+                'accent.primary': '#475569',
+                'surface.page.bg': '#0f172a',
+              }
+            : {
+                'accent.primary': '#f97316',
+                'surface.page.bg': '#fffaf5',
+              },
+    },
+  ]),
+);
+
 const installThemeRegistryMock = async (page: Page) => {
   await page.route(/\/api\/v1\/theme-registry(?:\?.*)?$/i, async (route, request) => {
     if (request.method() !== 'GET') {
       await route.continue();
       return;
     }
-    await mockJson(route, []);
+    await mockJson(route, mockThemeRegistryEntries);
   });
 };
 
@@ -503,6 +891,25 @@ const installApiMocks = async (page: Page) => {
     }
     await mockJson(route, {});
   });
+
+  await page.route(/\/api\/v1\/themes(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, mockThemeSummaries);
+  });
+
+  await page.route(/\/api\/v1\/themes\/[^/?]+(?:\?.*)?$/i, async (route, request) => {
+    const url = new URL(request.url());
+    const match = url.pathname.match(/\/api\/v1\/themes\/([^/?]+)$/i);
+    const themeId = match?.[1] ?? '';
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, mockThemeDetailsById[themeId] ?? mockThemeDetailsById['pw-light']);
+  });
 };
 
 const evaluateOutcome = (
@@ -530,6 +937,15 @@ const evaluateOutcome = (
   }
   if (telemetry.summary.network5xx > 0) {
     failReasons.push(`xhr/fetch 5xx: ${telemetry.summary.network5xx}`);
+  }
+  if ((telemetry.summary.resourceFailures ?? 0) > 0) {
+    failReasons.push(`resource load failure: ${telemetry.summary.resourceFailures}`);
+  }
+  if ((telemetry.summary.unhandledRejections ?? 0) > 0) {
+    failReasons.push(`unhandled rejection: ${telemetry.summary.unhandledRejections}`);
+  }
+  if ((telemetry.summary.runtimeOverlays ?? 0) > 0) {
+    failReasons.push(`runtime overlay: ${telemetry.summary.runtimeOverlays}`);
   }
 
   const matrix = scenario.expected_status_matrix;
@@ -586,11 +1002,13 @@ test.describe('Playwright YAML scenario runner', () => {
       const root = resolveBaseUrl(baseURL, scenario.baseUrl ?? config.baseUrl);
       const allowlists = mergeAllowlists(config.defaults, scenario, readonlyAllowlistEnv);
       const telemetrySession = createTelemetryCollector(page, allowlists, { readonlyEnforce, readonlyPathRegex });
+      await installBrowserRuntimeObservers(page);
 
       const blockedReasons: string[] = [];
       const failReasons: string[] = [];
       const warnReasons: string[] = [];
       let telemetry: TelemetryResult;
+      const stepJournal: ScenarioStepJournalEntry[] = [];
 
       if (mockThemeRegistry) {
         await installThemeRegistryMock(page);
@@ -623,29 +1041,42 @@ test.describe('Playwright YAML scenario runner', () => {
           const firstPath = firstGoto?.goto ?? '/';
 
           for (const [index, step] of scenario.steps.entries()) {
-            if (index === 0 && 'goto' in step && scenario.auth_required && !authenticated) {
-              await authenticateAndNavigate(page, root, step.goto, scenario.permissions ?? []);
-              authenticated = true;
-              continue;
+            const label = describeStep(step);
+            try {
+              if (index === 0 && 'goto' in step && scenario.auth_required && !authenticated) {
+                await authenticateAndNavigate(page, root, step.goto, scenario.permissions ?? []);
+                authenticated = true;
+                stepJournal.push({ index, label, status: 'PASS' });
+                continue;
+              }
+              if (!authenticated && scenario.auth_required) {
+                await authenticateAndNavigate(page, root, firstPath, scenario.permissions ?? []);
+                authenticated = true;
+              }
+              await runStep(page, root, step);
+              stepJournal.push({ index, label, status: 'PASS' });
+            } catch (error) {
+              const message = error instanceof Error ? error.message : String(error);
+              stepJournal.push({ index, label, status: 'FAIL', error: message });
+              throw new Error(`STEP_FAILED[${index}] ${label}: ${message}`);
             }
-            if (!authenticated && scenario.auth_required) {
-              await authenticateAndNavigate(page, root, firstPath, scenario.permissions ?? []);
-              authenticated = true;
-            }
-            await runStep(page, root, step);
           }
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         const isAuthError = /TOKEN_NOT_PROVIDED|TOKEN_ENDPOINT_FAILED/i.test(message);
-        if (softMode) {
-          if (isAuthError) blockedReasons.push(`AUTH_BLOCKED: ${message}`);
-          else failReasons.push(message);
-        } else {
-          throw error;
-        }
+        if (isAuthError) blockedReasons.push(`AUTH_BLOCKED: ${message}`);
+        else failReasons.push(message);
       } finally {
+        const runtimeObserverData = await collectBrowserRuntimeObservers(page);
+        const runtimeOverlays = await detectRuntimeOverlays(page);
         telemetry = telemetrySession.stop();
+        telemetry.resourceFailures = filterAllowedResourceFailures(runtimeObserverData.resourceFailures, allowlists);
+        telemetry.unhandledRejections = runtimeObserverData.unhandledRejections;
+        telemetry.runtimeOverlays = runtimeOverlays;
+        telemetry.summary.resourceFailures = telemetry.resourceFailures.length;
+        telemetry.summary.unhandledRejections = runtimeObserverData.unhandledRejections.length;
+        telemetry.summary.runtimeOverlays = runtimeOverlays.length;
       }
 
       const core = evaluateOutcome(scenario, config.defaults, telemetry);
@@ -670,6 +1101,11 @@ test.describe('Playwright YAML scenario runner', () => {
               ? 'WARN'
               : 'PASS';
       const reportPath = path.join(outputRoot, `pw-scenario-${safeName(scenario.name)}-${stamp}.md`);
+      const artifactBaseDir = path.join(outputRoot, 'artifacts', `${safeName(scenario.name)}-${stamp}`);
+      fs.mkdirSync(artifactBaseDir, { recursive: true });
+      const evidenceArtifacts = await captureScenarioArtifacts(page, scenario.name, stamp);
+      const stepJournalPath = path.join(artifactBaseDir, 'step-journal.json');
+      fs.writeFileSync(stepJournalPath, JSON.stringify(stepJournal, null, 2), 'utf8');
       const runResult: ScenarioRunResult = {
         name: scenario.name,
         level: scenario.level,
@@ -679,6 +1115,11 @@ test.describe('Playwright YAML scenario runner', () => {
         blockedReasons,
         telemetry,
         reportPath,
+        artifacts: {
+          screenshotPath: evidenceArtifacts.screenshotPath,
+          htmlPath: evidenceArtifacts.htmlPath,
+          stepJournalPath,
+        },
       };
       results.push(runResult);
       writeScenarioReport(runResult);

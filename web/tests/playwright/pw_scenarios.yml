@@ -24,11 +24,15 @@ scenarios:
     level: 1
     auth_required: false
     console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
       - "http://localhost:3004/remoteEntry\\.js"
       - "http://localhost:3005/remoteEntry\\.js"
       - "http://localhost:3006/remoteEntry\\.js"
       - "http://localhost:3007/remoteEntry\\.js"
     console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
@@ -41,11 +45,15 @@ scenarios:
     level: 1
     auth_required: false
     console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
       - "http://localhost:3004/remoteEntry\\.js"
       - "http://localhost:3005/remoteEntry\\.js"
       - "http://localhost:3006/remoteEntry\\.js"
       - "http://localhost:3007/remoteEntry\\.js"
     console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
@@ -70,19 +78,77 @@ scenarios:
     auth_required: true
     permissions:
       - THEME_ADMIN
-    steps:
-      - goto: /admin/themes
-      - expectVisible: '[data-testid="theme-admin-page"]'
-
-  - name: ui_library_page
-    level: 1
-    auth_required: false
     console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
       - "http://localhost:3004/remoteEntry\\.js"
       - "http://localhost:3005/remoteEntry\\.js"
       - "http://localhost:3006/remoteEntry\\.js"
       - "http://localhost:3007/remoteEntry\\.js"
     console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/themes
+      - expectVisible: '[data-testid="theme-admin-page"]'
+      - expectVisible: '[data-testid="theme-admin-editor-theme-select"]'
+      - expectVisible: '[data-testid="theme-admin-preview-section"]'
+
+  - name: theme_admin_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/themes
+      - expectVisible: '[data-testid="theme-admin-page"]'
+      - expectVisible: '[data-testid="theme-admin-properties-section"]'
+      - expectVisible: '[data-testid="theme-admin-registry-section"]'
+      - click: '[data-testid="theme-admin-preview-theme-pw-ocean"]'
+      - waitForLoadState: networkidle
+      - select:
+          selector: '[data-testid="theme-admin-editor-theme-select"]'
+          value: pw-graphite
+      - click: '[data-testid="theme-admin-preview-theme-pw-graphite"]'
+      - waitForLoadState: networkidle
+      - expectVisible: '[data-testid="theme-admin-preview-palette"]'
+      - select:
+          selector: '[data-testid="theme-admin-editor-theme-select"]'
+          value: pw-light
+      - click: '[data-testid="theme-admin-preview-theme-pw-light"]'
+      - waitForLoadState: networkidle
+
+  - name: ui_library_page
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
@@ -99,6 +165,74 @@ scenarios:
       - click: '[data-testid="design-lab-tab-api"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_navigation_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /ui-library
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - expectVisible: '[data-testid="design-lab-search"]'
+      - click: '[data-testid="design-lab-track-new_packages"]'
+      - click: '[data-testid="design-lab-group-navigation"]'
+      - click: '[data-testid="design-lab-item-breadcrumb"]'
+      - expectVisible: '[data-testid="design-lab-detail-hero"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-item-tabs"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Text
+      - click: '[data-testid="design-lab-group-general"]'
+      - click: '[data-testid="design-lab-item-text"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: shell_public_route_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /login
+      - expectVisible: '[data-testid="login-title"]'
+      - goto: /runtime/theme-matrix
+      - expectVisible: '[data-testid="runtime-theme-matrix-root"]'
+      - goto: /ui-library
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-track-roadmap"]'
+      - click: '[data-testid="design-lab-group-navigation"]'
+      - click: '[data-testid="design-lab-item-steps"]'
+      - click: '[data-testid="design-lab-tab-overview"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
 
   - name: access_roles_page

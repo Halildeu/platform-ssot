@@ -18,6 +18,7 @@ import {
   Skeleton,
   Spinner,
   Tag,
+  Tabs,
   Text,
   ThemePreviewCard,
   Tooltip,
@@ -136,6 +137,13 @@ const demoModeLabel: Record<DesignLabDemoMode, string> = {
   inspector: 'Inspector',
   planned: 'Planned',
 };
+
+const toTestIdSuffix = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
 
 const trackMeta: Record<DesignLabTrack, { label: string; note: string }> = {
   new_packages: {
@@ -1209,6 +1217,7 @@ const DesignLabPage: React.FC = () => {
             <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-panel p-3 shadow-sm">
               <DetailLabel>Arama</DetailLabel>
               <input
+                data-testid="design-lab-search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Button, Grid, Theme, Modal..."
@@ -1236,6 +1245,7 @@ const DesignLabPage: React.FC = () => {
                   return (
                     <button
                       key={track}
+                      data-testid={`design-lab-track-${track}`}
                       type="button"
                       onClick={() => setActiveTrack(track)}
                       className={`w-full rounded-[24px] border p-3 text-left transition ${
@@ -1285,6 +1295,7 @@ const DesignLabPage: React.FC = () => {
                   return (
                     <button
                       key={group.id}
+                      data-testid={`design-lab-group-${group.id}`}
                       type="button"
                       onClick={() => setSelectedGroupId(group.id)}
                       className={`flex w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left transition ${
@@ -1328,7 +1339,11 @@ const DesignLabPage: React.FC = () => {
                       return null;
                     }
                     return (
-                      <div key={subgroup} className="overflow-hidden rounded-[22px] border border-border-subtle bg-surface-panel">
+                      <div
+                        key={subgroup}
+                        data-testid={`design-lab-subgroup-${toTestIdSuffix(subgroup)}`}
+                        className="overflow-hidden rounded-[22px] border border-border-subtle bg-surface-panel"
+                      >
                         <div className="border-b border-border-subtle bg-surface-muted px-3 py-2">
                           <div className="flex items-center justify-between gap-3">
                             <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
@@ -1343,6 +1358,7 @@ const DesignLabPage: React.FC = () => {
                             return (
                               <button
                                 key={item.name}
+                                data-testid={`design-lab-item-${toTestIdSuffix(item.name)}`}
                                 type="button"
                                 onClick={() => setSelectedItemName(item.name)}
                                 className={`group flex w-full items-start gap-3 rounded-2xl border px-3 py-3 text-left transition ${

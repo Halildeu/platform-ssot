@@ -46,6 +46,26 @@ export type TelemetryNetworkEntry = {
   allowed: boolean;
 };
 
+export type TelemetryResourceFailureEntry = {
+  ts: string;
+  url: string;
+  tagName?: string;
+  resourceType?: string;
+  message?: string;
+};
+
+export type TelemetryRuntimeOverlayEntry = {
+  ts: string;
+  detector: string;
+  snippet: string;
+};
+
+export type TelemetryUnhandledRejectionEntry = {
+  ts: string;
+  message: string;
+  stack?: string;
+};
+
 export type TelemetrySummary = {
   consoleErrors: number;
   consoleErrorsAllowed: number;
@@ -56,7 +76,10 @@ export type TelemetrySummary = {
   network403: number;
   network5xx: number;
   networkFailures: number;
+  resourceFailures: number;
   readonlyViolations: number;
+  unhandledRejections: number;
+  runtimeOverlays: number;
 };
 
 export type TelemetryResult = {
@@ -67,7 +90,10 @@ export type TelemetryResult = {
   consoleLogs: TelemetryConsoleEntry[];
   pageErrors: TelemetryPageErrorEntry[];
   network: TelemetryNetworkEntry[];
+  resourceFailures: TelemetryResourceFailureEntry[];
   readonlyViolations: TelemetryNetworkEntry[];
+  unhandledRejections: TelemetryUnhandledRejectionEntry[];
+  runtimeOverlays: TelemetryRuntimeOverlayEntry[];
   summary: TelemetrySummary;
 };
 
@@ -340,7 +366,10 @@ export const createTelemetryCollector = (
       consoleLogs,
       pageErrors,
       network,
+      resourceFailures: [],
       readonlyViolations,
+      unhandledRejections: [],
+      runtimeOverlays: [],
       summary: {
         consoleErrors: consoleErrors.length - consoleErrorsAllowed,
         consoleErrorsAllowed,
@@ -351,7 +380,10 @@ export const createTelemetryCollector = (
         network403,
         network5xx,
         networkFailures,
+        resourceFailures: 0,
         readonlyViolations: readonlyViolations.length,
+        unhandledRejections: 0,
+        runtimeOverlays: 0,
       },
     };
   };

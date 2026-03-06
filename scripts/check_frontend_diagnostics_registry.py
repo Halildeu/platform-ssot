@@ -53,9 +53,9 @@ def main() -> int:
     preset_map = {item.get("preset_id"): item for item in doctor_presets if isinstance(item, dict)}
 
     expected_presets = {
-        "ui-library": ("playwright:ui_library_page", "gateway_smoke", "base_url_fetch_check"),
-        "shell-public": ("playwright:shell_login|runtime_theme_matrix|ui_library_page", "gateway_smoke", "base_url_fetch_check"),
-        "theme-admin": ("playwright:theme_registry_page", "gateway_smoke", "base_url_fetch_check"),
+        "ui-library": ("playwright:ui_library_page|ui_library_navigation_walk", "gateway_smoke", "base_url_fetch_check"),
+        "shell-public": ("playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk", "gateway_smoke", "base_url_fetch_check"),
+        "theme-admin": ("playwright:theme_registry_page|theme_admin_navigation_walk", "gateway_smoke", "base_url_fetch_check"),
     }
     for preset_id, expected_steps in expected_presets.items():
         preset = preset_map.get(preset_id)
@@ -70,14 +70,34 @@ def main() -> int:
     scenarios_text = SCENARIOS.read_text(encoding="utf-8")
     if "name: ui_library_page" not in scenarios_text:
         problems.append("missing-scenario:ui_library_page")
+    if "name: ui_library_navigation_walk" not in scenarios_text:
+        problems.append("missing-scenario:ui_library_navigation_walk")
+    if "name: shell_public_route_walk" not in scenarios_text:
+        problems.append("missing-scenario:shell_public_route_walk")
+    if "name: theme_admin_navigation_walk" not in scenarios_text:
+        problems.append("missing-scenario:theme_admin_navigation_walk")
     if "goto: /ui-library" not in scenarios_text:
         problems.append("missing-route-step:/ui-library")
+    if "goto: /admin/themes" not in scenarios_text:
+        problems.append("missing-route-step:/admin/themes")
     if "[data-testid=\"design-lab-detail-tabs\"]" not in scenarios_text:
         problems.append("missing-selector:design-lab-detail-tabs")
+    if "[data-testid=\"design-lab-search\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-search")
+    if "[data-testid=\"design-lab-track-new_packages\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-track-new_packages")
+    if "[data-testid=\"theme-admin-preview-theme-pw-ocean\"]" not in scenarios_text:
+        problems.append("missing-selector:theme-admin-preview-theme-pw-ocean")
+    if "[data-testid=\"theme-admin-preview-section\"]" not in scenarios_text:
+        problems.append("missing-selector:theme-admin-preview-section")
 
     doctor_text = DOCTOR.read_text(encoding="utf-8")
     if "ui_library_page" not in doctor_text:
         problems.append("doctor-missing-scenario-reference")
+    if "ui_library_navigation_walk" not in doctor_text:
+        problems.append("doctor-missing-click-walk-reference")
+    if "theme_admin_navigation_walk" not in doctor_text:
+        problems.append("doctor-missing-theme-admin-click-walk-reference")
     if "frontend-doctor.summary.v1.json" not in doctor_text:
         problems.append("doctor-missing-summary-json")
 

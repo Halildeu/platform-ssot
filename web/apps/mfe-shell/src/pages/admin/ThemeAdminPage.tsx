@@ -185,6 +185,13 @@ const contrastRatio = (bg: { r: number; g: number; b: number }, fg: { r: number;
   return (maxL + 0.05) / (minL + 0.05);
 };
 
+const toTestIdSegment = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
 // STORY-0022: Theme Personalization v1.0
 const ThemeAdminPage: React.FC = () => {
   const { currentThemeId, refreshResolvedTheme } = useThemeContext();
@@ -1023,6 +1030,7 @@ const ThemeAdminPage: React.FC = () => {
 	                  </div>
 	                  <button
 	                    type="button"
+	                    data-testid="theme-admin-default-save"
 	                    className="inline-flex items-center rounded-full border border-border-subtle bg-surface-default px-3 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary disabled:cursor-not-allowed disabled:text-text-subtle"
 	                    onClick={() => void handleDefaultThemeSave()}
 	                    disabled={defaultThemeSaving || !defaultThemeDirty || !defaultThemeId}
@@ -1031,6 +1039,7 @@ const ThemeAdminPage: React.FC = () => {
 	                  </button>
 	                </div>
 	                <select
+	                  data-testid="theme-admin-default-theme-select"
 	                  className="mt-2 h-9 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-xs font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
 	                  value={defaultThemeId ?? ''}
 	                  onChange={(event) => setDefaultThemeId(event.target.value || null)}
@@ -1064,6 +1073,7 @@ const ThemeAdminPage: React.FC = () => {
 	                  </div>
 	                  <button
 	                    type="button"
+	                    data-testid="theme-admin-palette-save"
 	                    className="inline-flex items-center rounded-full border border-border-subtle bg-surface-default px-3 py-1 text-[11px] font-semibold text-text-secondary hover:border-text-secondary disabled:cursor-not-allowed disabled:text-text-subtle"
 	                    onClick={() => void handlePaletteSave()}
 	                    disabled={paletteSaving || !paletteDirty}
@@ -1112,6 +1122,7 @@ const ThemeAdminPage: React.FC = () => {
 	              <div className="flex flex-wrap items-center gap-2">
 	                <span className="text-xs font-semibold text-text-secondary">Düzenlenecek global tema:</span>
 	                <select
+	                  data-testid="theme-admin-editor-theme-select"
 	                  className="h-9 rounded-md border border-border-subtle bg-surface-default px-2 text-xs font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
 	                  value={selectedThemeId ?? ''}
 	                  onChange={(event) => {
@@ -1130,6 +1141,7 @@ const ThemeAdminPage: React.FC = () => {
 	                </select>
 	                <button
 	                  type="button"
+	                  data-testid="theme-admin-save"
 	                  className="inline-flex items-center rounded-md border border-action-primary-border bg-action-primary px-3 py-1 text-xs font-semibold text-action-primary-text hover:opacity-90 disabled:cursor-not-allowed disabled:border-border-subtle disabled:bg-surface-muted disabled:text-text-subtle"
 	                  onClick={() => void handleSave()}
 	                  disabled={saving || !selectedThemeId || !themeMeta}
@@ -1144,7 +1156,11 @@ const ThemeAdminPage: React.FC = () => {
 
 	            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_520px]">
 		              <div className="flex flex-col gap-4">
-		              <details open className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2">
+		              <details
+                    open
+                    className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2"
+                    data-testid="theme-admin-properties-section"
+                  >
 		                <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-text-secondary">
 		                  Tema özellikleri
 		                </summary>
@@ -1270,7 +1286,11 @@ const ThemeAdminPage: React.FC = () => {
 		                </div>
 		              </details>
 
-		              <details open className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2">
+		              <details
+                    open
+                    className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2"
+                    data-testid="theme-admin-registry-section"
+                  >
 		                <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-text-secondary">
 		                  Registry renkleri
 		                </summary>
@@ -1444,7 +1464,12 @@ const ThemeAdminPage: React.FC = () => {
 
 	              </div>
 	              <aside className="lg:sticky lg:top-24 self-start max-h-[calc(100vh-8rem)] overflow-auto">
-	              <details open data-theme-preview className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2">
+	              <details
+                    open
+                    data-theme-preview
+                    data-testid="theme-admin-preview-section"
+                    className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2"
+                  >
 	                <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-text-secondary">
 	                  Önizleme
 	                </summary>
@@ -1461,7 +1486,7 @@ const ThemeAdminPage: React.FC = () => {
 	                        {selectedTheme?.name ?? '—'}
 	                      </span>
 	                    </div>
-	                    <div className="mt-2 grid grid-cols-3 gap-2" role="list">
+	                    <div className="mt-2 grid grid-cols-3 gap-2" role="list" data-testid="theme-admin-preview-palette">
 	                      {paletteThemes.map((theme) => {
 	                        const isActive = theme.id === selectedThemeId;
 	                        const density = theme.axes?.density;
@@ -1472,6 +1497,7 @@ const ThemeAdminPage: React.FC = () => {
 		                          <button
 		                            key={theme.id}
 		                            type="button"
+                                data-testid={`theme-admin-preview-theme-${toTestIdSegment(theme.id)}`}
 		                            role="listitem"
 		                            aria-pressed={isActive}
 		                            onClick={() => {

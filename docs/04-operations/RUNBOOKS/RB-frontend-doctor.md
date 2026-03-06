@@ -12,7 +12,8 @@ Owner: Frontend Platform
 - Frontend runtime hata toplama, route smoke, login davranışı ve gateway smoke zincirini
   tek komut ve tek kanıt paketi altında çalıştırmak.
 - Özellikle `UI Library` gibi vitrin alanlarında `pageerror`, `console.error`,
-  route çökmesi ve smoke regressions'larını kullanıcı söylemeden görmek.
+  route çökmesi, `resource load failure`, `unhandled rejection`, `runtime overlay`
+  ve click-walk regressions'larını kullanıcı söylemeden görmek.
 
 -------------------------------------------------------------------------------
 2. KAPSAM
@@ -25,6 +26,8 @@ Owner: Frontend Platform
   - `web/tests/playwright/scenario-runner.spec.ts`
   - `web/tests/smoke/gateway-smoke.mjs`
 - Varsayılan preset: `ui-library`
+- Auth-required preset:
+  - `theme-admin` (mock-backed route diagnostics)
 - Çıktılar:
   - `web/test-results/diagnostics/frontend-doctor/*/frontend-doctor.summary.v1.json`
   - `web/test-results/diagnostics/frontend-doctor/*/frontend-doctor.summary.v1.md`
@@ -41,11 +44,18 @@ Owner: Frontend Platform
 
 - Başlatma:
   - `npm -C web run doctor:frontend -- --preset ui-library`
+  - `npm -C web run doctor:frontend -- --preset theme-admin`
 
 - Opsiyonel parametreler:
   - `--base-url http://localhost:3000`
   - `--soft-mode 1`
   - `--auth-mode none`
+
+- `theme-admin` preset davranışı:
+  - Varsayılan olarak `PW_AUTH_MODE=token_injection` ile çalışır.
+  - `PW_TEST_TOKEN` verilmezse doctor kendi sentetik test token'ını üretir.
+  - `PW_MOCK_THEME_REGISTRY=1` ve `PW_MOCK_API=1` ile admin route başlangıç verileri mock'lanır.
+  - Amaç gerçek client secret istemeden auth-required UI route crash / console / overlay / click-walk hatalarını yakalamaktır.
 
 - Durdurma:
   - Doctor tek-shot çalışır; çalışan alt süreç yoksa özel kapatma gerekmez.
@@ -63,12 +73,15 @@ Owner: Frontend Platform
   - `logs/tailwind_lint.log`
   - `logs/login_test.log`
   - `logs/playwright_ui_library.log`
+  - `logs/playwright_theme_admin.log`
   - `logs/gateway_smoke.log`
 - Minimum metrikler:
   - `overall_status`
   - `base_url_check.ok`
   - step bazlı `PASS/FAIL`
   - Playwright scenario raporu var mı
+  - screenshot/html evidence üretildi mi
+  - `resourceFailures / unhandledRejections / runtimeOverlays` sayıları
   - Gateway smoke artefact'ı var mı
 
 -------------------------------------------------------------------------------
@@ -84,11 +97,12 @@ Owner: Frontend Platform
 
 - [ ] Arıza senaryosu 2 – UI Library Playwright FAIL:
   - Given: `playwright_ui_library` step'i FAIL,
-  - When: `pw-scenario-ui-library-page-*.md` raporunda `pageerror`, `console.error` veya selector hatası var,
+  - When: `pw-scenario-ui-library-*.md` raporunda `pageerror`, `console.error`, `resource load failure`, `runtime overlay` veya selector hatası var,
   - Then:
     - Önce route crash veya invalid React element var mı bak.
     - Sonra `pw_scenarios.yml` selector'leri ile `DesignLabPage` testid'lerini karşılaştır.
     - Beklenen remote eksikliği varsa allowlist kuralını registry/pw_scenarios üzerinde açık yaz.
+    - `web/test-results/pw/artifacts/**` altındaki screenshot/html ve `step-journal.json` dosyasını aç.
 
 - [ ] Arıza senaryosu 3 – Gateway smoke FAIL:
   - Given: `gateway_smoke` FAIL,
@@ -97,13 +111,21 @@ Owner: Frontend Platform
     - `web/tests/smoke/artifacts/gateway-smoke.log` dosyasını aç.
     - Beklenen `401/200` davranışını gateway ve auth config ile karşılaştır.
 
+- [ ] Arıza senaryosu 4 – Theme admin diagnostics FAIL:
+  - Given: `theme-admin` preset FAIL,
+  - When: `pw-scenario-theme-registry-page-*.md` veya `pw-scenario-theme-admin-navigation-walk-*.md` raporunda `pageerror`, `console.error`, `resource load failure`, `runtime overlay` veya click-step kırılması var,
+  - Then:
+    - Önce `ThemeAdminPage` üstündeki `data-testid` yüzeyi ile scenario selector'lerini karşılaştır.
+    - Sonra `installThemeRegistryMock` ve `installApiMocks` altında `/api/v1/theme-registry`, `/api/v1/themes`, `/api/v1/themes/:id` mock'larını doğrula.
+    - Hata auth kaynaklıysa `PW_AUTH_MODE`, `PW_TEST_TOKEN` ve scenario `permissions` setini kontrol et.
+
 -------------------------------------------------------------------------------
 6. ÖZET
 -------------------------------------------------------------------------------
 
 - `frontend-doctor`, mevcut Playwright telemetry ve gateway smoke hattını yeniden yazmaz;
   tek paket altında orkestre eder.
-- Yeni vitrin veya önemli route, canonical scenario ve doctor kanıtı olmadan stabil sayılmaz.
+- Yeni vitrin veya önemli route, canonical scenario + click-walk + doctor kanıtı olmadan stabil sayılmaz.
 
 -------------------------------------------------------------------------------
 7. LİNKLER (İSTEĞE BAĞLI)

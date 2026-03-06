@@ -24,11 +24,15 @@
         "console.warn",
         "xhr_fetch_401_403_5xx",
         "requestfailed",
-        "readonly_violation"
+        "readonly_violation",
+        "resource_load_failure",
+        "unhandled_rejection",
+        "runtime_overlay"
       ],
       "artifacts": [
         "web/test-results/pw/pw-scenario-*.md",
-        "web/test-results/pw/pw-summary-*.md"
+        "web/test-results/pw/pw-summary-*.md",
+        "web/test-results/pw/artifacts/**"
       ]
     },
     {
@@ -42,9 +46,15 @@
         "PW_AUTH_MODE",
         "PW_SOFT_MODE"
       ],
+      "signals": [
+        "route_open_smoke",
+        "interaction_click_walk",
+        "step_journal_evidence"
+      ],
       "artifacts": [
         "web/test-results/pw/pw-scenario-*.md",
-        "web/test-results/pw/pw-summary-*.md"
+        "web/test-results/pw/pw-summary-*.md",
+        "web/test-results/pw/artifacts/**"
       ]
     },
     {
@@ -95,8 +105,11 @@
         "build_health",
         "lint_health",
         "route_runtime_health",
+        "route_click_walk_health",
         "login_smoke_health",
-        "gateway_smoke_health"
+        "gateway_smoke_health",
+        "resource_load_health",
+        "runtime_overlay_health"
       ],
       "artifacts": [
         "web/test-results/diagnostics/frontend-doctor/*/frontend-doctor.summary.v1.json",
@@ -131,6 +144,9 @@
       "route_id": "theme_admin",
       "path": "/admin/themes",
       "scenario_name": "theme_registry_page",
+      "secondary_scenarios": [
+        "theme_admin_navigation_walk"
+      ],
       "auth_required": true,
       "owner": "mfe-shell"
     },
@@ -164,7 +180,7 @@
         "build:shell",
         "lint:tailwind",
         "test:shell(login)",
-        "playwright:ui_library_page",
+        "playwright:ui_library_page|ui_library_navigation_walk",
         "gateway_smoke",
         "base_url_fetch_check"
       ],
@@ -172,7 +188,9 @@
         "frontend-doctor.summary.v1.json",
         "frontend-doctor.summary.v1.md",
         "pw-scenario-ui-library-page-*.md",
+        "pw-scenario-ui-library-navigation-walk-*.md",
         "pw-summary-*.md",
+        "web/test-results/pw/artifacts/**",
         "gateway-smoke.log"
       ]
     },
@@ -183,7 +201,7 @@
         "build:shell",
         "lint:tailwind",
         "test:shell(login)",
-        "playwright:shell_login|runtime_theme_matrix|ui_library_page",
+        "playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk",
         "gateway_smoke",
         "base_url_fetch_check"
       ],
@@ -193,7 +211,10 @@
         "pw-scenario-shell-login-*.md",
         "pw-scenario-runtime-theme-matrix-*.md",
         "pw-scenario-ui-library-page-*.md",
+        "pw-scenario-ui-library-navigation-walk-*.md",
+        "pw-scenario-shell-public-route-walk-*.md",
         "pw-summary-*.md",
+        "web/test-results/pw/artifacts/**",
         "gateway-smoke.log"
       ]
     },
@@ -203,25 +224,31 @@
       "steps": [
         "build:shell",
         "lint:tailwind",
-        "playwright:theme_registry_page",
+        "playwright:theme_registry_page|theme_admin_navigation_walk",
         "gateway_smoke",
         "base_url_fetch_check"
       ],
       "requires_auth_mode": "token_injection",
+      "runtime_mode": "mock-backed-auth-route",
       "expected_artifacts": [
         "frontend-doctor.summary.v1.json",
         "frontend-doctor.summary.v1.md",
         "pw-scenario-theme-registry-page-*.md",
+        "pw-scenario-theme-admin-navigation-walk-*.md",
         "pw-summary-*.md",
+        "web/test-results/pw/artifacts/**",
         "gateway-smoke.log"
       ]
     }
   ],
   "hard_rules": [
     "Yeni web route veya vitrin alani canonical senaryo olmadan tamamlanmis sayilmaz.",
+    "Yeni etkileşimli vitrin veya admin route en az bir click-walk senaryosu olmadan tamamlanmis sayilmaz.",
     "Yeni UI library surface pageerror ve allowlist disi console.error üretirse release edilmez.",
+    "Allowlist disi resource load failure, unhandled rejection veya runtime overlay varsa release edilmez.",
     "Doctor script mevcut telemetry hattini orkestre eder; ayri ikinci smoke sistemi kurulmaz.",
     "Diagnostics artifact'lari JSON-first ozet ve kanit dosyalari ile saklanir.",
-    "Beklenen remote eksiklikleri allowlist ile acik yazilmadan gürültü görmezden gelinmez."
+    "Beklenen remote eksiklikleri allowlist ile acik yazilmadan gürültü görmezden gelinmez.",
+    "Auth gerekli route diagnostics'i mümkünse mock-backed UI route seviyesinde kosulur; gercek client secret zorunlu kilinmaz."
   ]
 }
