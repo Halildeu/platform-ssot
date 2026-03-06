@@ -18,6 +18,7 @@ Bu dosya insan okunur özet görünümüdür. Kanonik kaynak:
 - HTTP sahibi: `web/packages/shared-http`
 - UX standart kaynağı: `ux_katalogu` → yerel referans `docs/02-architecture/context/ux-katalogu.reference.v1.json`
 - UI library ↔ UX eşleme kaynağı: `docs/02-architecture/context/ui-library-ux-alignment.v1.json`
+- Component roadmap kaynağı: `docs/02-architecture/context/ui-library-component-roadmap.v1.json`
 
 ## Temel ilkeler
 
@@ -69,6 +70,7 @@ Bir ortak component tamamlanmış sayılmadan önce şu zincir kapanır:
 
 - `python3 scripts/check_ui_library_governance_contract.py`
 - `python3 scripts/check_ui_library_ux_alignment.py`
+- `python3 scripts/check_ui_library_component_roadmap.py`
 - `npm -C web run designlab:index`
 - `npm -C web run lint:tailwind`
 - `npm -C web run lint:no-antd`
@@ -103,10 +105,11 @@ Koddan önce şu sıra okunur:
 2. `ui-library-governance.contract.v1.json`
 3. `ux-katalogu.reference.v1.json`
 4. `ui-library-ux-alignment.v1.json`
-5. `ui-library-system.context.v1.json`
-6. `ui-library-system-blueprint.v1.json`
-7. `STYLE-WEB-001.md`
-8. `component-registry.v1.json`
+5. `ui-library-component-roadmap.v1.json`
+6. `ui-library-system.context.v1.json`
+7. `ui-library-system-blueprint.v1.json`
+8. `STYLE-WEB-001.md`
+9. `component-registry.v1.json`
 
 ## Yasak hareketler
 

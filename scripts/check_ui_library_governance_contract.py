@@ -74,6 +74,8 @@ def main() -> int:
         problems.append("missing-gate:lint:tailwind")
     if "python3 scripts/check_ui_library_ux_alignment.py" not in gates.get("mandatory_checks", []):
         problems.append("missing-gate:check_ui_library_ux_alignment")
+    if "python3 scripts/check_ui_library_component_roadmap.py" not in gates.get("mandatory_checks", []):
+        problems.append("missing-gate:check_ui_library_component_roadmap")
 
     if problems:
         print("[check_ui_library_governance_contract] FAIL")

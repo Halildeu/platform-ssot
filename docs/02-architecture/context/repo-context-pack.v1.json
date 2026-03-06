@@ -9,6 +9,7 @@
     "docs/02-architecture/context/ui-library-governance.contract.v1.json",
     "docs/02-architecture/context/ux-katalogu.reference.v1.json",
     "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
     "docs/02-architecture/context/ui-library-system.context.v1.json",
     "docs/02-architecture/system-overview.v1.json",
     "docs/02-architecture/domain-map.v1.json",
@@ -28,6 +29,7 @@
     "docs/00-handbook/WEB-PROJECT-LAYOUT.md",
     "docs/00-handbook/STYLE-WEB-001.md",
     "docs/02-architecture/context/ui-library-governance.contract.v1.md",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.md",
     "docs/02-architecture/INDEX.md",
     "docs/02-architecture/SYSTEM-OVERVIEW.md",
     "docs/02-architecture/DOMAIN-MAP.md",
@@ -39,6 +41,7 @@
     "Sonra target service, shared library veya MFE blueprint seçilir.",
     "UI library degisikliginde governance contract okunmadan component işi başlamaz.",
     "UI library degisikliginde UX katalog referansi ve alignment kontrati okunur.",
+    "UI library degisikliginde component roadmap okunur ve aktif wave/family secilir.",
     "UI library degisikliginde ui-library-system context ve component registry birlikte okunur.",
     "Web UI degisikliginde STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak okunur.",
     "Yeni iç servis çağrısı varsa communication matrix güncellenir.",
@@ -91,6 +94,7 @@
     "Web tarafında yeni ortak primitive yalnız packages/ui-kit altinda doğar; apps/** yalnız composition katmanıdır.",
     "Tailwind görsel kararın kaynağı değil, token ve ui-kit kontratını render eden yardımcı katmandır.",
     "UI library feature'larında governance contract -> UX reference -> alignment -> context -> blueprint -> registry sırası korunur.",
-    "UX Kataloğu ile hizalanmayan ortak component kararı tamamlanmış sayılmaz."
+    "UX Kataloğu ile hizalanmayan ortak component kararı tamamlanmış sayılmaz.",
+    "Roadmap family/wave secimi yapilmadan yeni ortak component implementasyonu baslamaz."
   ]
 }

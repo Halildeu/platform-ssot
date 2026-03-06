@@ -6,6 +6,7 @@
   "governance_contract": "docs/02-architecture/context/ui-library-governance.contract.v1.json",
   "ux_catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
   "ux_alignment_contract": "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+  "component_roadmap": "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
   "canonical_modules": [
     "web/packages/ui-kit",
     "web/apps/mfe-shell/src/pages/admin",
@@ -70,6 +71,7 @@
   "quality_gates": [
     "python3 scripts/check_ui_library_governance_contract.py",
     "python3 scripts/check_ui_library_ux_alignment.py",
+    "python3 scripts/check_ui_library_component_roadmap.py",
     "npm -C web run designlab:index",
     "npm -C web run lint:tailwind",
     "npm -C web run lint:no-antd",
@@ -95,6 +97,7 @@
     "Repo context pack okunur.",
     "UI library governance contract okunur.",
     "UX katalog referansi ve UI-library UX alignment kontrati okunur.",
+    "Component roadmap okunur; family ve wave secimi yapilir.",
     "UI library system context okunur.",
     "STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak kontrol edilir.",
     "Component registry ve taxonomy okunur.",
