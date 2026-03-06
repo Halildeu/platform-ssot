@@ -1,0 +1,103 @@
+{
+  "version": "1.0.0",
+  "matrix_id": "business-journey-e2e-matrix",
+  "status": "active",
+  "scope": "contractor-repo-runtime-ui-v1",
+  "canonical_entrypoints": [
+    "web/tests/playwright/pw_scenarios.yml",
+    "web/scripts/ops/frontend-doctor.mjs",
+    "docs/02-architecture/context/frontend-diagnostics.registry.v1.json"
+  ],
+  "hard_rules": [
+    "Journey coverage route smoke yerine gorev tamamlama zincirini kanitlamalidir.",
+    "Her journey en az bir action step, bir visible assertion ve bir evidence artefact uretmelidir.",
+    "Auth gerekli journey'lerde token injection veya esit deger mock-backed auth modu zorunludur.",
+    "Journey PASS olmasi icin allowlist disi console/pageerror/runtime overlay sinyali olamaz.",
+    "Journey coverage olmadan ilgili capability insansiz teslimata hazir sayilmaz."
+  ],
+  "journeys": [
+    {
+      "journey_id": "access_role_review",
+      "title": "Access role inceleme ve permission drawer dogrulama",
+      "capability": "access_roles",
+      "user_goal": "Kullanici bir role gider, filtre uygular, rol cekmecesini acar ve permission registry goruntuler.",
+      "scenario_name": "access_roles_navigation_walk",
+      "route": "/access/roles",
+      "auth_required": true,
+      "primary_module": "mfe-access",
+      "required_permissions": [
+        "access-read"
+      ],
+      "acceptance": [
+        "Access filter alanina deger girilebilir.",
+        "Grid satiri secildiginde rol cekmecesi acilir.",
+        "Permission registry paneli gorunur.",
+        "Kapatma aksiyonu drawer'i bozmadan sonlanir."
+      ],
+      "evidence": [
+        "pw-scenario-access-roles-navigation-walk-*.md",
+        "web/test-results/pw/artifacts/**"
+      ]
+    },
+    {
+      "journey_id": "audit_event_investigation",
+      "title": "Audit olay arastirma ve raw kayit inceleme",
+      "capability": "audit_events",
+      "user_goal": "Kullanici audit filtresi uygular, bir olayi acar ve raw JSON sekmesini inceler.",
+      "scenario_name": "audit_events_navigation_walk",
+      "route": "/audit/events",
+      "auth_required": true,
+      "primary_module": "mfe-audit",
+      "required_permissions": [
+        "audit-read"
+      ],
+      "acceptance": [
+        "Audit filtreleri uygulanabilir.",
+        "Grid satirindan detay drawer acilir.",
+        "Raw JSON gorunur.",
+        "Drawer kapaninca sayfa stabil kalir."
+      ],
+      "evidence": [
+        "pw-scenario-audit-events-navigation-walk-*.md",
+        "web/test-results/pw/artifacts/**"
+      ]
+    },
+    {
+      "journey_id": "reporting_user_filtering",
+      "title": "Reporting kullanici filtreleme ve grid etkileşimi",
+      "capability": "reporting_users",
+      "user_goal": "Kullanici report filtrelerini uygular, grid sonucunu gorur ve liste etkileşimini bozmadan ilerler.",
+      "scenario_name": "reporting_users_navigation_walk",
+      "route": "/admin/reports/users",
+      "auth_required": true,
+      "primary_module": "mfe-reporting",
+      "required_permissions": [
+        "VIEW_REPORTS"
+      ],
+      "acceptance": [
+        "Search ve status filtreleri uygulanabilir.",
+        "Entity grid render olur.",
+        "Satir etkileşimi sonrasi grid stabil kalir.",
+        "Journey allowlist disi runtime hata uretmez."
+      ],
+      "evidence": [
+        "pw-scenario-reporting-users-navigation-walk-*.md",
+        "web/test-results/pw/artifacts/**"
+      ]
+    }
+  ],
+  "doctor_contract": {
+    "preset_id": "business-journeys",
+    "required_steps": [
+      "shell_build",
+      "tailwind_lint",
+      "playwright_business_journeys",
+      "gateway_smoke",
+      "base_url_fetch_check"
+    ],
+    "summary_artifacts": [
+      "frontend-doctor.summary.v1.json",
+      "frontend-doctor.summary.v1.md"
+    ]
+  }
+}

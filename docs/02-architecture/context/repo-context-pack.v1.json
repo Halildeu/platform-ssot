@@ -13,6 +13,7 @@
     "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json",
     "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
     "docs/02-architecture/context/backend-diagnostics.registry.v1.json",
+    "docs/02-architecture/context/business-journey-e2e-matrix.v1.json",
     "docs/02-architecture/context/autonomous-delivery-gap-assessment.v1.json",
     "docs/02-architecture/context/ui-library-system.context.v1.json",
     "docs/02-architecture/system-overview.v1.json",
@@ -37,6 +38,7 @@
     "docs/02-architecture/context/ui-library-wave-2-navigation.v1.md",
     "docs/02-architecture/context/frontend-diagnostics.registry.v1.md",
     "docs/02-architecture/context/backend-diagnostics.registry.v1.md",
+    "docs/02-architecture/context/business-journey-e2e-matrix.v1.md",
     "docs/02-architecture/context/autonomous-delivery-gap-assessment.v1.md",
     "docs/02-architecture/context/orchestrator-adoption-bridge.v1.md",
     "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
@@ -56,6 +58,7 @@
     "UI library degisikliginde aktif wave execution contract okunmadan component kodu baslamaz.",
     "UI library degisikliginde diagnostics registry ve frontend doctor akisi okunur.",
     "Backend runtime veya servis akisina dokunan degisiklikte backend diagnostics registry ve backend doctor akisi okunur.",
+    "Gercek kullanici gorevi veya teslimat smoke'u konusuluyorsa business journey e2e matrix okunur.",
     "Insansiz teslimat hedefi konusuluyorsa autonomous delivery gap assessment okunur.",
     "UI library degisikliginde ui-library-system context ve component registry birlikte okunur.",
     "Web UI degisikliginde STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak okunur.",
@@ -114,6 +117,7 @@
     "Aktif wave execution contract olmadan ortak component için acceptance/preview/evidence yoruma birakilmaz.",
     "UI Library route'u canonical Playwright senaryosu ve frontend-doctor kaniti olmadan stabil sayilmaz."
     ,
-    "Backend runtime degisikligi backend-doctor summary kaniti olmadan stabil sayilmaz."
+    "Backend runtime degisikligi backend-doctor summary kaniti olmadan stabil sayilmaz.",
+    "Business journey etkileyen degisiklik business-journey doctor evidence'i olmadan insansiz teslimata hazir sayilmaz."
   ]
 }

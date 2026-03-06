@@ -274,6 +274,27 @@
         "web/test-results/pw/artifacts/**",
         "gateway-smoke.log"
       ]
+    },
+    {
+      "preset_id": "business-journeys",
+      "description": "Access role inceleme, audit olay arastirma ve reporting kullanici filtreleme gorevlerini route smoke degil is akisi seviyesinde korur.",
+      "steps": [
+        "playwright:access_roles_navigation_walk|audit_events_navigation_walk|reporting_users_navigation_walk",
+        "gateway_smoke",
+        "base_url_fetch_check"
+      ],
+      "requires_auth_mode": "token_injection",
+      "runtime_mode": "mock-backed-auth-routes",
+      "expected_artifacts": [
+        "frontend-doctor.summary.v1.json",
+        "frontend-doctor.summary.v1.md",
+        "pw-scenario-access-roles-navigation-walk-*.md",
+        "pw-scenario-audit-events-navigation-walk-*.md",
+        "pw-scenario-reporting-users-navigation-walk-*.md",
+        "pw-summary-*.md",
+        "web/test-results/pw/artifacts/**",
+        "gateway-smoke.log"
+      ]
     }
   ],
   "hard_rules": [

@@ -61,6 +61,11 @@ def main() -> int:
             "gateway_smoke",
             "base_url_fetch_check",
         ),
+        "business-journeys": (
+            "playwright:access_roles_navigation_walk|audit_events_navigation_walk|reporting_users_navigation_walk",
+            "gateway_smoke",
+            "base_url_fetch_check",
+        ),
     }
     for preset_id, expected_steps in expected_presets.items():
         preset = preset_map.get(preset_id)
@@ -127,6 +132,8 @@ def main() -> int:
         problems.append("doctor-missing-audit-click-walk-reference")
     if "reporting_users_navigation_walk" not in doctor_text:
         problems.append("doctor-missing-reporting-click-walk-reference")
+    if "playwright_business_journeys" not in doctor_text:
+        problems.append("doctor-missing-business-journeys-step")
     if "frontend-doctor.summary.v1.json" not in doctor_text:
         problems.append("doctor-missing-summary-json")
 

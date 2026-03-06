@@ -25,6 +25,13 @@ Doctor preset'leri:
   - varsayılan auth modu: `token_injection`
   - varsayılan çalışma modu: `mock-backed route diagnostics`
   - gerçek client secret zorunlu değildir; sentetik test token + mock API ile UI crash/overlay/console/click regressions yakalanır
+- `auth-business-routes` → `/access/roles`, `/audit/events`, `/admin/reports/users`
+  - senaryolar: `access_roles_page`, `access_roles_navigation_walk`, `audit_events_page`, `audit_events_navigation_walk`, `reporting_users_page`, `reporting_users_navigation_walk`
+  - varsayılan auth modu: `token_injection`
+  - varsayılan çalışma modu: `mock-backed auth routes`
+- `business-journeys` → gerçek görev akışı seviyesi preset
+  - senaryolar: `access_roles_navigation_walk`, `audit_events_navigation_walk`, `reporting_users_navigation_walk`
+  - route smoke değil, görev tamamlama kanıtı üretir
 
 Kanonik giris noktaları:
 - `web/scripts/ops/frontend-doctor.mjs`

@@ -230,6 +230,65 @@ const presetMap = {
       },
     ],
   },
+  'business-journeys': {
+    description: 'Gercek kullanici gorevi seviyesinde access/audit/reporting is akisi smoke denetimi',
+    route: '/access/roles,/audit/events,/admin/reports/users',
+    playwrightGrep:
+      'access_roles_navigation_walk|audit_events_navigation_walk|reporting_users_navigation_walk',
+    steps: [
+      {
+        id: 'shell_build',
+        label: 'Shell build',
+        cmd: 'npm',
+        args: ['run', 'build:shell'],
+        cwd: webRoot,
+      },
+      {
+        id: 'tailwind_lint',
+        label: 'Tailwind lint',
+        cmd: 'npm',
+        args: ['run', 'lint:tailwind'],
+        cwd: webRoot,
+      },
+      {
+        id: 'playwright_business_journeys',
+        label: 'Playwright business journey scenarios',
+        cmd: 'node',
+        args: [
+          'scripts/ops/run-with-frontend-stack.mjs',
+          '--stack',
+          'auth-business-routes',
+          '--',
+          'npx',
+          'playwright',
+          'test',
+          '--config',
+          'tests/playwright/playwright.config.ts',
+          'tests/playwright/scenario-runner.spec.ts',
+          '--project=chromium',
+          '--grep',
+          'access_roles_navigation_walk|audit_events_navigation_walk|reporting_users_navigation_walk',
+        ],
+        cwd: webRoot,
+        env: {
+          PLAYWRIGHT_BASE_URL: baseUrl,
+          PW_MODE: 'ci',
+          PW_SOFT_MODE: softMode,
+          PW_AUTH_MODE: authMode === 'none' ? 'token_injection' : authMode,
+          PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
+          PW_MOCK_API: process.env.PW_MOCK_API || '1',
+          FRONTEND_STACK_LOG_DIR: path.join(logDir, 'business-journeys-stack'),
+        },
+      },
+      {
+        id: 'gateway_smoke',
+        label: 'Gateway smoke',
+        cmd: 'node',
+        args: ['tests/smoke/gateway-smoke.mjs'],
+        cwd: webRoot,
+      },
+    ],
+  },
 };
 
 if (!presetMap[preset]) {
