@@ -19,6 +19,10 @@ Alt içerikler:
 - context/backend-diagnostics.registry.v1.md → backend diagnostics registry insan okunur özeti
 - context/business-journey-e2e-matrix.v1.json → route smoke ötesinde görev tamamlama zincirini koruyan journey matrisi
 - context/business-journey-e2e-matrix.v1.md → business journey matrisinin insan okunur özeti
+- context/security-remediation.contract.v1.json → bloklayici CVE kapatma ve governed residual risk kontrati
+- context/security-remediation.contract.v1.md → security remediation kontratinin insan okunur ozeti
+- context/live-release-provisioning.contract.v1.json → live canary ve DAST provisioning/fail-closed kontrati
+- context/live-release-provisioning.contract.v1.md → live provisioning kontratinin insan okunur ozeti
 - context/autonomous-delivery-gap-assessment.v1.json → insansız teslimat için hazır/kısmi/eksik halkaların kanonik gap matrisi
 - context/autonomous-delivery-gap-assessment.v1.md → gap assessment insan okunur özeti
 - context/orchestrator-adoption-bridge.v1.json → managed repo platform tabanının orchestrator'a taşınma köprüsü
@@ -47,18 +51,20 @@ Okuma sırası:
 7. `context/frontend-diagnostics.registry.v1.json` (UI kit / vitrin / route stabilitesi işi varsa)
 8. `context/backend-diagnostics.registry.v1.json` (backend runtime / smoke / health işi varsa)
 9. `context/business-journey-e2e-matrix.v1.json` (katalog bazlı gerçek iş akışı smoke konuşuluyorsa)
-10. `context/autonomous-delivery-gap-assessment.v1.json` (insansız teslimat / tam otonomi hedefi konuşuluyorsa)
-11. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
-12. `system-overview.v1.json`
-13. `domain-map.v1.json`
-14. `runtime/*.v1.json`
-15. `blueprints/*.v1.json`
-16. `INDEX.md`
-17. `SYSTEM-OVERVIEW.md`
-18. `DOMAIN-MAP.md`
-19. `runtime/*.md`
-20. `services/*`
-21. `clients/*`
+10. `context/security-remediation.contract.v1.json` (security remediation / CVE / release guardrail işi varsa)
+11. `context/live-release-provisioning.contract.v1.json` (canary / DAST / provisioning işi varsa)
+12. `context/autonomous-delivery-gap-assessment.v1.json` (insansız teslimat / tam otonomi hedefi konuşuluyorsa)
+13. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
+14. `system-overview.v1.json`
+15. `domain-map.v1.json`
+16. `runtime/*.v1.json`
+17. `blueprints/*.v1.json`
+18. `INDEX.md`
+19. `SYSTEM-OVERVIEW.md`
+20. `DOMAIN-MAP.md`
+21. `runtime/*.md`
+22. `services/*`
+23. `clients/*`
 
 Kural:
 - AI önce JSON kanonik katmanı okur.

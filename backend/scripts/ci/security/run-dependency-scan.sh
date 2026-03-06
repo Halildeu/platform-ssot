@@ -12,6 +12,7 @@ FAIL_CVSS="${DEPENDENCY_CHECK_FAIL_CVSS:-7.0}"
 NVD_API_KEY_VALUE="${NVD_API_KEY:-}"
 GLOBAL_DC_CACHE_DIR="${HOME}/.m2/repository/org/owasp/dependency-check-data/9.0"
 LOCAL_DC_CACHE_DIR="${REPORT_DIR}/cache"
+SUPPRESSION_FILE="${ROOT_DIR}/backend/scripts/ci/security/dependency-check-suppressions.xml"
 
 echo "[security][dependency-check] Running OWASP Dependency-Check v${DC_VERSION} (fail on CVSS >= ${FAIL_CVSS})"
 
@@ -24,6 +25,10 @@ cmd=(
   -DfailOnError=true
   "-DfailBuildOnCVSS=${FAIL_CVSS}"
 )
+
+if [[ -f "${SUPPRESSION_FILE}" ]]; then
+  cmd+=("-DsuppressionFile=${SUPPRESSION_FILE}")
+fi
 
 if [[ -n "${NVD_API_KEY_VALUE}" ]]; then
   cmd+=("-DnvdApiKey=${NVD_API_KEY_VALUE}")

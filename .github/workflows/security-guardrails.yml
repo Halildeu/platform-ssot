@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ZAP_TARGET_URL: ${{ secrets.ZAP_TARGET_URL }}
+      ZAP_AUTH_MODE: ${{ vars.ZAP_AUTH_MODE }}
+      ZAP_AUTH_HEADER_NAME: ${{ vars.ZAP_AUTH_HEADER_NAME }}
+      ZAP_AUTH_HEADER_VALUE: ${{ secrets.ZAP_AUTH_HEADER_VALUE }}
       COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
       COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
@@ -43,6 +46,9 @@ jobs:
       - name: Baseline security checks
         run: python3 scripts/check_security_all.py
 
+      - name: Check live release provisioning contract
+        run: python3 scripts/check_live_release_provisioning_contract.py
+
       - name: Backend SAST
         run: bash backend/scripts/ci/security/run-sast.sh
 
@@ -54,6 +60,9 @@ jobs:
 
       - name: Feature flag health
         run: ruby backend/scripts/ci/security/export-flag-health.rb
+
+      - name: Check security remediation contract
+        run: python3 scripts/check_security_remediation_contract.py
 
       - name: ZAP baseline
         if: ${{ env.ZAP_TARGET_URL != '' }}

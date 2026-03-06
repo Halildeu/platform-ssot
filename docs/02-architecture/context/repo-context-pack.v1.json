@@ -14,6 +14,8 @@
     "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
     "docs/02-architecture/context/backend-diagnostics.registry.v1.json",
     "docs/02-architecture/context/business-journey-e2e-matrix.v1.json",
+    "docs/02-architecture/context/security-remediation.contract.v1.json",
+    "docs/02-architecture/context/live-release-provisioning.contract.v1.json",
     "docs/02-architecture/context/autonomous-delivery-gap-assessment.v1.json",
     "docs/02-architecture/context/ui-library-system.context.v1.json",
     "docs/02-architecture/system-overview.v1.json",
@@ -39,6 +41,8 @@
     "docs/02-architecture/context/frontend-diagnostics.registry.v1.md",
     "docs/02-architecture/context/backend-diagnostics.registry.v1.md",
     "docs/02-architecture/context/business-journey-e2e-matrix.v1.md",
+    "docs/02-architecture/context/security-remediation.contract.v1.md",
+    "docs/02-architecture/context/live-release-provisioning.contract.v1.md",
     "docs/02-architecture/context/autonomous-delivery-gap-assessment.v1.md",
     "docs/02-architecture/context/orchestrator-adoption-bridge.v1.md",
     "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
@@ -59,6 +63,7 @@
     "UI library degisikliginde diagnostics registry ve frontend doctor akisi okunur.",
     "Backend runtime veya servis akisina dokunan degisiklikte backend diagnostics registry ve backend doctor akisi okunur.",
     "Gercek kullanici gorevi veya teslimat smoke'u konusuluyorsa business journey e2e matrix okunur.",
+    "Security remediation, release canary veya DAST degisikliginde security-remediation contract ve live-release provisioning contract okunur.",
     "Insansiz teslimat hedefi konusuluyorsa autonomous delivery gap assessment okunur.",
     "UI library degisikliginde ui-library-system context ve component registry birlikte okunur.",
     "Web UI degisikliginde STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak okunur.",
@@ -118,6 +123,9 @@
     "UI Library route'u canonical Playwright senaryosu ve frontend-doctor kaniti olmadan stabil sayilmaz."
     ,
     "Backend runtime degisikligi backend-doctor summary kaniti olmadan stabil sayilmaz.",
-    "Business journey etkileyen degisiklik business-journey doctor evidence'i olmadan insansiz teslimata hazir sayilmaz."
+    "Business journey etkileyen degisiklik business-journey doctor evidence'i olmadan insansiz teslimata hazir sayilmaz.",
+    "HIGH veya CRITICAL dependency/security bulgusu ile merge tamamlanmis sayilmaz.",
+    "Residual MEDIUM bulgu yalniz security-remediation contract, suppression dosyasi ve review tarihi ile tasinabilir.",
+    "Live canary ve DAST degisikligi live-release provisioning contract ile fail-closed dogrulanmadan hazir sayilmaz."
   ]
 }

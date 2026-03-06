@@ -20,6 +20,17 @@ mvn -B \
   -Dcyclonedx.outputDirectory="${REPORT_DIR}"
 
 SBOM_PATH="${REPORT_DIR}/bom.${SBOM_FORMAT}"
+GENERATED_SBOM_PATH="${ROOT_DIR}/target/bom.${SBOM_FORMAT}"
+
+if [[ -f "${GENERATED_SBOM_PATH}" && "${GENERATED_SBOM_PATH}" != "${SBOM_PATH}" ]]; then
+  cp "${GENERATED_SBOM_PATH}" "${SBOM_PATH}"
+fi
+
+if [[ ! -f "${SBOM_PATH}" ]]; then
+  echo "[security][sbom] HATA: SBOM bulunamadi: ${SBOM_PATH}" >&2
+  exit 1
+fi
+
 echo "[security][sbom] SBOM written to ${SBOM_PATH}"
 
 if [[ -n "${COSIGN_PRIVATE_KEY:-}" ]]; then

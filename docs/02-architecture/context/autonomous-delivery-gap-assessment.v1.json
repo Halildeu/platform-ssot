@@ -136,19 +136,15 @@
     {
       "capability_id": "secrets_and_token_plumbing",
       "title": "Secrets ve token plumbing",
-      "status": "partial",
-      "why": "Vault sync ve Keycloak secret yuzeyi var. Ancak auth-required route diagnostics cogunlukla mock-backed sentetik token ile ilerliyor; live canary, ZAP ve tam auth-required business journeys icin gercek non-secret dev credential/provisioning matrisi hala kanonik degil.",
+      "status": "ready",
+      "why": "Vault sync, Keycloak secret yuzeyi, AUTH-REGISTRY ve live release provisioning contract artik tek zincirde. Auth-required route diagnostics sentetik token ile izole test calistirirken, live canary ve DAST icin gerekli secret/variable/hook isimleri kanonik kontrat ve checker ile fail-closed baglandi.",
       "evidence": [
         ".github/workflows/vault-secrets-sync.yml",
         "docs/00-handbook/AUTH-REGISTRY.tsv",
         "web/tests/playwright/utils/auth.ts",
         ".github/workflows/release-canary.yml",
-        ".github/workflows/security-guardrails.yml"
-      ],
-      "gaps": [
-        "local non-secret dev token stratejisi kanonik değil",
-        "auth-required preset'ler için token source matrisi JSON-first değil",
-        "live canary ve DAST için secret provisioning matrisi JSON-first değil"
+        ".github/workflows/security-guardrails.yml",
+        "docs/02-architecture/context/live-release-provisioning.contract.v1.json"
       ]
     },
     {
@@ -167,24 +163,6 @@
   ],
   "missing_mechanisms_to_add_next": [
     {
-      "priority": "P1",
-      "id": "security-remediation-program",
-      "title": "Dependency/CVE remediation backlog",
-      "reason": "Security guardrail artik gercek bulgu uretiyor; mxparser ve woodstox gibi CVE'ler icin versiyon/override/tedarik zinciri duzeltme plani gerekiyor."
-    },
-    {
-      "priority": "P1",
-      "id": "live-canary-secret-provisioning",
-      "title": "Live canary secret ve hook provisioning matrisi",
-      "reason": "Canary mekanizmasi hazir; ama tam canli mod icin hook URL, Prom/Grafana ve smoke URL secret'larinin kanonik provisioning contract'i eksik."
-    },
-    {
-      "priority": "P1",
-      "id": "dast-target-contract",
-      "title": "DAST target ve auth contract",
-      "reason": "ZAP mekanizmasi workflow'da var ama hedef URL, auth modu ve environment scope kontrati eksik."
-    },
-    {
       "priority": "P2",
       "id": "autofix-policy-loop",
       "title": "Kontrollü auto-fix policy loop",
@@ -192,13 +170,12 @@
     }
   ],
   "recommended_execution_order": [
-    "dependency remediation backlog'unu cikarma ve CVE duzeltme dalgalarini planlama",
-    "live canary secret/hook provisioning kontratini tamamlama",
-    "DAST target ve auth contract'ini tamamlama",
+    "security-remediation residual review tarihini (2026-04-15) takip etme",
+    "kontrollu auto-fix policy loop'unu tanimlama",
     "orchestrator core unlock sonrası substrate adoption"
   ],
   "current_verdict": {
-    "status": "partial-with-real-findings",
-    "summary": "Frontend browser-visible diagnostics, backend doctor, business-journey e2e ve release/security guardrail mekanizmalari artik kanonik. Tam insansiz teslimat icin kalan aciklar mekanizma eksiginden cok secret/provisioning kontratlari, auto-fix politikasi ve guardrail'in yakaladigi gercek security bulgularidir."
+    "status": "ready-with-governed-residual-risk",
+    "summary": "Frontend browser-visible diagnostics, backend doctor, business-journey e2e, security remediation ve live provisioning kontratlari artik kanonik ve fail-closed. Kalan acik konu mekanizma eksiginden cok governance niteliginde residual risk review'u, kontrollu auto-fix politikasi ve orchestrator core unlock penceresidir."
   }
 }

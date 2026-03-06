@@ -29,6 +29,9 @@
 	<properties>
 		<java.version>21</java.version>
 		<spring-cloud.version>2023.0.3</spring-cloud.version>
+		<security.httpclient.version>4.5.14</security.httpclient.version>
+		<security.woodstox.version>6.7.0</security.woodstox.version>
+		<security.xstream.version>1.4.21</security.xstream.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -58,6 +61,44 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-jxpath</groupId>
+					<artifactId>commons-jxpath</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>${security.xstream.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>io.github.x-stream</groupId>
+					<artifactId>mxparser</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${security.httpclient.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.woodstox</groupId>
+			<artifactId>woodstox-core</artifactId>
+			<version>${security.woodstox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.10</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-jxpath</groupId>
+					<artifactId>commons-jxpath</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>

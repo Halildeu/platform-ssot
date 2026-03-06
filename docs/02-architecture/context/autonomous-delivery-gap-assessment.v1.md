@@ -11,11 +11,8 @@ tek yerde görmek.
 Genel hüküm:
 - Frontend browser-visible diagnostics ve backend runtime doctor katmanı artık kanonik.
 - Business journey e2e ve release/security guardrail mekanizmaları da artık kanonik.
-- Ama tam insansız teslimat zinciri henüz tamamlanmış değil.
-- En kritik açıklar:
-  - gerçek security bulgularının remediation backlog'u,
-  - live secret/provisioning kontratları,
-  - kontrollü auto-fix politikası.
+- Security remediation ve live provisioning kontratları da artık kanonik.
+- Yönetilen repo için teslimat zinciri mekanik olarak hazır; kalan açıklar residual risk yönetişimi ve kontrollü auto-fix politikasıdır.
 
 Durum özeti:
 - `ready`
@@ -27,15 +24,14 @@ Durum özeti:
   - backend runtime smoke
   - full business journey e2e
   - release canary / security guardrail
+  - secrets/token plumbing
   - CI triage ve evidence bundle
 - `partial`
-  - secrets/token plumbing
   - auto-fix loop
 - `blocked`
   - orchestrator core adoption (`CORE_UNLOCK` bekliyor)
 
 Önerilen sıra:
-1. dependency/CVE remediation backlog
-2. live canary secret/hook provisioning kontratı
-3. DAST target/auth contract
-4. core unlock sonrası orchestrator adoption
+1. security-remediation residual review tarihi takibi
+2. kontrollü auto-fix policy loop
+3. core unlock sonrası orchestrator adoption

@@ -38,8 +38,8 @@ jobs:
       )
     env:
       CANARY_ENABLED: ${{ secrets.CANARY_ENABLED }}
-      DEFAULT_MODE: ${{ vars.CANARY_DEFAULT_MODE || 'live' }}
-      DEFAULT_ENV: ${{ vars.CANARY_DEFAULT_ENV || 'stage' }}
+      CANARY_DEFAULT_MODE: ${{ vars.CANARY_DEFAULT_MODE || 'live' }}
+      CANARY_DEFAULT_ENV: ${{ vars.CANARY_DEFAULT_ENV || 'stage' }}
       CANARY_PROM_URL: ${{ secrets.CANARY_PROM_URL }}
       GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }}
       CANARY_API_KEY: ${{ secrets.CANARY_API_KEY }}
@@ -64,8 +64,8 @@ jobs:
           set -euo pipefail
           mode="${{ github.event.inputs.mode || '' }}"
           env_name="${{ github.event.inputs.env || '' }}"
-          if [ -z "${mode}" ]; then mode="${DEFAULT_MODE}"; fi
-          if [ -z "${env_name}" ]; then env_name="${DEFAULT_ENV}"; fi
+          if [ -z "${mode}" ]; then mode="${CANARY_DEFAULT_MODE}"; fi
+          if [ -z "${env_name}" ]; then env_name="${CANARY_DEFAULT_ENV}"; fi
           echo "mode=${mode}" >> "$GITHUB_OUTPUT"
           echo "env_name=${env_name}" >> "$GITHUB_OUTPUT"
 
@@ -82,6 +82,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Check live release provisioning contract
+        if: ${{ steps.resolve.outputs.mode == 'sample' || env.CANARY_ENABLED == 'true' }}
+        run: python3 scripts/check_live_release_provisioning_contract.py
 
       - name: Run canary orchestration
         if: ${{ steps.resolve.outputs.mode == 'sample' || env.CANARY_ENABLED == 'true' }}

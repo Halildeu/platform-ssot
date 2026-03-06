@@ -97,6 +97,55 @@ const writeFile = (filePath, value) => {
   writeFileSync(filePath, value, 'utf-8');
 };
 
+const requireEnv = (name) => {
+  const value = (process.env[name] || '').trim();
+  if (!value) {
+    throw new Error(`Live canary icin eksik environment: ${name}`);
+  }
+  return value;
+};
+
+const requireOneOf = (names) => {
+  for (const name of names) {
+    const value = (process.env[name] || '').trim();
+    if (value) {
+      return { name, value };
+    }
+  }
+  throw new Error(`Live canary icin su alanlardan en az biri zorunlu: ${names.join(', ')}`);
+};
+
+const validateLiveProvisioning = () => {
+  if (mode !== 'live') {
+    return;
+  }
+
+  requireOneOf([
+    'CANARY_APPLY_WEIGHT_HOOK_URL',
+    'CANARY_WEIGHT_10_HOOK_URL',
+    'CANARY_WEIGHT_50_HOOK_URL',
+    'CANARY_WEIGHT_100_HOOK_URL',
+  ]);
+  requireEnv('CANARY_ROLLBACK_HOOK_URL');
+  requireEnv('CANARY_WEB_SMOKE_URL');
+  const backendHealthUrls = (process.env.CANARY_BACKEND_HEALTH_URLS || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (backendHealthUrls.length === 0) {
+    throw new Error('Live canary icin CANARY_BACKEND_HEALTH_URLS zorunludur.');
+  }
+  requireEnv('CANARY_PROM_URL');
+  requireOneOf(['GRAFANA_API_KEY', 'CANARY_API_KEY']);
+  [
+    'CANARY_TTFB_QUERY',
+    'CANARY_ERROR_QUERY',
+    'CANARY_SENTRY_QUERY',
+    'CANARY_AUDIT_FILTER_QUERY',
+    'CANARY_AUDIT_TOTAL_QUERY',
+  ].forEach(requireEnv);
+};
+
 const resolveMetrics = (weight) => {
   const metricsFile = path.join(outDir, `metrics-${weight}.json`);
   if (mode === 'sample') {
@@ -147,6 +196,7 @@ const validateRuntime = async () => {
 };
 
 const main = async () => {
+  validateLiveProvisioning();
   const stageResults = [];
   let overallStatus = 'PASS';
   let rollbackResult = { skipped: true, reason: 'not-triggered' };
