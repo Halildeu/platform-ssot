@@ -9,11 +9,9 @@ Amaç:
 tek yerde görmek.
 
 Genel hüküm:
-- Frontend browser-visible diagnostics artık güçlü.
+- Frontend browser-visible diagnostics ve backend runtime doctor katmanı artık kanonik.
 - Ama tam insansız teslimat zinciri henüz tamamlanmış değil.
 - En kritik açıklar:
-  - auth-required business route click-walk coverage,
-  - backend-doctor,
   - business journey e2e kataloğu,
   - gerçek canary/security guardrail implementation.
 
@@ -23,10 +21,10 @@ Durum özeti:
   - code generation guardrails
   - browser-visible failure detection
   - public route browser coverage
-  - CI triage ve evidence bundle
-- `partial`
   - auth-required route browser coverage
   - backend runtime smoke
+  - CI triage ve evidence bundle
+- `partial`
   - full business journey e2e
   - auto-fix loop
   - release canary / security guardrail
@@ -35,9 +33,7 @@ Durum özeti:
   - orchestrator core adoption (`CORE_UNLOCK` bekliyor)
 
 Önerilen sıra:
-1. auth-required route click-walk preset'leri
-2. backend-doctor
-3. katalog bazlı user-journey e2e matrisi
-4. release canary / guardrail implementation
-5. security guardrail implementation
-6. core unlock sonrası orchestrator adoption
+1. katalog bazlı user-journey e2e matrisi
+2. release canary / guardrail implementation
+3. security guardrail implementation
+4. core unlock sonrası orchestrator adoption

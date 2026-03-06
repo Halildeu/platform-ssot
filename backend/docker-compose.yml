@@ -50,7 +50,7 @@ services:
       SPRING_CLOUD_VAULT_KV_ENABLED: "false"
       PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       SERVICE_TOKEN_MINT_URL: ${SERVICE_TOKEN_MINT_URL:-http://auth-service:8088/oauth2/token}
-      USER_DB_SCHEMA: ${USER_DB_SCHEMA:-public}
+      USER_DB_SCHEMA: ${USER_DB_SCHEMA:-user_service}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       # RS256/JWKS doğrulaması
@@ -94,8 +94,8 @@ services:
       SPRING_CLOUD_VAULT_KV_ENABLED: "false"
       PERMISSION_SERVICE_BASE_URL: ${PERMISSION_SERVICE_BASE_URL:-http://permission-service}
       USER_SERVICE_BASE_URL: ${USER_SERVICE_BASE_URL:-http://user-service}
-      AUTH_DB_SCHEMA: ${AUTH_DB_SCHEMA:-public}
-      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      AUTH_DB_SCHEMA: ${AUTH_DB_SCHEMA:-auth_service}
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
       AUTH_DB_NAME: ${AUTH_DB_NAME:-users}
       AUTH_DB_USERNAME: ${AUTH_DB_USERNAME:-postgres}
       AUTH_DB_PASSWORD: ${AUTH_DB_PASSWORD:-postgres}
@@ -134,11 +134,11 @@ services:
       # Access token aud claim’i Keycloak client tanımındaki variant-service değerine göre doğrulanır.
       SECURITY_JWT_AUDIENCE: variant-service
       # Opsiyonel diğer ayarlar
-      VARIANT_DB_URL: ${VARIANT_DB_URL}
-      VARIANT_DB_USERNAME: ${VARIANT_DB_USERNAME}
-      VARIANT_DB_PASSWORD: ${VARIANT_DB_PASSWORD}
-      VARIANT_DB_SCHEMA: ${VARIANT_DB_SCHEMA:-public}
-      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL}
+      VARIANT_DB_URL: ${VARIANT_DB_URL:-jdbc:postgresql://postgres-db:5432/users?currentSchema=variant_service,public}
+      VARIANT_DB_USERNAME: ${VARIANT_DB_USERNAME:-postgres}
+      VARIANT_DB_PASSWORD: ${VARIANT_DB_PASSWORD:-postgres}
+      VARIANT_DB_SCHEMA: ${VARIANT_DB_SCHEMA:-variant_service}
+      EUREKA_SERVER_URL: ${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -163,7 +163,7 @@ services:
       - SPRING_DATASOURCE_URL=${CORE_DATA_DB_URL:-jdbc:postgresql://postgres-db:5432/users}
       - SPRING_DATASOURCE_USERNAME=${CORE_DATA_DB_USERNAME:-postgres}
       - SPRING_DATASOURCE_PASSWORD=${CORE_DATA_DB_PASSWORD:-postgres}
-      - CORE_DATA_DB_SCHEMA=${CORE_DATA_DB_SCHEMA:-public}
+      - CORE_DATA_DB_SCHEMA=${CORE_DATA_DB_SCHEMA:-core_data_service}
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
       - SECURITY_JWT_JWK_SET_URI=${SECURITY_JWT_JWK_SET_URI:-http://keycloak:8080/realms/serban/protocol/openid-connect/certs}
       - SECURITY_JWT_ISSUER=${SECURITY_JWT_ISSUER:-http://localhost:8081/realms/serban}
@@ -295,8 +295,8 @@ services:
       - PERMISSION_DB_URL=${PERMISSION_DB_URL:-jdbc:postgresql://postgres-db:5432/users}
       - PERMISSION_DB_USERNAME=${PERMISSION_DB_USERNAME:-postgres}
       - PERMISSION_DB_PASSWORD=${PERMISSION_DB_PASSWORD:-postgres}
-      - PERMISSION_DB_SCHEMA=${PERMISSION_DB_SCHEMA:-public}
-      - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
+      - PERMISSION_DB_SCHEMA=${PERMISSION_DB_SCHEMA:-permission_service}
+      - EUREKA_SERVER_URL=${EUREKA_SERVER_URL:-http://discovery-server:8761/eureka}
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - SPRING_CLOUD_VAULT_ENABLED=false
@@ -314,7 +314,7 @@ services:
       # Ek issuer listesi Keycloak serban realm'i işaret eder
       - SECURITY_JWT_JWK_SET_URIS=http://keycloak:8080/realms/serban/protocol/openid-connect/certs
       - SECURITY_JWT_ISSUERS=http://localhost:8081/realms/serban
-      - PERMISSION_BOOTSTRAP_DEFAULT_ADMIN_ASSIGNMENTS_USER_TABLE=${PERMISSION_BOOTSTRAP_DEFAULT_ADMIN_ASSIGNMENTS_USER_TABLE:-users}
+      - PERMISSION_BOOTSTRAP_DEFAULT_ADMIN_ASSIGNMENTS_USER_TABLE=${PERMISSION_BOOTSTRAP_DEFAULT_ADMIN_ASSIGNMENTS_USER_TABLE:-user_service.users}
     depends_on:
       discovery-server:
         condition: service_healthy

@@ -60,32 +60,23 @@
     {
       "capability_id": "auth_required_route_browser_coverage",
       "title": "Auth-required route browser coverage",
-      "status": "partial",
-      "why": "Theme admin route mock-backed token injection ile korunuyor. Access, audit ve reporting route'larında yalnız açılış smoke var; click-walk ve richer UI evidence eksik.",
+      "status": "ready",
+      "why": "Theme admin ile birlikte access, audit ve reporting route'lari da mock-backed token injection preset'i altinda page-open + click-walk + evidence artefact seti ile korunuyor.",
       "evidence": [
         "web/tests/playwright/pw_scenarios.yml",
-        "web/test-results/diagnostics/frontend-doctor/2026-03-06T02-20-11-661Z/frontend-doctor.summary.v1.json"
-      ],
-      "gaps": [
-        "access_roles_page için click-walk eksik",
-        "audit_events_page için click-walk eksik",
-        "reporting_users_page için click-walk eksik",
-        "auth-required preset'lerin hepsi frontend-doctor preset listesinde ayrı ayrı tanımlı değil"
+        "web/scripts/ops/frontend-doctor.mjs",
+        "web/test-results/diagnostics/frontend-doctor/2026-03-06T07-17-49-825Z/frontend-doctor.summary.v1.json"
       ]
     },
     {
       "capability_id": "backend_runtime_smoke",
       "title": "Backend runtime smoke ve canlı doğrulama",
-      "status": "partial",
-      "why": "Service schema cutover, compose smoke ve health kanıtları var; ancak frontend-doctor benzeri tek komutlu backend-doctor katmanı yok.",
+      "status": "ready",
+      "why": "Compose service matrix, health probe, unauthorized smoke ve redacted log triage tek komutlu backend-doctor summary paketi altinda birlestirildi.",
       "evidence": [
-        "docs/02-architecture/runtime/database-isolation-plan.v1.json",
-        "docs/04-operations/RUNBOOKS/RB-live-service-schema-cutover.md",
-        "backend/.autopilot-tmp/runtime-smoke/compose-ps-summary.json"
-      ],
-      "gaps": [
-        "tek girişli backend-doctor yok",
-        "service bazlı smoke preset'leri JSON-first registry altında birleşmemiş"
+        "docs/02-architecture/context/backend-diagnostics.registry.v1.json",
+        "backend/scripts/ops/backend-doctor.py",
+        "backend/test-results/diagnostics/backend-doctor/2026-03-06T07-30-52.860680+00-00/backend-doctor.summary.v1.json"
       ]
     },
     {
@@ -176,18 +167,6 @@
   ],
   "missing_mechanisms_to_add_next": [
     {
-      "priority": "P0",
-      "id": "access-audit-reporting-click-walk-presets",
-      "title": "Auth-required route click-walk preset'leri",
-      "reason": "Browser-visible hata yakalama theme-admin için var, diğer admin/business route'larda açılış smoke düzeyinde kalıyor."
-    },
-    {
-      "priority": "P0",
-      "id": "backend-doctor",
-      "title": "Tek girişli backend doctor",
-      "reason": "Frontend tarafındaki doctor olgunluğuna karşılık backend runtime/health/log/smoke katmanı tek komutta birleşmiyor."
-    },
-    {
       "priority": "P1",
       "id": "business-journey-scenario-catalog",
       "title": "Katalog bazlı user-journey senaryo kataloğu",
@@ -213,8 +192,6 @@
     }
   ],
   "recommended_execution_order": [
-    "auth-required route click-walk preset'lerini tamamlama",
-    "backend-doctor ekleme",
     "katalog bazlı user-journey e2e matrisi ekleme",
     "release canary + guardrail placeholder'larını gerçek entegrasyona çevirme",
     "security-guardrails placeholder'larını gerçek gate'e çevirme",
@@ -222,6 +199,6 @@
   ],
   "current_verdict": {
     "status": "partial-but-advancing",
-    "summary": "Browser-visible frontend hata yakalama artık güçlü. Tam insansız teslimat için en kritik açıklar auth-required business route walk coverage, backend-doctor, gerçek release/security guardrail entegrasyonu ve business-journey e2e kataloğudur."
+    "summary": "Frontend browser-visible hata yakalama ve backend runtime doctor katmani artik kanonik. Tam insansiz teslimat icin acik en kritik halkalar katalog bazli business-journey e2e ve gercek release/security guardrail entegrasyonudur."
   }
 }

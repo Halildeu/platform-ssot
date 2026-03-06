@@ -1,0 +1,267 @@
+{
+  "version": "1.0",
+  "registry_id": "backend-diagnostics-registry-v1",
+  "subject_id": "backend_runtime_diagnostics_control_plane",
+  "title": "Backend Diagnostics Control Plane",
+  "purpose": "Local compose runtime health, service matrix, unauthorized smoke, log triage ve tek JSON/MD summary zincirini tek doctor akısı altında toplamak.",
+  "canonical_entrypoints": [
+    "docs/02-architecture/context/backend-diagnostics.registry.v1.json",
+    "backend/scripts/ops/backend-doctor.py",
+    "docs/04-operations/RUNBOOKS/RB-backend-doctor.md",
+    "backend/scripts/smoke.sh",
+    "backend/scripts/ops/run-live-service-schema-cutover.sh",
+    "docs/04-operations/MONITORING/MONITORING-backend-services.md"
+  ],
+  "diagnostic_layers": [
+    {
+      "layer_id": "compose_service_matrix",
+      "status": "active",
+      "owner": "backend/docker-compose.yml",
+      "signals": [
+        "service_presence",
+        "container_state",
+        "compose_health",
+        "port_publication"
+      ],
+      "artifacts": [
+        "backend/test-results/diagnostics/backend-doctor/*/service-matrix.v1.json",
+        "backend/test-results/diagnostics/backend-doctor/*/artifacts/compose-ps.raw.txt"
+      ]
+    },
+    {
+      "layer_id": "http_health_probes",
+      "status": "active",
+      "owner": "backend/scripts/ops/backend-doctor.py",
+      "signals": [
+        "service_health_endpoint",
+        "oidc_metadata_health",
+        "vault_sys_health"
+      ],
+      "artifacts": [
+        "backend/test-results/diagnostics/backend-doctor/*/health-probes.v1.json"
+      ]
+    },
+    {
+      "layer_id": "unauthorized_runtime_smoke",
+      "status": "active",
+      "owner": "backend/scripts/ops/backend-doctor.py",
+      "signals": [
+        "gateway_unauthorized_companies",
+        "auth_jwks",
+        "eureka_registry"
+      ],
+      "artifacts": [
+        "backend/test-results/diagnostics/backend-doctor/*/smoke-checks.v1.json"
+      ]
+    },
+    {
+      "layer_id": "log_triage",
+      "status": "active",
+      "owner": "backend/scripts/ops/backend-doctor.py",
+      "signals": [
+        "error_keyword_hits",
+        "exception_hits",
+        "first_redacted_excerpts"
+      ],
+      "artifacts": [
+        "backend/test-results/diagnostics/backend-doctor/*/log-triage.v1.json"
+      ]
+    },
+    {
+      "layer_id": "legacy_token_smoke",
+      "status": "active_manual",
+      "owner": "backend/scripts/smoke.sh",
+      "signals": [
+        "token_mint",
+        "authenticated_gateway_users_list",
+        "export_guard"
+      ],
+      "artifacts": [
+        "stdout only; no canonical summary"
+      ]
+    },
+    {
+      "layer_id": "backend_doctor",
+      "status": "active",
+      "owner": "backend/scripts/ops/backend-doctor.py",
+      "signals": [
+        "overall_status",
+        "critical_service_health",
+        "critical_smoke_health",
+        "log_triage_summary"
+      ],
+      "artifacts": [
+        "backend/test-results/diagnostics/backend-doctor/*/backend-doctor.summary.v1.json",
+        "backend/test-results/diagnostics/backend-doctor/*/backend-doctor.summary.v1.md"
+      ]
+    }
+  ],
+  "service_matrix": [
+    {
+      "service_id": "discovery_server",
+      "compose_service": "discovery-server",
+      "critical": true,
+      "host_port": 8761,
+      "health_url": "http://localhost:8761/actuator/health",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "postgres_db",
+      "compose_service": "postgres-db",
+      "critical": true,
+      "host_port": 5432,
+      "health_via": "compose_only"
+    },
+    {
+      "service_id": "auth_service",
+      "compose_service": "auth-service",
+      "critical": true,
+      "host_port": 8088,
+      "health_url": "http://localhost:8088/actuator/health",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "permission_service",
+      "compose_service": "permission-service",
+      "critical": true,
+      "host_port": 8090,
+      "health_url": "http://localhost:8090/actuator/health",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "user_service",
+      "compose_service": "user-service",
+      "critical": true,
+      "host_port": 8089,
+      "health_url": "http://localhost:8089/actuator/health",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "variant_service",
+      "compose_service": "variant-service",
+      "critical": true,
+      "host_port": 8091,
+      "health_url": "http://localhost:8091/actuator/health",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "core_data_service",
+      "compose_service": "core-data-service",
+      "critical": true,
+      "host_port": 8092,
+      "health_url": "http://localhost:8092/actuator/health",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "api_gateway",
+      "compose_service": "api-gateway",
+      "critical": true,
+      "host_port": 8080,
+      "health_url": "http://localhost:8080/actuator/health",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "keycloak",
+      "compose_service": "keycloak",
+      "critical": true,
+      "host_port": 8081,
+      "health_url": "http://localhost:8081/realms/serban/.well-known/openid-configuration",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "vault",
+      "compose_service": "vault",
+      "critical": false,
+      "host_port": 8200,
+      "health_url": "http://localhost:8200/v1/sys/health",
+      "expected_http_statuses": [200, 429, 472, 473]
+    },
+    {
+      "service_id": "observability_prometheus",
+      "compose_service": "observability-prometheus",
+      "critical": false,
+      "host_port": 9090,
+      "health_url": "http://localhost:9090/-/ready",
+      "expected_http_statuses": [200]
+    },
+    {
+      "service_id": "observability_grafana",
+      "compose_service": "observability-grafana",
+      "critical": false,
+      "host_port": 3010,
+      "health_url": "http://localhost:3010/api/health",
+      "expected_http_statuses": [200]
+    }
+  ],
+  "smoke_checks": [
+    {
+      "check_id": "gateway_companies_unauthorized",
+      "critical": true,
+      "method": "GET",
+      "url": "http://localhost:8080/api/v1/companies",
+      "expected_statuses": [401, 403]
+    },
+    {
+      "check_id": "auth_jwks",
+      "critical": true,
+      "method": "GET",
+      "url": "http://localhost:8088/oauth2/jwks",
+      "expected_statuses": [200]
+    },
+    {
+      "check_id": "eureka_registry",
+      "critical": true,
+      "method": "GET",
+      "url": "http://localhost:8761/eureka/apps",
+      "expected_statuses": [200]
+    }
+  ],
+  "log_triage": {
+    "tail_lines": 200,
+    "patterns": [
+      "\\bERROR\\b",
+      "\\bFATAL\\b",
+      "\\bException\\b",
+      "Traceback",
+      "Caused by:"
+    ],
+    "excerpt_limit_per_service": 5,
+    "redaction_rules": [
+      "Bearer <token>",
+      "authorization/token/secret/password/client_secret alanlari",
+      "JWT benzeri uzun degerler"
+    ]
+  },
+  "doctor_presets": [
+    {
+      "preset_id": "local-compose",
+      "description": "Yerel docker compose runtime'ini side-effect olmadan gozlemleyen backend doctor preset'i.",
+      "steps": [
+        "compose_service_matrix",
+        "http_health_probes",
+        "unauthorized_runtime_smoke",
+        "log_triage",
+        "summary_bundle"
+      ],
+      "expected_artifacts": [
+        "backend-doctor.summary.v1.json",
+        "backend-doctor.summary.v1.md",
+        "service-matrix.v1.json",
+        "health-probes.v1.json",
+        "smoke-checks.v1.json",
+        "log-triage.v1.json",
+        "artifacts/compose-ps.raw.txt"
+      ],
+      "side_effect_policy": "report_only"
+    }
+  ],
+  "hard_rules": [
+    "backend-doctor varsayılan olarak report_only calisir; docker compose up/down yapmaz.",
+    "Secrets, token, password, private key ve authorization header value evidence'a yazilmaz.",
+    "Compose service matrix, health probe ve smoke sonucu ayni summary paketi icinde toplanir.",
+    "Kritik servis down ise overall_status PASS olamaz.",
+    "Kritik smoke fail ise overall_status PASS olamaz.",
+    "Ham docker log dump'i artifact olarak yazilmaz; yalniz redacted triage excerpt yazilir.",
+    "Canli runtime durumu ile mekanizma olgunlugu ayri degerlendirilir; doctor FAIL uretse bile summary her zaman yazilir."
+  ]
+}
