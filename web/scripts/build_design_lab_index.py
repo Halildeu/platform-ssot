@@ -4,25 +4,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Set, TypedDict
-from zoneinfo import ZoneInfo
-
-
-TR_TZ = ZoneInfo("Europe/Istanbul")
-
-
-def now_tr() -> datetime:
-    return datetime.now(TR_TZ)
-
-
-def format_ts(dt: datetime) -> str:
-    return dt.isoformat(timespec="seconds")
-
-
-def format_ts_utc(dt: datetime) -> str:
-    return dt.astimezone(timezone.utc).isoformat(timespec="seconds")
 
 
 def resolve_module_path(from_path: Path, module_path: str) -> Optional[Path]:
@@ -434,13 +417,10 @@ def build_design_lab_index(web_root: Path) -> dict:
             }
         )
 
-    timestamp_tr = now_tr()
     exported_count = sum(1 for item in items if item.get("availability") == "exported")
     planned_count = sum(1 for item in items if item.get("availability") == "planned")
     return {
         "version": 1,
-        "generatedAt": format_ts(timestamp_tr),
-        "generatedAtUtc": format_ts_utc(timestamp_tr),
         "source": {
             "package": "mfe-ui-kit",
             "index": "packages/ui-kit/src/index.ts",
