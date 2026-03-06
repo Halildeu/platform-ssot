@@ -68,3 +68,11 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 - `npm -C web run lint:tailwind`
 - `npm -C web run lint:no-antd`
 - `npm -C web run test:ui-kit`
+
+## Son durum
+
+- `completed`
+- `Button` ve `Text` stable seviyede hizalandi.
+- `LinkInline`, `IconButton`, `Skeleton`, `Spinner`, `Avatar`, `Divider` beta export olarak acildi.
+- `ui-kit` test ve build zinciri gecti.
+- `Design Lab` preview ve registry kaniti guncellendi.

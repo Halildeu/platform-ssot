@@ -9,14 +9,20 @@ import {
   EntityGridTemplate,
   FilterBar,
   FormDrawer,
+  IconButton,
+  LinkInline,
   Modal,
   PageLayout,
   ReportFilterPanel,
   Select,
+  Skeleton,
+  Spinner,
   Tag,
   Text,
   ThemePreviewCard,
   Tooltip,
+  Avatar,
+  Divider,
 } from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
 import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
@@ -365,6 +371,126 @@ const DesignLabPage: React.FC = () => {
                       Uzun açıklama metni iki satıra clamp edilir; layout taşması üretmez ve typography kontratını korur.
                     </Text>
                   </div>
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'LinkInline':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Internal / external">
+                <div className="flex flex-wrap items-center gap-4">
+                  <LinkInline href="#users">Internal link</LinkInline>
+                  <LinkInline href="https://mui.com" external>External link</LinkInline>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Current / blocked">
+                <div className="flex flex-wrap items-center gap-4">
+                  <LinkInline href="#current" current>Current state</LinkInline>
+                  <LinkInline href="#blocked" disabled>Disabled state</LinkInline>
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'IconButton':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Intent ve size">
+                <div className="flex flex-wrap items-center gap-3">
+                  <IconButton icon={<span aria-hidden="true">+</span>} label="Ekle" size="sm" />
+                  <IconButton icon={<span aria-hidden="true">☆</span>} label="Pinle" selected />
+                  <IconButton icon={<span aria-hidden="true">×</span>} label="Sil" variant="destructive" size="lg" />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Loading / disabled">
+                <div className="flex flex-wrap items-center gap-3">
+                  <IconButton icon={<span aria-hidden="true">⟳</span>} label="Yükleniyor" loading />
+                  <IconButton icon={<span aria-hidden="true">🔒</span>} label="Kilitli" disabled />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Skeleton':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+              <PreviewPanel title="Text">
+                <Skeleton lines={3} />
+              </PreviewPanel>
+              <PreviewPanel title="Avatar + text">
+                <div className="flex items-center gap-3">
+                  <Skeleton variant="avatar" />
+                  <div className="flex-1">
+                    <Skeleton lines={2} />
+                  </div>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Card placeholder">
+                <Skeleton variant="rect" className="h-28" />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Spinner':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+              <PreviewPanel title="Inline">
+                <Spinner label="Yükleniyor" />
+              </PreviewPanel>
+              <PreviewPanel title="Block">
+                <Spinner mode="block" label="Liste hazırlanıyor" />
+              </PreviewPanel>
+              <PreviewPanel title="Overlay">
+                <Spinner mode="overlay" label="Bölüm yükleniyor" />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Avatar':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Sizes">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Avatar name="Ada Lovelace" size="sm" />
+                  <Avatar name="Ada Lovelace" size="md" />
+                  <Avatar name="Ada Lovelace" size="lg" />
+                  <Avatar name="Ada Lovelace" size="xl" />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Fallback types">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Avatar name="Grace Hopper" />
+                  <Avatar fallbackIcon={<span aria-hidden="true">👤</span>} />
+                  <Avatar shape="square" name="Alan Turing" />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Divider':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Horizontal">
+                <div className="space-y-3">
+                  <Text>İçerik üstü</Text>
+                  <Divider />
+                  <Text variant="secondary">İçerik altı</Text>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Label / vertical">
+                <div className="flex items-center gap-4">
+                  <Text>Sol</Text>
+                  <Divider orientation="vertical" className="h-8" />
+                  <Text>Sağ</Text>
+                  <Divider label="veya" className="flex-1" />
                 </div>
               </PreviewPanel>
             </div>

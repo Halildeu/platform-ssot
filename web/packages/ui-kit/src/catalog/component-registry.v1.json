@@ -85,18 +85,24 @@
   "tracks": {
     "implemented": [
       "AgGridServer",
+      "Avatar",
       "Badge",
       "Button",
       "DetailDrawer",
+      "Divider",
       "Dropdown",
       "Empty",
       "EntityGridTemplate",
       "FilterBar",
       "FormDrawer",
+      "IconButton",
+      "LinkInline",
       "Modal",
       "PageLayout",
       "ReportFilterPanel",
       "Select",
+      "Skeleton",
+      "Spinner",
       "THEME_APPEARANCE_OPTIONS",
       "THEME_DENSITY_OPTIONS",
       "THEME_ELEVATION_OPTIONS",
@@ -182,6 +188,60 @@
       ]
     },
     {
+      "name": "AnchorToc",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "AnchorToc P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Avatar",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "content",
+      "subgroup": "identity",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Avatar & Identity",
+      "demoMode": "inspector",
+      "description": "Identity primitivei; image, initials ve fallback icon davranisini gizlilik varsayimlariyla sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-1",
+        "foundation-primitives",
+        "beta",
+        "identity"
+      ],
+      "uxPrimaryThemeId": "trust_privacy_security_ux",
+      "uxPrimarySubthemeId": "privacy_by_design_defaults",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+    },
+    {
       "name": "Badge",
       "kind": "component",
       "availability": "exported",
@@ -200,6 +260,27 @@
         "design_tokens",
         "preview_visibility",
         "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Breadcrumb",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Breadcrumb P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
       ]
     },
     {
@@ -276,6 +357,111 @@
       "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
+      "name": "Checkbox",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Checkbox P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "CommandPalette",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "CommandPalette P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "ContextMenu",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "ContextMenu P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "DatePicker",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "DatePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Descriptions",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Descriptions P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
       "name": "DetailDrawer",
       "kind": "component",
       "availability": "exported",
@@ -296,6 +482,39 @@
         "preview_visibility",
         "registry_export_sync"
       ]
+    },
+    {
+      "name": "Divider",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "content",
+      "subgroup": "divider",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Divider",
+      "demoMode": "inspector",
+      "description": "Separation primitivei; horizontal, vertical ve labelled divider davranisini tek API ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-1",
+        "foundation-primitives",
+        "beta",
+        "divider"
+      ],
+      "uxPrimaryThemeId": "consistency_and_pattern_governance",
+      "uxPrimarySubthemeId": "behavior_contracts_across_modules",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "Dropdown",
@@ -468,6 +687,116 @@
       ]
     },
     {
+      "name": "IconButton",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "actions",
+      "subgroup": "buttons",
+      "taxonomyGroupId": "actions",
+      "taxonomySubgroup": "Icon button",
+      "demoMode": "live",
+      "description": "Icon-only aksiyon primitivei; accessible name, selected state ve size kontratini Button ile hizali verir.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-1",
+        "foundation-primitives",
+        "beta",
+        "icon-button"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+    },
+    {
+      "name": "JsonViewer",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "JsonViewer P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "LinkInline",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "content",
+      "subgroup": "link",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Link",
+      "demoMode": "live",
+      "description": "Inline link primitivei; internal, external ve current-state davranisini ortak API ile verir.",
+      "sectionIds": [
+        "component_library_management",
+        "navigation_patterns",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-1",
+        "foundation-primitives",
+        "beta",
+        "link"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "orientation_and_wayfinding",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+    },
+    {
+      "name": "List",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "List P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
       "name": "Modal",
       "kind": "component",
       "availability": "exported",
@@ -509,6 +838,69 @@
         "design_tokens",
         "preview_visibility",
         "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Pagination",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Pagination P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Popover",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Popover P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Radio",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Radio P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
       ]
     },
     {
@@ -836,6 +1228,115 @@
       ]
     },
     {
+      "name": "Skeleton",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "feedback",
+      "subgroup": "loading",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Skeleton / Placeholder",
+      "demoMode": "live",
+      "description": "Loading placeholder primitivei; text, avatar ve card skeleton varyantlarini token-first sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-1",
+        "foundation-primitives",
+        "beta",
+        "loading"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "loading_empty_error_success_patterns",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+    },
+    {
+      "name": "Slider",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Slider P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Spinner",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "feedback",
+      "subgroup": "loading",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Progress / Spinner",
+      "demoMode": "live",
+      "description": "Loading indicator primitivei; inline, block ve overlay modlarini ortak semantikle verir.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-1",
+        "foundation-primitives",
+        "beta",
+        "loading"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "response_time_budget_feedback",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+    },
+    {
+      "name": "Steps",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Steps P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
       "name": "subscribeThemeAxes",
       "kind": "function",
       "availability": "exported",
@@ -853,6 +1354,69 @@
       ],
       "qualityGates": [
         "registry_export_sync"
+      ]
+    },
+    {
+      "name": "Switch",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "Switch P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TableSimple",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "TableSimple P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "runtime",
+      "subgroup": "utilities",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "demoMode": "planned",
+      "description": "Tabs P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
       ]
     },
     {
@@ -908,6 +1472,48 @@
       "uxPrimarySubthemeId": "contrast_typography_readability",
       "roadmapWaveId": "wave_1_foundation_primitives",
       "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+    },
+    {
+      "name": "TextArea",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "TextArea P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "TextInput",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "TextInput P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
     },
     {
       "name": "THEME_APPEARANCE_OPTIONS",
@@ -1032,6 +1638,27 @@
       ]
     },
     {
+      "name": "TimePicker",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "forms",
+      "subgroup": "inputs",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "planned",
+      "description": "TimePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
       "name": "toggleVariantDefault",
       "kind": "function",
       "availability": "exported",
@@ -1071,486 +1698,6 @@
         "design_tokens",
         "preview_visibility",
         "registry_export_sync"
-      ]
-    },
-    {
-      "name": "updateThemeAxes",
-      "kind": "function",
-      "availability": "exported",
-      "lifecycle": "beta",
-      "group": "theme",
-      "subgroup": "runtime",
-      "taxonomyGroupId": "theme_tokens",
-      "taxonomySubgroup": "Theme editor (axes)",
-      "demoMode": "inspector",
-      "description": "Theme axes patch uygulayan runtime controller.",
-      "sectionIds": [
-        "design_token_management",
-        "theming_customization",
-        "documentation_standards"
-      ],
-      "qualityGates": [
-        "registry_export_sync"
-      ]
-    },
-    {
-      "name": "useGridVariants",
-      "kind": "hook",
-      "availability": "exported",
-      "lifecycle": "beta",
-      "group": "data-grid",
-      "subgroup": "variants",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Hooks (useX)",
-      "demoMode": "inspector",
-      "description": "Grid varyantlarini kullanip durum yoneten hook.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "registry_export_sync"
-      ]
-    },
-    {
-      "name": "withAccessGuard",
-      "kind": "function",
-      "availability": "exported",
-      "lifecycle": "stable",
-      "group": "runtime",
-      "subgroup": "access",
-      "taxonomyGroupId": "auth_security_ui",
-      "taxonomySubgroup": "Permission gates",
-      "demoMode": "inspector",
-      "description": "Readonly/disabled guard davranisini event handler seviyesinde uygular.",
-      "sectionIds": [
-        "utility_components",
-        "accessibility_compliance",
-        "integration_distribution"
-      ],
-      "qualityGates": [
-        "registry_export_sync"
-      ]
-    },
-    {
-      "name": "AnchorToc",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "AnchorToc P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Breadcrumb",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Breadcrumb P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Checkbox",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Checkbox P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "CommandPalette",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "CommandPalette P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "ContextMenu",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "ContextMenu P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "DatePicker",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "DatePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Descriptions",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Descriptions P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "JsonViewer",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "JsonViewer P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "List",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "List P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Pagination",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Pagination P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Popover",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Popover P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Radio",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Radio P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Slider",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Slider P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Steps",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Steps P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Switch",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Switch P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "TableSimple",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "TableSimple P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "Tabs",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Tabs P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "TextArea",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TextArea P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "TextInput",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TextInput P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
-    },
-    {
-      "name": "TimePicker",
-      "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "forms",
-      "subgroup": "inputs",
-      "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TimePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
-      "sectionIds": [
-        "component_library_management",
-        "documentation_standards",
-        "accessibility_compliance"
-      ],
-      "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
       ]
     },
     {
@@ -1617,6 +1764,26 @@
       ]
     },
     {
+      "name": "updateThemeAxes",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "theme",
+      "subgroup": "runtime",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "Theme axes patch uygulayan runtime controller.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
       "name": "Upload",
       "kind": "component",
       "availability": "planned",
@@ -1635,6 +1802,46 @@
       "qualityGates": [
         "backlog_contract",
         "preview_before_release"
+      ]
+    },
+    {
+      "name": "useGridVariants",
+      "kind": "hook",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "data-grid",
+      "subgroup": "variants",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Hooks (useX)",
+      "demoMode": "inspector",
+      "description": "Grid varyantlarini kullanip durum yoneten hook.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ]
+    },
+    {
+      "name": "withAccessGuard",
+      "kind": "function",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "runtime",
+      "subgroup": "access",
+      "taxonomyGroupId": "auth_security_ui",
+      "taxonomySubgroup": "Permission gates",
+      "demoMode": "inspector",
+      "description": "Readonly/disabled guard davranisini event handler seviyesinde uygular.",
+      "sectionIds": [
+        "utility_components",
+        "accessibility_compliance",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
       ]
     }
   ]

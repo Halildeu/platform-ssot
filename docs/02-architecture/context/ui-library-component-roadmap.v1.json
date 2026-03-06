@@ -41,16 +41,15 @@
           "Tag",
           "Text",
           "Tooltip",
-          "Empty"
-        ],
-        "gaps": [
+          "Empty",
           "LinkInline",
           "IconButton",
           "Avatar",
           "Divider",
           "Skeleton",
           "Spinner"
-        ]
+        ],
+        "gaps": []
       },
       "target_components": [
         {
@@ -693,7 +692,7 @@
     {
       "wave_id": "wave_1_foundation_primitives",
       "title_tr": "Foundation Primitives",
-      "status": "planned",
+      "status": "completed",
       "objective": "Temel primitive setini kur ve mevcut atomlari stable seviyeye getir.",
       "families": [
         "foundation_primitives"

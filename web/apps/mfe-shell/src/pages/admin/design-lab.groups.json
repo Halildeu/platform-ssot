@@ -34,6 +34,7 @@
       "label": "Feedback",
       "subgroups": [
         { "id": "badges", "label": "Badges" },
+        { "id": "loading", "label": "Loading & Placeholder" },
         { "id": "tooltips", "label": "Tooltips" },
         { "id": "tags", "label": "Tags" }
       ]
@@ -59,7 +60,10 @@
       "id": "content",
       "label": "Content & Typography",
       "subgroups": [
-        { "id": "text", "label": "Text" }
+        { "id": "text", "label": "Text" },
+        { "id": "link", "label": "Link" },
+        { "id": "identity", "label": "Identity" },
+        { "id": "divider", "label": "Divider" }
       ]
     },
     {
@@ -89,4 +93,3 @@
     }
   ]
 }
-

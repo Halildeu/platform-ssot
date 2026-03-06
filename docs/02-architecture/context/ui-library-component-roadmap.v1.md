@@ -144,6 +144,7 @@ Minimum evidence:
 
 ### Wave 1
 
+- `completed`
 - `Foundation Primitives`
 - hedef:
   - `Button`

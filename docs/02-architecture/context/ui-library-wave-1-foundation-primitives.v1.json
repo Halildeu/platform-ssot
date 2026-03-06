@@ -3,7 +3,7 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_1_foundation_primitives",
   "family_id": "foundation_primitives",
-  "status": "planned_for_implementation",
+  "status": "completed",
   "purpose": "Foundation primitives dalgasi icin component bazli acceptance, UX eslesmesi, preview senaryolari ve gate/evidence planini tek kanonik pakette toplamak.",
   "baseline": {
     "governance_lock_commit": "0900750",
@@ -30,22 +30,34 @@
     {
       "batch_id": "batch_1_existing_upgrades",
       "objective": "Mevcut stable primitive'leri yeni governance ve UX standardina hizalamak.",
-      "components": ["Button", "Text"]
+      "components": [
+        "Button",
+        "Text"
+      ]
     },
     {
       "batch_id": "batch_2_interactive_primitives",
       "objective": "Link ve icon-aksi yonlu primitive'leri ortak API ile eklemek.",
-      "components": ["LinkInline", "IconButton"]
+      "components": [
+        "LinkInline",
+        "IconButton"
+      ]
     },
     {
       "batch_id": "batch_3_feedback_loading",
       "objective": "Loading ve waiting state primitive'lerini token-first sekilde eklemek.",
-      "components": ["Skeleton", "Spinner"]
+      "components": [
+        "Skeleton",
+        "Spinner"
+      ]
     },
     {
       "batch_id": "batch_4_support_primitives",
       "objective": "Identity ve separation primitive'lerini tamamlamak.",
-      "components": ["Avatar", "Divider"]
+      "components": [
+        "Avatar",
+        "Divider"
+      ]
     }
   ],
   "components": [
@@ -76,9 +88,18 @@
         "keyboard activation ve focus-visible davranisi APG beklentisiyle uyumludur"
       ],
       "preview_scenarios": [
-        {"id": "button-variants", "title": "Varyant matrisi"},
-        {"id": "button-density", "title": "Density ve size matrisi"},
-        {"id": "button-states", "title": "Disabled, loading ve destructive durumlari"}
+        {
+          "id": "button-variants",
+          "title": "Varyant matrisi"
+        },
+        {
+          "id": "button-density",
+          "title": "Density ve size matrisi"
+        },
+        {
+          "id": "button-states",
+          "title": "Disabled, loading ve destructive durumlari"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -120,9 +141,18 @@
         "copy ve long-content senaryolari okunabilirlik hedefini korur"
       ],
       "preview_scenarios": [
-        {"id": "text-scale", "title": "Typography scale ve semantic varyantlar"},
-        {"id": "text-tone", "title": "Tone ve emphasis matrisi"},
-        {"id": "text-truncation", "title": "Clamp, truncate ve long-content gorunumu"}
+        {
+          "id": "text-scale",
+          "title": "Typography scale ve semantic varyantlar"
+        },
+        {
+          "id": "text-tone",
+          "title": "Tone ve emphasis matrisi"
+        },
+        {
+          "id": "text-truncation",
+          "title": "Clamp, truncate ve long-content gorunumu"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -162,8 +192,14 @@
         "focus-visible ve visited davranisi erişilebilirlik kontratini bozmadan calisir"
       ],
       "preview_scenarios": [
-        {"id": "link-inline-basic", "title": "Internal ve external link varyantlari"},
-        {"id": "link-inline-states", "title": "Current, disabled ve hover/focus durumlari"}
+        {
+          "id": "link-inline-basic",
+          "title": "Internal ve external link varyantlari"
+        },
+        {
+          "id": "link-inline-states",
+          "title": "Current, disabled ve hover/focus durumlari"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -203,8 +239,14 @@
         "tooltip veya label fallback karari deterministic olur"
       ],
       "preview_scenarios": [
-        {"id": "icon-button-sizes", "title": "Size ve intent matrisi"},
-        {"id": "icon-button-a11y", "title": "Label, tooltip ve selected durumlari"}
+        {
+          "id": "icon-button-sizes",
+          "title": "Size ve intent matrisi"
+        },
+        {
+          "id": "icon-button-a11y",
+          "title": "Label, tooltip ve selected durumlari"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -244,9 +286,18 @@
         "empty state ile karismayan loading anlatimi verir"
       ],
       "preview_scenarios": [
-        {"id": "skeleton-text-card", "title": "Text ve card placeholder varyantlari"},
-        {"id": "skeleton-table-row", "title": "Table row ve list loading"},
-        {"id": "skeleton-reduced-motion", "title": "Reduced motion davranisi"}
+        {
+          "id": "skeleton-text-card",
+          "title": "Text ve card placeholder varyantlari"
+        },
+        {
+          "id": "skeleton-table-row",
+          "title": "Table row ve list loading"
+        },
+        {
+          "id": "skeleton-reduced-motion",
+          "title": "Reduced motion davranisi"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -286,8 +337,14 @@
         "skeleton ile kullanilacak senaryolar net ayrilir"
       ],
       "preview_scenarios": [
-        {"id": "spinner-inline-block", "title": "Inline ve block spinner varyantlari"},
-        {"id": "spinner-overlay", "title": "Overlay ve section-loading senaryosu"}
+        {
+          "id": "spinner-inline-block",
+          "title": "Inline ve block spinner varyantlari"
+        },
+        {
+          "id": "spinner-overlay",
+          "title": "Overlay ve section-loading senaryosu"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -327,8 +384,14 @@
         "broken-image durumunda layout collapse uretmez"
       ],
       "preview_scenarios": [
-        {"id": "avatar-fallbacks", "title": "Image, initials ve icon fallback durumlari"},
-        {"id": "avatar-sizes", "title": "Size ve density varyantlari"}
+        {
+          "id": "avatar-fallbacks",
+          "title": "Image, initials ve icon fallback durumlari"
+        },
+        {
+          "id": "avatar-sizes",
+          "title": "Size ve density varyantlari"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -368,8 +431,14 @@
         "layout separator olarak tekrar kullanilabilir ve low-noise kalir"
       ],
       "preview_scenarios": [
-        {"id": "divider-basic", "title": "Horizontal ve vertical varyantlar"},
-        {"id": "divider-with-label", "title": "Label ile ayrim ve spacing davranisi"}
+        {
+          "id": "divider-basic",
+          "title": "Horizontal ve vertical varyantlar"
+        },
+        {
+          "id": "divider-with-label",
+          "title": "Label ile ayrim ve spacing davranisi"
+        }
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -390,5 +459,33 @@
     "Button ve Text stable olarak korunur; diger 6 component en az beta cikis kriterine ulasir.",
     "Registry/preview/UX alignment drift = 0 olur.",
     "Raw visual bypass ve duplicate primitive count = 0 olur."
-  ]
+  ],
+  "completion_summary": {
+    "implemented_components": [
+      "Button",
+      "Text",
+      "LinkInline",
+      "IconButton",
+      "Skeleton",
+      "Spinner",
+      "Avatar",
+      "Divider"
+    ],
+    "stable_components": [
+      "Button",
+      "Text"
+    ],
+    "beta_components": [
+      "LinkInline",
+      "IconButton",
+      "Skeleton",
+      "Spinner",
+      "Avatar",
+      "Divider"
+    ],
+    "design_lab_index_total": 76,
+    "ui_kit_tests_passed": true,
+    "ui_kit_build_passed": true,
+    "shell_build_passed": true
+  }
 }
