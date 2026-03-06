@@ -13,9 +13,6 @@ const smokeRoot = path.join(webRoot, 'tests', 'smoke', 'artifacts');
 
 const now = new Date();
 const stamp = now.toISOString().replace(/[:.]/g, '-');
-const outDir = path.join(doctorRoot, stamp);
-const logDir = path.join(outDir, 'logs');
-mkdirSync(logDir, { recursive: true });
 
 const args = process.argv.slice(2);
 const getArg = (name, fallback = null) => {
@@ -25,6 +22,11 @@ const getArg = (name, fallback = null) => {
 };
 
 const preset = getArg('--preset', 'ui-library');
+const presetSlug = preset.replace(/[^a-z0-9_-]+/gi, '-').toLowerCase();
+const outDir = path.join(doctorRoot, `${stamp}-${presetSlug}`);
+const logDir = path.join(outDir, 'logs');
+mkdirSync(logDir, { recursive: true });
+
 const baseUrl = getArg('--base-url', process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000');
 const softMode = getArg('--soft-mode', process.env.PW_SOFT_MODE || '0');
 const authMode = getArg('--auth-mode', process.env.PW_AUTH_MODE || 'none');
