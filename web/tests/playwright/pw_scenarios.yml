@@ -240,27 +240,175 @@ scenarios:
     auth_required: true
     permissions:
       - access-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /access/roles
+      - expectVisible: '[data-testid="access-roles-page"]'
+      - expectVisible: '[data-testid="access-grid"]'
       - waitForSelector: '.ag-center-cols-container'
+
+  - name: access_roles_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - access-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /access/roles
+      - expectVisible: '[data-testid="access-roles-page"]'
+      - expectVisible: '[data-testid="access-filter-bar"]'
+      - fill:
+          selector: '[data-testid="access-filter-search"]'
+          value: Operasyon
+      - click: '[data-testid="access-filter-apply"]'
+      - expectVisible: '[data-testid="access-grid"]'
+      - clickFirst: '[data-testid="access-grid"] .ag-center-cols-container [row-index="0"]'
+      - expectVisible: '[data-testid="access-role-drawer-content"]'
+      - expectVisible: '[data-testid="access-permission-registry"]'
+      - click: 'button[aria-label="Kapat"]'
 
   - name: audit_events_page
     level: 1
     auth_required: true
     permissions:
       - audit-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /audit/events
+      - expectVisible: '[data-testid="audit-events-page"]'
+      - expectVisible: '[data-testid="audit-grid"]'
       - waitForSelector: '.ag-center-cols-container'
+
+  - name: audit_events_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - audit-read
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /audit/events
+      - expectVisible: '[data-testid="audit-events-page"]'
+      - expectVisible: '[data-testid="audit-filter-bar"]'
+      - fill:
+          selector: '[data-testid="audit-filter-user-email"]'
+          value: user1@example.com
+      - click: '[data-testid="audit-filter-apply"]'
+      - expectVisible: '[data-testid="audit-grid"]'
+      - clickFirst: '[data-testid="audit-grid"] .ag-center-cols-container [row-index="0"]'
+      - expectVisible: '[data-testid="audit-detail-summary"]'
+      - click: 'text=Raw JSON'
+      - expectVisible: '[data-testid="audit-detail-raw"]'
+      - click: 'button[aria-label="Kapat"]'
 
   - name: reporting_users_page
     level: 1
     auth_required: true
     permissions:
       - VIEW_REPORTS
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
       - goto: /admin/reports/users
+      - expectVisible: '[data-testid="report-page-users"]'
       - waitForSelector: '[data-theme-scope="entity-grid"]'
+
+  - name: reporting_users_navigation_walk
+    level: 1
+    auth_required: true
+    permissions:
+      - VIEW_REPORTS
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /admin/reports/users
+      - expectVisible: '[data-testid="report-page-users"]'
+      - expectVisible: '[data-testid="report-filter-panel"]'
+      - fill:
+          selector: '[data-testid="report-filter-search"]'
+          value: Ayse
+      - select:
+          selector: '[data-testid="report-filter-status"]'
+          value: ACTIVE
+      - click: '[data-testid="report-filter-submit"]'
+      - expectVisible: '[data-theme-scope="entity-grid"]'
+      - clickFirst: '[data-theme-scope="entity-grid"] .ag-center-cols-container [row-index="0"]'
+      - expectVisible: '[data-theme-scope="entity-grid"] .ag-center-cols-container [row-index="0"]'
 
   - name: story_0050_locale_switch_propagation
     level: 1

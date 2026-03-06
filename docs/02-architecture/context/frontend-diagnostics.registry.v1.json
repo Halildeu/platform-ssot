@@ -154,6 +154,9 @@
       "route_id": "access_roles",
       "path": "/access/roles",
       "scenario_name": "access_roles_page",
+      "secondary_scenarios": [
+        "access_roles_navigation_walk"
+      ],
       "auth_required": true,
       "owner": "mfe-access"
     },
@@ -161,6 +164,9 @@
       "route_id": "audit_events",
       "path": "/audit/events",
       "scenario_name": "audit_events_page",
+      "secondary_scenarios": [
+        "audit_events_navigation_walk"
+      ],
       "auth_required": true,
       "owner": "mfe-audit"
     },
@@ -168,6 +174,9 @@
       "route_id": "reporting_users",
       "path": "/admin/reports/users",
       "scenario_name": "reporting_users_page",
+      "secondary_scenarios": [
+        "reporting_users_navigation_walk"
+      ],
       "auth_required": true,
       "owner": "mfe-reporting"
     }
@@ -235,6 +244,32 @@
         "frontend-doctor.summary.v1.md",
         "pw-scenario-theme-registry-page-*.md",
         "pw-scenario-theme-admin-navigation-walk-*.md",
+        "pw-summary-*.md",
+        "web/test-results/pw/artifacts/**",
+        "gateway-smoke.log"
+      ]
+    },
+    {
+      "preset_id": "auth-business-routes",
+      "description": "Auth gerekli access, audit ve reporting route'lari icin page-open + click-walk diagnostics preset'i.",
+      "steps": [
+        "build:shell",
+        "lint:tailwind",
+        "playwright:access_roles_page|access_roles_navigation_walk|audit_events_page|audit_events_navigation_walk|reporting_users_page|reporting_users_navigation_walk",
+        "gateway_smoke",
+        "base_url_fetch_check"
+      ],
+      "requires_auth_mode": "token_injection",
+      "runtime_mode": "mock-backed-auth-routes",
+      "expected_artifacts": [
+        "frontend-doctor.summary.v1.json",
+        "frontend-doctor.summary.v1.md",
+        "pw-scenario-access-roles-page-*.md",
+        "pw-scenario-access-roles-navigation-walk-*.md",
+        "pw-scenario-audit-events-page-*.md",
+        "pw-scenario-audit-events-navigation-walk-*.md",
+        "pw-scenario-reporting-users-page-*.md",
+        "pw-scenario-reporting-users-navigation-walk-*.md",
         "pw-summary-*.md",
         "web/test-results/pw/artifacts/**",
         "gateway-smoke.log"

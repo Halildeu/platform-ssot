@@ -14,6 +14,8 @@ Owner: Frontend Platform
 - Özellikle `UI Library` gibi vitrin alanlarında `pageerror`, `console.error`,
   route çökmesi, `resource load failure`, `unhandled rejection`, `runtime overlay`
   ve click-walk regressions'larını kullanıcı söylemeden görmek.
+- Auth gerekli business route'larda (`access`, `audit`, `reporting`) page-open ile
+  yetinmeyip gerçek tıklama akışını kanıtlamak.
 
 -------------------------------------------------------------------------------
 2. KAPSAM
@@ -28,6 +30,7 @@ Owner: Frontend Platform
 - Varsayılan preset: `ui-library`
 - Auth-required preset:
   - `theme-admin` (mock-backed route diagnostics)
+  - `auth-business-routes` (mock-backed access/audit/reporting diagnostics)
 - Çıktılar:
   - `web/test-results/diagnostics/frontend-doctor/*/frontend-doctor.summary.v1.json`
   - `web/test-results/diagnostics/frontend-doctor/*/frontend-doctor.summary.v1.md`
@@ -45,6 +48,7 @@ Owner: Frontend Platform
 - Başlatma:
   - `npm -C web run doctor:frontend -- --preset ui-library`
   - `npm -C web run doctor:frontend -- --preset theme-admin`
+  - `npm -C web run doctor:frontend -- --preset auth-business-routes`
 
 - Opsiyonel parametreler:
   - `--base-url http://localhost:3000`
@@ -56,6 +60,12 @@ Owner: Frontend Platform
   - `PW_TEST_TOKEN` verilmezse doctor kendi sentetik test token'ını üretir.
   - `PW_MOCK_THEME_REGISTRY=1` ve `PW_MOCK_API=1` ile admin route başlangıç verileri mock'lanır.
   - Amaç gerçek client secret istemeden auth-required UI route crash / console / overlay / click-walk hatalarını yakalamaktır.
+
+- `auth-business-routes` preset davranışı:
+  - Varsayılan olarak `PW_AUTH_MODE=token_injection` ile çalışır.
+  - `PW_TEST_TOKEN` verilmezse doctor kendi sentetik test token'ını kullanır.
+  - `PW_MOCK_API=1` ile access/audit/reporting route'larının gerekli HTTP verileri mock'lanır.
+  - Amaç gerçek backend dalgalanmasından bağımsız olarak route render + filter + grid + drawer click-walk hatalarını yakalamaktır.
 
 - Durdurma:
   - Doctor tek-shot çalışır; çalışan alt süreç yoksa özel kapatma gerekmez.
@@ -118,6 +128,14 @@ Owner: Frontend Platform
     - Önce `ThemeAdminPage` üstündeki `data-testid` yüzeyi ile scenario selector'lerini karşılaştır.
     - Sonra `installThemeRegistryMock` ve `installApiMocks` altında `/api/v1/theme-registry`, `/api/v1/themes`, `/api/v1/themes/:id` mock'larını doğrula.
     - Hata auth kaynaklıysa `PW_AUTH_MODE`, `PW_TEST_TOKEN` ve scenario `permissions` setini kontrol et.
+
+- [ ] Arıza senaryosu 5 – Auth business route diagnostics FAIL:
+  - Given: `auth-business-routes` preset FAIL,
+  - When: `pw-scenario-access-roles-*`, `pw-scenario-audit-events-*` veya `pw-scenario-reporting-users-*` raporlarından biri kirmizi,
+  - Then:
+    - Ilk olarak ilgili route icin `data-testid` yuzeyini ve click selector'lerini dogrula.
+    - Sonra `installApiMocks` altindaki `/v1/roles`, `/v1/permissions`, `/audit/events`, `/v1/users` mock'larini kontrol et.
+    - Hata auth kaynakliysa scenario `permissions` seti ile shell route guard beklentisini karsilastir.
 
 -------------------------------------------------------------------------------
 6. ÖZET

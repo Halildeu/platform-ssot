@@ -100,7 +100,7 @@ const AccessGrid: React.FC<AccessGridProps> = ({
   }, [rows, selectedRoleIds]);
 
   return (
-    <div className="ag-theme-quartz" style={{ width: '100%', height: 520 }}>
+    <div data-testid="access-grid" className="ag-theme-quartz" style={{ width: '100%', height: 520 }}>
       <AgGridReact
         ref={gridRef}
         rowData={rows}

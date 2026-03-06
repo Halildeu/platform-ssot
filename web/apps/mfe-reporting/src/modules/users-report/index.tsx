@@ -55,6 +55,7 @@ export const usersReportModule: ReportModule<UsersReportFilters, UsersReportRow>
         <label className={labelClass}>
           <span>{t('reports.filters.status.placeholder')}</span>
           <select
+            data-testid="report-filter-status"
             className={inputClass}
             value={values.status ?? 'ALL'}
             onChange={(event) => setFieldValue('status', event.target.value as UsersReportFilters['status'])}

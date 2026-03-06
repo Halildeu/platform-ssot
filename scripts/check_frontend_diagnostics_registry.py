@@ -56,6 +56,11 @@ def main() -> int:
         "ui-library": ("playwright:ui_library_page|ui_library_navigation_walk", "gateway_smoke", "base_url_fetch_check"),
         "shell-public": ("playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk", "gateway_smoke", "base_url_fetch_check"),
         "theme-admin": ("playwright:theme_registry_page|theme_admin_navigation_walk", "gateway_smoke", "base_url_fetch_check"),
+        "auth-business-routes": (
+            "playwright:access_roles_page|access_roles_navigation_walk|audit_events_page|audit_events_navigation_walk|reporting_users_page|reporting_users_navigation_walk",
+            "gateway_smoke",
+            "base_url_fetch_check",
+        ),
     }
     for preset_id, expected_steps in expected_presets.items():
         preset = preset_map.get(preset_id)
@@ -76,10 +81,22 @@ def main() -> int:
         problems.append("missing-scenario:shell_public_route_walk")
     if "name: theme_admin_navigation_walk" not in scenarios_text:
         problems.append("missing-scenario:theme_admin_navigation_walk")
+    if "name: access_roles_navigation_walk" not in scenarios_text:
+        problems.append("missing-scenario:access_roles_navigation_walk")
+    if "name: audit_events_navigation_walk" not in scenarios_text:
+        problems.append("missing-scenario:audit_events_navigation_walk")
+    if "name: reporting_users_navigation_walk" not in scenarios_text:
+        problems.append("missing-scenario:reporting_users_navigation_walk")
     if "goto: /ui-library" not in scenarios_text:
         problems.append("missing-route-step:/ui-library")
     if "goto: /admin/themes" not in scenarios_text:
         problems.append("missing-route-step:/admin/themes")
+    if "goto: /access/roles" not in scenarios_text:
+        problems.append("missing-route-step:/access/roles")
+    if "goto: /audit/events" not in scenarios_text:
+        problems.append("missing-route-step:/audit/events")
+    if "goto: /admin/reports/users" not in scenarios_text:
+        problems.append("missing-route-step:/admin/reports/users")
     if "[data-testid=\"design-lab-detail-tabs\"]" not in scenarios_text:
         problems.append("missing-selector:design-lab-detail-tabs")
     if "[data-testid=\"design-lab-search\"]" not in scenarios_text:
@@ -90,6 +107,12 @@ def main() -> int:
         problems.append("missing-selector:theme-admin-preview-theme-pw-ocean")
     if "[data-testid=\"theme-admin-preview-section\"]" not in scenarios_text:
         problems.append("missing-selector:theme-admin-preview-section")
+    if "[data-testid=\"access-filter-search\"]" not in scenarios_text:
+        problems.append("missing-selector:access-filter-search")
+    if "[data-testid=\"audit-filter-user-email\"]" not in scenarios_text:
+        problems.append("missing-selector:audit-filter-user-email")
+    if "[data-testid=\"report-filter-search\"]" not in scenarios_text:
+        problems.append("missing-selector:report-filter-search")
 
     doctor_text = DOCTOR.read_text(encoding="utf-8")
     if "ui_library_page" not in doctor_text:
@@ -98,6 +121,12 @@ def main() -> int:
         problems.append("doctor-missing-click-walk-reference")
     if "theme_admin_navigation_walk" not in doctor_text:
         problems.append("doctor-missing-theme-admin-click-walk-reference")
+    if "access_roles_navigation_walk" not in doctor_text:
+        problems.append("doctor-missing-access-click-walk-reference")
+    if "audit_events_navigation_walk" not in doctor_text:
+        problems.append("doctor-missing-audit-click-walk-reference")
+    if "reporting_users_navigation_walk" not in doctor_text:
+        problems.append("doctor-missing-reporting-click-walk-reference")
     if "frontend-doctor.summary.v1.json" not in doctor_text:
         problems.append("doctor-missing-summary-json")
 

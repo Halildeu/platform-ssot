@@ -288,20 +288,30 @@ export const AuditEventFeed: React.FC = () => {
   }, [emitTelemetry]);
 
   return (
-    <div>
+    <div data-testid="audit-event-feed">
       <div className="audit-toolbar">
-        <form className="audit-filter-bar" onSubmit={onFilterSubmit}>
+        <form data-testid="audit-filter-bar" className="audit-filter-bar" onSubmit={onFilterSubmit}>
           <label>
             User Email
-            <input name="userEmail" placeholder="user@example.com" defaultValue={filters.userEmail} />
+            <input
+              data-testid="audit-filter-user-email"
+              name="userEmail"
+              placeholder="user@example.com"
+              defaultValue={filters.userEmail}
+            />
           </label>
           <label>
             Service
-            <input name="service" placeholder="service-name" defaultValue={filters.service} />
+            <input
+              data-testid="audit-filter-service"
+              name="service"
+              placeholder="service-name"
+              defaultValue={filters.service}
+            />
           </label>
           <label>
             Level
-            <select name="level" defaultValue={filters.level}>
+            <select data-testid="audit-filter-level" name="level" defaultValue={filters.level}>
               <option value="">All</option>
               <option value="INFO">Info</option>
               <option value="WARN">Warn</option>
@@ -309,21 +319,22 @@ export const AuditEventFeed: React.FC = () => {
             </select>
           </label>
           <div>
-            <button type="submit">Apply Filters</button>
+            <button data-testid="audit-filter-apply" type="submit">Apply Filters</button>
           </div>
         </form>
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <button type="button" className="secondary" onClick={refreshData}>
+          <button data-testid="audit-refresh" type="button" className="secondary" onClick={refreshData}>
             Refresh
           </button>
-          <button type="button" onClick={() => handleExport('csv')}>
+          <button data-testid="audit-export-csv" type="button" onClick={() => handleExport('csv')}>
             Export CSV
           </button>
-          <button type="button" onClick={() => handleExport('json')}>
+          <button data-testid="audit-export-json" type="button" onClick={() => handleExport('json')}>
             Export JSON
           </button>
           <label className="audit-live-indicator">
             <input
+              data-testid="audit-live-toggle"
               type="checkbox"
               checked={isLive}
               onChange={(e) => {
@@ -340,7 +351,7 @@ export const AuditEventFeed: React.FC = () => {
         </div>
       </div>
 
-      <div className="ag-theme-quartz audit-grid">
+      <div data-testid="audit-grid" className="ag-theme-quartz audit-grid">
         <AgGridReact<AuditEvent>
           ref={gridRef}
           gridOptions={gridOptions}

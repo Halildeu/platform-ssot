@@ -54,10 +54,6 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   access = 'full',
 }) => {
   const accessState = resolveAccessState(access);
-  if (!open || accessState.isHidden) {
-    return null;
-  }
-
   const hasTabs = Boolean(tabs && tabs.length > 0);
   const firstTabKey = hasTabs ? tabs![0].key : null;
   const [activeTab, setActiveTab] = React.useState<string | null>(firstTabKey);
@@ -78,6 +74,10 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
     : sections ?? [];
   const hasCustomContent = Boolean(children);
   const panelWidth = typeof width === 'number' ? `${width}px` : width;
+
+  if (!open || accessState.isHidden) {
+    return null;
+  }
 
   return (
     <div className="mfe-detail-drawer fixed inset-0 z-50 flex" data-access-state={accessState.state}>

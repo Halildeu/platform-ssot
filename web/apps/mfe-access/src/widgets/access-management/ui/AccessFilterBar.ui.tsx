@@ -62,12 +62,14 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
   return (
     <form
       onSubmit={handleSubmit}
+      data-testid="access-filter-bar"
       className="flex w-full flex-wrap items-end gap-3 rounded-2xl border border-border-subtle bg-surface-default bg-opacity-70 p-4 shadow-sm"
     >
       <label className="flex flex-1 flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
         <span>{t('access.filter.searchPlaceholder')}</span>
         <input
           type="text"
+          data-testid="access-filter-search"
           className="mt-1 w-full rounded-xl border border-border-subtle px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline"
           placeholder={t('access.filter.searchPlaceholder')}
           value={localFilters.search}
@@ -77,6 +79,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
       <label className="flex flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
         <span>{t('access.filter.moduleAll')}</span>
         <select
+          data-testid="access-filter-module"
           className="mt-1 min-w-[200px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
           value={localFilters.moduleKey}
           onChange={(event) => {
@@ -94,6 +97,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
       <label className="flex flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
         <span>{t('access.filter.level.all')}</span>
         <select
+          data-testid="access-filter-level"
           className="mt-1 min-w-[180px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
           value={localFilters.level}
           onChange={(event) => handleLevelChange(event.target.value as AccessLevel | 'ALL')}
@@ -108,12 +112,14 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
       <div className="ml-auto flex flex-wrap gap-2">
         <button
           type="submit"
+          data-testid="access-filter-apply"
           className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90"
         >
           {t('access.filter.apply')}
         </button>
         <button
           type="button"
+          data-testid="access-filter-reset"
           className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary hover:bg-surface-muted"
           onClick={handleReset}
         >

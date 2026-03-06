@@ -40,24 +40,28 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
   formatNumber,
   formatDate,
 }) => {
-  if (!open || !role) {
-    return null;
-  }
-
   const { data: permissionList = [] } = useQuery({
     queryKey: ['permissions'],
     queryFn: getPermissions,
-    enabled: open,
+    enabled: open && Boolean(role),
     staleTime: 60_000,
   });
 
+  const rolePermissionIds = React.useMemo(
+    () => (Array.isArray(role?.permissions) ? role.permissions : []),
+    [role],
+  );
   const [selectedPermissionIds, setSelectedPermissionIds] = React.useState<string[]>(
-    Array.isArray(role.permissions) ? role.permissions : [],
+    rolePermissionIds,
   );
 
   React.useEffect(() => {
-    setSelectedPermissionIds(Array.isArray(role.permissions) ? role.permissions : []);
-  }, [role]);
+    setSelectedPermissionIds(rolePermissionIds);
+  }, [rolePermissionIds]);
+
+  if (!open || !role) {
+    return null;
+  }
 
   const togglePermission = (id: string) => {
     setSelectedPermissionIds((prev) => (prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]));
@@ -94,7 +98,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
         </button>
       )}
     >
-      <div className="flex flex-col gap-6">
+      <div data-testid="access-role-drawer-content" className="flex flex-col gap-6">
         <p className="text-sm text-text-subtle">{role.description || t('access.drawer.noDescription')}</p>
 
         <dl className="space-y-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
@@ -181,6 +185,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
           <div className="flex justify-end">
             <button
               type="button"
+              data-testid="access-role-drawer-save"
               className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90 disabled:opacity-50"
               onClick={handleSavePermissions}
               disabled={savingPermissions}

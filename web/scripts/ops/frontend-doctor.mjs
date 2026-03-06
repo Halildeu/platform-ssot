@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -171,6 +171,65 @@ const presetMap = {
       },
     ],
   },
+  'auth-business-routes': {
+    description: 'Auth gerekli access, audit ve reporting business route denetimi',
+    route: '/access/roles,/audit/events,/admin/reports/users',
+    playwrightGrep:
+      'access_roles_page|access_roles_navigation_walk|audit_events_page|audit_events_navigation_walk|reporting_users_page|reporting_users_navigation_walk',
+    steps: [
+      {
+        id: 'shell_build',
+        label: 'Shell build',
+        cmd: 'npm',
+        args: ['run', 'build:shell'],
+        cwd: webRoot,
+      },
+      {
+        id: 'tailwind_lint',
+        label: 'Tailwind lint',
+        cmd: 'npm',
+        args: ['run', 'lint:tailwind'],
+        cwd: webRoot,
+      },
+      {
+        id: 'playwright_auth_business_routes',
+        label: 'Playwright auth business route scenarios',
+        cmd: 'node',
+        args: [
+          'scripts/ops/run-with-frontend-stack.mjs',
+          '--stack',
+          'auth-business-routes',
+          '--',
+          'npx',
+          'playwright',
+          'test',
+          '--config',
+          'tests/playwright/playwright.config.ts',
+          'tests/playwright/scenario-runner.spec.ts',
+          '--project=chromium',
+          '--grep',
+          'access_roles_page|access_roles_navigation_walk|audit_events_page|audit_events_navigation_walk|reporting_users_page|reporting_users_navigation_walk',
+        ],
+        cwd: webRoot,
+        env: {
+          PLAYWRIGHT_BASE_URL: baseUrl,
+          PW_MODE: 'ci',
+          PW_SOFT_MODE: softMode,
+          PW_AUTH_MODE: authMode === 'none' ? 'token_injection' : authMode,
+          PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
+          PW_MOCK_API: process.env.PW_MOCK_API || '1',
+          FRONTEND_STACK_LOG_DIR: path.join(logDir, 'auth-business-routes-stack'),
+        },
+      },
+      {
+        id: 'gateway_smoke',
+        label: 'Gateway smoke',
+        cmd: 'node',
+        args: ['tests/smoke/gateway-smoke.mjs'],
+        cwd: webRoot,
+      },
+    ],
+  },
 };
 
 if (!presetMap[preset]) {
@@ -274,12 +333,13 @@ const runStep = (step) => {
 const main = async () => {
   const activePreset = presetMap[preset];
   const doctorStartedMs = Date.now();
-  const baseCheck = await runFetchCheck(baseUrl);
   const steps = [];
 
   for (const step of activePreset.steps) {
     steps.push(runStep(step));
   }
+
+  const baseCheck = await runFetchCheck(baseUrl);
 
   const pwArtifacts = findRecentArtifacts(pwRoot, (name) => name.startsWith('pw-') && name.endsWith('.md'), doctorStartedMs - 2000)
     .map((fullPath) => path.relative(repoRoot, fullPath));

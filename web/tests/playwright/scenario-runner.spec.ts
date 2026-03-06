@@ -15,6 +15,7 @@ import {
 type ScenarioStep =
   | { goto: string }
   | { click: string }
+  | { clickFirst: string }
   | { fill: { selector: string; value: string } | [string, string] }
   | { select: { selector: string; value: string } | [string, string] }
   | { waitForURL: string }
@@ -238,6 +239,7 @@ type ScenarioStepJournalEntry = {
 const describeStep = (step: ScenarioStep) => {
   if ('goto' in step) return `goto:${step.goto}`;
   if ('click' in step) return `click:${step.click}`;
+  if ('clickFirst' in step) return `clickFirst:${step.clickFirst}`;
   if ('fill' in step) {
     const raw = step.fill;
     const selector = Array.isArray(raw) ? raw[0] : raw.selector;
@@ -685,6 +687,10 @@ const runStep = async (
     await page.locator(step.click).click();
     return;
   }
+  if ('clickFirst' in step) {
+    await page.locator(step.clickFirst).first().click();
+    return;
+  }
   if ('fill' in step) {
     const raw = step.fill;
     const selector = Array.isArray(raw) ? raw[0] : raw.selector;
@@ -838,6 +844,119 @@ const mockThemeDetailsById = Object.fromEntries(
   ]),
 );
 
+const mockAccessRoleItems = [
+  {
+    id: 'role-ops-admin',
+    name: 'Operasyon Admin',
+    description: 'Tum modullerde yonetim yetkisine sahip rol.',
+    memberCount: 8,
+    systemRole: true,
+    lastModifiedAt: '2025-10-15T09:12:00Z',
+    lastModifiedBy: 'melisa.erden',
+    permissions: ['VIEW_USERS', 'MANAGE_USERS', 'VIEW_AUDIT', 'EDIT_SECURITY'],
+    policies: [
+      {
+        moduleKey: 'USER_MANAGEMENT',
+        moduleLabel: 'Kullanici Yonetimi',
+        level: 'MANAGE',
+        lastUpdatedAt: '2025-09-30T11:20:00Z',
+        updatedBy: 'melisa.erden',
+      },
+      {
+        moduleKey: 'AUDIT_TRAIL',
+        moduleLabel: 'Audit Kayitlari',
+        level: 'VIEW',
+        lastUpdatedAt: '2025-10-02T10:05:00Z',
+        updatedBy: 'melisa.erden',
+      },
+    ],
+  },
+  {
+    id: 'role-analytics',
+    name: 'Raporlama Analisti',
+    description: 'Rapor ve icgoru uretimi icin erisimler.',
+    memberCount: 6,
+    systemRole: false,
+    lastModifiedAt: '2025-10-01T11:37:00Z',
+    lastModifiedBy: 'eda.aksoy',
+    permissions: ['VIEW_REPORTS', 'VIEW_AUDIT'],
+    policies: [
+      {
+        moduleKey: 'REPORTING',
+        moduleLabel: 'Raporlama',
+        level: 'MANAGE',
+        lastUpdatedAt: '2025-10-01T11:37:00Z',
+        updatedBy: 'eda.aksoy',
+      },
+    ],
+  },
+];
+
+const mockPermissionItems = [
+  {
+    id: 'VIEW_USERS',
+    code: 'VIEW_USERS',
+    moduleKey: 'USER_MANAGEMENT',
+    moduleLabel: 'Kullanici Yonetimi',
+  },
+  {
+    id: 'MANAGE_USERS',
+    code: 'MANAGE_USERS',
+    moduleKey: 'USER_MANAGEMENT',
+    moduleLabel: 'Kullanici Yonetimi',
+  },
+  {
+    id: 'VIEW_AUDIT',
+    code: 'VIEW_AUDIT',
+    moduleKey: 'AUDIT_TRAIL',
+    moduleLabel: 'Audit Kayitlari',
+  },
+];
+
+const mockAuditEvents = Array.from({ length: 12 }).map((_, index) => ({
+  id: `pw-audit-${index + 1}`,
+  timestamp: new Date(Date.now() - index * 60_000).toISOString(),
+  userEmail: `user${(index % 3) + 1}@example.com`,
+  service: index % 2 === 0 ? 'permission-service' : 'auth-service',
+  action: index % 2 === 0 ? 'ROLE_ASSIGNED' : 'ROLE_REVOKED',
+  level: index % 3 === 0 ? 'ERROR' : index % 3 === 1 ? 'WARN' : 'INFO',
+  details: 'Playwright mock audit event',
+  metadata: { scope: index % 2 === 0 ? 'global' : 'project', actorId: 2000 + index },
+  before: index % 2 === 0 ? null : { permissions: ['VIEW_USERS'] },
+  after: index % 2 === 0 ? { permissions: ['VIEW_USERS', 'MANAGE_USERS'] } : null,
+  correlationId: `pw-corr-${Math.floor(index / 3)}`,
+}));
+
+const mockUsersReportItems = [
+  {
+    id: 'user-1',
+    fullName: 'Ayse Yilmaz',
+    email: 'ayse@example.com',
+    role: 'Admin',
+    status: 'ACTIVE',
+    lastLoginAt: '2026-03-05T09:15:00Z',
+    createdAt: '2025-11-01T08:00:00Z',
+  },
+  {
+    id: 'user-2',
+    fullName: 'Mehmet Demir',
+    email: 'mehmet@example.com',
+    role: 'Analyst',
+    status: 'INVITED',
+    lastLoginAt: null,
+    createdAt: '2025-12-10T13:30:00Z',
+  },
+  {
+    id: 'user-3',
+    fullName: 'Elif Kaya',
+    email: 'elif@example.com',
+    role: 'Reporter',
+    status: 'SUSPENDED',
+    lastLoginAt: '2026-03-04T17:45:00Z',
+    createdAt: '2025-09-18T10:20:00Z',
+  },
+];
+
 const installThemeRegistryMock = async (page: Page) => {
   await page.route(/\/api\/v1\/theme-registry(?:\?.*)?$/i, async (route, request) => {
     if (request.method() !== 'GET') {
@@ -857,15 +976,73 @@ const installApiMocks = async (page: Page) => {
     await mockJson(route, { themeId: 'pw-default', type: 'GLOBAL', appearance: 'light', tokens: {} });
   });
 
-  await page.route(/\/api\/v1\/roles(?:\?.*)?$/i, async (route, request) => {
+  await page.route(/\/audit\/events\/live(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET' || !['fetch', 'xhr'].includes(request.resourceType())) {
+      await route.continue();
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'text/event-stream',
+      headers: {
+        'x-pw-mocked': '1',
+        'cache-control': 'no-store',
+      },
+      body: `data: ${JSON.stringify(mockAuditEvents[0])}\n\n`,
+    });
+  });
+
+  await page.route(/(?:\/api)?\/v1\/roles(?:\?.*)?$/i, async (route, request) => {
     if (request.method() !== 'GET') {
       await route.continue();
       return;
     }
-    await mockJson(route, { items: [], total: 0 });
+    await mockJson(route, { items: mockAccessRoleItems, total: mockAccessRoleItems.length });
   });
 
-  await page.route(/\/api\/v1\/users(?:\?.*)?$/i, async (route, request) => {
+  await page.route(/(?:\/api)?\/v1\/roles\/[^/?]+(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    const url = new URL(request.url());
+    const match = url.pathname.match(/(?:\/api)?\/v1\/roles\/([^/?]+)$/i);
+    const roleId = decodeURIComponent(match?.[1] ?? '');
+    const role = mockAccessRoleItems.find((item) => item.id === roleId) ?? mockAccessRoleItems[0];
+    await mockJson(route, role);
+  });
+
+  await page.route(/(?:\/api)?\/v1\/permissions(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, { items: mockPermissionItems, total: mockPermissionItems.length });
+  });
+
+  await page.route(/\/audit\/events(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET' || !['fetch', 'xhr'].includes(request.resourceType())) {
+      await route.continue();
+      return;
+    }
+    const url = new URL(request.url());
+    const pageNumber = Number(url.searchParams.get('page') ?? 0) || 0;
+    const pageSize = Number(url.searchParams.get('size') ?? 200) || 200;
+    const userEmail = (url.searchParams.get('filter[userEmail]') ?? '').toLowerCase();
+    const service = (url.searchParams.get('filter[service]') ?? '').toLowerCase();
+    const level = (url.searchParams.get('filter[level]') ?? '').toUpperCase();
+    const filtered = mockAuditEvents.filter((item) => {
+      if (userEmail && !item.userEmail.toLowerCase().includes(userEmail)) return false;
+      if (service && !item.service.toLowerCase().includes(service)) return false;
+      if (level && item.level !== level) return false;
+      return true;
+    });
+    const start = pageNumber * pageSize;
+    const items = filtered.slice(start, start + pageSize);
+    await mockJson(route, { events: items, total: filtered.length, page: pageNumber });
+  });
+
+  await page.route(/(?:\/api)?\/v1\/users(?:\?.*)?$/i, async (route, request) => {
     if (request.method() !== 'GET') {
       await route.continue();
       return;
@@ -873,7 +1050,25 @@ const installApiMocks = async (page: Page) => {
     const url = new URL(request.url());
     const pageNumber = Number(url.searchParams.get('page') ?? 1) || 1;
     const pageSize = Number(url.searchParams.get('pageSize') ?? 20) || 20;
-    await mockJson(route, { items: [], total: 0, page: pageNumber, pageSize });
+    const search = (url.searchParams.get('search') ?? '').toLowerCase();
+    const status = (url.searchParams.get('status') ?? '').toUpperCase();
+    const filtered = mockUsersReportItems.filter((item) => {
+      if (
+        search &&
+        ![item.fullName, item.email, item.role, item.id].some((field) =>
+          String(field ?? '').toLowerCase().includes(search),
+        )
+      ) {
+        return false;
+      }
+      if (status && item.status !== status) {
+        return false;
+      }
+      return true;
+    });
+    const start = Math.max(pageNumber - 1, 0) * pageSize;
+    const items = filtered.slice(start, start + pageSize);
+    await mockJson(route, { items, total: filtered.length, page: pageNumber, pageSize });
   });
 
   await page.route(/\/manifest\/v1\/manifest\.json(?:\?.*)?$/i, async (route, request) => {

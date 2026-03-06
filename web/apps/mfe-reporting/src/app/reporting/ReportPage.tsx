@@ -130,69 +130,75 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
     title: t(item.key),
     path: item.to,
   }));
+  const pageTestId = React.useMemo(
+    () => `report-page-${module.route.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '').toLowerCase()}`,
+    [module.route],
+  );
 
   const initialVariantId = searchParams.get('variant') ?? undefined;
 
   if (!ready) {
     return (
-      <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div data-testid={pageTestId} className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
         <div className="h-4 w-36 animate-pulse rounded-full bg-surface-muted" />
       </div>
     );
   }
 
   return (
-    <PageLayout
-      title={t(module.titleKey)}
-      description={t(module.descriptionKey)}
-      breadcrumbItems={breadcrumbItems}
-      actions={(
-        <button
-          type="button"
-          onClick={() => setReloadSignal((value) => value + 1)}
-          className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted"
-        >
-          {t('reports.toolbar.refresh')}
-        </button>
-      )}
-      fullHeight
-      descriptionRevealOnHover
-    >
-      <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
-        <ReportFilterPanel
-          loading={loading}
-          onSubmit={handleSubmit}
-          onReset={handleReset}
-          submitLabel={t('reports.filters.apply')}
-          resetLabel={t('reports.filters.reset')}
-        >
-          {module.renderFilters({
-            values: filters,
-            setFieldValue: setFilterFieldValue,
-            submit: handleSubmit,
-            t,
-          })}
-        </ReportFilterPanel>
+    <div data-testid={pageTestId}>
+      <PageLayout
+        title={t(module.titleKey)}
+        description={t(module.descriptionKey)}
+        breadcrumbItems={breadcrumbItems}
+        actions={(
+          <button
+            type="button"
+            onClick={() => setReloadSignal((value) => value + 1)}
+            className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary transition hover:bg-surface-muted"
+          >
+            {t('reports.toolbar.refresh')}
+          </button>
+        )}
+        fullHeight
+        descriptionRevealOnHover
+      >
+        <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <ReportFilterPanel
+            loading={loading}
+            onSubmit={handleSubmit}
+            onReset={handleReset}
+            submitLabel={t('reports.filters.apply')}
+            resetLabel={t('reports.filters.reset')}
+          >
+            {module.renderFilters({
+              values: filters,
+              setFieldValue: setFilterFieldValue,
+              submit: handleSubmit,
+              t,
+            })}
+          </ReportFilterPanel>
 
-        <EntityGridTemplate<TRow>
-          key={reloadSignal}
-          gridId={module.id}
-          gridSchemaVersion={1}
-          initialVariantId={initialVariantId}
-          columnDefs={colDefs}
-          dataSourceMode="server"
-          createServerSideDatasource={() => createServerSideDatasource()}
-          toolbarExtras={(
-            <button
-              type="button"
-              disabled
-              className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-subtle"
-            >
-              {t('reports.toolbar.exportCsv')}
-            </button>
-          )}
-        />
-      </div>
-    </PageLayout>
+          <EntityGridTemplate<TRow>
+            key={reloadSignal}
+            gridId={module.id}
+            gridSchemaVersion={1}
+            initialVariantId={initialVariantId}
+            columnDefs={colDefs}
+            dataSourceMode="server"
+            createServerSideDatasource={() => createServerSideDatasource()}
+            toolbarExtras={(
+              <button
+                type="button"
+                disabled
+                className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-subtle"
+              >
+                {t('reports.toolbar.exportCsv')}
+              </button>
+            )}
+          />
+        </div>
+      </PageLayout>
+    </div>
   );
 }
