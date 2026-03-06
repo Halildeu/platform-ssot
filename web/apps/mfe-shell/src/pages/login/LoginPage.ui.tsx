@@ -13,8 +13,11 @@ const LoginPage = () => {
   const redirectPath = useMemo(() => {
     const params = new URLSearchParams(location.search);
     const redirect = params.get('redirect');
-    return redirect || '/';
-  }, [location.search]);
+    if (redirect) {
+      return redirect;
+    }
+    return permitAllMode ? '/ui-library' : '/';
+  }, [location.search, permitAllMode]);
 
   const handleCorporateLogin = () => {
     if (permitAllMode) {
@@ -43,6 +46,14 @@ const LoginPage = () => {
         </div>
 
         <div className="flex flex-col gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            className="flex w-full items-center justify-center"
+            onClick={() => navigate('/ui-library')}
+          >
+            UI Library'yi Aç
+          </Button>
           {permitAllMode ? (
             <div
               data-testid="permitall-login-banner"

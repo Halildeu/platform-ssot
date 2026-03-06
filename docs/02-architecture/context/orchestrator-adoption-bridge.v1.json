@@ -1,0 +1,79 @@
+{
+  "version": "1.0",
+  "bridge_id": "orchestrator-adoption-bridge-v1",
+  "subject_id": "managed_repo_platform_adoption",
+  "title": "Managed Repo Platform Adoption Bridge",
+  "purpose": "Tasieron repo icindeki backend/frontend altyapisini orchestrator tarafina tasimak icin kaynak envanteri, hedef katman ve core-lock uyumlu degisiklik planini tanimlar.",
+  "source_managed_repo": "/Users/halilkocoglu/Documents/dev-clean-runtime-cutover",
+  "target_orchestrator_repo": "/Users/halilkocoglu/Documents/autonomous-orchestrator",
+  "source_capabilities": {
+    "backend_runtime": [
+      "api-gateway",
+      "discovery-server",
+      "auth-service",
+      "user-service",
+      "permission-service",
+      "variant-service",
+      "core-data-service",
+      "common-auth"
+    ],
+    "frontend_runtime": [
+      "mfe-shell",
+      "mfe-users",
+      "mfe-access",
+      "mfe-audit",
+      "mfe-reporting",
+      "mfe-ethic",
+      "mfe-suggestions",
+      "packages/ui-kit",
+      "packages/shared-http",
+      "packages/shared-types",
+      "packages/i18n-dicts"
+    ],
+    "platform_controls": [
+      "frontend diagnostics registry",
+      "frontend-doctor",
+      "playwright telemetry",
+      "gateway smoke",
+      "ui-library governance + UX alignment",
+      "runtime architecture matrices"
+    ]
+  },
+  "target_adoption_layers": [
+    {
+      "layer_id": "control_plane_contracts",
+      "status": "ready_in_managed_repo",
+      "required_core_changes": [
+        "managed repo diagnostics registry'nin sync kapsamina alinmasi",
+        "frontend-doctor artifact yollarinin standards sync map'ine eklenmesi",
+        "ui-library route smoke kontratinin multi-repo operating contract altina alinmasi"
+      ]
+    },
+    {
+      "layer_id": "frontend_platform_base",
+      "status": "ready_in_managed_repo",
+      "required_core_changes": [
+        "ui-kit / shell / diagnostics blueprint'lerinin orchestrator onboarding contract'ina eklenmesi"
+      ]
+    },
+    {
+      "layer_id": "backend_runtime_base",
+      "status": "ready_in_managed_repo",
+      "required_core_changes": [
+        "service communication matrix + schema ownership planinin orchestrator ingestion modeli ile hizalanmasi"
+      ]
+    }
+  ],
+  "constraints": [
+    "CORE_UNLOCK yokken orchestrator core dosyalarina yazim yapilmaz.",
+    "Taşıma islemi once contract/policy/sync seviyesinde yapilir; kod kopyalama ikinci fazdir.",
+    "Managed repo backend/frontend altyapisi dogrudan referans substrate olarak kabul edilir; yeniden sifirdan yazilmaz."
+  ],
+  "next_when_core_unlock_available": [
+    "sync_managed_repo_standards.py allowlist ve payload genisletilir",
+    "AI-MULTIREPO-OPERATING-CONTRACT.v1.md altina frontend diagnostics / doctor required evidence eklenir",
+    "module-delivery gate required checks set'ine frontend-doctor rapor varligi baglanir",
+    "orchestrator portfolio status icine managed repo diagnostics health ozeti eklenir"
+  ],
+  "current_delivery_mode": "report_only_until_core_unlock"
+}

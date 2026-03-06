@@ -1295,9 +1295,7 @@
       "name": "Tabs",
       "kind": "component",
       "importStatement": "import { Tabs } from 'mfe-ui-kit';",
-      "whereUsed": [
-        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-      ],
+      "whereUsed": [],
       "group": "navigation",
       "subgroup": "tabs",
       "tags": [

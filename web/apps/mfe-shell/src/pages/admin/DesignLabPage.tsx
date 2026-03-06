@@ -18,7 +18,6 @@ import {
   Skeleton,
   Spinner,
   Tag,
-  Tabs,
   Text,
   ThemePreviewCard,
   Tooltip,
@@ -32,6 +31,8 @@ import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
 type DesignLabLifecycle = 'stable' | 'beta' | 'planned';
 type DesignLabAvailability = 'exported' | 'planned';
 type DesignLabDemoMode = 'live' | 'inspector' | 'planned';
+type DesignLabTrack = 'new_packages' | 'current_system' | 'roadmap';
+type DesignLabDetailTab = 'overview' | 'demo' | 'api' | 'ux' | 'quality';
 
 type DesignLabIndexItem = {
   name: string;
@@ -136,6 +137,60 @@ const demoModeLabel: Record<DesignLabDemoMode, string> = {
   planned: 'Planned',
 };
 
+const trackMeta: Record<DesignLabTrack, { label: string; note: string }> = {
+  new_packages: {
+    label: 'Yeni Paketler',
+    note: 'Wave kontratıyla üretilen yeni component ailesi.',
+  },
+  current_system: {
+    label: 'Eski Sistem',
+    note: 'Repoda zaten kullanılan önceki export seti.',
+  },
+  roadmap: {
+    label: 'Roadmap',
+    note: 'Henüz export edilmemiş planlı component backlog’u.',
+  },
+};
+
+const resolveItemTrack = (item: DesignLabIndexItem): DesignLabTrack => {
+  if (item.availability === 'planned' || item.demoMode === 'planned') {
+    return 'roadmap';
+  }
+  if (item.roadmapWaveId || item.acceptanceContractId) {
+    return 'new_packages';
+  }
+  return 'current_system';
+};
+
+const trackVisualMeta: Record<
+  DesignLabTrack,
+  {
+    accentClass: string;
+    borderClass: string;
+    badgeTone: 'info' | 'warning' | 'muted';
+    eyebrow: string;
+  }
+> = {
+  new_packages: {
+    accentClass: 'bg-action-primary',
+    borderClass: 'border-action-primary-border',
+    badgeTone: 'info',
+    eyebrow: 'Wave',
+  },
+  current_system: {
+    accentClass: 'bg-border-default',
+    borderClass: 'border-border-default',
+    badgeTone: 'muted',
+    eyebrow: 'Legacy',
+  },
+  roadmap: {
+    accentClass: 'bg-state-warning-border',
+    borderClass: 'border-state-warning-border',
+    badgeTone: 'warning',
+    eyebrow: 'Planned',
+  },
+};
+
 const SectionBadge: React.FC<{ label: string }> = ({ label }) => (
   <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-muted px-2.5 py-1 text-[11px] font-semibold text-text-secondary">
     {label}
@@ -143,11 +198,11 @@ const SectionBadge: React.FC<{ label: string }> = ({ label }) => (
 );
 
 const SummaryCard: React.FC<{ label: string; value: number; note: string }> = ({ label, value, note }) => (
-  <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
-    <Text as="div" variant="secondary" className="text-xs font-semibold uppercase tracking-[0.18em]">
+  <div className="rounded-2xl border border-border-subtle bg-surface-panel px-4 py-3 shadow-sm">
+    <Text as="div" variant="secondary" className="text-[10px] font-semibold uppercase tracking-[0.22em]">
       {label}
     </Text>
-    <div className="mt-2 text-3xl font-semibold text-text-primary">{value}</div>
+    <div className="mt-2 text-2xl font-semibold text-text-primary">{value}</div>
     <Text variant="secondary" className="mt-1 block text-xs">
       {note}
     </Text>
@@ -169,13 +224,27 @@ const DetailLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </Text>
 );
 
+const detailTabMeta: Array<{
+  id: DesignLabDetailTab;
+  label: string;
+  description: string;
+}> = [
+  { id: 'overview', label: 'Overview', description: 'Özet ve hızlı durum görünümü' },
+  { id: 'demo', label: 'Demo', description: 'Canlı component preview' },
+  { id: 'api', label: 'API', description: 'Import ve registry alanları' },
+  { id: 'ux', label: 'UX', description: 'UX katalog eşleşmesi' },
+  { id: 'quality', label: 'Quality', description: 'Gate ve kullanım kanıtları' },
+];
+
 const DesignLabPage: React.FC = () => {
   const [query, setQuery] = useState('');
+  const [activeTrack, setActiveTrack] = useState<DesignLabTrack>('new_packages');
+  const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('overview');
   const [selectedItemName, setSelectedItemName] = useState<string>(() => {
     const button = designLabIndex.items.find((item) => item.name === 'Button');
     return button?.name ?? designLabIndex.items[0]?.name ?? '';
   });
-  const [expandedGroups, setExpandedGroups] = useState<string[]>(['actions', 'data_entry', 'data_display']);
+  const [selectedGroupId, setSelectedGroupId] = useState<string>('actions');
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [formDrawerOpen, setFormDrawerOpen] = useState(false);
@@ -189,13 +258,19 @@ const DesignLabPage: React.FC = () => {
     setModalOpen(false);
     setFormDrawerOpen(false);
     setDetailDrawerOpen(false);
+    setDetailTab('overview');
   }, [selectedItemName]);
 
   const normalizedQuery = query.trim().toLowerCase();
 
+  const itemsForTrack = useMemo(
+    () => designLabIndex.items.filter((item) => resolveItemTrack(item) === activeTrack),
+    [activeTrack],
+  );
+
   const filteredItems = useMemo(() => {
-    if (!normalizedQuery) return designLabIndex.items;
-    return designLabIndex.items.filter((item) => {
+    if (!normalizedQuery) return itemsForTrack;
+    return itemsForTrack.filter((item) => {
       const haystack = [
         item.name,
         item.kind,
@@ -212,10 +287,10 @@ const DesignLabPage: React.FC = () => {
         .toLowerCase();
       return haystack.includes(normalizedQuery);
     });
-  }, [normalizedQuery]);
+  }, [itemsForTrack, normalizedQuery]);
 
   const selectedItem = useMemo(
-    () => filteredItems.find((item) => item.name === selectedItemName) ?? designLabIndex.items.find((item) => item.name === selectedItemName) ?? null,
+    () => filteredItems.find((item) => item.name === selectedItemName) ?? null,
     [filteredItems, selectedItemName],
   );
 
@@ -240,12 +315,20 @@ const DesignLabPage: React.FC = () => {
     return map;
   }, [filteredItems]);
 
-  const effectiveExpandedGroups = useMemo(() => {
-    if (normalizedQuery) {
-      return designLabTaxonomy.groups.filter((group) => (countByGroup.get(group.id) ?? 0) > 0).map((group) => group.id);
-    }
-    return expandedGroups;
-  }, [countByGroup, expandedGroups, normalizedQuery]);
+  const visibleGroups = useMemo(
+    () => designLabTaxonomy.groups.filter((group) => (countByGroup.get(group.id) ?? 0) > 0),
+    [countByGroup],
+  );
+
+  const selectedGroup = useMemo(
+    () => designLabTaxonomy.groups.find((group) => group.id === selectedGroupId) ?? visibleGroups[0] ?? null,
+    [selectedGroupId, visibleGroups],
+  );
+
+  const selectedGroupItemsBySubgroup = useMemo(
+    () => (selectedGroup ? itemsByGroupAndSubgroup.get(selectedGroup.id) ?? new Map<string, DesignLabIndexItem[]>() : new Map<string, DesignLabIndexItem[]>()),
+    [itemsByGroupAndSubgroup, selectedGroup],
+  );
 
   const summary = useMemo(() => {
     const items = designLabIndex.items;
@@ -258,6 +341,52 @@ const DesignLabPage: React.FC = () => {
       liveDemo: items.filter((item) => item.demoMode === 'live').length,
     };
   }, []);
+
+  const trackSummary = useMemo(
+    () => ({
+      new_packages: designLabIndex.items.filter((item) => resolveItemTrack(item) === 'new_packages').length,
+      current_system: designLabIndex.items.filter((item) => resolveItemTrack(item) === 'current_system').length,
+      roadmap: designLabIndex.items.filter((item) => resolveItemTrack(item) === 'roadmap').length,
+    }),
+    [],
+  );
+
+  const selectedTrackVisual = trackVisualMeta[activeTrack];
+
+  const heroStats = useMemo(() => {
+    if (!selectedItem) {
+      return [];
+    }
+    return [
+      { label: 'Track', value: trackMeta[resolveItemTrack(selectedItem)].label, note: 'Kaynağın ait olduğu yayın hattı' },
+      { label: 'Grup', value: selectedGroup?.title ?? selectedItem.taxonomyGroupId, note: 'Ana gezinim ailesi' },
+      { label: 'Demo', value: demoModeLabel[selectedItem.demoMode], note: 'Preview görünüm tipi' },
+      { label: 'Kullanım', value: String(selectedItem.whereUsed.length), note: 'Tespit edilen kullanım noktası' },
+    ];
+  }, [selectedGroup, selectedItem]);
+
+  useEffect(() => {
+    if (visibleGroups.length === 0) {
+      setSelectedGroupId('');
+      return;
+    }
+    if (!selectedGroup || !visibleGroups.some((group) => group.id === selectedGroup.id)) {
+      setSelectedGroupId(visibleGroups[0].id);
+    }
+  }, [selectedGroup, visibleGroups]);
+
+  useEffect(() => {
+    if (filteredItems.length === 0) {
+      setSelectedItemName('');
+      return;
+    }
+    const activeSelection = filteredItems.some((item) => item.name === selectedItemName);
+    if (activeSelection) {
+      return;
+    }
+    const groupScopedFallback = selectedGroup ? filteredItems.find((item) => item.taxonomyGroupId === selectedGroup.id) : null;
+    setSelectedItemName((groupScopedFallback ?? filteredItems[0]).name);
+  }, [filteredItems, selectedGroup, selectedItemName]);
 
   const handleCopy = async (value: string) => {
     const ok = await copyToClipboard(value);
@@ -845,208 +974,502 @@ const DesignLabPage: React.FC = () => {
     return renderLivePreview(item);
   };
 
+  const renderOverviewTab = (item: DesignLabIndexItem | null) => {
+    if (!item) {
+      return (
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <Text variant="secondary">Soldan bir component seç.</Text>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Kısa Özet</DetailLabel>
+          <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
+            {item.name}
+          </Text>
+          <Text variant="secondary" className="mt-2 block leading-7">
+            {item.description}
+          </Text>
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {heroStats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>{stat.label}</DetailLabel>
+                <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
+                  {stat.value}
+                </Text>
+                <Text variant="secondary" className="mt-1 block text-xs">
+                  {stat.note}
+                </Text>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Hızlı Durum</DetailLabel>
+          <div className="mt-4 space-y-3">
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Yayın Durumu
+              </Text>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Badge tone={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
+                <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
+                  {statusLabel[item.lifecycle]}
+                </Badge>
+                <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
+                  {demoModeLabel[item.demoMode]}
+                </Badge>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Wave / Contract
+              </Text>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {item.roadmapWaveId ? <SectionBadge label={item.roadmapWaveId} /> : <Text variant="secondary">Wave yok</Text>}
+                {item.acceptanceContractId ? <SectionBadge label={item.acceptanceContractId} /> : null}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Etiketler
+              </Text>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {item.tags?.length ? item.tags.map((tag) => <SectionBadge key={tag} label={tag} />) : <Text variant="secondary">Etiket yok</Text>}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderApiTab = (item: DesignLabIndexItem | null) => {
+    if (!item) {
+      return <Text variant="secondary">API bilgisi için component seç.</Text>;
+    }
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Import</DetailLabel>
+          <pre className="mt-3 whitespace-pre-wrap rounded-2xl border border-border-subtle bg-surface-muted p-4 text-xs text-text-primary">
+            {item.importStatement || 'Planned item — import kapalı'}
+          </pre>
+        </div>
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Registry Alanları</DetailLabel>
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <DetailLabel>Kind</DetailLabel>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">{item.kind}</Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <DetailLabel>Taxonomy</DetailLabel>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomyGroupId}</Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <DetailLabel>Subgroup</DetailLabel>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomySubgroup}</Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <DetailLabel>Track</DetailLabel>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">{trackMeta[resolveItemTrack(item)].label}</Text>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderUxTab = (item: DesignLabIndexItem | null) => {
+    if (!item) {
+      return <Text variant="secondary">UX eşleşmesi için component seç.</Text>;
+    }
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>UX Alignment</DetailLabel>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {item.uxPrimaryThemeId ? <SectionBadge label={item.uxPrimaryThemeId} /> : <Text variant="secondary">Primary theme yok</Text>}
+            {item.uxPrimarySubthemeId ? <SectionBadge label={item.uxPrimarySubthemeId} /> : <Text variant="secondary">Primary subtheme yok</Text>}
+          </div>
+        </div>
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>North Star Sections</DetailLabel>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {item.sectionIds?.length ? item.sectionIds.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />) : <Text variant="secondary">Section yok</Text>}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderQualityTab = (item: DesignLabIndexItem | null) => {
+    if (!item) {
+      return <Text variant="secondary">Kalite bilgisi için component seç.</Text>;
+    }
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Quality Gates</DetailLabel>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {item.qualityGates?.length ? item.qualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">Gate yok</Text>}
+          </div>
+        </div>
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Where Used</DetailLabel>
+          <div className="mt-4 space-y-2">
+            {item.whereUsed.length > 0 ? item.whereUsed.map((filePath) => (
+              <div key={filePath} className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-3">
+                <div className="break-all text-xs text-text-secondary">{filePath}</div>
+              </div>
+            )) : <Text variant="secondary">Kullanım bulunamadı.</Text>}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderDetailTabContent = (item: DesignLabIndexItem | null) => {
+    switch (detailTab) {
+      case 'overview':
+        return renderOverviewTab(item);
+      case 'demo':
+        return renderPreview(item);
+      case 'api':
+        return renderApiTab(item);
+      case 'ux':
+        return renderUxTab(item);
+      case 'quality':
+        return renderQualityTab(item);
+      default:
+        return renderOverviewTab(item);
+    }
+  };
+
   return (
     <div data-testid="design-lab-page" className="space-y-4">
-      <section className="rounded-[32px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+      <section className="rounded-[32px] border border-border-subtle bg-surface-default px-5 py-5 shadow-sm">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div className="max-w-3xl">
-            <Text as="div" className="text-3xl font-semibold">UI Kütüphane Sistemi</Text>
-            <Text variant="secondary" className="mt-2 block">
+            <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.24em]">
+              UI Kit / Catalog
+            </Text>
+            <Text as="div" className="mt-2 text-3xl font-semibold text-text-primary">UI Kütüphane Sistemi</Text>
+            <Text variant="secondary" className="mt-2 block text-sm leading-7">
               `mfe-ui-kit` paketinin kanonik katalog ve preview yüzeyi. Export edilen component, utility ve planned backlog aynı JSON registry’den okunur.
             </Text>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Tag tone="success">Package-only model</Tag>
             <Tag tone="info">JSON-first catalog</Tag>
+            <Tag tone="warning">UX-aligned</Tag>
           </div>
         </div>
         <div className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-6">
-          <SummaryCard label="Total" value={summary.total} note="Katalog girdisi" />
-          <SummaryCard label="Exported" value={summary.exported} note="Gerçek package export" />
-          <SummaryCard label="Planned" value={summary.planned} note="Roadmap backlog" />
-          <SummaryCard label="Stable" value={summary.stable} note="Üretimde güvenilir" />
-          <SummaryCard label="Beta" value={summary.beta} note="Gelişen export" />
-          <SummaryCard label="Live Demo" value={summary.liveDemo} note="Canlı preview hazır" />
+          <SummaryCard label="Total" value={summary.total} note="Katalog" />
+          <SummaryCard label="Exported" value={summary.exported} note="Yayınlandı" />
+          <SummaryCard label="Planned" value={summary.planned} note="Bekliyor" />
+          <SummaryCard label="Stable" value={summary.stable} note="Güvenilir" />
+          <SummaryCard label="Beta" value={summary.beta} note="Gelişiyor" />
+          <SummaryCard label="Live Demo" value={summary.liveDemo} note="Canlı demo" />
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[320px_1fr_360px]">
-        <aside className="min-h-0 rounded-[28px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <Text as="div" className="font-semibold">Catalog</Text>
-            <Text variant="secondary">{filteredItems.length}/{designLabIndex.items.length}</Text>
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[360px_1fr]">
+        <aside
+          data-testid="design-lab-sidebar"
+          className="sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[32px] border border-border-subtle bg-surface-panel shadow-sm"
+        >
+          <div className="border-b border-border-subtle bg-surface-default px-5 py-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.24em]">
+                  UI Library
+                </Text>
+                <Text as="div" className="mt-2 text-2xl font-semibold text-text-primary">
+                  Katalog Gezgini
+                </Text>
+                <Text variant="secondary" className="mt-2 block text-sm">
+                  Yeni paketleri, legacy export setini ve roadmap backlog’unu hiyerarşik olarak tara.
+                </Text>
+              </div>
+              <div className="shrink-0 rounded-2xl border border-border-subtle bg-surface-muted px-3 py-2 text-right">
+                <Text as="div" variant="secondary" className="text-[10px] font-semibold uppercase tracking-[0.22em]">
+                  Aktif kayıt
+                </Text>
+                <div className="mt-1 text-2xl font-semibold text-text-primary">{filteredItems.length}</div>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-panel p-3 shadow-sm">
+              <DetailLabel>Arama</DetailLabel>
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Button, Grid, Theme, Modal..."
+                className="mt-3 h-11 w-full rounded-2xl border border-border-default bg-surface-default px-3 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
+                aria-label="UI library arama"
+              />
+            </div>
           </div>
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Ara: Button, Grid, Theme..."
-            className="mb-4 h-11 w-full rounded-2xl border border-border-default bg-surface-default px-3 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
-            aria-label="Design lab arama"
-          />
-          <div className="max-h-[calc(100vh-310px)] overflow-auto pr-1">
-            {designLabTaxonomy.groups.map((group) => {
-              const groupCount = countByGroup.get(group.id) ?? 0;
-              const expanded = effectiveExpandedGroups.includes(group.id);
-              return (
-                <div key={group.id} className="mb-3">
-                  <button
-                    type="button"
-                    onClick={() => setExpandedGroups((prev) => (prev.includes(group.id) ? prev.filter((id) => id !== group.id) : [...prev, group.id]))}
-                    disabled={Boolean(normalizedQuery)}
-                    className={`flex w-full items-center justify-between rounded-2xl border px-3 py-2 text-left transition ${expanded ? 'border-border-default bg-surface-default shadow-sm' : 'border-transparent hover:bg-surface-muted'} ${normalizedQuery ? 'cursor-default opacity-90' : ''}`}
-                  >
-                    <span className="text-sm font-semibold text-text-primary">{group.title}</span>
-                    <span className="text-xs font-semibold text-text-secondary">{groupCount}</span>
-                  </button>
-                  {expanded ? (
-                    <div className="mt-2 space-y-2">
-                      {group.subgroups.map((subgroup) => {
-                        const subgroupItems = itemsByGroupAndSubgroup.get(group.id)?.get(subgroup) ?? [];
-                        return (
-                          <div key={subgroup}>
-                            <div className="mb-1 flex items-center justify-between px-2">
-                              <Text as="div" variant="secondary" className="text-xs font-semibold">{subgroup}</Text>
-                              <Text variant="secondary" className="text-xs">{subgroupItems.length}</Text>
-                            </div>
-                            {subgroupItems.length > 0 ? (
-                              <div className="space-y-1">
-                                {subgroupItems.map((item) => {
-                                  const active = item.name === selectedItem?.name;
-                                  return (
-                                    <button
-                                      key={item.name}
-                                      type="button"
-                                      onClick={() => setSelectedItemName(item.name)}
-                                      className={`flex w-full items-start justify-between gap-3 rounded-2xl border px-3 py-2 text-left transition ${active ? 'border-border-default bg-surface-default shadow-sm' : 'border-transparent hover:bg-surface-muted'}`}
-                                    >
-                                      <span className="min-w-0">
-                                        <span className="block text-sm font-semibold text-text-primary">{item.name}</span>
-                                        <span className="block text-[11px] text-text-secondary">{availabilityLabel[item.availability]} • {statusLabel[item.lifecycle]}</span>
-                                      </span>
-                                      <span className={`shrink-0 text-[11px] font-semibold ${statusToneClass[item.lifecycle]}`}>{demoModeLabel[item.demoMode]}</span>
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            ) : (
-                              <Text variant="secondary" className="px-2 text-xs">Bu alt grupta öğe yok.</Text>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : null}
+
+          <div className="min-h-0 flex-1 space-y-5 overflow-auto px-4 py-4">
+            <section data-testid="design-lab-track-section">
+              <div className="mb-3 flex items-end justify-between gap-3">
+                <div>
+                  <Text as="div" className="font-semibold">Trackler</Text>
+                  <Text variant="secondary" className="mt-1 block text-xs">
+                    Önce hangi katmanı gezmek istediğini seç.
+                  </Text>
                 </div>
-              );
-            })}
+                <Badge tone="muted">{Object.keys(trackMeta).length}</Badge>
+              </div>
+              <div className="space-y-2">
+                {(Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
+                  const active = track === activeTrack;
+                  const visual = trackVisualMeta[track];
+                  return (
+                    <button
+                      key={track}
+                      type="button"
+                      onClick={() => setActiveTrack(track)}
+                      className={`w-full rounded-[24px] border p-3 text-left transition ${
+                        active
+                          ? `${visual.borderClass} bg-surface-default shadow-sm`
+                          : 'border-border-subtle bg-surface-panel hover:bg-surface-muted'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className={`mt-1 h-10 w-1.5 shrink-0 rounded-full ${active ? visual.accentClass : 'bg-border-subtle'}`} />
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center justify-between gap-3">
+                            <div>
+                              <Text as="div" variant="secondary" className="text-[10px] font-semibold uppercase tracking-[0.22em]">
+                                {visual.eyebrow}
+                              </Text>
+                              <Text as="div" className="mt-1 text-base font-semibold text-text-primary">
+                                {trackMeta[track].label}
+                              </Text>
+                            </div>
+                            <Badge tone={active ? visual.badgeTone : 'muted'}>{trackSummary[track]}</Badge>
+                          </div>
+                          <Text variant="secondary" className="mt-2 block text-xs leading-5">
+                            {trackMeta[track].note}
+                          </Text>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section data-testid="design-lab-group-section" className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+              <div className="mb-3 flex items-end justify-between gap-3">
+                <div>
+                  <Text as="div" className="font-semibold">Gruplar</Text>
+                  <Text variant="secondary" className="mt-1 block text-xs">
+                    Aktif track içindeki ana başlığı seç.
+                  </Text>
+                </div>
+                <Badge tone="muted">{visibleGroups.length}</Badge>
+              </div>
+              <div className="space-y-2">
+                {visibleGroups.map((group) => {
+                  const active = selectedGroup?.id === group.id;
+                  return (
+                    <button
+                      key={group.id}
+                      type="button"
+                      onClick={() => setSelectedGroupId(group.id)}
+                      className={`flex w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left transition ${
+                        active
+                          ? 'border-action-primary-border bg-surface-muted shadow-sm'
+                          : 'border-transparent hover:bg-surface-muted'
+                      }`}
+                    >
+                      <span className={`h-9 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-border-subtle'}`} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold text-text-primary">{group.title}</span>
+                        <span className="mt-1 block text-[11px] text-text-secondary">
+                          {countByGroup.get(group.id) ?? 0} component
+                        </span>
+                      </span>
+                      <Badge tone={active ? 'info' : 'muted'}>{countByGroup.get(group.id) ?? 0}</Badge>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section data-testid="design-lab-tree-section" className="min-h-0 rounded-[24px] border border-border-subtle bg-surface-default p-4">
+              <div className="mb-3 flex items-end justify-between gap-3">
+                <div>
+                  <Text as="div" className="font-semibold">Component Ağacı</Text>
+                  <Text variant="secondary" className="mt-1 block text-xs">
+                    Alt başlık ve component seçimini buradan yap.
+                  </Text>
+                </div>
+                <Text variant="secondary" className="text-xs">
+                  {selectedGroup?.title ?? '—'}
+                </Text>
+              </div>
+
+              <div className="max-h-[calc(100vh-520px)] min-h-0 space-y-3 overflow-auto pr-1">
+                {selectedGroup ? (
+                  selectedGroup.subgroups.map((subgroup) => {
+                    const subgroupItems = selectedGroupItemsBySubgroup.get(subgroup) ?? [];
+                    if (subgroupItems.length === 0) {
+                      return null;
+                    }
+                    return (
+                      <div key={subgroup} className="overflow-hidden rounded-[22px] border border-border-subtle bg-surface-panel">
+                        <div className="border-b border-border-subtle bg-surface-muted px-3 py-2">
+                          <div className="flex items-center justify-between gap-3">
+                            <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                              {subgroup}
+                            </Text>
+                            <Badge tone="muted">{subgroupItems.length}</Badge>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5 p-2">
+                          {subgroupItems.map((item) => {
+                            const active = item.name === selectedItem?.name;
+                            return (
+                              <button
+                                key={item.name}
+                                type="button"
+                                onClick={() => setSelectedItemName(item.name)}
+                                className={`group flex w-full items-start gap-3 rounded-2xl border px-3 py-3 text-left transition ${
+                                  active
+                                    ? 'border-action-primary-border bg-surface-default shadow-sm'
+                                    : 'border-transparent hover:bg-surface-muted'
+                                }`}
+                              >
+                                <span className={`mt-1 h-8 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-border-subtle group-hover:bg-border-default'}`} />
+                                <span className="min-w-0 flex-1">
+                                  <span className="block text-sm font-semibold text-text-primary">{item.name}</span>
+                                  <span className="mt-1 block text-[11px] text-text-secondary">
+                                    {availabilityLabel[item.availability]} • {statusLabel[item.lifecycle]}
+                                  </span>
+                                </span>
+                                <span className="shrink-0 pt-0.5">
+                                  <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
+                                    {item.demoMode === 'live' ? 'Live' : item.demoMode === 'planned' ? 'Plan' : 'Info'}
+                                  </Badge>
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                    <Text variant="secondary">Bu track için görünür grup bulunamadı.</Text>
+                  </div>
+                )}
+              </div>
+            </section>
           </div>
         </aside>
 
-        <section className="min-h-0 rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-          <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <Text as="div" className="text-xl font-semibold">{selectedItem?.name ?? '—'}</Text>
-                {selectedItem ? <Badge tone={selectedItem.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[selectedItem.availability]}</Badge> : null}
-                {selectedItem ? <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>{statusLabel[selectedItem.lifecycle]}</Badge> : null}
-              </div>
-              {selectedItem ? <Text variant="secondary" className="mt-2 block max-w-3xl">{selectedItem.description}</Text> : null}
-            </div>
-            {selectedItem?.importStatement ? (
-              <Button variant="secondary" onClick={() => handleCopy(selectedItem.importStatement)}>Copy import</Button>
-            ) : null}
-          </div>
-          {copied === 'ok' ? <Text variant="secondary" className="mb-3 block">Kopyalandı</Text> : null}
-          {copied === 'fail' ? <Text variant="secondary" className="mb-3 block">Kopyalanamadı</Text> : null}
-          {renderPreview(selectedItem)}
-        </section>
-
-        <aside className="min-h-0 rounded-[28px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <Text as="div" className="font-semibold">Detail</Text>
-            <Text variant="secondary">{selectedItem?.whereUsed.length ?? 0} kullanım</Text>
-          </div>
-          <div className="max-h-[calc(100vh-310px)] space-y-3 overflow-auto pr-1">
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Registry</DetailLabel>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {selectedItem ? (
-                  <>
-                    <SectionBadge label={selectedItem.kind} />
-                    <SectionBadge label={demoModeLabel[selectedItem.demoMode]} />
-                    <SectionBadge label={selectedItem.taxonomyGroupId} />
-                    {selectedItem.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
-                  </>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>UX alignment</DetailLabel>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {selectedItem?.uxPrimaryThemeId ? <SectionBadge label={selectedItem.uxPrimaryThemeId} /> : <Text variant="secondary">Yok</Text>}
-                {selectedItem?.uxPrimarySubthemeId ? <SectionBadge label={selectedItem.uxPrimarySubthemeId} /> : null}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>North Star sections</DetailLabel>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {selectedItem?.sectionIds?.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />) ?? <Text variant="secondary">Yok</Text>}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Quality gates</DetailLabel>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {selectedItem?.qualityGates?.map((gate) => <SectionBadge key={gate} label={gate} />) ?? <Text variant="secondary">Yok</Text>}
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Contract</DetailLabel>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {selectedItem?.acceptanceContractId ? <SectionBadge label={selectedItem.acceptanceContractId} /> : <Text variant="secondary">Yok</Text>}
-              </div>
-              {selectedItem?.tags?.length ? (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {selectedItem.tags.map((tag) => <SectionBadge key={tag} label={tag} />)}
-                </div>
-              ) : null}
-            </div>
-
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Import</DetailLabel>
-              <pre className="mt-3 whitespace-pre-wrap rounded-2xl border border-border-subtle bg-surface-muted p-3 text-xs text-text-primary">
-                {selectedItem?.importStatement || 'Planned item — import kapalı'}
-              </pre>
-            </div>
-
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Where used</DetailLabel>
-              <div className="mt-3 space-y-2">
-                {selectedItem && selectedItem.whereUsed.length > 0 ? selectedItem.whereUsed.map((filePath) => (
-                  <div key={filePath} className="rounded-2xl border border-border-subtle bg-surface-muted px-3 py-2">
-                    <div className="break-all text-xs text-text-secondary">{filePath}</div>
-                    <div className="mt-2 flex justify-end">
-                      <Button variant="ghost" onClick={() => handleCopy(filePath)}>Copy</Button>
+        <section className="space-y-4">
+          <section className="overflow-hidden rounded-[32px] border border-border-subtle bg-surface-default shadow-sm">
+            <div className="border-b border-border-subtle bg-surface-panel px-6 py-5">
+              <div data-testid="design-lab-detail-hero" className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                <div className="min-w-0">
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <SectionBadge label={trackMeta[activeTrack].label} />
+                    {selectedGroup ? <SectionBadge label={selectedGroup.title} /> : null}
+                    {selectedItem?.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <span className={`mt-1 hidden h-16 w-2 shrink-0 rounded-full xl:block ${selectedTrackVisual.accentClass}`} />
+                    <div className="min-w-0">
+                      <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.24em]">
+                        Component Detail
+                      </Text>
+                      <Text as="div" className="mt-2 text-3xl font-semibold text-text-primary">
+                        {selectedItem?.name ?? 'Seçili component yok'}
+                      </Text>
+                      {selectedItem ? (
+                        <Text variant="secondary" className="mt-3 block max-w-3xl text-sm leading-7">
+                          {selectedItem.description}
+                        </Text>
+                      ) : (
+                        <Text variant="secondary" className="mt-3 block max-w-3xl text-sm leading-7">
+                          Soldan bir grup ve component seç.
+                        </Text>
+                      )}
                     </div>
                   </div>
-                )) : <Text variant="secondary">Kullanım bulunamadı.</Text>}
+                </div>
+                <div className="grid grid-cols-2 gap-3 xl:min-w-[340px]">
+                  {heroStats.map((stat) => (
+                    <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                      <DetailLabel>{stat.label}</DetailLabel>
+                      <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">{stat.value}</Text>
+                      <Text variant="secondary" className="mt-1 block text-xs">{stat.note}</Text>
+                    </div>
+                  ))}
+                </div>
               </div>
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                {selectedItem ? <Badge tone={selectedItem.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[selectedItem.availability]}</Badge> : null}
+                {selectedItem ? <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>{statusLabel[selectedItem.lifecycle]}</Badge> : null}
+                {selectedItem ? <Badge tone={selectedItem.demoMode === 'live' ? 'success' : selectedItem.demoMode === 'planned' ? 'warning' : 'muted'}>{demoModeLabel[selectedItem.demoMode]}</Badge> : null}
+                {selectedItem?.importStatement ? (
+                  <Button variant="secondary" className="ml-auto" onClick={() => handleCopy(selectedItem.importStatement)}>Import kopyala</Button>
+                ) : null}
+              </div>
+              {copied === 'ok' ? <Text variant="secondary" className="mt-3 block">Kopyalandı</Text> : null}
+              {copied === 'fail' ? <Text variant="secondary" className="mt-3 block">Kopyalanamadı</Text> : null}
             </div>
 
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Index state</DetailLabel>
-              <Text variant="secondary" className="mt-3 block">
-                Bu panel `component-registry.v1.json` + `designlab:index` çıktısını birlikte kullanır.
-              </Text>
-              {designLabIndex.generatedAt ? (
-                <Text variant="secondary" className="mt-2 block text-xs">Son index: {designLabIndex.generatedAt}</Text>
-              ) : null}
+            <div className="px-4 py-4">
+              <div data-testid="design-lab-detail-tabs" className="rounded-[28px] border border-border-subtle bg-surface-panel p-2 shadow-sm">
+                <div className="flex flex-wrap gap-2">
+                  {detailTabMeta.map((tab) => {
+                    const active = detailTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        data-testid={`design-lab-tab-${tab.id}`}
+                        type="button"
+                        onClick={() => setDetailTab(tab.id)}
+                        className={`min-w-[132px] rounded-2xl border px-4 py-3 text-left transition ${
+                          active
+                            ? 'border-action-primary-border bg-surface-default shadow-sm'
+                            : 'border-transparent bg-transparent hover:bg-surface-muted'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <Text as="span" className={`text-sm font-semibold ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
+                            {tab.label}
+                          </Text>
+                          {active ? <span className="h-2.5 w-2.5 rounded-full bg-action-primary" aria-hidden="true" /> : null}
+                        </div>
+                        <Text variant="secondary" className="mt-1 block text-[11px] leading-5">
+                          {tab.description}
+                        </Text>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div data-testid="design-lab-detail-panel" className="mt-4">
+                {renderDetailTabContent(selectedItem)}
+              </div>
             </div>
-          </div>
-        </aside>
+          </section>
+        </section>
       </section>
     </div>
   );

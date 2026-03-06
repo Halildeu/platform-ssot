@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 const authModeMock = { permitAll: false };
 
@@ -24,6 +24,11 @@ vi.mock('../../app/auth/auth-config', () => ({
 
 import keycloak from '../../app/auth/keycloakClient';
 import LoginPage from './LoginPage.ui';
+
+const LocationViewer = () => {
+  const location = useLocation();
+  return <div data-testid="location-display">{`${location.pathname}${location.search}`}</div>;
+};
 
 describe('LoginPage', () => {
   beforeEach(() => {
@@ -70,5 +75,21 @@ describe('LoginPage', () => {
 
     expect(screen.getByTestId('permitall-login-banner')).toBeInTheDocument();
     expect(screen.queryByTestId('corporate-login-button')).toBeNull();
+  });
+
+  it('navigates to ui library on continue in permitAll mode', () => {
+    authModeMock.permitAll = true;
+    render(
+      <MemoryRouter initialEntries={['/login']}>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/ui-library" element={<LocationViewer />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByText('auth.login.continue'));
+
+    expect(screen.getByTestId('location-display')).toHaveTextContent('/ui-library');
   });
 });

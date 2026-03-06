@@ -13,8 +13,12 @@ Alt içerikler:
 - context/ui-library-component-roadmap.v1.md → roadmap özet görünümü
 - context/ui-library-wave-2-navigation.v1.json → aktif navigation dalgasi icin component bazli execution contract
 - context/ui-library-wave-2-navigation.v1.md → aktif navigation dalgasinin insan okunur ozeti
+- context/frontend-diagnostics.registry.v1.json → frontend debug/smoke/telemetry control plane kaydı
+- context/frontend-diagnostics.registry.v1.md → diagnostics registry insan okunur özeti
+- context/orchestrator-adoption-bridge.v1.json → managed repo platform tabanının orchestrator'a taşınma köprüsü
 - context/ui-library-system.context.v1.json → UI kit / Design Lab geliştirme kontratı
 - blueprints/ui-library-system-blueprint.v1.json → yeni ortak component üretim blueprint'i
+- ../04-operations/RUNBOOKS/RB-frontend-doctor.md → lokal frontend doctor çalışma kartı
 - system-overview.v1.json → makinece okunur sistem özeti
 - domain-map.v1.json  → makinece okunur domain / bounded context haritası
 - SYSTEM-OVERVIEW.md  → genel mimari üst bakış
@@ -33,17 +37,18 @@ Okuma sırası:
 4. `context/ui-library-ux-alignment.v1.json` (UI kit / Design Lab işi varsa)
 5. `context/ui-library-component-roadmap.v1.json` (UI kit / Design Lab işi varsa)
 6. `context/ui-library-wave-2-navigation.v1.json` (aktif wave bu ise)
-7. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
-8. `system-overview.v1.json`
-9. `domain-map.v1.json`
-10. `runtime/*.v1.json`
-11. `blueprints/*.v1.json`
-12. `INDEX.md`
-13. `SYSTEM-OVERVIEW.md`
-14. `DOMAIN-MAP.md`
-15. `runtime/*.md`
-16. `services/*`
-17. `clients/*`
+7. `context/frontend-diagnostics.registry.v1.json` (UI kit / vitrin / route stabilitesi işi varsa)
+8. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
+9. `system-overview.v1.json`
+10. `domain-map.v1.json`
+11. `runtime/*.v1.json`
+12. `blueprints/*.v1.json`
+13. `INDEX.md`
+14. `SYSTEM-OVERVIEW.md`
+15. `DOMAIN-MAP.md`
+16. `runtime/*.md`
+17. `services/*`
+18. `clients/*`
 
 Kural:
 - AI önce JSON kanonik katmanı okur.

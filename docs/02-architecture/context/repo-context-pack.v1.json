@@ -11,6 +11,7 @@
     "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
     "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
     "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json",
+    "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
     "docs/02-architecture/context/ui-library-system.context.v1.json",
     "docs/02-architecture/system-overview.v1.json",
     "docs/02-architecture/domain-map.v1.json",
@@ -32,6 +33,9 @@
     "docs/02-architecture/context/ui-library-governance.contract.v1.md",
     "docs/02-architecture/context/ui-library-component-roadmap.v1.md",
     "docs/02-architecture/context/ui-library-wave-2-navigation.v1.md",
+    "docs/02-architecture/context/frontend-diagnostics.registry.v1.md",
+    "docs/02-architecture/context/orchestrator-adoption-bridge.v1.md",
+    "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
     "docs/02-architecture/INDEX.md",
     "docs/02-architecture/SYSTEM-OVERVIEW.md",
     "docs/02-architecture/DOMAIN-MAP.md",
@@ -45,6 +49,7 @@
     "UI library degisikliginde UX katalog referansi ve alignment kontrati okunur.",
     "UI library degisikliginde component roadmap okunur ve aktif wave/family secilir.",
     "UI library degisikliginde aktif wave execution contract okunmadan component kodu baslamaz.",
+    "UI library degisikliginde diagnostics registry ve frontend doctor akisi okunur.",
     "UI library degisikliginde ui-library-system context ve component registry birlikte okunur.",
     "Web UI degisikliginde STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak okunur.",
     "Yeni iç servis çağrısı varsa communication matrix güncellenir.",
@@ -99,6 +104,7 @@
     "UI library feature'larında governance contract -> UX reference -> alignment -> context -> blueprint -> registry sırası korunur.",
     "UX Kataloğu ile hizalanmayan ortak component kararı tamamlanmış sayılmaz.",
     "Roadmap family/wave secimi yapilmadan yeni ortak component implementasyonu baslamaz.",
-    "Aktif wave execution contract olmadan ortak component için acceptance/preview/evidence yoruma birakilmaz."
+    "Aktif wave execution contract olmadan ortak component için acceptance/preview/evidence yoruma birakilmaz.",
+    "UI Library route'u canonical Playwright senaryosu ve frontend-doctor kaniti olmadan stabil sayilmaz."
   ]
 }

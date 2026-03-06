@@ -1661,6 +1661,7 @@ const AppLayout = () => {
   const authState = useAppSelector((state) => state.auth);
   const { token, expiresAt } = authState;
   const permitAllMode = isPermitAllMode();
+  const defaultLandingPath = permitAllMode ? '/login' : '/suggestions';
   const showSidebar = Boolean(token) || permitAllMode;
   const dispatch = useAppDispatch();
   const { t } = useShellCommonI18n();
@@ -1780,14 +1781,16 @@ const AppLayout = () => {
                     </ProtectedRoute>
                   )}
                 />
+                <Route path="/ui-library" element={<DesignLabPage />} />
                 <Route path="/admin/design-lab" element={<Navigate to="/admin/ui-library" replace />} />
+                <Route path="/design-lab" element={<Navigate to="/ui-library" replace />} />
                 <Route path="/runtime/theme-matrix" element={<ThemeMatrixPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />
                 <Route
                   path="/"
-                  element={<Navigate to={(token || permitAllMode) ? '/suggestions' : '/login'} replace />}
+                  element={<Navigate to={(token || permitAllMode) ? defaultLandingPath : '/login'} replace />}
                 />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>

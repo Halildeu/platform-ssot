@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { createServer } from 'http';
-import { execSync } from 'child_process';
 import { mkdirSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -27,22 +26,38 @@ const server = createServer((req, res) => {
   res.end(JSON.stringify(responseBody, null, 2));
 });
 
-const runCurl = (command) => {
-  try {
-    return execSync(command, { encoding: 'utf8' });
-  } catch (error) {
-    const stdout = error.stdout?.toString();
-    const stderr = error.stderr?.toString();
-    return `${stdout ?? ''}${stderr ?? ''}`;
-  }
+const runFetch = async (pathName, headers = {}) => {
+  const response = await fetch(`http://127.0.0.1:${PORT}${pathName}`, {
+    method: 'GET',
+    headers,
+  });
+  const body = await response.text();
+  const headerLines = [...response.headers.entries()]
+    .filter(([key]) => key.toLowerCase() !== 'date')
+    .map(([key, value]) => `${key}: ${value}`);
+  return [
+    `HTTP/1.1 ${response.status} ${response.statusText}`,
+    ...headerLines,
+    '',
+    body,
+  ].join('\n');
 };
 
-server.listen(PORT, '127.0.0.1', () => {
-  const curl401 = `curl -i -s -H "X-Trace-Id: smoke-401" http://127.0.0.1:${PORT}/api/v1/users`;
-  const curl200 = `curl -i -s -H "Authorization: Bearer demo-token" -H "X-Trace-Id: smoke-200" http://127.0.0.1:${PORT}/api/v1/users`;
+server.listen(PORT, '127.0.0.1', async () => {
+  const req401 = 'GET /api/v1/users (no token)';
+  const req200 = 'GET /api/v1/users (demo token)';
   const output = [];
-  output.push(`$ ${curl401}\n${runCurl(curl401)}`);
-  output.push(`$ ${curl200}\n${runCurl(curl200)}`);
+  try {
+    const res401 = await runFetch('/api/v1/users', { 'X-Trace-Id': 'smoke-401' });
+    const res200 = await runFetch('/api/v1/users', {
+      Authorization: 'Bearer demo-token',
+      'X-Trace-Id': 'smoke-200',
+    });
+    output.push(`$ ${req401}\n${res401}`);
+    output.push(`$ ${req200}\n${res200}`);
+  } catch (error) {
+    output.push(`gateway-smoke error: ${error instanceof Error ? error.message : String(error)}`);
+  }
 
   const artifactDir = join(dirname(fileURLToPath(import.meta.url)), 'artifacts');
   mkdirSync(artifactDir, { recursive: true });

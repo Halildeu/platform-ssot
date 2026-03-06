@@ -174,8 +174,11 @@ const isReadonlyAllowed = (
   });
 };
 
-const isConsoleAllowed = (allowlist: RegExp[], message: string) =>
-  allowlist.length > 0 && allowlist.some((regex) => regex.test(message));
+const isConsoleAllowed = (allowlist: RegExp[], message: string, locationUrl?: string) => {
+  if (allowlist.length === 0) return false;
+  const probe = locationUrl ? `${message} ${locationUrl}` : message;
+  return allowlist.some((regex) => regex.test(message) || regex.test(probe));
+};
 
 const captureConsole = (
   msg: ConsoleMessage,
@@ -183,14 +186,15 @@ const captureConsole = (
 ): Omit<TelemetryConsoleEntry, 'allowed'> & { allowed: boolean } => {
   const location = msg.location();
   const text = msg.text();
+  const sanitizedLocationUrl = location?.url ? sanitizeUrl(location.url) : undefined;
   return {
     ts: new Date().toISOString(),
     level: msg.type(),
     text,
-    location: location?.url
-      ? { url: sanitizeUrl(location.url), lineNumber: location.lineNumber, columnNumber: location.columnNumber }
+    location: sanitizedLocationUrl
+      ? { url: sanitizedLocationUrl, lineNumber: location.lineNumber, columnNumber: location.columnNumber }
       : undefined,
-    allowed: isConsoleAllowed(allowlist, text),
+    allowed: isConsoleAllowed(allowlist, text, sanitizedLocationUrl),
   };
 };
 

@@ -7,6 +7,8 @@
   "ux_catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
   "ux_alignment_contract": "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
   "component_roadmap": "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+  "diagnostics_registry": "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
+  "diagnostics_runbook": "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
   "active_wave_contracts": [
     "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json"
   ],
@@ -77,10 +79,12 @@
     "python3 scripts/check_ui_library_component_roadmap.py",
     "python3 scripts/check_ui_library_wave_2_navigation.py",
     "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+    "python3 scripts/check_frontend_diagnostics_registry.py",
     "npm -C web run designlab:index",
     "npm -C web run lint:tailwind",
     "npm -C web run lint:no-antd",
-    "npm -C web run test:ui-kit"
+    "npm -C web run test:ui-kit",
+    "npm -C web run doctor:frontend -- --preset ui-library"
   ],
   "north_star_sections": [
     {
@@ -146,6 +150,7 @@
     "UX katalog referansi ve UI-library UX alignment kontrati okunur.",
     "Component roadmap okunur; family ve wave secimi yapilir.",
     "Aktif wave execution contract okunur ve component order kesinlestirilir.",
+    "Diagnostics registry okunur; canonical scenario ve doctor preset netlestirilir.",
     "UI library system context okunur.",
     "STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak kontrol edilir.",
     "Component registry ve taxonomy okunur.",
