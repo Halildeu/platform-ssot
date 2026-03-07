@@ -8,7 +8,6 @@ ROOT = Path('.')
 CONTRACT = ROOT / 'docs/02-architecture/context/ui-library-wave-3-forms.v1.json'
 API_CATALOG = ROOT / 'web/packages/ui-kit/src/catalog/component-api-catalog.v1.json'
 REGISTRY = ROOT / 'web/packages/ui-kit/src/catalog/component-registry.v1.json'
-EXPECTED_COMPONENTS = {'TextInput', 'TextArea', 'Checkbox', 'Radio', 'Switch'}
 REQUIRED_TOP = [
     'version',
     'subject_id',
@@ -69,12 +68,13 @@ def main() -> int:
 
     components = data.get('components', [])
     seen = {item.get('component_name') for item in components}
-    for name in EXPECTED_COMPONENTS:
-        if name not in seen:
-            problems.append(f'missing-component:{name}')
+    if len(seen) != len(components):
+        problems.append('duplicate-component-name')
+    if not components:
+        problems.append('empty-components')
 
     orders = [item.get('implementation_order') for item in components]
-    if sorted(orders) != list(range(1, len(EXPECTED_COMPONENTS) + 1)):
+    if sorted(orders) != list(range(1, len(components) + 1)):
         problems.append('invalid-implementation-order-sequence')
 
     api_items = {item.get('name'): item for item in api_catalog.get('items', [])}
@@ -112,8 +112,11 @@ def main() -> int:
         else:
             if registry_item.get('availability') != 'exported':
                 problems.append(f'registry-availability:{name}:{registry_item.get("availability")}')
-            if registry_item.get('lifecycle') != 'stable':
-                problems.append(f'registry-lifecycle:{name}:{registry_item.get("lifecycle")}')
+            expected_maturity = item.get('target_maturity')
+            if registry_item.get('lifecycle') != expected_maturity:
+                problems.append(
+                    f'registry-lifecycle:{name}:{registry_item.get("lifecycle")}!= {expected_maturity}'
+                )
             if registry_item.get('demoMode') != 'live':
                 problems.append(f'registry-demo-mode:{name}:{registry_item.get("demoMode")}')
             if registry_item.get('roadmapWaveId') != 'wave_3_forms':
@@ -124,7 +127,7 @@ def main() -> int:
                 problems.append(f'missing-registry-ux:{name}')
 
     completed = set(data.get('progress_summary', {}).get('completed_components', []))
-    if completed != EXPECTED_COMPONENTS:
+    if completed != seen:
         problems.append('invalid-progress-summary-completed-components')
 
     if problems:

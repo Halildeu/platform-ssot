@@ -309,6 +309,67 @@
       ]
     },
     {
+      "name": "DatePicker",
+      "variantAxes": [
+        "size: sm | md | lg",
+        "range: min | max",
+        "state: default | invalid | readonly | disabled"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled",
+        "calendar date entry",
+        "inline validation",
+        "access-aware interaction"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Tarih seciminin basligi ve baglami."
+        },
+        {
+          "name": "description / hint / error",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Aciklama, yardim ve validation geri bildirimi."
+        },
+        {
+          "name": "value / defaultValue",
+          "type": "string (YYYY-MM-DD)",
+          "default": "-",
+          "required": false,
+          "description": "Controlled veya uncontrolled secili tarih."
+        },
+        {
+          "name": "min / max",
+          "type": "string (YYYY-MM-DD)",
+          "default": "-",
+          "required": false,
+          "description": "Secilebilir tarih araligini belirler."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkileşim duzeyi."
+        }
+      ],
+      "previewFocus": [
+        "controlled milestone date",
+        "readonly state",
+        "invalid release window state"
+      ],
+      "regressionFocus": [
+        "controlled/uncontrolled parity",
+        "readonly interaction guard",
+        "selected date badge sync"
+      ]
+    },
+    {
       "name": "Divider",
       "variantAxes": [
         "orientation: horizontal | vertical",
@@ -655,6 +716,67 @@
         "table-row placeholder sayısı",
         "animated metadata ve motion-reduce",
         "content reflow yerine yer tutucu kararlılığı"
+      ]
+    },
+    {
+      "name": "Slider",
+      "variantAxes": [
+        "size: sm | md | lg",
+        "range: min | max | step",
+        "state: default | invalid | readonly | disabled"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled",
+        "numeric range selection",
+        "inline validation",
+        "access-aware interaction"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Range seciminin basligi ve form baglami."
+        },
+        {
+          "name": "description / hint / error",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Aciklama, yardim ve validation geri bildirimi."
+        },
+        {
+          "name": "min / max / step",
+          "type": "number",
+          "default": "0 / 100 / 1",
+          "required": false,
+          "description": "Range davranisini belirleyen numeric eksen."
+        },
+        {
+          "name": "valueFormatter",
+          "type": "(value:number)=>ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Gorunen deger chipinin bicimini belirler."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkileşim duzeyi."
+        }
+      ],
+      "previewFocus": [
+        "controlled density slider",
+        "readonly matrix",
+        "policy-blocked invalid state"
+      ],
+      "regressionFocus": [
+        "controlled/uncontrolled parity",
+        "readonly interaction guard",
+        "value formatting consistency"
       ]
     },
     {

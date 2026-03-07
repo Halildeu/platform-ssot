@@ -50,8 +50,8 @@
     },
     {
       "batch_id": "batch_3_extended_inputs",
-      "status": "planned",
-      "objective": "Slider, DatePicker, TimePicker ve Upload gibi genisletilmis input davranislarini tamamlamak.",
+      "status": "in_progress",
+      "objective": "Slider ve DatePicker beta export + live preview + API catalog ile acildi; TimePicker ve Upload backlog olarak kaldi.",
       "components": [
         "Slider",
         "DatePicker",
@@ -337,6 +337,114 @@
         "unit/component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "Slider",
+      "implementation_order": 6,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Slider.tsx",
+          "web/packages/ui-kit/src/components/Slider.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Slider"
+      },
+      "ux_primary_theme_id": "personalization_and_adaptive_productivity",
+      "ux_primary_subtheme_id": "adaptive_density_layout_preferences",
+      "acceptance_criteria": [
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "numeric range secimi deger chipi ile birlikte okunur kalir",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "policy-blocked ve validation state preview ile regression testte gorunur olur",
+        "density benzeri sayisal ayarlar forms wave icinde ayni shell diliyle sunulur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "slider-density-controlled",
+          "title": "Controlled density slider"
+        },
+        {
+          "id": "slider-state-matrix",
+          "title": "Readonly ve invalid slider durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Slider icin exported/beta olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "DatePicker",
+      "implementation_order": 7,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/DatePicker.tsx",
+          "web/packages/ui-kit/src/components/DatePicker.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Date / Time pickers"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "cross_step_context_persistence",
+      "acceptance_criteria": [
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "min/max tarih araligi native date input ile korunur",
+        "milestone ve release window state preview ile regression testte gorunur olur",
+        "date entry yardim, error ve selected value badge ile okunur kalir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "datepicker-milestone-controlled",
+          "title": "Controlled milestone date"
+        },
+        {
+          "id": "datepicker-state-matrix",
+          "title": "Readonly ve invalid datepicker durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari DatePicker icin exported/beta olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "wave_exit_criteria": [
@@ -348,21 +456,22 @@
   "progress_summary": {
     "completed_components": [
       "Checkbox",
+      "DatePicker",
       "Radio",
+      "Slider",
       "Switch",
       "TextArea",
       "TextInput"
     ],
     "remaining_components": [
-      "Slider",
-      "DatePicker",
       "TimePicker",
       "Upload"
     ],
     "notes": [
       "Batch 1 text fields export + preview + API catalog + doctor evidence ile acildi.",
       "Checkbox, Radio ve Switch stable export + live preview + API catalog ile batch 2 kapandi.",
-      "Forms dalgasi in-progress; extended inputs sonraki batchlerdir."
+      "Slider ve DatePicker beta export + live preview + API catalog ile batch 3 acildi.",
+      "Forms dalgasi in-progress; TimePicker ve Upload sonraki backlog olarak kaldi."
     ]
   },
   "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_3_forms",

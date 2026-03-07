@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 62,
-    "planned": 14,
-    "liveDemo": 33,
+    "exported": 64,
+    "planned": 12,
+    "liveDemo": 35,
     "inspector": 29
   },
   "items": [
@@ -333,30 +333,40 @@
     {
       "name": "DatePicker",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { DatePicker } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "beta",
+        "date-entry",
+        "forms",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "DatePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Date / Time pickers",
+      "demoMode": "live",
+      "description": "DatePicker primitivei; milestone, release ve tarih secim akislari icin access-aware date entry yuzeyi sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "cross_step_context_persistence",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "Descriptions",
@@ -1020,30 +1030,40 @@
     {
       "name": "Slider",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { Slider } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "beta",
+        "forms",
+        "range-entry",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Slider P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Slider",
+      "demoMode": "live",
+      "description": "Slider primitivei; density, threshold ve progress tuning icin access-aware range secimi sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "personalization_and_adaptive_productivity",
+      "uxPrimarySubthemeId": "adaptive_density_layout_preferences",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "Spinner",

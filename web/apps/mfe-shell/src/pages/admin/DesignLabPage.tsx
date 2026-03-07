@@ -21,6 +21,8 @@ import {
   Checkbox,
   Radio,
   Switch,
+  Slider,
+  DatePicker,
   Skeleton,
   Spinner,
   Pagination,
@@ -298,6 +300,8 @@ const DesignLabPage: React.FC = () => {
   const [checkboxValue, setCheckboxValue] = useState(true);
   const [radioValue, setRadioValue] = useState<'design' | 'ops' | 'delivery'>('design');
   const [switchValue, setSwitchValue] = useState(true);
+  const [sliderValue, setSliderValue] = useState(68);
+  const [dateValue, setDateValue] = useState('2026-03-21');
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -1226,6 +1230,62 @@ const DesignLabPage: React.FC = () => {
             </div>
           </div>
         );
+      case 'Slider':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Controlled range">
+                <div className="space-y-4">
+                  <Slider
+                    label="Yoğunluk"
+                    description="Kart ve tablo boşluk kararını tek kaynaktan yönet."
+                    hint="Daha yüksek değer daha ferah görünüm üretir."
+                    min={20}
+                    max={100}
+                    step={4}
+                    value={sliderValue}
+                    onValueChange={setSliderValue}
+                    minLabel="Kompakt"
+                    maxLabel="Rahat"
+                    valueFormatter={(value) => `${value}%`}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="State matrix">
+                <div className="grid grid-cols-1 gap-3">
+                  <Slider label="Readonly slider" value={72} access="readonly" valueFormatter={(value) => `${value}%`} />
+                  <Slider label="Blocked by policy" defaultValue={36} invalid error="Bu değişim için ek approval gerekiyor." />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'DatePicker':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Controlled date">
+                <div className="space-y-4">
+                  <DatePicker
+                    label="Teslim tarihi"
+                    description="Gorevin tamamlanacağı günü planla."
+                    hint="Takvim seçimi ile shareable milestone üret."
+                    value={dateValue}
+                    min="2026-03-08"
+                    max="2026-04-30"
+                    onValueChange={setDateValue}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="State matrix">
+                <div className="grid grid-cols-1 gap-3">
+                  <DatePicker label="Readonly date" value="2026-03-09" access="readonly" />
+                  <DatePicker label="Invalid milestone" defaultValue="2026-03-01" invalid error="Tarih mevcut release penceresinin dışında." />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
       case 'Dropdown':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -1863,6 +1923,108 @@ const DesignLabPage: React.FC = () => {
                 </PreviewPanel>
                 <PreviewPanel title="Blocked by policy">
                   <Switch label="Ek onay gerekiyor" invalid error="Bu geçiş için ek onay gerekiyor." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Slider':
+        return [
+          {
+            id: 'slider-density',
+            eyebrow: 'Alternative 01',
+            title: 'Density calibration',
+            description: 'Alan yoğunluğu ve layout sıkılığı için kontrollü numeric seçim.',
+            badges: ['range', 'controlled', 'density'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Controlled slider">
+                  <Slider
+                    label="Yoğunluk"
+                    description="Kart ve tablo boşluk kararını tek kaynaktan yönet."
+                    hint="Daha yüksek değer daha ferah görünüm üretir."
+                    min={20}
+                    max={100}
+                    step={4}
+                    value={sliderValue}
+                    onValueChange={setSliderValue}
+                    minLabel="Kompakt"
+                    maxLabel="Rahat"
+                    valueFormatter={(value) => `${value}%`}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Current value">
+                  <LibraryMetricCard
+                    label="Density"
+                    value={`${sliderValue}%`}
+                    note="Slider değeri controlled state ile preview ve regression yüzeyine taşınıyor."
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'slider-states',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly and policy states',
+            description: 'Readonly ve blocked by policy senaryolarında range input davranışı.',
+            badges: ['readonly', 'invalid', 'policy'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly">
+                  <Slider label="Readonly slider" value={72} access="readonly" valueFormatter={(value) => `${value}%`} />
+                </PreviewPanel>
+                <PreviewPanel title="Policy blocked">
+                  <Slider label="Blocked by policy" defaultValue={36} invalid error="Bu değişim için ek approval gerekiyor." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'DatePicker':
+        return [
+          {
+            id: 'datepicker-milestone',
+            eyebrow: 'Alternative 01',
+            title: 'Milestone planner',
+            description: 'Takvim bazlı teslim tarihi ve rollout günü seçimi.',
+            badges: ['calendar', 'milestone', 'controlled'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Controlled date">
+                  <DatePicker
+                    label="Teslim tarihi"
+                    description="Görevin tamamlanacağı günü planla."
+                    hint="Takvim seçimi ile shareable milestone üret."
+                    value={dateValue}
+                    min="2026-03-08"
+                    max="2026-04-30"
+                    onValueChange={setDateValue}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Selected date">
+                  <LibraryMetricCard
+                    label="Delivery date"
+                    value={dateValue}
+                    note="DatePicker controlled değerini release ve planning akışına taşıyor."
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'datepicker-states',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly and validation states',
+            description: 'Readonly ve invalid tarih seçimleri için tek shell kontratı.',
+            badges: ['readonly', 'invalid', 'date-entry'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly">
+                  <DatePicker label="Readonly date" value="2026-03-09" access="readonly" />
+                </PreviewPanel>
+                <PreviewPanel title="Invalid">
+                  <DatePicker label="Invalid milestone" defaultValue="2026-03-01" invalid error="Tarih mevcut release penceresinin dışında." />
                 </PreviewPanel>
               </div>
             ),

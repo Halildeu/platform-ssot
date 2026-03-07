@@ -460,23 +460,36 @@
     {
       "name": "DatePicker",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "group": "forms",
       "subgroup": "inputs",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "DatePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Date / Time pickers",
+      "demoMode": "live",
+      "description": "DatePicker primitivei; milestone, release ve tarih secim akislari icin access-aware date entry yuzeyi sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-3",
+        "forms",
+        "beta",
+        "date-entry"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "cross_step_context_persistence",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "Descriptions",
@@ -1327,23 +1340,36 @@
     {
       "name": "Slider",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "group": "forms",
       "subgroup": "inputs",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Slider P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Slider",
+      "demoMode": "live",
+      "description": "Slider primitivei; density, threshold ve progress tuning icin access-aware range secimi sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-3",
+        "forms",
+        "beta",
+        "range-entry"
+      ],
+      "uxPrimaryThemeId": "personalization_and_adaptive_productivity",
+      "uxPrimarySubthemeId": "adaptive_density_layout_preferences",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "Spinner",

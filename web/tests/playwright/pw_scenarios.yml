@@ -345,6 +345,24 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Slider
+      - expectVisible: '[data-testid="design-lab-item-slider"]'
+      - click: '[data-testid="design-lab-item-slider"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: DatePicker
+      - expectVisible: '[data-testid="design-lab-item-datepicker"]'
+      - click: '[data-testid="design-lab-item-datepicker"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
 
   - name: shell_public_route_walk
     level: 1

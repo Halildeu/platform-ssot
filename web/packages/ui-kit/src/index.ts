@@ -43,6 +43,8 @@ export * from './components/TextArea';
 export * from './components/Checkbox';
 export * from './components/Radio';
 export * from './components/Switch';
+export * from './components/Slider';
+export * from './components/DatePicker';
 export * from './components/Modal';
 export * from './components/Dropdown';
 export * from './components/Tag';

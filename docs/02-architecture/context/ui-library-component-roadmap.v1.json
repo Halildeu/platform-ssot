@@ -206,15 +206,15 @@
       "current_state": {
         "implemented_now": [
           "Checkbox",
+          "DatePicker",
           "Radio",
           "Select",
+          "Slider",
           "Switch",
           "TextArea",
           "TextInput"
         ],
         "gaps": [
-          "Slider",
-          "DatePicker",
           "TimePicker",
           "Upload"
         ]
@@ -764,7 +764,8 @@
       "notes": [
         "TextInput ve TextArea stable export + live preview + API catalog ile acildi.",
         "Checkbox, Radio ve Switch stable export + live preview + API catalog ile acildi.",
-        "Extended inputs batchi siradaki hedeftir."
+        "Slider ve DatePicker beta export + live preview + API catalog ile acildi.",
+        "TimePicker ve Upload sonraki backlog olarak kaldi."
       ]
     },
     {

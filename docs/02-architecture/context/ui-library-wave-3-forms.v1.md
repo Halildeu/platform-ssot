@@ -12,6 +12,8 @@
 - `Checkbox`
 - `Radio`
 - `Switch`
+- `Slider`
+- `DatePicker`
 
 ## Hedef
 Forms ailesini label, helper, validation, access-state ve character count davranislariyla tek shell kontrati altinda standardize etmek.
@@ -25,7 +27,5 @@ Forms ailesini label, helper, validation, access-state ve character count davran
 - `gate:ui-library-wave -- --wave wave_3_forms` PASS
 
 ## Sonraki batch'ler
-- `Slider`
-- `DatePicker`
 - `TimePicker`
 - `Upload`
