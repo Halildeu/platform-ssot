@@ -867,14 +867,14 @@
     {
       "name": "Pagination",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "group": "navigation",
       "subgroup": "pagination",
       "taxonomyGroupId": "navigation",
       "taxonomySubgroup": "Pagination",
-      "demoMode": "planned",
-      "description": "Pagination P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "Pagination primitivei; server/client modlari, compact sayfalama ve bilgi yogun dataset gezintisini tek API ile sunar.",
       "sectionIds": [
         "component_library_management",
         "navigation_patterns",
@@ -890,7 +890,8 @@
       "tags": [
         "wave-2",
         "navigation",
-        "planned"
+        "beta",
+        "flow-navigation"
       ],
       "uxPrimaryThemeId": "task_completion_architecture",
       "uxPrimarySubthemeId": "critical_path_minimization",
@@ -1354,14 +1355,14 @@
     {
       "name": "Steps",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "group": "navigation",
       "subgroup": "steps",
       "taxonomyGroupId": "navigation",
       "taxonomySubgroup": "Steps",
-      "demoMode": "planned",
-      "description": "Steps P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "Steps primitivei; cok adimli wizard ve release progress akislari icin status-rich navigation katmani sunar.",
       "sectionIds": [
         "component_library_management",
         "navigation_patterns",
@@ -1377,7 +1378,8 @@
       "tags": [
         "wave-2",
         "navigation",
-        "planned"
+        "beta",
+        "progress"
       ],
       "uxPrimaryThemeId": "data_entry_validation_recovery",
       "uxPrimarySubthemeId": "multi_step_wizard_progress",

@@ -49,7 +49,7 @@ Okuma sırası:
 3. `context/ux-katalogu.reference.v1.json` (UI kit / Design Lab işi varsa)
 4. `context/ui-library-ux-alignment.v1.json` (UI kit / Design Lab işi varsa)
 5. `context/ui-library-component-roadmap.v1.json` (UI kit / Design Lab işi varsa)
-6. `context/ui-library-wave-1-foundation-primitives.v1.json` (aktif wave bu ise)
+6. `context/ui-library-wave-2-navigation.v1.json` (aktif wave bu ise)
 7. `context/frontend-diagnostics.registry.v1.json` (UI kit / vitrin / route stabilitesi işi varsa)
 8. `context/backend-diagnostics.registry.v1.json` (backend runtime / smoke / health işi varsa)
 9. `context/business-journey-e2e-matrix.v1.json` (katalog bazlı gerçek iş akışı smoke konuşuluyorsa)

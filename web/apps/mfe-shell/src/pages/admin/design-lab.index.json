@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 54,
-    "planned": 22,
-    "liveDemo": 25,
+    "exported": 56,
+    "planned": 20,
+    "liveDemo": 27,
     "inspector": 30
   },
   "items": [
@@ -800,21 +800,24 @@
     {
       "name": "Pagination",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { Pagination } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "navigation",
       "subgroup": "pagination",
       "tags": [
+        "beta",
+        "flow-navigation",
         "navigation",
-        "planned",
         "wave-2"
       ],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "taxonomyGroupId": "navigation",
       "taxonomySubgroup": "Pagination",
-      "demoMode": "planned",
-      "description": "Pagination P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "Pagination primitivei; server/client modlari, compact sayfalama ve bilgi yogun dataset gezintisini tek API ile sunar.",
       "sectionIds": [
         "component_library_management",
         "navigation_patterns",
@@ -1058,21 +1061,24 @@
     {
       "name": "Steps",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { Steps } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "navigation",
       "subgroup": "steps",
       "tags": [
+        "beta",
         "navigation",
-        "planned",
+        "progress",
         "wave-2"
       ],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "taxonomyGroupId": "navigation",
       "taxonomySubgroup": "Steps",
-      "demoMode": "planned",
-      "description": "Steps P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "Steps primitivei; cok adimli wizard ve release progress akislari icin status-rich navigation katmani sunar.",
       "sectionIds": [
         "component_library_management",
         "navigation_patterns",

@@ -7,7 +7,7 @@ Kanonik kaynak:
 
 `wave_2_navigation` icin navigation ailesinin component bazli uygulama kontratini kilitlemek.
 
-Bu dalga aktif degildir; foundation release-hardening bittikten sonra yeniden acilir.
+Bu dalga aktiftir; foundation release-hardening tamamlandiktan sonra navigation akisi yeniden acildi.
 
 Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 
@@ -28,7 +28,7 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 - `Pagination`
 - `Steps`
 - amac: flow navigation ve progress kaliplarini eklemek
-- durum: `planned`
+- durum: `completed`
 
 ### Batch 3
 - `AnchorToc`
@@ -40,16 +40,17 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 ### Bu patch ile tamamlananlar
 - `Tabs` -> stable
 - `Breadcrumb` -> stable
+- `Pagination` -> beta
+- `Steps` -> beta
 
 ### Sonraki backlog
-- `Pagination` -> beta hedefi
-- `Steps` -> beta hedefi
 - `AnchorToc` -> beta hedefi
 
 ## Wave exit criteria
 
 - `Tabs` ve `Breadcrumb` stable export + preview + test + UX alignment ile tamamlanir.
-- `Pagination`, `Steps` ve `AnchorToc` planned backlog kontratiyla korunur.
+- `Pagination` ve `Steps` beta export + preview + API catalog + regression test ile tamamlanir.
+- `AnchorToc` planned backlog kontratiyla korunur.
 - Navigation family registry drift = `0` olur.
 - Keyboard navigation ve current-page a11y evidence yazili olur.
 
@@ -68,8 +69,7 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 
 ## Son durum
 
-- `planned`
-- `Tabs` ve `Breadcrumb` export edildi.
-- `PageLayout` breadcrumb rendering yeni primitive'e tasindi.
-- `Pagination`, `Steps` ve `AnchorToc` backlog kontratinda planned durumda tutuluyor.
-- navigation sonraki aktif dalga; mevcut aktif release-hardening odağı foundation primitives.
+- `in_progress`
+- `Tabs` ve `Breadcrumb` stable export olarak acik.
+- `Pagination` ve `Steps` beta export + live preview + API catalog ile aktif.
+- `AnchorToc` navigation dalgasinin kalan tek planned backlog girdisi.

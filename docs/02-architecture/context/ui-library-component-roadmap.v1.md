@@ -49,9 +49,9 @@ Kanonik kaynak:
 - Mevcut:
   - `Tabs`
   - `Breadcrumb`
-- Hedef:
   - `Pagination`
   - `Steps`
+- Hedef:
   - `AnchorToc`
 
 ### 3. Forms
@@ -169,7 +169,7 @@ Minimum evidence:
 
 ### Wave 2
 
-- `planned`
+- `in_progress`
 - `Navigation`
 - hedef:
   - `Tabs`
@@ -178,7 +178,9 @@ Minimum evidence:
   - `Steps`
   - `AnchorToc`
 - not:
-  - foundation hardening PASS olduktan sonra yeniden aktiflesir
+  - `Tabs` ve `Breadcrumb` stable export olarak acik
+  - `Pagination` ve `Steps` beta export + preview + API catalog ile aktif
+  - kalan tek planned backlog girdisi `AnchorToc`
 
 ### Wave 3
 

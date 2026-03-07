@@ -6,12 +6,19 @@ from pathlib import Path
 
 ROOT = Path('.')
 CONTRACT = ROOT / 'docs/02-architecture/context/ui-library-wave-2-navigation.v1.json'
+API_CATALOG = ROOT / 'web/packages/ui-kit/src/catalog/component-api-catalog.v1.json'
 EXPECTED_COMPONENTS = {
     'Tabs',
     'Breadcrumb',
     'Pagination',
     'Steps',
     'AnchorToc',
+}
+EXPORTED_COMPONENTS = {
+    'Tabs',
+    'Breadcrumb',
+    'Pagination',
+    'Steps',
 }
 REQUIRED_TOP = [
     'version',
@@ -48,8 +55,12 @@ def main() -> int:
     if not CONTRACT.exists():
         print('[check_ui_library_wave_2_navigation] FAIL: missing contract')
         return 1
+    if not API_CATALOG.exists():
+        print('[check_ui_library_wave_2_navigation] FAIL: missing api catalog')
+        return 1
 
     data = json.loads(CONTRACT.read_text(encoding='utf-8'))
+    api_catalog = json.loads(API_CATALOG.read_text(encoding='utf-8'))
     problems: list[str] = []
 
     for key in REQUIRED_TOP:
@@ -66,10 +77,20 @@ def main() -> int:
         problems.append('invalid-gate-runner-command')
 
     components = data.get('components', [])
+    api_items = {item.get('name'): item for item in api_catalog.get('items', [])}
     seen = {item.get('component_name') for item in components}
     for name in EXPECTED_COMPONENTS:
         if name not in seen:
             problems.append(f'missing-component:{name}')
+
+    for name in EXPORTED_COMPONENTS:
+        api_item = api_items.get(name)
+        if not api_item:
+            problems.append(f'missing-api-catalog-entry:{name}')
+            continue
+        for key in ['variantAxes', 'stateModel', 'props', 'previewFocus', 'regressionFocus']:
+            if not api_item.get(key):
+                problems.append(f'empty-api-catalog-field:{name}:{key}')
 
     orders = [item.get('implementation_order') for item in components]
     if sorted(orders) != list(range(1, len(EXPECTED_COMPONENTS) + 1)):

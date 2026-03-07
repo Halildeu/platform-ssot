@@ -53,8 +53,8 @@ def main() -> int:
     preset_map = {item.get("preset_id"): item for item in doctor_presets if isinstance(item, dict)}
 
     expected_presets = {
-        "ui-library": ("playwright:ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk", "gateway_smoke", "base_url_fetch_check"),
-        "shell-public": ("playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk", "gateway_smoke", "base_url_fetch_check"),
+        "ui-library": ("playwright:ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk", "gateway_smoke", "base_url_fetch_check"),
+        "shell-public": ("playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|shell_public_route_walk", "gateway_smoke", "base_url_fetch_check"),
         "theme-admin": ("playwright:theme_registry_page|theme_admin_navigation_walk", "gateway_smoke", "base_url_fetch_check"),
         "auth-business-routes": (
             "playwright:access_roles_page|access_roles_navigation_walk|audit_events_page|audit_events_navigation_walk|reporting_users_page|reporting_users_navigation_walk",
@@ -84,6 +84,8 @@ def main() -> int:
         problems.append("missing-scenario:ui_library_navigation_walk")
     if "name: ui_library_foundation_wave_1_walk" not in scenarios_text:
         problems.append("missing-scenario:ui_library_foundation_wave_1_walk")
+    if "name: ui_library_navigation_wave_2_walk" not in scenarios_text:
+        problems.append("missing-scenario:ui_library_navigation_wave_2_walk")
     if "name: shell_public_route_walk" not in scenarios_text:
         problems.append("missing-scenario:shell_public_route_walk")
     if "name: theme_admin_navigation_walk" not in scenarios_text:
@@ -128,6 +130,8 @@ def main() -> int:
         problems.append("doctor-missing-click-walk-reference")
     if "ui_library_foundation_wave_1_walk" not in doctor_text:
         problems.append("doctor-missing-foundation-wave-reference")
+    if "ui_library_navigation_wave_2_walk" not in doctor_text:
+        problems.append("doctor-missing-wave-2-navigation-reference")
     if "theme_admin_navigation_walk" not in doctor_text:
         problems.append("doctor-missing-theme-admin-click-walk-reference")
     if "access_roles_navigation_walk" not in doctor_text:

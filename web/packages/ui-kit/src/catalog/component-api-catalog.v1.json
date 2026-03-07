@@ -1,8 +1,115 @@
 {
   "version": "1.0",
   "subject_id": "ui_kutuphane_sistemi",
-  "wave_id": "wave_1_foundation_primitives",
+  "wave_id": "multi_wave_ui_library_catalog",
   "items": [
+    {
+      "name": "Avatar",
+      "variantAxes": [
+        "size: sm | md | lg | xl",
+        "shape: circle | square",
+        "fallback: image | initials | icon"
+      ],
+      "stateModel": [
+        "image-loaded",
+        "broken-image-fallback",
+        "privacy-safe-identity"
+      ],
+      "props": [
+        {
+          "name": "src",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Profil görseli kaynağı; hata durumunda fallback devreye girer."
+        },
+        {
+          "name": "name / alt",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Initials üretimi ve erişilebilir label kaynağı."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg' | 'xl'",
+          "default": "md",
+          "required": false,
+          "description": "Kimlik yoğunluğu ve avatar hacmi."
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'square'",
+          "default": "circle",
+          "required": false,
+          "description": "Kimlik yüzey geometrisi."
+        },
+        {
+          "name": "fallbackIcon",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Image ve initials yerine gösterilecek kontrollü icon fallback."
+        }
+      ],
+      "previewFocus": [
+        "size matrisi",
+        "image / initials / icon fallback",
+        "square kimlik varyantı"
+      ],
+      "regressionFocus": [
+        "broken image sonrası deterministic fallback",
+        "fallback metadata",
+        "privacy-safe identity rendering"
+      ]
+    },
+    {
+      "name": "Breadcrumb",
+      "variantAxes": [
+        "density: default | compact",
+        "collapse: full | middle-collapse",
+        "itemType: href | action | current | disabled"
+      ],
+      "stateModel": [
+        "current page",
+        "collapsed middle",
+        "disabled crumb",
+        "route-aware reuse"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "BreadcrumbItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Path segmentlerini, href/onClick ve disabled/current davranisini tasir."
+        },
+        {
+          "name": "maxItems",
+          "type": "number",
+          "default": "-",
+          "required": false,
+          "description": "Uzun pathlerde middle collapse davranisini acar."
+        },
+        {
+          "name": "separator",
+          "type": "ReactNode",
+          "default": "/",
+          "required": false,
+          "description": "Marka veya domain odakli ayirici varyasyonu."
+        }
+      ],
+      "previewFocus": [
+        "basic path",
+        "collapsed path",
+        "PageLayout reuse"
+      ],
+      "regressionFocus": [
+        "aria-current semantics",
+        "collapse determinism",
+        "disabled/current visual separation"
+      ]
+    },
     {
       "name": "Button",
       "variantAxes": [
@@ -73,72 +180,110 @@
       ]
     },
     {
-      "name": "Text",
+      "name": "Divider",
       "variantAxes": [
-        "preset: display | heading | title | body | body-sm | caption | mono",
-        "variant: primary | secondary | muted | success | danger",
-        "wrap: wrap | nowrap | pretty | balance"
+        "orientation: horizontal | vertical",
+        "label: none | text",
+        "decorative: true | false"
       ],
       "stateModel": [
-        "truncate",
-        "clampLines",
-        "align",
-        "tabularNums",
-        "mono"
+        "semantic-separator",
+        "decorative-only",
+        "spacing-preservation"
       ],
       "props": [
         {
-          "name": "preset",
-          "type": "'display' | 'heading' | 'title' | 'body' | 'body-sm' | 'caption' | 'mono'",
-          "default": "body-sm",
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "default": "horizontal",
           "required": false,
-          "description": "Semantic typography preset'i ve line-height kararini belirler."
+          "description": "Ayırıcı eksenini belirler."
         },
         {
-          "name": "variant",
-          "type": "'primary' | 'secondary' | 'muted' | 'success' | 'danger'",
-          "default": "primary",
+          "name": "label",
+          "type": "ReactNode",
+          "default": "-",
           "required": false,
-          "description": "Semantic tone katmani."
+          "description": "Anlamlı ayrım metni veya bağlamsal başlık."
         },
         {
-          "name": "wrap",
-          "type": "'wrap' | 'nowrap' | 'pretty' | 'balance'",
-          "default": "wrap",
-          "required": false,
-          "description": "Uzun kopya satir dagilimi kararini belirler."
-        },
-        {
-          "name": "truncate / clampLines",
-          "type": "boolean / number",
-          "default": "false / -",
-          "required": false,
-          "description": "Single-line ve multi-line overflow davranisi."
-        },
-        {
-          "name": "align",
-          "type": "'left' | 'center' | 'right'",
-          "default": "left",
-          "required": false,
-          "description": "Metin hizalama karari."
-        },
-        {
-          "name": "tabularNums",
+          "name": "decorative",
           "type": "boolean",
           "default": "false",
           "required": false,
-          "description": "Finansal ve sayisal kolonlarda sabit rakam genisligi saglar."
+          "description": "Ayrıcı yalnız görsel amaçlı ise semantik role kapatılır."
         }
       ],
       "previewFocus": [
-        "semantic scale",
-        "tone ve emphasis",
-        "pretty wrap + tabular nums"
+        "horizontal ve vertical varyantlar",
+        "labelled divider",
+        "decorative vs semantic ayrımı"
       ],
       "regressionFocus": [
-        "contrast ve readability",
-        "clamp/truncate overflow",
-        "theme axis gecislerinde semantic typography"
+        "separator role davranışı",
+        "decorative metadata",
+        "vertical divider spacing kararlılığı"
+      ]
+    },
+    {
+      "name": "IconButton",
+      "variantAxes": [
+        "variant: ghost | secondary | destructive",
+        "size: sm | md | lg",
+        "state: selected | disabled | loading"
+      ],
+      "stateModel": [
+        "selected",
+        "aria-pressed",
+        "loading spinner-only",
+        "square hit-area"
+      ],
+      "props": [
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Tek zorunlu gorsel slot."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "-",
+          "required": true,
+          "description": "Accessible name kaynagi; aria-label ve title fallback icin kullanilir."
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Secondary gorunum ve aria-pressed davranisini açar."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Square hit-area ve density kararini belirler."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Spinner-only loading gorunumu ve interaction block."
+        }
+      ],
+      "previewFocus": [
+        "size ve intent matrix",
+        "selected + loading + disabled",
+        "secondary action button"
+      ],
+      "regressionFocus": [
+        "accessible name zorunlulugu",
+        "loading halinde kare hit-area korunumu",
+        "selected state semantics"
       ]
     },
     {
@@ -203,64 +348,64 @@
       ]
     },
     {
-      "name": "IconButton",
+      "name": "Pagination",
       "variantAxes": [
-        "variant: ghost | secondary | destructive",
-        "size: sm | md | lg",
-        "state: selected | disabled | loading"
+        "mode: server | client",
+        "size: sm | md",
+        "density: default | compact"
       ],
       "stateModel": [
-        "selected",
-        "aria-pressed",
-        "loading spinner-only",
-        "square hit-area"
+        "controlled",
+        "uncontrolled",
+        "ellipsis range",
+        "prev-next guard"
       ],
       "props": [
         {
-          "name": "icon",
-          "type": "ReactNode",
+          "name": "totalItems",
+          "type": "number",
           "default": "-",
           "required": true,
-          "description": "Tek zorunlu gorsel slot."
+          "description": "Toplam kayit sayisi ve sayfa sayisi hesabinin kaynagidir."
         },
         {
-          "name": "label",
-          "type": "string",
-          "default": "-",
-          "required": true,
-          "description": "Accessible name kaynagi; aria-label ve title fallback icin kullanilir."
+          "name": "pageSize",
+          "type": "number",
+          "default": "10",
+          "required": false,
+          "description": "Tek sayfada gosterilen kayit adedi."
         },
         {
-          "name": "selected",
+          "name": "page / defaultPage",
+          "type": "number",
+          "default": "1",
+          "required": false,
+          "description": "Controlled veya uncontrolled page state secimi."
+        },
+        {
+          "name": "mode",
+          "type": "'server' | 'client'",
+          "default": "server",
+          "required": false,
+          "description": "Dataset kaynagina gore bilgi etiketi ve davranis tonunu belirler."
+        },
+        {
+          "name": "compact / showPageInfo",
           "type": "boolean",
-          "default": "false",
+          "default": "false / true",
           "required": false,
-          "description": "Secondary gorunum ve aria-pressed davranisini açar."
-        },
-        {
-          "name": "size",
-          "type": "'sm' | 'md' | 'lg'",
-          "default": "md",
-          "required": false,
-          "description": "Square hit-area ve density kararini belirler."
-        },
-        {
-          "name": "loading",
-          "type": "boolean",
-          "default": "false",
-          "required": false,
-          "description": "Spinner-only loading gorunumu ve interaction block."
+          "description": "Yoğun grid ve liste ekranlari icin bilgi yogunlugunu ayarlar."
         }
       ],
       "previewFocus": [
-        "size ve intent matrix",
-        "selected + loading + disabled",
-        "secondary action button"
+        "server-side matrix",
+        "compact client-side",
+        "ellipsis behavior"
       ],
       "regressionFocus": [
-        "accessible name zorunlulugu",
-        "loading halinde kare hit-area korunumu",
-        "selected state semantics"
+        "page clamp",
+        "aria-current",
+        "prev-next disabled guards"
       ]
     },
     {
@@ -369,109 +514,188 @@
       ]
     },
     {
-      "name": "Avatar",
-      "variantAxes": [
-        "size: sm | md | lg | xl",
-        "shape: circle | square",
-        "fallback: image | initials | icon"
-      ],
-      "stateModel": [
-        "image-loaded",
-        "broken-image-fallback",
-        "privacy-safe-identity"
-      ],
-      "props": [
-        {
-          "name": "src",
-          "type": "string",
-          "default": "-",
-          "required": false,
-          "description": "Profil görseli kaynağı; hata durumunda fallback devreye girer."
-        },
-        {
-          "name": "name / alt",
-          "type": "string",
-          "default": "-",
-          "required": false,
-          "description": "Initials üretimi ve erişilebilir label kaynağı."
-        },
-        {
-          "name": "size",
-          "type": "'sm' | 'md' | 'lg' | 'xl'",
-          "default": "md",
-          "required": false,
-          "description": "Kimlik yoğunluğu ve avatar hacmi."
-        },
-        {
-          "name": "shape",
-          "type": "'circle' | 'square'",
-          "default": "circle",
-          "required": false,
-          "description": "Kimlik yüzey geometrisi."
-        },
-        {
-          "name": "fallbackIcon",
-          "type": "ReactNode",
-          "default": "-",
-          "required": false,
-          "description": "Image ve initials yerine gösterilecek kontrollü icon fallback."
-        }
-      ],
-      "previewFocus": [
-        "size matrisi",
-        "image / initials / icon fallback",
-        "square kimlik varyantı"
-      ],
-      "regressionFocus": [
-        "broken image sonrası deterministic fallback",
-        "fallback metadata",
-        "privacy-safe identity rendering"
-      ]
-    },
-    {
-      "name": "Divider",
+      "name": "Steps",
       "variantAxes": [
         "orientation: horizontal | vertical",
-        "label: none | text",
-        "decorative: true | false"
+        "size: sm | md",
+        "mode: static | interactive"
       ],
       "stateModel": [
-        "semantic-separator",
-        "decorative-only",
-        "spacing-preservation"
+        "complete",
+        "current",
+        "upcoming",
+        "error",
+        "optional"
       ],
       "props": [
+        {
+          "name": "items",
+          "type": "StepItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Her adimin title, description, status ve optional bilgisini tasir."
+        },
+        {
+          "name": "value / defaultValue",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Controlled veya uncontrolled aktif adim secimi."
+        },
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Wizard veya review akislari icin tiklanabilir adim davranisini acar."
+        },
         {
           "name": "orientation",
           "type": "'horizontal' | 'vertical'",
           "default": "horizontal",
           "required": false,
-          "description": "Ayırıcı eksenini belirler."
-        },
-        {
-          "name": "label",
-          "type": "ReactNode",
-          "default": "-",
-          "required": false,
-          "description": "Anlamlı ayrım metni veya bağlamsal başlık."
-        },
-        {
-          "name": "decorative",
-          "type": "boolean",
-          "default": "false",
-          "required": false,
-          "description": "Ayrıcı yalnız görsel amaçlı ise semantik role kapatılır."
+          "description": "Progress kalibinin sayfa icindeki akisini belirler."
         }
       ],
       "previewFocus": [
-        "horizontal ve vertical varyantlar",
-        "labelled divider",
-        "decorative vs semantic ayrımı"
+        "interactive progress",
+        "vertical status-rich flow",
+        "current step emphasis"
       ],
       "regressionFocus": [
-        "separator role davranışı",
-        "decorative metadata",
-        "vertical divider spacing kararlılığı"
+        "aria-current step",
+        "interactive change handling",
+        "status fallback ordering"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "variantAxes": [
+        "appearance: underline | pill",
+        "orientation: horizontal | vertical",
+        "activationMode: automatic | manual"
+      ],
+      "stateModel": [
+        "controlled",
+        "uncontrolled",
+        "disabled tab",
+        "badge/icon metadata"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "TabItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Label, content, badge, icon ve disabled kararlarini tasiyan sekme listesi."
+        },
+        {
+          "name": "value / defaultValue",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Controlled veya uncontrolled state secimini belirler."
+        },
+        {
+          "name": "appearance",
+          "type": "'underline' | 'pill'",
+          "default": "underline",
+          "required": false,
+          "description": "Sekmenin navigation tonu ve vurgu katmanini belirler."
+        },
+        {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "default": "horizontal",
+          "required": false,
+          "description": "Wayfinding yonunu ve layout dagilimini belirler."
+        },
+        {
+          "name": "activationMode",
+          "type": "'automatic' | 'manual'",
+          "default": "automatic",
+          "required": false,
+          "description": "Keyboard navigation sirasinda panel aktivasyon davranisini belirler."
+        }
+      ],
+      "previewFocus": [
+        "controlled underline",
+        "vertical manual activation",
+        "badge/icon metadata"
+      ],
+      "regressionFocus": [
+        "APG keyboard navigation",
+        "disabled tab drift",
+        "panel activation semantics"
+      ]
+    },
+    {
+      "name": "Text",
+      "variantAxes": [
+        "preset: display | heading | title | body | body-sm | caption | mono",
+        "variant: primary | secondary | muted | success | danger",
+        "wrap: wrap | nowrap | pretty | balance"
+      ],
+      "stateModel": [
+        "truncate",
+        "clampLines",
+        "align",
+        "tabularNums",
+        "mono"
+      ],
+      "props": [
+        {
+          "name": "preset",
+          "type": "'display' | 'heading' | 'title' | 'body' | 'body-sm' | 'caption' | 'mono'",
+          "default": "body-sm",
+          "required": false,
+          "description": "Semantic typography preset'i ve line-height kararini belirler."
+        },
+        {
+          "name": "variant",
+          "type": "'primary' | 'secondary' | 'muted' | 'success' | 'danger'",
+          "default": "primary",
+          "required": false,
+          "description": "Semantic tone katmani."
+        },
+        {
+          "name": "wrap",
+          "type": "'wrap' | 'nowrap' | 'pretty' | 'balance'",
+          "default": "wrap",
+          "required": false,
+          "description": "Uzun kopya satir dagilimi kararini belirler."
+        },
+        {
+          "name": "truncate / clampLines",
+          "type": "boolean / number",
+          "default": "false / -",
+          "required": false,
+          "description": "Single-line ve multi-line overflow davranisi."
+        },
+        {
+          "name": "align",
+          "type": "'left' | 'center' | 'right'",
+          "default": "left",
+          "required": false,
+          "description": "Metin hizalama karari."
+        },
+        {
+          "name": "tabularNums",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Finansal ve sayisal kolonlarda sabit rakam genisligi saglar."
+        }
+      ],
+      "previewFocus": [
+        "semantic scale",
+        "tone ve emphasis",
+        "pretty wrap + tabular nums"
+      ],
+      "regressionFocus": [
+        "contrast ve readability",
+        "clamp/truncate overflow",
+        "theme axis gecislerinde semantic typography"
       ]
     }
   ]

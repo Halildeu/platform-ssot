@@ -17,6 +17,8 @@ import {
   Select,
   Skeleton,
   Spinner,
+  Pagination,
+  Steps,
   Tag,
   Tabs,
   Text,
@@ -291,6 +293,8 @@ const DesignLabPage: React.FC = () => {
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
+  const [paginationPage, setPaginationPage] = useState(6);
+  const [stepsValue, setStepsValue] = useState('review');
 
   useEffect(() => {
     setModalOpen(false);
@@ -836,6 +840,88 @@ const DesignLabPage: React.FC = () => {
                     { label: 'Libraries', href: '#libraries' },
                     { label: 'UI System', href: '#ui-system' },
                     { label: 'Tabs' },
+                  ]}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Pagination':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Server-side matrix">
+                <Pagination
+                  totalItems={248}
+                  pageSize={20}
+                  page={paginationPage}
+                  onPageChange={setPaginationPage}
+                  mode="server"
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Compact / client-side">
+                <Pagination
+                  totalItems={84}
+                  pageSize={12}
+                  defaultPage={2}
+                  size="sm"
+                  compact
+                  mode="client"
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Steps':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Interactive progress">
+                <Steps
+                  value={stepsValue}
+                  onValueChange={setStepsValue}
+                  interactive
+                  items={[
+                    {
+                      value: 'draft',
+                      title: 'Taslak',
+                      description: 'İlk kural ve içerik çerçevesi hazırlanır.',
+                    },
+                    {
+                      value: 'review',
+                      title: 'İnceleme',
+                      description: 'UX, API ve quality gate kanıtı birlikte doğrulanır.',
+                    },
+                    {
+                      value: 'release',
+                      title: 'Release',
+                      description: 'Wave gate ve doctor evidence ile kapanış yapılır.',
+                    },
+                  ]}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Vertical / status-rich">
+                <Steps
+                  orientation="vertical"
+                  items={[
+                    {
+                      value: 'scope',
+                      title: 'Scope',
+                      description: 'Contract ve registry eşleşmesi tamamlandı.',
+                      status: 'complete',
+                    },
+                    {
+                      value: 'preview',
+                      title: 'Preview',
+                      description: 'Live preview ve demoscope gözden geçiriliyor.',
+                      status: 'current',
+                    },
+                    {
+                      value: 'security',
+                      title: 'Security',
+                      description: 'Doctor evidence ve release guardrail bekleniyor.',
+                      optional: true,
+                    },
                   ]}
                 />
               </PreviewPanel>
