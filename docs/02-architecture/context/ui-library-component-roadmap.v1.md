@@ -51,8 +51,9 @@ Kanonik kaynak:
   - `Breadcrumb`
   - `Pagination`
   - `Steps`
-- Hedef:
   - `AnchorToc`
+- Hedef:
+  - açık gap yok
 
 ### 3. Forms
 
@@ -169,7 +170,7 @@ Minimum evidence:
 
 ### Wave 2
 
-- `in_progress`
+- `completed`
 - `Navigation`
 - hedef:
   - `Tabs`
@@ -180,7 +181,7 @@ Minimum evidence:
 - not:
   - `Tabs` ve `Breadcrumb` stable export olarak acik
   - `Pagination` ve `Steps` beta export + preview + API catalog ile aktif
-  - kalan tek planned backlog girdisi `AnchorToc`
+  - `AnchorToc` beta export + live preview ile navigation dalgasi kapandi
 
 ### Wave 3
 

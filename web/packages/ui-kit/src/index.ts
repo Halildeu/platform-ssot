@@ -53,6 +53,7 @@ export * from './components/Tabs';
 export * from './components/Breadcrumb';
 export * from './components/Pagination';
 export * from './components/Steps';
+export * from './components/AnchorToc';
 export * from './components/theme/ThemePreviewCard';
 export * from './layout/PageLayout';
 export * from './layout/FilterBar';

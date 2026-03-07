@@ -190,14 +190,14 @@
     {
       "name": "AnchorToc",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "group": "navigation",
       "subgroup": "anchor-toc",
       "taxonomyGroupId": "navigation",
       "taxonomySubgroup": "Anchor / Table of contents",
-      "demoMode": "inspector",
-      "description": "AnchorToc P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "AnchorToc primitivei; uzun sayfa, policy ve docs-site akislari icin derin link ve aktif heading navigation davranisini tek API ile sunar.",
       "sectionIds": [
         "component_library_management",
         "navigation_patterns",
@@ -213,7 +213,8 @@
       "tags": [
         "wave-2",
         "navigation",
-        "planned"
+        "beta",
+        "contextual-navigation"
       ],
       "uxPrimaryThemeId": "navigation_information_scent",
       "uxPrimarySubthemeId": "deep_link_and_shareable_state",

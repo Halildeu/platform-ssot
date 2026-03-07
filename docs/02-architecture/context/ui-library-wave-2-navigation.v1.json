@@ -3,16 +3,16 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_2_navigation",
   "family_id": "navigation",
-  "status": "in_progress",
+  "status": "completed",
   "purpose": "Navigation dalgasi icin Tabs, Breadcrumb, Pagination, Steps ve AnchorToc component ailesinin acceptance, UX eslesmesi, preview ve evidence kontratini tek kanonik pakette toplamak.",
   "baseline": {
     "governance_lock_commit": "0900750",
     "roadmap_lock_commit": "2393148",
     "wave_1_completion_commit": "863f480",
     "registry_snapshot": {
-      "exported_count": 54,
-      "planned_count": 22,
-      "live_demo_count": 25
+      "exported_count": 57,
+      "planned_count": 19,
+      "live_demo_count": 28
     }
   },
   "required_read_order": [
@@ -48,7 +48,7 @@
     },
     {
       "batch_id": "batch_3_contextual_navigation",
-      "status": "planned",
+      "status": "completed",
       "objective": "Uzun sayfa ve dokuman navigasyonunu anchor/toC primitive ile tamamlamak.",
       "components": [
         "AnchorToc"
@@ -255,13 +255,15 @@
       "component_name": "AnchorToc",
       "implementation_order": 5,
       "source_state": "planned_registry",
-      "registry_action": "preserve_planned_entry",
+      "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
-      "preview_mode": "inspector",
+      "preview_mode": "live",
       "implementation_scope": {
         "existing_source_paths": [],
         "target_source_paths": [
-          "web/packages/ui-kit/src/components/AnchorToc.tsx"
+          "web/packages/ui-kit/src/components/AnchorToc.tsx",
+          "web/packages/ui-kit/src/components/AnchorToc.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
         ],
         "target_taxonomy_group": "navigation",
         "target_taxonomy_subgroup": "Anchor / Table of contents"
@@ -280,20 +282,26 @@
       ],
       "gate_checks": [
         "python3 scripts/check_ui_library_wave_2_navigation.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run test:ui-kit",
         "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation"
       ],
       "evidence_requirements": [
-        "planned registry entry korunur",
+        "registry lifecycle ve UX alanlari AnchorToc icin exported/beta olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "hash sync ve active heading regression testi gecer",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
     }
   ],
   "wave_exit_criteria": [
     "Tabs ve Breadcrumb stable export + preview + test + UX alignment ile tamamlanir",
-    "Pagination ve Steps beta export + preview + API catalog + regression test ile tamamlanir",
-    "AnchorToc planned backlog kontratiyla korunur",
+    "Pagination, Steps ve AnchorToc beta export + preview + API catalog + regression test ile tamamlanir",
     "navigation family registry drift = 0 olur",
-    "keyboard navigation / current-page / step semantics a11y evidence yazili ve testlenmis olur",
+    "keyboard navigation / current-page / step semantics / active heading semantics a11y evidence yazili ve testlenmis olur",
     "Navigation wave calismasi wave gate PASS olmadan releasee cikmaz.",
     "doctor:frontend ui-library evidence = PASS olur."
   ],
@@ -302,15 +310,14 @@
       "Tabs",
       "Breadcrumb",
       "Pagination",
-      "Steps"
-    ],
-    "remaining_components": [
+      "Steps",
       "AnchorToc"
     ],
+    "remaining_components": [],
     "notes": [
       "Batch 1 primary navigation stable export ile kapandi.",
       "Batch 2 flow navigation export + API catalog + live preview ile acildi.",
-      "AnchorToc navigation dalgasinin kalan tek planned backlog girdisidir."
+      "Batch 3 contextual navigation AnchorToc ile tamamlandi ve navigation wave kapandi."
     ]
   },
   "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation",

@@ -141,11 +141,10 @@
           "Tabs",
           "Breadcrumb",
           "Pagination",
-          "Steps"
-        ],
-        "gaps": [
+          "Steps",
           "AnchorToc"
-        ]
+        ],
+        "gaps": []
       },
       "target_components": [
         {
@@ -719,7 +718,7 @@
     {
       "wave_id": "wave_2_navigation",
       "title_tr": "Navigation",
-      "status": "in_progress",
+      "status": "completed",
       "objective": "Sekme, breadcrumb ve ilerleme kaliplarini standardize et.",
       "families": [
         "navigation"
@@ -737,7 +736,7 @@
       "notes": [
         "Tabs ve Breadcrumb stable export olarak acik.",
         "Pagination ve Steps beta export + preview + API catalog ile aktif.",
-        "AnchorToc sonraki contextual navigation batch olarak bekliyor."
+        "AnchorToc beta export + live preview ile eklendi ve navigation wave kapandi."
       ]
     },
     {

@@ -4,6 +4,67 @@
   "wave_id": "multi_wave_ui_library_catalog",
   "items": [
     {
+      "name": "AnchorToc",
+      "variantAxes": [
+        "density: comfortable | compact",
+        "layout: static | sticky",
+        "mode: controlled | uncontrolled"
+      ],
+      "stateModel": [
+        "active section",
+        "hash sync",
+        "disabled item",
+        "hierarchical depth"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "AnchorTocItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Her heading icin id, label, level, meta ve disabled bilgisini tasir."
+        },
+        {
+          "name": "value / defaultValue",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Controlled veya uncontrolled aktif bolum secimi."
+        },
+        {
+          "name": "syncWithHash",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Deep-link ve shareable hash state davranisini acar."
+        },
+        {
+          "name": "sticky",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Uzun policy/docs ekranlarinda sabit navigation paneli davranisi saglar."
+        },
+        {
+          "name": "density",
+          "type": "'comfortable' | 'compact'",
+          "default": "comfortable",
+          "required": false,
+          "description": "Bilgi yogunluguna gore spacing kararini belirler."
+        }
+      ],
+      "previewFocus": [
+        "policy outline",
+        "hash sync + active heading",
+        "hierarchical depth"
+      ],
+      "regressionFocus": [
+        "aria-current location",
+        "hash persistence",
+        "disabled anchor guard"
+      ]
+    },
+    {
       "name": "Avatar",
       "variantAxes": [
         "size: sm | md | lg | xl",

@@ -25,6 +25,7 @@ import {
   ThemePreviewCard,
   Tooltip,
   Avatar,
+  AnchorToc,
   Breadcrumb,
   Divider,
 } from 'mfe-ui-kit';
@@ -295,6 +296,7 @@ const DesignLabPage: React.FC = () => {
   const [tabsValue, setTabsValue] = useState('overview');
   const [paginationPage, setPaginationPage] = useState(6);
   const [stepsValue, setStepsValue] = useState('review');
+  const [anchorValue, setAnchorValue] = useState('overview');
 
   useEffect(() => {
     setModalOpen(false);
@@ -925,6 +927,54 @@ const DesignLabPage: React.FC = () => {
                   ]}
                 />
               </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'AnchorToc':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[320px_1fr]">
+              <AnchorToc
+                value={anchorValue}
+                onValueChange={setAnchorValue}
+                title="Policy bölümleri"
+                items={[
+                  { id: 'overview', label: 'Overview', meta: 'P1' },
+                  { id: 'ux', label: 'UX Standardı', level: 2, meta: 'P2' },
+                  { id: 'security', label: 'Security Controls', level: 2, meta: 'P3' },
+                  { id: 'release', label: 'Release Evidence', level: 3, meta: 'P4' },
+                ]}
+              />
+              <div className="space-y-4 rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                <PreviewPanel title="Deep-link / shareable state">
+                  <div className="space-y-4">
+                    <section id="overview" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                      <Text preset="title">Overview</Text>
+                      <Text variant="secondary" className="mt-2 block">
+                        AnchorToc ayni sayfa icinde paylasilabilir hash state uretir ve aktif bolumu vurgular.
+                      </Text>
+                    </section>
+                    <section id="ux" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                      <Text preset="title">UX Standardı</Text>
+                      <Text variant="secondary" className="mt-2 block">
+                        Bilgi kokusu, derin link ve policy okumalarinda progress kaybi olmadan gezinme saglar.
+                      </Text>
+                    </section>
+                    <section id="security" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                      <Text preset="title">Security Controls</Text>
+                      <Text variant="secondary" className="mt-2 block">
+                        Active heading state hem docs-site hem admin policy ekranlari icin tek primitive uzerinden gelir.
+                      </Text>
+                    </section>
+                    <section id="release" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                      <Text preset="title">Release Evidence</Text>
+                      <Text variant="secondary" className="mt-2 block">
+                        Doctor evidence ve wave gate ile birlikte kullanildiginda dokuman ve release izlerini ayni dilde toplar.
+                      </Text>
+                    </section>
+                  </div>
+                </PreviewPanel>
+              </div>
             </div>
           </div>
         );

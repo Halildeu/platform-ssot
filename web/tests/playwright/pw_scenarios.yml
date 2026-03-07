@@ -197,11 +197,6 @@ scenarios:
       - click: '[data-testid="design-lab-item-tabs"]'
       - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
-      - fill:
-          selector: '[data-testid="design-lab-search"]'
-          value: Text
-      - expectVisible: '[data-testid="design-lab-item-text"]'
-      - click: '[data-testid="design-lab-item-text"]'
       - click: '[data-testid="design-lab-tab-api"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
 
@@ -296,6 +291,15 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: AnchorToc
+      - expectVisible: '[data-testid="design-lab-item-anchortoc"]'
+      - click: '[data-testid="design-lab-item-anchortoc"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
 
   - name: shell_public_route_walk
     level: 1
@@ -323,7 +327,7 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-page"]'
       - click: '[data-testid="design-lab-track-new_packages"]'
       - click: '[data-testid="design-lab-group-navigation"]'
-      - click: '[data-testid="design-lab-item-steps"]'
+      - click: '[data-testid="design-lab-item-anchortoc"]'
       - click: '[data-testid="design-lab-tab-overview"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
 

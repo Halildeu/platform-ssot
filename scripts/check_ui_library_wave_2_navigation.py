@@ -19,6 +19,7 @@ EXPORTED_COMPONENTS = {
     'Breadcrumb',
     'Pagination',
     'Steps',
+    'AnchorToc',
 }
 REQUIRED_TOP = [
     'version',

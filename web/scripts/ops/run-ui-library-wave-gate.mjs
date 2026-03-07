@@ -40,7 +40,7 @@ const waveMap = {
   },
   wave_2_navigation: {
     checker: 'python3 scripts/check_ui_library_wave_2_navigation.py',
-    focus: ['Tabs', 'Breadcrumb', 'Pagination', 'Steps'],
+    focus: ['Tabs', 'Breadcrumb', 'Pagination', 'Steps', 'AnchorToc'],
   },
 };
 

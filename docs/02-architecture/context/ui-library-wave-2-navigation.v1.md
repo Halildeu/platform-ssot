@@ -7,7 +7,7 @@ Kanonik kaynak:
 
 `wave_2_navigation` icin navigation ailesinin component bazli uygulama kontratini kilitlemek.
 
-Bu dalga aktiftir; foundation release-hardening tamamlandiktan sonra navigation akisi yeniden acildi.
+Bu dalga tamamlandi; foundation release-hardening tamamlandiktan sonra navigation akisi kapatildi.
 
 Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 
@@ -33,7 +33,7 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 ### Batch 3
 - `AnchorToc`
 - amac: uzun sayfa ve policy/dokuman navigasyonunu tamamlamak
-- durum: `planned`
+- durum: `completed`
 
 ## Component listesi
 
@@ -42,9 +42,10 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 - `Breadcrumb` -> stable
 - `Pagination` -> beta
 - `Steps` -> beta
+- `AnchorToc` -> beta
 
 ### Sonraki backlog
-- `AnchorToc` -> beta hedefi
+- Navigation ailesi icin acik backlog kalmadi
 
 ## Wave exit criteria
 
@@ -69,7 +70,7 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 
 ## Son durum
 
-- `in_progress`
+- `completed`
 - `Tabs` ve `Breadcrumb` stable export olarak acik.
-- `Pagination` ve `Steps` beta export + live preview + API catalog ile aktif.
-- `AnchorToc` navigation dalgasinin kalan tek planned backlog girdisi.
+- `Pagination`, `Steps` ve `AnchorToc` beta export + live preview + API catalog ile aktif.
+- Navigation ailesi wave-2 scope icinde butuncul olarak kapandi.
