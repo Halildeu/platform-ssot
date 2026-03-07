@@ -17,6 +17,8 @@
     "docs/02-architecture/context/security-remediation.contract.v1.json",
     "docs/02-architecture/context/live-release-provisioning.contract.v1.json",
     "docs/02-architecture/context/autonomous-delivery-gap-assessment.v1.json",
+    "docs/02-architecture/context/ui-library-page-block-library.contract.v1.json",
+    "docs/02-architecture/context/ui-library-package-release.contract.v1.json",
     "docs/02-architecture/context/ui-library-system.context.v1.json",
     "docs/02-architecture/system-overview.v1.json",
     "docs/02-architecture/domain-map.v1.json",
@@ -44,6 +46,8 @@
     "docs/02-architecture/context/business-journey-e2e-matrix.v1.md",
     "docs/02-architecture/context/security-remediation.contract.v1.md",
     "docs/02-architecture/context/live-release-provisioning.contract.v1.md",
+    "docs/02-architecture/context/ui-library-page-block-library.contract.v1.md",
+    "docs/02-architecture/context/ui-library-package-release.contract.v1.md",
     "docs/02-architecture/context/autonomous-delivery-gap-assessment.v1.md",
     "docs/02-architecture/context/orchestrator-adoption-bridge.v1.md",
     "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
@@ -71,7 +75,9 @@
     "Yeni iç servis çağrısı varsa communication matrix güncellenir.",
     "Yeni secret/config ihtiyacı varsa secret source matrix güncellenir.",
     "Yeni runtime bileşeni varsa dependency matrix güncellenir.",
-    "Teknik borç veya drift ile çelişen geliştirme varsa önce karar verilir."
+    "Teknik borç veya drift ile çelişen geliştirme varsa önce karar verilir.",
+    "UI library page/block veya composite shell degisikliginde page/block contract okunur.",
+    "UI library versioning, publish veya lifecycle degisikliginde package release contract okunur."
   ],
   "known_debts": [
     {
@@ -126,6 +132,8 @@
     "Business journey etkileyen degisiklik business-journey doctor evidence'i olmadan insansiz teslimata hazir sayilmaz.",
     "HIGH veya CRITICAL dependency/security bulgusu ile merge tamamlanmis sayilmaz.",
     "Residual MEDIUM bulgu yalniz security-remediation contract, suppression dosyasi ve review tarihi ile tasinabilir.",
-    "Live canary ve DAST degisikligi live-release provisioning contract ile fail-closed dogrulanmadan hazir sayilmaz."
+    "Live canary ve DAST degisikligi live-release provisioning contract ile fail-closed dogrulanmadan hazir sayilmaz.",
+    "Page/block compositeleri apps/** icinde kopyalanmaz; page/block contract ile ui-kit icinde uretilir.",
+    "Stable package release veya version bump, package release contract ve release notes olmadan tamam sayilmaz."
   ]
 }

@@ -71,7 +71,9 @@
     "Yeni component eklenince registry, preview ve designlab:index ayni patch icinde guncellenir.",
     "Design Lab'te gorunmeyen ortak component release edilmez.",
     "Tema persistence ihtiyaci variant-service sahibi disinda ikinci bir local mekanizma ile cozulmez.",
-    "Yeni veya degisen ortak component UX primary theme/subtheme baglanti karari almadan release edilmez."
+    "Yeni veya degisen ortak component UX primary theme/subtheme baglanti karari almadan release edilmez.",
+    "PageLayout/FilterBar/ReportFilterPanel gibi page/block compositeleri route icinde kopyalanmaz; ui-kit page/block library contract ile yonetilir.",
+    "Version bump, lifecycle promotion veya publish hedefi degisiyorsa package release contract ve release notes ayni patch icinde guncellenir."
   ],
   "quality_gates": [
     "python3 scripts/check_ui_library_governance_contract.py",
@@ -87,7 +89,9 @@
     "npm -C web run test:ui-kit",
     "npm -C web run doctor:frontend -- --preset ui-library",
     "python3 scripts/check_ui_library_wave_4_data_display.py",
-    "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+    "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display",
+    "python3 scripts/check_ui_library_page_block_contract.py",
+    "python3 scripts/check_ui_library_package_release_contract.py"
   ],
   "north_star_sections": [
     {
@@ -153,6 +157,8 @@
     "UX katalog referansi ve UI-library UX alignment kontrati okunur.",
     "Component roadmap okunur; family ve wave secimi yapilir.",
     "Aktif wave execution contract okunur ve component order kesinlestirilir.",
+    "Page/block family degisikliginde page/block contract okunur.",
+    "Versioning/publish/lifecycle degisikliginde package release contract okunur.",
     "Diagnostics registry okunur; canonical scenario ve doctor preset netlestirilir.",
     "UI library system context okunur.",
     "STYLE-WEB-001 ve WEB-PROJECT-LAYOUT karar katmani olarak kontrol edilir.",
@@ -161,5 +167,7 @@
     "Is ui-kit component mi, app-level composition mi, theme/runtime integration mi netlestirilir.",
     "Preview/demo kurali tanimlanir.",
     "Kodlama ancak bundan sonra baslar."
-  ]
+  ],
+  "page_block_contract": "docs/02-architecture/context/ui-library-page-block-library.contract.v1.json",
+  "package_release_contract": "docs/02-architecture/context/ui-library-package-release.contract.v1.json"
 }

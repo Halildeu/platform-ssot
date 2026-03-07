@@ -82,6 +82,20 @@ const steps = [
     cwd: repoRoot,
   },
   {
+    id: 'page_block_contract',
+    label: 'Page/block contract check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_page_block_contract.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'package_release_contract',
+    label: 'Package release contract check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_package_release_contract.py'],
+    cwd: repoRoot,
+  },
+  {
     id: 'frontend_diagnostics_registry',
     label: 'Frontend diagnostics registry check',
     cmd: 'python3',

@@ -1,0 +1,154 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-page-block-library-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "family_id": "page_blocks",
+  "wave_id": "wave_7_page_blocks",
+  "title": "UI Library Page/Block Library Contract",
+  "purpose": "Hazir page ve block kutuphanesini mevcut layout/composite substrate uzerinden urunlestirmek; sayfa seviyesinde yeniden kullanim, tutarlilik ve dusuk entegrasyon dokunusu saglamak.",
+  "scope": {
+    "current_exported_blocks": [
+      "PageLayout",
+      "FilterBar",
+      "ReportFilterPanel"
+    ],
+    "planned_targets": [
+      "PageHeader",
+      "SummaryStrip",
+      "EntitySummaryBlock",
+      "SectionShell",
+      "ActionHeader"
+    ],
+    "excluded_to_other_families": [
+      "FormDrawer",
+      "DetailDrawer",
+      "AgGridServer",
+      "EntityGridTemplate"
+    ],
+    "canonical_source_paths": [
+      "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx",
+      "web/packages/ui-kit/src/layout/FilterBar/FilterBar.tsx",
+      "web/packages/ui-kit/src/layout/ReportFilterPanel/ReportFilterPanel.tsx"
+    ]
+  },
+  "non_goals": [
+    "apps/** altinda page block kopyasi yazmak",
+    "route page icinde duplicate toolbar, header veya summary shell uretmek",
+    "overlay ve data-grid substrate sahipligini page/block ailesine tasimak"
+  ],
+  "required_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+    "docs/02-architecture/context/ui-library-page-block-library.contract.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "docs/00-handbook/WEB-PROJECT-LAYOUT.md",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+  ],
+  "operating_model": {
+    "design_rule": "Page/block ailesi veri ve aksiyonlari slot/props ile alir; route seviyesinde minimum kod ile compose edilir.",
+    "consumer_rule": "apps/** yalniz veri, action handler ve route-level compose besler; page/block davranisi ui-kit icinde kalir.",
+    "data_contract_rule": "Page block bileşenleri business fetch yapmaz; yalniz props, children, section config ve callback alir.",
+    "extensibility_rule": "Yeni block once bu kontrata eklenir, sonra registry/API catalog/preview ile ayni patch icinde acilir."
+  },
+  "component_targets": [
+    {
+      "component_name": "PageLayout",
+      "source_type": "existing_upgrade",
+      "current_maturity": "stable",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "domain_based_information_architecture",
+      "acceptance_focus": [
+        "baslik, breadcrumb, action rail ve content slot tek shell icinde kalir",
+        "dar genislikte header/action wrap davranisi okunabilir kalir",
+        "route-level duplicate header layout sayisi sifirlanir"
+      ]
+    },
+    {
+      "component_name": "FilterBar",
+      "source_type": "existing_upgrade",
+      "current_maturity": "stable",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "critical_path_minimization",
+      "acceptance_focus": [
+        "liste/grid filtre aksiyonlari tek toolbar shell icinde toplanir",
+        "responsive wrap, action placement ve clear/apply davranisi sabit kalir",
+        "search/filter toolbar duplicate local varyantlari olusturulmaz"
+      ]
+    },
+    {
+      "component_name": "ReportFilterPanel",
+      "source_type": "existing_upgrade",
+      "current_maturity": "stable",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "ux_primary_theme_id": "data_entry_validation_recovery",
+      "ux_primary_subtheme_id": "dependency_aware_form_guidance",
+      "acceptance_focus": [
+        "rapor filtre paneli submit/reset/summary davranisini tek shell'de toplar",
+        "inline validation ve disabled state pattern'i forms ailesiyle uyumlu olur",
+        "rapor sayfalarinda duplicate panel yapisi kalmaz"
+      ]
+    },
+    {
+      "component_name": "PageHeader",
+      "source_type": "planned_registry",
+      "current_maturity": "planned",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "orientation_and_wayfinding",
+      "acceptance_focus": [
+        "title, subtitle, status ve quick action bileşenlerini tek shell icinde toplar"
+      ]
+    },
+    {
+      "component_name": "SummaryStrip",
+      "source_type": "planned_registry",
+      "current_maturity": "planned",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "ux_primary_theme_id": "measurement_kpi_and_experimentation",
+      "ux_primary_subtheme_id": "task_completion_time_p50_p95",
+      "acceptance_focus": [
+        "KPI/stat kartlarini tek satir veya wrap eden strip shell ile sunar"
+      ]
+    },
+    {
+      "component_name": "EntitySummaryBlock",
+      "source_type": "planned_registry",
+      "current_maturity": "planned",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "confirmation_receipts_and_traceability",
+      "acceptance_focus": [
+        "entity detail ust ozetini reusable summary block olarak sunar"
+      ]
+    }
+  ],
+  "gate_requirements": [
+    "python3 scripts/check_ui_library_page_block_contract.py",
+    "python3 scripts/check_ui_library_component_roadmap.py",
+    "npm -C web run designlab:index",
+    "npm -C web run test:ui-kit",
+    "npm -C web run doctor:frontend -- --preset ui-library"
+  ],
+  "evidence_requirements": [
+    "component registry page/block entry parity",
+    "API catalog girdisi veya planned backlog kaydi",
+    "live Design Lab preview veya planned contract kaydi",
+    "wave gate doctor evidence",
+    "release notes referansi"
+  ],
+  "success_criteria": [
+    "Page/block compositeleri route icinde kopyalanmak yerine ui-kit uzerinden cagrilir.",
+    "Page level shell davranisi veriyle beslenen, dusuk dokunuslu reusable API haline gelir.",
+    "Overlay/data-grid substrate ownership'i page/block ailesiyle carpismaz."
+  ]
+}

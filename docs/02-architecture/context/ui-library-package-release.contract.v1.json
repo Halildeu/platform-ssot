@@ -1,0 +1,115 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-package-release-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "package_name": "mfe-ui-kit",
+  "package_json_path": "web/packages/ui-kit/package.json",
+  "purpose": "UI kit package versioning, changelog, build artefact ve dagitim kanitini fail-closed release kontrati altinda toplamak.",
+  "versioning_strategy": {
+    "source_of_truth": "web/packages/ui-kit/package.json:version",
+    "scheme": "semver",
+    "rules": {
+      "major": "stable component API'sinde backward incompatible degisiklik veya kaldirilma",
+      "minor": "yeni exported component, yeni variant axis veya backward compatible capability genislemesi",
+      "patch": "bugfix, a11y duzeltmesi, visual regression fix, docs/preview parity duzeltmesi"
+    },
+    "prerelease_channels": [
+      "beta",
+      "rc"
+    ],
+    "lifecycle_mapping": {
+      "planned": "release edilmez",
+      "beta": "preview/docs/gate PASS ile kontrollu adoption",
+      "stable": "release notes ve canary evidence ile yayimlanabilir",
+      "deprecated": "replacement + migration note olmadan yeni release icinde yalniz deprecate edilir"
+    }
+  },
+  "distribution_targets": [
+    {
+      "target_id": "module_federation_remote",
+      "channel": "internal-web-runtime",
+      "build_command": "npm -C web run build:ui-kit",
+      "artifact_paths": [
+        "web/packages/ui-kit/dist/remoteEntry.js"
+      ]
+    },
+    {
+      "target_id": "publish_bundle",
+      "channel": "bundle-drop",
+      "build_command": "npm -C web run publish:bundle",
+      "artifact_paths": [
+        "web/dist/ui-kit/remoteEntry.js"
+      ]
+    },
+    {
+      "target_id": "storybook_static",
+      "channel": "docs-static",
+      "build_command": "npm -C web run build-storybook",
+      "artifact_paths": [
+        "web/storybook-static/index.html"
+      ]
+    },
+    {
+      "target_id": "chromatic",
+      "channel": "hosted-docs-review",
+      "build_command": "npm -C web run chromatic",
+      "artifact_paths": []
+    }
+  ],
+  "required_scripts": [
+    "build:ui-kit",
+    "build-storybook",
+    "chromatic",
+    "publish:bundle",
+    "security:build-bundle",
+    "doctor:frontend",
+    "gate:ui-library-wave"
+  ],
+  "release_evidence": {
+    "required_files": [
+      "web/packages/ui-kit/package.json",
+      "web/packages/ui-kit/src/catalog/component-registry.v1.json",
+      "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json",
+      "docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md",
+      "docs/02-architecture/context/ui-library-package-release.contract.v1.json"
+    ],
+    "required_artifacts": [
+      "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+      "web/test-results/diagnostics/frontend-doctor/**/frontend-doctor.summary.v1.json",
+      "web/test-results/diagnostics/ui-library-wave-gate/**/ui-library-wave-gate.summary.v1.json"
+    ],
+    "required_human_log": [
+      "release note entry",
+      "stable veya beta lifecycle degisikligi notu",
+      "breaking degisiklik varsa migration note"
+    ]
+  },
+  "changelog_policy": {
+    "release_notes_path": "docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md",
+    "entry_minimums": [
+      "version",
+      "date",
+      "changed components",
+      "lifecycle changes",
+      "breaking changes",
+      "migration notes",
+      "evidence references"
+    ],
+    "stable_release_requires": [
+      "doctor frontend PASS",
+      "wave gate PASS",
+      "release notes entry"
+    ]
+  },
+  "fail_closed_rules": [
+    "package version degisiyorsa release notes entry yoksa release hazir sayilmaz",
+    "registry lifecycle degisikligi varsa component API catalog ve Design Lab parity olmadan release hazir sayilmaz",
+    "storyboard/chromatic/publish bundle scriptleri kayitli degilse dagitim kontrati FAIL olur",
+    "stable veya breaking degisiklikte wave gate PASS kaniti olmadan version bump tamam sayilmaz"
+  ],
+  "success_criteria": [
+    "UI kit versiyon artislari semver kuralina gore acik sekilde siniflanir.",
+    "Dagitim hedefleri, build komutu ve artefact kaniti tek kontratta gorunur olur.",
+    "Release notes olmadan sessiz paket davranis degisikligi yapilmaz."
+  ]
+}

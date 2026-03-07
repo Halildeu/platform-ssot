@@ -411,6 +411,87 @@
       ]
     },
     {
+      "family_id": "page_blocks",
+      "title_tr": "Page / Block Library",
+      "ux_alignment_family_id": "page_block_compositions",
+      "purpose": "Hazir page shell ve block compositelerini veriyle beslenen, dusuk dokunuslu reusable API olarak urunlestirmek.",
+      "current_state": {
+        "implemented_now": [
+          "PageLayout",
+          "FilterBar",
+          "ReportFilterPanel"
+        ],
+        "gaps": [
+          "PageHeader",
+          "SummaryStrip",
+          "EntitySummaryBlock",
+          "SectionShell",
+          "ActionHeader"
+        ]
+      },
+      "target_components": [
+        {
+          "component_name": "PageLayout",
+          "source_type": "existing_upgrade",
+          "target_wave": "wave_7_page_blocks",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "navigation_information_scent",
+          "ux_primary_subtheme_id": "domain_based_information_architecture"
+        },
+        {
+          "component_name": "FilterBar",
+          "source_type": "existing_upgrade",
+          "target_wave": "wave_7_page_blocks",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "task_completion_architecture",
+          "ux_primary_subtheme_id": "critical_path_minimization"
+        },
+        {
+          "component_name": "ReportFilterPanel",
+          "source_type": "existing_upgrade",
+          "target_wave": "wave_7_page_blocks",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "data_entry_validation_recovery",
+          "ux_primary_subtheme_id": "dependency_aware_form_guidance"
+        },
+        {
+          "component_name": "PageHeader",
+          "source_type": "roadmap_only",
+          "target_wave": "wave_7_page_blocks",
+          "target_maturity": "beta",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "navigation_information_scent",
+          "ux_primary_subtheme_id": "orientation_and_wayfinding"
+        },
+        {
+          "component_name": "SummaryStrip",
+          "source_type": "roadmap_only",
+          "target_wave": "wave_7_page_blocks",
+          "target_maturity": "beta",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "measurement_kpi_and_experimentation",
+          "ux_primary_subtheme_id": "task_completion_time_p50_p95"
+        },
+        {
+          "component_name": "EntitySummaryBlock",
+          "source_type": "roadmap_only",
+          "target_wave": "wave_7_page_blocks",
+          "target_maturity": "beta",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "feedback_state_and_visibility",
+          "ux_primary_subtheme_id": "confirmation_receipts_and_traceability"
+        }
+      ],
+      "exit_criteria": [
+        "Page shell ve summary block seti route icinde kopyalanmadan ui-kit uzerinden kullanilir.",
+        "Page/block compositeler veri ve callback ile calisir; fetch ve business logic route seviyesinde kalir.",
+        "Page/block family icin release notes ve package lifecycle kurali uygulanir."
+      ]
+    },
+    {
       "family_id": "overlay",
       "title_tr": "Overlay",
       "ux_alignment_family_id": "overlay_and_confirmation_components",
@@ -612,6 +693,13 @@
         }
       },
       {
+        "family_id": "page_blocks",
+        "target_mix": {
+          "stable": 3,
+          "beta": 3
+        }
+      },
+      {
         "family_id": "overlay",
         "target_mix": {
           "stable": 3,
@@ -636,7 +724,9 @@
       "npm -C web run lint:no-antd",
       "npm -C web run test:ui-kit",
       "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives",
-      "npm -C web run doctor:frontend -- --preset ui-library"
+      "npm -C web run doctor:frontend -- --preset ui-library",
+      "python3 scripts/check_ui_library_page_block_contract.py",
+      "python3 scripts/check_ui_library_package_release_contract.py"
     ],
     "family_specific_checks": {
       "foundation_primitives": [
@@ -670,6 +760,12 @@
         "manual fallback path",
         "privacy/redaction note",
         "audit trail evidence"
+      ],
+      "page_blocks": [
+        "page shell slot contract check",
+        "route-level duplicate layout count = 0",
+        "summary/filter/header block preview parity",
+        "release notes and lifecycle note for stable block changes"
       ]
     },
     "minimum_evidence_artifacts": [
@@ -843,6 +939,33 @@
         "wave_2_navigation",
         "wave_3_forms",
         "wave_5_overlay"
+      ]
+    },
+    {
+      "wave_id": "wave_7_page_blocks",
+      "title_tr": "Page / Block Library",
+      "status": "planned",
+      "objective": "Hazir page shell ve block compositelerini urunlestir; route-level kopya yapilari azalt.",
+      "families": [
+        "page_blocks"
+      ],
+      "candidate_components": [
+        "PageLayout",
+        "FilterBar",
+        "ReportFilterPanel",
+        "PageHeader",
+        "SummaryStrip",
+        "EntitySummaryBlock"
+      ],
+      "dependencies": [
+        "wave_1_foundation_primitives",
+        "wave_2_navigation",
+        "wave_3_forms",
+        "wave_4_data_display"
+      ],
+      "notes": [
+        "PageLayout, FilterBar ve ReportFilterPanel mevcut export substrate olarak kontrata alinacak.",
+        "Yeni page/block family, overlay ve data-display substrate ile ownership cakismasi olusturmayacak."
       ]
     }
   ]

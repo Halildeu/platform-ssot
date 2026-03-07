@@ -11,6 +11,10 @@ Alt içerikler:
 - context/ui-library-ux-alignment.v1.json → UI kütüphanesi ile UX Kataloğu eşleme kontratı
 - context/ui-library-component-roadmap.v1.json → component family matrix, maturity hedefi ve release wave planı
 - context/ui-library-component-roadmap.v1.md → roadmap özet görünümü
+- context/ui-library-page-block-library.contract.v1.json → hazır page/block ailesi için ürünleşme kontratı
+- context/ui-library-page-block-library.contract.v1.md → page/block kontratının insan okunur özeti
+- context/ui-library-package-release.contract.v1.json → ui-kit versiyonlama ve dağıtım kontratı
+- context/ui-library-package-release.contract.v1.md → versiyonlama/dağıtım kontratının insan okunur özeti
 - context/ui-library-wave-1-foundation-primitives.v1.json → tamamlanan foundation dalgasi icin execution contract
 - context/ui-library-wave-1-foundation-primitives.v1.md → foundation dalgasinin insan okunur ozeti
 - context/ui-library-wave-2-navigation.v1.json → tamamlanan navigation dalgasi icin execution contract
@@ -51,24 +55,26 @@ Okuma sırası:
 3. `context/ux-katalogu.reference.v1.json` (UI kit / Design Lab işi varsa)
 4. `context/ui-library-ux-alignment.v1.json` (UI kit / Design Lab işi varsa)
 5. `context/ui-library-component-roadmap.v1.json` (UI kit / Design Lab işi varsa)
-6. `context/ui-library-wave-4-data-display.v1.json` (aktif wave bu ise)
-7. `context/frontend-diagnostics.registry.v1.json` (UI kit / vitrin / route stabilitesi işi varsa)
-8. `context/backend-diagnostics.registry.v1.json` (backend runtime / smoke / health işi varsa)
-9. `context/business-journey-e2e-matrix.v1.json` (katalog bazlı gerçek iş akışı smoke konuşuluyorsa)
-10. `context/security-remediation.contract.v1.json` (security remediation / CVE / release guardrail işi varsa)
-11. `context/live-release-provisioning.contract.v1.json` (canary / DAST / provisioning işi varsa)
-12. `context/autonomous-delivery-gap-assessment.v1.json` (insansız teslimat / tam otonomi hedefi konuşuluyorsa)
-13. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
-14. `system-overview.v1.json`
-15. `domain-map.v1.json`
-16. `runtime/*.v1.json`
-17. `blueprints/*.v1.json`
-18. `INDEX.md`
-19. `SYSTEM-OVERVIEW.md`
-20. `DOMAIN-MAP.md`
-21. `runtime/*.md`
-22. `services/*`
-23. `clients/*`
+6. `context/ui-library-page-block-library.contract.v1.json` (page/block compositeleri konusu varsa)
+7. `context/ui-library-package-release.contract.v1.json` (versiyonlama / dağıtım konusu varsa)
+8. `context/ui-library-wave-4-data-display.v1.json` (aktif wave bu ise)
+9. `context/frontend-diagnostics.registry.v1.json` (UI kit / vitrin / route stabilitesi işi varsa)
+10. `context/backend-diagnostics.registry.v1.json` (backend runtime / smoke / health işi varsa)
+11. `context/business-journey-e2e-matrix.v1.json` (katalog bazlı gerçek iş akışı smoke konuşuluyorsa)
+12. `context/security-remediation.contract.v1.json` (security remediation / CVE / release guardrail işi varsa)
+13. `context/live-release-provisioning.contract.v1.json` (canary / DAST / provisioning işi varsa)
+14. `context/autonomous-delivery-gap-assessment.v1.json` (insansız teslimat / tam otonomi hedefi konuşuluyorsa)
+15. `context/ui-library-system.context.v1.json` (UI kit / Design Lab işi varsa)
+16. `system-overview.v1.json`
+17. `domain-map.v1.json`
+18. `runtime/*.v1.json`
+19. `blueprints/*.v1.json`
+20. `INDEX.md`
+21. `SYSTEM-OVERVIEW.md`
+22. `DOMAIN-MAP.md`
+23. `runtime/*.md`
+24. `services/*`
+25. `clients/*`
 
 Kural:
 - AI önce JSON kanonik katmanı okur.

@@ -12,6 +12,7 @@ REQUIRED_FAMILIES = {
     "navigation",
     "forms",
     "data_display",
+    "page_blocks",
     "overlay",
     "ai_native_helpers",
 }
@@ -24,6 +25,7 @@ REQUIRED_WAVES = {
     "wave_4_data_display",
     "wave_5_overlay",
     "wave_6_ai_native_helpers",
+    "wave_7_page_blocks",
 }
 
 
