@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 70,
-    "planned": 6,
-    "liveDemo": 41,
+    "exported": 72,
+    "planned": 4,
+    "liveDemo": 43,
     "inspector": 29
   },
   "items": [
@@ -1724,58 +1724,76 @@
     {
       "name": "Tree",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Tree P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { Tree } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "data_display",
+      "subgroup": "tree_table",
+      "tags": [
+        "beta",
+        "data-display",
+        "tree",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Tree / TreeTable",
+      "demoMode": "live",
+      "description": "Tree primitivei; policy, release ve ownership hiyerarsilerini secim ve readonly modlariyla sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "navigation_patterns"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "deep_link_and_shareable_state",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "TreeTable",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "TreeTable P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { TreeTable } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "data_display",
+      "subgroup": "tree_table",
+      "tags": [
+        "beta",
+        "data-display",
+        "tree-table",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Tree / TreeTable",
+      "demoMode": "live",
+      "description": "TreeTable primitivei; owner, status ve scope verisini hiyerarsik satirlarla tablo halinde sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "integration_distribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "role_goal_task_mapping",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Upload",
