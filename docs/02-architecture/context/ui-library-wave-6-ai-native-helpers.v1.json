@@ -3,7 +3,7 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_6_ai_native_helpers",
   "family_id": "ai_native_helpers",
-  "status": "in_progress",
+  "status": "completed",
   "purpose": "AI destekli karar, komut ve guven sinyallerini tek kutuphane kontratina alarak seffaf, izlenebilir ve insan onayina saygili helper seti olusturmak.",
   "baseline": {
     "governance_lock_commit": "0900750",
@@ -40,8 +40,8 @@
     },
     {
       "batch_id": "batch_2_human_approval_and_citations",
-      "status": "planned",
-      "objective": "ApprovalCheckpoint, CitationPanel, AIActionAuditTimeline ve PromptComposer için ikinci AI-native helper dilimini acmak.",
+      "status": "completed",
+      "objective": "ApprovalCheckpoint, CitationPanel, AIActionAuditTimeline ve PromptComposer icin ikinci AI-native helper dilimini export + preview + doctor evidence ile tamamlamak.",
       "components": [
         "ApprovalCheckpoint",
         "CitationPanel",
@@ -218,20 +218,227 @@
         "component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "ApprovalCheckpoint",
+      "implementation_order": 4,
+      "source_state": "new_component",
+      "registry_action": "promote_planned_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/ApprovalCheckpoint.tsx",
+          "web/packages/ui-kit/src/components/ApprovalCheckpoint.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "ai_native_helpers",
+        "target_taxonomy_subgroup": "Approval / Audit"
+      },
+      "ux_primary_theme_id": "ai_assisted_decision_experience",
+      "ux_primary_subtheme_id": "human_approval_checkpoints",
+      "acceptance_criteria": [
+        "human approval checkpoint durumu, evidence seti ve checklist ayni primitive uzerinde okunur",
+        "readonly ve disabled modlarda karar aksiyonlari bloklanir",
+        "primary ve secondary kararlar ayni component API uzerinden tetiklenir",
+        "live preview ve docs showcase approval queue senaryolarini gosterir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "approval-checkpoint-interactive",
+          "title": "Interactive human checkpoint"
+        },
+        {
+          "id": "approval-checkpoint-readonly",
+          "title": "Readonly review queue"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari ApprovalCheckpoint icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "CitationPanel",
+      "implementation_order": 5,
+      "source_state": "new_component",
+      "registry_action": "promote_planned_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/CitationPanel.tsx",
+          "web/packages/ui-kit/src/components/CitationPanel.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "ai_native_helpers",
+        "target_taxonomy_subgroup": "Citations / Prompting"
+      },
+      "ux_primary_theme_id": "ai_assisted_decision_experience",
+      "ux_primary_subtheme_id": "confidence_and_source_transparency",
+      "acceptance_criteria": [
+        "source transparency, excerpt ve locator bilgisi tek panel primitive uzerinde gorunur",
+        "interactive ve readonly mod ayni API ile korunur",
+        "aktif citation secimi deterministic sekilde vurgulanir",
+        "doctor ve docs walkthrough alinti panelini canli gezer"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "citation-panel-source-transparency",
+          "title": "Source transparency panel"
+        },
+        {
+          "id": "citation-panel-readonly",
+          "title": "Readonly reference surface"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari CitationPanel icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "AIActionAuditTimeline",
+      "implementation_order": 6,
+      "source_state": "new_component",
+      "registry_action": "promote_planned_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/AIActionAuditTimeline.tsx",
+          "web/packages/ui-kit/src/components/AIActionAuditTimeline.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "ai_native_helpers",
+        "target_taxonomy_subgroup": "Approval / Audit"
+      },
+      "ux_primary_theme_id": "ai_assisted_decision_experience",
+      "ux_primary_subtheme_id": "ai_action_audit_trail",
+      "acceptance_criteria": [
+        "ai aksiyonlari, human review ve system eventleri tek timeline primitive ile gorunur",
+        "readonly mod secimi bloklar ama audit kanitini korur",
+        "selected event vurgusu deterministic sekilde calisir",
+        "docs showcase ve live preview kronolojik audit akislarini gosterir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "audit-timeline-interactive",
+          "title": "Interactive audit trail"
+        },
+        {
+          "id": "audit-timeline-readonly",
+          "title": "Readonly evidentiary log"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari AIActionAuditTimeline icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "PromptComposer",
+      "implementation_order": 7,
+      "source_state": "new_component",
+      "registry_action": "promote_planned_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/PromptComposer.tsx",
+          "web/packages/ui-kit/src/components/PromptComposer.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "ai_native_helpers",
+        "target_taxonomy_subgroup": "Citations / Prompting"
+      },
+      "ux_primary_theme_id": "ux_writing_and_microcopy",
+      "ux_primary_subtheme_id": "ai_message_tone_guardrails",
+      "acceptance_criteria": [
+        "subject, body, scope ve tone tek composer primitive ile yonetilir",
+        "readonly mod body ve scope degisikliklerini bloklar",
+        "guardrail ve citation etiketleri ayni surface uzerinde gorunur",
+        "preview ve docs sayfasi en az iki farkli authoring alternatifi gosterir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "prompt-composer-controlled",
+          "title": "Controlled prompt authoring"
+        },
+        {
+          "id": "prompt-composer-readonly",
+          "title": "Readonly review mode"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari PromptComposer icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "progress_summary": {
     "completed_components": [
       "CommandPalette",
       "RecommendationCard",
-      "ConfidenceBadge"
-    ],
-    "remaining_components": [
+      "ConfidenceBadge",
       "ApprovalCheckpoint",
       "CitationPanel",
       "AIActionAuditTimeline",
       "PromptComposer"
-    ]
+    ],
+    "remaining_components": []
   },
   "doctor_preset": "ui-library",
   "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"

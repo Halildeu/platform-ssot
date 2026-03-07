@@ -29,6 +29,10 @@ import {
   CommandPalette,
   RecommendationCard,
   ConfidenceBadge,
+  ApprovalCheckpoint,
+  CitationPanel,
+  AIActionAuditTimeline,
+  PromptComposer,
   TableSimple,
   Descriptions,
   List,
@@ -324,6 +328,15 @@ const DesignLabPage: React.FC = () => {
   const [commandPaletteQuery, setCommandPaletteQuery] = useState('');
   const [lastCommandSelection, setLastCommandSelection] = useState<string | null>(null);
   const [recommendationDecision, setRecommendationDecision] = useState<'pending' | 'applied' | 'review'>('pending');
+  const [approvalCheckpointState, setApprovalCheckpointState] = useState<'pending' | 'approved' | 'rejected'>('pending');
+  const [selectedCitationId, setSelectedCitationId] = useState<string | null>('policy-4-2');
+  const [selectedAuditId, setSelectedAuditId] = useState<string | null>('audit-draft');
+  const [promptSubject, setPromptSubject] = useState('Quarterly ethics review');
+  const [promptBody, setPromptBody] = useState(
+    'Prepare a concise approval-ready summary for ethics program findings. Highlight high-risk items, cite the governing policy sections and keep the tone strict but neutral.',
+  );
+  const [promptScope, setPromptScope] = useState<'general' | 'approval' | 'policy' | 'release'>('approval');
+  const [promptTone, setPromptTone] = useState<'neutral' | 'strict' | 'exploratory'>('strict');
   const policyTableRows = [
     { policy: 'Etik Politikası', owner: 'Uyum', status: 'Aktif', updatedAt: '06 Mar 2026' },
     { policy: 'Hediye & Ağırlama', owner: 'Hukuk', status: 'Taslak', updatedAt: '05 Mar 2026' },
@@ -741,6 +754,99 @@ const DesignLabPage: React.FC = () => {
         shortcut: '↵',
         keywords: ['apply', 'rollout', 'safe', 'recommendation'],
         badge: <Badge tone="success">AI</Badge>,
+      },
+    ],
+    [],
+  );
+
+  const approvalCheckpointSteps = useMemo(
+    () => [
+      {
+        key: 'doctor',
+        label: 'Doctor evidence temiz',
+        helper: 'Browser doctor ve pageerror kaniti PASS olmali.',
+        owner: 'Frontend QA',
+        status: 'approved' as const,
+      },
+      {
+        key: 'citations',
+        label: 'Citation transparency',
+        helper: 'Kaynak ve excerpt paneli karara baglanmali.',
+        owner: 'UX / Governance',
+        status: 'ready' as const,
+      },
+      {
+        key: 'human',
+        label: 'Human approval',
+        helper: 'Son publish karari insan onayindan gecmeli.',
+        owner: 'Release Board',
+        status: approvalCheckpointState === 'approved' ? ('approved' as const) : approvalCheckpointState === 'rejected' ? ('blocked' as const) : ('todo' as const),
+      },
+    ],
+    [approvalCheckpointState],
+  );
+
+  const citationPanelItems = useMemo(
+    () => [
+      {
+        id: 'policy-4-2',
+        title: 'Policy §4.2 Human approval',
+        excerpt: 'AI tavsiyesi karar etkisi uretiyorsa nihai islemden once insan onayi zorunludur.',
+        source: 'policy_work_intake.v2.json',
+        locator: 'sec:4.2',
+        kind: 'policy' as const,
+        badges: [<Tag key="policy-critical" tone="warning">critical</Tag>],
+      },
+      {
+        id: 'ux-ai-3',
+        title: 'UX Catalog: confidence transparency',
+        excerpt: 'Confidence, rationale ve source transparency ayni deneyim yuzeyinde birlikte okunur.',
+        source: 'ux_katalogu.reference.v1.json',
+        locator: 'ux:ai-3',
+        kind: 'doc' as const,
+        badges: [<Tag key="ux" tone="info">ux</Tag>],
+      },
+      {
+        id: 'doctor-ui',
+        title: 'Doctor evidence: ui-library',
+        excerpt: 'doctor:frontend ui-library preset sonucu PASS; pageerror ve console error bulunmadi.',
+        source: 'frontend-doctor.summary.v1.json',
+        locator: 'doctor:ui-library',
+        kind: 'log' as const,
+        badges: [<Tag key="pass" tone="success">pass</Tag>],
+      },
+    ],
+    [],
+  );
+
+  const auditTimelineItems = useMemo(
+    () => [
+      {
+        id: 'audit-draft',
+        actor: 'ai' as const,
+        title: 'AI recommendation drafted',
+        timestamp: '07 Mar 2026 18:10',
+        summary: 'Forms dalgasi icin publish-ready ozet uretildi ve confidence hesaplandi.',
+        status: 'drafted' as const,
+        badges: [<Tag key="wave" tone="muted">wave-6</Tag>],
+      },
+      {
+        id: 'audit-review',
+        actor: 'human' as const,
+        title: 'Governance review requested',
+        timestamp: '07 Mar 2026 18:14',
+        summary: 'Citation panel ve approval checkpoint ile birlikte ikinci goz talep edildi.',
+        status: 'approved' as const,
+        badges: [<Tag key="review" tone="info">review</Tag>],
+      },
+      {
+        id: 'audit-release',
+        actor: 'system' as const,
+        title: 'Release note staged',
+        timestamp: '07 Mar 2026 18:19',
+        summary: 'Canary kontrati ve release notes draft status ile isaretlendi.',
+        status: 'observed' as const,
+        badges: [<Tag key="system" tone="warning">observed</Tag>],
       },
     ],
     [],
@@ -1700,6 +1806,126 @@ const DesignLabPage: React.FC = () => {
                   <Text variant="secondary" className="block leading-7">
                     Confidence badge tek basina kesinlik iddiası taşımaz; skor, kaynak sayisi ve review gereksinimi birlikte okunur.
                   </Text>
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'ApprovalCheckpoint':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Interactive approval checkpoint">
+                <ApprovalCheckpoint
+                  title="Forms wave publish checkpoint"
+                  summary="AI helper dalgasi publish edilmeden once doctor, citation ve insan onayi ayni yuzeyde gorunur."
+                  status={approvalCheckpointState}
+                  approverLabel="Release board"
+                  dueLabel="07 Mar 2026 · 22:00"
+                  evidenceItems={['doctor:frontend', 'wave gate', 'security guardrails']}
+                  steps={approvalCheckpointSteps}
+                  citations={citationPanelItems.map((item) => item.locator as string)}
+                  onPrimaryAction={() => setApprovalCheckpointState('approved')}
+                  onSecondaryAction={() => setApprovalCheckpointState('rejected')}
+                  footerNote={`Current state: ${approvalCheckpointState}`}
+                  badges={[<Tag key="ai" tone="info">ai-native</Tag>]}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Readonly checkpoint">
+                <ApprovalCheckpoint
+                  title="Readonly approval evidence"
+                  summary="Bu varyant inceleme akisinda yalnizca okunur; aksiyon tetiklemez."
+                  status="pending"
+                  access="readonly"
+                  steps={approvalCheckpointSteps}
+                  evidenceItems={['doctor:frontend', 'ux alignment']}
+                  citations={['sec:4.2', 'ux:ai-3']}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'CitationPanel':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+              <PreviewPanel title="Interactive citations">
+                <CitationPanel
+                  items={citationPanelItems}
+                  activeCitationId={selectedCitationId}
+                  onOpenCitation={(id) => setSelectedCitationId(id)}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Selected citation">
+                <LibraryMetricCard
+                  label="Active citation"
+                  value={selectedCitationId ?? '—'}
+                  note={(citationPanelItems.find((item) => item.id === selectedCitationId)?.source as string) ?? 'Kaynak secilmedi'}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'AIActionAuditTimeline':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+              <PreviewPanel title="Interactive audit timeline">
+                <AIActionAuditTimeline
+                  items={auditTimelineItems}
+                  selectedId={selectedAuditId}
+                  onSelectItem={(id) => setSelectedAuditId(id)}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Selected event">
+                <Descriptions
+                  title="Audit event"
+                  density="compact"
+                  columns={1}
+                  items={[
+                    { key: 'selected', label: 'Selected', value: selectedAuditId ?? '—', tone: 'info' },
+                    {
+                      key: 'actor',
+                      label: 'Actor',
+                      value: auditTimelineItems.find((item) => item.id === selectedAuditId)?.actor ?? '—',
+                      tone: 'success',
+                    },
+                    {
+                      key: 'status',
+                      label: 'Status',
+                      value: auditTimelineItems.find((item) => item.id === selectedAuditId)?.status ?? '—',
+                      tone: 'warning',
+                    },
+                  ]}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'PromptComposer':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+              <PreviewPanel title="Controlled prompt authoring">
+                <PromptComposer
+                  subject={promptSubject}
+                  onSubjectChange={setPromptSubject}
+                  value={promptBody}
+                  onValueChange={setPromptBody}
+                  scope={promptScope}
+                  onScopeChange={setPromptScope}
+                  tone={promptTone}
+                  onToneChange={setPromptTone}
+                  guardrails={['pii-safe', 'approval-bound', 'source-required']}
+                  citations={citationPanelItems.map((item) => item.locator as string)}
+                  footerNote="Prompt output release notuna gireceksek human approval ile birlestirilir."
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Prompt summary">
+                <div className="grid grid-cols-1 gap-3">
+                  <LibraryMetricCard label="Subject" value={promptSubject} note="Prompt amaci" />
+                  <LibraryMetricCard label="Scope" value={promptScope} note="Execution boundary" />
+                  <LibraryMetricCard label="Tone" value={promptTone} note="Message discipline" />
                 </div>
               </PreviewPanel>
             </div>
@@ -3031,6 +3257,230 @@ const DesignLabPage: React.FC = () => {
                 </PreviewPanel>
                 <PreviewPanel title="Custom label">
                   <ConfidenceBadge level="low" label="Escalate" compact />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'ApprovalCheckpoint':
+        return [
+          {
+            id: 'approval-checkpoint-interactive',
+            eyebrow: 'Alternative 01',
+            title: 'Interactive human checkpoint',
+            description: 'AI tavsiyesi, kanit listesi ve human approval aksiyonlari tek kontratta birlesir.',
+            badges: ['approval', 'governance', 'human-in-loop'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Controlled checkpoint">
+                  <ApprovalCheckpoint
+                    title="Production release approval"
+                    summary="Doctor ve security kaniti PASS oldugunda son insan karari bu bloktan cikar."
+                    status={approvalCheckpointState}
+                    approverLabel="Platform board"
+                    dueLabel="Before publish"
+                    evidenceItems={['doctor:frontend', 'security-guardrails', 'release-canary']}
+                    steps={approvalCheckpointSteps}
+                    citations={citationPanelItems.map((item) => item.locator as string)}
+                    onPrimaryAction={() => setApprovalCheckpointState('approved')}
+                    onSecondaryAction={() => setApprovalCheckpointState('rejected')}
+                    footerNote={`Decision: ${approvalCheckpointState}`}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Decision summary">
+                  <LibraryMetricCard
+                    label="Approval state"
+                    value={approvalCheckpointState}
+                    note="State audit timeline ile birlikte okunur."
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'approval-checkpoint-readonly',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly review queue',
+            description: 'Onay kuyrugunda ayni bileşen yalnız okunur modda kullanilir.',
+            badges: ['readonly', 'queue', 'review'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly queue item">
+                  <ApprovalCheckpoint
+                    title="Readonly queue card"
+                    summary="Insan onayi bekleyen ama aksiyon yetkisi olmayan kullanicilar icin."
+                    access="readonly"
+                    evidenceItems={['doctor:frontend', 'ux alignment']}
+                    steps={approvalCheckpointSteps}
+                    citations={['sec:4.2', 'ux:ai-3']}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Governance note">
+                  <Text variant="secondary" className="block leading-7">
+                    Aynı primitive hem onay akışı hem de inceleme kuyruğunda kullanılır; fark erişim seviyesiyle belirlenir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'CitationPanel':
+        return [
+          {
+            id: 'citation-panel-source-transparency',
+            eyebrow: 'Alternative 01',
+            title: 'Source transparency panel',
+            description: 'Policy, UX ve doctor kanıtları tek panelde okunur ve seçili kaynak vurgulanır.',
+            badges: ['sources', 'transparency', 'citations'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Selectable sources">
+                  <CitationPanel
+                    items={citationPanelItems}
+                    activeCitationId={selectedCitationId}
+                    onOpenCitation={(id) => setSelectedCitationId(id)}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Selected source">
+                  <Descriptions
+                    title="Citation context"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'active', label: 'Active', value: selectedCitationId ?? '—', tone: 'info' },
+                      {
+                        key: 'source',
+                        label: 'Source',
+                        value: (citationPanelItems.find((item) => item.id === selectedCitationId)?.source as string) ?? '—',
+                        tone: 'success',
+                      },
+                    ]}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'citation-panel-readonly',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly reference surface',
+            description: 'Kaynak paneli aksiyon vermez ama alinti ve locator bilgisini korur.',
+            badges: ['readonly', 'reference', 'governed'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly citations">
+                  <CitationPanel items={citationPanelItems} access="readonly" activeCitationId="policy-4-2" />
+                </PreviewPanel>
+                <PreviewPanel title="Usage note">
+                  <Text variant="secondary" className="block leading-7">
+                    Citation panel, recommendation ve approval yüzeylerinde aynı primitive olarak tekrar kullanılır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'AIActionAuditTimeline':
+        return [
+          {
+            id: 'audit-timeline-interactive',
+            eyebrow: 'Alternative 01',
+            title: 'Interactive audit trail',
+            description: 'AI aksiyonlari, insan review ve system eventleri tek timeline primitive ile okunur.',
+            badges: ['audit', 'timeline', 'observability'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Selectable timeline">
+                  <AIActionAuditTimeline
+                    items={auditTimelineItems}
+                    selectedId={selectedAuditId}
+                    onSelectItem={(id) => setSelectedAuditId(id)}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Selected event">
+                  <LibraryMetricCard
+                    label="Event"
+                    value={selectedAuditId ?? '—'}
+                    note={(auditTimelineItems.find((item) => item.id === selectedAuditId)?.title as string) ?? 'Kayit secilmedi'}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'audit-timeline-readonly',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly evidentiary log',
+            description: 'Readonly modda timeline seçim yapmadan audit kanıtı olarak kullanılır.',
+            badges: ['readonly', 'evidence', 'history'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly history">
+                  <AIActionAuditTimeline items={auditTimelineItems} access="readonly" selectedId="audit-review" />
+                </PreviewPanel>
+                <PreviewPanel title="Audit note">
+                  <Text variant="secondary" className="block leading-7">
+                    Bu blok approval, recommendation ve release sayfalarında aynı davranışla tekrar kullanılabilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'PromptComposer':
+        return [
+          {
+            id: 'prompt-composer-controlled',
+            eyebrow: 'Alternative 01',
+            title: 'Controlled prompt authoring',
+            description: 'Prompt subject, body, scope ve tone tek composer primitive ile kontrol edilir.',
+            badges: ['prompt', 'controlled', 'guardrails'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+                <PreviewPanel title="Interactive composer">
+                  <PromptComposer
+                    subject={promptSubject}
+                    onSubjectChange={setPromptSubject}
+                    value={promptBody}
+                    onValueChange={setPromptBody}
+                    scope={promptScope}
+                    onScopeChange={setPromptScope}
+                    tone={promptTone}
+                    onToneChange={setPromptTone}
+                    guardrails={['pii-safe', 'approval-bound', 'source-required']}
+                    citations={citationPanelItems.map((item) => item.locator as string)}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Live state">
+                  <LibraryMetricCard label="Scope" value={promptScope} note={`Tone: ${promptTone}`} />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'prompt-composer-readonly',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly review mode',
+            description: 'Draft prompt metni aynı bileşenle gözden geçirilir ama değiştirilemez.',
+            badges: ['readonly', 'review', 'prompt'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly composer">
+                  <PromptComposer
+                    subject={promptSubject}
+                    value={promptBody}
+                    scope={promptScope}
+                    tone={promptTone}
+                    access="readonly"
+                    guardrails={['pii-safe', 'approval-bound', 'source-required']}
+                    citations={citationPanelItems.map((item) => item.locator as string)}
+                    footerNote="Readonly review mode"
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Contract note">
+                  <Text variant="secondary" className="block leading-7">
+                    Prompt composer, free-form textarea yerine scope ve tone guardrail'leri görünür kılar.
+                  </Text>
                 </PreviewPanel>
               </div>
             ),

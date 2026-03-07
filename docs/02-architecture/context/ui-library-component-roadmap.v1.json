@@ -597,14 +597,13 @@
         "implemented_now": [
           "CommandPalette",
           "RecommendationCard",
-          "ConfidenceBadge"
-        ],
-        "gaps": [
+          "ConfidenceBadge",
           "ApprovalCheckpoint",
           "CitationPanel",
           "AIActionAuditTimeline",
           "PromptComposer"
-        ]
+        ],
+        "gaps": []
       },
       "target_components": [
         {
@@ -636,7 +635,7 @@
         },
         {
           "component_name": "ApprovalCheckpoint",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_6_ai_native_helpers",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -645,25 +644,25 @@
         },
         {
           "component_name": "CitationPanel",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_6_ai_native_helpers",
           "target_maturity": "beta",
-          "preview_mode": "inspector",
+          "preview_mode": "live",
           "ux_primary_theme_id": "ai_assisted_decision_experience",
           "ux_primary_subtheme_id": "confidence_and_source_transparency"
         },
         {
           "component_name": "AIActionAuditTimeline",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_6_ai_native_helpers",
           "target_maturity": "beta",
-          "preview_mode": "inspector",
+          "preview_mode": "live",
           "ux_primary_theme_id": "ai_assisted_decision_experience",
           "ux_primary_subtheme_id": "ai_action_audit_trail"
         },
         {
           "component_name": "PromptComposer",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_6_ai_native_helpers",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -950,13 +949,12 @@
         "DetailDrawer",
         "Popover"
       ],
-      "remaining_components": [
-      ]
+      "remaining_components": []
     },
     {
       "wave_id": "wave_6_ai_native_helpers",
       "title_tr": "AI-Native Helpers",
-      "status": "in_progress",
+      "status": "completed",
       "objective": "AI destekli karar ve onay deneyimini guvenli, izlenebilir ve UX catalog uyumlu hale getir.",
       "families": [
         "ai_native_helpers"

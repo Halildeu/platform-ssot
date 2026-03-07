@@ -591,7 +591,34 @@ scenarios:
       - click: '[data-testid="design-lab-item-confidencebadge"]'
       - click: '[data-testid="design-lab-tab-api"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
-
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ApprovalCheckpoint
+      - expectVisible: '[data-testid="design-lab-item-approvalcheckpoint"]'
+      - click: '[data-testid="design-lab-item-approvalcheckpoint"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: CitationPanel
+      - expectVisible: '[data-testid="design-lab-item-citationpanel"]'
+      - click: '[data-testid="design-lab-item-citationpanel"]'
+      - click: '[data-testid="design-lab-tab-ux"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: AIActionAuditTimeline
+      - expectVisible: '[data-testid="design-lab-item-aiactionaudittimeline"]'
+      - click: '[data-testid="design-lab-item-aiactionaudittimeline"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: PromptComposer
+      - expectVisible: '[data-testid="design-lab-item-promptcomposer"]'
+      - click: '[data-testid="design-lab-item-promptcomposer"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
   - name: shell_public_route_walk
     level: 1
     auth_required: false

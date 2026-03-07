@@ -45,6 +45,10 @@ EXPECTED_COMPONENTS = {
     "CommandPalette",
     "RecommendationCard",
     "ConfidenceBadge",
+    "ApprovalCheckpoint",
+    "CitationPanel",
+    "AIActionAuditTimeline",
+    "PromptComposer",
 }
 
 

@@ -60,7 +60,7 @@ const waveMap = {
   },
   wave_6_ai_native_helpers: {
     checker: 'python3 scripts/check_ui_library_wave_6_ai_native_helpers.py',
-    focus: ['CommandPalette', 'RecommendationCard', 'ConfidenceBadge'],
+    focus: ['CommandPalette', 'RecommendationCard', 'ConfidenceBadge', 'ApprovalCheckpoint', 'CitationPanel', 'AIActionAuditTimeline', 'PromptComposer'],
   },
 };
 
