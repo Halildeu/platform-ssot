@@ -8,13 +8,41 @@
     "overrides": "apps/mfe-shell/src/pages/admin/design-lab.overrides.json"
   },
   "summary": {
-    "total": 76,
-    "exported": 73,
-    "planned": 3,
-    "liveDemo": 44,
+    "total": 82,
+    "exported": 76,
+    "planned": 6,
+    "liveDemo": 47,
     "inspector": 29
   },
   "items": [
+    {
+      "name": "AIActionAuditTimeline",
+      "kind": "component",
+      "importStatement": "",
+      "whereUsed": [],
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "tags": [],
+      "availability": "planned",
+      "lifecycle": "planned",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Audit",
+      "demoMode": "planned",
+      "description": "AIActionAuditTimeline backlog girdisi; AI aksiyon ve insan onayi izini zaman akisi olarak sunar.",
+      "sectionIds": [
+        "governance_contribution",
+        "documentation_standards",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
+    },
     {
       "name": "AgGridServer",
       "kind": "component",
@@ -92,6 +120,34 @@
       "uxPrimarySubthemeId": "deep_link_and_shareable_state",
       "roadmapWaveId": "wave_2_navigation",
       "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+    },
+    {
+      "name": "ApprovalCheckpoint",
+      "kind": "component",
+      "importStatement": "",
+      "whereUsed": [],
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "tags": [],
+      "availability": "planned",
+      "lifecycle": "planned",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Audit",
+      "demoMode": "planned",
+      "description": "Human approval checkpoint backlog girdisi; export implementation + preview ile acilir.",
+      "sectionIds": [
+        "governance_contribution",
+        "integration_distribution",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "Avatar",
@@ -284,23 +340,23 @@
       "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
-      "name": "CommandPalette",
+      "name": "CitationPanel",
       "kind": "component",
       "importStatement": "",
       "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
+      "group": "ai_helpers",
+      "subgroup": "citations_prompting",
       "tags": [],
       "availability": "planned",
       "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Citations / Prompting",
       "demoMode": "planned",
-      "description": "CommandPalette P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "description": "CitationPanel backlog girdisi; kaynak ve alinti seffafligini panel yuzeyinde sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "documentation_standards",
+        "governance_contribution",
+        "integration_distribution"
       ],
       "qualityGates": [
         "backlog_contract",
@@ -310,6 +366,82 @@
       "uxPrimarySubthemeId": "",
       "roadmapWaveId": "",
       "acceptanceContractId": ""
+    },
+    {
+      "name": "CommandPalette",
+      "kind": "component",
+      "importStatement": "import { CommandPalette } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "command_palette",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "command",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Command palette",
+      "demoMode": "live",
+      "description": "Global komut, route ve AI yardimci aksiyonlarini tek palette icinde arama/keyboard ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "safe_prompt_templates_and_scope",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "ConfidenceBadge",
+      "kind": "component",
+      "importStatement": "import { ConfidenceBadge } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "recommendations",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "confidence",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Recommendation / Confidence",
+      "demoMode": "live",
+      "description": "Confidence seviyesini, skorunu ve kaynak sayisini tek badge primitive ile gosterir.",
+      "sectionIds": [
+        "state_feedback",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "confidence_and_source_transparency",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
       "name": "ContextMenu",
@@ -975,6 +1107,34 @@
       "acceptanceContractId": "ui-library-wave-5-overlay-v1"
     },
     {
+      "name": "PromptComposer",
+      "kind": "component",
+      "importStatement": "",
+      "whereUsed": [],
+      "group": "ai_helpers",
+      "subgroup": "citations_prompting",
+      "tags": [],
+      "availability": "planned",
+      "lifecycle": "planned",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Citations / Prompting",
+      "demoMode": "planned",
+      "description": "PromptComposer backlog girdisi; scope-safe prompt yazimi ve tone guardrail yuzeyi sunar.",
+      "sectionIds": [
+        "documentation_standards",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
+    },
+    {
       "name": "Radio",
       "kind": "component",
       "importStatement": "import { Radio } from 'mfe-ui-kit';",
@@ -1011,6 +1171,44 @@
       "uxPrimarySubthemeId": "smart_defaults_and_prefill",
       "roadmapWaveId": "wave_3_forms",
       "acceptanceContractId": "ui-library-wave-3-forms-v1"
+    },
+    {
+      "name": "RecommendationCard",
+      "kind": "component",
+      "importStatement": "import { RecommendationCard } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "recommendations",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "recommendation",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Recommendation / Confidence",
+      "demoMode": "live",
+      "description": "AI onerilerini confidence, kaynak ve human action butonlari ile ayni kart kontratina baglar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "contextual_recommendation_cards",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
       "name": "ReportFilterPanel",

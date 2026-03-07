@@ -548,6 +548,50 @@ scenarios:
       - click: 'button:has-text("Popover aç")'
       - expectVisible: '[role="dialog"]'
 
+  - name: ui_library_ai_native_wave_6_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /ui-library
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: CommandPalette
+      - expectVisible: '[data-testid="design-lab-item-commandpalette"]'
+      - click: '[data-testid="design-lab-item-commandpalette"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: 'button:has-text("Komut paletini aç")'
+      - expectVisible: '[role="dialog"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: RecommendationCard
+      - expectVisible: '[data-testid="design-lab-item-recommendationcard"]'
+      - click: '[data-testid="design-lab-item-recommendationcard"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ConfidenceBadge
+      - expectVisible: '[data-testid="design-lab-item-confidencebadge"]'
+      - click: '[data-testid="design-lab-item-confidencebadge"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
   - name: shell_public_route_walk
     level: 1
     auth_required: false

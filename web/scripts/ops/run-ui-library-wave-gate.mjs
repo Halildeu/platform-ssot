@@ -27,6 +27,7 @@ const readActiveWave = () => {
   if (base.includes('wave-3-forms')) return 'wave_3_forms';
   if (base.includes('wave-4-data-display')) return 'wave_4_data_display';
   if (base.includes('wave-5-overlay')) return 'wave_5_overlay';
+  if (base.includes('wave-6-ai-native-helpers')) return 'wave_6_ai_native_helpers';
   throw new Error(`aktif wave anlasilamadi: ${active}`);
 };
 
@@ -56,6 +57,10 @@ const waveMap = {
   wave_5_overlay: {
     checker: 'python3 scripts/check_ui_library_wave_5_overlay.py',
     focus: ['Modal', 'Dropdown', 'Tooltip', 'FormDrawer', 'DetailDrawer', 'Popover'],
+  },
+  wave_6_ai_native_helpers: {
+    checker: 'python3 scripts/check_ui_library_wave_6_ai_native_helpers.py',
+    focus: ['CommandPalette', 'RecommendationCard', 'ConfidenceBadge'],
   },
 };
 

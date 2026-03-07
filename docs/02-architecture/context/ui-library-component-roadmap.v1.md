@@ -7,7 +7,7 @@
 - `data_display`: completed
 - `page_blocks`: planned
 - `overlay`: completed
-- `ai_native_helpers`: planned
+- `ai_native_helpers`: in_progress
 
 ## Wave Status
 - `wave_1_foundation_primitives`: completed
@@ -15,7 +15,7 @@
 - `wave_3_forms`: completed
 - `wave_4_data_display`: completed
 - `wave_5_overlay`: completed
-- `wave_6_ai_native_helpers`: planned
+- `wave_6_ai_native_helpers`: in_progress
 - `wave_7_page_blocks`: planned
 
 ## Data display mevcut batch
@@ -48,3 +48,4 @@
 - Overlay dalgasinda `Modal`, `Dropdown`, `Tooltip`, `FormDrawer`, `DetailDrawer` ve `Popover` ayni kontrata alindi.
 - `wave_5_overlay` dalgasi `Modal`, `Dropdown`, `Tooltip`, `FormDrawer`, `DetailDrawer` ve `Popover` ile kapandi.
 - `ContextMenu` ve `TourCoachmarks` overlay ailesinin gelecek backlog'u olarak ayrildi; aktif dalga kapsamina dahil degil.
+- AI helper dalgasinda `CommandPalette`, `RecommendationCard` ve `ConfidenceBadge` export + live preview + doctor evidence ile acildi.

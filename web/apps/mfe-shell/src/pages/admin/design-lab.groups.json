@@ -244,6 +244,28 @@
           "label": "Utilities"
         }
       ]
+    },
+    {
+      "id": "ai_helpers",
+      "label": "AI Helpers",
+      "subgroups": [
+        {
+          "id": "command_palette",
+          "label": "Command Palette"
+        },
+        {
+          "id": "recommendations",
+          "label": "Recommendations & Confidence"
+        },
+        {
+          "id": "approval_audit",
+          "label": "Approval & Audit"
+        },
+        {
+          "id": "citations_prompting",
+          "label": "Citations & Prompting"
+        }
+      ]
     }
   ]
 }

@@ -26,6 +26,9 @@ import {
   DatePicker,
   TimePicker,
   Upload,
+  CommandPalette,
+  RecommendationCard,
+  ConfidenceBadge,
   TableSimple,
   Descriptions,
   List,
@@ -288,9 +291,9 @@ const DesignLabPage: React.FC = () => {
   const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('overview');
   const [treeSelection, setTreeSelection] = useState<LibraryProductTreeSelection>({
     trackId: 'new_packages',
-    groupId: 'data_display',
-    subgroupId: 'Table',
-    itemId: 'TableSimple',
+    groupId: 'ai_helpers',
+    subgroupId: 'command_palette',
+    itemId: 'CommandPalette',
   });
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -317,6 +320,10 @@ const DesignLabPage: React.FC = () => {
     { name: 'policy-draft.pdf', size: 245_000, type: 'application/pdf' },
     { name: 'control-matrix.xlsx', size: 82_000, type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
   ]);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [commandPaletteQuery, setCommandPaletteQuery] = useState('');
+  const [lastCommandSelection, setLastCommandSelection] = useState<string | null>(null);
+  const [recommendationDecision, setRecommendationDecision] = useState<'pending' | 'applied' | 'review'>('pending');
   const policyTableRows = [
     { policy: 'Etik Politikası', owner: 'Uyum', status: 'Aktif', updatedAt: '06 Mar 2026' },
     { policy: 'Hediye & Ağırlama', owner: 'Hukuk', status: 'Taslak', updatedAt: '05 Mar 2026' },
@@ -693,6 +700,48 @@ const DesignLabPage: React.FC = () => {
       { id: 'USR-001', name: 'Users', owner: 'user-service' },
       { id: 'PRM-001', name: 'Permissions', owner: 'permission-service' },
       { id: 'VAR-001', name: 'Variants', owner: 'variant-service' },
+    ],
+    [],
+  );
+
+  const commandPaletteItems = useMemo(
+    () => [
+      {
+        id: 'open-ui-library-docs',
+        title: 'UI Library docs',
+        description: 'Komponent dokümantasyon sayfasına ve canlı örneklere dön.',
+        group: 'Navigate',
+        shortcut: '⌘U',
+        keywords: ['docs', 'library', 'component'],
+        badge: <Badge tone="info">Docs</Badge>,
+      },
+      {
+        id: 'review-release-evidence',
+        title: 'Release evidence review',
+        description: 'Doctor ve gate kanıtlarını tek özetten incele.',
+        group: 'Governance',
+        shortcut: '⌘R',
+        keywords: ['doctor', 'gate', 'evidence', 'release'],
+        badge: <Badge tone="warning">Review</Badge>,
+      },
+      {
+        id: 'open-ai-approvals',
+        title: 'AI approval queue',
+        description: 'İnsan onayı bekleyen AI öneri kuyruğunu aç.',
+        group: 'AI Assist',
+        shortcut: '⌘A',
+        keywords: ['approval', 'queue', 'ai', 'human'],
+        badge: <Badge tone="muted">Human</Badge>,
+      },
+      {
+        id: 'apply-safe-rollout',
+        title: 'Apply safe rollout',
+        description: 'Düşük riskli rollout önerisini kontrollü olarak uygula.',
+        group: 'AI Assist',
+        shortcut: '↵',
+        keywords: ['apply', 'rollout', 'safe', 'recommendation'],
+        badge: <Badge tone="success">AI</Badge>,
+      },
     ],
     [],
   );
@@ -1519,6 +1568,139 @@ const DesignLabPage: React.FC = () => {
                   value={`${uploadFiles.length}`}
                   note={uploadFiles.map((file) => file.name).join(', ')}
                 />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'CommandPalette':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+              <PreviewPanel title="Interactive launcher">
+                <div className="space-y-4">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button onClick={() => setCommandPaletteOpen(true)}>Komut paletini aç</Button>
+                    <SectionBadge label="⌘ K" />
+                    <SectionBadge label="AI-assisted" />
+                  </div>
+                  <CommandPalette
+                    open={commandPaletteOpen}
+                    title="Yonetim komut paleti"
+                    subtitle="Gezinim, AI tavsiyesi ve governance aksiyonlarini tek palette topla."
+                    items={commandPaletteItems}
+                    query={commandPaletteQuery}
+                    onQueryChange={setCommandPaletteQuery}
+                    onClose={() => setCommandPaletteOpen(false)}
+                    onSelect={(id, selectedItem) => {
+                      setLastCommandSelection(`${selectedItem.title} · ${id}`);
+                    }}
+                    footer={<Text variant="secondary">Doktor, gate ve approval akislari ayni palette gorunur.</Text>}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Current command state">
+                <div className="grid grid-cols-1 gap-3">
+                  <LibraryMetricCard
+                    label="Active query"
+                    value={commandPaletteQuery || '—'}
+                    note="Palette controlled query state ile calisiyor."
+                  />
+                  <LibraryMetricCard
+                    label="Last selection"
+                    value={lastCommandSelection ?? 'Henüz seçim yok'}
+                    note="Secilen komut route ya da AI aksiyonunu tetikler."
+                  />
+                  <Descriptions
+                    title="Governance"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'mode', label: 'Mode', value: 'dialog', tone: 'info' },
+                      { key: 'scope', label: 'Scope', value: 'navigate / ai / review', tone: 'success' },
+                      { key: 'evidence', label: 'Evidence', value: 'doctor + gate', tone: 'warning' },
+                    ]}
+                  />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'RecommendationCard':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Interactive governance recommendation">
+                <div className="space-y-4">
+                  <RecommendationCard
+                    title="Security remediation wave now"
+                    summary="Dependency bulgulari kapanmis durumda. UI library forms dalgasini kontrollu sekilde publish edebilirsin."
+                    recommendationType="Release suggestion"
+                    rationale={[
+                      'doctor:frontend kaniti yeşil',
+                      'wave gate PASS',
+                      'Residual risk kayıt altinda',
+                    ]}
+                    citations={['doctor:frontend', 'wave_3_forms', 'security-guardrails']}
+                    confidenceLevel="high"
+                    confidenceScore={89}
+                    sourceCount={4}
+                    tone={recommendationDecision === 'applied' ? 'success' : recommendationDecision === 'review' ? 'warning' : 'info'}
+                    primaryActionLabel={recommendationDecision === 'applied' ? 'Uygulandı' : 'Uygula'}
+                    secondaryActionLabel={recommendationDecision === 'review' ? 'İncelemede' : 'İncele'}
+                    onPrimaryAction={() => setRecommendationDecision('applied')}
+                    onSecondaryAction={() => setRecommendationDecision('review')}
+                    footerNote={`Decision: ${recommendationDecision}`}
+                    badges={[
+                      <Tag key="batch" tone="info">wave-6</Tag>,
+                      <Tag key="contract" tone="muted">contract-bound</Tag>,
+                    ]}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Readonly advisory card">
+                <RecommendationCard
+                  title="Human approval required"
+                  summary="Bu öneri doğrudan uygulanmaz. İnsan onayı, citation panel ve audit timeline ile birlikte görünür."
+                  recommendationType="Advisory"
+                  rationale={[
+                    'approval queue zorunlu',
+                    'policy impact yüksek',
+                  ]}
+                  citations={['approval-checkpoint', 'audit-trace']}
+                  confidenceLevel="medium"
+                  confidenceScore={72}
+                  sourceCount={2}
+                  access="readonly"
+                  compact
+                  footerNote="Readonly mode"
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'ConfidenceBadge':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Confidence matrix">
+                <div className="flex flex-wrap gap-3">
+                  <ConfidenceBadge level="low" score={41} sourceCount={1} />
+                  <ConfidenceBadge level="medium" score={68} sourceCount={3} />
+                  <ConfidenceBadge level="high" score={84} sourceCount={5} />
+                  <ConfidenceBadge level="very-high" score={96} sourceCount={8} />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Compact + transparency">
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-3">
+                    <ConfidenceBadge level="high" score={87} compact />
+                    <ConfidenceBadge level="medium" label="Manual review" compact showScore={false} />
+                    <ConfidenceBadge level="low" score={29} access="readonly" />
+                  </div>
+                  <Text variant="secondary" className="block leading-7">
+                    Confidence badge tek basina kesinlik iddiası taşımaz; skor, kaynak sayisi ve review gereksinimi birlikte okunur.
+                  </Text>
+                </div>
               </PreviewPanel>
             </div>
           </div>
@@ -2569,6 +2751,286 @@ const DesignLabPage: React.FC = () => {
                 </PreviewPanel>
                 <PreviewPanel title="Invalid">
                   <Upload label="Eksik kanit" invalid error="En az bir imzali PDF yuklenmeli." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'CommandPalette':
+        return [
+          {
+            id: 'command-palette-global-launcher',
+            eyebrow: 'Alternative 01',
+            title: 'Global launcher / route switcher',
+            description: 'Tüm route ve operasyonel aksiyonlari tek dialog içinde gezdiren ana komut paleti deneyimi.',
+            badges: ['launcher', 'dialog', 'navigate'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Palette open state">
+                  <div className="space-y-4">
+                    <Button onClick={() => setCommandPaletteOpen(true)}>Komut paletini aç</Button>
+                    <CommandPalette
+                      open={commandPaletteOpen}
+                      title="UI command center"
+                      subtitle="Gezinim, release review ve AI destekli aksiyonlar ayni palette."
+                      items={commandPaletteItems}
+                      query={commandPaletteQuery}
+                      onQueryChange={setCommandPaletteQuery}
+                      onClose={() => setCommandPaletteOpen(false)}
+                      onSelect={(id, selectedItem) => {
+                        setLastCommandSelection(`${selectedItem.title} · ${id}`);
+                      }}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Selected command">
+                  <LibraryMetricCard
+                    label="Selection"
+                    value={lastCommandSelection ?? 'Henüz seçim yok'}
+                    note="Palette selection route veya aksiyon state’ini besliyor."
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'command-palette-readonly-browse',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly browse mode',
+            description: 'Erişim kısıtlı kullanıcılar komutları görebilir ama uygulayamaz; bu fark aynı bileşende korunur.',
+            badges: ['readonly', 'governed', 'browse'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly palette contract">
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap gap-2">
+                      <SectionBadge label="readonly" />
+                      <SectionBadge label="discoverability" />
+                      <SectionBadge label="no execution" />
+                    </div>
+                    <Text variant="secondary" className="block leading-7">
+                      Readonly modda kullanıcı komut başlıklarını, group bilgisini ve shortcut bilgisini görür; aksiyon tetiklenmez.
+                    </Text>
+                    <List
+                      items={commandPaletteItems.map((item) => ({
+                        key: item.id,
+                        title: String(item.title),
+                        description: String(item.description ?? ''),
+                        meta: item.shortcut,
+                        badges: [item.group ?? 'General'],
+                      }))}
+                      access="readonly"
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Contract note">
+                  <Descriptions
+                    title="Governance contract"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'access', label: 'Access', value: 'readonly', tone: 'info' },
+                      { key: 'focus', label: 'Focus', value: 'discoverability + safety', tone: 'success' },
+                      { key: 'ux', label: 'UX anchor', value: 'guided_navigation_assistance', tone: 'warning' },
+                    ]}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'command-palette-approval-scope',
+            eyebrow: 'Alternative 03',
+            title: 'Approval-scoped command set',
+            description: 'AI ve approval akışları aynı palette scope badge’leriyle gruplanır.',
+            badges: ['approval', 'ai-assist', 'scope'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Scoped commands">
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap gap-2">
+                      <SectionBadge label="AI Assist" />
+                      <SectionBadge label="Governance" />
+                    </div>
+                    <List
+                      items={commandPaletteItems
+                        .filter((item) => item.group === 'AI Assist' || item.group === 'Governance')
+                        .map((item) => ({
+                          key: item.id,
+                          title: String(item.title),
+                          description: String(item.description ?? ''),
+                          meta: item.shortcut,
+                          badges: [item.group ?? 'General'],
+                        }))}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Scope summary">
+                  <div className="flex flex-wrap gap-2">
+                    <SectionBadge label="AI Assist" />
+                    <SectionBadge label="Governance" />
+                    <SectionBadge label="approval queue" />
+                  </div>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'RecommendationCard':
+        return [
+          {
+            id: 'recommendation-card-rollout',
+            eyebrow: 'Alternative 01',
+            title: 'Rollout recommendation card',
+            description: 'AI destekli rollout önerisini rationale, citation ve confidence ile birlikte gösterir.',
+            badges: ['ai', 'rollout', 'confidence'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Interactive decision card">
+                  <RecommendationCard
+                    title="Forms wave rollout hazır"
+                    summary="Gate ve doctor sonuçları forms dalgasının kontrollü şekilde publish edilebileceğini gösteriyor."
+                    recommendationType="Rollout"
+                    rationale={['wave gate PASS', 'doctor evidence clean', 'security residual governed']}
+                    citations={['wave_3_forms', 'doctor:frontend', 'security-remediation']}
+                    confidenceLevel="high"
+                    confidenceScore={91}
+                    sourceCount={5}
+                    tone={recommendationDecision === 'applied' ? 'success' : recommendationDecision === 'review' ? 'warning' : 'info'}
+                    onPrimaryAction={() => setRecommendationDecision('applied')}
+                    onSecondaryAction={() => setRecommendationDecision('review')}
+                    footerNote={`Decision state: ${recommendationDecision}`}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Decision summary">
+                  <LibraryMetricCard
+                    label="Current decision"
+                    value={recommendationDecision}
+                    note="Card state doctor ve audit timeline ile senkron tutulur."
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'recommendation-card-readonly',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly governance advisory',
+            description: 'İnceleme amaçlı kartta aksiyon butonları erişim moduna göre kilitlenir.',
+            badges: ['readonly', 'governance', 'advisory'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly card">
+                  <RecommendationCard
+                    title="Manual approval required"
+                    summary="Bu öneri yalnız okunur şekilde gösterilir; onay akışı ayrı yüzeyden ilerler."
+                    recommendationType="Advisory"
+                    rationale={['high policy impact', 'human checkpoint required']}
+                    citations={['approval_checkpoint', 'policy_work_intake']}
+                    confidenceLevel="medium"
+                    confidenceScore={74}
+                    access="readonly"
+                    compact
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Reasoning surface">
+                  <Text variant="secondary" className="block leading-7">
+                    Recommendation card, öneri metnini tek başına bırakmaz; gerekçe, citation ve confidence aynı yüzeyde okunur.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'recommendation-card-compact-queue',
+            eyebrow: 'Alternative 03',
+            title: 'Compact queue card',
+            description: 'Onay kuyruğunda çoklu önerileri daha kompakt hacimde göstermeye yarar.',
+            badges: ['compact', 'queue', 'triage'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                {['security', 'release', 'ux'].map((scope, index) => (
+                  <RecommendationCard
+                    key={scope}
+                    title={`${scope.toUpperCase()} recommendation`}
+                    summary="Sıradaki öneri başlığını kompakt yoğunlukta göster."
+                    recommendationType="Queue item"
+                    confidenceLevel={index === 0 ? 'high' : index === 1 ? 'medium' : 'low'}
+                    confidenceScore={index === 0 ? 88 : index === 1 ? 67 : 41}
+                    compact
+                    badges={[<Tag key={scope} tone="muted">{scope}</Tag>]}
+                  />
+                ))}
+              </div>
+            ),
+          },
+        ];
+      case 'ConfidenceBadge':
+        return [
+          {
+            id: 'confidence-badge-matrix',
+            eyebrow: 'Alternative 01',
+            title: 'Confidence matrix',
+            description: 'Low -> very-high seviyelerini skor ve kaynak sayısı ile birlikte gösterir.',
+            badges: ['matrix', 'explainability', 'score'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="All levels">
+                  <div className="flex flex-wrap gap-3">
+                    <ConfidenceBadge level="low" score={35} sourceCount={1} />
+                    <ConfidenceBadge level="medium" score={62} sourceCount={3} />
+                    <ConfidenceBadge level="high" score={84} sourceCount={5} />
+                    <ConfidenceBadge level="very-high" score={97} sourceCount={9} />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Reading guidance">
+                  <Text variant="secondary" className="block leading-7">
+                    Confidence badge yorum desteğidir; confidence, citation ve human review gereksinimi birlikte okunmalıdır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'confidence-badge-compact',
+            eyebrow: 'Alternative 02',
+            title: 'Compact inline usage',
+            description: 'Dense list ve action header akışlarında aynı badge daha kompakt gösterilir.',
+            badges: ['compact', 'inline', 'dense-ui'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Compact badges">
+                  <div className="flex flex-wrap gap-3">
+                    <ConfidenceBadge level="high" score={86} compact />
+                    <ConfidenceBadge level="medium" label="Manual review" compact showScore={false} />
+                    <ConfidenceBadge level="low" score={28} compact />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Header embedding">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Text preset="title">AI suggestion</Text>
+                    <ConfidenceBadge level="high" score={89} compact />
+                  </div>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'confidence-badge-governed-states',
+            eyebrow: 'Alternative 03',
+            title: 'Access and transparency states',
+            description: 'Readonly ve controlled transparency durumları aynı kontratta gösterilir.',
+            badges: ['readonly', 'transparency', 'governed'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <PreviewPanel title="Readonly">
+                  <ConfidenceBadge level="medium" score={70} sourceCount={2} access="readonly" />
+                </PreviewPanel>
+                <PreviewPanel title="No score">
+                  <ConfidenceBadge level="high" showScore={false} sourceCount={4} />
+                </PreviewPanel>
+                <PreviewPanel title="Custom label">
+                  <ConfidenceBadge level="low" label="Escalate" compact />
                 </PreviewPanel>
               </div>
             ),

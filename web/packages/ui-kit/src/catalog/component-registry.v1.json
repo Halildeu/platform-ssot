@@ -392,23 +392,36 @@
     {
       "name": "CommandPalette",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "CommandPalette P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "ai_helpers",
+      "subgroup": "command_palette",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Command palette",
+      "demoMode": "live",
+      "description": "Global komut, route ve AI yardimci aksiyonlarini tek palette icinde arama/keyboard ile sunar.",
       "sectionIds": [
-        "utility_components",
+        "component_library_management",
         "integration_distribution",
         "governance_contribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-6",
+        "ai-native-helpers",
+        "beta",
+        "command"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "safe_prompt_templates_and_scope",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
       "name": "ContextMenu",
@@ -2198,6 +2211,158 @@
       ],
       "qualityGates": [
         "registry_export_sync"
+      ]
+    },
+    {
+      "name": "RecommendationCard",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "ai_helpers",
+      "subgroup": "recommendations",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Recommendation / Confidence",
+      "demoMode": "live",
+      "description": "AI onerilerini confidence, kaynak ve human action butonlari ile ayni kart kontratina baglar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-6",
+        "ai-native-helpers",
+        "beta",
+        "recommendation"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "contextual_recommendation_cards",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "ConfidenceBadge",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "ai_helpers",
+      "subgroup": "recommendations",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Recommendation / Confidence",
+      "demoMode": "live",
+      "description": "Confidence seviyesini, skorunu ve kaynak sayisini tek badge primitive ile gosterir.",
+      "sectionIds": [
+        "state_feedback",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-6",
+        "ai-native-helpers",
+        "beta",
+        "confidence"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "confidence_and_source_transparency",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "ApprovalCheckpoint",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Audit",
+      "demoMode": "planned",
+      "description": "Human approval checkpoint backlog girdisi; export implementation + preview ile acilir.",
+      "sectionIds": [
+        "governance_contribution",
+        "integration_distribution",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "CitationPanel",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "ai_helpers",
+      "subgroup": "citations_prompting",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Citations / Prompting",
+      "demoMode": "planned",
+      "description": "CitationPanel backlog girdisi; kaynak ve alinti seffafligini panel yuzeyinde sunar.",
+      "sectionIds": [
+        "documentation_standards",
+        "governance_contribution",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "AIActionAuditTimeline",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Audit",
+      "demoMode": "planned",
+      "description": "AIActionAuditTimeline backlog girdisi; AI aksiyon ve insan onayi izini zaman akisi olarak sunar.",
+      "sectionIds": [
+        "governance_contribution",
+        "documentation_standards",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ]
+    },
+    {
+      "name": "PromptComposer",
+      "kind": "component",
+      "availability": "planned",
+      "lifecycle": "planned",
+      "group": "ai_helpers",
+      "subgroup": "citations_prompting",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Citations / Prompting",
+      "demoMode": "planned",
+      "description": "PromptComposer backlog girdisi; scope-safe prompt yazimi ve tone guardrail yuzeyi sunar.",
+      "sectionIds": [
+        "documentation_standards",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
       ]
     }
   ]

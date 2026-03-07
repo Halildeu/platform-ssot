@@ -210,6 +210,16 @@
         "Event bus / BroadcastChannel",
         "Feature flags"
       ]
+    },
+    {
+      "id": "ai_native_helpers",
+      "title": "AI-Native Helpers",
+      "subgroups": [
+        "Command palette",
+        "Recommendation / Confidence",
+        "Approval / Audit",
+        "Citations / Prompting"
+      ]
     }
   ]
 }

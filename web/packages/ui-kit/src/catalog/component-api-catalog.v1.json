@@ -2204,6 +2204,215 @@
         "controlled/uncontrolled parity",
         "readonly interaction guard"
       ]
+    },
+    {
+      "name": "CommandPalette",
+      "variantAxes": [
+        "scope: global | approval | policy",
+        "state: open | closed",
+        "layout: grouped | flat"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled query",
+        "keyboard navigation",
+        "filtered results",
+        "readonly browsing vs actionable full mode"
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": true,
+          "description": "Palette acikligini kontrol eder."
+        },
+        {
+          "name": "items",
+          "type": "CommandPaletteItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Baslik, aciklama, grup, shortcut ve badge bilgisine sahip komut listesi."
+        },
+        {
+          "name": "query / defaultQuery",
+          "type": "string",
+          "default": "\"\"",
+          "required": false,
+          "description": "Arama sorgusunu controlled veya uncontrolled sekilde yonetir."
+        },
+        {
+          "name": "onQueryChange",
+          "type": "(query: string) => void",
+          "default": "-",
+          "required": false,
+          "description": "Arama girdisi her degistiginde yeni sorguyu bildirir."
+        },
+        {
+          "name": "onSelect",
+          "type": "(id: string, item: CommandPaletteItem) => void",
+          "default": "-",
+          "required": false,
+          "description": "Secilen komut kimligini ve item bilgisini dondurur."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Escape veya overlay click sonrasinda palette kapanisini bildirir."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve secim davranisini kontrol eder."
+        }
+      ],
+      "previewFocus": [
+        "global search + grouped actions",
+        "approval shortcut scope",
+        "readonly browse mode"
+      ],
+      "regressionFocus": [
+        "keyboard navigation parity",
+        "query filtering stability",
+        "readonly/disabled selection guard"
+      ]
+    },
+    {
+      "name": "RecommendationCard",
+      "variantAxes": [
+        "tone: info | success | warning",
+        "layout: default | compact",
+        "actions: primary + secondary | readonly"
+      ],
+      "stateModel": [
+        "confidence-aware card",
+        "citation list",
+        "actionable vs readonly review"
+      ],
+      "props": [
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Oneri kartinin ana basligi."
+        },
+        {
+          "name": "summary",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "AI ozetini veya tavsiyeyi aciklar."
+        },
+        {
+          "name": "rationale",
+          "type": "string[]",
+          "default": "[]",
+          "required": false,
+          "description": "Oneriyi destekleyen ana gerekce listesi."
+        },
+        {
+          "name": "citations",
+          "type": "string[]",
+          "default": "[]",
+          "required": false,
+          "description": "Kaynak veya evidence etiketlerini listeler."
+        },
+        {
+          "name": "confidenceLevel / confidenceScore",
+          "type": "ConfidenceLevel / number",
+          "default": "medium / -",
+          "required": false,
+          "description": "ConfidenceBadge ile birlikte seffaf skor gosterir."
+        },
+        {
+          "name": "primaryActionLabel / secondaryActionLabel",
+          "type": "string",
+          "default": "Apply / Review",
+          "required": false,
+          "description": "Kart aksiyon butonlarini adlandirir."
+        },
+        {
+          "name": "onPrimaryAction / onSecondaryAction",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Insan onayi veya detay inceleme aksiyonlarini bildirir."
+        }
+      ],
+      "previewFocus": [
+        "policy recommendation card",
+        "risk review card",
+        "readonly governance state"
+      ],
+      "regressionFocus": [
+        "action button guard",
+        "confidence badge composition",
+        "citation and rationale rendering"
+      ]
+    },
+    {
+      "name": "ConfidenceBadge",
+      "variantAxes": [
+        "level: low | medium | high | very-high",
+        "layout: default | compact",
+        "visibility: score | sources"
+      ],
+      "stateModel": [
+        "confidence label",
+        "score surface",
+        "source transparency"
+      ],
+      "props": [
+        {
+          "name": "level",
+          "type": "'low' | 'medium' | 'high' | 'very-high'",
+          "default": "medium",
+          "required": false,
+          "description": "Semantic confidence seviyesini belirler."
+        },
+        {
+          "name": "score",
+          "type": "number",
+          "default": "-",
+          "required": false,
+          "description": "Yuzdesel confidence degerini gosterir."
+        },
+        {
+          "name": "sourceCount",
+          "type": "number",
+          "default": "-",
+          "required": false,
+          "description": "Confidence hesabina giren kaynak sayisini gosterir."
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Kaynak sayisini gizleyip kompakt badge yuzeyi uretir."
+        },
+        {
+          "name": "showScore",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Score gosterimini acip kapatir."
+        }
+      ],
+      "previewFocus": [
+        "confidence matrix",
+        "score + source transparency",
+        "compact list usage"
+      ],
+      "regressionFocus": [
+        "level to tone mapping",
+        "compact output formatting",
+        "hidden access rendering"
+      ]
     }
   ]
 }

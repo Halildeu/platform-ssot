@@ -594,11 +594,12 @@
       "ux_alignment_family_id": "ai_assisted_components",
       "purpose": "AI onerisi, onay checkpoint'i, kaynak seffafligi ve insan onayi gerektiren deneyimleri ortaklastirmak.",
       "current_state": {
-        "implemented_now": [],
-        "gaps": [
+        "implemented_now": [
           "CommandPalette",
           "RecommendationCard",
-          "ConfidenceBadge",
+          "ConfidenceBadge"
+        ],
+        "gaps": [
           "ApprovalCheckpoint",
           "CitationPanel",
           "AIActionAuditTimeline",
@@ -617,7 +618,7 @@
         },
         {
           "component_name": "RecommendationCard",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_6_ai_native_helpers",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -626,7 +627,7 @@
         },
         {
           "component_name": "ConfidenceBadge",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_6_ai_native_helpers",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -955,7 +956,7 @@
     {
       "wave_id": "wave_6_ai_native_helpers",
       "title_tr": "AI-Native Helpers",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "AI destekli karar ve onay deneyimini guvenli, izlenebilir ve UX catalog uyumlu hale getir.",
       "families": [
         "ai_native_helpers"

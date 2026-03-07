@@ -1,0 +1,238 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "wave_id": "wave_6_ai_native_helpers",
+  "family_id": "ai_native_helpers",
+  "status": "in_progress",
+  "purpose": "AI destekli karar, komut ve guven sinyallerini tek kutuphane kontratina alarak seffaf, izlenebilir ve insan onayina saygili helper seti olusturmak.",
+  "baseline": {
+    "governance_lock_commit": "0900750",
+    "roadmap_lock_commit": "2393148",
+    "overlay_completion_commit": "b6e92bc",
+    "registry_snapshot": {
+      "exported_count": 72,
+      "planned_count": 4,
+      "live_demo_count": 43
+    }
+  },
+  "required_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+    "docs/02-architecture/context/ui-library-wave-6-ai-native-helpers.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
+    "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+  ],
+  "implementation_batches": [
+    {
+      "batch_id": "batch_1_core_ai_helpers",
+      "status": "completed",
+      "objective": "CommandPalette, RecommendationCard ve ConfidenceBadge bileşenlerini canlı preview, contract API ve doctor evidence ile sisteme almak.",
+      "components": [
+        "CommandPalette",
+        "RecommendationCard",
+        "ConfidenceBadge"
+      ]
+    },
+    {
+      "batch_id": "batch_2_human_approval_and_citations",
+      "status": "planned",
+      "objective": "ApprovalCheckpoint, CitationPanel, AIActionAuditTimeline ve PromptComposer için ikinci AI-native helper dilimini acmak.",
+      "components": [
+        "ApprovalCheckpoint",
+        "CitationPanel",
+        "AIActionAuditTimeline",
+        "PromptComposer"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "component_name": "CommandPalette",
+      "implementation_order": 1,
+      "source_state": "partial_local_component",
+      "registry_action": "promote_existing_local_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/CommandPalette.tsx",
+          "web/packages/ui-kit/src/components/CommandPalette.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "ai_native_helpers",
+        "target_taxonomy_subgroup": "Command palette"
+      },
+      "ux_primary_theme_id": "ai_assisted_decision_experience",
+      "ux_primary_subtheme_id": "safe_prompt_templates_and_scope",
+      "acceptance_criteria": [
+        "global komut, route ve AI aksiyonlari grup bazli arama ve keyboard navigation ile tek palette yuzeyinde bulunur",
+        "readonly ve disabled policy durumlarinda secim davranisi korunur ve islem tetiklenmez",
+        "escape, overlay click ve enter secimi deterministic sekilde calisir",
+        "command palette sayfada tek dogru primitive olarak gorunur; local modal/popup kopyasi uretilmez"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "command-palette-global-search",
+          "title": "Global command search"
+        },
+        {
+          "id": "command-palette-approval-scope",
+          "title": "Approval scoped command list"
+        },
+        {
+          "id": "command-palette-readonly-browse",
+          "title": "Readonly browse mode"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari CommandPalette icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "RecommendationCard",
+      "implementation_order": 2,
+      "source_state": "partial_local_component",
+      "registry_action": "promote_existing_local_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/RecommendationCard.tsx",
+          "web/packages/ui-kit/src/components/RecommendationCard.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "ai_native_helpers",
+        "target_taxonomy_subgroup": "Recommendation / Confidence"
+      },
+      "ux_primary_theme_id": "ai_assisted_decision_experience",
+      "ux_primary_subtheme_id": "contextual_recommendation_cards",
+      "acceptance_criteria": [
+        "oneriler confidence, gerekce ve kaynak sinyalleriyle ayni kart kontrati uzerinden sunulur",
+        "primary ve secondary aksiyonlar access guard ile policy uyumlu calisir",
+        "compact ve standart layout ayni primitive ile gorunur",
+        "human review ve apply akislarinin her ikisi docs sayfasinda ayni component uzerinden gorulur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "recommendation-card-policy",
+          "title": "Policy recommendation card"
+        },
+        {
+          "id": "recommendation-card-risk-review",
+          "title": "Risk review card"
+        },
+        {
+          "id": "recommendation-card-readonly",
+          "title": "Readonly governance state"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari RecommendationCard icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "ConfidenceBadge",
+      "implementation_order": 3,
+      "source_state": "partial_local_component",
+      "registry_action": "promote_existing_local_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/ConfidenceBadge.tsx",
+          "web/packages/ui-kit/src/components/ConfidenceBadge.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "ai_native_helpers",
+        "target_taxonomy_subgroup": "Recommendation / Confidence"
+      },
+      "ux_primary_theme_id": "ai_assisted_decision_experience",
+      "ux_primary_subtheme_id": "confidence_and_source_transparency",
+      "acceptance_criteria": [
+        "confidence seviyesi, skor ve kaynak sayisi tek badge primitive ile okunur",
+        "compact ve tam layout ayni contract altinda kalir",
+        "hidden access durumunda render etmez",
+        "recommendation ve approval yuzeylerinde dogrudan reuse edilir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "confidence-badge-matrix",
+          "title": "Confidence matrix"
+        },
+        {
+          "id": "confidence-badge-source-transparency",
+          "title": "Score and source transparency"
+        },
+        {
+          "id": "confidence-badge-compact",
+          "title": "Compact list usage"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari ConfidenceBadge icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    }
+  ],
+  "progress_summary": {
+    "completed_components": [
+      "CommandPalette",
+      "RecommendationCard",
+      "ConfidenceBadge"
+    ],
+    "remaining_components": [
+      "ApprovalCheckpoint",
+      "CitationPanel",
+      "AIActionAuditTimeline",
+      "PromptComposer"
+    ]
+  },
+  "doctor_preset": "ui-library",
+  "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+}
