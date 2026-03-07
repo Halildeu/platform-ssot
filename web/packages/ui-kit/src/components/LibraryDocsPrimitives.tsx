@@ -116,3 +116,106 @@ export const LibraryDetailTabs: React.FC<LibraryDetailTabsProps> = ({
   </section>
 );
 
+export type LibraryOutlineItem = {
+  id: string;
+  label: string;
+};
+
+export type LibraryOutlinePanelProps = {
+  title?: string;
+  items: LibraryOutlineItem[];
+  activeItemId: string;
+  onItemSelect: (itemId: string) => void;
+  className?: string;
+};
+
+export const LibraryOutlinePanel: React.FC<LibraryOutlinePanelProps> = ({
+  title = 'Bu sayfada',
+  items,
+  activeItemId,
+  onItemSelect,
+  className,
+}) => (
+  <section className={clsx('rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm', className)}>
+    <LibraryDetailLabel>{title}</LibraryDetailLabel>
+    <div className="mt-3 space-y-1.5">
+      {items.map((item) => {
+        const active = activeItemId === item.id;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => onItemSelect(item.id)}
+            className={clsx(
+              'flex w-full items-center justify-between rounded-2xl px-3 py-2 text-left transition',
+              active ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-panel',
+            )}
+          >
+            <span className={clsx('text-sm', active ? 'font-semibold text-text-primary' : 'text-text-secondary')}>
+              {item.label}
+            </span>
+            {active ? <span className="h-2.5 w-2.5 rounded-full bg-action-primary" aria-hidden="true" /> : null}
+          </button>
+        );
+      })}
+    </div>
+  </section>
+);
+
+export type LibraryPanelStatItem = {
+  label: string;
+  value: React.ReactNode;
+};
+
+export type LibraryStatsPanelProps = {
+  title?: string;
+  items: LibraryPanelStatItem[];
+  className?: string;
+};
+
+export const LibraryStatsPanel: React.FC<LibraryStatsPanelProps> = ({
+  title = 'Library Stats',
+  items,
+  className,
+}) => (
+  <section className={clsx('rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm', className)}>
+    <LibraryDetailLabel>{title}</LibraryDetailLabel>
+    <div className="mt-3 grid grid-cols-2 gap-3">
+      {items.map((item) => (
+        <div key={item.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+          <LibraryDetailLabel>{item.label}</LibraryDetailLabel>
+          <div className="mt-2 text-xl font-semibold text-text-primary">{item.value}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+export type LibraryMetadataItem = {
+  label: string;
+  value: React.ReactNode;
+};
+
+export type LibraryMetadataPanelProps = {
+  title?: string;
+  items: LibraryMetadataItem[];
+  className?: string;
+};
+
+export const LibraryMetadataPanel: React.FC<LibraryMetadataPanelProps> = ({
+  title = 'Metadata',
+  items,
+  className,
+}) => (
+  <section className={clsx('rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm', className)}>
+    <LibraryDetailLabel>{title}</LibraryDetailLabel>
+    <div className="mt-3 space-y-3">
+      {items.map((item) => (
+        <div key={item.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+          <LibraryDetailLabel>{item.label}</LibraryDetailLabel>
+          <div className="mt-2">{item.value}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+);

@@ -35,6 +35,9 @@ import {
   LibraryPreviewPanel as PreviewPanel,
   LibraryMetricCard,
   LibraryDetailTabs,
+  LibraryOutlinePanel,
+  LibraryStatsPanel,
+  LibraryMetadataPanel,
   type LibraryProductTreeSelection,
   type LibraryProductTreeTrack,
 } from 'mfe-ui-kit';
@@ -1577,77 +1580,45 @@ const DesignLabPage: React.FC = () => {
 
           <aside className="hidden xl:block">
             <div className="sticky top-4 space-y-4">
-              <section className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Bu sayfada
-                </Text>
-                <div className="mt-3 space-y-1.5">
-                  {detailTabMeta.map((tab) => {
-                    const active = detailTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        onClick={() => setDetailTab(tab.id)}
-                        className={`flex w-full items-center justify-between rounded-2xl px-3 py-2 text-left transition ${
-                          active ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-panel'
-                        }`}
-                      >
-                        <span className={`text-sm ${active ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>{tab.label}</span>
-                        {active ? <span className="h-2.5 w-2.5 rounded-full bg-action-primary" aria-hidden="true" /> : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
+              <LibraryOutlinePanel
+                items={detailTabMeta.map((tab) => ({ id: tab.id, label: tab.label }))}
+                activeItemId={detailTab}
+                onItemSelect={(tabId) => setDetailTab(tabId as DesignLabDetailTab)}
+              />
 
-              <section className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Library Stats
-                </Text>
-                <div className="mt-3 grid grid-cols-2 gap-3">
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                    <DetailLabel>Total</DetailLabel>
-                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.total}</div>
-                  </div>
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                    <DetailLabel>Exported</DetailLabel>
-                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.exported}</div>
-                  </div>
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                    <DetailLabel>Live</DetailLabel>
-                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.liveDemo}</div>
-                  </div>
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                    <DetailLabel>Planned</DetailLabel>
-                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.planned}</div>
-                  </div>
-                </div>
-              </section>
+              <LibraryStatsPanel
+                items={[
+                  { label: 'Total', value: summary.total },
+                  { label: 'Exported', value: summary.exported },
+                  { label: 'Live', value: summary.liveDemo },
+                  { label: 'Planned', value: summary.planned },
+                ]}
+              />
 
-              <section className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Metadata
-                </Text>
-                <div className="mt-3 space-y-3">
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                    <DetailLabel>Status</DetailLabel>
-                    <Text as="div" className={`mt-2 font-semibold ${selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary'}`}>
-                      {selectedItem ? statusLabel[selectedItem.lifecycle] : 'Seçim yok'}
-                    </Text>
-                  </div>
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                    <DetailLabel>Package</DetailLabel>
-                    <Text as="div" className="mt-2 font-semibold text-text-primary">mfe-ui-kit</Text>
-                  </div>
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                    <DetailLabel>Contract</DetailLabel>
-                    <Text as="div" className="mt-2 break-all text-xs font-medium text-text-primary">
-                      {selectedItem?.acceptanceContractId ?? '—'}
-                    </Text>
-                  </div>
-                </div>
-              </section>
+              <LibraryMetadataPanel
+                items={[
+                  {
+                    label: 'Status',
+                    value: (
+                      <Text as="div" className={`font-semibold ${selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary'}`}>
+                        {selectedItem ? statusLabel[selectedItem.lifecycle] : 'Seçim yok'}
+                      </Text>
+                    ),
+                  },
+                  {
+                    label: 'Package',
+                    value: <Text as="div" className="font-semibold text-text-primary">mfe-ui-kit</Text>,
+                  },
+                  {
+                    label: 'Contract',
+                    value: (
+                      <Text as="div" className="break-all text-xs font-medium text-text-primary">
+                        {selectedItem?.acceptanceContractId ?? '—'}
+                      </Text>
+                    ),
+                  },
+                ]}
+              />
             </div>
           </aside>
         </div>

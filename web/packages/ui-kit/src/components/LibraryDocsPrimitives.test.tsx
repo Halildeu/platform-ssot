@@ -3,9 +3,12 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   LibraryDetailTabs,
+  LibraryMetadataPanel,
   LibraryMetricCard,
+  LibraryOutlinePanel,
   LibraryPreviewPanel,
   LibrarySectionBadge,
+  LibraryStatsPanel,
 } from './LibraryDocsPrimitives';
 
 describe('LibraryDocsPrimitives', () => {
@@ -46,5 +49,41 @@ describe('LibraryDocsPrimitives', () => {
     expect(screen.getByText('Varyant matrisi')).toBeInTheDocument();
     expect(screen.getByText('Preview content')).toBeInTheDocument();
   });
-});
 
+  test('outline, stats ve metadata paneli render eder ve outline secimini bildirir', async () => {
+    const user = userEvent.setup();
+    const handleSelect = jest.fn();
+
+    render(
+      <>
+        <LibraryOutlinePanel
+          items={[
+            { id: 'overview', label: 'Overview' },
+            { id: 'api', label: 'API' },
+          ]}
+          activeItemId="overview"
+          onItemSelect={handleSelect}
+        />
+        <LibraryStatsPanel
+          items={[
+            { label: 'Total', value: 76 },
+            { label: 'Live', value: 28 },
+          ]}
+        />
+        <LibraryMetadataPanel
+          items={[
+            { label: 'Status', value: <span>Stable</span> },
+            { label: 'Package', value: <span>mfe-ui-kit</span> },
+          ]}
+        />
+      </>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'API' }));
+    expect(handleSelect).toHaveBeenCalledWith('api');
+    expect(screen.getByText('Total')).toBeInTheDocument();
+    expect(screen.getByText('76')).toBeInTheDocument();
+    expect(screen.getByText('Stable')).toBeInTheDocument();
+    expect(screen.getByText('mfe-ui-kit')).toBeInTheDocument();
+  });
+});
