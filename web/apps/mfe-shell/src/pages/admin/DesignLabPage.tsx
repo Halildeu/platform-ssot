@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Boxes, MapIcon, Sparkles } from 'lucide-react';
+import { Boxes, CircleHelp, MapIcon, Sparkles } from 'lucide-react';
 import {
   AgGridServer,
   Badge,
@@ -1550,13 +1550,22 @@ const DesignLabPage: React.FC = () => {
               <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.22em]">
                 UI Library
               </Text>
-              <Text as="div" className="mt-2 text-2xl font-semibold text-text-primary">
-                Component Explorer
-              </Text>
-              <Text variant="secondary" className="mt-2 block text-sm leading-6">
-                Material UI tarzı doküman akışında component ailelerini, export durumunu ve canlı demoları tek yerden gez.
-              </Text>
-              <div className="mt-4">
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <Text as="div" className="text-2xl font-semibold text-text-primary">
+                  Component Explorer
+                </Text>
+                <Tooltip text="Component ailelerini, export durumunu ve canlı demoları tek bir doküman akışında gezmek için kullan.">
+                  <span className="shrink-0">
+                    <IconButton
+                      icon={<CircleHelp className="h-4 w-4" />}
+                      label="Component Explorer yardımı"
+                      size="sm"
+                      variant="ghost"
+                    />
+                  </span>
+                </Tooltip>
+              </div>
+              <div className="mt-3">
                 <input
                   data-testid="design-lab-search"
                   value={query}
