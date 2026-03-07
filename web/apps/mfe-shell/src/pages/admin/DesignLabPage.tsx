@@ -9,11 +9,13 @@ import {
   Popover,
   Empty,
   EntityGridTemplate,
+  EntitySummaryBlock,
   FilterBar,
   FormDrawer,
   IconButton,
   LinkInline,
   Modal,
+  PageHeader,
   PageLayout,
   ReportFilterPanel,
   Select,
@@ -41,6 +43,7 @@ import {
   TreeTable,
   Skeleton,
   Spinner,
+  SummaryStrip,
   Pagination,
   Steps,
   Tag,
@@ -713,6 +716,63 @@ const DesignLabPage: React.FC = () => {
       { id: 'USR-001', name: 'Users', owner: 'user-service' },
       { id: 'PRM-001', name: 'Permissions', owner: 'permission-service' },
       { id: 'VAR-001', name: 'Variants', owner: 'variant-service' },
+    ],
+    [],
+  );
+
+  const pageHeaderMeta = useMemo(
+    () => [
+      <SectionBadge key="release-window" label="Release Window · 04 Mar 2026" />,
+      <SectionBadge key="owner" label="Owner · Platform UI" />,
+      <SectionBadge key="coverage" label="Doctor coverage · PASS" />,
+    ],
+    [],
+  );
+
+  const summaryStripItems = useMemo(
+    () => [
+      {
+        key: 'published',
+        label: 'Published',
+        value: '72',
+        note: 'Gerçek export edilmiş block ve component seti.',
+        trend: <Badge tone="success">+4 bu hafta</Badge>,
+        tone: 'success' as const,
+      },
+      {
+        key: 'planned',
+        label: 'Planned',
+        value: '4',
+        note: 'Roadmap üzerinde kalan ürünleşme backlog’u.',
+        trend: <Badge tone="warning">Wave 7</Badge>,
+        tone: 'warning' as const,
+      },
+      {
+        key: 'doctor',
+        label: 'Doctor',
+        value: 'PASS',
+        note: 'UI Library browser diagnostics yeşil.',
+        trend: <Badge tone="info">ui-library</Badge>,
+        tone: 'info' as const,
+      },
+      {
+        key: 'gate',
+        label: 'Wave Gate',
+        value: 'PASS',
+        note: 'Tam release gate zinciri geçti.',
+        trend: <Badge tone="success">latest</Badge>,
+        tone: 'default' as const,
+      },
+    ],
+    [],
+  );
+
+  const entitySummaryItems = useMemo(
+    () => [
+      { key: 'domain', label: 'Domain', value: 'UI Platform', tone: 'info' as const },
+      { key: 'status', label: 'Status', value: 'Active', tone: 'success' as const },
+      { key: 'owner', label: 'Owner', value: 'Platform Team', tone: 'info' as const },
+      { key: 'lastRelease', label: 'Last Release', value: '2026-03-07', tone: 'warning' as const },
     ],
     [],
   );
@@ -2191,6 +2251,27 @@ const DesignLabPage: React.FC = () => {
             </PageLayout>
           </div>
         );
+      case 'PageHeader':
+        return (
+          <PageHeader
+            eyebrow="Page Shell"
+            title="Component Library"
+            description="Katalog, release ve kalite bilgisini tek page header shell içinde toplar."
+            status={<Badge tone="success">Stable shell</Badge>}
+            meta={pageHeaderMeta}
+            actions={
+              <>
+                <Button variant="secondary">Release notes</Button>
+                <Button>Publish</Button>
+              </>
+            }
+            aside={
+              <div className="rounded-2xl border border-border-subtle bg-surface-default px-4 py-3 text-sm text-text-secondary">
+                Son doctor kanıtı: PASS
+              </div>
+            }
+          />
+        );
       case 'FilterBar':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -2256,6 +2337,25 @@ const DesignLabPage: React.FC = () => {
             </ReportFilterPanel>
             <Text variant="secondary" className="mt-3 block">Durum: {reportStatus}</Text>
           </div>
+        );
+      case 'SummaryStrip':
+        return (
+          <SummaryStrip
+            title="Release summary"
+            description="Page üstü KPI ve durum özetini reusable strip ile verir."
+            items={summaryStripItems}
+          />
+        );
+      case 'EntitySummaryBlock':
+        return (
+          <EntitySummaryBlock
+            title="Ethics Program"
+            subtitle="Owner, lifecycle ve metadata bilgisini tek entity shell içinde toplar."
+            badge={<Badge tone="info">Program</Badge>}
+            avatar={{ name: 'Ethics Program' }}
+            actions={<Button variant="secondary">Detayı aç</Button>}
+            items={entitySummaryItems}
+          />
         );
       case 'EntityGridTemplate':
         return (
@@ -4382,6 +4482,462 @@ const DesignLabPage: React.FC = () => {
                       { key: 'mode', label: 'Mode switch', value: 'client -> server', tone: 'info' },
                       { key: 'toolbar', label: 'Toolbar', value: 'Tema / Filtre / Varyant', tone: 'success' },
                       { key: 'datasource', label: 'Datasource', value: 'createServerSideDatasource', tone: 'warning' },
+                    ]}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'PageLayout':
+        return [
+          {
+            id: 'page-layout-directory-shell',
+            eyebrow: 'Alternative 01',
+            title: 'Directory shell',
+            description: 'Breadcrumb, page header, filter shell ve detail aside ayni page-level contract icinde toplanir.',
+            badges: ['page-shell', 'stable', 'directory'],
+            content: (
+              <div className="grid grid-cols-1 gap-4">
+                <PreviewPanel title="Directory shell">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                    <PageLayout
+                      title="UI governance catalog"
+                      description="Page shell, header ve filter davranisi tek layout contract'i ile tekrar kullanilir."
+                      breadcrumbItems={[
+                        { title: 'Docs', path: '#' },
+                        { title: 'UI Library', path: '#' },
+                        { title: 'Page Blocks' },
+                      ]}
+                      headerExtra={<SectionBadge label="stable substrate" />}
+                      actions={
+                        <>
+                          <Button intent="secondary" size="sm">Export</Button>
+                          <Button size="sm">Yeni blok</Button>
+                        </>
+                      }
+                      filterBar={(
+                        <FilterBar onReset={() => setSearchInputValue('')} onSaveView={() => setDropdownAction('Saved page-block view')}>
+                          <TextInput
+                            label="Ara"
+                            value={searchInputValue}
+                            onValueChange={setSearchInputValue}
+                            size="sm"
+                            leadingVisual={<span aria-hidden="true">⌕</span>}
+                          />
+                          <Select
+                            label="Durum"
+                            value={selectValue}
+                            onValueChange={(value) => setSelectValue(String(value))}
+                            size="sm"
+                            options={[
+                              { label: 'Comfortable', value: 'comfortable' },
+                              { label: 'Compact', value: 'compact' },
+                              { label: 'Readonly', value: 'readonly' },
+                            ]}
+                          />
+                        </FilterBar>
+                      )}
+                      detail={(
+                        <div className="space-y-3 rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                          <Text as="div" className="font-semibold">Detail aside</Text>
+                          <Text variant="secondary">Layout, detail rail ve body arasındaki oran aynı shell içinde kalır.</Text>
+                          <LibraryMetricCard label="Selection" value={dropdownAction} note="Action rail state" />
+                        </div>
+                      )}
+                    >
+                      <div className="space-y-4">
+                        <SummaryStrip title="Release summary" description="Page shell ile birlikte öne çıkan metrikler." items={summaryStripItems} columns={4} />
+                        <Descriptions
+                          title="Shell contract"
+                          description="Aynı layout drawer ve detay sayfasında yeniden kullanılabilir."
+                          items={rolloutDescriptionItems}
+                          columns={2}
+                        />
+                      </div>
+                    </PageLayout>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Contract note">
+                  <Text variant="secondary" className="block leading-7">
+                    `PageLayout`, route seviyesinde breadcrumb, action rail, filter shell ve detail aside kombinasyonunu
+                    birleştirir; ekran bazlı kopya shell kodunu azaltır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'page-layout-detail-shell',
+            eyebrow: 'Alternative 02',
+            title: 'Detail review shell',
+            description: 'Detail odaklı sayfalarda aynı layout daha yoğun aside ve footer ile kullanılabilir.',
+            badges: ['detail', 'aside', 'review'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Compact detail">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                    <PageLayout
+                      title="Change review"
+                      description="Readonly review ve approve/reject aksiyonları aynı page shell içinde."
+                      breadcrumbItems={[
+                        { title: 'Releases', path: '#' },
+                        { title: 'Wave 7', path: '#' },
+                        { title: 'Review' },
+                      ]}
+                      actions={<Button size="sm">Approve</Button>}
+                      detail={(
+                        <Descriptions
+                          title="Decision"
+                          items={[
+                            { key: 'risk', label: 'Risk', value: 'Low', tone: 'success' },
+                            { key: 'owner', label: 'Owner', value: 'Platform UI', tone: 'info' },
+                          ]}
+                          columns={1}
+                          density="compact"
+                        />
+                      )}
+                      footer={<Text variant="secondary">Footer rail aynı shell kontratında kalır.</Text>}
+                    >
+                      <EntitySummaryBlock
+                        title="Wave 7 page blocks"
+                        subtitle="Page-level reusable shell rollout özeti."
+                        badge={<Badge tone="success">Ready</Badge>}
+                        items={entitySummaryItems}
+                      />
+                    </PageLayout>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Usage note">
+                  <Text variant="secondary" className="block leading-7">
+                    Aynı layout hem directory hem detail/review ekranlarında çalışır; değişen yalnız içerik ve callback'tir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'PageHeader':
+        return [
+          {
+            id: 'page-header-release-surface',
+            eyebrow: 'Alternative 01',
+            title: 'Release and docs header',
+            description: 'Eyebrow, title, status, meta ve quick action bloklarını tek üst yüzeyde toplar.',
+            badges: ['header', 'beta', 'hero'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Primary header">
+                  <PageHeader
+                    eyebrow="UI Library"
+                    title="Page block rollout"
+                    description="Yeni page-level block ailesinin release ve docs yüzeyi aynı header primitive ile kurgulanır."
+                    meta={pageHeaderMeta}
+                    status={<Badge tone="success">Ready</Badge>}
+                    actions={(
+                      <>
+                        <Button intent="secondary" size="sm">Share</Button>
+                        <Button size="sm">Promote</Button>
+                      </>
+                    )}
+                    aside={<LibraryMetricCard label="Doctor" value="PASS" note="ui-library preset" />}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    `PageHeader`, route-level hero alanını tek primitive'de toplar. Meta chip, status badge ve aside
+                    metrikleri için sayfa bazlı yeni header kurmaya gerek bırakmaz.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'page-header-compact-detail',
+            eyebrow: 'Alternative 02',
+            title: 'Compact detail header',
+            description: 'Daha yoğun detail sayfalarında kompakt header kullanımı.',
+            badges: ['compact', 'detail', 'meta'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Compact mode">
+                  <PageHeader
+                    eyebrow="DETAIL"
+                    title="EntitySummaryBlock"
+                    description="Component detail için daha kısa header yüzeyi."
+                    compact
+                    meta={[
+                      <SectionBadge key="family" label="page_blocks" />,
+                      <SectionBadge key="wave" label="wave_7" />,
+                    ]}
+                    status={<Badge tone="info">Beta</Badge>}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Contract note">
+                  <Descriptions
+                    title="Header contract"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'eyebrow', label: 'Eyebrow', value: 'optional', tone: 'info' },
+                      { key: 'meta', label: 'Meta', value: 'chips / tags', tone: 'success' },
+                      { key: 'aside', label: 'Aside', value: 'metric or helper', tone: 'warning' },
+                    ]}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'FilterBar':
+        return [
+          {
+            id: 'filter-bar-toolbar-shell',
+            eyebrow: 'Alternative 01',
+            title: 'Toolbar shell',
+            description: 'Arama, filtre ve save-view aksiyonlarını ortak toolbar yüzeyinde toplar.',
+            badges: ['filters', 'stable', 'toolbar'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Controlled toolbar">
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                    <FilterBar
+                      onReset={() => {
+                        setSearchInputValue('');
+                        setCheckboxValue(false);
+                      }}
+                      onSaveView={() => setDropdownAction('Saved toolbar view')}
+                      extra={<SectionBadge label="shared-toolbar" />}
+                    >
+                      <TextInput label="Arama" value={searchInputValue} onValueChange={setSearchInputValue} size="sm" />
+                      <Select
+                        label="Yoğunluk"
+                        size="sm"
+                        value={selectValue}
+                        onValueChange={(value) => setSelectValue(String(value))}
+                        options={[
+                          { label: 'Comfortable', value: 'comfortable' },
+                          { label: 'Compact', value: 'compact' },
+                        ]}
+                      />
+                      <Checkbox label="Sadece aktifler" checked={checkboxValue} onCheckedChange={setCheckboxValue} />
+                    </FilterBar>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Shared state">
+                  <LibraryMetricCard label="Toolbar state" value={dropdownAction} note="Reset/save-view aksiyonları aynı shell üzerinden yönetiliyor." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'filter-bar-readonly-shell',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly and policy states',
+            description: 'Readonly veya policy-locked toolbar durumları aynı bileşende korunur.',
+            badges: ['readonly', 'policy', 'state'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly toolbar">
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                    <FilterBar access="readonly" onReset={() => undefined} onSaveView={() => undefined}>
+                      <TextInput label="Readonly arama" value="ui-kit" size="sm" access="readonly" />
+                      <Select
+                        label="Scope"
+                        size="sm"
+                        value="shared"
+                        options={[{ label: 'Shared', value: 'shared' }]}
+                        access="readonly"
+                      />
+                    </FilterBar>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Filter shell, sayfa bazlı toolbar kopyalamaz; sadece alanlar ve callback'ler beslenir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'ReportFilterPanel':
+        return [
+          {
+            id: 'report-filter-panel-submit-flow',
+            eyebrow: 'Alternative 01',
+            title: 'Submit flow panel',
+            description: 'Rapor sayfaları için çok alanlı filtre ve aksiyon yüzeyini tek panel kontratında toplar.',
+            badges: ['panel', 'submit', 'stable'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Interactive panel">
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                    <ReportFilterPanel onSubmit={() => setReportStatus('Filtre uygulandı')} onReset={() => setReportStatus('Filtre sıfırlandı')}>
+                      <TextInput label="Arama" value={searchInputValue} onValueChange={setSearchInputValue} size="sm" />
+                      <Select
+                        label="Durum"
+                        size="sm"
+                        value={selectValue}
+                        onValueChange={(value) => setSelectValue(String(value))}
+                        options={[
+                          { label: 'Comfortable', value: 'comfortable' },
+                          { label: 'Compact', value: 'compact' },
+                        ]}
+                      />
+                      <DatePicker label="Başlangıç" value={dateValue} onValueChange={setDateValue} />
+                    </ReportFilterPanel>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Panel state">
+                  <LibraryMetricCard label="Status" value={reportStatus} note="Submit ve reset davranışı panel üzerinden besleniyor." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'report-filter-panel-readonly',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly policy panel',
+            description: 'Readonly ve policy-locked senaryolarında submit aksiyonu kilitlenirken bilgi korunur.',
+            badges: ['readonly', 'policy', 'governed'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly panel">
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                    <ReportFilterPanel access="readonly" onSubmit={() => undefined} onReset={() => undefined}>
+                      <TextInput label="Readonly arama" value="weekly review" access="readonly" />
+                      <DatePicker label="Tarih" value="2026-03-07" access="readonly" />
+                    </ReportFilterPanel>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Descriptions
+                    title="Panel rule"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'submit', label: 'Submit', value: 'full access only', tone: 'warning' },
+                      { key: 'reset', label: 'Reset', value: 'readonly aware', tone: 'info' },
+                      { key: 'scope', label: 'Use case', value: 'report pages', tone: 'success' },
+                    ]}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'SummaryStrip':
+        return [
+          {
+            id: 'summary-strip-release-metrics',
+            eyebrow: 'Alternative 01',
+            title: 'Release metrics strip',
+            description: 'Üst metrik yüzeyini kartlı ama ortak bir summary strip kontratıyla sunar.',
+            badges: ['metrics', 'beta', 'summary'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Primary strip">
+                  <SummaryStrip
+                    title="UI Library overview"
+                    description="Export, doctor ve wave gate snapshot tek strip içinde."
+                    items={summaryStripItems}
+                    columns={4}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Summary strip, dashboard KPI bandı gibi davranmaz; sayfa header altında karar destekleyen kısa metrikleri taşır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'summary-strip-compact-ownership',
+            eyebrow: 'Alternative 02',
+            title: 'Compact ownership summary',
+            description: 'Daha dar sayfalarda 2 kolonlu veya 3 kolonlu özet kullanımı.',
+            badges: ['compact', 'ownership', 'responsive'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Three-column strip">
+                  <SummaryStrip
+                    title="Delivery ownership"
+                    items={[
+                      { key: 'owner', label: 'Owner', value: 'Platform UI', tone: 'info', note: 'Primary maintainer' },
+                      { key: 'review', label: 'Review', value: '2/3', tone: 'warning', note: 'Security sign-off bekliyor' },
+                      { key: 'release', label: 'Release', value: 'Ready', tone: 'success', note: 'Doctor PASS' },
+                    ]}
+                    columns={3}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Usage note">
+                  <LibraryMetricCard label="Responsive mode" value="3 columns" note="Dar yüzeyde otomatik kırılır." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'EntitySummaryBlock':
+        return [
+          {
+            id: 'entity-summary-block-primary',
+            eyebrow: 'Alternative 01',
+            title: 'Entity ownership summary',
+            description: 'Entity-level özet, badge, avatar ve detail descriptions aynı blokta toplanır.',
+            badges: ['entity', 'summary', 'beta'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Primary summary block">
+                  <EntitySummaryBlock
+                    title="Platform UI"
+                    subtitle="Page block family owner ve release summary"
+                    badge={<Badge tone="success">Active</Badge>}
+                    avatar={{ name: 'Platform UI' }}
+                    actions={<Button size="sm">Open details</Button>}
+                    items={entitySummaryItems}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Why use it">
+                  <Text variant="secondary" className="block leading-7">
+                    `EntitySummaryBlock`, detail drawer ya da entity header yerine doğrudan okunabilir bir summary yüzeyi verir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'entity-summary-block-with-avatar',
+            eyebrow: 'Alternative 02',
+            title: 'Avatar and governance metadata',
+            description: 'Avatar, badge ve descriptions kombinasyonunu daha yönetim odaklı gösterimle taşır.',
+            badges: ['avatar', 'governance', 'details'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Governance summary">
+                  <EntitySummaryBlock
+                    title="Wave 7 rollout"
+                    subtitle="Reusable page shell adoption"
+                    badge={<Badge tone="warning">Beta</Badge>}
+                    avatar={{ src: avatarPreviewImageSrc, alt: 'Wave 7 preview', name: 'Wave 7' }}
+                    items={[
+                      { key: 'wave', label: 'Wave', value: 'wave_7_page_blocks', tone: 'info' },
+                      { key: 'status', label: 'Status', value: 'Completed', tone: 'success' },
+                      { key: 'next', label: 'Next', value: 'SectionShell backlog', tone: 'warning' },
+                      { key: 'owner', label: 'Owner', value: 'Platform Team', tone: 'info' },
+                    ]}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Contract note">
+                  <Descriptions
+                    title="Summary contract"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'header', label: 'Header', value: 'title + badge + subtitle', tone: 'info' },
+                      { key: 'avatar', label: 'Avatar', value: 'optional', tone: 'success' },
+                      { key: 'details', label: 'Details', value: 'Descriptions grid', tone: 'warning' },
                     ]}
                   />
                 </PreviewPanel>

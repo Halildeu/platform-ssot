@@ -3,8 +3,8 @@
 Amaç: Hazır page ve block kütüphanesini mevcut layout/composite substrate üzerinden ürünleştirmek.
 
 ## Kapsam
-- Mevcut exported bloklar: `PageLayout`, `FilterBar`, `ReportFilterPanel`
-- Planlı bloklar: `PageHeader`, `SummaryStrip`, `EntitySummaryBlock`, `SectionShell`, `ActionHeader`
+- Mevcut exported bloklar: `PageLayout`, `FilterBar`, `ReportFilterPanel`, `PageHeader`, `SummaryStrip`, `EntitySummaryBlock`
+- Planlı bloklar: `SectionShell`, `ActionHeader`
 - Hariç tutulan aileler: `FormDrawer`, `DetailDrawer`, `AgGridServer`, `EntityGridTemplate`
 
 ## Temel Kurallar
@@ -14,9 +14,11 @@ Amaç: Hazır page ve block kütüphanesini mevcut layout/composite substrate ü
 
 ## Wave
 - Wave: `wave_7_page_blocks`
-- Durum: `planned`
+- Durum: `completed`
 
 ## Kanıt
 - `python3 scripts/check_ui_library_page_block_contract.py`
+- `python3 scripts/check_ui_library_wave_7_page_blocks.py`
 - `npm -C web run doctor:frontend -- --preset ui-library`
 - `npm -C web run test:ui-kit`
+- `npm -C web run gate:ui-library-wave -- --wave wave_7_page_blocks`

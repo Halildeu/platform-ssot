@@ -10,7 +10,7 @@
   "diagnostics_registry": "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
   "diagnostics_runbook": "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
   "active_wave_contracts": [
-    "docs/02-architecture/context/ui-library-wave-6-ai-native-helpers.v1.json"
+    "docs/02-architecture/context/ui-library-wave-7-page-blocks.v1.json"
   ],
   "canonical_modules": [
     "web/packages/ui-kit",
@@ -93,7 +93,8 @@
     "python3 scripts/check_ui_library_page_block_contract.py",
     "python3 scripts/check_ui_library_package_release_contract.py",
     "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
-    "npm -C web run gate:ui-library-wave -- --wave wave_6_ai_native_helpers"
+    "python3 scripts/check_ui_library_wave_7_page_blocks.py",
+    "npm -C web run gate:ui-library-wave -- --wave wave_7_page_blocks"
   ],
   "north_star_sections": [
     {
@@ -173,6 +174,7 @@
   "page_block_contract": "docs/02-architecture/context/ui-library-page-block-library.contract.v1.json",
   "package_release_contract": "docs/02-architecture/context/ui-library-package-release.contract.v1.json",
   "secondary_human_sources": [
-    "docs/02-architecture/context/ui-library-wave-6-ai-native-helpers.v1.md"
+    "docs/02-architecture/context/ui-library-wave-6-ai-native-helpers.v1.md",
+    "docs/02-architecture/context/ui-library-wave-7-page-blocks.v1.md"
   ]
 }

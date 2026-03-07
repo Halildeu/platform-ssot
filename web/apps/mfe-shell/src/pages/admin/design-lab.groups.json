@@ -74,16 +74,20 @@
       ]
     },
     {
-      "id": "layout",
-      "label": "Layout",
+      "id": "page_blocks",
+      "label": "Page Blocks",
       "subgroups": [
         {
-          "id": "page",
-          "label": "Page Layout"
+          "id": "page_shell",
+          "label": "Page Shell"
         },
         {
           "id": "filters",
           "label": "Filters"
+        },
+        {
+          "id": "summary",
+          "label": "Summary Blocks"
         }
       ]
     },

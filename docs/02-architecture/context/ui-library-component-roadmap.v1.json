@@ -418,12 +418,12 @@
         "implemented_now": [
           "PageLayout",
           "FilterBar",
-          "ReportFilterPanel"
-        ],
-        "gaps": [
+          "ReportFilterPanel",
           "PageHeader",
           "SummaryStrip",
-          "EntitySummaryBlock",
+          "EntitySummaryBlock"
+        ],
+        "gaps": [
           "SectionShell",
           "ActionHeader"
         ]
@@ -458,7 +458,7 @@
         },
         {
           "component_name": "PageHeader",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_7_page_blocks",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -467,7 +467,7 @@
         },
         {
           "component_name": "SummaryStrip",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_7_page_blocks",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -476,7 +476,7 @@
         },
         {
           "component_name": "EntitySummaryBlock",
-          "source_type": "roadmap_only",
+          "source_type": "planned_registry",
           "target_wave": "wave_7_page_blocks",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -978,7 +978,7 @@
     {
       "wave_id": "wave_7_page_blocks",
       "title_tr": "Page / Block Library",
-      "status": "planned",
+      "status": "completed",
       "objective": "Hazir page shell ve block compositelerini urunlestir; route-level kopya yapilari azalt.",
       "families": [
         "page_blocks"
@@ -998,8 +998,9 @@
         "wave_4_data_display"
       ],
       "notes": [
-        "PageLayout, FilterBar ve ReportFilterPanel mevcut export substrate olarak kontrata alinacak.",
-        "Yeni page/block family, overlay ve data-display substrate ile ownership cakismasi olusturmayacak."
+        "PageLayout, FilterBar ve ReportFilterPanel mevcut substrate olarak page_blocks ailesine tasindi.",
+        "PageHeader, SummaryStrip ve EntitySummaryBlock batch ile export + live preview + doctor evidence seviyesine cekildi.",
+        "SectionShell ve ActionHeader sonraki backlog olarak ailede tutulur; aktif dalga kapsaminda degildir."
       ]
     }
   ]

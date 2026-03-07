@@ -649,6 +649,57 @@ scenarios:
       - click: '[data-testid="design-lab-tab-overview"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
 
+  - name: ui_library_page_blocks_wave_7_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /ui-library
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: PageLayout
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: PageHeader
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: FilterBar
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ReportFilterPanel
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: SummaryStrip
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: EntitySummaryBlock
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
   - name: access_roles_page
     level: 1
     auth_required: true

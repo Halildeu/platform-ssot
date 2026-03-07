@@ -8,10 +8,10 @@
     "overrides": "apps/mfe-shell/src/pages/admin/design-lab.overrides.json"
   },
   "summary": {
-    "total": 82,
-    "exported": 80,
+    "total": 85,
+    "exported": 83,
     "planned": 2,
-    "liveDemo": 51,
+    "liveDemo": 54,
     "inspector": 29
   },
   "items": [
@@ -766,21 +766,66 @@
       "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
+      "name": "EntitySummaryBlock",
+      "kind": "component",
+      "importStatement": "import { EntitySummaryBlock } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "summary",
+      "tags": [
+        "beta",
+        "entity",
+        "page-blocks",
+        "summary",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Summary Blocks",
+      "demoMode": "live",
+      "description": "Entity detail ust ozeti, avatar, badge, metadata ve quick action alanlarini tek block icinde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+    },
+    {
       "name": "FilterBar",
       "kind": "component",
       "importStatement": "import { FilterBar } from 'mfe-ui-kit';",
       "whereUsed": [
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "group": "layout",
+      "group": "page_blocks",
       "subgroup": "filters",
-      "tags": [],
+      "tags": [
+        "filters",
+        "page-blocks",
+        "stable",
+        "toolbar",
+        "wave-7"
+      ],
       "availability": "exported",
       "lifecycle": "stable",
-      "taxonomyGroupId": "search_filtering",
-      "taxonomySubgroup": "Filter bar",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Filters",
       "demoMode": "live",
-      "description": "Liste ve grid filtreleme aksiyonlari icin ortak toolbar satiri.",
+      "description": "Liste, grid ve panel filtrelerini ortak toolbar shell icinde toplar.",
       "sectionIds": [
         "component_library_management",
         "state_feedback",
@@ -789,12 +834,14 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "FormDrawer",
@@ -1024,6 +1071,45 @@
       "acceptanceContractId": "ui-library-wave-5-overlay-v1"
     },
     {
+      "name": "PageHeader",
+      "kind": "component",
+      "importStatement": "import { PageHeader } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "page_shell",
+      "tags": [
+        "beta",
+        "header",
+        "page-blocks",
+        "page-shell",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Page Shell",
+      "demoMode": "live",
+      "description": "Title, description, status, meta ve action alanlarini tek page header shell icinde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "navigation_patterns"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "orientation_and_wayfinding",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+    },
+    {
       "name": "PageLayout",
       "kind": "component",
       "importStatement": "import { PageLayout } from 'mfe-ui-kit';",
@@ -1035,15 +1121,21 @@
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
         "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
       ],
-      "group": "layout",
-      "subgroup": "page",
-      "tags": [],
+      "group": "page_blocks",
+      "subgroup": "page_shell",
+      "tags": [
+        "layout",
+        "page-blocks",
+        "page-shell",
+        "stable",
+        "wave-7"
+      ],
       "availability": "exported",
       "lifecycle": "stable",
-      "taxonomyGroupId": "layout_surfaces",
-      "taxonomySubgroup": "Page Layout / Containers",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Page Shell",
       "demoMode": "live",
-      "description": "Route seviyesinde baslik, breadcrumb, actions ve detail alanlarini standardize eder.",
+      "description": "Route seviyesinde breadcrumb, title, actions, filters ve detail shell davranisini standartlastirir.",
       "sectionIds": [
         "component_library_management",
         "responsive_layout",
@@ -1052,12 +1144,14 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "domain_based_information_architecture",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "Pagination",
@@ -1258,15 +1352,21 @@
         "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "group": "layout",
+      "group": "page_blocks",
       "subgroup": "filters",
-      "tags": [],
+      "tags": [
+        "filters",
+        "page-blocks",
+        "reporting",
+        "stable",
+        "wave-7"
+      ],
       "availability": "exported",
       "lifecycle": "stable",
-      "taxonomyGroupId": "search_filtering",
-      "taxonomySubgroup": "Filter bar",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Filters",
       "demoMode": "live",
-      "description": "Rapor filtreleri ve submit/reset aksiyonlarini tek panelde toplar.",
+      "description": "Rapor filtreleri, submit/reset ve durum bilgisini tek panel shell icinde toplar.",
       "sectionIds": [
         "component_library_management",
         "state_feedback",
@@ -1275,12 +1375,14 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "dependency_aware_form_guidance",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "Select",
@@ -1464,6 +1566,45 @@
       "uxPrimarySubthemeId": "multi_step_wizard_progress",
       "roadmapWaveId": "wave_2_navigation",
       "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+    },
+    {
+      "name": "SummaryStrip",
+      "kind": "component",
+      "importStatement": "import { SummaryStrip } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "summary",
+      "tags": [
+        "beta",
+        "kpi",
+        "page-blocks",
+        "summary",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Summary Blocks",
+      "demoMode": "live",
+      "description": "Page ustu KPI, durum ve trend ozetlerini reusable strip shell olarak sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "state_feedback"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "measurement_kpi_and_experimentation",
+      "uxPrimarySubthemeId": "task_completion_time_p50_p95",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "Switch",

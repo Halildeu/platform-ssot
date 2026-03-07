@@ -10,12 +10,12 @@
     "current_exported_blocks": [
       "PageLayout",
       "FilterBar",
-      "ReportFilterPanel"
-    ],
-    "planned_targets": [
+      "ReportFilterPanel",
       "PageHeader",
       "SummaryStrip",
-      "EntitySummaryBlock",
+      "EntitySummaryBlock"
+    ],
+    "planned_targets": [
       "SectionShell",
       "ActionHeader"
     ],
@@ -28,7 +28,10 @@
     "canonical_source_paths": [
       "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx",
       "web/packages/ui-kit/src/layout/FilterBar/FilterBar.tsx",
-      "web/packages/ui-kit/src/layout/ReportFilterPanel/ReportFilterPanel.tsx"
+      "web/packages/ui-kit/src/layout/ReportFilterPanel/ReportFilterPanel.tsx",
+      "web/packages/ui-kit/src/layout/PageHeader/PageHeader.tsx",
+      "web/packages/ui-kit/src/layout/SummaryStrip/SummaryStrip.tsx",
+      "web/packages/ui-kit/src/layout/EntitySummaryBlock/EntitySummaryBlock.tsx"
     ]
   },
   "non_goals": [
@@ -98,7 +101,7 @@
     {
       "component_name": "PageHeader",
       "source_type": "planned_registry",
-      "current_maturity": "planned",
+      "current_maturity": "beta",
       "target_maturity": "beta",
       "preview_mode": "live",
       "ux_primary_theme_id": "navigation_information_scent",
@@ -110,7 +113,7 @@
     {
       "component_name": "SummaryStrip",
       "source_type": "planned_registry",
-      "current_maturity": "planned",
+      "current_maturity": "beta",
       "target_maturity": "beta",
       "preview_mode": "live",
       "ux_primary_theme_id": "measurement_kpi_and_experimentation",
@@ -122,7 +125,7 @@
     {
       "component_name": "EntitySummaryBlock",
       "source_type": "planned_registry",
-      "current_maturity": "planned",
+      "current_maturity": "beta",
       "target_maturity": "beta",
       "preview_mode": "live",
       "ux_primary_theme_id": "feedback_state_and_visibility",
@@ -137,7 +140,9 @@
     "python3 scripts/check_ui_library_component_roadmap.py",
     "npm -C web run designlab:index",
     "npm -C web run test:ui-kit",
-    "npm -C web run doctor:frontend -- --preset ui-library"
+    "npm -C web run doctor:frontend -- --preset ui-library",
+    "python3 scripts/check_ui_library_wave_7_page_blocks.py",
+    "npm -C web run gate:ui-library-wave -- --wave wave_7_page_blocks"
   ],
   "evidence_requirements": [
     "component registry page/block entry parity",

@@ -65,6 +65,58 @@
       ]
     },
     {
+      "name": "AIActionAuditTimeline",
+      "variantAxes": [
+        "mode: interactive | readonly",
+        "density: default | compact",
+        "selection: active | passive"
+      ],
+      "stateModel": [
+        "selected audit event",
+        "actor badge mapping",
+        "status badge mapping"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "AIActionAuditTimelineItem[]",
+          "default": "[]",
+          "required": true,
+          "description": "Actor, status, title, timestamp ve summary alanlarini tasir."
+        },
+        {
+          "name": "selectedId",
+          "type": "string | null",
+          "default": "null",
+          "required": false,
+          "description": "Secili timeline maddesini vurgular."
+        },
+        {
+          "name": "onSelectItem",
+          "type": "(id: string, item: AIActionAuditTimelineItem) => void",
+          "default": "-",
+          "required": false,
+          "description": "Interactive timeline secim callback'ini uretir."
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Summary alanini daha yogun ritimde gosterir."
+        }
+      ],
+      "previewFocus": [
+        "interactive audit trail",
+        "readonly evidentiary log"
+      ],
+      "regressionFocus": [
+        "readonly selection guard",
+        "actor/status badge mapping",
+        "selected event emphasis"
+      ]
+    },
+    {
       "name": "AnchorToc",
       "variantAxes": [
         "density: comfortable | compact",
@@ -123,6 +175,65 @@
         "aria-current location",
         "hash persistence",
         "disabled anchor guard"
+      ]
+    },
+    {
+      "name": "ApprovalCheckpoint",
+      "variantAxes": [
+        "status: pending | approved | rejected | blocked",
+        "mode: actionable | readonly",
+        "layout: evidence-rich | compact review"
+      ],
+      "stateModel": [
+        "checkpoint status",
+        "checklist progression",
+        "primary / secondary decision actions"
+      ],
+      "props": [
+        {
+          "name": "title / summary",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Checkpoint basligi ve karar ozetini tanimlar."
+        },
+        {
+          "name": "status",
+          "type": "'pending' | 'approved' | 'rejected' | 'blocked'",
+          "default": "pending",
+          "required": false,
+          "description": "Genel approval state badge tonunu belirler."
+        },
+        {
+          "name": "steps",
+          "type": "ApprovalCheckpointItem[]",
+          "default": "[]",
+          "required": false,
+          "description": "Checklist, owner ve step status bilgisini gosterir."
+        },
+        {
+          "name": "evidenceItems / citations",
+          "type": "string[]",
+          "default": "[]",
+          "required": false,
+          "description": "Karari destekleyen evidence ve kaynak etiketlerini listeler."
+        },
+        {
+          "name": "onPrimaryAction / onSecondaryAction",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Insan onayi ve review talebi aksiyonlarini tetikler."
+        }
+      ],
+      "previewFocus": [
+        "interactive human checkpoint",
+        "readonly review queue"
+      ],
+      "regressionFocus": [
+        "readonly action guard",
+        "status to badge tone mapping",
+        "checklist rendering stability"
       ]
     },
     {
@@ -370,6 +481,193 @@
       ]
     },
     {
+      "name": "CitationPanel",
+      "variantAxes": [
+        "mode: interactive | readonly",
+        "density: default | compact",
+        "selection: active | passive"
+      ],
+      "stateModel": [
+        "selected citation",
+        "source type tone mapping",
+        "empty state"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "CitationPanelItem[]",
+          "default": "[]",
+          "required": true,
+          "description": "Title, excerpt, source, locator ve kind bilgisini tasir."
+        },
+        {
+          "name": "activeCitationId",
+          "type": "string | null",
+          "default": "null",
+          "required": false,
+          "description": "Secili citation satirini vurgular."
+        },
+        {
+          "name": "onOpenCitation",
+          "type": "(id: string, item: CitationPanelItem) => void",
+          "default": "-",
+          "required": false,
+          "description": "Interactive modda satira tiklandiginda callback uretir."
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Excerpt yuzeyini daha yogun satir ritmine ceker."
+        }
+      ],
+      "previewFocus": [
+        "source transparency panel",
+        "readonly reference surface"
+      ],
+      "regressionFocus": [
+        "readonly open guard",
+        "active citation highlight",
+        "empty state rendering"
+      ]
+    },
+    {
+      "name": "CommandPalette",
+      "variantAxes": [
+        "scope: global | approval | policy",
+        "state: open | closed",
+        "layout: grouped | flat"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled query",
+        "keyboard navigation",
+        "filtered results",
+        "readonly browsing vs actionable full mode"
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": true,
+          "description": "Palette acikligini kontrol eder."
+        },
+        {
+          "name": "items",
+          "type": "CommandPaletteItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Baslik, aciklama, grup, shortcut ve badge bilgisine sahip komut listesi."
+        },
+        {
+          "name": "query / defaultQuery",
+          "type": "string",
+          "default": "\"\"",
+          "required": false,
+          "description": "Arama sorgusunu controlled veya uncontrolled sekilde yonetir."
+        },
+        {
+          "name": "onQueryChange",
+          "type": "(query: string) => void",
+          "default": "-",
+          "required": false,
+          "description": "Arama girdisi her degistiginde yeni sorguyu bildirir."
+        },
+        {
+          "name": "onSelect",
+          "type": "(id: string, item: CommandPaletteItem) => void",
+          "default": "-",
+          "required": false,
+          "description": "Secilen komut kimligini ve item bilgisini dondurur."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Escape veya overlay click sonrasinda palette kapanisini bildirir."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve secim davranisini kontrol eder."
+        }
+      ],
+      "previewFocus": [
+        "global search + grouped actions",
+        "approval shortcut scope",
+        "readonly browse mode"
+      ],
+      "regressionFocus": [
+        "keyboard navigation parity",
+        "query filtering stability",
+        "readonly/disabled selection guard"
+      ]
+    },
+    {
+      "name": "ConfidenceBadge",
+      "variantAxes": [
+        "level: low | medium | high | very-high",
+        "layout: default | compact",
+        "visibility: score | sources"
+      ],
+      "stateModel": [
+        "confidence label",
+        "score surface",
+        "source transparency"
+      ],
+      "props": [
+        {
+          "name": "level",
+          "type": "'low' | 'medium' | 'high' | 'very-high'",
+          "default": "medium",
+          "required": false,
+          "description": "Semantic confidence seviyesini belirler."
+        },
+        {
+          "name": "score",
+          "type": "number",
+          "default": "-",
+          "required": false,
+          "description": "Yuzdesel confidence degerini gosterir."
+        },
+        {
+          "name": "sourceCount",
+          "type": "number",
+          "default": "-",
+          "required": false,
+          "description": "Confidence hesabina giren kaynak sayisini gosterir."
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Kaynak sayisini gizleyip kompakt badge yuzeyi uretir."
+        },
+        {
+          "name": "showScore",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Score gosterimini acip kapatir."
+        }
+      ],
+      "previewFocus": [
+        "confidence matrix",
+        "score + source transparency",
+        "compact list usage"
+      ],
+      "regressionFocus": [
+        "level to tone mapping",
+        "compact output formatting",
+        "hidden access rendering"
+      ]
+    },
+    {
       "name": "DatePicker",
       "variantAxes": [
         "size: sm | md | lg",
@@ -489,6 +787,67 @@
         "empty state rendering",
         "tone mapping",
         "responsive column collapse"
+      ]
+    },
+    {
+      "name": "DetailDrawer",
+      "variantAxes": [
+        "tabs: summary | audit | details",
+        "surface: review | evidence | readonly",
+        "width: lg | xl"
+      ],
+      "stateModel": [
+        "open / closed",
+        "active tab",
+        "escape dismiss",
+        "readonly access hint"
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": true,
+          "description": "Drawer acikligini controlled olarak yonetir."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Header title ve aria label kaynagi."
+        },
+        {
+          "name": "tabs",
+          "type": "DetailDrawerTab[]",
+          "default": "-",
+          "required": true,
+          "description": "Sekmeli icerik yapisini tanimlar."
+        },
+        {
+          "name": "access / accessReason",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
+          "default": "full / -",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve readonly nedeni."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Dismiss callbacki."
+        }
+      ],
+      "previewFocus": [
+        "tabbed review drawer",
+        "readonly evidence drawer",
+        "audit/status tab switch"
+      ],
+      "regressionFocus": [
+        "tab aria wiring",
+        "escape close parity",
+        "readonly badge visibility"
       ]
     },
     {
@@ -666,6 +1025,189 @@
         "server datasource attach",
         "variant selector rendering",
         "pagination summary"
+      ]
+    },
+    {
+      "name": "EntitySummaryBlock",
+      "variantAxes": [
+        "surface: detail-summary | readonly-summary",
+        "identity: avatar | initials | icon",
+        "actions: none | quick-actions"
+      ],
+      "stateModel": [
+        "avatar fallback",
+        "badge visibility",
+        "description grid render",
+        "action slot visibility"
+      ],
+      "props": [
+        {
+          "name": "title / subtitle",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Entity baslik ve alt baslik bilgisi."
+        },
+        {
+          "name": "badge",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Entity durumu veya etiketi."
+        },
+        {
+          "name": "avatar",
+          "type": "{ src?; alt?; name?; fallbackIcon? }",
+          "default": "-",
+          "required": false,
+          "description": "Identity sunumu icin avatar konfigurasyonu."
+        },
+        {
+          "name": "actions",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Quick action slotu."
+        },
+        {
+          "name": "items",
+          "type": "DescriptionsItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Summary metadata girdileri."
+        }
+      ],
+      "previewFocus": [
+        "entity detail summary",
+        "readonly registry summary",
+        "avatar + actions composition"
+      ],
+      "regressionFocus": [
+        "avatar fallback parity",
+        "description columns",
+        "header/action alignment"
+      ]
+    },
+    {
+      "name": "FilterBar",
+      "variantAxes": [
+        "surface: inline-toolbar | wrap-toolbar",
+        "actions: reset | save-view | custom-extra",
+        "access: full | readonly | disabled"
+      ],
+      "stateModel": [
+        "filter control wrap",
+        "reset action",
+        "save-view action",
+        "readonly guard"
+      ],
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Filtre kontrol slotlari."
+        },
+        {
+          "name": "onReset",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Reset aksiyonu."
+        },
+        {
+          "name": "onSaveView",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Kaydedilmis gorunum aksiyonu."
+        },
+        {
+          "name": "extra",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Ek aksiyon veya bilgi alanı."
+        },
+        {
+          "name": "access / accessReason",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
+          "default": "full / -",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve davranis."
+        }
+      ],
+      "previewFocus": [
+        "grid filter toolbar",
+        "compact search strip",
+        "readonly action guard"
+      ],
+      "regressionFocus": [
+        "wrap parity",
+        "save-view guard",
+        "button disabled/readOnly separation"
+      ]
+    },
+    {
+      "name": "FormDrawer",
+      "variantAxes": [
+        "size: md | lg | xl",
+        "footer: action-bar | readonly",
+        "surface: create | edit | guided-form"
+      ],
+      "stateModel": [
+        "open / closed",
+        "escape dismiss",
+        "readonly access guard",
+        "form submit / cancel flow"
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": true,
+          "description": "Drawer acikligini controlled olarak yonetir."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Drawer title ve aria-labelledby kaynagi."
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Primary/secondary action alani."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkileşim duzeyi."
+        },
+        {
+          "name": "onClose / onSubmit",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Dismiss ve form aksiyon callbackleri."
+        }
+      ],
+      "previewFocus": [
+        "create flow drawer",
+        "readonly policy drawer",
+        "submit/cancel footer states"
+      ],
+      "regressionFocus": [
+        "escape close parity",
+        "readonly submit guard",
+        "dialog labelling"
       ]
     },
     {
@@ -980,6 +1522,128 @@
       ]
     },
     {
+      "name": "PageHeader",
+      "variantAxes": [
+        "density: compact | default",
+        "status: none | badge",
+        "actions: none | dual-cta | aside"
+      ],
+      "stateModel": [
+        "meta chip rendering",
+        "status badge presence",
+        "action wrap",
+        "aside stacking"
+      ],
+      "props": [
+        {
+          "name": "eyebrow / title / description",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Header bilgi hiyerarsisini kurar."
+        },
+        {
+          "name": "meta",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Chip veya metadata slotu."
+        },
+        {
+          "name": "status",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Title yanindaki durum sinyali."
+        },
+        {
+          "name": "actions / aside",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Sag alandaki CTA ve yardimci panel slotlari."
+        },
+        {
+          "name": "compact",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Header yogunlugunu dusurur."
+        }
+      ],
+      "previewFocus": [
+        "release page header",
+        "compact detail header",
+        "status + actions shell"
+      ],
+      "regressionFocus": [
+        "header wrap parity",
+        "meta chip overflow",
+        "aside alignment"
+      ]
+    },
+    {
+      "name": "PageLayout",
+      "variantAxes": [
+        "surface: content-only | detail-sidebar",
+        "header: title-only | actions | filters",
+        "footer: none | sticky-summary"
+      ],
+      "stateModel": [
+        "breadcrumb visibility",
+        "header action wrap",
+        "detail rail presence",
+        "filter bar slot rendering"
+      ],
+      "props": [
+        {
+          "name": "title / description",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Header title ve aciklama alani."
+        },
+        {
+          "name": "breadcrumbItems",
+          "type": "PageBreadcrumbItem[]",
+          "default": "-",
+          "required": false,
+          "description": "Route breadcrumb kaynagi."
+        },
+        {
+          "name": "actions / headerExtra",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Sag ust aksiyon ve ek bilgi alani."
+        },
+        {
+          "name": "filterBar",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Sayfa filtre shell slotu."
+        },
+        {
+          "name": "detail / footer",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Detail rail ve footer slotlari."
+        }
+      ],
+      "previewFocus": [
+        "directory page shell",
+        "detail sidebar layout",
+        "header action wrap"
+      ],
+      "regressionFocus": [
+        "breadcrumb render parity",
+        "detail slot sizing",
+        "filter bar placement"
+      ]
+    },
+    {
       "name": "Pagination",
       "variantAxes": [
         "mode: server | client",
@@ -1038,6 +1702,126 @@
         "page clamp",
         "aria-current",
         "prev-next disabled guards"
+      ]
+    },
+    {
+      "name": "Popover",
+      "variantAxes": [
+        "side: top | right | bottom | left",
+        "align: start | center | end",
+        "surface: guidance | policy | action-cluster"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled open",
+        "outside click dismiss",
+        "escape dismiss",
+        "readonly access guard"
+      ],
+      "props": [
+        {
+          "name": "trigger",
+          "type": "ReactElement",
+          "default": "-",
+          "required": false,
+          "description": "Popover panelini acan referans element."
+        },
+        {
+          "name": "title / content",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Panel basligi ve icerigi."
+        },
+        {
+          "name": "open / defaultOpen",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Controlled veya uncontrolled aciklik durumu."
+        },
+        {
+          "name": "side / align",
+          "type": "'top' | 'right' | 'bottom' | 'left' / 'start' | 'center' | 'end'",
+          "default": "bottom / center",
+          "required": false,
+          "description": "Panel konumunu belirler."
+        },
+        {
+          "name": "access / accessReason",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
+          "default": "full / -",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve engel nedeni."
+        }
+      ],
+      "previewFocus": [
+        "rich guidance popover",
+        "readonly blocked popover",
+        "action cluster panel"
+      ],
+      "regressionFocus": [
+        "outside click dismiss",
+        "controlled/uncontrolled parity",
+        "readonly interaction guard"
+      ]
+    },
+    {
+      "name": "PromptComposer",
+      "variantAxes": [
+        "scope: general | approval | policy | release",
+        "tone: neutral | strict | exploratory",
+        "mode: editable | readonly"
+      ],
+      "stateModel": [
+        "controlled / uncontrolled subject",
+        "controlled / uncontrolled body",
+        "scope and tone guardrails"
+      ],
+      "props": [
+        {
+          "name": "subject / defaultSubject",
+          "type": "string",
+          "default": "\"\"",
+          "required": false,
+          "description": "Prompt amacini tek satirda controlled veya uncontrolled sekilde tutar."
+        },
+        {
+          "name": "value / defaultValue",
+          "type": "string",
+          "default": "\"\"",
+          "required": false,
+          "description": "Ana prompt govdesini controlled veya uncontrolled sekilde yonetir."
+        },
+        {
+          "name": "scope / tone",
+          "type": "PromptComposerScope / PromptComposerTone",
+          "default": "general / neutral",
+          "required": false,
+          "description": "Prompt execution boundary ve tone guardrail kararini belirler."
+        },
+        {
+          "name": "guardrails / citations",
+          "type": "string[]",
+          "default": "[]",
+          "required": false,
+          "description": "Promptun policy ve source anchor kontratini gorunur kilar."
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "default": "1200",
+          "required": false,
+          "description": "Body alaninin karakter ust sinirini belirler."
+        }
+      ],
+      "previewFocus": [
+        "controlled prompt authoring",
+        "readonly review mode"
+      ],
+      "regressionFocus": [
+        "readonly body guard",
+        "scope and tone selection parity",
+        "guardrail/citation rendering"
       ]
     },
     {
@@ -1106,6 +1890,141 @@
         "group selection parity",
         "readonly interaction guard",
         "label/description association"
+      ]
+    },
+    {
+      "name": "RecommendationCard",
+      "variantAxes": [
+        "tone: info | success | warning",
+        "layout: default | compact",
+        "actions: primary + secondary | readonly"
+      ],
+      "stateModel": [
+        "confidence-aware card",
+        "citation list",
+        "actionable vs readonly review"
+      ],
+      "props": [
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Oneri kartinin ana basligi."
+        },
+        {
+          "name": "summary",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "AI ozetini veya tavsiyeyi aciklar."
+        },
+        {
+          "name": "rationale",
+          "type": "string[]",
+          "default": "[]",
+          "required": false,
+          "description": "Oneriyi destekleyen ana gerekce listesi."
+        },
+        {
+          "name": "citations",
+          "type": "string[]",
+          "default": "[]",
+          "required": false,
+          "description": "Kaynak veya evidence etiketlerini listeler."
+        },
+        {
+          "name": "confidenceLevel / confidenceScore",
+          "type": "ConfidenceLevel / number",
+          "default": "medium / -",
+          "required": false,
+          "description": "ConfidenceBadge ile birlikte seffaf skor gosterir."
+        },
+        {
+          "name": "primaryActionLabel / secondaryActionLabel",
+          "type": "string",
+          "default": "Apply / Review",
+          "required": false,
+          "description": "Kart aksiyon butonlarini adlandirir."
+        },
+        {
+          "name": "onPrimaryAction / onSecondaryAction",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Insan onayi veya detay inceleme aksiyonlarini bildirir."
+        }
+      ],
+      "previewFocus": [
+        "policy recommendation card",
+        "risk review card",
+        "readonly governance state"
+      ],
+      "regressionFocus": [
+        "action button guard",
+        "confidence badge composition",
+        "citation and rationale rendering"
+      ]
+    },
+    {
+      "name": "ReportFilterPanel",
+      "variantAxes": [
+        "layout: inline-panel | dense-panel",
+        "actions: submit-reset | readonly",
+        "surface: report | analytics"
+      ],
+      "stateModel": [
+        "submit flow",
+        "reset flow",
+        "loading state",
+        "readonly guard"
+      ],
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Panel icindeki filtre alanlari."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Submit/reset sirasinda paneli kilitler."
+        },
+        {
+          "name": "submitLabel / resetLabel",
+          "type": "string",
+          "default": "Filtrele / Sifirla",
+          "required": false,
+          "description": "Aksiyon etiketlerini override eder."
+        },
+        {
+          "name": "onSubmit / onReset",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Panel aksiyon callbackleri."
+        },
+        {
+          "name": "access / accessReason",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
+          "default": "full / -",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkileşim seviyesi."
+        }
+      ],
+      "previewFocus": [
+        "report filter submit flow",
+        "analytics filter reset",
+        "readonly policy panel"
+      ],
+      "regressionFocus": [
+        "submit guard",
+        "reset guard",
+        "child slot wrap"
       ]
     },
     {
@@ -1327,6 +2246,60 @@
         "aria-current step",
         "interactive change handling",
         "status fallback ordering"
+      ]
+    },
+    {
+      "name": "SummaryStrip",
+      "variantAxes": [
+        "columns: 2 | 3 | 4",
+        "tone: default | info | success | warning",
+        "surface: KPI | audit-summary"
+      ],
+      "stateModel": [
+        "stat card wrap",
+        "trend visibility",
+        "note visibility",
+        "column density"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "SummaryStripItem[]",
+          "default": "-",
+          "required": true,
+          "description": "KPI kartlarinin veri girisi."
+        },
+        {
+          "name": "title / description",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Strip ustu baslik ve aciklama."
+        },
+        {
+          "name": "columns",
+          "type": "2 | 3 | 4",
+          "default": "4",
+          "required": false,
+          "description": "Responsive kolon yogunlugu."
+        },
+        {
+          "name": "access / accessReason",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
+          "default": "full / -",
+          "required": false,
+          "description": "Policy tabanli gorunurluk seviyesi."
+        }
+      ],
+      "previewFocus": [
+        "release KPI strip",
+        "warning trend strip",
+        "compact summary row"
+      ],
+      "regressionFocus": [
+        "column wrap parity",
+        "tone border mapping",
+        "trend placement"
       ]
     },
     {
@@ -2020,620 +2993,6 @@
         "file list normalization",
         "readonly interaction guard",
         "maxFiles enforcement"
-      ]
-    },
-    {
-      "name": "FormDrawer",
-      "variantAxes": [
-        "size: md | lg | xl",
-        "footer: action-bar | readonly",
-        "surface: create | edit | guided-form"
-      ],
-      "stateModel": [
-        "open / closed",
-        "escape dismiss",
-        "readonly access guard",
-        "form submit / cancel flow"
-      ],
-      "props": [
-        {
-          "name": "open",
-          "type": "boolean",
-          "default": "false",
-          "required": true,
-          "description": "Drawer acikligini controlled olarak yonetir."
-        },
-        {
-          "name": "title",
-          "type": "ReactNode",
-          "default": "-",
-          "required": false,
-          "description": "Drawer title ve aria-labelledby kaynagi."
-        },
-        {
-          "name": "footer",
-          "type": "ReactNode",
-          "default": "-",
-          "required": false,
-          "description": "Primary/secondary action alani."
-        },
-        {
-          "name": "access",
-          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
-          "default": "full",
-          "required": false,
-          "description": "Policy tabanli gorunurluk ve etkileşim duzeyi."
-        },
-        {
-          "name": "onClose / onSubmit",
-          "type": "() => void",
-          "default": "-",
-          "required": false,
-          "description": "Dismiss ve form aksiyon callbackleri."
-        }
-      ],
-      "previewFocus": [
-        "create flow drawer",
-        "readonly policy drawer",
-        "submit/cancel footer states"
-      ],
-      "regressionFocus": [
-        "escape close parity",
-        "readonly submit guard",
-        "dialog labelling"
-      ]
-    },
-    {
-      "name": "DetailDrawer",
-      "variantAxes": [
-        "tabs: summary | audit | details",
-        "surface: review | evidence | readonly",
-        "width: lg | xl"
-      ],
-      "stateModel": [
-        "open / closed",
-        "active tab",
-        "escape dismiss",
-        "readonly access hint"
-      ],
-      "props": [
-        {
-          "name": "open",
-          "type": "boolean",
-          "default": "false",
-          "required": true,
-          "description": "Drawer acikligini controlled olarak yonetir."
-        },
-        {
-          "name": "title",
-          "type": "ReactNode",
-          "default": "-",
-          "required": false,
-          "description": "Header title ve aria label kaynagi."
-        },
-        {
-          "name": "tabs",
-          "type": "DetailDrawerTab[]",
-          "default": "-",
-          "required": true,
-          "description": "Sekmeli icerik yapisini tanimlar."
-        },
-        {
-          "name": "access / accessReason",
-          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
-          "default": "full / -",
-          "required": false,
-          "description": "Policy tabanli gorunurluk ve readonly nedeni."
-        },
-        {
-          "name": "onClose",
-          "type": "() => void",
-          "default": "-",
-          "required": false,
-          "description": "Dismiss callbacki."
-        }
-      ],
-      "previewFocus": [
-        "tabbed review drawer",
-        "readonly evidence drawer",
-        "audit/status tab switch"
-      ],
-      "regressionFocus": [
-        "tab aria wiring",
-        "escape close parity",
-        "readonly badge visibility"
-      ]
-    },
-    {
-      "name": "Popover",
-      "variantAxes": [
-        "side: top | right | bottom | left",
-        "align: start | center | end",
-        "surface: guidance | policy | action-cluster"
-      ],
-      "stateModel": [
-        "controlled vs uncontrolled open",
-        "outside click dismiss",
-        "escape dismiss",
-        "readonly access guard"
-      ],
-      "props": [
-        {
-          "name": "trigger",
-          "type": "ReactElement",
-          "default": "-",
-          "required": false,
-          "description": "Popover panelini acan referans element."
-        },
-        {
-          "name": "title / content",
-          "type": "ReactNode",
-          "default": "-",
-          "required": false,
-          "description": "Panel basligi ve icerigi."
-        },
-        {
-          "name": "open / defaultOpen",
-          "type": "boolean",
-          "default": "false",
-          "required": false,
-          "description": "Controlled veya uncontrolled aciklik durumu."
-        },
-        {
-          "name": "side / align",
-          "type": "'top' | 'right' | 'bottom' | 'left' / 'start' | 'center' | 'end'",
-          "default": "bottom / center",
-          "required": false,
-          "description": "Panel konumunu belirler."
-        },
-        {
-          "name": "access / accessReason",
-          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
-          "default": "full / -",
-          "required": false,
-          "description": "Policy tabanli gorunurluk ve engel nedeni."
-        }
-      ],
-      "previewFocus": [
-        "rich guidance popover",
-        "readonly blocked popover",
-        "action cluster panel"
-      ],
-      "regressionFocus": [
-        "outside click dismiss",
-        "controlled/uncontrolled parity",
-        "readonly interaction guard"
-      ]
-    },
-    {
-      "name": "CommandPalette",
-      "variantAxes": [
-        "scope: global | approval | policy",
-        "state: open | closed",
-        "layout: grouped | flat"
-      ],
-      "stateModel": [
-        "controlled vs uncontrolled query",
-        "keyboard navigation",
-        "filtered results",
-        "readonly browsing vs actionable full mode"
-      ],
-      "props": [
-        {
-          "name": "open",
-          "type": "boolean",
-          "default": "false",
-          "required": true,
-          "description": "Palette acikligini kontrol eder."
-        },
-        {
-          "name": "items",
-          "type": "CommandPaletteItem[]",
-          "default": "-",
-          "required": true,
-          "description": "Baslik, aciklama, grup, shortcut ve badge bilgisine sahip komut listesi."
-        },
-        {
-          "name": "query / defaultQuery",
-          "type": "string",
-          "default": "\"\"",
-          "required": false,
-          "description": "Arama sorgusunu controlled veya uncontrolled sekilde yonetir."
-        },
-        {
-          "name": "onQueryChange",
-          "type": "(query: string) => void",
-          "default": "-",
-          "required": false,
-          "description": "Arama girdisi her degistiginde yeni sorguyu bildirir."
-        },
-        {
-          "name": "onSelect",
-          "type": "(id: string, item: CommandPaletteItem) => void",
-          "default": "-",
-          "required": false,
-          "description": "Secilen komut kimligini ve item bilgisini dondurur."
-        },
-        {
-          "name": "onClose",
-          "type": "() => void",
-          "default": "-",
-          "required": false,
-          "description": "Escape veya overlay click sonrasinda palette kapanisini bildirir."
-        },
-        {
-          "name": "access",
-          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
-          "default": "full",
-          "required": false,
-          "description": "Policy tabanli gorunurluk ve secim davranisini kontrol eder."
-        }
-      ],
-      "previewFocus": [
-        "global search + grouped actions",
-        "approval shortcut scope",
-        "readonly browse mode"
-      ],
-      "regressionFocus": [
-        "keyboard navigation parity",
-        "query filtering stability",
-        "readonly/disabled selection guard"
-      ]
-    },
-    {
-      "name": "RecommendationCard",
-      "variantAxes": [
-        "tone: info | success | warning",
-        "layout: default | compact",
-        "actions: primary + secondary | readonly"
-      ],
-      "stateModel": [
-        "confidence-aware card",
-        "citation list",
-        "actionable vs readonly review"
-      ],
-      "props": [
-        {
-          "name": "title",
-          "type": "ReactNode",
-          "default": "-",
-          "required": true,
-          "description": "Oneri kartinin ana basligi."
-        },
-        {
-          "name": "summary",
-          "type": "ReactNode",
-          "default": "-",
-          "required": true,
-          "description": "AI ozetini veya tavsiyeyi aciklar."
-        },
-        {
-          "name": "rationale",
-          "type": "string[]",
-          "default": "[]",
-          "required": false,
-          "description": "Oneriyi destekleyen ana gerekce listesi."
-        },
-        {
-          "name": "citations",
-          "type": "string[]",
-          "default": "[]",
-          "required": false,
-          "description": "Kaynak veya evidence etiketlerini listeler."
-        },
-        {
-          "name": "confidenceLevel / confidenceScore",
-          "type": "ConfidenceLevel / number",
-          "default": "medium / -",
-          "required": false,
-          "description": "ConfidenceBadge ile birlikte seffaf skor gosterir."
-        },
-        {
-          "name": "primaryActionLabel / secondaryActionLabel",
-          "type": "string",
-          "default": "Apply / Review",
-          "required": false,
-          "description": "Kart aksiyon butonlarini adlandirir."
-        },
-        {
-          "name": "onPrimaryAction / onSecondaryAction",
-          "type": "() => void",
-          "default": "-",
-          "required": false,
-          "description": "Insan onayi veya detay inceleme aksiyonlarini bildirir."
-        }
-      ],
-      "previewFocus": [
-        "policy recommendation card",
-        "risk review card",
-        "readonly governance state"
-      ],
-      "regressionFocus": [
-        "action button guard",
-        "confidence badge composition",
-        "citation and rationale rendering"
-      ]
-    },
-    {
-      "name": "ConfidenceBadge",
-      "variantAxes": [
-        "level: low | medium | high | very-high",
-        "layout: default | compact",
-        "visibility: score | sources"
-      ],
-      "stateModel": [
-        "confidence label",
-        "score surface",
-        "source transparency"
-      ],
-      "props": [
-        {
-          "name": "level",
-          "type": "'low' | 'medium' | 'high' | 'very-high'",
-          "default": "medium",
-          "required": false,
-          "description": "Semantic confidence seviyesini belirler."
-        },
-        {
-          "name": "score",
-          "type": "number",
-          "default": "-",
-          "required": false,
-          "description": "Yuzdesel confidence degerini gosterir."
-        },
-        {
-          "name": "sourceCount",
-          "type": "number",
-          "default": "-",
-          "required": false,
-          "description": "Confidence hesabina giren kaynak sayisini gosterir."
-        },
-        {
-          "name": "compact",
-          "type": "boolean",
-          "default": "false",
-          "required": false,
-          "description": "Kaynak sayisini gizleyip kompakt badge yuzeyi uretir."
-        },
-        {
-          "name": "showScore",
-          "type": "boolean",
-          "default": "true",
-          "required": false,
-          "description": "Score gosterimini acip kapatir."
-        }
-      ],
-      "previewFocus": [
-        "confidence matrix",
-        "score + source transparency",
-        "compact list usage"
-      ],
-      "regressionFocus": [
-        "level to tone mapping",
-        "compact output formatting",
-        "hidden access rendering"
-      ]
-    },
-    {
-      "name": "ApprovalCheckpoint",
-      "variantAxes": [
-        "status: pending | approved | rejected | blocked",
-        "mode: actionable | readonly",
-        "layout: evidence-rich | compact review"
-      ],
-      "stateModel": [
-        "checkpoint status",
-        "checklist progression",
-        "primary / secondary decision actions"
-      ],
-      "props": [
-        {
-          "name": "title / summary",
-          "type": "ReactNode",
-          "default": "-",
-          "required": true,
-          "description": "Checkpoint basligi ve karar ozetini tanimlar."
-        },
-        {
-          "name": "status",
-          "type": "'pending' | 'approved' | 'rejected' | 'blocked'",
-          "default": "pending",
-          "required": false,
-          "description": "Genel approval state badge tonunu belirler."
-        },
-        {
-          "name": "steps",
-          "type": "ApprovalCheckpointItem[]",
-          "default": "[]",
-          "required": false,
-          "description": "Checklist, owner ve step status bilgisini gosterir."
-        },
-        {
-          "name": "evidenceItems / citations",
-          "type": "string[]",
-          "default": "[]",
-          "required": false,
-          "description": "Karari destekleyen evidence ve kaynak etiketlerini listeler."
-        },
-        {
-          "name": "onPrimaryAction / onSecondaryAction",
-          "type": "() => void",
-          "default": "-",
-          "required": false,
-          "description": "Insan onayi ve review talebi aksiyonlarini tetikler."
-        }
-      ],
-      "previewFocus": [
-        "interactive human checkpoint",
-        "readonly review queue"
-      ],
-      "regressionFocus": [
-        "readonly action guard",
-        "status to badge tone mapping",
-        "checklist rendering stability"
-      ]
-    },
-    {
-      "name": "CitationPanel",
-      "variantAxes": [
-        "mode: interactive | readonly",
-        "density: default | compact",
-        "selection: active | passive"
-      ],
-      "stateModel": [
-        "selected citation",
-        "source type tone mapping",
-        "empty state"
-      ],
-      "props": [
-        {
-          "name": "items",
-          "type": "CitationPanelItem[]",
-          "default": "[]",
-          "required": true,
-          "description": "Title, excerpt, source, locator ve kind bilgisini tasir."
-        },
-        {
-          "name": "activeCitationId",
-          "type": "string | null",
-          "default": "null",
-          "required": false,
-          "description": "Secili citation satirini vurgular."
-        },
-        {
-          "name": "onOpenCitation",
-          "type": "(id: string, item: CitationPanelItem) => void",
-          "default": "-",
-          "required": false,
-          "description": "Interactive modda satira tiklandiginda callback uretir."
-        },
-        {
-          "name": "compact",
-          "type": "boolean",
-          "default": "false",
-          "required": false,
-          "description": "Excerpt yuzeyini daha yogun satir ritmine ceker."
-        }
-      ],
-      "previewFocus": [
-        "source transparency panel",
-        "readonly reference surface"
-      ],
-      "regressionFocus": [
-        "readonly open guard",
-        "active citation highlight",
-        "empty state rendering"
-      ]
-    },
-    {
-      "name": "AIActionAuditTimeline",
-      "variantAxes": [
-        "mode: interactive | readonly",
-        "density: default | compact",
-        "selection: active | passive"
-      ],
-      "stateModel": [
-        "selected audit event",
-        "actor badge mapping",
-        "status badge mapping"
-      ],
-      "props": [
-        {
-          "name": "items",
-          "type": "AIActionAuditTimelineItem[]",
-          "default": "[]",
-          "required": true,
-          "description": "Actor, status, title, timestamp ve summary alanlarini tasir."
-        },
-        {
-          "name": "selectedId",
-          "type": "string | null",
-          "default": "null",
-          "required": false,
-          "description": "Secili timeline maddesini vurgular."
-        },
-        {
-          "name": "onSelectItem",
-          "type": "(id: string, item: AIActionAuditTimelineItem) => void",
-          "default": "-",
-          "required": false,
-          "description": "Interactive timeline secim callback'ini uretir."
-        },
-        {
-          "name": "compact",
-          "type": "boolean",
-          "default": "false",
-          "required": false,
-          "description": "Summary alanini daha yogun ritimde gosterir."
-        }
-      ],
-      "previewFocus": [
-        "interactive audit trail",
-        "readonly evidentiary log"
-      ],
-      "regressionFocus": [
-        "readonly selection guard",
-        "actor/status badge mapping",
-        "selected event emphasis"
-      ]
-    },
-    {
-      "name": "PromptComposer",
-      "variantAxes": [
-        "scope: general | approval | policy | release",
-        "tone: neutral | strict | exploratory",
-        "mode: editable | readonly"
-      ],
-      "stateModel": [
-        "controlled / uncontrolled subject",
-        "controlled / uncontrolled body",
-        "scope and tone guardrails"
-      ],
-      "props": [
-        {
-          "name": "subject / defaultSubject",
-          "type": "string",
-          "default": "\"\"",
-          "required": false,
-          "description": "Prompt amacini tek satirda controlled veya uncontrolled sekilde tutar."
-        },
-        {
-          "name": "value / defaultValue",
-          "type": "string",
-          "default": "\"\"",
-          "required": false,
-          "description": "Ana prompt govdesini controlled veya uncontrolled sekilde yonetir."
-        },
-        {
-          "name": "scope / tone",
-          "type": "PromptComposerScope / PromptComposerTone",
-          "default": "general / neutral",
-          "required": false,
-          "description": "Prompt execution boundary ve tone guardrail kararini belirler."
-        },
-        {
-          "name": "guardrails / citations",
-          "type": "string[]",
-          "default": "[]",
-          "required": false,
-          "description": "Promptun policy ve source anchor kontratini gorunur kilar."
-        },
-        {
-          "name": "maxLength",
-          "type": "number",
-          "default": "1200",
-          "required": false,
-          "description": "Body alaninin karakter ust sinirini belirler."
-        }
-      ],
-      "previewFocus": [
-        "controlled prompt authoring",
-        "readonly review mode"
-      ],
-      "regressionFocus": [
-        "readonly body guard",
-        "scope and tone selection parity",
-        "guardrail/citation rendering"
       ]
     }
   ]
