@@ -117,6 +117,8 @@ type DesignLabTaxonomy = {
 const designLabIndex = designLabIndexRaw as DesignLabIndex;
 const designLabTaxonomy = designLabTaxonomyRaw as DesignLabTaxonomy;
 const componentApiCatalog = componentApiCatalogRaw as DesignLabApiCatalog;
+const avatarPreviewImageSrc =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='32' fill='%23E38B2C'/%3E%3Ccircle cx='64' cy='50' r='24' fill='%23FFF5E8'/%3E%3Cpath d='M30 110c8-18 22-28 34-28s26 10 34 28' fill='%23FFF5E8'/%3E%3C/svg%3E";
 
 const copyToClipboard = async (value: string): Promise<boolean> => {
   if (!value) return false;
@@ -618,7 +620,7 @@ const DesignLabPage: React.FC = () => {
       case 'Skeleton':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
               <PreviewPanel title="Text">
                 <Skeleton lines={3} />
               </PreviewPanel>
@@ -633,13 +635,19 @@ const DesignLabPage: React.FC = () => {
               <PreviewPanel title="Card placeholder">
                 <Skeleton variant="rect" className="h-28" />
               </PreviewPanel>
+              <PreviewPanel title="Table row / reduced motion">
+                <div className="space-y-4">
+                  <Skeleton variant="table-row" />
+                  <Skeleton variant="table-row" animated={false} />
+                </div>
+              </PreviewPanel>
             </div>
           </div>
         );
       case 'Spinner':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
               <PreviewPanel title="Inline">
                 <Spinner label="Yükleniyor" />
               </PreviewPanel>
@@ -649,19 +657,35 @@ const DesignLabPage: React.FC = () => {
               <PreviewPanel title="Overlay">
                 <Spinner mode="overlay" label="Bölüm yükleniyor" />
               </PreviewPanel>
+              <PreviewPanel title="Tone / size">
+                <div className="flex flex-wrap items-center gap-4">
+                  <Spinner size="sm" tone="neutral" label="Kısa" />
+                  <Spinner size="md" tone="primary" label="Orta" />
+                  <div className="rounded-2xl bg-text-primary px-4 py-3">
+                    <Spinner size="lg" tone="inverse" label="Inverse" />
+                  </div>
+                </div>
+              </PreviewPanel>
             </div>
           </div>
         );
       case 'Avatar':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
               <PreviewPanel title="Sizes">
                 <div className="flex flex-wrap items-center gap-3">
                   <Avatar name="Ada Lovelace" size="sm" />
                   <Avatar name="Ada Lovelace" size="md" />
                   <Avatar name="Ada Lovelace" size="lg" />
                   <Avatar name="Ada Lovelace" size="xl" />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Image / privacy-safe identity">
+                <div className="flex flex-wrap items-center gap-3">
+                  <Avatar src={avatarPreviewImageSrc} name="Nora Stone" alt="Nora Stone" />
+                  <Avatar name="Broken Image" />
+                  <Avatar shape="square" src={avatarPreviewImageSrc} name="Square Identity" alt="Square Identity" />
                 </div>
               </PreviewPanel>
               <PreviewPanel title="Fallback types">
@@ -677,7 +701,7 @@ const DesignLabPage: React.FC = () => {
       case 'Divider':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
               <PreviewPanel title="Horizontal">
                 <div className="space-y-3">
                   <Text>İçerik üstü</Text>
@@ -691,6 +715,13 @@ const DesignLabPage: React.FC = () => {
                   <Divider orientation="vertical" className="h-8" />
                   <Text>Sağ</Text>
                   <Divider label="veya" className="flex-1" />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Semantic / decorative">
+                <div className="space-y-3">
+                  <Divider label="Sözleşmeli ayırıcı" />
+                  <Divider decorative />
+                  <Text variant="secondary">Dekoratif ayırıcı rol üretmez.</Text>
                 </div>
               </PreviewPanel>
             </div>

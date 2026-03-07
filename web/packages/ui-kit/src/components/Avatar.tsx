@@ -61,11 +61,15 @@ export const Avatar: React.FC<AvatarProps> = ({
   }
 
   const showImage = Boolean(src) && !imageFailed;
+  const fallbackType = showImage ? 'image' : fallbackIcon ? 'icon' : 'initials';
 
   return (
     <div
       {...rest}
       data-access-state={accessState.state}
+      data-size={size}
+      data-shape={shape}
+      data-fallback={fallbackType}
       className={cn(
         'inline-flex shrink-0 items-center justify-center overflow-hidden border border-border-subtle bg-surface-muted font-semibold text-text-secondary',
         sizeClassNames[size],

@@ -229,7 +229,7 @@
       "subgroup": "identity",
       "taxonomyGroupId": "general",
       "taxonomySubgroup": "Avatar & Identity",
-      "demoMode": "inspector",
+      "demoMode": "live",
       "description": "Identity primitivei; image, initials ve fallback icon davranisini gizlilik varsayimlariyla sunar.",
       "sectionIds": [
         "component_library_management",
@@ -516,7 +516,7 @@
       "subgroup": "divider",
       "taxonomyGroupId": "general",
       "taxonomySubgroup": "Divider",
-      "demoMode": "inspector",
+      "demoMode": "live",
       "description": "Separation primitivei; horizontal, vertical ve labelled divider davranisini tek API ile sunar.",
       "sectionIds": [
         "component_library_management",

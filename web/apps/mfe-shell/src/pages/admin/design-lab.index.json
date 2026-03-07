@@ -11,8 +11,8 @@
     "total": 76,
     "exported": 54,
     "planned": 22,
-    "liveDemo": 23,
-    "inspector": 32
+    "liveDemo": 25,
+    "inspector": 30
   },
   "items": [
     {
@@ -100,7 +100,7 @@
       "lifecycle": "beta",
       "taxonomyGroupId": "general",
       "taxonomySubgroup": "Avatar & Identity",
-      "demoMode": "inspector",
+      "demoMode": "live",
       "description": "Identity primitivei; image, initials ve fallback icon davranisini gizlilik varsayimlariyla sunar.",
       "sectionIds": [
         "component_library_management",
@@ -424,7 +424,7 @@
       "lifecycle": "beta",
       "taxonomyGroupId": "general",
       "taxonomySubgroup": "Divider",
-      "demoMode": "inspector",
+      "demoMode": "live",
       "description": "Separation primitivei; horizontal, vertical ve labelled divider davranisini tek API ile sunar.",
       "sectionIds": [
         "component_library_management",

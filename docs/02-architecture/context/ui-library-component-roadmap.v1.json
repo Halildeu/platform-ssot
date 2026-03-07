@@ -72,7 +72,7 @@
         },
         {
           "component_name": "LinkInline",
-          "source_type": "roadmap_only",
+          "source_type": "existing_upgrade",
           "target_wave": "wave_1_foundation_primitives",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -81,7 +81,7 @@
         },
         {
           "component_name": "IconButton",
-          "source_type": "roadmap_only",
+          "source_type": "existing_upgrade",
           "target_wave": "wave_1_foundation_primitives",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -90,25 +90,25 @@
         },
         {
           "component_name": "Avatar",
-          "source_type": "roadmap_only",
+          "source_type": "existing_upgrade",
           "target_wave": "wave_1_foundation_primitives",
           "target_maturity": "beta",
-          "preview_mode": "inspector",
+          "preview_mode": "live",
           "ux_primary_theme_id": "trust_privacy_security_ux",
           "ux_primary_subtheme_id": "privacy_by_design_defaults"
         },
         {
           "component_name": "Divider",
-          "source_type": "roadmap_only",
+          "source_type": "existing_upgrade",
           "target_wave": "wave_1_foundation_primitives",
           "target_maturity": "beta",
-          "preview_mode": "inspector",
+          "preview_mode": "live",
           "ux_primary_theme_id": "consistency_and_pattern_governance",
           "ux_primary_subtheme_id": "behavior_contracts_across_modules"
         },
         {
           "component_name": "Skeleton",
-          "source_type": "roadmap_only",
+          "source_type": "existing_upgrade",
           "target_wave": "wave_1_foundation_primitives",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -117,7 +117,7 @@
         },
         {
           "component_name": "Spinner",
-          "source_type": "roadmap_only",
+          "source_type": "existing_upgrade",
           "target_wave": "wave_1_foundation_primitives",
           "target_maturity": "beta",
           "preview_mode": "live",
@@ -695,7 +695,7 @@
     {
       "wave_id": "wave_1_foundation_primitives",
       "title_tr": "Foundation Primitives",
-      "status": "in_progress",
+      "status": "completed",
       "objective": "Foundation primitives export setini zorunlu doctor evidence ve release-hardening gate altinda yeniden kilitle.",
       "families": [
         "foundation_primitives"

@@ -262,6 +262,217 @@
         "loading halinde kare hit-area korunumu",
         "selected state semantics"
       ]
+    },
+    {
+      "name": "Skeleton",
+      "variantAxes": [
+        "variant: text | rect | avatar | pill | table-row",
+        "animated: true | false"
+      ],
+      "stateModel": [
+        "loading-placeholder",
+        "reduced-motion",
+        "layout-preservation"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'text' | 'rect' | 'avatar' | 'pill' | 'table-row'",
+          "default": "text",
+          "required": false,
+          "description": "Placeholder geometrisini ve bilgi yoğunluğunu belirler."
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "default": "1",
+          "required": false,
+          "description": "Text varyantında üretilecek placeholder satır sayısı."
+        },
+        {
+          "name": "animated",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Pulse animasyonu aktif mi, reduced-motion tercihinde nasıl davranacağını belirler."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy temelli görünürlük kontrolü."
+        }
+      ],
+      "previewFocus": [
+        "text ve card placeholder",
+        "avatar + list skeleton",
+        "table-row ve reduced motion"
+      ],
+      "regressionFocus": [
+        "table-row placeholder sayısı",
+        "animated metadata ve motion-reduce",
+        "content reflow yerine yer tutucu kararlılığı"
+      ]
+    },
+    {
+      "name": "Spinner",
+      "variantAxes": [
+        "mode: inline | block | overlay",
+        "size: sm | md | lg",
+        "tone: primary | neutral | inverse"
+      ],
+      "stateModel": [
+        "status",
+        "aria-busy",
+        "overlay-blocking-scope"
+      ],
+      "props": [
+        {
+          "name": "mode",
+          "type": "'inline' | 'block' | 'overlay'",
+          "default": "inline",
+          "required": false,
+          "description": "Spinner'ın hangi yerleşim katmanında görüneceğini belirler."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Görsel yoğunluk ve hit-area ölçeği."
+        },
+        {
+          "name": "tone",
+          "type": "'primary' | 'neutral' | 'inverse'",
+          "default": "primary",
+          "required": false,
+          "description": "Semantic tone katmanı."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "Yükleniyor",
+          "required": false,
+          "description": "Erişilebilir loading açıklaması."
+        }
+      ],
+      "previewFocus": [
+        "inline ve block loading",
+        "overlay spinner",
+        "tone ve size farkları"
+      ],
+      "regressionFocus": [
+        "role=status ve aria-busy kontratı",
+        "mode/tone/size metadata",
+        "overlay ile inline spinner ayrışması"
+      ]
+    },
+    {
+      "name": "Avatar",
+      "variantAxes": [
+        "size: sm | md | lg | xl",
+        "shape: circle | square",
+        "fallback: image | initials | icon"
+      ],
+      "stateModel": [
+        "image-loaded",
+        "broken-image-fallback",
+        "privacy-safe-identity"
+      ],
+      "props": [
+        {
+          "name": "src",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Profil görseli kaynağı; hata durumunda fallback devreye girer."
+        },
+        {
+          "name": "name / alt",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Initials üretimi ve erişilebilir label kaynağı."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg' | 'xl'",
+          "default": "md",
+          "required": false,
+          "description": "Kimlik yoğunluğu ve avatar hacmi."
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'square'",
+          "default": "circle",
+          "required": false,
+          "description": "Kimlik yüzey geometrisi."
+        },
+        {
+          "name": "fallbackIcon",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Image ve initials yerine gösterilecek kontrollü icon fallback."
+        }
+      ],
+      "previewFocus": [
+        "size matrisi",
+        "image / initials / icon fallback",
+        "square kimlik varyantı"
+      ],
+      "regressionFocus": [
+        "broken image sonrası deterministic fallback",
+        "fallback metadata",
+        "privacy-safe identity rendering"
+      ]
+    },
+    {
+      "name": "Divider",
+      "variantAxes": [
+        "orientation: horizontal | vertical",
+        "label: none | text",
+        "decorative: true | false"
+      ],
+      "stateModel": [
+        "semantic-separator",
+        "decorative-only",
+        "spacing-preservation"
+      ],
+      "props": [
+        {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "default": "horizontal",
+          "required": false,
+          "description": "Ayırıcı eksenini belirler."
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Anlamlı ayrım metni veya bağlamsal başlık."
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Ayrıcı yalnız görsel amaçlı ise semantik role kapatılır."
+        }
+      ],
+      "previewFocus": [
+        "horizontal ve vertical varyantlar",
+        "labelled divider",
+        "decorative vs semantic ayrımı"
+      ],
+      "regressionFocus": [
+        "separator role davranışı",
+        "decorative metadata",
+        "vertical divider spacing kararlılığı"
+      ]
     }
   ]
 }

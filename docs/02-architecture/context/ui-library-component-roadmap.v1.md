@@ -28,13 +28,20 @@ Kanonik kaynak:
 
 - Amaç: temel atom/primitive setini sabitlemek
 - Mevcut: `Button`, `Badge`, `Tag`, `Text`, `Tooltip`, `Empty`
-- Eksik/gap:
+- Foundation release seti:
+  - `Button`
+  - `Badge`
+  - `Tag`
+  - `Text`
+  - `Tooltip`
+  - `Empty`
   - `LinkInline`
   - `IconButton`
   - `Avatar`
   - `Divider`
   - `Skeleton`
   - `Spinner`
+- Açık gap: yok
 
 ### 2. Navigation
 
@@ -145,7 +152,7 @@ Minimum evidence:
 
 ### Wave 1
 
-- `in_progress`
+- `completed`
 - `Foundation Primitives`
 - hedef:
   - `Button`
@@ -157,8 +164,8 @@ Minimum evidence:
   - `Skeleton`
   - `Spinner`
 - not:
-  - aktif release-hardening odağı `Button / Text / LinkInline / IconButton`
-  - `doctor:frontend` evidence zorunlu
+  - tum foundation primitive seti export + preview + API catalog + doctor evidence ile kapandi
+  - `doctor:frontend` evidence wave kapanis kaniti olarak zorunlu calisti
 
 ### Wave 2
 

@@ -55,7 +55,17 @@ export const Spinner: React.FC<SpinnerProps> = ({
   );
 
   return (
-    <div {...rest} role="status" aria-live="polite" data-access-state={accessState.state} className={containerClassName}>
+    <div
+      {...rest}
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      data-access-state={accessState.state}
+      data-size={size}
+      data-tone={tone}
+      data-mode={mode}
+      className={containerClassName}
+    >
       <span
         aria-hidden="true"
         className={cn(

@@ -3,7 +3,7 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_1_foundation_primitives",
   "family_id": "foundation_primitives",
-  "status": "in_progress",
+  "status": "completed",
   "purpose": "Foundation primitives dalgasi icin component bazli acceptance, UX eslesmesi, preview senaryolari ve gate/evidence planini tek kanonik pakette toplamak.",
   "baseline": {
     "governance_lock_commit": "0900750",
@@ -33,7 +33,8 @@
       "components": [
         "Button",
         "Text"
-      ]
+      ],
+      "status": "completed"
     },
     {
       "batch_id": "batch_2_interactive_primitives",
@@ -41,7 +42,8 @@
       "components": [
         "LinkInline",
         "IconButton"
-      ]
+      ],
+      "status": "completed"
     },
     {
       "batch_id": "batch_3_feedback_loading",
@@ -49,7 +51,8 @@
       "components": [
         "Skeleton",
         "Spinner"
-      ]
+      ],
+      "status": "completed"
     },
     {
       "batch_id": "batch_4_support_primitives",
@@ -57,7 +60,8 @@
       "components": [
         "Avatar",
         "Divider"
-      ]
+      ],
+      "status": "completed"
     }
   ],
   "components": [
@@ -179,7 +183,9 @@
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
-        "existing_source_paths": [],
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/LinkInline.tsx"
+        ],
         "target_source_paths": [
           "web/packages/ui-kit/src/components/LinkInline.tsx"
         ],
@@ -213,7 +219,7 @@
         "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
-        "yeni registry entry olusturulur",
+        "registry lifecycle ve UX alanlari guncellenir",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
         "a11y note: focus-visible + external-link safety",
@@ -228,7 +234,9 @@
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
-        "existing_source_paths": [],
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/IconButton.tsx"
+        ],
         "target_source_paths": [
           "web/packages/ui-kit/src/components/IconButton.tsx"
         ],
@@ -262,7 +270,7 @@
         "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
-        "yeni registry entry olusturulur",
+        "registry lifecycle ve UX alanlari guncellenir",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
         "a11y note: accessible name + hit area",
@@ -277,7 +285,9 @@
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
-        "existing_source_paths": [],
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Skeleton.tsx"
+        ],
         "target_source_paths": [
           "web/packages/ui-kit/src/components/Skeleton.tsx"
         ],
@@ -315,7 +325,7 @@
         "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
-        "yeni registry entry olusturulur",
+        "registry lifecycle ve UX alanlari guncellenir",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
         "a11y note: reduced motion + loading semantics",
@@ -330,7 +340,9 @@
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
-        "existing_source_paths": [],
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Spinner.tsx"
+        ],
         "target_source_paths": [
           "web/packages/ui-kit/src/components/Spinner.tsx"
         ],
@@ -364,7 +376,7 @@
         "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
-        "yeni registry entry olusturulur",
+        "registry lifecycle ve UX alanlari guncellenir",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
         "a11y note: status/label semantics",
@@ -377,9 +389,11 @@
       "source_state": "existing_exported",
       "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
-      "preview_mode": "inspector",
+      "preview_mode": "live",
       "implementation_scope": {
-        "existing_source_paths": [],
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Avatar.tsx"
+        ],
         "target_source_paths": [
           "web/packages/ui-kit/src/components/Avatar.tsx"
         ],
@@ -413,8 +427,8 @@
         "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
-        "yeni registry entry olusturulur",
-        "Design Lab inspector preview eklenir",
+        "registry lifecycle ve UX alanlari guncellenir",
+        "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
         "privacy note: sentetik/fallback identity davranisi",
         "frontend-doctor ui-library PASS evidence uretilir"
@@ -426,9 +440,11 @@
       "source_state": "existing_exported",
       "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
-      "preview_mode": "inspector",
+      "preview_mode": "live",
       "implementation_scope": {
-        "existing_source_paths": [],
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Divider.tsx"
+        ],
         "target_source_paths": [
           "web/packages/ui-kit/src/components/Divider.tsx"
         ],
@@ -462,8 +478,8 @@
         "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
-        "yeni registry entry olusturulur",
-        "Design Lab inspector preview eklenir",
+        "registry lifecycle ve UX alanlari guncellenir",
+        "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
         "spacing + semantics notu eklenir",
         "frontend-doctor ui-library PASS evidence uretilir"
@@ -504,13 +520,21 @@
     "design_lab_index_total": 76,
     "ui_kit_tests_passed": true,
     "ui_kit_build_passed": true,
-    "shell_build_passed": true
+    "shell_build_passed": true,
+    "doctor_frontend_passed": true,
+    "wave_gate_passed": true,
+    "notes": [
+      "Wave 1 foundation primitive seti export, preview, API catalog ve doctor evidence ile kapatildi.",
+      "Navigation wave bir sonraki planned aile olarak korunur."
+    ],
+    "design_lab_exported_count": 54,
+    "design_lab_planned_count": 22,
+    "design_lab_live_demo_count": 25,
+    "latest_wave_gate_evidence": "web/test-results/diagnostics/ui-library-wave-gate/2026-03-07T09-52-46-882Z-wave_1_foundation_primitives/ui-library-wave-gate.summary.v1.json",
+    "latest_doctor_preset": "ui-library"
   },
-  "activation_mode": "release_hardening",
-  "active_batches": [
-    "batch_1_existing_upgrades",
-    "batch_2_interactive_primitives"
-  ],
+  "activation_mode": "completed",
+  "active_batches": [],
   "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives",
   "doctor_preset": "ui-library"
 }

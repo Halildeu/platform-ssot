@@ -10,7 +10,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export type SkeletonVariant = 'text' | 'rect' | 'avatar' | 'pill';
+export type SkeletonVariant = 'text' | 'rect' | 'avatar' | 'pill' | 'table-row';
 
 export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement>, AccessControlledProps {
   variant?: SkeletonVariant;
@@ -23,6 +23,7 @@ const variantClassNames: Record<SkeletonVariant, string> = {
   rect: 'h-24 w-full rounded-2xl',
   avatar: 'h-12 w-12 rounded-full',
   pill: 'h-8 w-24 rounded-full',
+  'table-row': 'h-3.5 rounded-md',
 };
 
 export const Skeleton: React.FC<SkeletonProps> = ({
@@ -38,13 +39,16 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     return null;
   }
 
-  const count = variant === 'text' ? Math.max(1, lines) : 1;
+  const count = variant === 'text' ? Math.max(1, lines) : variant === 'table-row' ? 4 : 1;
+  const tableRowWidths = ['w-full', 'w-4/5', 'w-3/5', 'w-2/5'];
 
   return (
     <div
       {...rest}
       data-access-state={accessState.state}
       data-variant={variant}
+      data-lines={variant === 'text' ? String(Math.max(1, lines)) : undefined}
+      data-animated={animated ? 'true' : 'false'}
       className={cn('flex flex-col gap-2', className)}
       aria-hidden="true"
     >
@@ -56,6 +60,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
             animated && 'animate-pulse motion-reduce:animate-none',
             variantClassNames[variant],
             variant === 'text' && index === count - 1 && count > 1 && 'w-4/5',
+            variant === 'table-row' && tableRowWidths[index],
           )}
         />
       ))}

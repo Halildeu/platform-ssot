@@ -80,7 +80,7 @@ def main() -> int:
         if name not in seen:
             problems.append(f'missing-component:{name}')
 
-    for name in {'Button', 'Text', 'LinkInline', 'IconButton'}:
+    for name in EXPECTED_COMPONENTS:
         api_item = api_items.get(name)
         if not api_item:
             problems.append(f'missing-api-catalog-entry:{name}')

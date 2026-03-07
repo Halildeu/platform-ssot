@@ -75,7 +75,15 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 
 ## Son durum
 
-- `in_progress`
-- aktif batch: `Button`, `Text`, `LinkInline`, `IconButton`
-- `LinkInline` ve `IconButton` artik roadmap-only degil, exported reality ile hizalanir.
-- foundation wave bundan sonra doctor evidence olmadan tamamlanmis sayilmaz.
+- `completed`
+- tum 4 batch kapandi ve 8 component release-hardening cizgisinden gecti:
+  - `Button`
+  - `Text`
+  - `LinkInline`
+  - `IconButton`
+  - `Skeleton`
+  - `Spinner`
+  - `Avatar`
+  - `Divider`
+- `Avatar` ve `Divider` artik inspector degil, live preview ile gorunur.
+- foundation wave export + preview + API catalog + doctor evidence ile kapatildi.
