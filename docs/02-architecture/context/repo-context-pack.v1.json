@@ -43,7 +43,7 @@
     "docs/02-architecture/context/ui-library-wave-4-data-display.v1.md",
     "docs/02-architecture/context/ui-library-wave-5-overlay.v1.md",
     "docs/02-architecture/context/ui-library-wave-6-ai-native-helpers.v1.md",
-    "docs/02-architecture/context/ui-library-wave-7-page-blocks.v1.md",
+    "docs/02-architecture/context/ui-library-wave-8-overlay-extensions.v1.md",
     "docs/02-architecture/context/frontend-diagnostics.registry.v1.md",
     "docs/02-architecture/context/backend-diagnostics.registry.v1.md",
     "docs/02-architecture/context/business-journey-e2e-matrix.v1.md",
@@ -138,5 +138,8 @@
     "Live canary ve DAST degisikligi live-release provisioning contract ile fail-closed dogrulanmadan hazir sayilmaz.",
     "Page/block compositeleri apps/** icinde kopyalanmaz; page/block contract ile ui-kit icinde uretilir.",
     "Stable package release veya version bump, package release contract ve release notes olmadan tamam sayilmaz."
+  ],
+  "primary_machine_sources": [
+    "docs/02-architecture/context/ui-library-wave-8-overlay-extensions.v1.json"
   ]
 }

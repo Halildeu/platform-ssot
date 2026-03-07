@@ -502,12 +502,11 @@
           "DetailDrawer",
           "Dropdown",
           "Tooltip",
-          "Popover"
-        ],
-        "gaps": [
+          "Popover",
           "ContextMenu",
           "TourCoachmarks"
-        ]
+        ],
+        "gaps": []
       },
       "target_components": [
         {
@@ -548,21 +547,23 @@
         },
         {
           "component_name": "ContextMenu",
-          "source_type": "planned_registry",
-          "target_wave": "backlog_overlay_future",
+          "source_type": "implemented_backlog",
+          "target_wave": "wave_8_overlay_extensions",
           "target_maturity": "beta",
           "preview_mode": "live",
           "ux_primary_theme_id": "navigation_information_scent",
-          "ux_primary_subtheme_id": "contextual_quick_actions"
+          "ux_primary_subtheme_id": "contextual_quick_actions",
+          "registry_action": "promote_planned_entry"
         },
         {
           "component_name": "TourCoachmarks",
-          "source_type": "planned_registry",
-          "target_wave": "backlog_overlay_future",
+          "source_type": "implemented_backlog",
+          "target_wave": "wave_8_overlay_extensions",
           "target_maturity": "beta",
           "preview_mode": "live",
           "ux_primary_theme_id": "onboarding_help_and_learnability",
-          "ux_primary_subtheme_id": "process_tours_for_critical_flows"
+          "ux_primary_subtheme_id": "process_tours_for_critical_flows",
+          "registry_action": "promote_planned_entry"
         },
         {
           "component_name": "Dropdown",
@@ -939,7 +940,7 @@
       "notes": [
         "Batch-1 overlay primitive seti Modal, Dropdown ve Tooltip olarak acildi.",
         "Dropdown forms taxonomy altinda, Tooltip feedback taxonomy altinda kalsa da wave_5 capraz-grup overlay batch olarak yonetilir.",
-        "ContextMenu ve TourCoachmarks overlay ailesinin gelecek backlog'unda tutulur; wave_5 kapsami disindadir."
+        "ContextMenu ve TourCoachmarks sonraki overlay extension dalgasi olan wave_8_overlay_extensions ile kapatildi."
       ],
       "completed_components": [
         "Modal",
@@ -1002,6 +1003,32 @@
         "PageHeader, SummaryStrip ve EntitySummaryBlock batch ile export + live preview + doctor evidence seviyesine cekildi.",
         "SectionShell ve ActionHeader sonraki backlog olarak ailede tutulur; aktif dalga kapsaminda degildir."
       ]
+    },
+    {
+      "wave_id": "wave_8_overlay_extensions",
+      "title_tr": "Overlay Extensions",
+      "status": "completed",
+      "objective": "ContextMenu ve TourCoachmarks backlog overlay uzantilarini export + docs + doctor evidence ile urunlestir.",
+      "families": [
+        "overlay"
+      ],
+      "candidate_components": [
+        "ContextMenu",
+        "TourCoachmarks"
+      ],
+      "dependencies": [
+        "wave_5_overlay",
+        "wave_7_page_blocks"
+      ],
+      "notes": [
+        "ContextMenu ve TourCoachmarks wave_5 disindaki backlog statusten cikartilip ayri overlay extension dalgasi olarak kapatildi.",
+        "Doktor, Playwright ve docs-site preview evidence ayni dalga kontratina baglandi."
+      ],
+      "completed_components": [
+        "ContextMenu",
+        "TourCoachmarks"
+      ],
+      "remaining_components": []
     }
   ]
 }

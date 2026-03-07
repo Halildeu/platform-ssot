@@ -151,7 +151,6 @@
       "AnchorToc",
       "Breadcrumb",
       "CommandPalette",
-      "ContextMenu",
       "DatePicker",
       "Descriptions",
       "Pagination",
@@ -160,7 +159,10 @@
       "Steps",
       "Switch",
       "TableSimple",
-      "Tabs",
+      "Tabs"
+    ],
+    "wave": [
+      "ContextMenu",
       "TourCoachmarks"
     ]
   },
@@ -602,14 +604,14 @@
     {
       "name": "ContextMenu",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "ContextMenu P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "overlays",
+      "subgroup": "context_menu",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Context menu",
+      "demoMode": "live",
+      "description": "ContextMenu action ve right-click akislari icin overlay extension primitive’i.",
       "sectionIds": [
         "utility_components",
         "integration_distribution",
@@ -618,7 +620,11 @@
       "qualityGates": [
         "backlog_contract",
         "preview_before_release"
-      ]
+      ],
+      "roadmapWaveId": "wave_8_overlay_extensions",
+      "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1",
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "contextual_quick_actions"
     },
     {
       "name": "DatePicker",
@@ -2383,14 +2389,14 @@
     {
       "name": "TourCoachmarks",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "overlays",
+      "subgroup": "tour_coachmarks",
       "taxonomyGroupId": "overlays_portals",
       "taxonomySubgroup": "Tour / Coachmarks",
-      "demoMode": "planned",
-      "description": "TourCoachmarks P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "TourCoachmarks guided onboarding ve compliance walkthrough akislari icin overlay extension primitive’i.",
       "sectionIds": [
         "component_library_management",
         "overlay_components",
@@ -2399,7 +2405,11 @@
       "qualityGates": [
         "backlog_contract",
         "preview_before_release"
-      ]
+      ],
+      "roadmapWaveId": "wave_8_overlay_extensions",
+      "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1",
+      "uxPrimaryThemeId": "onboarding_help_and_learnability",
+      "uxPrimarySubthemeId": "process_tours_for_critical_flows"
     },
     {
       "name": "Tree",

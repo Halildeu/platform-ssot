@@ -7,6 +7,7 @@ import {
   DetailDrawer,
   Dropdown,
   Popover,
+  ContextMenu,
   Empty,
   EntityGridTemplate,
   EntitySummaryBlock,
@@ -51,6 +52,7 @@ import {
   Text,
   ThemePreviewCard,
   Tooltip,
+  TourCoachmarks,
   Avatar,
   AnchorToc,
   Breadcrumb,
@@ -304,6 +306,7 @@ const DesignLabPage: React.FC = () => {
   });
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [contextMenuAction, setContextMenuAction] = useState('Henüz seçim yok');
   const [formDrawerOpen, setFormDrawerOpen] = useState(false);
   const [readonlyFormDrawerOpen, setReadonlyFormDrawerOpen] = useState(false);
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
@@ -338,6 +341,9 @@ const DesignLabPage: React.FC = () => {
   const [promptBody, setPromptBody] = useState(
     'Prepare a concise approval-ready summary for ethics program findings. Highlight high-risk items, cite the governing policy sections and keep the tone strict but neutral.',
   );
+  const [tourOpen, setTourOpen] = useState(false);
+  const [tourStep, setTourStep] = useState(0);
+  const [tourStatus, setTourStatus] = useState<'idle' | 'guided' | 'finished'>('idle');
   const [promptScope, setPromptScope] = useState<'general' | 'approval' | 'policy' | 'release'>('approval');
   const [promptTone, setPromptTone] = useState<'neutral' | 'strict' | 'exploratory'>('strict');
   const policyTableRows = [
@@ -569,9 +575,13 @@ const DesignLabPage: React.FC = () => {
 
   useEffect(() => {
     setModalOpen(false);
+    setContextMenuAction('Henüz seçim yok');
     setFormDrawerOpen(false);
     setReadonlyFormDrawerOpen(false);
     setDetailDrawerOpen(false);
+    setTourOpen(false);
+    setTourStep(0);
+    setTourStatus('idle');
     setDetailTab('overview');
   }, [selectedItem?.name]);
 
@@ -2328,6 +2338,139 @@ const DesignLabPage: React.FC = () => {
             />
           </div>
         );
+      case 'ContextMenu':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+              <PreviewPanel title="Action trigger">
+                <div className="flex flex-wrap items-start gap-3">
+                  <ContextMenu
+                    buttonLabel="Bağlam menüsü"
+                    title="Release actions"
+                    testIdPrefix="design-lab-contextmenu"
+                    items={[
+                      { key: 'approve', label: 'Onay akışını başlat', description: 'İnsan onayı ve wave gate kanıtını birlikte toplar.' },
+                      { key: 'review', label: 'İnceleme kuyruğuna ekle', description: 'Readonly review ve ek kanıt talebi üretir.' },
+                      { key: 'archive', label: 'Arşive taşı', description: 'Eski varyantları planlı backlog alanına taşır.', danger: true },
+                    ]}
+                    onSelect={(key) => setContextMenuAction(key)}
+                  />
+                  <div
+                    className="min-w-[220px] rounded-2xl border border-border-subtle bg-surface-canvas px-4 py-4 text-sm text-text-secondary"
+                    data-testid="design-lab-contextmenu-result"
+                  >
+                    Son seçim: <span className="font-semibold text-text-primary">{contextMenuAction}</span>
+                  </div>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Right-click surface">
+                <ContextMenu
+                  triggerMode="contextmenu"
+                  title="Surface actions"
+                  testIdPrefix="design-lab-contextmenu-surface"
+                  items={[
+                    { key: 'duplicate', label: 'Kartı çoğalt', shortcut: 'D' },
+                    { key: 'pin', label: 'Bu görünümü sabitle', shortcut: 'P' },
+                    { key: 'readonly', label: 'Readonly nedeni göster', description: 'Policy guard ile context menu de sınırlandırılır.' },
+                  ]}
+                  onSelect={(key) => setContextMenuAction(`surface:${key}`)}
+                  trigger={(
+                    <div className="space-y-2">
+                      <Text preset="title">Sağ tıkla</Text>
+                      <Text variant="secondary" className="block leading-7">
+                        Context menu sağ tık yüzeyinde de aynı contract ile çalışır. Menü kısa eylem listesi olmalı; ağaç navigasyon olmamalı.
+                      </Text>
+                    </div>
+                  )}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'TourCoachmarks':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+              <PreviewPanel title="Guided walkthrough">
+                <div className="flex flex-wrap items-start gap-3">
+                  <Button
+                    onClick={() => {
+                      setTourOpen(true);
+                      setTourStep(0);
+                      setTourStatus('guided');
+                    }}
+                    data-testid="design-lab-tour-open"
+                  >
+                    Turu başlat
+                  </Button>
+                  <SectionBadge label={tourStatus === 'finished' ? 'finished' : tourStatus === 'guided' ? 'guided' : 'idle'} />
+                </div>
+                <div className="mt-4">
+                  <TourCoachmarks
+                    open={tourOpen}
+                    currentStep={tourStep}
+                    onStepChange={(index) => setTourStep(index)}
+                    onClose={() => {
+                      setTourOpen(false);
+                      setTourStatus('idle');
+                    }}
+                    onFinish={() => {
+                      setTourStatus('finished');
+                      setTourOpen(false);
+                    }}
+                    testIdPrefix="design-lab-tour"
+                    steps={[
+                      {
+                        id: 'scope',
+                        title: 'Scope doğrulaması',
+                        description: 'Önce wave ve registry sözleşmesi netleşir; kullanıcı neyi yayınladığını görür.',
+                        meta: 'contract',
+                      },
+                      {
+                        id: 'preview',
+                        title: 'Canlı demo incelemesi',
+                        description: 'Preview, API ve kalite kanıtı aynı walkthrough içinde açıklanır.',
+                        meta: 'preview',
+                        tone: 'success',
+                      },
+                      {
+                        id: 'release',
+                        title: 'Release evidence',
+                        description: 'Doctor, gate ve security guardrail kanıtı tamamlanmadan tur bitmiş sayılmaz.',
+                        meta: 'release',
+                        tone: 'warning',
+                      },
+                    ]}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Readonly compliance tour">
+                <TourCoachmarks
+                  defaultOpen
+                  mode="readonly"
+                  allowSkip={false}
+                  showProgress={false}
+                  access="readonly"
+                  steps={[
+                    {
+                      id: 'policy',
+                      title: 'Policy açıklaması',
+                      description: 'Readonly walkthrough, kritik alanlarda kullanıcının neden-sonuç bilgisini aynı overlay içinde taşır.',
+                      meta: 'readonly',
+                    },
+                    {
+                      id: 'controls',
+                      title: 'Kontrol noktaları',
+                      description: 'Onay ve security kontrolleri tamamlanmadan release butonları görünür kalmaz.',
+                      meta: 'controls',
+                      tone: 'warning',
+                    },
+                  ]}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
       case 'ReportFilterPanel':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -3979,6 +4122,194 @@ const DesignLabPage: React.FC = () => {
                 <PreviewPanel title="Rule of thumb">
                   <Text variant="secondary" className="block leading-7">
                     Eğer kullanıcı bir şey yapamayacaksa popover’ın kendisi de policy guard ile davranmalı; tooltip ya da inline mesaj alternatifi düşünülmelidir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'ContextMenu':
+        return [
+          {
+            id: 'context-menu-action-trigger',
+            eyebrow: 'Alternative 01',
+            title: 'Action menu / release shortcuts',
+            description: 'Kısa aksiyon listelerini policy ve review bağlamıyla aynı overlay içinde gösterir.',
+            badges: ['overlay-extension', 'beta', 'actions'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <PreviewPanel title="Button trigger">
+                  <div className="flex flex-wrap items-start gap-3">
+                    <ContextMenu
+                      buttonLabel="Bağlam menüsü"
+                      title="Release actions"
+                      testIdPrefix="design-lab-contextmenu"
+                      items={[
+                        { key: 'approve', label: 'Onay akışını başlat', description: 'İnsan onayı ve wave gate kanıtını birlikte toplar.' },
+                        { key: 'review', label: 'İnceleme kuyruğuna ekle', description: 'Readonly review ve ek kanıt talebi üretir.' },
+                        { key: 'archive', label: 'Arşive taşı', description: 'Eski varyantları planlı backlog alanına taşır.', danger: true },
+                      ]}
+                      onSelect={(key) => setContextMenuAction(key)}
+                    />
+                    <div
+                      className="min-w-[220px] rounded-2xl border border-border-subtle bg-surface-canvas px-4 py-4 text-sm text-text-secondary"
+                      data-testid="design-lab-contextmenu-result"
+                    >
+                      Son seçim: <span className="font-semibold text-text-primary">{contextMenuAction}</span>
+                    </div>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Context menu, çok seviyeli ağaç veya uzun açıklama paneli değildir. Kısa ve bağlamsal aksiyonlar için kullanılır; derin bilgi gerekiyorsa popover ya da drawer seçilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'context-menu-surface-trigger',
+            eyebrow: 'Alternative 02',
+            title: 'Right-click / surface menu',
+            description: 'Canvas veya kart yüzeyinde sağ tık davranışı ile aynı kontratı kullanır.',
+            badges: ['right-click', 'surface', 'policy'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Surface trigger">
+                  <ContextMenu
+                    triggerMode="contextmenu"
+                    title="Surface actions"
+                    items={[
+                      { key: 'duplicate', label: 'Kartı çoğalt', shortcut: 'D' },
+                      { key: 'pin', label: 'Görünümü sabitle', shortcut: 'P' },
+                      { key: 'readonly', label: 'Readonly nedeni göster', description: 'Policy guard ile sınırlandırılır.' },
+                    ]}
+                    onSelect={(key) => setContextMenuAction(`surface:${key}`)}
+                    trigger={(
+                      <div className="space-y-2">
+                        <Text preset="title">Sağ tıkla</Text>
+                        <Text variant="secondary" className="block leading-7">
+                          Surface menüleri satır, kart veya canvas üzerinde hızlı aksiyon verir. Gezinti ağacı için kullanılmaz.
+                        </Text>
+                      </div>
+                    )}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Sağ tık menüsü varsa aynı aksiyonların erişilebilir bir button trigger alternatifinin de olması gerekir. Yalnız mouse kullanıcılarına özel tasarım kabul edilmez.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'TourCoachmarks':
+        return [
+          {
+            id: 'tour-guided-walkthrough',
+            eyebrow: 'Alternative 01',
+            title: 'Guided onboarding / release walkthrough',
+            description: 'Wave, preview ve release kanıtını adım adım açıklayan rehber yüzey.',
+            badges: ['tour', 'guided', 'compliance'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <PreviewPanel title="Interactive walkthrough">
+                  <div className="flex flex-wrap items-start gap-3">
+                    <Button
+                      data-testid="design-lab-tour-open"
+                      onClick={() => {
+                        setTourOpen(true);
+                        setTourStep(0);
+                        setTourStatus('guided');
+                      }}
+                    >
+                      Turu başlat
+                    </Button>
+                    <SectionBadge label={tourStatus === 'finished' ? 'finished' : tourStatus === 'guided' ? 'guided' : 'idle'} />
+                  </div>
+                  <div className="mt-4">
+                    <TourCoachmarks
+                      open={tourOpen}
+                      currentStep={tourStep}
+                      onStepChange={(index) => setTourStep(index)}
+                      onClose={() => {
+                        setTourOpen(false);
+                        setTourStatus('idle');
+                      }}
+                      onFinish={() => {
+                        setTourStatus('finished');
+                        setTourOpen(false);
+                      }}
+                      testIdPrefix="design-lab-tour"
+                      steps={[
+                        {
+                          id: 'scope',
+                          title: 'Scope doğrulaması',
+                          description: 'Önce wave ve registry sözleşmesi netleşir; kullanıcı neyi yayınladığını görür.',
+                          meta: 'contract',
+                        },
+                        {
+                          id: 'preview',
+                          title: 'Canlı demo incelemesi',
+                          description: 'Preview, API ve kalite kanıtı aynı walkthrough içinde açıklanır.',
+                          meta: 'preview',
+                          tone: 'success',
+                        },
+                        {
+                          id: 'release',
+                          title: 'Release evidence',
+                          description: 'Doctor, gate ve security guardrail kanıtı tamamlanmadan tur bitmiş sayılmaz.',
+                          meta: 'release',
+                          tone: 'warning',
+                        },
+                      ]}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Tour/coachmarks yalnız onboarding için değil; kritik approval, release ve policy akışlarında adım adım bağlam gösterimi için de kullanılabilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'tour-readonly-compliance',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly compliance walkthrough',
+            description: 'Readonly policy nedenlerini ve kontrol noktalarını sakin bir anlatımla taşır.',
+            badges: ['readonly', 'policy', 'walkthrough'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly tour">
+                  <TourCoachmarks
+                    defaultOpen
+                    mode="readonly"
+                    allowSkip={false}
+                    showProgress={false}
+                    access="readonly"
+                    steps={[
+                      {
+                        id: 'policy',
+                        title: 'Policy açıklaması',
+                        description: 'Readonly walkthrough, kritik alanlarda kullanıcının neden-sonuç bilgisini aynı overlay içinde taşır.',
+                        meta: 'readonly',
+                      },
+                      {
+                        id: 'controls',
+                        title: 'Kontrol noktaları',
+                        description: 'Onay ve security kontrolleri tamamlanmadan release butonları görünür kalmaz.',
+                        meta: 'controls',
+                        tone: 'warning',
+                      },
+                    ]}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Coachmark yüzeyi çok uzun içerik taşıyacaksa docs sayfasına veya panel yapısına dönmek gerekir. Tur kısa, yönlendirici ve görev odaklı kalmalıdır.
                   </Text>
                 </PreviewPanel>
               </div>

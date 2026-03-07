@@ -2994,6 +2994,146 @@
         "readonly interaction guard",
         "maxFiles enforcement"
       ]
+    },
+    {
+      "name": "ContextMenu",
+      "variantAxes": [
+        "triggerMode: button | contextmenu",
+        "align: left | right",
+        "access: full | readonly | disabled | hidden"
+      ],
+      "stateModel": [
+        "closed / open",
+        "outside click close",
+        "escape dismiss",
+        "policy-blocked interaction"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "ContextMenuItem[]",
+          "default": "[]",
+          "required": true,
+          "description": "Menude gosterilecek label, description, shortcut ve danger bilgisini tasir."
+        },
+        {
+          "name": "trigger / buttonLabel",
+          "type": "ReactNode | string",
+          "default": "Bağlam menüsü",
+          "required": false,
+          "description": "Button veya surface trigger metnini tanimlar."
+        },
+        {
+          "name": "triggerMode",
+          "type": "'button' | 'contextmenu'",
+          "default": "button",
+          "required": false,
+          "description": "Button trigger veya sağ tık yüzeyi davranışını seçer."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Overlay içindeki menü başlığını ve aria label bağını üretir."
+        },
+        {
+          "name": "align",
+          "type": "'left' | 'right'",
+          "default": "left",
+          "required": false,
+          "description": "Button trigger modunda menünün yatay hizasını belirler."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanlı görünürlük ve etkileşim seviyesini kontrol eder."
+        }
+      ],
+      "previewFocus": [
+        "button trigger actions",
+        "right click surface",
+        "selection summary",
+        "policy blocked interaction"
+      ],
+      "regressionFocus": [
+        "outside click close",
+        "escape close parity",
+        "contextmenu open positioning",
+        "selection callback stability"
+      ]
+    },
+    {
+      "name": "TourCoachmarks",
+      "variantAxes": [
+        "mode: guided | readonly",
+        "allowSkip: true | false",
+        "showProgress: true | false"
+      ],
+      "stateModel": [
+        "closed / open",
+        "step navigation",
+        "finish callback",
+        "readonly walkthrough"
+      ],
+      "props": [
+        {
+          "name": "steps",
+          "type": "TourCoachmarkStep[]",
+          "default": "[]",
+          "required": true,
+          "description": "Her adım için id, title, description, meta ve tone bilgisini taşır."
+        },
+        {
+          "name": "mode",
+          "type": "'guided' | 'readonly'",
+          "default": "guided",
+          "required": false,
+          "description": "Etkileşimli tur veya yalnız inceleme walkthrough modunu seçer."
+        },
+        {
+          "name": "allowSkip",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Skip / kapat aksiyonunun görünürlüğünü belirler."
+        },
+        {
+          "name": "showProgress",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Adım sayacı rozetini görünür tutar."
+        },
+        {
+          "name": "currentStep / defaultStep",
+          "type": "number",
+          "default": "0",
+          "required": false,
+          "description": "Controlled veya uncontrolled adım ilerleme durumunu yönetir."
+        },
+        {
+          "name": "onStepChange / onFinish",
+          "type": "(index:number)=>void / ()=>void",
+          "default": "-",
+          "required": false,
+          "description": "Tur ilerleme ve tamamlanma aksiyonlarını dışarıya taşır."
+        }
+      ],
+      "previewFocus": [
+        "guided onboarding",
+        "readonly compliance walkthrough",
+        "progress visibility",
+        "finish state"
+      ],
+      "regressionFocus": [
+        "next previous navigation",
+        "finish callback",
+        "hidden access guard",
+        "readonly mode action rules"
+      ]
     }
   ]
 }

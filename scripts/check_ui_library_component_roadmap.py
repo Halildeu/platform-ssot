@@ -26,6 +26,7 @@ REQUIRED_WAVES = {
     "wave_5_overlay",
     "wave_6_ai_native_helpers",
     "wave_7_page_blocks",
+    "wave_8_overlay_extensions",
 }
 
 

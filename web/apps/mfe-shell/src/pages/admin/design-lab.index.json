@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 85,
-    "exported": 83,
-    "planned": 2,
-    "liveDemo": 54,
+    "exported": 85,
+    "planned": 0,
+    "liveDemo": 56,
     "inspector": 29
   },
   "items": [
@@ -476,17 +476,19 @@
     {
       "name": "ContextMenu",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
+      "importStatement": "import { ContextMenu } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "overlays",
+      "subgroup": "context_menu",
       "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "ContextMenu P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Context menu",
+      "demoMode": "live",
+      "description": "ContextMenu action ve right-click akislari icin overlay extension primitive’i.",
       "sectionIds": [
         "utility_components",
         "integration_distribution",
@@ -496,10 +498,10 @@
         "backlog_contract",
         "preview_before_release"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "contextual_quick_actions",
+      "roadmapWaveId": "wave_8_overlay_extensions",
+      "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1"
     },
     {
       "name": "DatePicker",
@@ -2123,17 +2125,19 @@
     {
       "name": "TourCoachmarks",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
+      "importStatement": "import { TourCoachmarks } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "overlays",
+      "subgroup": "tour_coachmarks",
       "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "beta",
       "taxonomyGroupId": "overlays_portals",
       "taxonomySubgroup": "Tour / Coachmarks",
-      "demoMode": "planned",
-      "description": "TourCoachmarks P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "TourCoachmarks guided onboarding ve compliance walkthrough akislari icin overlay extension primitive’i.",
       "sectionIds": [
         "component_library_management",
         "overlay_components",
@@ -2143,10 +2147,10 @@
         "backlog_contract",
         "preview_before_release"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "onboarding_help_and_learnability",
+      "uxPrimarySubthemeId": "process_tours_for_critical_flows",
+      "roadmapWaveId": "wave_8_overlay_extensions",
+      "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1"
     },
     {
       "name": "Tree",

@@ -17,6 +17,7 @@
 - `wave_5_overlay`: completed
 - `wave_6_ai_native_helpers`: completed
 - `wave_7_page_blocks`: completed
+- `wave_8_overlay_extensions`: completed
 
 ## Data display mevcut batch
 - `TableSimple`
@@ -47,7 +48,7 @@
 - `List`, `JsonViewer`, `Tree` ve `TreeTable` batch-3 ile beta export + live preview + API catalog seviyesine cekildi.
 - Overlay dalgasinda `Modal`, `Dropdown`, `Tooltip`, `FormDrawer`, `DetailDrawer` ve `Popover` ayni kontrata alindi.
 - `wave_5_overlay` dalgasi `Modal`, `Dropdown`, `Tooltip`, `FormDrawer`, `DetailDrawer` ve `Popover` ile kapandi.
-- `ContextMenu` ve `TourCoachmarks` overlay ailesinin gelecek backlog'u olarak ayrildi; aktif dalga kapsamina dahil degil.
+- `ContextMenu` ve `TourCoachmarks` `wave_8_overlay_extensions` ile export + live preview + doctor evidence seviyesine cekildi.
 - AI helper dalgasi `CommandPalette`, `RecommendationCard`, `ConfidenceBadge`, `ApprovalCheckpoint`, `CitationPanel`, `AIActionAuditTimeline` ve `PromptComposer` ile export + live preview + doctor evidence seviyesinde kapandi.
 - `wave_7_page_blocks` dalgasi `PageLayout`, `FilterBar`, `ReportFilterPanel`, `PageHeader`, `SummaryStrip` ve `EntitySummaryBlock` ile kapandi.
 - `SectionShell` ve `ActionHeader` page/block ailesinin sonraki backlog'unda tutulur; aktif dalga kapsamina dahil degildir.

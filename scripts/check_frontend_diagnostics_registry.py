@@ -53,8 +53,8 @@ def main() -> int:
     preset_map = {item.get("preset_id"): item for item in doctor_presets if isinstance(item, dict)}
 
     expected_presets = {
-        "ui-library": ("playwright:ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|ui_library_ai_native_wave_6_walk|ui_library_page_blocks_wave_7_walk", "gateway_smoke", "base_url_fetch_check"),
-        "shell-public": ("playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|ui_library_ai_native_wave_6_walk|shell_public_route_walk|ui_library_page_blocks_wave_7_walk", "gateway_smoke", "base_url_fetch_check"),
+        "ui-library": ("playwright:ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|ui_library_ai_native_wave_6_walk|ui_library_page_blocks_wave_7_walk|ui_library_overlay_extensions_wave_8_walk", "gateway_smoke", "base_url_fetch_check"),
+        "shell-public": ("playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|ui_library_ai_native_wave_6_walk|shell_public_route_walk|ui_library_page_blocks_wave_7_walk|ui_library_overlay_extensions_wave_8_walk", "gateway_smoke", "base_url_fetch_check"),
         "theme-admin": ("playwright:theme_registry_page|theme_admin_navigation_walk", "gateway_smoke", "base_url_fetch_check"),
         "auth-business-routes": (
             "playwright:access_roles_page|access_roles_navigation_walk|audit_events_page|audit_events_navigation_walk|reporting_users_page|reporting_users_navigation_walk",
@@ -96,6 +96,8 @@ def main() -> int:
         problems.append("missing-scenario:ui_library_ai_native_wave_6_walk")
     if "name: ui_library_page_blocks_wave_7_walk" not in scenarios_text:
         problems.append("missing-scenario:ui_library_page_blocks_wave_7_walk")
+    if "name: ui_library_overlay_extensions_wave_8_walk" not in scenarios_text:
+        problems.append("missing-scenario:ui_library_overlay_extensions_wave_8_walk")
     if "name: shell_public_route_walk" not in scenarios_text:
         problems.append("missing-scenario:shell_public_route_walk")
     if "name: theme_admin_navigation_walk" not in scenarios_text:
@@ -132,6 +134,20 @@ def main() -> int:
         problems.append("missing-selector:audit-filter-user-email")
     if "[data-testid=\"report-filter-search\"]" not in scenarios_text:
         problems.append("missing-selector:report-filter-search")
+    if "[data-testid=\"design-lab-item-contextmenu\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-item-contextmenu")
+    if "[data-testid=\"design-lab-item-tourcoachmarks\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-item-tourcoachmarks")
+    if "[data-testid=\"design-lab-contextmenu-trigger\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-contextmenu-trigger")
+    if "[data-testid=\"design-lab-contextmenu-result\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-contextmenu-result")
+    if "[data-testid=\"design-lab-tour-open\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-tour-open")
+    if "[data-testid=\"design-lab-tour-panel\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-tour-panel")
+    if "[data-testid=\"design-lab-tour-next\"]" not in scenarios_text:
+        problems.append("missing-selector:design-lab-tour-next")
 
     doctor_text = DOCTOR.read_text(encoding="utf-8")
     if "ui_library_page" not in doctor_text:
@@ -152,6 +168,8 @@ def main() -> int:
         problems.append("doctor-missing-wave-6-ai-reference")
     if "ui_library_page_blocks_wave_7_walk" not in doctor_text:
         problems.append("doctor-missing-wave-7-page-blocks-reference")
+    if "ui_library_overlay_extensions_wave_8_walk" not in doctor_text:
+        problems.append("doctor-missing-wave-8-overlay-extensions-reference")
     if "theme_admin_navigation_walk" not in doctor_text:
         problems.append("doctor-missing-theme-admin-click-walk-reference")
     if "access_roles_navigation_walk" not in doctor_text:

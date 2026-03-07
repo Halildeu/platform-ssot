@@ -83,3 +83,6 @@ Okuma sırası:
 Kural:
 - AI önce JSON kanonik katmanı okur.
 - Markdown dosyalar açıklayıcı ikinci kaynak olarak kullanılır.
+
+- `docs/02-architecture/context/ui-library-wave-8-overlay-extensions.v1.json`
+- `docs/02-architecture/context/ui-library-wave-8-overlay-extensions.v1.md`

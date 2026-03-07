@@ -48,6 +48,14 @@
         {
           "id": "popover",
           "label": "Popover"
+        },
+        {
+          "id": "context_menu",
+          "label": "Context menu"
+        },
+        {
+          "id": "tour_coachmarks",
+          "label": "Tour / Coachmarks"
         }
       ]
     },

@@ -63,6 +63,8 @@ export * from './components/PromptComposer';
 export * from './components/Modal';
 export * from './components/Dropdown';
 export * from './components/Popover';
+export * from './components/TourCoachmarks';
+export * from './components/ContextMenu';
 export * from './components/Tag';
 export * from './components/Empty';
 export * from './components/Text';
