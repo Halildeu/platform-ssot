@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 61,
-    "planned": 15,
-    "liveDemo": 32,
+    "exported": 62,
+    "planned": 14,
+    "liveDemo": 33,
     "inspector": 29
   },
   "items": [
@@ -1124,30 +1124,40 @@
     {
       "name": "Switch",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { Switch } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "forms",
+        "stable",
+        "toggle",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Switch P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Switch / Toggle",
+      "demoMode": "live",
+      "description": "Switch primitivei; release, visibility ve policy toggles icin access-aware, validation-ready boolean gecis davranisi sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "deterministic_state_model",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "THEME_APPEARANCE_OPTIONS",

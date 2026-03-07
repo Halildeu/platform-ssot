@@ -40,8 +40,8 @@
     },
     {
       "batch_id": "batch_2_boolean_controls",
-      "status": "in_progress",
-      "objective": "Checkbox ve Radio export ile acilip Switch backlog'u kalan boolean control ailesini forms kontrati altina almak.",
+      "status": "completed",
+      "objective": "Checkbox, Radio ve Switch boolean control ailesi stable export + live preview + API catalog ile tamamlandi.",
       "components": [
         "Checkbox",
         "Radio",
@@ -61,116 +61,6 @@
     }
   ],
   "components": [
-    {
-      "component_name": "Checkbox",
-      "implementation_order": 3,
-      "source_state": "planned_registry",
-      "registry_action": "upgrade_existing_entry",
-      "target_maturity": "stable",
-      "preview_mode": "live",
-      "implementation_scope": {
-        "existing_source_paths": [],
-        "target_source_paths": [
-          "web/packages/ui-kit/src/components/BooleanControlPrimitives.tsx",
-          "web/packages/ui-kit/src/components/Checkbox.tsx",
-          "web/packages/ui-kit/src/components/Checkbox.test.tsx",
-          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
-        ],
-        "target_taxonomy_group": "data_entry",
-        "target_taxonomy_subgroup": "Checkbox / Radio"
-      },
-      "ux_primary_theme_id": "data_entry_validation_recovery",
-      "ux_primary_subtheme_id": "input_error_prevention_patterns",
-      "acceptance_criteria": [
-        "label, description, hint ve error davranisi ortak boolean-control shell ile gelir",
-        "controlled ve uncontrolled kullanim tek API ile desteklenir",
-        "indeterminate state native input ile deterministic senkronize edilir",
-        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
-        "checkbox validation ve recovery sinyalleri preview ve regression testte gorunur olur"
-      ],
-      "preview_scenarios": [
-        {
-          "id": "checkbox-controlled-hint",
-          "title": "Controlled checkbox ve helper metni"
-        },
-        {
-          "id": "checkbox-validation-state",
-          "title": "Invalid, indeterminate ve readonly durumlari"
-        }
-      ],
-      "gate_checks": [
-        "python3 scripts/check_ui_library_wave_3_forms.py",
-        "python3 scripts/check_ui_library_component_roadmap.py",
-        "python3 scripts/check_frontend_diagnostics_registry.py",
-        "npm -C web run designlab:index",
-        "npm -C web run lint:tailwind",
-        "npm -C web run lint:no-antd",
-        "npm -C web run test:ui-kit",
-        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
-      ],
-      "evidence_requirements": [
-        "registry lifecycle ve UX alanlari Checkbox icin exported/stable olarak guncellenir",
-        "Design Lab live preview eklenir",
-        "API katalog girdisi eklenir",
-        "unit/component test ozeti uretilir",
-        "frontend-doctor ui-library PASS evidence uretilir"
-      ]
-    },
-    {
-      "component_name": "Radio",
-      "implementation_order": 4,
-      "source_state": "planned_registry",
-      "registry_action": "upgrade_existing_entry",
-      "target_maturity": "stable",
-      "preview_mode": "live",
-      "implementation_scope": {
-        "existing_source_paths": [],
-        "target_source_paths": [
-          "web/packages/ui-kit/src/components/BooleanControlPrimitives.tsx",
-          "web/packages/ui-kit/src/components/Radio.tsx",
-          "web/packages/ui-kit/src/components/Radio.test.tsx",
-          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
-        ],
-        "target_taxonomy_group": "data_entry",
-        "target_taxonomy_subgroup": "Checkbox / Radio"
-      },
-      "ux_primary_theme_id": "task_completion_architecture",
-      "ux_primary_subtheme_id": "smart_defaults_and_prefill",
-      "acceptance_criteria": [
-        "label, description, hint ve error davranisi ortak boolean-control shell ile gelir",
-        "controlled ve uncontrolled kullanim tek API ile desteklenir",
-        "single-choice group davranisi native radio semantics ile korunur",
-        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
-        "radio validation ve state matrix preview ile regression testte gorunur olur"
-      ],
-      "preview_scenarios": [
-        {
-          "id": "radio-controlled-group",
-          "title": "Controlled radio grup secimi"
-        },
-        {
-          "id": "radio-state-matrix",
-          "title": "Invalid, readonly ve disabled radio durumlari"
-        }
-      ],
-      "gate_checks": [
-        "python3 scripts/check_ui_library_wave_3_forms.py",
-        "python3 scripts/check_ui_library_component_roadmap.py",
-        "python3 scripts/check_frontend_diagnostics_registry.py",
-        "npm -C web run designlab:index",
-        "npm -C web run lint:tailwind",
-        "npm -C web run lint:no-antd",
-        "npm -C web run test:ui-kit",
-        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
-      ],
-      "evidence_requirements": [
-        "registry lifecycle ve UX alanlari Radio icin exported/stable olarak guncellenir",
-        "Design Lab live preview eklenir",
-        "API katalog girdisi eklenir",
-        "unit/component test ozeti uretilir",
-        "frontend-doctor ui-library PASS evidence uretilir"
-      ]
-    },
     {
       "component_name": "TextInput",
       "implementation_order": 1,
@@ -280,6 +170,173 @@
         "unit/component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "Checkbox",
+      "implementation_order": 3,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/BooleanControlPrimitives.tsx",
+          "web/packages/ui-kit/src/components/Checkbox.tsx",
+          "web/packages/ui-kit/src/components/Checkbox.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Checkbox / Radio"
+      },
+      "ux_primary_theme_id": "data_entry_validation_recovery",
+      "ux_primary_subtheme_id": "input_error_prevention_patterns",
+      "acceptance_criteria": [
+        "label, description, hint ve error davranisi ortak boolean-control shell ile gelir",
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "indeterminate state native input ile deterministic senkronize edilir",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "checkbox validation ve recovery sinyalleri preview ve regression testte gorunur olur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "checkbox-controlled-hint",
+          "title": "Controlled checkbox ve helper metni"
+        },
+        {
+          "id": "checkbox-validation-state",
+          "title": "Invalid, indeterminate ve readonly durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Checkbox icin exported/stable olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ],
+      "target_taxonomy_subgroup": "Checkbox / Radio"
+    },
+    {
+      "component_name": "Radio",
+      "implementation_order": 4,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/BooleanControlPrimitives.tsx",
+          "web/packages/ui-kit/src/components/Radio.tsx",
+          "web/packages/ui-kit/src/components/Radio.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Checkbox / Radio"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "smart_defaults_and_prefill",
+      "acceptance_criteria": [
+        "label, description, hint ve error davranisi ortak boolean-control shell ile gelir",
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "single-choice group davranisi native radio semantics ile korunur",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "radio validation ve state matrix preview ile regression testte gorunur olur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "radio-controlled-group",
+          "title": "Controlled radio grup secimi"
+        },
+        {
+          "id": "radio-state-matrix",
+          "title": "Invalid, readonly ve disabled radio durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Radio icin exported/stable olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ],
+      "target_taxonomy_subgroup": "Checkbox / Radio"
+    },
+    {
+      "component_name": "Switch",
+      "implementation_order": 5,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/BooleanControlPrimitives.tsx",
+          "web/packages/ui-kit/src/components/Switch.tsx",
+          "web/packages/ui-kit/src/components/Switch.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Switch / Toggle"
+      },
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "deterministic_state_model",
+      "acceptance_criteria": [
+        "label, description, hint ve error davranisi ortak boolean-control shell ile gelir",
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "role=switch semantics ve keyboard davranisi deterministic calisir",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "release toggle ve policy-blocked state preview ve regression testte gorunur olur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "switch-controlled-release",
+          "title": "Controlled release toggle"
+        },
+        {
+          "id": "switch-state-matrix",
+          "title": "Readonly, disabled ve invalid switch durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Switch icin exported/stable olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "wave_exit_criteria": [
@@ -292,11 +349,11 @@
     "completed_components": [
       "Checkbox",
       "Radio",
-      "TextInput",
-      "TextArea"
+      "Switch",
+      "TextArea",
+      "TextInput"
     ],
     "remaining_components": [
-      "Switch",
       "Slider",
       "DatePicker",
       "TimePicker",
@@ -304,8 +361,8 @@
     ],
     "notes": [
       "Batch 1 text fields export + preview + API catalog + doctor evidence ile acildi.",
-      "Checkbox ve Radio stable export + live preview + API catalog ile batch 2 kismen acildi.",
-      "Forms dalgasi in-progress; Switch ve extended inputs sonraki batchlerdir."
+      "Checkbox, Radio ve Switch stable export + live preview + API catalog ile batch 2 kapandi.",
+      "Forms dalgasi in-progress; extended inputs sonraki batchlerdir."
     ]
   },
   "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_3_forms",

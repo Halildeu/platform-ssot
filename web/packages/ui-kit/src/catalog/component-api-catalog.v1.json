@@ -766,6 +766,67 @@
       ]
     },
     {
+      "name": "Switch",
+      "variantAxes": [
+        "size: sm | md | lg",
+        "state: unchecked | checked | invalid | readonly | disabled",
+        "mode: immediate-toggle | policy-gated-toggle"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled",
+        "instant toggle intent",
+        "inline validation",
+        "access-aware interaction"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Toggle davranisinin basligini ve baglamini tanimlar."
+        },
+        {
+          "name": "description / hint / error",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Aciklama, yardim ve validation geri bildirimi."
+        },
+        {
+          "name": "checked / defaultChecked",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Controlled veya uncontrolled acik/kapali durumu."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Track ve hit-area boyutunu belirler."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkileşim duzeyi."
+        }
+      ],
+      "previewFocus": [
+        "controlled release toggle",
+        "readonly and disabled matrix",
+        "policy-blocked validation state"
+      ],
+      "regressionFocus": [
+        "readonly interaction guard",
+        "controlled/uncontrolled parity",
+        "switch role semantics"
+      ]
+    },
+    {
       "name": "Tabs",
       "variantAxes": [
         "appearance: underline | pill",

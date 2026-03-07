@@ -7,6 +7,7 @@ import { getFieldTone, type FieldSize } from './FieldControlPrimitives';
 export type BooleanControlKind = 'checkbox' | 'radio';
 export type BooleanControlSize = FieldSize;
 export type BooleanControlTone = ReturnType<typeof getFieldTone>;
+export type BooleanToggleKind = 'switch';
 
 const sizeMap: Record<BooleanControlSize, { control: string; title: string; body: string; helper: string }> = {
   sm: {
@@ -52,6 +53,24 @@ const toneClasses: Record<BooleanControlTone, { frame: string; input: string; he
   },
 };
 
+const toggleSizeMap: Record<BooleanControlSize, { track: string; thumb: string; translate: string }> = {
+  sm: {
+    track: 'h-6 w-10',
+    thumb: 'h-4 w-4',
+    translate: 'peer-checked:translate-x-4',
+  },
+  md: {
+    track: 'h-7 w-12',
+    thumb: 'h-5 w-5',
+    translate: 'peer-checked:translate-x-5',
+  },
+  lg: {
+    track: 'h-8 w-14',
+    thumb: 'h-6 w-6',
+    translate: 'peer-checked:translate-x-6',
+  },
+};
+
 export const getBooleanInputClass = (
   kind: BooleanControlKind,
   size: BooleanControlSize,
@@ -78,6 +97,36 @@ export const getBooleanFrameClass = (
     toneClasses[tone].frame,
     fullWidth ? 'w-full' : 'w-fit',
     className,
+  );
+
+export const getBooleanToggleInputClass = (readonly: boolean, disabled: boolean) =>
+  clsx('peer sr-only', readonly ? 'cursor-default' : disabled ? 'cursor-not-allowed' : 'cursor-pointer');
+
+export const getBooleanToggleTrackClass = (
+  size: BooleanControlSize,
+  tone: BooleanControlTone,
+  readonly: boolean,
+  disabled: boolean,
+) =>
+  clsx(
+    'relative inline-flex items-center rounded-full border transition duration-200 ease-out',
+    toggleSizeMap[size].track,
+    tone === 'default' && 'border-border-default bg-surface-muted peer-checked:border-[var(--accent-primary)] peer-checked:bg-[var(--accent-primary)]',
+    tone === 'invalid' &&
+      'border-state-danger-border bg-surface-muted peer-checked:border-state-danger-border peer-checked:bg-state-danger-border',
+    tone === 'readonly' &&
+      'border-border-default bg-surface-muted peer-checked:border-[var(--accent-primary)]/70 peer-checked:bg-[var(--accent-primary)]/70',
+    tone === 'disabled' &&
+      'border-border-subtle bg-surface-muted opacity-70 peer-checked:border-[var(--accent-primary)]/50 peer-checked:bg-[var(--accent-primary)]/50',
+    readonly ? 'cursor-default' : disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+    'peer-focus-visible:ring-2 peer-focus-visible:ring-[var(--accent-focus)] peer-focus-visible:ring-offset-1',
+  );
+
+export const getBooleanToggleThumbClass = (size: BooleanControlSize) =>
+  clsx(
+    'pointer-events-none absolute left-0.5 top-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out -translate-y-1/2',
+    toggleSizeMap[size].thumb,
+    toggleSizeMap[size].translate,
   );
 
 export type BooleanControlShellProps = {

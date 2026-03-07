@@ -205,14 +205,14 @@
       "purpose": "Veri girisi, dogrulama, geri bildirim ve kurtarma davranislarini ortak component seviyesinde standardize etmek.",
       "current_state": {
         "implemented_now": [
-          "Select",
-          "TextInput",
-          "TextArea",
           "Checkbox",
-          "Radio"
+          "Radio",
+          "Select",
+          "Switch",
+          "TextArea",
+          "TextInput"
         ],
         "gaps": [
-          "Switch",
           "Slider",
           "DatePicker",
           "TimePicker",
@@ -763,8 +763,8 @@
       ],
       "notes": [
         "TextInput ve TextArea stable export + live preview + API catalog ile acildi.",
-        "Checkbox ve Radio stable export + live preview + API catalog ile acildi.",
-        "Switch bir sonraki boolean control batch'i olarak bekliyor."
+        "Checkbox, Radio ve Switch stable export + live preview + API catalog ile acildi.",
+        "Extended inputs batchi siradaki hedeftir."
       ]
     },
     {

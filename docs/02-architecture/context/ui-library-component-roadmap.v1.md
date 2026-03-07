@@ -64,8 +64,8 @@ Kanonik kaynak:
   - `TextArea`
   - `Checkbox`
   - `Radio`
-- Hedef:
   - `Switch`
+- Hedef:
   - `Slider`
   - `DatePicker`
   - `TimePicker`
@@ -187,11 +187,12 @@ Minimum evidence:
 
 - `Forms`
 - hedef:
-  - `Switch`
   - `Slider`
   - `DatePicker`
   - `TimePicker`
   - `Upload`
+- not:
+  - `Switch` stable export + live preview + API catalog ile boolean control ailesine katildi
 
 ### Wave 4
 

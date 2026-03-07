@@ -1436,23 +1436,36 @@
     {
       "name": "Switch",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "stable",
       "group": "forms",
       "subgroup": "inputs",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Switch P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Switch / Toggle",
+      "demoMode": "live",
+      "description": "Switch primitivei; release, visibility ve policy toggles icin access-aware, validation-ready boolean gecis davranisi sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-3",
+        "forms",
+        "stable",
+        "toggle"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "deterministic_state_model",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "TableSimple",

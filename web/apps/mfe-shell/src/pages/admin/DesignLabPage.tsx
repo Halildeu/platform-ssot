@@ -20,6 +20,7 @@ import {
   TextInput,
   Checkbox,
   Radio,
+  Switch,
   Skeleton,
   Spinner,
   Pagination,
@@ -296,6 +297,7 @@ const DesignLabPage: React.FC = () => {
   );
   const [checkboxValue, setCheckboxValue] = useState(true);
   const [radioValue, setRadioValue] = useState<'design' | 'ops' | 'delivery'>('design');
+  const [switchValue, setSwitchValue] = useState(true);
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -1196,6 +1198,34 @@ const DesignLabPage: React.FC = () => {
             </div>
           </div>
         );
+      case 'Switch':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Controlled toggle">
+                <div className="space-y-4">
+                  <Switch
+                    label="Canlı görünürlüğü aç"
+                    description="Yayınlanan ekranı son kullanıcıya anında görünür yap."
+                    hint="İhtiyaç halinde tekrar kapatabilirsin."
+                    checked={switchValue}
+                    onCheckedChange={(checked) => setSwitchValue(checked)}
+                  />
+                  <Text variant="secondary" className="block">
+                    Aktif durum: {switchValue ? 'Açık' : 'Kapalı'}
+                  </Text>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="State matrix">
+                <div className="grid grid-cols-1 gap-3">
+                  <Switch label="Readonly toggle" defaultChecked access="readonly" />
+                  <Switch label="Disabled toggle" access="disabled" />
+                  <Switch label="Eksik policy onayı" invalid error="Bu geçiş için ek onay gerekiyor." />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
       case 'Dropdown':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -1783,6 +1813,56 @@ const DesignLabPage: React.FC = () => {
                 </PreviewPanel>
                 <PreviewPanel title="Disabled">
                   <Radio name="wave-3-radio-state" value="disabled" label="Disabled seçenek" access="disabled" />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Switch':
+        return [
+          {
+            id: 'switch-live-toggle',
+            eyebrow: 'Alternative 01',
+            title: 'Live publish switch',
+            description: 'Tek toggle ile görünürlük veya rollout durumu değiştiren kontrollü kullanım.',
+            badges: ['toggle', 'controlled', 'release'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Controlled toggle">
+                  <Switch
+                    label="Canlı görünürlüğü aç"
+                    description="Yayınlanan ekranı son kullanıcıya anında görünür yap."
+                    hint="İhtiyaç halinde tekrar kapatabilirsin."
+                    checked={switchValue}
+                    onCheckedChange={(checked) => setSwitchValue(checked)}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Current status">
+                  <LibraryMetricCard
+                    label="Live state"
+                    value={switchValue ? 'enabled' : 'disabled'}
+                    note="Switch değişikliği controlled state ile doğrudan izleniyor."
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'switch-states',
+            eyebrow: 'Alternative 02',
+            title: 'State matrix',
+            description: 'Readonly, disabled ve policy-blocked switch davranışları.',
+            badges: ['readonly', 'disabled', 'invalid'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <PreviewPanel title="Readonly">
+                  <Switch label="Readonly toggle" defaultChecked access="readonly" />
+                </PreviewPanel>
+                <PreviewPanel title="Disabled">
+                  <Switch label="Disabled toggle" access="disabled" />
+                </PreviewPanel>
+                <PreviewPanel title="Blocked by policy">
+                  <Switch label="Ek onay gerekiyor" invalid error="Bu geçiş için ek onay gerekiyor." />
                 </PreviewPanel>
               </div>
             ),
