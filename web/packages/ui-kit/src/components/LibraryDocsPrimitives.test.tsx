@@ -2,12 +2,14 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  LibraryDocsSection,
   LibraryDetailTabs,
   LibraryMetadataPanel,
   LibraryMetricCard,
   LibraryOutlinePanel,
   LibraryPreviewPanel,
   LibrarySectionBadge,
+  LibraryShowcaseCard,
   LibraryStatsPanel,
 } from './LibraryDocsPrimitives';
 
@@ -48,6 +50,26 @@ describe('LibraryDocsPrimitives', () => {
     expect(screen.getByText('Yeni Paketler')).toBeInTheDocument();
     expect(screen.getByText('Varyant matrisi')).toBeInTheDocument();
     expect(screen.getByText('Preview content')).toBeInTheDocument();
+  });
+
+  test('docs section ve showcase card metinlerini render eder', () => {
+    render(
+      <>
+        <LibraryDocsSection eyebrow="Demo" title="Alternatifler" description="Tek sayfada coklu varyant akisi.">
+          <div>Section content</div>
+        </LibraryDocsSection>
+        <LibraryShowcaseCard title="Filled input" description="Profil formu varyanti.">
+          <div>Showcase content</div>
+        </LibraryShowcaseCard>
+      </>,
+    );
+
+    expect(screen.getByText('Alternatifler')).toBeInTheDocument();
+    expect(screen.getByText('Tek sayfada coklu varyant akisi.')).toBeInTheDocument();
+    expect(screen.getByText('Section content')).toBeInTheDocument();
+    expect(screen.getByText('Filled input')).toBeInTheDocument();
+    expect(screen.getByText('Profil formu varyanti.')).toBeInTheDocument();
+    expect(screen.getByText('Showcase content')).toBeInTheDocument();
   });
 
   test('outline, stats ve metadata paneli render eder ve outline secimini bildirir', async () => {

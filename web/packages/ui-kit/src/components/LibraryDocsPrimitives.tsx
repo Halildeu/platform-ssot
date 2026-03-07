@@ -52,6 +52,81 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({ title,
   </div>
 );
 
+export type LibraryDocsSectionProps = {
+  id?: string;
+  eyebrow?: string;
+  title: string;
+  description?: React.ReactNode;
+  actions?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+};
+
+export const LibraryDocsSection = React.forwardRef<HTMLElement, LibraryDocsSectionProps>(function LibraryDocsSection(
+  { id, eyebrow, title, description, actions, children, className },
+  ref,
+) {
+  return (
+    <section
+      ref={ref}
+      id={id}
+      className={clsx('scroll-mt-28 rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm', className)}
+    >
+      <div className="flex flex-col gap-4 border-b border-border-subtle pb-5 md:flex-row md:items-start md:justify-between">
+        <div className="min-w-0">
+          {eyebrow ? <LibraryDetailLabel>{eyebrow}</LibraryDetailLabel> : null}
+          <Text as="h2" className="mt-2 text-[1.85rem] font-semibold tracking-[-0.03em] text-text-primary">
+            {title}
+          </Text>
+          {description ? (
+            <Text variant="secondary" className="mt-2 block max-w-3xl text-sm leading-7">
+              {description}
+            </Text>
+          ) : null}
+        </div>
+        {actions ? <div className="shrink-0">{actions}</div> : null}
+      </div>
+      <div className="mt-6">{children}</div>
+    </section>
+  );
+});
+
+export type LibraryShowcaseCardProps = {
+  eyebrow?: string;
+  title: string;
+  description?: React.ReactNode;
+  badges?: React.ReactNode;
+  children: React.ReactNode;
+  className?: string;
+};
+
+export const LibraryShowcaseCard: React.FC<LibraryShowcaseCardProps> = ({
+  eyebrow,
+  title,
+  description,
+  badges,
+  children,
+  className,
+}) => (
+  <article className={clsx('rounded-[26px] border border-border-subtle bg-surface-panel p-5 shadow-sm', className)}>
+    <div className="flex flex-col gap-3 border-b border-border-subtle pb-4 md:flex-row md:items-start md:justify-between">
+      <div className="min-w-0">
+        {eyebrow ? <LibraryDetailLabel>{eyebrow}</LibraryDetailLabel> : null}
+        <Text as="h3" className="mt-2 text-xl font-semibold text-text-primary">
+          {title}
+        </Text>
+        {description ? (
+          <Text variant="secondary" className="mt-2 block max-w-3xl text-sm leading-7">
+            {description}
+          </Text>
+        ) : null}
+      </div>
+      {badges ? <div className="flex shrink-0 flex-wrap gap-2">{badges}</div> : null}
+    </div>
+    <div className="mt-5">{children}</div>
+  </article>
+);
+
 export type LibraryMetricCardProps = {
   label: string;
   value: React.ReactNode;

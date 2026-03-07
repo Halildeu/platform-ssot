@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Boxes, CircleHelp, MapIcon, Sparkles } from 'lucide-react';
 import {
   AgGridServer,
@@ -34,9 +34,11 @@ import {
   Breadcrumb,
   Divider,
   LibraryProductTree,
+  LibraryDocsSection,
   LibrarySectionBadge as SectionBadge,
   LibraryDetailLabel as DetailLabel,
   LibraryPreviewPanel as PreviewPanel,
+  LibraryShowcaseCard,
   LibraryMetricCard,
   LibraryDetailTabs,
   LibraryOutlinePanel,
@@ -253,12 +255,21 @@ const detailTabMeta: Array<{
   label: string;
   description: string;
 }> = [
-  { id: 'overview', label: 'Overview', description: 'Özet ve hızlı durum görünümü' },
-  { id: 'demo', label: 'Demo', description: 'Canlı component preview' },
-  { id: 'api', label: 'API', description: 'Import ve registry alanları' },
-  { id: 'ux', label: 'UX', description: 'UX katalog eşleşmesi' },
-  { id: 'quality', label: 'Quality', description: 'Gate ve kullanım kanıtları' },
+  { id: 'overview', label: 'Overview', description: 'Kısa özet, durum ve karar çerçevesi' },
+  { id: 'demo', label: 'Demo', description: 'Aşağı doğru akan çoklu varyant showcase alanı' },
+  { id: 'api', label: 'API', description: 'Import, props, variant axes ve state modeli' },
+  { id: 'ux', label: 'UX', description: 'UX katalog hizası ve north-star bağları' },
+  { id: 'quality', label: 'Quality', description: 'Gate, regression ve kullanım kanıtları' },
 ];
+
+type ComponentShowcaseSection = {
+  id: string;
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  badges?: string[];
+  content: React.ReactNode;
+};
 
 const DesignLabPage: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -275,8 +286,13 @@ const DesignLabPage: React.FC = () => {
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const [selectValue, setSelectValue] = useState('comfortable');
   const [textInputValue, setTextInputValue] = useState('Nova kullanıcı');
+  const [searchInputValue, setSearchInputValue] = useState('Denetim planı');
+  const [inviteInputValue, setInviteInputValue] = useState('ops@nova.io');
   const [textAreaValue, setTextAreaValue] = useState(
     'Açıklama alanı inline yardım, hata ve karakter sayacı ile birlikte form deneyimini tamamlar.',
+  );
+  const [commentValue, setCommentValue] = useState(
+    'Bu alan yorum, not ve açıklama akışlarında otomatik yükseklik ile çalışmalı.',
   );
   const [checkboxValue, setCheckboxValue] = useState(true);
   const [radioValue, setRadioValue] = useState<'design' | 'ops' | 'delivery'>('design');
@@ -360,12 +376,52 @@ const DesignLabPage: React.FC = () => {
     ];
   }, [selectedGroup, selectedItem]);
 
+  const detailSectionRefs = useRef<Record<DesignLabDetailTab, HTMLElement | null>>({
+    overview: null,
+    demo: null,
+    api: null,
+    ux: null,
+    quality: null,
+  });
+
   useEffect(() => {
     setModalOpen(false);
     setFormDrawerOpen(false);
     setDetailDrawerOpen(false);
     setDetailTab('overview');
   }, [selectedItem?.name]);
+
+  useEffect(() => {
+    const sections = detailTabMeta
+      .map((entry) => ({ id: entry.id, element: detailSectionRefs.current[entry.id] }))
+      .filter((entry): entry is { id: DesignLabDetailTab; element: HTMLElement } => Boolean(entry.element));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((left, right) => right.intersectionRatio - left.intersectionRatio);
+        const next = visible[0]?.target.id.replace('design-lab-section-', '') as DesignLabDetailTab | undefined;
+        if (next) {
+          setDetailTab((current) => (current === next ? current : next));
+        }
+      },
+      {
+        rootMargin: '-18% 0px -58% 0px',
+        threshold: [0.15, 0.4, 0.65],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section.element));
+    return () => observer.disconnect();
+  }, [selectedItem?.name]);
+
+  const scrollToDetailSection = (tabId: DesignLabDetailTab) => {
+    setDetailTab(tabId);
+    detailSectionRefs.current[tabId]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const treeTracks = useMemo<LibraryProductTreeTrack[]>(() => {
     return (Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
@@ -1315,43 +1371,500 @@ const DesignLabPage: React.FC = () => {
     }
   };
 
-  const renderPreview = (item: DesignLabIndexItem | null) => {
-    if (!item) {
-      return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-6 shadow-sm">
-          <Text variant="secondary">Seçili bileşen yok.</Text>
-        </div>
-      );
+  const buildDemoShowcaseSections = (item: DesignLabIndexItem): ComponentShowcaseSection[] => {
+    switch (item.name) {
+      case 'TextInput':
+        return [
+          {
+            id: 'text-input-profile',
+            eyebrow: 'Alternative 01',
+            title: 'Profile / account field',
+            description: 'Label, açıklama, yardım ve karakter sayacı ile klasik ürün formu akışı.',
+            badges: ['form', 'stable', 'count'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Filled account field">
+                  <TextInput
+                    label="Kullanıcı adı"
+                    description="Sistemde görünen kısa tanım."
+                    hint="Boşluk bırakmadan en fazla 32 karakter."
+                    value={textInputValue}
+                    maxLength={32}
+                    showCount
+                    onValueChange={setTextInputValue}
+                    leadingVisual={<span aria-hidden="true">@</span>}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Doğru kullanım notu">
+                  <Text variant="secondary" className="block leading-7">
+                    Birincil form alanı için label, description ve hint aynı yüzeyde görünür. Sayaç sadece karakter
+                    baskısı olan alanlarda açılır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-input-search',
+            eyebrow: 'Alternative 02',
+            title: 'Search / command bar input',
+            description: 'Arama ve filtre satırlarında kullanılan daha hızlı, kısa ve aksiyon odaklı varyant.',
+            badges: ['search', 'compact', 'leading-icon'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Search">
+                  <TextInput
+                    label="Arama"
+                    description="Kayıt, şirket veya kullanıcı ara."
+                    value={searchInputValue}
+                    onValueChange={setSearchInputValue}
+                    size="sm"
+                    leadingVisual={<span aria-hidden="true">⌕</span>}
+                    trailingVisual={<SectionBadge label="⌘K" />}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Filter row">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
+                    <TextInput
+                      label="Hızlı filtre"
+                      defaultValue="policy"
+                      size="sm"
+                      fullWidth
+                      leadingVisual={<span aria-hidden="true">⌕</span>}
+                    />
+                    <Button variant="secondary" className="sm:self-end">Uygula</Button>
+                  </div>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-input-validation',
+            eyebrow: 'Alternative 03',
+            title: 'Validation / state matrix',
+            description: 'Aynı primitive ile doğrulanan, hatalı ve readonly alan davranışı.',
+            badges: ['validation', 'readonly', 'error'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <PreviewPanel title="Success-adjacent">
+                  <TextInput
+                    label="Doğrulanan alan"
+                    defaultValue="nova.user"
+                    trailingVisual={<span aria-hidden="true">✓</span>}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Invalid">
+                  <TextInput label="Hatalı alan" defaultValue="!" invalid error="En az 3 karakter girilmeli." />
+                </PreviewPanel>
+                <PreviewPanel title="Readonly">
+                  <TextInput label="Readonly alan" defaultValue="system-generated" access="readonly" />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-input-density',
+            eyebrow: 'Alternative 04',
+            title: 'Density / sizing matrix',
+            description: 'Aynı API ile küçük, orta ve geniş hit-area seçenekleri.',
+            badges: ['sm', 'md', 'lg'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <PreviewPanel title="Small">
+                  <TextInput label="Kompakt alan" defaultValue="sm-density" size="sm" />
+                </PreviewPanel>
+                <PreviewPanel title="Medium">
+                  <TextInput label="Varsayılan alan" defaultValue="md-density" size="md" />
+                </PreviewPanel>
+                <PreviewPanel title="Large">
+                  <TextInput label="Vurgulu alan" defaultValue="lg-density" size="lg" trailingVisual={<span aria-hidden="true">→</span>} />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-input-invite',
+            eyebrow: 'Alternative 05',
+            title: 'Inline action / invite flow',
+            description: 'Alan ve aksiyonu aynı blokta gösteren kısa iş akışı örneği.',
+            badges: ['action-pair', 'cta', 'task-flow'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_auto]">
+                <PreviewPanel title="Invite input">
+                  <TextInput
+                    label="Davet e-postası"
+                    description="Yeni paydaşı ekle."
+                    value={inviteInputValue}
+                    onValueChange={setInviteInputValue}
+                    type="email"
+                    leadingVisual={<span aria-hidden="true">✉</span>}
+                    trailingVisual={<Badge tone="info">Pending</Badge>}
+                  />
+                </PreviewPanel>
+                <div className="flex items-end">
+                  <Button fullWidth={false} trailingVisual={<span aria-hidden="true">→</span>}>
+                    Davet gönder
+                  </Button>
+                </div>
+              </div>
+            ),
+          },
+          {
+            id: 'text-input-access',
+            eyebrow: 'Alternative 06',
+            title: 'Policy / access controlled states',
+            description: 'Aynı bileşenin readonly, disabled ve hidden politika modları.',
+            badges: ['access', 'policy', 'governance'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <PreviewPanel title="Readonly">
+                  <TextInput
+                    label="Sözleşmeli alan"
+                    defaultValue="release-window"
+                    access="readonly"
+                    hint="Bu alan yalnız sistem tarafından değiştirilir."
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Disabled">
+                  <TextInput
+                    label="Kilitleme sonrası"
+                    defaultValue="publish-locked"
+                    access="disabled"
+                    hint="Yayın sonrasında düzenleme kapalı."
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Hidden state sayfada boşluk bırakmamalı; disabled ve readonly ise aynı görünmemeli. Biri pasif,
+                    diğeri bilgi taşıyan kilitli durumdur.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'TextArea':
+        return [
+          {
+            id: 'text-area-authoring',
+            eyebrow: 'Alternative 01',
+            title: 'Authoring / note field',
+            description: 'Uzun açıklama yazımı için birincil authoring yüzeyi.',
+            badges: ['authoring', 'auto-resize', 'count'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Auto resize">
+                  <TextArea
+                    label="Açıklama"
+                    description="Uzun içerik alanları için ortak metin girişi."
+                    hint="Çok satırlı bilgi girişi için otomatik yükseklik ayarı."
+                    value={commentValue}
+                    rows={3}
+                    maxLength={180}
+                    showCount
+                    resize="auto"
+                    onValueChange={setCommentValue}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Authoring yüzeylerinde `auto` resize daha doğal. Audit veya sabit layout alanlarında kontrollü
+                    dikey resize tercih edilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-area-review',
+            eyebrow: 'Alternative 02',
+            title: 'Review / decision log',
+            description: 'Karar, itiraz veya yorum kaydı için okunaklı review alanı.',
+            badges: ['review', 'audit', 'multiline'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Reviewer note">
+                  <TextArea
+                    label="İnceleme notu"
+                    defaultValue="Politika metni güncellendi; yayın öncesi hukuk ekibi son gözden geçirmeyi tamamlamalı."
+                    rows={5}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Readonly audit">
+                  <TextArea
+                    label="Otomatik oluşturulan log"
+                    defaultValue="2026-03-07 12:48 · system-bot -> release evidence dosyasi eklendi."
+                    access="readonly"
+                    rows={5}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-area-validation',
+            eyebrow: 'Alternative 03',
+            title: 'Validation / enforcement',
+            description: 'Eksik açıklama, minimum içerik ve kullanıcı geri bildirimi.',
+            badges: ['error', 'hint', 'count'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <PreviewPanel title="Invalid">
+                  <TextArea
+                    label="Validation örneği"
+                    defaultValue="Eksik açıklama"
+                    invalid
+                    error="Bu alan en az 20 karakter olmalı."
+                    rows={3}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Readonly">
+                  <TextArea label="Readonly not" defaultValue="Sistem logu kullanıcı tarafından değiştirilemez." access="readonly" rows={3} />
+                </PreviewPanel>
+                <PreviewPanel title="Disabled">
+                  <TextArea label="Disabled draft" defaultValue="Yayın sonrası kilitlenir." access="disabled" rows={3} />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-area-layout',
+            eyebrow: 'Alternative 04',
+            title: 'Panel / side-by-side layout',
+            description: 'Dar yan panel ve geniş içerik paneli için aynı bileşenin iki yerleşim örneği.',
+            badges: ['layout', 'panel', 'responsive'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[0.8fr_1.2fr]">
+                <PreviewPanel title="Side panel">
+                  <TextArea label="Kısa not" defaultValue="Kompakt panel notu." rows={3} />
+                </PreviewPanel>
+                <PreviewPanel title="Primary editor">
+                  <TextArea
+                    label="Yayın notu"
+                    defaultValue="Bu sürümde navigation bileşenleri yeniden düzenlendi, forms wave açıldı ve frontend doctor kanıtı zorunlu hale getirildi."
+                    rows={6}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'text-area-recipes',
+            eyebrow: 'Alternative 05',
+            title: 'Recipe summary',
+            description: 'Hangi bağlamda hangi TextArea davranışı seçilmeli.',
+            badges: ['recipes', 'selection-guide'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <LibraryMetricCard label="Comment" value="auto" note="Yorum ve tartışma akışlarında auto resize." />
+                <LibraryMetricCard label="Audit" value="readonly" note="Sistem logu ve immutable kayıt yüzeyleri." />
+                <LibraryMetricCard label="Policy" value="vertical" note="Uzun hukuki metinlerde kontrollü resize." />
+              </div>
+            ),
+          },
+        ];
+      case 'Checkbox':
+        return [
+          {
+            id: 'checkbox-single',
+            eyebrow: 'Alternative 01',
+            title: 'Single consent',
+            description: 'Tek satırlı onay ve bildirim alanı.',
+            badges: ['consent', 'single-choice'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Controlled">
+                  <Checkbox
+                    label="Yayın sonrası bildirim gönder"
+                    description="Akış tamamlandığında paydaşlara otomatik bilgi ver."
+                    hint="İşlem anında kapatılabilir."
+                    checked={checkboxValue}
+                    onCheckedChange={(checked) => setCheckboxValue(checked)}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Tek karar alanlarında checkbox, çok seçenekli ama bağımsız tercihlerde stacked checkbox listesi tercih edilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'checkbox-states',
+            eyebrow: 'Alternative 02',
+            title: 'State matrix',
+            description: 'Eksik onay, kısmi seçim, readonly ve disabled davranışı.',
+            badges: ['invalid', 'indeterminate', 'access'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
+                <PreviewPanel title="Invalid">
+                  <Checkbox label="Eksik onay" invalid error="Devam etmeden önce onay vermelisin." />
+                </PreviewPanel>
+                <PreviewPanel title="Indeterminate">
+                  <Checkbox label="Kısmi seçim" indeterminate hint="Alt seçeneklerin bir bölümü seçili." />
+                </PreviewPanel>
+                <PreviewPanel title="Readonly">
+                  <Checkbox label="Readonly seçim" defaultChecked access="readonly" />
+                </PreviewPanel>
+                <PreviewPanel title="Disabled">
+                  <Checkbox label="Disabled seçim" access="disabled" />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Radio':
+        return [
+          {
+            id: 'radio-choice',
+            eyebrow: 'Alternative 01',
+            title: 'Single-choice strategy',
+            description: 'Bir kararın tek seçenekle seçildiği yönlendirici form yüzeyi.',
+            badges: ['single-choice', 'decision'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Controlled group">
+                  <div className="space-y-3">
+                    <Radio
+                      name="wave-3-radio-demo"
+                      value="design"
+                      label="Design odaklı"
+                      description="Önce görünüm ve doküman kalitesini tamamla."
+                      checked={radioValue === 'design'}
+                      onCheckedChange={(checked) => checked && setRadioValue('design')}
+                    />
+                    <Radio
+                      name="wave-3-radio-demo"
+                      value="ops"
+                      label="Ops odaklı"
+                      description="Doctor ve gate kanıtı önce tamamlansın."
+                      checked={radioValue === 'ops'}
+                      onCheckedChange={(checked) => checked && setRadioValue('ops')}
+                    />
+                    <Radio
+                      name="wave-3-radio-demo"
+                      value="delivery"
+                      label="Delivery odaklı"
+                      description="Feature sonrası teslim artefact’larını önceliklendir."
+                      checked={radioValue === 'delivery'}
+                      onCheckedChange={(checked) => checked && setRadioValue('delivery')}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Selected value">
+                  <LibraryMetricCard label="Current selection" value={radioValue} note="Controlled radio state shell tarafından yönetiliyor." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'radio-states',
+            eyebrow: 'Alternative 02',
+            title: 'State matrix',
+            description: 'Geçersiz, readonly ve disabled radyo durumları.',
+            badges: ['invalid', 'readonly', 'disabled'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
+                <PreviewPanel title="Default">
+                  <Radio name="wave-3-radio-state" value="default" label="Varsayılan seçenek" defaultChecked />
+                </PreviewPanel>
+                <PreviewPanel title="Invalid">
+                  <Radio
+                    name="wave-3-radio-state"
+                    value="invalid"
+                    label="Eksik seçim"
+                    invalid
+                    error="En az bir dağıtım stratejisi seçilmeli."
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Readonly">
+                  <Radio name="wave-3-radio-state" value="readonly" label="Readonly seçenek" access="readonly" />
+                </PreviewPanel>
+                <PreviewPanel title="Disabled">
+                  <Radio name="wave-3-radio-state" value="disabled" label="Disabled seçenek" access="disabled" />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      default:
+        return [
+          {
+            id: `${toTestIdSuffix(item.name)}-default-preview`,
+            eyebrow: 'Preview',
+            title: `${item.name} live preview`,
+            description: item.description,
+            badges: [statusLabel[item.lifecycle], demoModeLabel[item.demoMode]],
+            content: renderLivePreview(item),
+          },
+        ];
     }
+  };
+
+  const renderDemoSection = (item: DesignLabIndexItem | null) => {
+    if (!item) {
+      return <Text variant="secondary">Canlı showcase için component seç.</Text>;
+    }
+
     if (item.availability === 'planned' || item.demoMode === 'planned') {
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-6 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <Text as="div" className="text-xl font-semibold">{item.name}</Text>
-              <Text variant="secondary" className="mt-2 block max-w-2xl">{item.description}</Text>
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <LibraryShowcaseCard
+            eyebrow="Roadmap"
+            title={`${item.name} henüz release edilmedi`}
+            description="Bu item planlı backlog seviyesinde. Export, live demo ve regression kanıtı tamamlanmadan canlı showcase açılmaz."
+            badges={<Tag tone="info">Planned item</Tag>}
+          >
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <LibraryMetricCard label="Release gate" value="blocked" note="Implementation + registry sync + preview gerektirir." />
+              <LibraryMetricCard label="Wave" value={item.roadmapWaveId ?? '—'} note="Roadmap wave hizası." />
             </div>
-            <Tag tone="info">Roadmap item</Tag>
-          </div>
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Release gate</DetailLabel>
-              <Text variant="secondary" className="mt-2 block">Implementation, registry sync, live preview ve package export tamamlanmadan exported duruma gecmez.</Text>
+          </LibraryShowcaseCard>
+          <LibraryShowcaseCard
+            eyebrow="North Star"
+            title="Bu bileşen nerede kullanılacak?"
+            description="Roadmap item olduğu için önce UX ve quality kontratı netleşir, sonra export edilir."
+          >
+            <div className="flex flex-wrap gap-2">
+              {item.sectionIds.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />)}
             </div>
-            <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>North Star sections</DetailLabel>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {item.sectionIds.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />)}
-              </div>
-            </div>
-          </div>
+          </LibraryShowcaseCard>
         </div>
       );
     }
-    if (item.demoMode === 'live') {
-      return renderLivePreview(item);
-    }
-    return renderLivePreview(item);
+
+    const showcaseSections = buildDemoShowcaseSections(item);
+
+    return (
+      <div className="space-y-5">
+        <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+          <div className="flex flex-wrap gap-2">
+            {showcaseSections.map((section, index) => (
+              <SectionBadge key={section.id} label={`${String(index + 1).padStart(2, '0')} · ${section.title}`} />
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-5">
+          {showcaseSections.map((section) => (
+            <LibraryShowcaseCard
+              key={section.id}
+              eyebrow={section.eyebrow}
+              title={section.title}
+              description={section.description}
+              badges={
+                section.badges?.length
+                  ? section.badges.map((badge) => <SectionBadge key={badge} label={badge} />)
+                  : undefined
+              }
+            >
+              {section.content}
+            </LibraryShowcaseCard>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   const renderOverviewTab = (item: DesignLabIndexItem | null) => {
@@ -1595,22 +2108,81 @@ const DesignLabPage: React.FC = () => {
     );
   };
 
-  const renderDetailTabContent = (item: DesignLabIndexItem | null) => {
-    switch (detailTab) {
-      case 'overview':
-        return renderOverviewTab(item);
-      case 'demo':
-        return renderPreview(item);
-      case 'api':
-        return renderApiTab(item);
-      case 'ux':
-        return renderUxTab(item);
-      case 'quality':
-        return renderQualityTab(item);
-      default:
-        return renderOverviewTab(item);
-    }
-  };
+  const renderDetailTabContent = (item: DesignLabIndexItem | null) => (
+    <div className="space-y-5">
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.overview = node;
+        }}
+        id="design-lab-section-overview"
+        eyebrow="Section 01"
+        title="Overview"
+        description="Bileşenin rolü, yayın durumu ve karar çerçevesi."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="overview">{renderOverviewTab(item)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.demo = node;
+        }}
+        id="design-lab-section-demo"
+        eyebrow="Section 02"
+        title="Demo Gallery"
+        description="Ant Design ve Material UI benzeri tek sayfa showcase akışı. Seçili component için bütün alternatifler aşağı doğru görünür."
+        actions={
+          item?.importStatement ? (
+            <Button variant="secondary" onClick={() => handleCopy(item.importStatement)}>
+              Import kopyala
+            </Button>
+          ) : undefined
+        }
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="demo">{renderDemoSection(item)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.api = node;
+        }}
+        id="design-lab-section-api"
+        eyebrow="Section 03"
+        title="API"
+        description="Import, props, variant axes ve regression focus bilgisi."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="api">{renderApiTab(item)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.ux = node;
+        }}
+        id="design-lab-section-ux"
+        eyebrow="Section 04"
+        title="UX Alignment"
+        description="UX katalog hizası ve north-star section bağları."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="ux">{renderUxTab(item)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.quality = node;
+        }}
+        id="design-lab-section-quality"
+        eyebrow="Section 05"
+        title="Quality"
+        description="Gate, usage ve regression evidence katmanı."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="quality">{renderQualityTab(item)}</div>
+      </LibraryDocsSection>
+    </div>
+  );
 
   return (
     <div data-testid="design-lab-page" className="min-h-screen bg-surface-canvas">
@@ -1737,7 +2309,7 @@ const DesignLabPage: React.FC = () => {
               <LibraryDetailTabs
                 tabs={detailTabMeta}
                 activeTabId={detailTab}
-                onTabChange={(tabId) => setDetailTab(tabId as DesignLabDetailTab)}
+                onTabChange={(tabId) => scrollToDetailSection(tabId as DesignLabDetailTab)}
                 testIdPrefix="design-lab"
               />
             </div>
@@ -1752,7 +2324,7 @@ const DesignLabPage: React.FC = () => {
               <LibraryOutlinePanel
                 items={detailTabMeta.map((tab) => ({ id: tab.id, label: tab.label }))}
                 activeItemId={detailTab}
-                onItemSelect={(tabId) => setDetailTab(tabId as DesignLabDetailTab)}
+                onItemSelect={(tabId) => scrollToDetailSection(tabId as DesignLabDetailTab)}
               />
 
               <LibraryStatsPanel
