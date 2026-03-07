@@ -238,18 +238,6 @@ const SectionBadge: React.FC<{ label: string }> = ({ label }) => (
   </span>
 );
 
-const SummaryCard: React.FC<{ label: string; value: number; note: string }> = ({ label, value, note }) => (
-  <div className="rounded-2xl border border-border-subtle bg-surface-panel px-4 py-3 shadow-sm">
-    <Text as="div" variant="secondary" className="text-[10px] font-semibold uppercase tracking-[0.22em]">
-      {label}
-    </Text>
-    <div className="mt-2 text-2xl font-semibold text-text-primary">{value}</div>
-    <Text variant="secondary" className="mt-1 block text-xs">
-      {note}
-    </Text>
-  </div>
-);
-
 const PreviewPanel: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
     <Text as="div" variant="secondary" className="text-xs font-semibold uppercase tracking-[0.18em]">
@@ -1468,333 +1456,327 @@ const DesignLabPage: React.FC = () => {
   };
 
   return (
-    <div data-testid="design-lab-page" className="space-y-4">
-      <section className="rounded-[32px] border border-border-subtle bg-surface-default px-5 py-5 shadow-sm">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div className="max-w-3xl">
-            <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.24em]">
-              UI Kit / Catalog
-            </Text>
-            <Text as="div" className="mt-2 text-3xl font-semibold text-text-primary">UI Kütüphane Sistemi</Text>
-            <Text variant="secondary" className="mt-2 block text-sm leading-7">
-              `mfe-ui-kit` paketinin kanonik katalog ve preview yüzeyi. Export edilen component, utility ve planned backlog aynı JSON registry’den okunur.
-            </Text>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Tag tone="success">Package-only model</Tag>
-            <Tag tone="info">JSON-first catalog</Tag>
-            <Tag tone="warning">UX-aligned</Tag>
-          </div>
+    <div data-testid="design-lab-page" className="min-h-screen bg-surface-canvas">
+      <div className="mx-auto max-w-[1880px] px-4 py-5 xl:px-6">
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-text-secondary">
+          <span className="font-semibold uppercase tracking-[0.18em] text-text-secondary">Docs</span>
+          <span>/</span>
+          <span>UI Library</span>
+          <span>/</span>
+          <span>{selectedGroup?.title ?? trackMeta[activeTrack].label}</span>
+          {selectedItem ? (
+            <>
+              <span>/</span>
+              <span className="font-medium text-text-primary">{selectedItem.name}</span>
+            </>
+          ) : null}
         </div>
-        <div className="mt-5 grid grid-cols-2 gap-3 xl:grid-cols-6">
-          <SummaryCard label="Total" value={summary.total} note="Katalog" />
-          <SummaryCard label="Exported" value={summary.exported} note="Yayınlandı" />
-          <SummaryCard label="Planned" value={summary.planned} note="Bekliyor" />
-          <SummaryCard label="Stable" value={summary.stable} note="Güvenilir" />
-          <SummaryCard label="Beta" value={summary.beta} note="Gelişiyor" />
-          <SummaryCard label="Live Demo" value={summary.liveDemo} note="Canlı demo" />
-        </div>
-      </section>
 
-      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[360px_1fr]">
-        <aside
-          data-testid="design-lab-sidebar"
-          className="sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[32px] border border-border-subtle bg-surface-panel shadow-sm"
-        >
-          <div className="border-b border-border-subtle bg-surface-default px-5 py-5">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.24em]">
-                  UI Library
-                </Text>
-                <Text as="div" className="mt-2 text-2xl font-semibold text-text-primary">
-                  Katalog Gezgini
-                </Text>
-                <Text variant="secondary" className="mt-2 block text-sm">
-                  Yeni paketleri, legacy export setini ve roadmap backlog’unu hiyerarşik olarak tara.
-                </Text>
-              </div>
-              <div className="shrink-0 rounded-2xl border border-border-subtle bg-surface-muted px-3 py-2 text-right">
-                <Text as="div" variant="secondary" className="text-[10px] font-semibold uppercase tracking-[0.22em]">
-                  Aktif kayıt
-                </Text>
-                <div className="mt-1 text-2xl font-semibold text-text-primary">{filteredItems.length}</div>
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[300px_minmax(0,1fr)_260px]">
+          <aside
+            data-testid="design-lab-sidebar"
+            className="sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
+          >
+            <div className="border-b border-border-subtle px-5 py-5">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.22em]">
+                UI Library
+              </Text>
+              <Text as="div" className="mt-2 text-2xl font-semibold text-text-primary">
+                Component Explorer
+              </Text>
+              <Text variant="secondary" className="mt-2 block text-sm leading-6">
+                Material UI tarzı doküman akışında component ailelerini, export durumunu ve canlı demoları tek yerden gez.
+              </Text>
+              <div className="mt-4">
+                <input
+                  data-testid="design-lab-search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Component ara..."
+                  className="h-11 w-full rounded-2xl border border-border-default bg-surface-panel px-4 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
+                  aria-label="UI library arama"
+                />
               </div>
             </div>
 
-            <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-panel p-3 shadow-sm">
-              <DetailLabel>Arama</DetailLabel>
-              <input
-                data-testid="design-lab-search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Button, Grid, Theme, Modal..."
-                className="mt-3 h-11 w-full rounded-2xl border border-border-default bg-surface-default px-3 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
-                aria-label="UI library arama"
-              />
-            </div>
-          </div>
-
-          <div className="min-h-0 flex-1 space-y-5 overflow-auto px-4 py-4">
-            <section data-testid="design-lab-track-section">
-              <div className="mb-3 flex items-end justify-between gap-3">
-                <div>
-                  <Text as="div" className="font-semibold">Trackler</Text>
-                  <Text variant="secondary" className="mt-1 block text-xs">
-                    Önce hangi katmanı gezmek istediğini seç.
-                  </Text>
-                </div>
-                <Badge tone="muted">{Object.keys(trackMeta).length}</Badge>
-              </div>
-              <div className="space-y-2">
-                {(Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
-                  const active = track === activeTrack;
-                  const visual = trackVisualMeta[track];
-                  return (
-                    <button
-                      key={track}
-                      data-testid={`design-lab-track-${track}`}
-                      type="button"
-                      onClick={() => setActiveTrack(track)}
-                      className={`w-full rounded-[24px] border p-3 text-left transition ${
-                        active
-                          ? `${visual.borderClass} bg-surface-default shadow-sm`
-                          : 'border-border-subtle bg-surface-panel hover:bg-surface-muted'
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <span className={`mt-1 h-10 w-1.5 shrink-0 rounded-full ${active ? visual.accentClass : 'bg-border-subtle'}`} />
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-3">
-                            <div>
-                              <Text as="div" variant="secondary" className="text-[10px] font-semibold uppercase tracking-[0.22em]">
-                                {visual.eyebrow}
-                              </Text>
-                              <Text as="div" className="mt-1 text-base font-semibold text-text-primary">
-                                {trackMeta[track].label}
-                              </Text>
-                            </div>
-                            <Badge tone={active ? visual.badgeTone : 'muted'}>{trackSummary[track]}</Badge>
-                          </div>
-                          <Text variant="secondary" className="mt-2 block text-xs leading-5">
-                            {trackMeta[track].note}
-                          </Text>
-                        </div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section data-testid="design-lab-group-section" className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-              <div className="mb-3 flex items-end justify-between gap-3">
-                <div>
-                  <Text as="div" className="font-semibold">Gruplar</Text>
-                  <Text variant="secondary" className="mt-1 block text-xs">
-                    Aktif track içindeki ana başlığı seç.
-                  </Text>
-                </div>
-                <Badge tone="muted">{visibleGroups.length}</Badge>
-              </div>
-              <div className="space-y-2">
-                {visibleGroups.map((group) => {
-                  const active = selectedGroup?.id === group.id;
-                  return (
-                    <button
-                      key={group.id}
-                      data-testid={`design-lab-group-${group.id}`}
-                      type="button"
-                      onClick={() => setSelectedGroupId(group.id)}
-                      className={`flex w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left transition ${
-                        active
-                          ? 'border-action-primary-border bg-surface-muted shadow-sm'
-                          : 'border-transparent hover:bg-surface-muted'
-                      }`}
-                    >
-                      <span className={`h-9 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-border-subtle'}`} />
-                      <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-semibold text-text-primary">{group.title}</span>
-                        <span className="mt-1 block text-[11px] text-text-secondary">
-                          {countByGroup.get(group.id) ?? 0} component
-                        </span>
-                      </span>
-                      <Badge tone={active ? 'info' : 'muted'}>{countByGroup.get(group.id) ?? 0}</Badge>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section data-testid="design-lab-tree-section" className="min-h-0 rounded-[24px] border border-border-subtle bg-surface-default p-4">
-              <div className="mb-3 flex items-end justify-between gap-3">
-                <div>
-                  <Text as="div" className="font-semibold">Component Ağacı</Text>
-                  <Text variant="secondary" className="mt-1 block text-xs">
-                    Alt başlık ve component seçimini buradan yap.
-                  </Text>
-                </div>
-                <Text variant="secondary" className="text-xs">
-                  {selectedGroup?.title ?? '—'}
+            <div className="min-h-0 flex-1 space-y-6 overflow-auto px-4 py-5">
+              <section data-testid="design-lab-track-section">
+                <Text as="div" variant="secondary" className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Katalog Katmanı
                 </Text>
-              </div>
-
-              <div className="max-h-[calc(100vh-520px)] min-h-0 space-y-3 overflow-auto pr-1">
-                {selectedGroup ? (
-                  selectedGroup.subgroups.map((subgroup) => {
-                    const subgroupItems = selectedGroupItemsBySubgroup.get(subgroup) ?? [];
-                    if (subgroupItems.length === 0) {
-                      return null;
-                    }
+                <div className="space-y-1.5">
+                  {(Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
+                    const active = track === activeTrack;
+                    const visual = trackVisualMeta[track];
                     return (
-                      <div
-                        key={subgroup}
-                        data-testid={`design-lab-subgroup-${toTestIdSuffix(subgroup)}`}
-                        className="overflow-hidden rounded-[22px] border border-border-subtle bg-surface-panel"
+                      <button
+                        key={track}
+                        data-testid={`design-lab-track-${track}`}
+                        type="button"
+                        onClick={() => setActiveTrack(track)}
+                        className={`flex w-full items-start gap-3 rounded-2xl px-3 py-3 text-left transition ${
+                          active ? 'bg-surface-panel' : 'hover:bg-surface-panel'
+                        }`}
                       >
-                        <div className="border-b border-border-subtle bg-surface-muted px-3 py-2">
-                          <div className="flex items-center justify-between gap-3">
-                            <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                        <span className={`mt-0.5 h-8 w-1.5 shrink-0 rounded-full ${active ? visual.accentClass : 'bg-border-subtle'}`} />
+                        <span className="min-w-0 flex-1">
+                          <span className="flex items-center justify-between gap-3">
+                            <span className="block text-sm font-semibold text-text-primary">{trackMeta[track].label}</span>
+                            <Badge tone={active ? visual.badgeTone : 'muted'}>{trackSummary[track]}</Badge>
+                          </span>
+                          <span className="mt-1 block text-xs leading-5 text-text-secondary">{trackMeta[track].note}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+
+              <section data-testid="design-lab-group-section">
+                <Text as="div" variant="secondary" className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Family
+                </Text>
+                <div className="space-y-1">
+                  {visibleGroups.map((group) => {
+                    const active = selectedGroup?.id === group.id;
+                    return (
+                      <button
+                        key={group.id}
+                        data-testid={`design-lab-group-${group.id}`}
+                        type="button"
+                        onClick={() => setSelectedGroupId(group.id)}
+                        className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition ${
+                          active ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-panel'
+                        }`}
+                      >
+                        <span className={`h-7 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-border-subtle'}`} />
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-medium text-text-primary">{group.title}</span>
+                        </span>
+                        <span className="text-xs text-text-secondary">{countByGroup.get(group.id) ?? 0}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+
+              <section data-testid="design-lab-tree-section">
+                <Text as="div" variant="secondary" className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Components
+                </Text>
+                <div className="max-h-[calc(100vh-480px)] min-h-0 space-y-4 overflow-auto pr-1">
+                  {selectedGroup ? (
+                    selectedGroup.subgroups.map((subgroup) => {
+                      const subgroupItems = selectedGroupItemsBySubgroup.get(subgroup) ?? [];
+                      if (subgroupItems.length === 0) return null;
+                      return (
+                        <div key={subgroup} data-testid={`design-lab-subgroup-${toTestIdSuffix(subgroup)}`}>
+                          <div className="mb-2 px-3">
+                            <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.16em]">
                               {subgroup}
                             </Text>
-                            <Badge tone="muted">{subgroupItems.length}</Badge>
+                          </div>
+                          <div className="space-y-1">
+                            {subgroupItems.map((item) => {
+                              const active = item.name === selectedItem?.name;
+                              return (
+                                <button
+                                  key={item.name}
+                                  data-testid={`design-lab-item-${toTestIdSuffix(item.name)}`}
+                                  type="button"
+                                  onClick={() => setSelectedItemName(item.name)}
+                                  className={`flex w-full items-start gap-3 rounded-2xl px-3 py-2.5 text-left transition ${
+                                    active ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-panel'
+                                  }`}
+                                >
+                                  <span className={`mt-0.5 h-7 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-transparent'}`} />
+                                  <span className="min-w-0 flex-1">
+                                    <span className="block text-sm font-medium text-text-primary">{item.name}</span>
+                                    <span className="mt-1 block text-[11px] text-text-secondary">
+                                      {statusLabel[item.lifecycle]} · {demoModeLabel[item.demoMode]}
+                                    </span>
+                                  </span>
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
-                        <div className="space-y-1.5 p-2">
-                          {subgroupItems.map((item) => {
-                            const active = item.name === selectedItem?.name;
-                            return (
-                              <button
-                                key={item.name}
-                                data-testid={`design-lab-item-${toTestIdSuffix(item.name)}`}
-                                type="button"
-                                onClick={() => setSelectedItemName(item.name)}
-                                className={`group flex w-full items-start gap-3 rounded-2xl border px-3 py-3 text-left transition ${
-                                  active
-                                    ? 'border-action-primary-border bg-surface-default shadow-sm'
-                                    : 'border-transparent hover:bg-surface-muted'
-                                }`}
-                              >
-                                <span className={`mt-1 h-8 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-border-subtle group-hover:bg-border-default'}`} />
-                                <span className="min-w-0 flex-1">
-                                  <span className="block text-sm font-semibold text-text-primary">{item.name}</span>
-                                  <span className="mt-1 block text-[11px] text-text-secondary">
-                                    {availabilityLabel[item.availability]} • {statusLabel[item.lifecycle]}
-                                  </span>
-                                </span>
-                                <span className="shrink-0 pt-0.5">
-                                  <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
-                                    {item.demoMode === 'live' ? 'Live' : item.demoMode === 'planned' ? 'Plan' : 'Info'}
-                                  </Badge>
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                    <Text variant="secondary">Bu track için görünür grup bulunamadı.</Text>
-                  </div>
-                )}
-              </div>
-            </section>
-          </div>
-        </aside>
+                      );
+                    })
+                  ) : (
+                    <Text variant="secondary">Bu katmanda görünür component yok.</Text>
+                  )}
+                </div>
+              </section>
+            </div>
+          </aside>
 
-        <section className="space-y-4">
-          <section className="overflow-hidden rounded-[32px] border border-border-subtle bg-surface-default shadow-sm">
-            <div className="border-b border-border-subtle bg-surface-panel px-6 py-5">
-              <div data-testid="design-lab-detail-hero" className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                <div className="min-w-0">
-                  <div className="mb-3 flex flex-wrap items-center gap-2">
-                    <SectionBadge label={trackMeta[activeTrack].label} />
-                    {selectedGroup ? <SectionBadge label={selectedGroup.title} /> : null}
-                    {selectedItem?.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <span className={`mt-1 hidden h-16 w-2 shrink-0 rounded-full xl:block ${selectedTrackVisual.accentClass}`} />
-                    <div className="min-w-0">
-                      <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.24em]">
-                        Component Detail
-                      </Text>
-                      <Text as="div" className="mt-2 text-3xl font-semibold text-text-primary">
-                        {selectedItem?.name ?? 'Seçili component yok'}
-                      </Text>
+          <main className="min-w-0 space-y-5">
+            <section
+              data-testid="design-lab-detail-hero"
+              className="overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
+            >
+              <div className="border-b border-border-subtle px-6 py-6">
+                <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+                  <div className="min-w-0">
+                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                      <SectionBadge label={trackMeta[activeTrack].label} />
+                      {selectedGroup ? <SectionBadge label={selectedGroup.title} /> : null}
+                      {selectedItem?.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
                       {selectedItem ? (
-                        <Text variant="secondary" className="mt-3 block max-w-3xl text-sm leading-7">
-                          {selectedItem.description}
-                        </Text>
-                      ) : (
-                        <Text variant="secondary" className="mt-3 block max-w-3xl text-sm leading-7">
-                          Soldan bir grup ve component seç.
-                        </Text>
-                      )}
+                        <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>
+                          {statusLabel[selectedItem.lifecycle]}
+                        </Badge>
+                      ) : null}
                     </div>
+                    <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.22em]">
+                      Component
+                    </Text>
+                    <Text as="h1" className="mt-2 text-[2.35rem] font-semibold tracking-[-0.03em] text-text-primary">
+                      {selectedItem?.name ?? 'Component seç'}
+                    </Text>
+                    <Text variant="secondary" className="mt-3 block max-w-3xl text-[15px] leading-7">
+                      {selectedItem?.description ?? 'Sol menüden bir component seçerek canlı demo, API ve kalite detaylarını inceleyebilirsin.'}
+                    </Text>
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3 xl:min-w-[340px]">
-                  {heroStats.map((stat) => (
-                    <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                      <DetailLabel>{stat.label}</DetailLabel>
-                      <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">{stat.value}</Text>
-                      <Text variant="secondary" className="mt-1 block text-xs">{stat.note}</Text>
-                    </div>
-                  ))}
+                  <div className="grid grid-cols-2 gap-3 xl:w-[340px]">
+                    {heroStats.map((stat) => (
+                      <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                        <DetailLabel>{stat.label}</DetailLabel>
+                        <Text as="div" className="mt-2 text-base font-semibold text-text-primary">
+                          {stat.value}
+                        </Text>
+                        <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                          {stat.note}
+                        </Text>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="mt-5 flex flex-wrap items-center gap-2">
+
+              <div className="flex flex-wrap items-center gap-2 px-6 py-4">
                 {selectedItem ? <Badge tone={selectedItem.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[selectedItem.availability]}</Badge> : null}
-                {selectedItem ? <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>{statusLabel[selectedItem.lifecycle]}</Badge> : null}
                 {selectedItem ? <Badge tone={selectedItem.demoMode === 'live' ? 'success' : selectedItem.demoMode === 'planned' ? 'warning' : 'muted'}>{demoModeLabel[selectedItem.demoMode]}</Badge> : null}
+                {selectedItem?.uxPrimaryThemeId ? <SectionBadge label={selectedItem.uxPrimaryThemeId} /> : null}
                 {selectedItem?.importStatement ? (
-                  <Button variant="secondary" className="ml-auto" onClick={() => handleCopy(selectedItem.importStatement)}>Import kopyala</Button>
+                  <Button variant="secondary" className="ml-auto" onClick={() => handleCopy(selectedItem.importStatement)}>
+                    Import kopyala
+                  </Button>
                 ) : null}
               </div>
-              {copied === 'ok' ? <Text variant="secondary" className="mt-3 block">Kopyalandı</Text> : null}
-              {copied === 'fail' ? <Text variant="secondary" className="mt-3 block">Kopyalanamadı</Text> : null}
-            </div>
+              {copied === 'ok' ? <Text variant="secondary" className="px-6 pb-4">Kopyalandı</Text> : null}
+              {copied === 'fail' ? <Text variant="secondary" className="px-6 pb-4">Kopyalanamadı</Text> : null}
+            </section>
 
-            <div className="px-4 py-4">
-              <div data-testid="design-lab-detail-tabs" className="rounded-[28px] border border-border-subtle bg-surface-panel p-2 shadow-sm">
-                <div className="flex flex-wrap gap-2">
+            <section
+              data-testid="design-lab-detail-tabs"
+              className="sticky top-4 z-10 rounded-[24px] border border-border-subtle bg-surface-default/95 p-2 shadow-sm backdrop-blur"
+            >
+              <div className="flex flex-wrap gap-2">
+                {detailTabMeta.map((tab) => {
+                  const active = detailTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      data-testid={`design-lab-tab-${tab.id}`}
+                      type="button"
+                      onClick={() => setDetailTab(tab.id)}
+                      className={`rounded-2xl px-4 py-2.5 text-sm font-medium transition ${
+                        active
+                          ? 'bg-surface-panel text-text-primary shadow-sm'
+                          : 'text-text-secondary hover:bg-surface-panel'
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section data-testid="design-lab-detail-panel" className="min-w-0">
+              {renderDetailTabContent(selectedItem)}
+            </section>
+          </main>
+
+          <aside className="hidden xl:block">
+            <div className="sticky top-4 space-y-4">
+              <section className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Bu sayfada
+                </Text>
+                <div className="mt-3 space-y-1.5">
                   {detailTabMeta.map((tab) => {
                     const active = detailTab === tab.id;
                     return (
                       <button
                         key={tab.id}
-                        data-testid={`design-lab-tab-${tab.id}`}
                         type="button"
                         onClick={() => setDetailTab(tab.id)}
-                        className={`min-w-[132px] rounded-2xl border px-4 py-3 text-left transition ${
-                          active
-                            ? 'border-action-primary-border bg-surface-default shadow-sm'
-                            : 'border-transparent bg-transparent hover:bg-surface-muted'
+                        className={`flex w-full items-center justify-between rounded-2xl px-3 py-2 text-left transition ${
+                          active ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-panel'
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-3">
-                          <Text as="span" className={`text-sm font-semibold ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
-                            {tab.label}
-                          </Text>
-                          {active ? <span className="h-2.5 w-2.5 rounded-full bg-action-primary" aria-hidden="true" /> : null}
-                        </div>
-                        <Text variant="secondary" className="mt-1 block text-[11px] leading-5">
-                          {tab.description}
-                        </Text>
+                        <span className={`text-sm ${active ? 'font-semibold text-text-primary' : 'text-text-secondary'}`}>{tab.label}</span>
+                        {active ? <span className="h-2.5 w-2.5 rounded-full bg-action-primary" aria-hidden="true" /> : null}
                       </button>
                     );
                   })}
                 </div>
-              </div>
-              <div data-testid="design-lab-detail-panel" className="mt-4">
-                {renderDetailTabContent(selectedItem)}
-              </div>
+              </section>
+
+              <section className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Library Stats
+                </Text>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                    <DetailLabel>Total</DetailLabel>
+                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.total}</div>
+                  </div>
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                    <DetailLabel>Exported</DetailLabel>
+                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.exported}</div>
+                  </div>
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                    <DetailLabel>Live</DetailLabel>
+                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.liveDemo}</div>
+                  </div>
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                    <DetailLabel>Planned</DetailLabel>
+                    <div className="mt-2 text-xl font-semibold text-text-primary">{summary.planned}</div>
+                  </div>
+                </div>
+              </section>
+
+              <section className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Metadata
+                </Text>
+                <div className="mt-3 space-y-3">
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                    <DetailLabel>Status</DetailLabel>
+                    <Text as="div" className={`mt-2 font-semibold ${selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary'}`}>
+                      {selectedItem ? statusLabel[selectedItem.lifecycle] : 'Seçim yok'}
+                    </Text>
+                  </div>
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                    <DetailLabel>Package</DetailLabel>
+                    <Text as="div" className="mt-2 font-semibold text-text-primary">mfe-ui-kit</Text>
+                  </div>
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                    <DetailLabel>Contract</DetailLabel>
+                    <Text as="div" className="mt-2 break-all text-xs font-medium text-text-primary">
+                      {selectedItem?.acceptanceContractId ?? '—'}
+                    </Text>
+                  </div>
+                </div>
+              </section>
             </div>
-          </section>
-        </section>
-      </section>
+          </aside>
+        </div>
+      </div>
     </div>
   );
 };
