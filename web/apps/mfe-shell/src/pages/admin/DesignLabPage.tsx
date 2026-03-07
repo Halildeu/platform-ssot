@@ -1503,9 +1503,6 @@ const DesignLabPage: React.FC = () => {
                   <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
                     Ürün Ağacı
                   </Text>
-                  <Text variant="secondary" className="mt-1 block text-xs leading-5">
-                    Track seç, altında family açılsın; sonra subgroup ve component düzeyine in.
-                  </Text>
                 </div>
 
                 <section data-testid="design-lab-track-section" className="space-y-2">
@@ -1532,7 +1529,6 @@ const DesignLabPage: React.FC = () => {
                                 <span className="text-xs text-text-secondary">{active ? '−' : '+'}</span>
                               </span>
                             </span>
-                            <span className="mt-1 block text-xs leading-5 text-text-secondary">{trackMeta[track].note}</span>
                           </span>
                         </button>
 
@@ -1555,11 +1551,11 @@ const DesignLabPage: React.FC = () => {
                                         <span className={`h-7 w-1.5 shrink-0 rounded-full ${groupActive ? 'bg-action-primary' : 'bg-border-subtle'}`} />
                                         <span className="min-w-0 flex-1">
                                           <span className="block text-sm font-medium text-text-primary">{group.title}</span>
-                                          <span className="mt-1 block text-[11px] text-text-secondary">
-                                            {countByGroup.get(group.id) ?? 0} component
-                                          </span>
                                         </span>
-                                        <span className="text-xs text-text-secondary">{groupActive ? '−' : '+'}</span>
+                                        <span className="flex items-center gap-2">
+                                          <Badge tone="muted">{countByGroup.get(group.id) ?? 0}</Badge>
+                                          <span className="text-xs text-text-secondary">{groupActive ? '−' : '+'}</span>
+                                        </span>
                                       </button>
 
                                       {groupActive ? (
@@ -1601,9 +1597,11 @@ const DesignLabPage: React.FC = () => {
                                                             <span className={`mt-0.5 h-7 w-1.5 shrink-0 rounded-full ${itemActive ? 'bg-action-primary' : 'bg-transparent'}`} />
                                                             <span className="min-w-0 flex-1">
                                                               <span className="block text-sm font-medium text-text-primary">{item.name}</span>
-                                                              <span className="mt-1 block text-[11px] text-text-secondary">
-                                                                {statusLabel[item.lifecycle]} · {demoModeLabel[item.demoMode]}
-                                                              </span>
+                                                            </span>
+                                                            <span className="shrink-0">
+                                                              <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
+                                                                {statusLabel[item.lifecycle]}
+                                                              </Badge>
                                                             </span>
                                                           </button>
                                                         );
