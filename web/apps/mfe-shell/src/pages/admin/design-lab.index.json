@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 66,
-    "planned": 10,
-    "liveDemo": 37,
+    "exported": 68,
+    "planned": 8,
+    "liveDemo": 39,
     "inspector": 29
   },
   "items": [
@@ -371,30 +371,39 @@
     {
       "name": "Descriptions",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Descriptions P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { Descriptions } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "data_display",
+      "subgroup": "descriptions",
+      "tags": [
+        "beta",
+        "data-display",
+        "descriptions",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Descriptions / Key-Value",
+      "demoMode": "live",
+      "description": "Key-value detail primitivei; owner, scope, risk ve status ozetlerini kolon bazli layout ile gosterir.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "state_feedback",
+        "documentation_standards"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "DetailDrawer",
@@ -1327,30 +1336,39 @@
     {
       "name": "TableSimple",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "TableSimple P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { TableSimple } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "data_display",
+      "subgroup": "table_simple",
+      "tags": [
+        "beta",
+        "data-display",
+        "table",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Table",
+      "demoMode": "live",
+      "description": "Hafif veri tablosu primitivei; loading, empty, sticky header ve density davranisini tek API ile sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "responsive_layout"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "measurement_kpi_and_experimentation",
+      "uxPrimarySubthemeId": "task_completion_time_p50_p95",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Tabs",

@@ -3,8 +3,8 @@
 ## Family Matrix
 - `foundation_primitives`: completed
 - `navigation`: completed
-- `forms`: completed for current wave scope
-- `data_display`: planned
+- `forms`: completed
+- `data_display`: in progress
 - `overlay`: planned
 - `ai_native_helpers`: planned
 
@@ -12,17 +12,11 @@
 - `wave_1_foundation_primitives`: completed
 - `wave_2_navigation`: completed
 - `wave_3_forms`: completed
+- `wave_4_data_display`: in progress
 
-## Forms mevcut set
-- `TextInput`
-- `TextArea`
-- `Checkbox`
-- `Radio`
-- `Switch`
-- `Slider`
-- `DatePicker`
-- `TimePicker`
-- `Upload`
+## Data display mevcut batch
+- `TableSimple`
+- `Descriptions`
 
 ## Son not
-- Forms dalgasi export + API + preview + doctor evidence ile kapandi.
+- Data display dalgasinda ilk hafif tablo batch'i export + API + preview + doctor evidence ile acildi.

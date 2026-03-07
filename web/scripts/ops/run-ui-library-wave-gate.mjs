@@ -25,6 +25,7 @@ const readActiveWave = () => {
   if (base.includes('wave-1-foundation-primitives')) return 'wave_1_foundation_primitives';
   if (base.includes('wave-2-navigation')) return 'wave_2_navigation';
   if (base.includes('wave-3-forms')) return 'wave_3_forms';
+  if (base.includes('wave-4-data-display')) return 'wave_4_data_display';
   throw new Error(`aktif wave anlasilamadi: ${active}`);
 };
 
@@ -46,6 +47,10 @@ const waveMap = {
   wave_3_forms: {
     checker: 'python3 scripts/check_ui_library_wave_3_forms.py',
     focus: ['TextInput', 'TextArea', 'Checkbox', 'Radio', 'Switch', 'Slider', 'DatePicker', 'TimePicker', 'Upload'],
+  },
+  wave_4_data_display: {
+    checker: 'python3 scripts/check_ui_library_wave_4_data_display.py',
+    focus: ['TableSimple', 'Descriptions'],
   },
 };
 

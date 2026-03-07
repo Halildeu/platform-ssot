@@ -407,7 +407,7 @@
       ],
       "exit_criteria": [
         "Data display seti loading/empty/error/success patternlerini ortak getirir.",
-        "Task-critical tablolar performans ve a11y \u00f6l\u00e7\u00fcm ba\u011flariyla gelir."
+        "Task-critical tablolar performans ve a11y ölçüm bağlariyla gelir."
       ]
     },
     {
@@ -776,7 +776,7 @@
     {
       "wave_id": "wave_4_data_display",
       "title_tr": "Data Display",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Grid ve hafif veri gosterim ailesini gorev odakli ve olculebilir hale getir.",
       "families": [
         "data_display"
@@ -794,6 +794,10 @@
       "dependencies": [
         "wave_1_foundation_primitives",
         "wave_3_forms"
+      ],
+      "notes": [
+        "TableSimple ve Descriptions export + live preview + API catalog ile acildi.",
+        "AgGridServer ve EntityGridTemplate substrate sertlestirmesi sonraki batch olarak izleniyor."
       ]
     },
     {

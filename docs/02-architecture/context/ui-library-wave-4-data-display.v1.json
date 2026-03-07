@@ -1,0 +1,192 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "wave_id": "wave_4_data_display",
+  "family_id": "data_display",
+  "status": "in_progress",
+  "purpose": "Data display dalgasi icin hafif tablo ve key-value veri gosterim primitive'lerini tek kanonik execution contract altinda acmak; agir grid substrate'i sonraki batch'lerde sertlestirmek.",
+  "baseline": {
+    "governance_lock_commit": "0900750",
+    "roadmap_lock_commit": "2393148",
+    "foundation_completion_commit": "5dfde36",
+    "navigation_completion_commit": "aab6659",
+    "forms_completion_commit": "31646ae",
+    "registry_snapshot": {
+      "exported_count": 61,
+      "planned_count": 15,
+      "live_demo_count": 32
+    }
+  },
+  "required_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+    "docs/02-architecture/context/ui-library-wave-4-data-display.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
+    "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+  ],
+  "implementation_batches": [
+    {
+      "batch_id": "batch_1_light_tables",
+      "status": "completed",
+      "objective": "Hafif veri listesi ve key-value detay bloklarini token-first, access-aware ve live preview olarak acmak.",
+      "components": [
+        "TableSimple",
+        "Descriptions"
+      ]
+    },
+    {
+      "batch_id": "batch_2_grid_upgrade",
+      "status": "planned",
+      "objective": "AgGridServer ve EntityGridTemplate substrate'ini docs/API/performance evidence ile sertlestirmek.",
+      "components": [
+        "AgGridServer",
+        "EntityGridTemplate"
+      ]
+    },
+    {
+      "batch_id": "batch_3_structured_views",
+      "status": "planned",
+      "objective": "List, Tree, TreeTable ve JsonViewer ile gorev odakli veri gezginlerini acmak.",
+      "components": [
+        "List",
+        "Tree",
+        "TreeTable",
+        "JsonViewer"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "component_name": "TableSimple",
+      "implementation_order": 1,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/TableSimple.tsx",
+          "web/packages/ui-kit/src/components/TableSimple.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "Table"
+      },
+      "ux_primary_theme_id": "measurement_kpi_and_experimentation",
+      "ux_primary_subtheme_id": "task_completion_time_p50_p95",
+      "acceptance_criteria": [
+        "caption, description, loading, empty ve striped state ayni primitive ile gelir",
+        "columns API'si accessor veya render callback ile deterministik calisir",
+        "empty state duplicate local card yerine kutuphane Empty primitive'i ile gosterilir",
+        "comfortable/compact density ve sticky header ayni surface API'sinde acilir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "table-simple-policy-list",
+          "title": "Policy / owner / status tablo akisi"
+        },
+        {
+          "id": "table-simple-loading-empty",
+          "title": "Loading ve empty davranisi"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari TableSimple icin exported/beta olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "Descriptions",
+      "implementation_order": 2,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Descriptions.tsx",
+          "web/packages/ui-kit/src/components/Descriptions.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "Descriptions / Key-Value"
+      },
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "confirmation_receipts_and_traceability",
+      "acceptance_criteria": [
+        "label-value-hint bloklari tek primitive ile grid veya tek kolon akisa yerlesir",
+        "success/warning/danger bilgi tonu item bazinda verilebilir",
+        "bos veri durumu duplicate panel yerine kutuphane Empty primitive'i ile gosterilir",
+        "span ve columns parametreleri ile detay ozet kartlari tek API icinde kalir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "descriptions-rollout-summary",
+          "title": "Rollout / owner / scope detay karti"
+        },
+        {
+          "id": "descriptions-compliance-panel",
+          "title": "Risk ve onay ozetleri"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Descriptions icin exported/beta olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    }
+  ],
+  "progress_summary": {
+    "completed_components": [
+      "TableSimple",
+      "Descriptions"
+    ],
+    "remaining_components": [
+      "AgGridServer",
+      "EntityGridTemplate",
+      "List",
+      "Tree",
+      "TreeTable",
+      "JsonViewer"
+    ]
+  },
+  "doctor_preset": "ui-library",
+  "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display",
+  "hard_rules": [
+    "wave_4_data_display gate PASS olmadan data display family release'e cikmaz",
+    "Agir grid substrate'i docs/API evidence olmadan stable sayilmaz",
+    "planned registry item'i export edilmismis gibi gosterilmez"
+  ]
+}

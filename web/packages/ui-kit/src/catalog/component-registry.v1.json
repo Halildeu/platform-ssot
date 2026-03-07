@@ -454,23 +454,35 @@
     {
       "name": "Descriptions",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Descriptions P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "data_display",
+      "subgroup": "descriptions",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Descriptions / Key-Value",
+      "demoMode": "live",
+      "description": "Key-value detail primitivei; owner, scope, risk ve status ozetlerini kolon bazli layout ile gosterir.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "state_feedback",
+        "documentation_standards"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-4",
+        "data-display",
+        "beta",
+        "descriptions"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "DetailDrawer",
@@ -1196,23 +1208,35 @@
     {
       "name": "TableSimple",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "TableSimple P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "data_display",
+      "subgroup": "table_simple",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Table",
+      "demoMode": "live",
+      "description": "Hafif veri tablosu primitivei; loading, empty, sticky header ve density davranisini tek API ile sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "responsive_layout"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-4",
+        "data-display",
+        "beta",
+        "table"
+      ],
+      "uxPrimaryThemeId": "measurement_kpi_and_experimentation",
+      "uxPrimarySubthemeId": "task_completion_time_p50_p95",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Tabs",

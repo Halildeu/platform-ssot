@@ -25,6 +25,8 @@ import {
   DatePicker,
   TimePicker,
   Upload,
+  TableSimple,
+  Descriptions,
   Skeleton,
   Spinner,
   Pagination,
@@ -281,9 +283,9 @@ const DesignLabPage: React.FC = () => {
   const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('overview');
   const [treeSelection, setTreeSelection] = useState<LibraryProductTreeSelection>({
     trackId: 'new_packages',
-    groupId: 'data_entry',
-    subgroupId: 'Text Input / TextArea',
-    itemId: 'TextInput',
+    groupId: 'data_display',
+    subgroupId: 'Table',
+    itemId: 'TableSimple',
   });
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -309,6 +311,17 @@ const DesignLabPage: React.FC = () => {
     { name: 'policy-draft.pdf', size: 245_000, type: 'application/pdf' },
     { name: 'control-matrix.xlsx', size: 82_000, type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
   ]);
+  const policyTableRows = [
+    { policy: 'Etik Politikası', owner: 'Uyum', status: 'Aktif', updatedAt: '06 Mar 2026' },
+    { policy: 'Hediye & Ağırlama', owner: 'Hukuk', status: 'Taslak', updatedAt: '05 Mar 2026' },
+    { policy: 'Çıkar Çatışması', owner: 'İK', status: 'Onay Bekliyor', updatedAt: '04 Mar 2026' },
+  ];
+  const rolloutDescriptionItems = [
+    { key: 'owner', label: 'Sahip', value: 'Uyum Operasyonları', helper: 'Canary ve rollout kararını veren ekip.' },
+    { key: 'scope', label: 'Kapsam', value: 'Tüm bağlı ortaklıklar', tone: 'info' as const, span: 2 as const },
+    { key: 'status', label: 'Durum', value: 'Aktif', tone: 'success' as const },
+    { key: 'review', label: 'Son gözden geçirme', value: '07 Mar 2026', helper: 'Change approval snapshot ile eşli.' },
+  ];
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -1375,6 +1388,81 @@ const DesignLabPage: React.FC = () => {
             </div>
           </div>
         );
+      case 'TableSimple':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Policy status table">
+                <TableSimple
+                  caption="Politika portföyü"
+                  description="Görev odaklı hafif tablo görünümü."
+                  columns={[
+                    { key: 'policy', label: 'Politika', accessor: 'policy', emphasis: true, truncate: true },
+                    { key: 'owner', label: 'Sahip', accessor: 'owner' },
+                    {
+                      key: 'status',
+                      label: 'Durum',
+                      align: 'center',
+                      render: (row) => <Badge tone={row.status === 'Aktif' ? 'success' : row.status === 'Taslak' ? 'warning' : 'info'}>{row.status}</Badge>,
+                    },
+                  ]}
+                  rows={policyTableRows}
+                  stickyHeader
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Loading + empty">
+                <div className="space-y-4">
+                  <TableSimple
+                    caption="Yüklenen tablo"
+                    columns={[
+                      { key: 'policy', label: 'Politika', accessor: 'policy' },
+                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
+                    ]}
+                    rows={[]}
+                    loading
+                  />
+                  <TableSimple
+                    caption="Boş tablo"
+                    columns={[
+                      { key: 'policy', label: 'Politika', accessor: 'policy' },
+                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
+                    ]}
+                    rows={[]}
+                    emptyStateLabel="Henüz yayınlanmış veri yok."
+                    density="compact"
+                  />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Descriptions':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Rollout summary">
+                <Descriptions
+                  title="Canary özeti"
+                  description="Rollout owner, scope ve review snapshot tek blokta."
+                  items={rolloutDescriptionItems}
+                  columns={2}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Risk / approval panel">
+                <Descriptions
+                  title="Risk ve onay"
+                  items={[
+                    { key: 'risk', label: 'Risk Seviyesi', value: 'Medium', tone: 'warning' },
+                    { key: 'approval', label: 'Onay Akışı', value: '2/3 tamamlandı', helper: 'Security sign-off bekleniyor.' },
+                    { key: 'ticket', label: 'Change ID', value: 'CHG-UI-204', tone: 'info' },
+                  ]}
+                  columns={1}
+                  density="compact"
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
       case 'Dropdown':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -2217,6 +2305,142 @@ const DesignLabPage: React.FC = () => {
                 </PreviewPanel>
                 <PreviewPanel title="Invalid">
                   <Upload label="Eksik kanit" invalid error="En az bir imzali PDF yuklenmeli." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'TableSimple':
+        return [
+          {
+            id: 'table-simple-policy-list',
+            eyebrow: 'Alternative 01',
+            title: 'Policy / owner / status table',
+            description: 'Task-critical policy listesini hafif, hızlı ve okunabilir bir tablo ile gösterir.',
+            badges: ['table', 'beta', 'status'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Policy matrix">
+                  <TableSimple
+                    caption="Politika portföyü"
+                    description="Owner ve status alanları tek tablo yüzeyinde."
+                    columns={[
+                      { key: 'policy', label: 'Politika', accessor: 'policy', emphasis: true, truncate: true },
+                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
+                      {
+                        key: 'status',
+                        label: 'Durum',
+                        align: 'center',
+                        render: (row) => <Badge tone={row.status === 'Aktif' ? 'success' : row.status === 'Taslak' ? 'warning' : 'info'}>{row.status}</Badge>,
+                      },
+                      { key: 'updatedAt', label: 'Güncelleme', accessor: 'updatedAt', align: 'right' },
+                    ]}
+                    rows={policyTableRows}
+                    stickyHeader
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Guidance">
+                  <Text variant="secondary" className="block leading-7">
+                    `TableSimple`, ağır grid altyapısına ihtiyaç olmayan görev listeleri için hızlı render, loading ve empty state
+                    davranışını tek primitive ile verir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'table-simple-loading-empty',
+            eyebrow: 'Alternative 02',
+            title: 'Loading and empty states',
+            description: 'Aynı primitive loading skeleton ve boş tablo davranışını yerel kopya olmadan sunar.',
+            badges: ['loading', 'empty', 'compact'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Loading">
+                  <TableSimple
+                    caption="Loading tablosu"
+                    columns={[
+                      { key: 'policy', label: 'Politika', accessor: 'policy' },
+                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
+                    ]}
+                    rows={[]}
+                    loading
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Empty">
+                  <TableSimple
+                    caption="Boş tablo"
+                    columns={[
+                      { key: 'policy', label: 'Politika', accessor: 'policy' },
+                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
+                    ]}
+                    rows={[]}
+                    emptyStateLabel="Henüz gösterilecek kayıt yok."
+                    density="compact"
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Descriptions':
+        return [
+          {
+            id: 'descriptions-rollout-summary',
+            eyebrow: 'Alternative 01',
+            title: 'Rollout / owner / scope summary',
+            description: 'Owner, scope, review ve status bilgilerini hızlı okunur bir key-value yüzeyinde toplar.',
+            badges: ['summary', 'beta', 'rollout'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Primary summary">
+                  <Descriptions
+                    title="Canary özeti"
+                    description="Rollout owner, scope ve review snapshot tek blokta."
+                    items={rolloutDescriptionItems}
+                    columns={2}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Interpretation">
+                  <Text variant="secondary" className="block leading-7">
+                    `Descriptions`, özellikle drawer, detail panel ve approval yüzeylerinde tekrar eden label-value bloklarını
+                    ortaklaştırır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'descriptions-compliance-panel',
+            eyebrow: 'Alternative 02',
+            title: 'Risk and approval panels',
+            description: 'Risk, approval ve control snapshot’larını tone-aware bilgi kartlarıyla taşır.',
+            badges: ['risk', 'approval', 'compact'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Approval">
+                  <Descriptions
+                    title="Risk ve onay"
+                    items={[
+                      { key: 'risk', label: 'Risk Seviyesi', value: 'Medium', tone: 'warning' },
+                      { key: 'approval', label: 'Onay Akışı', value: '2/3 tamamlandı', helper: 'Security sign-off bekleniyor.' },
+                      { key: 'ticket', label: 'Change ID', value: 'CHG-UI-204', tone: 'info' },
+                    ]}
+                    columns={1}
+                    density="compact"
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Ownership">
+                  <Descriptions
+                    title="Operasyon özeti"
+                    items={[
+                      { key: 'owner', label: 'Sahip', value: 'Platform UX' },
+                      { key: 'window', label: 'Pencere', value: 'Cumartesi 22:00', tone: 'info' },
+                      { key: 'signoff', label: 'Sign-off', value: 'Ready', tone: 'success' },
+                    ]}
+                    columns={1}
+                    density="compact"
+                  />
                 </PreviewPanel>
               </div>
             ),

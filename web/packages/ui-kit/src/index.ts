@@ -47,6 +47,8 @@ export * from './components/Slider';
 export * from './components/DatePicker';
 export * from './components/TimePicker';
 export * from './components/Upload';
+export * from './components/TableSimple';
+export * from './components/Descriptions';
 export * from './components/Modal';
 export * from './components/Dropdown';
 export * from './components/Tag';

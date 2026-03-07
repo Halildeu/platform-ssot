@@ -68,6 +68,21 @@
       ]
     },
     {
+      "id": "data_display",
+      "label": "Data Display",
+      "subgroups": [
+        { "id": "table_simple", "label": "Table" },
+        { "id": "descriptions", "label": "Descriptions / Key-Value" },
+        { "id": "list", "label": "List" },
+        { "id": "tree_table", "label": "Tree / TreeTable" },
+        { "id": "stat_cards", "label": "Statistic / KPI cards" },
+        { "id": "timeline", "label": "Timeline" },
+        { "id": "calendar_scheduler", "label": "Calendar / Scheduler view" },
+        { "id": "media", "label": "Media (Image/Carousel)" },
+        { "id": "json_viewer", "label": "Code / JSON viewer" }
+      ]
+    },
+    {
       "id": "content",
       "label": "Content & Typography",
       "subgroups": [

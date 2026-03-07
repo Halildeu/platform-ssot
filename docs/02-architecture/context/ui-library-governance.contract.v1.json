@@ -406,14 +406,14 @@
     "mandatory_checks": [
       "python3 scripts/check_ui_library_ux_alignment.py",
       "python3 scripts/check_ui_library_component_roadmap.py",
-      "python3 scripts/check_ui_library_wave_3_forms.py",
       "python3 scripts/check_ui_library_wave_2_navigation.py",
       "npm -C web run designlab:index",
       "npm -C web run lint:tailwind",
       "npm -C web run lint:no-antd",
       "npm -C web run test:ui-kit",
-      "npm -C web run gate:ui-library-wave -- --wave wave_3_forms",
-      "npm -C web run doctor:frontend -- --preset ui-library"
+      "npm -C web run doctor:frontend -- --preset ui-library",
+      "python3 scripts/check_ui_library_wave_4_data_display.py",
+      "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
     ],
     "release_readiness_rules": [
       "registry drift = 0",
@@ -438,7 +438,7 @@
       "docs/02-architecture/context/ux-katalogu.reference.v1.json",
       "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
       "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
-      "docs/02-architecture/context/ui-library-wave-3-forms.v1.json",
+      "docs/02-architecture/context/ui-library-wave-4-data-display.v1.json",
       "docs/02-architecture/context/ui-library-system.context.v1.json",
       "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
       "docs/00-handbook/STYLE-WEB-001.md",
