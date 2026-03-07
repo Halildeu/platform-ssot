@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useId } from 'react';
 import {
   resolveAccessState,
   type AccessControlledProps,
@@ -31,6 +31,24 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
   accessReason,
 }) => {
   const accessState = resolveAccessState(access);
+  const titleId = useId();
+
+  useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, onClose]);
+
   if (!open || accessState.isHidden) {
     return null;
   }
@@ -69,9 +87,13 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
             overflow: 'hidden',
             boxShadow: 'var(--elevation-overlay)',
           }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          aria-label={title ? undefined : 'Drawer'}
         >
           <header className="flex items-center justify-between border-b border-border-subtle px-6 py-4">
-            <div className="text-base font-semibold text-text-primary">{title}</div>
+            <div id={title ? titleId : undefined} className="text-base font-semibold text-text-primary">{title}</div>
             <button
               type="button"
               onClick={onClose}

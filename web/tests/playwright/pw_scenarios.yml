@@ -520,6 +520,33 @@ scenarios:
       - click: '[data-testid="design-lab-item-tooltip"]'
       - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: FormDrawer
+      - expectVisible: '[data-testid="design-lab-item-formdrawer"]'
+      - click: '[data-testid="design-lab-item-formdrawer"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: 'button:has-text("Yeni kayıt drawer")'
+      - expectVisible: '[role="dialog"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: DetailDrawer
+      - expectVisible: '[data-testid="design-lab-item-detaildrawer"]'
+      - click: '[data-testid="design-lab-item-detaildrawer"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: 'button:has-text("Detay drawer")'
+      - expectVisible: '[role="dialog"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: Popover
+      - expectVisible: '[data-testid="design-lab-item-popover"]'
+      - click: '[data-testid="design-lab-item-popover"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: 'button:has-text("Popover aç")'
+      - expectVisible: '[role="dialog"]'
 
   - name: shell_public_route_walk
     level: 1

@@ -508,7 +508,7 @@
       "taxonomyGroupId": "overlays_portals",
       "taxonomySubgroup": "Drawer / Side panel",
       "demoMode": "live",
-      "description": "Kayit detay ve sekmeli inceleme akislari icin ortak drawer yapisi.",
+      "description": "Detay, audit ve summary akislari icin sekmeli side panel primitivei.",
       "sectionIds": [
         "component_library_management",
         "overlay_components",
@@ -517,7 +517,20 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+      "tags": [
+        "wave-5",
+        "overlay",
+        "stable",
+        "drawer",
+        "detail"
       ]
     },
     {
@@ -677,7 +690,7 @@
       "taxonomyGroupId": "overlays_portals",
       "taxonomySubgroup": "Drawer / Side panel",
       "demoMode": "live",
-      "description": "Form odakli side-panel akislari icin standart drawer yapisi.",
+      "description": "Form akislari icin step-aware ve access-aware side panel primitivei.",
       "sectionIds": [
         "component_library_management",
         "overlay_components",
@@ -686,7 +699,20 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "multi_step_wizard_progress",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+      "tags": [
+        "wave-5",
+        "overlay",
+        "stable",
+        "drawer",
+        "form"
       ]
     },
     {
@@ -916,22 +942,36 @@
     {
       "name": "Popover",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Popover P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "overlays",
+      "subgroup": "popover",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Popover",
+      "demoMode": "live",
+      "description": "Kisa ama rich guidance ve inline action cluster akislari icin overlay panel.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "overlay_components",
+        "state_feedback",
+        "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "actionable_error_messages",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+      "tags": [
+        "wave-5",
+        "overlay",
+        "beta",
+        "popover",
+        "guidance"
       ]
     },
     {

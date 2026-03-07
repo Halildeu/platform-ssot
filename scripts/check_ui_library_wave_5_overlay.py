@@ -41,7 +41,14 @@ REQUIRED_COMPONENT_KEYS = [
 ]
 
 REQUIRED_GATE_COMMAND = 'npm -C web run gate:ui-library-wave -- --wave wave_5_overlay'
-EXPECTED_COMPONENTS = {'Modal', 'Dropdown', 'Tooltip'}
+EXPECTED_COMPONENTS = {
+    'Modal',
+    'Dropdown',
+    'Tooltip',
+    'FormDrawer',
+    'DetailDrawer',
+    'Popover',
+}
 
 
 def main() -> int:

@@ -2021,6 +2021,189 @@
         "readonly interaction guard",
         "maxFiles enforcement"
       ]
+    },
+    {
+      "name": "FormDrawer",
+      "variantAxes": [
+        "size: md | lg | xl",
+        "footer: action-bar | readonly",
+        "surface: create | edit | guided-form"
+      ],
+      "stateModel": [
+        "open / closed",
+        "escape dismiss",
+        "readonly access guard",
+        "form submit / cancel flow"
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": true,
+          "description": "Drawer acikligini controlled olarak yonetir."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Drawer title ve aria-labelledby kaynagi."
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Primary/secondary action alani."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkileşim duzeyi."
+        },
+        {
+          "name": "onClose / onSubmit",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Dismiss ve form aksiyon callbackleri."
+        }
+      ],
+      "previewFocus": [
+        "create flow drawer",
+        "readonly policy drawer",
+        "submit/cancel footer states"
+      ],
+      "regressionFocus": [
+        "escape close parity",
+        "readonly submit guard",
+        "dialog labelling"
+      ]
+    },
+    {
+      "name": "DetailDrawer",
+      "variantAxes": [
+        "tabs: summary | audit | details",
+        "surface: review | evidence | readonly",
+        "width: lg | xl"
+      ],
+      "stateModel": [
+        "open / closed",
+        "active tab",
+        "escape dismiss",
+        "readonly access hint"
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": true,
+          "description": "Drawer acikligini controlled olarak yonetir."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Header title ve aria label kaynagi."
+        },
+        {
+          "name": "tabs",
+          "type": "DetailDrawerTab[]",
+          "default": "-",
+          "required": true,
+          "description": "Sekmeli icerik yapisini tanimlar."
+        },
+        {
+          "name": "access / accessReason",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
+          "default": "full / -",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve readonly nedeni."
+        },
+        {
+          "name": "onClose",
+          "type": "() => void",
+          "default": "-",
+          "required": false,
+          "description": "Dismiss callbacki."
+        }
+      ],
+      "previewFocus": [
+        "tabbed review drawer",
+        "readonly evidence drawer",
+        "audit/status tab switch"
+      ],
+      "regressionFocus": [
+        "tab aria wiring",
+        "escape close parity",
+        "readonly badge visibility"
+      ]
+    },
+    {
+      "name": "Popover",
+      "variantAxes": [
+        "side: top | right | bottom | left",
+        "align: start | center | end",
+        "surface: guidance | policy | action-cluster"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled open",
+        "outside click dismiss",
+        "escape dismiss",
+        "readonly access guard"
+      ],
+      "props": [
+        {
+          "name": "trigger",
+          "type": "ReactElement",
+          "default": "-",
+          "required": false,
+          "description": "Popover panelini acan referans element."
+        },
+        {
+          "name": "title / content",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Panel basligi ve icerigi."
+        },
+        {
+          "name": "open / defaultOpen",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Controlled veya uncontrolled aciklik durumu."
+        },
+        {
+          "name": "side / align",
+          "type": "'top' | 'right' | 'bottom' | 'left' / 'start' | 'center' | 'end'",
+          "default": "bottom / center",
+          "required": false,
+          "description": "Panel konumunu belirler."
+        },
+        {
+          "name": "access / accessReason",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden' / string",
+          "default": "full / -",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve engel nedeni."
+        }
+      ],
+      "previewFocus": [
+        "rich guidance popover",
+        "readonly blocked popover",
+        "action cluster panel"
+      ],
+      "regressionFocus": [
+        "outside click dismiss",
+        "controlled/uncontrolled parity",
+        "readonly interaction guard"
+      ]
     }
   ]
 }

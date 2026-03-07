@@ -27,6 +27,7 @@ export interface DetailDrawerProps extends AccessControlledProps {
   extra?: React.ReactNode;
   children?: React.ReactNode;
   onTabChange?: (key: string) => void;
+  accessReason?: string;
 }
 
 const renderSection = (section: DetailSection) => (
@@ -52,17 +53,36 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   children,
   onTabChange,
   access = 'full',
+  accessReason,
 }) => {
   const accessState = resolveAccessState(access);
   const hasTabs = Boolean(tabs && tabs.length > 0);
   const firstTabKey = hasTabs ? tabs![0].key : null;
   const [activeTab, setActiveTab] = React.useState<string | null>(firstTabKey);
+  const titleId = React.useId();
+  const tabPanelId = React.useId();
 
   React.useEffect(() => {
     if (open && hasTabs) {
       setActiveTab(firstTabKey);
     }
   }, [tabs, open, hasTabs, firstTabKey]);
+
+  React.useEffect(() => {
+    if (!open) {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, onClose]);
 
   const handleTabSelect = (tabKey: string) => {
     setActiveTab(tabKey);
@@ -100,9 +120,13 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
             overflow: 'hidden',
             boxShadow: 'var(--elevation-overlay)',
           }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          aria-label={title ? undefined : 'Detail drawer'}
         >
           <header className="flex items-center justify-between border-b border-border-subtle px-6 py-4">
-            <div className="text-base font-semibold text-text-primary">{title}</div>
+            <div id={title ? titleId : undefined} className="text-base font-semibold text-text-primary">{title}</div>
             <div className="flex items-center gap-3">
               {extra}
               <button
@@ -110,6 +134,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 onClick={onClose}
                 className="inline-flex h-8 w-8 items-center justify-center rounded-full text-text-subtle hover:text-text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selection-outline focus-visible:ring-offset-1"
                 aria-label="Kapat"
+                title={accessReason}
               >
                 ✕
               </button>
@@ -117,13 +142,17 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
           </header>
           <div className="flex h-full flex-col overflow-hidden">
             {hasTabs && (
-              <div className="mfe-detail-drawer__tabs flex border-b border-border-subtle px-6">
+              <div className="mfe-detail-drawer__tabs flex border-b border-border-subtle px-6" role="tablist" aria-label="Detail drawer tabs">
                 {tabs?.map((tab) => {
                   const isActive = tab.key === (activeTab ?? tabs[0]?.key);
                   return (
                     <button
                       key={tab.key}
                       type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-controls={`${tabPanelId}-${tab.key}`}
+                      id={`${tabPanelId}-tab-${tab.key}`}
                       className={`px-4 py-3 text-sm font-medium transition-colors ${
                         isActive
                           ? 'border-b-2 border-selection text-text-primary'
@@ -137,7 +166,12 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
                 })}
               </div>
             )}
-            <div className="flex-1 overflow-y-auto px-6 py-4">
+            <div
+              className="flex-1 overflow-y-auto px-6 py-4"
+              role={hasTabs ? 'tabpanel' : undefined}
+              id={hasTabs && activeTab ? `${tabPanelId}-${activeTab}` : undefined}
+              aria-labelledby={hasTabs && activeTab ? `${tabPanelId}-tab-${activeTab}` : undefined}
+            >
               {hasCustomContent ? (
                 children
               ) : (

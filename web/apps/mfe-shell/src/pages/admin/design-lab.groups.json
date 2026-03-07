@@ -44,6 +44,10 @@
         {
           "id": "drawers",
           "label": "Drawers"
+        },
+        {
+          "id": "popover",
+          "label": "Popover"
         }
       ]
     },

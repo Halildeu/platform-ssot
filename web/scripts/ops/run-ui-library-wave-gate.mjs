@@ -55,7 +55,7 @@ const waveMap = {
   },
   wave_5_overlay: {
     checker: 'python3 scripts/check_ui_library_wave_5_overlay.py',
-    focus: ['Modal', 'Dropdown', 'Tooltip'],
+    focus: ['Modal', 'Dropdown', 'Tooltip', 'FormDrawer', 'DetailDrawer', 'Popover'],
   },
 };
 

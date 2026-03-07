@@ -122,6 +122,7 @@
       "title": "Overlays & Portals",
       "subgroups": [
         "Drawer / Side panel",
+        "Popover",
         "Modal stack manager",
         "Context menu",
         "Command palette",

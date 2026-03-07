@@ -3,8 +3,8 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_5_overlay",
   "family_id": "overlay",
-  "status": "in_progress",
-  "purpose": "Overlay dalgasinin ilk batch'inde Modal, Dropdown ve Tooltip primitive'lerini gercek urun davranisi, accessibility ve doctor evidence ile sertlestirmek.",
+  "status": "completed",
+  "purpose": "Overlay dalgasinda Modal, Dropdown, Tooltip, FormDrawer, DetailDrawer ve Popover primitivelerini gercek urun davranisi, accessibility ve doctor evidence ile standardize etmek.",
   "baseline": {
     "governance_lock_commit": "0900750",
     "roadmap_lock_commit": "2393148",
@@ -43,7 +43,7 @@
     },
     {
       "batch_id": "batch_2_drawer_and_popover",
-      "status": "planned",
+      "status": "completed",
       "objective": "FormDrawer, DetailDrawer ve Popover ailesini ayni overlay kontratina almak.",
       "components": [
         "FormDrawer",
@@ -217,13 +217,181 @@
         "component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "FormDrawer",
+      "implementation_order": 4,
+      "source_state": "exported_substrate",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/layout/FormDrawer/FormDrawer.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/layout/FormDrawer/FormDrawer.tsx",
+          "web/packages/ui-kit/src/layout/FormDrawer/FormDrawer.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "overlays",
+        "target_taxonomy_subgroup": "Drawer / Side panel"
+      },
+      "ux_primary_theme_id": "data_entry_validation_recovery",
+      "ux_primary_subtheme_id": "multi_step_wizard_progress",
+      "acceptance_criteria": [
+        "escape ile kapanma ve aria-modal davranisi standart olur",
+        "readonly access durumunda submit aksiyonu bloklanir ama close affordance korunur",
+        "footer ve body surface ayni primitive API uzerinden sunulur",
+        "create/edit drawer varyantlari ayni docs sayfasinda gorunur olur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "form-drawer-create-flow",
+          "title": "Yeni kayit drawer akisi"
+        },
+        {
+          "id": "form-drawer-readonly-policy",
+          "title": "Readonly policy drawer"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_5_overlay.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari FormDrawer icin exported/stable olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "DetailDrawer",
+      "implementation_order": 5,
+      "source_state": "exported_substrate",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/layout/DetailDrawer/DetailDrawer.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/layout/DetailDrawer/DetailDrawer.tsx",
+          "web/packages/ui-kit/src/layout/DetailDrawer/DetailDrawer.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "overlays",
+        "target_taxonomy_subgroup": "Drawer / Side panel"
+      },
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "confirmation_receipts_and_traceability",
+      "acceptance_criteria": [
+        "tablist ve tabpanel arialari deterministic olur",
+        "escape dismiss ve close affordance ayni primitive icinde korunur",
+        "readonly detail drawer access reason ile gorunur olur",
+        "audit/summary/detail varyantlari ayni docs yuzeyinde karsilastirilir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "detail-drawer-tabbed-review",
+          "title": "Sekmeli review drawer"
+        },
+        {
+          "id": "detail-drawer-readonly-evidence",
+          "title": "Readonly evidence drawer"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_5_overlay.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari DetailDrawer icin exported/stable olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "Popover",
+      "implementation_order": 6,
+      "source_state": "planned_registry",
+      "registry_action": "promote_planned_entry_to_exported",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Popover.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Popover.tsx",
+          "web/packages/ui-kit/src/components/Popover.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "overlays",
+        "target_taxonomy_subgroup": "Popover"
+      },
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "actionable_error_messages",
+      "acceptance_criteria": [
+        "outside click ve escape dismiss ayni primitive icinde standardize olur",
+        "readonly access durumunda popover acilmaz ve neden metni docs orneginde gorunur",
+        "controlled/uncontrolled open parity korunur",
+        "rich guidance ve action cluster varyantlari ayni docs sayfasinda yer alir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "popover-rich-guidance",
+          "title": "Rich guidance popover"
+        },
+        {
+          "id": "popover-readonly-panel",
+          "title": "Readonly blocked popover"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_5_overlay.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Popover icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "progress_summary": {
     "completed_components": [
       "Modal",
       "Dropdown",
-      "Tooltip"
+      "Tooltip",
+      "FormDrawer",
+      "DetailDrawer",
+      "Popover"
     ],
     "remaining_components": []
   },

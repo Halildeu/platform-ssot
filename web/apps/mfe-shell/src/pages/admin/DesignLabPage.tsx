@@ -6,6 +6,7 @@ import {
   Button,
   DetailDrawer,
   Dropdown,
+  Popover,
   Empty,
   EntityGridTemplate,
   FilterBar,
@@ -294,6 +295,7 @@ const DesignLabPage: React.FC = () => {
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [formDrawerOpen, setFormDrawerOpen] = useState(false);
+  const [readonlyFormDrawerOpen, setReadonlyFormDrawerOpen] = useState(false);
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const [selectValue, setSelectValue] = useState('comfortable');
   const [textInputValue, setTextInputValue] = useState('Nova kullanıcı');
@@ -545,6 +547,7 @@ const DesignLabPage: React.FC = () => {
   useEffect(() => {
     setModalOpen(false);
     setFormDrawerOpen(false);
+    setReadonlyFormDrawerOpen(false);
     setDetailDrawerOpen(false);
     setDetailTab('overview');
   }, [selectedItem?.name]);
@@ -1816,6 +1819,26 @@ const DesignLabPage: React.FC = () => {
             />
           </div>
         );
+      case 'Popover':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <Popover
+              title="Policy guidance"
+              trigger={<Button variant="secondary">Popover aç</Button>}
+              content={(
+                <div className="space-y-3">
+                  <Text variant="secondary" className="block leading-6">
+                    Kısa ama zengin bağlam gerektiğinde popover kullanılır. Bu panel route değiştirmeden karar desteği verir.
+                  </Text>
+                  <div className="flex flex-wrap gap-2">
+                    <Tag tone="warning">Policy</Tag>
+                    <Tag tone="info">Readonly</Tag>
+                  </div>
+                </div>
+              )}
+            />
+          </div>
+        );
       case 'ReportFilterPanel':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -2735,6 +2758,215 @@ const DesignLabPage: React.FC = () => {
                   <Text variant="secondary" className="block leading-7">
                     Kullanıcıyı durduracak ya da karar verdirecek içerik tooltip yerine dialog, inline error veya panel yüzeyine
                     taşınmalıdır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'FormDrawer':
+        return [
+          {
+            id: 'form-drawer-create-flow',
+            eyebrow: 'Alternative 01',
+            title: 'Form drawer / create flow',
+            description: 'Sayfa bağlamını kaybetmeden kısa veri girişini side panel içine taşır.',
+            badges: ['drawer', 'stable', 'form'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <PreviewPanel title="Create / edit panel">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button onClick={() => setFormDrawerOpen(true)}>Yeni kayıt drawer</Button>
+                    <SectionBadge label="slide-over" />
+                  </div>
+                  <FormDrawer open={formDrawerOpen} title="Yeni kayıt" onClose={() => setFormDrawerOpen(false)}>
+                    <div className="flex flex-col gap-3">
+                      <TextInput label="Kayıt adı" value={textInputValue} onChange={(event) => setTextInputValue(event.target.value)} />
+                      <Select
+                        label="Yoğunluk"
+                        value={selectValue}
+                        onChange={(event) => setSelectValue(event.target.value)}
+                        options={[
+                          { value: 'compact', label: 'Compact' },
+                          { value: 'comfortable', label: 'Comfortable' },
+                        ]}
+                      />
+                    </div>
+                  </FormDrawer>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    FormDrawer, modal yerine daha uzun ama hâlâ görev odaklı form akışları için kullanılmalı. Route değişmeden veri girişi
+                    yapılır; ana ekran bağlamı korunur.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'form-drawer-readonly-policy',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly / policy constrained form drawer',
+            description: 'Kaydet aksiyonunu kapatıp inceleme ve bağlamı canlı tutar.',
+            badges: ['readonly', 'policy', 'drawer'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly state">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button variant="secondary" onClick={() => setReadonlyFormDrawerOpen(true)}>
+                      Readonly drawer
+                    </Button>
+                    <SectionBadge label="policy-locked" />
+                  </div>
+                  <FormDrawer
+                    open={readonlyFormDrawerOpen}
+                    title="Readonly kayıt"
+                    onClose={() => setReadonlyFormDrawerOpen(false)}
+                    access="readonly"
+                  >
+                    <div className="flex flex-col gap-3">
+                      <TextInput label="Kayıt adı" value="Readonly kayıt" readOnly onChange={() => undefined} />
+                      <Text variant="secondary">Kaydet aksiyonu policy gereği kapalıdır.</Text>
+                    </div>
+                  </FormDrawer>
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Policy nedeniyle yalnız inceleme yapılacaksa drawer açık kalabilir; submit kapanır, kapatma ve bağlam görünürlüğü devam eder.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'DetailDrawer':
+        return [
+          {
+            id: 'detail-drawer-tabbed-review',
+            eyebrow: 'Alternative 01',
+            title: 'Tabbed review drawer',
+            description: 'Detay, audit ve rollout özetini aynı slide-over içinde sekmeli olarak sunar.',
+            badges: ['drawer', 'stable', 'review'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <PreviewPanel title="Detail review panel">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button onClick={() => setDetailDrawerOpen(true)}>Detay drawer</Button>
+                    <SectionBadge label="tabbed" />
+                  </div>
+                  <DetailDrawer
+                    open={detailDrawerOpen}
+                    title="Rollout detay"
+                    onClose={() => setDetailDrawerOpen(false)}
+                    tabs={[
+                      {
+                        key: 'summary',
+                        label: 'Summary',
+                        sections: [
+                          { key: 'owner', title: 'Owner', content: <Text variant="secondary">Platform Ops</Text> },
+                          { key: 'scope', title: 'Scope', content: <Text variant="secondary">TR + EU rollout</Text> },
+                        ],
+                      },
+                      {
+                        key: 'audit',
+                        label: 'Audit',
+                        sections: [
+                          { key: 'approval', title: 'Approval', content: <Text variant="secondary">07 Mar 2026 / approved</Text> },
+                          { key: 'trace', title: 'Trace', content: <Text variant="secondary">trace-id: overlay-4471</Text> },
+                        ],
+                      },
+                    ]}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    DetailDrawer; detail, audit ve summary içeriğini route kırmadan sunmak için uygundur. İçerik yoğunluğu modalı geçtiğinde drawer tercih edilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'detail-drawer-readonly-evidence',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly evidence drawer',
+            description: 'Kanıt ve özet bloklarını sekmesiz ama düzenli bir inceleme yüzeyinde toplar.',
+            badges: ['readonly', 'evidence', 'summary'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Evidence summary">
+                  <div className="rounded-3xl border border-border-subtle bg-surface-canvas p-5">
+                    <Text preset="title">Deployment kanıtı</Text>
+                    <Text variant="secondary" className="mt-3 block leading-7">
+                      Detail drawer tek bir summary yüzeyi olarak da kullanılabilir. Özellikle readonly kanıt ve snapshot incelemelerinde iyi çalışır.
+                    </Text>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    İçerik çok uzarsa drawer içinde section/tabs kullan; kısa ve pasif inceleme gerekiyorsa sekmesiz summary da yeterlidir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Popover':
+        return [
+          {
+            id: 'popover-rich-guidance',
+            eyebrow: 'Alternative 01',
+            title: 'Rich contextual guidance',
+            description: 'Tooltip için uzun, drawer için kısa kalan bağlamı yerinde gösterir.',
+            badges: ['popover', 'beta', 'guidance'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <PreviewPanel title="Contextual helper">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Popover
+                      title="Policy note"
+                      trigger={<Button variant="secondary">Popover aç</Button>}
+                      content={(
+                        <div className="space-y-3">
+                          <Text variant="secondary" className="block leading-6">
+                            Bu alan yalnız yayın penceresi açıkken düzenlenebilir. Kapsam ve risk kısa panel içinde açıklanır.
+                          </Text>
+                          <div className="flex flex-wrap gap-2">
+                            <Tag tone="info">Contextual</Tag>
+                            <Tag tone="warning">Policy</Tag>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Popover, kısa ama rich içerik için kullanılır. Menü değildir; kullanıcıya yardımcı panel, ek bağlam veya küçük action cluster gösterir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'popover-readonly-panel',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly helper panel',
+            description: 'Readonly ve disabled akışlarda neden-sonuç bilgisini tooltipten daha görünür verir.',
+            badges: ['readonly', 'helper', 'panel'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly helper">
+                  <Popover
+                    title="Readonly reason"
+                    access="readonly"
+                    trigger={<Button variant="ghost">Neden kapalı?</Button>}
+                    content={<Text variant="secondary">Popover readonly olduğunda açılmaz; bu durumda başka yüzey seçilmelidir.</Text>}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Eğer kullanıcı bir şey yapamayacaksa popover’ın kendisi de policy guard ile davranmalı; tooltip ya da inline mesaj alternatifi düşünülmelidir.
                   </Text>
                 </PreviewPanel>
               </div>
@@ -3661,7 +3893,7 @@ const DesignLabPage: React.FC = () => {
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[300px_minmax(0,1fr)_260px]">
           <aside
             data-testid="design-lab-sidebar"
-            className="sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
+            className="relative z-10 sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
           >
             <div className="border-b border-border-subtle px-5 py-5">
               <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.22em]">
