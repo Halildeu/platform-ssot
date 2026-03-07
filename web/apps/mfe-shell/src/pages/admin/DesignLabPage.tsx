@@ -2446,6 +2446,154 @@ const DesignLabPage: React.FC = () => {
             ),
           },
         ];
+      case 'AgGridServer':
+        return [
+          {
+            id: 'ag-grid-server-ownership-list',
+            eyebrow: 'Alternative 01',
+            title: 'Server-backed ownership matrix',
+            description: 'AgGridServer, gateway tarafindan beslenen owner/status listelerini server-side datasource kontratiyla gösterir.',
+            badges: ['server-side', 'stable', 'performance'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Server ownership list">
+                  <div className="h-[360px]">
+                    <AgGridServer
+                      height={320}
+                      columnDefs={[
+                        { field: 'id', headerName: 'ID', width: 120 },
+                        { field: 'name', headerName: 'Kaynak', flex: 1 },
+                        { field: 'owner', headerName: 'Owner', width: 180 },
+                      ]}
+                      getData={async () => ({ rows: serverGridRows, total: serverGridRows.length })}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Performance contract">
+                  <div className="grid grid-cols-1 gap-3">
+                    <LibraryMetricCard label="Datasource" value="server" note="Grid veriyi getData kontratiyla ceker." />
+                    <LibraryMetricCard label="Rows" value={`${serverGridRows.length}`} note="Batch-2 demo snapshot verisi." />
+                    <LibraryMetricCard label="Surface" value="stable" note="Substrate component; performance contract zorunlu." />
+                  </div>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'ag-grid-server-loading-contract',
+            eyebrow: 'Alternative 02',
+            title: 'Loading and fallback contract',
+            description: 'Datasource, loading ve empty davranisi ayni primitive icinde kalir; ekran seviyesi kopya kod gerekmez.',
+            badges: ['loading', 'empty', 'ops'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Operator guidance">
+                  <Text variant="secondary" className="block leading-7">
+                    `AgGridServer`, server-side pagination ve datasource baglama davranisini tek noktada toplar. Bu sayede
+                    ownership listesi, audit query sonucu ve entity registry gibi yuzeyler ayni behavior contract'i kullanir.
+                  </Text>
+                </PreviewPanel>
+                <PreviewPanel title="Evidence focus">
+                  <Descriptions
+                    title="Regression odagi"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'datasource', label: 'Datasource', value: 'setServerSideDatasource', tone: 'info' },
+                      { key: 'loading', label: 'Loading', value: 'Overlay + request pending', tone: 'warning' },
+                      { key: 'failure', label: 'Failure', value: 'fail callback', tone: 'danger' },
+                    ]}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'EntityGridTemplate':
+        return [
+          {
+            id: 'entity-grid-template-client-registry',
+            eyebrow: 'Alternative 01',
+            title: 'Client-side entity registry',
+            description: 'Toolbar, variant ve sayfalama davranisini tek entity template yuzeyinde toplar.',
+            badges: ['client', 'stable', 'toolbar'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Entity registry">
+                  <div className="h-[420px]">
+                    <EntityGridTemplate<Record<string, unknown>>
+                      gridId="design-lab-entity-grid-client"
+                      gridSchemaVersion={1}
+                      dataSourceMode="client"
+                      rowData={gridRows}
+                      total={gridRows.length}
+                      page={1}
+                      pageSize={25}
+                      columnDefs={[
+                        { field: 'name', headerName: 'Isim', flex: 1 },
+                        { field: 'status', headerName: 'Durum', width: 140 },
+                        { field: 'updatedAt', headerName: 'Guncelleme', width: 140 },
+                      ]}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Template value">
+                  <Text variant="secondary" className="block leading-7">
+                    `EntityGridTemplate`, toolbar, varyant secimi, pagination ve theme akslarini tek substrate bileşeninde
+                    birlestirir. Client-side liste ekranlari icin ayrı shell kodu yazmak zorunda kalmazsin.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'entity-grid-template-server-mode',
+            eyebrow: 'Alternative 02',
+            title: 'Server-side toolbar and datasource mode',
+            description: 'Ayni template, server mode calisirken datasource ve toolbar davranisini korur.',
+            badges: ['server', 'variant', 'mode-switch'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Server mode">
+                  <div className="h-[420px]">
+                    <EntityGridTemplate<Record<string, unknown>>
+                      gridId="design-lab-entity-grid-server"
+                      gridSchemaVersion={2}
+                      dataSourceMode="server"
+                      total={serverGridRows.length}
+                      page={1}
+                      pageSize={25}
+                      columnDefs={[
+                        { field: 'id', headerName: 'ID', width: 120 },
+                        { field: 'name', headerName: 'Kaynak', flex: 1 },
+                        { field: 'owner', headerName: 'Owner', width: 180 },
+                      ]}
+                      createServerSideDatasource={() => ({
+                        getRows: async (params: {
+                          success: (payload: { rowData: unknown[]; rowCount: number }) => void;
+                        }) => {
+                          params.success({ rowData: serverGridRows, rowCount: serverGridRows.length });
+                        },
+                      })}
+                    />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Regression contract">
+                  <Descriptions
+                    title="Template odagi"
+                    density="compact"
+                    columns={1}
+                    items={[
+                      { key: 'mode', label: 'Mode switch', value: 'client -> server', tone: 'info' },
+                      { key: 'toolbar', label: 'Toolbar', value: 'Tema / Filtre / Varyant', tone: 'success' },
+                      { key: 'datasource', label: 'Datasource', value: 'createServerSideDatasource', tone: 'warning' },
+                    ]}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
       default:
         return [
           {

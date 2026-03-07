@@ -50,7 +50,7 @@ const waveMap = {
   },
   wave_4_data_display: {
     checker: 'python3 scripts/check_ui_library_wave_4_data_display.py',
-    focus: ['TableSimple', 'Descriptions'],
+    focus: ['TableSimple', 'Descriptions', 'AgGridServer', 'EntityGridTemplate'],
   },
 };
 

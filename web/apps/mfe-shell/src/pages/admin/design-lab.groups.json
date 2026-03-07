@@ -9,112 +9,236 @@
       "id": "actions",
       "label": "Actions",
       "subgroups": [
-        { "id": "buttons", "label": "Buttons" }
+        {
+          "id": "buttons",
+          "label": "Buttons"
+        }
       ]
     },
     {
       "id": "forms",
       "label": "Forms",
       "subgroups": [
-        { "id": "select", "label": "Select" },
-        { "id": "dropdown", "label": "Dropdown" },
-        { "id": "inputs", "label": "Inputs" }
+        {
+          "id": "select",
+          "label": "Select"
+        },
+        {
+          "id": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "id": "inputs",
+          "label": "Inputs"
+        }
       ]
     },
     {
       "id": "overlays",
       "label": "Overlays",
       "subgroups": [
-        { "id": "modal", "label": "Modal" },
-        { "id": "drawers", "label": "Drawers" }
+        {
+          "id": "modal",
+          "label": "Modal"
+        },
+        {
+          "id": "drawers",
+          "label": "Drawers"
+        }
       ]
     },
     {
       "id": "feedback",
       "label": "Feedback",
       "subgroups": [
-        { "id": "badges", "label": "Badges" },
-        { "id": "loading", "label": "Loading & Placeholder" },
-        { "id": "tooltips", "label": "Tooltips" },
-        { "id": "tags", "label": "Tags" }
+        {
+          "id": "badges",
+          "label": "Badges"
+        },
+        {
+          "id": "loading",
+          "label": "Loading & Placeholder"
+        },
+        {
+          "id": "tooltips",
+          "label": "Tooltips"
+        },
+        {
+          "id": "tags",
+          "label": "Tags"
+        }
       ]
     },
     {
       "id": "layout",
       "label": "Layout",
       "subgroups": [
-        { "id": "page", "label": "Page Layout" },
-        { "id": "filters", "label": "Filters" }
+        {
+          "id": "page",
+          "label": "Page Layout"
+        },
+        {
+          "id": "filters",
+          "label": "Filters"
+        }
       ]
     },
     {
       "id": "navigation",
       "label": "Navigation",
       "subgroups": [
-        { "id": "tabs", "label": "Tabs" },
-        { "id": "breadcrumb", "label": "Breadcrumb" },
-        { "id": "pagination", "label": "Pagination" },
-        { "id": "steps", "label": "Steps" },
-        { "id": "anchor-toc", "label": "Anchor / Table of contents" }
+        {
+          "id": "tabs",
+          "label": "Tabs"
+        },
+        {
+          "id": "breadcrumb",
+          "label": "Breadcrumb"
+        },
+        {
+          "id": "pagination",
+          "label": "Pagination"
+        },
+        {
+          "id": "steps",
+          "label": "Steps"
+        },
+        {
+          "id": "anchor-toc",
+          "label": "Anchor / Table of contents"
+        }
       ]
     },
     {
       "id": "data-grid",
       "label": "Data & Grid",
       "subgroups": [
-        { "id": "entity-grid", "label": "Entity Grid" },
-        { "id": "ag-grid-server", "label": "AgGrid Server" },
-        { "id": "variants", "label": "Variants" }
+        {
+          "id": "entity-grid",
+          "label": "Entity Grid"
+        },
+        {
+          "id": "ag-grid-server",
+          "label": "AgGrid Server"
+        },
+        {
+          "id": "variants",
+          "label": "Variants"
+        }
       ]
     },
     {
       "id": "data_display",
       "label": "Data Display",
       "subgroups": [
-        { "id": "table_simple", "label": "Table" },
-        { "id": "descriptions", "label": "Descriptions / Key-Value" },
-        { "id": "list", "label": "List" },
-        { "id": "tree_table", "label": "Tree / TreeTable" },
-        { "id": "stat_cards", "label": "Statistic / KPI cards" },
-        { "id": "timeline", "label": "Timeline" },
-        { "id": "calendar_scheduler", "label": "Calendar / Scheduler view" },
-        { "id": "media", "label": "Media (Image/Carousel)" },
-        { "id": "json_viewer", "label": "Code / JSON viewer" }
+        {
+          "id": "table_simple",
+          "label": "Table"
+        },
+        {
+          "id": "data_grid",
+          "label": "Data Grid (AG Grid / EntityGrid)"
+        },
+        {
+          "id": "descriptions",
+          "label": "Descriptions / Key-Value"
+        },
+        {
+          "id": "list",
+          "label": "List"
+        },
+        {
+          "id": "tree_table",
+          "label": "Tree / TreeTable"
+        },
+        {
+          "id": "stat_cards",
+          "label": "Statistic / KPI cards"
+        },
+        {
+          "id": "timeline",
+          "label": "Timeline"
+        },
+        {
+          "id": "calendar_scheduler",
+          "label": "Calendar / Scheduler view"
+        },
+        {
+          "id": "media",
+          "label": "Media (Image/Carousel)"
+        },
+        {
+          "id": "json_viewer",
+          "label": "Code / JSON viewer"
+        }
       ]
     },
     {
       "id": "content",
       "label": "Content & Typography",
       "subgroups": [
-        { "id": "text", "label": "Text" },
-        { "id": "link", "label": "Link" },
-        { "id": "identity", "label": "Identity" },
-        { "id": "divider", "label": "Divider" }
+        {
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "id": "identity",
+          "label": "Identity"
+        },
+        {
+          "id": "divider",
+          "label": "Divider"
+        }
       ]
     },
     {
       "id": "empty-states",
       "label": "Empty States",
       "subgroups": [
-        { "id": "empty", "label": "Empty" }
+        {
+          "id": "empty",
+          "label": "Empty"
+        }
       ]
     },
     {
       "id": "theme",
       "label": "Theme & Tokens",
       "subgroups": [
-        { "id": "preview", "label": "Preview" },
-        { "id": "options", "label": "Options" },
-        { "id": "runtime", "label": "Runtime" }
+        {
+          "id": "preview",
+          "label": "Preview"
+        },
+        {
+          "id": "options",
+          "label": "Options"
+        },
+        {
+          "id": "runtime",
+          "label": "Runtime"
+        }
       ]
     },
     {
       "id": "runtime",
       "label": "Runtime (Advanced)",
       "subgroups": [
-        { "id": "auth", "label": "Auth" },
-        { "id": "access", "label": "Access" },
-        { "id": "utilities", "label": "Utilities" }
+        {
+          "id": "auth",
+          "label": "Auth"
+        },
+        {
+          "id": "access",
+          "label": "Access"
+        },
+        {
+          "id": "utilities",
+          "label": "Utilities"
+        }
       ]
     }
   ]

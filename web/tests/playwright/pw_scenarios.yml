@@ -420,6 +420,24 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: AgGridServer
+      - expectVisible: '[data-testid="design-lab-item-aggridserver"]'
+      - click: '[data-testid="design-lab-item-aggridserver"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: EntityGridTemplate
+      - expectVisible: '[data-testid="design-lab-item-entitygridtemplate"]'
+      - click: '[data-testid="design-lab-item-entitygridtemplate"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
 
   - name: shell_public_route_walk
     level: 1

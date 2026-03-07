@@ -21,6 +21,8 @@
 ## Data display mevcut batch
 - `TableSimple`
 - `Descriptions`
+- `AgGridServer`
+- `EntityGridTemplate`
 
 ## Page/block library hedefi
 - Mevcut reusable shell'ler: `PageLayout`, `FilterBar`, `ReportFilterPanel`
@@ -37,4 +39,5 @@
 
 ## Son not
 - Data display dalgasinda ilk hafif tablo batch'i export + API + preview + doctor evidence ile acildi.
+- `AgGridServer` ve `EntityGridTemplate` batch-2 ile ayni kontrata alindi; doktor kaniti ve wave gate PASS uretildi.
 - Sonraki buyuk urunlestirme bosluklari: `page_blocks` family ve package release contract operasyonu.

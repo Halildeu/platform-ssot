@@ -1464,6 +1464,137 @@
         "readonly interaction guard",
         "maxFiles enforcement"
       ]
+    },
+    {
+      "name": "AgGridServer",
+      "variantAxes": [
+        "surface: fixed-height | full-width",
+        "data-flow: success | loading | error",
+        "schema: simple columns | grouped columns"
+      ],
+      "stateModel": [
+        "server datasource attach",
+        "loading overlay lifecycle",
+        "success vs fail getRows handling",
+        "rowCount fallback"
+      ],
+      "props": [
+        {
+          "name": "columnDefs",
+          "type": "(ColDef | ColGroupDef)[]",
+          "default": "-",
+          "required": true,
+          "description": "Server-side grid kolon yapisi."
+        },
+        {
+          "name": "getData",
+          "type": "(request) => Promise<{ rows; total? }>",
+          "default": "-",
+          "required": true,
+          "description": "Grid isteklerini merkezi fetch katmanina baglar."
+        },
+        {
+          "name": "height",
+          "type": "number | string",
+          "default": "600",
+          "required": false,
+          "description": "Grid container yuksekligi."
+        },
+        {
+          "name": "defaultColDef",
+          "type": "ColDef",
+          "default": "-",
+          "required": false,
+          "description": "Tum kolonlar icin ortak default davranislar."
+        },
+        {
+          "name": "gridOptions",
+          "type": "GridOptions",
+          "default": "-",
+          "required": false,
+          "description": "Server-side row model ve cache davranisi icin ileri grid ayarlari."
+        }
+      ],
+      "previewFocus": [
+        "server datasource attach",
+        "owner/resource dataset",
+        "loading and fail handling"
+      ],
+      "regressionFocus": [
+        "datasource success/fail parity",
+        "rowCount fallback",
+        "overlay visibility"
+      ]
+    },
+    {
+      "name": "EntityGridTemplate",
+      "variantAxes": [
+        "mode: client | server",
+        "theme: quartz | balham | material | alpine",
+        "density: comfortable | compact"
+      ],
+      "stateModel": [
+        "client pagination",
+        "server datasource attach",
+        "variant management",
+        "toolbar export actions",
+        "theme and density sync"
+      ],
+      "props": [
+        {
+          "name": "gridId",
+          "type": "string",
+          "default": "-",
+          "required": true,
+          "description": "Variant ve preference owner kimligini belirler."
+        },
+        {
+          "name": "columnDefs",
+          "type": "ColDef[]",
+          "default": "-",
+          "required": true,
+          "description": "Grid kolon yapisi ve davranislari."
+        },
+        {
+          "name": "dataSourceMode",
+          "type": "'server' | 'client'",
+          "default": "server",
+          "required": false,
+          "description": "Gridin client-side veya server-side calisma modunu belirler."
+        },
+        {
+          "name": "rowData / total / page / pageSize",
+          "type": "RowData[] / number",
+          "default": "-",
+          "required": false,
+          "description": "Client-side liste ve pagination girdileri."
+        },
+        {
+          "name": "createServerSideDatasource",
+          "type": "(params) => IServerSideDatasource",
+          "default": "-",
+          "required": false,
+          "description": "Server-side mod icin datasource baglayicisi."
+        },
+        {
+          "name": "toolbarExtras",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Grid toolbarina urune ozel aksiyon ekler."
+        }
+      ],
+      "previewFocus": [
+        "client-side entity list",
+        "server datasource mode",
+        "toolbar and variant controls"
+      ],
+      "regressionFocus": [
+        "mode switch parity",
+        "server datasource attach",
+        "variant selector rendering",
+        "pagination summary"
+      ]
     }
   ]
 }

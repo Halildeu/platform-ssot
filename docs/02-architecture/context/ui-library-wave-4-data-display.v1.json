@@ -4,7 +4,7 @@
   "wave_id": "wave_4_data_display",
   "family_id": "data_display",
   "status": "in_progress",
-  "purpose": "Data display dalgasi icin hafif tablo ve key-value veri gosterim primitive'lerini tek kanonik execution contract altinda acmak; agir grid substrate'i sonraki batch'lerde sertlestirmek.",
+  "purpose": "Data display dalgasi icin hafif tablo primitive'lerinden agir grid substrate'ine gecmek; AgGridServer ve EntityGridTemplate'i docs/API/performance evidence ile kanonik kontrata almak.",
   "baseline": {
     "governance_lock_commit": "0900750",
     "roadmap_lock_commit": "2393148",
@@ -41,7 +41,7 @@
     },
     {
       "batch_id": "batch_2_grid_upgrade",
-      "status": "planned",
+      "status": "completed",
       "objective": "AgGridServer ve EntityGridTemplate substrate'ini docs/API/performance evidence ile sertlestirmek.",
       "components": [
         "AgGridServer",
@@ -166,16 +166,126 @@
         "unit/component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "AgGridServer",
+      "implementation_order": 3,
+      "source_state": "exported_substrate",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/layout/AgGridServer/AgGridServer.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/layout/AgGridServer/AgGridServer.tsx",
+          "web/packages/ui-kit/src/components/AgGridServer.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "Data Grid (AG Grid / EntityGrid)"
+      },
+      "ux_primary_theme_id": "performance_resilience_experience",
+      "ux_primary_subtheme_id": "perceived_performance_optimization",
+      "acceptance_criteria": [
+        "server-side datasource attach davranisi tek wrapper icinde deterministic calisir",
+        "success ve fail akislari loading overlay ve rowCount fallback ile ayni API yuzeyinde toplanir",
+        "owner/resource gibi operasyonel veri setleri duplicate grid shell olmadan render edilir",
+        "docs ve preview katmani server request contractini tek component sayfasinda gosterir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "ag-grid-server-ops-list",
+          "title": "Server-side kaynak listesi"
+        },
+        {
+          "id": "ag-grid-server-contract",
+          "title": "Datasource ve performans kontrati"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari AgGridServer icin exported/stable olarak guncellenir",
+        "Design Lab live preview sectionlari eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "EntityGridTemplate",
+      "implementation_order": 4,
+      "source_state": "exported_substrate",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/entity-grid/EntityGridTemplate.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/entity-grid/EntityGridTemplate.tsx",
+          "web/packages/ui-kit/src/components/EntityGridTemplate.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "Data Grid (AG Grid / EntityGrid)"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "role_goal_task_mapping",
+      "acceptance_criteria": [
+        "client ve server mode ayni grid shell icinde parity ile calisir",
+        "toolbar, variant, theme ve density kontrolleri kopya ekran yerine ortak substrate icinde kalir",
+        "entity list ekranlari duplicate wrapper olmadan template ile kurulabilir",
+        "docs ve preview katmani variant/pagination/export davranisini tek component sayfasinda gosterir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "entity-grid-template-client-list",
+          "title": "Client-side entity listesi"
+        },
+        {
+          "id": "entity-grid-template-server-mode",
+          "title": "Server-side toolbar ve datasource akisi"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari EntityGridTemplate icin exported/stable olarak guncellenir",
+        "Design Lab live preview sectionlari eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "progress_summary": {
     "completed_components": [
       "TableSimple",
-      "Descriptions"
+      "Descriptions",
+      "AgGridServer",
+      "EntityGridTemplate"
     ],
     "remaining_components": [
-      "AgGridServer",
-      "EntityGridTemplate",
       "List",
       "Tree",
       "TreeTable",

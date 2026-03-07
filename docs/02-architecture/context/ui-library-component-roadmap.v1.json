@@ -893,7 +893,7 @@
       ],
       "notes": [
         "TableSimple ve Descriptions export + live preview + API catalog ile acildi.",
-        "AgGridServer ve EntityGridTemplate substrate sertlestirmesi sonraki batch olarak izleniyor."
+        "AgGridServer ve EntityGridTemplate stable export + live preview + API catalog + doctor evidence ile batch-2 tamamlandi."
       ]
     },
     {
