@@ -135,7 +135,9 @@
       "toggleVariantDefault",
       "updateThemeAxes",
       "useGridVariants",
-      "withAccessGuard"
+      "withAccessGuard",
+      "TextInput",
+      "TextArea"
     ],
     "planned_p2": [
       "AnchorToc",
@@ -155,8 +157,6 @@
       "Switch",
       "TableSimple",
       "Tabs",
-      "TextArea",
-      "TextInput",
       "TimePicker",
       "TourCoachmarks",
       "Tree",
@@ -1539,44 +1539,70 @@
     {
       "name": "TextArea",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "stable",
       "group": "forms",
       "subgroup": "inputs",
       "taxonomyGroupId": "data_entry",
       "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TextArea P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "TextArea primitivei; long-form text entry, auto-resize, inline guidance ve validation davranisini ortak field shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-3",
+        "forms",
+        "stable",
+        "multiline-entry"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "dependency_aware_form_guidance",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "TextInput",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "stable",
       "group": "forms",
       "subgroup": "inputs",
       "taxonomyGroupId": "data_entry",
       "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TextInput P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "TextInput primitivei; label, helper, error, count ve access-aware text entry davranisini ortak field shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-3",
+        "forms",
+        "stable",
+        "text-entry"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "inline_validation_before_submit",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "THEME_APPEARANCE_OPTIONS",

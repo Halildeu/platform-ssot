@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 57,
-    "planned": 19,
-    "liveDemo": 28,
+    "exported": 59,
+    "planned": 17,
+    "liveDemo": 30,
     "inspector": 29
   },
   "items": [
@@ -129,6 +129,7 @@
         "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
         "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
       ],
       "group": "feedback",
@@ -198,6 +199,7 @@
       "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
         "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
         "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
         "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
@@ -1376,6 +1378,7 @@
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
       ],
       "group": "content",
@@ -1411,58 +1414,78 @@
     {
       "name": "TextArea",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { TextArea } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "forms",
+        "multiline-entry",
+        "stable",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
       "taxonomyGroupId": "data_entry",
       "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TextArea P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "TextArea primitivei; long-form text entry, auto-resize, inline guidance ve validation davranisini ortak field shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "dependency_aware_form_guidance",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "TextInput",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { TextInput } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "forms",
+        "stable",
+        "text-entry",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
       "taxonomyGroupId": "data_entry",
       "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TextInput P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "demoMode": "live",
+      "description": "TextInput primitivei; label, helper, error, count ve access-aware text entry davranisini ortak field shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "inline_validation_before_submit",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "ThemePreviewCard",

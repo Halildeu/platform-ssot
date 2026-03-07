@@ -406,12 +406,13 @@
     "mandatory_checks": [
       "python3 scripts/check_ui_library_ux_alignment.py",
       "python3 scripts/check_ui_library_component_roadmap.py",
+      "python3 scripts/check_ui_library_wave_3_forms.py",
       "python3 scripts/check_ui_library_wave_2_navigation.py",
       "npm -C web run designlab:index",
       "npm -C web run lint:tailwind",
       "npm -C web run lint:no-antd",
       "npm -C web run test:ui-kit",
-      "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives",
+      "npm -C web run gate:ui-library-wave -- --wave wave_3_forms",
       "npm -C web run doctor:frontend -- --preset ui-library"
     ],
     "release_readiness_rules": [
@@ -437,7 +438,7 @@
       "docs/02-architecture/context/ux-katalogu.reference.v1.json",
       "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
       "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
-      "docs/02-architecture/context/ui-library-wave-1-foundation-primitives.v1.json",
+      "docs/02-architecture/context/ui-library-wave-3-forms.v1.json",
       "docs/02-architecture/context/ui-library-system.context.v1.json",
       "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
       "docs/00-handbook/STYLE-WEB-001.md",

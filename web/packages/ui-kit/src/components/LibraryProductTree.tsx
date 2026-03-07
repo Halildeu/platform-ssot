@@ -65,8 +65,6 @@ const ChevronDown = () => (
 
 const makeGroupKey = (trackId: string, groupId: string) => `${trackId}:${groupId}`;
 const makeSubgroupKey = (trackId: string, groupId: string, subgroupId: string) => `${trackId}:${groupId}:${subgroupId}`;
-const normalizeTreeLabel = (value: string) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '');
-
 const ensureTrackSelection = (tracks: LibraryProductTreeTrack[], fallback?: Partial<LibraryProductTreeSelection>): LibraryProductTreeSelection => {
   const track = tracks.find((entry) => entry.id === fallback?.trackId) ?? tracks[0] ?? null;
   const group = track?.groups.find((entry) => entry.id === fallback?.groupId) ?? track?.groups[0] ?? null;
@@ -311,9 +309,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                               const subgroupKey = makeSubgroupKey(track.id, group.id, subgroup.id);
                               const isSubgroupExpanded = expandedSubgroups.includes(subgroupKey);
                               const singletonItem = subgroup.items.length === 1 ? subgroup.items[0] : null;
-                              const collapseSingletonSubgroup =
-                                Boolean(singletonItem) &&
-                                normalizeTreeLabel(subgroup.label) === normalizeTreeLabel(singletonItem!.label);
+                              const collapseSingletonSubgroup = Boolean(singletonItem);
                               return (
                                 <div key={subgroupKey} className="mb-2 last:mb-0">
                                   {collapseSingletonSubgroup && singletonItem ? (

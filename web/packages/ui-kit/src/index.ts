@@ -38,6 +38,8 @@ export * from './components/Button';
 export * from './components/Badge';
 export * from './components/Tooltip';
 export * from './components/Select';
+export * from './components/TextInput';
+export * from './components/TextArea';
 export * from './components/Modal';
 export * from './components/Dropdown';
 export * from './components/Tag';

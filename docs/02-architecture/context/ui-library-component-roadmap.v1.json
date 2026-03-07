@@ -742,7 +742,7 @@
     {
       "wave_id": "wave_3_forms",
       "title_tr": "Forms",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Input ailesini error/help/validation davranislariyla tamamla.",
       "families": [
         "forms"
@@ -760,6 +760,10 @@
       ],
       "dependencies": [
         "wave_1_foundation_primitives"
+      ],
+      "notes": [
+        "TextInput ve TextArea stable export + live preview + API catalog ile acildi.",
+        "Checkbox, Radio ve Switch bir sonraki batch olarak bekliyor."
       ]
     },
     {

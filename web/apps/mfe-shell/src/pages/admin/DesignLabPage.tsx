@@ -16,6 +16,8 @@ import {
   PageLayout,
   ReportFilterPanel,
   Select,
+  TextArea,
+  TextInput,
   Skeleton,
   Spinner,
   Pagination,
@@ -261,15 +263,19 @@ const DesignLabPage: React.FC = () => {
   const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('overview');
   const [treeSelection, setTreeSelection] = useState<LibraryProductTreeSelection>({
     trackId: 'new_packages',
-    groupId: 'actions',
-    subgroupId: 'feedback',
-    itemId: 'Button',
+    groupId: 'data_entry',
+    subgroupId: 'Text Input / TextArea',
+    itemId: 'TextInput',
   });
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [formDrawerOpen, setFormDrawerOpen] = useState(false);
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const [selectValue, setSelectValue] = useState('comfortable');
+  const [textInputValue, setTextInputValue] = useState('Nova kullanıcı');
+  const [textAreaValue, setTextAreaValue] = useState(
+    'Açıklama alanı inline yardım, hata ve karakter sayacı ile birlikte form deneyimini tamamlar.',
+  );
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -978,6 +984,72 @@ const DesignLabPage: React.FC = () => {
               />
             </div>
             <Text variant="secondary" className="mt-3 block">Aktif değer: {selectValue}</Text>
+          </div>
+        );
+      case 'TextInput':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Label / yardım / sayaç">
+                <div className="space-y-4">
+                  <TextInput
+                    label="Kullanıcı adı"
+                    description="Sistemde görünen kısa tanım."
+                    hint="Boşluk bırakmadan en fazla 32 karakter."
+                    value={textInputValue}
+                    maxLength={32}
+                    showCount
+                    onValueChange={setTextInputValue}
+                    leadingVisual={<span aria-hidden="true">@</span>}
+                  />
+                  <Text variant="secondary" className="block">
+                    Aktif değer: {textInputValue}
+                  </Text>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Durum matrisi">
+                <div className="grid grid-cols-1 gap-3">
+                  <TextInput label="Doğrulanan alan" defaultValue="nova.user" trailingVisual={<span aria-hidden="true">✓</span>} />
+                  <TextInput label="Hatalı alan" defaultValue="!" invalid error="En az 3 karakter girilmeli." />
+                  <TextInput label="Readonly alan" defaultValue="system-generated" access="readonly" />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'TextArea':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Auto resize / yardım">
+                <div className="space-y-4">
+                  <TextArea
+                    label="Açıklama"
+                    description="Uzun içerik alanları için ortak metin girişi."
+                    hint="Çok satırlı bilgi girişi için otomatik yükseklik ayarı."
+                    value={textAreaValue}
+                    rows={3}
+                    maxLength={180}
+                    showCount
+                    resize="auto"
+                    onValueChange={setTextAreaValue}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Validation / erişim">
+                <div className="grid grid-cols-1 gap-3">
+                  <TextArea
+                    label="Validation örneği"
+                    defaultValue="Eksik açıklama"
+                    invalid
+                    error="Bu alan en az 20 karakter olmalı."
+                    rows={3}
+                  />
+                  <TextArea label="Readonly not" defaultValue="Sistem logu kullanıcı tarafından değiştirilemez." access="readonly" rows={3} />
+                  <TextArea label="Disabled draft" defaultValue="Yayın sonrası kilitlenir." access="disabled" rows={3} />
+                </div>
+              </PreviewPanel>
+            </div>
           </div>
         );
       case 'Dropdown':

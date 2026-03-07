@@ -157,6 +157,7 @@ scenarios:
       - goto: /ui-library
       - expectVisible: '[data-testid="design-lab-page"]'
       - expectVisible: '[data-testid="design-lab-sidebar"]'
+      - expectVisible: '[data-testid="design-lab-track-new_packages"]'
       - expectVisible: '[data-testid="design-lab-track-section"]'
       - expectVisible: '[data-testid="design-lab-group-section"]'
       - expectVisible: '[data-testid="design-lab-tree-section"]'
@@ -277,6 +278,45 @@ scenarios:
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+
+  - name: ui_library_forms_wave_3_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /ui-library
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: TextInput
+      - expectVisible: '[data-testid="design-lab-item-textinput"]'
+      - click: '[data-testid="design-lab-item-textinput"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-api"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: TextArea
+      - expectVisible: '[data-testid="design-lab-item-textarea"]'
+      - click: '[data-testid="design-lab-item-textarea"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'

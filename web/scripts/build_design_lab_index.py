@@ -47,6 +47,17 @@ EXPORT_NAMED_RE = re.compile(
     r"export\s+{([^}]+)}\s*;",
     flags=re.MULTILINE | re.DOTALL,
 )
+INTERNAL_DOCS_EXPORTS: Set[str] = {
+    "LibraryDetailLabel",
+    "LibraryDetailTabs",
+    "LibraryMetadataPanel",
+    "LibraryMetricCard",
+    "LibraryOutlinePanel",
+    "LibraryPreviewPanel",
+    "LibraryProductTree",
+    "LibrarySectionBadge",
+    "LibraryStatsPanel",
+}
 
 
 def parse_named_exports(spec: str) -> Set[str]:
@@ -370,16 +381,17 @@ def build_design_lab_index(web_root: Path) -> dict:
         for name in names:
             origin_by_name.setdefault(name, module_path)
 
-    usage = collect_ui_kit_import_usage(web_root=web_root, exported_names=exported_names)
+    catalog_exported_names = {name for name in exported_names if name not in INTERNAL_DOCS_EXPORTS}
+    usage = collect_ui_kit_import_usage(web_root=web_root, exported_names=catalog_exported_names)
 
-    missing_registry = sorted(name for name in exported_names if name not in registry_by_name)
+    missing_registry = sorted(name for name in catalog_exported_names if name not in registry_by_name)
     if missing_registry:
         raise SystemExit(f"[designlab:index] exported names missing from registry: {', '.join(missing_registry)}")
 
     exported_but_not_real = sorted(
         name
         for name, entry in registry_by_name.items()
-        if str(entry.get("availability") or "").strip() == "exported" and name not in exported_names
+        if str(entry.get("availability") or "").strip() == "exported" and name not in catalog_exported_names
     )
     if exported_but_not_real:
         raise SystemExit(

@@ -66,6 +66,7 @@
     "python3 scripts/check_ui_library_governance_contract.py",
     "python3 scripts/check_ui_library_ux_alignment.py",
     "python3 scripts/check_ui_library_component_roadmap.py",
+    "python3 scripts/check_ui_library_wave_3_forms.py",
     "python3 scripts/check_ui_library_wave_2_navigation.py",
     "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
     "designlab:index",

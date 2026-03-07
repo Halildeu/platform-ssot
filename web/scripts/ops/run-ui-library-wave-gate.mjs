@@ -24,6 +24,7 @@ const readActiveWave = () => {
   const base = path.basename(active);
   if (base.includes('wave-1-foundation-primitives')) return 'wave_1_foundation_primitives';
   if (base.includes('wave-2-navigation')) return 'wave_2_navigation';
+  if (base.includes('wave-3-forms')) return 'wave_3_forms';
   throw new Error(`aktif wave anlasilamadi: ${active}`);
 };
 
@@ -41,6 +42,10 @@ const waveMap = {
   wave_2_navigation: {
     checker: 'python3 scripts/check_ui_library_wave_2_navigation.py',
     focus: ['Tabs', 'Breadcrumb', 'Pagination', 'Steps', 'AnchorToc'],
+  },
+  wave_3_forms: {
+    checker: 'python3 scripts/check_ui_library_wave_3_forms.py',
+    focus: ['TextInput', 'TextArea'],
   },
 };
 

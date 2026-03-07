@@ -1,0 +1,202 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "wave_id": "wave_3_forms",
+  "family_id": "forms",
+  "status": "in_progress",
+  "purpose": "Forms dalgasi icin TextInput ve TextArea ile baslayan veri girisi, validation, inline help ve recovery davranislarini tek kanonik execution contract altinda toplamak.",
+  "baseline": {
+    "governance_lock_commit": "0900750",
+    "roadmap_lock_commit": "2393148",
+    "foundation_completion_commit": "5dfde36",
+    "navigation_completion_commit": "aab6659",
+    "registry_snapshot": {
+      "exported_count": 57,
+      "planned_count": 19,
+      "live_demo_count": 28
+    }
+  },
+  "required_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+    "docs/02-architecture/context/ui-library-wave-3-forms.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
+    "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+  ],
+  "implementation_batches": [
+    {
+      "batch_id": "batch_1_text_fields",
+      "status": "completed",
+      "objective": "Tek satirli ve cok satirli temel text input ailesini ortak shell, validation ve helper davranislariyla acmak.",
+      "components": [
+        "TextInput",
+        "TextArea"
+      ]
+    },
+    {
+      "batch_id": "batch_2_boolean_controls",
+      "status": "planned",
+      "objective": "Checkbox, Radio ve Switch ailesini ayni forms kontrati altina almak.",
+      "components": [
+        "Checkbox",
+        "Radio",
+        "Switch"
+      ]
+    },
+    {
+      "batch_id": "batch_3_extended_inputs",
+      "status": "planned",
+      "objective": "Slider, DatePicker, TimePicker ve Upload gibi genisletilmis input davranislarini tamamlamak.",
+      "components": [
+        "Slider",
+        "DatePicker",
+        "TimePicker",
+        "Upload"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "component_name": "TextInput",
+      "implementation_order": 1,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/FieldControlPrimitives.tsx",
+          "web/packages/ui-kit/src/components/TextInput.tsx",
+          "web/packages/ui-kit/src/components/TextInput.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Text Input / TextArea"
+      },
+      "ux_primary_theme_id": "data_entry_validation_recovery",
+      "ux_primary_subtheme_id": "inline_validation_before_submit",
+      "acceptance_criteria": [
+        "label, description, hint, error ve count ayni shell kontrati uzerinden gelir",
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "leading ve trailing visual slotlari layout jump uretmez",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "inline validation ve count feedback submit oncesi net hata iyilestirme sinyali verir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "text-input-helper-count",
+          "title": "Label, helper ve karakter sayaci"
+        },
+        {
+          "id": "text-input-states",
+          "title": "Readonly, invalid ve verified state matrisi"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari TextInput icin exported/stable olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "TextArea",
+      "implementation_order": 2,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/FieldControlPrimitives.tsx",
+          "web/packages/ui-kit/src/components/TextArea.tsx",
+          "web/packages/ui-kit/src/components/TextArea.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Text Input / TextArea"
+      },
+      "ux_primary_theme_id": "data_entry_validation_recovery",
+      "ux_primary_subtheme_id": "dependency_aware_form_guidance",
+      "acceptance_criteria": [
+        "label, description, hint, error ve count ayni shell kontrati uzerinden gelir",
+        "vertical, none ve auto resize davranislari deterministic olur",
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "uzun metin alanlarinda helper ve validation feedback gorev akisini bozmadan okunur kalir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "text-area-auto-resize",
+          "title": "Auto resize ve helper metni"
+        },
+        {
+          "id": "text-area-validation-states",
+          "title": "Validation, readonly ve disabled durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari TextArea icin exported/stable olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    }
+  ],
+  "wave_exit_criteria": [
+    "TextInput ve TextArea stable export + preview + API catalog + regression test ile tamamlanir",
+    "forms family icin doctor:frontend ui-library evidence = PASS olur",
+    "wave_3_forms gate PASS olmadan forms family releasee cikmaz",
+    "batch_2 ve batch_3 tamamlandiginda forms family registry drift = 0 olur"
+  ],
+  "progress_summary": {
+    "completed_components": [
+      "TextInput",
+      "TextArea"
+    ],
+    "remaining_components": [
+      "Checkbox",
+      "Radio",
+      "Switch",
+      "Slider",
+      "DatePicker",
+      "TimePicker",
+      "Upload"
+    ],
+    "notes": [
+      "Batch 1 text fields export + preview + API catalog + doctor evidence ile acildi.",
+      "Forms dalgasi in-progress; boolean controls ve extended inputs sonraki batchlerdir."
+    ]
+  },
+  "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_3_forms",
+  "doctor_preset": "ui-library"
+}
