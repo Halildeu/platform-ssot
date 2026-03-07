@@ -25,8 +25,8 @@ const tracks: LibraryProductTreeTrack[] = [
             ],
           },
           {
-            id: 'navigation',
-            label: 'navigation',
+            id: 'tabs',
+            label: 'Tabs',
             items: [{ id: 'tabs', label: 'Tabs', badgeLabel: 'Beta', badgeTone: 'warning' }],
           },
         ],
@@ -90,9 +90,19 @@ describe('LibraryProductTree', () => {
     render(<LibraryProductTree tracks={tracks} defaultSelection={{ trackId: 'new_packages', groupId: 'actions', subgroupId: 'feedback', itemId: 'button' }} />);
 
     expect(screen.getByText('Button')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /navigation/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Tabs/i }));
 
     expect(screen.getByText('Tabs')).toBeInTheDocument();
     expect(screen.queryByText('Button')).not.toBeInTheDocument();
+  });
+
+  test('tek itemli ve ayni isimli subgroup tek satir olarak gosterilir', () => {
+    render(<LibraryProductTree tracks={tracks} defaultSelection={{ trackId: 'new_packages', groupId: 'actions', subgroupId: 'feedback', itemId: 'button' }} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /Tabs/i }));
+
+    const tabButtons = screen.getAllByRole('button', { name: /Tabs/i });
+    expect(tabButtons).toHaveLength(1);
+    expect(screen.getByText('Beta')).toBeInTheDocument();
   });
 });

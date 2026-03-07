@@ -65,6 +65,7 @@ const ChevronDown = () => (
 
 const makeGroupKey = (trackId: string, groupId: string) => `${trackId}:${groupId}`;
 const makeSubgroupKey = (trackId: string, groupId: string, subgroupId: string) => `${trackId}:${groupId}:${subgroupId}`;
+const normalizeTreeLabel = (value: string) => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '');
 
 const ensureTrackSelection = (tracks: LibraryProductTreeTrack[], fallback?: Partial<LibraryProductTreeSelection>): LibraryProductTreeSelection => {
   const track = tracks.find((entry) => entry.id === fallback?.trackId) ?? tracks[0] ?? null;
@@ -309,74 +310,135 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                             {group.subgroups.map((subgroup) => {
                               const subgroupKey = makeSubgroupKey(track.id, group.id, subgroup.id);
                               const isSubgroupExpanded = expandedSubgroups.includes(subgroupKey);
+                              const singletonItem = subgroup.items.length === 1 ? subgroup.items[0] : null;
+                              const collapseSingletonSubgroup =
+                                Boolean(singletonItem) &&
+                                normalizeTreeLabel(subgroup.label) === normalizeTreeLabel(singletonItem!.label);
                               return (
                                 <div key={subgroupKey} className="mb-2 last:mb-0">
-                                  <button
-                                    type="button"
-                                    onClick={() => toggleSubgroup(track, group, subgroup)}
-                                    data-testid={
-                                      testIdPrefix
-                                        ? `${testIdPrefix}-subgroup-${subgroup.id
-                                            .trim()
-                                            .toLowerCase()
-                                            .replace(/[^a-z0-9]+/g, '_')
-                                            .replace(/^_+|_+$/g, '')}`
-                                        : undefined
-                                    }
-                                    className={clsx(
-                                      'grid w-full grid-cols-[auto_auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors',
-                                      isSubgroupExpanded ? 'border-border-default bg-surface-panel' : 'border-transparent bg-transparent hover:bg-surface-muted',
-                                    )}
-                                  >
-                                    {isSubgroupExpanded ? <ChevronDown /> : <ChevronRight />}
-                                    <span className={clsx('h-6 w-1 shrink-0 rounded-full', isSubgroupExpanded ? track.accentClassName ?? 'bg-action-primary' : 'bg-border-subtle')} />
-                                    <span className="min-w-0">
-                                      <span className="block break-words text-xs font-semibold leading-5 text-text-secondary">
-                                        {subgroup.label}
-                                      </span>
-                                      <span className="mt-2 block">
-                                        <Badge tone="muted">{subgroup.items.length}</Badge>
-                                      </span>
-                                    </span>
-                                  </button>
-
-                                  {isSubgroupExpanded ? (
-                                    <div className="mt-2 space-y-1 rounded-[16px] bg-surface-canvas p-2">
-                                      {subgroup.items.map((item) => {
-                                        const isItemActive =
-                                          selection.trackId === track.id &&
+                                  {collapseSingletonSubgroup && singletonItem ? (
+                                    <button
+                                      type="button"
+                                      onClick={() => selectItem(track, group, subgroup, singletonItem)}
+                                      data-testid={
+                                        testIdPrefix
+                                          ? `${testIdPrefix}-item-${singletonItem.id
+                                              .trim()
+                                              .toLowerCase()
+                                              .replace(/[^a-z0-9]+/g, '_')
+                                              .replace(/^_+|_+$/g, '')}`
+                                          : undefined
+                                      }
+                                      className={clsx(
+                                        'mb-1 grid w-full grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-3 text-left transition-colors last:mb-0',
+                                        selection.trackId === track.id &&
                                           selection.groupId === group.id &&
                                           selection.subgroupId === subgroup.id &&
-                                          selection.itemId === item.id;
-                                        return (
-                                          <button
-                                            key={`${subgroupKey}:${item.id}`}
-                                            type="button"
-                                            onClick={() => selectItem(track, group, subgroup, item)}
-                                            data-testid={testIdPrefix ? `${testIdPrefix}-item-${item.id.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '')}` : undefined}
-                                            className={clsx(
-                                              'mb-1 grid w-full grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors last:mb-0',
-                                              isItemActive
-                                                ? 'border-action-primary/25 bg-surface-default shadow-sm'
-                                                : 'border-transparent bg-transparent hover:bg-surface-muted',
-                                            )}
-                                          >
-                                            <span className={clsx('h-5 w-1 shrink-0 rounded-full', isItemActive ? track.accentClassName ?? 'bg-action-primary' : 'bg-transparent')} />
-                                            <span className="min-w-0">
-                                              <span className="block break-words text-sm font-medium leading-6 text-text-primary">
-                                                {item.label}
-                                              </span>
-                                              {item.badgeLabel ? (
-                                                <span className="mt-2 block">
-                                                  <Badge tone={item.badgeTone ?? 'muted'}>{item.badgeLabel}</Badge>
+                                          selection.itemId === singletonItem.id
+                                          ? 'border-action-primary/25 bg-surface-default shadow-sm'
+                                          : 'border-border-subtle bg-surface-canvas hover:bg-surface-muted',
+                                      )}
+                                    >
+                                      <span
+                                        className={clsx(
+                                          'mt-1 h-5 w-1 shrink-0 rounded-full',
+                                          selection.trackId === track.id &&
+                                            selection.groupId === group.id &&
+                                            selection.subgroupId === subgroup.id &&
+                                            selection.itemId === singletonItem.id
+                                            ? track.accentClassName ?? 'bg-action-primary'
+                                            : 'bg-border-subtle',
+                                        )}
+                                      />
+                                      <span className="min-w-0">
+                                        <span className="block break-words text-sm font-semibold leading-6 text-text-primary">
+                                          {singletonItem.label}
+                                        </span>
+                                        {singletonItem.badgeLabel ? (
+                                          <span className="mt-2 block">
+                                            <Badge tone={singletonItem.badgeTone ?? 'muted'}>{singletonItem.badgeLabel}</Badge>
+                                          </span>
+                                        ) : null}
+                                      </span>
+                                    </button>
+                                  ) : (
+                                    <>
+                                      <button
+                                        type="button"
+                                        onClick={() => toggleSubgroup(track, group, subgroup)}
+                                        data-testid={
+                                          testIdPrefix
+                                            ? `${testIdPrefix}-subgroup-${subgroup.id
+                                                .trim()
+                                                .toLowerCase()
+                                                .replace(/[^a-z0-9]+/g, '_')
+                                                .replace(/^_+|_+$/g, '')}`
+                                            : undefined
+                                        }
+                                        className={clsx(
+                                          'grid w-full grid-cols-[auto_auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors',
+                                          isSubgroupExpanded ? 'border-border-default bg-surface-panel' : 'border-transparent bg-transparent hover:bg-surface-muted',
+                                        )}
+                                      >
+                                        {isSubgroupExpanded ? <ChevronDown /> : <ChevronRight />}
+                                        <span className={clsx('h-6 w-1 shrink-0 rounded-full', isSubgroupExpanded ? track.accentClassName ?? 'bg-action-primary' : 'bg-border-subtle')} />
+                                        <span className="min-w-0">
+                                          <span className="block break-words text-xs font-semibold leading-5 text-text-secondary">
+                                            {subgroup.label}
+                                          </span>
+                                          <span className="mt-2 block">
+                                            <Badge tone="muted">{subgroup.items.length}</Badge>
+                                          </span>
+                                        </span>
+                                      </button>
+
+                                      {isSubgroupExpanded ? (
+                                        <div className="mt-2 space-y-1 rounded-[16px] bg-surface-canvas p-2">
+                                          {subgroup.items.map((item) => {
+                                            const isItemActive =
+                                              selection.trackId === track.id &&
+                                              selection.groupId === group.id &&
+                                              selection.subgroupId === subgroup.id &&
+                                              selection.itemId === item.id;
+                                            return (
+                                              <button
+                                                key={`${subgroupKey}:${item.id}`}
+                                                type="button"
+                                                onClick={() => selectItem(track, group, subgroup, item)}
+                                                data-testid={
+                                                  testIdPrefix
+                                                    ? `${testIdPrefix}-item-${item.id
+                                                        .trim()
+                                                        .toLowerCase()
+                                                        .replace(/[^a-z0-9]+/g, '_')
+                                                        .replace(/^_+|_+$/g, '')}`
+                                                    : undefined
+                                                }
+                                                className={clsx(
+                                                  'mb-1 grid w-full grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors last:mb-0',
+                                                  isItemActive
+                                                    ? 'border-action-primary/25 bg-surface-default shadow-sm'
+                                                    : 'border-transparent bg-transparent hover:bg-surface-muted',
+                                                )}
+                                              >
+                                                <span className={clsx('h-5 w-1 shrink-0 rounded-full', isItemActive ? track.accentClassName ?? 'bg-action-primary' : 'bg-transparent')} />
+                                                <span className="min-w-0">
+                                                  <span className="block break-words text-sm font-medium leading-6 text-text-primary">
+                                                    {item.label}
+                                                  </span>
+                                                  {item.badgeLabel ? (
+                                                    <span className="mt-2 block">
+                                                      <Badge tone={item.badgeTone ?? 'muted'}>{item.badgeLabel}</Badge>
+                                                    </span>
+                                                  ) : null}
                                                 </span>
-                                              ) : null}
-                                            </span>
-                                          </button>
-                                        );
-                                      })}
-                                    </div>
-                                  ) : null}
+                                              </button>
+                                            );
+                                          })}
+                                        </div>
+                                      ) : null}
+                                    </>
+                                  )}
                                 </div>
                               );
                             })}
