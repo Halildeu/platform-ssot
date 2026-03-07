@@ -30,6 +30,11 @@ import {
   Breadcrumb,
   Divider,
   LibraryProductTree,
+  LibrarySectionBadge as SectionBadge,
+  LibraryDetailLabel as DetailLabel,
+  LibraryPreviewPanel as PreviewPanel,
+  LibraryMetricCard,
+  LibraryDetailTabs,
   type LibraryProductTreeSelection,
   type LibraryProductTreeTrack,
 } from 'mfe-ui-kit';
@@ -235,27 +240,6 @@ const trackVisualMeta: Record<
     eyebrow: 'Planned',
   },
 };
-
-const SectionBadge: React.FC<{ label: string }> = ({ label }) => (
-  <span className="inline-flex items-center rounded-full border border-border-subtle bg-surface-muted px-2.5 py-1 text-[11px] font-semibold text-text-secondary">
-    {label}
-  </span>
-);
-
-const PreviewPanel: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-    <Text as="div" variant="secondary" className="text-xs font-semibold uppercase tracking-[0.18em]">
-      {title}
-    </Text>
-    <div className="mt-3">{children}</div>
-  </div>
-);
-
-const DetailLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-    {children}
-  </Text>
-);
 
 const detailTabMeta: Array<{
   id: DesignLabDetailTab;
@@ -1557,15 +1541,7 @@ const DesignLabPage: React.FC = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-3 xl:w-[340px]">
                     {heroStats.map((stat) => (
-                      <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                        <DetailLabel>{stat.label}</DetailLabel>
-                        <Text as="div" className="mt-2 text-base font-semibold text-text-primary">
-                          {stat.value}
-                        </Text>
-                        <Text variant="secondary" className="mt-1 block text-xs leading-5">
-                          {stat.note}
-                        </Text>
-                      </div>
+                      <LibraryMetricCard key={stat.label} label={stat.label} value={stat.value} note={stat.note} />
                     ))}
                   </div>
                 </div>
@@ -1585,31 +1561,14 @@ const DesignLabPage: React.FC = () => {
               {copied === 'fail' ? <Text variant="secondary" className="px-6 pb-4">Kopyalanamadı</Text> : null}
             </section>
 
-            <section
-              data-testid="design-lab-detail-tabs"
-              className="sticky top-4 z-10 rounded-[24px] border border-border-subtle bg-surface-default/95 p-2 shadow-sm backdrop-blur"
-            >
-              <div className="flex flex-wrap gap-2">
-                {detailTabMeta.map((tab) => {
-                  const active = detailTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      data-testid={`design-lab-tab-${tab.id}`}
-                      type="button"
-                      onClick={() => setDetailTab(tab.id)}
-                      className={`rounded-2xl px-4 py-2.5 text-sm font-medium transition ${
-                        active
-                          ? 'bg-surface-panel text-text-primary shadow-sm'
-                          : 'text-text-secondary hover:bg-surface-panel'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
+            <div data-testid="design-lab-detail-tabs">
+              <LibraryDetailTabs
+                tabs={detailTabMeta}
+                activeTabId={detailTab}
+                onTabChange={(tabId) => setDetailTab(tabId as DesignLabDetailTab)}
+                testIdPrefix="design-lab"
+              />
+            </div>
 
             <section data-testid="design-lab-detail-panel" className="min-w-0">
               {renderDetailTabContent(selectedItem)}
