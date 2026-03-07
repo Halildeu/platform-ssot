@@ -2551,6 +2551,196 @@ const DesignLabPage: React.FC = () => {
             ),
           },
         ];
+      case 'Modal':
+        return [
+          {
+            id: 'modal-confirm-dialog',
+            eyebrow: 'Alternative 01',
+            title: 'Confirm / destructive dialog',
+            description: 'Yüksek riskli aksiyonlarda karar, ikincil açıklama ve footer action dilini tek overlay shell üzerinde toplar.',
+            badges: ['dialog', 'stable', 'confirmation'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <PreviewPanel title="Interactive confirm modal">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button onClick={() => setModalOpen(true)}>Modal aç</Button>
+                    <SectionBadge label="Riskli aksiyon" />
+                  </div>
+                  <Modal
+                    open={modalOpen}
+                    title="Rollout onayı gerekiyor"
+                    onClose={() => setModalOpen(false)}
+                    footer={(
+                      <div className="flex justify-end gap-2">
+                        <Button variant="ghost" onClick={() => setModalOpen(false)}>Vazgeç</Button>
+                        <Button variant="destructive" onClick={() => setModalOpen(false)}>Onayla</Button>
+                      </div>
+                    )}
+                  >
+                    <Text variant="secondary" className="block leading-7">
+                      Bu adım yayın hattını tetikler. Kullanıcıya risk, kapsam ve dönüş etkisi aynı dialog içinde görünmelidir.
+                    </Text>
+                  </Modal>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Modal, sayfa içi ufak yardım için değil; karar, kesinti, onay ve form odaklı kısa görevler için kullanılmalı.
+                    Overlay click ve escape davranışı task riskine göre yönetilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'modal-audit-readonly',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly / audit review dialog',
+            description: 'Kilitli içerik, readonly inceleme ve kanıt gösterimi için daha sakin modal varyantı.',
+            badges: ['readonly', 'audit', 'review'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Review dialog pattern">
+                  <div className="rounded-3xl border border-border-subtle bg-surface-canvas p-5">
+                    <Text preset="title">Kanıt özeti</Text>
+                    <Text variant="secondary" className="mt-3 block leading-7">
+                      Dialog içinde readonly metin, ek bilgi ve tek bir kapatma aksiyonu gösterilir. Kullanıcıdan veri
+                      beklenmeyen durumlarda dialog dili daha sakin ve düşük gerilimli tutulur.
+                    </Text>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <Badge tone="info">Readonly review</Badge>
+                      <Badge tone="muted">No inline edit</Badge>
+                    </div>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Aynı modal primitive hem destructive hem readonly review akışını taşıyabilir; fark, copy ve footer
+                    aksiyonlarının sayısı ile tonunda yaratılır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Dropdown':
+        return [
+          {
+            id: 'dropdown-action-menu',
+            eyebrow: 'Alternative 01',
+            title: 'Action menu',
+            description: 'Satır bazlı hızlı aksiyonlar ve overflow menu davranışı için ana kullanım kalıbı.',
+            badges: ['menu', 'stable', 'actions'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+                <PreviewPanel title="Row action menu">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Dropdown
+                      trigger={<span>Aksiyon Menüsü</span>}
+                      items={[
+                        { key: 'publish', label: 'Publish' },
+                        { key: 'duplicate', label: 'Duplicate' },
+                        { key: 'archive', label: 'Archive' },
+                      ]}
+                      onSelect={setDropdownAction}
+                    />
+                    <Text variant="secondary">Seçim: {dropdownAction}</Text>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Dropdown bir navigasyon ağacı değildir. Kısa eylem listeleri, satır bazlı işlemler ve bağlamsal hızlandırıcılar
+                    için kullanılır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'dropdown-filter-density',
+            eyebrow: 'Alternative 02',
+            title: 'Filter / density selector',
+            description: 'Aynı primitive ile görünüm yoğunluğu ve küçük ayar menülerini yönetir.',
+            badges: ['filters', 'density', 'compact'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Density selector">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Dropdown
+                      trigger={<span>Yoğunluk seç</span>}
+                      align="right"
+                      items={[
+                        { key: 'compact', label: 'Compact' },
+                        { key: 'comfortable', label: 'Comfortable' },
+                        { key: 'relaxed', label: 'Relaxed' },
+                      ]}
+                    />
+                    <SectionBadge label="right aligned" />
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Policy note">
+                  <Text variant="secondary" className="block leading-7">
+                    Dropdown içeriği kısa kalmalı. Uzun, çok seviyeli ya da açıklama ağırlıklı içerik için popover veya drawer
+                    tercih edilir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Tooltip':
+        return [
+          {
+            id: 'tooltip-inline-hint',
+            eyebrow: 'Alternative 01',
+            title: 'Inline hint / affordance',
+            description: 'Dar alanda kısa yardımcı açıklamaları fokus ve hover ile görünür kılar.',
+            badges: ['hint', 'beta', 'inline'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1fr]">
+                <PreviewPanel title="Inline help">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Tooltip text="Tooltip örneği">
+                      <Button variant="secondary">Hover / Focus</Button>
+                    </Tooltip>
+                    <Tooltip text="Kisa yardim metni yalnizca ek baglam verir.">
+                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-surface-canvas text-sm font-semibold text-text-secondary">i</span>
+                    </Tooltip>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Guideline">
+                  <Text variant="secondary" className="block leading-7">
+                    Tooltip, kritik doğrulama mesajı veya uzun eğitim içeriği taşımaz. Kısa yardım, affordance açıklaması ve ikon
+                    etiketleme için uygundur.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'tooltip-policy-guidance',
+            eyebrow: 'Alternative 02',
+            title: 'Policy / readonly guidance',
+            description: 'Readonly veya kontrollü yüzeylerde neden-sonuç bilgisini boğmadan gösterir.',
+            badges: ['policy', 'readonly', 'guidance'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly reason">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Tooltip text="Bu alan yayın penceresi dışında readonly duruma alınır.">
+                      <Button access="readonly" variant="ghost">Readonly alan</Button>
+                    </Tooltip>
+                  </div>
+                </PreviewPanel>
+                <PreviewPanel title="Rule of thumb">
+                  <Text variant="secondary" className="block leading-7">
+                    Kullanıcıyı durduracak ya da karar verdirecek içerik tooltip yerine dialog, inline error veya panel yüzeyine
+                    taşınmalıdır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
       case 'TableSimple':
         return [
           {

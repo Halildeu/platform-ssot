@@ -538,6 +538,67 @@
       ]
     },
     {
+      "name": "Dropdown",
+      "variantAxes": [
+        "align: left | right",
+        "menu: action | filter",
+        "state: default | readonly | disabled-item"
+      ],
+      "stateModel": [
+        "closed / open",
+        "outside click dismiss",
+        "escape dismiss",
+        "selection callback"
+      ],
+      "props": [
+        {
+          "name": "trigger",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Dropdown tetikleyici buton icerigi."
+        },
+        {
+          "name": "items",
+          "type": "DropdownItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Menu item listesi; disabled item destegi vardir."
+        },
+        {
+          "name": "onSelect",
+          "type": "(key: string) => void",
+          "default": "-",
+          "required": false,
+          "description": "Secili item anahtari ile callback uretir."
+        },
+        {
+          "name": "align",
+          "type": "'left' | 'right'",
+          "default": "left",
+          "required": false,
+          "description": "Menu panelinin triggera gore hizalanmasi."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkilesim seviyesi."
+        }
+      ],
+      "previewFocus": [
+        "action menu",
+        "filter menu",
+        "readonly + disabled items"
+      ],
+      "regressionFocus": [
+        "menu semantics",
+        "outside click + escape close",
+        "access guard parity"
+      ]
+    },
+    {
       "name": "EntityGridTemplate",
       "variantAxes": [
         "mode: client | server",
@@ -848,6 +909,74 @@
         "loading state evidence",
         "selected item sync",
         "blocked interaction guard"
+      ]
+    },
+    {
+      "name": "Modal",
+      "variantAxes": [
+        "size: sm | md | lg",
+        "dismiss: overlay | escape | close-button",
+        "surface: confirm | destructive | audit"
+      ],
+      "stateModel": [
+        "open / closed",
+        "escape dismiss",
+        "overlay dismiss",
+        "access-aware close affordance"
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "default": "false",
+          "required": true,
+          "description": "Dialogun acik olup olmadigini belirler."
+        },
+        {
+          "name": "title",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Header title ve aria label kaynagi."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Dialog genisligini belirler."
+        },
+        {
+          "name": "closeOnOverlayClick / closeOnEscape",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Dismiss davranisini kontrol eder."
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Primary/secondary aksiyon alani."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk ve etkilesim seviyesi."
+        }
+      ],
+      "previewFocus": [
+        "confirm + destructive dialogs",
+        "audit readonly dialog",
+        "dismiss behavior matrix"
+      ],
+      "regressionFocus": [
+        "escape/overlay close parity",
+        "access-aware close button",
+        "dialog labelling"
       ]
     },
     {
@@ -1654,6 +1783,60 @@
         "controlled/uncontrolled parity",
         "readonly interaction guard",
         "selected time badge sync"
+      ]
+    },
+    {
+      "name": "Tooltip",
+      "variantAxes": [
+        "placement: top | bottom",
+        "intent: short hint | guidance",
+        "state: hover | focus"
+      ],
+      "stateModel": [
+        "hidden / visible",
+        "hover entry",
+        "focus entry",
+        "hidden access"
+      ],
+      "props": [
+        {
+          "name": "text",
+          "type": "string",
+          "default": "-",
+          "required": true,
+          "description": "Tooltip icerigini belirler."
+        },
+        {
+          "name": "placement",
+          "type": "'top' | 'bottom'",
+          "default": "top",
+          "required": false,
+          "description": "Tooltip bubble yonunu belirler."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Tooltip tetikleyicisi."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanli gorunurluk seviyesi."
+        }
+      ],
+      "previewFocus": [
+        "inline hint",
+        "readonly guidance",
+        "hover + focus behavior"
+      ],
+      "regressionFocus": [
+        "tooltip visibility toggle",
+        "aria-describedby sync",
+        "hidden access guard"
       ]
     },
     {

@@ -10,7 +10,7 @@
   "diagnostics_registry": "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
   "diagnostics_runbook": "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
   "active_wave_contracts": [
-    "docs/02-architecture/context/ui-library-wave-4-data-display.v1.json"
+    "docs/02-architecture/context/ui-library-wave-5-overlay.v1.json"
   ],
   "canonical_modules": [
     "web/packages/ui-kit",
@@ -82,6 +82,7 @@
     "python3 scripts/check_ui_library_wave_3_forms.py",
     "python3 scripts/check_ui_library_wave_2_navigation.py",
     "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
+    "python3 scripts/check_ui_library_wave_5_overlay.py",
     "python3 scripts/check_frontend_diagnostics_registry.py",
     "npm -C web run designlab:index",
     "npm -C web run lint:tailwind",
@@ -89,9 +90,9 @@
     "npm -C web run test:ui-kit",
     "npm -C web run doctor:frontend -- --preset ui-library",
     "python3 scripts/check_ui_library_wave_4_data_display.py",
-    "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display",
     "python3 scripts/check_ui_library_page_block_contract.py",
-    "python3 scripts/check_ui_library_package_release_contract.py"
+    "python3 scripts/check_ui_library_package_release_contract.py",
+    "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
   ],
   "north_star_sections": [
     {

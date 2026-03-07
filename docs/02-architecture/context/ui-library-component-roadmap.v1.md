@@ -6,7 +6,7 @@
 - `forms`: completed
 - `data_display`: completed
 - `page_blocks`: planned
-- `overlay`: planned
+- `overlay`: in_progress
 - `ai_native_helpers`: planned
 
 ## Wave Status
@@ -14,7 +14,7 @@
 - `wave_2_navigation`: completed
 - `wave_3_forms`: completed
 - `wave_4_data_display`: completed
-- `wave_5_overlay`: planned
+- `wave_5_overlay`: in_progress
 - `wave_6_ai_native_helpers`: planned
 - `wave_7_page_blocks`: planned
 
@@ -45,4 +45,4 @@
 - Data display dalgasinda ilk hafif tablo batch'i export + API + preview + doctor evidence ile acildi.
 - `AgGridServer` ve `EntityGridTemplate` batch-2 ile ayni kontrata alindi; doktor kaniti ve wave gate PASS uretildi.
 - `List`, `JsonViewer`, `Tree` ve `TreeTable` batch-3 ile beta export + live preview + API catalog seviyesine cekildi.
-- Sonraki buyuk urunlestirme bosluklari: `page_blocks` family ve package release contract operasyonu.
+- Overlay dalgasinin batch-1 focus seti: `Modal`, `Dropdown`, `Tooltip`.

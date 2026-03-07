@@ -1,0 +1,232 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "wave_id": "wave_5_overlay",
+  "family_id": "overlay",
+  "status": "in_progress",
+  "purpose": "Overlay dalgasinin ilk batch'inde Modal, Dropdown ve Tooltip primitive'lerini gercek urun davranisi, accessibility ve doctor evidence ile sertlestirmek.",
+  "baseline": {
+    "governance_lock_commit": "0900750",
+    "roadmap_lock_commit": "2393148",
+    "foundation_completion_commit": "5dfde36",
+    "navigation_completion_commit": "aab6659",
+    "forms_completion_commit": "31646ae",
+    "data_display_completion_commit": "087c571",
+    "registry_snapshot": {
+      "exported_count": 72,
+      "planned_count": 4,
+      "live_demo_count": 43
+    }
+  },
+  "required_read_order": [
+    "docs/02-architecture/context/repo-context-pack.v1.json",
+    "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+    "docs/02-architecture/context/ux-katalogu.reference.v1.json",
+    "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
+    "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
+    "docs/02-architecture/context/ui-library-wave-5-overlay.v1.json",
+    "docs/02-architecture/context/ui-library-system.context.v1.json",
+    "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md",
+    "web/packages/ui-kit/src/catalog/component-registry.v1.json"
+  ],
+  "implementation_batches": [
+    {
+      "batch_id": "batch_1_overlay_primitives",
+      "status": "completed",
+      "objective": "Modal, Dropdown ve Tooltip primitive'lerini keyboard, dismiss, access guard ve docs-site showcase davranislariyla standardize etmek.",
+      "components": [
+        "Modal",
+        "Dropdown",
+        "Tooltip"
+      ]
+    },
+    {
+      "batch_id": "batch_2_drawer_and_popover",
+      "status": "planned",
+      "objective": "FormDrawer, DetailDrawer ve Popover ailesini ayni overlay kontratina almak.",
+      "components": [
+        "FormDrawer",
+        "DetailDrawer",
+        "Popover"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "component_name": "Modal",
+      "implementation_order": 1,
+      "source_state": "exported_substrate",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Modal.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Modal.tsx",
+          "web/packages/ui-kit/src/components/Modal.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "feedback",
+        "target_taxonomy_subgroup": "Modal / Dialog / Confirm"
+      },
+      "ux_primary_theme_id": "trust_privacy_security_ux",
+      "ux_primary_subtheme_id": "high_risk_action_confirmation",
+      "acceptance_criteria": [
+        "overlay click ve escape kapatma davranisi ayni primitive icinde deterministic olur",
+        "size, footer ve close affordance ayni API ile verilir",
+        "readonly/disabled/hidden access guardlari duplicate local dialog olmadan primitive icinde cozulur",
+        "destructive confirm ve save/cancel patternleri ayni docs sayfasinda gorunur olur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "modal-confirm-destructive",
+          "title": "Confirm / destructive akisi"
+        },
+        {
+          "id": "modal-readonly-audit",
+          "title": "Readonly / audit bilgi diyaloğu"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_5_overlay.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Modal icin exported/stable olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "Dropdown",
+      "implementation_order": 2,
+      "source_state": "exported_substrate",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "stable",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Dropdown.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Dropdown.tsx",
+          "web/packages/ui-kit/src/components/Dropdown.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Select / Dropdown / Combobox"
+      },
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "contextual_quick_actions",
+      "acceptance_criteria": [
+        "trigger button menu semantics ve aria-expanded davranisi verir",
+        "outside click, select ve escape ile kapanma ayni primitive icinde standardize olur",
+        "readonly/disabled guardlari duplicate local menu kopyasi olmadan primitive icinde korunur",
+        "action menu ve filter menu varyantlari ayni docs yuzeyinde gorunur olur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "dropdown-action-menu",
+          "title": "Action menu / kebab akisi"
+        },
+        {
+          "id": "dropdown-filter-menu",
+          "title": "Filter / dense menu akisi"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_5_overlay.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Dropdown icin exported/stable olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "Tooltip",
+      "implementation_order": 3,
+      "source_state": "exported_substrate",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [
+          "web/packages/ui-kit/src/components/Tooltip.tsx"
+        ],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Tooltip.tsx",
+          "web/packages/ui-kit/src/components/Tooltip.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "feedback",
+        "target_taxonomy_subgroup": "Tooltip"
+      },
+      "ux_primary_theme_id": "feedback_state_and_visibility",
+      "ux_primary_subtheme_id": "actionable_error_messages",
+      "acceptance_criteria": [
+        "native title yerine gorunur overlay tooltip kullanilir",
+        "hover ve focus ile acilan yardim katmani ayni API icinde calisir",
+        "placement davranisi ve access hidden guard primitive icinde korunur",
+        "short hint ve inline guidance varyantlari docs yuzeyinde ayni sayfada gorunur olur"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "tooltip-inline-hint",
+          "title": "Inline hint / short helper"
+        },
+        {
+          "id": "tooltip-guidance-readonly",
+          "title": "Readonly guidance / policy hint"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_5_overlay.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Tooltip icin exported/beta olarak guncellenir",
+        "Design Lab live preview ve docs showcase eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    }
+  ],
+  "progress_summary": {
+    "completed_components": [
+      "Modal",
+      "Dropdown",
+      "Tooltip"
+    ],
+    "remaining_components": []
+  },
+  "doctor_preset": "ui-library",
+  "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_5_overlay"
+}

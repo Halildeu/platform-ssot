@@ -26,6 +26,7 @@ const readActiveWave = () => {
   if (base.includes('wave-2-navigation')) return 'wave_2_navigation';
   if (base.includes('wave-3-forms')) return 'wave_3_forms';
   if (base.includes('wave-4-data-display')) return 'wave_4_data_display';
+  if (base.includes('wave-5-overlay')) return 'wave_5_overlay';
   throw new Error(`aktif wave anlasilamadi: ${active}`);
 };
 
@@ -51,6 +52,10 @@ const waveMap = {
   wave_4_data_display: {
     checker: 'python3 scripts/check_ui_library_wave_4_data_display.py',
     focus: ['TableSimple', 'Descriptions', 'AgGridServer', 'EntityGridTemplate', 'List', 'JsonViewer', 'Tree', 'TreeTable'],
+  },
+  wave_5_overlay: {
+    checker: 'python3 scripts/check_ui_library_wave_5_overlay.py',
+    focus: ['Modal', 'Dropdown', 'Tooltip'],
   },
 };
 

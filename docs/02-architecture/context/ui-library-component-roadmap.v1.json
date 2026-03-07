@@ -499,7 +499,9 @@
         "implemented_now": [
           "Modal",
           "FormDrawer",
-          "DetailDrawer"
+          "DetailDrawer",
+          "Dropdown",
+          "Tooltip"
         ],
         "gaps": [
           "Popover",
@@ -561,6 +563,24 @@
           "preview_mode": "live",
           "ux_primary_theme_id": "onboarding_help_and_learnability",
           "ux_primary_subtheme_id": "process_tours_for_critical_flows"
+        },
+        {
+          "component_name": "Dropdown",
+          "source_type": "existing_upgrade",
+          "target_wave": "wave_5_overlay",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "navigation_information_scent",
+          "ux_primary_subtheme_id": "contextual_quick_actions"
+        },
+        {
+          "component_name": "Tooltip",
+          "source_type": "existing_upgrade",
+          "target_wave": "wave_5_overlay",
+          "target_maturity": "beta",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "feedback_state_and_visibility",
+          "ux_primary_subtheme_id": "actionable_error_messages"
         }
       ],
       "exit_criteria": [
@@ -899,13 +919,15 @@
     {
       "wave_id": "wave_5_overlay",
       "title_tr": "Overlay",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "Dialog/drawer/popover onay akisini guvenli ve izlenebilir sekilde tamamla.",
       "families": [
         "overlay"
       ],
       "candidate_components": [
         "Modal",
+        "Dropdown",
+        "Tooltip",
         "FormDrawer",
         "DetailDrawer",
         "Popover",
@@ -915,6 +937,10 @@
       "dependencies": [
         "wave_1_foundation_primitives",
         "wave_3_forms"
+      ],
+      "notes": [
+        "Batch-1 overlay primitive seti Modal, Dropdown ve Tooltip olarak acildi.",
+        "Dropdown forms taxonomy altinda, Tooltip feedback taxonomy altinda kalsa da wave_5 capraz-grup overlay batch olarak yonetilir."
       ]
     },
     {

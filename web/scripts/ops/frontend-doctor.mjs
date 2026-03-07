@@ -38,7 +38,7 @@ const presetMap = {
     route: '/ui-library',
     stackId: 'shell-only',
     playwrightGrep:
-      'ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk',
+      'ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk',
     steps: [
       {
         id: 'shell_build',
@@ -78,7 +78,7 @@ const presetMap = {
           'tests/playwright/scenario-runner.spec.ts',
           '--project=chromium',
           '--grep',
-          'ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk',
+          'ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk',
         ],
         cwd: webRoot,
         env: {
@@ -103,7 +103,7 @@ const presetMap = {
     route: '/login,/runtime/theme-matrix,/ui-library',
     stackId: 'shell-only',
     playwrightGrep:
-      'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|shell_public_route_walk',
+      'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|shell_public_route_walk',
     steps: [
       {
         id: 'shell_build',
@@ -143,7 +143,7 @@ const presetMap = {
           'tests/playwright/scenario-runner.spec.ts',
           '--project=chromium',
           '--grep',
-          'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|shell_public_route_walk',
+          'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|shell_public_route_walk',
         ],
         cwd: webRoot,
         env: {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useId } from 'react';
 import {
   resolveAccessState,
   withAccessGuard,
@@ -13,6 +13,9 @@ export type ModalProps = {
   children: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
+  closeOnOverlayClick?: boolean;
+  closeOnEscape?: boolean;
 } & AccessControlledProps;
 
 export const Modal: React.FC<ModalProps> = ({
@@ -22,14 +25,17 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   footer,
   className = '',
+  size = 'md',
+  closeOnOverlayClick = true,
+  closeOnEscape = true,
   access = 'full',
   accessReason,
 }) => {
   const accessState = resolveAccessState(access);
-  if (!open || accessState.isHidden) return null;
-
+  const titleId = useId();
   const resolvedInteraction: AccessLevel =
     accessState.isDisabled || accessState.isReadonly ? accessState.state : 'full';
+  const canClose = Boolean(onClose) && resolvedInteraction === 'full';
   const guardedClose = onClose
     ? withAccessGuard<React.MouseEvent<HTMLButtonElement | HTMLDivElement>>(
         resolvedInteraction,
@@ -37,6 +43,31 @@ export const Modal: React.FC<ModalProps> = ({
         accessState.isDisabled,
       )
     : undefined;
+
+  useEffect(() => {
+    if (!open || !onClose || !closeOnEscape || resolvedInteraction !== 'full') {
+      return undefined;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+      event.preventDefault();
+      onClose();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [closeOnEscape, onClose, open, resolvedInteraction]);
+
+  if (!open || accessState.isHidden) return null;
+
+  const sizeClasses = {
+    sm: 'max-w-md',
+    md: 'max-w-lg',
+    lg: 'max-w-2xl',
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" data-access-state={accessState.state}>
@@ -47,28 +78,32 @@ export const Modal: React.FC<ModalProps> = ({
             'color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity) * 1%), transparent)',
           opacity: 'var(--overlay-opacity)',
         }}
-        onClick={guardedClose}
+        onClick={closeOnOverlayClick ? guardedClose : undefined}
         role="presentation"
         aria-hidden="true"
       />
       <div
-        className={`relative w-full max-w-lg rounded-xl border border-border-subtle bg-surface-panel ${className}`}
+        className={`relative w-full ${sizeClasses[size]} rounded-xl border border-border-subtle bg-surface-panel ${className}`}
         role="dialog"
         aria-modal="true"
-        aria-label={title}
+        aria-labelledby={title ? titleId : undefined}
+        aria-label={title ? undefined : 'Dialog'}
+        data-size={size}
         data-access-state={accessState.state}
         style={{ boxShadow: 'var(--elevation-overlay)' }}
       >
         <div className="flex items-start justify-between border-b border-border-subtle px-4 py-3">
-          <div className="text-sm font-semibold text-text-primary">{title}</div>
+          <div id={titleId} className="text-sm font-semibold text-text-primary">
+            {title}
+          </div>
           {onClose ? (
             <button
               type="button"
               onClick={guardedClose}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full text-text-secondary hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Kapat"
-              aria-disabled={resolvedInteraction !== 'full' || undefined}
-              disabled={accessState.isDisabled}
+              aria-disabled={!canClose || undefined}
+              disabled={!canClose}
               title={accessReason}
             >
               ×

@@ -563,7 +563,7 @@
       "taxonomyGroupId": "data_entry",
       "taxonomySubgroup": "Select / Dropdown / Combobox",
       "demoMode": "live",
-      "description": "Kebab ve context action menu ihtiyacini kapsayan acilir menu primitivei.",
+      "description": "Aksiyon ve filtre menu akislari icin keyboard/dismiss davranisi olan dropdown primitivei.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
@@ -572,7 +572,19 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "contextual_quick_actions",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+      "tags": [
+        "wave-5",
+        "overlay",
+        "stable",
+        "menu"
       ]
     },
     {
@@ -821,7 +833,7 @@
       "taxonomyGroupId": "feedback",
       "taxonomySubgroup": "Modal / Dialog / Confirm",
       "demoMode": "live",
-      "description": "Dialog ve confirm akislari icin token zincirine bagli overlay primitivei.",
+      "description": "Dialog, confirm ve audit overlay akislari icin token zincirine bagli primitive.",
       "sectionIds": [
         "component_library_management",
         "state_feedback",
@@ -830,7 +842,19 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "trust_privacy_security_ux",
+      "uxPrimarySubthemeId": "high_risk_action_confirmation",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+      "tags": [
+        "wave-5",
+        "overlay",
+        "stable",
+        "dialog"
       ]
     },
     {
@@ -1505,13 +1529,13 @@
       "name": "Tooltip",
       "kind": "component",
       "availability": "exported",
-      "lifecycle": "stable",
+      "lifecycle": "beta",
       "group": "feedback",
       "subgroup": "tooltips",
       "taxonomyGroupId": "feedback",
       "taxonomySubgroup": "Tooltip",
       "demoMode": "live",
-      "description": "Native title tabanli hafif yardim metni primitivei.",
+      "description": "Hover ve focus ile acilan gorunur tooltip bubble primitivei.",
       "sectionIds": [
         "component_library_management",
         "state_feedback",
@@ -1520,7 +1544,19 @@
       "qualityGates": [
         "design_tokens",
         "preview_visibility",
-        "registry_export_sync"
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "actionable_error_messages",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+      "tags": [
+        "wave-5",
+        "overlay",
+        "beta",
+        "tooltip"
       ]
     },
     {

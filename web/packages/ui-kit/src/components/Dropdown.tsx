@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import {
   resolveAccessState,
   withAccessGuard,
@@ -31,6 +31,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
+  const menuId = useId();
   const accessState = resolveAccessState(access);
   const isReadonly = accessState.isReadonly;
   const resolvedDisabled = accessState.isDisabled;
@@ -41,14 +42,26 @@ export const Dropdown: React.FC<DropdownProps> = ({
       : accessState.state;
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
       }
     };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+      }
+    };
+
     window.addEventListener('click', handleClickOutside);
-    return () => window.removeEventListener('click', handleClickOutside);
+    window.addEventListener('keydown', handleEscape);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('keydown', handleEscape);
+    };
   }, [open]);
 
   if (accessState.isHidden) {
@@ -61,17 +74,31 @@ export const Dropdown: React.FC<DropdownProps> = ({
     resolvedDisabled,
   );
 
+  const handleTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (interactionState !== 'full') {
+      return;
+    }
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setOpen(true);
+    }
+  };
+
   return (
     <div className={`relative inline-block ${className}`} ref={ref} data-access-state={accessState.state}>
       <button
         type="button"
         onClick={handleToggle}
+        onKeyDown={handleTriggerKeyDown}
         className="inline-flex items-center justify-center rounded-md border border-border-subtle bg-surface-panel px-3 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
         style={{
           color: 'var(--text-primary)',
           backgroundColor: 'var(--surface-panel-bg)',
           borderColor: 'var(--border-subtle)',
         }}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
         aria-disabled={resolvedDisabled || isReadonly || undefined}
         aria-readonly={isReadonly || undefined}
         disabled={resolvedDisabled || isReadonly}
@@ -81,9 +108,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
       </button>
       {open ? (
         <div
+          id={menuId}
           className={`absolute z-50 mt-2 w-48 rounded-lg border border-border-subtle bg-surface-panel ${
             align === 'right' ? 'right-0' : 'left-0'
           }`}
+          role="menu"
           style={{
             backgroundColor: 'var(--surface-panel-bg)',
             borderColor: 'var(--border-subtle)',
@@ -96,6 +125,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
               <li key={item.key}>
                 <button
                   type="button"
+                  role="menuitem"
                   disabled={item.disabled}
                   onClick={() => {
                     if (item.disabled) return;

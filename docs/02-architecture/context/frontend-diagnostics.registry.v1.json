@@ -144,7 +144,8 @@
         "ui_library_foundation_wave_1_walk",
         "ui_library_navigation_wave_2_walk",
         "ui_library_forms_wave_3_walk",
-        "ui_library_data_display_wave_4_walk"
+        "ui_library_data_display_wave_4_walk",
+        "ui_library_overlay_wave_5_walk"
       ]
     },
     {
@@ -196,7 +197,7 @@
         "build:shell",
         "lint:tailwind",
         "test:shell(login)",
-        "playwright:ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk",
+        "playwright:ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk",
         "gateway_smoke",
         "base_url_fetch_check"
       ],
@@ -208,6 +209,7 @@
         "pw-scenario-ui-library-navigation-walk-*.md",
         "pw-scenario-ui-library-navigation-wave-2-walk-*.md",
         "pw-scenario-ui-library-forms-wave-3-walk-*.md",
+        "pw-scenario-ui-library-overlay-wave-5-walk-*.md",
         "pw-summary-*.md",
         "pw-scenario-ui-library-data-display-wave-4-walk-*.md",
         "web/test-results/pw/artifacts/**",
@@ -222,7 +224,7 @@
         "build:shell",
         "lint:tailwind",
         "test:shell(login)",
-        "playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|shell_public_route_walk",
+        "playwright:shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|shell_public_route_walk",
         "gateway_smoke",
         "base_url_fetch_check"
       ],
@@ -237,6 +239,7 @@
         "pw-scenario-ui-library-forms-wave-3-walk-*.md",
         "pw-scenario-shell-public-route-walk-*.md",
         "pw-scenario-ui-library-data-display-wave-4-walk-*.md",
+        "pw-scenario-ui-library-overlay-wave-5-walk-*.md",
         "pw-summary-*.md",
         "web/test-results/pw/artifacts/**",
         "gateway-smoke.log"
