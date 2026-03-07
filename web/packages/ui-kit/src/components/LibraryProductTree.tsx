@@ -324,14 +324,20 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                         : undefined
                                     }
                                     className={clsx(
-                                      'flex w-full items-center gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors',
+                                      'grid w-full grid-cols-[auto_auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors',
                                       isSubgroupExpanded ? 'border-border-default bg-surface-panel' : 'border-transparent bg-transparent hover:bg-surface-muted',
                                     )}
                                   >
                                     {isSubgroupExpanded ? <ChevronDown /> : <ChevronRight />}
                                     <span className={clsx('h-6 w-1 shrink-0 rounded-full', isSubgroupExpanded ? track.accentClassName ?? 'bg-action-primary' : 'bg-border-subtle')} />
-                                    <span className="min-w-0 flex-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-secondary">{subgroup.label}</span>
-                                    <Badge tone="muted">{subgroup.items.length}</Badge>
+                                    <span className="min-w-0">
+                                      <span className="block break-words text-[11px] font-semibold uppercase tracking-[0.16em] leading-5 text-text-secondary">
+                                        {subgroup.label}
+                                      </span>
+                                      <span className="mt-2 block">
+                                        <Badge tone="muted">{subgroup.items.length}</Badge>
+                                      </span>
+                                    </span>
                                   </button>
 
                                   {isSubgroupExpanded ? (
@@ -349,15 +355,23 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                             onClick={() => selectItem(track, group, subgroup, item)}
                                             data-testid={testIdPrefix ? `${testIdPrefix}-item-${item.id.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '')}` : undefined}
                                             className={clsx(
-                                              'mb-1 flex w-full items-center gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors last:mb-0',
+                                              'mb-1 grid w-full grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors last:mb-0',
                                               isItemActive
                                                 ? 'border-action-primary/25 bg-surface-default shadow-sm'
                                                 : 'border-transparent bg-transparent hover:bg-surface-muted',
                                             )}
                                           >
                                             <span className={clsx('h-5 w-1 shrink-0 rounded-full', isItemActive ? track.accentClassName ?? 'bg-action-primary' : 'bg-transparent')} />
-                                            <span className="min-w-0 flex-1 text-sm font-medium text-text-primary">{item.label}</span>
-                                            {item.badgeLabel ? <Badge tone={item.badgeTone ?? 'muted'}>{item.badgeLabel}</Badge> : null}
+                                            <span className="min-w-0">
+                                              <span className="block break-words text-sm font-medium leading-6 text-text-primary">
+                                                {item.label}
+                                              </span>
+                                              {item.badgeLabel ? (
+                                                <span className="mt-2 block">
+                                                  <Badge tone={item.badgeTone ?? 'muted'}>{item.badgeLabel}</Badge>
+                                                </span>
+                                              ) : null}
+                                            </span>
                                           </button>
                                         );
                                       })}
