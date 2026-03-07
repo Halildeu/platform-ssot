@@ -45,7 +45,7 @@ const waveMap = {
   },
   wave_3_forms: {
     checker: 'python3 scripts/check_ui_library_wave_3_forms.py',
-    focus: ['TextInput', 'TextArea', 'Checkbox', 'Radio', 'Switch', 'Slider', 'DatePicker'],
+    focus: ['TextInput', 'TextArea', 'Checkbox', 'Radio', 'Switch', 'Slider', 'DatePicker', 'TimePicker', 'Upload'],
   },
 };
 

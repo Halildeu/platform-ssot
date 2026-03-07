@@ -215,6 +215,7 @@ const UiLibrarySidebarLabPage: React.FC = () => {
             </div>
             <LibraryProductTree
               tracks={tracks}
+              selection={selection}
               defaultSelection={selection}
               onSelectionChange={setSelection}
             />

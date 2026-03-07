@@ -23,6 +23,8 @@ import {
   Switch,
   Slider,
   DatePicker,
+  TimePicker,
+  Upload,
   Skeleton,
   Spinner,
   Pagination,
@@ -302,6 +304,11 @@ const DesignLabPage: React.FC = () => {
   const [switchValue, setSwitchValue] = useState(true);
   const [sliderValue, setSliderValue] = useState(68);
   const [dateValue, setDateValue] = useState('2026-03-21');
+  const [timeValue, setTimeValue] = useState('14:30');
+  const [uploadFiles, setUploadFiles] = useState([
+    { name: 'policy-draft.pdf', size: 245_000, type: 'application/pdf' },
+    { name: 'control-matrix.xlsx', size: 82_000, type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+  ]);
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -396,6 +403,33 @@ const DesignLabPage: React.FC = () => {
     setDetailDrawerOpen(false);
     setDetailTab('overview');
   }, [selectedItem?.name]);
+
+  useEffect(() => {
+    if (!selectedItem) return;
+
+    const nextTrack = resolveItemTrack(selectedItem);
+    const nextGroupId = selectedItem.taxonomyGroupId;
+    const nextSubgroupId = selectedItem.taxonomySubgroup;
+    const nextItemId = selectedItem.name;
+
+    setTreeSelection((current) => {
+      if (
+        current.trackId === nextTrack &&
+        current.groupId === nextGroupId &&
+        current.subgroupId === nextSubgroupId &&
+        current.itemId === nextItemId
+      ) {
+        return current;
+      }
+
+      return {
+        trackId: nextTrack,
+        groupId: nextGroupId,
+        subgroupId: nextSubgroupId,
+        itemId: nextItemId,
+      };
+    });
+  }, [selectedItem]);
 
   useEffect(() => {
     const sections = detailTabMeta
@@ -1286,6 +1320,61 @@ const DesignLabPage: React.FC = () => {
             </div>
           </div>
         );
+      case 'TimePicker':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Controlled time">
+                <div className="space-y-4">
+                  <TimePicker
+                    label="Kesim saati"
+                    description="Release penceresindeki uygulama saatini sec."
+                    hint="15 dakikalik araliklarla planla."
+                    value={timeValue}
+                    min="09:00"
+                    max="22:00"
+                    step={900}
+                    onValueChange={setTimeValue}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="State matrix">
+                <div className="grid grid-cols-1 gap-3">
+                  <TimePicker label="Readonly time" value="18:45" access="readonly" />
+                  <TimePicker label="Invalid cutover" defaultValue="23:30" invalid error="Bu saat izinli deployment penceresinin dışında." />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Upload':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Controlled file list">
+                <div className="space-y-4">
+                  <Upload
+                    label="Kanit paketi"
+                    description="Release ve approval kanitlarini ayni yerden topla."
+                    hint="PDF, XLSX ve ZIP desteklenir."
+                    accept=".pdf,.xlsx,.zip"
+                    multiple
+                    maxFiles={4}
+                    files={uploadFiles}
+                    onFilesChange={setUploadFiles}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Current payload">
+                <LibraryMetricCard
+                  label="Selected files"
+                  value={`${uploadFiles.length}`}
+                  note={uploadFiles.map((file) => file.name).join(', ')}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
       case 'Dropdown':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -2030,6 +2119,109 @@ const DesignLabPage: React.FC = () => {
             ),
           },
         ];
+      case 'TimePicker':
+        return [
+          {
+            id: 'timepicker-cutover-window',
+            eyebrow: 'Alternative 01',
+            title: 'Cutover window planner',
+            description: 'Deployment, maintenance ve approval pencere saatlerini kontrollü şekilde yönetir.',
+            badges: ['time-entry', 'controlled', 'release-window'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Controlled time">
+                  <TimePicker
+                    label="Kesim saati"
+                    description="Bakim penceresindeki uygulama saatini sec."
+                    hint="15 dakikalik adimlarla ilerle."
+                    value={timeValue}
+                    min="09:00"
+                    max="22:00"
+                    step={900}
+                    onValueChange={setTimeValue}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Selected time">
+                  <LibraryMetricCard
+                    label="Cutover time"
+                    value={timeValue}
+                    note="TimePicker controlled state ile rollout akisini besliyor."
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'timepicker-state-matrix',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly and invalid states',
+            description: 'Readonly ve release-window validation senaryolari ayni shell diliyle gorulur.',
+            badges: ['readonly', 'invalid', 'governed-input'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly">
+                  <TimePicker label="Readonly time" value="18:45" access="readonly" />
+                </PreviewPanel>
+                <PreviewPanel title="Invalid">
+                  <TimePicker label="Invalid cutover" defaultValue="23:30" invalid error="Bu saat izinli deployment penceresinin dışında." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Upload':
+        return [
+          {
+            id: 'upload-evidence-pack',
+            eyebrow: 'Alternative 01',
+            title: 'Evidence pack uploader',
+            description: 'Policy, release ve denetim kanitlarini tek alanda toplayan kontrollu upload yuzeyi.',
+            badges: ['files', 'multiple', 'evidence'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Controlled upload">
+                  <Upload
+                    label="Kanit paketi"
+                    description="Release ve approval kanitlarini ayni yerden topla."
+                    hint="PDF, XLSX ve ZIP desteklenir."
+                    accept=".pdf,.xlsx,.zip"
+                    multiple
+                    maxFiles={4}
+                    files={uploadFiles}
+                    onFilesChange={setUploadFiles}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Payload summary">
+                  <LibraryMetricCard
+                    label="Files"
+                    value={`${uploadFiles.length}`}
+                    note={uploadFiles.map((file) => file.name).join(', ')}
+                  />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'upload-governed-states',
+            eyebrow: 'Alternative 02',
+            title: 'Validation and access states',
+            description: 'Readonly, disabled ve policy-blocked upload davranislari ayri panelde gorulur.',
+            badges: ['readonly', 'disabled', 'invalid'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                <PreviewPanel title="Readonly">
+                  <Upload label="Readonly upload" files={uploadFiles} access="readonly" />
+                </PreviewPanel>
+                <PreviewPanel title="Disabled">
+                  <Upload label="Disabled upload" access="disabled" />
+                </PreviewPanel>
+                <PreviewPanel title="Invalid">
+                  <Upload label="Eksik kanit" invalid error="En az bir imzali PDF yuklenmeli." />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
       default:
         return [
           {
@@ -2489,6 +2681,7 @@ const DesignLabPage: React.FC = () => {
 
                 <LibraryProductTree
                   tracks={treeTracks}
+                  selection={treeSelection}
                   defaultSelection={treeSelection}
                   onSelectionChange={setTreeSelection}
                   testIdPrefix="design-lab"

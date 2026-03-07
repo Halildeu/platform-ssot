@@ -3,7 +3,7 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_3_forms",
   "family_id": "forms",
-  "status": "in_progress",
+  "status": "completed",
   "purpose": "Forms dalgasi icin TextInput ve TextArea ile baslayan veri girisi, validation, inline help ve recovery davranislarini tek kanonik execution contract altinda toplamak.",
   "baseline": {
     "governance_lock_commit": "0900750",
@@ -50,8 +50,8 @@
     },
     {
       "batch_id": "batch_3_extended_inputs",
-      "status": "in_progress",
-      "objective": "Slider ve DatePicker beta export + live preview + API catalog ile acildi; TimePicker ve Upload backlog olarak kaldi.",
+      "status": "completed",
+      "objective": "Slider, DatePicker, TimePicker ve Upload export + live preview + API catalog ile forms wave tamamlandi.",
       "components": [
         "Slider",
         "DatePicker",
@@ -445,13 +445,121 @@
         "unit/component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "TimePicker",
+      "implementation_order": 8,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/TimePicker.tsx",
+          "web/packages/ui-kit/src/components/TimePicker.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Date / Time pickers"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "cross_step_context_persistence",
+      "acceptance_criteria": [
+        "controlled ve uncontrolled kullanim tek API ile desteklenir",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "min/max saat araligi ve step davranisi native time input ile korunur",
+        "cutover ve maintenance window state preview ile regression testte gorunur olur",
+        "time entry helper, error ve selected value badge ile okunur kalir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "timepicker-cutover-controlled",
+          "title": "Controlled cutover time"
+        },
+        {
+          "id": "timepicker-state-matrix",
+          "title": "Readonly ve invalid timepicker durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari TimePicker icin exported/beta olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "Upload",
+      "implementation_order": 9,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Upload.tsx",
+          "web/packages/ui-kit/src/components/Upload.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_entry",
+        "target_taxonomy_subgroup": "Upload / Attachments"
+      },
+      "ux_primary_theme_id": "data_entry_validation_recovery",
+      "ux_primary_subtheme_id": "dependency_aware_form_guidance",
+      "acceptance_criteria": [
+        "controlled ve uncontrolled file list kullanimlari tek API ile desteklenir",
+        "readonly, disabled ve hidden access state davranislari merkezi access-controller ile calisir",
+        "multiple ve maxFiles limit davranisi deterministic olur",
+        "validation ve eksik kanit stateleri preview ile regression testte gorunur olur",
+        "file listesi secim sonrasi okunur ve policy-aware sekilde gorunur kalir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "upload-evidence-pack",
+          "title": "Controlled evidence pack upload"
+        },
+        {
+          "id": "upload-state-matrix",
+          "title": "Readonly, disabled ve invalid upload durumlari"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_3_forms.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_3_forms"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Upload icin exported/beta olarak guncellenir",
+        "Design Lab live preview eklenir",
+        "API katalog girdisi eklenir",
+        "unit/component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "wave_exit_criteria": [
     "TextInput ve TextArea stable export + preview + API catalog + regression test ile tamamlanir",
     "forms family icin doctor:frontend ui-library evidence = PASS olur",
     "wave_3_forms gate PASS olmadan forms family releasee cikmaz",
-    "batch_2 ve batch_3 tamamlandiginda forms family registry drift = 0 olur"
+    "forms family registry drift = 0 olur"
   ],
   "progress_summary": {
     "completed_components": [
@@ -461,17 +569,16 @@
       "Slider",
       "Switch",
       "TextArea",
-      "TextInput"
-    ],
-    "remaining_components": [
+      "TextInput",
       "TimePicker",
       "Upload"
     ],
+    "remaining_components": [],
     "notes": [
       "Batch 1 text fields export + preview + API catalog + doctor evidence ile acildi.",
       "Checkbox, Radio ve Switch stable export + live preview + API catalog ile batch 2 kapandi.",
-      "Slider ve DatePicker beta export + live preview + API catalog ile batch 3 acildi.",
-      "Forms dalgasi in-progress; TimePicker ve Upload sonraki backlog olarak kaldi."
+      "Slider, DatePicker, TimePicker ve Upload beta export + live preview + API catalog ile batch 3 kapandi.",
+      "Forms dalgasi completed; remaining component kalmadi."
     ]
   },
   "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_3_forms",

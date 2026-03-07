@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 64,
-    "planned": 12,
-    "liveDemo": 35,
+    "exported": 66,
+    "planned": 10,
+    "liveDemo": 37,
     "inspector": 29
   },
   "items": [
@@ -1573,30 +1573,40 @@
     {
       "name": "TimePicker",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { TimePicker } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "beta",
+        "forms",
+        "time-entry",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "TimePicker P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Date / Time pickers",
+      "demoMode": "live",
+      "description": "TimePicker primitivei; rollout, cutover ve maintenance pencere saatlerini access-aware time entry yuzeyi ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "cross_step_context_persistence",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "Tooltip",
@@ -1716,30 +1726,40 @@
     {
       "name": "Upload",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { Upload } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "beta",
+        "file-entry",
+        "forms",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Upload P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Upload / File picker",
+      "demoMode": "live",
+      "description": "Upload primitivei; kanit, ek ve release paketlerini policy-aware file selection yuzeyi ile toplar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "dependency_aware_form_guidance",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "buildAuthHeaders",

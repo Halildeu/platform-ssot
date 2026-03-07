@@ -46,6 +46,7 @@ export type LibraryProductTreeSelection = {
 export type LibraryProductTreeProps = {
   tracks: LibraryProductTreeTrack[];
   className?: string;
+  selection?: Partial<LibraryProductTreeSelection>;
   defaultSelection?: Partial<LibraryProductTreeSelection>;
   onSelectionChange?: (selection: LibraryProductTreeSelection) => void;
   testIdPrefix?: string;
@@ -82,11 +83,15 @@ const ensureTrackSelection = (tracks: LibraryProductTreeTrack[], fallback?: Part
 export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
   tracks,
   className,
+  selection: controlledSelection,
   defaultSelection,
   onSelectionChange,
   testIdPrefix,
 }) => {
-  const initialSelection = React.useMemo(() => ensureTrackSelection(tracks, defaultSelection), [tracks, defaultSelection]);
+  const initialSelection = React.useMemo(
+    () => ensureTrackSelection(tracks, controlledSelection ?? defaultSelection),
+    [tracks, controlledSelection, defaultSelection],
+  );
   const [selection, setSelection] = React.useState<LibraryProductTreeSelection>(initialSelection);
   const [expandedTracks, setExpandedTracks] = React.useState<string[]>(initialSelection.trackId ? [initialSelection.trackId] : []);
   const [expandedGroups, setExpandedGroups] = React.useState<string[]>(
@@ -112,6 +117,22 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
       return next;
     });
   }, [tracks]);
+
+  React.useEffect(() => {
+    if (!controlledSelection) return;
+    const next = ensureTrackSelection(tracks, controlledSelection);
+    setSelection((current) => {
+      if (
+        current.trackId === next.trackId &&
+        current.groupId === next.groupId &&
+        current.subgroupId === next.subgroupId &&
+        current.itemId === next.itemId
+      ) {
+        return current;
+      }
+      return next;
+    });
+  }, [tracks, controlledSelection]);
 
   React.useEffect(() => {
     onSelectionChange?.(selection);

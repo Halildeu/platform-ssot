@@ -45,6 +45,8 @@ export * from './components/Radio';
 export * from './components/Switch';
 export * from './components/Slider';
 export * from './components/DatePicker';
+export * from './components/TimePicker';
+export * from './components/Upload';
 export * from './components/Modal';
 export * from './components/Dropdown';
 export * from './components/Tag';

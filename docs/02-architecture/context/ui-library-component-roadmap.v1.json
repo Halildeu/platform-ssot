@@ -305,7 +305,12 @@
       "exit_criteria": [
         "Label/help/error/disabled/readOnly durumlari ortak kontratla gelir.",
         "Inline validation ve error recovery Design Lab demo'larinda gorunur olur."
-      ]
+      ],
+      "implemented_now": [
+        "TimePicker",
+        "Upload"
+      ],
+      "gaps": []
     },
     {
       "family_id": "data_display",
@@ -402,7 +407,7 @@
       ],
       "exit_criteria": [
         "Data display seti loading/empty/error/success patternlerini ortak getirir.",
-        "Task-critical tablolar performans ve a11y ölçüm bağlariyla gelir."
+        "Task-critical tablolar performans ve a11y \u00f6l\u00e7\u00fcm ba\u011flariyla gelir."
       ]
     },
     {
@@ -742,7 +747,7 @@
     {
       "wave_id": "wave_3_forms",
       "title_tr": "Forms",
-      "status": "in_progress",
+      "status": "completed",
       "objective": "Input ailesini error/help/validation davranislariyla tamamla.",
       "families": [
         "forms"
@@ -764,8 +769,8 @@
       "notes": [
         "TextInput ve TextArea stable export + live preview + API catalog ile acildi.",
         "Checkbox, Radio ve Switch stable export + live preview + API catalog ile acildi.",
-        "Slider ve DatePicker beta export + live preview + API catalog ile acildi.",
-        "TimePicker ve Upload sonraki backlog olarak kaldi."
+        "Slider, DatePicker, TimePicker ve Upload beta export + live preview + API catalog ile acildi.",
+        "wave_3_forms kapanisi doctor evidence ve wave gate PASS ile tamamlandi."
       ]
     },
     {
