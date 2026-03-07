@@ -51,6 +51,8 @@ export * from './components/TableSimple';
 export * from './components/Descriptions';
 export * from './components/List';
 export * from './components/JsonViewer';
+export * from './components/Tree';
+export * from './components/TreeTable';
 export * from './components/Modal';
 export * from './components/Dropdown';
 export * from './components/Tag';

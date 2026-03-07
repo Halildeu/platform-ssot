@@ -2,8 +2,8 @@
 
 - Wave: `wave_4_data_display`
 - Family: `data_display`
-- Durum: `in_progress`
-- Acilan batch'ler: `TableSimple`, `Descriptions`, `AgGridServer`, `EntityGridTemplate`, `List`, `JsonViewer`
+- Durum: `completed`
+- Tamamlanan batch'ler: `TableSimple`, `Descriptions`, `AgGridServer`, `EntityGridTemplate`, `List`, `JsonViewer`, `Tree`, `TreeTable`
 
 ## Amac
 
@@ -13,7 +13,7 @@ Hafif tablo, liste ve JSON veri gosterim primitive'lerini token-first, access-aw
 
 1. `batch_1_light_tables` → `TableSimple`, `Descriptions` (completed)
 2. `batch_2_grid_upgrade` → `AgGridServer`, `EntityGridTemplate` (completed)
-3. `batch_3_structured_views` → `List`, `JsonViewer` (in progress), `Tree`, `TreeTable` (remaining)
+3. `batch_3_structured_views` → `List`, `JsonViewer`, `Tree`, `TreeTable` (completed)
 
 ## Gate
 
@@ -30,4 +30,5 @@ Hafif tablo, liste ve JSON veri gosterim primitive'lerini token-first, access-aw
 ## Batch 3 notu
 
 - `List` ve `JsonViewer` artik `exported + live + API catalog + doctor evidence` seviyesine cekildi.
-- `Tree` ve `TreeTable` data display dalgasinin kalan backlog'u olarak duruyor.
+- `Tree` ve `TreeTable` beta export + live preview + API catalog + doctor evidence seviyesine cekildi.
+- `wave_4_data_display` bu kapanisla birlikte tamamladi.

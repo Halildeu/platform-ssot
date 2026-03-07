@@ -3,7 +3,7 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_4_data_display",
   "family_id": "data_display",
-  "status": "in_progress",
+  "status": "completed",
   "purpose": "Data display dalgasi icin hafif tablo primitive'lerinden agir grid substrate'ine gecmek; AgGridServer ve EntityGridTemplate'i docs/API/performance evidence ile kanonik kontrata almak.",
   "baseline": {
     "governance_lock_commit": "0900750",
@@ -50,7 +50,7 @@
     },
     {
       "batch_id": "batch_3_structured_views",
-      "status": "in_progress",
+      "status": "completed",
       "objective": "List, Tree, TreeTable ve JsonViewer ile gorev odakli veri gezginlerini acmak.",
       "components": [
         "List",
@@ -382,6 +382,112 @@
         "component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "Tree",
+      "implementation_order": 7,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/Tree.tsx",
+          "web/packages/ui-kit/src/components/Tree.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "Tree / TreeTable"
+      },
+      "ux_primary_theme_id": "navigation_information_scent",
+      "ux_primary_subtheme_id": "deep_link_and_shareable_state",
+      "acceptance_criteria": [
+        "tree dugumleri expand/collapse davranisini deterministic sekilde korur",
+        "selected node, readonly ve disabled durumlari ayni primitive icinde gorunur",
+        "loading ve empty state duplicate shell olmadan ayni component ile gosterilir",
+        "release governance ve audit hierarchy ayni API ile kurulabilir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "tree-release-governance",
+          "title": "Release governance hierarchy"
+        },
+        {
+          "id": "tree-readonly-audit",
+          "title": "Readonly audit tree"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari Tree icin exported/beta olarak guncellenir",
+        "Design Lab live preview sectionlari eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "TreeTable",
+      "implementation_order": 8,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/TreeTable.tsx",
+          "web/packages/ui-kit/src/components/TreeTable.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "Tree / TreeTable"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "role_goal_task_mapping",
+      "acceptance_criteria": [
+        "tree ve tablo kolonlari ayni hiyerarsik row modelinde bulusur",
+        "expanded row, selected row ve loading/empty davranislari deterministic calisir",
+        "ownership matrix ve compact review ayni primitive ile kurulabilir",
+        "table kolonlari node metadata ve data payload ile birlikte render edilir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "tree-table-ownership-matrix",
+          "title": "Ownership matrix"
+        },
+        {
+          "id": "tree-table-compact-review",
+          "title": "Compact review matrix"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari TreeTable icin exported/beta olarak guncellenir",
+        "Design Lab live preview sectionlari eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "progress_summary": {
@@ -391,12 +497,11 @@
       "AgGridServer",
       "EntityGridTemplate",
       "List",
-      "JsonViewer"
-    ],
-    "remaining_components": [
+      "JsonViewer",
       "Tree",
       "TreeTable"
-    ]
+    ],
+    "remaining_components": []
   },
   "doctor_preset": "ui-library",
   "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display",

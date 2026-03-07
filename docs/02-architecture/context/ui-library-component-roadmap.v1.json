@@ -324,12 +324,11 @@
           "TableSimple",
           "Descriptions",
           "List",
-          "JsonViewer"
-        ],
-        "gaps": [
+          "JsonViewer",
           "Tree",
           "TreeTable"
-        ]
+        ],
+        "gaps": []
       },
       "target_components": [
         {
@@ -373,7 +372,7 @@
           "source_type": "planned_registry",
           "target_wave": "wave_4_data_display",
           "target_maturity": "beta",
-          "preview_mode": "inspector",
+          "preview_mode": "live",
           "ux_primary_theme_id": "navigation_information_scent",
           "ux_primary_subtheme_id": "domain_based_information_architecture"
         },
@@ -382,7 +381,7 @@
           "source_type": "planned_registry",
           "target_wave": "wave_4_data_display",
           "target_maturity": "beta",
-          "preview_mode": "inspector",
+          "preview_mode": "live",
           "ux_primary_theme_id": "navigation_information_scent",
           "ux_primary_subtheme_id": "domain_based_information_architecture"
         },
@@ -872,7 +871,7 @@
     {
       "wave_id": "wave_4_data_display",
       "title_tr": "Data Display",
-      "status": "in_progress",
+      "status": "completed",
       "objective": "Grid ve hafif veri gosterim ailesini gorev odakli ve olculebilir hale getir.",
       "families": [
         "data_display"
@@ -894,7 +893,7 @@
       "notes": [
         "TableSimple ve Descriptions export + live preview + API catalog ile acildi.",
         "AgGridServer ve EntityGridTemplate stable export + live preview + API catalog + doctor evidence ile batch-2 tamamlandi.",
-        "List ve JsonViewer beta export + live preview + API catalog ile batch-3 partial completion seviyesine cekildi."
+        "List, JsonViewer, Tree ve TreeTable beta export + live preview + API catalog ile wave_4_data_display kapandi."
       ]
     },
     {

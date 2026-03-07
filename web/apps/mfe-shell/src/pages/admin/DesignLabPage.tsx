@@ -29,6 +29,8 @@ import {
   Descriptions,
   List,
   JsonViewer,
+  Tree,
+  TreeTable,
   Skeleton,
   Spinner,
   Pagination,
@@ -371,6 +373,87 @@ const DesignLabPage: React.FC = () => {
       },
     },
   };
+  const treeNodes = [
+    {
+      key: 'release',
+      label: 'Release Control Plane',
+      description: 'Gate, doctor ve security kanitlarini tek hiyerarside toplar.',
+      meta: 'root',
+      badges: ['Stable'],
+      tone: 'info' as const,
+      children: [
+        {
+          key: 'doctor',
+          label: 'Doctor evidence',
+          description: 'Frontend doctor preset ciktilari.',
+          meta: 'PASS',
+          badges: ['ui-library'],
+          tone: 'success' as const,
+          children: [
+            {
+              key: 'doctor-ui-library',
+              label: 'UI Library walkthrough',
+              description: 'Console/pageerror ve click-walk sonucu temiz.',
+              meta: '5 step',
+            },
+            {
+              key: 'doctor-shell',
+              label: 'Shell public preset',
+              description: 'Login ve public route zinciri PASS.',
+              meta: '3 route',
+            },
+          ],
+        },
+        {
+          key: 'security',
+          label: 'Security contract',
+          description: 'Residual risk ve live provisioning kurallari.',
+          meta: 'review',
+          badges: ['Policy'],
+          tone: 'warning' as const,
+          children: [
+            {
+              key: 'security-residual',
+              label: 'Residual review',
+              description: 'Takvimli kalan riskler zorunlu review ile izlenir.',
+              meta: 'Apr-15',
+            },
+          ],
+        },
+      ],
+    },
+  ];
+  const treeTableNodes = [
+    {
+      key: 'platform-ui',
+      label: 'Platform UI',
+      description: 'Ortak tasarim sistemi owner ekibi.',
+      meta: 'stable',
+      badges: ['Owner'],
+      tone: 'info' as const,
+      data: { owner: 'Platform UI', status: 'Stable', scope: 'Global' },
+      children: [
+        {
+          key: 'ui-library-surface',
+          label: 'UI Library',
+          description: 'Docs, preview ve API katalog yuzeyi.',
+          meta: 'wave-4',
+          badges: ['Data display'],
+          tone: 'success' as const,
+          data: { owner: 'Design Ops', status: 'Beta', scope: 'Docs' },
+        },
+        {
+          key: 'delivery-gates',
+          label: 'Delivery gates',
+          description: 'Wave gate ve doctor evidence zinciri.',
+          meta: 'doctor',
+          badges: ['QA'],
+          tone: 'warning' as const,
+          data: { owner: 'Release Ops', status: 'PASS', scope: 'Delivery' },
+        },
+      ],
+    },
+  ];
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -1562,6 +1645,65 @@ const DesignLabPage: React.FC = () => {
             </div>
           </div>
         );
+      case 'Tree':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Operational hierarchy">
+                <Tree
+                  title="Delivery hierarchy"
+                  description="Gate ve policy sahipligini tek hiyerarside okur."
+                  nodes={treeNodes}
+                  defaultExpandedKeys={['release', 'doctor']}
+                  selectedKey="doctor-ui-library"
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Readonly review">
+                <Tree
+                  title="Readonly review"
+                  density="compact"
+                  nodes={treeNodes}
+                  defaultExpandedKeys={['release', 'security']}
+                  access="readonly"
+                  selectedKey="security-residual"
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'TreeTable':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Ownership matrix">
+                <TreeTable
+                  title="Component ownership"
+                  description="Owner, status ve scope bilgisi hiyerarsik satirlarla okunur."
+                  nodes={treeTableNodes}
+                  defaultExpandedKeys={['platform-ui']}
+                  columns={[
+                    { key: 'owner', label: 'Owner', accessor: 'owner', emphasis: true },
+                    { key: 'status', label: 'Durum', accessor: 'status', align: 'center' },
+                    { key: 'scope', label: 'Scope', accessor: 'scope' },
+                  ]}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Compact review">
+                <TreeTable
+                  title="Compact matrix"
+                  density="compact"
+                  nodes={treeTableNodes}
+                  defaultExpandedKeys={['platform-ui']}
+                  selectedKey="delivery-gates"
+                  columns={[
+                    { key: 'status', label: 'Durum', accessor: 'status', align: 'center', emphasis: true },
+                    { key: 'scope', label: 'Scope', accessor: 'scope' },
+                  ]}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
       case 'Dropdown':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -2646,6 +2788,119 @@ const DesignLabPage: React.FC = () => {
                   <div className="space-y-4">
                     <JsonViewer title="Undefined payload" value={undefined} emptyStateLabel="Payload gelmedi." />
                     <JsonViewer title="Primitive payload" value={{ releaseWindow: 'saturday-22', rollbackReady: true }} rootLabel="config" />
+                  </div>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'Tree':
+        return [
+          {
+            id: 'tree-release-governance',
+            eyebrow: 'Alternative 01',
+            title: 'Release governance hierarchy',
+            description: 'Doctor, security ve policy akislarini tek bir hiyerarsik agacta izler.',
+            badges: ['tree', 'hierarchy', 'beta'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Hierarchy">
+                  <Tree
+                    title="Release hierarchy"
+                    nodes={treeNodes}
+                    defaultExpandedKeys={['release', 'doctor']}
+                    selectedKey="doctor-ui-library"
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Usage note">
+                  <Text variant="secondary" className="block leading-7">
+                    `Tree`, onay akisi, rollout ownership ve policy kırılımlarında kullanıcıya derinlik hissini bozmadan
+                    hiyerarşi sunar.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'tree-readonly-audit',
+            eyebrow: 'Alternative 02',
+            title: 'Readonly audit tree',
+            description: 'Readonly state, compact density ve secili node davranisini birlikte gosterir.',
+            badges: ['readonly', 'compact', 'audit'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Readonly tree">
+                  <Tree
+                    density="compact"
+                    nodes={treeNodes}
+                    defaultExpandedKeys={['release', 'security']}
+                    access="readonly"
+                    selectedKey="security-residual"
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Loading and empty">
+                  <div className="space-y-4">
+                    <Tree title="Loading tree" loading nodes={[]} />
+                    <Tree title="Empty tree" nodes={[]} emptyStateLabel="Hiyerarsi bulunamadi." />
+                  </div>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'TreeTable':
+        return [
+          {
+            id: 'tree-table-ownership-matrix',
+            eyebrow: 'Alternative 01',
+            title: 'Ownership matrix',
+            description: 'TreeTable, owner / status / scope verisini hiyerarsik satirlarla birlestirir.',
+            badges: ['matrix', 'hierarchy', 'beta'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Ownership matrix">
+                  <TreeTable
+                    nodes={treeTableNodes}
+                    defaultExpandedKeys={['platform-ui']}
+                    columns={[
+                      { key: 'owner', label: 'Owner', accessor: 'owner', emphasis: true },
+                      { key: 'status', label: 'Durum', accessor: 'status', align: 'center' },
+                      { key: 'scope', label: 'Scope', accessor: 'scope' },
+                    ]}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Usage note">
+                  <Text variant="secondary" className="block leading-7">
+                    `TreeTable`, entity ya da ownership agacinda hiyerarsiyi kaybetmeden kolonlu karsilastirma yapar.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'tree-table-compact-review',
+            eyebrow: 'Alternative 02',
+            title: 'Compact review matrix',
+            description: 'Compact density, selected row ve loading/empty fallback davranisini birlikte gosterir.',
+            badges: ['compact', 'selected', 'fallback'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Compact table">
+                  <TreeTable
+                    density="compact"
+                    nodes={treeTableNodes}
+                    defaultExpandedKeys={['platform-ui']}
+                    selectedKey="delivery-gates"
+                    columns={[
+                      { key: 'status', label: 'Durum', accessor: 'status', align: 'center', emphasis: true },
+                      { key: 'scope', label: 'Scope', accessor: 'scope' },
+                    ]}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Loading and empty">
+                  <div className="space-y-4">
+                    <TreeTable title="Loading matrix" loading nodes={[]} columns={[]} />
+                    <TreeTable title="Empty matrix" nodes={[]} columns={[]} emptyStateLabel="Hiyerarsik tablo kaydi yok." />
                   </div>
                 </PreviewPanel>
               </div>

@@ -140,6 +140,8 @@
       "TimePicker",
       "toggleVariantDefault",
       "Tooltip",
+      "Tree",
+      "TreeTable",
       "updateThemeAxes",
       "Upload",
       "useGridVariants",
@@ -159,9 +161,7 @@
       "Switch",
       "TableSimple",
       "Tabs",
-      "TourCoachmarks",
-      "Tree",
-      "TreeTable"
+      "TourCoachmarks"
     ]
   },
   "items": [
@@ -1547,44 +1547,68 @@
     {
       "name": "Tree",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "Tree P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "data_display",
+      "subgroup": "tree_table",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Tree / TreeTable",
+      "demoMode": "live",
+      "description": "Tree primitivei; policy, release ve ownership hiyerarsilerini secim ve readonly modlariyla sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "navigation_patterns"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-4",
+        "data-display",
+        "beta",
+        "tree"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "deep_link_and_shareable_state",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "TreeTable",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
-      "group": "runtime",
-      "subgroup": "utilities",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "TreeTable P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "data_display",
+      "subgroup": "tree_table",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Tree / TreeTable",
+      "demoMode": "live",
+      "description": "TreeTable primitivei; owner, status ve scope verisini hiyerarsik satirlarla tablo halinde sunar.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "integration_distribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-4",
+        "data-display",
+        "beta",
+        "tree-table"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "role_goal_task_mapping",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Upload",

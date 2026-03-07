@@ -4,6 +4,67 @@
   "wave_id": "multi_wave_ui_library_catalog",
   "items": [
     {
+      "name": "AgGridServer",
+      "variantAxes": [
+        "surface: fixed-height | full-width",
+        "data-flow: success | loading | error",
+        "schema: simple columns | grouped columns"
+      ],
+      "stateModel": [
+        "server datasource attach",
+        "loading overlay lifecycle",
+        "success vs fail getRows handling",
+        "rowCount fallback"
+      ],
+      "props": [
+        {
+          "name": "columnDefs",
+          "type": "(ColDef | ColGroupDef)[]",
+          "default": "-",
+          "required": true,
+          "description": "Server-side grid kolon yapisi."
+        },
+        {
+          "name": "getData",
+          "type": "(request) => Promise<{ rows; total? }>",
+          "default": "-",
+          "required": true,
+          "description": "Grid isteklerini merkezi fetch katmanina baglar."
+        },
+        {
+          "name": "height",
+          "type": "number | string",
+          "default": "600",
+          "required": false,
+          "description": "Grid container yuksekligi."
+        },
+        {
+          "name": "defaultColDef",
+          "type": "ColDef",
+          "default": "-",
+          "required": false,
+          "description": "Tum kolonlar icin ortak default davranislar."
+        },
+        {
+          "name": "gridOptions",
+          "type": "GridOptions",
+          "default": "-",
+          "required": false,
+          "description": "Server-side row model ve cache davranisi icin ileri grid ayarlari."
+        }
+      ],
+      "previewFocus": [
+        "server datasource attach",
+        "owner/resource dataset",
+        "loading and fail handling"
+      ],
+      "regressionFocus": [
+        "datasource success/fail parity",
+        "rowCount fallback",
+        "overlay visibility"
+      ]
+    },
+    {
       "name": "AnchorToc",
       "variantAxes": [
         "density: comfortable | compact",
@@ -477,6 +538,76 @@
       ]
     },
     {
+      "name": "EntityGridTemplate",
+      "variantAxes": [
+        "mode: client | server",
+        "theme: quartz | balham | material | alpine",
+        "density: comfortable | compact"
+      ],
+      "stateModel": [
+        "client pagination",
+        "server datasource attach",
+        "variant management",
+        "toolbar export actions",
+        "theme and density sync"
+      ],
+      "props": [
+        {
+          "name": "gridId",
+          "type": "string",
+          "default": "-",
+          "required": true,
+          "description": "Variant ve preference owner kimligini belirler."
+        },
+        {
+          "name": "columnDefs",
+          "type": "ColDef[]",
+          "default": "-",
+          "required": true,
+          "description": "Grid kolon yapisi ve davranislari."
+        },
+        {
+          "name": "dataSourceMode",
+          "type": "'server' | 'client'",
+          "default": "server",
+          "required": false,
+          "description": "Gridin client-side veya server-side calisma modunu belirler."
+        },
+        {
+          "name": "rowData / total / page / pageSize",
+          "type": "RowData[] / number",
+          "default": "-",
+          "required": false,
+          "description": "Client-side liste ve pagination girdileri."
+        },
+        {
+          "name": "createServerSideDatasource",
+          "type": "(params) => IServerSideDatasource",
+          "default": "-",
+          "required": false,
+          "description": "Server-side mod icin datasource baglayicisi."
+        },
+        {
+          "name": "toolbarExtras",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Grid toolbarina urune ozel aksiyon ekler."
+        }
+      ],
+      "previewFocus": [
+        "client-side entity list",
+        "server datasource mode",
+        "toolbar and variant controls"
+      ],
+      "regressionFocus": [
+        "mode switch parity",
+        "server datasource attach",
+        "variant selector rendering",
+        "pagination summary"
+      ]
+    },
+    {
       "name": "IconButton",
       "variantAxes": [
         "variant: ghost | secondary | destructive",
@@ -538,6 +669,66 @@
       ]
     },
     {
+      "name": "JsonViewer",
+      "variantAxes": [
+        "depth: collapsed | progressive expand",
+        "surface: default | constrained height",
+        "type badges: on | off"
+      ],
+      "stateModel": [
+        "undefined / empty payload",
+        "nested expand-collapse",
+        "readonly contract snapshot"
+      ],
+      "props": [
+        {
+          "name": "value",
+          "type": "unknown",
+          "default": "-",
+          "required": true,
+          "description": "Gösterilecek payload; primitive, object veya array olabilir."
+        },
+        {
+          "name": "rootLabel",
+          "type": "string",
+          "default": "payload",
+          "required": false,
+          "description": "Ağaç kökünde gösterilecek label."
+        },
+        {
+          "name": "defaultExpandedDepth",
+          "type": "number",
+          "default": "1",
+          "required": false,
+          "description": "İlk açılışta hangi derinliğe kadar expanded gösterileceğini belirler."
+        },
+        {
+          "name": "maxHeight",
+          "type": "number | string",
+          "default": "420",
+          "required": false,
+          "description": "Uzun payloadlarda scrollable viewer yüksekliği."
+        },
+        {
+          "name": "showTypes",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Primitive ve node type badge gösterimini açar."
+        }
+      ],
+      "previewFocus": [
+        "release evidence payload",
+        "policy snapshot",
+        "undefined / primitive fallback"
+      ],
+      "regressionFocus": [
+        "nested node toggle",
+        "empty payload handling",
+        "type badge rendering"
+      ]
+    },
+    {
       "name": "LinkInline",
       "variantAxes": [
         "tone: primary | secondary",
@@ -596,6 +787,67 @@
         "external target/rel guvenligi",
         "focus-visible ve current-state semantics",
         "blocked state ile normal text ayrisimi"
+      ]
+    },
+    {
+      "name": "List",
+      "variantAxes": [
+        "density: comfortable | compact",
+        "selection: passive | selectable",
+        "tone: default | info | success | warning | danger"
+      ],
+      "stateModel": [
+        "loading",
+        "empty",
+        "selected item",
+        "disabled / blocked interaction"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "ListItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Title, description, meta, badge ve tone bilgisini taşıyan kayıt listesi."
+        },
+        {
+          "name": "density",
+          "type": "'comfortable' | 'compact'",
+          "default": "comfortable",
+          "required": false,
+          "description": "Liste satır yüksekliği ve bilgi yoğunluğu."
+        },
+        {
+          "name": "selectedKey",
+          "type": "React.Key | null",
+          "default": "null",
+          "required": false,
+          "description": "Seçili öğeyi controlled state ile belirler."
+        },
+        {
+          "name": "onItemSelect",
+          "type": "(key) => void",
+          "default": "-",
+          "required": false,
+          "description": "Satır seçimini parent state ile yönetir."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Liste yüklenirken skeleton satırları gösterir ve aria-busy işaretler."
+        }
+      ],
+      "previewFocus": [
+        "operational inbox",
+        "compact selectable list",
+        "loading / empty states"
+      ],
+      "regressionFocus": [
+        "loading state evidence",
+        "selected item sync",
+        "blocked interaction guard"
       ]
     },
     {
@@ -1405,6 +1657,128 @@
       ]
     },
     {
+      "name": "Tree",
+      "variantAxes": [
+        "density: comfortable | compact",
+        "selection: passive | selectable",
+        "surface: default | readonly review"
+      ],
+      "stateModel": [
+        "expanded / collapsed nodes",
+        "selected node",
+        "loading / empty state",
+        "readonly / disabled interaction"
+      ],
+      "props": [
+        {
+          "name": "nodes",
+          "type": "TreeNode[]",
+          "default": "-",
+          "required": true,
+          "description": "Hiyerarsik dugum listesi; label, description, badges ve child dallarini tasir."
+        },
+        {
+          "name": "selectedKey",
+          "type": "React.Key | null",
+          "default": "-",
+          "required": false,
+          "description": "Secili node bilgisini controlled olarak yonetir."
+        },
+        {
+          "name": "onNodeSelect",
+          "type": "(key: React.Key) => void",
+          "default": "-",
+          "required": false,
+          "description": "Node secildiginde event uretir."
+        },
+        {
+          "name": "defaultExpandedKeys / expandedKeys",
+          "type": "React.Key[]",
+          "default": "[]",
+          "required": false,
+          "description": "Expand/collapse davranisini uncontrolled veya controlled sekilde yonetir."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Skeleton tree state gosterir ve gercek node yerine gecici satirlar render eder."
+        }
+      ],
+      "previewFocus": [
+        "release governance hierarchy",
+        "readonly audit tree",
+        "loading / empty states"
+      ],
+      "regressionFocus": [
+        "expand collapse determinism",
+        "selected node sync",
+        "readonly interaction guard"
+      ]
+    },
+    {
+      "name": "TreeTable",
+      "variantAxes": [
+        "density: comfortable | compact",
+        "selection: passive | selectable",
+        "surface: ownership matrix | compact review"
+      ],
+      "stateModel": [
+        "expanded / collapsed rows",
+        "selected row",
+        "loading / empty state",
+        "column-based comparison"
+      ],
+      "props": [
+        {
+          "name": "nodes",
+          "type": "TreeTableNode[]",
+          "default": "-",
+          "required": true,
+          "description": "Label, badges, meta ve child row verilerini tasiyan hiyerarsik satir listesi."
+        },
+        {
+          "name": "columns",
+          "type": "TreeTableColumn[]",
+          "default": "-",
+          "required": true,
+          "description": "Agac kolonu yanindaki owner/status/scope gibi veri kolonlarini tanimlar."
+        },
+        {
+          "name": "selectedKey",
+          "type": "React.Key | null",
+          "default": "-",
+          "required": false,
+          "description": "Secili hiyerarsik satiri controlled olarak yonetir."
+        },
+        {
+          "name": "defaultExpandedKeys / expandedKeys",
+          "type": "React.Key[]",
+          "default": "[]",
+          "required": false,
+          "description": "Hangi satirlarin acik oldugunu kontrol eder."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Table skeleton satirlari ile data gelene kadar yer tutucu gosterir."
+        }
+      ],
+      "previewFocus": [
+        "ownership matrix",
+        "compact review matrix",
+        "loading / empty states"
+      ],
+      "regressionFocus": [
+        "expanded row rendering",
+        "selected row sync",
+        "column value determinism"
+      ]
+    },
+    {
       "name": "Upload",
       "variantAxes": [
         "size: sm | md | lg",
@@ -1463,258 +1837,6 @@
         "file list normalization",
         "readonly interaction guard",
         "maxFiles enforcement"
-      ]
-    },
-    {
-      "name": "AgGridServer",
-      "variantAxes": [
-        "surface: fixed-height | full-width",
-        "data-flow: success | loading | error",
-        "schema: simple columns | grouped columns"
-      ],
-      "stateModel": [
-        "server datasource attach",
-        "loading overlay lifecycle",
-        "success vs fail getRows handling",
-        "rowCount fallback"
-      ],
-      "props": [
-        {
-          "name": "columnDefs",
-          "type": "(ColDef | ColGroupDef)[]",
-          "default": "-",
-          "required": true,
-          "description": "Server-side grid kolon yapisi."
-        },
-        {
-          "name": "getData",
-          "type": "(request) => Promise<{ rows; total? }>",
-          "default": "-",
-          "required": true,
-          "description": "Grid isteklerini merkezi fetch katmanina baglar."
-        },
-        {
-          "name": "height",
-          "type": "number | string",
-          "default": "600",
-          "required": false,
-          "description": "Grid container yuksekligi."
-        },
-        {
-          "name": "defaultColDef",
-          "type": "ColDef",
-          "default": "-",
-          "required": false,
-          "description": "Tum kolonlar icin ortak default davranislar."
-        },
-        {
-          "name": "gridOptions",
-          "type": "GridOptions",
-          "default": "-",
-          "required": false,
-          "description": "Server-side row model ve cache davranisi icin ileri grid ayarlari."
-        }
-      ],
-      "previewFocus": [
-        "server datasource attach",
-        "owner/resource dataset",
-        "loading and fail handling"
-      ],
-      "regressionFocus": [
-        "datasource success/fail parity",
-        "rowCount fallback",
-        "overlay visibility"
-      ]
-    },
-    {
-      "name": "EntityGridTemplate",
-      "variantAxes": [
-        "mode: client | server",
-        "theme: quartz | balham | material | alpine",
-        "density: comfortable | compact"
-      ],
-      "stateModel": [
-        "client pagination",
-        "server datasource attach",
-        "variant management",
-        "toolbar export actions",
-        "theme and density sync"
-      ],
-      "props": [
-        {
-          "name": "gridId",
-          "type": "string",
-          "default": "-",
-          "required": true,
-          "description": "Variant ve preference owner kimligini belirler."
-        },
-        {
-          "name": "columnDefs",
-          "type": "ColDef[]",
-          "default": "-",
-          "required": true,
-          "description": "Grid kolon yapisi ve davranislari."
-        },
-        {
-          "name": "dataSourceMode",
-          "type": "'server' | 'client'",
-          "default": "server",
-          "required": false,
-          "description": "Gridin client-side veya server-side calisma modunu belirler."
-        },
-        {
-          "name": "rowData / total / page / pageSize",
-          "type": "RowData[] / number",
-          "default": "-",
-          "required": false,
-          "description": "Client-side liste ve pagination girdileri."
-        },
-        {
-          "name": "createServerSideDatasource",
-          "type": "(params) => IServerSideDatasource",
-          "default": "-",
-          "required": false,
-          "description": "Server-side mod icin datasource baglayicisi."
-        },
-        {
-          "name": "toolbarExtras",
-          "type": "ReactNode",
-          "default": "-",
-          "required": false,
-          "description": "Grid toolbarina urune ozel aksiyon ekler."
-        }
-      ],
-      "previewFocus": [
-        "client-side entity list",
-        "server datasource mode",
-        "toolbar and variant controls"
-      ],
-      "regressionFocus": [
-        "mode switch parity",
-        "server datasource attach",
-        "variant selector rendering",
-        "pagination summary"
-      ]
-    },
-    {
-      "name": "List",
-      "variantAxes": [
-        "density: comfortable | compact",
-        "selection: passive | selectable",
-        "tone: default | info | success | warning | danger"
-      ],
-      "stateModel": [
-        "loading",
-        "empty",
-        "selected item",
-        "disabled / blocked interaction"
-      ],
-      "props": [
-        {
-          "name": "items",
-          "type": "ListItem[]",
-          "default": "-",
-          "required": true,
-          "description": "Title, description, meta, badge ve tone bilgisini taşıyan kayıt listesi."
-        },
-        {
-          "name": "density",
-          "type": "'comfortable' | 'compact'",
-          "default": "comfortable",
-          "required": false,
-          "description": "Liste satır yüksekliği ve bilgi yoğunluğu."
-        },
-        {
-          "name": "selectedKey",
-          "type": "React.Key | null",
-          "default": "null",
-          "required": false,
-          "description": "Seçili öğeyi controlled state ile belirler."
-        },
-        {
-          "name": "onItemSelect",
-          "type": "(key) => void",
-          "default": "-",
-          "required": false,
-          "description": "Satır seçimini parent state ile yönetir."
-        },
-        {
-          "name": "loading",
-          "type": "boolean",
-          "default": "false",
-          "required": false,
-          "description": "Liste yüklenirken skeleton satırları gösterir ve aria-busy işaretler."
-        }
-      ],
-      "previewFocus": [
-        "operational inbox",
-        "compact selectable list",
-        "loading / empty states"
-      ],
-      "regressionFocus": [
-        "loading state evidence",
-        "selected item sync",
-        "blocked interaction guard"
-      ]
-    },
-    {
-      "name": "JsonViewer",
-      "variantAxes": [
-        "depth: collapsed | progressive expand",
-        "surface: default | constrained height",
-        "type badges: on | off"
-      ],
-      "stateModel": [
-        "undefined / empty payload",
-        "nested expand-collapse",
-        "readonly contract snapshot"
-      ],
-      "props": [
-        {
-          "name": "value",
-          "type": "unknown",
-          "default": "-",
-          "required": true,
-          "description": "Gösterilecek payload; primitive, object veya array olabilir."
-        },
-        {
-          "name": "rootLabel",
-          "type": "string",
-          "default": "payload",
-          "required": false,
-          "description": "Ağaç kökünde gösterilecek label."
-        },
-        {
-          "name": "defaultExpandedDepth",
-          "type": "number",
-          "default": "1",
-          "required": false,
-          "description": "İlk açılışta hangi derinliğe kadar expanded gösterileceğini belirler."
-        },
-        {
-          "name": "maxHeight",
-          "type": "number | string",
-          "default": "420",
-          "required": false,
-          "description": "Uzun payloadlarda scrollable viewer yüksekliği."
-        },
-        {
-          "name": "showTypes",
-          "type": "boolean",
-          "default": "true",
-          "required": false,
-          "description": "Primitive ve node type badge gösterimini açar."
-        }
-      ],
-      "previewFocus": [
-        "release evidence payload",
-        "policy snapshot",
-        "undefined / primitive fallback"
-      ],
-      "regressionFocus": [
-        "nested node toggle",
-        "empty payload handling",
-        "type badge rendering"
       ]
     }
   ]
