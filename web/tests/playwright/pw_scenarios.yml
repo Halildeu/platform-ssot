@@ -320,18 +320,18 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
-          value: Steps
-      - expectVisible: '[data-testid="design-lab-item-steps"]'
-      - click: '[data-testid="design-lab-item-steps"]'
+          value: Checkbox
+      - expectVisible: '[data-testid="design-lab-item-checkbox"]'
+      - click: '[data-testid="design-lab-item-checkbox"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
-          value: AnchorToc
-      - expectVisible: '[data-testid="design-lab-item-anchortoc"]'
-      - click: '[data-testid="design-lab-item-anchortoc"]'
+          value: Radio
+      - expectVisible: '[data-testid="design-lab-item-radio"]'
+      - click: '[data-testid="design-lab-item-radio"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-api"]'

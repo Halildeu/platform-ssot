@@ -95,10 +95,12 @@
       "EntityGridTemplate",
       "FilterBar",
       "FormDrawer",
+      "Checkbox",
       "IconButton",
       "LinkInline",
       "Modal",
       "PageLayout",
+      "Radio",
       "ReportFilterPanel",
       "Select",
       "Skeleton",
@@ -142,7 +144,6 @@
     "planned_p2": [
       "AnchorToc",
       "Breadcrumb",
-      "Checkbox",
       "CommandPalette",
       "ContextMenu",
       "DatePicker",
@@ -151,7 +152,6 @@
       "List",
       "Pagination",
       "Popover",
-      "Radio",
       "Slider",
       "Steps",
       "Switch",
@@ -384,23 +384,36 @@
     {
       "name": "Checkbox",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "stable",
       "group": "forms",
       "subgroup": "inputs",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Checkbox P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Checkbox / Radio",
+      "demoMode": "live",
+      "description": "Checkbox primitivei; helper, validation, readonly/disabled ve indeterminate davranisini ortak boolean-control shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-3",
+        "forms",
+        "stable",
+        "boolean-entry"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "input_error_prevention_patterns",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "CommandPalette",
@@ -923,23 +936,36 @@
     {
       "name": "Radio",
       "kind": "component",
-      "availability": "planned",
-      "lifecycle": "planned",
+      "availability": "exported",
+      "lifecycle": "stable",
       "group": "forms",
       "subgroup": "inputs",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Radio P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Checkbox / Radio",
+      "demoMode": "live",
+      "description": "Radio primitivei; tek secimli tercih, helper, validation ve access-aware interaction davranisini ortak boolean-control shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
-      ]
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-3",
+        "forms",
+        "stable",
+        "single-choice"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "smart_defaults_and_prefill",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "registerTokenResolver",

@@ -60,11 +60,11 @@ Kanonik kaynak:
 - Amaç: input, validation ve recovery davranışını standartlaştırmak
 - Mevcut:
   - `Select`
-- Hedef:
   - `TextInput`
   - `TextArea`
   - `Checkbox`
   - `Radio`
+- Hedef:
   - `Switch`
   - `Slider`
   - `DatePicker`
@@ -187,10 +187,6 @@ Minimum evidence:
 
 - `Forms`
 - hedef:
-  - `TextInput`
-  - `TextArea`
-  - `Checkbox`
-  - `Radio`
   - `Switch`
   - `Slider`
   - `DatePicker`

@@ -241,6 +241,74 @@
       ]
     },
     {
+      "name": "Checkbox",
+      "variantAxes": [
+        "size: sm | md | lg",
+        "state: unchecked | checked | indeterminate",
+        "tone: default | invalid | readonly | disabled"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled",
+        "indeterminate mixed state",
+        "inline validation",
+        "access-aware interaction"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Boolean aksiyon veya onay alanı başlığı."
+        },
+        {
+          "name": "description / hint / error",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Açıklama, yardım ve doğrulama geri bildirimi."
+        },
+        {
+          "name": "checked / defaultChecked",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Controlled veya uncontrolled seçili durum."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Kısmi seçim veya üst-seviye aggregate state davranışı."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Hit-area ve label yoğunluğu."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanlı görünürlük ve etkileşim düzeyi."
+        }
+      ],
+      "previewFocus": [
+        "controlled checkbox",
+        "indeterminate mixed state",
+        "validation + readonly matrix"
+      ],
+      "regressionFocus": [
+        "indeterminate native sync",
+        "readonly interaction guard",
+        "controlled/uncontrolled parity"
+      ]
+    },
+    {
       "name": "Divider",
       "variantAxes": [
         "orientation: horizontal | vertical",
@@ -467,6 +535,74 @@
         "page clamp",
         "aria-current",
         "prev-next disabled guards"
+      ]
+    },
+    {
+      "name": "Radio",
+      "variantAxes": [
+        "size: sm | md | lg",
+        "state: unchecked | checked | invalid | readonly | disabled",
+        "grouping: single | list"
+      ],
+      "stateModel": [
+        "controlled vs uncontrolled",
+        "single-choice group",
+        "inline validation",
+        "access-aware interaction"
+      ],
+      "props": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Tekil tercih etiketini tanımlar."
+        },
+        {
+          "name": "description / hint / error",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Açıklama, yardım ve doğrulama geri bildirimi."
+        },
+        {
+          "name": "name / value",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Tek secimli grup davranisi ve form payload baglami."
+        },
+        {
+          "name": "checked / defaultChecked",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Controlled veya uncontrolled secili durum."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Hit-area ve label yoğunluğu."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy tabanlı görünürlük ve etkileşim düzeyi."
+        }
+      ],
+      "previewFocus": [
+        "controlled radio group",
+        "state matrix",
+        "helper + invalid messaging"
+      ],
+      "regressionFocus": [
+        "group selection parity",
+        "readonly interaction guard",
+        "label/description association"
       ]
     },
     {

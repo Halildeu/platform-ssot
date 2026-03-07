@@ -18,6 +18,8 @@ import {
   Select,
   TextArea,
   TextInput,
+  Checkbox,
+  Radio,
   Skeleton,
   Spinner,
   Pagination,
@@ -276,6 +278,8 @@ const DesignLabPage: React.FC = () => {
   const [textAreaValue, setTextAreaValue] = useState(
     'Açıklama alanı inline yardım, hata ve karakter sayacı ile birlikte form deneyimini tamamlar.',
   );
+  const [checkboxValue, setCheckboxValue] = useState(true);
+  const [radioValue, setRadioValue] = useState<'design' | 'ops' | 'delivery'>('design');
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -1047,6 +1051,90 @@ const DesignLabPage: React.FC = () => {
                   />
                   <TextArea label="Readonly not" defaultValue="Sistem logu kullanıcı tarafından değiştirilemez." access="readonly" rows={3} />
                   <TextArea label="Disabled draft" defaultValue="Yayın sonrası kilitlenir." access="disabled" rows={3} />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Checkbox':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Controlled + yardım">
+                <div className="space-y-4">
+                  <Checkbox
+                    label="Yayın sonrası bildirim gönder"
+                    description="Akış tamamlandığında paydaşlara otomatik bilgi ver."
+                    hint="İşlem anında kapatılabilir."
+                    checked={checkboxValue}
+                    onCheckedChange={(checked) => setCheckboxValue(checked)}
+                  />
+                  <Text variant="secondary" className="block">
+                    Aktif seçim: {checkboxValue ? 'Açık' : 'Kapalı'}
+                  </Text>
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="Validation / erişim">
+                <div className="grid grid-cols-1 gap-3">
+                  <Checkbox label="Eksik onay" invalid error="Devam etmeden önce onay vermelisin." />
+                  <Checkbox label="Kısmi seçim" indeterminate hint="Alt seçeneklerin bir bölümü seçili." />
+                  <Checkbox label="Readonly seçim" defaultChecked access="readonly" />
+                  <Checkbox label="Disabled seçim" access="disabled" />
+                </div>
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'Radio':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Controlled seçenek grubu">
+                <div className="space-y-3">
+                  <Radio
+                    name="wave-3-radio-demo"
+                    value="design"
+                    label="Design odaklı"
+                    description="Önce görünüm ve doküman kalitesini tamamla."
+                    checked={radioValue === 'design'}
+                    onCheckedChange={(checked) => {
+                      if (checked) setRadioValue('design');
+                    }}
+                  />
+                  <Radio
+                    name="wave-3-radio-demo"
+                    value="ops"
+                    label="Ops odaklı"
+                    description="Doctor ve gate kanıtı önce tamamlansın."
+                    checked={radioValue === 'ops'}
+                    onCheckedChange={(checked) => {
+                      if (checked) setRadioValue('ops');
+                    }}
+                  />
+                  <Radio
+                    name="wave-3-radio-demo"
+                    value="delivery"
+                    label="Delivery odaklı"
+                    description="Feature sonrası teslim artefact’larını önceliklendir."
+                    checked={radioValue === 'delivery'}
+                    onCheckedChange={(checked) => {
+                      if (checked) setRadioValue('delivery');
+                    }}
+                  />
+                </div>
+              </PreviewPanel>
+              <PreviewPanel title="State matrix">
+                <div className="grid grid-cols-1 gap-3">
+                  <Radio name="wave-3-radio-state" value="default" label="Varsayılan seçenek" defaultChecked />
+                  <Radio
+                    name="wave-3-radio-state"
+                    value="invalid"
+                    label="Eksik seçim"
+                    invalid
+                    error="En az bir dağıtım stratejisi seçilmeli."
+                  />
+                  <Radio name="wave-3-radio-state" value="readonly" label="Readonly seçenek" access="readonly" />
+                  <Radio name="wave-3-radio-state" value="disabled" label="Disabled seçenek" access="disabled" />
                 </div>
               </PreviewPanel>
             </div>

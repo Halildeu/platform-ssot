@@ -40,6 +40,8 @@ export * from './components/Tooltip';
 export * from './components/Select';
 export * from './components/TextInput';
 export * from './components/TextArea';
+export * from './components/Checkbox';
+export * from './components/Radio';
 export * from './components/Modal';
 export * from './components/Dropdown';
 export * from './components/Tag';

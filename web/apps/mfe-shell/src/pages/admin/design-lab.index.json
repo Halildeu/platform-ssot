@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 59,
-    "planned": 17,
-    "liveDemo": 30,
+    "exported": 61,
+    "planned": 15,
+    "liveDemo": 32,
     "inspector": 29
   },
   "items": [
@@ -239,30 +239,40 @@
     {
       "name": "Checkbox",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { Checkbox } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "boolean-entry",
+        "forms",
+        "stable",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Checkbox P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Checkbox / Radio",
+      "demoMode": "live",
+      "description": "Checkbox primitivei; helper, validation, readonly/disabled ve indeterminate davranisini ortak boolean-control shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "input_error_prevention_patterns",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "CommandPalette",
@@ -871,30 +881,40 @@
     {
       "name": "Radio",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
+      "importStatement": "import { Radio } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
+      "tags": [
+        "forms",
+        "single-choice",
+        "stable",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
       "taxonomyGroupId": "data_entry",
-      "taxonomySubgroup": "Text Input / TextArea",
-      "demoMode": "planned",
-      "description": "Radio P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "taxonomySubgroup": "Checkbox / Radio",
+      "demoMode": "live",
+      "description": "Radio primitivei; tek secimli tercih, helper, validation ve access-aware interaction davranisini ortak boolean-control shell ile sunar.",
       "sectionIds": [
         "component_library_management",
         "documentation_standards",
         "accessibility_compliance"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "smart_defaults_and_prefill",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "ReportFilterPanel",

@@ -8,7 +8,7 @@ ROOT = Path('.')
 CONTRACT = ROOT / 'docs/02-architecture/context/ui-library-wave-3-forms.v1.json'
 API_CATALOG = ROOT / 'web/packages/ui-kit/src/catalog/component-api-catalog.v1.json'
 REGISTRY = ROOT / 'web/packages/ui-kit/src/catalog/component-registry.v1.json'
-EXPECTED_COMPONENTS = {'TextInput', 'TextArea'}
+EXPECTED_COMPONENTS = {'TextInput', 'TextArea', 'Checkbox', 'Radio'}
 REQUIRED_TOP = [
     'version',
     'subject_id',
