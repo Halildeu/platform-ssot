@@ -276,7 +276,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
             {isTrackExpanded ? (
               <div className="border-t border-border-subtle px-4 py-3">
                 <div
-                  className="ml-5 border-l border-border-default pl-3"
+                  className="space-y-2"
                   data-testid={
                     testIdPrefix && isTrackSelected ? `${testIdPrefix}-group-section` : undefined
                   }
@@ -305,7 +305,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                         </button>
 
                         {isGroupExpanded ? (
-                          <div className="ml-5 mt-2 border-l border-border-subtle pl-3">
+                          <div className="mt-2 space-y-2 rounded-[18px] border border-border-subtle bg-surface-default p-2">
                             {group.subgroups.map((subgroup) => {
                               const subgroupKey = makeSubgroupKey(track.id, group.id, subgroup.id);
                               const isSubgroupExpanded = expandedSubgroups.includes(subgroupKey);
@@ -331,7 +331,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                     {isSubgroupExpanded ? <ChevronDown /> : <ChevronRight />}
                                     <span className={clsx('h-6 w-1 shrink-0 rounded-full', isSubgroupExpanded ? track.accentClassName ?? 'bg-action-primary' : 'bg-border-subtle')} />
                                     <span className="min-w-0">
-                                      <span className="block break-words text-[11px] font-semibold uppercase tracking-[0.16em] leading-5 text-text-secondary">
+                                      <span className="block break-words text-xs font-semibold leading-5 text-text-secondary">
                                         {subgroup.label}
                                       </span>
                                       <span className="mt-2 block">
@@ -341,7 +341,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                   </button>
 
                                   {isSubgroupExpanded ? (
-                                    <div className="ml-5 mt-2 border-l border-border-subtle/80 pl-3">
+                                    <div className="mt-2 space-y-1 rounded-[16px] bg-surface-canvas p-2">
                                       {subgroup.items.map((item) => {
                                         const isItemActive =
                                           selection.trackId === track.id &&
