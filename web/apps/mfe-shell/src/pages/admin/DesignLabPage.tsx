@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Boxes, MapIcon, Sparkles } from 'lucide-react';
 import {
   AgGridServer,
   Badge,
@@ -28,6 +29,9 @@ import {
   AnchorToc,
   Breadcrumb,
   Divider,
+  LibraryProductTree,
+  type LibraryProductTreeSelection,
+  type LibraryProductTreeTrack,
 } from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
 import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
@@ -267,13 +271,13 @@ const detailTabMeta: Array<{
 
 const DesignLabPage: React.FC = () => {
   const [query, setQuery] = useState('');
-  const [activeTrack, setActiveTrack] = useState<DesignLabTrack>('new_packages');
   const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('overview');
-  const [selectedItemName, setSelectedItemName] = useState<string>(() => {
-    const button = designLabIndex.items.find((item) => item.name === 'Button');
-    return button?.name ?? designLabIndex.items[0]?.name ?? '';
+  const [treeSelection, setTreeSelection] = useState<LibraryProductTreeSelection>({
+    trackId: 'new_packages',
+    groupId: 'actions',
+    subgroupId: 'feedback',
+    itemId: 'Button',
   });
-  const [selectedGroupId, setSelectedGroupId] = useState<string>('actions');
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [formDrawerOpen, setFormDrawerOpen] = useState(false);
@@ -286,12 +290,7 @@ const DesignLabPage: React.FC = () => {
   const [stepsValue, setStepsValue] = useState('review');
   const [anchorValue, setAnchorValue] = useState('overview');
 
-  useEffect(() => {
-    setModalOpen(false);
-    setFormDrawerOpen(false);
-    setDetailDrawerOpen(false);
-    setDetailTab('overview');
-  }, [selectedItemName]);
+  const activeTrack = (treeSelection.trackId as DesignLabTrack | null) ?? 'new_packages';
 
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -322,44 +321,13 @@ const DesignLabPage: React.FC = () => {
   }, [itemsForTrack, normalizedQuery]);
 
   const selectedItem = useMemo(
-    () => filteredItems.find((item) => item.name === selectedItemName) ?? null,
-    [filteredItems, selectedItemName],
-  );
-
-  const countByGroup = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const group of designLabTaxonomy.groups) counts.set(group.id, 0);
-    for (const item of filteredItems) {
-      counts.set(item.taxonomyGroupId, (counts.get(item.taxonomyGroupId) ?? 0) + 1);
-    }
-    return counts;
-  }, [filteredItems]);
-
-  const itemsByGroupAndSubgroup = useMemo(() => {
-    const map = new Map<string, Map<string, DesignLabIndexItem[]>>();
-    for (const item of filteredItems) {
-      const subgroupMap = map.get(item.taxonomyGroupId) ?? new Map<string, DesignLabIndexItem[]>();
-      const list = subgroupMap.get(item.taxonomySubgroup) ?? [];
-      list.push(item);
-      subgroupMap.set(item.taxonomySubgroup, [...list].sort((a, b) => a.name.localeCompare(b.name, 'en')));
-      map.set(item.taxonomyGroupId, subgroupMap);
-    }
-    return map;
-  }, [filteredItems]);
-
-  const visibleGroups = useMemo(
-    () => designLabTaxonomy.groups.filter((group) => (countByGroup.get(group.id) ?? 0) > 0),
-    [countByGroup],
+    () => filteredItems.find((item) => item.name === treeSelection.itemId) ?? filteredItems[0] ?? null,
+    [filteredItems, treeSelection.itemId],
   );
 
   const selectedGroup = useMemo(
-    () => designLabTaxonomy.groups.find((group) => group.id === selectedGroupId) ?? visibleGroups[0] ?? null,
-    [selectedGroupId, visibleGroups],
-  );
-
-  const selectedGroupItemsBySubgroup = useMemo(
-    () => (selectedGroup ? itemsByGroupAndSubgroup.get(selectedGroup.id) ?? new Map<string, DesignLabIndexItem[]>() : new Map<string, DesignLabIndexItem[]>()),
-    [itemsByGroupAndSubgroup, selectedGroup],
+    () => designLabTaxonomy.groups.find((group) => group.id === treeSelection.groupId) ?? null,
+    [treeSelection.groupId],
   );
 
   const summary = useMemo(() => {
@@ -396,27 +364,71 @@ const DesignLabPage: React.FC = () => {
   }, [selectedGroup, selectedItem]);
 
   useEffect(() => {
-    if (visibleGroups.length === 0) {
-      setSelectedGroupId('');
-      return;
-    }
-    if (!selectedGroup || !visibleGroups.some((group) => group.id === selectedGroup.id)) {
-      setSelectedGroupId(visibleGroups[0].id);
-    }
-  }, [selectedGroup, visibleGroups]);
+    setModalOpen(false);
+    setFormDrawerOpen(false);
+    setDetailDrawerOpen(false);
+    setDetailTab('overview');
+  }, [selectedItem?.name]);
 
-  useEffect(() => {
-    if (filteredItems.length === 0) {
-      setSelectedItemName('');
-      return;
-    }
-    const activeSelection = filteredItems.find((item) => item.name === selectedItemName);
-    if (activeSelection && (!selectedGroup || activeSelection.taxonomyGroupId === selectedGroup.id)) {
-      return;
-    }
-    const groupScopedFallback = selectedGroup ? filteredItems.find((item) => item.taxonomyGroupId === selectedGroup.id) : null;
-    setSelectedItemName((groupScopedFallback ?? filteredItems[0]).name);
-  }, [filteredItems, selectedGroup, selectedItemName]);
+  const treeTracks = useMemo<LibraryProductTreeTrack[]>(() => {
+    return (Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
+      const trackItems = (track === activeTrack
+        ? filteredItems
+        : designLabIndex.items.filter((item) => resolveItemTrack(item) === track)
+      ).sort((a, b) => a.name.localeCompare(b.name, 'en'));
+
+      const groups = designLabTaxonomy.groups
+        .map((group) => {
+          const subgroups = group.subgroups
+            .map((subgroup) => {
+              const subgroupItems = trackItems
+                .filter((item) => item.taxonomyGroupId === group.id && item.taxonomySubgroup === subgroup)
+                .sort((a, b) => a.name.localeCompare(b.name, 'en'));
+              if (!subgroupItems.length) return null;
+              return {
+                id: subgroup,
+                label: subgroup,
+                items: subgroupItems.map((item) => ({
+                  id: item.name,
+                  label: item.name,
+                  badgeLabel: statusLabel[item.lifecycle],
+                  badgeTone: item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info',
+                })),
+              };
+            })
+            .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+
+          if (!subgroups.length) return null;
+
+          const count = subgroups.reduce((sum, subgroup) => sum + subgroup.items.length, 0);
+          return {
+            id: group.id,
+            label: group.title,
+            badgeLabel: String(count),
+            subgroups,
+          };
+        })
+        .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
+
+      const trackIcon =
+        track === 'new_packages'
+          ? <Sparkles className="h-4 w-4 text-action-primary" />
+          : track === 'current_system'
+            ? <Boxes className="h-4 w-4 text-text-secondary" />
+            : <MapIcon className="h-4 w-4 text-state-warning-text" />;
+
+      return {
+        id: track,
+        label: trackMeta[track].label,
+        eyebrow: trackVisualMeta[track].eyebrow,
+        icon: trackIcon,
+        badgeLabel: String(track === activeTrack ? filteredItems.length : trackSummary[track]),
+        accentClassName: trackVisualMeta[track].accentClass,
+        selectedToneClassName: `border ${trackVisualMeta[track].borderClass} bg-surface-default`,
+        groups,
+      };
+    });
+  }, [activeTrack, filteredItems, trackSummary]);
 
   const handleCopy = async (value: string) => {
     const ok = await copyToClipboard(value);
@@ -1505,130 +1517,12 @@ const DesignLabPage: React.FC = () => {
                   </Text>
                 </div>
 
-                <section data-testid="design-lab-track-section" className="space-y-2">
-                  {(Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
-                    const active = track === activeTrack;
-                    const visual = trackVisualMeta[track];
-                    const groupsForTrack = active ? visibleGroups : [];
-                    return (
-                      <div key={track} className="overflow-hidden rounded-[20px] border border-border-subtle bg-surface-default">
-                        <button
-                          data-testid={`design-lab-track-${track}`}
-                          type="button"
-                          onClick={() => setActiveTrack(track)}
-                          className={`flex w-full items-start gap-3 px-3 py-3 text-left transition ${
-                            active ? 'bg-surface-default' : 'hover:bg-surface-muted'
-                          }`}
-                        >
-                          <span className={`mt-0.5 h-8 w-1.5 shrink-0 rounded-full ${active ? visual.accentClass : 'bg-border-subtle'}`} />
-                          <span className="min-w-0 flex-1">
-                            <span className="flex items-center justify-between gap-3">
-                              <span className="block text-sm font-semibold text-text-primary">{trackMeta[track].label}</span>
-                              <span className="flex items-center gap-2">
-                                <Badge tone={active ? visual.badgeTone : 'muted'}>{trackSummary[track]}</Badge>
-                                <span className="text-xs text-text-secondary">{active ? '−' : '+'}</span>
-                              </span>
-                            </span>
-                          </span>
-                        </button>
-
-                        {active ? (
-                          <div className="border-t border-border-subtle px-2 py-2">
-                            <section data-testid="design-lab-group-section" className="space-y-1.5">
-                              {groupsForTrack.length > 0 ? (
-                                groupsForTrack.map((group) => {
-                                  const groupActive = selectedGroup?.id === group.id;
-                                  return (
-                                    <div key={group.id} className="rounded-[18px] border border-border-subtle bg-surface-panel">
-                                      <button
-                                        data-testid={`design-lab-group-${group.id}`}
-                                        type="button"
-                                        onClick={() => setSelectedGroupId(group.id)}
-                                        className={`flex w-full items-center gap-3 px-3 py-2.5 text-left transition ${
-                                          groupActive ? 'bg-surface-panel' : 'hover:bg-surface-muted'
-                                        }`}
-                                      >
-                                        <span className={`h-7 w-1.5 shrink-0 rounded-full ${groupActive ? 'bg-action-primary' : 'bg-border-subtle'}`} />
-                                        <span className="min-w-0 flex-1">
-                                          <span className="block text-sm font-medium text-text-primary">{group.title}</span>
-                                        </span>
-                                        <span className="flex items-center gap-2">
-                                          <Badge tone="muted">{countByGroup.get(group.id) ?? 0}</Badge>
-                                          <span className="text-xs text-text-secondary">{groupActive ? '−' : '+'}</span>
-                                        </span>
-                                      </button>
-
-                                      {groupActive ? (
-                                        <div data-testid="design-lab-tree-section" className="border-t border-border-subtle px-2 py-2">
-                                          <div className="space-y-2">
-                                            {group.subgroups.map((subgroup) => {
-                                              const subgroupItems = selectedGroupItemsBySubgroup.get(subgroup) ?? [];
-                                              if (subgroupItems.length === 0) return null;
-                                              return (
-                                                <div
-                                                  key={subgroup}
-                                                  data-testid={`design-lab-subgroup-${toTestIdSuffix(subgroup)}`}
-                                                  className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default"
-                                                >
-                                                  <div className="flex items-center gap-3 border-b border-border-subtle px-3 py-2.5">
-                                                    <span className="h-6 w-1.5 shrink-0 rounded-full bg-action-primary" />
-                                                    <span className="min-w-0 flex-1">
-                                                      <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-text-secondary">
-                                                        {subgroup}
-                                                      </span>
-                                                    </span>
-                                                    <Badge tone="muted">{subgroupItems.length}</Badge>
-                                                  </div>
-
-                                                  <div className="px-2 py-2">
-                                                    <div className="space-y-1">
-                                                      {subgroupItems.map((item) => {
-                                                        const itemActive = item.name === selectedItem?.name;
-                                                        return (
-                                                          <button
-                                                            key={item.name}
-                                                            data-testid={`design-lab-item-${toTestIdSuffix(item.name)}`}
-                                                            type="button"
-                                                            onClick={() => setSelectedItemName(item.name)}
-                                                            className={`flex w-full items-start gap-3 rounded-2xl px-3 py-2.5 text-left transition ${
-                                                              itemActive ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-muted'
-                                                            }`}
-                                                          >
-                                                            <span className={`mt-0.5 h-7 w-1.5 shrink-0 rounded-full ${itemActive ? 'bg-action-primary' : 'bg-transparent'}`} />
-                                                            <span className="min-w-0 flex-1">
-                                                              <span className="block text-sm font-medium text-text-primary">{item.name}</span>
-                                                            </span>
-                                                            <span className="shrink-0">
-                                                              <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
-                                                                {statusLabel[item.lifecycle]}
-                                                              </Badge>
-                                                            </span>
-                                                          </button>
-                                                        );
-                                                      })}
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                              );
-                                            })}
-                                          </div>
-                                        </div>
-                                      ) : null}
-                                    </div>
-                                  );
-                                })
-                              ) : (
-                                <Text variant="secondary" className="px-3 py-2 text-sm">
-                                  Bu track için görünür family yok.
-                                </Text>
-                              )}
-                            </section>
-                          </div>
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </section>
+                <LibraryProductTree
+                  tracks={treeTracks}
+                  defaultSelection={treeSelection}
+                  onSelectionChange={setTreeSelection}
+                  testIdPrefix="design-lab"
+                />
               </section>
             </div>
           </aside>

@@ -29,6 +29,7 @@ import { UnauthorizedPage } from '../pages/unauthorized';
 import ThemeMatrixPage from '../pages/runtime/ThemeMatrixPage';
 import ThemeAdminPage from '../pages/admin/ThemeAdminPage';
 import DesignLabPage from '../pages/admin/DesignLabPage';
+import UiLibrarySidebarLabPage from '../pages/admin/UiLibrarySidebarLabPage';
 import { ProtectedRoute } from '../widgets/app-shell/ui/ProtectedRoute.ui';
 import LoginPopover from '../widgets/app-shell/ui/LoginPopover.ui';
 import AppLauncher from '../widgets/app-shell/ui/AppLauncher.ui';
@@ -1782,6 +1783,15 @@ const AppLayout = () => {
                   )}
                 />
                 <Route path="/ui-library" element={<DesignLabPage />} />
+                <Route
+                  path="/admin/ui-library/sidebar-lab"
+                  element={(
+                    <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
+                      <UiLibrarySidebarLabPage />
+                    </ProtectedRoute>
+                  )}
+                />
+                <Route path="/ui-library/sidebar-lab" element={<UiLibrarySidebarLabPage />} />
                 <Route path="/admin/design-lab" element={<Navigate to="/admin/ui-library" replace />} />
                 <Route path="/design-lab" element={<Navigate to="/ui-library" replace />} />
                 <Route path="/runtime/theme-matrix" element={<ThemeMatrixPage />} />

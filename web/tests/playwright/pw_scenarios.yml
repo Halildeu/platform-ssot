@@ -188,12 +188,13 @@ scenarios:
       - goto: /ui-library
       - expectVisible: '[data-testid="design-lab-page"]'
       - expectVisible: '[data-testid="design-lab-search"]'
-      - click: '[data-testid="design-lab-track-new_packages"]'
       - click: '[data-testid="design-lab-group-navigation"]'
+      - click: '[data-testid="design-lab-subgroup-breadcrumb"]'
       - click: '[data-testid="design-lab-item-breadcrumb"]'
       - expectVisible: '[data-testid="design-lab-detail-hero"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-subgroup-tabs"]'
       - click: '[data-testid="design-lab-item-tabs"]'
       - click: '[data-testid="design-lab-tab-quality"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
@@ -220,8 +221,6 @@ scenarios:
     steps:
       - goto: /ui-library
       - expectVisible: '[data-testid="design-lab-page"]'
-      - click: '[data-testid="design-lab-track-new_packages"]'
-      - click: '[data-testid="design-lab-group-actions"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: Button
@@ -271,7 +270,6 @@ scenarios:
     steps:
       - goto: /ui-library
       - expectVisible: '[data-testid="design-lab-page"]'
-      - click: '[data-testid="design-lab-track-new_packages"]'
       - click: '[data-testid="design-lab-group-navigation"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -325,8 +323,8 @@ scenarios:
       - expectVisible: '[data-testid="runtime-theme-matrix-root"]'
       - goto: /ui-library
       - expectVisible: '[data-testid="design-lab-page"]'
-      - click: '[data-testid="design-lab-track-new_packages"]'
       - click: '[data-testid="design-lab-group-navigation"]'
+      - click: '[data-testid="design-lab-subgroup-anchor_table_of_contents"]'
       - click: '[data-testid="design-lab-item-anchortoc"]'
       - click: '[data-testid="design-lab-tab-overview"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
