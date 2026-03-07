@@ -1,0 +1,267 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "wave_id": "wave_1_foundation_primitives",
+  "items": [
+    {
+      "name": "Button",
+      "variantAxes": [
+        "variant: primary | secondary | ghost | destructive",
+        "size: sm | md | lg",
+        "loadingDisplay: label | spinner-only"
+      ],
+      "stateModel": [
+        "full",
+        "readonly",
+        "disabled",
+        "loading",
+        "fullWidth"
+      ],
+      "props": [
+        {
+          "name": "variant",
+          "type": "'primary' | 'secondary' | 'ghost' | 'destructive'",
+          "default": "primary",
+          "required": false,
+          "description": "Aksiyon intent katmanini belirler."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Density ve hit-area kararini belirler."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Interaction'i bloke eder ve loading katmanini açar."
+        },
+        {
+          "name": "loadingDisplay",
+          "type": "'label' | 'spinner-only'",
+          "default": "label",
+          "required": false,
+          "description": "Loading halinde label korunur mu yoksa sadece spinner mi gosterilir kararini verir."
+        },
+        {
+          "name": "leadingVisual / trailingVisual",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Slot bazli icon/visual alanlari; loading halinde layout jump uretmez."
+        },
+        {
+          "name": "access",
+          "type": "'full' | 'readonly' | 'disabled' | 'hidden'",
+          "default": "full",
+          "required": false,
+          "description": "Policy temelli görünürlük ve interaction kontrolu."
+        }
+      ],
+      "previewFocus": [
+        "variant matrix",
+        "size ve icon slot",
+        "loading + full width CTA"
+      ],
+      "regressionFocus": [
+        "loading sirasinda slot stabilitesi",
+        "keyboard activation ve focus-visible",
+        "readonly/disabled click guard"
+      ]
+    },
+    {
+      "name": "Text",
+      "variantAxes": [
+        "preset: display | heading | title | body | body-sm | caption | mono",
+        "variant: primary | secondary | muted | success | danger",
+        "wrap: wrap | nowrap | pretty | balance"
+      ],
+      "stateModel": [
+        "truncate",
+        "clampLines",
+        "align",
+        "tabularNums",
+        "mono"
+      ],
+      "props": [
+        {
+          "name": "preset",
+          "type": "'display' | 'heading' | 'title' | 'body' | 'body-sm' | 'caption' | 'mono'",
+          "default": "body-sm",
+          "required": false,
+          "description": "Semantic typography preset'i ve line-height kararini belirler."
+        },
+        {
+          "name": "variant",
+          "type": "'primary' | 'secondary' | 'muted' | 'success' | 'danger'",
+          "default": "primary",
+          "required": false,
+          "description": "Semantic tone katmani."
+        },
+        {
+          "name": "wrap",
+          "type": "'wrap' | 'nowrap' | 'pretty' | 'balance'",
+          "default": "wrap",
+          "required": false,
+          "description": "Uzun kopya satir dagilimi kararini belirler."
+        },
+        {
+          "name": "truncate / clampLines",
+          "type": "boolean / number",
+          "default": "false / -",
+          "required": false,
+          "description": "Single-line ve multi-line overflow davranisi."
+        },
+        {
+          "name": "align",
+          "type": "'left' | 'center' | 'right'",
+          "default": "left",
+          "required": false,
+          "description": "Metin hizalama karari."
+        },
+        {
+          "name": "tabularNums",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Finansal ve sayisal kolonlarda sabit rakam genisligi saglar."
+        }
+      ],
+      "previewFocus": [
+        "semantic scale",
+        "tone ve emphasis",
+        "pretty wrap + tabular nums"
+      ],
+      "regressionFocus": [
+        "contrast ve readability",
+        "clamp/truncate overflow",
+        "theme axis gecislerinde semantic typography"
+      ]
+    },
+    {
+      "name": "LinkInline",
+      "variantAxes": [
+        "tone: primary | secondary",
+        "underline: always | hover | none",
+        "state: internal | external | current | blocked"
+      ],
+      "stateModel": [
+        "current",
+        "disabled",
+        "readonly-access",
+        "external"
+      ],
+      "props": [
+        {
+          "name": "href",
+          "type": "string",
+          "default": "-",
+          "required": false,
+          "description": "Blocked durumda span fallback render edilir."
+        },
+        {
+          "name": "tone",
+          "type": "'primary' | 'secondary'",
+          "default": "primary",
+          "required": false,
+          "description": "Link'in semantic gorunurluk seviyesi."
+        },
+        {
+          "name": "underline",
+          "type": "'always' | 'hover' | 'none'",
+          "default": "hover",
+          "required": false,
+          "description": "Underline davranisi ve information scent seviyesi."
+        },
+        {
+          "name": "current / external / disabled",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Current page, harici baglanti ve blocked fallback durumlari."
+        },
+        {
+          "name": "leadingVisual / trailingVisual",
+          "type": "ReactNode",
+          "default": "-",
+          "required": false,
+          "description": "Inline icon veya arrow slotlari."
+        }
+      ],
+      "previewFocus": [
+        "internal vs external",
+        "current vs blocked",
+        "secondary tone"
+      ],
+      "regressionFocus": [
+        "external target/rel guvenligi",
+        "focus-visible ve current-state semantics",
+        "blocked state ile normal text ayrisimi"
+      ]
+    },
+    {
+      "name": "IconButton",
+      "variantAxes": [
+        "variant: ghost | secondary | destructive",
+        "size: sm | md | lg",
+        "state: selected | disabled | loading"
+      ],
+      "stateModel": [
+        "selected",
+        "aria-pressed",
+        "loading spinner-only",
+        "square hit-area"
+      ],
+      "props": [
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Tek zorunlu gorsel slot."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "default": "-",
+          "required": true,
+          "description": "Accessible name kaynagi; aria-label ve title fallback icin kullanilir."
+        },
+        {
+          "name": "selected",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Secondary gorunum ve aria-pressed davranisini açar."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "default": "md",
+          "required": false,
+          "description": "Square hit-area ve density kararini belirler."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Spinner-only loading gorunumu ve interaction block."
+        }
+      ],
+      "previewFocus": [
+        "size ve intent matrix",
+        "selected + loading + disabled",
+        "secondary action button"
+      ],
+      "regressionFocus": [
+        "accessible name zorunlulugu",
+        "loading halinde kare hit-area korunumu",
+        "selected state semantics"
+      ]
+    }
+  ]
+}

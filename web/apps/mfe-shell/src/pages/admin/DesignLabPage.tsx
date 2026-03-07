@@ -28,6 +28,7 @@ import {
 } from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
 import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
+import componentApiCatalogRaw from '../../../../../packages/ui-kit/src/catalog/component-api-catalog.v1.json';
 
 type DesignLabLifecycle = 'stable' | 'beta' | 'planned';
 type DesignLabAvailability = 'exported' | 'planned';
@@ -56,6 +57,30 @@ type DesignLabIndexItem = {
   uxPrimarySubthemeId?: string;
   roadmapWaveId?: string;
   acceptanceContractId?: string;
+};
+
+type DesignLabApiProp = {
+  name: string;
+  type: string;
+  default: string;
+  required: boolean;
+  description: string;
+};
+
+type DesignLabApiItem = {
+  name: string;
+  variantAxes: string[];
+  stateModel: string[];
+  props: DesignLabApiProp[];
+  previewFocus: string[];
+  regressionFocus: string[];
+};
+
+type DesignLabApiCatalog = {
+  version: string;
+  subject_id: string;
+  wave_id: string;
+  items: DesignLabApiItem[];
 };
 
 type DesignLabIndex = {
@@ -91,6 +116,7 @@ type DesignLabTaxonomy = {
 
 const designLabIndex = designLabIndexRaw as DesignLabIndex;
 const designLabTaxonomy = designLabTaxonomyRaw as DesignLabTaxonomy;
+const componentApiCatalog = componentApiCatalogRaw as DesignLabApiCatalog;
 
 const copyToClipboard = async (value: string): Promise<boolean> => {
   if (!value) return false;
@@ -137,6 +163,8 @@ const demoModeLabel: Record<DesignLabDemoMode, string> = {
   inspector: 'Inspector',
   planned: 'Planned',
 };
+
+const componentApiMap = new Map(componentApiCatalog.items.map((item) => [item.name, item]));
 
 const toTestIdSuffix = (value: string) =>
   value
@@ -1092,32 +1120,113 @@ const DesignLabPage: React.FC = () => {
     if (!item) {
       return <Text variant="secondary">API bilgisi için component seç.</Text>;
     }
+    const apiItem = componentApiMap.get(item.name);
     return (
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Import</DetailLabel>
-          <pre className="mt-3 whitespace-pre-wrap rounded-2xl border border-border-subtle bg-surface-muted p-4 text-xs text-text-primary">
-            {item.importStatement || 'Planned item — import kapalı'}
-          </pre>
+      <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Import</DetailLabel>
+            <pre className="mt-3 whitespace-pre-wrap rounded-2xl border border-border-subtle bg-surface-muted p-4 text-xs text-text-primary">
+              {item.importStatement || 'Planned item — import kapalı'}
+            </pre>
+          </div>
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>API Model</DetailLabel>
+            {apiItem ? (
+              <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                  <DetailLabel>Variant Axes</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {apiItem.variantAxes.map((entry) => <SectionBadge key={entry} label={entry} />)}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                  <DetailLabel>State Model</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {apiItem.stateModel.map((entry) => <SectionBadge key={entry} label={entry} />)}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                  <DetailLabel>Preview Focus</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {apiItem.previewFocus.map((entry) => <SectionBadge key={entry} label={entry} />)}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                  <DetailLabel>Regression Focus</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {apiItem.regressionFocus.map((entry) => <SectionBadge key={entry} label={entry} />)}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Text variant="secondary" className="mt-3 block">
+                Bu component icin henuz detayli API catalog girdisi yok.
+              </Text>
+            )}
+          </div>
         </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Registry Alanları</DetailLabel>
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-              <DetailLabel>Kind</DetailLabel>
-              <Text as="div" className="mt-2 font-semibold text-text-primary">{item.kind}</Text>
-            </div>
-            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-              <DetailLabel>Taxonomy</DetailLabel>
-              <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomyGroupId}</Text>
-            </div>
-            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-              <DetailLabel>Subgroup</DetailLabel>
-              <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomySubgroup}</Text>
-            </div>
-            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-              <DetailLabel>Track</DetailLabel>
-              <Text as="div" className="mt-2 font-semibold text-text-primary">{trackMeta[resolveItemTrack(item)].label}</Text>
+
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Primary Props</DetailLabel>
+            {apiItem ? (
+              <div className="mt-4 overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel">
+                <div className="grid grid-cols-[1.1fr_1.2fr_0.8fr] gap-3 border-b border-border-subtle px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-secondary">
+                  <span>Prop</span>
+                  <span>Type</span>
+                  <span>Default</span>
+                </div>
+                <div className="divide-y divide-border-subtle">
+                  {apiItem.props.map((prop) => (
+                    <div key={prop.name} className="grid grid-cols-1 gap-2 px-4 py-4 md:grid-cols-[1.1fr_1.2fr_0.8fr] md:gap-3">
+                      <div>
+                        <Text as="div" className="font-semibold text-text-primary">
+                          {prop.name}
+                        </Text>
+                        <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                          {prop.description}
+                        </Text>
+                      </div>
+                      <code className="rounded-xl border border-border-subtle bg-surface-muted px-3 py-2 text-xs text-text-primary">
+                        {prop.type}
+                      </code>
+                      <div className="flex items-start gap-2">
+                        <code className="rounded-xl border border-border-subtle bg-surface-muted px-3 py-2 text-xs text-text-primary">
+                          {prop.default}
+                        </code>
+                        {prop.required ? <Badge tone="warning">Required</Badge> : null}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Text variant="secondary" className="mt-3 block">
+                Props tablosu henuz tanimlanmadi.
+              </Text>
+            )}
+          </div>
+
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Registry Alanları</DetailLabel>
+            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-1">
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>Kind</DetailLabel>
+                <Text as="div" className="mt-2 font-semibold text-text-primary">{item.kind}</Text>
+              </div>
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>Taxonomy</DetailLabel>
+                <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomyGroupId}</Text>
+              </div>
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>Subgroup</DetailLabel>
+                <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomySubgroup}</Text>
+              </div>
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>Track</DetailLabel>
+                <Text as="div" className="mt-2 font-semibold text-text-primary">{trackMeta[resolveItemTrack(item)].label}</Text>
+              </div>
             </div>
           </div>
         </div>
