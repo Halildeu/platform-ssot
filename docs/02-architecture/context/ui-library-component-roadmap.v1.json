@@ -320,15 +320,15 @@
       "current_state": {
         "implemented_now": [
           "AgGridServer",
-          "EntityGridTemplate"
+          "EntityGridTemplate",
+          "TableSimple",
+          "Descriptions",
+          "List",
+          "JsonViewer"
         ],
         "gaps": [
-          "TableSimple",
-          "List",
           "Tree",
-          "TreeTable",
-          "Descriptions",
-          "JsonViewer"
+          "TreeTable"
         ]
       },
       "target_components": [
@@ -400,7 +400,7 @@
           "source_type": "planned_registry",
           "target_wave": "wave_4_data_display",
           "target_maturity": "beta",
-          "preview_mode": "inspector",
+          "preview_mode": "live",
           "ux_primary_theme_id": "trust_privacy_security_ux",
           "ux_primary_subtheme_id": "user_visible_audit_log"
         }
@@ -893,7 +893,8 @@
       ],
       "notes": [
         "TableSimple ve Descriptions export + live preview + API catalog ile acildi.",
-        "AgGridServer ve EntityGridTemplate stable export + live preview + API catalog + doctor evidence ile batch-2 tamamlandi."
+        "AgGridServer ve EntityGridTemplate stable export + live preview + API catalog + doctor evidence ile batch-2 tamamlandi.",
+        "List ve JsonViewer beta export + live preview + API catalog ile batch-3 partial completion seviyesine cekildi."
       ]
     },
     {

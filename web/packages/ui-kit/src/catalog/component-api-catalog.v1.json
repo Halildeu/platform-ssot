@@ -1595,6 +1595,127 @@
         "variant selector rendering",
         "pagination summary"
       ]
+    },
+    {
+      "name": "List",
+      "variantAxes": [
+        "density: comfortable | compact",
+        "selection: passive | selectable",
+        "tone: default | info | success | warning | danger"
+      ],
+      "stateModel": [
+        "loading",
+        "empty",
+        "selected item",
+        "disabled / blocked interaction"
+      ],
+      "props": [
+        {
+          "name": "items",
+          "type": "ListItem[]",
+          "default": "-",
+          "required": true,
+          "description": "Title, description, meta, badge ve tone bilgisini taşıyan kayıt listesi."
+        },
+        {
+          "name": "density",
+          "type": "'comfortable' | 'compact'",
+          "default": "comfortable",
+          "required": false,
+          "description": "Liste satır yüksekliği ve bilgi yoğunluğu."
+        },
+        {
+          "name": "selectedKey",
+          "type": "React.Key | null",
+          "default": "null",
+          "required": false,
+          "description": "Seçili öğeyi controlled state ile belirler."
+        },
+        {
+          "name": "onItemSelect",
+          "type": "(key) => void",
+          "default": "-",
+          "required": false,
+          "description": "Satır seçimini parent state ile yönetir."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "required": false,
+          "description": "Liste yüklenirken skeleton satırları gösterir ve aria-busy işaretler."
+        }
+      ],
+      "previewFocus": [
+        "operational inbox",
+        "compact selectable list",
+        "loading / empty states"
+      ],
+      "regressionFocus": [
+        "loading state evidence",
+        "selected item sync",
+        "blocked interaction guard"
+      ]
+    },
+    {
+      "name": "JsonViewer",
+      "variantAxes": [
+        "depth: collapsed | progressive expand",
+        "surface: default | constrained height",
+        "type badges: on | off"
+      ],
+      "stateModel": [
+        "undefined / empty payload",
+        "nested expand-collapse",
+        "readonly contract snapshot"
+      ],
+      "props": [
+        {
+          "name": "value",
+          "type": "unknown",
+          "default": "-",
+          "required": true,
+          "description": "Gösterilecek payload; primitive, object veya array olabilir."
+        },
+        {
+          "name": "rootLabel",
+          "type": "string",
+          "default": "payload",
+          "required": false,
+          "description": "Ağaç kökünde gösterilecek label."
+        },
+        {
+          "name": "defaultExpandedDepth",
+          "type": "number",
+          "default": "1",
+          "required": false,
+          "description": "İlk açılışta hangi derinliğe kadar expanded gösterileceğini belirler."
+        },
+        {
+          "name": "maxHeight",
+          "type": "number | string",
+          "default": "420",
+          "required": false,
+          "description": "Uzun payloadlarda scrollable viewer yüksekliği."
+        },
+        {
+          "name": "showTypes",
+          "type": "boolean",
+          "default": "true",
+          "required": false,
+          "description": "Primitive ve node type badge gösterimini açar."
+        }
+      ],
+      "previewFocus": [
+        "release evidence payload",
+        "policy snapshot",
+        "undefined / primitive fallback"
+      ],
+      "regressionFocus": [
+        "nested node toggle",
+        "empty payload handling",
+        "type badge rendering"
+      ]
     }
   ]
 }

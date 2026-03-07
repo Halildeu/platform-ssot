@@ -27,6 +27,8 @@ import {
   Upload,
   TableSimple,
   Descriptions,
+  List,
+  JsonViewer,
   Skeleton,
   Spinner,
   Pagination,
@@ -322,6 +324,53 @@ const DesignLabPage: React.FC = () => {
     { key: 'status', label: 'Durum', value: 'Aktif', tone: 'success' as const },
     { key: 'review', label: 'Son gözden geçirme', value: '07 Mar 2026', helper: 'Change approval snapshot ile eşli.' },
   ];
+  const listItems = [
+    {
+      key: 'triage',
+      title: 'Release evidence triage',
+      description: 'Security ve rollout kanıtları tamamlanmadan publish penceresi açılmıyor.',
+      meta: 'P0',
+      badges: ['Blocked'],
+      tone: 'warning' as const,
+    },
+    {
+      key: 'doctor',
+      title: 'Frontend doctor summary',
+      description: 'UI Library, shell-public ve auth route preset’leri tek raporda toplandı.',
+      meta: 'PASS',
+      badges: ['Doctor'],
+      tone: 'success' as const,
+    },
+    {
+      key: 'residual',
+      title: 'Residual risk review',
+      description: 'Jackon residual review tarihi yaklaşmadan güncelleme planı hazırlanmalı.',
+      meta: 'MEDIUM',
+      badges: ['Security'],
+      tone: 'info' as const,
+    },
+  ];
+  const jsonViewerValue = {
+    release: {
+      waveId: 'wave_4_data_display',
+      focus: ['TableSimple', 'Descriptions', 'AgGridServer', 'EntityGridTemplate', 'List', 'JsonViewer'],
+      evidence: {
+        doctor: 'PASS',
+        uiKitTests: 'PASS',
+        gate: 'PASS',
+      },
+    },
+    policy: {
+      rollout: {
+        mode: 'doctor-first',
+        security: 'fail-closed',
+      },
+      owners: {
+        frontend: 'platform-ui',
+        governance: 'ux-catalog',
+      },
+    },
+  };
   const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
   const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
   const [tabsValue, setTabsValue] = useState('overview');
@@ -1463,6 +1512,56 @@ const DesignLabPage: React.FC = () => {
             </div>
           </div>
         );
+      case 'List':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Operational inbox">
+                <List
+                  title="Release work queue"
+                  description="Öncelikli rollout ve kanıt işleri aynı yüzeyde izlenir."
+                  items={listItems}
+                  selectedKey="doctor"
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Compact selectable">
+                <List
+                  title="Compact review"
+                  density="compact"
+                  items={listItems}
+                  selectedKey="triage"
+                  onItemSelect={() => undefined}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
+      case 'JsonViewer':
+        return (
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              <PreviewPanel title="Release evidence payload">
+                <JsonViewer
+                  title="Wave summary"
+                  description="Gate ve doctor kanıtını debug ekranına ihtiyaç duymadan okunur kılar."
+                  value={jsonViewerValue}
+                  rootLabel="wave"
+                  defaultExpandedDepth={2}
+                />
+              </PreviewPanel>
+              <PreviewPanel title="Policy snapshot">
+                <JsonViewer
+                  title="Policy payload"
+                  description="Readonly operational contract yüzeyi."
+                  value={jsonViewerValue.policy}
+                  rootLabel="policy"
+                  defaultExpandedDepth={1}
+                  maxHeight={320}
+                />
+              </PreviewPanel>
+            </div>
+          </div>
+        );
       case 'Dropdown':
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -2441,6 +2540,113 @@ const DesignLabPage: React.FC = () => {
                     columns={1}
                     density="compact"
                   />
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'List':
+        return [
+          {
+            id: 'list-operational-inbox',
+            eyebrow: 'Alternative 01',
+            title: 'Operational inbox / task list',
+            description: 'Öncelik, meta ve badge kombinasyonlarını aynı liste yüzeyinde toplar.',
+            badges: ['task-list', 'selection', 'beta'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <PreviewPanel title="Review queue">
+                  <List
+                    title="Deployment work queue"
+                    description="Security, doctor ve rollout kanıtları tek yüzeyde okunur."
+                    items={listItems}
+                    selectedKey="doctor"
+                    onItemSelect={() => undefined}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Why this matters">
+                  <Text variant="secondary" className="block leading-7">
+                    `List`, hafif ama durum taşıyan görev akışlarında tablo açmadan seçim, badge ve meta bilgisini birlikte taşır.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'list-priority-review',
+            eyebrow: 'Alternative 02',
+            title: 'Priority / review state matrix',
+            description: 'Compact density, blocked item ve tone farklarını görünür kılar.',
+            badges: ['compact', 'priority', 'tone'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Compact list">
+                  <List
+                    density="compact"
+                    items={listItems}
+                    selectedKey="triage"
+                    onItemSelect={() => undefined}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Loading and empty">
+                  <div className="space-y-4">
+                    <List title="Loading queue" loading items={[]} />
+                    <List title="Empty queue" items={[]} emptyStateLabel="Gösterilecek görev yok." />
+                  </div>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+        ];
+      case 'JsonViewer':
+        return [
+          {
+            id: 'json-viewer-release-payload',
+            eyebrow: 'Alternative 01',
+            title: 'Release evidence payload',
+            description: 'Wave gate ve doctor özetini okunabilir katmanlı JSON ağacı olarak sunar.',
+            badges: ['payload', 'audit', 'beta'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+                <PreviewPanel title="Primary payload">
+                  <JsonViewer
+                    title="Wave summary"
+                    description="Gate ve doctor kanıtı aynı payload altında izlenir."
+                    value={jsonViewerValue}
+                    rootLabel="wave"
+                    defaultExpandedDepth={2}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Usage note">
+                  <Text variant="secondary" className="block leading-7">
+                    `JsonViewer`, debug paneli gibi görünmeden kontrat, config ve kanıt payload’larını son kullanıcıya okunur hale getirir.
+                  </Text>
+                </PreviewPanel>
+              </div>
+            ),
+          },
+          {
+            id: 'json-viewer-policy-config',
+            eyebrow: 'Alternative 02',
+            title: 'Policy / config snapshot',
+            description: 'Daha dar, readonly yapılandırma snapshot’ları için kompakt gösterim.',
+            badges: ['policy', 'config', 'readonly'],
+            content: (
+              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                <PreviewPanel title="Policy snapshot">
+                  <JsonViewer
+                    title="Policy"
+                    value={jsonViewerValue.policy}
+                    rootLabel="policy"
+                    defaultExpandedDepth={1}
+                    maxHeight={320}
+                  />
+                </PreviewPanel>
+                <PreviewPanel title="Empty / undefined">
+                  <div className="space-y-4">
+                    <JsonViewer title="Undefined payload" value={undefined} emptyStateLabel="Payload gelmedi." />
+                    <JsonViewer title="Primitive payload" value={{ releaseWindow: 'saturday-22', rollbackReady: true }} rootLabel="config" />
+                  </div>
                 </PreviewPanel>
               </div>
             ),

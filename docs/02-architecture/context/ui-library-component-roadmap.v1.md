@@ -23,6 +23,8 @@
 - `Descriptions`
 - `AgGridServer`
 - `EntityGridTemplate`
+- `List`
+- `JsonViewer`
 
 ## Page/block library hedefi
 - Mevcut reusable shell'ler: `PageLayout`, `FilterBar`, `ReportFilterPanel`
@@ -40,4 +42,5 @@
 ## Son not
 - Data display dalgasinda ilk hafif tablo batch'i export + API + preview + doctor evidence ile acildi.
 - `AgGridServer` ve `EntityGridTemplate` batch-2 ile ayni kontrata alindi; doktor kaniti ve wave gate PASS uretildi.
+- `List` ve `JsonViewer` batch-3 ile beta export + live preview + API catalog seviyesine cekildi.
 - Sonraki buyuk urunlestirme bosluklari: `page_blocks` family ve package release contract operasyonu.

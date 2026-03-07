@@ -9,9 +9,9 @@
   },
   "summary": {
     "total": 76,
-    "exported": 68,
-    "planned": 8,
-    "liveDemo": 39,
+    "exported": 70,
+    "planned": 6,
+    "liveDemo": 41,
     "inspector": 29
   },
   "items": [
@@ -691,30 +691,39 @@
     {
       "name": "JsonViewer",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "JsonViewer P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { JsonViewer } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "data_display",
+      "subgroup": "json_viewer",
+      "tags": [
+        "beta",
+        "data-display",
+        "json-viewer",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Code / JSON viewer",
+      "demoMode": "live",
+      "description": "Kontrat, kanıt ve yapılandırma payloadlarını okunur ağaç görünümüyle gösteren JSON viewer primitivei.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "integration_distribution"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "trust_privacy_security_ux",
+      "uxPrimarySubthemeId": "user_visible_audit_log",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "LinkInline",
@@ -757,30 +766,39 @@
     {
       "name": "List",
       "kind": "component",
-      "importStatement": "",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [],
-      "availability": "planned",
-      "lifecycle": "planned",
-      "taxonomyGroupId": "runtime_utilities",
-      "taxonomySubgroup": "Runtime controllers (theme/auth)",
-      "demoMode": "planned",
-      "description": "List P2 backlog girdisi; export ancak implementation + preview tamamlandiginda acilir.",
+      "importStatement": "import { List } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "data_display",
+      "subgroup": "list",
+      "tags": [
+        "beta",
+        "data-display",
+        "list",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "List",
+      "demoMode": "live",
+      "description": "Görev, onay ve operasyon listeleri için badge/meta/selection destekli hafif liste primitivei.",
       "sectionIds": [
-        "utility_components",
-        "integration_distribution",
-        "governance_contribution"
+        "table_data_display",
+        "documentation_standards",
+        "state_feedback"
       ],
       "qualityGates": [
-        "backlog_contract",
-        "preview_before_release"
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
       ],
-      "uxPrimaryThemeId": "",
-      "uxPrimarySubthemeId": "",
-      "roadmapWaveId": "",
-      "acceptanceContractId": ""
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Modal",

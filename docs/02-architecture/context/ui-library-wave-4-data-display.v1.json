@@ -50,7 +50,7 @@
     },
     {
       "batch_id": "batch_3_structured_views",
-      "status": "planned",
+      "status": "in_progress",
       "objective": "List, Tree, TreeTable ve JsonViewer ile gorev odakli veri gezginlerini acmak.",
       "components": [
         "List",
@@ -276,6 +276,112 @@
         "component test ozeti uretilir",
         "frontend-doctor ui-library PASS evidence uretilir"
       ]
+    },
+    {
+      "component_name": "List",
+      "implementation_order": 5,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/List.tsx",
+          "web/packages/ui-kit/src/components/List.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "List"
+      },
+      "ux_primary_theme_id": "task_completion_architecture",
+      "ux_primary_subtheme_id": "critical_path_minimization",
+      "acceptance_criteria": [
+        "title, description, meta ve badge bilgisi tek liste primitiveinde toplanir",
+        "loading, empty ve selectable state ayni API icinde deterministic calisir",
+        "tone ve density varyantlari duplicate card/list kopyasi uretmeden ayni primitive ile gorunur",
+        "operational inbox ve compact review akislari ayni component ile kurulabilir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "list-operational-inbox",
+          "title": "Operational inbox / task list"
+        },
+        {
+          "id": "list-priority-review",
+          "title": "Priority / review state matrix"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari List icin exported/beta olarak guncellenir",
+        "Design Lab live preview sectionlari eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
+    },
+    {
+      "component_name": "JsonViewer",
+      "implementation_order": 6,
+      "source_state": "planned_registry",
+      "registry_action": "upgrade_existing_entry",
+      "target_maturity": "beta",
+      "preview_mode": "live",
+      "implementation_scope": {
+        "existing_source_paths": [],
+        "target_source_paths": [
+          "web/packages/ui-kit/src/components/JsonViewer.tsx",
+          "web/packages/ui-kit/src/components/JsonViewer.test.tsx",
+          "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+        ],
+        "target_taxonomy_group": "data_display",
+        "target_taxonomy_subgroup": "Code / JSON viewer"
+      },
+      "ux_primary_theme_id": "trust_privacy_security_ux",
+      "ux_primary_subtheme_id": "user_visible_audit_log",
+      "acceptance_criteria": [
+        "object ve array payloadlari recursive sekilde expand/collapse ile okunabilir olur",
+        "undefined ve empty payload durumlari duplicate panel yerine ortak Empty davranisina duser",
+        "type badge ve primitive formatlama ayni viewer kontratinda deterministic calisir",
+        "release evidence ve policy snapshot senaryolari ayni component ile kurulabilir"
+      ],
+      "preview_scenarios": [
+        {
+          "id": "json-viewer-release-payload",
+          "title": "Release evidence payload"
+        },
+        {
+          "id": "json-viewer-policy-config",
+          "title": "Policy / config snapshot"
+        }
+      ],
+      "gate_checks": [
+        "python3 scripts/check_ui_library_wave_4_data_display.py",
+        "python3 scripts/check_ui_library_component_roadmap.py",
+        "python3 scripts/check_frontend_diagnostics_registry.py",
+        "npm -C web run designlab:index",
+        "npm -C web run lint:tailwind",
+        "npm -C web run lint:no-antd",
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      ],
+      "evidence_requirements": [
+        "registry lifecycle ve UX alanlari JsonViewer icin exported/beta olarak guncellenir",
+        "Design Lab live preview sectionlari eklenir",
+        "API katalog girdisi eklenir",
+        "component test ozeti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
+      ]
     }
   ],
   "progress_summary": {
@@ -283,13 +389,13 @@
       "TableSimple",
       "Descriptions",
       "AgGridServer",
-      "EntityGridTemplate"
+      "EntityGridTemplate",
+      "List",
+      "JsonViewer"
     ],
     "remaining_components": [
-      "List",
       "Tree",
-      "TreeTable",
-      "JsonViewer"
+      "TreeTable"
     ]
   },
   "doctor_preset": "ui-library",
