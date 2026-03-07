@@ -630,7 +630,9 @@
       "npm -C web run designlab:index",
       "npm -C web run lint:tailwind",
       "npm -C web run lint:no-antd",
-      "npm -C web run test:ui-kit"
+      "npm -C web run test:ui-kit",
+      "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives",
+      "npm -C web run doctor:frontend -- --preset ui-library"
     ],
     "family_specific_checks": {
       "foundation_primitives": [
@@ -693,8 +695,8 @@
     {
       "wave_id": "wave_1_foundation_primitives",
       "title_tr": "Foundation Primitives",
-      "status": "completed",
-      "objective": "Temel primitive setini kur ve mevcut atomlari stable seviyeye getir.",
+      "status": "in_progress",
+      "objective": "Foundation primitives export setini zorunlu doctor evidence ve release-hardening gate altinda yeniden kilitle.",
       "families": [
         "foundation_primitives"
       ],
@@ -711,13 +713,13 @@
       "dependencies": [
         "governance locked",
         "ux alignment locked",
-        "design token chain active"
+        "frontend diagnostics registry active"
       ]
     },
     {
       "wave_id": "wave_2_navigation",
       "title_tr": "Navigation",
-      "status": "in_progress",
+      "status": "planned",
       "objective": "Sekme, breadcrumb ve ilerleme kaliplarini standardize et.",
       "families": [
         "navigation"

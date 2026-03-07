@@ -46,7 +46,7 @@
     "docs/02-architecture/context/ux-katalogu.reference.v1.json referans olarak korunur",
     "docs/02-architecture/context/ui-library-ux-alignment.v1.json guncel kalir",
     "docs/02-architecture/context/ui-library-component-roadmap.v1.json aktif family/wave kararini tasir",
-    "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json aktif wave execution contract olarak okunur",
+    "docs/02-architecture/context/ui-library-wave-1-foundation-primitives.v1.json aktif release-hardening wave execution contract olarak okunur",
     "docs/02-architecture/context/ui-library-system.context.v1.json guncel kalir",
     "docs/00-handbook/STYLE-WEB-001.md ile uyum korunur",
     "web/packages/ui-kit/src/catalog/component-registry.v1.json guncellenir",
@@ -72,6 +72,7 @@
     "lint:tailwind",
     "ui-kit package tests",
     "no-antd dependency guard",
+    "gate:ui-library-wave",
     "preview smoke veya deterministik inspector"
   ]
 }

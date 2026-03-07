@@ -7,6 +7,8 @@ Kanonik kaynak:
 
 `wave_2_navigation` icin navigation ailesinin component bazli uygulama kontratini kilitlemek.
 
+Bu dalga aktif degildir; foundation release-hardening bittikten sonra yeniden acilir.
+
 Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 
 1. component bazli acceptance
@@ -57,14 +59,17 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 - `python3 scripts/check_ui_library_component_roadmap.py`
 - `python3 scripts/check_ui_library_governance_contract.py`
 - `python3 scripts/check_ui_library_ux_alignment.py`
+- `npm -C web run gate:ui-library-wave -- --wave wave_2_navigation`
 - `npm -C web run designlab:index`
 - `npm -C web run lint:tailwind`
 - `npm -C web run lint:no-antd`
 - `npm -C web run test:ui-kit`
+- `npm -C web run doctor:frontend -- --preset ui-library`
 
 ## Son durum
 
-- `in_progress`
+- `planned`
 - `Tabs` ve `Breadcrumb` export edildi.
 - `PageLayout` breadcrumb rendering yeni primitive'e tasindi.
 - `Pagination`, `Steps` ve `AnchorToc` backlog kontratinda planned durumda tutuluyor.
+- navigation sonraki aktif dalga; mevcut aktif release-hardening odağı foundation primitives.

@@ -36,7 +36,8 @@ const presetMap = {
   'ui-library': {
     description: 'UI Library vitrini ve login/gateway smoke denetimi',
     route: '/ui-library',
-    playwrightGrep: 'ui_library_page|ui_library_navigation_walk',
+    stackId: 'shell-only',
+    playwrightGrep: 'ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk',
     steps: [
       {
         id: 'shell_build',
@@ -62,14 +63,29 @@ const presetMap = {
       {
         id: 'playwright_ui_library',
         label: 'Playwright UI Library scenario',
-        cmd: 'npx',
-        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'ui_library_page|ui_library_navigation_walk'],
+        cmd: 'node',
+        args: [
+          'scripts/ops/run-with-frontend-stack.mjs',
+          '--stack',
+          'shell-only',
+          '--',
+          'npx',
+          'playwright',
+          'test',
+          '--config',
+          'tests/playwright/playwright.config.ts',
+          'tests/playwright/scenario-runner.spec.ts',
+          '--project=chromium',
+          '--grep',
+          'ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk',
+        ],
         cwd: webRoot,
         env: {
           PLAYWRIGHT_BASE_URL: baseUrl,
           PW_MODE: 'ci',
           PW_SOFT_MODE: softMode,
           PW_AUTH_MODE: authMode,
+          FRONTEND_STACK_LOG_DIR: path.join(logDir, 'ui-library-stack'),
         },
       },
       {
@@ -84,6 +100,7 @@ const presetMap = {
   'shell-public': {
     description: 'Login, runtime theme matrix ve UI Library icin kamuya acik shell route denetimi',
     route: '/login,/runtime/theme-matrix,/ui-library',
+    stackId: 'shell-only',
     playwrightGrep: 'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk',
     steps: [
       {
@@ -110,14 +127,29 @@ const presetMap = {
       {
         id: 'playwright_shell_public',
         label: 'Playwright public shell scenarios',
-        cmd: 'npx',
-        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk'],
+        cmd: 'node',
+        args: [
+          'scripts/ops/run-with-frontend-stack.mjs',
+          '--stack',
+          'shell-only',
+          '--',
+          'npx',
+          'playwright',
+          'test',
+          '--config',
+          'tests/playwright/playwright.config.ts',
+          'tests/playwright/scenario-runner.spec.ts',
+          '--project=chromium',
+          '--grep',
+          'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|shell_public_route_walk',
+        ],
         cwd: webRoot,
         env: {
           PLAYWRIGHT_BASE_URL: baseUrl,
           PW_MODE: 'ci',
           PW_SOFT_MODE: softMode,
           PW_AUTH_MODE: authMode,
+          FRONTEND_STACK_LOG_DIR: path.join(logDir, 'shell-public-stack'),
         },
       },
       {
@@ -132,6 +164,7 @@ const presetMap = {
   'theme-admin': {
     description: 'Auth gerekli admin theme registry route denetimi',
     route: '/admin/themes',
+    stackId: 'shell-only',
     playwrightGrep: 'theme_registry_page|theme_admin_navigation_walk',
     steps: [
       {
@@ -151,8 +184,22 @@ const presetMap = {
       {
         id: 'playwright_theme_admin',
         label: 'Playwright theme admin scenario',
-        cmd: 'npx',
-        args: ['playwright', 'test', '--config', 'tests/playwright/playwright.config.ts', 'tests/playwright/scenario-runner.spec.ts', '--project=chromium', '--grep', 'theme_registry_page|theme_admin_navigation_walk'],
+        cmd: 'node',
+        args: [
+          'scripts/ops/run-with-frontend-stack.mjs',
+          '--stack',
+          'shell-only',
+          '--',
+          'npx',
+          'playwright',
+          'test',
+          '--config',
+          'tests/playwright/playwright.config.ts',
+          'tests/playwright/scenario-runner.spec.ts',
+          '--project=chromium',
+          '--grep',
+          'theme_registry_page|theme_admin_navigation_walk',
+        ],
         cwd: webRoot,
         env: {
           PLAYWRIGHT_BASE_URL: baseUrl,
@@ -162,6 +209,7 @@ const presetMap = {
           PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
           PW_MOCK_THEME_REGISTRY: process.env.PW_MOCK_THEME_REGISTRY || '1',
           PW_MOCK_API: process.env.PW_MOCK_API || '1',
+          FRONTEND_STACK_LOG_DIR: path.join(logDir, 'theme-admin-stack'),
         },
       },
       {
@@ -176,6 +224,7 @@ const presetMap = {
   'auth-business-routes': {
     description: 'Auth gerekli access, audit ve reporting business route denetimi',
     route: '/access/roles,/audit/events,/admin/reports/users',
+    stackId: 'auth-business-routes',
     playwrightGrep:
       'access_roles_page|access_roles_navigation_walk|audit_events_page|audit_events_navigation_walk|reporting_users_page|reporting_users_navigation_walk',
     steps: [
@@ -235,6 +284,7 @@ const presetMap = {
   'business-journeys': {
     description: 'Gercek kullanici gorevi seviyesinde access/audit/reporting is akisi smoke denetimi',
     route: '/access/roles,/audit/events,/admin/reports/users',
+    stackId: 'auth-business-routes',
     playwrightGrep:
       'access_roles_navigation_walk|audit_events_navigation_walk|reporting_users_navigation_walk',
     steps: [
@@ -321,6 +371,57 @@ const runFetchCheck = async (url) => {
   }
 };
 
+const runStackFetchCheck = (stackId, url) => {
+  const startedAt = new Date().toISOString();
+  const fetchLogDir = path.join(logDir, `${stackId}-base-url-check`);
+  const result = spawnSync(
+    'node',
+    [
+      'scripts/ops/run-with-frontend-stack.mjs',
+      '--stack',
+      stackId,
+      '--',
+      'node',
+      'scripts/ops/http-check.mjs',
+      '--url',
+      url,
+    ],
+    {
+      cwd: webRoot,
+      env: {
+        ...process.env,
+        FRONTEND_STACK_LOG_DIR: fetchLogDir,
+      },
+      encoding: 'utf8',
+      maxBuffer: 1024 * 1024 * 4,
+    },
+  );
+
+  if (result.stdout) {
+    try {
+      const payload = JSON.parse(result.stdout.trim());
+      return {
+        ...payload,
+        startedAt: payload.startedAt ?? startedAt,
+        endedAt: payload.endedAt ?? new Date().toISOString(),
+        logDir: path.relative(repoRoot, fetchLogDir),
+      };
+    } catch {
+      // fallback below
+    }
+  }
+
+  return {
+    ok: result.status === 0,
+    status: null,
+    startedAt,
+    endedAt: new Date().toISOString(),
+    url,
+    error: (result.stderr || result.stdout || '').trim() || 'stack-fetch-check failed',
+    logDir: path.relative(repoRoot, fetchLogDir),
+  };
+};
+
 const findRecentArtifacts = (rootDir, matcher, sinceMs) => {
   try {
     return readdirSync(rootDir)
@@ -400,7 +501,9 @@ const main = async () => {
     steps.push(runStep(step));
   }
 
-  const baseCheck = await runFetchCheck(baseUrl);
+  const baseCheck = activePreset.stackId
+    ? runStackFetchCheck(activePreset.stackId, baseUrl)
+    : await runFetchCheck(baseUrl);
 
   const pwArtifacts = findRecentArtifacts(pwRoot, (name) => name.startsWith('pw-') && name.endsWith('.md'), doctorStartedMs - 2000)
     .map((fullPath) => path.relative(repoRoot, fullPath));

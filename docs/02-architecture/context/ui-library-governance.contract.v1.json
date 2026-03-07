@@ -410,7 +410,9 @@
       "npm -C web run designlab:index",
       "npm -C web run lint:tailwind",
       "npm -C web run lint:no-antd",
-      "npm -C web run test:ui-kit"
+      "npm -C web run test:ui-kit",
+      "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives",
+      "npm -C web run doctor:frontend -- --preset ui-library"
     ],
     "release_readiness_rules": [
       "registry drift = 0",
@@ -418,7 +420,8 @@
       "preview deterministic",
       "ux alignment present",
       "wcag/apg ilgili pattern notu yazili",
-      "theme compatibility deklarasyonu var"
+      "theme compatibility deklarasyonu var",
+      "doctor:frontend ui-library evidence = PASS"
     ],
     "recommended_checks": [
       "ui-kit build",
@@ -434,7 +437,7 @@
       "docs/02-architecture/context/ux-katalogu.reference.v1.json",
       "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
       "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
-      "docs/02-architecture/context/ui-library-wave-2-navigation.v1.json",
+      "docs/02-architecture/context/ui-library-wave-1-foundation-primitives.v1.json",
       "docs/02-architecture/context/ui-library-system.context.v1.json",
       "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
       "docs/00-handbook/STYLE-WEB-001.md",

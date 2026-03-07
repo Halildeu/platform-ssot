@@ -145,7 +145,7 @@ Minimum evidence:
 
 ### Wave 1
 
-- `completed`
+- `in_progress`
 - `Foundation Primitives`
 - hedef:
   - `Button`
@@ -156,10 +156,13 @@ Minimum evidence:
   - `Divider`
   - `Skeleton`
   - `Spinner`
+- not:
+  - aktif release-hardening odağı `Button / Text / LinkInline / IconButton`
+  - `doctor:frontend` evidence zorunlu
 
 ### Wave 2
 
-- `in_progress`
+- `planned`
 - `Navigation`
 - hedef:
   - `Tabs`
@@ -167,6 +170,8 @@ Minimum evidence:
   - `Pagination`
   - `Steps`
   - `AnchorToc`
+- not:
+  - foundation hardening PASS olduktan sonra yeniden aktiflesir
 
 ### Wave 3
 

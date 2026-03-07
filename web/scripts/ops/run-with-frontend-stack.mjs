@@ -35,6 +35,17 @@ const logRoot = process.env.FRONTEND_STACK_LOG_DIR
 mkdirSync(logRoot, { recursive: true });
 
 const stacks = {
+  'shell-only': {
+    description: 'Public shell route ve UI Library diagnostics icin yalniz mfe-shell servisini hazirlar.',
+    services: [
+      {
+        name: 'mfe-shell',
+        readyUrl: 'http://localhost:3000/login',
+        cmd: 'npm',
+        args: ['start', '--prefix', 'apps/mfe-shell'],
+      },
+    ],
+  },
   'auth-business-routes': {
     description: 'Auth gerekli business route senaryolari icin shell + access + audit + reporting remotelarini hazirlar.',
     services: [

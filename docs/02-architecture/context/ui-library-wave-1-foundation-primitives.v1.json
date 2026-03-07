@@ -3,7 +3,7 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_1_foundation_primitives",
   "family_id": "foundation_primitives",
-  "status": "completed",
+  "status": "in_progress",
   "purpose": "Foundation primitives dalgasi icin component bazli acceptance, UX eslesmesi, preview senaryolari ve gate/evidence planini tek kanonik pakette toplamak.",
   "baseline": {
     "governance_lock_commit": "0900750",
@@ -105,13 +105,15 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "registry lifecycle ve UX alanlari guncellenir",
         "Design Lab live preview eklentisi gorunur olur",
         "Button regression/test ozeti uretilir",
-        "a11y note: keyboard + focus-visible"
+        "a11y note: keyboard + focus-visible",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
@@ -158,20 +160,22 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "registry lifecycle ve UX alanlari guncellenir",
         "Design Lab typography preview guncellenir",
         "Text regression/test ozeti uretilir",
-        "contrast/readability notu eklenir"
+        "contrast/readability notu eklenir",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
       "component_name": "LinkInline",
       "implementation_order": 3,
-      "source_state": "roadmap_only",
-      "registry_action": "create_new_entry",
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
@@ -205,20 +209,22 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "yeni registry entry olusturulur",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
-        "a11y note: focus-visible + external-link safety"
+        "a11y note: focus-visible + external-link safety",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
       "component_name": "IconButton",
       "implementation_order": 4,
-      "source_state": "roadmap_only",
-      "registry_action": "create_new_entry",
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
@@ -252,20 +258,22 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "yeni registry entry olusturulur",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
-        "a11y note: accessible name + hit area"
+        "a11y note: accessible name + hit area",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
       "component_name": "Skeleton",
       "implementation_order": 5,
-      "source_state": "roadmap_only",
-      "registry_action": "create_new_entry",
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
@@ -303,20 +311,22 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "yeni registry entry olusturulur",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
-        "a11y note: reduced motion + loading semantics"
+        "a11y note: reduced motion + loading semantics",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
       "component_name": "Spinner",
       "implementation_order": 6,
-      "source_state": "roadmap_only",
-      "registry_action": "create_new_entry",
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
       "preview_mode": "live",
       "implementation_scope": {
@@ -350,20 +360,22 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "yeni registry entry olusturulur",
         "Design Lab live preview eklenir",
         "unit/component test ozeti uretilir",
-        "a11y note: status/label semantics"
+        "a11y note: status/label semantics",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
       "component_name": "Avatar",
       "implementation_order": 7,
-      "source_state": "roadmap_only",
-      "registry_action": "create_new_entry",
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
       "preview_mode": "inspector",
       "implementation_scope": {
@@ -397,20 +409,22 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "yeni registry entry olusturulur",
         "Design Lab inspector preview eklenir",
         "unit/component test ozeti uretilir",
-        "privacy note: sentetik/fallback identity davranisi"
+        "privacy note: sentetik/fallback identity davranisi",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
       "component_name": "Divider",
       "implementation_order": 8,
-      "source_state": "roadmap_only",
-      "registry_action": "create_new_entry",
+      "source_state": "existing_exported",
+      "registry_action": "upgrade_existing_entry",
       "target_maturity": "beta",
       "preview_mode": "inspector",
       "implementation_scope": {
@@ -444,13 +458,15 @@
         "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives"
       ],
       "evidence_requirements": [
         "yeni registry entry olusturulur",
         "Design Lab inspector preview eklenir",
         "unit/component test ozeti uretilir",
-        "spacing + semantics notu eklenir"
+        "spacing + semantics notu eklenir",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     }
   ],
@@ -458,7 +474,9 @@
     "Tum 8 component icin acceptance, preview ve gate evidence maddeleri patch icinde temsil edilir.",
     "Button ve Text stable olarak korunur; diger 6 component en az beta cikis kriterine ulasir.",
     "Registry/preview/UX alignment drift = 0 olur.",
-    "Raw visual bypass ve duplicate primitive count = 0 olur."
+    "Raw visual bypass ve duplicate primitive count = 0 olur.",
+    "Aktif batch icin ui-library doctor evidence = PASS olur.",
+    "Wave gate summary PASS olmadan foundation release tamamlanmis sayilmaz."
   ],
   "completion_summary": {
     "implemented_components": [
@@ -487,5 +505,12 @@
     "ui_kit_tests_passed": true,
     "ui_kit_build_passed": true,
     "shell_build_passed": true
-  }
+  },
+  "activation_mode": "release_hardening",
+  "active_batches": [
+    "batch_1_existing_upgrades",
+    "batch_2_interactive_primitives"
+  ],
+  "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives",
+  "doctor_preset": "ui-library"
 }

@@ -45,8 +45,16 @@ jobs:
           python3 scripts/check_theme_override_allowlist.py
           python3 scripts/check_no_hardcoded_theme_styles.py
 
-      - name: Web lint
-        run: bash scripts/run_lint_web.sh
+      - name: UI library wave gate
+        run: npm run gate:ui-library-wave
+        working-directory: web
 
-      - name: Web unit tests
-        run: bash scripts/run_tests_web.sh unit
+      - name: Upload web QA artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-qa-artifacts
+          path: |
+            web/test-results/diagnostics/**
+            web/test-results/pw/**
+            web/tests/smoke/artifacts/**

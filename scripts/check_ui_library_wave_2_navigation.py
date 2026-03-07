@@ -18,7 +18,10 @@ REQUIRED_TOP = [
     'subject_id',
     'wave_id',
     'family_id',
+    'status',
     'baseline',
+    'gate_runner_command',
+    'doctor_preset',
     'required_read_order',
     'implementation_batches',
     'components',
@@ -38,6 +41,7 @@ REQUIRED_COMPONENT_KEYS = [
     'gate_checks',
     'evidence_requirements',
 ]
+REQUIRED_GATE_COMMAND = 'npm -C web run gate:ui-library-wave -- --wave wave_2_navigation'
 
 
 def main() -> int:
@@ -56,6 +60,10 @@ def main() -> int:
         problems.append('invalid-wave-id')
     if data.get('family_id') != 'navigation':
         problems.append('invalid-family-id')
+    if data.get('doctor_preset') != 'ui-library':
+        problems.append('invalid-doctor-preset')
+    if data.get('gate_runner_command') != REQUIRED_GATE_COMMAND:
+        problems.append('invalid-gate-runner-command')
 
     components = data.get('components', [])
     seen = {item.get('component_name') for item in components}
@@ -75,10 +83,15 @@ def main() -> int:
         for list_key in ['acceptance_criteria', 'preview_scenarios', 'gate_checks', 'evidence_requirements']:
             if not item.get(list_key):
                 problems.append(f'empty-component-list:{name}:{list_key}')
+        if REQUIRED_GATE_COMMAND not in item.get('gate_checks', []):
+            problems.append(f'missing-gate-runner:{name}')
         scope = item.get('implementation_scope', {})
         for scope_key in ['target_source_paths', 'target_taxonomy_group', 'target_taxonomy_subgroup']:
             if scope_key not in scope:
                 problems.append(f'missing-scope-key:{name}:{scope_key}')
+
+    if not any('doctor' in criterion.lower() for criterion in data.get('wave_exit_criteria', [])):
+        problems.append('missing-doctor-wave-exit-criteria')
 
     if problems:
         print('[check_ui_library_wave_2_navigation] FAIL')

@@ -3,7 +3,7 @@
   "subject_id": "ui_kutuphane_sistemi",
   "wave_id": "wave_2_navigation",
   "family_id": "navigation",
-  "status": "in_progress",
+  "status": "planned",
   "purpose": "Navigation dalgasi icin Tabs, Breadcrumb, Pagination, Steps ve AnchorToc component ailesinin acceptance, UX eslesmesi, preview ve evidence kontratini tek kanonik pakette toplamak.",
   "baseline": {
     "governance_lock_commit": "0900750",
@@ -97,13 +97,15 @@
         "python3 scripts/check_ui_library_governance_contract.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation"
       ],
       "evidence_requirements": [
         "registry lifecycle ve UX alanlari Tabs icin guncellenir",
         "Design Lab live preview eklenir",
         "keyboard navigation testi gecer",
-        "PageLayout veya consumer preview ile navigation reuse kaniti olusur"
+        "PageLayout veya consumer preview ile navigation reuse kaniti olusur",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
@@ -148,13 +150,15 @@
         "python3 scripts/check_ui_library_governance_contract.py",
         "npm -C web run designlab:index",
         "npm -C web run lint:tailwind",
-        "npm -C web run test:ui-kit"
+        "npm -C web run test:ui-kit",
+        "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation"
       ],
       "evidence_requirements": [
         "registry lifecycle ve UX alanlari Breadcrumb icin guncellenir",
         "Design Lab live preview eklenir",
         "collapse ve current-page testi gecer",
-        "PageLayout reuse kaniti uretilir"
+        "PageLayout reuse kaniti uretilir",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
@@ -185,10 +189,12 @@
         }
       ],
       "gate_checks": [
-        "python3 scripts/check_ui_library_wave_2_navigation.py"
+        "python3 scripts/check_ui_library_wave_2_navigation.py",
+        "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation"
       ],
       "evidence_requirements": [
-        "planned registry entry korunur"
+        "planned registry entry korunur",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
@@ -219,10 +225,12 @@
         }
       ],
       "gate_checks": [
-        "python3 scripts/check_ui_library_wave_2_navigation.py"
+        "python3 scripts/check_ui_library_wave_2_navigation.py",
+        "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation"
       ],
       "evidence_requirements": [
-        "planned registry entry korunur"
+        "planned registry entry korunur",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     },
     {
@@ -253,10 +261,12 @@
         }
       ],
       "gate_checks": [
-        "python3 scripts/check_ui_library_wave_2_navigation.py"
+        "python3 scripts/check_ui_library_wave_2_navigation.py",
+        "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation"
       ],
       "evidence_requirements": [
-        "planned registry entry korunur"
+        "planned registry entry korunur",
+        "frontend-doctor ui-library PASS evidence uretilir"
       ]
     }
   ],
@@ -264,7 +274,9 @@
     "Tabs ve Breadcrumb stable export + preview + test + UX alignment ile tamamlanir",
     "Pagination, Steps ve AnchorToc icin planned backlog kontrati korunur",
     "navigation family registry drift = 0 olur",
-    "keyboard navigation / current-page a11y evidence yazili ve testlenmis olur"
+    "keyboard navigation / current-page a11y evidence yazili ve testlenmis olur",
+    "Navigation wave calismasi wave gate PASS olmadan releasee cikmaz.",
+    "doctor:frontend ui-library evidence = PASS olur."
   ],
   "progress_summary": {
     "completed_components": [
@@ -280,5 +292,7 @@
       "Batch 1 navigation primitives export edildi.",
       "PageLayout breadcrumb rendering yeni Breadcrumb primitive uzerinden calisiyor."
     ]
-  }
+  },
+  "gate_runner_command": "npm -C web run gate:ui-library-wave -- --wave wave_2_navigation",
+  "doctor_preset": "ui-library"
 }

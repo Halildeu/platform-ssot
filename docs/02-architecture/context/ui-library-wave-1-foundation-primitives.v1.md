@@ -5,7 +5,7 @@ Kanonik kaynak:
 
 ## Amac
 
-`wave_1_foundation_primitives` icin koddan once component bazli uygulama kontratini kilitlemek.
+`wave_1_foundation_primitives` icin foundation export setini zorunlu `doctor:frontend` kaniti ve wave gate altinda release-hardening modunda yeniden kilitlemek.
 
 Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 
@@ -24,7 +24,7 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 ### Batch 2
 - `LinkInline`
 - `IconButton`
-- amac: interactive primitive setini acmak
+- amac: interactive primitive setini exported gercegiyle hizalayip release kanitini kapatmak
 
 ### Batch 3
 - `Skeleton`
@@ -42,7 +42,7 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 - `Button` -> stable
 - `Text` -> stable
 
-### Yeni component
+### Exported release-hardening
 - `LinkInline` -> beta
 - `IconButton` -> beta
 - `Skeleton` -> beta
@@ -57,6 +57,8 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 - Diger 6 component en az beta cikis kriterine ulasir.
 - Registry/preview/UX alignment drift = 0 olur.
 - Duplicate primitive ve raw visual bypass = 0 olur.
+- `doctor:frontend -- --preset ui-library` PASS olur.
+- `gate:ui-library-wave -- --wave wave_1_foundation_primitives` PASS olmadan wave kapanmaz.
 
 ## Zorunlu check listesi
 
@@ -64,15 +66,16 @@ Bu dalgada kod ancak su dort sey netlestikten sonra baslar:
 - `python3 scripts/check_ui_library_component_roadmap.py`
 - `python3 scripts/check_ui_library_governance_contract.py`
 - `python3 scripts/check_ui_library_ux_alignment.py`
+- `npm -C web run gate:ui-library-wave -- --wave wave_1_foundation_primitives`
 - `npm -C web run designlab:index`
 - `npm -C web run lint:tailwind`
 - `npm -C web run lint:no-antd`
 - `npm -C web run test:ui-kit`
+- `npm -C web run doctor:frontend -- --preset ui-library`
 
 ## Son durum
 
-- `completed`
-- `Button` ve `Text` stable seviyede hizalandi.
-- `LinkInline`, `IconButton`, `Skeleton`, `Spinner`, `Avatar`, `Divider` beta export olarak acildi.
-- `ui-kit` test ve build zinciri gecti.
-- `Design Lab` preview ve registry kaniti guncellendi.
+- `in_progress`
+- aktif batch: `Button`, `Text`, `LinkInline`, `IconButton`
+- `LinkInline` ve `IconButton` artik roadmap-only degil, exported reality ile hizalanir.
+- foundation wave bundan sonra doctor evidence olmadan tamamlanmis sayilmaz.

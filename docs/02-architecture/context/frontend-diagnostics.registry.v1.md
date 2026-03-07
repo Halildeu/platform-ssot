@@ -19,11 +19,15 @@ Ana katmanlar:
 - Frontend doctor
 
 Doctor preset'leri:
-- `ui-library` → `/ui-library` (`ui_library_page` + `ui_library_navigation_walk`)
+- `ui-library` → `/ui-library` (`ui_library_page` + `ui_library_navigation_walk` + `ui_library_foundation_wave_1_walk`)
+  - stack mode: `shell-only`
+  - foundation release-hardening dalgasinda `Button`, `Text`, `LinkInline`, `IconButton` click-walk kaniti uretir
 - `shell-public` → `/login`, `/runtime/theme-matrix`, `/ui-library` (`shell_login` + `runtime_theme_matrix` + `ui_library_page` + `ui_library_navigation_walk` + `shell_public_route_walk`)
+  - stack mode: `shell-only`
 - `theme-admin` → `/admin/themes` (`theme_registry_page` + `theme_admin_navigation_walk`)
   - varsayılan auth modu: `token_injection`
   - varsayılan çalışma modu: `mock-backed route diagnostics`
+  - stack mode: `shell-only`
   - gerçek client secret zorunlu değildir; sentetik test token + mock API ile UI crash/overlay/console/click regressions yakalanır
 - `auth-business-routes` → `/access/roles`, `/audit/events`, `/admin/reports/users`
   - senaryolar: `access_roles_page`, `access_roles_navigation_walk`, `audit_events_page`, `audit_events_navigation_walk`, `reporting_users_page`, `reporting_users_navigation_walk`
@@ -47,4 +51,5 @@ Kural:
 - Yeni UI library yüzeyi pageerror veya allowlist dışı console.error üretiyorsa release edilmez.
 - Allowlist dışı `resource load failure`, `unhandled rejection` veya `runtime overlay` varsa release edilmez.
 - Doctor, mevcut telemetry hattını orkestre eder; paralel ikinci smoke sistemi kurulmaz.
+- `ui-library` preset'i shell'i kendi kaldirir; disaridan manuel dev server beklemez.
 - Auth-required route diagnostics mümkünse mock-backed UI seviyesinde koşturulur; sırf browser crash tespiti için gerçek secret bağımlılığı eklenmez.

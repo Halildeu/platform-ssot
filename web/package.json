@@ -35,6 +35,7 @@
     "tokens:build": "node ./scripts/theme/generate-theme-css.mjs",
     "designlab:index": "python3 scripts/build_design_lab_index.py",
     "doctor:frontend": "node ./scripts/ops/frontend-doctor.mjs",
+    "gate:ui-library-wave": "node ./scripts/ops/run-ui-library-wave-gate.mjs",
     "lint:style": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:semantic": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:tailwind": "node ./scripts/lint/check-tailwind-semantic.mjs",
