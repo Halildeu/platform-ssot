@@ -383,8 +383,6 @@ const DesignLabPage: React.FC = () => {
     [],
   );
 
-  const selectedTrackVisual = trackVisualMeta[activeTrack];
-
   const heroStats = useMemo(() => {
     if (!selectedItem) {
       return [];
@@ -412,8 +410,8 @@ const DesignLabPage: React.FC = () => {
       setSelectedItemName('');
       return;
     }
-    const activeSelection = filteredItems.some((item) => item.name === selectedItemName);
-    if (activeSelection) {
+    const activeSelection = filteredItems.find((item) => item.name === selectedItemName);
+    if (activeSelection && (!selectedGroup || activeSelection.taxonomyGroupId === selectedGroup.id)) {
       return;
     }
     const groupScopedFallback = selectedGroup ? filteredItems.find((item) => item.taxonomyGroupId === selectedGroup.id) : null;
@@ -1499,114 +1497,140 @@ const DesignLabPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="min-h-0 flex-1 space-y-6 overflow-auto px-4 py-5">
-              <section data-testid="design-lab-track-section">
-                <Text as="div" variant="secondary" className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Katalog Katmanı
-                </Text>
-                <div className="space-y-1.5">
+            <div className="min-h-0 flex-1 overflow-auto px-4 py-5">
+              <section className="rounded-[24px] border border-border-subtle bg-surface-panel p-3">
+                <div className="mb-3 px-2">
+                  <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                    Ürün Ağacı
+                  </Text>
+                  <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                    Track seç, altında family açılsın; sonra subgroup ve component düzeyine in.
+                  </Text>
+                </div>
+
+                <section data-testid="design-lab-track-section" className="space-y-2">
                   {(Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
                     const active = track === activeTrack;
                     const visual = trackVisualMeta[track];
+                    const groupsForTrack = active ? visibleGroups : [];
                     return (
-                      <button
-                        key={track}
-                        data-testid={`design-lab-track-${track}`}
-                        type="button"
-                        onClick={() => setActiveTrack(track)}
-                        className={`flex w-full items-start gap-3 rounded-2xl px-3 py-3 text-left transition ${
-                          active ? 'bg-surface-panel' : 'hover:bg-surface-panel'
-                        }`}
-                      >
-                        <span className={`mt-0.5 h-8 w-1.5 shrink-0 rounded-full ${active ? visual.accentClass : 'bg-border-subtle'}`} />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex items-center justify-between gap-3">
-                            <span className="block text-sm font-semibold text-text-primary">{trackMeta[track].label}</span>
-                            <Badge tone={active ? visual.badgeTone : 'muted'}>{trackSummary[track]}</Badge>
+                      <div key={track} className="overflow-hidden rounded-[20px] border border-border-subtle bg-surface-default">
+                        <button
+                          data-testid={`design-lab-track-${track}`}
+                          type="button"
+                          onClick={() => setActiveTrack(track)}
+                          className={`flex w-full items-start gap-3 px-3 py-3 text-left transition ${
+                            active ? 'bg-surface-default' : 'hover:bg-surface-muted'
+                          }`}
+                        >
+                          <span className={`mt-0.5 h-8 w-1.5 shrink-0 rounded-full ${active ? visual.accentClass : 'bg-border-subtle'}`} />
+                          <span className="min-w-0 flex-1">
+                            <span className="flex items-center justify-between gap-3">
+                              <span className="block text-sm font-semibold text-text-primary">{trackMeta[track].label}</span>
+                              <span className="flex items-center gap-2">
+                                <Badge tone={active ? visual.badgeTone : 'muted'}>{trackSummary[track]}</Badge>
+                                <span className="text-xs text-text-secondary">{active ? '−' : '+'}</span>
+                              </span>
+                            </span>
+                            <span className="mt-1 block text-xs leading-5 text-text-secondary">{trackMeta[track].note}</span>
                           </span>
-                          <span className="mt-1 block text-xs leading-5 text-text-secondary">{trackMeta[track].note}</span>
-                        </span>
-                      </button>
+                        </button>
+
+                        {active ? (
+                          <div className="border-t border-border-subtle px-2 py-2">
+                            <section data-testid="design-lab-group-section" className="space-y-1.5">
+                              {groupsForTrack.length > 0 ? (
+                                groupsForTrack.map((group) => {
+                                  const groupActive = selectedGroup?.id === group.id;
+                                  return (
+                                    <div key={group.id} className="rounded-[18px] border border-border-subtle bg-surface-panel">
+                                      <button
+                                        data-testid={`design-lab-group-${group.id}`}
+                                        type="button"
+                                        onClick={() => setSelectedGroupId(group.id)}
+                                        className={`flex w-full items-center gap-3 px-3 py-2.5 text-left transition ${
+                                          groupActive ? 'bg-surface-panel' : 'hover:bg-surface-muted'
+                                        }`}
+                                      >
+                                        <span className={`h-7 w-1.5 shrink-0 rounded-full ${groupActive ? 'bg-action-primary' : 'bg-border-subtle'}`} />
+                                        <span className="min-w-0 flex-1">
+                                          <span className="block text-sm font-medium text-text-primary">{group.title}</span>
+                                          <span className="mt-1 block text-[11px] text-text-secondary">
+                                            {countByGroup.get(group.id) ?? 0} component
+                                          </span>
+                                        </span>
+                                        <span className="text-xs text-text-secondary">{groupActive ? '−' : '+'}</span>
+                                      </button>
+
+                                      {groupActive ? (
+                                        <div data-testid="design-lab-tree-section" className="border-t border-border-subtle px-2 py-2">
+                                          <div className="space-y-2">
+                                            {group.subgroups.map((subgroup) => {
+                                              const subgroupItems = selectedGroupItemsBySubgroup.get(subgroup) ?? [];
+                                              if (subgroupItems.length === 0) return null;
+                                              return (
+                                                <div
+                                                  key={subgroup}
+                                                  data-testid={`design-lab-subgroup-${toTestIdSuffix(subgroup)}`}
+                                                  className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default"
+                                                >
+                                                  <div className="flex items-center gap-3 border-b border-border-subtle px-3 py-2.5">
+                                                    <span className="h-6 w-1.5 shrink-0 rounded-full bg-action-primary" />
+                                                    <span className="min-w-0 flex-1">
+                                                      <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-text-secondary">
+                                                        {subgroup}
+                                                      </span>
+                                                    </span>
+                                                    <Badge tone="muted">{subgroupItems.length}</Badge>
+                                                  </div>
+
+                                                  <div className="px-2 py-2">
+                                                    <div className="space-y-1">
+                                                      {subgroupItems.map((item) => {
+                                                        const itemActive = item.name === selectedItem?.name;
+                                                        return (
+                                                          <button
+                                                            key={item.name}
+                                                            data-testid={`design-lab-item-${toTestIdSuffix(item.name)}`}
+                                                            type="button"
+                                                            onClick={() => setSelectedItemName(item.name)}
+                                                            className={`flex w-full items-start gap-3 rounded-2xl px-3 py-2.5 text-left transition ${
+                                                              itemActive ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-muted'
+                                                            }`}
+                                                          >
+                                                            <span className={`mt-0.5 h-7 w-1.5 shrink-0 rounded-full ${itemActive ? 'bg-action-primary' : 'bg-transparent'}`} />
+                                                            <span className="min-w-0 flex-1">
+                                                              <span className="block text-sm font-medium text-text-primary">{item.name}</span>
+                                                              <span className="mt-1 block text-[11px] text-text-secondary">
+                                                                {statusLabel[item.lifecycle]} · {demoModeLabel[item.demoMode]}
+                                                              </span>
+                                                            </span>
+                                                          </button>
+                                                        );
+                                                      })}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      ) : null}
+                                    </div>
+                                  );
+                                })
+                              ) : (
+                                <Text variant="secondary" className="px-3 py-2 text-sm">
+                                  Bu track için görünür family yok.
+                                </Text>
+                              )}
+                            </section>
+                          </div>
+                        ) : null}
+                      </div>
                     );
                   })}
-                </div>
-              </section>
-
-              <section data-testid="design-lab-group-section">
-                <Text as="div" variant="secondary" className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Family
-                </Text>
-                <div className="space-y-1">
-                  {visibleGroups.map((group) => {
-                    const active = selectedGroup?.id === group.id;
-                    return (
-                      <button
-                        key={group.id}
-                        data-testid={`design-lab-group-${group.id}`}
-                        type="button"
-                        onClick={() => setSelectedGroupId(group.id)}
-                        className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition ${
-                          active ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-panel'
-                        }`}
-                      >
-                        <span className={`h-7 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-border-subtle'}`} />
-                        <span className="min-w-0 flex-1">
-                          <span className="block text-sm font-medium text-text-primary">{group.title}</span>
-                        </span>
-                        <span className="text-xs text-text-secondary">{countByGroup.get(group.id) ?? 0}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-
-              <section data-testid="design-lab-tree-section">
-                <Text as="div" variant="secondary" className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Components
-                </Text>
-                <div className="max-h-[calc(100vh-480px)] min-h-0 space-y-4 overflow-auto pr-1">
-                  {selectedGroup ? (
-                    selectedGroup.subgroups.map((subgroup) => {
-                      const subgroupItems = selectedGroupItemsBySubgroup.get(subgroup) ?? [];
-                      if (subgroupItems.length === 0) return null;
-                      return (
-                        <div key={subgroup} data-testid={`design-lab-subgroup-${toTestIdSuffix(subgroup)}`}>
-                          <div className="mb-2 px-3">
-                            <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.16em]">
-                              {subgroup}
-                            </Text>
-                          </div>
-                          <div className="space-y-1">
-                            {subgroupItems.map((item) => {
-                              const active = item.name === selectedItem?.name;
-                              return (
-                                <button
-                                  key={item.name}
-                                  data-testid={`design-lab-item-${toTestIdSuffix(item.name)}`}
-                                  type="button"
-                                  onClick={() => setSelectedItemName(item.name)}
-                                  className={`flex w-full items-start gap-3 rounded-2xl px-3 py-2.5 text-left transition ${
-                                    active ? 'bg-surface-panel shadow-sm' : 'hover:bg-surface-panel'
-                                  }`}
-                                >
-                                  <span className={`mt-0.5 h-7 w-1.5 shrink-0 rounded-full ${active ? 'bg-action-primary' : 'bg-transparent'}`} />
-                                  <span className="min-w-0 flex-1">
-                                    <span className="block text-sm font-medium text-text-primary">{item.name}</span>
-                                    <span className="mt-1 block text-[11px] text-text-secondary">
-                                      {statusLabel[item.lifecycle]} · {demoModeLabel[item.demoMode]}
-                                    </span>
-                                  </span>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      );
-                    })
-                  ) : (
-                    <Text variant="secondary">Bu katmanda görünür component yok.</Text>
-                  )}
-                </div>
+                </section>
               </section>
             </div>
           </aside>
