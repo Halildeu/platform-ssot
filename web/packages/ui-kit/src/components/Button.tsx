@@ -38,6 +38,12 @@ const spinnerSizeClassNames: Record<ButtonSize, string> = {
   lg: 'h-4.5 w-4.5 border-2',
 };
 
+const slotSizeClassNames: Record<ButtonSize, string> = {
+  sm: 'min-w-3.5 text-sm',
+  md: 'min-w-4 text-base',
+  lg: 'min-w-5 text-lg',
+};
+
 export interface ButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'>,
     AccessControlledProps {
@@ -49,6 +55,7 @@ export interface ButtonProps
   leadingVisual?: React.ReactNode;
   trailingVisual?: React.ReactNode;
   fullWidth?: boolean;
+  loadingDisplay?: 'label' | 'spinner-only';
 }
 
 const LoadingSpinner: React.FC<{ size: ButtonSize }> = ({ size }) => (
@@ -72,6 +79,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     leadingVisual,
     trailingVisual,
     fullWidth = false,
+    loadingDisplay = 'label',
     access = 'full',
     accessReason,
     disabled,
@@ -100,7 +108,49 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     resolvedDisabled,
   );
   const titleText = accessReason ?? title;
-  const visualLeading = loading ? <LoadingSpinner size={size} /> : leadingVisual;
+  const hasLeadingSlot = loading || Boolean(leadingVisual);
+  const hasTrailingSlot = Boolean(trailingVisual);
+
+  const renderContent = (options: { loadingContent?: boolean; visuallyHidden?: boolean } = {}) => {
+    const { loadingContent = false, visuallyHidden = false } = options;
+    const leadingNode = loadingContent ? <LoadingSpinner size={size} /> : leadingVisual;
+
+    return (
+      <span
+        className={cn(
+          'inline-flex items-center justify-center [column-gap:inherit]',
+          visuallyHidden && 'invisible',
+        )}
+        aria-hidden={visuallyHidden || undefined}
+      >
+        {hasLeadingSlot ? (
+          <span
+            className={cn(
+              'inline-flex shrink-0 items-center justify-center',
+              slotSizeClassNames[size],
+            )}
+          >
+            {leadingNode}
+          </span>
+        ) : null}
+        {loadingContent && loadingDisplay === 'spinner-only' ? null : (
+          <span className="min-w-0 truncate">{loadingContent ? loadingLabel : children}</span>
+        )}
+        {hasTrailingSlot ? (
+          <span
+            className={cn(
+              'inline-flex shrink-0 items-center justify-center',
+              slotSizeClassNames[size],
+              loadingContent && 'opacity-0',
+            )}
+            aria-hidden={loadingContent || undefined}
+          >
+            {trailingVisual}
+          </span>
+        ) : null}
+      </span>
+    );
+  };
 
   return (
     <button
@@ -111,6 +161,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       data-variant={variant}
       data-size={size}
       data-loading={loading ? 'true' : 'false'}
+      data-slot-layout="stacked"
+      data-leading-slot={hasLeadingSlot ? 'true' : 'false'}
+      data-trailing-slot={hasTrailingSlot ? 'true' : 'false'}
       className={cn(
         'inline-flex shrink-0 items-center justify-center whitespace-nowrap border font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50',
         sizeClassNames[size],
@@ -125,11 +178,19 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
       onClick={handleClick}
       title={titleText}
     >
-      {visualLeading ? <span className="inline-flex items-center justify-center">{visualLeading}</span> : null}
-      <span className="inline-flex items-center justify-center">{loading ? loadingLabel : children}</span>
-      {!loading && trailingVisual ? (
-        <span className="inline-flex items-center justify-center">{trailingVisual}</span>
-      ) : null}
+      <span
+        className={cn(
+          'grid items-center justify-center [grid-template-areas:stack]',
+          fullWidth && 'w-full',
+        )}
+      >
+        <span className="[grid-area:stack]">{renderContent({ visuallyHidden: loading })}</span>
+        {loading ? (
+          <span data-loading-layer="true" className="[grid-area:stack]">
+            {renderContent({ loadingContent: true })}
+          </span>
+        ) : null}
+      </span>
     </button>
   );
 });

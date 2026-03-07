@@ -16,8 +16,9 @@ export type LinkInlineTone = 'primary' | 'secondary';
 export type LinkInlineUnderline = 'always' | 'hover' | 'none';
 
 const toneClasses: Record<LinkInlineTone, string> = {
-  primary: 'text-text-primary',
-  secondary: 'text-text-secondary',
+  primary:
+    'text-[var(--accent-primary)] visited:text-text-secondary hover:text-[var(--accent-primary-hover)]',
+  secondary: 'text-text-secondary hover:text-text-primary',
 };
 
 const underlineClasses: Record<LinkInlineUnderline, string> = {
@@ -72,11 +73,11 @@ export const LinkInline = React.forwardRef<HTMLAnchorElement, LinkInlineProps>(f
   const interactionState: AccessLevel = blocked ? 'disabled' : accessState.state;
   const handleClick = withAccessGuard<React.MouseEvent<HTMLAnchorElement>>(interactionState, onClick, blocked);
   const baseClassName = cn(
-    'inline-flex items-center gap-1 rounded-md font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-1',
+    'inline-flex items-center gap-1 rounded-md font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2',
     toneClasses[tone],
     underlineClasses[underline],
-    current && 'font-semibold text-text-primary',
-    blocked && 'cursor-not-allowed opacity-50',
+    current && 'font-semibold text-text-primary decoration-[var(--accent-primary)] underline underline-offset-4',
+    blocked && 'cursor-not-allowed border border-border-subtle bg-surface-muted px-2 py-1 text-text-subtle no-underline opacity-100',
     className,
   );
   const titleText = accessReason ?? title;
@@ -86,6 +87,7 @@ export const LinkInline = React.forwardRef<HTMLAnchorElement, LinkInlineProps>(f
       <span
         className={baseClassName}
         data-access-state={accessState.state}
+        data-link-state="blocked"
         aria-disabled="true"
         title={titleText}
       >
@@ -104,6 +106,7 @@ export const LinkInline = React.forwardRef<HTMLAnchorElement, LinkInlineProps>(f
       onClick={handleClick}
       className={baseClassName}
       data-access-state={accessState.state}
+      data-link-state={current ? 'current' : isExternal ? 'external' : 'internal'}
       aria-current={current ? 'page' : undefined}
       target={isExternal ? '_blank' : target}
       rel={isExternal ? 'noopener noreferrer' : rel}
@@ -116,6 +119,7 @@ export const LinkInline = React.forwardRef<HTMLAnchorElement, LinkInlineProps>(f
       ) : isExternal ? (
         <span aria-hidden="true">↗</span>
       ) : null}
+      {isExternal ? <span className="sr-only">Harici bağlantı</span> : null}
     </a>
   );
 });

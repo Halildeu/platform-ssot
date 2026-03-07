@@ -445,9 +445,21 @@ const DesignLabPage: React.FC = () => {
               </PreviewPanel>
               <PreviewPanel title="Durumlar">
                 <div className="flex flex-wrap items-center gap-3">
-                  <Button loading loadingLabel="Kaydediliyor">Kaydet</Button>
+                  <Button
+                    loading
+                    loadingLabel="Kaydediliyor"
+                    leadingVisual={<span aria-hidden="true">✓</span>}
+                    trailingVisual={<span aria-hidden="true">→</span>}
+                  >
+                    Değişiklikleri kaydet
+                  </Button>
                   <Button disabled variant="secondary">Disabled</Button>
                   <Button access="readonly" variant="ghost">Readonly</Button>
+                </div>
+                <div className="mt-4 max-w-sm">
+                  <Button fullWidth variant="secondary" trailingVisual={<span aria-hidden="true">→</span>}>
+                    Tam genişlik CTA
+                  </Button>
                 </div>
               </PreviewPanel>
             </div>
@@ -513,6 +525,24 @@ const DesignLabPage: React.FC = () => {
                   </div>
                 </div>
               </PreviewPanel>
+              <PreviewPanel title="Okunabilirlik ve numerik hizalama">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="rounded-2xl border border-border-subtle bg-surface-canvas p-4">
+                    <Text preset="body" wrap="pretty">
+                      Pretty wrap aktifken uzun paragraf daha dengeli satir dagilimi ile okunur; bu da docs ve panel yuzeylerinde
+                      goz yorgunlugunu azaltir.
+                    </Text>
+                  </div>
+                  <div className="rounded-2xl border border-border-subtle bg-surface-canvas p-4 text-right">
+                    <Text preset="body-sm" align="right" tabularNums>
+                      12.450,00
+                    </Text>
+                    <Text preset="caption" variant="secondary" className="mt-2 block">
+                      Tabular nums
+                    </Text>
+                  </div>
+                </div>
+              </PreviewPanel>
             </div>
           </div>
         );
@@ -530,6 +560,7 @@ const DesignLabPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-4">
                   <LinkInline href="#current" current>Current state</LinkInline>
                   <LinkInline href="#blocked" disabled>Disabled state</LinkInline>
+                  <LinkInline href="#secondary" tone="secondary" underline="always">Secondary tone</LinkInline>
                 </div>
               </PreviewPanel>
             </div>
@@ -550,6 +581,7 @@ const DesignLabPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-3">
                   <IconButton icon={<span aria-hidden="true">⟳</span>} label="Yükleniyor" loading />
                   <IconButton icon={<span aria-hidden="true">🔒</span>} label="Kilitli" disabled />
+                  <IconButton icon={<span aria-hidden="true">☰</span>} label="Menüyü aç" variant="secondary" />
                 </div>
               </PreviewPanel>
             </div>

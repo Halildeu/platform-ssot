@@ -10,8 +10,8 @@ export interface IconButtonProps extends Omit<ButtonProps, 'children' | 'leading
 }
 
 const sizeClass: Record<ButtonSize, string> = {
-  sm: 'h-9 w-9 p-0',
-  md: 'h-10 w-10 p-0',
+  sm: 'h-10 w-10 p-0',
+  md: 'h-11 w-11 p-0',
   lg: 'h-12 w-12 p-0',
 };
 
@@ -34,8 +34,10 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(f
       ref={ref}
       variant={selected ? 'secondary' : variant}
       size={size}
+      loadingDisplay="spinner-only"
       className={`${sizeClass[size]} ${selected ? 'ring-1 ring-[var(--accent-focus)]' : ''} ${className ?? ''}`.trim()}
       aria-label={label}
+      aria-pressed={selected || undefined}
       title={title ?? label}
     >
       <span aria-hidden="true" className="inline-flex items-center justify-center text-current">{icon}</span>

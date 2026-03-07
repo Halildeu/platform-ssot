@@ -14,7 +14,8 @@ export type TextVariant = 'primary' | 'secondary' | 'muted' | 'success' | 'dange
 export type TextSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type TextWeight = 'regular' | 'medium' | 'semibold' | 'bold';
 export type TextPreset = 'display' | 'heading' | 'title' | 'body' | 'body-sm' | 'caption' | 'mono';
-export type TextWrap = 'wrap' | 'nowrap';
+export type TextWrap = 'wrap' | 'nowrap' | 'pretty' | 'balance';
+export type TextAlign = 'left' | 'center' | 'right';
 
 type TextElement = 'span' | 'p' | 'div' | 'label' | 'strong' | 'small' | 'h1' | 'h2' | 'h3' | 'h4';
 
@@ -27,12 +28,12 @@ const variantClass: Record<TextVariant, string> = {
 };
 
 const sizeClass: Record<TextSize, string> = {
-  xs: 'text-xs',
-  sm: 'text-sm',
-  md: 'text-base',
-  lg: 'text-lg',
-  xl: 'text-xl',
-  '2xl': 'text-2xl',
+  xs: 'text-xs leading-5',
+  sm: 'text-sm leading-6',
+  md: 'text-base leading-7',
+  lg: 'text-lg leading-7',
+  xl: 'text-xl leading-8',
+  '2xl': 'text-2xl leading-tight',
 };
 
 const weightClass: Record<TextWeight, string> = {
@@ -43,13 +44,26 @@ const weightClass: Record<TextWeight, string> = {
 };
 
 const presetClass: Record<TextPreset, string> = {
-  display: 'text-2xl font-semibold tracking-tight',
-  heading: 'text-xl font-semibold tracking-tight',
-  title: 'text-lg font-semibold',
-  body: 'text-base font-normal',
-  'body-sm': 'text-sm font-normal',
-  caption: 'text-xs font-medium uppercase tracking-wide',
-  mono: 'font-mono text-sm font-medium',
+  display: 'text-3xl font-semibold leading-tight tracking-tight text-balance',
+  heading: 'text-2xl font-semibold leading-tight tracking-tight text-balance',
+  title: 'text-lg font-semibold leading-7',
+  body: 'text-base font-normal leading-7',
+  'body-sm': 'text-sm font-normal leading-6',
+  caption: 'text-xs font-semibold uppercase leading-5 tracking-[0.16em]',
+  mono: 'font-mono text-sm font-medium leading-6',
+};
+
+const wrapClass: Record<TextWrap, string> = {
+  wrap: '',
+  nowrap: 'whitespace-nowrap',
+  pretty: '[text-wrap:pretty]',
+  balance: '[text-wrap:balance]',
+};
+
+const alignClass: Record<TextAlign, string> = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
 };
 
 export type TextProps = React.HTMLAttributes<HTMLElement> &
@@ -62,8 +76,10 @@ export type TextProps = React.HTMLAttributes<HTMLElement> &
     truncate?: boolean;
     clampLines?: number;
     mono?: boolean;
+    tabularNums?: boolean;
     italic?: boolean;
     wrap?: TextWrap;
+    align?: TextAlign;
     children: React.ReactNode;
   };
 
@@ -76,8 +92,10 @@ export const Text: React.FC<TextProps> = ({
   truncate = false,
   clampLines,
   mono = false,
+  tabularNums = false,
   italic = false,
   wrap = 'wrap',
+  align = 'left',
   className,
   children,
   access = 'full',
@@ -112,8 +130,10 @@ export const Text: React.FC<TextProps> = ({
         weight && weightClass[weight],
         variantClass[variant],
         mono && 'font-mono',
+        tabularNums && 'tabular-nums',
         italic && 'italic',
-        wrap === 'nowrap' && 'whitespace-nowrap',
+        wrapClass[wrap],
+        alignClass[align],
         truncate && 'truncate',
         clampStyle && 'overflow-hidden',
         className,

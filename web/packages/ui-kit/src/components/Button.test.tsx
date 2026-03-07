@@ -26,7 +26,13 @@ describe('Button', () => {
     const handleClick = jest.fn();
 
     render(
-      <Button loading loadingLabel="Kaydediliyor" onClick={handleClick}>
+      <Button
+        loading
+        loadingLabel="Kaydediliyor"
+        leadingVisual={<span aria-hidden="true">+</span>}
+        trailingVisual={<span aria-hidden="true">→</span>}
+        onClick={handleClick}
+      >
         Kaydet
       </Button>,
     );
@@ -34,6 +40,10 @@ describe('Button', () => {
     const button = screen.getByRole('button', { name: 'Kaydediliyor' });
     expect(button).toHaveAttribute('aria-busy', 'true');
     expect(button).toHaveAttribute('data-loading', 'true');
+    expect(button).toHaveAttribute('data-slot-layout', 'stacked');
+    expect(button).toHaveAttribute('data-leading-slot', 'true');
+    expect(button).toHaveAttribute('data-trailing-slot', 'true');
+    expect(button.querySelector('[data-loading-layer="true"]')).not.toBeNull();
 
     await user.click(button);
     expect(handleClick).not.toHaveBeenCalled();
@@ -54,5 +64,11 @@ describe('Button', () => {
 
     await user.click(button);
     expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  test('fullWidth kullanildiginda tam genislik sinifini korur', () => {
+    render(<Button fullWidth>Kaydet</Button>);
+
+    expect(screen.getByRole('button', { name: 'Kaydet' })).toHaveClass('w-full');
   });
 });
