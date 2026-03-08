@@ -15,6 +15,7 @@ Amaç: Çok repolu ERP ürün ailesinde standardizasyon drift'ini engellemek, AI
 6. AI governance fail-closed çalışır: allowlist dışı provider/model çağrısı engellenir; canlı çağrılar explicit flag ile açılır.
 7. Audit zorunludur: LLM çağrıları redacted audit izi bırakır; secret/token değerleri asla loglanmaz.
 8. Reasoning lane fallback kurallıdır: `reasoning -> fast reasoning -> chat` sıralaması policy ile yönetilir.
+9. Cache boundary fail-closed çalışır: `.cache/` yalnız türetilmiş rapor/kanıt/state içindir; kanonik ve sürekli kullanılan işlevsel dosyalar `.cache/` altında tutulamaz.
 
 ## Zorunlu Kontroller
 - Teknik kontrol dosyası: `standards.lock`
@@ -30,6 +31,7 @@ Amaç: Çok repolu ERP ürün ailesinde standardizasyon drift'ini engellemek, AI
 - Legacy standards archive manifest: `registry/archives/legacy_standards_archive.aistd.v1.json`
 - Solo branch policy guard: `scripts/check_branch_protection_solo_policy.py`
 - Lane config + runner: `ci/module_delivery_lanes.v1.json`, `ci/run_module_delivery_lane.py`, `ci/check_module_delivery_lanes.py`
+- Cache boundary guard: `docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md`, `scripts/check_cache_boundary.py`
 
 ## Standart Kaynakları (Neye Göre Kontrol Eder?)
 Bu kontrat `standards.lock` içindeki `standard_sources` haritasını canonical kabul eder:
@@ -46,6 +48,7 @@ Bu kontrat `standards.lock` içindeki `standard_sources` haritasını canonical 
 Not (Hard Cutover v2):
 - Legacy doc tabanlı standart bağımlılıkları `standard_sources` dışına alınmıştır.
 - Legacy dosyalar yalnız `registry/archives/legacy_standards_archive.aistd.v1.json` manifesti ile read-only arşiv olarak tutulur.
+- `.cache/` altındaki yollar normatif kaynak sayılmaz; silinebilir/rebuildable kabul edilir.
 
 ## Uyum Kanıtı
 - PR başına gate artefact'ları saklanır.
@@ -56,6 +59,7 @@ Not (Hard Cutover v2):
 - Taşeron repo sync doğrulama komutu: `python3 ci/check_standards_lock.py --repo-root <repo_root>`
 - Lane kontrat doğrulama komutu: `python3 ci/check_module_delivery_lanes.py --strict`
 - Solo branch policy doğrulama komutu: `python3 scripts/check_branch_protection_solo_policy.py --repo-slug <owner/repo>`
+- Cache boundary doğrulama komutu: `python3 scripts/check_cache_boundary.py`
 - System summary kaynakları:
   - `.cache/reports/system_status.v1.json`
   - `.cache/reports/portfolio_status.v1.json`
@@ -72,6 +76,7 @@ Not (Hard Cutover v2):
 8. Branch protection policy: `standards.lock.branch_protection.required_checks` icinde `module-delivery-gate` zorunludur; canli dogrulama kaniti yoksa durum `UNVERIFIED` olarak raporlanir.
 9. Solo developer policy: write yetkili collaborator sayisi `<=1` ise `required_approving_review_count=0` ve `require_code_owner_reviews=false` zorunludur; `>1` oldugunda minimum `1` review ve code-owner review zorunludur.
 10. Legacy format yonetimi: Eski markdown/json standart kaynaklari yalnizca archive/snapshot amacli tutulur; normatif teknik kararlar `technical_baseline.aistd.v1.json` uzerinden yorumlanir.
+11. Cache boundary: Surekli kullanilan registry, policy, schema, contract, operasyon dokumani ve authority dosyalari `.cache/` altinda tutulamaz; `.cache/` yalniz turetilmis rapor/kanit/state icindir.
 
 ## Değişiklik Yönetimi
 - Bu kontratta değişiklik sessiz yapılmaz; CHG süreci ve gate kanıtı gerekir.

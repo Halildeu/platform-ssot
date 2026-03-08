@@ -7,6 +7,7 @@ Bu dokuman "mimari kararlar + katman sinirlari"ni kalici olarak tutar.
 - Kalici SSOT: repo (L1)
 - Gunluk run/override/kanit: workspace (L2)
 - Musteri/harici repo: external (L3)
+- Cache boundary: `.cache/` altindaki icerik silinebilir/rebuildable kabul edilir; kanonik/islevsel dosya yolu orada yasamaz.
 
 ## No-wait standardi
 - Uzun is: job-start -> poll
