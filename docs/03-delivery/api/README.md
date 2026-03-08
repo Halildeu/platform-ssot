@@ -38,7 +38,7 @@ rehberlerini `STYLE-API-001` ve NUMARALANDIRMA standardına uygun şekilde tutar
   - `users.yaml` → kullanıcı servis uçları
   - `permission.yaml` → permission servis uçları
 - Örnek istemci koleksiyonları:
-  - `docs/03-delivery/api/client-examples/Users-Permissions-API.postman_collection.json`
+  - `docs-ssot/03-delivery/api/client-examples/Users-Permissions-API.postman_collection.json`
   - `docs/03-delivery/api/client-examples/insomnia-export.yaml`
 
 Detaylı kabul kriterleri için:

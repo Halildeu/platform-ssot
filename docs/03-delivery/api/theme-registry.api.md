@@ -170,11 +170,30 @@ Body:
 { "themeId": "uuid" }
 ```
 
+9) Güvenlik ve Hata Modeli
 -------------------------------------------------------------------------------
-9) Bağlantılar
+
+Güvenlik:
+- `GET /api/v1/theme-registry` ve `GET /api/v1/themes?scope=global` uçları read-only kullanım içindir.
+- `scope=user` ve `/api/v1/me/**` uçlarında geçerli access token zorunludur.
+- Admin yazma uçlarında (`PUT/PATCH`) `THEME_ADMIN` veya `SYSTEM_CONFIGURE` rolü zorunludur.
+
+Hata Modeli (ErrorResponse):
+```json
+{
+  "timestamp": "2026-03-04T10:00:00Z",
+  "status": 400,
+  "error": "Bad Request",
+  "code": "THEME_REGISTRY_VALIDATION_FAILED",
+  "message": "Unknown semantic key: surface.unknown.bg",
+  "path": "/api/v1/themes/global/123"
+}
+```
+
+-------------------------------------------------------------------------------
+10) Bağlantılar
 -------------------------------------------------------------------------------
 
 - Story: docs/03-delivery/STORIES/STORY-0044-theme-ssot-single-chain-v1.md  
 - ADR: docs/02-architecture/services/theme-system/ADR/ADR-0002-theme-contract-v0-1.md  
 - STYLE-API-001: docs/00-handbook/STYLE-API-001.md
-

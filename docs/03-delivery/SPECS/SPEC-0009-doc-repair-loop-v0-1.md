@@ -126,6 +126,6 @@ yalnız güvenli (allowlist) değişikliklerle doküman zincirini PASS seviyesin
 
 ## 5. LİNKLER
 
-- Reason map (SSOT): `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+- Reason map (SSOT): `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
 - Plan generator (plan-only): `scripts/doc_repair_plan.py`
 - Runbook: `docs/04-operations/RUNBOOKS/RB-doc-repair-loop.md`
