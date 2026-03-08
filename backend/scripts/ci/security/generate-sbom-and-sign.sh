@@ -36,7 +36,15 @@ fi
 echo "[security][sbom] SBOM written to ${SBOM_PATH}"
 
 if [[ -n "${COSIGN_PRIVATE_KEY:-}" ]]; then
-  COSIGN_ARGS=(sign-blob "--key" "env://COSIGN_PRIVATE_KEY")
+  COSIGN_ARGS=(
+    sign-blob
+    "--key" "env://COSIGN_PRIVATE_KEY"
+    "--new-bundle-format=false"
+    "--use-signing-config=false"
+  )
+  if [[ "${CI:-false}" == "true" || "${COSIGN_NONINTERACTIVE:-true}" == "true" ]]; then
+    COSIGN_ARGS+=("--yes")
+  fi
   if [[ -n "${COSIGN_PASSWORD:-}" ]]; then
     export COSIGN_PASSWORD
   fi
