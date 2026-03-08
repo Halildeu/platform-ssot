@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-P = Path("docs/03-delivery/SPECS/content-boundary-policy.v1.json")
+P = Path("docs-ssot/03-delivery/SPECS/content-boundary-policy.v1.json")
 
 
 def die(msg: str) -> int:

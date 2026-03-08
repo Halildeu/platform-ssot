@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-POLICY_PATH = Path("docs/00-handbook/DOC-TEMPLATE-MAP-SSOT.json")
+POLICY_PATH = Path("docs-ssot/00-handbook/DOC-TEMPLATE-MAP-SSOT.json")
 
 # Supports both:
 # - "1. AMAÇ"

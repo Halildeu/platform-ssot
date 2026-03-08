@@ -11,9 +11,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/content-boundary-policy.v1.json")
-SSOT_PATH = Path("docs/00-handbook/DOC-CONTENT-BOUNDARY-SSOT.json")
-MAP_PATH = Path("docs/00-handbook/DOC-TEMPLATE-MAP-SSOT.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/content-boundary-policy.v1.json")
+SSOT_PATH = Path("docs-ssot/00-handbook/DOC-CONTENT-BOUNDARY-SSOT.json")
+MAP_PATH = Path("docs-ssot/00-handbook/DOC-TEMPLATE-MAP-SSOT.json")
 
 DEFAULT_OUT = Path(".autopilot-tmp/flow-mining/content-boundary-report.md")
 

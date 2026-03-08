@@ -7,7 +7,7 @@ Goal:
 - Focuses on BM items (DEC/GRD/ASM/VAL/RSK and KPI for MET docs).
 
 Policy:
-- docs/03-delivery/SPECS/bm-content-policy.v1.json
+- docs-ssot/03-delivery/SPECS/bm-content-policy.v1.json
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-POLICY_PATH = Path("docs/03-delivery/SPECS/bm-content-policy.v1.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/bm-content-policy.v1.json")
 BM_ROOT = Path("docs/01-product/BUSINESS-MASTERS")
 OUT_REPORT = Path(".autopilot-tmp/flow-mining/bm-content-report.md")
 

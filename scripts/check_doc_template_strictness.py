@@ -9,8 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-MAP = Path("docs/00-handbook/DOC-TEMPLATE-MAP-SSOT.json")
-POL = Path("docs/03-delivery/SPECS/template-strictness-policy.v1.json")
+MAP = Path("docs-ssot/00-handbook/DOC-TEMPLATE-MAP-SSOT.json")
+POL = Path("docs-ssot/03-delivery/SPECS/template-strictness-policy.v1.json")
 OUT = Path(".autopilot-tmp/flow-mining/template-strictness-report.md")
 
 # Supports:

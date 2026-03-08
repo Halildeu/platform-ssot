@@ -23,7 +23,13 @@ from typing import Any, Dict, List, Set
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT = ROOT / "docs" / "03-delivery" / "SPECS" / "doc-repair-reason-map.v0.1.json"
+DEFAULT = (
+    ROOT
+    / "docs-ssot"
+    / "03-delivery"
+    / "SPECS"
+    / "doc-repair-reason-map.v0.1.json"
+)
 
 
 def fail(msg: str) -> int:
