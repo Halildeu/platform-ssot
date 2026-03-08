@@ -30,9 +30,9 @@ fi
 
 cd "$WEB_DIR"
 
-if [[ ! -f dist/remoteEntry.js || ! -f dist/users/remoteEntry.js || ! -f dist/reports/remoteEntry.js || ! -f dist/ui-kit/remoteEntry.js ]]; then
-  echo "[check_security_web] publish bundle eksik; npm run security:build-bundle"
-  npm run security:build-bundle
+if [[ ! -f apps/dist/users/remoteEntry.js || ! -f apps/dist/suggestions/remoteEntry.js || ! -f apps/dist/ethic/remoteEntry.js || ! -f apps/dist/access/remoteEntry.js || ! -f packages/dist/ui-kit/remoteEntry.js ]]; then
+  echo "[check_security_web] build artefact eksik; npm run build"
+  npm run build
 fi
 
 echo "[check_security_web] npm run security:sri:check"

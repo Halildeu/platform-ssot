@@ -30,6 +30,9 @@ KEYCLOAK_CLIENT_ID	github_secret	@team/platform	GitHub Actions secret	OIDC clien
 KEYCLOAK_CLIENT_SECRET	github_secret	@team/platform	GitHub Actions secret	OIDC client secret	.github/workflows/vault-secrets-sync.yml	Playwright Keycloak config.
 KEYCLOAK_SCOPE	github_secret	@team/platform	GitHub Actions secret	optional OAuth scope	.github/workflows/vault-secrets-sync.yml	Optional.
 KEYCLOAK_TOKEN_URL	github_secret	@team/platform	GitHub Actions secret	OIDC token endpoint URL	.github/workflows/vault-secrets-sync.yml	Playwright Keycloak config.
+COSIGN_PASSWORD	github_secret	@team/platform	GitHub Actions secret	Cosign private key password	.github/workflows/security-guardrails.yml	SBOM signing key passphrase when key is encrypted.
+COSIGN_PRIVATE_KEY	github_secret	@team/platform	GitHub Actions secret	Cosign private key (PEM)	.github/workflows/security-guardrails.yml	Used by cosign sign-blob for SBOM signatures.
+NVD_API_KEY	github_secret	@team/platform	GitHub Actions secret	NVD API key	.github/workflows/security-guardrails.yml	Used by Dependency-Check to avoid NVD throttling and stale-cache fallback.
 PLAYWRIGHT_BASE_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) base URL	.github/workflows/web-playwright-nightly.yml	Base URL for Playwright tests (dispatch can override).
 ROLLBACK_ENABLED	github_secret	@team/platform	GitHub Actions secret	string "true"/"false"	.github/workflows/rollback.yml	Kill-switch: rollback workflow.
 VAULT_ADDR	github_secret	@team/platform	GitHub Actions secret	Vault address URL	.github/workflows/vault-secrets-sync.yml,docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Vault endpoint.
