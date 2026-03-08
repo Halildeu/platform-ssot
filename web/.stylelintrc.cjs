@@ -2,6 +2,11 @@
 
 module.exports = {
   extends: ['stylelint-config-standard'],
+  ignoreFiles: [
+    '**/node_modules/**',
+    '**/node_modules_old/**',
+    'node_modules_failed_pnpm_hoisted/**',
+  ],
   rules: {
     'at-rule-no-unknown': [
       true,

@@ -58,6 +58,7 @@ const prodConfig = {
         'ag-grid-enterprise': { singleton: true, strictVersion: true, requiredVersion: deps['ag-grid-enterprise'] },
         'ag-grid-react':      { singleton: true, strictVersion: true, requiredVersion: deps['ag-grid-react'] },
         '@mfe/shared-http':   { singleton: true, requiredVersion: false },
+        '@mfe/i18n-dicts':    { singleton: true, requiredVersion: false },
       },
     }),
   ],

@@ -34,6 +34,7 @@ const devConfig = {
         '@tanstack/react-query': { singleton: true, requiredVersion: deps['@tanstack/react-query'] },
         'mfe-ui-kit': { singleton: true, requiredVersion: false },
         '@mfe/shared-http': { singleton: true, requiredVersion: false },
+        '@mfe/i18n-dicts': { singleton: true, requiredVersion: false },
       },
     }),
   ],

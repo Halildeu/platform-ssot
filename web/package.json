@@ -22,13 +22,15 @@
   "main": "index.js",
   "scripts": {
     "prestart": "npx kill-port 3000 3001 3002 3003 3004 3005 3006 3007 || true",
-    "dev:remotes": "bash ./scripts/ci/start-remotes.sh",
+    "dev:remotes": "bash ./scripts/health/run-dev-servers.sh --profile remotes",
     "dev:shell": "npm start --prefix apps/mfe-shell",
     "dev:users": "npm start --prefix apps/mfe-users",
     "dev:access": "npm start --prefix apps/mfe-access",
     "dev:audit": "npm start --prefix apps/mfe-audit",
-    "dev:all": "npm-run-all --parallel dev:shell dev:users dev:access dev:audit",
-    "start": "concurrently \"npm start --prefix apps/mfe-shell\" \"npm start --prefix apps/mfe-suggestions\" \"npm start --prefix apps/mfe-ethic\" \"npm start --prefix packages/ui-kit\" \"npm start --prefix apps/mfe-users\" \"npm start --prefix apps/mfe-access\" \"npm start --prefix apps/mfe-audit\" \"npm start --prefix apps/mfe-reporting\"",
+    "dev:all:raw": "npm-run-all --parallel dev:shell dev:users dev:access dev:audit",
+    "dev:all": "bash ./scripts/health/run-dev-servers.sh --profile core",
+    "start:raw": "npx concurrently \"npm start --prefix apps/mfe-shell\" \"npm start --prefix apps/mfe-suggestions\" \"npm start --prefix apps/mfe-ethic\" \"npm start --prefix packages/ui-kit\" \"npm start --prefix apps/mfe-users\" \"npm start --prefix apps/mfe-access\" \"npm start --prefix apps/mfe-audit\" \"npm start --prefix apps/mfe-reporting\"",
+    "start": "bash ./scripts/health/run-dev-servers.sh --profile full",
     "build-storybook": "storybook build",
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build-storybook",
     "clean": "rimraf dist",
@@ -45,7 +47,8 @@
     "build:ui-kit": "npm run build --prefix packages/ui-kit",
     "build:users": "npm run build --prefix apps/mfe-users",
     "build:reporting": "npm run build --prefix apps/mfe-reporting",
-    "build": "npm run clean && npm-run-all --parallel build:*",
+    "build:raw": "npm run clean && npm-run-all --parallel build:shell build:suggestions build:ethic build:access build:audit build:ui-kit build:users build:reporting",
+    "build": "bash ./scripts/health/run-web-build-guard.sh --script build:raw",
     "test": "npm-run-all test:shell test:suggestions test:ethic test:access test:audit test:ui-kit test:users test:reporting test:shared-types",
     "test:shell": "npm run test --prefix apps/mfe-shell",
     "test:suggestions": "npm run test --prefix apps/mfe-suggestions",
@@ -149,7 +152,22 @@
   "overrides": {
     "ag-grid-community": "34.3.1",
     "ag-grid-enterprise": "34.3.1",
-    "ag-grid-react": "34.3.1"
+    "ag-grid-react": "34.3.1",
+    "baseline-browser-mapping": "2.10.0",
+    "browserslist": "4.28.1",
+    "caniuse-lite": "1.0.30001777",
+    "update-browserslist-db": "1.2.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "ag-grid-community": "34.3.1",
+      "ag-grid-enterprise": "34.3.1",
+      "ag-grid-react": "34.3.1",
+      "baseline-browser-mapping": "2.10.0",
+      "browserslist": "4.28.1",
+      "caniuse-lite": "1.0.30001777",
+      "update-browserslist-db": "1.2.3"
+    }
   },
   "size-limit": [
     {
