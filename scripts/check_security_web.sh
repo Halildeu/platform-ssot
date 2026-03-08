@@ -30,6 +30,11 @@ fi
 
 cd "$WEB_DIR"
 
+if [[ ! -f dist/users/remoteEntry.js || ! -f dist/suggestions/remoteEntry.js || ! -f dist/ethic/remoteEntry.js || ! -f dist/access/remoteEntry.js || ! -f dist/ui-kit/remoteEntry.js ]]; then
+  echo "[check_security_web] publish bundle eksik; npm run security:build-bundle"
+  npm run security:build-bundle
+fi
+
 echo "[check_security_web] npm run security:sri:check"
 npm run security:sri:check
 

@@ -1,0 +1,11 @@
+name: ci-doc-zone-governance
+on:
+  pull_request:
+  push:
+jobs:
+  doc-zone-purity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check doc zone governance (baseline + archive)
+        run: python3 scripts/ci/check_doc_zone_purity.py

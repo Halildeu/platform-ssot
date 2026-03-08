@@ -37,6 +37,48 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-python@v5
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        with:
+          python-version: "3.11"
+
+      - name: Deploy gate (technical baseline + release contract)
+        if: ${{ env.DEPLOY_ENABLED == 'true' }}
+        env:
+          DEPLOY_SCOPE: ${{ github.event.inputs.env || 'stage' }}
+          AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM: ${{ secrets.AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +x
+
+          scope="${DEPLOY_SCOPE}"
+          echo "::notice title=deploy-web::deploy_gate scope=${scope}"
+
+          key_path=""
+          if [ "${scope}" = "prod" ]; then
+            if [ -z "${AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM:-}" ]; then
+              echo "::error title=deploy-web::AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM missing; refusing prod deploy."
+              exit 1
+            fi
+            key_path="${RUNNER_TEMP}/autonomous_pipeline_signing_public.pem"
+            printf "%s" "${AUTONOMOUS_PIPELINE_SIGNING_PUBLIC_KEY_PEM}" > "${key_path}"
+            chmod 600 "${key_path}"
+          fi
+
+          if [ -n "${key_path}" ]; then
+            python3 scripts/ops/deploy_scope_gate.py \
+              --target web \
+              --scope "${scope}" \
+              --public-key "${key_path}" \
+              --out .cache/reports/deploy_scope_gate_web.v1.json
+          else
+            python3 scripts/ops/deploy_scope_gate.py \
+              --target web \
+              --scope "${scope}" \
+              --out .cache/reports/deploy_scope_gate_web.v1.json
+          fi
+
       - uses: actions/setup-node@v4
         if: ${{ env.DEPLOY_ENABLED == 'true' }}
         with:
