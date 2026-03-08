@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+BACKEND_POM="${ROOT_DIR}/pom.xml"
 REPORT_DIR="${ROOT_DIR}/test-results/security/dependency-check"
 TARGET_REPORT_DIR="${ROOT_DIR}/target"
 mkdir -p "${REPORT_DIR}"
@@ -18,6 +19,7 @@ echo "[security][dependency-check] Running OWASP Dependency-Check v${DC_VERSION}
 
 cmd=(
   mvn -B
+  -f "${BACKEND_POM}"
   "org.owasp:dependency-check-maven:${DC_VERSION}:aggregate"
   -DskipTests=true
   -Dformats=HTML,JSON,CSV,XML

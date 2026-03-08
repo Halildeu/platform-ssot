@@ -77,5 +77,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: security-reports
-          path: test-results/security/**
+          path: backend/test-results/security/**
           if-no-files-found: warn

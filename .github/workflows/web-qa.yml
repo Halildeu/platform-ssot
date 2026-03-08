@@ -37,6 +37,10 @@ jobs:
         run: npm ci
         working-directory: web
 
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+        working-directory: web
+
       - name: Theme guardrails (contract + no-fallback)
         run: |
           npm -C web run tokens:build -- --check

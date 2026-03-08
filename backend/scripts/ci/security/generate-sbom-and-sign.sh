@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+BACKEND_POM="${ROOT_DIR}/pom.xml"
 REPORT_DIR="${ROOT_DIR}/test-results/security/sbom"
 mkdir -p "${REPORT_DIR}"
 cd "${ROOT_DIR}"
@@ -11,6 +12,7 @@ SBOM_FORMAT="${SBOM_FORMAT:-json}"
 
 echo "[security][sbom] Generating CycloneDX SBOM (${SBOM_FORMAT})"
 mvn -B \
+  -f "${BACKEND_POM}" \
   org.cyclonedx:cyclonedx-maven-plugin:"${CYCLONEDX_VERSION}":makeAggregateBom \
   -DskipTests=true \
   -Dcyclonedx.skipAttach=true \
