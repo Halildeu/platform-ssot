@@ -132,6 +132,7 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function S
             aria-readonly={isReadonly || undefined}
             aria-disabled={isDisabled || isReadonly || undefined}
             aria-describedby={describedBy}
+            title={accessReason}
             className={clsx(
               'min-w-0 flex-1 accent-[var(--accent-primary)] bg-transparent',
               isReadonly ? 'cursor-default' : isDisabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer',
