@@ -1,0 +1,15 @@
+{
+  "policy_id": "bm-content-policy.v1",
+  "enabled": false,
+  "rules": {
+    "require_sections_1_to_10": true,
+    "require_id_prefix_matches_file": true,
+    "forbid_tbd_anywhere": false,
+    "min_dec": 1,
+    "min_grd": 1,
+    "min_asm": 1,
+    "min_val": 1,
+    "min_rsk": 0,
+    "min_kpi_for_met_doc": 0
+  }
+}
