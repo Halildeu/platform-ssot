@@ -36,7 +36,20 @@ fi
 echo "[security][sbom] SBOM written to ${SBOM_PATH}"
 
 if [[ -n "${COSIGN_PRIVATE_KEY:-}" ]]; then
-  COSIGN_ARGS=(sign-blob "--key" "env://COSIGN_PRIVATE_KEY")
+  COSIGN_ARGS=(
+    sign-blob
+    "--key" "env://COSIGN_PRIVATE_KEY"
+  )
+  COSIGN_HELP="$(cosign sign-blob --help 2>/dev/null || true)"
+  if grep -q -- "--new-bundle-format" <<<"${COSIGN_HELP}"; then
+    COSIGN_ARGS+=("--new-bundle-format=false")
+  fi
+  if grep -q -- "--use-signing-config" <<<"${COSIGN_HELP}"; then
+    COSIGN_ARGS+=("--use-signing-config=false")
+  fi
+  if [[ "${CI:-false}" == "true" || "${COSIGN_NONINTERACTIVE:-true}" == "true" ]]; then
+    COSIGN_ARGS+=("--yes")
+  fi
   if [[ -n "${COSIGN_PASSWORD:-}" ]]; then
     export COSIGN_PASSWORD
   fi
@@ -48,5 +61,9 @@ if [[ -n "${COSIGN_PRIVATE_KEY:-}" ]]; then
     "${SBOM_PATH}"
   echo "[security][sbom] Signature stored at ${SBOM_PATH}.sig"
 else
-  echo "::warning::COSIGN_PRIVATE_KEY not provided; SBOM signature skipped."
+  if [[ "${COSIGN_REQUIRED:-false}" == "true" ]]; then
+    echo "::warning::COSIGN_PRIVATE_KEY not provided; SBOM signature skipped."
+  else
+    echo "::notice::COSIGN_PRIVATE_KEY not provided; SBOM signature skipped."
+  fi
 fi

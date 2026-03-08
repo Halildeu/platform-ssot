@@ -78,6 +78,10 @@
         {
           "id": "tags",
           "label": "Tags"
+        },
+        {
+          "id": "state_recipes",
+          "label": "State Recipes"
         }
       ]
     },
@@ -96,6 +100,10 @@
         {
           "id": "summary",
           "label": "Summary Blocks"
+        },
+        {
+          "id": "recipes",
+          "label": "Recipes"
         }
       ]
     },
@@ -236,6 +244,14 @@
         {
           "id": "runtime",
           "label": "Runtime"
+        },
+        {
+          "id": "preset_gallery",
+          "label": "Preset Gallery"
+        },
+        {
+          "id": "preset_compare",
+          "label": "Preset Compare"
         }
       ]
     },
@@ -276,6 +292,10 @@
         {
           "id": "citations_prompting",
           "label": "Citations & Prompting"
+        },
+        {
+          "id": "authoring",
+          "label": "Authoring"
         }
       ]
     }

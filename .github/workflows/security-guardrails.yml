@@ -40,6 +40,9 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
 
+      - name: Setup Cosign
+        uses: sigstore/cosign-installer@v3
+
       - name: Install web dependencies
         run: npm ci
         working-directory: web

@@ -70,6 +70,7 @@
         "Table",
         "Data Grid (AG Grid / EntityGrid)",
         "List",
+        "Detail summary / inspector",
         "Tree / TreeTable",
         "Descriptions / Key-Value",
         "Statistic / KPI cards",
@@ -91,6 +92,7 @@
         "Progress / Spinner",
         "Skeleton / Placeholder",
         "Empty state / No data",
+        "Empty / Error / Loading recipes",
         "Error boundary / Fallback UI"
       ]
     },
@@ -100,6 +102,7 @@
       "subgroups": [
         "Search box",
         "Filter bar",
+        "Search + filter listings",
         "Facets",
         "Sort controls",
         "Saved filters / Views"
@@ -162,6 +165,8 @@
         "Theme editor (axes)",
         "Token viewer (semantic/raw)",
         "Theme preview cards",
+        "Theme preset gallery",
+        "Theme preset comparison",
         "Contrast / a11y checker",
         "Density / radius / motion presets",
         "Overlay intensity tools"
@@ -218,7 +223,9 @@
         "Command palette",
         "Recommendation / Confidence",
         "Approval / Audit",
-        "Citations / Prompting"
+        "Approval / Review recipes",
+        "Citations / Prompting",
+        "AI authoring workflows"
       ]
     }
   ]

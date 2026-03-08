@@ -735,16 +735,14 @@
       "purpose": "Resmi theme preset ailesini docs, runtime ve release diliyle ayni isimlerde toplamak.",
       "current_state": {
         "implemented_now": [
-          "EnterpriseLightDefault",
-          "OperatorDarkFocus",
-          "AccessibilityHighContrast",
-          "CompactWorkspace"
+          "ThemePresetGallery",
+          "ThemePresetCompare"
         ],
         "gaps": []
       },
       "target_components": [
         {
-          "component_name": "EnterpriseLightDefault",
+          "component_name": "ThemePresetGallery",
           "source_type": "preset_catalog",
           "target_wave": "wave_10_theme_presets",
           "target_maturity": "stable",
@@ -753,31 +751,13 @@
           "ux_primary_subtheme_id": "mode_density_personalization"
         },
         {
-          "component_name": "OperatorDarkFocus",
-          "source_type": "preset_catalog",
-          "target_wave": "wave_10_theme_presets",
-          "target_maturity": "stable",
-          "preview_mode": "live",
-          "ux_primary_theme_id": "theming_customization",
-          "ux_primary_subtheme_id": "mode_density_personalization"
-        },
-        {
-          "component_name": "AccessibilityHighContrast",
+          "component_name": "ThemePresetCompare",
           "source_type": "preset_catalog",
           "target_wave": "wave_10_theme_presets",
           "target_maturity": "stable",
           "preview_mode": "live",
           "ux_primary_theme_id": "accessibility_and_inclusive_design",
           "ux_primary_subtheme_id": "contrast_typography_readability"
-        },
-        {
-          "component_name": "CompactWorkspace",
-          "source_type": "preset_catalog",
-          "target_wave": "wave_10_theme_presets",
-          "target_maturity": "stable",
-          "preview_mode": "live",
-          "ux_primary_theme_id": "responsive_layout",
-          "ux_primary_subtheme_id": "density_scale_management"
         }
       ],
       "exit_criteria": [
@@ -1279,10 +1259,8 @@
         "theme_presets"
       ],
       "candidate_components": [
-        "EnterpriseLightDefault",
-        "OperatorDarkFocus",
-        "AccessibilityHighContrast",
-        "CompactWorkspace"
+        "ThemePresetGallery",
+        "ThemePresetCompare"
       ],
       "dependencies": [
         "wave_9_foundation_language"

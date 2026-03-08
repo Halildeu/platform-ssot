@@ -3134,6 +3134,343 @@
         "hidden access guard",
         "readonly mode action rules"
       ]
+    },
+    {
+      "name": "AIGuidedAuthoring",
+      "variantAxes": [
+        "surface: focused-authoring | command-assisted",
+        "recommendations: empty | populated",
+        "palette: closed | open"
+      ],
+      "stateModel": [
+        "prompt composer state",
+        "recommendation action dispatch",
+        "command palette visibility"
+      ],
+      "props": [
+        {
+          "name": "promptComposerProps",
+          "type": "Partial<PromptComposerProps>",
+          "default": "{}",
+          "required": false,
+          "description": "Prompt composer icindeki subject, body ve guardrail davranisini recipe seviyesinde devreder."
+        },
+        {
+          "name": "recommendations",
+          "type": "AIGuidedAuthoringRecommendation[]",
+          "default": "[]",
+          "required": false,
+          "description": "Yan panelde gosterilecek canonical recommendation kartlarini tasir."
+        },
+        {
+          "name": "commandItems / paletteOpen",
+          "type": "CommandPaletteItem[] / boolean",
+          "default": "[] / false",
+          "required": false,
+          "description": "Command palette aksiyonlarini ve acik/kapali durumunu kontrol eder."
+        },
+        {
+          "name": "onApplyRecommendation / onReviewRecommendation",
+          "type": "(id, item) => void",
+          "default": "-",
+          "required": false,
+          "description": "Recommendation aksiyonlarini consumer katmana cikarir."
+        }
+      ],
+      "previewFocus": [
+        "prompt + recommendation workspace",
+        "command-assisted authoring"
+      ],
+      "regressionFocus": [
+        "palette open-close parity",
+        "recommendation callback wiring",
+        "readonly access guard"
+      ]
+    },
+    {
+      "name": "ApprovalReview",
+      "variantAxes": [
+        "layout: checkpoint-first | evidence-first",
+        "selection: controlled | uncontrolled",
+        "mode: interactive | readonly"
+      ],
+      "stateModel": [
+        "selected citation",
+        "selected audit item",
+        "approval action propagation"
+      ],
+      "props": [
+        {
+          "name": "checkpoint",
+          "type": "ApprovalCheckpointProps",
+          "default": "-",
+          "required": true,
+          "description": "Review recipe icindeki canonical approval kartini tanimlar."
+        },
+        {
+          "name": "citations / auditItems",
+          "type": "CitationPanelItem[] / AIActionAuditTimelineItem[]",
+          "default": "[] / []",
+          "required": true,
+          "description": "Evidence seti ve audit timeline kayitlarini birlikte verir."
+        },
+        {
+          "name": "selectedCitationId / selectedAuditId",
+          "type": "string | null",
+          "default": "null",
+          "required": false,
+          "description": "Controlled modda aktif evidence ve audit maddesini belirler."
+        },
+        {
+          "name": "onCitationSelect / onAuditSelect",
+          "type": "(id, item) => void",
+          "default": "-",
+          "required": false,
+          "description": "Recipe icindeki secim olaylarini consumer katmana tasir."
+        }
+      ],
+      "previewFocus": [
+        "approval + evidence review",
+        "audit rich escalation surface"
+      ],
+      "regressionFocus": [
+        "selection state parity",
+        "checkpoint passthrough stability",
+        "readonly interaction guard"
+      ]
+    },
+    {
+      "name": "DetailSummary",
+      "variantAxes": [
+        "summary: absent | present",
+        "payload: detail-only | detail+json",
+        "header: compact | action-rich"
+      ],
+      "stateModel": [
+        "summary strip visibility",
+        "entity summary context",
+        "json payload presence"
+      ],
+      "props": [
+        {
+          "name": "title / description / meta / status",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Recipe seviyesindeki header bilgisini tanimlar."
+        },
+        {
+          "name": "summaryItems",
+          "type": "SummaryStripItem[]",
+          "default": "[]",
+          "required": false,
+          "description": "Detail header altindaki KPI strip verisi."
+        },
+        {
+          "name": "entity",
+          "type": "EntitySummaryBlockProps",
+          "default": "-",
+          "required": true,
+          "description": "Primary entity ozetini canonical block ile verir."
+        },
+        {
+          "name": "detailItems / jsonValue",
+          "type": "DescriptionsItem[] / unknown",
+          "default": "[] / undefined",
+          "required": false,
+          "description": "Structured metadata ve machine-readable payload yuzeylerini recipe altinda toplar."
+        }
+      ],
+      "previewFocus": [
+        "detail inspector shell",
+        "summary + json dual rail"
+      ],
+      "regressionFocus": [
+        "optional section visibility",
+        "entity/detail payload ordering",
+        "json fallback parity"
+      ]
+    },
+    {
+      "name": "EmptyErrorLoading",
+      "variantAxes": [
+        "mode: empty | error | loading",
+        "skeleton: on | off",
+        "recovery: passive | retry-action"
+      ],
+      "stateModel": [
+        "mode switch",
+        "retry CTA visibility",
+        "skeleton stack visibility"
+      ],
+      "props": [
+        {
+          "name": "mode",
+          "type": "'empty' | 'error' | 'loading'",
+          "default": "-",
+          "required": true,
+          "description": "Recipe icindeki aktif state branch'ini belirler."
+        },
+        {
+          "name": "errorLabel / retryLabel / onRetry",
+          "type": "ReactNode / string / () => void",
+          "default": "- / 'Tekrar dene' / -",
+          "required": false,
+          "description": "Error state'teki geri donus mesajini ve aksiyonunu tanimlar."
+        },
+        {
+          "name": "loadingLabel / showSkeleton",
+          "type": "string / boolean",
+          "default": "'Yukleniyor' / true",
+          "required": false,
+          "description": "Loading branch'indeki spinner ve skeleton davranisini kontrol eder."
+        }
+      ],
+      "previewFocus": [
+        "loading with skeleton",
+        "error recovery panel",
+        "empty fallback"
+      ],
+      "regressionFocus": [
+        "mode branch parity",
+        "retry callback wiring",
+        "spinner + skeleton visibility"
+      ]
+    },
+    {
+      "name": "SearchFilterListing",
+      "variantAxes": [
+        "results: empty | listed | custom-surface",
+        "filters: hidden | visible",
+        "summary: absent | present"
+      ],
+      "stateModel": [
+        "filter shell visibility",
+        "summary strip visibility",
+        "result list fallback"
+      ],
+      "props": [
+        {
+          "name": "title / description / meta / status",
+          "type": "ReactNode",
+          "default": "-",
+          "required": true,
+          "description": "Recipe header katmanini tanimlar."
+        },
+        {
+          "name": "filters / onReset / onSaveView",
+          "type": "ReactNode / () => void",
+          "default": "- / - / -",
+          "required": false,
+          "description": "Canonical FilterBar icerigini ve aksiyonlarini tasir."
+        },
+        {
+          "name": "summaryItems",
+          "type": "SummaryStripItem[]",
+          "default": "[]",
+          "required": false,
+          "description": "Result shell altindaki KPI strip verisi."
+        },
+        {
+          "name": "items / results",
+          "type": "ListItem[] / ReactNode",
+          "default": "[] / -",
+          "required": false,
+          "description": "Varsayilan list surface veya custom result renderer secebilir."
+        }
+      ],
+      "previewFocus": [
+        "policy inventory listing",
+        "search + filter shell"
+      ],
+      "regressionFocus": [
+        "empty fallback parity",
+        "filter action wiring",
+        "summary/result ordering"
+      ]
+    },
+    {
+      "name": "ThemePresetCompare",
+      "variantAxes": [
+        "pair: default-vs-accessibility | default-vs-compact",
+        "axes: core-only | extended",
+        "surface: gallery-linked | standalone"
+      ],
+      "stateModel": [
+        "left/right preset binding",
+        "axis row rendering",
+        "contrast mapping"
+      ],
+      "props": [
+        {
+          "name": "leftPreset / rightPreset",
+          "type": "ThemePresetGalleryItem",
+          "default": "-",
+          "required": true,
+          "description": "Karsilastirilacak iki resmi preset nesnesini tasir."
+        },
+        {
+          "name": "axes",
+          "type": "string[]",
+          "default": "['appearance','density','intent','contrast']",
+          "required": false,
+          "description": "Compare matrisinde gosterilecek eksenleri belirler."
+        }
+      ],
+      "previewFocus": [
+        "preset pair comparison",
+        "contrast and density review"
+      ],
+      "regressionFocus": [
+        "missing preset fallback",
+        "axis mapping parity",
+        "preview card pairing"
+      ]
+    },
+    {
+      "name": "ThemePresetGallery",
+      "variantAxes": [
+        "selection: controlled | uncontrolled",
+        "preset-count: compact | expanded",
+        "contrast: mixed | standard-only"
+      ],
+      "stateModel": [
+        "selected preset",
+        "default preset emphasis",
+        "compare axis chip rendering"
+      ],
+      "props": [
+        {
+          "name": "presets",
+          "type": "ThemePresetGalleryItem[]",
+          "default": "[]",
+          "required": true,
+          "description": "Resmi preset ailesinin label, mode, appearance ve density alanlarini tasir."
+        },
+        {
+          "name": "selectedPresetId / defaultSelectedPresetId",
+          "type": "string | null",
+          "default": "null",
+          "required": false,
+          "description": "Gallery secimini controlled veya uncontrolled modda yonetir."
+        },
+        {
+          "name": "compareAxes / onSelectPreset",
+          "type": "ReactNode[] / (id, item) => void",
+          "default": "[] / -",
+          "required": false,
+          "description": "Gallery uzerindeki compare eksenlerini ve preset secim olayini disari acar."
+        }
+      ],
+      "previewFocus": [
+        "preset catalog gallery",
+        "default/high-contrast emphasis"
+      ],
+      "regressionFocus": [
+        "selection state parity",
+        "empty fallback",
+        "default/high contrast badge mapping"
+      ]
     }
   ]
 }

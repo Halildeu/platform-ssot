@@ -932,3 +932,99 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-tour-panel"]'
       - click: '[data-testid="design-lab-tour-next"]'
       - expectVisible: '[data-testid="design-lab-tour-step-preview"]'
+
+  - name: ui_library_theme_presets_wave_10_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /ui-library
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ThemePresetGallery
+      - expectVisible: '[data-testid="design-lab-item-themepresetgallery"]'
+      - click: '[data-testid="design-lab-item-themepresetgallery"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-theme-preset-gallery-catalog"] [data-component="theme-preset-gallery"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ThemePresetCompare
+      - expectVisible: '[data-testid="design-lab-item-themepresetcompare"]'
+      - click: '[data-testid="design-lab-item-themepresetcompare"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-theme-preset-compare-default"] [data-component="theme-preset-compare"]'
+
+  - name: ui_library_recipe_wave_11_walk
+    level: 1
+    auth_required: false
+    console_error_allowlist:
+      - "http://localhost:3001/remoteEntry\\.js"
+      - "http://localhost:3002/remoteEntry\\.js"
+      - "http://localhost:3004/remoteEntry\\.js"
+      - "http://localhost:3005/remoteEntry\\.js"
+      - "http://localhost:3006/remoteEntry\\.js"
+      - "http://localhost:3007/remoteEntry\\.js"
+    console_warn_allowlist:
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3001/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3002/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3004/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3005/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
+      - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
+    steps:
+      - goto: /ui-library
+      - expectVisible: '[data-testid="design-lab-page"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: SearchFilterListing
+      - expectVisible: '[data-testid="design-lab-item-searchfilterlisting"]'
+      - click: '[data-testid="design-lab-item-searchfilterlisting"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-search-filter-listing-default"] [data-component="search-filter-listing"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: DetailSummary
+      - expectVisible: '[data-testid="design-lab-item-detailsummary"]'
+      - click: '[data-testid="design-lab-item-detailsummary"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-detail-summary-default"] [data-component="detail-summary"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: ApprovalReview
+      - expectVisible: '[data-testid="design-lab-item-approvalreview"]'
+      - click: '[data-testid="design-lab-item-approvalreview"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-approval-review-default"] [data-component="approval-review"]'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: EmptyErrorLoading
+      - expectVisible: '[data-testid="design-lab-item-emptyerrorloading"]'
+      - click: '[data-testid="design-lab-item-emptyerrorloading"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: ':nth-match([data-testid="design-lab-demo-card-empty-error-loading-default"] [data-component="empty-error-loading"], 1)'
+      - fill:
+          selector: '[data-testid="design-lab-search"]'
+          value: AIGuidedAuthoring
+      - expectVisible: '[data-testid="design-lab-item-aiguidedauthoring"]'
+      - click: '[data-testid="design-lab-item-aiguidedauthoring"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-demo-card-ai-guided-authoring-default"] [data-component="ai-guided-authoring"]'
+      - click: '[data-testid="design-lab-workspace-recipes"]'
+      - expectVisible: '[data-testid="design-lab-recipe-list"]'
+      - click: '[data-testid="design-lab-recipe-search_filter_listing"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
+      - expectVisible: '[data-testid="design-lab-recipe-demo-card-search_filter_listing-assembly-map"] [data-component="search-filter-listing"]'

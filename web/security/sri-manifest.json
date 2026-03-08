@@ -1,30 +1,30 @@
 {
-  "generatedAt": "2026-03-08T11:20:36.876Z",
+  "generatedAt": "2026-03-08T16:14:36.879Z",
   "remotes": {
     "mfe-users": {
       "artifact": "dist/users/remoteEntry.js",
-      "sri": "sha384-GDJRWkXLmR8ZVhoSJBfxaH9l9/eU/UJl3iwetuC3tcnXazhI2m4hrUhJdP89L7PF",
-      "lastRotatedAt": "2026-03-08T11:20:36.876Z"
+      "sri": "sha384-UYxsVJdV+wNriIJeCrFMIGbiibfDIpewoXt3FY+PwnJw474Inko9dwzBvYaGtKuE",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
     "mfe-suggestions": {
       "artifact": "dist/suggestions/remoteEntry.js",
-      "sri": "sha384-FFHUd3XsTSfBuYxqrYgrJQdhEKgS635THTFY4oZkpLvtGzp0BCaLpT40Ik4iXrnR",
-      "lastRotatedAt": "2026-03-08T11:20:36.876Z"
+      "sri": "sha384-DwgYPhGxgBFwegOk9+3txhEMwTTajSLMKB3vs6/+PM3bZPf3G2Cv7d/2PTVe6uD6",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
     "mfe-ethic": {
       "artifact": "dist/ethic/remoteEntry.js",
       "sri": "sha384-ZW4zhw+hEhiL7+BuDqj59wD9YgjOApxYeyQqHbUNa65X5RuVuzIboaXVS5g9V9yC",
-      "lastRotatedAt": "2026-03-08T11:20:36.876Z"
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
     "mfe-access": {
       "artifact": "dist/access/remoteEntry.js",
-      "sri": "sha384-F0/tsidv0dxgEhBnK1GnERFVeyGVgwNowuX0RfHS3k1MzZyBn96WUsbcrH3jLh+H",
-      "lastRotatedAt": "2026-03-08T11:20:36.876Z"
+      "sri": "sha384-iCZ79inUyNx7SOdQdnoPvQr2m6RxZbuU7FhTgKHafBNAC/DeIW3C+Fmi+jA7xsVd",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
     "mfe-ui-kit": {
       "artifact": "dist/ui-kit/remoteEntry.js",
-      "sri": "sha384-g9R1vyBwavPYZIK2tRZVhBhd1NVXj0fjkpYbeWYkCdwIcfG4hcxS2wYisBXZofGE",
-      "lastRotatedAt": "2026-03-08T11:20:36.876Z"
+      "sri": "sha384-g30O7HSe1OP4OVizKgOj8eZLTjqOgAzfnt1Jy/bIGHa/rVr97NDxAYH8Wb+mkpRS",
+      "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     }
   }
 }

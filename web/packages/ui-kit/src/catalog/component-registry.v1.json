@@ -238,6 +238,40 @@
       "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
+      "name": "AIGuidedAuthoring",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "beta",
+      "group": "ai_helpers",
+      "subgroup": "authoring",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "AI authoring workflows",
+      "demoMode": "live",
+      "description": "Prompt yazimi, recommendation stack ve command palette akisini reusable authoring recipe yuzeyinde toplar.",
+      "sectionIds": [
+        "governance_contribution",
+        "documentation_standards",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-11",
+        "recipes",
+        "beta",
+        "ai-authoring"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "safe_prompt_templates_and_scope",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+    },
+    {
       "name": "AnchorToc",
       "kind": "component",
       "availability": "exported",
@@ -304,6 +338,40 @@
       "uxPrimarySubthemeId": "human_approval_checkpoints",
       "roadmapWaveId": "wave_6_ai_native_helpers",
       "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "ApprovalReview",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Review recipes",
+      "demoMode": "live",
+      "description": "Approval checkpoint, citation evidence ve audit timeline akisini tek review recipe katmaninda birlestirir.",
+      "sectionIds": [
+        "governance_contribution",
+        "integration_distribution",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-11",
+        "recipes",
+        "stable",
+        "approval"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "human_approval_checkpoints",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
     },
     {
       "name": "Avatar",
@@ -694,6 +762,40 @@
       "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
+      "name": "DetailSummary",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "page_blocks",
+      "subgroup": "recipes",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Detail summary / inspector",
+      "demoMode": "live",
+      "description": "PageHeader, SummaryStrip, EntitySummaryBlock ve detay payload yuzeylerini ayni inspector recipe olarak toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "table_data_display"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-11",
+        "recipes",
+        "stable",
+        "detail"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+    },
+    {
       "name": "DetailDrawer",
       "kind": "component",
       "availability": "exported",
@@ -816,6 +918,40 @@
         "preview_visibility",
         "registry_export_sync"
       ]
+    },
+    {
+      "name": "EmptyErrorLoading",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "feedback",
+      "subgroup": "state_recipes",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Empty / Error / Loading recipes",
+      "demoMode": "live",
+      "description": "Bos, hata ve yukleniyor durumlarini Empty, Spinner ve Skeleton katmanlariyla ayni feedback recipe altinda toplar.",
+      "sectionIds": [
+        "state_feedback",
+        "documentation_standards",
+        "component_library_management"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-11",
+        "recipes",
+        "stable",
+        "state-feedback"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "loading_empty_error_success_patterns",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
     },
     {
       "name": "EntityGridTemplate",
@@ -1426,6 +1562,40 @@
       "uxPrimarySubthemeId": "contextual_recommendation_cards",
       "roadmapWaveId": "wave_6_ai_native_helpers",
       "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "SearchFilterListing",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "page_blocks",
+      "subgroup": "recipes",
+      "taxonomyGroupId": "search_filtering",
+      "taxonomySubgroup": "Search + filter listings",
+      "demoMode": "live",
+      "description": "PageHeader, FilterBar, SummaryStrip ve sonuc listesini ayni listing recipe kompozisyonunda toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "tags": [
+        "wave-11",
+        "recipes",
+        "stable",
+        "listing"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
     },
     {
       "name": "registerTokenResolver",
@@ -2275,6 +2445,72 @@
       "qualityGates": [
         "registry_export_sync"
       ]
+    },
+    {
+      "name": "ThemePresetCompare",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "theme",
+      "subgroup": "preset_compare",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme preset comparison",
+      "demoMode": "live",
+      "description": "Iki resmi preset arasindaki appearance, density, contrast ve intent farklarini ayni compare matrisiyle gosterir.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-10",
+        "theme-presets",
+        "stable",
+        "compare"
+      ],
+      "uxPrimaryThemeId": "accessibility_and_inclusive_design",
+      "uxPrimarySubthemeId": "contrast_typography_readability",
+      "roadmapWaveId": "wave_10_theme_presets",
+      "acceptanceContractId": "ui-library-wave-10-theme-presets-v1"
+    },
+    {
+      "name": "ThemePresetGallery",
+      "kind": "component",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "group": "theme",
+      "subgroup": "preset_gallery",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme preset gallery",
+      "demoMode": "live",
+      "description": "Resmi preset ailesini secilebilir theme preview galerisi olarak sunar ve preset kimligini docs/runtime ile ayni tutar.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "tags": [
+        "wave-10",
+        "theme-presets",
+        "stable",
+        "gallery"
+      ],
+      "uxPrimaryThemeId": "theming_customization",
+      "uxPrimarySubthemeId": "mode_density_personalization",
+      "roadmapWaveId": "wave_10_theme_presets",
+      "acceptanceContractId": "ui-library-wave-10-theme-presets-v1"
     },
     {
       "name": "ThemePreviewCard",
