@@ -14,6 +14,7 @@ NVD_API_KEY_VALUE="${NVD_API_KEY:-}"
 CACHE_DIR_SUFFIX="${DC_VERSION//./_}"
 LOCAL_DC_CACHE_DIR="${REPORT_DIR}/cache-v${CACHE_DIR_SUFFIX}"
 SUPPRESSION_FILE="${ROOT_DIR}/backend/scripts/ci/security/dependency-check-suppressions.xml"
+SCAN_LOG_PATH="${REPORT_DIR}/dependency-check.log"
 
 echo "[security][dependency-check] Running OWASP Dependency-Check v${DC_VERSION} (fail on CVSS >= ${FAIL_CVSS})"
 
@@ -66,13 +67,30 @@ fi
 build_cmd "${cache_present_at_start}"
 
 scan_status=0
-"${cmd[@]}" || scan_status=$?
+set +e
+"${cmd[@]}" 2>&1 | tee "${SCAN_LOG_PATH}"
+scan_status=${PIPESTATUS[0]}
+set -e
+
+if [[ "${scan_status}" -ne 0 && -n "${NVD_API_KEY_VALUE}" ]] && grep -q "Invalid API Key" "${SCAN_LOG_PATH}" && has_cache_data; then
+  echo "[security][dependency-check] Gecersiz NVD_API_KEY algilandi; versioned cache ile cache-only modda yeniden deneniyor."
+  NVD_API_KEY_VALUE=""
+  build_cmd true
+  scan_status=0
+  set +e
+  "${cmd[@]}" 2>&1 | tee -a "${SCAN_LOG_PATH}"
+  scan_status=${PIPESTATUS[0]}
+  set -e
+fi
 
 if [[ "${scan_status}" -ne 0 && -z "${NVD_API_KEY_VALUE}" && "${cache_present_at_start}" != "true" ]] && has_cache_data; then
   echo "[security][dependency-check] Bootstrap sonrasi versioned cache olustu; cache-only modda bir kez daha deneniyor."
   build_cmd true
   scan_status=0
-  "${cmd[@]}" || scan_status=$?
+  set +e
+  "${cmd[@]}" 2>&1 | tee -a "${SCAN_LOG_PATH}"
+  scan_status=${PIPESTATUS[0]}
+  set -e
 fi
 
 for artifact in \
