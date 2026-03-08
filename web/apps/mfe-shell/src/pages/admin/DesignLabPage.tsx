@@ -176,6 +176,35 @@ type DesignLabIndex = {
       apiCatalogItems: number;
     };
   };
+  themePresets?: {
+    catalogId: string;
+    sourceOfTruth: string;
+    defaultMode: string;
+    compareAxes: string[];
+    presets: Array<{
+      presetId: string;
+      themeMode: string;
+      label: string;
+      appearance: string;
+      density: string;
+      intent: string;
+      isHighContrast: boolean;
+      isDefaultMode: boolean;
+    }>;
+    rules: string[];
+    successCriteria: string[];
+  };
+  recipes?: {
+    contractId: string;
+    currentFamilies: Array<{
+      recipeId: string;
+      ownerBlocks: string[];
+      intent: string;
+    }>;
+    plannedFamilies: string[];
+    rules: string[];
+    successCriteria: string[];
+  };
   items: DesignLabIndexItem[];
 };
 
@@ -338,6 +367,14 @@ const buildReleaseFamilyContext = (
       ? 'Son release notunda bu family veya wave ile ortusen bir degisim izi var.'
       : 'Son release daha cok platform ve dagitim hattina odakli; bu family icin dogrudan bir degisim etiketi yok.',
   };
+};
+
+const buildRelatedRecipes = (
+  item: DesignLabIndexItem | null,
+  recipeSummary: DesignLabIndex['recipes'],
+) => {
+  if (!item || !recipeSummary) return [];
+  return recipeSummary.currentFamilies.filter((recipe) => recipe.ownerBlocks.includes(item.name));
 };
 
 const toTestIdSuffix = (value: string) =>
@@ -672,12 +709,18 @@ const DesignLabPage: React.FC = () => {
   }, []);
 
   const releaseSummary = designLabIndex.release ?? null;
+  const themePresetSummary = designLabIndex.themePresets ?? null;
+  const recipeSummary = designLabIndex.recipes ?? null;
   const readyDistributionTargetCount = useMemo(
     () =>
       releaseSummary?.distributionTargets.filter(
         (target) => target.artifactCount === 0 || target.artifactPresentCount === target.artifactCount,
       ).length ?? 0,
     [releaseSummary],
+  );
+  const relatedRecipes = useMemo(
+    () => buildRelatedRecipes(selectedItem, recipeSummary),
+    [recipeSummary, selectedItem],
   );
 
   const trackSummary = useMemo(
@@ -5671,6 +5714,127 @@ const DesignLabPage: React.FC = () => {
                 ) : null}
               </div>
             </div>
+          </LibraryShowcaseCard>
+        ) : null}
+
+        {themePresetSummary ? (
+          <LibraryShowcaseCard
+            eyebrow="Theme Presets"
+            title="Resmi preset galerisi"
+            description="Theme engine üzerinde resmi olarak desteklenen preset ailesi. Docs, release ve runtime aynı preset kimliklerini kullanır."
+            badges={[
+              <SectionBadge key="theme-catalog" label={themePresetSummary.catalogId} />,
+              <SectionBadge key="theme-count" label={`${themePresetSummary.presets.length} preset`} />,
+            ]}
+          >
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              {themePresetSummary.presets.map((preset) => (
+                <div key={preset.presetId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <Text as="div" className="font-semibold text-text-primary">
+                        {preset.label}
+                      </Text>
+                      <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                        {preset.intent}
+                      </Text>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {preset.isDefaultMode ? <Badge tone="success">Default</Badge> : null}
+                      {preset.isHighContrast ? <Badge tone="warning">High contrast</Badge> : null}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-[180px_minmax(0,1fr)]">
+                    <div className="rounded-[22px] border border-border-subtle bg-surface-panel p-3">
+                      <ThemePreviewCard selected={preset.isDefaultMode} />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <LibraryMetricCard label="Mode" value={preset.themeMode} />
+                      <LibraryMetricCard label="Appearance" value={preset.appearance} />
+                      <LibraryMetricCard label="Density" value={preset.density} />
+                      <LibraryMetricCard label="Contrast" value={preset.isHighContrast ? 'high' : 'standard'} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
+              <DetailLabel>Preset kuralları</DetailLabel>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {themePresetSummary.compareAxes.map((axis) => (
+                  <SectionBadge key={axis} label={axis} />
+                ))}
+              </div>
+              <div className="mt-4 space-y-2">
+                {themePresetSummary.rules.map((rule) => (
+                  <Text key={rule} variant="secondary" className="block text-sm leading-6">
+                    {rule}
+                  </Text>
+                ))}
+              </div>
+            </div>
+          </LibraryShowcaseCard>
+        ) : null}
+
+        {recipeSummary ? (
+          <LibraryShowcaseCard
+            eyebrow="Recipe System"
+            title={relatedRecipes.length ? 'Seçili component ile ilişkili reçeteler' : 'Library recipe ailesi'}
+            description="Tek tek component yerine ortak ekran davranışlarını reusable recipe mantığıyla yönetmek için kullanılan kontrat katmanı."
+            badges={[
+              <SectionBadge key="recipe-contract" label={recipeSummary.contractId} />,
+              <SectionBadge key="recipe-count" label={`${recipeSummary.currentFamilies.length} current`} />,
+              recipeSummary.plannedFamilies.length ? (
+                <SectionBadge key="recipe-planned" label={`${recipeSummary.plannedFamilies.length} planned`} />
+              ) : null,
+            ]}
+          >
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+              {(relatedRecipes.length ? relatedRecipes : recipeSummary.currentFamilies).map((recipe) => (
+                <div key={recipe.recipeId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <Text as="div" className="font-semibold text-text-primary">
+                        {recipe.recipeId}
+                      </Text>
+                      <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                        {recipe.intent}
+                      </Text>
+                    </div>
+                    <Badge tone={recipe.ownerBlocks.includes(item.name) ? 'success' : 'muted'}>
+                      {recipe.ownerBlocks.includes(item.name) ? 'Direct owner' : 'Library recipe'}
+                    </Badge>
+                  </div>
+
+                  <div className="mt-4">
+                    <DetailLabel>Owner blocks</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {recipe.ownerBlocks.map((owner) => (
+                        <SectionBadge
+                          key={owner}
+                          label={owner}
+                          className={owner === item.name ? 'border-state-success-border bg-state-success-bg text-state-success-text' : undefined}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {recipeSummary.plannedFamilies.length ? (
+              <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                <DetailLabel>Planned recipes</DetailLabel>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {recipeSummary.plannedFamilies.map((family) => (
+                    <SectionBadge key={family} label={family} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </LibraryShowcaseCard>
         ) : null}
       </div>

@@ -388,6 +388,83 @@ def build_release_metadata(
     }
 
 
+def build_theme_preset_metadata(web_root: Path) -> dict[str, Any]:
+    repo_root = web_root.parent
+    theme_catalog_path = (
+        repo_root / "docs" / "02-architecture" / "context" / "ui-library-theme-preset-catalog.v1.json"
+    )
+    theme_contract_path = web_root / "design-tokens" / "generated" / "theme-contract.json"
+    theme_catalog = load_json(theme_catalog_path)
+    theme_contract = load_json(theme_contract_path)
+    modes = theme_contract.get("modes", {}) if isinstance(theme_contract.get("modes"), dict) else {}
+    default_mode = str(theme_contract.get("defaultMode") or "")
+
+    presets: list[dict[str, Any]] = []
+    for raw_preset in theme_catalog.get("presets", []):
+        preset_id = str(raw_preset.get("preset_id") or "")
+        theme_mode = str(raw_preset.get("theme_mode") or "")
+        mode_meta = modes.get(theme_mode, {}) if isinstance(modes.get(theme_mode), dict) else {}
+        appearance = str(raw_preset.get("appearance") or mode_meta.get("appearance") or "")
+        density = str(raw_preset.get("density") or "")
+        intent = str(raw_preset.get("intent") or "")
+        label = str(mode_meta.get("label") or theme_mode or preset_id)
+        is_high_contrast = bool(mode_meta.get("isHighContrast") or appearance == "high-contrast")
+        presets.append(
+            {
+                "presetId": preset_id,
+                "themeMode": theme_mode,
+                "label": label,
+                "appearance": appearance,
+                "density": density,
+                "intent": intent,
+                "isHighContrast": is_high_contrast,
+                "isDefaultMode": theme_mode == default_mode,
+            }
+        )
+
+    return {
+        "catalogId": str(theme_catalog.get("catalog_id") or ""),
+        "sourceOfTruth": str(theme_catalog.get("source_of_truth") or ""),
+        "defaultMode": default_mode,
+        "compareAxes": ["appearance", "density", "intent", "contrast"],
+        "presets": presets,
+        "rules": [str(value) for value in theme_catalog.get("rules", []) if str(value).strip()],
+        "successCriteria": [
+            str(value) for value in theme_catalog.get("success_criteria", []) if str(value).strip()
+        ],
+    }
+
+
+def build_recipe_metadata(web_root: Path) -> dict[str, Any]:
+    repo_root = web_root.parent
+    recipe_contract_path = (
+        repo_root / "docs" / "02-architecture" / "context" / "ui-library-recipe-system.contract.v1.json"
+    )
+    recipe_contract = load_json(recipe_contract_path)
+
+    current_families: list[dict[str, Any]] = []
+    for raw_recipe in recipe_contract.get("current_recipe_families", []):
+        current_families.append(
+            {
+                "recipeId": str(raw_recipe.get("recipe_id") or ""),
+                "ownerBlocks": [str(value) for value in raw_recipe.get("owner_blocks", []) if str(value).strip()],
+                "intent": str(raw_recipe.get("intent") or ""),
+            }
+        )
+
+    return {
+        "contractId": str(recipe_contract.get("contract_id") or ""),
+        "currentFamilies": current_families,
+        "plannedFamilies": [
+            str(value) for value in recipe_contract.get("planned_recipe_families", []) if str(value).strip()
+        ],
+        "rules": [str(value) for value in recipe_contract.get("rules", []) if str(value).strip()],
+        "successCriteria": [
+            str(value) for value in recipe_contract.get("success_criteria", []) if str(value).strip()
+        ],
+    }
+
+
 def build_groups_lookup(groups: DesignLabGroups) -> set[tuple[str, str]]:
     valid_pairs: set[tuple[str, str]] = set()
     for group in groups["groups"]:
@@ -606,6 +683,8 @@ def build_design_lab_index(web_root: Path) -> dict:
             registry_entries=registry_entries,
             api_catalog_item_count=len(api_catalog_items),
         ),
+        "themePresets": build_theme_preset_metadata(web_root),
+        "recipes": build_recipe_metadata(web_root),
         "items": items,
     }
 

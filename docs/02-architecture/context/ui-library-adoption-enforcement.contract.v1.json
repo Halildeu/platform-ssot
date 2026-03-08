@@ -21,6 +21,8 @@
     "npm -C web run lint:no-antd",
     "npm -C web run doctor:frontend -- --preset ui-library",
     "npm -C web run gate:ui-library-wave",
+    "python3 scripts/check_no_hardcoded_theme_styles.py",
+    "python3 scripts/check_ui_library_adoption_enforcement.py",
     "python3 scripts/check_ui_library_governance_contract.py",
     "python3 scripts/check_ui_library_ux_alignment.py",
     "python3 scripts/check_frontend_diagnostics_registry.py"

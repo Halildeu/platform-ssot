@@ -124,7 +124,7 @@ export const getBooleanToggleTrackClass = (
 
 export const getBooleanToggleThumbClass = (size: BooleanControlSize) =>
   clsx(
-    'pointer-events-none absolute left-0.5 top-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out -translate-y-1/2',
+    'pointer-events-none absolute left-0.5 top-1/2 rounded-full bg-surface-canvas shadow-sm transition-transform duration-200 ease-out -translate-y-1/2',
     toggleSizeMap[size].thumb,
     toggleSizeMap[size].translate,
   );

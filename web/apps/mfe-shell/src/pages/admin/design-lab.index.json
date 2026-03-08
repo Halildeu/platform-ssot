@@ -121,6 +121,142 @@
       "apiCatalogItems": 51
     }
   },
+  "themePresets": {
+    "catalogId": "ui-library-theme-preset-catalog-v1",
+    "sourceOfTruth": "web/design-tokens/generated/theme-contract.json",
+    "defaultMode": "serban-light",
+    "compareAxes": [
+      "appearance",
+      "density",
+      "intent",
+      "contrast"
+    ],
+    "presets": [
+      {
+        "presetId": "enterprise_light_default",
+        "themeMode": "serban-light",
+        "label": "Light",
+        "appearance": "light",
+        "density": "comfortable",
+        "intent": "varsayilan kurumsal is akislarinda dengeli gorunum",
+        "isHighContrast": false,
+        "isDefaultMode": true
+      },
+      {
+        "presetId": "operator_dark_focus",
+        "themeMode": "serban-dark",
+        "label": "Dark",
+        "appearance": "dark",
+        "density": "comfortable",
+        "intent": "uzun sureli operasyon ekranlarinda odak ve dusuk parazit",
+        "isHighContrast": false,
+        "isDefaultMode": false
+      },
+      {
+        "presetId": "accessibility_high_contrast",
+        "themeMode": "serban-hc",
+        "label": "High Contrast",
+        "appearance": "high-contrast",
+        "density": "comfortable",
+        "intent": "kontrast, focus ve readability oncelikli erisilebilir preset",
+        "isHighContrast": true,
+        "isDefaultMode": false
+      },
+      {
+        "presetId": "compact_workspace",
+        "themeMode": "serban-compact",
+        "label": "Compact",
+        "appearance": "light",
+        "density": "compact",
+        "intent": "yuksek bilgi yogunlugu ve operasyonel tablo/grid agir ekranlar",
+        "isHighContrast": false,
+        "isDefaultMode": false
+      }
+    ],
+    "rules": [
+      "Resmi presetler theme-contract allowedModes disina cikamaz.",
+      "Yeni preset eklenirse docs, preview, release notes ve Theme Admin ayni patch icinde guncellenir.",
+      "Preset adi docs ve runtime tarafinda ayni semantic kimlikle kullanilir."
+    ],
+    "successCriteria": [
+      "UI library docs portali resmi preset ailesini tek katalogdan okur.",
+      "Theme ve density kararlari daginik local toggle'lar yerine resmi preset isimleriyle ifade edilir."
+    ]
+  },
+  "recipes": {
+    "contractId": "ui-library-recipe-system-contract-v1",
+    "currentFamilies": [
+      {
+        "recipeId": "search_filter_listing",
+        "ownerBlocks": [
+          "PageLayout",
+          "FilterBar",
+          "AgGridServer",
+          "TableSimple",
+          "List",
+          "Empty"
+        ],
+        "intent": "liste, filtre ve sonuc yuzeylerini ayni shell altinda toplamak"
+      },
+      {
+        "recipeId": "detail_summary",
+        "ownerBlocks": [
+          "PageHeader",
+          "SummaryStrip",
+          "EntitySummaryBlock",
+          "Descriptions",
+          "JsonViewer"
+        ],
+        "intent": "detay ekranlarinda ozet + meta + yan panel kurgusunu ortaklastirmak"
+      },
+      {
+        "recipeId": "approval_review",
+        "ownerBlocks": [
+          "ApprovalCheckpoint",
+          "CitationPanel",
+          "AIActionAuditTimeline",
+          "Modal",
+          "DetailDrawer"
+        ],
+        "intent": "onay, karar ve audit akisini tutarli bir review recipe'si ile sunmak"
+      },
+      {
+        "recipeId": "empty_error_loading",
+        "ownerBlocks": [
+          "Empty",
+          "Skeleton",
+          "Spinner",
+          "Tooltip"
+        ],
+        "intent": "bos, hata ve yukleniyor durumlarini tutarli geri bildirim diliyle vermek"
+      },
+      {
+        "recipeId": "ai_guided_authoring",
+        "ownerBlocks": [
+          "PromptComposer",
+          "RecommendationCard",
+          "ConfidenceBadge",
+          "TextArea",
+          "CommandPalette"
+        ],
+        "intent": "AI destekli yazim ve karar yuzeylerini reusable recipe olarak kurmak"
+      }
+    ],
+    "plannedFamilies": [
+      "dashboard_kpi_analytics",
+      "table_to_chart_review",
+      "multi_step_submission"
+    ],
+    "rules": [
+      "Yeni page veya panel ilk once uygun recipe var mi diye kontrol edilir.",
+      "Ayni davranisi tekrar eden route-level layout recipe owner API'sine tasinir.",
+      "Recipe aileleri component, block, UX alignment ve release notu bagiyla birlikte yonetilir."
+    ],
+    "successCriteria": [
+      "Sadece component degil, ekran kaliplari da standart ve tekrar kullanilir hale gelir.",
+      "Sayfalar minimum UI kodu ile veri/config doldurarak recipe tuketebilir."
+    ]
+  },
   "items": [
     {
       "name": "AIActionAuditTimeline",

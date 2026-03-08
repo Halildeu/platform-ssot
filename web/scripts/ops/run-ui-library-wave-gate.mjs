@@ -180,6 +180,20 @@ const steps = [
     cwd: webRoot,
   },
   {
+    id: 'theme_style_guard',
+    label: 'No hardcoded theme styles',
+    cmd: 'python3',
+    args: ['scripts/check_no_hardcoded_theme_styles.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'adoption_enforcement',
+    label: 'UI library adoption enforcement',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_adoption_enforcement.py'],
+    cwd: repoRoot,
+  },
+  {
     id: 'ui_kit_tests',
     label: 'UI kit tests',
     cmd: 'npm',

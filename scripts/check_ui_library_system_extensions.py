@@ -44,6 +44,8 @@ def main() -> int:
         "npm -C web run lint:no-antd",
         "npm -C web run doctor:frontend -- --preset ui-library",
         "npm -C web run gate:ui-library-wave",
+        "python3 scripts/check_no_hardcoded_theme_styles.py",
+        "python3 scripts/check_ui_library_adoption_enforcement.py",
     }
     enforced = set(adoption.get("current_enforced_checks", []))
     for item in required_checks:
