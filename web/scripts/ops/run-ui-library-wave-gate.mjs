@@ -81,7 +81,7 @@ const waveMap = {
   },
   wave_10_theme_presets: {
     checker: 'python3 scripts/check_ui_library_wave_10_theme_presets.py',
-    focus: ['EnterpriseLightDefault', 'OperatorDarkFocus', 'AccessibilityHighContrast', 'CompactWorkspace'],
+    focus: ['ThemePresetGallery', 'ThemePresetCompare'],
   },
   wave_11_recipes: {
     checker: 'python3 scripts/check_ui_library_wave_11_recipes.py',

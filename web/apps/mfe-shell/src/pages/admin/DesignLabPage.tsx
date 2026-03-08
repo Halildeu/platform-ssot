@@ -33,13 +33,18 @@ import {
   RecommendationCard,
   ConfidenceBadge,
   ApprovalCheckpoint,
+  ApprovalReview,
+  AIGuidedAuthoring,
   CitationPanel,
   AIActionAuditTimeline,
   PromptComposer,
+  DetailSummary,
+  EmptyErrorLoading,
   TableSimple,
   Descriptions,
   List,
   JsonViewer,
+  SearchFilterListing,
   Tree,
   TreeTable,
   Skeleton,
@@ -54,6 +59,8 @@ import {
   Tooltip,
   TourCoachmarks,
   Avatar,
+  ThemePresetCompare,
+  ThemePresetGallery,
   AnchorToc,
   Breadcrumb,
   Divider,
@@ -377,7 +384,10 @@ const buildRelatedRecipes = (
   recipeSummary: DesignLabIndex['recipes'],
 ) => {
   if (!item || !recipeSummary) return [];
-  return recipeSummary.currentFamilies.filter((recipe) => recipe.ownerBlocks.includes(item.name));
+  const recipeLikeId = item.name.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
+  return recipeSummary.currentFamilies.filter(
+    (recipe) => recipe.ownerBlocks.includes(item.name) || recipe.recipeId === recipeLikeId,
+  );
 };
 
 const toTestIdSuffix = (value: string) =>
@@ -961,6 +971,35 @@ const DesignLabPage: React.FC = () => {
       ),
     [selectedRecipeItems],
   );
+  const themePresetGalleryItems = useMemo(
+    () =>
+      (themePresetSummary?.presets ?? []).map((preset) => ({
+        presetId: preset.presetId,
+        label: preset.label,
+        themeMode: preset.themeMode,
+        appearance: preset.appearance,
+        density: preset.density,
+        intent: preset.intent,
+        isHighContrast: preset.isHighContrast,
+        isDefaultMode: preset.isDefaultMode,
+      })),
+    [themePresetSummary],
+  );
+  const defaultThemePreset = useMemo(
+    () => themePresetGalleryItems.find((preset) => preset.isDefaultMode) ?? themePresetGalleryItems[0] ?? null,
+    [themePresetGalleryItems],
+  );
+  const contrastThemePreset = useMemo(
+    () => themePresetGalleryItems.find((preset) => preset.isHighContrast) ?? themePresetGalleryItems[1] ?? null,
+    [themePresetGalleryItems],
+  );
+  const compactThemePreset = useMemo(
+    () =>
+      themePresetGalleryItems.find(
+        (preset) => typeof preset.density === 'string' && preset.density.toLowerCase() === 'compact',
+      ) ?? null,
+    [themePresetGalleryItems],
+  );
 
   const trackSummary = useMemo(
     () => ({
@@ -1397,6 +1436,175 @@ const DesignLabPage: React.FC = () => {
     ],
     [],
   );
+
+  const renderRecipeComponentPreview = (recipeId: string) => {
+    switch (recipeId) {
+      case 'search_filter_listing':
+        return (
+          <SearchFilterListing
+            eyebrow="Recipe"
+            title="Policy inventory"
+            description="Search, filter ve result shell ayni recipe kontrati altinda toplanir."
+            meta={<SectionBadge label="recipe:first" />}
+            status={<Badge tone="info">Live</Badge>}
+            filters={(
+              <>
+                <TextInput
+                  label="Search"
+                  value={searchInputValue}
+                  onValueChange={setSearchInputValue}
+                  size="sm"
+                  leadingVisual={<span aria-hidden="true">⌕</span>}
+                />
+                <Select
+                  label="Density"
+                  value={selectValue}
+                  onValueChange={(value) => setSelectValue(String(value))}
+                  size="sm"
+                  options={[
+                    { label: 'Comfortable', value: 'comfortable' },
+                    { label: 'Compact', value: 'compact' },
+                    { label: 'Readonly', value: 'readonly' },
+                  ]}
+                />
+              </>
+            )}
+            onReset={() => setSearchInputValue('')}
+            onSaveView={() => setDropdownAction('Saved recipe listing view')}
+            summaryItems={[
+              { key: 'results', label: 'Results', value: String(serverGridRows.length), note: 'Server snapshot' },
+              { key: 'selection', label: 'Selection', value: dropdownAction || '—', note: 'Toolbar action state' },
+              { key: 'density', label: 'Density', value: selectValue, note: 'Recipe shell density' },
+            ]}
+            items={serverGridRows.slice(0, 3).map((row) => ({
+              key: row.id,
+              title: row.name,
+              description: `${row.owner} · ${row.theme}`,
+              meta: row.status,
+              badges: [row.track],
+              tone: row.status === 'Ready' ? 'success' : 'info',
+            }))}
+          />
+        );
+      case 'detail_summary':
+        return (
+          <DetailSummary
+            eyebrow="Recipe"
+            title="Wave 11 rollout detail"
+            description="Summary, entity context ve payload ayni inspector recipe ile okunur."
+            meta={(
+              <>
+                <SectionBadge label="wave_11_recipes" />
+                <SectionBadge label="stable" />
+              </>
+            )}
+            status={<Badge tone="success">Publish-ready</Badge>}
+            summaryItems={[
+              { key: 'owners', label: 'Owners', value: '5', note: 'Canonical owner block count', tone: 'info' },
+              { key: 'doctor', label: 'Doctor', value: 'PASS', note: 'ui-library preset', tone: 'success' },
+              { key: 'adoption', label: 'Adoption', value: 'locked', note: 'Recipe-first enforcement', tone: 'warning' },
+            ]}
+            entity={{
+              title: 'Recipe System',
+              subtitle: 'Page ve panel kompozisyonlarini veri/config ile tekrar kullanir.',
+              badge: <Badge tone="success">Stable</Badge>,
+              avatar: { name: 'Recipe System' },
+              items: [
+                { key: 'contract', label: 'Contract', value: 'ui-library-recipe-system-contract-v1', tone: 'info' },
+                { key: 'wave', label: 'Wave', value: 'wave_11_recipes', tone: 'success' },
+                { key: 'owner', label: 'Owner', value: 'Platform UI', tone: 'info' },
+                { key: 'mode', label: 'Mode', value: 'JSON-first', tone: 'warning' },
+              ],
+            }}
+            detailItems={[
+              { key: 'focus', label: 'Focus', value: 'Reusable page/panel patterns', tone: 'info' },
+              { key: 'gate', label: 'Gate', value: 'doctor + wave check', tone: 'success' },
+              { key: 'preview', label: 'Preview', value: '/ui-library', tone: 'warning' },
+              { key: 'adoption', label: 'Rule', value: 'Recipe before page-level custom UI', tone: 'info', span: 2 },
+            ]}
+            jsonValue={{
+              recipeId: 'detail_summary',
+              ownerBlocks: ['PageHeader', 'SummaryStrip', 'EntitySummaryBlock', 'Descriptions', 'JsonViewer'],
+              status: 'stable',
+            }}
+          />
+        );
+      case 'approval_review':
+        return (
+          <ApprovalReview
+            checkpoint={{
+              title: 'Publish approval',
+              summary: 'Recipe publish karari citation evidence ve audit timeline ile birlikte okunur.',
+              status: approvalCheckpointState,
+              steps: approvalCheckpointSteps,
+              evidenceItems: ['doctor:frontend', 'gate:wave_11', 'playwright:ui_library_recipe_wave_11_walk'],
+              citations: citationPanelItems.map((item) => String(item.locator ?? '—')),
+              onPrimaryAction: () => setApprovalCheckpointState('approved'),
+              onSecondaryAction: () => setApprovalCheckpointState('rejected'),
+              footerNote: `Current state: ${approvalCheckpointState}`,
+            }}
+            citations={citationPanelItems}
+            auditItems={auditTimelineItems}
+            selectedCitationId={selectedCitationId}
+            selectedAuditId={selectedAuditId}
+            onCitationSelect={setSelectedCitationId}
+            onAuditSelect={setSelectedAuditId}
+          />
+        );
+      case 'empty_error_loading':
+        return (
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+            <EmptyErrorLoading mode="loading" loadingLabel="Recipe surfaces hazirlaniyor" />
+            <EmptyErrorLoading mode="error" onRetry={() => setDropdownAction('Retry requested from recipe state')} />
+            <EmptyErrorLoading mode="empty" />
+          </div>
+        );
+      case 'ai_guided_authoring':
+        return (
+          <AIGuidedAuthoring
+            confidenceLevel={recommendationDecision === 'applied' ? 'high' : recommendationDecision === 'review' ? 'medium' : 'medium'}
+            confidenceScore={recommendationDecision === 'applied' ? 0.92 : 0.74}
+            sourceCount={citationPanelItems.length}
+            promptComposerProps={{
+              subject: promptSubject,
+              onSubjectChange: setPromptSubject,
+              value: promptBody,
+              onValueChange: setPromptBody,
+              scope: promptScope,
+              onScopeChange: setPromptScope,
+              tone: promptTone,
+              onToneChange: setPromptTone,
+              citations: citationPanelItems.map((item) => String(item.locator ?? '—')),
+              guardrails: ['human-approval', 'source-transparency', 'scope-lock'],
+            }}
+            recommendations={[
+              {
+                id: 'recipe-adoption',
+                title: 'Use ApprovalReview recipe',
+                summary: 'Duplicate review shell yerine canonical ApprovalReview recipe kullan.',
+                recommendationType: 'Recipe suggestion',
+                confidenceLevel: recommendationDecision === 'applied' ? 'high' : 'medium',
+                confidenceScore: recommendationDecision === 'applied' ? 0.91 : 0.76,
+                citations: ['doctor:frontend', 'wave_11_recipes', 'adoption-enforcement'],
+                tone: recommendationDecision === 'review' ? 'warning' : 'info',
+                footerNote: `Decision: ${recommendationDecision}`,
+              },
+            ]}
+            commandItems={commandPaletteItems}
+            onApplyRecommendation={() => setRecommendationDecision('applied')}
+            onReviewRecommendation={() => setRecommendationDecision('review')}
+          />
+        );
+      default:
+        return (
+          <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+            <Text variant="secondary" className="block text-sm leading-6">
+              Bu recipe icin canli kompozisyon henuz tanimli degil.
+            </Text>
+          </div>
+        );
+    }
+  };
 
   const renderLivePreview = (item: DesignLabIndexItem) => {
     switch (item.name) {
@@ -5759,6 +5967,106 @@ const DesignLabPage: React.FC = () => {
             ),
           },
         ];
+      case 'ThemePresetGallery':
+        return [
+          {
+            id: 'theme-preset-gallery-catalog',
+            eyebrow: 'Recipe 01',
+            title: 'Theme preset gallery',
+            description: 'Resmi preset ailesi docs ve runtime ile ayni semantic kimliklerle ayni galeriden okunur.',
+            badges: ['wave-10', 'theme-presets', 'gallery'],
+            content: (
+              <ThemePresetGallery
+                presets={themePresetGalleryItems}
+                compareAxes={themePresetSummary?.compareAxes ?? []}
+              />
+            ),
+          },
+          {
+            id: 'theme-preset-gallery-compare',
+            eyebrow: 'Recipe 02',
+            title: 'Preset compare handoff',
+            description: 'Gallery secimi ile compare matrisi ayni preset dili uzerinden okunur.',
+            badges: ['compare', 'contrast', 'density'],
+            content: (
+              <ThemePresetCompare
+                leftPreset={defaultThemePreset}
+                rightPreset={contrastThemePreset ?? compactThemePreset}
+              />
+            ),
+          },
+        ];
+      case 'ThemePresetCompare':
+        return [
+          {
+            id: 'theme-preset-compare-default',
+            eyebrow: 'Recipe 01',
+            title: 'Theme preset compare',
+            description: 'Appearance, density, contrast ve intent farklari ayni compare matrisiyle okunur.',
+            badges: ['wave-10', 'theme-presets', 'compare'],
+            content: (
+              <ThemePresetCompare
+                leftPreset={defaultThemePreset}
+                rightPreset={contrastThemePreset ?? compactThemePreset}
+              />
+            ),
+          },
+        ];
+      case 'SearchFilterListing':
+        return [
+          {
+            id: 'search-filter-listing-default',
+            eyebrow: 'Recipe 01',
+            title: 'Search + filter listing',
+            description: 'PageHeader, FilterBar, SummaryStrip ve listing shell ayni recipe ile tekrar kullanilir.',
+            badges: ['wave-11', 'recipes', 'listing'],
+            content: renderRecipeComponentPreview('search_filter_listing'),
+          },
+        ];
+      case 'DetailSummary':
+        return [
+          {
+            id: 'detail-summary-default',
+            eyebrow: 'Recipe 01',
+            title: 'Detail summary inspector',
+            description: 'Entity detail, KPI strip ve JSON payload tek inspector recipe altinda toplanir.',
+            badges: ['wave-11', 'recipes', 'detail'],
+            content: renderRecipeComponentPreview('detail_summary'),
+          },
+        ];
+      case 'ApprovalReview':
+        return [
+          {
+            id: 'approval-review-default',
+            eyebrow: 'Recipe 01',
+            title: 'Approval review workflow',
+            description: 'Checkpoint, evidence ve audit akisi ayni review recipe ile okunur.',
+            badges: ['wave-11', 'recipes', 'approval'],
+            content: renderRecipeComponentPreview('approval_review'),
+          },
+        ];
+      case 'EmptyErrorLoading':
+        return [
+          {
+            id: 'empty-error-loading-default',
+            eyebrow: 'Recipe 01',
+            title: 'State feedback recipe',
+            description: 'Loading, error ve empty durumlari ayni feedback diliyle tekrar kullanilir.',
+            badges: ['wave-11', 'recipes', 'feedback'],
+            content: renderRecipeComponentPreview('empty_error_loading'),
+          },
+        ];
+      case 'AIGuidedAuthoring':
+        return [
+          {
+            id: 'ai-guided-authoring-default',
+            eyebrow: 'Recipe 01',
+            title: 'AI guided authoring',
+            description: 'Prompt yazimi, recommendation ve command palette ayni authoring shell altinda toplanir.',
+            badges: ['wave-11', 'recipes', 'ai-authoring'],
+            content: renderRecipeComponentPreview('ai_guided_authoring'),
+          },
+        ];
       default:
         return [
           {
@@ -5866,34 +6174,13 @@ const DesignLabPage: React.FC = () => {
         id: `${toTestIdSuffix(recipe.recipeId)}-assembly-map`,
         kind: 'recipe',
         eyebrow: 'Recipe 01',
-        title: 'Assembly map',
-        description: 'Recipe içindeki canonical bloklar, track dağılımı ve eksik owner eşleşmeleri.',
+        title: 'Recipe surface',
+        description: 'Recipe’in canlı kompozisyonu, contract bağlamı ve consumer handoff aynı kartta okunur.',
         badges: ['recipe', 'assembly', `${recipe.ownerBlocks.length} blocks`],
         content: (
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-            <PreviewPanel title="Assembly map" kind="recipe">
-              <div className="grid grid-cols-1 gap-3">
-                {recipe.ownerBlocks.map((owner) => {
-                  const item = recipeItems.find((entry) => entry.name === owner) ?? null;
-                  return (
-                    <div key={owner} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <Text as="div" className="font-semibold text-text-primary">
-                            {owner}
-                          </Text>
-                          <Text variant="secondary" className="mt-1 block text-sm leading-6">
-                            {item?.description ?? 'Registry içinde ilgili component bulunamadı.'}
-                          </Text>
-                        </div>
-                        <Badge tone={item ? 'success' : 'warning'}>
-                          {item ? trackMeta[resolveItemTrack(item)].label : 'Missing'}
-                        </Badge>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            <PreviewPanel title="Recipe surface" kind="recipe">
+              {renderRecipeComponentPreview(recipe.recipeId)}
             </PreviewPanel>
             <PreviewPanel title="Consumer handoff" kind="recipe">
               <div className="grid grid-cols-1 gap-3">
@@ -6296,38 +6583,15 @@ const DesignLabPage: React.FC = () => {
               <SectionBadge key="theme-count" label={`${themePresetSummary.presets.length} preset`} />,
             ]}
           >
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              {themePresetSummary.presets.map((preset) => (
-                <div key={preset.presetId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <Text as="div" className="font-semibold text-text-primary">
-                        {preset.label}
-                      </Text>
-                      <Text variant="secondary" className="mt-1 block text-sm leading-6">
-                        {preset.intent}
-                      </Text>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {preset.isDefaultMode ? <Badge tone="success">Default</Badge> : null}
-                      {preset.isHighContrast ? <Badge tone="warning">High contrast</Badge> : null}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-[180px_minmax(0,1fr)]">
-                    <div className="rounded-[22px] border border-border-subtle bg-surface-panel p-3">
-                      <ThemePreviewCard selected={preset.isDefaultMode} />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <LibraryMetricCard label="Mode" value={preset.themeMode} />
-                      <LibraryMetricCard label="Appearance" value={preset.appearance} />
-                      <LibraryMetricCard label="Density" value={preset.density} />
-                      <LibraryMetricCard label="Contrast" value={preset.isHighContrast ? 'high' : 'standard'} />
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 gap-4">
+              <ThemePresetGallery
+                presets={themePresetGalleryItems}
+                compareAxes={themePresetSummary.compareAxes}
+              />
+              <ThemePresetCompare
+                leftPreset={defaultThemePreset}
+                rightPreset={contrastThemePreset ?? compactThemePreset}
+              />
             </div>
 
             <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
@@ -6362,7 +6626,47 @@ const DesignLabPage: React.FC = () => {
             ]}
           >
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              {(relatedRecipes.length ? relatedRecipes : recipeSummary.currentFamilies).map((recipe) => (
+              {relatedRecipes.length ? relatedRecipes.map((recipe) => {
+                const directRecipeMatch =
+                  recipe.ownerBlocks.includes(item.name)
+                  || recipe.recipeId === item.name.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
+
+                return (
+                  <div key={recipe.recipeId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                    <div className="grid grid-cols-1 gap-4">
+                      {renderRecipeComponentPreview(recipe.recipeId)}
+                      <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4">
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <Text as="div" className="font-semibold text-text-primary">
+                              {recipe.recipeId}
+                            </Text>
+                            <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                              {recipe.intent}
+                            </Text>
+                          </div>
+                          <Badge tone={directRecipeMatch ? 'success' : 'muted'}>
+                            {directRecipeMatch ? 'Direct recipe' : 'Library recipe'}
+                          </Badge>
+                        </div>
+
+                        <div className="mt-4">
+                          <DetailLabel>Owner blocks</DetailLabel>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {recipe.ownerBlocks.map((owner) => (
+                              <SectionBadge
+                                key={owner}
+                                label={owner}
+                                className={owner === item.name ? 'border-state-success-border bg-state-success-bg text-state-success-text' : undefined}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }) : recipeSummary.currentFamilies.map((recipe) => (
                 <div key={recipe.recipeId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -6373,20 +6677,14 @@ const DesignLabPage: React.FC = () => {
                         {recipe.intent}
                       </Text>
                     </div>
-                    <Badge tone={recipe.ownerBlocks.includes(item.name) ? 'success' : 'muted'}>
-                      {recipe.ownerBlocks.includes(item.name) ? 'Direct owner' : 'Library recipe'}
-                    </Badge>
+                    <Badge tone="muted">Library recipe</Badge>
                   </div>
 
                   <div className="mt-4">
                     <DetailLabel>Owner blocks</DetailLabel>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {recipe.ownerBlocks.map((owner) => (
-                        <SectionBadge
-                          key={owner}
-                          label={owner}
-                          className={owner === item.name ? 'border-state-success-border bg-state-success-bg text-state-success-text' : undefined}
-                        />
+                        <SectionBadge key={owner} label={owner} />
                       ))}
                     </div>
                   </div>
