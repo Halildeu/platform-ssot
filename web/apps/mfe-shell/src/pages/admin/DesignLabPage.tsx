@@ -60,6 +60,7 @@ import {
   LibraryProductTree,
   LibraryQueryProvider,
   LibraryDocsSection,
+  LibraryCodeBlock,
   LibrarySectionBadge as SectionBadge,
   LibraryDetailLabel as DetailLabel,
   LibraryPreviewPanel as PreviewPanel,
@@ -69,6 +70,8 @@ import {
   LibraryOutlinePanel,
   LibraryStatsPanel,
   LibraryMetadataPanel,
+  LibraryPropsTable,
+  LibraryUsageRecipesPanel,
   type LibraryProductTreeSelection,
   type LibraryProductTreeTrack,
 } from 'mfe-ui-kit';
@@ -246,6 +249,67 @@ const demoModeLabel: Record<DesignLabDemoMode, string> = {
 };
 
 const componentApiMap = new Map(componentApiCatalog.items.map((item) => [item.name, item]));
+
+const buildUsagePropValue = (prop: DesignLabApiProp): string => {
+  if (prop.name === 'children') return '"Ornek icerik"';
+  if (prop.type.includes('ReactNode')) return '"Ornek icerik"';
+  if (prop.type.includes('string')) {
+    if (prop.name.toLowerCase().includes('email')) return '"admin@example.com"';
+    if (prop.name.toLowerCase().includes('placeholder')) return '"Deger gir..."';
+    if (prop.name.toLowerCase().includes('label')) return '"Alan etiketi"';
+    return '"ornek"';
+  }
+  if (prop.type.includes('boolean')) return 'true';
+  if (prop.type.includes('number')) return '0';
+  if (prop.name.toLowerCase().includes('items')) return '[/* items */]';
+  if (prop.name.toLowerCase().includes('columns') || prop.name.toLowerCase().includes('defs')) return '[/* columns */]';
+  if (prop.name.toLowerCase().startsWith('on')) return '() => {}';
+  if (prop.type.includes('[]')) return '[/* values */]';
+  return '{/* TODO */}';
+};
+
+const buildUsageRecipes = (item: DesignLabIndexItem, apiItem?: DesignLabApiItem | null) => {
+  const importStatement = item.importStatement || `import { ${item.name} } from 'mfe-ui-kit';`;
+  const requiredProps = (apiItem?.props ?? []).filter((prop) => prop.required);
+  const exampleProps = requiredProps.slice(0, 2);
+  const openTagProps = exampleProps
+    .map((prop) => `  ${prop.name}=${buildUsagePropValue(prop)}`)
+    .join('\n');
+  const basicCode = `${importStatement}\n\nexport function Example() {\n  return (\n    <${item.name}${openTagProps ? `\n${openTagProps}` : ''}${exampleProps.some((prop) => prop.name === 'children') ? '' : ''}\n    />\n  );\n}`;
+
+  const recipes: Array<{ title: string; description: string; code: string; badges?: React.ReactNode }> = [
+    {
+      title: 'Temel kullanim',
+      description: 'Paket importu ve minimum API ile güvenli başlangıç reçetesi.',
+      code: basicCode,
+      badges: <SectionBadge label={item.lifecycle === 'stable' ? 'Stable recipe' : 'Beta recipe'} />,
+    },
+  ];
+
+  const controlledProps = (apiItem?.props ?? []).filter(
+    (prop) => ['value', 'checked', 'open', 'selectedId'].includes(prop.name) || prop.name.startsWith('on'),
+  );
+  if (controlledProps.length > 0) {
+    const controlledCode = `${importStatement}\n\nexport function ControlledExample() {\n  const [state, setState] = React.useState(${controlledProps.some((prop) => prop.name === 'checked' || prop.type.includes('boolean')) ? 'false' : "''"});\n\n  return (\n    <${item.name}\n      ${controlledProps.some((prop) => prop.name === 'value') ? "value={state}\n      onChange={(event) => setState(event.target.value)}" : ''}${
+        controlledProps.some((prop) => prop.name === 'checked') ? "checked={state}\n      onChange={(event) => setState(event.target.checked)}" : ''
+      }${controlledProps.some((prop) => prop.name === 'open') ? "open={state}\n      onOpenChange={setState}" : ''}\n    />\n  );\n}`;
+    recipes.push({
+      title: 'Controlled state',
+      description: 'Form veya shell state ile yönetilen kullanım kalıbı.',
+      code: controlledCode.replace(/\n\s*\n\s*\n/g, '\n\n'),
+      badges: <SectionBadge label="Controlled" />,
+    });
+  }
+
+  recipes.push({
+    title: 'Ops / quality note',
+    description: 'Wave gate, browser doctor ve registry sözleşmesiyle hizalı kullanım notu.',
+    code: `// Gate odaklari\n// - UX alignment: ${item.uxPrimaryThemeId ?? 'none'} / ${item.uxPrimarySubthemeId ?? 'none'}\n// - Quality gates: ${(item.qualityGates ?? []).join(', ') || 'none'}\n// - Registry track: ${trackMeta[resolveItemTrack(item)].label}\n${importStatement}`,
+    badges: <SectionBadge label="Governed usage" />,
+  });
+
+  return recipes;
+};
 
 const toTestIdSuffix = (value: string) =>
   value
@@ -5571,14 +5635,13 @@ const DesignLabPage: React.FC = () => {
       return <Text variant="secondary">API bilgisi için component seç.</Text>;
     }
     const apiItem = componentApiMap.get(item.name);
+    const usageRecipes = buildUsageRecipes(item, apiItem);
     return (
       <div className="grid grid-cols-1 gap-4">
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
             <DetailLabel>Import</DetailLabel>
-            <pre className="mt-3 whitespace-pre-wrap rounded-2xl border border-border-subtle bg-surface-muted p-4 text-xs text-text-primary">
-              {item.importStatement || 'Planned item — import kapalı'}
-            </pre>
+            <LibraryCodeBlock code={item.importStatement || 'Planned item — import kapalı'} className="mt-3" />
           </div>
           <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
             <DetailLabel>API Model</DetailLabel>
@@ -5618,45 +5681,15 @@ const DesignLabPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Primary Props</DetailLabel>
-            {apiItem ? (
-              <div className="mt-4 overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel">
-                <div className="grid grid-cols-[1.1fr_1.2fr_0.8fr] gap-3 border-b border-border-subtle px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-secondary">
-                  <span>Prop</span>
-                  <span>Type</span>
-                  <span>Default</span>
-                </div>
-                <div className="divide-y divide-border-subtle">
-                  {apiItem.props.map((prop) => (
-                    <div key={prop.name} className="grid grid-cols-1 gap-2 px-4 py-4 md:grid-cols-[1.1fr_1.2fr_0.8fr] md:gap-3">
-                      <div>
-                        <Text as="div" className="font-semibold text-text-primary">
-                          {prop.name}
-                        </Text>
-                        <Text variant="secondary" className="mt-1 block text-xs leading-5">
-                          {prop.description}
-                        </Text>
-                      </div>
-                      <code className="rounded-xl border border-border-subtle bg-surface-muted px-3 py-2 text-xs text-text-primary">
-                        {prop.type}
-                      </code>
-                      <div className="flex items-start gap-2">
-                        <code className="rounded-xl border border-border-subtle bg-surface-muted px-3 py-2 text-xs text-text-primary">
-                          {prop.default}
-                        </code>
-                        {prop.required ? <Badge tone="warning">Required</Badge> : null}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <Text variant="secondary" className="mt-3 block">
-                Props tablosu henuz tanimlanmadi.
-              </Text>
-            )}
-          </div>
+          <LibraryPropsTable
+            rows={(apiItem?.props ?? []).map((prop) => ({
+              name: prop.name,
+              type: prop.type,
+              defaultValue: prop.default,
+              required: prop.required,
+              description: prop.description,
+            }))}
+          />
 
           <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
             <DetailLabel>Registry Alanları</DetailLabel>
@@ -5680,6 +5713,8 @@ const DesignLabPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        <LibraryUsageRecipesPanel recipes={usageRecipes} />
       </div>
     );
   };

@@ -52,6 +52,27 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({ title,
   </div>
 );
 
+export type LibraryCodeBlockProps = {
+  code: string;
+  languageLabel?: string;
+  className?: string;
+};
+
+export const LibraryCodeBlock: React.FC<LibraryCodeBlockProps> = ({
+  code,
+  languageLabel = 'tsx',
+  className,
+}) => (
+  <div className={clsx('overflow-hidden rounded-2xl border border-border-subtle bg-surface-muted', className)}>
+    <div className="border-b border-border-subtle px-3 py-2">
+      <LibraryDetailLabel className="text-[10px]">{languageLabel}</LibraryDetailLabel>
+    </div>
+    <pre className="overflow-x-auto whitespace-pre-wrap px-4 py-4 text-xs leading-6 text-text-primary">
+      <code>{code}</code>
+    </pre>
+  </div>
+);
+
 export type LibraryDocsSectionProps = {
   id?: string;
   eyebrow?: string;
@@ -125,6 +146,115 @@ export const LibraryShowcaseCard: React.FC<LibraryShowcaseCardProps> = ({
     </div>
     <div className="mt-5">{children}</div>
   </article>
+);
+
+export type LibraryPropsTableRow = {
+  name: string;
+  type: string;
+  defaultValue: string;
+  required: boolean;
+  description: string;
+};
+
+export type LibraryPropsTableProps = {
+  title?: string;
+  rows: LibraryPropsTableRow[];
+  emptyText?: string;
+  className?: string;
+};
+
+export const LibraryPropsTable: React.FC<LibraryPropsTableProps> = ({
+  title = 'Primary Props',
+  rows,
+  emptyText = 'Props tablosu henuz tanimlanmadi.',
+  className,
+}) => (
+  <div className={clsx('rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm', className)}>
+    <LibraryDetailLabel>{title}</LibraryDetailLabel>
+    {rows.length ? (
+      <div className="mt-4 overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel">
+        <div className="grid grid-cols-[1.05fr_1.15fr_0.8fr] gap-3 border-b border-border-subtle px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-secondary">
+          <span>Prop</span>
+          <span>Type</span>
+          <span>Default</span>
+        </div>
+        <div className="divide-y divide-border-subtle">
+          {rows.map((prop) => (
+            <div key={prop.name} className="grid grid-cols-1 gap-2 px-4 py-4 md:grid-cols-[1.05fr_1.15fr_0.8fr] md:gap-3">
+              <div>
+                <Text as="div" className="font-semibold text-text-primary">
+                  {prop.name}
+                </Text>
+                <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                  {prop.description}
+                </Text>
+              </div>
+              <LibraryCodeBlock code={prop.type} languageLabel="type" className="self-start" />
+              <div className="flex items-start gap-2">
+                <LibraryCodeBlock code={prop.defaultValue} languageLabel="default" className="min-w-0 flex-1 self-start" />
+                {prop.required ? <LibrarySectionBadge label="Required" className="border-state-warning-border bg-state-warning-bg text-state-warning-text" /> : null}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <Text variant="secondary" className="mt-3 block">
+        {emptyText}
+      </Text>
+    )}
+  </div>
+);
+
+export type LibraryUsageRecipe = {
+  title: string;
+  description?: React.ReactNode;
+  code: string;
+  badges?: React.ReactNode;
+};
+
+export type LibraryUsageRecipesPanelProps = {
+  title?: string;
+  recipes: LibraryUsageRecipe[];
+  emptyText?: string;
+  className?: string;
+};
+
+export const LibraryUsageRecipesPanel: React.FC<LibraryUsageRecipesPanelProps> = ({
+  title = 'Usage Recipes',
+  recipes,
+  emptyText = 'Usage recipe henuz tanimlanmadi.',
+  className,
+}) => (
+  <div className={clsx('rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm', className)}>
+    <LibraryDetailLabel>{title}</LibraryDetailLabel>
+    {recipes.length ? (
+      <div className="mt-4 space-y-4">
+        {recipes.map((recipe) => (
+          <div key={recipe.title} className="rounded-3xl border border-border-subtle bg-surface-panel p-4">
+            <div className="flex flex-col gap-3 border-b border-border-subtle pb-3 md:flex-row md:items-start md:justify-between">
+              <div className="min-w-0">
+                <Text as="h3" className="text-base font-semibold text-text-primary">
+                  {recipe.title}
+                </Text>
+                {recipe.description ? (
+                  <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                    {recipe.description}
+                  </Text>
+                ) : null}
+              </div>
+              {recipe.badges ? <div className="flex flex-wrap gap-2">{recipe.badges}</div> : null}
+            </div>
+            <LibraryCodeBlock code={recipe.code} className="mt-4" />
+          </div>
+        ))}
+      </div>
+    ) : (
+      <Text variant="secondary" className="mt-3 block">
+        {emptyText}
+      </Text>
+    )}
+  </div>
 );
 
 export type LibraryMetricCardProps = {

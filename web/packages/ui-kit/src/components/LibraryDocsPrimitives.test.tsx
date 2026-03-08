@@ -2,15 +2,18 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
+  LibraryCodeBlock,
   LibraryDocsSection,
   LibraryDetailTabs,
   LibraryMetadataPanel,
   LibraryMetricCard,
   LibraryOutlinePanel,
   LibraryPreviewPanel,
+  LibraryPropsTable,
   LibrarySectionBadge,
   LibraryShowcaseCard,
   LibraryStatsPanel,
+  LibraryUsageRecipesPanel,
 } from './LibraryDocsPrimitives';
 
 describe('LibraryDocsPrimitives', () => {
@@ -107,5 +110,39 @@ describe('LibraryDocsPrimitives', () => {
     expect(screen.getByText('76')).toBeInTheDocument();
     expect(screen.getByText('Stable')).toBeInTheDocument();
     expect(screen.getByText('mfe-ui-kit')).toBeInTheDocument();
+  });
+
+  test('code block, props table ve usage recipes render eder', () => {
+    render(
+      <>
+        <LibraryCodeBlock code={"import { Button } from 'mfe-ui-kit';"} />
+        <LibraryPropsTable
+          rows={[
+            {
+              name: 'variant',
+              type: "'primary' | 'secondary'",
+              defaultValue: 'primary',
+              required: false,
+              description: 'Temel aksiyon tonunu belirler.',
+            },
+          ]}
+        />
+        <LibraryUsageRecipesPanel
+          recipes={[
+            {
+              title: 'Temel kullanim',
+              description: 'Sayfa ici aksiyonlarda kullanilir.',
+              code: "<Button>Kaydet</Button>",
+            },
+          ]}
+        />
+      </>,
+    );
+
+    expect(screen.getByText("import { Button } from 'mfe-ui-kit';")).toBeInTheDocument();
+    expect(screen.getByText('variant')).toBeInTheDocument();
+    expect(screen.getByText('Temel aksiyon tonunu belirler.')).toBeInTheDocument();
+    expect(screen.getByText('Temel kullanim')).toBeInTheDocument();
+    expect(screen.getByText('<Button>Kaydet</Button>')).toBeInTheDocument();
   });
 });
