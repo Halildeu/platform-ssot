@@ -5,7 +5,7 @@ import argparse
 import json
 import re
 from pathlib import Path
-from typing import Optional, Set, TypedDict
+from typing import Any, Optional, Set, TypedDict
 
 
 def resolve_module_path(from_path: Path, module_path: str) -> Optional[Path]:
@@ -255,6 +255,136 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def split_csv_values(raw: str) -> list[str]:
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+def parse_release_note_entries(text: str) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    current: dict[str, Any] | None = None
+    in_entries = False
+    in_evidence = False
+
+    for raw_line in text.splitlines():
+        line = raw_line.rstrip()
+        stripped = line.strip()
+        if stripped == "## Entries":
+            in_entries = True
+            current = None
+            in_evidence = False
+            continue
+        if not in_entries:
+            continue
+        if stripped.startswith("- version:"):
+            if current:
+                entries.append(current)
+            current = {
+                "version": stripped.split(":", 1)[1].strip(),
+                "date": "",
+                "changed_components": "",
+                "lifecycle_changes": "",
+                "breaking_changes": "",
+                "migration_notes": "",
+                "evidence_refs": [],
+            }
+            in_evidence = False
+            continue
+        if current is None or not stripped:
+            continue
+        if stripped.startswith("date:"):
+            current["date"] = stripped.split(":", 1)[1].strip()
+        elif stripped.startswith("changed_components:"):
+            current["changed_components"] = stripped.split(":", 1)[1].strip()
+        elif stripped.startswith("lifecycle_changes:"):
+            current["lifecycle_changes"] = stripped.split(":", 1)[1].strip()
+        elif stripped.startswith("breaking_changes:"):
+            current["breaking_changes"] = stripped.split(":", 1)[1].strip()
+        elif stripped.startswith("migration_notes:"):
+            current["migration_notes"] = stripped.split(":", 1)[1].strip()
+        elif stripped.startswith("evidence_refs:"):
+            in_evidence = True
+        elif in_evidence and stripped.startswith("- "):
+            current["evidence_refs"].append(stripped[2:].strip())
+
+    if current:
+        entries.append(current)
+    return entries
+
+
+def build_release_metadata(
+    web_root: Path,
+    *,
+    registry_entries: list[ComponentRegistryItem],
+    api_catalog_item_count: int,
+) -> dict[str, Any]:
+    repo_root = web_root.parent
+    package_json_path = web_root / "packages" / "ui-kit" / "package.json"
+    contract_path = repo_root / "docs" / "02-architecture" / "context" / "ui-library-package-release.contract.v1.json"
+    release_notes_path = repo_root / "docs" / "04-operations" / "RELEASE-NOTES" / "RELEASE-NOTES-ui-library.md"
+
+    package_json = load_json(package_json_path)
+    contract = load_json(contract_path)
+    release_entries = parse_release_note_entries(release_notes_path.read_text(encoding="utf-8"))
+    latest_entry = release_entries[0] if release_entries else None
+
+    targets: list[dict[str, Any]] = []
+    for raw_target in contract.get("distribution_targets", []):
+        artifact_paths = raw_target.get("artifact_paths", [])
+        present_count = 0
+        normalized_paths: list[str] = []
+        for rel_path in artifact_paths:
+            rel_path_str = str(rel_path)
+            normalized_paths.append(rel_path_str)
+            if (repo_root / rel_path_str).is_file():
+                present_count += 1
+        targets.append(
+            {
+                "targetId": str(raw_target.get("target_id") or ""),
+                "channel": str(raw_target.get("channel") or ""),
+                "buildCommand": str(raw_target.get("build_command") or ""),
+                "artifactCount": len(normalized_paths),
+                "artifactPresentCount": present_count,
+                "artifacts": normalized_paths,
+            }
+        )
+
+    stable_count = sum(1 for entry in registry_entries if str(entry.get("lifecycle") or "") == "stable")
+    beta_count = sum(1 for entry in registry_entries if str(entry.get("lifecycle") or "") == "beta")
+
+    latest_release = {
+        "version": str(latest_entry.get("version") or "") if latest_entry else "",
+        "date": str(latest_entry.get("date") or "") if latest_entry else "",
+        "changedComponents": split_csv_values(str(latest_entry.get("changed_components") or "")) if latest_entry else [],
+        "lifecycleChanges": str(latest_entry.get("lifecycle_changes") or "") if latest_entry else "",
+        "breakingChanges": str(latest_entry.get("breaking_changes") or "") if latest_entry else "",
+        "migrationNotes": str(latest_entry.get("migration_notes") or "") if latest_entry else "",
+        "evidenceRefs": list(latest_entry.get("evidence_refs") or []) if latest_entry else [],
+    }
+
+    return {
+        "packageName": str(package_json.get("name") or ""),
+        "packageVersion": str(package_json.get("version") or ""),
+        "packageJsonPath": package_json_path.relative_to(repo_root).as_posix(),
+        "contractId": str(contract.get("contract_id") or ""),
+        "contractPath": contract_path.relative_to(repo_root).as_posix(),
+        "releaseNotesPath": release_notes_path.relative_to(repo_root).as_posix(),
+        "versionScheme": str(contract.get("versioning_strategy", {}).get("scheme") or ""),
+        "requiredScripts": [str(value) for value in contract.get("required_scripts", []) if str(value).strip()],
+        "stableReleaseRequires": [
+            str(value)
+            for value in contract.get("changelog_policy", {}).get("stable_release_requires", [])
+            if str(value).strip()
+        ],
+        "distributionTargets": targets,
+        "latestRelease": latest_release,
+        "registrySummary": {
+            "stable": stable_count,
+            "beta": beta_count,
+            "apiCatalogItems": api_catalog_item_count,
+        },
+    }
+
+
 def build_groups_lookup(groups: DesignLabGroups) -> set[tuple[str, str]]:
     valid_pairs: set[tuple[str, str]] = set()
     for group in groups["groups"]:
@@ -357,6 +487,9 @@ def build_design_lab_index(web_root: Path) -> dict:
     registry_entries = registry_obj.get("items") if isinstance(registry_obj.get("items"), list) else []
     if not registry_entries:
         raise SystemExit("[designlab:index] component registry is empty")
+    api_catalog_path = web_root / "packages" / "ui-kit" / "src" / "catalog" / "component-api-catalog.v1.json"
+    api_catalog_obj = load_json(api_catalog_path)
+    api_catalog_items = api_catalog_obj.get("items") if isinstance(api_catalog_obj.get("items"), list) else []
 
     registry_by_name: dict[str, ComponentRegistryItem] = {}
     for idx, raw_entry in enumerate(registry_entries):
@@ -448,6 +581,13 @@ def build_design_lab_index(web_root: Path) -> dict:
 
     exported_count = sum(1 for item in items if item.get("availability") == "exported")
     planned_count = sum(1 for item in items if item.get("availability") == "planned")
+    summary = {
+        "total": len(items),
+        "exported": exported_count,
+        "planned": planned_count,
+        "liveDemo": sum(1 for item in items if item.get("demoMode") == "live"),
+        "inspector": sum(1 for item in items if item.get("demoMode") == "inspector"),
+    }
     return {
         "version": 1,
         "source": {
@@ -457,13 +597,12 @@ def build_design_lab_index(web_root: Path) -> dict:
             "groups": "apps/mfe-shell/src/pages/admin/design-lab.groups.json",
             "overrides": "apps/mfe-shell/src/pages/admin/design-lab.overrides.json",
         },
-        "summary": {
-            "total": len(items),
-            "exported": exported_count,
-            "planned": planned_count,
-            "liveDemo": sum(1 for item in items if item.get("demoMode") == "live"),
-            "inspector": sum(1 for item in items if item.get("demoMode") == "inspector"),
-        },
+        "summary": summary,
+        "release": build_release_metadata(
+            web_root,
+            registry_entries=registry_entries,
+            api_catalog_item_count=len(api_catalog_items),
+        ),
         "items": items,
     }
 

@@ -140,6 +140,39 @@ type DesignLabIndex = {
     liveDemo: number;
     inspector: number;
   };
+  release?: {
+    packageName: string;
+    packageVersion: string;
+    packageJsonPath: string;
+    contractId: string;
+    contractPath: string;
+    releaseNotesPath: string;
+    versionScheme: string;
+    requiredScripts: string[];
+    stableReleaseRequires: string[];
+    distributionTargets: Array<{
+      targetId: string;
+      channel: string;
+      buildCommand: string;
+      artifactCount: number;
+      artifactPresentCount: number;
+      artifacts: string[];
+    }>;
+    latestRelease: {
+      version: string;
+      date: string;
+      changedComponents: string[];
+      lifecycleChanges: string;
+      breakingChanges: string;
+      migrationNotes: string;
+      evidenceRefs: string[];
+    };
+    registrySummary: {
+      stable: number;
+      beta: number;
+      apiCatalogItems: number;
+    };
+  };
   items: DesignLabIndexItem[];
 };
 
@@ -544,6 +577,15 @@ const DesignLabPage: React.FC = () => {
       liveDemo: items.filter((item) => item.demoMode === 'live').length,
     };
   }, []);
+
+  const releaseSummary = designLabIndex.release ?? null;
+  const readyDistributionTargetCount = useMemo(
+    () =>
+      releaseSummary?.distributionTargets.filter(
+        (target) => target.artifactCount === 0 || target.artifactPresentCount === target.artifactCount,
+      ).length ?? 0,
+    [releaseSummary],
+  );
 
   const trackSummary = useMemo(
     () => ({
@@ -5372,66 +5414,154 @@ const DesignLabPage: React.FC = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Kısa Özet</DetailLabel>
-          <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
-            {item.name}
-          </Text>
-          <Text variant="secondary" className="mt-2 block leading-7">
-            {item.description}
-          </Text>
-          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-            {heroStats.map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <DetailLabel>{stat.label}</DetailLabel>
-                <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
-                  {stat.value}
+      <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Kısa Özet</DetailLabel>
+            <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
+              {item.name}
+            </Text>
+            <Text variant="secondary" className="mt-2 block leading-7">
+              {item.description}
+            </Text>
+            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+              {heroStats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                  <DetailLabel>{stat.label}</DetailLabel>
+                  <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
+                    {stat.value}
+                  </Text>
+                  <Text variant="secondary" className="mt-1 block text-xs">
+                    {stat.note}
+                  </Text>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Hızlı Durum</DetailLabel>
+            <div className="mt-4 space-y-3">
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Yayın Durumu
                 </Text>
-                <Text variant="secondary" className="mt-1 block text-xs">
-                  {stat.note}
-                </Text>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Badge tone={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
+                  <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
+                    {statusLabel[item.lifecycle]}
+                  </Badge>
+                  <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
+                    {demoModeLabel[item.demoMode]}
+                  </Badge>
+                </div>
               </div>
-            ))}
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Wave / Contract
+                </Text>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {item.roadmapWaveId ? <SectionBadge label={item.roadmapWaveId} /> : <Text variant="secondary">Wave yok</Text>}
+                  {item.acceptanceContractId ? <SectionBadge label={item.acceptanceContractId} /> : null}
+                </div>
+              </div>
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Etiketler
+                </Text>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {item.tags?.length ? item.tags.map((tag) => <SectionBadge key={tag} label={tag} />) : <Text variant="secondary">Etiket yok</Text>}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Hızlı Durum</DetailLabel>
-          <div className="mt-4 space-y-3">
-            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                Yayın Durumu
-              </Text>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <Badge tone={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
-                <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
-                  {statusLabel[item.lifecycle]}
-                </Badge>
-                <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
-                  {demoModeLabel[item.demoMode]}
-                </Badge>
+        {releaseSummary ? (
+          <LibraryShowcaseCard
+            eyebrow="Release"
+            title={`${releaseSummary.packageName}@${releaseSummary.packageVersion}`}
+            description="Kütüphanenin sürüm, changelog ve dağıtım kanıtı aynı docs sayfasından görünür. Bu blok yayın mantığını component detayıyla aynı bağlamda tutar."
+            badges={[
+              <SectionBadge key="scheme" label={releaseSummary.versionScheme.toUpperCase()} />,
+              <SectionBadge key="release-version" label={`Release ${releaseSummary.latestRelease.version || releaseSummary.packageVersion}`} />,
+              <SectionBadge key="release-date" label={releaseSummary.latestRelease.date || 'Tarih yok'} />,
+            ]}
+          >
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Lifecycle Changes</DetailLabel>
+                  <Text variant="secondary" className="mt-2 block text-sm leading-7">
+                    {releaseSummary.latestRelease.lifecycleChanges || 'Henüz lifecycle notu yok.'}
+                  </Text>
+                </div>
+                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Migration Notes</DetailLabel>
+                  <Text variant="secondary" className="mt-2 block text-sm leading-7">
+                    {releaseSummary.latestRelease.migrationNotes || 'Migration notu yok.'}
+                  </Text>
+                </div>
+                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Changed Components</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {releaseSummary.latestRelease.changedComponents.length ? (
+                      releaseSummary.latestRelease.changedComponents.map((component) => (
+                        <SectionBadge key={component} label={component} />
+                      ))
+                    ) : (
+                      <Text variant="secondary">Bileşen kaydı yok</Text>
+                    )}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Breaking Changes</DetailLabel>
+                  <Text
+                    variant="secondary"
+                    className={`mt-2 block text-sm leading-7 ${releaseSummary.latestRelease.breakingChanges === 'none' ? 'text-state-success-text' : ''}`}
+                  >
+                    {releaseSummary.latestRelease.breakingChanges || 'none'}
+                  </Text>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Distribution Targets</DetailLabel>
+                  <div className="mt-3 space-y-3">
+                    {releaseSummary.distributionTargets.map((target) => {
+                      const fullyReady = target.artifactCount === 0 || target.artifactPresentCount === target.artifactCount;
+                      return (
+                        <div key={target.targetId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <Text as="div" className="font-semibold text-text-primary">
+                              {target.targetId}
+                            </Text>
+                            <Badge tone={fullyReady ? 'success' : 'warning'}>
+                              {target.artifactPresentCount}/{target.artifactCount || 0}
+                            </Badge>
+                          </div>
+                          <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                            {target.channel}
+                          </Text>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Stable Release Requires</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {releaseSummary.stableReleaseRequires.map((entry) => (
+                      <SectionBadge key={entry} label={entry} />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                Wave / Contract
-              </Text>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {item.roadmapWaveId ? <SectionBadge label={item.roadmapWaveId} /> : <Text variant="secondary">Wave yok</Text>}
-                {item.acceptanceContractId ? <SectionBadge label={item.acceptanceContractId} /> : null}
-              </div>
-            </div>
-            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                Etiketler
-              </Text>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {item.tags?.length ? item.tags.map((tag) => <SectionBadge key={tag} label={tag} />) : <Text variant="secondary">Etiket yok</Text>}
-              </div>
-            </div>
-          </div>
-        </div>
+          </LibraryShowcaseCard>
+        ) : null}
       </div>
     );
   };
@@ -5762,6 +5892,8 @@ const DesignLabPage: React.FC = () => {
                     <div className="mb-3 flex flex-wrap items-center gap-2">
                       <SectionBadge label={trackMeta[activeTrack].label} />
                       {selectedGroup ? <SectionBadge label={selectedGroup.title} /> : null}
+                      {releaseSummary?.packageVersion ? <SectionBadge label={`${releaseSummary.packageName}@${releaseSummary.packageVersion}`} /> : null}
+                      {releaseSummary?.latestRelease.date ? <SectionBadge label={`Release · ${releaseSummary.latestRelease.date}`} /> : null}
                       {selectedItem?.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
                       {selectedItem ? (
                         <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>
@@ -5831,6 +5963,30 @@ const DesignLabPage: React.FC = () => {
                   { label: 'Planned', value: summary.planned },
                 ]}
               />
+
+              {releaseSummary ? (
+                <LibraryMetadataPanel
+                  title="Release"
+                  items={[
+                    {
+                      label: 'Package',
+                      value: <Text as="div" className="font-semibold text-text-primary">{`${releaseSummary.packageName}@${releaseSummary.packageVersion}`}</Text>,
+                    },
+                    {
+                      label: 'Latest Notes',
+                      value: <Text as="div" className="font-semibold text-text-primary">{releaseSummary.latestRelease.date || 'Tarih yok'}</Text>,
+                    },
+                    {
+                      label: 'Targets Ready',
+                      value: <Text as="div" className="font-semibold text-text-primary">{`${readyDistributionTargetCount}/${releaseSummary.distributionTargets.length}`}</Text>,
+                    },
+                    {
+                      label: 'Evidence',
+                      value: <Text as="div" className="font-semibold text-text-primary">{String(releaseSummary.latestRelease.evidenceRefs.length)}</Text>,
+                    },
+                  ]}
+                />
+              ) : null}
 
               <LibraryMetadataPanel
                 items={[

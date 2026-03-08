@@ -14,6 +14,113 @@
     "liveDemo": 56,
     "inspector": 29
   },
+  "release": {
+    "packageName": "mfe-ui-kit",
+    "packageVersion": "1.1.0",
+    "packageJsonPath": "web/packages/ui-kit/package.json",
+    "contractId": "ui-library-package-release-contract-v1",
+    "contractPath": "docs/02-architecture/context/ui-library-package-release.contract.v1.json",
+    "releaseNotesPath": "docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md",
+    "versionScheme": "semver",
+    "requiredScripts": [
+      "build:ui-kit",
+      "build-storybook",
+      "chromatic",
+      "publish:bundle",
+      "release:ui-library:manifest",
+      "release:ui-library",
+      "security:build-bundle",
+      "doctor:frontend",
+      "gate:ui-library-wave",
+      "gate:ui-library-release"
+    ],
+    "stableReleaseRequires": [
+      "doctor frontend PASS",
+      "release gate PASS",
+      "release notes entry",
+      "ui-library release manifest",
+      "release runbook linki"
+    ],
+    "distributionTargets": [
+      {
+        "targetId": "module_federation_remote",
+        "channel": "internal-web-runtime",
+        "buildCommand": "npm -C web run build:ui-kit",
+        "artifactCount": 1,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/packages/ui-kit/dist/remoteEntry.js"
+        ]
+      },
+      {
+        "targetId": "publish_bundle",
+        "channel": "bundle-drop",
+        "buildCommand": "npm -C web run publish:bundle",
+        "artifactCount": 1,
+        "artifactPresentCount": 1,
+        "artifacts": [
+          "web/dist/ui-kit/remoteEntry.js"
+        ]
+      },
+      {
+        "targetId": "storybook_static",
+        "channel": "docs-static",
+        "buildCommand": "npm -C web run build-storybook",
+        "artifactCount": 1,
+        "artifactPresentCount": 1,
+        "artifacts": [
+          "web/storybook-static/index.html"
+        ]
+      },
+      {
+        "targetId": "chromatic",
+        "channel": "hosted-docs-review",
+        "buildCommand": "npm -C web run chromatic",
+        "artifactCount": 0,
+        "artifactPresentCount": 0,
+        "artifacts": []
+      },
+      {
+        "targetId": "release_manifest",
+        "channel": "release-evidence",
+        "buildCommand": "npm -C web run release:ui-library:manifest",
+        "artifactCount": 2,
+        "artifactPresentCount": 1,
+        "artifacts": [
+          "web/dist/ui-kit/ui-library-release-manifest.v1.json",
+          "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+        ]
+      }
+    ],
+    "latestRelease": {
+      "version": "1.1.0",
+      "date": "2026-03-08",
+      "changedComponents": [
+        "overlay_extensions",
+        "release_pipeline_hardening",
+        "package_release_manifest",
+        "publish_workflow"
+      ],
+      "lifecycleChanges": "exported=85, planned=0; ui-kit release/publish kontrati fail-closed hale getirildi",
+      "breakingChanges": "none",
+      "migrationNotes": "module federation kullanan tuketiciler './library' expose yuzeyini referans alabilir; mevcut package importlari degismedi",
+      "evidenceRefs": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+        "web/test-results/diagnostics/frontend-doctor/**/frontend-doctor.summary.v1.json",
+        "web/test-results/diagnostics/ui-library-wave-gate/**/ui-library-wave-gate.summary.v1.json",
+        "web/test-results/diagnostics/ui-library-release-gate/**/ui-library-release-gate.summary.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release.summary.v1.json",
+        "docs/04-operations/RUNBOOKS/RB-ui-library-package-release.md",
+        "docs/03-delivery/TEST-PLANS/TP-0302-release-deploy-e2e-v0-1.md"
+      ]
+    },
+    "registrySummary": {
+      "stable": 28,
+      "beta": 57,
+      "apiCatalogItems": 51
+    }
+  },
   "items": [
     {
       "name": "AIActionAuditTimeline",
