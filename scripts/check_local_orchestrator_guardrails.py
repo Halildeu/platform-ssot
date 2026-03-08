@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 
-POLICY_PATH = Path("docs/04-operations/LOCAL-ORCHESTRATOR-POLICY.v1.json")
+POLICY_PATH = Path("docs-ssot/04-operations/LOCAL-ORCHESTRATOR-POLICY.v1.json")
 ORCHESTRATOR_PATH = Path("scripts/ops/local_merge_deploy_orchestrator.sh")
 PR_MERGE_WORKFLOW_PATH = Path(".github/workflows/pr-merge.yml")
 

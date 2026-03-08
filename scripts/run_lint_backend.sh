@@ -28,7 +28,9 @@ fi
 
 cd "$BACKEND_DIR"
 
-echo "[run_lint_backend] ./mvnw -q -DskipTests compile (cwd=$BACKEND_DIR)"
-./mvnw -q -DskipTests compile
+echo "[run_lint_backend] backend build guard wrapper -> compile"
+BACKEND_BUILD_LABEL="${BACKEND_BUILD_LABEL:-compile}" \
+BACKEND_BUILD_REPORT="${BACKEND_BUILD_REPORT:-$ROOT_DIR/.cache/reports/backend_build_guard.v1.json}" \
+  bash "$BACKEND_DIR/scripts/health/run-backend-build-guard.sh" -- -q -DskipTests compile
 
 echo "[run_lint_backend] Backend compile / basic check başarıyla tamamlandı ✅"
