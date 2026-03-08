@@ -35,16 +35,18 @@ fi
 if [[ -n "${NVD_API_KEY_VALUE}" ]]; then
   cmd+=("-DnvdApiKey=${NVD_API_KEY_VALUE}")
 else
-  echo "[security][dependency-check] NVD_API_KEY yok; lokal cache-first modda auto update kapatiliyor."
   if [[ -d "${GLOBAL_DC_CACHE_DIR}" && ! -d "${LOCAL_DC_CACHE_DIR}" ]]; then
     mkdir -p "$(dirname "${LOCAL_DC_CACHE_DIR}")"
     cp -R "${GLOBAL_DC_CACHE_DIR}" "${LOCAL_DC_CACHE_DIR}"
   fi
-  rm -f "${LOCAL_DC_CACHE_DIR}/odc.update.lock"
-  cmd+=("-DautoUpdate=false")
-  cmd+=("-DossindexAnalyzerEnabled=false")
   if [[ -d "${LOCAL_DC_CACHE_DIR}" ]]; then
+    echo "[security][dependency-check] NVD_API_KEY yok; mevcut cache ile auto update kapatiliyor."
+    rm -f "${LOCAL_DC_CACHE_DIR}/odc.update.lock"
+    cmd+=("-DautoUpdate=false")
+    cmd+=("-DossindexAnalyzerEnabled=false")
     cmd+=("-DdataDirectory=${LOCAL_DC_CACHE_DIR}")
+  else
+    echo "[security][dependency-check] NVD_API_KEY ve lokal cache yok; ilk veritabani bootstrap'i icin auto update acik birakiliyor."
   fi
 fi
 

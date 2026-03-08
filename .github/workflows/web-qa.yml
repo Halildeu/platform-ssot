@@ -50,6 +50,8 @@ jobs:
           python3 scripts/check_no_hardcoded_theme_styles.py
 
       - name: UI library wave gate
+        env:
+          PW_ALLOW_LOCALHOST: "1"
         run: npm run gate:ui-library-wave
         working-directory: web
 
