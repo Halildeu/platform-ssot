@@ -11,6 +11,9 @@ cd "${ROOT_DIR}"
 DC_VERSION="${DEPENDENCY_CHECK_VERSION:-12.2.0}"
 FAIL_CVSS="${DEPENDENCY_CHECK_FAIL_CVSS:-7.0}"
 NVD_API_KEY_VALUE="${NVD_API_KEY:-}"
+NVD_API_DELAY_MS="${DEPENDENCY_CHECK_NVD_API_DELAY_MS:-5000}"
+NVD_API_MAX_RETRY_COUNT="${DEPENDENCY_CHECK_NVD_MAX_RETRY_COUNT:-40}"
+NVD_API_RESULTS_PER_PAGE="${DEPENDENCY_CHECK_NVD_RESULTS_PER_PAGE:-2000}"
 CACHE_DIR_SUFFIX="${DC_VERSION//./_}"
 LOCAL_DC_CACHE_DIR="${REPORT_DIR}/cache-v${CACHE_DIR_SUFFIX}"
 LOCAL_DC_CACHE_SNAPSHOT_DIR="${REPORT_DIR}/cache-snapshot-v${CACHE_DIR_SUFFIX}"
@@ -42,7 +45,7 @@ has_cache_snapshot() {
 }
 
 scan_log_has_recoverable_nvd_failure() {
-  rg -q \
+  grep -Eq \
     "NVD Returned Status Code: 429|connectionPool is null|MVStoreException|Error updating the NVD Data|JdbcSQLNonTransientException: IO Exception" \
     "${SCAN_LOG_PATH}"
 }
@@ -75,7 +78,11 @@ build_cmd() {
   fi
 
   if [[ -n "${NVD_API_KEY_VALUE}" ]]; then
-    cmd+=("-DnvdApiKey=${NVD_API_KEY_VALUE}")
+    echo "[security][dependency-check] NVD_API_KEY bulundu; throttle'li update aciliyor (delay=${NVD_API_DELAY_MS}ms, retries=${NVD_API_MAX_RETRY_COUNT}, pageSize=${NVD_API_RESULTS_PER_PAGE})."
+    cmd+=("-DnvdApiKeyEnvironmentVariable=NVD_API_KEY")
+    cmd+=("-DnvdApiDelay=${NVD_API_DELAY_MS}")
+    cmd+=("-DnvdMaxRetryCount=${NVD_API_MAX_RETRY_COUNT}")
+    cmd+=("-DnvdApiResultsPerPage=${NVD_API_RESULTS_PER_PAGE}")
     return
   fi
 
