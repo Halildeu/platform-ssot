@@ -6,7 +6,7 @@ standartlaştırır. `PROJECT-FLOW` tablosu bu dokümanın konusu değildir.
 ## 1. SSOT Referansları
 
 - Üretim kontratı: `docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md`
-- Template map: `docs/00-handbook/DOC-TEMPLATE-MAP-SSOT.json`
+- Template map: `docs-ssot/00-handbook/DOC-TEMPLATE-MAP-SSOT.json`
 - Şablonlar: `docs/99-templates/*.template.md`
 
 ## 2. Üretim Kontratı (Girdi → Çıktı)

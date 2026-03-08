@@ -372,7 +372,7 @@
       "required_confirm": null,
       "inputs": [
         "ref=main",
-        "policy_file=docs/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json"
+        "policy_file=docs-ssot/03-delivery/SPECS/doc-repair-autopr-policy.v0.6.json"
       ],
       "outputs": [
         "artifact: doc-repair-autopr (artifacts/doc-repair/**)",
@@ -505,7 +505,7 @@
       "required_confirm": null,
       "inputs": [
         "ref (push: fix/**|wip/**|docs/**|ops/**) or workflow_dispatch",
-        "rules_path=docs/04-operations/PR-BOT-RULES.json"
+        "rules_path=docs-ssot/04-operations/PR-BOT-RULES.json"
       ],
       "outputs": [
         "artifacts/pr-bot.log (workflow artifact/log)",

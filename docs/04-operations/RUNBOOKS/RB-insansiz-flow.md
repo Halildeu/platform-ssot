@@ -35,7 +35,7 @@ Owner: @team/platform
   - ID rezervasyonu: `docs/03-delivery/ID-REGISTRY.tsv`
     - Kural: Yeni STORY başlamadan önce ilgili `STORY/AC/TP` NUM (XXXX) bu registry’de rezerve edilir.
   - Delivery zinciri: `docs/03-delivery/STORIES/`, `docs/03-delivery/ACCEPTANCE/`, `docs/03-delivery/TEST-PLANS/`
-  - PR bot kuralları: `docs/04-operations/PR-BOT-RULES.json`
+  - PR bot kuralları: `docs-ssot/04-operations/PR-BOT-RULES.json`
   - Runbook’lar: bu doküman + `RB-pr-bot` + `RB-log-digest`
 - Kapsam dışı:
   - Fork repo’larda otomasyon (güvenlik nedeniyle çalışmaz).
@@ -98,7 +98,7 @@ Owner: @team/platform
     - `.github/workflows/deploy-backend.yml`
     - `.github/workflows/post-deploy-validate.yml`
     - `.github/workflows/rollback.yml`
-  - Merge’i kapat (SSOT): `docs/04-operations/PR-BOT-RULES.json` içinde ilgili `match` için `merge_policy=none`.
+  - Merge’i kapat (SSOT): `docs-ssot/04-operations/PR-BOT-RULES.json` içinde ilgili `match` için `merge_policy=none`.
   - Secrets kill switch (önerilen):
     - `DEPLOY_ENABLED` (true/false)
     - `ROLLBACK_ENABLED` (true/false)
@@ -214,7 +214,7 @@ Edge-case tablosu (v0.1):
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- SSOT: docs/04-operations/PR-BOT-RULES.json
+- SSOT: docs-ssot/04-operations/PR-BOT-RULES.json
 - Runbook: docs/04-operations/RUNBOOKS/RB-pr-bot.md
 - Runbook: docs/04-operations/RUNBOOKS/RB-log-digest.md
 - Workflow: .github/workflows/pr-bot.yml

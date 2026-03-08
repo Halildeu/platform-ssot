@@ -18,7 +18,7 @@ Bu runbook’un hedefi: “2 hafta sonra enable yapmayı unutmayalım” sorunun
 2. KAPSAM
 -------------------------------------------------------------------------------
 
-- Policy SSOT: `docs/03-delivery/SPECS/trace-quality-policy.v1.json`
+- Policy SSOT: `docs-ssot/03-delivery/SPECS/trace-quality-policy.v1.json`
 - Checker: `scripts/check_trace_quality.py` (policy-aware)
 - Policy schema checker: `scripts/check_trace_quality_policy.py`
 - CI gate: `.github/workflows/doc-qa.yml` içinde çalışır.
@@ -33,7 +33,7 @@ Not:
 
 ### 3.1 Enable (Hard Gate Aç)
 
-1) Policy dosyasını aç: `docs/03-delivery/SPECS/trace-quality-policy.v1.json`
+1) Policy dosyasını aç: `docs-ssot/03-delivery/SPECS/trace-quality-policy.v1.json`
 2) `enabled: true` yap.
 3) (Opsiyonel) `min_refined_ratio` değerini güncelle.
 4) PR aç ve CI doc-qa sonucunu kontrol et.
@@ -86,7 +86,7 @@ Hard gate açma/kapatma yalnızca policy flip ile yapılır:
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- Policy: `docs/03-delivery/SPECS/trace-quality-policy.v1.json`
+- Policy: `docs-ssot/03-delivery/SPECS/trace-quality-policy.v1.json`
 - Checker: `scripts/check_trace_quality.py`
 - Policy checker: `scripts/check_trace_quality_policy.py`
 - CI: `.github/workflows/doc-qa.yml`

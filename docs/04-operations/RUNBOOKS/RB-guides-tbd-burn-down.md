@@ -90,7 +90,7 @@ Durdur (pausa/rollback):
 -------------------------------------------------------------------------------
 
 - Template: `docs/99-templates/GUIDE.template.md`
-- Mapping SSOT: `docs/00-handbook/DOC-TEMPLATE-MAP-SSOT.json`
-- Guides policy: `docs/03-delivery/SPECS/guides-policy.v1.json`
+- Mapping SSOT: `docs-ssot/00-handbook/DOC-TEMPLATE-MAP-SSOT.json`
+- Guides policy: `docs-ssot/03-delivery/SPECS/guides-policy.v1.json`
 - Checker: `scripts/check_doc_heading_contract.py`
 - Local ranking: `.autopilot-tmp/flow-mining/guides-tbd-ranking.json`

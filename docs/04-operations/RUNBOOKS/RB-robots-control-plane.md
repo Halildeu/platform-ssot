@@ -17,8 +17,8 @@ Owner: @team/platform
 -------------------------------------------------------------------------------
 
 - SSOT:
-  - Registry: `docs/04-operations/ROBOTS-REGISTRY.v0.1.json`
-  - Policy: `docs/03-delivery/SPECS/robots-policy.v1.json`
+  - Registry: `docs-ssot/04-operations/ROBOTS-REGISTRY.v0.1.json`
+  - Policy: `docs-ssot/03-delivery/SPECS/robots-policy.v1.json`
 - Checker’lar:
   - `scripts/check_robots_policy.py` (schema-lite; hard gate)
   - `scripts/check_robots_drift.py` (policy-aware; enabled=false iken non-blocking)
@@ -52,11 +52,11 @@ Owner: @team/platform
   - Given: `scripts/check_robots_policy.py` FAIL
   - When: Doc QA / local execution-log koşuldu
   - Then:
-    1) `docs/04-operations/ROBOTS-REGISTRY.v0.1.json` JSON parse/scheme hatasını düzelt.
+    1) `docs-ssot/04-operations/ROBOTS-REGISTRY.v0.1.json` JSON parse/scheme hatasını düzelt.
     2) `python3 scripts/check_robots_policy.py` PASS olana kadar tekrarla.
 
 - [ ] Arıza senaryosu 2 – Drift hard gate açıldı ve CI FAIL:
-  - Given: `docs/03-delivery/SPECS/robots-policy.v1.json` içinde `enabled=true`
+  - Given: `docs-ssot/03-delivery/SPECS/robots-policy.v1.json` içinde `enabled=true`
   - When: `scripts/check_robots_drift.py` ihlal buldu
   - Then:
     1) `.autopilot-tmp/robots/robots-drift-report.md` içinde UNREGISTERED_ROBOT listesini aç.
@@ -75,8 +75,8 @@ Owner: @team/platform
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- SSOT: `docs/04-operations/ROBOTS-REGISTRY.v0.1.json`
-- Policy: `docs/03-delivery/SPECS/robots-policy.v1.json`
+- SSOT: `docs-ssot/04-operations/ROBOTS-REGISTRY.v0.1.json`
+- Policy: `docs-ssot/03-delivery/SPECS/robots-policy.v1.json`
 - Checker: `scripts/check_robots_policy.py`
 - Checker: `scripts/check_robots_drift.py`
 - CI: `.github/workflows/doc-qa.yml`

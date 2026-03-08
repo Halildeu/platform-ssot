@@ -139,6 +139,18 @@ servislerde önerilir.
   - application-local.yml
   - application-dev.yml
   - application-prod.yml
+- Shared database kullanılan development/compose senaryosunda:
+  - Her servis kendi Flyway history tablosunu tanımlar.
+  - Her servis için hedef schema ownership önceden tanımlanır:
+    `auth_service`, `user_service`, `permission_service`, `variant_service`,
+    `core_data_service`.
+  - Runtime cutover yapılana kadar varsayılan schema `public` kalabilir; ancak
+    config katmanında servis bazlı schema env anahtarı tanımlı olmak zorundadır.
+  - Sonradan eklenen servis için boş olmayan ortak şemada ilk boot gerekiyorsa
+    `baseline-on-migrate=true` kullanılır.
+  - Başlangıç migration'ının gerçekten çalışması gerekiyorsa baseline versiyonu
+    migration zinciriyle uyumlu ayarlanır.
+  - Schema cutover öncesinde cross-service SQL bağımlılığı kalmamalıdır.
 
 -------------------------------------------------------------------------------
 12. TEST STANDARTLARI
@@ -163,6 +175,25 @@ Yasaklar:
   - event
   - shared package interface’leri  
 üzerinden yapılır.
+
+Servisler arası HTTP istemcisi standardı:
+- Yeni veya dokunulan service-to-service HTTP kodunda `WebClient` kullanılmalıdır.
+- Yeni `RestTemplate` kullanımı eklenmez.
+- Mevcut `RestTemplate` kullanan kodlar legacy kabul edilir ve kademeli migrate edilir.
+- Discovery/load-balanced çağrılarda istemci standardı servis bazında bölünmez.
+
+Veri ownership standardı:
+- Her tablo tek bir backend servisine aittir.
+- Başka bir servisin tablosuna SQL ile yazmak veya migration içinde dokunmak
+  yasaktır.
+- Cross-service veri ihtiyacı HTTP/API veya event ile çözülür.
+- Uygulanmış versioned Flyway migration dosyaları yerinde değiştirilmez.
+- Tarihsel migration ownership ihlali varsa çözüm:
+  - yeni ownership tarafında bootstrap/fix mekanizması kurmak
+  - ardından kontrollü re-baseline veya migration rechain planı çıkarmaktır.
+- Fresh bootstrap için temiz zincir gerekiyorsa aktif `db/migration` yanında
+  ayrı `db/migration_schema_owned` hattı açılır; aktif runtime ancak açıkça
+  `*_FLYWAY_LOCATIONS` override edildiğinde bu hatta geçer.
 
 -------------------------------------------------------------------------------
 14. AGENT DAVRANIŞ REHBERİ

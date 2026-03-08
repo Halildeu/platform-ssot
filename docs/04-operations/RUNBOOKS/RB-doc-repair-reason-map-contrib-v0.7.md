@@ -17,7 +17,7 @@ Owner: Halil K.
 -------------------------------------------------------------------------------
 
 - SSOT:
-  - `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+  - `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
 - Kaynak artefact’lar:
   - `artifacts/doc-repair/unknowns.md`
   - `artifacts/doc-repair/metrics.json`
@@ -39,7 +39,7 @@ Owner: Halil K.
        - `python3 scripts/doc_repair_plan.py --summary artifacts/doc-repair/summary.md --out-dir artifacts/doc-repair`
        - `python3 scripts/doc_repair_unknowns.py --out artifacts/doc-repair/unknowns.md`
   2) Reason map’e pattern ekle:
-     - `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json` → `blockedReason_patterns[]`
+     - `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json` → `blockedReason_patterns[]`
   3) Gate:
      - `python3 scripts/check_doc_repair_reason_map.py`
 - Durdurma:
@@ -85,7 +85,7 @@ Owner: Halil K.
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- Reason map (SSOT): `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+- Reason map (SSOT): `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
 - Checker: `scripts/check_doc_repair_reason_map.py`
 - Unknowns: `scripts/doc_repair_unknowns.py`
 - Metrics: `scripts/doc_repair_metrics.py`

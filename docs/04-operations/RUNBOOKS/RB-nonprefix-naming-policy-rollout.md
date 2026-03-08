@@ -17,8 +17,8 @@ Not: Bu runbook, policy flip’i **merge sonrası main** üzerinde uygulamak iç
 2. KAPSAM
 -------------------------------------------------------------------------------
 
-- Policy: `docs/03-delivery/SPECS/nonprefix-naming-policy.v1.json`
-- SSOT: `docs/00-handbook/DOC-NONPREFIX-NAMING-SSOT.json`
+- Policy: `docs-ssot/03-delivery/SPECS/nonprefix-naming-policy.v1.json`
+- SSOT: `docs-ssot/00-handbook/DOC-NONPREFIX-NAMING-SSOT.json`
 - Checker: `scripts/check_doc_folder_file_naming.py` (policy-aware)
 - CI: `.github/workflows/doc-qa.yml` (policy enabled=true iken ihlal varsa FAIL)
 
@@ -33,7 +33,7 @@ Enable (hard gate aç):
 1) Lokal rapor üret:
    - `python3 scripts/check_doc_folder_file_naming.py`
 2) Policy flip:
-   - `docs/03-delivery/SPECS/nonprefix-naming-policy.v1.json` → `enabled: true`
+   - `docs-ssot/03-delivery/SPECS/nonprefix-naming-policy.v1.json` → `enabled: true`
 3) PR aç → doc-qa PASS olmalı.
 
 Disable (hard gate kapat / rollback):
@@ -90,8 +90,8 @@ Not:
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- SSOT: `docs/00-handbook/DOC-NONPREFIX-NAMING-SSOT.json`
-- Policy: `docs/03-delivery/SPECS/nonprefix-naming-policy.v1.json`
+- SSOT: `docs-ssot/00-handbook/DOC-NONPREFIX-NAMING-SSOT.json`
+- Policy: `docs-ssot/03-delivery/SPECS/nonprefix-naming-policy.v1.json`
 - Checker: `scripts/check_doc_folder_file_naming.py`
 - CI: `.github/workflows/doc-qa.yml`
 - Local execution log: `.autopilot-tmp/execution-log/execution-log.md`

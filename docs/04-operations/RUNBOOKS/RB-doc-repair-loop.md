@@ -18,7 +18,7 @@ Owner: Halil K.
 
 - Kapsam:
   - `scripts/docflow_next.py autopilot --dry-run` çıktısı üzerinden plan üretimi
-  - Reason normalization SSOT: `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+  - Reason normalization SSOT: `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
 - Ortamlar:
   - Local (developer machine)
   - CI (plan üretimi opsiyonel; gate değil)
@@ -54,7 +54,7 @@ Owner: Halil K.
 
 - [ ] Arıza senaryosu 1 – Reason map dosyası yok / JSON parse edilemiyor:
   - Given: `doc_repair_plan` reason map yüklerken hata veriyor.  
-    When: `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json` yok veya JSON bozuk.  
+    When: `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json` yok veya JSON bozuk.  
     Then:
     - Dosya path’ini kontrol et.
     - Gerekirse `--reason-map <PATH>` ile override et.
@@ -80,6 +80,6 @@ Owner: Halil K.
 
 - ADR: `docs/02-architecture/services/backend-docs/ADR/ADR-0002-doc-repair-loop-v0-1.md`
 - SPEC: `docs/03-delivery/SPECS/SPEC-0009-doc-repair-loop-v0-1.md`
-- Reason map: `docs/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
+- Reason map: `docs-ssot/03-delivery/SPECS/doc-repair-reason-map.v0.1.json`
 - Engine: `scripts/docflow_next.py`
 - Workflow: `.github/workflows/doc-qa.yml`
