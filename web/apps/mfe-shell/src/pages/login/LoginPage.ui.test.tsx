@@ -25,6 +25,7 @@ vi.mock('../../app/i18n', () => ({
 
 vi.mock('../../app/auth/auth-config', () => ({
   isPermitAllMode: () => authModeMock.permitAll,
+  buildAppRedirectUri: (value?: string) => `http://localhost:3000${value ?? '/'}`,
 }));
 
 import keycloak from '../../app/auth/keycloakClient';
@@ -63,6 +64,7 @@ describe('LoginPage', () => {
     fireEvent.click(button);
 
     expect(loginSpy).toHaveBeenCalledTimes(1);
+    expect(loginSpy).toHaveBeenCalledWith({ redirectUri: 'http://localhost:3000/access/roles' });
   });
 
   it('shows permitAll banner instead of corporate button', () => {

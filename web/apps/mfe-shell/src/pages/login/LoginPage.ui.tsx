@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from 'mfe-ui-kit';
 import { useShellCommonI18n } from '../../app/i18n';
 import keycloak from '../../app/auth/keycloakClient';
-import { isPermitAllMode } from '../../app/auth/auth-config';
+import { buildAppRedirectUri, isPermitAllMode } from '../../app/auth/auth-config';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const LoginPage = () => {
       navigate(redirectPath);
       return;
     }
-    const redirectUri = `${window.location.origin}${redirectPath}`;
+    const redirectUri = buildAppRedirectUri(redirectPath);
     keycloak.login({ redirectUri }).catch(() => undefined);
   };
 

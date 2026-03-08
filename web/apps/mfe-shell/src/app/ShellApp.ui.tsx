@@ -13,7 +13,7 @@ import {
   registerUnauthorizedHandler,
 } from '@mfe/shared-http';
 import keycloak from './auth/keycloakClient';
-import { authConfig, isKeycloakMode, isPermitAllMode } from './auth/auth-config';
+import { authConfig, buildAppRedirectUri, isKeycloakMode, isPermitAllMode } from './auth/auth-config';
 
 import { store } from './store/store';
 import { useAppDispatch, useAppSelector } from './store/store.hooks';
@@ -1371,7 +1371,7 @@ const Header = () => {
   const handleLogout = useCallback(() => {
     dispatch(logout());
     if (keycloakEnabled && typeof window !== 'undefined') {
-      keycloak.logout({ redirectUri: `${window.location.origin}/login`, federated: true }).catch(() => {
+      keycloak.logout({ redirectUri: buildAppRedirectUri('/login'), federated: true }).catch(() => {
         // no-op
       });
     }
@@ -1617,7 +1617,7 @@ const Header = () => {
 	              className="inline-flex items-center gap-2 rounded-full border border-action-primary-border bg-action-primary px-4 py-2 text-xs font-semibold text-action-primary-text shadow-sm hover:opacity-90"
 	              onClick={() => {
 	                setLoginOpen(false);
-	                keycloak.login({ redirectUri: window.location.href }).catch(() => {
+	                keycloak.login({ redirectUri: buildAppRedirectUri(window.location.href) }).catch(() => {
 	                  setLoginOpen(true);
 	                });
               }}

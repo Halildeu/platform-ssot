@@ -6,6 +6,7 @@ type KeycloakConfig = {
   url: string;
   realm: string;
   clientId: string;
+  appPublicOrigin: string;
   silentCheckSsoRedirectUri: string;
 };
 
@@ -53,6 +54,52 @@ const parseList = (value: string | undefined, fallback: string[]): string[] => {
     .filter((part) => part.length > 0);
 };
 
+const LOCAL_ALLOWED_APP_ORIGINS = new Set([
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+]);
+
+const normalizeOrigin = (value: string): string => value.trim().replace(/\/+$/, '');
+
+const resolveAppPublicOrigin = (): string => {
+  const fromEnv =
+    getEnvValue('VITE_FRONTEND_PUBLIC_ORIGIN') ??
+    getEnvValue('FRONTEND_PUBLIC_ORIGIN') ??
+    getEnvValue('VITE_APP_PUBLIC_ORIGIN') ??
+    getEnvValue('APP_PUBLIC_ORIGIN');
+  if (fromEnv) {
+    return normalizeOrigin(fromEnv);
+  }
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    const currentOrigin = normalizeOrigin(window.location.origin);
+    if (LOCAL_ALLOWED_APP_ORIGINS.has(currentOrigin)) {
+      return currentOrigin;
+    }
+    if (currentOrigin.startsWith('https://')) {
+      return currentOrigin;
+    }
+  }
+  return 'http://localhost:3000';
+};
+
+const normalizeRedirectPath = (value: string | undefined): string => {
+  if (!value) {
+    return '/';
+  }
+  if (value.startsWith('/')) {
+    return value;
+  }
+  try {
+    const parsed = new URL(value, resolveAppPublicOrigin());
+    return `${parsed.pathname}${parsed.search}${parsed.hash}` || '/';
+  } catch {
+    return '/';
+  }
+};
+
+export const buildAppRedirectUri = (value?: string): string =>
+  `${resolveAppPublicOrigin()}${normalizeRedirectPath(value)}`;
+
 const resolveAuthMode = (): AuthMode => {
   const raw = getEnvValue('VITE_AUTH_MODE') ?? getEnvValue('AUTH_MODE');
   if (raw && raw.toLowerCase() === 'permitall') {
@@ -66,10 +113,7 @@ const resolveSilentCheckUri = (): string => {
   if (fromEnv) {
     return fromEnv;
   }
-  if (typeof window !== 'undefined' && window.location?.origin) {
-    return `${window.location.origin}/silent-check-sso.html`;
-  }
-  return 'http://localhost:3000/silent-check-sso.html';
+  return `${resolveAppPublicOrigin()}/silent-check-sso.html`;
 };
 
 const authMode = resolveAuthMode();
@@ -87,6 +131,7 @@ const keycloakConfig: KeycloakConfig = {
     getEnvValue('VITE_KEYCLOAK_CLIENT_ID') ??
     getEnvValue('KEYCLOAK_CLIENT_ID') ??
     'frontend',
+  appPublicOrigin: resolveAppPublicOrigin(),
   silentCheckSsoRedirectUri: resolveSilentCheckUri(),
 };
 
