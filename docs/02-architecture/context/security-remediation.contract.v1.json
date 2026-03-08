@@ -1,0 +1,95 @@
+{
+  "version": "1.0",
+  "contract_id": "security-remediation-contract-v1",
+  "last_verified": "2026-03-06",
+  "purpose": "Backend security gate'inde bloklayici CVE'lerin nasil kapatildigini ve residual risklerin hangi kuralla yonetildigini kanonik olarak tanimlar.",
+  "blocking_policy": {
+    "dependency_check_fail_cvss": 7.0,
+    "goal": "HIGH ve CRITICAL bulgulari gate seviyesinde sifirlamak, residual MEDIUM bulgulari ise yalniz gerekceli ve zaman sinirli kontrat ile tasimak.",
+    "required_checks": [
+      "bash backend/scripts/ci/security/run-dependency-scan.sh",
+      "python3 scripts/check_security_remediation_contract.py",
+      "python3 scripts/check_security_all.py"
+    ]
+  },
+  "remediation_waves": [
+    {
+      "id": "wave-eureka-transitives-2026-03-06",
+      "status": "implemented",
+      "scope": [
+        "backend/api-gateway/pom.xml",
+        "backend/auth-service/pom.xml",
+        "backend/user-service/pom.xml",
+        "backend/permission-service/pom.xml",
+        "backend/variant-service/pom.xml",
+        "backend/core-data-service/pom.xml",
+        "backend/discovery-server/pom.xml"
+      ],
+      "actions": [
+        {
+          "problem": "io.github.x-stream:mxparser kritik CVE zinciri",
+          "remediation": "Eureka kullanan tum modullerde direct xstream 1.4.21 tanimlandi ve mxparser transitif olarak exclude edildi.",
+          "evidence": [
+            "backend/auth-service/pom.xml",
+            "backend/discovery-server/pom.xml"
+          ]
+        },
+        {
+          "problem": "org.apache.httpcomponents:httpclient 4.5.3 medium CVE",
+          "remediation": "Eureka kullanan tum modullerde direct httpclient 4.5.14 override edildi.",
+          "evidence": [
+            "backend/api-gateway/pom.xml",
+            "backend/auth-service/pom.xml"
+          ]
+        },
+        {
+          "problem": "com.fasterxml.woodstox:woodstox-core 6.2.1 high CVE",
+          "remediation": "Eureka client ve server kullanan tum modullerde woodstox-core 6.7.0 direct override edildi.",
+          "evidence": [
+            "backend/discovery-server/pom.xml",
+            "backend/core-data-service/pom.xml"
+          ]
+        },
+        {
+          "problem": "commons-jxpath optional transitif medium CVE",
+          "remediation": "Starter seviyesinde commons-jxpath exclude edildi ve direct commons-configuration tanimi ile konfig zinciri korundu.",
+          "evidence": [
+            "backend/auth-service/pom.xml",
+            "backend/discovery-server/pom.xml"
+          ]
+        }
+      ]
+    }
+  ],
+  "governed_residual_risks": [
+    {
+      "id": "residual-jackson-databind-cve-2023-35116",
+      "package": "pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.15.4",
+      "cve": "CVE-2023-35116",
+      "severity": "MEDIUM",
+      "status": "accepted-with-suppression",
+      "justification": "Dependency-Check NVD kaydi 2.16.0 alti surumleri kapsiyor; ayni kayitta vendor notu bunun dis saldiri modeliyle gecerli bir zafiyet olmadigini belirtiyor. Spring Boot 3.2.x baseline'i 2.15.4 kullaniyor. Bu nedenle bulgu fail-open gizlenmiyor; suppression dosyasi ve review tarihi ile yonetiliyor.",
+      "suppression_file": "backend/scripts/ci/security/dependency-check-suppressions.xml",
+      "review_on_or_before": "2026-04-15",
+      "exit_criteria": [
+        "Spring Boot baseline jackson-bom >= 2.16.0 oldugunda suppression kaldirilir.",
+        "Vendor veya NVD siniflandirmasi degisirse suppression yeniden degerlendirilir.",
+        "Runtime exploitability gosterimi cikarsa residual-risk durumu kaldirilir ve gerçek upgrade dalgasi acilir."
+      ],
+      "evidence": [
+        "backend/test-results/security/dependency-check/dependency-check-report.json",
+        "backend/scripts/ci/security/dependency-check-suppressions.xml"
+      ]
+    }
+  ],
+  "artifact_expectations": {
+    "dependency_check_report": "backend/test-results/security/dependency-check/dependency-check-report.json",
+    "sbom": "backend/test-results/security/sbom/bom.json",
+    "flag_health": "backend/test-results/security/flag-health.json"
+  },
+  "success_criteria": [
+    "Dependency-Check aggregate raporunda HIGH veya CRITICAL kalmamalidir.",
+    "Residual MEDIUM bulgular yalniz kontratta tanimli suppression/gerekce ile bulunabilir.",
+    "Security remediation kontrati checker'i mevcut rapor ile tutarli olmalidir."
+  ]
+}
