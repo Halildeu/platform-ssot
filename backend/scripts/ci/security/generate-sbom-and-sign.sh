@@ -39,9 +39,14 @@ if [[ -n "${COSIGN_PRIVATE_KEY:-}" ]]; then
   COSIGN_ARGS=(
     sign-blob
     "--key" "env://COSIGN_PRIVATE_KEY"
-    "--new-bundle-format=false"
-    "--use-signing-config=false"
   )
+  COSIGN_HELP="$(cosign sign-blob --help 2>/dev/null || true)"
+  if grep -q -- "--new-bundle-format" <<<"${COSIGN_HELP}"; then
+    COSIGN_ARGS+=("--new-bundle-format=false")
+  fi
+  if grep -q -- "--use-signing-config" <<<"${COSIGN_HELP}"; then
+    COSIGN_ARGS+=("--use-signing-config=false")
+  fi
   if [[ "${CI:-false}" == "true" || "${COSIGN_NONINTERACTIVE:-true}" == "true" ]]; then
     COSIGN_ARGS+=("--yes")
   fi
