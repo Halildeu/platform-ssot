@@ -20,6 +20,7 @@ jobs:
       COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
       COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      DEPENDENCY_CHECK_VERSION: "12.2.0"
 
     steps:
       - name: Checkout
@@ -42,6 +43,14 @@ jobs:
       - name: Install web dependencies
         run: npm ci
         working-directory: web
+
+      - name: Restore dependency-check cache
+        uses: actions/cache@v4
+        with:
+          path: backend/test-results/security/dependency-check/cache-v12_2_0
+          key: ${{ runner.os }}-dependency-check-v12_2_0
+          restore-keys: |
+            ${{ runner.os }}-dependency-check-
 
       - name: Baseline security checks
         run: python3 scripts/check_security_all.py

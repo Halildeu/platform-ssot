@@ -8,14 +8,16 @@ TARGET_REPORT_DIR="${ROOT_DIR}/target"
 mkdir -p "${REPORT_DIR}"
 cd "${ROOT_DIR}"
 
-DC_VERSION="${DEPENDENCY_CHECK_VERSION:-10.0.3}"
+DC_VERSION="${DEPENDENCY_CHECK_VERSION:-12.2.0}"
 FAIL_CVSS="${DEPENDENCY_CHECK_FAIL_CVSS:-7.0}"
 NVD_API_KEY_VALUE="${NVD_API_KEY:-}"
-GLOBAL_DC_CACHE_DIR="${HOME}/.m2/repository/org/owasp/dependency-check-data/9.0"
-LOCAL_DC_CACHE_DIR="${REPORT_DIR}/cache"
+CACHE_DIR_SUFFIX="${DC_VERSION//./_}"
+LOCAL_DC_CACHE_DIR="${REPORT_DIR}/cache-v${CACHE_DIR_SUFFIX}"
 SUPPRESSION_FILE="${ROOT_DIR}/backend/scripts/ci/security/dependency-check-suppressions.xml"
 
 echo "[security][dependency-check] Running OWASP Dependency-Check v${DC_VERSION} (fail on CVSS >= ${FAIL_CVSS})"
+
+mkdir -p "${LOCAL_DC_CACHE_DIR}"
 
 cmd=(
   mvn -B
@@ -26,6 +28,7 @@ cmd=(
   -DoutputDirectory="${REPORT_DIR}"
   -DfailOnError=true
   "-DfailBuildOnCVSS=${FAIL_CVSS}"
+  "-DdataDirectory=${LOCAL_DC_CACHE_DIR}"
 )
 
 if [[ -f "${SUPPRESSION_FILE}" ]]; then
@@ -35,18 +38,13 @@ fi
 if [[ -n "${NVD_API_KEY_VALUE}" ]]; then
   cmd+=("-DnvdApiKey=${NVD_API_KEY_VALUE}")
 else
-  if [[ -d "${GLOBAL_DC_CACHE_DIR}" && ! -d "${LOCAL_DC_CACHE_DIR}" ]]; then
-    mkdir -p "$(dirname "${LOCAL_DC_CACHE_DIR}")"
-    cp -R "${GLOBAL_DC_CACHE_DIR}" "${LOCAL_DC_CACHE_DIR}"
-  fi
-  if [[ -d "${LOCAL_DC_CACHE_DIR}" ]]; then
-    echo "[security][dependency-check] NVD_API_KEY yok; mevcut cache ile auto update kapatiliyor."
+  if find "${LOCAL_DC_CACHE_DIR}" -mindepth 1 -print -quit | grep -q .; then
+    echo "[security][dependency-check] NVD_API_KEY yok; mevcut versioned cache ile auto update kapatiliyor."
     rm -f "${LOCAL_DC_CACHE_DIR}/odc.update.lock"
     cmd+=("-DautoUpdate=false")
     cmd+=("-DossindexAnalyzerEnabled=false")
-    cmd+=("-DdataDirectory=${LOCAL_DC_CACHE_DIR}")
   else
-    echo "[security][dependency-check] NVD_API_KEY ve lokal cache yok; ilk veritabani bootstrap'i icin auto update acik birakiliyor."
+    echo "[security][dependency-check] NVD_API_KEY ve versioned cache yok; ilk veritabani bootstrap'i icin auto update acik birakiliyor."
   fi
 fi
 
