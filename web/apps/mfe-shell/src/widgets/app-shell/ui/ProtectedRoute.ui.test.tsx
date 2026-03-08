@@ -5,6 +5,11 @@ import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { cleanup, render, screen } from '@testing-library/react';
 import { ProtectedRoute } from './ProtectedRoute.ui';
 
+const routerFuture = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+} as const;
+
 const authState = {
   auth: {
     token: null as string | null,
@@ -41,7 +46,7 @@ const LocationViewer = ({ label }: { label: string }) => {
 
 const renderWithRouter = () =>
   render(
-    <MemoryRouter initialEntries={['/admin/users']}>
+    <MemoryRouter initialEntries={['/admin/users']} future={routerFuture}>
       <Routes>
         <Route
           path="/admin/users"

@@ -4,6 +4,11 @@ import '@testing-library/jest-dom/vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+const routerFuture = {
+  v7_startTransition: true,
+  v7_relativeSplatPath: true,
+} as const;
+
 const authModeMock = { permitAll: false };
 
 vi.mock('../../app/auth/keycloakClient', () => ({
@@ -37,7 +42,7 @@ describe('LoginPage', () => {
 
   it('renders corporate login button', () => {
     render(
-      <MemoryRouter initialEntries={['/login']}>
+      <MemoryRouter initialEntries={['/login']} future={routerFuture}>
         <LoginPage />
       </MemoryRouter>,
     );
@@ -49,7 +54,7 @@ describe('LoginPage', () => {
   it('calls keycloak.login on click with redirect', async () => {
     const loginSpy = vi.spyOn(keycloak, 'login');
     render(
-      <MemoryRouter initialEntries={['/login?redirect=/access/roles']}>
+      <MemoryRouter initialEntries={['/login?redirect=/access/roles']} future={routerFuture}>
         <LoginPage />
       </MemoryRouter>,
     );
@@ -63,7 +68,7 @@ describe('LoginPage', () => {
   it('shows permitAll banner instead of corporate button', () => {
     authModeMock.permitAll = true;
     render(
-      <MemoryRouter initialEntries={['/login']}>
+      <MemoryRouter initialEntries={['/login']} future={routerFuture}>
         <LoginPage />
       </MemoryRouter>,
     );

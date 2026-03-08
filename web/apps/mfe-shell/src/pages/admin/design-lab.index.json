@@ -1,41 +1,529 @@
 {
   "version": 1,
-  "generatedAt": "2025-12-18T23:49:21+03:00",
-  "generatedAtUtc": "2025-12-18T20:49:21+00:00",
   "source": {
     "package": "mfe-ui-kit",
     "index": "packages/ui-kit/src/index.ts",
+    "registry": "packages/ui-kit/src/catalog/component-registry.v1.json",
     "groups": "apps/mfe-shell/src/pages/admin/design-lab.groups.json",
     "overrides": "apps/mfe-shell/src/pages/admin/design-lab.overrides.json"
   },
+  "summary": {
+    "total": 92,
+    "exported": 92,
+    "planned": 0,
+    "liveDemo": 63,
+    "inspector": 29
+  },
+  "release": {
+    "packageName": "mfe-ui-kit",
+    "packageVersion": "1.1.0",
+    "packageJsonPath": "web/packages/ui-kit/package.json",
+    "contractId": "ui-library-package-release-contract-v1",
+    "contractPath": "docs/02-architecture/context/ui-library-package-release.contract.v1.json",
+    "releaseNotesPath": "docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md",
+    "versionScheme": "semver",
+    "requiredScripts": [
+      "build:ui-kit",
+      "build-storybook",
+      "chromatic",
+      "publish:bundle",
+      "release:ui-library:manifest",
+      "release:ui-library",
+      "security:build-bundle",
+      "doctor:frontend",
+      "gate:ui-library-wave",
+      "gate:ui-library-release"
+    ],
+    "stableReleaseRequires": [
+      "doctor frontend PASS",
+      "release gate PASS",
+      "release notes entry",
+      "ui-library release manifest",
+      "release runbook linki"
+    ],
+    "distributionTargets": [
+      {
+        "targetId": "module_federation_remote",
+        "channel": "internal-web-runtime",
+        "buildCommand": "npm -C web run build:ui-kit",
+        "artifactCount": 1,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/packages/ui-kit/dist/remoteEntry.js"
+        ]
+      },
+      {
+        "targetId": "publish_bundle",
+        "channel": "bundle-drop",
+        "buildCommand": "npm -C web run publish:bundle",
+        "artifactCount": 1,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/dist/ui-kit/remoteEntry.js"
+        ]
+      },
+      {
+        "targetId": "storybook_static",
+        "channel": "docs-static",
+        "buildCommand": "npm -C web run build-storybook",
+        "artifactCount": 1,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/storybook-static/index.html"
+        ]
+      },
+      {
+        "targetId": "chromatic",
+        "channel": "hosted-docs-review",
+        "buildCommand": "npm -C web run chromatic",
+        "artifactCount": 0,
+        "artifactPresentCount": 0,
+        "artifacts": []
+      },
+      {
+        "targetId": "release_manifest",
+        "channel": "release-evidence",
+        "buildCommand": "npm -C web run release:ui-library:manifest",
+        "artifactCount": 2,
+        "artifactPresentCount": 0,
+        "artifacts": [
+          "web/dist/ui-kit/ui-library-release-manifest.v1.json",
+          "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+        ]
+      }
+    ],
+    "latestRelease": {
+      "version": "1.1.0",
+      "date": "2026-03-08",
+      "changedComponents": [
+        "overlay_extensions",
+        "release_pipeline_hardening",
+        "package_release_manifest",
+        "publish_workflow"
+      ],
+      "lifecycleChanges": "exported=85, planned=0; ui-kit release/publish kontrati fail-closed hale getirildi",
+      "breakingChanges": "none",
+      "migrationNotes": "module federation kullanan tuketiciler './library' expose yuzeyini referans alabilir; mevcut package importlari degismedi",
+      "evidenceRefs": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+        "web/test-results/diagnostics/frontend-doctor/**/frontend-doctor.summary.v1.json",
+        "web/test-results/diagnostics/ui-library-wave-gate/**/ui-library-wave-gate.summary.v1.json",
+        "web/test-results/diagnostics/ui-library-release-gate/**/ui-library-release-gate.summary.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release.summary.v1.json",
+        "docs/04-operations/RUNBOOKS/RB-ui-library-package-release.md",
+        "docs/03-delivery/TEST-PLANS/TP-0302-release-deploy-e2e-v0-1.md"
+      ]
+    },
+    "registrySummary": {
+      "stable": 34,
+      "beta": 58,
+      "apiCatalogItems": 58
+    }
+  },
+  "themePresets": {
+    "catalogId": "ui-library-theme-preset-catalog-v1",
+    "sourceOfTruth": "web/design-tokens/generated/theme-contract.json",
+    "defaultMode": "serban-light",
+    "compareAxes": [
+      "appearance",
+      "density",
+      "intent",
+      "contrast"
+    ],
+    "presets": [
+      {
+        "presetId": "enterprise_light_default",
+        "themeMode": "serban-light",
+        "label": "Light",
+        "appearance": "light",
+        "density": "comfortable",
+        "intent": "varsayilan kurumsal is akislarinda dengeli gorunum",
+        "isHighContrast": false,
+        "isDefaultMode": true
+      },
+      {
+        "presetId": "operator_dark_focus",
+        "themeMode": "serban-dark",
+        "label": "Dark",
+        "appearance": "dark",
+        "density": "comfortable",
+        "intent": "uzun sureli operasyon ekranlarinda odak ve dusuk parazit",
+        "isHighContrast": false,
+        "isDefaultMode": false
+      },
+      {
+        "presetId": "accessibility_high_contrast",
+        "themeMode": "serban-hc",
+        "label": "High Contrast",
+        "appearance": "high-contrast",
+        "density": "comfortable",
+        "intent": "kontrast, focus ve readability oncelikli erisilebilir preset",
+        "isHighContrast": true,
+        "isDefaultMode": false
+      },
+      {
+        "presetId": "compact_workspace",
+        "themeMode": "serban-compact",
+        "label": "Compact",
+        "appearance": "light",
+        "density": "compact",
+        "intent": "yuksek bilgi yogunlugu ve operasyonel tablo/grid agir ekranlar",
+        "isHighContrast": false,
+        "isDefaultMode": false
+      }
+    ],
+    "rules": [
+      "Resmi presetler theme-contract allowedModes disina cikamaz.",
+      "Yeni preset eklenirse docs, preview, release notes ve Theme Admin ayni patch icinde guncellenir.",
+      "Preset adi docs ve runtime tarafinda ayni semantic kimlikle kullanilir."
+    ],
+    "successCriteria": [
+      "UI library docs portali resmi preset ailesini tek katalogdan okur.",
+      "Theme ve density kararlari daginik local toggle'lar yerine resmi preset isimleriyle ifade edilir."
+    ]
+  },
+  "recipes": {
+    "contractId": "ui-library-recipe-system-contract-v1",
+    "currentFamilies": [
+      {
+        "recipeId": "search_filter_listing",
+        "ownerBlocks": [
+          "PageLayout",
+          "FilterBar",
+          "AgGridServer",
+          "TableSimple",
+          "List",
+          "Empty"
+        ],
+        "intent": "liste, filtre ve sonuc yuzeylerini ayni shell altinda toplamak"
+      },
+      {
+        "recipeId": "detail_summary",
+        "ownerBlocks": [
+          "PageHeader",
+          "SummaryStrip",
+          "EntitySummaryBlock",
+          "Descriptions",
+          "JsonViewer"
+        ],
+        "intent": "detay ekranlarinda ozet + meta + yan panel kurgusunu ortaklastirmak"
+      },
+      {
+        "recipeId": "approval_review",
+        "ownerBlocks": [
+          "ApprovalCheckpoint",
+          "CitationPanel",
+          "AIActionAuditTimeline",
+          "Modal",
+          "DetailDrawer"
+        ],
+        "intent": "onay, karar ve audit akisini tutarli bir review recipe'si ile sunmak"
+      },
+      {
+        "recipeId": "empty_error_loading",
+        "ownerBlocks": [
+          "Empty",
+          "Skeleton",
+          "Spinner",
+          "Tooltip"
+        ],
+        "intent": "bos, hata ve yukleniyor durumlarini tutarli geri bildirim diliyle vermek"
+      },
+      {
+        "recipeId": "ai_guided_authoring",
+        "ownerBlocks": [
+          "PromptComposer",
+          "RecommendationCard",
+          "ConfidenceBadge",
+          "TextArea",
+          "CommandPalette"
+        ],
+        "intent": "AI destekli yazim ve karar yuzeylerini reusable recipe olarak kurmak"
+      }
+    ],
+    "plannedFamilies": [
+      "dashboard_kpi_analytics",
+      "table_to_chart_review",
+      "multi_step_submission"
+    ],
+    "rules": [
+      "Yeni page veya panel ilk once uygun recipe var mi diye kontrol edilir.",
+      "Ayni davranisi tekrar eden route-level layout recipe owner API'sine tasinir.",
+      "Recipe aileleri component, block, UX alignment ve release notu bagiyla birlikte yonetilir."
+    ],
+    "successCriteria": [
+      "Sadece component degil, ekran kaliplari da standart ve tekrar kullanilir hale gelir.",
+      "Sayfalar minimum UI kodu ile veri/config doldurarak recipe tuketebilir."
+    ]
+  },
   "items": [
+    {
+      "name": "AIActionAuditTimeline",
+      "kind": "component",
+      "importStatement": "import { AIActionAuditTimeline } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "tags": [
+        "ai-native-helpers",
+        "audit",
+        "beta",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Audit",
+      "demoMode": "live",
+      "description": "AI aksiyonlari, insan onayi ve sistem gozlemlerini secilebilir audit timeline yuzeyinde toplar.",
+      "sectionIds": [
+        "governance_contribution",
+        "documentation_standards",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "ai_action_audit_trail",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "AIGuidedAuthoring",
+      "kind": "component",
+      "importStatement": "import { AIGuidedAuthoring } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "authoring",
+      "tags": [
+        "ai-authoring",
+        "beta",
+        "recipes",
+        "wave-11"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "AI authoring workflows",
+      "demoMode": "live",
+      "description": "Prompt yazimi, recommendation stack ve command palette akisini reusable authoring recipe yuzeyinde toplar.",
+      "sectionIds": [
+        "governance_contribution",
+        "documentation_standards",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "safe_prompt_templates_and_scope",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+    },
     {
       "name": "AgGridServer",
       "kind": "component",
       "importStatement": "import { AgGridServer } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "data-grid",
-      "subgroup": "ag-grid-server",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "grid"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "data_display",
+      "subgroup": "data_grid",
+      "tags": [
+        "data-display",
+        "grid",
+        "server",
+        "stable",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Data Grid (AG Grid / EntityGrid)",
+      "demoMode": "live",
+      "description": "Server-side AG Grid wrapperi; standard options ve overlay davranisini toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "table_data_display",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence",
+        "performance_contract"
+      ],
+      "uxPrimaryThemeId": "performance_resilience_experience",
+      "uxPrimarySubthemeId": "perceived_performance_optimization",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "AnchorToc",
       "kind": "component",
       "importStatement": "import { AnchorToc } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "navigation",
+      "subgroup": "anchor-toc",
+      "tags": [
+        "beta",
+        "contextual-navigation",
+        "navigation",
+        "wave-2"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Anchor / Table of contents",
+      "demoMode": "live",
+      "description": "AnchorToc primitivei; uzun sayfa, policy ve docs-site akislari icin derin link ve aktif heading navigation davranisini tek API ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "navigation_patterns",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "deep_link_and_shareable_state",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+    },
+    {
+      "name": "ApprovalCheckpoint",
+      "kind": "component",
+      "importStatement": "import { ApprovalCheckpoint } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "tags": [
+        "ai-native-helpers",
+        "approval",
+        "beta",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Audit",
+      "demoMode": "live",
+      "description": "Human approval checkpoint, evidence seti ve karar aksiyonlarini tek governance kartinda toplar.",
+      "sectionIds": [
+        "governance_contribution",
+        "integration_distribution",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "human_approval_checkpoints",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "ApprovalReview",
+      "kind": "component",
+      "importStatement": "import { ApprovalReview } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "approval_audit",
+      "tags": [
+        "approval",
+        "recipes",
+        "stable",
+        "wave-11"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Approval / Review recipes",
+      "demoMode": "live",
+      "description": "Approval checkpoint, citation evidence ve audit timeline akisini tek review recipe katmaninda birlestirir.",
+      "sectionIds": [
+        "governance_contribution",
+        "integration_distribution",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "human_approval_checkpoints",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+    },
+    {
+      "name": "Avatar",
+      "kind": "component",
+      "importStatement": "import { Avatar } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "content",
+      "subgroup": "identity",
+      "tags": [
+        "beta",
+        "foundation-primitives",
+        "identity",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Avatar & Identity",
+      "demoMode": "live",
+      "description": "Identity primitivei; image, initials ve fallback icon davranisini gizlilik varsayimlariyla sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "trust_privacy_security_ux",
+      "uxPrimarySubthemeId": "privacy_by_design_defaults",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "Badge",
@@ -44,30 +532,69 @@
       "whereUsed": [
         "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
         "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
       ],
       "group": "feedback",
       "subgroup": "badges",
       "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Badge / Tag / Chip",
+      "demoMode": "live",
+      "description": "Durum, sayi ve kisa sinyal gosteren hafif etiket bileşeni.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "Breadcrumb",
       "kind": "component",
       "importStatement": "import { Breadcrumb } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "navigation",
+      "subgroup": "breadcrumb",
+      "tags": [
+        "navigation",
+        "stable",
+        "wave-2"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Breadcrumb",
+      "demoMode": "live",
+      "description": "Breadcrumb primitivei; route-aware yol izi, collapse ve current-page davranisini tek API ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "navigation_patterns",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "domain_based_information_architecture",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Button",
@@ -76,8 +603,7 @@
       "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
         "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
         "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
         "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
@@ -86,82 +612,290 @@
       ],
       "group": "actions",
       "subgroup": "buttons",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "tags": [
+        "foundation-primitives",
+        "stable",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "actions",
+      "taxonomySubgroup": "Button",
+      "demoMode": "live",
+      "description": "Temel aksiyon primitivei; varyant, boyut, loading ve icon slot davranisini tek token zincirinde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "consistency_and_pattern_governance",
+      "uxPrimarySubthemeId": "single_component_source_of_truth",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "Checkbox",
       "kind": "component",
       "importStatement": "import { Checkbox } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "boolean-entry",
+        "forms",
+        "stable",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Checkbox / Radio",
+      "demoMode": "live",
+      "description": "Checkbox primitivei; helper, validation, readonly/disabled ve indeterminate davranisini ortak boolean-control shell ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "input_error_prevention_patterns",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
+    },
+    {
+      "name": "CitationPanel",
+      "kind": "component",
+      "importStatement": "import { CitationPanel } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "citations_prompting",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "citations",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Citations / Prompting",
+      "demoMode": "live",
+      "description": "Kaynak ve alinti seffafligini secilebilir, readonly ve governed modlarla panel yuzeyinde sunar.",
+      "sectionIds": [
+        "documentation_standards",
+        "governance_contribution",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "confidence_and_source_transparency",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
       "name": "CommandPalette",
       "kind": "component",
       "importStatement": "import { CommandPalette } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "ai_helpers",
+      "subgroup": "command_palette",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "command",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Command palette",
+      "demoMode": "live",
+      "description": "Global komut, route ve AI yardimci aksiyonlarini tek palette icinde arama/keyboard ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "safe_prompt_templates_and_scope",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+    },
+    {
+      "name": "ConfidenceBadge",
+      "kind": "component",
+      "importStatement": "import { ConfidenceBadge } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "recommendations",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "confidence",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Recommendation / Confidence",
+      "demoMode": "live",
+      "description": "Confidence seviyesini, skorunu ve kaynak sayisini tek badge primitive ile gosterir.",
+      "sectionIds": [
+        "state_feedback",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "confidence_and_source_transparency",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
       "name": "ContextMenu",
       "kind": "component",
       "importStatement": "import { ContextMenu } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "overlays",
+      "subgroup": "context_menu",
+      "tags": [],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Context menu",
+      "demoMode": "live",
+      "description": "ContextMenu action ve right-click akislari icin overlay extension primitive’i.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "contextual_quick_actions",
+      "roadmapWaveId": "wave_8_overlay_extensions",
+      "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1"
     },
     {
       "name": "DatePicker",
       "kind": "component",
       "importStatement": "import { DatePicker } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "beta",
+        "date-entry",
+        "forms",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Date / Time pickers",
+      "demoMode": "live",
+      "description": "DatePicker primitivei; milestone, release ve tarih secim akislari icin access-aware date entry yuzeyi sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "cross_step_context_persistence",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "Descriptions",
       "kind": "component",
       "importStatement": "import { Descriptions } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "data_display",
+      "subgroup": "descriptions",
+      "tags": [
+        "beta",
+        "data-display",
+        "descriptions",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Descriptions / Key-Value",
+      "demoMode": "live",
+      "description": "Key-value detail primitivei; owner, scope, risk ve status ozetlerini kolon bazli layout ile gosterir.",
+      "sectionIds": [
+        "table_data_display",
+        "state_feedback",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "DetailDrawer",
@@ -170,43 +904,223 @@
       "whereUsed": [
         "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
         "web/apps/mfe-audit/src/app/components/AuditDetailDrawer.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
         "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx"
       ],
       "group": "overlays",
       "subgroup": "drawers",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "tags": [
+        "detail",
+        "drawer",
+        "overlay",
+        "stable",
+        "wave-5"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Drawer / Side panel",
+      "demoMode": "live",
+      "description": "Detay, audit ve summary akislari icin sekmeli side panel primitivei.",
+      "sectionIds": [
+        "component_library_management",
+        "overlay_components",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+    },
+    {
+      "name": "DetailSummary",
+      "kind": "component",
+      "importStatement": "import { DetailSummary } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "recipes",
+      "tags": [
+        "detail",
+        "recipes",
+        "stable",
+        "wave-11"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Detail summary / inspector",
+      "demoMode": "live",
+      "description": "PageHeader, SummaryStrip, EntitySummaryBlock ve detay payload yuzeylerini ayni inspector recipe olarak toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "table_data_display"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+    },
+    {
+      "name": "Divider",
+      "kind": "component",
+      "importStatement": "import { Divider } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "content",
+      "subgroup": "divider",
+      "tags": [
+        "beta",
+        "divider",
+        "foundation-primitives",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Divider",
+      "demoMode": "live",
+      "description": "Separation primitivei; horizontal, vertical ve labelled divider davranisini tek API ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "consistency_and_pattern_governance",
+      "uxPrimarySubthemeId": "behavior_contracts_across_modules",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "Dropdown",
       "kind": "component",
       "importStatement": "import { Dropdown } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "dropdown",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "menu",
+        "overlay",
+        "stable",
+        "wave-5"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Select / Dropdown / Combobox",
+      "demoMode": "live",
+      "description": "Aksiyon ve filtre menu akislari icin keyboard/dismiss davranisi olan dropdown primitivei.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "contextual_quick_actions",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1"
     },
     {
       "name": "Empty",
       "kind": "component",
       "importStatement": "import { Empty } from 'mfe-ui-kit';",
       "whereUsed": [
-        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
       "group": "empty-states",
       "subgroup": "empty",
       "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Empty state / No data",
+      "demoMode": "live",
+      "description": "Bos durum ve no-data ekranlari icin ortak fallback yuzeyi.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
+    },
+    {
+      "name": "EmptyErrorLoading",
+      "kind": "component",
+      "importStatement": "import { EmptyErrorLoading } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "feedback",
+      "subgroup": "state_recipes",
+      "tags": [
+        "recipes",
+        "stable",
+        "state-feedback",
+        "wave-11"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Empty / Error / Loading recipes",
+      "demoMode": "live",
+      "description": "Bos, hata ve yukleniyor durumlarini Empty, Spinner ve Skeleton katmanlariyla ayni feedback recipe altinda toplar.",
+      "sectionIds": [
+        "state_feedback",
+        "documentation_standards",
+        "component_library_management"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "loading_empty_error_success_patterns",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
     },
     {
       "name": "EntityGridTemplate",
@@ -215,69 +1129,305 @@
       "whereUsed": [
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "group": "data-grid",
-      "subgroup": "entity-grid",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "grid"
+      "group": "data_display",
+      "subgroup": "data_grid",
+      "tags": [
+        "data-display",
+        "entity-grid",
+        "grid",
+        "stable",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Data Grid (AG Grid / EntityGrid)",
+      "demoMode": "live",
+      "description": "ERP liste ekranlari icin ana grid kompoziti.",
+      "sectionIds": [
+        "component_library_management",
+        "table_data_display",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence",
+        "performance_contract"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "role_goal_task_mapping",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
+    },
+    {
+      "name": "EntitySummaryBlock",
+      "kind": "component",
+      "importStatement": "import { EntitySummaryBlock } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "summary",
+      "tags": [
+        "beta",
+        "entity",
+        "page-blocks",
+        "summary",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Summary Blocks",
+      "demoMode": "live",
+      "description": "Entity detail ust ozeti, avatar, badge, metadata ve quick action alanlarini tek block icinde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "FilterBar",
       "kind": "component",
       "importStatement": "import { FilterBar } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "layout",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
       "subgroup": "filters",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "tags": [
+        "filters",
+        "page-blocks",
+        "stable",
+        "toolbar",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Filters",
+      "demoMode": "live",
+      "description": "Liste, grid ve panel filtrelerini ortak toolbar shell icinde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "table_data_display"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "FormDrawer",
       "kind": "component",
       "importStatement": "import { FormDrawer } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "overlays",
       "subgroup": "drawers",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "tags": [
+        "drawer",
+        "form",
+        "overlay",
+        "stable",
+        "wave-5"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Drawer / Side panel",
+      "demoMode": "live",
+      "description": "Form akislari icin step-aware ve access-aware side panel primitivei.",
+      "sectionIds": [
+        "component_library_management",
+        "overlay_components",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "multi_step_wizard_progress",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+    },
+    {
+      "name": "IconButton",
+      "kind": "component",
+      "importStatement": "import { IconButton } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "actions",
+      "subgroup": "buttons",
+      "tags": [
+        "beta",
+        "foundation-primitives",
+        "icon-button",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "actions",
+      "taxonomySubgroup": "Icon button",
+      "demoMode": "live",
+      "description": "Icon-only aksiyon primitivei; accessible name, selected state ve size kontratini Button ile hizali verir.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "JsonViewer",
       "kind": "component",
       "importStatement": "import { JsonViewer } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "data_display",
+      "subgroup": "json_viewer",
+      "tags": [
+        "beta",
+        "data-display",
+        "json-viewer",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Code / JSON viewer",
+      "demoMode": "live",
+      "description": "Kontrat, kanıt ve yapılandırma payloadlarını okunur ağaç görünümüyle gösteren JSON viewer primitivei.",
+      "sectionIds": [
+        "table_data_display",
+        "documentation_standards",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "trust_privacy_security_ux",
+      "uxPrimarySubthemeId": "user_visible_audit_log",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
+    },
+    {
+      "name": "LinkInline",
+      "kind": "component",
+      "importStatement": "import { LinkInline } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "content",
+      "subgroup": "link",
+      "tags": [
+        "beta",
+        "foundation-primitives",
+        "link",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Link",
+      "demoMode": "live",
+      "description": "Inline link primitivei; internal, external ve current-state davranisini ortak API ile verir.",
+      "sectionIds": [
+        "component_library_management",
+        "navigation_patterns",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "orientation_and_wayfinding",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "List",
       "kind": "component",
       "importStatement": "import { List } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "data_display",
+      "subgroup": "list",
+      "tags": [
+        "beta",
+        "data-display",
+        "list",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "List",
+      "demoMode": "live",
+      "description": "Görev, onay ve operasyon listeleri için badge/meta/selection destekli hafif liste primitivei.",
+      "sectionIds": [
+        "table_data_display",
+        "documentation_standards",
+        "state_feedback"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Modal",
@@ -288,11 +1438,73 @@
       ],
       "group": "overlays",
       "subgroup": "modal",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "tags": [
+        "dialog",
+        "overlay",
+        "stable",
+        "wave-5"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Modal / Dialog / Confirm",
+      "demoMode": "live",
+      "description": "Dialog, confirm ve audit overlay akislari icin token zincirine bagli primitive.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "trust_privacy_security_ux",
+      "uxPrimarySubthemeId": "high_risk_action_confirmation",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+    },
+    {
+      "name": "PageHeader",
+      "kind": "component",
+      "importStatement": "import { PageHeader } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "page_shell",
+      "tags": [
+        "beta",
+        "header",
+        "page-blocks",
+        "page-shell",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Page Shell",
+      "demoMode": "live",
+      "description": "Title, description, status, meta ve action alanlarini tek page header shell icinde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "navigation_patterns"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "orientation_and_wayfinding",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "PageLayout",
@@ -301,77 +1513,311 @@
       "whereUsed": [
         "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
         "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
         "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
       ],
-      "group": "layout",
-      "subgroup": "page",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "group": "page_blocks",
+      "subgroup": "page_shell",
+      "tags": [
+        "layout",
+        "page-blocks",
+        "page-shell",
+        "stable",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Page Shell",
+      "demoMode": "live",
+      "description": "Route seviyesinde breadcrumb, title, actions, filters ve detail shell davranisini standartlastirir.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "domain_based_information_architecture",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "Pagination",
       "kind": "component",
       "importStatement": "import { Pagination } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "navigation",
+      "subgroup": "pagination",
+      "tags": [
+        "beta",
+        "flow-navigation",
+        "navigation",
+        "wave-2"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Pagination",
+      "demoMode": "live",
+      "description": "Pagination primitivei; server/client modlari, compact sayfalama ve bilgi yogun dataset gezintisini tek API ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "navigation_patterns",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Popover",
       "kind": "component",
       "importStatement": "import { Popover } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "overlays",
+      "subgroup": "popover",
+      "tags": [
+        "beta",
+        "guidance",
+        "overlay",
+        "popover",
+        "wave-5"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Popover",
+      "demoMode": "live",
+      "description": "Kisa ama rich guidance ve inline action cluster akislari icin overlay panel.",
+      "sectionIds": [
+        "overlay_components",
+        "state_feedback",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "actionable_error_messages",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+    },
+    {
+      "name": "PromptComposer",
+      "kind": "component",
+      "importStatement": "import { PromptComposer } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "citations_prompting",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "prompt",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Citations / Prompting",
+      "demoMode": "live",
+      "description": "Scope-safe prompt yazimi, tone guardrail ve source anchors yuzeyini tek composer primitive ile sunar.",
+      "sectionIds": [
+        "documentation_standards",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ux_writing_and_microcopy",
+      "uxPrimarySubthemeId": "ai_message_tone_guardrails",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
       "name": "Radio",
       "kind": "component",
       "importStatement": "import { Radio } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "forms",
+        "single-choice",
+        "stable",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Checkbox / Radio",
+      "demoMode": "live",
+      "description": "Radio primitivei; tek secimli tercih, helper, validation ve access-aware interaction davranisini ortak boolean-control shell ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "smart_defaults_and_prefill",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
+    },
+    {
+      "name": "RecommendationCard",
+      "kind": "component",
+      "importStatement": "import { RecommendationCard } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "ai_helpers",
+      "subgroup": "recommendations",
+      "tags": [
+        "ai-native-helpers",
+        "beta",
+        "recommendation",
+        "wave-6"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "ai_native_helpers",
+      "taxonomySubgroup": "Recommendation / Confidence",
+      "demoMode": "live",
+      "description": "AI onerilerini confidence, kaynak ve human action butonlari ile ayni kart kontratina baglar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "ai_assisted_decision_experience",
+      "uxPrimarySubthemeId": "contextual_recommendation_cards",
+      "roadmapWaveId": "wave_6_ai_native_helpers",
+      "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
     },
     {
       "name": "ReportFilterPanel",
       "kind": "component",
       "importStatement": "import { ReportFilterPanel } from 'mfe-ui-kit';",
       "whereUsed": [
-        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx"
+        "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "group": "layout",
+      "group": "page_blocks",
       "subgroup": "filters",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "tags": [
+        "filters",
+        "page-blocks",
+        "reporting",
+        "stable",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Filters",
+      "demoMode": "live",
+      "description": "Rapor filtreleri, submit/reset ve durum bilgisini tek panel shell icinde toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "table_data_display"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "dependency_aware_form_guidance",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+    },
+    {
+      "name": "SearchFilterListing",
+      "kind": "component",
+      "importStatement": "import { SearchFilterListing } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "recipes",
+      "tags": [
+        "listing",
+        "recipes",
+        "stable",
+        "wave-11"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "search_filtering",
+      "taxonomySubgroup": "Search + filter listings",
+      "demoMode": "live",
+      "description": "PageHeader, FilterBar, SummaryStrip ve sonuc listesini ayni listing recipe kompozisyonunda toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "critical_path_minimization",
+      "roadmapWaveId": "wave_11_recipes",
+      "acceptanceContractId": "ui-library-wave-11-recipes-v1"
     },
     {
       "name": "Select",
@@ -384,51 +1830,254 @@
       "group": "forms",
       "subgroup": "select",
       "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Select / Dropdown / Combobox",
+      "demoMode": "live",
+      "description": "Temel secim ve dropdown alanlarini ortak stil ve access guard ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
+    },
+    {
+      "name": "Skeleton",
+      "kind": "component",
+      "importStatement": "import { Skeleton } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "feedback",
+      "subgroup": "loading",
+      "tags": [
+        "beta",
+        "foundation-primitives",
+        "loading",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Skeleton / Placeholder",
+      "demoMode": "live",
+      "description": "Loading placeholder primitivei; text, avatar ve card skeleton varyantlarini token-first sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "loading_empty_error_success_patterns",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "Slider",
       "kind": "component",
       "importStatement": "import { Slider } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "beta",
+        "forms",
+        "range-entry",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Slider",
+      "demoMode": "live",
+      "description": "Slider primitivei; density, threshold ve progress tuning icin access-aware range secimi sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "personalization_and_adaptive_productivity",
+      "uxPrimarySubthemeId": "adaptive_density_layout_preferences",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
+    },
+    {
+      "name": "Spinner",
+      "kind": "component",
+      "importStatement": "import { Spinner } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "feedback",
+      "subgroup": "loading",
+      "tags": [
+        "beta",
+        "foundation-primitives",
+        "loading",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Progress / Spinner",
+      "demoMode": "live",
+      "description": "Loading indicator primitivei; inline, block ve overlay modlarini ortak semantikle verir.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "response_time_budget_feedback",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "Steps",
       "kind": "component",
       "importStatement": "import { Steps } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "navigation",
+      "subgroup": "steps",
+      "tags": [
+        "beta",
+        "navigation",
+        "progress",
+        "wave-2"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Steps",
+      "demoMode": "live",
+      "description": "Steps primitivei; cok adimli wizard ve release progress akislari icin status-rich navigation katmani sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "navigation_patterns",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "multi_step_wizard_progress",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+    },
+    {
+      "name": "SummaryStrip",
+      "kind": "component",
+      "importStatement": "import { SummaryStrip } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "page_blocks",
+      "subgroup": "summary",
+      "tags": [
+        "beta",
+        "kpi",
+        "page-blocks",
+        "summary",
+        "wave-7"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "page_blocks",
+      "taxonomySubgroup": "Summary Blocks",
+      "demoMode": "live",
+      "description": "Page ustu KPI, durum ve trend ozetlerini reusable strip shell olarak sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "responsive_layout",
+        "state_feedback"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "doctor_frontend_evidence"
+      ],
+      "uxPrimaryThemeId": "measurement_kpi_and_experimentation",
+      "uxPrimarySubthemeId": "task_completion_time_p50_p95",
+      "roadmapWaveId": "wave_7_page_blocks",
+      "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
     },
     {
       "name": "Switch",
       "kind": "component",
       "importStatement": "import { Switch } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "forms",
+        "stable",
+        "toggle",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Switch / Toggle",
+      "demoMode": "live",
+      "description": "Switch primitivei; release, visibility ve policy toggles icin access-aware, validation-ready boolean gecis davranisi sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "deterministic_state_model",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "THEME_APPEARANCE_OPTIONS",
@@ -440,10 +2089,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_APPEARANCE_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "THEME_DENSITY_OPTIONS",
@@ -455,10 +2118,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_DENSITY_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "THEME_ELEVATION_OPTIONS",
@@ -470,10 +2147,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_ELEVATION_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "THEME_MOTION_OPTIONS",
@@ -485,10 +2176,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_MOTION_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "THEME_RADIUS_OPTIONS",
@@ -500,40 +2205,98 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Density / radius / motion presets",
+      "demoMode": "inspector",
+      "description": "THEME_RADIUS_OPTIONS için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "TableSimple",
       "kind": "component",
       "importStatement": "import { TableSimple } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "data_display",
+      "subgroup": "table_simple",
+      "tags": [
+        "beta",
+        "data-display",
+        "table",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Table",
+      "demoMode": "live",
+      "description": "Hafif veri tablosu primitivei; loading, empty, sticky header ve density davranisini tek API ile sunar.",
+      "sectionIds": [
+        "table_data_display",
+        "documentation_standards",
+        "responsive_layout"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "measurement_kpi_and_experimentation",
+      "uxPrimarySubthemeId": "task_completion_time_p50_p95",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Tabs",
       "kind": "component",
       "importStatement": "import { Tabs } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "navigation",
+      "subgroup": "tabs",
+      "tags": [
+        "navigation",
+        "stable",
+        "wave-2"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "navigation",
+      "taxonomySubgroup": "Tabs",
+      "demoMode": "live",
+      "description": "Tabs navigation primitivei; controlled/uncontrolled state, keyboard navigation ve token-first tablist davranisini tek API ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "navigation_patterns",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "orientation_and_wayfinding",
+      "roadmapWaveId": "wave_2_navigation",
+      "acceptanceContractId": "ui-library-wave-2-navigation-v1"
     },
     {
       "name": "Tag",
@@ -541,16 +2304,30 @@
       "importStatement": "import { Tag } from 'mfe-ui-kit';",
       "whereUsed": [
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx"
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
       "group": "feedback",
       "subgroup": "tags",
       "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Badge / Tag / Chip",
+      "demoMode": "live",
+      "description": "Kategori, statü ve filtre sinyalleri icin kullanılan kapsul etiket.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "Text",
@@ -560,128 +2337,439 @@
         "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
         "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
         "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/ApprovalsInboxPage.tsx",
-        "web/apps/mfe-shell/src/pages/approvals/InvoiceApprovalPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
         "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
       ],
       "group": "content",
       "subgroup": "text",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "tags": [
+        "foundation-primitives",
+        "stable",
+        "typography",
+        "wave-1"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "general",
+      "taxonomySubgroup": "Typography",
+      "demoMode": "live",
+      "description": "Tipografi primitivei; semantic preset, tone, clamp/truncate ve mono davranisini tek API ile verir.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "accessibility_and_inclusive_design",
+      "uxPrimarySubthemeId": "contrast_typography_readability",
+      "roadmapWaveId": "wave_1_foundation_primitives",
+      "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
     },
     {
       "name": "TextArea",
       "kind": "component",
       "importStatement": "import { TextArea } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "forms",
+        "multiline-entry",
+        "stable",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "live",
+      "description": "TextArea primitivei; long-form text entry, auto-resize, inline guidance ve validation davranisini ortak field shell ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "dependency_aware_form_guidance",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "TextInput",
       "kind": "component",
       "importStatement": "import { TextInput } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "forms",
+        "stable",
+        "text-entry",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Text Input / TextArea",
+      "demoMode": "live",
+      "description": "TextInput primitivei; label, helper, error, count ve access-aware text entry davranisini ortak field shell ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "inline_validation_before_submit",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
+    },
+    {
+      "name": "ThemePresetCompare",
+      "kind": "component",
+      "importStatement": "import { ThemePresetCompare } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "theme",
+      "subgroup": "preset_compare",
+      "tags": [
+        "compare",
+        "stable",
+        "theme-presets",
+        "wave-10"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme preset comparison",
+      "demoMode": "live",
+      "description": "Iki resmi preset arasindaki appearance, density, contrast ve intent farklarini ayni compare matrisiyle gosterir.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "accessibility_and_inclusive_design",
+      "uxPrimarySubthemeId": "contrast_typography_readability",
+      "roadmapWaveId": "wave_10_theme_presets",
+      "acceptanceContractId": "ui-library-wave-10-theme-presets-v1"
+    },
+    {
+      "name": "ThemePresetGallery",
+      "kind": "component",
+      "importStatement": "import { ThemePresetGallery } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "theme",
+      "subgroup": "preset_gallery",
+      "tags": [
+        "gallery",
+        "stable",
+        "theme-presets",
+        "wave-10"
+      ],
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme preset gallery",
+      "demoMode": "live",
+      "description": "Resmi preset ailesini secilebilir theme preview galerisi olarak sunar ve preset kimligini docs/runtime ile ayni tutar.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "theming_customization",
+      "uxPrimarySubthemeId": "mode_density_personalization",
+      "roadmapWaveId": "wave_10_theme_presets",
+      "acceptanceContractId": "ui-library-wave-10-theme-presets-v1"
     },
     {
       "name": "ThemePreviewCard",
       "kind": "component",
       "importStatement": "import { ThemePreviewCard } from 'mfe-ui-kit';",
       "whereUsed": [
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/widgets/shell/ShellRuntimePanel.tsx"
+        "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
       ],
       "group": "theme",
       "subgroup": "preview",
       "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme preview cards",
+      "demoMode": "live",
+      "description": "Tema varyasyonlarini minik kartlar halinde karsilastiran preview primitivei.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "TimePicker",
       "kind": "component",
       "importStatement": "import { TimePicker } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "beta",
+        "forms",
+        "time-entry",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Date / Time pickers",
+      "demoMode": "live",
+      "description": "TimePicker primitivei; rollout, cutover ve maintenance pencere saatlerini access-aware time entry yuzeyi ile sunar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "cross_step_context_persistence",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "Tooltip",
       "kind": "component",
       "importStatement": "import { Tooltip } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "feedback",
       "subgroup": "tooltips",
+      "tags": [
+        "beta",
+        "overlay",
+        "tooltip",
+        "wave-5"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "feedback",
+      "taxonomySubgroup": "Tooltip",
+      "demoMode": "live",
+      "description": "Hover ve focus ile acilan gorunur tooltip bubble primitivei.",
+      "sectionIds": [
+        "component_library_management",
+        "state_feedback",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "feedback_state_and_visibility",
+      "uxPrimarySubthemeId": "actionable_error_messages",
+      "roadmapWaveId": "wave_5_overlay",
+      "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+    },
+    {
+      "name": "TourCoachmarks",
+      "kind": "component",
+      "importStatement": "import { TourCoachmarks } from 'mfe-ui-kit';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
+      "group": "overlays",
+      "subgroup": "tour_coachmarks",
       "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "shell"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "overlays_portals",
+      "taxonomySubgroup": "Tour / Coachmarks",
+      "demoMode": "live",
+      "description": "TourCoachmarks guided onboarding ve compliance walkthrough akislari icin overlay extension primitive’i.",
+      "sectionIds": [
+        "component_library_management",
+        "overlay_components",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "backlog_contract",
+        "preview_before_release"
+      ],
+      "uxPrimaryThemeId": "onboarding_help_and_learnability",
+      "uxPrimarySubthemeId": "process_tours_for_critical_flows",
+      "roadmapWaveId": "wave_8_overlay_extensions",
+      "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1"
     },
     {
       "name": "Tree",
       "kind": "component",
       "importStatement": "import { Tree } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "data_display",
+      "subgroup": "tree_table",
+      "tags": [
+        "beta",
+        "data-display",
+        "tree",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Tree / TreeTable",
+      "demoMode": "live",
+      "description": "Tree primitivei; policy, release ve ownership hiyerarsilerini secim ve readonly modlariyla sunar.",
+      "sectionIds": [
+        "table_data_display",
+        "documentation_standards",
+        "navigation_patterns"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "navigation_information_scent",
+      "uxPrimarySubthemeId": "deep_link_and_shareable_state",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "TreeTable",
       "kind": "component",
       "importStatement": "import { TreeTable } from 'mfe-ui-kit';",
-      "whereUsed": [],
-      "group": "runtime",
-      "subgroup": "utilities",
-      "tags": [
-        "unclassified"
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
       ],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "beta",
-      "demoType": "shell"
+      "group": "data_display",
+      "subgroup": "tree_table",
+      "tags": [
+        "beta",
+        "data-display",
+        "tree-table",
+        "wave-4"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_display",
+      "taxonomySubgroup": "Tree / TreeTable",
+      "demoMode": "live",
+      "description": "TreeTable primitivei; owner, status ve scope verisini hiyerarsik satirlarla tablo halinde sunar.",
+      "sectionIds": [
+        "table_data_display",
+        "documentation_standards",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment"
+      ],
+      "uxPrimaryThemeId": "task_completion_architecture",
+      "uxPrimarySubthemeId": "role_goal_task_mapping",
+      "roadmapWaveId": "wave_4_data_display",
+      "acceptanceContractId": "ui-library-wave-4-data-display-v1"
     },
     {
       "name": "Upload",
       "kind": "component",
       "importStatement": "import { Upload } from 'mfe-ui-kit';",
-      "whereUsed": [],
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+      ],
       "group": "forms",
       "subgroup": "inputs",
-      "tags": [],
-      "hasDemo": true,
-      "hasSpec": true,
-      "status": "stable",
-      "demoType": "form"
+      "tags": [
+        "beta",
+        "file-entry",
+        "forms",
+        "wave-3"
+      ],
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "data_entry",
+      "taxonomySubgroup": "Upload / File picker",
+      "demoMode": "live",
+      "description": "Upload primitivei; kanit, ek ve release paketlerini policy-aware file selection yuzeyi ile toplar.",
+      "sectionIds": [
+        "component_library_management",
+        "documentation_standards",
+        "accessibility_compliance"
+      ],
+      "qualityGates": [
+        "design_tokens",
+        "preview_visibility",
+        "registry_export_sync",
+        "ux_catalog_alignment",
+        "a11y_keyboard_support"
+      ],
+      "uxPrimaryThemeId": "data_entry_validation_recovery",
+      "uxPrimarySubthemeId": "dependency_aware_form_guidance",
+      "roadmapWaveId": "wave_3_forms",
+      "acceptanceContractId": "ui-library-wave-3-forms-v1"
     },
     {
       "name": "buildAuthHeaders",
@@ -691,10 +2779,24 @@
       "group": "runtime",
       "subgroup": "auth",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "Shared auth token resolver zincirinden header üreten helper.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "buildEntityGridQueryParams",
@@ -704,10 +2806,24 @@
       "group": "data-grid",
       "subgroup": "entity-grid",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "tables_grid_addons",
+      "taxonomySubgroup": "Server-side pagination helpers",
+      "demoMode": "inspector",
+      "description": "Grid state bilgisini backend query param’lerine ceviren helper.",
+      "sectionIds": [
+        "table_data_display",
+        "utility_components",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "getResolvedToken",
@@ -717,10 +2833,24 @@
       "group": "runtime",
       "subgroup": "auth",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "getResolvedToken için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "getThemeAxes",
@@ -734,10 +2864,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Token viewer (semantic/raw)",
+      "demoMode": "inspector",
+      "description": "Aktif theme axes değerlerini okur.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "getThemeContract",
@@ -750,10 +2894,24 @@
       "group": "theme",
       "subgroup": "runtime",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Token viewer (semantic/raw)",
+      "demoMode": "inspector",
+      "description": "Aktif semantic theme contract bilgisini okur.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "registerTokenResolver",
@@ -763,10 +2921,24 @@
       "group": "runtime",
       "subgroup": "auth",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "registerTokenResolver için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "resetTokenResolver",
@@ -776,10 +2948,24 @@
       "group": "runtime",
       "subgroup": "auth",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "HTTP helpers",
+      "demoMode": "inspector",
+      "description": "resetTokenResolver için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "resolveAccessState",
@@ -789,27 +2975,55 @@
       "group": "runtime",
       "subgroup": "access",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "auth_security_ui",
+      "taxonomySubgroup": "Permission gates",
+      "demoMode": "inspector",
+      "description": "Permission/access seviyesini render davranisina cevirir.",
+      "sectionIds": [
+        "utility_components",
+        "accessibility_compliance",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "resolveThemeModeKey",
       "kind": "function",
       "importStatement": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
       "whereUsed": [
+        "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
         "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
-        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-        "web/apps/mfe-shell/src/widgets/shell/ShellRuntimePanel.tsx"
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
       ],
       "group": "theme",
       "subgroup": "runtime",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Token viewer (semantic/raw)",
+      "demoMode": "inspector",
+      "description": "resolveThemeModeKey için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setAppearance",
@@ -821,10 +3035,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setAppearance için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setDensity",
@@ -836,10 +3064,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setDensity için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setElevation",
@@ -851,10 +3093,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setElevation için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setMotion",
@@ -866,10 +3122,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setMotion için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setOverlayIntensity",
@@ -881,10 +3151,24 @@
       "group": "theme",
       "subgroup": "runtime",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Overlay intensity tools",
+      "demoMode": "inspector",
+      "description": "setOverlayIntensity için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setOverlayOpacity",
@@ -894,10 +3178,24 @@
       "group": "theme",
       "subgroup": "runtime",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Overlay intensity tools",
+      "demoMode": "inspector",
+      "description": "setOverlayOpacity için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setRadius",
@@ -909,10 +3207,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setRadius için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setSurfaceTone",
@@ -924,10 +3236,24 @@
       "tags": [
         "advanced"
       ],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setSurfaceTone için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "setTableSurfaceTone",
@@ -939,10 +3265,24 @@
       "group": "theme",
       "subgroup": "runtime",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "setTableSurfaceTone için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "shouldBlockInteraction",
@@ -952,10 +3292,24 @@
       "group": "runtime",
       "subgroup": "access",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "auth_security_ui",
+      "taxonomySubgroup": "Permission gates",
+      "demoMode": "inspector",
+      "description": "shouldBlockInteraction için kanonik katalog girdisi.",
+      "sectionIds": [
+        "utility_components",
+        "accessibility_compliance",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "subscribeThemeAxes",
@@ -967,10 +3321,24 @@
       "group": "theme",
       "subgroup": "runtime",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "subscribeThemeAxes için kanonik katalog girdisi.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "toggleVariantDefault",
@@ -980,10 +3348,24 @@
       "group": "data-grid",
       "subgroup": "variants",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Feature flags",
+      "demoMode": "inspector",
+      "description": "Grid default varyantini belirleyen utility.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "updateThemeAxes",
@@ -995,10 +3377,24 @@
       "group": "theme",
       "subgroup": "runtime",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "theme_tokens",
+      "taxonomySubgroup": "Theme editor (axes)",
+      "demoMode": "inspector",
+      "description": "Theme axes patch uygulayan runtime controller.",
+      "sectionIds": [
+        "design_token_management",
+        "theming_customization",
+        "documentation_standards"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "useGridVariants",
@@ -1008,10 +3404,24 @@
       "group": "data-grid",
       "subgroup": "variants",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "beta",
+      "taxonomyGroupId": "runtime_utilities",
+      "taxonomySubgroup": "Hooks (useX)",
+      "demoMode": "inspector",
+      "description": "Grid varyantlarini kullanip durum yoneten hook.",
+      "sectionIds": [
+        "utility_components",
+        "integration_distribution",
+        "governance_contribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     },
     {
       "name": "withAccessGuard",
@@ -1021,10 +3431,24 @@
       "group": "runtime",
       "subgroup": "access",
       "tags": [],
-      "hasDemo": false,
-      "hasSpec": false,
-      "status": "beta",
-      "demoType": "none"
+      "availability": "exported",
+      "lifecycle": "stable",
+      "taxonomyGroupId": "auth_security_ui",
+      "taxonomySubgroup": "Permission gates",
+      "demoMode": "inspector",
+      "description": "Readonly/disabled guard davranisini event handler seviyesinde uygular.",
+      "sectionIds": [
+        "utility_components",
+        "accessibility_compliance",
+        "integration_distribution"
+      ],
+      "qualityGates": [
+        "registry_export_sync"
+      ],
+      "uxPrimaryThemeId": "",
+      "uxPrimarySubthemeId": "",
+      "roadmapWaveId": "",
+      "acceptanceContractId": ""
     }
   ]
 }
