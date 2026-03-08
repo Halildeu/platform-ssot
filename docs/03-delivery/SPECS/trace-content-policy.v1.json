@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "rules": {
+    "forbid_tbd_anywhere": true,
+    "required_columns": [
+      "BM_ITEM_ID",
+      "BM_SECTION",
+      "TARGET_TYPE",
+      "TARGET_ID",
+      "mapping_quality",
+      "NOTES"
+    ],
+    "allowed_target_types": [
+      "PB",
+      "PRD",
+      "PLATFORM_SPEC",
+      "SPEC",
+      "ADR",
+      "TECH-DESIGN",
+      "GUIDE",
+      "INTERFACE-CONTRACT",
+      "STORY",
+      "AC",
+      "TP",
+      "RB",
+      "DATA-CARD",
+      "MODEL-CARD",
+      "OBS"
+    ],
+    "allowed_mapping_quality": [
+      "refined",
+      "coarse"
+    ],
+    "require_bm_item_exists": true,
+    "require_bm_section_matches_item": true,
+    "require_notes_nonempty": true,
+    "require_platform_spec_capability_note": true,
+    "full_coverage_trace_files": [
+      "TRACE-0001-ethics-bm-to-delivery.tsv"
+    ]
+  },
+  "notes": [
+    "Amaç: TRACE pack dosyalarında schema + minimum doluluk + (exemplar için) full coverage kuralını hard gate ile korumak.",
+    "Bu gate hedef dokümanların içerik doğruluğunu garanti etmez; izlenebilirlik zincirini kıran drift'i yakalar.",
+    "Full coverage yalnız policy’de listelenen exemplar trace dosyalarına uygulanır."
+  ]
+}

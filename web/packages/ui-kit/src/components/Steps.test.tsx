@@ -28,4 +28,12 @@ describe('Steps', () => {
 
     expect(container.querySelector('ol')).toHaveAttribute('data-orientation', 'vertical');
   });
+
+  test('vertical interactive varyantta aktif step değişir', () => {
+    render(<Steps items={items} defaultValue="review" orientation="vertical" interactive />);
+
+    fireEvent.click(screen.getByRole('button', { name: /Yayın/i }));
+
+    expect(screen.getByText('Yayın').closest('[aria-current="step"]')).toBeInTheDocument();
+  });
 });

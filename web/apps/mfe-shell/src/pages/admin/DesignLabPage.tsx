@@ -63,7 +63,7 @@ import {
   LibraryCodeBlock,
   LibrarySectionBadge as SectionBadge,
   LibraryDetailLabel as DetailLabel,
-  LibraryPreviewPanel as PreviewPanel,
+  LibraryPreviewPanel,
   LibraryShowcaseCard,
   LibraryMetricCard,
   LibraryDetailTabs,
@@ -84,6 +84,9 @@ type DesignLabAvailability = 'exported' | 'planned';
 type DesignLabDemoMode = 'live' | 'inspector' | 'planned';
 type DesignLabTrack = 'new_packages' | 'current_system' | 'roadmap';
 type DesignLabDetailTab = 'overview' | 'demo' | 'api' | 'ux' | 'quality';
+type DesignLabWorkspaceMode = 'components' | 'recipes';
+type DesignLabDemoGalleryMode = 'all' | 'live_only' | 'recipes_first';
+type DemoSurfaceKind = 'live' | 'reference' | 'recipe';
 
 type DesignLabIndexItem = {
   name: string;
@@ -456,18 +459,195 @@ type ComponentShowcaseSection = {
   title: string;
   description?: string;
   badges?: string[];
+  kind?: DemoSurfaceKind;
   content: React.ReactNode;
+};
+
+type DesignLabRecipeFamily = NonNullable<NonNullable<DesignLabIndex['recipes']>['currentFamilies']>[number];
+
+type PreviewPanelProps = React.ComponentProps<typeof LibraryPreviewPanel> & {
+  kind?: DemoSurfaceKind;
+};
+
+const demoGalleryModeOptions: Array<{
+  id: DesignLabDemoGalleryMode;
+  label: string;
+  note: string;
+}> = [
+  {
+    id: 'all',
+    label: 'Tüm yüzeyler',
+    note: 'Canlı demo, referans ve tarif kartlarını birlikte gösterir.',
+  },
+  {
+    id: 'live_only',
+    label: 'Demo only',
+    note: 'Not ve referans panelleri gizler; yalnız canlı yüzeyleri bırakır.',
+  },
+  {
+    id: 'recipes_first',
+    label: 'Recipes first',
+    note: 'Önce tüketim tariflerini, sonra component varyantlarını gösterir.',
+  },
+];
+
+const demoSurfaceMeta: Record<
+  DemoSurfaceKind,
+  {
+    label: string;
+    badgeClassName: string;
+    panelClassName: string;
+  }
+> = {
+  live: {
+    label: 'LIVE',
+    badgeClassName: 'border-state-success-border bg-state-success-bg text-state-success-text',
+    panelClassName: 'border-state-success-border/35',
+  },
+  reference: {
+    label: 'REFERENCE',
+    badgeClassName: 'border-border-subtle bg-surface-muted text-text-secondary',
+    panelClassName: 'border-border-subtle bg-surface-muted/30',
+  },
+  recipe: {
+    label: 'RECIPE',
+    badgeClassName: 'border-state-warning-border bg-state-warning-bg text-state-warning-text',
+    panelClassName: 'border-state-warning-border/35',
+  },
+};
+
+const DemoGalleryModeContext = React.createContext<DesignLabDemoGalleryMode>('all');
+
+const normalizeDemoSurfaceText = (value: string) =>
+  value
+    .trim()
+    .toLocaleLowerCase('tr-TR')
+    .replace(/ç/g, 'c')
+    .replace(/ğ/g, 'g')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ş/g, 's')
+    .replace(/ü/g, 'u')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ');
+
+const includesAnyDemoToken = (value: string, tokens: string[]) =>
+  tokens.some((token) => value.includes(token));
+
+const resolvePreviewPanelKind = (title: string, explicitKind?: DemoSurfaceKind): DemoSurfaceKind => {
+  if (explicitKind) return explicitKind;
+
+  const normalized = normalizeDemoSurfaceText(title);
+  if (includesAnyDemoToken(normalized, ['recipe', 'consume contract', 'consumer handoff', 'direct recipes'])) {
+    return 'recipe';
+  }
+  if (
+    includesAnyDemoToken(normalized, [
+      'guideline',
+      'usage note',
+      'rule of thumb',
+      'contract note',
+      'policy note',
+      'governance note',
+      'audit note',
+      'reading guidance',
+      'guidance',
+      'interpretation',
+      'why use it',
+      'why this matters',
+      'selected ',
+      'current ',
+      'summary',
+      'payload summary',
+      'policy snapshot',
+      'contract',
+      'live state',
+      'panel state',
+      'shared state',
+      'current command state',
+      'selected source',
+      'selected event',
+      'selected citation',
+      'kullanim notu',
+      'dogru kullanim notu',
+    ])
+  ) {
+    return 'reference';
+  }
+  return 'live';
+};
+
+const resolveShowcaseSectionKind = (section: ComponentShowcaseSection): DemoSurfaceKind => {
+  if (section.kind) return section.kind;
+
+  const normalized = normalizeDemoSurfaceText(
+    [section.id, section.title, section.description ?? '', ...(section.badges ?? [])].join(' '),
+  );
+
+  if (includesAnyDemoToken(normalized, ['recipe', 'recipes', 'consume contract', 'consumer handoff'])) {
+    return 'recipe';
+  }
+  if (
+    includesAnyDemoToken(normalized, [
+      'guideline',
+      'usage note',
+      'rule of thumb',
+      'contract note',
+      'policy note',
+      'governance note',
+      'audit note',
+      'reading guidance',
+      'guidance',
+      'interpretation',
+      'why use it',
+      'why this matters',
+    ])
+  ) {
+    return 'reference';
+  }
+  return 'live';
+};
+
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ title, children, className, kind }) => {
+  const demoGalleryMode = React.useContext(DemoGalleryModeContext);
+  const resolvedKind = resolvePreviewPanelKind(title, kind);
+
+  if (demoGalleryMode === 'live_only' && resolvedKind !== 'live') {
+    return null;
+  }
+
+  return (
+    <div
+      data-demo-panel-kind={resolvedKind}
+      className={[
+        'rounded-2xl border bg-surface-default p-4',
+        demoSurfaceMeta[resolvedKind].panelClassName,
+        className ?? '',
+      ]
+        .join(' ')
+        .trim()}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <DetailLabel className="text-xs">{title}</DetailLabel>
+        <SectionBadge label={demoSurfaceMeta[resolvedKind].label} className={demoSurfaceMeta[resolvedKind].badgeClassName} />
+      </div>
+      <div className="mt-3">{children}</div>
+    </div>
+  );
 };
 
 const DesignLabPage: React.FC = () => {
   const [query, setQuery] = useState('');
+  const [recipeQuery, setRecipeQuery] = useState('');
   const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('overview');
+  const [workspaceMode, setWorkspaceMode] = useState<DesignLabWorkspaceMode>('components');
   const [treeSelection, setTreeSelection] = useState<LibraryProductTreeSelection>({
     trackId: 'new_packages',
     groupId: 'ai_helpers',
     subgroupId: 'command_palette',
     itemId: 'CommandPalette',
   });
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(designLabIndex.recipes?.currentFamilies[0]?.recipeId ?? null);
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [contextMenuAction, setContextMenuAction] = useState('Henüz seçim yok');
@@ -654,7 +834,10 @@ const DesignLabPage: React.FC = () => {
   const [tabsValue, setTabsValue] = useState('overview');
   const [paginationPage, setPaginationPage] = useState(6);
   const [stepsValue, setStepsValue] = useState('review');
+  const [stepsStatusRichValue, setStepsStatusRichValue] = useState('preview');
   const [anchorValue, setAnchorValue] = useState('overview');
+  const [demoGalleryMode, setDemoGalleryMode] = useState<DesignLabDemoGalleryMode>('all');
+  const [sectionLockEnabled, setSectionLockEnabled] = useState(true);
 
   const activeTrack = (treeSelection.trackId as DesignLabTrack | null) ?? 'new_packages';
 
@@ -722,6 +905,62 @@ const DesignLabPage: React.FC = () => {
     () => buildRelatedRecipes(selectedItem, recipeSummary),
     [recipeSummary, selectedItem],
   );
+  const recipeFamilies = recipeSummary?.currentFamilies ?? [];
+  const normalizedRecipeQuery = recipeQuery.trim().toLowerCase();
+  const filteredRecipeFamilies = useMemo(() => {
+    if (!normalizedRecipeQuery) return recipeFamilies;
+    return recipeFamilies.filter((recipe) => {
+      const haystack = [recipe.recipeId, recipe.intent, ...recipe.ownerBlocks].join(' ').toLowerCase();
+      return haystack.includes(normalizedRecipeQuery);
+    });
+  }, [recipeFamilies, normalizedRecipeQuery]);
+  const selectedRecipe = useMemo(
+    () => filteredRecipeFamilies.find((recipe) => recipe.recipeId === selectedRecipeId)
+      ?? recipeFamilies.find((recipe) => recipe.recipeId === selectedRecipeId)
+      ?? filteredRecipeFamilies[0]
+      ?? recipeFamilies[0]
+      ?? null,
+    [filteredRecipeFamilies, recipeFamilies, selectedRecipeId],
+  );
+  const selectedRecipeItems = useMemo(
+    () =>
+      (selectedRecipe?.ownerBlocks ?? [])
+        .map((owner) => designLabIndex.items.find((item) => item.name === owner) ?? null)
+        .filter((item): item is DesignLabIndexItem => Boolean(item)),
+    [selectedRecipe],
+  );
+  const selectedRecipeTracks = useMemo(
+    () =>
+      Array.from(
+        new Set(selectedRecipeItems.map((item) => trackMeta[resolveItemTrack(item)].label)),
+      ),
+    [selectedRecipeItems],
+  );
+  const selectedRecipeSections = useMemo(
+    () =>
+      Array.from(
+        new Set(selectedRecipeItems.flatMap((item) => item.sectionIds ?? [])),
+      ),
+    [selectedRecipeItems],
+  );
+  const selectedRecipeThemes = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          selectedRecipeItems.flatMap((item) =>
+            [item.uxPrimaryThemeId, item.uxPrimarySubthemeId].filter(Boolean) as string[],
+          ),
+        ),
+      ),
+    [selectedRecipeItems],
+  );
+  const selectedRecipeQualityGates = useMemo(
+    () =>
+      Array.from(
+        new Set(selectedRecipeItems.flatMap((item) => item.qualityGates ?? [])),
+      ),
+    [selectedRecipeItems],
+  );
 
   const trackSummary = useMemo(
     () => ({
@@ -732,7 +971,7 @@ const DesignLabPage: React.FC = () => {
     [],
   );
 
-  const heroStats = useMemo(() => {
+  const componentHeroStats = useMemo(() => {
     if (!selectedItem) {
       return [];
     }
@@ -743,6 +982,19 @@ const DesignLabPage: React.FC = () => {
       { label: 'Kullanım', value: String(selectedItem.whereUsed.length), note: 'Tespit edilen kullanım noktası' },
     ];
   }, [selectedGroup, selectedItem]);
+  const recipeHeroStats = useMemo(() => {
+    if (!selectedRecipe) {
+      return [];
+    }
+    return [
+      { label: 'Owner Blocks', value: String(selectedRecipe.ownerBlocks.length), note: 'Recipe içindeki canonical component sayısı' },
+      { label: 'Tracks', value: String(selectedRecipeTracks.length), note: 'Tüketilen yayın hattı sayısı' },
+      { label: 'Sections', value: String(selectedRecipeSections.length), note: 'North-star kapsama alanı' },
+      { label: 'Themes', value: String(selectedRecipeThemes.length), note: 'Bağlı UX tema ve alt tema sayısı' },
+    ];
+  }, [selectedRecipe, selectedRecipeSections.length, selectedRecipeThemes.length, selectedRecipeTracks.length]);
+  const heroStats = workspaceMode === 'recipes' ? recipeHeroStats : componentHeroStats;
+  const activeSubjectKey = workspaceMode === 'recipes' ? selectedRecipe?.recipeId ?? null : selectedItem?.name ?? null;
 
   const detailSectionRefs = useRef<Record<DesignLabDetailTab, HTMLElement | null>>({
     overview: null,
@@ -751,6 +1003,24 @@ const DesignLabPage: React.FC = () => {
     ux: null,
     quality: null,
   });
+  const previousItemNameRef = useRef<string | null>(null);
+  const sectionLockEnabledRef = useRef(sectionLockEnabled);
+  const detailTabRef = useRef<DesignLabDetailTab>(detailTab);
+
+  useEffect(() => {
+    sectionLockEnabledRef.current = sectionLockEnabled;
+  }, [sectionLockEnabled]);
+
+  useEffect(() => {
+    detailTabRef.current = detailTab;
+  }, [detailTab]);
+
+  useEffect(() => {
+    if (workspaceMode !== 'recipes') return;
+    if (selectedRecipe) return;
+    if (!filteredRecipeFamilies.length) return;
+    setSelectedRecipeId(filteredRecipeFamilies[0].recipeId);
+  }, [filteredRecipeFamilies, selectedRecipe, workspaceMode]);
 
   useEffect(() => {
     setModalOpen(false);
@@ -761,8 +1031,25 @@ const DesignLabPage: React.FC = () => {
     setTourOpen(false);
     setTourStep(0);
     setTourStatus('idle');
-    setDetailTab('overview');
-  }, [selectedItem?.name]);
+  }, [activeSubjectKey]);
+
+  useEffect(() => {
+    const previousItemName = previousItemNameRef.current;
+    const itemChanged = Boolean(previousItemName && previousItemName !== activeSubjectKey);
+
+    if (itemChanged) {
+      if (sectionLockEnabledRef.current) {
+        const lockedSection = detailTabRef.current;
+        window.requestAnimationFrame(() => {
+          detailSectionRefs.current[lockedSection]?.scrollIntoView({ behavior: 'auto', block: 'start' });
+        });
+      } else {
+        setDetailTab('overview');
+      }
+    }
+
+    previousItemNameRef.current = activeSubjectKey;
+  }, [activeSubjectKey]);
 
   useEffect(() => {
     if (!selectedItem) return;
@@ -816,11 +1103,21 @@ const DesignLabPage: React.FC = () => {
 
     sections.forEach((section) => observer.observe(section.element));
     return () => observer.disconnect();
-  }, [selectedItem?.name]);
+  }, [activeSubjectKey]);
 
   const scrollToDetailSection = (tabId: DesignLabDetailTab) => {
     setDetailTab(tabId);
     detailSectionRefs.current[tabId]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const focusComponentFromRecipe = (item: DesignLabIndexItem) => {
+    setWorkspaceMode('components');
+    setTreeSelection({
+      trackId: resolveItemTrack(item),
+      groupId: item.taxonomyGroupId,
+      subgroupId: item.taxonomySubgroup,
+      itemId: item.name,
+    });
   };
 
   const treeTracks = useMemo<LibraryProductTreeTrack[]>(() => {
@@ -1547,19 +1844,20 @@ const DesignLabPage: React.FC = () => {
               </PreviewPanel>
               <PreviewPanel title="Vertical / status-rich">
                 <Steps
+                  value={stepsStatusRichValue}
+                  onValueChange={setStepsStatusRichValue}
                   orientation="vertical"
+                  interactive
                   items={[
                     {
                       value: 'scope',
                       title: 'Scope',
                       description: 'Contract ve registry eşleşmesi tamamlandı.',
-                      status: 'complete',
                     },
                     {
                       value: 'preview',
                       title: 'Preview',
                       description: 'Live preview ve demoscope gözden geçiriliyor.',
-                      status: 'current',
                     },
                     {
                       value: 'security',
@@ -5475,6 +5773,235 @@ const DesignLabPage: React.FC = () => {
     }
   };
 
+  const buildRecipeLensSection = (item: DesignLabIndexItem): ComponentShowcaseSection | null => {
+    if (!recipeSummary) return null;
+
+    const directRecipes = relatedRecipes.length
+      ? relatedRecipes
+      : recipeSummary.currentFamilies.filter((recipe) => recipe.ownerBlocks.includes(item.name));
+
+    const recipeCandidates = directRecipes.length ? directRecipes : recipeSummary.currentFamilies.slice(0, 3);
+
+    return {
+      id: `${toTestIdSuffix(item.name)}-recipe-lens`,
+      kind: 'recipe',
+      eyebrow: 'Recipe Lens',
+      title: 'Recipe composition lens',
+      description: 'Bu component hangi ekran reçetelerinde kullanılır ve tüketici ekip nerede hazır kompozisyon almalıdır.',
+      badges: ['recipe-first', 'consumer-handoff', `${recipeCandidates.length} recipe`],
+      content: (
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+          <PreviewPanel title="Direct recipes" kind="recipe">
+            <div className="grid grid-cols-1 gap-3">
+              {recipeCandidates.map((recipe) => (
+                <div key={recipe.recipeId} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <Text as="div" className="font-semibold text-text-primary">
+                        {recipe.recipeId}
+                      </Text>
+                      <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                        {recipe.intent}
+                      </Text>
+                    </div>
+                    <Badge tone={recipe.ownerBlocks.includes(item.name) ? 'success' : 'muted'}>
+                      {recipe.ownerBlocks.includes(item.name) ? 'Direct owner' : 'Related'}
+                    </Badge>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {recipe.ownerBlocks.map((owner) => (
+                      <SectionBadge
+                        key={owner}
+                        label={owner}
+                        className={owner === item.name ? 'border-state-success-border bg-state-success-bg text-state-success-text' : undefined}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </PreviewPanel>
+          <PreviewPanel title="Consumer handoff" kind="recipe">
+            <div className="grid grid-cols-1 gap-3">
+              <LibraryMetricCard
+                label="Preferred source"
+                value={directRecipes.length ? 'Recipe composition' : 'Primitive composition'}
+                note={directRecipes.length ? 'Bu component için önce hazır recipe ailesi tüketilmeli.' : 'Hazır recipe yok; primitive doğrudan compose edilecek.'}
+              />
+              <LibraryMetricCard
+                label="Primary track"
+                value={trackMeta[resolveItemTrack(item)].label}
+                note="Tüketici ekip aynı track içindeki canonical recipe ve theme presetlerini referans almalı."
+              />
+              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>Consumer rule</DetailLabel>
+                <Text variant="secondary" className="mt-2 block text-sm leading-7">
+                  Uygulama ekipleri yeni ekran tasarımını sayfa içinde yeniden icat etmemeli. Önce bu lens içindeki recipe aileleri
+                  kontrol edilmeli; yalnız eksikse primitive seviyesinde yeni kompozisyon tasarlanmalı.
+                </Text>
+              </div>
+            </div>
+          </PreviewPanel>
+        </div>
+      ),
+    };
+  };
+
+  const buildRecipeWorkspaceShowcaseSections = (recipe: DesignLabRecipeFamily): ComponentShowcaseSection[] => {
+    const recipeItems = recipe.ownerBlocks
+      .map((owner) => designLabIndex.items.find((item) => item.name === owner) ?? null)
+      .filter((item): item is DesignLabIndexItem => Boolean(item));
+    const missingOwners = recipe.ownerBlocks.filter((owner) => !recipeItems.some((item) => item.name === owner));
+    const recipeTracks = Array.from(new Set(recipeItems.map((item) => trackMeta[resolveItemTrack(item)].label)));
+    const recipeSections = Array.from(new Set(recipeItems.flatMap((item) => item.sectionIds ?? [])));
+    const recipeThemes = Array.from(
+      new Set(
+        recipeItems.flatMap((item) => [item.uxPrimaryThemeId, item.uxPrimarySubthemeId].filter(Boolean) as string[]),
+      ),
+    );
+    const recipeQuality = Array.from(new Set(recipeItems.flatMap((item) => item.qualityGates ?? [])));
+
+    return [
+      {
+        id: `${toTestIdSuffix(recipe.recipeId)}-assembly-map`,
+        kind: 'recipe',
+        eyebrow: 'Recipe 01',
+        title: 'Assembly map',
+        description: 'Recipe içindeki canonical bloklar, track dağılımı ve eksik owner eşleşmeleri.',
+        badges: ['recipe', 'assembly', `${recipe.ownerBlocks.length} blocks`],
+        content: (
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+            <PreviewPanel title="Assembly map" kind="recipe">
+              <div className="grid grid-cols-1 gap-3">
+                {recipe.ownerBlocks.map((owner) => {
+                  const item = recipeItems.find((entry) => entry.name === owner) ?? null;
+                  return (
+                    <div key={owner} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <Text as="div" className="font-semibold text-text-primary">
+                            {owner}
+                          </Text>
+                          <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                            {item?.description ?? 'Registry içinde ilgili component bulunamadı.'}
+                          </Text>
+                        </div>
+                        <Badge tone={item ? 'success' : 'warning'}>
+                          {item ? trackMeta[resolveItemTrack(item)].label : 'Missing'}
+                        </Badge>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </PreviewPanel>
+            <PreviewPanel title="Consumer handoff" kind="recipe">
+              <div className="grid grid-cols-1 gap-3">
+                <LibraryMetricCard
+                  label="Preferred path"
+                  value="Recipe -> Screen"
+                  note="Ürün ekipleri bu recipe ailelerinden başlayıp yalnız veri ve iş kuralı bağlamalı."
+                />
+                <LibraryMetricCard
+                  label="Track spread"
+                  value={recipeTracks.length ? recipeTracks.join(' / ') : '—'}
+                  note="Recipe bileşenleri birden fazla track kapsıyorsa tasarım kararları bu yüzeyde kilitlenmeli."
+                />
+                {missingOwners.length ? (
+                  <div className="rounded-2xl border border-state-warning-border bg-state-warning-bg p-4">
+                    <DetailLabel>Missing owners</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {missingOwners.map((owner) => (
+                        <SectionBadge key={owner} label={owner} className="border-state-warning-border bg-state-warning-bg text-state-warning-text" />
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                    <DetailLabel>Contract health</DetailLabel>
+                    <Text variant="secondary" className="mt-2 block text-sm leading-7">
+                      Tüm owner block’lar registry ile eşleşiyor. Bu recipe artık tüketici ekranları için güvenli başlangıç noktası olarak kullanılabilir.
+                    </Text>
+                  </div>
+                )}
+              </div>
+            </PreviewPanel>
+          </div>
+        ),
+      },
+      {
+        id: `${toTestIdSuffix(recipe.recipeId)}-building-blocks`,
+        kind: 'live',
+        eyebrow: 'Recipe 02',
+        title: 'Primary building blocks',
+        description: 'Recipe içindeki bloklardan herhangi birine geçip component seviyesinde incelemeye devam et.',
+        badges: ['live', 'component-bridge', 'handoff'],
+        content: (
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            {recipeItems.map((item) => (
+              <div key={item.name} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <Text as="div" className="font-semibold text-text-primary">
+                      {item.name}
+                    </Text>
+                    <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                      {item.description}
+                    </Text>
+                  </div>
+                  <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
+                    {statusLabel[item.lifecycle]}
+                  </Badge>
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <SectionBadge label={trackMeta[resolveItemTrack(item)].label} />
+                  {item.uxPrimaryThemeId ? <SectionBadge label={item.uxPrimaryThemeId} /> : null}
+                </div>
+                <div className="mt-4">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => focusComponentFromRecipe(item)}
+                    data-testid={`design-lab-recipe-owner-${toTestIdSuffix(recipe.recipeId)}-${toTestIdSuffix(item.name)}`}
+                  >
+                    Component detayına git
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ),
+      },
+      {
+        id: `${toTestIdSuffix(recipe.recipeId)}-quality-reference`,
+        kind: 'reference',
+        eyebrow: 'Recipe 03',
+        title: 'Governance and quality contract',
+        description: 'Recipe düzeyinde ortak quality gate, UX tema ve north-star section kapsaması.',
+        badges: ['reference', 'quality', 'ux'],
+        content: (
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1fr]">
+            <PreviewPanel title="Quality gates" kind="reference">
+              <div className="flex flex-wrap gap-2">
+                {recipeQuality.length ? recipeQuality.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">Gate yok</Text>}
+              </div>
+            </PreviewPanel>
+            <PreviewPanel title="UX and sections" kind="reference">
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-2">
+                  {recipeThemes.length ? recipeThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">UX theme yok</Text>}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {recipeSections.length ? recipeSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">North-star section yok</Text>}
+                </div>
+              </div>
+            </PreviewPanel>
+          </div>
+        ),
+      },
+    ];
+  };
+
   const renderDemoSection = (item: DesignLabIndexItem | null) => {
     if (!item) {
       return <Text variant="secondary">Canlı showcase için component seç.</Text>;
@@ -5507,36 +6034,78 @@ const DesignLabPage: React.FC = () => {
       );
     }
 
-    const showcaseSections = buildDemoShowcaseSections(item);
+    const baseShowcaseSections = buildDemoShowcaseSections(item).map((section) => ({
+      ...section,
+      kind: resolveShowcaseSectionKind(section),
+    }));
+    const recipeLensSection = buildRecipeLensSection(item);
+    const orderedShowcaseSections = demoGalleryMode === 'recipes_first'
+      ? [
+          ...(recipeLensSection ? [recipeLensSection] : []),
+          ...baseShowcaseSections.sort((left, right) => {
+            const order: Record<DemoSurfaceKind, number> = { recipe: 0, live: 1, reference: 2 };
+            return order[left.kind ?? 'live'] - order[right.kind ?? 'live'];
+          }),
+        ]
+      : baseShowcaseSections.filter((section) => demoGalleryMode !== 'live_only' || section.kind === 'live');
 
     return (
-      <div className="space-y-5">
-        <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-          <div className="flex flex-wrap gap-2">
-            {showcaseSections.map((section, index) => (
-              <SectionBadge key={section.id} label={`${String(index + 1).padStart(2, '0')} · ${section.title}`} />
-            ))}
+      <DemoGalleryModeContext.Provider value={demoGalleryMode}>
+        <div className="space-y-5">
+          <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+            <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+              <div className="flex flex-wrap gap-2">
+                {orderedShowcaseSections.map((section, index) => (
+                  <SectionBadge key={section.id} label={`${String(index + 1).padStart(2, '0')} · ${section.title}`} />
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <SectionBadge label={`Mod · ${demoGalleryModeOptions.find((entry) => entry.id === demoGalleryMode)?.label ?? 'Tüm yüzeyler'}`} />
+                <SectionBadge label={sectionLockEnabled ? 'Section lock · Açık' : 'Section lock · Kapalı'} />
+              </div>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {(['live', 'reference', 'recipe'] as DemoSurfaceKind[]).map((kind) => (
+                <SectionBadge
+                  key={kind}
+                  label={demoSurfaceMeta[kind].label}
+                  className={demoSurfaceMeta[kind].badgeClassName}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-5">
+            {orderedShowcaseSections.length ? (
+              orderedShowcaseSections.map((section) => (
+                <div key={section.id} data-testid={`design-lab-demo-card-${section.id}`} data-demo-section-kind={section.kind}>
+                  <LibraryShowcaseCard
+                    eyebrow={section.eyebrow}
+                    title={section.title}
+                    description={section.description}
+                    badges={[
+                      <SectionBadge
+                        key={`${section.id}-kind`}
+                        label={demoSurfaceMeta[section.kind ?? 'live'].label}
+                        className={demoSurfaceMeta[section.kind ?? 'live'].badgeClassName}
+                      />,
+                      ...((section.badges ?? []).map((badge) => <SectionBadge key={`${section.id}-${badge}`} label={badge} />)),
+                    ]}
+                  >
+                    {section.content}
+                  </LibraryShowcaseCard>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                <Text variant="secondary" className="block leading-7">
+                  Seçili mod için görünür demo kalmadı. `Tüm yüzeyler` veya `Recipes first` moduna dönerek referans ve tarif bloklarını tekrar açabilirsin.
+                </Text>
+              </div>
+            )}
           </div>
         </div>
-
-        <div className="space-y-5">
-          {showcaseSections.map((section) => (
-            <LibraryShowcaseCard
-              key={section.id}
-              eyebrow={section.eyebrow}
-              title={section.title}
-              description={section.description}
-              badges={
-                section.badges?.length
-                  ? section.badges.map((badge) => <SectionBadge key={badge} label={badge} />)
-                  : undefined
-              }
-            >
-              {section.content}
-            </LibraryShowcaseCard>
-          ))}
-        </div>
-      </div>
+      </DemoGalleryModeContext.Provider>
     );
   };
 
@@ -5979,7 +6548,218 @@ const DesignLabPage: React.FC = () => {
     );
   };
 
-  const renderDetailTabContent = (item: DesignLabIndexItem | null) => (
+  const renderRecipeOverviewTab = (recipe: DesignLabRecipeFamily | null) => {
+    if (!recipe) {
+      return (
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <Text variant="secondary">Recipe Explorer için soldan bir reçete seç.</Text>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Recipe Summary</DetailLabel>
+            <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
+              {recipe.recipeId}
+            </Text>
+            <Text variant="secondary" className="mt-2 block leading-7">
+              {recipe.intent}
+            </Text>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {recipe.ownerBlocks.map((owner) => (
+                <SectionBadge key={owner} label={owner} />
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Recipe Quick Status</DetailLabel>
+            <div className="mt-4 grid grid-cols-1 gap-3">
+              <LibraryMetricCard label="Owner blocks" value={recipe.ownerBlocks.length} note="Bu recipe içindeki canonical bileşen sayısı." />
+              <LibraryMetricCard label="Tracks" value={selectedRecipeTracks.length} note="Recipe’in dağıldığı yayın hattı sayısı." />
+              <LibraryMetricCard label="Sections" value={selectedRecipeSections.length} note="Kapsanan north-star section sayısı." />
+              <LibraryMetricCard label="Themes" value={selectedRecipeThemes.length} note="Bağlı UX tema ve alt tema yüzeyi." />
+            </div>
+          </div>
+        </div>
+
+        <LibraryShowcaseCard
+          eyebrow="Consumer Flow"
+          title="Recipe adoption contract"
+          description="Uygulama ekipleri önce recipe seviyesinde karar almalı, sonra gerekli owner block detayına inmelidir."
+          badges={[
+            <SectionBadge key="recipe-id" label={recipe.recipeId} />,
+            <SectionBadge key="recipe-owner-count" label={`${recipe.ownerBlocks.length} owner block`} />,
+          ]}
+        >
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+            <LibraryMetricCard label="Step 1" value="Recipe seç" note="Ekran problemi önce hazır recipe ailesiyle eşleştirilir." />
+            <LibraryMetricCard label="Step 2" value="Preset kilitle" note="Theme, density ve UX section kararları recipe katmanında sabitlenir." />
+            <LibraryMetricCard label="Step 3" value="Componente in" note="Yalnız eksik blok ya da varyant ihtiyacı varsa primitive detaya inilmelidir." />
+          </div>
+        </LibraryShowcaseCard>
+      </div>
+    );
+  };
+
+  const renderRecipeDemoSection = (recipe: DesignLabRecipeFamily | null) => {
+    if (!recipe) {
+      return <Text variant="secondary">Demo ve kompozisyon için bir recipe seç.</Text>;
+    }
+
+    const baseShowcaseSections = buildRecipeWorkspaceShowcaseSections(recipe).map((section) => ({
+      ...section,
+      kind: resolveShowcaseSectionKind(section),
+    }));
+    const orderedShowcaseSections = demoGalleryMode === 'recipes_first'
+      ? [...baseShowcaseSections].sort((left, right) => {
+          const order: Record<DemoSurfaceKind, number> = { recipe: 0, live: 1, reference: 2 };
+          return order[left.kind ?? 'live'] - order[right.kind ?? 'live'];
+        })
+      : baseShowcaseSections.filter((section) => demoGalleryMode !== 'live_only' || section.kind === 'live');
+
+    return (
+      <DemoGalleryModeContext.Provider value={demoGalleryMode}>
+        <div className="space-y-5">
+          <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+            <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+              <div className="flex flex-wrap gap-2">
+                {orderedShowcaseSections.map((section, index) => (
+                  <SectionBadge key={section.id} label={`${String(index + 1).padStart(2, '0')} · ${section.title}`} />
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <SectionBadge label={`Mod · ${demoGalleryModeOptions.find((entry) => entry.id === demoGalleryMode)?.label ?? 'Tüm yüzeyler'}`} />
+                <SectionBadge label={sectionLockEnabled ? 'Section lock · Açık' : 'Section lock · Kapalı'} />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-5">
+            {orderedShowcaseSections.length ? (
+              orderedShowcaseSections.map((section) => (
+                <div key={section.id} data-testid={`design-lab-recipe-demo-card-${section.id}`} data-demo-section-kind={section.kind}>
+                  <LibraryShowcaseCard
+                    eyebrow={section.eyebrow}
+                    title={section.title}
+                    description={section.description}
+                    badges={[
+                      <SectionBadge
+                        key={`${section.id}-kind`}
+                        label={demoSurfaceMeta[section.kind ?? 'live'].label}
+                        className={demoSurfaceMeta[section.kind ?? 'live'].badgeClassName}
+                      />,
+                      ...((section.badges ?? []).map((badge) => <SectionBadge key={`${section.id}-${badge}`} label={badge} />)),
+                    ]}
+                  >
+                    {section.content}
+                  </LibraryShowcaseCard>
+                </div>
+              ))
+            ) : (
+              <div className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                <Text variant="secondary" className="block leading-7">
+                  Seçili mod için görünür recipe demosu kalmadı. `Tüm yüzeyler` veya `Recipes first` moduna dönerek kompozisyon kartlarını tekrar açabilirsin.
+                </Text>
+              </div>
+            )}
+          </div>
+        </div>
+      </DemoGalleryModeContext.Provider>
+    );
+  };
+
+  const renderRecipeApiTab = (recipe: DesignLabRecipeFamily | null) => {
+    if (!recipe) {
+      return <Text variant="secondary">Consume contract için bir recipe seç.</Text>;
+    }
+
+    const composeCode = `import { ${recipe.ownerBlocks.join(', ')} } from 'mfe-ui-kit';\n\nexport function ${recipe.recipeId.replace(/[^a-zA-Z0-9]+/g, ' ')}Recipe() {\n  return (\n    <div>{/* ${recipe.intent} */}</div>\n  );\n}`;
+    const usageRecipes = [
+      {
+        title: 'Compose recipe shell',
+        description: 'Recipe owner block setini doğrudan aynı yüzeyde compose et.',
+        code: composeCode,
+      },
+      {
+        title: 'Consumer handoff',
+        description: 'Uygulama ekipleri önce recipe kararını taşır, sonra gerekirse alt primitive varyantı açar.',
+        code: `// Recipe intent\n// ${recipe.intent}\n// Owner blocks: ${recipe.ownerBlocks.join(', ')}\n// Contract: ${recipeSummary?.contractId ?? 'recipe-contract'}`,
+      },
+    ];
+
+    return (
+      <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Recipe Contract</DetailLabel>
+            <LibraryCodeBlock code={composeCode} className="mt-3" />
+          </div>
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <DetailLabel>Registry Binding</DetailLabel>
+            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-1">
+              <LibraryMetricCard label="Recipe ID" value={recipe.recipeId} note="Design Lab içindeki canonical recipe kimliği." />
+              <LibraryMetricCard label="Owner blocks" value={recipe.ownerBlocks.length} note="Tüketici ekranın compose edeceği resmi blok seti." />
+              <LibraryMetricCard label="Tracks" value={selectedRecipeTracks.join(' / ') || '—'} note="Recipe içindeki yayın hatları." />
+              <LibraryMetricCard label="Contract" value={recipeSummary?.contractId ?? '—'} note="Recipe sisteminin kaynak kontratı." />
+            </div>
+          </div>
+        </div>
+        <LibraryUsageRecipesPanel title="Recipe consume patterns" recipes={usageRecipes} />
+      </div>
+    );
+  };
+
+  const renderRecipeUxTab = (recipe: DesignLabRecipeFamily | null) => {
+    if (!recipe) {
+      return <Text variant="secondary">UX hizası için bir recipe seç.</Text>;
+    }
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>UX Theme Coverage</DetailLabel>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {selectedRecipeThemes.length ? selectedRecipeThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">Theme bağı yok</Text>}
+          </div>
+        </div>
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>North Star Sections</DetailLabel>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {selectedRecipeSections.length ? selectedRecipeSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">Section bağı yok</Text>}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderRecipeQualityTab = (recipe: DesignLabRecipeFamily | null) => {
+    if (!recipe) {
+      return <Text variant="secondary">Kalite bilgisi için bir recipe seç.</Text>;
+    }
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Combined Quality Gates</DetailLabel>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {selectedRecipeQualityGates.length ? selectedRecipeQualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">Quality gate yok</Text>}
+          </div>
+        </div>
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>Lifecycle Mix</DetailLabel>
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+            <LibraryMetricCard label="Stable" value={selectedRecipeItems.filter((item) => item.lifecycle === 'stable').length} note="Recipe içindeki stable blok sayısı." />
+            <LibraryMetricCard label="Beta" value={selectedRecipeItems.filter((item) => item.lifecycle === 'beta').length} note="Henüz stabilize edilmemiş blok sayısı." />
+            <LibraryMetricCard label="Live demo" value={selectedRecipeItems.filter((item) => item.demoMode === 'live').length} note="Canlı demoya sahip blok sayısı." />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderComponentDetailTabContent = (item: DesignLabIndexItem | null) => (
     <div className="space-y-5">
       <LibraryDocsSection
         ref={(node) => {
@@ -6003,11 +6783,33 @@ const DesignLabPage: React.FC = () => {
         title="Demo Gallery"
         description="Ant Design ve Material UI benzeri tek sayfa showcase akışı. Seçili component için bütün alternatifler aşağı doğru görünür."
         actions={
-          item?.importStatement ? (
-            <Button variant="secondary" onClick={() => handleCopy(item.importStatement)}>
-              Import kopyala
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Button
+              size="sm"
+              variant={sectionLockEnabled ? 'secondary' : 'ghost'}
+              onClick={() => setSectionLockEnabled((current) => !current)}
+              data-testid="design-lab-section-lock-toggle"
+            >
+              {sectionLockEnabled ? 'Section lock açık' : 'Section lock kapalı'}
             </Button>
-          ) : undefined
+            {demoGalleryModeOptions.map((option) => (
+              <Button
+                key={option.id}
+                size="sm"
+                variant={demoGalleryMode === option.id ? 'secondary' : 'ghost'}
+                onClick={() => setDemoGalleryMode(option.id)}
+                data-testid={`design-lab-demo-mode-${option.id}`}
+                title={option.note}
+              >
+                {option.label}
+              </Button>
+            ))}
+            {item?.importStatement ? (
+              <Button variant="secondary" size="sm" onClick={() => handleCopy(item.importStatement)}>
+                Import kopyala
+              </Button>
+            ) : null}
+          </div>
         }
         className="scroll-mt-32"
       >
@@ -6055,6 +6857,167 @@ const DesignLabPage: React.FC = () => {
     </div>
   );
 
+  const renderRecipeDetailTabContent = (recipe: DesignLabRecipeFamily | null) => (
+    <div className="space-y-5">
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.overview = node;
+        }}
+        id="design-lab-section-overview"
+        eyebrow="Section 01"
+        title="Overview"
+        description="Recipe amacı, owner blokları ve tüketim karar çerçevesi."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="overview">{renderRecipeOverviewTab(recipe)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.demo = node;
+        }}
+        id="design-lab-section-demo"
+        eyebrow="Section 02"
+        title="Recipe Gallery"
+        description="Recipe kompozisyonu, canlı blok köprüleri ve tüketici handoff akışı."
+        actions={
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Button
+              size="sm"
+              variant={sectionLockEnabled ? 'secondary' : 'ghost'}
+              onClick={() => setSectionLockEnabled((current) => !current)}
+              data-testid="design-lab-section-lock-toggle"
+            >
+              {sectionLockEnabled ? 'Section lock açık' : 'Section lock kapalı'}
+            </Button>
+            {demoGalleryModeOptions.map((option) => (
+              <Button
+                key={option.id}
+                size="sm"
+                variant={demoGalleryMode === option.id ? 'secondary' : 'ghost'}
+                onClick={() => setDemoGalleryMode(option.id)}
+                data-testid={`design-lab-demo-mode-${option.id}`}
+                title={option.note}
+              >
+                {option.label}
+              </Button>
+            ))}
+          </div>
+        }
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="demo">{renderRecipeDemoSection(recipe)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.api = node;
+        }}
+        id="design-lab-section-api"
+        eyebrow="Section 03"
+        title="Consume Contract"
+        description="Recipe import, compose ve consumer handoff reçeteleri."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="api">{renderRecipeApiTab(recipe)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.ux = node;
+        }}
+        id="design-lab-section-ux"
+        eyebrow="Section 04"
+        title="UX Alignment"
+        description="Recipe düzeyinde tema, north-star ve design intent kapsaması."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="ux">{renderRecipeUxTab(recipe)}</div>
+      </LibraryDocsSection>
+
+      <LibraryDocsSection
+        ref={(node) => {
+          detailSectionRefs.current.quality = node;
+        }}
+        id="design-lab-section-quality"
+        eyebrow="Section 05"
+        title="Quality"
+        description="Recipe içindeki blokların birleşik kalite görünümü."
+        className="scroll-mt-32"
+      >
+        <div data-detail-section-id="quality">{renderRecipeQualityTab(recipe)}</div>
+      </LibraryDocsSection>
+    </div>
+  );
+
+  const sidebarSearchValue = workspaceMode === 'recipes' ? recipeQuery : query;
+  const sidebarSearchPlaceholder = workspaceMode === 'recipes' ? 'Recipe ara...' : 'Component ara...';
+  const sidebarHelpText = workspaceMode === 'recipes'
+    ? 'Recipe ailelerini, owner block setlerini ve tüketim kontratlarını tek akışta gezmek için kullan.'
+    : 'Component ailelerini, export durumunu ve canlı demoları tek bir doküman akışında gezmek için kullan.';
+  const activeHeroTitle = workspaceMode === 'recipes' ? selectedRecipe?.recipeId ?? 'Recipe seç' : selectedItem?.name ?? 'Component seç';
+  const activeHeroDescription = workspaceMode === 'recipes'
+    ? selectedRecipe?.intent ?? 'Sol menüden bir recipe seçerek canonical ekran kompozisyonlarını inceleyebilirsin.'
+    : selectedItem?.description ?? 'Sol menüden bir component seçerek canlı demo, API ve kalite detaylarını inceleyebilirsin.';
+  const activeHeroLabel = workspaceMode === 'recipes' ? 'Recipe' : 'Component';
+  const activeDetailContent = workspaceMode === 'recipes'
+    ? renderRecipeDetailTabContent(selectedRecipe)
+    : renderComponentDetailTabContent(selectedItem);
+  const sidebarStats = workspaceMode === 'recipes'
+    ? [
+        { label: 'Recipes', value: recipeFamilies.length },
+        { label: 'Filtered', value: filteredRecipeFamilies.length },
+        { label: 'Owner blocks', value: recipeFamilies.reduce((sum, recipe) => sum + recipe.ownerBlocks.length, 0) },
+        { label: 'Components', value: summary.total },
+      ]
+    : [
+        { label: 'Total', value: summary.total },
+        { label: 'Exported', value: summary.exported },
+        { label: 'Live', value: summary.liveDemo },
+        { label: 'Planned', value: summary.planned },
+      ];
+  const activeMetadataItems = workspaceMode === 'recipes'
+    ? [
+        {
+          label: 'Mode',
+          value: <Text as="div" className="font-semibold text-text-primary">Recipe Explorer</Text>,
+        },
+        {
+          label: 'Contract',
+          value: <Text as="div" className="break-all text-xs font-medium text-text-primary">{recipeSummary?.contractId ?? '—'}</Text>,
+        },
+        {
+          label: 'Owner Blocks',
+          value: <Text as="div" className="font-semibold text-text-primary">{String(selectedRecipe?.ownerBlocks.length ?? 0)}</Text>,
+        },
+        {
+          label: 'Tracks',
+          value: <Text as="div" className="font-semibold text-text-primary">{selectedRecipeTracks.join(' / ') || '—'}</Text>,
+        },
+      ]
+    : [
+        {
+          label: 'Status',
+          value: (
+            <Text as="div" className={`font-semibold ${selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary'}`}>
+              {selectedItem ? statusLabel[selectedItem.lifecycle] : 'Seçim yok'}
+            </Text>
+          ),
+        },
+        {
+          label: 'Package',
+          value: <Text as="div" className="font-semibold text-text-primary">mfe-ui-kit</Text>,
+        },
+        {
+          label: 'Contract',
+          value: (
+            <Text as="div" className="break-all text-xs font-medium text-text-primary">
+              {selectedItem?.acceptanceContractId ?? '—'}
+            </Text>
+          ),
+        },
+      ];
+
   return (
     <div data-testid="design-lab-page" className="min-h-screen bg-surface-canvas">
       <div className="mx-auto max-w-[1880px] px-4 py-5 xl:px-6">
@@ -6063,8 +7026,13 @@ const DesignLabPage: React.FC = () => {
           <span>/</span>
           <span>UI Library</span>
           <span>/</span>
-          <span>{selectedGroup?.title ?? trackMeta[activeTrack].label}</span>
-          {selectedItem ? (
+          <span>{workspaceMode === 'recipes' ? 'Recipe Explorer' : selectedGroup?.title ?? trackMeta[activeTrack].label}</span>
+          {workspaceMode === 'recipes' ? selectedRecipe ? (
+            <>
+              <span>/</span>
+              <span className="font-medium text-text-primary">{selectedRecipe.recipeId}</span>
+            </>
+          ) : null : selectedItem ? (
             <>
               <span>/</span>
               <span className="font-medium text-text-primary">{selectedItem.name}</span>
@@ -6083,25 +7051,49 @@ const DesignLabPage: React.FC = () => {
               </Text>
               <div className="mt-2 flex items-center justify-between gap-3">
                 <Text as="div" className="text-2xl font-semibold text-text-primary">
-                  Component Explorer
+                  {workspaceMode === 'recipes' ? 'Recipe Explorer' : 'Component Explorer'}
                 </Text>
-                <Tooltip text="Component ailelerini, export durumunu ve canlı demoları tek bir doküman akışında gezmek için kullan.">
+                <Tooltip text={sidebarHelpText}>
                   <span className="shrink-0">
                     <IconButton
                       icon={<CircleHelp className="h-4 w-4" />}
-                      label="Component Explorer yardımı"
+                      label={workspaceMode === 'recipes' ? 'Recipe Explorer yardımı' : 'Component Explorer yardımı'}
                       size="sm"
                       variant="ghost"
                     />
                   </span>
                 </Tooltip>
               </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button
+                  size="sm"
+                  variant={workspaceMode === 'components' ? 'secondary' : 'ghost'}
+                  onClick={() => setWorkspaceMode('components')}
+                  data-testid="design-lab-workspace-components"
+                >
+                  Components
+                </Button>
+                <Button
+                  size="sm"
+                  variant={workspaceMode === 'recipes' ? 'secondary' : 'ghost'}
+                  onClick={() => setWorkspaceMode('recipes')}
+                  data-testid="design-lab-workspace-recipes"
+                >
+                  Recipes
+                </Button>
+              </div>
               <div className="mt-3">
                 <input
                   data-testid="design-lab-search"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Component ara..."
+                  value={sidebarSearchValue}
+                  onChange={(event) => {
+                    if (workspaceMode === 'recipes') {
+                      setRecipeQuery(event.target.value);
+                      return;
+                    }
+                    setQuery(event.target.value);
+                  }}
+                  placeholder={sidebarSearchPlaceholder}
                   className="h-11 w-full rounded-2xl border border-border-default bg-surface-panel px-4 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
                   aria-label="UI library arama"
                 />
@@ -6109,21 +7101,74 @@ const DesignLabPage: React.FC = () => {
             </div>
 
             <div className="min-h-0 flex-1 overflow-auto px-4 py-5">
-              <section className="rounded-[24px] border border-border-subtle bg-surface-panel p-3">
-                <div className="mb-3 px-2">
-                  <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                    Ürün Ağacı
-                  </Text>
-                </div>
+              {workspaceMode === 'recipes' ? (
+                <section className="rounded-[24px] border border-border-subtle bg-surface-panel p-3">
+                  <div className="mb-3 flex items-center justify-between gap-2 px-2">
+                    <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                      Recipe Explorer
+                    </Text>
+                    <SectionBadge label={`${filteredRecipeFamilies.length} recipe`} />
+                  </div>
+                  <div className="space-y-2" data-testid="design-lab-recipe-list">
+                    {filteredRecipeFamilies.length ? filteredRecipeFamilies.map((recipe) => {
+                      const active = selectedRecipe?.recipeId === recipe.recipeId;
+                      return (
+                        <button
+                          key={recipe.recipeId}
+                          type="button"
+                          onClick={() => setSelectedRecipeId(recipe.recipeId)}
+                          data-testid={`design-lab-recipe-${toTestIdSuffix(recipe.recipeId)}`}
+                          className={`w-full rounded-[18px] border px-4 py-3 text-left transition ${
+                            active
+                              ? 'border-action-primary/30 bg-surface-default shadow-sm'
+                              : 'border-border-subtle bg-surface-canvas hover:bg-surface-muted'
+                          }`}
+                        >
+                          <div className="flex flex-wrap items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <Text as="div" className="text-sm font-semibold text-text-primary">
+                                {recipe.recipeId}
+                              </Text>
+                              <Text variant="secondary" className="mt-1 block text-xs leading-6">
+                                {recipe.intent}
+                              </Text>
+                            </div>
+                            <Badge tone={active ? 'info' : 'muted'}>{recipe.ownerBlocks.length}</Badge>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {recipe.ownerBlocks.slice(0, 3).map((owner) => (
+                              <SectionBadge key={owner} label={owner} />
+                            ))}
+                            {recipe.ownerBlocks.length > 3 ? <SectionBadge label={`+${recipe.ownerBlocks.length - 3}`} /> : null}
+                          </div>
+                        </button>
+                      );
+                    }) : (
+                      <div className="rounded-[18px] border border-border-subtle bg-surface-canvas px-4 py-4">
+                        <Text variant="secondary" className="block text-sm leading-7">
+                          Arama kriterine uyan recipe bulunamadı.
+                        </Text>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              ) : (
+                <section className="rounded-[24px] border border-border-subtle bg-surface-panel p-3">
+                  <div className="mb-3 px-2">
+                    <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                      Ürün Ağacı
+                    </Text>
+                  </div>
 
-                <LibraryProductTree
-                  tracks={treeTracks}
-                  selection={treeSelection}
-                  defaultSelection={treeSelection}
-                  onSelectionChange={setTreeSelection}
-                  testIdPrefix="design-lab"
-                />
-              </section>
+                  <LibraryProductTree
+                    tracks={treeTracks}
+                    selection={treeSelection}
+                    defaultSelection={treeSelection}
+                    onSelectionChange={setTreeSelection}
+                    testIdPrefix="design-lab"
+                  />
+                </section>
+              )}
             </div>
           </aside>
 
@@ -6136,25 +7181,31 @@ const DesignLabPage: React.FC = () => {
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                   <div className="min-w-0">
                     <div className="mb-3 flex flex-wrap items-center gap-2">
-                      <SectionBadge label={trackMeta[activeTrack].label} />
-                      {selectedGroup ? <SectionBadge label={selectedGroup.title} /> : null}
+                      <SectionBadge label={workspaceMode === 'recipes' ? 'Recipe Explorer' : trackMeta[activeTrack].label} />
+                      {workspaceMode === 'recipes'
+                        ? selectedRecipe ? <SectionBadge label={`${selectedRecipe.ownerBlocks.length} owner block`} /> : null
+                        : selectedGroup ? <SectionBadge label={selectedGroup.title} /> : null}
                       {releaseSummary?.packageVersion ? <SectionBadge label={`${releaseSummary.packageName}@${releaseSummary.packageVersion}`} /> : null}
                       {releaseSummary?.latestRelease.date ? <SectionBadge label={`Release · ${releaseSummary.latestRelease.date}`} /> : null}
-                      {selectedItem?.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
-                      {selectedItem ? (
+                      {workspaceMode === 'recipes'
+                        ? selectedRecipeTracks.map((track) => <SectionBadge key={track} label={track} />)
+                        : selectedItem?.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
+                      {workspaceMode === 'recipes' ? (
+                        selectedRecipe ? <Badge tone="info">Recipe</Badge> : null
+                      ) : selectedItem ? (
                         <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>
                           {statusLabel[selectedItem.lifecycle]}
                         </Badge>
                       ) : null}
                     </div>
                     <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.22em]">
-                      Component
+                      {activeHeroLabel}
                     </Text>
                     <Text as="h1" className="mt-2 text-[2.35rem] font-semibold tracking-[-0.03em] text-text-primary">
-                      {selectedItem?.name ?? 'Component seç'}
+                      {activeHeroTitle}
                     </Text>
                     <Text variant="secondary" className="mt-3 block max-w-3xl text-[15px] leading-7">
-                      {selectedItem?.description ?? 'Sol menüden bir component seçerek canlı demo, API ve kalite detaylarını inceleyebilirsin.'}
+                      {activeHeroDescription}
                     </Text>
                   </div>
                   <div className="grid grid-cols-2 gap-3 xl:w-[340px]">
@@ -6166,10 +7217,22 @@ const DesignLabPage: React.FC = () => {
               </div>
 
               <div className="flex flex-wrap items-center gap-2 px-6 py-4">
-                {selectedItem ? <Badge tone={selectedItem.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[selectedItem.availability]}</Badge> : null}
-                {selectedItem ? <Badge tone={selectedItem.demoMode === 'live' ? 'success' : selectedItem.demoMode === 'planned' ? 'warning' : 'muted'}>{demoModeLabel[selectedItem.demoMode]}</Badge> : null}
-                {selectedItem?.uxPrimaryThemeId ? <SectionBadge label={selectedItem.uxPrimaryThemeId} /> : null}
-                {selectedItem?.importStatement ? (
+                {workspaceMode === 'recipes' ? (
+                  <>
+                    <Badge tone="info">Recipe-first design</Badge>
+                    {selectedRecipeThemes.slice(0, 3).map((theme) => (
+                      <SectionBadge key={theme} label={theme} />
+                    ))}
+                    {selectedRecipeQualityGates.length ? <SectionBadge label={`${selectedRecipeQualityGates.length} quality gate`} /> : null}
+                  </>
+                ) : (
+                  <>
+                    {selectedItem ? <Badge tone={selectedItem.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[selectedItem.availability]}</Badge> : null}
+                    {selectedItem ? <Badge tone={selectedItem.demoMode === 'live' ? 'success' : selectedItem.demoMode === 'planned' ? 'warning' : 'muted'}>{demoModeLabel[selectedItem.demoMode]}</Badge> : null}
+                    {selectedItem?.uxPrimaryThemeId ? <SectionBadge label={selectedItem.uxPrimaryThemeId} /> : null}
+                  </>
+                )}
+                {workspaceMode === 'components' && selectedItem?.importStatement ? (
                   <Button variant="secondary" className="ml-auto" onClick={() => handleCopy(selectedItem.importStatement)}>
                     Import kopyala
                   </Button>
@@ -6189,7 +7252,7 @@ const DesignLabPage: React.FC = () => {
             </div>
 
             <section data-testid="design-lab-detail-panel" className="min-w-0">
-              {renderDetailTabContent(selectedItem)}
+              {activeDetailContent}
             </section>
           </main>
 
@@ -6202,12 +7265,7 @@ const DesignLabPage: React.FC = () => {
               />
 
               <LibraryStatsPanel
-                items={[
-                  { label: 'Total', value: summary.total },
-                  { label: 'Exported', value: summary.exported },
-                  { label: 'Live', value: summary.liveDemo },
-                  { label: 'Planned', value: summary.planned },
-                ]}
+                items={sidebarStats}
               />
 
               {releaseSummary ? (
@@ -6230,46 +7288,34 @@ const DesignLabPage: React.FC = () => {
                       label: 'Evidence',
                       value: <Text as="div" className="font-semibold text-text-primary">{String(releaseSummary.latestRelease.evidenceRefs.length)}</Text>,
                     },
-                    ...(selectedItem
+                    ...(workspaceMode === 'recipes'
                       ? [
                           {
-                            label: 'Family',
-                            value: <Text as="div" className="font-semibold text-text-primary">{selectedGroup?.title ?? selectedItem.taxonomyGroupId}</Text>,
+                            label: 'Recipe',
+                            value: <Text as="div" className="font-semibold text-text-primary">{selectedRecipe?.recipeId ?? '—'}</Text>,
                           },
                           {
-                            label: 'Wave',
-                            value: <Text as="div" className="font-semibold text-text-primary">{selectedItem.roadmapWaveId ?? 'legacy_surface'}</Text>,
+                            label: 'Owner Blocks',
+                            value: <Text as="div" className="font-semibold text-text-primary">{String(selectedRecipe?.ownerBlocks.length ?? 0)}</Text>,
                           },
                         ]
-                      : []),
+                      : selectedItem
+                        ? [
+                            {
+                              label: 'Family',
+                              value: <Text as="div" className="font-semibold text-text-primary">{selectedGroup?.title ?? selectedItem.taxonomyGroupId}</Text>,
+                            },
+                            {
+                              label: 'Wave',
+                              value: <Text as="div" className="font-semibold text-text-primary">{selectedItem.roadmapWaveId ?? 'legacy_surface'}</Text>,
+                            },
+                          ]
+                        : []),
                   ]}
                 />
               ) : null}
 
-              <LibraryMetadataPanel
-                items={[
-                  {
-                    label: 'Status',
-                    value: (
-                      <Text as="div" className={`font-semibold ${selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary'}`}>
-                        {selectedItem ? statusLabel[selectedItem.lifecycle] : 'Seçim yok'}
-                      </Text>
-                    ),
-                  },
-                  {
-                    label: 'Package',
-                    value: <Text as="div" className="font-semibold text-text-primary">mfe-ui-kit</Text>,
-                  },
-                  {
-                    label: 'Contract',
-                    value: (
-                      <Text as="div" className="break-all text-xs font-medium text-text-primary">
-                        {selectedItem?.acceptanceContractId ?? '—'}
-                      </Text>
-                    ),
-                  },
-                ]}
-              />
+              <LibraryMetadataPanel items={activeMetadataItems} />
             </div>
           </aside>
         </div>

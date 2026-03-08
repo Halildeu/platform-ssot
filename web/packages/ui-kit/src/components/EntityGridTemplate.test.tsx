@@ -11,12 +11,16 @@ const mockAgGridReactProps = jest.fn();
 const mockCreateServerSideDatasource = jest.fn();
 
 jest.mock('ag-grid-react', () => {
-  const React = require('react');
+  const ReactModule = jest.requireActual<typeof import('react')>('react');
   return {
-    AgGridReact: React.forwardRef((props: Record<string, unknown>, _ref: unknown) => {
-      const readyFiredRef = React.useRef(false);
+    AgGridReact: ReactModule.forwardRef(function MockEntityGrid(
+      props: Record<string, unknown>,
+      ref: unknown,
+    ) {
+      void ref;
+      const readyFiredRef = ReactModule.useRef(false);
       mockAgGridReactProps(props);
-      React.useEffect(() => {
+      ReactModule.useEffect(() => {
         if (readyFiredRef.current) {
           return;
         }
@@ -45,7 +49,7 @@ jest.mock('ag-grid-react', () => {
         };
         props.onGridReady?.({ api, columnApi: {} });
       }, []);
-      return React.createElement('div', { 'data-testid': 'mock-entity-grid' });
+      return ReactModule.createElement('div', { 'data-testid': 'mock-entity-grid' });
     }),
   };
 });

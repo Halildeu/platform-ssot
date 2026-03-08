@@ -1,0 +1,179 @@
+{
+  "version": "1.0",
+  "templates_dir": "docs/99-templates",
+  "numbered_heading_style": true,
+  "map": {
+    "PB": {
+      "template": "PROBLEM-BRIEF.template.md",
+      "doc_glob": "docs/01-product/PROBLEM-BRIEFS/PB-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. SORUN TANIMI",
+        "4. HEDEF VE BAŞARI KRİTERLERİ",
+        "5. VARSAYIMLAR / RİSKLER",
+        "6. ÖZET",
+        "7. LİNKLER / SONRAKİ ADIMLAR"
+      ]
+    },
+    "PRD": {
+      "template": "PRD.template.md",
+      "doc_glob": "docs/01-product/PRD/PRD-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. KULLANICI SENARYOLARI",
+        "4. DAVRANIŞ / GEREKSİNİMLER",
+        "5. NON-GOALS (KAPSAM DIŞI)",
+        "6. ACCEPTANCE KRİTERLERİ ÖZETİ",
+        "7. RİSKLER / BAĞIMLILIKLAR",
+        "8. ÖZET",
+        "9. LİNKLER / SONRAKİ ADIMLAR"
+      ]
+    },
+    "BM": {
+      "template": "BM.template.md",
+      "doc_glob": "docs/01-product/BUSINESS-MASTERS/**/*.md"
+    },
+    "BENCH": {
+      "template": "BENCH.template.md",
+      "doc_glob": "docs/01-product/BENCHMARKS/**/*.md"
+    },
+    "STORY": {
+      "template": "STORY.template.md",
+      "doc_glob": "docs/03-delivery/STORIES/STORY-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. TANIM",
+        "3. KAPSAM VE SINIRLAR",
+        "4. ACCEPTANCE KRİTERLERİ",
+        "5. BAĞIMLILIKLAR",
+        "6. ÖZET",
+        "7. LİNKLER (İSTEĞE BAĞLI)"
+      ]
+    },
+    "AC": {
+      "template": "ACCEPTANCE.template.md",
+      "doc_glob": "docs/03-delivery/ACCEPTANCE/AC-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. GIVEN / WHEN / THEN SENARYOLARI",
+        "4. NOTLAR / KISITLAR",
+        "5. ÖZET",
+        "6. LİNKLER (İSTEĞE BAĞLI)"
+      ]
+    },
+    "TP": {
+      "template": "TEST-PLAN.template.md",
+      "doc_glob": "docs/03-delivery/TEST-PLANS/TP-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. STRATEJİ",
+        "4. TEST SENARYOLARI ÖZETİ"
+      ],
+      "heading_contract_mode": "subset"
+    },
+    "GUIDE": {
+      "template": "GUIDE.template.md",
+      "doc_glob": "docs/03-delivery/guides/**/GUIDE-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. KAPSAM DIŞI",
+        "4. BAĞLAM / ARKA PLAN",
+        "5. ADIM ADIM (KULLANIM)",
+        "6. SIK HATALAR / EDGE-CASE",
+        "7. LİNKLER"
+      ]
+    },
+    "RB": {
+      "template": "RUNBOOK.template.md",
+      "doc_glob": "docs/04-operations/RUNBOOKS/RB-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. BAŞLATMA / DURDURMA",
+        "4. GÖZLEMLEME / LOG / METRİKLER",
+        "5. ARIZA DURUMLARI VE ADIMLAR",
+        "6. ÖZET",
+        "7. LİNKLER (İSTEĞE BAĞLI)"
+      ]
+    },
+    "TRACE": {
+      "template": "TRACE.template.md",
+      "doc_glob": "docs/03-delivery/TRACES/TRACE-*.tsv",
+      "optional": true
+    },
+    "SPEC": {
+      "template": "SPEC.template.md",
+      "doc_glob": "docs/03-delivery/SPECS/SPEC-*.md",
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. KONTRAT (SSOT)",
+        "4. GOVERNANCE (DEĞİŞİKLİK POLİTİKASI)",
+        "5. LİNKLER"
+      ]
+    },
+    "TECH-DESIGN": {
+      "template": "TECH-DESIGN.template.md",
+      "doc_glob": "docs/02-architecture/services/**/TECH-DESIGN-*.md",
+      "optional": true,
+      "heading_contract_mode": "disabled"
+    },
+    "ADR": {
+      "template": "ADR.template.md",
+      "doc_glob": "docs/02-architecture/services/**/ADR/ADR-*.md",
+      "optional": true
+    },
+    "DATA-CARD": {
+      "template": "DATA-CARD.template.md",
+      "doc_glob": "docs/05-ml-ai/DATA-CARDS/DATA-CARD-*.md",
+      "optional": true,
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAYNAK VE KAPSAM",
+        "3. KALİTE / KISITLAR",
+        "4. GİZLİLİK VE ETİK",
+        "5. KULLANIM NOTLARI",
+        "6. ÖZET"
+      ]
+    },
+    "MODEL-CARD": {
+      "template": "MODEL-CARD.template.md",
+      "doc_glob": "docs/05-ml-ai/MODEL-CARDS/MODEL-CARD-*.md",
+      "optional": true,
+      "required_headings": [
+        "1. AMAÇ",
+        "2. MODEL VE VERİ ÖZETİ",
+        "3. METRİKLER VE PERFORMANS",
+        "4. RİSKLER VE BIAS",
+        "5. KULLANIM VE SINIRLAR",
+        "6. MONITORING VE DRIFT",
+        "7. ÖZET"
+      ]
+    },
+    "INTERFACE-CONTRACT": {
+      "template": "INTERFACE-CONTRACT.template.md",
+      "doc_glob": "docs/03-delivery/INTERFACE-CONTRACTS/INTERFACE-CONTRACT-*.md",
+      "optional": true,
+      "required_headings": [
+        "1. AMAÇ",
+        "2. KAPSAM",
+        "3. ENDPOINT / ARAYÜZ TANIMI",
+        "4. DAVRANIŞ VE HATA DURUMLARI",
+        "5. GÜVENLİK VE VERSİYONLAMA",
+        "6. ÖZET",
+        "7. LİNKLER / SONRAKİ ADIMLAR"
+      ]
+    }
+  },
+  "notes": [
+    "Template base isimleri ID prefix ile birebir eşleşmeyebilir (örn. AC -> ACCEPTANCE.template.md).",
+    "optional=true: template dosyası yoksa hard gate fail etmez; template eklendiğinde otomatik devreye girer.",
+    "GUIDE: docs/03-delivery/guides/** altında guide dokümanları için hedef format GUIDE-XXXX-*.md + GUIDE.template.md; migration sürecinde guides-policy enabled=false (non-blocking) tutulur.",
+    "TRACE dosyaları .tsv olduğu için heading-contract gate kapsamında değildir; trace kalite kontrolü ayrı check'lerle yapılır."
+  ]
+}

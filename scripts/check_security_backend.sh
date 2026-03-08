@@ -11,11 +11,6 @@ if [[ ! -d "${BACKEND_DIR}" ]]; then
   exit 1
 fi
 
-if ! command -v rg >/dev/null 2>&1; then
-  echo "[check_security_backend] HATA: rg gerekli." >&2
-  exit 2
-fi
-
 COMMON_GLOBS=(
   --glob '!docs/**'
   --glob '!**/legacy/**'
@@ -38,15 +33,99 @@ COMMON_GLOBS=(
   --glob '!**/infra/**'
 )
 
+run_search_with_python() {
+  local pattern="$1"
+  python3 - "$pattern" "${BACKEND_DIR}" >"${TMP_FILE}" <<'PY'
+import os
+import re
+import sys
+
+pattern = sys.argv[1]
+root = sys.argv[2]
+
+regex = re.compile(pattern)
+exclude_dir_names = {"docs", "legacy", "target", ".git", "packages", "devops", "infra"}
+exclude_subpaths = ("src/main/java", "src/test", "scripts/perf", "scripts/vault")
+exclude_file_names = {"mvnw", "mvnw.cmd", "test-users-and-variants.sh"}
+exclude_suffixes = (".example", ".env.example", "application-local.properties", "application-docker.properties")
+
+found = False
+
+
+def normalize(rel_path: str) -> str:
+    if rel_path in ("", "."):
+        return ""
+    return rel_path.replace(os.sep, "/")
+
+
+def contains_subpath(rel_path: str, subpath: str) -> bool:
+    rel_path = normalize(rel_path)
+    subpath = subpath.strip("/")
+    if not rel_path:
+        return False
+    return (
+        rel_path == subpath
+        or rel_path.startswith(f"{subpath}/")
+        or rel_path.endswith(f"/{subpath}")
+        or f"/{subpath}/" in rel_path
+    )
+
+for dirpath, dirnames, filenames in os.walk(root):
+    rel_dir_posix = normalize(os.path.relpath(dirpath, root))
+
+    kept_dirs = []
+    for dirname in dirnames:
+        rel_path = f"{rel_dir_posix}/{dirname}" if rel_dir_posix else dirname
+        if dirname in exclude_dir_names:
+            continue
+        if any(contains_subpath(rel_path, prefix) for prefix in exclude_subpaths):
+            continue
+        kept_dirs.append(dirname)
+    dirnames[:] = kept_dirs
+
+    for filename in filenames:
+        rel_path = f"{rel_dir_posix}/{filename}" if rel_dir_posix else filename
+        if filename in exclude_file_names:
+            continue
+        if any(contains_subpath(rel_path, prefix) for prefix in exclude_subpaths):
+            continue
+        if filename.startswith("docker-compose") and filename.endswith(".yml"):
+            continue
+        if any(rel_path.endswith(suffix) for suffix in exclude_suffixes):
+            continue
+        full_path = os.path.join(dirpath, filename)
+        try:
+            with open(full_path, "r", encoding="utf-8", errors="ignore") as handle:
+                for line_number, line in enumerate(handle, start=1):
+                    if regex.search(line):
+                        print(f"{full_path}:{line_number}:{line.rstrip()}")
+                        found = True
+        except OSError:
+            continue
+
+sys.exit(0 if found else 1)
+PY
+}
+
 run_search() {
   local label="$1"
   local pattern="$2"
   echo "[check_security_backend] Kontrol: $label"
-  if rg -n --pcre2 "$pattern" "${BACKEND_DIR}" "${COMMON_GLOBS[@]}" >"${TMP_FILE}" 2>/dev/null; then
+  if command -v rg >/dev/null 2>&1; then
+    rg -n --pcre2 "$pattern" "${BACKEND_DIR}" "${COMMON_GLOBS[@]}" >"${TMP_FILE}" 2>/dev/null
+  else
+    run_search_with_python "$pattern"
+  fi
+  local search_status=$?
+  if [[ $search_status -eq 0 ]]; then
     echo "[WARN] $label icin potansiyel bulgular:"
     cat "${TMP_FILE}"
     echo
     return 1
+  fi
+  if [[ $search_status -ne 1 ]]; then
+    echo "[check_security_backend] HATA: $label aramasi calistirilamadi." >&2
+    return 2
   fi
   echo "[OK]   $label icin supheli satir bulunamadi."
   return 0

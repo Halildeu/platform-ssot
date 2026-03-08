@@ -1,0 +1,31 @@
+{
+  "version": "0.1",
+  "source_priority": ["docflow_next.blockedReason", "doc_qa.logs"],
+  "reason_codes": [
+    "STORY_LINKS_SECTION_MISSING",
+    "AC_MISSING",
+    "AC_FILE_MISSING",
+    "TP_MISSING",
+    "TP_FILE_MISSING",
+    "EVIDENCE_MISSING_STRICT",
+    "API_DOC_MISSING",
+    "SPEC_IN_PROGRESS",
+    "ADR_IN_PROGRESS",
+    "VERSION_GATE_BLOCKED",
+    "STORY_PATH_INVALID",
+    "UNKNOWN"
+  ],
+  "blockedReason_patterns": [
+    { "pattern": "STORY içinde LİNKLER bölümü yok", "reason_code": "STORY_LINKS_SECTION_MISSING" },
+    { "pattern": "AC bulunamadı", "reason_code": "AC_MISSING" },
+    { "pattern": "AC dosyası yok:", "reason_code": "AC_FILE_MISSING" },
+    { "pattern": "TP bulunamadı", "reason_code": "TP_MISSING" },
+    { "pattern": "TP dosyası yok:", "reason_code": "TP_FILE_MISSING" },
+    { "pattern": "Repo içi kanıt referansı bulunamadı", "reason_code": "EVIDENCE_MISSING_STRICT" },
+    { "pattern": "API_DOC_MISSING", "reason_code": "API_DOC_MISSING" },
+    { "pattern": "SPEC_IN_PROGRESS", "reason_code": "SPEC_IN_PROGRESS" },
+    { "pattern": "ADR_IN_PROGRESS", "reason_code": "ADR_IN_PROGRESS" },
+    { "pattern": "Version Gate:", "reason_code": "VERSION_GATE_BLOCKED" },
+    { "pattern": "story path", "reason_code": "STORY_PATH_INVALID" }
+  ]
+}

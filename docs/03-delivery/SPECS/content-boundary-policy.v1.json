@@ -1,0 +1,8 @@
+{
+  "version": "1.0",
+  "enabled": false,
+  "notes": [
+    "enabled=false: rapor üretir, exit 0 (non-blocking).",
+    "enabled=true: ihlal varsa exit 1 (hard gate)."
+  ]
+}
