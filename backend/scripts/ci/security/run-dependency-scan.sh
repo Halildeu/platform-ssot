@@ -24,6 +24,13 @@ has_cache_data() {
   find "${LOCAL_DC_CACHE_DIR}" -mindepth 1 -print -quit | grep -q .
 }
 
+run_scan() {
+  set +e
+  "${cmd[@]}" 2>&1 | tee -a "${SCAN_LOG_PATH}"
+  scan_status=${PIPESTATUS[0]}
+  set -e
+}
+
 build_cmd() {
   local use_cached_data="$1"
 
@@ -67,30 +74,41 @@ fi
 build_cmd "${cache_present_at_start}"
 
 scan_status=0
-set +e
-"${cmd[@]}" 2>&1 | tee "${SCAN_LOG_PATH}"
-scan_status=${PIPESTATUS[0]}
-set -e
+: > "${SCAN_LOG_PATH}"
+run_scan
 
 if [[ "${scan_status}" -ne 0 && -n "${NVD_API_KEY_VALUE}" ]] && grep -q "Invalid API Key" "${SCAN_LOG_PATH}" && has_cache_data; then
   echo "[security][dependency-check] Gecersiz NVD_API_KEY algilandi; versioned cache ile cache-only modda yeniden deneniyor."
   NVD_API_KEY_VALUE=""
   build_cmd true
   scan_status=0
-  set +e
-  "${cmd[@]}" 2>&1 | tee -a "${SCAN_LOG_PATH}"
-  scan_status=${PIPESTATUS[0]}
-  set -e
+  run_scan
+fi
+
+if [[ "${scan_status}" -ne 0 && -n "${NVD_API_KEY_VALUE}" ]] && grep -q "Invalid API Key" "${SCAN_LOG_PATH}"; then
+  echo "[security][dependency-check] Gecersiz NVD_API_KEY reusable cache olmadan geldi; anahtarsiz bootstrap icin versioned cache sifirlaniyor."
+  NVD_API_KEY_VALUE=""
+  rm -rf "${LOCAL_DC_CACHE_DIR}"
+  mkdir -p "${LOCAL_DC_CACHE_DIR}"
+  build_cmd false
+  scan_status=0
+  run_scan
+fi
+
+if [[ "${scan_status}" -ne 0 && -z "${NVD_API_KEY_VALUE}" ]] && grep -q "NoDataException" "${SCAN_LOG_PATH}"; then
+  echo "[security][dependency-check] Cache-only denemesi veri tabani olusturamadi; anahtarsiz temiz bootstrap bir kez daha deneniyor."
+  rm -rf "${LOCAL_DC_CACHE_DIR}"
+  mkdir -p "${LOCAL_DC_CACHE_DIR}"
+  build_cmd false
+  scan_status=0
+  run_scan
 fi
 
 if [[ "${scan_status}" -ne 0 && -z "${NVD_API_KEY_VALUE}" && "${cache_present_at_start}" != "true" ]] && has_cache_data; then
   echo "[security][dependency-check] Bootstrap sonrasi versioned cache olustu; cache-only modda bir kez daha deneniyor."
   build_cmd true
   scan_status=0
-  set +e
-  "${cmd[@]}" 2>&1 | tee -a "${SCAN_LOG_PATH}"
-  scan_status=${PIPESTATUS[0]}
-  set -e
+  run_scan
 fi
 
 for artifact in \
