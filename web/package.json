@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "version": "1.0.0",
-  "description": "MFE K\u00f6k Dizini",
+  "description": "MFE Kök Dizini",
   "private": true,
   "engines": {
     "node": "20.x"
@@ -36,6 +36,7 @@
     "designlab:index": "python3 scripts/build_design_lab_index.py",
     "doctor:frontend": "node ./scripts/ops/frontend-doctor.mjs",
     "gate:ui-library-wave": "node ./scripts/ops/run-ui-library-wave-gate.mjs",
+    "gate:ui-library-release": "node ./scripts/ops/run-ui-library-release-gate.mjs",
     "lint:style": "stylelint \"**/*.{css,scss}\" --allow-empty-input",
     "lint:semantic": "eslint . --ext .ts,.tsx,.js,.jsx",
     "lint:tailwind": "node ./scripts/lint/check-tailwind-semantic.mjs",
@@ -81,7 +82,9 @@
     "storybook": "storybook dev -p 6006",
     "lint:no-antd": "node ./scripts/check-no-antd.mjs",
     "publish:bundle": "bash ./scripts/ci/publish_bundle.sh",
-    "security:build-bundle": "npm run build && npm run publish:bundle"
+    "security:build-bundle": "npm run build && npm run publish:bundle",
+    "release:ui-library:manifest": "node ./scripts/ops/export-ui-library-release-manifest.mjs",
+    "release:ui-library": "node ./scripts/ops/run-ui-library-release.mjs"
   },
   "keywords": [],
   "author": "",

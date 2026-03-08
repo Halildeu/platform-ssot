@@ -80,6 +80,7 @@ export * from './components/Pagination';
 export * from './components/Steps';
 export * from './components/AnchorToc';
 export * from './components/LibraryProductTree';
+export * from './components/LibraryQueryProvider';
 export * from './components/LibraryDocsPrimitives';
 export * from './components/theme/ThemePreviewCard';
 export * from './layout/PageLayout';

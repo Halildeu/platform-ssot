@@ -1,0 +1,65 @@
+name: ui-library-package-release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'web/packages/ui-kit/**'
+      - 'web/scripts/ops/export-ui-library-release-manifest.mjs'
+      - 'web/scripts/ops/run-ui-library-release-gate.mjs'
+      - 'web/scripts/ops/run-ui-library-release.mjs'
+      - 'web/scripts/ci/publish_bundle.sh'
+      - 'web/.storybook/**'
+      - 'docs/02-architecture/context/ui-library-package-release.contract.v1.json'
+      - 'docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md'
+      - 'docs/04-operations/RUNBOOKS/RB-ui-library-package-release.md'
+      - '.github/workflows/ui-library-package-release.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  ui-library-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install web dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Check package release contract
+        run: |
+          python3 scripts/check_ui_library_package_release_contract.py
+          python3 scripts/check_release_docs.py
+
+      - name: Run UI library release pipeline
+        run: npm run release:ui-library
+        working-directory: web
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+      - name: Upload UI library release artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-library-release-artifacts
+          path: |
+            web/storybook-static/**
+            web/dist/**
+            web/test-results/releases/ui-library/**
+            web/test-results/diagnostics/**
+          if-no-files-found: warn

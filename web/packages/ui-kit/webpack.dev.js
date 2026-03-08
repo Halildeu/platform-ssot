@@ -25,14 +25,15 @@ const devConfig = {
       filename: 'remoteEntry.js',
 
       exposes: {
+        './library': './src/index.ts',
         './Button': './src/components/Button.tsx',
-        // Diğer componentleri gerekiyorsa burada expose edin
       },
 
       shared: {
         ...sharedDeps,
         react:       { singleton: true, requiredVersion: deps.react },
         'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
+        '@tanstack/react-query': { singleton: true, requiredVersion: false },
         '@mfe/shared-http': { singleton: true, requiredVersion: false },
       },
     }),

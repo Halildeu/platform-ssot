@@ -56,6 +56,7 @@ INTERNAL_DOCS_EXPORTS: Set[str] = {
     "LibraryOutlinePanel",
     "LibraryPreviewPanel",
     "LibraryProductTree",
+    "LibraryQueryProvider",
     "LibrarySectionBadge",
     "LibraryShowcaseCard",
     "LibraryStatsPanel",

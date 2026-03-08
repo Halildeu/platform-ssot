@@ -54,6 +54,15 @@
       "channel": "hosted-docs-review",
       "build_command": "npm -C web run chromatic",
       "artifact_paths": []
+    },
+    {
+      "target_id": "release_manifest",
+      "channel": "release-evidence",
+      "build_command": "npm -C web run release:ui-library:manifest",
+      "artifact_paths": [
+        "web/dist/ui-kit/ui-library-release-manifest.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+      ]
     }
   ],
   "required_scripts": [
@@ -61,9 +70,12 @@
     "build-storybook",
     "chromatic",
     "publish:bundle",
+    "release:ui-library:manifest",
+    "release:ui-library",
     "security:build-bundle",
     "doctor:frontend",
-    "gate:ui-library-wave"
+    "gate:ui-library-wave",
+    "gate:ui-library-release"
   ],
   "release_evidence": {
     "required_files": [
@@ -71,17 +83,27 @@
       "web/packages/ui-kit/src/catalog/component-registry.v1.json",
       "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json",
       "docs/04-operations/RELEASE-NOTES/RELEASE-NOTES-ui-library.md",
-      "docs/02-architecture/context/ui-library-package-release.contract.v1.json"
+      "docs/02-architecture/context/ui-library-package-release.contract.v1.json",
+      "docs/04-operations/RUNBOOKS/RB-ui-library-package-release.md",
+      ".github/workflows/ui-library-package-release.yml",
+      "web/scripts/ops/export-ui-library-release-manifest.mjs",
+      "web/scripts/ops/run-ui-library-release-gate.mjs",
+      "web/scripts/ops/run-ui-library-release.mjs"
     ],
     "required_artifacts": [
       "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
       "web/test-results/diagnostics/frontend-doctor/**/frontend-doctor.summary.v1.json",
-      "web/test-results/diagnostics/ui-library-wave-gate/**/ui-library-wave-gate.summary.v1.json"
+      "web/test-results/diagnostics/ui-library-wave-gate/**/ui-library-wave-gate.summary.v1.json",
+      "web/test-results/diagnostics/ui-library-release-gate/**/ui-library-release-gate.summary.v1.json",
+      "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+      "web/test-results/releases/ui-library/latest/ui-library-release.summary.v1.json"
     ],
     "required_human_log": [
       "release note entry",
       "stable veya beta lifecycle degisikligi notu",
-      "breaking degisiklik varsa migration note"
+      "breaking degisiklik varsa migration note",
+      "runbook linki",
+      "test plan linki"
     ]
   },
   "changelog_policy": {
@@ -93,19 +115,25 @@
       "lifecycle changes",
       "breaking changes",
       "migration notes",
-      "evidence references"
+      "evidence references",
+      "runbook link",
+      "test plan link"
     ],
     "stable_release_requires": [
       "doctor frontend PASS",
-      "wave gate PASS",
-      "release notes entry"
+      "release gate PASS",
+      "release notes entry",
+      "ui-library release manifest",
+      "release runbook linki"
     ]
   },
   "fail_closed_rules": [
     "package version degisiyorsa release notes entry yoksa release hazir sayilmaz",
     "registry lifecycle degisikligi varsa component API catalog ve Design Lab parity olmadan release hazir sayilmaz",
     "storyboard/chromatic/publish bundle scriptleri kayitli degilse dagitim kontrati FAIL olur",
-    "stable veya breaking degisiklikte wave gate PASS kaniti olmadan version bump tamam sayilmaz"
+    "stable veya breaking degisiklikte release gate PASS kaniti olmadan version bump tamam sayilmaz",
+    "release manifest uretmeden publish bundle dagitim kaniti tamam sayilmaz",
+    "module federation remote './library' expose etmeden ui-kit release hazir sayilmaz"
   ],
   "success_criteria": [
     "UI kit versiyon artislari semver kuralina gore acik sekilde siniflanir.",

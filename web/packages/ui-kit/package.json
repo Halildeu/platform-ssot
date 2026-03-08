@@ -1,6 +1,6 @@
 {
   "name": "mfe-ui-kit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@tanstack/react-query": "^5.90.2",
     "@mfe/shared-http": "file:../shared-http",
     "@mfe/shared-types": "file:../shared-types",
     "ag-grid-community": "34.3.1",

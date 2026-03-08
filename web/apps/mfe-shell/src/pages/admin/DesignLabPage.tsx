@@ -58,6 +58,7 @@ import {
   Breadcrumb,
   Divider,
   LibraryProductTree,
+  LibraryQueryProvider,
   LibraryDocsSection,
   LibrarySectionBadge as SectionBadge,
   LibraryDetailLabel as DetailLabel,
@@ -2504,20 +2505,22 @@ const DesignLabPage: React.FC = () => {
         return (
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
             <div className="h-[420px]">
-              <EntityGridTemplate<Record<string, unknown>>
-                gridId="design-lab-grid"
-                gridSchemaVersion={1}
-                dataSourceMode="client"
-                rowData={gridRows}
-                total={gridRows.length}
-                page={1}
-                pageSize={25}
-                columnDefs={[
-                  { field: 'name', headerName: 'İsim', flex: 1 },
-                  { field: 'status', headerName: 'Durum', width: 140 },
-                  { field: 'updatedAt', headerName: 'Güncelleme', width: 140 },
-                ]}
-              />
+              <LibraryQueryProvider>
+                <EntityGridTemplate<Record<string, unknown>>
+                  gridId="design-lab-grid"
+                  gridSchemaVersion={1}
+                  dataSourceMode="client"
+                  rowData={gridRows}
+                  total={gridRows.length}
+                  page={1}
+                  pageSize={25}
+                  columnDefs={[
+                    { field: 'name', headerName: 'İsim', flex: 1 },
+                    { field: 'status', headerName: 'Durum', width: 140 },
+                    { field: 'updatedAt', headerName: 'Güncelleme', width: 140 },
+                  ]}
+                />
+              </LibraryQueryProvider>
             </div>
           </div>
         );
@@ -4747,20 +4750,22 @@ const DesignLabPage: React.FC = () => {
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
                 <PreviewPanel title="Entity registry">
                   <div className="h-[420px]">
-                    <EntityGridTemplate<Record<string, unknown>>
-                      gridId="design-lab-entity-grid-client"
-                      gridSchemaVersion={1}
-                      dataSourceMode="client"
-                      rowData={gridRows}
-                      total={gridRows.length}
-                      page={1}
-                      pageSize={25}
-                      columnDefs={[
-                        { field: 'name', headerName: 'Isim', flex: 1 },
-                        { field: 'status', headerName: 'Durum', width: 140 },
-                        { field: 'updatedAt', headerName: 'Guncelleme', width: 140 },
-                      ]}
-                    />
+                    <LibraryQueryProvider>
+                      <EntityGridTemplate<Record<string, unknown>>
+                        gridId="design-lab-entity-grid-client"
+                        gridSchemaVersion={1}
+                        dataSourceMode="client"
+                        rowData={gridRows}
+                        total={gridRows.length}
+                        page={1}
+                        pageSize={25}
+                        columnDefs={[
+                          { field: 'name', headerName: 'Isim', flex: 1 },
+                          { field: 'status', headerName: 'Durum', width: 140 },
+                          { field: 'updatedAt', headerName: 'Guncelleme', width: 140 },
+                        ]}
+                      />
+                    </LibraryQueryProvider>
                   </div>
                 </PreviewPanel>
                 <PreviewPanel title="Template value">
@@ -4782,26 +4787,28 @@ const DesignLabPage: React.FC = () => {
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <PreviewPanel title="Server mode">
                   <div className="h-[420px]">
-                    <EntityGridTemplate<Record<string, unknown>>
-                      gridId="design-lab-entity-grid-server"
-                      gridSchemaVersion={2}
-                      dataSourceMode="server"
-                      total={serverGridRows.length}
-                      page={1}
-                      pageSize={25}
-                      columnDefs={[
-                        { field: 'id', headerName: 'ID', width: 120 },
-                        { field: 'name', headerName: 'Kaynak', flex: 1 },
-                        { field: 'owner', headerName: 'Owner', width: 180 },
-                      ]}
-                      createServerSideDatasource={() => ({
-                        getRows: async (params: {
-                          success: (payload: { rowData: unknown[]; rowCount: number }) => void;
-                        }) => {
-                          params.success({ rowData: serverGridRows, rowCount: serverGridRows.length });
-                        },
-                      })}
-                    />
+                    <LibraryQueryProvider>
+                      <EntityGridTemplate<Record<string, unknown>>
+                        gridId="design-lab-entity-grid-server"
+                        gridSchemaVersion={2}
+                        dataSourceMode="server"
+                        total={serverGridRows.length}
+                        page={1}
+                        pageSize={25}
+                        columnDefs={[
+                          { field: 'id', headerName: 'ID', width: 120 },
+                          { field: 'name', headerName: 'Kaynak', flex: 1 },
+                          { field: 'owner', headerName: 'Owner', width: 180 },
+                        ]}
+                        createServerSideDatasource={() => ({
+                          getRows: async (params: {
+                            success: (payload: { rowData: unknown[]; rowCount: number }) => void;
+                          }) => {
+                            params.success({ rowData: serverGridRows, rowCount: serverGridRows.length });
+                          },
+                        })}
+                      />
+                    </LibraryQueryProvider>
                   </div>
                 </PreviewPanel>
                 <PreviewPanel title="Regression contract">

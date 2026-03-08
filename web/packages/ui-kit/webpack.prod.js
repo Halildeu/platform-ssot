@@ -20,12 +20,14 @@ const prodConfig = {
       name: 'mfe_ui_kit',
       filename: 'remoteEntry.js',
       exposes: {
+        './library': './src/index.ts',
         './Button': './src/components/Button.tsx',
       },
       shared: {
         ...sharedDeps,
         react: { singleton: true, requiredVersion: deps.react },
         'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
+        '@tanstack/react-query': { singleton: true, requiredVersion: false },
         '@mfe/shared-http': { singleton: true, requiredVersion: false },
       },
     }),
