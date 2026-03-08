@@ -311,6 +311,35 @@ const buildUsageRecipes = (item: DesignLabIndexItem, apiItem?: DesignLabApiItem 
   return recipes;
 };
 
+const buildReleaseFamilyContext = (
+  item: DesignLabIndexItem | null,
+  selectedGroupTitle: string | null,
+  releaseSummary: DesignLabIndex['release'],
+) => {
+  if (!item || !releaseSummary) return null;
+  const familyLabel = selectedGroupTitle ?? item.taxonomyGroupId;
+  const subgroupLabel = item.taxonomySubgroup;
+  const waveLabel = item.roadmapWaveId ?? 'legacy_surface';
+  const changedTokens = new Set(
+    releaseSummary.latestRelease.changedComponents.map((entry) => entry.trim().toLowerCase()),
+  );
+  const familyTouched =
+    changedTokens.has(item.taxonomyGroupId.toLowerCase()) ||
+    changedTokens.has(subgroupLabel.toLowerCase()) ||
+    changedTokens.has(waveLabel.toLowerCase()) ||
+    changedTokens.has(familyLabel.toLowerCase().replace(/\s+/g, '_'));
+
+  return {
+    familyLabel,
+    subgroupLabel,
+    waveLabel,
+    familyTouched,
+    note: familyTouched
+      ? 'Son release notunda bu family veya wave ile ortusen bir degisim izi var.'
+      : 'Son release daha cok platform ve dagitim hattina odakli; bu family icin dogrudan bir degisim etiketi yok.',
+  };
+};
+
 const toTestIdSuffix = (value: string) =>
   value
     .trim()
@@ -5476,6 +5505,7 @@ const DesignLabPage: React.FC = () => {
         </div>
       );
     }
+    const releaseFamilyContext = buildReleaseFamilyContext(item, selectedGroup?.title ?? null, releaseSummary ?? null);
 
     return (
       <div className="grid grid-cols-1 gap-4">
@@ -5622,6 +5652,23 @@ const DesignLabPage: React.FC = () => {
                     ))}
                   </div>
                 </div>
+
+                {releaseFamilyContext ? (
+                  <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Current Family Context</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={releaseFamilyContext.familyLabel} />
+                      <SectionBadge label={releaseFamilyContext.subgroupLabel} />
+                      <SectionBadge label={releaseFamilyContext.waveLabel} />
+                      <Badge tone={releaseFamilyContext.familyTouched ? 'success' : 'info'}>
+                        {releaseFamilyContext.familyTouched ? 'Release-touchpoint var' : 'Dogrudan release-touchpoint yok'}
+                      </Badge>
+                    </div>
+                    <Text variant="secondary" className="mt-3 block text-sm leading-6">
+                      {releaseFamilyContext.note}
+                    </Text>
+                  </div>
+                ) : null}
               </div>
             </div>
           </LibraryShowcaseCard>
@@ -6019,6 +6066,18 @@ const DesignLabPage: React.FC = () => {
                       label: 'Evidence',
                       value: <Text as="div" className="font-semibold text-text-primary">{String(releaseSummary.latestRelease.evidenceRefs.length)}</Text>,
                     },
+                    ...(selectedItem
+                      ? [
+                          {
+                            label: 'Family',
+                            value: <Text as="div" className="font-semibold text-text-primary">{selectedGroup?.title ?? selectedItem.taxonomyGroupId}</Text>,
+                          },
+                          {
+                            label: 'Wave',
+                            value: <Text as="div" className="font-semibold text-text-primary">{selectedItem.roadmapWaveId ?? 'legacy_surface'}</Text>,
+                          },
+                        ]
+                      : []),
                   ]}
                 />
               ) : null}
