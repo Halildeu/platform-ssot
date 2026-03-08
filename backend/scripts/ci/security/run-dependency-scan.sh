@@ -13,6 +13,7 @@ FAIL_CVSS="${DEPENDENCY_CHECK_FAIL_CVSS:-7.0}"
 NVD_API_KEY_VALUE="${NVD_API_KEY:-}"
 CACHE_DIR_SUFFIX="${DC_VERSION//./_}"
 LOCAL_DC_CACHE_DIR="${REPORT_DIR}/cache-v${CACHE_DIR_SUFFIX}"
+LOCAL_DC_CACHE_SNAPSHOT_DIR="${REPORT_DIR}/cache-snapshot-v${CACHE_DIR_SUFFIX}"
 SUPPRESSION_FILE="${ROOT_DIR}/backend/scripts/ci/security/dependency-check-suppressions.xml"
 SCAN_LOG_PATH="${REPORT_DIR}/dependency-check.log"
 
@@ -22,6 +23,28 @@ mkdir -p "${LOCAL_DC_CACHE_DIR}"
 
 has_cache_data() {
   find "${LOCAL_DC_CACHE_DIR}" -mindepth 1 -print -quit | grep -q .
+}
+
+prepare_cache_snapshot() {
+  rm -rf "${LOCAL_DC_CACHE_SNAPSHOT_DIR}"
+  mkdir -p "${LOCAL_DC_CACHE_SNAPSHOT_DIR}"
+  cp -R "${LOCAL_DC_CACHE_DIR}/." "${LOCAL_DC_CACHE_SNAPSHOT_DIR}/"
+}
+
+restore_cache_snapshot() {
+  rm -rf "${LOCAL_DC_CACHE_DIR}"
+  mkdir -p "${LOCAL_DC_CACHE_DIR}"
+  cp -R "${LOCAL_DC_CACHE_SNAPSHOT_DIR}/." "${LOCAL_DC_CACHE_DIR}/"
+}
+
+has_cache_snapshot() {
+  find "${LOCAL_DC_CACHE_SNAPSHOT_DIR}" -mindepth 1 -print -quit | grep -q .
+}
+
+scan_log_has_recoverable_nvd_failure() {
+  rg -q \
+    "NVD Returned Status Code: 429|connectionPool is null|MVStoreException|Error updating the NVD Data|JdbcSQLNonTransientException: IO Exception" \
+    "${SCAN_LOG_PATH}"
 }
 
 run_scan() {
@@ -71,6 +94,10 @@ if has_cache_data; then
   cache_present_at_start=true
 fi
 
+if [[ "${cache_present_at_start}" == "true" ]]; then
+  prepare_cache_snapshot
+fi
+
 build_cmd "${cache_present_at_start}"
 
 scan_status=0
@@ -91,6 +118,17 @@ if [[ "${scan_status}" -ne 0 && -n "${NVD_API_KEY_VALUE}" ]] && grep -q "Invalid
   rm -rf "${LOCAL_DC_CACHE_DIR}"
   mkdir -p "${LOCAL_DC_CACHE_DIR}"
   build_cmd false
+  scan_status=0
+  run_scan
+fi
+
+if [[ "${scan_status}" -ne 0 && -n "${NVD_API_KEY_VALUE}" && "${cache_present_at_start}" == "true" ]] \
+  && has_cache_snapshot \
+  && scan_log_has_recoverable_nvd_failure; then
+  echo "[security][dependency-check] NVD update 429/cache-corruption nedeniyle bozuldu; son saglam snapshot geri yuklenip cache-only modda yeniden deneniyor."
+  NVD_API_KEY_VALUE=""
+  restore_cache_snapshot
+  build_cmd true
   scan_status=0
   run_scan
 fi
