@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ux-north-star-catalog-aistd.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "kind",
+    "status",
+    "program_id",
+    "updated_at",
+    "north_star",
+    "thinking_consultation",
+    "references",
+    "domains"
+  ],
+  "properties": {
+    "version": {
+      "const": "v1"
+    },
+    "kind": {
+      "const": "ux-north-star-catalog-aistd"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "DRAFT", "ARCHIVED"]
+    },
+    "program_id": {
+      "const": "ui_kutuphane_sistemi"
+    },
+    "updated_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "north_star": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["goal", "primary_metric", "target", "constraints"],
+      "properties": {
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primary_metric": {
+          "const": "task_success_rate"
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constraints": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "thinking_consultation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "provider_policy_path",
+        "provider_guardrails_path",
+        "provider_candidates",
+        "required_lenses",
+        "notes"
+      ],
+      "properties": {
+        "mode": {
+          "const": "policy_driven_multi_lens"
+        },
+        "provider_policy_path": {
+          "const": "policies/policy_llm_live.v1.json"
+        },
+        "provider_guardrails_path": {
+          "const": "policies/policy_llm_providers_guardrails.v1.json"
+        },
+        "provider_candidates": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "required_lenses": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "notes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "publisher", "url", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "publisher": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "domains": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "item_count", "priority"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "item_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["P0", "P1", "P2"]
+          }
+        }
+      }
+    }
+  }
+}

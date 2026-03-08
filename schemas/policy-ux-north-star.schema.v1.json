@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "policy-ux-north-star.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "kind",
+    "status",
+    "owner",
+    "purpose",
+    "enforcement_mode",
+    "ci_lane",
+    "north_star_catalog_path",
+    "primary_program_id",
+    "experience_principles",
+    "interaction_contract",
+    "ai_ux_contract",
+    "measurement_contract"
+  ],
+  "properties": {
+    "version": {
+      "const": "v1"
+    },
+    "kind": {
+      "const": "policy-ux-north-star"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "DRAFT", "ARCHIVED"]
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "enforcement_mode": {
+      "const": "blocking"
+    },
+    "ci_lane": {
+      "const": "contract"
+    },
+    "north_star_catalog_path": {
+      "const": "registry/ux_north_star_catalog.aistd.v1.json"
+    },
+    "primary_program_id": {
+      "const": "ui_kutuphane_sistemi"
+    },
+    "experience_principles": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "description", "evidence_required"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^uxp-[0-9]{3}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_required": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "interaction_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state_model_required",
+        "keyboard_support_required",
+        "feedback_latency_budgets_ms",
+        "error_recovery_patterns"
+      ],
+      "properties": {
+        "state_model_required": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "keyboard_support_required": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "feedback_latency_budgets_ms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["soft", "hard"],
+          "properties": {
+            "soft": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "hard": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "error_recovery_patterns": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "ai_ux_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disclosure_required",
+        "human_override_required",
+        "prompt_trace_required",
+        "unsafe_output_block_required",
+        "model_consultation_mode",
+        "required_lenses",
+        "fallback_order"
+      ],
+      "properties": {
+        "disclosure_required": {
+          "const": true
+        },
+        "human_override_required": {
+          "const": true
+        },
+        "prompt_trace_required": {
+          "const": true
+        },
+        "unsafe_output_block_required": {
+          "const": true
+        },
+        "model_consultation_mode": {
+          "const": "multi-provider-lens"
+        },
+        "required_lenses": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "fallback_order": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 3,
+          "const": ["reasoning", "fast_reasoning", "chat"]
+        }
+      }
+    },
+    "measurement_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["north_star_metric", "support_metrics", "minimum_review_cadence_days"],
+      "properties": {
+        "north_star_metric": {
+          "const": "task_success_rate"
+        },
+        "support_metrics": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "minimum_review_cadence_days": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}

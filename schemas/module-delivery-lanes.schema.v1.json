@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/module-delivery-lanes.schema.v1.json",
+  "title": "Module Delivery Lanes",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "managed_repo_profile",
+    "merge_requires_all_green",
+    "clean_stderr_default",
+    "scope_lane_map",
+    "execution_sequence",
+    "lanes"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "v1"
+    },
+    "managed_repo_profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "merge_requires_all_green": {
+      "type": "boolean",
+      "const": true
+    },
+    "clean_stderr_default": {
+      "type": "boolean",
+      "const": true
+    },
+    "scope_lane_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backend",
+        "database",
+        "api",
+        "frontend",
+        "integration",
+        "e2e_gate"
+      ],
+      "properties": {
+        "backend": {
+          "type": "string",
+          "const": "unit"
+        },
+        "database": {
+          "type": "string",
+          "const": "database"
+        },
+        "api": {
+          "type": "string",
+          "const": "api"
+        },
+        "frontend": {
+          "type": "string",
+          "const": "contract"
+        },
+        "integration": {
+          "type": "string",
+          "const": "integration"
+        },
+        "e2e_gate": {
+          "type": "string",
+          "const": "e2e"
+        }
+      }
+    },
+    "execution_sequence": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "prefixItems": [
+        {
+          "type": "string",
+          "const": "backend"
+        },
+        {
+          "type": "string",
+          "const": "database"
+        },
+        {
+          "type": "string",
+          "const": "api"
+        },
+        {
+          "type": "string",
+          "const": "frontend"
+        },
+        {
+          "type": "string",
+          "const": "integration"
+        },
+        {
+          "type": "string",
+          "const": "e2e"
+        }
+      ],
+      "items": false
+    },
+    "lanes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "database",
+        "api",
+        "contract",
+        "integration",
+        "e2e"
+      ],
+      "properties": {
+        "unit": {
+          "$ref": "#/$defs/lane"
+        },
+        "database": {
+          "$ref": "#/$defs/lane"
+        },
+        "api": {
+          "$ref": "#/$defs/lane"
+        },
+        "contract": {
+          "$ref": "#/$defs/lane"
+        },
+        "integration": {
+          "$ref": "#/$defs/lane"
+        },
+        "e2e": {
+          "$ref": "#/$defs/lane"
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}

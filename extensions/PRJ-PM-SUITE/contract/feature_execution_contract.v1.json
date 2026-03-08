@@ -1,0 +1,140 @@
+{
+  "version": "v1",
+  "kind": "feature-execution-contract",
+  "status": "ACTIVE",
+  "feature_id": "dev_managed_repo_governed_bootstrap",
+  "title": "Managed Repo Governed Bootstrap",
+  "summary": "Start the first governed development cycle in the managed repo with execution bridge, UX traceability, and repo-root build tooling coverage active.",
+  "source_context": {
+    "source_type": "manual",
+    "source_refs": [
+      "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md",
+      "registry/technical_baseline.aistd.v1.json",
+      "extensions/PRJ-UX-NORTH-STAR/contract/ux_katalogu.final_lock.v1.json"
+    ],
+    "business_goal": "Allow feature development in the managed repo without losing UX, standards, or lane discipline.",
+    "requested_outcome": "Frontend, backend, API, database, and supporting build-tooling work should start from one contract that AI and CI can both enforce."
+  },
+  "delivery_scope": {
+    "repo_root": ".",
+    "service_scopes": [
+      "backend",
+      "database",
+      "api",
+      "frontend"
+    ],
+    "change_path_globs": [
+      "backend/**/*",
+      "backend/.env.example",
+      "backend/mvnw",
+      "backend/pom.xml",
+      "web/.stylelintrc.cjs",
+      "web/eslint.config.mjs",
+      "web/apps/**/*",
+      "web/packages/ui-kit/**/*",
+      "web/scripts/health/**",
+      "web/scripts/ops/**",
+      "docs/03-delivery/api/**/*"
+    ],
+    "affected_modules": [
+      "api-gateway",
+      "auth-service",
+      "backend-root-tooling",
+      "core-data-service",
+      "mfe-shell",
+      "ui-kit",
+      "web-tooling"
+    ]
+  },
+  "ux_contract": {
+    "mode": "REQUIRED",
+      "rationale": "The first managed-repo delivery cycle must keep page flows, shared UI kit usage, and frontend tooling surfaces aligned with the locked UX catalog.",
+      "artifacts": [
+        {
+        "path_glob": "web/apps/mfe-shell/src/pages/admin/**",
+        "ux_theme_id": "task_completion_architecture",
+        "ux_subtheme_id": "critical_path_minimization"
+      },
+      {
+        "path_glob": "web/apps/mfe-shell/src/widgets/app-shell/**",
+        "ux_theme_id": "navigation_information_scent",
+        "ux_subtheme_id": "orientation_and_wayfinding"
+      },
+      {
+        "path_glob": "web/packages/ui-kit/src/layout/**/*",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/packages/ui-kit/src/components/entity-grid/**/*",
+        "ux_theme_id": "data_entry_validation_recovery",
+        "ux_subtheme_id": "dependency_aware_form_guidance"
+      },
+      {
+        "path_glob": "web/.stylelintrc.cjs",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/eslint.config.mjs",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/scripts/health/**",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      },
+      {
+        "path_glob": "web/scripts/ops/**",
+        "ux_theme_id": "consistency_and_pattern_governance",
+        "ux_subtheme_id": "single_component_source_of_truth"
+      }
+    ]
+  },
+  "technical_contract": {
+    "baseline_profile_id": "erp-fullstack-java21-react18",
+    "api_version_prefix": "/api/v1",
+    "design_system_policy": "policies/policy_ui_design_system.v1.json",
+    "db_migration_required": false
+  },
+  "lane_plan": {
+    "execution_sequence": [
+      "backend",
+      "database",
+      "api",
+      "frontend",
+      "integration",
+      "e2e"
+    ],
+    "required_lanes": [
+      "unit",
+      "database",
+      "api",
+      "contract",
+      "integration",
+      "e2e"
+    ],
+    "notes": [
+      "Development starts from backend or database impact first, then API, then frontend, then integration and e2e.",
+      "Root-level backend bootstrap files and frontend tooling scripts stay inside the same governed bootstrap contract."
+    ]
+  },
+  "definition_of_done": {
+    "acceptance_criteria": [
+      "Managed repo changes can be traced to one ACTIVE feature execution contract.",
+      "Frontend changes are mappable to locked UX themes and subthemes.",
+      "Root-level backend/bootstrap and frontend tooling changes remain inside the same execution contract and packet write set.",
+      "Module delivery lane sequence remains unchanged and green."
+    ],
+    "evidence_paths": [
+      ".cache/reports/feature_execution_contract_sync_validation.v1.json",
+      ".cache/reports/ux_catalog_enforcement_sync_validation.v1.json",
+      ".cache/reports/managed_repo_governed_bootstrap.sample_check.v1.json"
+    ]
+  },
+  "notes": [
+    "bootstrap_contract_for_first_feature_cycle",
+    "narrow_scope_per_real_feature_before_large_domain_changes"
+  ]
+}
