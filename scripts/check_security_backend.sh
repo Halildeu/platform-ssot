@@ -45,22 +45,40 @@ root = sys.argv[2]
 
 regex = re.compile(pattern)
 exclude_dir_names = {"docs", "legacy", "target", ".git", "packages", "devops", "infra"}
-exclude_dir_prefixes = ("src/main/java", "src/test", "scripts/perf", "scripts/vault")
+exclude_subpaths = ("src/main/java", "src/test", "scripts/perf", "scripts/vault")
 exclude_file_names = {"mvnw", "mvnw.cmd", "test-users-and-variants.sh"}
 exclude_suffixes = (".example", ".env.example", "application-local.properties", "application-docker.properties")
 
 found = False
 
+
+def normalize(rel_path: str) -> str:
+    if rel_path in ("", "."):
+        return ""
+    return rel_path.replace(os.sep, "/")
+
+
+def contains_subpath(rel_path: str, subpath: str) -> bool:
+    rel_path = normalize(rel_path)
+    subpath = subpath.strip("/")
+    if not rel_path:
+        return False
+    return (
+        rel_path == subpath
+        or rel_path.startswith(f"{subpath}/")
+        or rel_path.endswith(f"/{subpath}")
+        or f"/{subpath}/" in rel_path
+    )
+
 for dirpath, dirnames, filenames in os.walk(root):
-    rel_dir = os.path.relpath(dirpath, root)
-    rel_dir_posix = "" if rel_dir == "." else rel_dir.replace(os.sep, "/")
+    rel_dir_posix = normalize(os.path.relpath(dirpath, root))
 
     kept_dirs = []
     for dirname in dirnames:
         rel_path = f"{rel_dir_posix}/{dirname}" if rel_dir_posix else dirname
         if dirname in exclude_dir_names:
             continue
-        if any(rel_path.startswith(prefix) for prefix in exclude_dir_prefixes):
+        if any(contains_subpath(rel_path, prefix) for prefix in exclude_subpaths):
             continue
         kept_dirs.append(dirname)
     dirnames[:] = kept_dirs
@@ -68,6 +86,8 @@ for dirpath, dirnames, filenames in os.walk(root):
     for filename in filenames:
         rel_path = f"{rel_dir_posix}/{filename}" if rel_dir_posix else filename
         if filename in exclude_file_names:
+            continue
+        if any(contains_subpath(rel_path, prefix) for prefix in exclude_subpaths):
             continue
         if filename.startswith("docker-compose") and filename.endswith(".yml"):
             continue

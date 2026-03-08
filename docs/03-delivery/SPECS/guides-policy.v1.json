@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "enabled": true,
+  "scope": {
+    "guides_root": "docs/03-delivery/guides"
+  },
+  "rules": {
+    "require_prefix": "GUIDE-\\d{4}",
+    "require_template": "GUIDE.template.md"
+  },
+  "notes": [
+    "enabled=false iken rapor üretir, exit 0 (non-blocking).",
+    "enabled=true iken guides altında prefixsiz *.md varsa exit 1 (hard gate)."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "notes": [
+    "Amaç: Template/prefix kapsamı dışında kalan dosyalar bile kanonik ad/konum kurallarına tabi olsun.",
+    "Guides için GUIDE prefix standardı ayrı policy ile yönetilir."
+  ],
+  "topic_folders": {
+    "rules": {
+      "canonical_case": "UPPER",
+      "pattern": "^[A-Z0-9_]+$",
+      "require_bm_bench_parity": true
+    },
+    "paths": [
+      "docs/01-product/BUSINESS-MASTERS",
+      "docs/01-product/BENCHMARKS"
+    ]
+  },
+  "nonprefix_allowlist": [
+    {
+      "dir": "docs/04-operations/pr-bot-templates",
+      "recursive": false,
+      "file_regex": "^[a-z0-9-]+\\.md$",
+      "note": "Operasyonel snippet'ler; içerik template değil ama isim kanonik (kebab-case)."
+    },
+    {
+      "dir": "docs/02-architecture",
+      "recursive": false,
+      "file_regex": "^(README|INDEX|SYSTEM-OVERVIEW|DOMAIN-MAP)\\.md$",
+      "note": "Architecture top-level allowlist: README/INDEX + placeholder SSOT files DOMAIN-MAP.md and SYSTEM-OVERVIEW.md."
+    },
+    {
+      "dir": "docs/03-delivery/guides",
+      "recursive": true,
+      "file_regex": "^GUIDE-\\d{4}-.+\\.md$",
+      "note": "Guides artık GUIDE prefixli; migration policy ayrı."
+    }
+  ]
+}

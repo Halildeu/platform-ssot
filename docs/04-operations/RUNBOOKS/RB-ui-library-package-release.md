@@ -44,11 +44,11 @@ Owner: Frontend Platform
   - `ui-library-release` gate `PASS` olmalıdır.
 
 - Başlatma:
-  1. `npm -C web run gate:ui-library-release`
-  2. `npm -C web run build-storybook`
-  3. `npm -C web run security:build-bundle`
-  4. `npm -C web run release:ui-library:manifest`
-  5. `CHROMATIC_PROJECT_TOKEN` varsa `npm -C web run chromatic`
+  - `npm -C web run gate:ui-library-release`
+  - `npm -C web run build-storybook`
+  - `npm -C web run security:build-bundle`
+  - `npm -C web run release:ui-library:manifest`
+  - `CHROMATIC_PROJECT_TOKEN` varsa `npm -C web run chromatic`
 
 - Durdurma:
   - Akış tek-shot çalışır; başarısız bir adım release’i fail-closed durdurur.
