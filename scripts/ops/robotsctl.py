@@ -6,8 +6,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-REGISTRY_PATH = Path("docs/04-operations/ROBOTS-REGISTRY.v0.1.json")
-POLICY_PATH = Path("docs/03-delivery/SPECS/robots-policy.v1.json")
+REGISTRY_PATH = Path("docs-ssot/04-operations/ROBOTS-REGISTRY.v0.1.json")
+POLICY_PATH = Path("docs-ssot/03-delivery/SPECS/robots-policy.v1.json")
 
 OUT_DIR = Path(".autopilot-tmp/robots")
 

@@ -9,7 +9,7 @@ Amaç:
 - merge_policy=bot_squash ise (ve PR draft değilse) "pr-bot/ready-to-merge" label'ını ensure et (best-effort)
 
 Notlar:
-- SSOT: docs/04-operations/PR-BOT-RULES.json
+- SSOT: docs-ssot/04-operations/PR-BOT-RULES.json
 - Template'ler: docs/04-operations/pr-bot-templates/*.md
 - Marker: <!-- pr-bot:rules -->
 """
@@ -472,7 +472,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
     ap.add_argument("--branch", default=os.environ.get("GITHUB_REF_NAME"))
     ap.add_argument("--base", default=None)
     ap.add_argument("--token-env", default="GH_TOKEN")
-    ap.add_argument("--rules-path", default="docs/04-operations/PR-BOT-RULES.json")
+    ap.add_argument("--rules-path", default="docs-ssot/04-operations/PR-BOT-RULES.json")
     ap.add_argument("--dry-run", action="store_true")
     return ap.parse_args(argv)
 
