@@ -146,7 +146,7 @@ service_check_url() {
     shell) printf 'http://127.0.0.1:3000/\n' ;;
     suggestions) printf 'http://127.0.0.1:3001/remoteEntry.js\n' ;;
     ethic) printf 'http://127.0.0.1:3002/remoteEntry.js\n' ;;
-    ui-kit) printf 'http://127.0.0.1:3003/\n' ;;
+    ui-kit) printf 'http://127.0.0.1:3003/remoteEntry.js\n' ;;
     users) printf 'http://127.0.0.1:3004/remoteEntry.js\n' ;;
     access) printf 'http://127.0.0.1:3005/remoteEntry.js\n' ;;
     audit) printf 'http://127.0.0.1:3006/remoteEntry.js\n' ;;

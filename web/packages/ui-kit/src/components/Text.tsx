@@ -48,3 +48,5 @@ export const Text: React.FC<TextProps> = ({
     </Component>
   );
 };
+
+export default Text;
