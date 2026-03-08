@@ -9,7 +9,7 @@ describe('ThemePresetCompare', () => {
         leftPreset={{
           presetId: 'enterprise_light_default',
           label: 'Enterprise Light',
-          themeMode: 'serban-light',
+          themeMode: 'light',
           appearance: 'light',
           density: 'comfortable',
           intent: 'Kurumsal default',
@@ -17,7 +17,7 @@ describe('ThemePresetCompare', () => {
         rightPreset={{
           presetId: 'accessibility_high_contrast',
           label: 'Accessibility High Contrast',
-          themeMode: 'serban-hc',
+          themeMode: 'high-contrast',
           appearance: 'high-contrast',
           density: 'comfortable',
           intent: 'Kontrast odakli',

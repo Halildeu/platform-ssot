@@ -7,7 +7,7 @@ describe('ThemePresetGallery', () => {
     {
       presetId: 'enterprise_light_default',
       label: 'Enterprise Light',
-      themeMode: 'serban-light',
+      themeMode: 'light',
       appearance: 'light',
       density: 'comfortable',
       intent: 'Dengeli kurumsal gorunum',
@@ -16,7 +16,7 @@ describe('ThemePresetGallery', () => {
     {
       presetId: 'accessibility_high_contrast',
       label: 'Accessibility High Contrast',
-      themeMode: 'serban-hc',
+      themeMode: 'high-contrast',
       appearance: 'high-contrast',
       density: 'comfortable',
       intent: 'Yuksek kontrast erisilebilir preset',
