@@ -1,30 +1,30 @@
 {
-  "generatedAt": "2025-11-02T08:26:24.575Z",
+  "generatedAt": "2026-03-08T12:58:54.279Z",
   "remotes": {
     "mfe-users": {
-      "artifact": "dist/users/remoteEntry.js",
-      "sri": "sha384-vn8U+832Z1kYCkYfWQEzw/8EYiH5cIe0LGUD84mEw6tO7RRzDe2La67zltojH8sG",
-      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+      "artifact": "apps/dist/users/remoteEntry.js",
+      "sri": "sha384-9wxkx/8epVHd/qguA0zSyErhhOYVsqOF4wqtOx4jZYfyIjeJBTNOThnH6gSHbCpF",
+      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
     },
     "mfe-suggestions": {
-      "artifact": "dist/suggestions/remoteEntry.js",
-      "sri": "sha384-JHHKcBXn3bscPuzhDxEmhQMyLFnqj8LM8FFzfrOzvcigOZ/Gt0ufBIbKTrd8bBCE",
-      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+      "artifact": "apps/dist/suggestions/remoteEntry.js",
+      "sri": "sha384-P9QLcZhb+zIUW6TWGOd+gp0ibmoFlbUIqvkzC1CxE6pyMrpYafcsL//x2nbDj6rf",
+      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
     },
     "mfe-ethic": {
-      "artifact": "dist/ethic/remoteEntry.js",
-      "sri": "sha384-xt73dyjcm002GV7d34LC4vvbVsUQIOM6KLbQ+v4J6jAmlIlOPx/S2FyxNYTEvxO3",
-      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+      "artifact": "apps/dist/ethic/remoteEntry.js",
+      "sri": "sha384-ZW4zhw+hEhiL7+BuDqj59wD9YgjOApxYeyQqHbUNa65X5RuVuzIboaXVS5g9V9yC",
+      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
     },
     "mfe-access": {
-      "artifact": "dist/access/remoteEntry.js",
-      "sri": "sha384-inQ49lXNp9SICPcvBSLoCYKCd6JAuDRrLOhjHMCv04h636/+gzIpcaXnLnVc1aea",
-      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+      "artifact": "apps/dist/access/remoteEntry.js",
+      "sri": "sha384-vB2z4tpLR9Bxa4vIKMGx/R8+PZLKpwWYOyVHbJR4ZZTY/Wibnh1hRSFjmwyE0GQM",
+      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
     },
     "mfe-ui-kit": {
-      "artifact": "dist/ui-kit/remoteEntry.js",
-      "sri": "sha384-aOIPYsDBx20U8vs7t+K1t0tqFaMbRxRtWTDZJAiyQL3+aEKkFxZMW36Z7WlMV3QS",
-      "lastRotatedAt": "2025-11-02T08:26:24.575Z"
+      "artifact": "packages/dist/ui-kit/remoteEntry.js",
+      "sri": "sha384-5QygpAcEHOVmBJhpf+4RCOYZtEkuGUjjLOAIM3fb2EiL8kXNCVvccvfAF8dvH/eZ",
+      "lastRotatedAt": "2026-03-08T12:58:54.279Z"
     }
   }
 }
