@@ -4,13 +4,20 @@
   "title": "UI Kutuphane Sistemi",
   "purpose": "mfe-ui-kit paketini sistemin tek profesyonel UI kutuphanesi olarak buyutmek, preview/demo yuzeyini zorunlu kilmak ve yeni component uretimini JSON-first kontratla deterministik hale getirmek.",
   "governance_contract": "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+  "typography_contract": "docs/02-architecture/context/ui-library-typography.contract.v1.json",
+  "iconography_contract": "docs/02-architecture/context/ui-library-iconography.contract.v1.json",
+  "motion_contract": "docs/02-architecture/context/ui-library-motion.contract.v1.json",
+  "responsive_layout_contract": "docs/02-architecture/context/ui-library-responsive-layout.contract.v1.json",
+  "adoption_enforcement_contract": "docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.json",
+  "theme_preset_catalog": "docs/02-architecture/context/ui-library-theme-preset-catalog.v1.json",
+  "recipe_system_contract": "docs/02-architecture/context/ui-library-recipe-system.contract.v1.json",
   "ux_catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
   "ux_alignment_contract": "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
   "component_roadmap": "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
   "diagnostics_registry": "docs/02-architecture/context/frontend-diagnostics.registry.v1.json",
   "diagnostics_runbook": "docs/04-operations/RUNBOOKS/RB-frontend-doctor.md",
   "active_wave_contracts": [
-    "docs/02-architecture/context/ui-library-wave-8-overlay-extensions.v1.json"
+    "docs/02-architecture/context/ui-library-wave-11-recipes.v1.json"
   ],
   "canonical_modules": [
     "web/packages/ui-kit",
@@ -60,6 +67,7 @@
   },
   "hard_rules": [
     "Yeni ortak UI primitive veya composite component sadece web/packages/ui-kit altina eklenir.",
+    "Semantic typography, iconography, motion ve responsive/layout-grid kararlari ilgili foundation kontratlari disinda lokal dille acilmaz.",
     "UI kutuphanesi ux_katalogu tema/subtheme standartlariyla hizali uretime tabidir.",
     "Tailwind tasarim sistemi olarak degil, ui-kit-first render/layout yardimcisi olarak kullanilir.",
     "apps/** icinde yeni ortak primitive uretilmez; yalniz ekran/layout compose edilir.",
@@ -77,8 +85,13 @@
   ],
   "quality_gates": [
     "python3 scripts/check_ui_library_governance_contract.py",
+    "python3 scripts/check_ui_library_foundation_contracts.py",
+    "python3 scripts/check_ui_library_system_extensions.py",
     "python3 scripts/check_ui_library_ux_alignment.py",
     "python3 scripts/check_ui_library_component_roadmap.py",
+    "python3 scripts/check_ui_library_wave_9_foundation_language.py",
+    "python3 scripts/check_ui_library_wave_10_theme_presets.py",
+    "python3 scripts/check_ui_library_wave_11_recipes.py",
     "python3 scripts/check_ui_library_wave_3_forms.py",
     "python3 scripts/check_ui_library_wave_2_navigation.py",
     "python3 scripts/check_ui_library_wave_1_foundation_primitives.py",
@@ -94,7 +107,7 @@
     "python3 scripts/check_ui_library_package_release_contract.py",
     "python3 scripts/check_ui_library_wave_6_ai_native_helpers.py",
     "python3 scripts/check_ui_library_wave_8_overlay_extensions.py",
-    "npm -C web run gate:ui-library-wave -- --wave wave_8_overlay_extensions"
+    "npm -C web run gate:ui-library-wave -- --wave wave_11_recipes"
   ],
   "north_star_sections": [
     {
@@ -157,6 +170,8 @@
   "feature_start_order": [
     "Repo context pack okunur.",
     "UI library governance contract okunur.",
+    "Typography, iconography, motion ve responsive/layout-grid kontratlari okunur.",
+    "Adoption/enforcement contract, theme preset catalog ve recipe system contract okunur.",
     "UX katalog referansi ve UI-library UX alignment kontrati okunur.",
     "Component roadmap okunur; family ve wave secimi yapilir.",
     "Aktif wave execution contract okunur ve component order kesinlestirilir.",
@@ -174,7 +189,15 @@
   "page_block_contract": "docs/02-architecture/context/ui-library-page-block-library.contract.v1.json",
   "package_release_contract": "docs/02-architecture/context/ui-library-package-release.contract.v1.json",
   "secondary_human_sources": [
-    "docs/02-architecture/context/ui-library-wave-6-ai-native-helpers.v1.md",
-    "docs/02-architecture/context/ui-library-wave-8-overlay-extensions.v1.md"
+    "docs/02-architecture/context/ui-library-typography.contract.v1.md",
+    "docs/02-architecture/context/ui-library-iconography.contract.v1.md",
+    "docs/02-architecture/context/ui-library-motion.contract.v1.md",
+    "docs/02-architecture/context/ui-library-responsive-layout.contract.v1.md",
+    "docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.md",
+    "docs/02-architecture/context/ui-library-theme-preset-catalog.v1.md",
+    "docs/02-architecture/context/ui-library-recipe-system.contract.v1.md",
+    "docs/02-architecture/context/ui-library-wave-9-foundation-language.v1.md",
+    "docs/02-architecture/context/ui-library-wave-10-theme-presets.v1.md",
+    "docs/02-architecture/context/ui-library-wave-11-recipes.v1.md"
   ]
 }

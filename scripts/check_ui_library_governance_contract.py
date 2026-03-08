@@ -14,11 +14,15 @@ REQUIRED_TOP_KEYS = [
     "benchmark_references",
     "north_star",
     "architecture_contract",
+    "foundation_contracts",
     "ux_catalog_alignment",
     "component_operating_model",
     "quality_attribute_contract",
     "delivery_gates",
     "ai_execution_contract",
+    "adoption_enforcement_contract",
+    "theme_preset_catalog",
+    "recipe_system_contract",
     "decision_policy",
 ]
 
@@ -63,6 +67,21 @@ def main() -> int:
         if not ref.get("source_url", "").startswith("https://"):
             problems.append(f"invalid-benchmark-url:{ref.get('id', 'unknown')}")
 
+    foundation_contracts = data.get("foundation_contracts", {})
+    for key in ("typography_contract", "iconography_contract", "motion_contract", "responsive_layout_contract"):
+        value = foundation_contracts.get(key)
+        if not value:
+            problems.append(f"missing-foundation-contract:{key}")
+        elif not (ROOT / value).exists():
+            problems.append(f"missing-foundation-contract-file:{key}")
+
+    for key in ("adoption_enforcement_contract", "theme_preset_catalog", "recipe_system_contract"):
+        value = data.get(key)
+        if not value:
+            problems.append(f"missing-extension-contract:{key}")
+        elif not (ROOT / value).exists():
+            problems.append(f"missing-extension-contract-file:{key}")
+
     ai_contract = data.get("ai_execution_contract", {})
     if not ai_contract.get("must_read_before_code"):
         problems.append("missing-ai-must-read")
@@ -76,6 +95,10 @@ def main() -> int:
         problems.append("missing-gate:check_ui_library_ux_alignment")
     if "python3 scripts/check_ui_library_component_roadmap.py" not in gates.get("mandatory_checks", []):
         problems.append("missing-gate:check_ui_library_component_roadmap")
+    if "python3 scripts/check_ui_library_foundation_contracts.py" not in gates.get("mandatory_checks", []):
+        problems.append("missing-gate:check_ui_library_foundation_contracts")
+    if "python3 scripts/check_ui_library_system_extensions.py" not in gates.get("mandatory_checks", []):
+        problems.append("missing-gate:check_ui_library_system_extensions")
 
     if problems:
         print("[check_ui_library_governance_contract] FAIL")

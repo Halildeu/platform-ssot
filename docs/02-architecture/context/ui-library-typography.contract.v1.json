@@ -1,0 +1,80 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-typography-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "foundation_id": "typography",
+  "purpose": "UI kit icindeki tum metin davranislarini tek semantic typography dili altinda toplamak; okunabilirlik, hiyerarsi ve locale uyumlulugunu zorunlu kilmak.",
+  "canonical_sources": [
+    "web/packages/ui-kit/src/components/Text.tsx",
+    "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json",
+    "docs/00-handbook/STYLE-WEB-001.md"
+  ],
+  "semantic_scale": [
+    {
+      "token_id": "display",
+      "usage": "page hero ve buyuk section basliklari",
+      "owner_components": [
+        "PageHeader",
+        "Component Explorer hero"
+      ]
+    },
+    {
+      "token_id": "heading",
+      "usage": "component docs basligi ve primary card basliklari",
+      "owner_components": [
+        "Text",
+        "LibraryDocsPrimitives"
+      ]
+    },
+    {
+      "token_id": "title",
+      "usage": "panel ve section basliklari",
+      "owner_components": [
+        "PageLayout",
+        "SummaryStrip",
+        "EntitySummaryBlock"
+      ]
+    },
+    {
+      "token_id": "body",
+      "usage": "varsayilan okumali icerik",
+      "owner_components": [
+        "Text",
+        "Descriptions",
+        "List"
+      ]
+    },
+    {
+      "token_id": "meta",
+      "usage": "yardimci, ikincil ve tablo meta verileri",
+      "owner_components": [
+        "Badge",
+        "Tag",
+        "JsonViewer"
+      ]
+    }
+  ],
+  "rules": [
+    "Metin rendering icin varsayilan semantic owner Text componentidir; apps/** icinde raw text styling ile yeni semantic seviye acilmaz.",
+    "Uzun metinler clamp, truncate veya wrap karari olmadan dar alana birakilmaz.",
+    "Sayisal verilerde tabular nums gerekli ise Text veya owner component tabularNums API'si kullanilir.",
+    "Body copy satir yuksekligi ve olculu satir uzunlugu okunabilirlik odakli kalir; component API'si bunu bozamaz.",
+    "Heading seviyeleri gorunum icin degil, bilgi hiyerarsisi icin secilir."
+  ],
+  "accessibility_rules": [
+    "Heading hierarchy atlamaz; page hero ve component docs basliklari hiyerarsik kalir.",
+    "Kontrast ve readability kararlari high-contrast preset ile uyumlu olmak zorundadir.",
+    "Clamp edilen metinlerde asil icerige erisim title veya detail view ile korunur."
+  ],
+  "evidence_requirements": [
+    "Text component API catalog kaydi",
+    "Design Lab typography ve readability preview",
+    "doctor:frontend ui-library PASS",
+    "wave gate PASS"
+  ],
+  "success_criteria": [
+    "Text ve docs shell'leri semantic typography kontratini ortak dille kullanir.",
+    "Raw heading/body class varyanti ile duplicate typography dili olusmaz.",
+    "Readability odakli wrapping, clamp ve tabular sayi davranisi tek owner API ile yonetilir."
+  ]
+}

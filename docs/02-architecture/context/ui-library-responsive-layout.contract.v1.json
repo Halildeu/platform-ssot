@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-responsive-layout-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "foundation_id": "responsive_layout",
+  "purpose": "Page shell, grid ve block davranislarini tek responsive/layout-grid kontrati altinda toplamak; breakpoint ve density kararlarini ortaklastirmak.",
+  "canonical_sources": [
+    "web/tailwind.config.js",
+    "web/packages/ui-kit/src/layout/PageLayout/PageLayout.tsx",
+    "web/packages/ui-kit/src/layout/PageHeader/PageHeader.tsx",
+    "web/packages/ui-kit/src/layout/SummaryStrip/SummaryStrip.tsx",
+    "web/packages/ui-kit/src/layout/FilterBar/FilterBar.tsx"
+  ],
+  "breakpoint_strategy": {
+    "source": "Tailwind default screens",
+    "breakpoints": [
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "2xl"
+    ]
+  },
+  "rules": [
+    "Responsive davranis component API veya shared page/block shell uzerinden tanimlanir; apps/** icinde duplicate breakpoint mantigi acilmaz.",
+    "Page shell'lerde section spacing ve content width kararini PageLayout/PageHeader owner API'si belirler.",
+    "Dense/compact gosterim ihtiyaci theme preset veya density axis ile yonetilir; lokal micro-spacing override birikimi yasaktir.",
+    "Sidebar, table ve summary block'larda dar genislikte wrap/collapse davranisi preview ile kanitlanir."
+  ],
+  "evidence_requirements": [
+    "Responsive preview section",
+    "Page/block preview parity",
+    "doctor:frontend PASS"
+  ],
+  "success_criteria": [
+    "Responsive davranis sayfa bazli kopya degil, owner shell ve block API ile gelir.",
+    "Density ve spacing kararlarinda theme axis ile layout shell kontrati birbiriyle çelişmez.",
+    "Dar genislikte okunabilirlik bozan local override sayisi sifira iner."
+  ]
+}

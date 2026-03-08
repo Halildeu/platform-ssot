@@ -1,0 +1,58 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-iconography-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "foundation_id": "iconography",
+  "purpose": "Ortak icon dilini tek runtime set ve tek semantik kuralla yonetmek; decorative ve informative icon kullanimini netlestirmek.",
+  "runtime_icon_set": {
+    "primary": "lucide-react",
+    "forbidden_runtime_sets": [
+      "@mui/icons-material",
+      "@ant-design/icons"
+    ],
+    "allowed_exceptions": [
+      "Brand asset veya partner logosu icon set disi tasinabilir."
+    ]
+  },
+  "size_tiers": [
+    {
+      "tier_id": "sm",
+      "usage": "inline meta ve dense toolbar"
+    },
+    {
+      "tier_id": "md",
+      "usage": "varsayilan action ve field icon"
+    },
+    {
+      "tier_id": "lg",
+      "usage": "hero, empty state ve docs spotlight"
+    }
+  ],
+  "rules": [
+    "Icon decorative ise assistive teknolojiden gizlenir; informative ise aria label veya text pairing zorunludur.",
+    "Icon tek basina primary bilgi tasiyamaz; gerekli ise label veya tooltip ile desteklenir.",
+    "Ayni action icin farkli icon secimleri uretilmez; canonical action/icon eslemesi registry ve docs ile sabitlenir.",
+    "Emoji veya text glyph canonical iconography yerine gecmez."
+  ],
+  "current_debt": [
+    {
+      "id": "legacy-inline-glyphs",
+      "status": "tracked",
+      "paths": [
+        "web/packages/ui-kit/src/components/entity-grid/EntityGridTemplate.tsx"
+      ],
+      "note": "Bazi legacy grid satirlarinda canonical lucide seti disi ikon/glyph izi bulunabilir; yeni patch'ler bunlari artirmayacak, migration recipe ile kapanacak."
+    }
+  ],
+  "evidence_requirements": [
+    "Icon-bearing component API catalog kaydi",
+    "A11y note: decorative vs informative ayrimi",
+    "lint:no-antd guard PASS",
+    "doctor:frontend ui-library PASS"
+  ],
+  "success_criteria": [
+    "Runtime icon dili tek sete indirgenir.",
+    "Decorative/informative icon kullanimi deterministic olur.",
+    "Yeni component icon secimi docs portal ve preview ile gorunur hale gelir."
+  ]
+}

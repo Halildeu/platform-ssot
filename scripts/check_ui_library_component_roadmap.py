@@ -15,6 +15,9 @@ REQUIRED_FAMILIES = {
     "page_blocks",
     "overlay",
     "ai_native_helpers",
+    "foundation_language",
+    "theme_presets",
+    "recipes",
 }
 
 REQUIRED_WAVES = {
@@ -27,6 +30,9 @@ REQUIRED_WAVES = {
     "wave_6_ai_native_helpers",
     "wave_7_page_blocks",
     "wave_8_overlay_extensions",
+    "wave_9_foundation_language",
+    "wave_10_theme_presets",
+    "wave_11_recipes",
 }
 
 

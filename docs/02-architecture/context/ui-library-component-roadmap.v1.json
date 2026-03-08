@@ -305,12 +305,7 @@
       "exit_criteria": [
         "Label/help/error/disabled/readOnly durumlari ortak kontratla gelir.",
         "Inline validation ve error recovery Design Lab demo'larinda gorunur olur."
-      ],
-      "implemented_now": [
-        "TimePicker",
-        "Upload"
-      ],
-      "gaps": []
+      ]
     },
     {
       "family_id": "data_display",
@@ -675,6 +670,191 @@
         "AI helper seti source transparency, confidence ve human approval davranislarini standartlastirir.",
         "AI-native componentler privacy/redaction ve audit trail kontratiyla gelir."
       ]
+    },
+    {
+      "family_id": "foundation_language",
+      "title_tr": "Foundation Language",
+      "ux_alignment_family_id": "governance_and_foundation_language",
+      "purpose": "Typography, iconography, motion ve responsive/layout-grid dilini component ustu bir foundation katmani olarak kilitlemek.",
+      "current_state": {
+        "implemented_now": [
+          "TypographySystem",
+          "IconographySystem",
+          "MotionSystem",
+          "ResponsiveLayoutGrid"
+        ],
+        "gaps": []
+      },
+      "target_components": [
+        {
+          "component_name": "TypographySystem",
+          "source_type": "contract_lock",
+          "target_wave": "wave_9_foundation_language",
+          "target_maturity": "stable",
+          "preview_mode": "inspector",
+          "ux_primary_theme_id": "consistency_and_pattern_governance",
+          "ux_primary_subtheme_id": "single_component_source_of_truth"
+        },
+        {
+          "component_name": "IconographySystem",
+          "source_type": "contract_lock",
+          "target_wave": "wave_9_foundation_language",
+          "target_maturity": "stable",
+          "preview_mode": "inspector",
+          "ux_primary_theme_id": "consistency_and_pattern_governance",
+          "ux_primary_subtheme_id": "behavior_contracts_across_modules"
+        },
+        {
+          "component_name": "MotionSystem",
+          "source_type": "contract_lock",
+          "target_wave": "wave_9_foundation_language",
+          "target_maturity": "stable",
+          "preview_mode": "inspector",
+          "ux_primary_theme_id": "feedback_state_and_visibility",
+          "ux_primary_subtheme_id": "response_time_budget_feedback"
+        },
+        {
+          "component_name": "ResponsiveLayoutGrid",
+          "source_type": "contract_lock",
+          "target_wave": "wave_9_foundation_language",
+          "target_maturity": "stable",
+          "preview_mode": "inspector",
+          "ux_primary_theme_id": "navigation_information_scent",
+          "ux_primary_subtheme_id": "domain_based_information_architecture"
+        }
+      ],
+      "exit_criteria": [
+        "Typography, iconography, motion ve responsive/layout-grid karar dili tek kontrat setinde kilitlenir.",
+        "Foundation dili governance ve wave gate icinde zorunlu okunur hale gelir."
+      ]
+    },
+    {
+      "family_id": "theme_presets",
+      "title_tr": "Theme Presets",
+      "ux_alignment_family_id": "theming_customization",
+      "purpose": "Resmi theme preset ailesini docs, runtime ve release diliyle ayni isimlerde toplamak.",
+      "current_state": {
+        "implemented_now": [
+          "EnterpriseLightDefault",
+          "OperatorDarkFocus",
+          "AccessibilityHighContrast",
+          "CompactWorkspace"
+        ],
+        "gaps": []
+      },
+      "target_components": [
+        {
+          "component_name": "EnterpriseLightDefault",
+          "source_type": "preset_catalog",
+          "target_wave": "wave_10_theme_presets",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "theming_customization",
+          "ux_primary_subtheme_id": "mode_density_personalization"
+        },
+        {
+          "component_name": "OperatorDarkFocus",
+          "source_type": "preset_catalog",
+          "target_wave": "wave_10_theme_presets",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "theming_customization",
+          "ux_primary_subtheme_id": "mode_density_personalization"
+        },
+        {
+          "component_name": "AccessibilityHighContrast",
+          "source_type": "preset_catalog",
+          "target_wave": "wave_10_theme_presets",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "accessibility_and_inclusive_design",
+          "ux_primary_subtheme_id": "contrast_typography_readability"
+        },
+        {
+          "component_name": "CompactWorkspace",
+          "source_type": "preset_catalog",
+          "target_wave": "wave_10_theme_presets",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "responsive_layout",
+          "ux_primary_subtheme_id": "density_scale_management"
+        }
+      ],
+      "exit_criteria": [
+        "Resmi preset ailesi theme-contract allowedModes ile uyumlu kalir.",
+        "Docs, preview ve release gorunumleri ayni preset kimliklerini kullanir."
+      ]
+    },
+    {
+      "family_id": "recipes",
+      "title_tr": "Recipes",
+      "ux_alignment_family_id": "recipe_patterns",
+      "purpose": "Tekil componentleri asan ekran/panel kaliplarini reusable recipe sistemi altinda toplamak.",
+      "current_state": {
+        "implemented_now": [
+          "SearchFilterListing",
+          "DetailSummary",
+          "ApprovalReview",
+          "EmptyErrorLoading",
+          "AIGuidedAuthoring"
+        ],
+        "gaps": [
+          "DashboardKPIAnalytics",
+          "TableToChartReview",
+          "MultiStepSubmission"
+        ]
+      },
+      "target_components": [
+        {
+          "component_name": "SearchFilterListing",
+          "source_type": "recipe_contract",
+          "target_wave": "wave_11_recipes",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "task_completion_architecture",
+          "ux_primary_subtheme_id": "critical_path_minimization"
+        },
+        {
+          "component_name": "DetailSummary",
+          "source_type": "recipe_contract",
+          "target_wave": "wave_11_recipes",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "feedback_state_and_visibility",
+          "ux_primary_subtheme_id": "confirmation_receipts_and_traceability"
+        },
+        {
+          "component_name": "ApprovalReview",
+          "source_type": "recipe_contract",
+          "target_wave": "wave_11_recipes",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "ai_assisted_decision_experience",
+          "ux_primary_subtheme_id": "human_approval_checkpoints"
+        },
+        {
+          "component_name": "EmptyErrorLoading",
+          "source_type": "recipe_contract",
+          "target_wave": "wave_11_recipes",
+          "target_maturity": "stable",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "feedback_state_and_visibility",
+          "ux_primary_subtheme_id": "loading_empty_error_success_patterns"
+        },
+        {
+          "component_name": "AIGuidedAuthoring",
+          "source_type": "recipe_contract",
+          "target_wave": "wave_11_recipes",
+          "target_maturity": "beta",
+          "preview_mode": "live",
+          "ux_primary_theme_id": "ai_assisted_decision_experience",
+          "ux_primary_subtheme_id": "safe_prompt_templates_and_scope"
+        }
+      ],
+      "exit_criteria": [
+        "Page ve panel kaliplari veri/config ile tuketilebilen reusable recipe diline tasinir.",
+        "Route-level duplicate layout ve flow sayisi azalir."
+      ]
     }
   ],
   "maturity_targets": {
@@ -732,12 +912,35 @@
           "stable": 0,
           "beta": 7
         }
+      },
+      {
+        "family_id": "foundation_language",
+        "target_mix": {
+          "stable": 4,
+          "beta": 0
+        }
+      },
+      {
+        "family_id": "theme_presets",
+        "target_mix": {
+          "stable": 4,
+          "beta": 0
+        }
+      },
+      {
+        "family_id": "recipes",
+        "target_mix": {
+          "stable": 4,
+          "beta": 1
+        }
       }
     ]
   },
   "gate_check_evidence_plan": {
     "common_checks": [
       "python3 scripts/check_ui_library_governance_contract.py",
+      "python3 scripts/check_ui_library_foundation_contracts.py",
+      "python3 scripts/check_ui_library_system_extensions.py",
       "python3 scripts/check_ui_library_ux_alignment.py",
       "npm -C web run designlab:index",
       "npm -C web run lint:tailwind",
@@ -786,6 +989,21 @@
         "route-level duplicate layout count = 0",
         "summary/filter/header block preview parity",
         "release notes and lifecycle note for stable block changes"
+      ],
+      "foundation_language": [
+        "semantic typography contract check",
+        "iconography single-runtime-set check",
+        "reduced-motion and responsive shell contract check"
+      ],
+      "theme_presets": [
+        "theme-contract allowedModes parity",
+        "preset docs/release parity",
+        "theme preview evidence"
+      ],
+      "recipes": [
+        "recipe owner component parity",
+        "page/block reuse evidence",
+        "duplicate layout reduction note"
       ]
     },
     "minimum_evidence_artifacts": [
@@ -1029,6 +1247,72 @@
         "TourCoachmarks"
       ],
       "remaining_components": []
+    },
+    {
+      "wave_id": "wave_9_foundation_language",
+      "title_tr": "Foundation Language",
+      "status": "completed",
+      "objective": "Typography, iconography, motion ve responsive/layout-grid kontratlarini kilitle.",
+      "families": [
+        "foundation_language"
+      ],
+      "candidate_components": [
+        "TypographySystem",
+        "IconographySystem",
+        "MotionSystem",
+        "ResponsiveLayoutGrid"
+      ],
+      "dependencies": [
+        "wave_1_foundation_primitives",
+        "wave_7_page_blocks"
+      ],
+      "notes": [
+        "Foundation dili component ustu kontrat seti olarak kilitlendi ve governance/gate zincirine baglandi."
+      ]
+    },
+    {
+      "wave_id": "wave_10_theme_presets",
+      "title_tr": "Theme Presets",
+      "status": "completed",
+      "objective": "Resmi theme preset ailesini tek katalog ve release diliyle standardize et.",
+      "families": [
+        "theme_presets"
+      ],
+      "candidate_components": [
+        "EnterpriseLightDefault",
+        "OperatorDarkFocus",
+        "AccessibilityHighContrast",
+        "CompactWorkspace"
+      ],
+      "dependencies": [
+        "wave_9_foundation_language"
+      ],
+      "notes": [
+        "Theme preset katalogu mevcut theme-contract allowedModes ile hizali resmi preset ailesi uretir."
+      ]
+    },
+    {
+      "wave_id": "wave_11_recipes",
+      "title_tr": "Recipes",
+      "status": "completed",
+      "objective": "Reusable ekran/panel kaliplarini recipe sistemi kontrati altinda standardize et.",
+      "families": [
+        "recipes"
+      ],
+      "candidate_components": [
+        "SearchFilterListing",
+        "DetailSummary",
+        "ApprovalReview",
+        "EmptyErrorLoading",
+        "AIGuidedAuthoring"
+      ],
+      "dependencies": [
+        "wave_7_page_blocks",
+        "wave_10_theme_presets"
+      ],
+      "notes": [
+        "Recipe sistemi, page/block ve component owner API'lerini tekrar kullanilabilir ekran kaliplari olarak birlestirdi."
+      ]
     }
   ]
 }

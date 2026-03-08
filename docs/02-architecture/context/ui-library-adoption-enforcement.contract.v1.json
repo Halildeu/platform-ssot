@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-adoption-enforcement-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "purpose": "Tasarim sisteminin var olmasini degil, zorunlu olarak tuketilmesini saglamak; local primitive, raw style ve duplicate page shell olusumunu fail-closed engellemek.",
+  "ui_kit_first_rule": true,
+  "forbidden_patterns": [
+    "apps/** altinda yeni ortak primitive veya composite olusturmak",
+    "raw color / raw spacing / raw radius / raw typography class kullanmak",
+    "registry kaydi olmadan ortak export acmak",
+    "preview ve doctor evidence olmadan common UI degisikligi stabil saymak"
+  ],
+  "allowed_exception_paths": [
+    "web/stories/**",
+    "web/.storybook/**",
+    "web/tests/**",
+    "web/packages/ui-kit/src/**"
+  ],
+  "current_enforced_checks": [
+    "npm -C web run lint:tailwind",
+    "npm -C web run lint:no-antd",
+    "npm -C web run doctor:frontend -- --preset ui-library",
+    "npm -C web run gate:ui-library-wave",
+    "python3 scripts/check_ui_library_governance_contract.py",
+    "python3 scripts/check_ui_library_ux_alignment.py",
+    "python3 scripts/check_frontend_diagnostics_registry.py"
+  ],
+  "planned_enforcement": [
+    "no-local-primitive eslint rule",
+    "raw-style codemod and autofix hints",
+    "visual regression screenshot gate",
+    "usage telemetry and deprecation dashboard"
+  ],
+  "migration_strategy": [
+    "mevcut local UI varyantlari once registry/recipe seviyesinde tanimlanir",
+    "ardindan ui-kit veya page-block owner API'sine tasinir",
+    "route icinde duplicate yapilar kaldirilir"
+  ],
+  "success_criteria": [
+    "Yeni UI gelistirmesi default olarak ui-kit veya page/block owner API ile baslar.",
+    "Design system disi raw visual karar birikimi kontrol altina alinir.",
+    "Adoption/enforcement katmani governance ve release gate icinde görünür olur."
+  ]
+}

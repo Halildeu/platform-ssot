@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "wave_id": "wave_11_recipes",
+  "subject_id": "ui_kutuphane_sistemi",
+  "title": "Recipe System",
+  "status": "completed",
+  "objective": "Page ve panel davranislarini reusable recipe ailesi olarak kilitlemek; sayfalarin veri/config ile calismasini desteklemek.",
+  "families": [
+    "recipes"
+  ],
+  "dependencies": [
+    "wave_7_page_blocks",
+    "wave_10_theme_presets"
+  ],
+  "focus_artifacts": [
+    "docs/02-architecture/context/ui-library-recipe-system.contract.v1.json",
+    "docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.json"
+  ],
+  "gate_requirements": [
+    "python3 scripts/check_ui_library_system_extensions.py",
+    "python3 scripts/check_ui_library_governance_contract.py",
+    "npm -C web run gate:ui-library-wave -- --wave wave_11_recipes"
+  ]
+}

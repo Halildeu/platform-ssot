@@ -1,0 +1,77 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-recipe-system-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "purpose": "Component seviyesini asan ortak ekran kaliplarini, recipe mantigiyla reusable ve JSON-first hale getirmek; sayfa ve moduller veri/config doldurarak ayni davranisi tuketsin.",
+  "current_recipe_families": [
+    {
+      "recipe_id": "search_filter_listing",
+      "owner_blocks": [
+        "PageLayout",
+        "FilterBar",
+        "AgGridServer",
+        "TableSimple",
+        "List",
+        "Empty"
+      ],
+      "intent": "liste, filtre ve sonuc yuzeylerini ayni shell altinda toplamak"
+    },
+    {
+      "recipe_id": "detail_summary",
+      "owner_blocks": [
+        "PageHeader",
+        "SummaryStrip",
+        "EntitySummaryBlock",
+        "Descriptions",
+        "JsonViewer"
+      ],
+      "intent": "detay ekranlarinda ozet + meta + yan panel kurgusunu ortaklastirmak"
+    },
+    {
+      "recipe_id": "approval_review",
+      "owner_blocks": [
+        "ApprovalCheckpoint",
+        "CitationPanel",
+        "AIActionAuditTimeline",
+        "Modal",
+        "DetailDrawer"
+      ],
+      "intent": "onay, karar ve audit akisini tutarli bir review recipe'si ile sunmak"
+    },
+    {
+      "recipe_id": "empty_error_loading",
+      "owner_blocks": [
+        "Empty",
+        "Skeleton",
+        "Spinner",
+        "Tooltip"
+      ],
+      "intent": "bos, hata ve yukleniyor durumlarini tutarli geri bildirim diliyle vermek"
+    },
+    {
+      "recipe_id": "ai_guided_authoring",
+      "owner_blocks": [
+        "PromptComposer",
+        "RecommendationCard",
+        "ConfidenceBadge",
+        "TextArea",
+        "CommandPalette"
+      ],
+      "intent": "AI destekli yazim ve karar yuzeylerini reusable recipe olarak kurmak"
+    }
+  ],
+  "planned_recipe_families": [
+    "dashboard_kpi_analytics",
+    "table_to_chart_review",
+    "multi_step_submission"
+  ],
+  "rules": [
+    "Yeni page veya panel ilk once uygun recipe var mi diye kontrol edilir.",
+    "Ayni davranisi tekrar eden route-level layout recipe owner API'sine tasinir.",
+    "Recipe aileleri component, block, UX alignment ve release notu bagiyla birlikte yonetilir."
+  ],
+  "success_criteria": [
+    "Sadece component degil, ekran kaliplari da standart ve tekrar kullanilir hale gelir.",
+    "Sayfalar minimum UI kodu ile veri/config doldurarak recipe tuketebilir."
+  ]
+}

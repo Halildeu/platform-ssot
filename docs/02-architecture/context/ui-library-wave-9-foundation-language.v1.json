@@ -1,0 +1,22 @@
+{
+  "version": "1.0",
+  "wave_id": "wave_9_foundation_language",
+  "subject_id": "ui_kutuphane_sistemi",
+  "title": "Foundation Language Lock",
+  "status": "completed",
+  "objective": "Typography, iconography, motion ve responsive/layout-grid dilini kanonik kontratlarla kilitlemek.",
+  "families": [
+    "foundation_language"
+  ],
+  "focus_artifacts": [
+    "docs/02-architecture/context/ui-library-typography.contract.v1.json",
+    "docs/02-architecture/context/ui-library-iconography.contract.v1.json",
+    "docs/02-architecture/context/ui-library-motion.contract.v1.json",
+    "docs/02-architecture/context/ui-library-responsive-layout.contract.v1.json"
+  ],
+  "gate_requirements": [
+    "python3 scripts/check_ui_library_foundation_contracts.py",
+    "python3 scripts/check_ui_library_governance_contract.py",
+    "npm -C web run gate:ui-library-wave -- --wave wave_9_foundation_language"
+  ]
+}

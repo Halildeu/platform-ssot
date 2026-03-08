@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+  "contract_id": "ui-library-motion-contract-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "foundation_id": "motion",
+  "purpose": "Theme axis ve token zincirine bagli, reduced-motion uyumlu ve overlay/feedback odakli motion dilini standardize etmek.",
+  "canonical_sources": [
+    "web/tailwind.config.js",
+    "web/packages/ui-kit/src/runtime/theme-controller.ts",
+    "web/packages/ui-kit/src/components/Skeleton.tsx",
+    "web/packages/ui-kit/src/components/Spinner.tsx"
+  ],
+  "timing_tokens": {
+    "durations": [
+      "fast",
+      "medium",
+      "slow"
+    ],
+    "easings": [
+      "standard",
+      "enter",
+      "exit"
+    ]
+  },
+  "rules": [
+    "Motion karari token ve theme axis disindan local duration/easing ile acilmaz.",
+    "Reduced motion tercihi olan kullanicida pulsing, spinning ve staged reveal davranislari durdurulur veya sadeleşir.",
+    "Overlay, tooltip ve popover acilislarinda hareket kisa ve odak bozmayan seviyede kalir.",
+    "State feedback animasyonlari bilgi tasir; dekoratif ve uzun animasyonlar default olamaz."
+  ],
+  "evidence_requirements": [
+    "Motion kullanan componentlerde reduced-motion notu",
+    "Skeleton/Spinner preview",
+    "doctor:frontend PASS"
+  ],
+  "success_criteria": [
+    "Motion tokenlari tailwind ve runtime theme axis ile uyumlu kalir.",
+    "Reduced-motion davranisi ortak componentlerde tekrarli degil, tek kontratla yonetilir.",
+    "Overlay ve feedback motion dili gorsel gürültü üretmez."
+  ]
+}

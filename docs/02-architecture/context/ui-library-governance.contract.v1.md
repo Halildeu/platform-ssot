@@ -16,9 +16,16 @@ Bu dosya insan okunur özet görünümüdür. Kanonik kaynak:
 - Theme runtime sahibi: `web/packages/ui-kit/src/runtime/theme-controller.ts`
 - Theme persistence sahibi: `variant-service`
 - HTTP sahibi: `web/packages/shared-http`
+- Typography kontrati: `docs/02-architecture/context/ui-library-typography.contract.v1.json`
+- Iconography kontrati: `docs/02-architecture/context/ui-library-iconography.contract.v1.json`
+- Motion kontrati: `docs/02-architecture/context/ui-library-motion.contract.v1.json`
+- Responsive/layout kontrati: `docs/02-architecture/context/ui-library-responsive-layout.contract.v1.json`
 - UX standart kaynağı: `ux_katalogu` → yerel referans `docs/02-architecture/context/ux-katalogu.reference.v1.json`
 - UI library ↔ UX eşleme kaynağı: `docs/02-architecture/context/ui-library-ux-alignment.v1.json`
 - Component roadmap kaynağı: `docs/02-architecture/context/ui-library-component-roadmap.v1.json`
+- Adoption/enforcement kontrati: `docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.json`
+- Theme preset katalogu: `docs/02-architecture/context/ui-library-theme-preset-catalog.v1.json`
+- Recipe sistem kontrati: `docs/02-architecture/context/ui-library-recipe-system.contract.v1.json`
 
 ## Temel ilkeler
 
@@ -69,8 +76,13 @@ Bir ortak component tamamlanmış sayılmadan önce şu zincir kapanır:
 ## Zorunlu kapılar
 
 - `python3 scripts/check_ui_library_governance_contract.py`
+- `python3 scripts/check_ui_library_foundation_contracts.py`
+- `python3 scripts/check_ui_library_system_extensions.py`
 - `python3 scripts/check_ui_library_ux_alignment.py`
 - `python3 scripts/check_ui_library_component_roadmap.py`
+- `python3 scripts/check_ui_library_wave_9_foundation_language.py`
+- `python3 scripts/check_ui_library_wave_10_theme_presets.py`
+- `python3 scripts/check_ui_library_wave_11_recipes.py`
 - `npm -C web run gate:ui-library-wave`
 - `npm -C web run designlab:index`
 - `npm -C web run lint:tailwind`
@@ -105,14 +117,21 @@ Koddan önce şu sıra okunur:
 
 1. `repo-context-pack.v1.json`
 2. `ui-library-governance.contract.v1.json`
-3. `ux-katalogu.reference.v1.json`
-4. `ui-library-ux-alignment.v1.json`
-5. `ui-library-component-roadmap.v1.json`
-6. `ui-library-wave-1-foundation-primitives.v1.json`
-7. `ui-library-system.context.v1.json`
-8. `ui-library-system-blueprint.v1.json`
-9. `STYLE-WEB-001.md`
-10. `component-registry.v1.json`
+3. `ui-library-typography.contract.v1.json`
+4. `ui-library-iconography.contract.v1.json`
+5. `ui-library-motion.contract.v1.json`
+6. `ui-library-responsive-layout.contract.v1.json`
+7. `ui-library-adoption-enforcement.contract.v1.json`
+8. `ui-library-theme-preset-catalog.v1.json`
+9. `ui-library-recipe-system.contract.v1.json`
+10. `ux-katalogu.reference.v1.json`
+11. `ui-library-ux-alignment.v1.json`
+12. `ui-library-component-roadmap.v1.json`
+13. `ui-library-wave-11-recipes.v1.json`
+14. `ui-library-system.context.v1.json`
+15. `ui-library-system-blueprint.v1.json`
+16. `STYLE-WEB-001.md`
+17. `component-registry.v1.json`
 
 ## Yasak hareketler
 

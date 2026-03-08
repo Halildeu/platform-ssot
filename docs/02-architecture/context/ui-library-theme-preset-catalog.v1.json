@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "catalog_id": "ui-library-theme-preset-catalog-v1",
+  "subject_id": "ui_kutuphane_sistemi",
+  "purpose": "Theme engine uzerindeki resmi preset ailelerini kanonik olarak tanimlamak; docs, preview ve release dilini ayni preset isimleriyle toplamak.",
+  "source_of_truth": "web/design-tokens/generated/theme-contract.json",
+  "presets": [
+    {
+      "preset_id": "enterprise_light_default",
+      "theme_mode": "serban-light",
+      "appearance": "light",
+      "density": "comfortable",
+      "intent": "varsayilan kurumsal is akislarinda dengeli gorunum"
+    },
+    {
+      "preset_id": "operator_dark_focus",
+      "theme_mode": "serban-dark",
+      "appearance": "dark",
+      "density": "comfortable",
+      "intent": "uzun sureli operasyon ekranlarinda odak ve dusuk parazit"
+    },
+    {
+      "preset_id": "accessibility_high_contrast",
+      "theme_mode": "serban-hc",
+      "appearance": "high-contrast",
+      "density": "comfortable",
+      "intent": "kontrast, focus ve readability oncelikli erisilebilir preset"
+    },
+    {
+      "preset_id": "compact_workspace",
+      "theme_mode": "serban-compact",
+      "appearance": "light",
+      "density": "compact",
+      "intent": "yuksek bilgi yogunlugu ve operasyonel tablo/grid agir ekranlar"
+    }
+  ],
+  "rules": [
+    "Resmi presetler theme-contract allowedModes disina cikamaz.",
+    "Yeni preset eklenirse docs, preview, release notes ve Theme Admin ayni patch icinde guncellenir.",
+    "Preset adi docs ve runtime tarafinda ayni semantic kimlikle kullanilir."
+  ],
+  "success_criteria": [
+    "UI library docs portali resmi preset ailesini tek katalogdan okur.",
+    "Theme ve density kararlari daginik local toggle'lar yerine resmi preset isimleriyle ifade edilir."
+  ]
+}

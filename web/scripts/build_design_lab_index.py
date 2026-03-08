@@ -48,18 +48,21 @@ EXPORT_NAMED_RE = re.compile(
     flags=re.MULTILINE | re.DOTALL,
 )
 INTERNAL_DOCS_EXPORTS: Set[str] = {
+    "LibraryCodeBlock",
     "LibraryDocsSection",
     "LibraryDetailLabel",
     "LibraryDetailTabs",
     "LibraryMetadataPanel",
     "LibraryMetricCard",
     "LibraryOutlinePanel",
+    "LibraryPropsTable",
     "LibraryPreviewPanel",
     "LibraryProductTree",
     "LibraryQueryProvider",
     "LibrarySectionBadge",
     "LibraryShowcaseCard",
     "LibraryStatsPanel",
+    "LibraryUsageRecipesPanel",
 }
 
 

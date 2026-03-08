@@ -119,6 +119,12 @@
       "web/apps/mfe-shell/src/pages/admin/design-lab.index.json"
     ]
   },
+  "foundation_contracts": {
+    "typography_contract": "docs/02-architecture/context/ui-library-typography.contract.v1.json",
+    "iconography_contract": "docs/02-architecture/context/ui-library-iconography.contract.v1.json",
+    "motion_contract": "docs/02-architecture/context/ui-library-motion.contract.v1.json",
+    "responsive_layout_contract": "docs/02-architecture/context/ui-library-responsive-layout.contract.v1.json"
+  },
   "ux_catalog_alignment": {
     "catalog_reference": "docs/02-architecture/context/ux-katalogu.reference.v1.json",
     "ui_alignment_reference": "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
@@ -404,16 +410,19 @@
   ],
   "delivery_gates": {
     "mandatory_checks": [
+      "python3 scripts/check_ui_library_foundation_contracts.py",
+      "python3 scripts/check_ui_library_system_extensions.py",
       "python3 scripts/check_ui_library_ux_alignment.py",
       "python3 scripts/check_ui_library_component_roadmap.py",
-      "python3 scripts/check_ui_library_wave_2_navigation.py",
+      "python3 scripts/check_ui_library_wave_9_foundation_language.py",
+      "python3 scripts/check_ui_library_wave_10_theme_presets.py",
+      "python3 scripts/check_ui_library_wave_11_recipes.py",
       "npm -C web run designlab:index",
       "npm -C web run lint:tailwind",
       "npm -C web run lint:no-antd",
       "npm -C web run test:ui-kit",
       "npm -C web run doctor:frontend -- --preset ui-library",
-      "python3 scripts/check_ui_library_wave_4_data_display.py",
-      "npm -C web run gate:ui-library-wave -- --wave wave_4_data_display"
+      "npm -C web run gate:ui-library-wave -- --wave wave_11_recipes"
     ],
     "release_readiness_rules": [
       "registry drift = 0",
@@ -435,10 +444,17 @@
     "must_read_before_code": [
       "docs/02-architecture/context/repo-context-pack.v1.json",
       "docs/02-architecture/context/ui-library-governance.contract.v1.json",
+      "docs/02-architecture/context/ui-library-typography.contract.v1.json",
+      "docs/02-architecture/context/ui-library-iconography.contract.v1.json",
+      "docs/02-architecture/context/ui-library-motion.contract.v1.json",
+      "docs/02-architecture/context/ui-library-responsive-layout.contract.v1.json",
+      "docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.json",
+      "docs/02-architecture/context/ui-library-theme-preset-catalog.v1.json",
+      "docs/02-architecture/context/ui-library-recipe-system.contract.v1.json",
       "docs/02-architecture/context/ux-katalogu.reference.v1.json",
       "docs/02-architecture/context/ui-library-ux-alignment.v1.json",
       "docs/02-architecture/context/ui-library-component-roadmap.v1.json",
-      "docs/02-architecture/context/ui-library-wave-4-data-display.v1.json",
+      "docs/02-architecture/context/ui-library-wave-11-recipes.v1.json",
       "docs/02-architecture/context/ui-library-system.context.v1.json",
       "docs/02-architecture/blueprints/ui-library-system-blueprint.v1.json",
       "docs/00-handbook/STYLE-WEB-001.md",
@@ -473,6 +489,9 @@
       "consumer error trend"
     ]
   },
+  "adoption_enforcement_contract": "docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.json",
+  "theme_preset_catalog": "docs/02-architecture/context/ui-library-theme-preset-catalog.v1.json",
+  "recipe_system_contract": "docs/02-architecture/context/ui-library-recipe-system.contract.v1.json",
   "decision_policy": {
     "prefer_reuse_before_create": true,
     "prefer_composition_before_new_primitive": true,

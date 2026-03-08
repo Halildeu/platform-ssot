@@ -8,6 +8,9 @@
 - `page_blocks`: completed
 - `overlay`: completed
 - `ai_native_helpers`: completed
+- `foundation_language`: completed
+- `theme_presets`: completed
+- `recipes`: completed
 
 ## Wave Status
 - `wave_1_foundation_primitives`: completed
@@ -18,6 +21,9 @@
 - `wave_6_ai_native_helpers`: completed
 - `wave_7_page_blocks`: completed
 - `wave_8_overlay_extensions`: completed
+- `wave_9_foundation_language`: completed
+- `wave_10_theme_presets`: completed
+- `wave_11_recipes`: completed
 
 ## Data display mevcut batch
 - `TableSimple`
@@ -52,3 +58,6 @@
 - AI helper dalgasi `CommandPalette`, `RecommendationCard`, `ConfidenceBadge`, `ApprovalCheckpoint`, `CitationPanel`, `AIActionAuditTimeline` ve `PromptComposer` ile export + live preview + doctor evidence seviyesinde kapandi.
 - `wave_7_page_blocks` dalgasi `PageLayout`, `FilterBar`, `ReportFilterPanel`, `PageHeader`, `SummaryStrip` ve `EntitySummaryBlock` ile kapandi.
 - `SectionShell` ve `ActionHeader` page/block ailesinin sonraki backlog'unda tutulur; aktif dalga kapsamina dahil degildir.
+- `wave_9_foundation_language` ile typography, iconography, motion ve responsive/layout-grid dili kanonik kontrat seti olarak kilitlendi.
+- `wave_10_theme_presets` ile resmi theme preset ailesi docs/release diline baglandi.
+- `wave_11_recipes` ile reusable ekran/panel kaliplari recipe sistemi kontratina baglandi.

@@ -30,6 +30,9 @@ const readActiveWave = () => {
   if (base.includes('wave-6-ai-native-helpers')) return 'wave_6_ai_native_helpers';
   if (base.includes('wave-7-page-blocks')) return 'wave_7_page_blocks';
   if (base.includes('wave-8-overlay-extensions')) return 'wave_8_overlay_extensions';
+  if (base.includes('wave-9-foundation-language')) return 'wave_9_foundation_language';
+  if (base.includes('wave-10-theme-presets')) return 'wave_10_theme_presets';
+  if (base.includes('wave-11-recipes')) return 'wave_11_recipes';
   throw new Error(`aktif wave anlasilamadi: ${active}`);
 };
 
@@ -72,6 +75,18 @@ const waveMap = {
     checker: 'python3 scripts/check_ui_library_wave_8_overlay_extensions.py',
     focus: ['ContextMenu', 'TourCoachmarks'],
   },
+  wave_9_foundation_language: {
+    checker: 'python3 scripts/check_ui_library_wave_9_foundation_language.py',
+    focus: ['TypographySystem', 'IconographySystem', 'MotionSystem', 'ResponsiveLayoutGrid'],
+  },
+  wave_10_theme_presets: {
+    checker: 'python3 scripts/check_ui_library_wave_10_theme_presets.py',
+    focus: ['EnterpriseLightDefault', 'OperatorDarkFocus', 'AccessibilityHighContrast', 'CompactWorkspace'],
+  },
+  wave_11_recipes: {
+    checker: 'python3 scripts/check_ui_library_wave_11_recipes.py',
+    focus: ['SearchFilterListing', 'DetailSummary', 'ApprovalReview', 'EmptyErrorLoading', 'AIGuidedAuthoring'],
+  },
 };
 
 if (!waveMap[waveId]) {
@@ -92,6 +107,20 @@ const steps = [
     label: 'UX alignment check',
     cmd: 'python3',
     args: ['scripts/check_ui_library_ux_alignment.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'foundation_contracts',
+    label: 'Foundation contracts check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_foundation_contracts.py'],
+    cwd: repoRoot,
+  },
+  {
+    id: 'system_extensions',
+    label: 'System extensions check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_system_extensions.py'],
     cwd: repoRoot,
   },
   {
