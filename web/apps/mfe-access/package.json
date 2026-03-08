@@ -4,7 +4,7 @@
   "description": "Access yönetimi mikro-frontend i",
   "main": "dist/remoteEntry.js",
   "scripts": {
-    "start": "npx kill-port 3005 || true && webpack serve --config webpack.dev.js",
+    "start": "npx kill-port 3005 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
     "build": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "npm run test:unit && npm run build",

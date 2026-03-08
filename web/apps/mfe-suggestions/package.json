@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "npx kill-port 3001 || true && webpack serve --config webpack.dev.js",
+    "start": "npx kill-port 3001 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
     "build": "webpack --mode=production --config webpack.prod.js",
     "test": "npm run build"
   },

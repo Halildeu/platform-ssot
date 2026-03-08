@@ -129,14 +129,14 @@ service_port() {
 
 service_command() {
   case "$1" in
-    shell) printf 'npm start --prefix apps/mfe-shell\n' ;;
-    suggestions) printf 'npm start --prefix apps/mfe-suggestions\n' ;;
-    ethic) printf 'npm start --prefix apps/mfe-ethic\n' ;;
-    ui-kit) printf 'npm start --prefix packages/ui-kit\n' ;;
-    users) printf 'npm start --prefix apps/mfe-users\n' ;;
-    access) printf 'npm start --prefix apps/mfe-access\n' ;;
-    audit) printf 'npm start --prefix apps/mfe-audit\n' ;;
-    reporting) printf 'npm start --prefix apps/mfe-reporting\n' ;;
+    shell) printf 'cd apps/mfe-shell && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+    suggestions) printf 'cd apps/mfe-suggestions && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+    ethic) printf 'cd apps/mfe-ethic && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+    ui-kit) printf 'cd packages/ui-kit && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+    users) printf 'cd apps/mfe-users && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+    access) printf 'cd apps/mfe-access && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+    audit) printf 'cd apps/mfe-audit && exec npx webpack serve --config webpack.dev.js --hot --no-watch-options-stdin\n' ;;
+    reporting) printf 'cd apps/mfe-reporting && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
     *) return 1 ;;
   esac
 }
@@ -167,10 +167,27 @@ while IFS= read -r service_name; do
   rotate_log "$service_name" "$log_path"
   printf '[session] %s %s\n' "$SESSION_ID" "$SESSION_CREATED_AT" >> "$log_path"
   echo "[run-web] $service_name (port $port) -> $log_path"
-  (
-    cd "$ROOT_DIR"
-    nohup bash -lc "$command" >>"$log_path" 2>&1 &
-  )
+  python3 - "$ROOT_DIR" "$log_path" "$command" <<'PY'
+import subprocess
+import sys
+from pathlib import Path
+
+root_dir = Path(sys.argv[1])
+log_path = Path(sys.argv[2])
+command = sys.argv[3]
+
+with log_path.open("ab", buffering=0) as log_file:
+    subprocess.Popen(
+        command,
+        cwd=root_dir,
+        shell=True,
+        executable="/bin/bash",
+        stdin=subprocess.DEVNULL,
+        stdout=log_file,
+        stderr=log_file,
+        start_new_session=True,
+    )
+PY
   record_session_line "$service_name" "$port" "started" "$check_url" "$log_path" "$command"
   selected_logs+=("$log_path")
 done < <(service_names_for_profile)

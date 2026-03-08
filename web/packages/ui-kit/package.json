@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "npx kill-port 3003 || true && webpack serve --config webpack.dev.js",
+    "start": "npx kill-port 3003 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
     "build": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "tsx --test src/lib/grid-variants/__tests__/*.test.ts"
