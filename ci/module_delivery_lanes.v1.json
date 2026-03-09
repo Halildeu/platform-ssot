@@ -33,7 +33,7 @@
       "timeout_seconds": 600
     },
     "contract": {
-      "command": "if [ -f scripts/run_lint_web.sh ] && [ -f scripts/run_tests_web.sh ] && [ -f web/package.json ] && command -v npm >/dev/null 2>&1; then if [ ! -d web/node_modules ]; then echo \"[module-lane-contract] web/node_modules missing, running npm install\"; (cd web && npm install --no-audit --no-fund); fi; bash scripts/run_lint_web.sh && bash scripts/run_tests_web.sh unit && (cd web && npm run build) && if [ -x web/scripts/health/run-web-runtime-lane.sh ]; then (cd web && ./scripts/health/run-web-runtime-lane.sh); fi; else python3 ci/check_standards_lock.py; fi",
+      "command": "python3 ci/check_script_budget.py --out .cache/script_budget/report.json && if [ -f scripts/run_lint_web.sh ] && [ -f scripts/run_tests_web.sh ] && [ -f web/package.json ] && command -v npm >/dev/null 2>&1; then if [ ! -d web/node_modules ]; then echo \"[module-lane-contract] web/node_modules missing, running npm install\"; (cd web && npm install --no-audit --no-fund); fi; bash scripts/run_lint_web.sh && bash scripts/run_tests_web.sh unit && (cd web && npm run build) && if [ -x web/scripts/health/run-web-runtime-lane.sh ]; then (cd web && ./scripts/health/run-web-runtime-lane.sh); fi; else python3 ci/check_standards_lock.py; fi",
       "timeout_seconds": 1800
     },
     "integration": {
