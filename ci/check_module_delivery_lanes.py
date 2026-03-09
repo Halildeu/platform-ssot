@@ -21,6 +21,7 @@ REQUIRED_SCOPE_LANE_MAP = {
 }
 WORKFLOW_SENTINELS = (
     "module-delivery-contract-check",
+    "Script budget precheck",
     "module-lane-unit",
     "module-lane-database",
     "module-lane-api",
@@ -28,6 +29,7 @@ WORKFLOW_SENTINELS = (
     "module-lane-integration",
     "module-lane-e2e",
     "module-delivery-gate",
+    "python3 ci/check_script_budget.py --out .cache/script_budget/report.json",
     "python3 ci/run_module_delivery_lane.py --lane unit",
     "python3 ci/run_module_delivery_lane.py --lane database",
     "python3 ci/run_module_delivery_lane.py --lane api",
@@ -106,124 +108,129 @@ def _contains_placeholder(value: str) -> bool:
     return False
 
 
-def main(argv: list[str] | None = None) -> int:
-    args = _parse_args(argv)
-    root = _repo_root()
-
+def _resolve_input_paths(root: Path, args: argparse.Namespace) -> tuple[Path, Path, Path]:
     config_path = Path(str(args.config).strip())
-    config_path = (root / config_path).resolve() if not config_path.is_absolute() else config_path.resolve()
     workflow_path = Path(str(args.workflow).strip())
-    workflow_path = (root / workflow_path).resolve() if not workflow_path.is_absolute() else workflow_path.resolve()
     schema_path = Path(str(args.schema).strip())
-    schema_path = (root / schema_path).resolve() if not schema_path.is_absolute() else schema_path.resolve()
+    if not config_path.is_absolute():
+        config_path = (root / config_path).resolve()
+    else:
+        config_path = config_path.resolve()
+    if not workflow_path.is_absolute():
+        workflow_path = (root / workflow_path).resolve()
+    else:
+        workflow_path = workflow_path.resolve()
+    if not schema_path.is_absolute():
+        schema_path = (root / schema_path).resolve()
+    else:
+        schema_path = schema_path.resolve()
+    return config_path, workflow_path, schema_path
 
+
+def _validate_input_paths(config_path: Path, workflow_path: Path, schema_path: Path) -> tuple[str, str, dict[str, Any]] | None:
     if not config_path.exists():
-        return _fail(
+        return (
             "LANE_CONFIG_MISSING",
             "module delivery lane config file is missing.",
-            details={"config_path": str(config_path)},
+            {"config_path": str(config_path)},
         )
     if not workflow_path.exists():
-        return _fail(
+        return (
             "LANE_WORKFLOW_MISSING",
             "module delivery workflow template is missing.",
-            details={"workflow_path": str(workflow_path)},
+            {"workflow_path": str(workflow_path)},
         )
     if not schema_path.exists():
-        return _fail(
+        return (
             "LANE_SCHEMA_MISSING",
             "module delivery lane schema file is missing.",
-            details={"schema_path": str(schema_path)},
+            {"schema_path": str(schema_path)},
         )
+    return None
 
+
+def _load_config_schema(config_path: Path, schema_path: Path) -> tuple[dict[str, Any], dict[str, Any]] | tuple[None, None]:
     try:
         config_obj = _load_json(config_path)
-    except Exception:
-        return _fail(
-            "LANE_CONFIG_INVALID_JSON",
-            "module delivery lane config must be valid JSON.",
-            details={"config_path": str(config_path)},
-        )
-    try:
         schema_obj = _load_json(schema_path)
     except Exception:
-        return _fail(
-            "LANE_SCHEMA_INVALID_JSON",
-            "module delivery lane schema must be valid JSON.",
-            details={"schema_path": str(schema_path)},
-        )
+        return None, None
+    if not isinstance(config_obj, dict) or not isinstance(schema_obj, dict):
+        return None, None
+    return config_obj, schema_obj
 
-    if not isinstance(config_obj, dict):
-        return _fail("LANE_CONFIG_INVALID_TYPE", "module delivery lane config root must be an object.")
-    if not isinstance(schema_obj, dict):
-        return _fail("LANE_SCHEMA_INVALID_TYPE", "module delivery lane schema root must be an object.")
 
+def _validate_config_schema(
+    *,
+    config_obj: dict[str, Any],
+    schema_obj: dict[str, Any],
+    config_path: Path,
+    schema_path: Path,
+) -> tuple[str, str, dict[str, Any]] | None:
     validator = Draft202012Validator(schema_obj)
     validation_errors = [_format_validation_error(exc) for exc in validator.iter_errors(config_obj)]
-    if validation_errors:
-        validation_errors.sort(key=lambda item: (item["path"], item["schema_path"], item["message"]))
-        return _fail(
-            "LANE_SCHEMA_VALIDATION_FAILED",
-            "module delivery lane config does not satisfy schema.",
-            details={
-                "config_path": str(config_path),
-                "schema_path": str(schema_path),
-                "errors": validation_errors[:10],
-            },
-        )
+    if not validation_errors:
+        return None
+    validation_errors.sort(key=lambda item: (item["path"], item["schema_path"], item["message"]))
+    return (
+        "LANE_SCHEMA_VALIDATION_FAILED",
+        "module delivery lane config does not satisfy schema.",
+        {
+            "config_path": str(config_path),
+            "schema_path": str(schema_path),
+            "errors": validation_errors[:10],
+        },
+    )
 
+
+def _validate_config_contract(config_obj: dict[str, Any]) -> tuple[str, str, dict[str, Any] | None] | None:
     if config_obj.get("version") != "v1":
-        return _fail("LANE_CONFIG_VERSION_INVALID", "module delivery lane config version must be v1.")
+        return "LANE_CONFIG_VERSION_INVALID", "module delivery lane config version must be v1.", None
     if config_obj.get("merge_requires_all_green") is not True:
-        return _fail(
-            "MERGE_GATE_NOT_STRICT",
-            "merge_requires_all_green must be true in lane config.",
-        )
+        return "MERGE_GATE_NOT_STRICT", "merge_requires_all_green must be true in lane config.", None
     if config_obj.get("clean_stderr_default") is not True:
-        return _fail(
-            "CLEAN_STDERR_DEFAULT_NOT_STRICT",
-            "clean_stderr_default must be true in lane config.",
-        )
+        return "CLEAN_STDERR_DEFAULT_NOT_STRICT", "clean_stderr_default must be true in lane config.", None
 
     scope_lane_map = config_obj.get("scope_lane_map")
     if not isinstance(scope_lane_map, dict):
-        return _fail("SCOPE_LANE_MAP_INVALID", "scope_lane_map must be an object.")
+        return "SCOPE_LANE_MAP_INVALID", "scope_lane_map must be an object.", None
     invalid_scope_map: dict[str, Any] = {}
     for scope, expected_lane in REQUIRED_SCOPE_LANE_MAP.items():
         actual_lane = scope_lane_map.get(scope)
         if actual_lane != expected_lane:
             invalid_scope_map[scope] = {"expected": expected_lane, "actual": actual_lane}
     if invalid_scope_map:
-        return _fail(
+        return (
             "SCOPE_LANE_MAP_MISMATCH",
             "scope_lane_map must map backend/database/api/frontend/integration/e2e_gate to required lane ids.",
-            details={"mismatches": invalid_scope_map},
+            {"mismatches": invalid_scope_map},
         )
 
     execution_sequence = config_obj.get("execution_sequence")
     if not isinstance(execution_sequence, list) or not execution_sequence:
-        return _fail(
-            "EXECUTION_SEQUENCE_INVALID",
-            "execution_sequence must be a non-empty list.",
-        )
+        return "EXECUTION_SEQUENCE_INVALID", "execution_sequence must be a non-empty list.", None
     sequence_normalized = [str(item) for item in execution_sequence]
     if sequence_normalized != list(REQUIRED_EXECUTION_SEQUENCE):
-        return _fail(
+        return (
             "EXECUTION_SEQUENCE_MISMATCH",
             "execution_sequence must match the required delivery order.",
-            details={
+            {
                 "expected_sequence": list(REQUIRED_EXECUTION_SEQUENCE),
                 "actual_sequence": sequence_normalized,
             },
         )
+    return None
 
+
+def _validate_lane_commands(config_obj: dict[str, Any], *, strict: bool) -> tuple[str, str, dict[str, Any] | None] | None:
     lanes = config_obj.get("lanes")
     if not isinstance(lanes, dict):
-        return _fail("LANES_SECTION_INVALID", "lanes section must be an object.")
+        return "LANES_SECTION_INVALID", "lanes section must be an object.", None
 
     missing_lanes: list[str] = []
     invalid_commands: list[str] = []
     placeholder_commands: list[str] = []
+    missing_required_guards: list[str] = []
     for lane in REQUIRED_LANES:
         lane_obj = lanes.get(lane)
         if not isinstance(lane_obj, dict):
@@ -235,41 +242,89 @@ def main(argv: list[str] | None = None) -> int:
             continue
         if _contains_placeholder(command):
             placeholder_commands.append(lane)
+        if lane == "contract" and "python3 ci/check_script_budget.py --out .cache/script_budget/report.json" not in command:
+            missing_required_guards.append("contract:script_budget_guard")
 
     if missing_lanes:
-        return _fail(
-            "REQUIRED_LANES_MISSING",
-            "required module delivery lanes are missing.",
-            details={"missing_lanes": missing_lanes},
-        )
+        return "REQUIRED_LANES_MISSING", "required module delivery lanes are missing.", {"missing_lanes": missing_lanes}
     if invalid_commands:
-        return _fail(
-            "LANE_COMMANDS_INVALID",
-            "lane commands must be non-empty strings.",
-            details={"invalid_lanes": invalid_commands},
+        return "LANE_COMMANDS_INVALID", "lane commands must be non-empty strings.", {"invalid_lanes": invalid_commands}
+    if missing_required_guards:
+        return (
+            "LANE_COMMANDS_MISSING_REQUIRED_GUARDS",
+            "critical lane commands must include required guard commands.",
+            {"missing_guards": missing_required_guards},
         )
-    if placeholder_commands and bool(args.strict):
-        return _fail(
+    if placeholder_commands and strict:
+        return (
             "LANE_COMMANDS_PLACEHOLDER",
             "strict mode does not allow placeholder lane commands.",
-            details={"placeholder_lanes": placeholder_commands},
+            {"placeholder_lanes": placeholder_commands},
         )
+    return None
 
-    workflow_text = workflow_path.read_text(encoding="utf-8")
+
+def _validate_workflow_template(workflow_text: str) -> tuple[str, str, dict[str, Any]] | None:
     missing_sentinels = [item for item in WORKFLOW_SENTINELS if item not in workflow_text]
     if missing_sentinels:
-        return _fail(
+        return (
             "LANE_WORKFLOW_INVALID",
             "module delivery workflow does not include required jobs/commands.",
-            details={"missing_markers": missing_sentinels},
+            {"missing_markers": missing_sentinels},
         )
     missing_sequence_markers = [item for item in WORKFLOW_SEQUENCE_SENTINELS if item not in workflow_text]
     if missing_sequence_markers:
-        return _fail(
+        return (
             "LANE_WORKFLOW_SEQUENCE_INVALID",
             "module delivery workflow must enforce backend->database->api->frontend->integration->e2e order.",
-            details={"missing_markers": missing_sequence_markers},
+            {"missing_markers": missing_sequence_markers},
         )
+    return None
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv)
+    root = _repo_root()
+    config_path, workflow_path, schema_path = _resolve_input_paths(root, args)
+
+    path_error = _validate_input_paths(config_path, workflow_path, schema_path)
+    if path_error:
+        return _fail(path_error[0], path_error[1], details=path_error[2])
+
+    config_obj, schema_obj = _load_config_schema(config_path, schema_path)
+    if config_obj is None:
+        return _fail(
+            "LANE_CONFIG_INVALID_JSON",
+            "module delivery lane config must be valid JSON.",
+            details={"config_path": str(config_path)},
+        )
+    if schema_obj is None:
+        return _fail(
+            "LANE_SCHEMA_INVALID_JSON",
+            "module delivery lane schema must be valid JSON.",
+            details={"schema_path": str(schema_path)},
+        )
+
+    schema_error = _validate_config_schema(
+        config_obj=config_obj,
+        schema_obj=schema_obj,
+        config_path=config_path,
+        schema_path=schema_path,
+    )
+    if schema_error:
+        return _fail(schema_error[0], schema_error[1], details=schema_error[2])
+
+    config_error = _validate_config_contract(config_obj)
+    if config_error:
+        return _fail(config_error[0], config_error[1], details=config_error[2])
+
+    lane_error = _validate_lane_commands(config_obj, strict=bool(args.strict))
+    if lane_error:
+        return _fail(lane_error[0], lane_error[1], details=lane_error[2])
+
+    workflow_error = _validate_workflow_template(workflow_path.read_text(encoding="utf-8"))
+    if workflow_error:
+        return _fail(workflow_error[0], workflow_error[1], details=workflow_error[2])
 
     print(
         json.dumps(
