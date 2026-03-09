@@ -68,6 +68,10 @@ const readEnv = (key: string, fallback: string): string => {
   }
   return fallback;
 };
+
+const shouldShowQueryDevtools =
+  (typeof process === 'undefined' || process.env.NODE_ENV !== 'production') &&
+  readEnv('ENABLE_QUERY_DEVTOOLS', '0').trim() === '1';
 import { getDictionary } from '@mfe/i18n-dicts';
 import type { UserProfile } from '@mfe/shared-types';
 
@@ -94,6 +98,13 @@ const queryClient = new QueryClient({
   },
 });
 type ThemeScope = 'global' | 'user';
+type RuntimeToastType = 'success' | 'info' | 'warning' | 'error' | 'loading';
+
+type RuntimeToast = {
+  id: string;
+  message: string;
+  type: RuntimeToastType;
+};
 
 type BackendTheme = {
   id: string;
@@ -1442,6 +1453,8 @@ const Header = () => {
             type="button"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-action-secondary-border bg-action-secondary text-action-secondary-text shadow-sm transition hover:opacity-90"
             onClick={() => setLauncherOpen((prev) => !prev)}
+            aria-label={t('shell.launcher.title')}
+            title={t('shell.launcher.title')}
           >
             <LayoutGrid className="h-4 w-4" aria-hidden />
           </button>
@@ -1659,16 +1672,88 @@ const AppLayout = () => {
   const { currentTheme } = useThemeContext();
   const colors = currentTheme.colors;
   const authState = useAppSelector((state) => state.auth);
-  const { token, expiresAt } = authState;
+  const { token, expiresAt, initialized } = authState;
   const permitAllMode = isPermitAllMode();
   const showSidebar = Boolean(token) || permitAllMode;
   const dispatch = useAppDispatch();
   const { t } = useShellCommonI18n();
   useShellShortcuts();
+  const [runtimeToasts, setRuntimeToasts] = useState<RuntimeToast[]>([]);
+  const runtimeToastTimeoutsRef = useRef<Record<string, number>>({});
+
+  const dismissRuntimeToast = useCallback((toastId: string) => {
+    setRuntimeToasts((previous) => previous.filter((toast) => toast.id !== toastId));
+    const timeoutId = runtimeToastTimeoutsRef.current[toastId];
+    if (timeoutId && typeof window !== 'undefined') {
+      window.clearTimeout(timeoutId);
+      delete runtimeToastTimeoutsRef.current[toastId];
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const handleToast = (event: Event) => {
+      const detail = (
+        event as CustomEvent<{ type?: string; text?: string; open?: boolean } | undefined>
+      ).detail;
+      const message = typeof detail?.text === 'string' ? detail.text.trim() : '';
+      if (!message) {
+        return;
+      }
+      const type =
+        detail?.type === 'success' ||
+        detail?.type === 'info' ||
+        detail?.type === 'warning' ||
+        detail?.type === 'error' ||
+        detail?.type === 'loading'
+          ? detail.type
+          : 'info';
+      dispatch(
+        pushNotification({
+          message,
+          type,
+          meta: { source: 'app:toast', open: detail?.open === true },
+        }),
+      );
+      const toastId =
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `toast-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+      setRuntimeToasts((previous) => {
+        const next = [...previous, { id: toastId, message, type }];
+        return next.slice(-4);
+      });
+      const timeoutId = window.setTimeout(() => {
+        dismissRuntimeToast(toastId);
+      }, 4500);
+      runtimeToastTimeoutsRef.current[toastId] = timeoutId;
+      if (detail?.open === true) {
+        dispatch(toggleOpen(true));
+      }
+    };
+    window.addEventListener('app:toast', handleToast as EventListener);
+    return () => {
+      window.removeEventListener('app:toast', handleToast as EventListener);
+    };
+  }, [dismissRuntimeToast, dispatch]);
+
+  useEffect(() => {
+    return () => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      Object.values(runtimeToastTimeoutsRef.current).forEach((timeoutId) => {
+        window.clearTimeout(timeoutId);
+      });
+      runtimeToastTimeoutsRef.current = {};
+    };
+  }, []);
 
   useEffect(() => {
     if (!token || !expiresAt) {
@@ -1786,7 +1871,13 @@ const AppLayout = () => {
                 <Route path="/unauthorized" element={<UnauthorizedPage />} />
                 <Route
                   path="/"
-                  element={<Navigate to={(token || permitAllMode) ? '/suggestions' : '/login'} replace />}
+                  element={
+                    !initialized && !permitAllMode ? (
+                      <div className="px-6 py-10 text-sm font-medium text-text-secondary">Oturum doğrulanıyor...</div>
+                    ) : (
+                      <Navigate to={(token || permitAllMode) ? '/suggestions' : '/login'} replace />
+                    )
+                  }
                 />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
@@ -1794,6 +1885,42 @@ const AppLayout = () => {
           </div>
           </main>
         </div>
+        {runtimeToasts.length > 0 ? (
+          <div className="pointer-events-none fixed right-4 top-24 z-40 flex w-full max-w-sm flex-col gap-3">
+            {runtimeToasts.map((toast) => {
+              const toneClass =
+                toast.type === 'success'
+                  ? 'border-state-success-border bg-state-success-bg text-state-success-text'
+                  : toast.type === 'warning'
+                    ? 'border-state-warning-border bg-state-warning-bg text-state-warning-text'
+                    : toast.type === 'error'
+                      ? 'border-state-danger-border bg-state-danger-bg text-state-danger-text'
+                      : toast.type === 'loading'
+                        ? 'border-selection-outline bg-surface-muted text-text-secondary'
+                        : 'border-state-info-border bg-state-info text-state-info-text';
+              return (
+                <div
+                  key={toast.id}
+                  role={toast.type === 'error' || toast.type === 'warning' ? 'alert' : 'status'}
+                  aria-live={toast.type === 'error' || toast.type === 'warning' ? 'assertive' : 'polite'}
+                  className={`pointer-events-auto rounded-2xl border px-4 py-3 shadow-xl backdrop-blur ${toneClass}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <p className="flex-1 text-sm font-semibold">{toast.message}</p>
+                    <button
+                      type="button"
+                      aria-label="Uyarıyı kapat"
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-current/20 text-current/80 transition hover:bg-black/5"
+                      onClick={() => dismissRuntimeToast(toast.id)}
+                    >
+                      <span aria-hidden>×</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </BrowserRouter>
   );
@@ -1855,11 +1982,17 @@ const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({ children })
 
     const bootstrap = async () => {
       try {
+        const isLoginRoute =
+          typeof window !== 'undefined' && window.location?.pathname?.startsWith('/login');
         await keycloak.init({
-          onLoad: 'check-sso',
+          ...(isLoginRoute
+            ? {}
+            : {
+                onLoad: 'check-sso' as const,
+                silentCheckSsoRedirectUri: authConfig.keycloak.silentCheckSsoRedirectUri,
+              }),
           pkceMethod: 'S256',
           checkLoginIframe: false,
-          silentCheckSsoRedirectUri: authConfig.keycloak.silentCheckSsoRedirectUri,
         });
         if (!mounted) return;
         const token = keycloak.token ?? null;
@@ -1922,7 +2055,7 @@ const AntShellTheme: React.FC = () => {
       <AuthBootstrapper>
         <AppLayout />
       </AuthBootstrapper>
-      {process.env.NODE_ENV !== 'production' ? <ReactQueryDevtools initialIsOpen={false} /> : null}
+      {shouldShowQueryDevtools ? <ReactQueryDevtools initialIsOpen={false} /> : null}
     </QueryClientProvider>
   );
 };

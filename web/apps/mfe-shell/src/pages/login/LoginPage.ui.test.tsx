@@ -10,6 +10,7 @@ const routerFuture = {
 } as const;
 
 const authModeMock = { permitAll: false };
+const authStateMock = { token: null as string | null, initialized: true };
 
 vi.mock('../../app/auth/keycloakClient', () => ({
   default: {
@@ -28,6 +29,11 @@ vi.mock('../../app/auth/auth-config', () => ({
   buildAppRedirectUri: (value?: string) => `http://localhost:3000${value ?? '/'}`,
 }));
 
+vi.mock('../../app/store/store.hooks', () => ({
+  useAppSelector: (selector: (state: { auth: typeof authStateMock }) => unknown) =>
+    selector({ auth: authStateMock }),
+}));
+
 import keycloak from '../../app/auth/keycloakClient';
 import LoginPage from './LoginPage.ui';
 
@@ -35,6 +41,8 @@ describe('LoginPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     authModeMock.permitAll = false;
+    authStateMock.token = null;
+    authStateMock.initialized = true;
   });
 
   afterEach(() => {
@@ -64,7 +72,7 @@ describe('LoginPage', () => {
     fireEvent.click(button);
 
     expect(loginSpy).toHaveBeenCalledTimes(1);
-    expect(loginSpy).toHaveBeenCalledWith({ redirectUri: 'http://localhost:3000/access/roles' });
+    expect(loginSpy).toHaveBeenCalledWith({ redirectUri: 'http://localhost:3000/login?redirect=%2Faccess%2Froles' });
   });
 
   it('shows permitAll banner instead of corporate button', () => {

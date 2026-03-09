@@ -1,15 +1,17 @@
 import React, { useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { Button } from 'mfe-ui-kit';
 import { useShellCommonI18n } from '../../app/i18n';
 import keycloak from '../../app/auth/keycloakClient';
 import { buildAppRedirectUri, isPermitAllMode } from '../../app/auth/auth-config';
+import { useAppSelector } from '../../app/store/store.hooks';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useShellCommonI18n();
   const permitAllMode = isPermitAllMode();
+  const { token, initialized } = useAppSelector((state) => state.auth);
   const redirectPath = useMemo(() => {
     const params = new URLSearchParams(location.search);
     const redirect = params.get('redirect');
@@ -21,9 +23,13 @@ const LoginPage = () => {
       navigate(redirectPath);
       return;
     }
-    const redirectUri = buildAppRedirectUri(redirectPath);
+    const redirectUri = buildAppRedirectUri(`/login?redirect=${encodeURIComponent(redirectPath)}`);
     keycloak.login({ redirectUri }).catch(() => undefined);
   };
+
+  if (initialized && token) {
+    return <Navigate to={redirectPath} replace />;
+  }
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-6 px-6 py-10">

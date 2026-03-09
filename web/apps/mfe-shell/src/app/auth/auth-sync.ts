@@ -14,6 +14,7 @@ type AuthSyncListener = (payload: AuthSyncPayload) => void;
 
 const CHANNEL_NAME = 'shell-auth';
 const STORAGE_EVENT_KEY = 'shell-auth-sync';
+const LEGACY_LOGOUT_SIGNAL_KEY = 'shell_logout_signal';
 const SNAPSHOT_STORAGE_KEY = 'serban.shell.authState';
 const SET_AUTH_EVENT = 'shell:set-auth-state';
 
@@ -146,6 +147,10 @@ if (channel) {
 
 if (hasWindow) {
   window.addEventListener('storage', (event: StorageEvent) => {
+    if (event.key === LEGACY_LOGOUT_SIGNAL_KEY) {
+      notifyListeners({ token: null, profile: null, expiresAt: null, event: 'LOGOUT' });
+      return;
+    }
     if (event.key !== STORAGE_EVENT_KEY || !event.newValue) {
       return;
     }
