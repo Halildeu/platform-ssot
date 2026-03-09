@@ -9,17 +9,10 @@
     "planned_count": 24,
     "live_demo_count": 17,
     "status": "FOUNDATION_LOCKED",
-    "notes": [
-      "Governance, UX alignment, registry ve Design Lab baglantilari commit ile sabitlendi.",
-      "Kod gelistirme family matrix + wave secimi yapilmadan baslamaz."
-    ]
+    "notes": ["Governance, UX alignment, registry ve Design Lab baglantilari commit ile sabitlendi.", "Kod gelistirme family matrix + wave secimi yapilmadan baslamaz."]
   },
   "planning_rule": {
-    "code_starts_after": [
-      "component family secimi",
-      "maturity hedefi secimi",
-      "gate/check/evidence planinin belirlenmesi"
-    ],
+    "code_starts_after": ["component family secimi", "maturity hedefi secimi", "gate/check/evidence planinin belirlenmesi"],
     "must_read_before_first_wave": [
       "docs/02-architecture/context/ui-library-governance.contract.v1.json",
       "docs/02-architecture/context/ux-katalogu.reference.v1.json",
@@ -35,20 +28,7 @@
       "ux_alignment_family_id": "foundation_primitives",
       "purpose": "Tum diger family'lerin uzerine oturdugu temel primitive ve feedback atomlarini standardize etmek.",
       "current_state": {
-        "implemented_now": [
-          "Button",
-          "Badge",
-          "Tag",
-          "Text",
-          "Tooltip",
-          "Empty",
-          "LinkInline",
-          "IconButton",
-          "Avatar",
-          "Divider",
-          "Skeleton",
-          "Spinner"
-        ],
+        "implemented_now": ["Button", "Badge", "Tag", "Text", "Tooltip", "Empty", "LinkInline", "IconButton", "Avatar", "Divider", "Skeleton", "Spinner"],
         "gaps": []
       },
       "target_components": [
@@ -137,13 +117,7 @@
       "ux_alignment_family_id": "navigation_components",
       "purpose": "Yol bulma, bilgi kokusu ve cok adimli akislarda kullanilan ortak navigation pattern'lerini standartlastirmak.",
       "current_state": {
-        "implemented_now": [
-          "Tabs",
-          "Breadcrumb",
-          "Pagination",
-          "Steps",
-          "AnchorToc"
-        ],
+        "implemented_now": ["Tabs", "Breadcrumb", "Pagination", "Steps", "AnchorToc"],
         "gaps": []
       },
       "target_components": [
@@ -204,20 +178,8 @@
       "ux_alignment_family_id": "form_input_components",
       "purpose": "Veri girisi, dogrulama, geri bildirim ve kurtarma davranislarini ortak component seviyesinde standardize etmek.",
       "current_state": {
-        "implemented_now": [
-          "Checkbox",
-          "DatePicker",
-          "Radio",
-          "Select",
-          "Slider",
-          "Switch",
-          "TextArea",
-          "TextInput"
-        ],
-        "gaps": [
-          "TimePicker",
-          "Upload"
-        ]
+        "implemented_now": ["Checkbox", "DatePicker", "Radio", "Select", "Slider", "Switch", "TextArea", "TextInput"],
+        "gaps": ["TimePicker", "Upload"]
       },
       "target_components": [
         {
@@ -313,16 +275,7 @@
       "ux_alignment_family_id": "data_display_and_grid_components",
       "purpose": "Liste, tablo, grid ve aciklayici veri gosteren yapilari gorev odakli ve performansli hale getirmek.",
       "current_state": {
-        "implemented_now": [
-          "AgGridServer",
-          "EntityGridTemplate",
-          "TableSimple",
-          "Descriptions",
-          "List",
-          "JsonViewer",
-          "Tree",
-          "TreeTable"
-        ],
+        "implemented_now": ["AgGridServer", "EntityGridTemplate", "TableSimple", "Descriptions", "List", "JsonViewer", "Tree", "TreeTable"],
         "gaps": []
       },
       "target_components": [
@@ -410,18 +363,8 @@
       "ux_alignment_family_id": "page_block_compositions",
       "purpose": "Hazir page shell ve block compositelerini veriyle beslenen, dusuk dokunuslu reusable API olarak urunlestirmek.",
       "current_state": {
-        "implemented_now": [
-          "PageLayout",
-          "FilterBar",
-          "ReportFilterPanel",
-          "PageHeader",
-          "SummaryStrip",
-          "EntitySummaryBlock"
-        ],
-        "gaps": [
-          "SectionShell",
-          "ActionHeader"
-        ]
+        "implemented_now": ["PageLayout", "FilterBar", "ReportFilterPanel", "PageHeader", "SummaryStrip", "EntitySummaryBlock"],
+        "gaps": ["SectionShell", "ActionHeader"]
       },
       "target_components": [
         {
@@ -491,16 +434,7 @@
       "ux_alignment_family_id": "overlay_and_confirmation_components",
       "purpose": "Dialog, drawer, popover ve confirmation deneyimlerini guvenli ve izlenebilir hale getirmek.",
       "current_state": {
-        "implemented_now": [
-          "Modal",
-          "FormDrawer",
-          "DetailDrawer",
-          "Dropdown",
-          "Tooltip",
-          "Popover",
-          "ContextMenu",
-          "TourCoachmarks"
-        ],
+        "implemented_now": ["Modal", "FormDrawer", "DetailDrawer", "Dropdown", "Tooltip", "Popover", "ContextMenu", "TourCoachmarks"],
         "gaps": []
       },
       "target_components": [
@@ -590,15 +524,7 @@
       "ux_alignment_family_id": "ai_assisted_components",
       "purpose": "AI onerisi, onay checkpoint'i, kaynak seffafligi ve insan onayi gerektiren deneyimleri ortaklastirmak.",
       "current_state": {
-        "implemented_now": [
-          "CommandPalette",
-          "RecommendationCard",
-          "ConfidenceBadge",
-          "ApprovalCheckpoint",
-          "CitationPanel",
-          "AIActionAuditTimeline",
-          "PromptComposer"
-        ],
+        "implemented_now": ["CommandPalette", "RecommendationCard", "ConfidenceBadge", "ApprovalCheckpoint", "CitationPanel", "AIActionAuditTimeline", "PromptComposer"],
         "gaps": []
       },
       "target_components": [
@@ -677,12 +603,7 @@
       "ux_alignment_family_id": "governance_and_foundation_language",
       "purpose": "Typography, iconography, motion ve responsive/layout-grid dilini component ustu bir foundation katmani olarak kilitlemek.",
       "current_state": {
-        "implemented_now": [
-          "TypographySystem",
-          "IconographySystem",
-          "MotionSystem",
-          "ResponsiveLayoutGrid"
-        ],
+        "implemented_now": ["TypographySystem", "IconographySystem", "MotionSystem", "ResponsiveLayoutGrid"],
         "gaps": []
       },
       "target_components": [
@@ -734,10 +655,7 @@
       "ux_alignment_family_id": "theming_customization",
       "purpose": "Resmi theme preset ailesini docs, runtime ve release diliyle ayni isimlerde toplamak.",
       "current_state": {
-        "implemented_now": [
-          "ThemePresetGallery",
-          "ThemePresetCompare"
-        ],
+        "implemented_now": ["ThemePresetGallery", "ThemePresetCompare"],
         "gaps": []
       },
       "target_components": [
@@ -771,18 +689,8 @@
       "ux_alignment_family_id": "recipe_patterns",
       "purpose": "Tekil componentleri asan ekran/panel kaliplarini reusable recipe sistemi altinda toplamak.",
       "current_state": {
-        "implemented_now": [
-          "SearchFilterListing",
-          "DetailSummary",
-          "ApprovalReview",
-          "EmptyErrorLoading",
-          "AIGuidedAuthoring"
-        ],
-        "gaps": [
-          "DashboardKPIAnalytics",
-          "TableToChartReview",
-          "MultiStepSubmission"
-        ]
+        "implemented_now": ["SearchFilterListing", "DetailSummary", "ApprovalReview", "EmptyErrorLoading", "AIGuidedAuthoring"],
+        "gaps": ["DashboardKPIAnalytics", "TableToChartReview", "MultiStepSubmission"]
       },
       "target_components": [
         {
@@ -975,11 +883,7 @@
         "iconography single-runtime-set check",
         "reduced-motion and responsive shell contract check"
       ],
-      "theme_presets": [
-        "theme-contract allowedModes parity",
-        "preset docs/release parity",
-        "theme preview evidence"
-      ],
+      "theme_presets": ["theme-contract allowedModes parity", "preset docs/release parity", "theme preview evidence"],
       "recipes": [
         "recipe owner component parity",
         "page/block reuse evidence",
@@ -1001,57 +905,25 @@
       "title_tr": "Foundation Locked",
       "status": "completed",
       "objective": "Governance, UX alignment, registry ve Design Lab baglarini sabitlemek.",
-      "families": [
-        "foundation_primitives",
-        "navigation",
-        "forms",
-        "data_display",
-        "overlay",
-        "ai_native_helpers"
-      ]
+      "families": ["foundation_primitives", "navigation", "forms", "data_display", "overlay", "ai_native_helpers"]
     },
     {
       "wave_id": "wave_1_foundation_primitives",
       "title_tr": "Foundation Primitives",
       "status": "completed",
       "objective": "Foundation primitives export setini zorunlu doctor evidence ve release-hardening gate altinda yeniden kilitle.",
-      "families": [
-        "foundation_primitives"
-      ],
-      "candidate_components": [
-        "Button",
-        "Text",
-        "LinkInline",
-        "IconButton",
-        "Avatar",
-        "Divider",
-        "Skeleton",
-        "Spinner"
-      ],
-      "dependencies": [
-        "governance locked",
-        "ux alignment locked",
-        "frontend diagnostics registry active"
-      ]
+      "families": ["foundation_primitives"],
+      "candidate_components": ["Button", "Text", "LinkInline", "IconButton", "Avatar", "Divider", "Skeleton", "Spinner"],
+      "dependencies": ["governance locked", "ux alignment locked", "frontend diagnostics registry active"]
     },
     {
       "wave_id": "wave_2_navigation",
       "title_tr": "Navigation",
       "status": "completed",
       "objective": "Sekme, breadcrumb ve ilerleme kaliplarini standardize et.",
-      "families": [
-        "navigation"
-      ],
-      "candidate_components": [
-        "Tabs",
-        "Breadcrumb",
-        "Pagination",
-        "Steps",
-        "AnchorToc"
-      ],
-      "dependencies": [
-        "wave_1_foundation_primitives"
-      ],
+      "families": ["navigation"],
+      "candidate_components": ["Tabs", "Breadcrumb", "Pagination", "Steps", "AnchorToc"],
+      "dependencies": ["wave_1_foundation_primitives"],
       "notes": [
         "Tabs ve Breadcrumb stable export olarak acik.",
         "Pagination ve Steps beta export + preview + API catalog ile aktif.",
@@ -1063,23 +935,9 @@
       "title_tr": "Forms",
       "status": "completed",
       "objective": "Input ailesini error/help/validation davranislariyla tamamla.",
-      "families": [
-        "forms"
-      ],
-      "candidate_components": [
-        "TextInput",
-        "TextArea",
-        "Checkbox",
-        "Radio",
-        "Switch",
-        "Slider",
-        "DatePicker",
-        "TimePicker",
-        "Upload"
-      ],
-      "dependencies": [
-        "wave_1_foundation_primitives"
-      ],
+      "families": ["forms"],
+      "candidate_components": ["TextInput", "TextArea", "Checkbox", "Radio", "Switch", "Slider", "DatePicker", "TimePicker", "Upload"],
+      "dependencies": ["wave_1_foundation_primitives"],
       "notes": [
         "TextInput ve TextArea stable export + live preview + API catalog ile acildi.",
         "Checkbox, Radio ve Switch stable export + live preview + API catalog ile acildi.",
@@ -1092,23 +950,9 @@
       "title_tr": "Data Display",
       "status": "completed",
       "objective": "Grid ve hafif veri gosterim ailesini gorev odakli ve olculebilir hale getir.",
-      "families": [
-        "data_display"
-      ],
-      "candidate_components": [
-        "AgGridServer",
-        "EntityGridTemplate",
-        "TableSimple",
-        "List",
-        "Tree",
-        "TreeTable",
-        "Descriptions",
-        "JsonViewer"
-      ],
-      "dependencies": [
-        "wave_1_foundation_primitives",
-        "wave_3_forms"
-      ],
+      "families": ["data_display"],
+      "candidate_components": ["AgGridServer", "EntityGridTemplate", "TableSimple", "List", "Tree", "TreeTable", "Descriptions", "JsonViewer"],
+      "dependencies": ["wave_1_foundation_primitives", "wave_3_forms"],
       "notes": [
         "TableSimple ve Descriptions export + live preview + API catalog ile acildi.",
         "AgGridServer ve EntityGridTemplate stable export + live preview + API catalog + doctor evidence ile batch-2 tamamlandi.",
@@ -1120,34 +964,15 @@
       "title_tr": "Overlay",
       "status": "completed",
       "objective": "Dialog/drawer/popover onay akisini guvenli ve izlenebilir sekilde tamamla.",
-      "families": [
-        "overlay"
-      ],
-      "candidate_components": [
-        "Modal",
-        "Dropdown",
-        "Tooltip",
-        "FormDrawer",
-        "DetailDrawer",
-        "Popover"
-      ],
-      "dependencies": [
-        "wave_1_foundation_primitives",
-        "wave_3_forms"
-      ],
+      "families": ["overlay"],
+      "candidate_components": ["Modal", "Dropdown", "Tooltip", "FormDrawer", "DetailDrawer", "Popover"],
+      "dependencies": ["wave_1_foundation_primitives", "wave_3_forms"],
       "notes": [
         "Batch-1 overlay primitive seti Modal, Dropdown ve Tooltip olarak acildi.",
         "Dropdown forms taxonomy altinda, Tooltip feedback taxonomy altinda kalsa da wave_5 capraz-grup overlay batch olarak yonetilir.",
         "ContextMenu ve TourCoachmarks sonraki overlay extension dalgasi olan wave_8_overlay_extensions ile kapatildi."
       ],
-      "completed_components": [
-        "Modal",
-        "Dropdown",
-        "Tooltip",
-        "FormDrawer",
-        "DetailDrawer",
-        "Popover"
-      ],
+      "completed_components": ["Modal", "Dropdown", "Tooltip", "FormDrawer", "DetailDrawer", "Popover"],
       "remaining_components": []
     },
     {
@@ -1155,47 +980,18 @@
       "title_tr": "AI-Native Helpers",
       "status": "completed",
       "objective": "AI destekli karar ve onay deneyimini guvenli, izlenebilir ve UX catalog uyumlu hale getir.",
-      "families": [
-        "ai_native_helpers"
-      ],
-      "candidate_components": [
-        "CommandPalette",
-        "RecommendationCard",
-        "ConfidenceBadge",
-        "ApprovalCheckpoint",
-        "CitationPanel",
-        "AIActionAuditTimeline",
-        "PromptComposer"
-      ],
-      "dependencies": [
-        "wave_1_foundation_primitives",
-        "wave_2_navigation",
-        "wave_3_forms",
-        "wave_5_overlay"
-      ]
+      "families": ["ai_native_helpers"],
+      "candidate_components": ["CommandPalette", "RecommendationCard", "ConfidenceBadge", "ApprovalCheckpoint", "CitationPanel", "AIActionAuditTimeline", "PromptComposer"],
+      "dependencies": ["wave_1_foundation_primitives", "wave_2_navigation", "wave_3_forms", "wave_5_overlay"]
     },
     {
       "wave_id": "wave_7_page_blocks",
       "title_tr": "Page / Block Library",
       "status": "completed",
       "objective": "Hazir page shell ve block compositelerini urunlestir; route-level kopya yapilari azalt.",
-      "families": [
-        "page_blocks"
-      ],
-      "candidate_components": [
-        "PageLayout",
-        "FilterBar",
-        "ReportFilterPanel",
-        "PageHeader",
-        "SummaryStrip",
-        "EntitySummaryBlock"
-      ],
-      "dependencies": [
-        "wave_1_foundation_primitives",
-        "wave_2_navigation",
-        "wave_3_forms",
-        "wave_4_data_display"
-      ],
+      "families": ["page_blocks"],
+      "candidate_components": ["PageLayout", "FilterBar", "ReportFilterPanel", "PageHeader", "SummaryStrip", "EntitySummaryBlock"],
+      "dependencies": ["wave_1_foundation_primitives", "wave_2_navigation", "wave_3_forms", "wave_4_data_display"],
       "notes": [
         "PageLayout, FilterBar ve ReportFilterPanel mevcut substrate olarak page_blocks ailesine tasindi.",
         "PageHeader, SummaryStrip ve EntitySummaryBlock batch ile export + live preview + doctor evidence seviyesine cekildi.",
@@ -1207,25 +1003,14 @@
       "title_tr": "Overlay Extensions",
       "status": "completed",
       "objective": "ContextMenu ve TourCoachmarks backlog overlay uzantilarini export + docs + doctor evidence ile urunlestir.",
-      "families": [
-        "overlay"
-      ],
-      "candidate_components": [
-        "ContextMenu",
-        "TourCoachmarks"
-      ],
-      "dependencies": [
-        "wave_5_overlay",
-        "wave_7_page_blocks"
-      ],
+      "families": ["overlay"],
+      "candidate_components": ["ContextMenu", "TourCoachmarks"],
+      "dependencies": ["wave_5_overlay", "wave_7_page_blocks"],
       "notes": [
         "ContextMenu ve TourCoachmarks wave_5 disindaki backlog statusten cikartilip ayri overlay extension dalgasi olarak kapatildi.",
         "Doktor, Playwright ve docs-site preview evidence ayni dalga kontratina baglandi."
       ],
-      "completed_components": [
-        "ContextMenu",
-        "TourCoachmarks"
-      ],
+      "completed_components": ["ContextMenu", "TourCoachmarks"],
       "remaining_components": []
     },
     {
@@ -1233,64 +1018,30 @@
       "title_tr": "Foundation Language",
       "status": "completed",
       "objective": "Typography, iconography, motion ve responsive/layout-grid kontratlarini kilitle.",
-      "families": [
-        "foundation_language"
-      ],
-      "candidate_components": [
-        "TypographySystem",
-        "IconographySystem",
-        "MotionSystem",
-        "ResponsiveLayoutGrid"
-      ],
-      "dependencies": [
-        "wave_1_foundation_primitives",
-        "wave_7_page_blocks"
-      ],
-      "notes": [
-        "Foundation dili component ustu kontrat seti olarak kilitlendi ve governance/gate zincirine baglandi."
-      ]
+      "families": ["foundation_language"],
+      "candidate_components": ["TypographySystem", "IconographySystem", "MotionSystem", "ResponsiveLayoutGrid"],
+      "dependencies": ["wave_1_foundation_primitives", "wave_7_page_blocks"],
+      "notes": ["Foundation dili component ustu kontrat seti olarak kilitlendi ve governance/gate zincirine baglandi."]
     },
     {
       "wave_id": "wave_10_theme_presets",
       "title_tr": "Theme Presets",
       "status": "completed",
       "objective": "Resmi theme preset ailesini tek katalog ve release diliyle standardize et.",
-      "families": [
-        "theme_presets"
-      ],
-      "candidate_components": [
-        "ThemePresetGallery",
-        "ThemePresetCompare"
-      ],
-      "dependencies": [
-        "wave_9_foundation_language"
-      ],
-      "notes": [
-        "Theme preset katalogu mevcut theme-contract allowedModes ile hizali resmi preset ailesi uretir."
-      ]
+      "families": ["theme_presets"],
+      "candidate_components": ["ThemePresetGallery", "ThemePresetCompare"],
+      "dependencies": ["wave_9_foundation_language"],
+      "notes": ["Theme preset katalogu mevcut theme-contract allowedModes ile hizali resmi preset ailesi uretir."]
     },
     {
       "wave_id": "wave_11_recipes",
       "title_tr": "Recipes",
       "status": "completed",
       "objective": "Reusable ekran/panel kaliplarini recipe sistemi kontrati altinda standardize et.",
-      "families": [
-        "recipes"
-      ],
-      "candidate_components": [
-        "SearchFilterListing",
-        "DetailSummary",
-        "ApprovalReview",
-        "EmptyErrorLoading",
-        "AIGuidedAuthoring"
-      ],
-      "dependencies": [
-        "wave_7_page_blocks",
-        "wave_10_theme_presets"
-      ],
-      "notes": [
-        "Recipe sistemi, page/block ve component owner API'lerini tekrar kullanilabilir ekran kaliplari olarak birlestirdi."
-      ]
+      "families": ["recipes"],
+      "candidate_components": ["SearchFilterListing", "DetailSummary", "ApprovalReview", "EmptyErrorLoading", "AIGuidedAuthoring"],
+      "dependencies": ["wave_7_page_blocks", "wave_10_theme_presets"],
+      "notes": ["Recipe sistemi, page/block ve component owner API'lerini tekrar kullanilabilir ekran kaliplari olarak birlestirdi."]
     }
   ]
 }
