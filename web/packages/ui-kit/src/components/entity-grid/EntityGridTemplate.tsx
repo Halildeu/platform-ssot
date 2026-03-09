@@ -469,6 +469,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
   const gridScopeAttributes = useMemo<Record<string, string>>(
     () => ({
       'data-theme-scope': 'entity-grid',
+      'data-grid-theme': gridTheme,
       'data-appearance': themeAxesState.appearance,
       'data-radius': themeAxesState.radius,
       'data-elevation': themeAxesState.elevation,
@@ -477,6 +478,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
       'data-table-surface-tone': themeAxesState.tableSurfaceTone,
     }),
     [
+      gridTheme,
       themeAxesState.appearance,
       themeAxesState.radius,
       themeAxesState.elevation,
@@ -2020,6 +2022,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
             className={toolbarSelectClass}
             value={gridTheme}
             onChange={(event) => handleThemeChange(event.target.value as ThemeValue)}
+            aria-label={themeLabel}
           >
             {themeOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -2034,6 +2037,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
             <button
               type="button"
               className={comfortableButtonClass}
+              aria-label={comfortableDensityLabel}
               aria-pressed={comfortableSelected}
               onClick={() => handleLocalDensitySelect('comfortable')}
             >
@@ -2042,6 +2046,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
             <button
               type="button"
               className={compactButtonClass}
+              aria-label={compactDensityLabel}
               aria-pressed={compactSelected}
               onClick={() => handleLocalDensitySelect('compact')}
             >
@@ -2052,6 +2057,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
                 type="button"
                 className={variantButtonClass}
                 onClick={handleLocalDensityReset}
+                aria-label={densityResetLabel}
               >
                 ↺ <span>{densityResetLabel}</span>
               </button>
@@ -2069,6 +2075,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
               value={quickFilterValue}
               onChange={(event) => handleQuickFilterChange(event.target.value)}
               type="text"
+              aria-label={quickFilterLabel}
             />
           </label>
         )}
@@ -2082,6 +2089,7 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
               disabled={variantOptions.length === 0 || variantsLoading}
               value={activeVariantId ?? ''}
               onChange={(event) => handleVariantSelect(event.target.value || undefined)}
+              aria-label={variantLabel}
             >
               <option value="">
                 {variantsLoading ? 'Varyantlar yükleniyor...' : 'Varyant seç...'}

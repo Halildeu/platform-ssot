@@ -84,7 +84,11 @@ import {
 } from 'mfe-ui-kit';
 import designLabIndexRaw from './design-lab.index.json';
 import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
-import componentApiCatalogRaw from '../../../../../packages/ui-kit/src/catalog/component-api-catalog.v1.json';
+import {
+  designLabApiCatalogMeta,
+  designLabApiItems,
+  designLabIndexItems,
+} from '../../../../../packages/ui-kit/src/catalog/component-docs';
 
 type DesignLabLifecycle = 'stable' | 'beta' | 'planned';
 type DesignLabAvailability = 'exported' | 'planned';
@@ -235,9 +239,15 @@ type DesignLabTaxonomy = {
   groups: DesignLabTaxonomyGroup[];
 };
 
-const designLabIndex = designLabIndexRaw as DesignLabIndex;
+const designLabIndex = {
+  ...(designLabIndexRaw as DesignLabIndex),
+  items: designLabIndexItems as DesignLabIndexItem[],
+} as DesignLabIndex;
 const designLabTaxonomy = designLabTaxonomyRaw as DesignLabTaxonomy;
-const componentApiCatalog = componentApiCatalogRaw as DesignLabApiCatalog;
+const componentApiCatalog = {
+  ...designLabApiCatalogMeta,
+  items: designLabApiItems as DesignLabApiItem[],
+} as DesignLabApiCatalog;
 const avatarPreviewImageSrc =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='32' fill='%23E38B2C'/%3E%3Ccircle cx='64' cy='50' r='24' fill='%23FFF5E8'/%3E%3Cpath d='M30 110c8-18 22-28 34-28s26 10 34 28' fill='%23FFF5E8'/%3E%3C/svg%3E";
 
