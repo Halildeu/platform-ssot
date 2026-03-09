@@ -76,10 +76,17 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
         aria-label={t('access.clone.cancelText')}
         onClick={onCancel}
       />
-      <div className="relative z-10 w-full max-w-xl rounded-3xl bg-surface-default p-6 shadow-2xl">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="access-role-clone-title"
+        className="relative z-10 w-full max-w-xl rounded-3xl bg-surface-default p-6 shadow-2xl"
+      >
         <header className="mb-4 flex items-start justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-text-primary">{t('access.clone.modal.title')}</h2>
+            <h2 id="access-role-clone-title" className="text-lg font-semibold text-text-primary">
+              {t('access.clone.modal.title')}
+            </h2>
             {role ? (
               <p className="text-sm text-text-subtle">{t('access.clone.modal.subtitle', { roleName: role.name })}</p>
             ) : null}

@@ -10,10 +10,11 @@ import {
 import { getShellServices } from '../../../app/services/shell-services';
 
 const API_BASE_URL = getGatewayBaseUrl();
-const USERS_BASE_URL = `${API_BASE_URL}/v1/users`;
-const AUTH_BASE_URL = `${API_BASE_URL}/v1/auth`;
-const PERMISSIONS_BASE_URL = `${API_BASE_URL}/v1/permissions`;
+const USERS_RESOURCE_PATH = '/v1/users';
+const AUTH_RESOURCE_PATH = '/v1/auth';
+const PERMISSIONS_RESOURCE_PATH = '/v1/permissions';
 const UNAUTHORIZED_STATUS = new Set([401, 403]);
+const PROFILE_MISSING_CODE = 'PROFILE_MISSING';
 
 const getFetchBaseUrl = () => {
   if (typeof window !== 'undefined' && window.location?.origin) {
@@ -21,6 +22,10 @@ const getFetchBaseUrl = () => {
   }
   return 'http://localhost';
 };
+
+const buildGatewayUrl = (resourcePath: string) => `${API_BASE_URL}${resourcePath}`;
+
+const buildFetchGatewayUrl = (resourcePath: string) => `${getFetchBaseUrl()}${buildGatewayUrl(resourcePath)}`;
 
 const resolveHttpClient = (): ApiInstance => {
   try {
@@ -72,7 +77,7 @@ const MODULE_LEVEL_ROLE_MAP: Record<string, Partial<Record<UserModuleAccessLevel
 
 export interface UsersApiResponse extends PaginatedResponse<UserSummary> {
   meta?: {
-    reason: 'success' | 'unauthorized' | 'network-error';
+    reason: 'success' | 'unauthorized' | 'profile-missing' | 'network-error';
   };
 }
 
@@ -138,6 +143,32 @@ const buildEmptyUsersResponse = (params: UsersQueryParams = {}): PaginatedRespon
   page: params.page ?? 1,
   pageSize: params.pageSize ?? 25,
 });
+
+const shouldUseFetchTransportStub = (): boolean => typeof fetch === 'function' && typeof document === 'undefined';
+
+const isProfileMissingPayload = (payload: unknown): boolean => {
+  if (!payload || typeof payload !== 'object') {
+    return false;
+  }
+  const record = payload as Record<string, unknown>;
+  return [record.message, record.error, record.errorCode, record.detail].some(
+    (value) => typeof value === 'string' && value.trim().toUpperCase() === PROFILE_MISSING_CODE,
+  );
+};
+
+const detectProfileMissingFromResponse = async (response: { clone?: () => Response; json?: () => Promise<unknown> }) => {
+  try {
+    if (typeof response.clone === 'function') {
+      return isProfileMissingPayload(await response.clone().json());
+    }
+    if (typeof response.json === 'function') {
+      return isProfileMissingPayload(await response.json());
+    }
+  } catch {
+    // ignore payload parsing errors
+  }
+  return false;
+};
 
 const buildFallbackUserDetail = (
   user: { id: string; email: string },
@@ -558,17 +589,20 @@ export const fetchUsers = async (
   let payload: UsersResponseWire;
 
   // Eğer global fetch stub'ı varsa (test ortamları), axios yerine doğrudan fetch kullan
-  if (typeof fetch === 'function') {
+  if (shouldUseFetchTransportStub()) {
     const headers = mergeHeaders(scope) as Record<string, string>;
-    const fetchBase = getFetchBaseUrl();
     try {
-      const response = await fetch(`${fetchBase}/api/v1/users${buildQueryString(params)}`, {
+      const response = await fetch(`${buildFetchGatewayUrl(USERS_RESOURCE_PATH)}${buildQueryString(params)}`, {
         headers,
       });
       if (!response.ok) {
         if (UNAUTHORIZED_STATUS.has(response.status)) {
+          const reason =
+            response.status === 403 && (await detectProfileMissingFromResponse(response))
+              ? ('profile-missing' as const)
+              : ('unauthorized' as const);
           return Object.assign(buildEmptyUsersResponse(params), {
-            meta: { reason: 'unauthorized' as const },
+            meta: { reason },
           });
         }
         return Object.assign(buildEmptyUsersResponse(params), {
@@ -587,7 +621,7 @@ export const fetchUsers = async (
   try {
     const client = resolveHttpClient();
     const response = await client.get<UsersResponseWire>(
-      `${USERS_BASE_URL}${buildQueryString(params)}`,
+      `${USERS_RESOURCE_PATH}${buildQueryString(params)}`,
       { headers: mergeHeaders(scope) },
     );
     payload = response.data ?? {};
@@ -601,11 +635,15 @@ export const fetchUsers = async (
         });
       }
       if (UNAUTHORIZED_STATUS.has(status)) {
+        const reason =
+          status === 403 && isProfileMissingPayload(error.response?.data)
+            ? ('profile-missing' as const)
+            : ('unauthorized' as const);
         console.warn(
           '[usersApi] Kullanıcı listesi yetkisiz döndü. Boş sonuç ile devam ediliyor.',
         );
         return Object.assign(buildEmptyUsersResponse(params), {
-          meta: { reason: 'unauthorized' as const },
+          meta: { reason },
         });
       }
       const parsed = await parseErrorResponse(error);
@@ -704,11 +742,10 @@ export const fetchUserDetail = async (
 ): Promise<UserDetail> => {
   const headers = mergeHeaders(scope);
 
-  if (typeof fetch === 'function') {
-    const fetchBase = getFetchBaseUrl();
+  if (shouldUseFetchTransportStub()) {
     try {
       const userResponse = await fetch(
-        `${fetchBase}/api/v1/users/by-email?email=${encodeURIComponent(user.email)}`,
+        `${buildFetchGatewayUrl(USERS_RESOURCE_PATH)}/by-email?email=${encodeURIComponent(user.email)}`,
         { headers: headers as Record<string, string> },
       );
       if (!userResponse.ok) {
@@ -721,7 +758,7 @@ export const fetchUserDetail = async (
       let assignments: AssignmentWire[] = [];
       try {
         const permResponse = await fetch(
-          `${fetchBase}/api/v1/permissions/assignments?userId=${encodeURIComponent(user.id)}`,
+          `${buildFetchGatewayUrl(PERMISSIONS_RESOURCE_PATH)}/assignments?userId=${encodeURIComponent(user.id)}`,
           { headers: headers as Record<string, string> },
         );
         if (permResponse.ok) {
@@ -743,7 +780,7 @@ export const fetchUserDetail = async (
   try {
     const client = resolveHttpClient();
     const response = await client.get<UserDetailWire>(
-      `${USERS_BASE_URL}/by-email?email=${encodeURIComponent(user.email)}`,
+      `${USERS_RESOURCE_PATH}/by-email?email=${encodeURIComponent(user.email)}`,
       { headers },
     );
     userData = response.data as UserDetailWire;
@@ -765,7 +802,7 @@ export const fetchUserDetail = async (
   try {
     const client = resolveHttpClient();
     const response = await client.get<unknown>(
-      `${PERMISSIONS_BASE_URL}/assignments?userId=${encodeURIComponent(user.id)}`,
+      `${PERMISSIONS_RESOURCE_PATH}/assignments?userId=${encodeURIComponent(user.id)}`,
       { headers },
     );
     const assignmentPayload = response.data;
@@ -798,7 +835,7 @@ export const updateUser = async (
   try {
     const client = resolveHttpClient();
     const response = await client.put(
-      `${USERS_BASE_URL}/${encodeURIComponent(args.userId)}`,
+      `${USERS_RESOURCE_PATH}/${encodeURIComponent(args.userId)}`,
       args.payload,
       { headers: mergeHeaders(args.scope) },
     );
@@ -841,7 +878,7 @@ export const updateUserModuleAccess = async (
   }
   try {
     const client = resolveHttpClient();
-    const response = await client.post(`${PERMISSIONS_BASE_URL}/assignments/update`, payload, {
+    const response = await client.post(`${PERMISSIONS_RESOURCE_PATH}/assignments/update`, payload, {
       headers: mergeHeaders(args.scope),
     });
     return response.data;
@@ -862,7 +899,7 @@ export const revokeUserModuleAccess = async (
   try {
     const client = resolveHttpClient();
     await client.delete(
-      `${PERMISSIONS_BASE_URL}/assignments/${encodeURIComponent(args.assignmentId)}${query}`,
+      `${PERMISSIONS_RESOURCE_PATH}/assignments/${encodeURIComponent(args.assignmentId)}${query}`,
       { headers: mergeHeaders(args.scope) },
     );
   } catch (error) {
@@ -878,7 +915,7 @@ export const toggleUserStatus = async (
   try {
     const client = resolveHttpClient();
     const response = await client.put(
-      `${USERS_BASE_URL}/${encodeURIComponent(args.userId)}/activation`,
+      `${USERS_RESOURCE_PATH}/${encodeURIComponent(args.userId)}/activation`,
       { active: args.enabled },
       { headers: mergeHeaders(args.scope) },
     );
@@ -896,7 +933,7 @@ export const triggerPasswordReset = async (
   try {
     const client = resolveHttpClient();
     const response = await client.post(
-      `${AUTH_BASE_URL}/password-resets`,
+      `${AUTH_RESOURCE_PATH}/password-resets`,
       { email: args.email },
       { headers: mergeHeaders() },
     );

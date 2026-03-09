@@ -555,6 +555,13 @@ const UsersGrid: React.FC<UsersGridProps> = ({
 
             const response = await fetchUsers(baseParams);
             const reason = response.meta?.reason;
+            if (reason === 'profile-missing') {
+              debugLog('server:getRows:profile-missing', requestLabel, { queryParams: baseParams });
+              showToast('warning', 'Profiliniz henüz oluşturulmamış. Lütfen sistem yöneticisiyle iletişime geçin.');
+              const batch = inFlight.get(key) ?? [];
+              batch.forEach((p) => ssrmSuccessFor(p, [], 0));
+              return;
+            }
             if (reason === 'unauthorized') {
               debugLog('server:getRows:unauthorized', requestLabel, { queryParams: baseParams });
               showToast('warning', 'Kullanıcı verilerini görmek için yetkiniz bulunmuyor.');

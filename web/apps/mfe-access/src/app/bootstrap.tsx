@@ -6,6 +6,7 @@ import { I18nProvider, I18nManager } from 'mfe_shell/i18n';
 import { getDictionary } from '@mfe/i18n-dicts';
 import AccessApp from './AccessApp.ui';
 import { configureShellServices } from './services/shell-services';
+import { isRuntimeDev } from './runtime/env';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +51,6 @@ root.render(
     <I18nProvider manager={manager}>
       <AccessApp />
     </I18nProvider>
-    {process.env.NODE_ENV !== 'production' ? <ReactQueryDevtools initialIsOpen={false} /> : null}
+    {isRuntimeDev() ? <ReactQueryDevtools initialIsOpen={false} /> : null}
   </QueryClientProvider>,
 );

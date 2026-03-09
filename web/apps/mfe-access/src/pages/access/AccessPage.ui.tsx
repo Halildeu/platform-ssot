@@ -16,6 +16,7 @@ import BulkPermissionModal from '../../widgets/access-management/ui/BulkPermissi
 import { getShellServices } from '../../app/services/shell-services';
 import { useAccessI18n } from '../../i18n/useAccessI18n';
 import PermissionRegistryPanel from '../../widgets/permission-registry/PermissionRegistryPanel.ui';
+import { isRuntimeDev, readRuntimeEnv } from '../../app/runtime/env';
 
 type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -55,7 +56,7 @@ const AccessPage: React.FC = () => {
     try {
       return getShellServices();
     } catch (error) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (isRuntimeDev()) {
         console.debug('[mfe-access] Shell servislerine erişilemedi:', error);
       }
       return null;
@@ -87,8 +88,8 @@ const AccessPage: React.FC = () => {
         traceId,
         context: {
           app: 'mfe-access',
-          env: (process.env.APP_ENVIRONMENT as TelemetryEvent['context']['env']) || 'local',
-          version: process.env.APP_RELEASE || 'dev',
+          env: (readRuntimeEnv('APP_ENVIRONMENT', 'local') as TelemetryEvent['context']['env']),
+          version: readRuntimeEnv('APP_RELEASE', 'dev'),
           tags: { route: '/access/roles', mutationName, ...(tags ?? {}) },
         },
         metrics: { durationMs },
@@ -156,8 +157,8 @@ const AccessPage: React.FC = () => {
       traceId,
       context: {
         app: 'mfe-access',
-        env: (process.env.APP_ENVIRONMENT as TelemetryEvent['context']['env']) || 'local',
-        version: process.env.APP_RELEASE || 'dev',
+        env: (readRuntimeEnv('APP_ENVIRONMENT', 'local') as TelemetryEvent['context']['env']),
+        version: readRuntimeEnv('APP_RELEASE', 'dev'),
         tags: { actionId, route: '/access/roles' },
       },
       payload: { route: '/access/roles' },
@@ -180,7 +181,7 @@ const AccessPage: React.FC = () => {
         }
       }
 
-      const handleClick = () => {
+      const activateAction = () => {
         if (disabled) {
           return;
         }
@@ -193,6 +194,22 @@ const AccessPage: React.FC = () => {
           setBulkModalOpen(true);
           return;
         }
+      };
+
+      const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
+        if (disabled) {
+          return;
+        }
+        if (action.key !== 'clone-role' && action.key !== 'bulk-permission') {
+          return;
+        }
+        // Grid seçimi toolbar click'inde düşse bile aksiyon state'i yakalansın.
+        event.preventDefault();
+        activateAction();
+      };
+
+      const handleClick = () => {
+        activateAction();
       };
 
       const label = t(action.label);
@@ -208,6 +225,7 @@ const AccessPage: React.FC = () => {
           type="button"
           title={tooltip}
           disabled={disabled}
+          onMouseDown={handleMouseDown}
           onClick={handleClick}
           className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
             disabled ? 'cursor-not-allowed opacity-50' : intentClass
@@ -407,14 +425,14 @@ const AccessPage: React.FC = () => {
         role={singleSelectedRole}
         onCancel={() => setCloneModalOpen(false)}
         t={t}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           if (!singleSelectedRole) {
             setCloneModalOpen(false);
             showToast('warning', t('access.notifications.cloneMissingSelection'));
             return;
           }
           try {
-            const result = cloneRole({
+            const result = await cloneRole({
               sourceRoleId: singleSelectedRole.id,
               name: values.name,
               description: values.description,
