@@ -58,6 +58,7 @@ export interface ButtonProps
   trailingVisual?: React.ReactNode;
   loading?: boolean;
   loadingDisplay?: LoadingDisplay;
+  loadingLabel?: string;
   access?: AccessLevel;
   accessReason?: string;
 }
@@ -76,6 +77,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
     trailingVisual,
     loading = false,
     loadingDisplay = 'label',
+    loadingLabel,
     access = 'full',
     accessReason,
     disabled,
@@ -93,7 +95,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   const resolvedDisabled = disabled || loading || accessState.isDisabled;
   const resolvedVariant = variant ?? intent ?? (primary === false ? 'secondary' : 'primary');
   const resolvedSize = normalizeSize(size);
-  const content = children ?? label;
+  const content = loading && loadingDisplay === 'label' && typeof loadingLabel === 'string' && loadingLabel.length > 0
+    ? loadingLabel
+    : children ?? label;
   const interactionState: AccessLevel = resolvedDisabled
     ? 'disabled'
     : isReadonly

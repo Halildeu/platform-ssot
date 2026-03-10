@@ -171,7 +171,7 @@ export const AuditEventFeed: React.FC = () => {
       service: (formData.get('service') as string) ?? '',
       level: (formData.get('level') as string) ?? ''
     });
-    if (gridApi) {
+    if (gridApi && (gridApi.getDisplayedRowCount?.() ?? 0) > 0) {
       gridApi.ensureIndexVisible(0, 'top');
     }
     refreshData();
@@ -228,7 +228,7 @@ export const AuditEventFeed: React.FC = () => {
         gridApi.ensureNodeVisible(node, 'middle');
       }
     });
-    if (!matched) {
+    if (!matched && (gridApi.getDisplayedRowCount?.() ?? 0) > 0) {
       gridApi.ensureIndexVisible(0, 'top');
     }
   }, [highlightId, gridApi, emitTelemetry]);

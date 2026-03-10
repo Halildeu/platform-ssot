@@ -1910,7 +1910,7 @@ const AppLayout = () => {
                     <button
                       type="button"
                       aria-label="Uyarıyı kapat"
-                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-current/20 text-current/80 transition hover:bg-black/5"
+                      className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-current/20 text-current/80 transition hover:bg-surface-muted"
                       onClick={() => dismissRuntimeToast(toast.id)}
                     >
                       <span aria-hidden>×</span>
@@ -1984,16 +1984,20 @@ const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({ children })
       try {
         const isLoginRoute =
           typeof window !== 'undefined' && window.location?.pathname?.startsWith('/login');
-        await keycloak.init({
-          ...(isLoginRoute
-            ? {}
-            : {
-                onLoad: 'check-sso' as const,
-                silentCheckSsoRedirectUri: authConfig.keycloak.silentCheckSsoRedirectUri,
-              }),
+        const initOptions: {
+          pkceMethod: 'S256';
+          checkLoginIframe: false;
+          onLoad?: 'check-sso';
+          silentCheckSsoRedirectUri?: string;
+        } = {
           pkceMethod: 'S256',
           checkLoginIframe: false,
-        });
+        };
+        if (!isLoginRoute && authConfig.keycloak.enableSilentCheckSso) {
+          initOptions.onLoad = 'check-sso';
+          initOptions.silentCheckSsoRedirectUri = authConfig.keycloak.silentCheckSsoRedirectUri;
+        }
+        await keycloak.init(initOptions);
         if (!mounted) return;
         const token = keycloak.token ?? null;
         if (token) {
