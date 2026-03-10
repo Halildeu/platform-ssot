@@ -138,13 +138,6 @@ const steps = [
     cwd: repoRoot,
   },
   {
-    id: 'package_release_contract',
-    label: 'Package release contract check',
-    cmd: 'python3',
-    args: ['scripts/check_ui_library_package_release_contract.py'],
-    cwd: repoRoot,
-  },
-  {
     id: 'frontend_diagnostics_registry',
     label: 'Frontend diagnostics registry check',
     cmd: 'python3',
@@ -164,6 +157,20 @@ const steps = [
     cmd: 'npm',
     args: ['run', 'designlab:index'],
     cwd: webRoot,
+  },
+  {
+    id: 'release_manifest',
+    label: 'UI library release manifest',
+    cmd: 'npm',
+    args: ['run', 'release:ui-library:manifest'],
+    cwd: webRoot,
+  },
+  {
+    id: 'package_release_contract',
+    label: 'Package release contract check',
+    cmd: 'python3',
+    args: ['scripts/check_ui_library_package_release_contract.py'],
+    cwd: repoRoot,
   },
   {
     id: 'tailwind_lint',

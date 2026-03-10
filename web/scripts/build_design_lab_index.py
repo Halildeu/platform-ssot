@@ -586,6 +586,205 @@ def build_upgrade_recipe_steps(
     ]
 
 
+def infer_codemod_candidate_profile(component_name: str) -> dict:
+    profile_map = {
+        "Empty": {
+            "strategyId": "empty-state-prop-codemod-candidate",
+            "transformKind": "jsx-prop-normalization",
+            "riskLevel": "low",
+            "confidence": "medium",
+            "requiredSignals": ["description", "access"],
+            "optionalSignals": ["accessReason", "className"],
+            "riskReasons": [
+                "Empty tek dosyada kullaniliyor ve public prop seti dar.",
+                "Description/access kombinasyonu gorunur oldugu icin dry-run tespiti yuksek sinyal uretir.",
+            ],
+            "blockers": [
+                "Actual JSX rewrite script'i henuz uretilmedi.",
+            ],
+        },
+        "ReportFilterPanel": {
+            "strategyId": "report-filter-panel-codemod-candidate",
+            "transformKind": "slot-prop-review",
+            "riskLevel": "high",
+            "confidence": "medium",
+            "requiredSignals": ["submitLabel", "resetLabel", "onSubmit", "onReset"],
+            "optionalSignals": ["loading", "children"],
+            "riskReasons": [
+                "Children slot ve handler ciftleri manuel davranis review'u gerektiriyor.",
+                "Yanlis rewrite submit/reset akisini sessizce bozabilir.",
+            ],
+            "blockers": [
+                "Children slot davranisi otomatik transform icin henuz guvenli degil.",
+                "Handler ciftleri icin semantic assertion katmani gerekli.",
+            ],
+        },
+        "Select": {
+            "strategyId": "select-options-codemod-candidate",
+            "transformKind": "options-prop-normalization",
+            "riskLevel": "medium",
+            "confidence": "medium",
+            "requiredSignals": ["options", "placeholder"],
+            "optionalSignals": ["access", "accessReason", "onChange"],
+            "riskReasons": [
+                "Options ve access davranisi birlikte degisirse etkileşim akisi etkilenir.",
+                "Controlled selection callback'leri manuel smoke ister.",
+            ],
+            "blockers": [
+                "Event payload rewrite'i icin ayrik test harness gerekiyor.",
+            ],
+        },
+        "Tag": {
+            "strategyId": "tag-tone-codemod-candidate",
+            "transformKind": "tone-access-normalization",
+            "riskLevel": "low",
+            "confidence": "medium",
+            "requiredSignals": ["tone", "access"],
+            "optionalSignals": ["accessReason", "className"],
+            "riskReasons": [
+                "Tag kullanimi tek dosyada ve JSX izi net.",
+                "Tone/access prop'lari regex ile kolay ayristiriliyor.",
+            ],
+            "blockers": [
+                "Semantic tone map degisirse manuel renk review'u gerekir.",
+            ],
+        },
+        "Text": {
+            "strategyId": "text-typography-codemod-candidate",
+            "transformKind": "typography-prop-normalization",
+            "riskLevel": "medium",
+            "confidence": "medium",
+            "requiredSignals": ["variant", "preset"],
+            "optionalSignals": ["truncate", "clampLines", "wrap", "align", "tabularNums"],
+            "riskReasons": [
+                "Birden fazla hedef dosyada typography semantic'i korunmali.",
+                "Clamp/truncate davranisi layout regressions uretebilir.",
+            ],
+            "blockers": [
+                "Typography rewrite'i icin visual diff olmadan auto-apply acilmamali.",
+            ],
+        },
+        "ThemePreviewCard": {
+            "strategyId": "theme-preview-card-codemod-candidate",
+            "transformKind": "selection-state-normalization",
+            "riskLevel": "low",
+            "confidence": "medium",
+            "requiredSignals": ["selected"],
+            "optionalSignals": ["className"],
+            "riskReasons": [
+                "Selected state kullanimi net ve hedef dosya sayisi dusuk.",
+                "Preview card state'i Storybook ve Design Lab ile hizali izleniyor.",
+            ],
+            "blockers": [
+                "Theme gallery etkileşimi icin owner onayi olmadan auto-apply acilmaz.",
+            ],
+        },
+    }
+    return profile_map.get(
+        component_name,
+        {
+            "strategyId": "component-codemod-candidate",
+            "transformKind": "jsx-prop-normalization",
+            "riskLevel": "medium",
+            "confidence": "low",
+            "requiredSignals": [],
+            "optionalSignals": [],
+            "riskReasons": ["Component icin generic codemod candidate profili kullanildi."],
+            "blockers": ["Component'e ozel rewrite strategy tanimlanmadi."],
+        },
+    )
+
+
+def build_codemod_candidate_steps(
+    *,
+    component_name: str,
+    consumer_app: str,
+    transform_kind: str,
+    risk_level: str,
+    required_signals: list[str],
+    target_files: list[str],
+) -> list[str]:
+    first_target = target_files[0] if target_files else f"web/apps/{consumer_app}/**"
+    signal_text = ", ".join(required_signals[:3]) if required_signals else "component sinyalleri"
+    return [
+        f"`{component_name}` icin `{consumer_app}` hedefinde `{transform_kind}` candidate'i dry-run olarak planlandi.",
+        f"Ilk eslesme turunda `{first_target}` dosyasinda `{signal_text}` sinyallerini ve import/JSX kullanimini dogrula.",
+        f"Risk seviyesi `{risk_level}` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+        "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir.",
+    ]
+
+
+def build_codemod_candidate(
+    *,
+    component_name: str,
+    consumer_app: str,
+    class_id: str,
+    semver: str,
+    owner_handles: list[str],
+    target_files: list[str],
+    api_focus_props: list[str],
+    preview_focus: list[str],
+    regression_focus: list[str],
+    manual_checklist_ref: str,
+    upgrade_recipe_ref: str,
+    codemod_contract: dict,
+) -> dict:
+    profile = infer_codemod_candidate_profile(component_name)
+    required_signals = [str(signal).strip() for signal in profile.get("requiredSignals", []) if str(signal).strip()]
+    optional_signals = [str(signal).strip() for signal in profile.get("optionalSignals", []) if str(signal).strip()]
+    transform_kind = str(profile.get("transformKind") or "jsx-prop-normalization")
+    risk_level = str(profile.get("riskLevel") or "medium")
+    return {
+        "candidateId": f"{component_name.lower()}-{consumer_app}-codemod",
+        "component": component_name,
+        "consumerApp": consumer_app,
+        "classId": class_id,
+        "semver": semver,
+        "ownerHandles": owner_handles,
+        "transformEngine": str(codemod_contract.get("transform_engine") or "ts-morph-candidate"),
+        "transformKind": transform_kind,
+        "strategyId": str(profile.get("strategyId") or "component-codemod-candidate"),
+        "riskLevel": risk_level,
+        "riskReasons": [str(entry).strip() for entry in profile.get("riskReasons", []) if str(entry).strip()][:3],
+        "blockers": [str(entry).strip() for entry in profile.get("blockers", []) if str(entry).strip()][:3],
+        "targetFiles": target_files,
+        "estimatedTouchPoints": max(len(target_files), 1),
+        "dryRunCommand": str(codemod_contract.get("audit_script") or "audit:ui-library-codemod-candidates"),
+        "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+        "dryRunScope": {
+            "targetFileCount": len(target_files),
+            "requiredAnySignals": required_signals,
+            "optionalSignals": optional_signals,
+            "minRequiredMatches": 1 if required_signals else 0,
+            "ownerMapped": bool(owner_handles),
+        },
+        "matchSelectors": [
+            f"import {{ {component_name} }} from 'mfe-ui-kit'",
+            f"<{component_name}",
+        ],
+        "apiFocusProps": api_focus_props[:5],
+        "previewFocus": preview_focus[:3],
+        "regressionFocus": regression_focus[:3],
+        "steps": build_codemod_candidate_steps(
+            component_name=component_name,
+            consumer_app=consumer_app,
+            transform_kind=transform_kind,
+            risk_level=risk_level,
+            required_signals=required_signals,
+            target_files=target_files,
+        ),
+        "manualChecklistRef": manual_checklist_ref,
+        "upgradeRecipeRef": upgrade_recipe_ref,
+        "applyReady": False,
+        "confidence": str(profile.get("confidence") or "low"),
+        "evidenceRefs": [
+            *target_files[:4],
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+        ],
+    }
+
+
 def collect_component_file_mentions(
     web_root: Path,
     component_names: set[str],
@@ -927,6 +1126,7 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
     change_class_items: list[dict] = []
     upgrade_checklist_items: list[dict] = []
     upgrade_recipe_items: list[dict] = []
+    codemod_candidate_items: list[dict] = []
 
     upgrade_contract_path = Path(__file__).resolve().parents[2] / "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json"
     upgrade_contract = load_optional_json(upgrade_contract_path)
@@ -934,6 +1134,8 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
     owner_contract = load_optional_json(owner_contract_path)
     recipes_contract_path = Path(__file__).resolve().parents[2] / "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json"
     recipes_contract = load_optional_json(recipes_contract_path)
+    codemod_contract_path = Path(__file__).resolve().parents[2] / "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json"
+    codemod_contract = load_optional_json(codemod_contract_path)
     codeowners_relative = str(owner_contract.get("codeowners_path") or ".github/CODEOWNERS").strip()
     codeowners_path = Path(__file__).resolve().parents[2] / codeowners_relative
     default_owner_handles = normalize_owner_handles(owner_contract.get("default_owner_handles"))
@@ -1123,16 +1325,20 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
                     "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
                     "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json",
                 ],
-                "codemodReady": False,
+                "codemodReady": str(entry.get("classId") or "").strip() == "minor-single-app-review",
             }
         )
         if str(entry.get("classId") or "").strip() == "minor-single-app-review":
             manifest_entry = manifest_by_name.get(component_name, {})
             index_item = manifest_entry.get("indexItem") if isinstance(manifest_entry, dict) else {}
             api_item = manifest_entry.get("apiItem") if isinstance(manifest_entry, dict) else {}
+            where_used_entries = index_item.get("whereUsed") if isinstance(index_item, dict) else []
+            api_props_entries = api_item.get("props") if isinstance(api_item, dict) else []
+            preview_focus_entries = api_item.get("previewFocus") if isinstance(api_item, dict) else []
+            regression_focus_entries = api_item.get("regressionFocus") if isinstance(api_item, dict) else []
             target_files = [
                 str(path).strip()
-                for path in ensure_list(index_item.get("whereUsed") if isinstance(index_item, dict) else [])
+                for path in (where_used_entries if isinstance(where_used_entries, list) else [])
                 if str(path).strip() != design_lab_path
             ]
             target_app = (
@@ -1142,22 +1348,24 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
             )
             api_props = [
                 str(prop.get("name") or "").strip()
-                for prop in ensure_list(api_item.get("props") if isinstance(api_item, dict) else [])
+                for prop in (api_props_entries if isinstance(api_props_entries, list) else [])
                 if isinstance(prop, dict) and str(prop.get("name") or "").strip()
             ]
             preview_focus = [
                 str(item).strip()
-                for item in ensure_list(api_item.get("previewFocus") if isinstance(api_item, dict) else [])
+                for item in (preview_focus_entries if isinstance(preview_focus_entries, list) else [])
                 if str(item).strip()
             ][:3]
             regression_focus = [
                 str(item).strip()
-                for item in ensure_list(api_item.get("regressionFocus") if isinstance(api_item, dict) else [])
+                for item in (regression_focus_entries if isinstance(regression_focus_entries, list) else [])
                 if str(item).strip()
             ][:3]
+            recipe_id = f"{component_name.lower()}-{target_app}-upgrade"
+            manual_checklist_ref = f"{component_name.lower()}-{str(entry.get('classId') or '').strip()}"
             upgrade_recipe_items.append(
                 {
-                    "recipeId": f"{component_name.lower()}-{target_app}-upgrade",
+                    "recipeId": recipe_id,
                     "component": component_name,
                     "consumerApp": target_app,
                     "classId": str(entry.get("classId") or "").strip(),
@@ -1180,13 +1388,29 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
                         api_focus_props=api_props,
                         regression_focus=regression_focus,
                     ),
-                    "manualChecklistRef": f"{component_name.lower()}-{str(entry.get('classId') or '').strip()}",
+                    "manualChecklistRef": manual_checklist_ref,
                     "evidenceRefs": [
                         *target_files[:4],
                         "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
                         "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
                     ],
                 }
+            )
+            codemod_candidate_items.append(
+                build_codemod_candidate(
+                    component_name=component_name,
+                    consumer_app=target_app,
+                    class_id=str(entry.get("classId") or "").strip(),
+                    semver=str(entry.get("semver") or "").strip(),
+                    owner_handles=owner_handles,
+                    target_files=target_files,
+                    api_focus_props=api_props,
+                    preview_focus=preview_focus,
+                    regression_focus=regression_focus,
+                    manual_checklist_ref=manual_checklist_ref,
+                    upgrade_recipe_ref=recipe_id,
+                    codemod_contract=codemod_contract,
+                )
             )
 
     if int(change_class_counts.get("major-cross-app-review") or 0) > 0:
@@ -1219,7 +1443,7 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
             "singleAppBlastRadiusCount": len(single_app_blast_radius),
             "crossAppReviewComponents": len(cross_app_review),
             "manualReviewRequiredComponents": len(adopted_outside_lab_names),
-            "codemodReadyComponents": 0,
+            "codemodReadyComponents": len(codemod_candidate_items),
             "ownerMappedAppsCount": owner_mapped_apps_count,
         },
         "ownerResolution": {
@@ -1246,7 +1470,7 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
                 "singleAppBlastRadiusCount": len(single_app_blast_radius),
                 "crossAppReviewComponents": len(cross_app_review),
                 "manualChecklistComponents": len(adopted_outside_lab_names),
-                "codemodReadyComponents": 0,
+                "codemodReadyComponents": len(codemod_candidate_items),
             },
         },
         "upgradeChecklist": {
@@ -1267,12 +1491,16 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
             "contractId": str(recipes_contract.get("contract_id") or "ui-library-consumer-upgrade-recipes-contract-v1"),
             "contractPath": "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json",
             "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "auditArtifactPath": str(
+                recipes_contract.get("audit_artifact_path")
+                or "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.audit.v1.json"
+            ),
             "candidateMode": str(recipes_contract.get("candidate_mode") or "dry-run-audit"),
             "auditScript": str(recipes_contract.get("audit_script") or "audit:ui-library-upgrade-recipes"),
             "summary": {
                 "totalRecipes": len(upgrade_recipe_items),
                 "singleAppRecipes": len(upgrade_recipe_items),
-                "codemodCandidateCount": len(upgrade_recipe_items),
+                "codemodCandidateCount": len(codemod_candidate_items),
                 "dryRunReadyCandidates": len(upgrade_recipe_items),
                 "manualOnlyRecipes": 0,
             },
@@ -1288,6 +1516,49 @@ def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str
             "evidenceRefs": [
                 "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json",
                 "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+                "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+            ],
+        },
+        "codemodCandidates": {
+            "contractId": str(codemod_contract.get("contract_id") or "ui-library-consumer-codemod-candidates-contract-v1"),
+            "contractPath": "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json",
+            "artifactPath": str(
+                codemod_contract.get("artifact_path")
+                or "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.v1.json"
+            ),
+            "auditArtifactPath": str(
+                codemod_contract.get("audit_artifact_path")
+                or "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.audit.v1.json"
+            ),
+            "auditScript": str(codemod_contract.get("audit_script") or "audit:ui-library-codemod-candidates"),
+            "transformEngine": str(codemod_contract.get("transform_engine") or "ts-morph-candidate"),
+            "applyPolicy": str(codemod_contract.get("apply_policy") or "manual-approval-required"),
+            "summary": {
+                "totalCandidates": len(codemod_candidate_items),
+                "dryRunReadyCandidates": len(codemod_candidate_items),
+                "autoApplyReadyCandidates": sum(
+                    1 for item in codemod_candidate_items if bool(item.get("applyReady"))
+                ),
+                "lowRiskCount": sum(1 for item in codemod_candidate_items if str(item.get("riskLevel") or "") == "low"),
+                "mediumRiskCount": sum(
+                    1 for item in codemod_candidate_items if str(item.get("riskLevel") or "") == "medium"
+                ),
+                "highRiskCount": sum(1 for item in codemod_candidate_items if str(item.get("riskLevel") or "") == "high"),
+            },
+            "items": sorted(
+                codemod_candidate_items,
+                key=lambda item: (str(item.get("riskLevel") or ""), str(item.get("component") or "")),
+            )[:16],
+            "rules": [
+                *[
+                    str(rule).strip()
+                    for rule in codemod_contract.get("rules", [])
+                    if str(rule).strip()
+                ][:4],
+            ],
+            "evidenceRefs": [
+                "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json",
+                "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
                 "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             ],
         },

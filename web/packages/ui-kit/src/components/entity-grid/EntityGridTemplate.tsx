@@ -831,10 +831,11 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
   const handleQuickFilterChange = useCallback(
     (value: string) => {
       setQuickFilterValue(value);
-      gridApi?.setGridOption?.('quickFilterText', value);
       if (isServerMode) {
         gridApi?.refreshServerSideStore?.({ purge: true });
+        return;
       }
+      gridApi?.setGridOption?.('quickFilterText', value);
     },
     [gridApi, isServerMode],
   );
@@ -1030,10 +1031,11 @@ export function EntityGridTemplate<RowData extends Record<string, unknown> = Rec
       enhancedApi.addEventListener?.('sortChanged', updateSavedState);
 
       if (quickFilterInitialValue) {
-        enhancedApi.setGridOption?.('quickFilterText', quickFilterInitialValue);
         setQuickFilterValue(quickFilterInitialValue);
         if (isServerMode) {
           enhancedApi.refreshServerSideStore?.({ purge: true });
+        } else {
+          enhancedApi.setGridOption?.('quickFilterText', quickFilterInitialValue);
         }
       }
 

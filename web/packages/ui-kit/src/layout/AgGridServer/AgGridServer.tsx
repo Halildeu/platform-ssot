@@ -58,7 +58,7 @@ export const AgGridServer: React.FC<AgGridServerProps> = ({
   }), [getData]);
 
   const handleGridReady = useCallback((event: GridReadyEvent) => {
-    event.api.setServerSideDatasource(datasource);
+    event.api.setGridOption?.('serverSideDatasource', datasource);
   }, [datasource]);
 
   const combinedOptions: GridOptions = useMemo(() => ({
@@ -81,7 +81,6 @@ export const AgGridServer: React.FC<AgGridServerProps> = ({
         defaultColDef={defaultColDef}
         onGridReady={handleGridReady}
         gridOptions={combinedOptions}
-        suppressInfiniteScroll
       />
     </div>
   );

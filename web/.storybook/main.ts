@@ -34,6 +34,12 @@ const config: StorybookConfig = {
       ...(config.resolve.alias || {}),
       'mfe_shell': resolve(__dirname, '../stories/mocks/mfe_shell'),
     };
+    // Storybook docs build tum UI surface'ini tek bundle'da toplar; bundle boyut
+    // butceleri app/package gate'lerinde izlendiginden burada webpack hint'lerini kapatiyoruz.
+    config.performance = {
+      ...(config.performance || {}),
+      hints: false,
+    };
     return config;
   }
 };

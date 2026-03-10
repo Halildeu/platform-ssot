@@ -20,6 +20,7 @@ const prodConfig = {
       name: 'mfe_ui_kit',
       filename: 'remoteEntry.js',
       exposes: {
+        './library': './src/index.ts',
         './Button': './src/components/Button.tsx',
       },
       shared: {

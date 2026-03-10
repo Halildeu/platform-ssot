@@ -25,6 +25,7 @@ const devConfig = {
       filename: 'remoteEntry.js',
 
       exposes: {
+        './library': './src/index.ts',
         './Button': './src/components/Button.tsx',
         // Diğer componentleri gerekiyorsa burada expose edin
       },

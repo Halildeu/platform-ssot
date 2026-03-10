@@ -35,7 +35,7 @@ const defaultInjectedToken = 'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJwZXJtaXNzaW
 const presetMap = {
   'ui-library': {
     description: 'UI Library vitrini ve login/gateway smoke denetimi',
-    route: '/ui-library',
+    route: '/admin/design-lab',
     stackId: 'shell-only',
     playwrightGrep:
       'ui_library_page|ui_library_navigation_walk|ui_library_foundation_wave_1_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|ui_library_ai_native_wave_6_walk|ui_library_page_blocks_wave_7_walk|ui_library_overlay_extensions_wave_8_walk|ui_library_theme_presets_wave_10_walk|ui_library_recipe_wave_11_walk',
@@ -85,7 +85,10 @@ const presetMap = {
           PLAYWRIGHT_BASE_URL: baseUrl,
           PW_MODE: 'ci',
           PW_SOFT_MODE: softMode,
-          PW_AUTH_MODE: authMode,
+          PW_AUTH_MODE: authMode === 'none' ? 'token_injection' : authMode,
+          PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
+          PW_FAKE_AUTH: '1',
+          PW_FAKE_AUTH_PERMISSIONS: 'THEME_ADMIN',
           FRONTEND_STACK_LOG_DIR: path.join(logDir, 'ui-library-stack'),
         },
       },
@@ -100,7 +103,7 @@ const presetMap = {
   },
   'shell-public': {
     description: 'Login, runtime theme matrix ve UI Library icin kamuya acik shell route denetimi',
-    route: '/login,/runtime/theme-matrix,/ui-library',
+    route: '/login,/runtime/theme-matrix,/admin/design-lab',
     stackId: 'shell-only',
     playwrightGrep:
       'shell_login|runtime_theme_matrix|ui_library_page|ui_library_navigation_walk|ui_library_navigation_wave_2_walk|ui_library_forms_wave_3_walk|ui_library_data_display_wave_4_walk|ui_library_overlay_wave_5_walk|ui_library_ai_native_wave_6_walk|ui_library_page_blocks_wave_7_walk|ui_library_overlay_extensions_wave_8_walk|ui_library_theme_presets_wave_10_walk|ui_library_recipe_wave_11_walk|shell_public_route_walk',
@@ -150,7 +153,10 @@ const presetMap = {
           PLAYWRIGHT_BASE_URL: baseUrl,
           PW_MODE: 'ci',
           PW_SOFT_MODE: softMode,
-          PW_AUTH_MODE: authMode,
+          PW_AUTH_MODE: authMode === 'none' ? 'token_injection' : authMode,
+          PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
+          PW_FAKE_AUTH: '1',
+          PW_FAKE_AUTH_PERMISSIONS: 'THEME_ADMIN',
           FRONTEND_STACK_LOG_DIR: path.join(logDir, 'shell-public-stack'),
         },
       },

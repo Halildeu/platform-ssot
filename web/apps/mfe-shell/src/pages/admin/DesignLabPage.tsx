@@ -322,6 +322,103 @@ type DesignLabIndex = {
         codemodReady: boolean;
       }>;
     };
+    upgradeRecipes?: {
+      contractId: string;
+      contractPath: string;
+      artifactPath: string;
+      auditArtifactPath: string;
+      candidateMode: string;
+      auditScript: string;
+      summary: {
+        totalRecipes: number;
+        singleAppRecipes: number;
+        codemodCandidateCount: number;
+        dryRunReadyCandidates: number;
+        manualOnlyRecipes: number;
+      };
+      items: Array<{
+        recipeId: string;
+        component: string;
+        consumerApp: string;
+        classId: string;
+        semver: string;
+        ownerHandles: string[];
+        targetFiles: string[];
+        importStatement: string;
+        apiFocusProps: string[];
+        previewFocus: string[];
+        regressionFocus: string[];
+        automation: {
+          mode: string;
+          status: string;
+          strategyId: string;
+          auditScript: string;
+          candidateScriptPath: string;
+          targetFileCount: number;
+          autoApplyReady: boolean;
+          confidence: string;
+        };
+        steps: string[];
+        manualChecklistRef: string;
+        evidenceRefs: string[];
+      }>;
+      rules: string[];
+      evidenceRefs: string[];
+    };
+    codemodCandidates?: {
+      contractId: string;
+      contractPath: string;
+      artifactPath: string;
+      auditArtifactPath: string;
+      auditScript: string;
+      transformEngine: string;
+      applyPolicy: string;
+      summary: {
+        totalCandidates: number;
+        dryRunReadyCandidates: number;
+        autoApplyReadyCandidates: number;
+        lowRiskCount: number;
+        mediumRiskCount: number;
+        highRiskCount: number;
+      };
+      items: Array<{
+        candidateId: string;
+        component: string;
+        consumerApp: string;
+        classId: string;
+        semver: string;
+        ownerHandles: string[];
+        transformEngine: string;
+        transformKind: string;
+        strategyId: string;
+        riskLevel: string;
+        riskReasons: string[];
+        blockers: string[];
+        targetFiles: string[];
+        estimatedTouchPoints: number;
+        dryRunCommand: string;
+        candidateScriptPath: string;
+        dryRunScope: {
+          targetFileCount: number;
+          requiredAnySignals: string[];
+          optionalSignals: string[];
+          minRequiredMatches: number;
+          ownerMapped: boolean;
+        };
+        matchSelectors: string[];
+        apiFocusProps: string[];
+        previewFocus: string[];
+        regressionFocus: string[];
+        steps: string[];
+        manualChecklistRef: string;
+        upgradeRecipeRef: string;
+        applyReady: boolean;
+        confidence: string;
+        evidenceRefs: string[];
+      }>;
+      rules: string[];
+      evidenceRefs: string[];
+    };
     semverGuidance?: {
       recommendedBump: string;
       reason: string;
@@ -7219,6 +7316,125 @@ const DesignLabPage: React.FC = () => {
                         `totalItems: ${migrationSummary.upgradeChecklist.summary.totalItems}`,
                       ].join('\n')}
                       languageLabel="checklist"
+                      className="mt-4"
+                    />
+                  </div>
+                ) : null}
+
+                {migrationSummary.upgradeRecipes ? (
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Upgrade recipes</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={`recipes ${migrationSummary.upgradeRecipes.summary.totalRecipes}`} />
+                      <SectionBadge label={`candidates ${migrationSummary.upgradeRecipes.summary.codemodCandidateCount}`} />
+                      <SectionBadge label={`dry-run ${migrationSummary.upgradeRecipes.summary.dryRunReadyCandidates}`} />
+                      <SectionBadge label={migrationSummary.upgradeRecipes.candidateMode} />
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      {migrationSummary.upgradeRecipes.items.slice(0, 4).map((item) => (
+                        <div key={item.recipeId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <Text as="div" className="text-sm font-semibold text-text-primary">
+                              {item.component}
+                            </Text>
+                            <div className="flex flex-wrap gap-2">
+                              <SectionBadge label={item.consumerApp} />
+                              <SectionBadge label={item.automation.strategyId} />
+                              <SectionBadge label={`confidence ${item.automation.confidence}`} />
+                            </div>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {item.ownerHandles.map((owner) => (
+                              <SectionBadge key={`${item.recipeId}-${owner}`} label={owner} />
+                            ))}
+                            {item.apiFocusProps.map((prop) => (
+                              <SectionBadge key={`${item.recipeId}-${prop}`} label={prop} />
+                            ))}
+                          </div>
+                          <div className="mt-3 space-y-2">
+                            {item.steps.slice(0, 2).map((step) => (
+                              <Text key={`${item.recipeId}-${step}`} variant="secondary" className="block text-sm leading-6">
+                                {step}
+                              </Text>
+                            ))}
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {item.targetFiles.slice(0, 2).map((target) => (
+                              <SectionBadge key={`${item.recipeId}-${target}`} label={target} />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <LibraryCodeBlock
+                      code={[
+                        `artifact: '${migrationSummary.upgradeRecipes.artifactPath}'`,
+                        `auditArtifact: '${migrationSummary.upgradeRecipes.auditArtifactPath}'`,
+                        `auditScript: '${migrationSummary.upgradeRecipes.auditScript}'`,
+                        `contract: '${migrationSummary.upgradeRecipes.contractPath}'`,
+                      ].join('\n')}
+                      languageLabel="recipes"
+                      className="mt-4"
+                    />
+                  </div>
+                ) : null}
+
+                {migrationSummary.codemodCandidates ? (
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Codemod candidates</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={`candidates ${migrationSummary.codemodCandidates.summary.totalCandidates}`} />
+                      <SectionBadge label={`dry-run ${migrationSummary.codemodCandidates.summary.dryRunReadyCandidates}`} />
+                      <SectionBadge label={`low ${migrationSummary.codemodCandidates.summary.lowRiskCount}`} />
+                      <SectionBadge label={`medium ${migrationSummary.codemodCandidates.summary.mediumRiskCount}`} />
+                      <SectionBadge label={`high ${migrationSummary.codemodCandidates.summary.highRiskCount}`} />
+                      <SectionBadge label={migrationSummary.codemodCandidates.transformEngine} />
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      {migrationSummary.codemodCandidates.items.slice(0, 4).map((item) => (
+                        <div key={item.candidateId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <Text as="div" className="text-sm font-semibold text-text-primary">
+                              {item.component}
+                            </Text>
+                            <div className="flex flex-wrap gap-2">
+                              <SectionBadge label={item.consumerApp} />
+                              <SectionBadge label={item.transformKind} />
+                              <SectionBadge label={`risk ${item.riskLevel}`} />
+                              <SectionBadge label={`touch ${item.estimatedTouchPoints}`} />
+                            </div>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {item.ownerHandles.map((owner) => (
+                              <SectionBadge key={`${item.candidateId}-${owner}`} label={owner} />
+                            ))}
+                            {item.dryRunScope.requiredAnySignals.map((signal) => (
+                              <SectionBadge key={`${item.candidateId}-${signal}`} label={signal} />
+                            ))}
+                          </div>
+                          <div className="mt-3 space-y-2">
+                            {item.steps.slice(0, 2).map((step) => (
+                              <Text key={`${item.candidateId}-${step}`} variant="secondary" className="block text-sm leading-6">
+                                {step}
+                              </Text>
+                            ))}
+                            {item.blockers.slice(0, 2).map((blocker) => (
+                              <Text key={`${item.candidateId}-${blocker}`} variant="secondary" className="block text-sm leading-6">
+                                blocker: {blocker}
+                              </Text>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <LibraryCodeBlock
+                      code={[
+                        `artifact: '${migrationSummary.codemodCandidates.artifactPath}'`,
+                        `auditArtifact: '${migrationSummary.codemodCandidates.auditArtifactPath}'`,
+                        `auditScript: '${migrationSummary.codemodCandidates.auditScript}'`,
+                        `applyPolicy: '${migrationSummary.codemodCandidates.applyPolicy}'`,
+                      ].join('\n')}
+                      languageLabel="codemods"
                       className="mt-4"
                     />
                   </div>

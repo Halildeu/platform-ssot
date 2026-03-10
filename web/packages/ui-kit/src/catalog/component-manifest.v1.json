@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "subject_id": "ui_kutuphane_sistemi",
-  "generatedAt": "2026-03-10T15:20:54+03:00",
-  "generatedAtUtc": "2026-03-10T12:20:54+00:00",
+  "generatedAt": "2026-03-10T16:26:20+03:00",
+  "generatedAtUtc": "2026-03-10T13:26:20+00:00",
   "source": {
     "package": "mfe-ui-kit",
     "index": "packages/ui-kit/src/index.ts",
@@ -97,7 +97,7 @@
       "singleAppBlastRadiusCount": 6,
       "crossAppReviewComponents": 4,
       "manualReviewRequiredComponents": 10,
-      "codemodReadyComponents": 0,
+      "codemodReadyComponents": 6,
       "ownerMappedAppsCount": 6
     },
     "ownerResolution": {
@@ -119,7 +119,7 @@
       "contractId": "ui-library-consumer-upgrade-contract-v1",
       "contractPath": "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json",
       "defaultStrategy": "manual-checklist",
-      "codemodSupport": "planned",
+      "codemodSupport": "dry-run-candidate",
       "tracks": [
         {
           "track_id": "package-import-review",
@@ -151,7 +151,7 @@
         "singleAppBlastRadiusCount": 6,
         "crossAppReviewComponents": 4,
         "manualChecklistComponents": 10,
-        "codemodReadyComponents": 0
+        "codemodReadyComponents": 6
       }
     },
     "upgradeChecklist": {
@@ -373,7 +373,7 @@
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
           ],
-          "codemodReady": false
+          "codemodReady": true
         },
         {
           "checklistId": "reportfilterpanel-minor-single-app-review",
@@ -404,7 +404,7 @@
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
           ],
-          "codemodReady": false
+          "codemodReady": true
         },
         {
           "checklistId": "select-minor-single-app-review",
@@ -435,7 +435,7 @@
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
           ],
-          "codemodReady": false
+          "codemodReady": true
         },
         {
           "checklistId": "tag-minor-single-app-review",
@@ -466,7 +466,7 @@
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
           ],
-          "codemodReady": false
+          "codemodReady": true
         },
         {
           "checklistId": "text-minor-single-app-review",
@@ -497,7 +497,7 @@
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
           ],
-          "codemodReady": false
+          "codemodReady": true
         },
         {
           "checklistId": "themepreviewcard-minor-single-app-review",
@@ -528,8 +528,840 @@
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
           ],
-          "codemodReady": false
+          "codemodReady": true
         }
+      ]
+    },
+    "upgradeRecipes": {
+      "contractId": "ui-library-consumer-upgrade-recipes-contract-v1",
+      "contractPath": "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json",
+      "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+      "auditArtifactPath": "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.audit.v1.json",
+      "candidateMode": "dry-run-audit",
+      "auditScript": "audit:ui-library-upgrade-recipes",
+      "summary": {
+        "totalRecipes": 6,
+        "singleAppRecipes": 6,
+        "codemodCandidateCount": 6,
+        "dryRunReadyCandidates": 6,
+        "manualOnlyRecipes": 0
+      },
+      "items": [
+        {
+          "recipeId": "empty-mfe-shell-upgrade",
+          "component": "Empty",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+          ],
+          "importStatement": "import { Empty } from 'mfe-ui-kit';",
+          "apiFocusProps": [
+            "description",
+            "className",
+            "access"
+          ],
+          "previewFocus": [
+            "default empty copy",
+            "custom description",
+            "embedded fallback panel"
+          ],
+          "regressionFocus": [
+            "description fallback parity",
+            "hidden access guard",
+            "layout centering stability"
+          ],
+          "automation": {
+            "mode": "dry-run-audit",
+            "status": "candidate",
+            "strategyId": "empty-state-prop-audit",
+            "auditScript": "audit:ui-library-upgrade-recipes",
+            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
+            "targetFileCount": 1,
+            "autoApplyReady": false,
+            "confidence": "medium"
+          },
+          "steps": [
+            "`mfe-shell` icinde once `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasindaki `Empty` import ve JSX kullanimini incele.",
+            "`Empty` icin ozellikle `description, className, access` alanlarinda backward-compat review yap.",
+            "Preview/regression turunda `description fallback parity, hidden access guard` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
+            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
+          ],
+          "manualChecklistRef": "empty-minor-single-app-review",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "recipeId": "reportfilterpanel-mfe-reporting-upgrade",
+          "component": "ReportFilterPanel",
+          "consumerApp": "mfe-reporting",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "targetFiles": [
+            "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx"
+          ],
+          "importStatement": "import { ReportFilterPanel } from 'mfe-ui-kit';",
+          "apiFocusProps": [
+            "children",
+            "loading",
+            "submitLabel / resetLabel",
+            "onSubmit / onReset",
+            "access / accessReason"
+          ],
+          "previewFocus": [
+            "report filter submit flow",
+            "analytics filter reset",
+            "readonly policy panel"
+          ],
+          "regressionFocus": [
+            "submit guard",
+            "reset guard",
+            "child slot wrap"
+          ],
+          "automation": {
+            "mode": "dry-run-audit",
+            "status": "candidate",
+            "strategyId": "filter-panel-slot-audit",
+            "auditScript": "audit:ui-library-upgrade-recipes",
+            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
+            "targetFileCount": 1,
+            "autoApplyReady": false,
+            "confidence": "medium"
+          },
+          "steps": [
+            "`mfe-reporting` icinde once `web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx` dosyasindaki `ReportFilterPanel` import ve JSX kullanimini incele.",
+            "`ReportFilterPanel` icin ozellikle `children, loading, submitLabel / resetLabel, onSubmit / onReset` alanlarinda backward-compat review yap.",
+            "Preview/regression turunda `submit guard, reset guard` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
+            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
+          ],
+          "manualChecklistRef": "reportfilterpanel-minor-single-app-review",
+          "evidenceRefs": [
+            "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "recipeId": "select-mfe-shell-upgrade",
+          "component": "Select",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+          ],
+          "importStatement": "import { Select } from 'mfe-ui-kit';",
+          "apiFocusProps": [
+            "value / onChange",
+            "options",
+            "placeholder",
+            "disabled / access / accessReason"
+          ],
+          "previewFocus": [
+            "controlled selection",
+            "placeholder-first flow",
+            "readonly and disabled states"
+          ],
+          "regressionFocus": [
+            "onChange access guard",
+            "placeholder option parity",
+            "option disabled semantics"
+          ],
+          "automation": {
+            "mode": "dry-run-audit",
+            "status": "candidate",
+            "strategyId": "select-options-prop-audit",
+            "auditScript": "audit:ui-library-upgrade-recipes",
+            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
+            "targetFileCount": 1,
+            "autoApplyReady": false,
+            "confidence": "medium"
+          },
+          "steps": [
+            "`mfe-shell` icinde once `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasindaki `Select` import ve JSX kullanimini incele.",
+            "`Select` icin ozellikle `value / onChange, options, placeholder, disabled / access / accessReason` alanlarinda backward-compat review yap.",
+            "Preview/regression turunda `onChange access guard, placeholder option parity` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
+            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
+          ],
+          "manualChecklistRef": "select-minor-single-app-review",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "recipeId": "tag-mfe-shell-upgrade",
+          "component": "Tag",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+          ],
+          "importStatement": "import { Tag } from 'mfe-ui-kit';",
+          "apiFocusProps": [
+            "children",
+            "tone",
+            "className / access"
+          ],
+          "previewFocus": [
+            "semantic status tags",
+            "uppercase compact label",
+            "access-hidden behavior"
+          ],
+          "regressionFocus": [
+            "tone mapping parity",
+            "hidden access guard",
+            "uppercase layout stability"
+          ],
+          "automation": {
+            "mode": "dry-run-audit",
+            "status": "candidate",
+            "strategyId": "tag-tone-access-audit",
+            "auditScript": "audit:ui-library-upgrade-recipes",
+            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
+            "targetFileCount": 1,
+            "autoApplyReady": false,
+            "confidence": "medium"
+          },
+          "steps": [
+            "`mfe-shell` icinde once `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasindaki `Tag` import ve JSX kullanimini incele.",
+            "`Tag` icin ozellikle `children, tone, className / access` alanlarinda backward-compat review yap.",
+            "Preview/regression turunda `tone mapping parity, hidden access guard` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
+            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
+          ],
+          "manualChecklistRef": "tag-minor-single-app-review",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "recipeId": "text-mfe-shell-upgrade",
+          "component": "Text",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+            "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
+          ],
+          "importStatement": "import { Text } from 'mfe-ui-kit';",
+          "apiFocusProps": [
+            "preset",
+            "variant",
+            "wrap",
+            "truncate / clampLines",
+            "align"
+          ],
+          "previewFocus": [
+            "semantic scale",
+            "tone ve emphasis",
+            "pretty wrap + tabular nums"
+          ],
+          "regressionFocus": [
+            "contrast ve readability",
+            "clamp/truncate overflow",
+            "theme axis gecislerinde semantic typography"
+          ],
+          "automation": {
+            "mode": "dry-run-audit",
+            "status": "candidate",
+            "strategyId": "typography-prop-audit",
+            "auditScript": "audit:ui-library-upgrade-recipes",
+            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
+            "targetFileCount": 3,
+            "autoApplyReady": false,
+            "confidence": "medium"
+          },
+          "steps": [
+            "`mfe-shell` icinde once `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasindaki `Text` import ve JSX kullanimini incele.",
+            "`Text` icin ozellikle `preset, variant, wrap, truncate / clampLines` alanlarinda backward-compat review yap.",
+            "Preview/regression turunda `contrast ve readability, clamp/truncate overflow` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
+            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
+          ],
+          "manualChecklistRef": "text-minor-single-app-review",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+            "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "recipeId": "themepreviewcard-mfe-shell-upgrade",
+          "component": "ThemePreviewCard",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPreviewPanel.tsx"
+          ],
+          "importStatement": "import { ThemePreviewCard } from 'mfe-ui-kit';",
+          "apiFocusProps": [
+            "selected",
+            "className"
+          ],
+          "previewFocus": [
+            "selected preset emphasis",
+            "compact token preview card",
+            "gallery embedding"
+          ],
+          "regressionFocus": [
+            "selected border/check parity",
+            "hover emphasis",
+            "preview skeleton rendering"
+          ],
+          "automation": {
+            "mode": "dry-run-audit",
+            "status": "candidate",
+            "strategyId": "theme-preview-card-audit",
+            "auditScript": "audit:ui-library-upgrade-recipes",
+            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
+            "targetFileCount": 2,
+            "autoApplyReady": false,
+            "confidence": "medium"
+          },
+          "steps": [
+            "`mfe-shell` icinde once `web/apps/mfe-shell/src/app/ShellApp.ui.tsx` dosyasindaki `ThemePreviewCard` import ve JSX kullanimini incele.",
+            "`ThemePreviewCard` icin ozellikle `selected, className` alanlarinda backward-compat review yap.",
+            "Preview/regression turunda `selected border/check parity, hover emphasis` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
+            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
+          ],
+          "manualChecklistRef": "themepreviewcard-minor-single-app-review",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPreviewPanel.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        }
+      ],
+      "rules": [
+        "Single-app backlog icin recipe satiri component, owner ve target file ile birlikte uretilir.",
+        "Dry-run audit candidate'i recipe artefact'inin parcasi olarak release manifest'e baglanir.",
+        "Actual write/codemod uygulamasi bu fazda otomatik yapilmaz; recipe ve audit sonucu onay girdisi uretir."
+      ],
+      "evidenceRefs": [
+        "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+      ]
+    },
+    "codemodCandidates": {
+      "contractId": "ui-library-consumer-codemod-candidates-contract-v1",
+      "contractPath": "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json",
+      "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.v1.json",
+      "auditArtifactPath": "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.audit.v1.json",
+      "auditScript": "audit:ui-library-codemod-candidates",
+      "transformEngine": "ts-morph-candidate",
+      "applyPolicy": "manual-approval-required",
+      "summary": {
+        "totalCandidates": 6,
+        "dryRunReadyCandidates": 6,
+        "autoApplyReadyCandidates": 0,
+        "lowRiskCount": 3,
+        "mediumRiskCount": 2,
+        "highRiskCount": 1
+      },
+      "items": [
+        {
+          "candidateId": "reportfilterpanel-mfe-reporting-codemod",
+          "component": "ReportFilterPanel",
+          "consumerApp": "mfe-reporting",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "transformEngine": "ts-morph-candidate",
+          "transformKind": "slot-prop-review",
+          "strategyId": "report-filter-panel-codemod-candidate",
+          "riskLevel": "high",
+          "riskReasons": [
+            "Children slot ve handler ciftleri manuel davranis review'u gerektiriyor.",
+            "Yanlis rewrite submit/reset akisini sessizce bozabilir."
+          ],
+          "blockers": [
+            "Children slot davranisi otomatik transform icin henuz guvenli degil.",
+            "Handler ciftleri icin semantic assertion katmani gerekli."
+          ],
+          "targetFiles": [
+            "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx"
+          ],
+          "estimatedTouchPoints": 1,
+          "dryRunCommand": "audit:ui-library-codemod-candidates",
+          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+          "dryRunScope": {
+            "targetFileCount": 1,
+            "requiredAnySignals": [
+              "submitLabel",
+              "resetLabel",
+              "onSubmit",
+              "onReset"
+            ],
+            "optionalSignals": [
+              "loading",
+              "children"
+            ],
+            "minRequiredMatches": 1,
+            "ownerMapped": true
+          },
+          "matchSelectors": [
+            "import { ReportFilterPanel } from 'mfe-ui-kit'",
+            "<ReportFilterPanel"
+          ],
+          "apiFocusProps": [
+            "children",
+            "loading",
+            "submitLabel / resetLabel",
+            "onSubmit / onReset",
+            "access / accessReason"
+          ],
+          "previewFocus": [
+            "report filter submit flow",
+            "analytics filter reset",
+            "readonly policy panel"
+          ],
+          "regressionFocus": [
+            "submit guard",
+            "reset guard",
+            "child slot wrap"
+          ],
+          "steps": [
+            "`ReportFilterPanel` icin `mfe-reporting` hedefinde `slot-prop-review` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx` dosyasinda `submitLabel, resetLabel, onSubmit` sinyallerini ve import/JSX kullanimini dogrula.",
+            "Risk seviyesi `high` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
+          ],
+          "manualChecklistRef": "reportfilterpanel-minor-single-app-review",
+          "upgradeRecipeRef": "reportfilterpanel-mfe-reporting-upgrade",
+          "applyReady": false,
+          "confidence": "medium",
+          "evidenceRefs": [
+            "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "candidateId": "empty-mfe-shell-codemod",
+          "component": "Empty",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "transformEngine": "ts-morph-candidate",
+          "transformKind": "jsx-prop-normalization",
+          "strategyId": "empty-state-prop-codemod-candidate",
+          "riskLevel": "low",
+          "riskReasons": [
+            "Empty tek dosyada kullaniliyor ve public prop seti dar.",
+            "Description/access kombinasyonu gorunur oldugu icin dry-run tespiti yuksek sinyal uretir."
+          ],
+          "blockers": [
+            "Actual JSX rewrite script'i henuz uretilmedi."
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+          ],
+          "estimatedTouchPoints": 1,
+          "dryRunCommand": "audit:ui-library-codemod-candidates",
+          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+          "dryRunScope": {
+            "targetFileCount": 1,
+            "requiredAnySignals": [
+              "description",
+              "access"
+            ],
+            "optionalSignals": [
+              "accessReason",
+              "className"
+            ],
+            "minRequiredMatches": 1,
+            "ownerMapped": true
+          },
+          "matchSelectors": [
+            "import { Empty } from 'mfe-ui-kit'",
+            "<Empty"
+          ],
+          "apiFocusProps": [
+            "description",
+            "className",
+            "access"
+          ],
+          "previewFocus": [
+            "default empty copy",
+            "custom description",
+            "embedded fallback panel"
+          ],
+          "regressionFocus": [
+            "description fallback parity",
+            "hidden access guard",
+            "layout centering stability"
+          ],
+          "steps": [
+            "`Empty` icin `mfe-shell` hedefinde `jsx-prop-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasinda `description, access` sinyallerini ve import/JSX kullanimini dogrula.",
+            "Risk seviyesi `low` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
+          ],
+          "manualChecklistRef": "empty-minor-single-app-review",
+          "upgradeRecipeRef": "empty-mfe-shell-upgrade",
+          "applyReady": false,
+          "confidence": "medium",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "candidateId": "tag-mfe-shell-codemod",
+          "component": "Tag",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "transformEngine": "ts-morph-candidate",
+          "transformKind": "tone-access-normalization",
+          "strategyId": "tag-tone-codemod-candidate",
+          "riskLevel": "low",
+          "riskReasons": [
+            "Tag kullanimi tek dosyada ve JSX izi net.",
+            "Tone/access prop'lari regex ile kolay ayristiriliyor."
+          ],
+          "blockers": [
+            "Semantic tone map degisirse manuel renk review'u gerekir."
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+          ],
+          "estimatedTouchPoints": 1,
+          "dryRunCommand": "audit:ui-library-codemod-candidates",
+          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+          "dryRunScope": {
+            "targetFileCount": 1,
+            "requiredAnySignals": [
+              "tone",
+              "access"
+            ],
+            "optionalSignals": [
+              "accessReason",
+              "className"
+            ],
+            "minRequiredMatches": 1,
+            "ownerMapped": true
+          },
+          "matchSelectors": [
+            "import { Tag } from 'mfe-ui-kit'",
+            "<Tag"
+          ],
+          "apiFocusProps": [
+            "children",
+            "tone",
+            "className / access"
+          ],
+          "previewFocus": [
+            "semantic status tags",
+            "uppercase compact label",
+            "access-hidden behavior"
+          ],
+          "regressionFocus": [
+            "tone mapping parity",
+            "hidden access guard",
+            "uppercase layout stability"
+          ],
+          "steps": [
+            "`Tag` icin `mfe-shell` hedefinde `tone-access-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasinda `tone, access` sinyallerini ve import/JSX kullanimini dogrula.",
+            "Risk seviyesi `low` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
+          ],
+          "manualChecklistRef": "tag-minor-single-app-review",
+          "upgradeRecipeRef": "tag-mfe-shell-upgrade",
+          "applyReady": false,
+          "confidence": "medium",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "candidateId": "themepreviewcard-mfe-shell-codemod",
+          "component": "ThemePreviewCard",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "transformEngine": "ts-morph-candidate",
+          "transformKind": "selection-state-normalization",
+          "strategyId": "theme-preview-card-codemod-candidate",
+          "riskLevel": "low",
+          "riskReasons": [
+            "Selected state kullanimi net ve hedef dosya sayisi dusuk.",
+            "Preview card state'i Storybook ve Design Lab ile hizali izleniyor."
+          ],
+          "blockers": [
+            "Theme gallery etkileşimi icin owner onayi olmadan auto-apply acilmaz."
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPreviewPanel.tsx"
+          ],
+          "estimatedTouchPoints": 2,
+          "dryRunCommand": "audit:ui-library-codemod-candidates",
+          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+          "dryRunScope": {
+            "targetFileCount": 2,
+            "requiredAnySignals": [
+              "selected"
+            ],
+            "optionalSignals": [
+              "className"
+            ],
+            "minRequiredMatches": 1,
+            "ownerMapped": true
+          },
+          "matchSelectors": [
+            "import { ThemePreviewCard } from 'mfe-ui-kit'",
+            "<ThemePreviewCard"
+          ],
+          "apiFocusProps": [
+            "selected",
+            "className"
+          ],
+          "previewFocus": [
+            "selected preset emphasis",
+            "compact token preview card",
+            "gallery embedding"
+          ],
+          "regressionFocus": [
+            "selected border/check parity",
+            "hover emphasis",
+            "preview skeleton rendering"
+          ],
+          "steps": [
+            "`ThemePreviewCard` icin `mfe-shell` hedefinde `selection-state-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/mfe-shell/src/app/ShellApp.ui.tsx` dosyasinda `selected` sinyallerini ve import/JSX kullanimini dogrula.",
+            "Risk seviyesi `low` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
+          ],
+          "manualChecklistRef": "themepreviewcard-minor-single-app-review",
+          "upgradeRecipeRef": "themepreviewcard-mfe-shell-upgrade",
+          "applyReady": false,
+          "confidence": "medium",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPreviewPanel.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "candidateId": "select-mfe-shell-codemod",
+          "component": "Select",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "transformEngine": "ts-morph-candidate",
+          "transformKind": "options-prop-normalization",
+          "strategyId": "select-options-codemod-candidate",
+          "riskLevel": "medium",
+          "riskReasons": [
+            "Options ve access davranisi birlikte degisirse etkileşim akisi etkilenir.",
+            "Controlled selection callback'leri manuel smoke ister."
+          ],
+          "blockers": [
+            "Event payload rewrite'i icin ayrik test harness gerekiyor."
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx"
+          ],
+          "estimatedTouchPoints": 1,
+          "dryRunCommand": "audit:ui-library-codemod-candidates",
+          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+          "dryRunScope": {
+            "targetFileCount": 1,
+            "requiredAnySignals": [
+              "options",
+              "placeholder"
+            ],
+            "optionalSignals": [
+              "access",
+              "accessReason",
+              "onChange"
+            ],
+            "minRequiredMatches": 1,
+            "ownerMapped": true
+          },
+          "matchSelectors": [
+            "import { Select } from 'mfe-ui-kit'",
+            "<Select"
+          ],
+          "apiFocusProps": [
+            "value / onChange",
+            "options",
+            "placeholder",
+            "disabled / access / accessReason"
+          ],
+          "previewFocus": [
+            "controlled selection",
+            "placeholder-first flow",
+            "readonly and disabled states"
+          ],
+          "regressionFocus": [
+            "onChange access guard",
+            "placeholder option parity",
+            "option disabled semantics"
+          ],
+          "steps": [
+            "`Select` icin `mfe-shell` hedefinde `options-prop-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasinda `options, placeholder` sinyallerini ve import/JSX kullanimini dogrula.",
+            "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
+          ],
+          "manualChecklistRef": "select-minor-single-app-review",
+          "upgradeRecipeRef": "select-mfe-shell-upgrade",
+          "applyReady": false,
+          "confidence": "medium",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
+          "candidateId": "text-mfe-shell-codemod",
+          "component": "Text",
+          "consumerApp": "mfe-shell",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "transformEngine": "ts-morph-candidate",
+          "transformKind": "typography-prop-normalization",
+          "strategyId": "text-typography-codemod-candidate",
+          "riskLevel": "medium",
+          "riskReasons": [
+            "Birden fazla hedef dosyada typography semantic'i korunmali.",
+            "Clamp/truncate davranisi layout regressions uretebilir."
+          ],
+          "blockers": [
+            "Typography rewrite'i icin visual diff olmadan auto-apply acilmamali."
+          ],
+          "targetFiles": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+            "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
+          ],
+          "estimatedTouchPoints": 3,
+          "dryRunCommand": "audit:ui-library-codemod-candidates",
+          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+          "dryRunScope": {
+            "targetFileCount": 3,
+            "requiredAnySignals": [
+              "variant",
+              "preset"
+            ],
+            "optionalSignals": [
+              "truncate",
+              "clampLines",
+              "wrap",
+              "align",
+              "tabularNums"
+            ],
+            "minRequiredMatches": 1,
+            "ownerMapped": true
+          },
+          "matchSelectors": [
+            "import { Text } from 'mfe-ui-kit'",
+            "<Text"
+          ],
+          "apiFocusProps": [
+            "preset",
+            "variant",
+            "wrap",
+            "truncate / clampLines",
+            "align"
+          ],
+          "previewFocus": [
+            "semantic scale",
+            "tone ve emphasis",
+            "pretty wrap + tabular nums"
+          ],
+          "regressionFocus": [
+            "contrast ve readability",
+            "clamp/truncate overflow",
+            "theme axis gecislerinde semantic typography"
+          ],
+          "steps": [
+            "`Text` icin `mfe-shell` hedefinde `typography-prop-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx` dosyasinda `variant, preset` sinyallerini ve import/JSX kullanimini dogrula.",
+            "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
+          ],
+          "manualChecklistRef": "text-minor-single-app-review",
+          "upgradeRecipeRef": "text-mfe-shell-upgrade",
+          "applyReady": false,
+          "confidence": "medium",
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+            "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        }
+      ],
+      "rules": [
+        "Codemod candidate artefact'i yalniz single-app blast radius backlog'undan turetilir; cross-app surface otomatik rewrite backlog'una alinmaz.",
+        "Her candidate transformKind, riskLevel, dry-run scope ve target file listesi tasir; soyut fikir kaydi olarak kalmaz.",
+        "Dry-run audit PASS olmadan candidate release manifest icinde 'latestAudit' ile senkron sayilmaz.",
+        "Auto-apply false varsayilanidir; actual rewrite script'i ayri onay ve ayri delivery turu ister."
+      ],
+      "evidenceRefs": [
+        "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+        "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
       ]
     },
     "semverGuidance": {

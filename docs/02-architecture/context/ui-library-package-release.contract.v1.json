@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "subject_id": "ui_kutuphane_sistemi",
+  "status": "ACTIVE",
+  "package_name": "mfe-ui-kit",
+  "package_manifest_path": "web/packages/ui-kit/package.json",
+  "release_manifest_path": "web/dist/ui-kit/ui-library-release-manifest.v1.json",
+  "release_summary_path": "web/test-results/releases/ui-library/latest/ui-library-release.summary.v1.json",
+  "consumer_upgrade_contract_path": "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json",
+  "consumer_owner_registry_path": "docs/02-architecture/context/ui-library-consumer-owner-registry.v1.json",
+  "consumer_upgrade_recipes_contract_path": "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json",
+  "consumer_codemod_candidates_contract_path": "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json",
+  "visual_review_contract_path": "docs/02-architecture/context/ui-library-visual-review.contract.v1.json",
+  "upgrade_checklist_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+  "upgrade_recipes_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+  "upgrade_recipes_audit_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.audit.v1.json",
+  "codemod_candidates_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.v1.json",
+  "codemod_candidates_audit_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.audit.v1.json",
+  "release_notes_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-release-notes.v1.md",
+  "changelog_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-changelog.v1.md",
+  "package_dist_root": "web/packages/dist/ui-kit",
+  "publish_dist_root": "web/dist/ui-kit",
+  "required_scripts": [
+    "build:ui-kit",
+    "build-storybook",
+    "chromatic",
+    "publish:bundle",
+    "release:ui-library:manifest",
+    "audit:ui-library-upgrade-recipes",
+    "audit:ui-library-codemod-candidates",
+    "gate:ui-library-visual",
+    "doctor:frontend",
+    "gate:ui-library-wave",
+    "gate:ui-library-release",
+    "release:ui-library"
+  ],
+  "module_federation": {
+    "remote_name": "mfe_ui_kit",
+    "required_exposes": [
+      "./library",
+      "./Button"
+    ]
+  }
+}

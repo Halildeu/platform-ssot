@@ -79,8 +79,8 @@ Detaylı rehberler:
 - Legacy FE mimari rehberi:  
   - `web/docs/architecture/frontend/frontend-project-layout.md`  
 - Yeni docs sistemiyle ilgili ana referanslar:  
-  - `docs/00-handbook/WEB-PROJECT-LAYOUT.md`  
-  - `docs/00-handbook/STYLE-WEB-001.md`  
-  - `docs/00-handbook/DOCS-PROJECT-LAYOUT.md`  
+  - `WEB-PROJECT-LAYOUT.md`  
+  - `STYLE-WEB-001.md`  
+  - `DOCS-PROJECT-LAYOUT.md`  
   - `docs/03-delivery/PROJECT-FLOW.md`  
   - `docs/03-delivery/guides/GUIDE-0003-fe-docs-migration-guide.md`  
