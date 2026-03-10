@@ -8,6 +8,7 @@ type KeycloakConfig = {
   clientId: string;
   appPublicOrigin: string;
   silentCheckSsoRedirectUri: string;
+  enableSilentCheckSso: boolean;
 };
 
 type FakeAuthProfile = Pick<UserProfile, 'email' | 'fullName' | 'displayName' | 'role' | 'permissions'>;
@@ -60,6 +61,9 @@ const LOCAL_ALLOWED_APP_ORIGINS = new Set([
 ]);
 
 const normalizeOrigin = (value: string): string => value.trim().replace(/\/+$/, '');
+
+const isLocalAppOrigin = (origin: string): boolean =>
+  origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:');
 
 const resolveAppPublicOrigin = (): string => {
   const fromEnv =
@@ -116,7 +120,22 @@ const resolveSilentCheckUri = (): string => {
   return `${resolveAppPublicOrigin()}/silent-check-sso.html`;
 };
 
+const resolveSilentCheckEnabled = (appPublicOrigin: string): boolean => {
+  const fromEnv =
+    getEnvValue('VITE_KEYCLOAK_ENABLE_SILENT_CHECK_SSO') ??
+    getEnvValue('KEYCLOAK_ENABLE_SILENT_CHECK_SSO');
+  if (typeof fromEnv === 'string' && fromEnv.trim().length > 0) {
+    return parseBoolean(fromEnv);
+  }
+  // Local development oturumu zaten token/user snapshot'i ile restore ediliyor.
+  // check-sso localde gereksiz iframe warning'i urettigi icin default'u kapali
+  // tutuyoruz; ihtiyac halinde env ile tekrar acilabilir.
+  return !isLocalAppOrigin(appPublicOrigin);
+};
+
 const authMode = resolveAuthMode();
+
+const appPublicOrigin = resolveAppPublicOrigin();
 
 const keycloakConfig: KeycloakConfig = {
   url:
@@ -131,8 +150,9 @@ const keycloakConfig: KeycloakConfig = {
     getEnvValue('VITE_KEYCLOAK_CLIENT_ID') ??
     getEnvValue('KEYCLOAK_CLIENT_ID') ??
     'frontend',
-  appPublicOrigin: resolveAppPublicOrigin(),
+  appPublicOrigin,
   silentCheckSsoRedirectUri: resolveSilentCheckUri(),
+  enableSilentCheckSso: resolveSilentCheckEnabled(appPublicOrigin),
 };
 
 const fakeProfile: FakeAuthProfile = {
