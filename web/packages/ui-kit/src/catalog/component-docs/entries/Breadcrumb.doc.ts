@@ -5,19 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Breadcrumb",
   "kind": "component",
-  "importStatement": "import { Breadcrumb } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "navigation",
-  "subgroup": "breadcrumb",
-  "tags": [
-    "navigation",
-    "stable",
-    "wave-2"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "navigation",
+  "subgroup": "breadcrumb",
   "taxonomyGroupId": "navigation",
   "taxonomySubgroup": "Breadcrumb",
   "demoMode": "live",
@@ -34,10 +25,19 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-2",
+    "navigation",
+    "stable"
+  ],
   "uxPrimaryThemeId": "navigation_information_scent",
   "uxPrimarySubthemeId": "domain_based_information_architecture",
   "roadmapWaveId": "wave_2_navigation",
-  "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+  "acceptanceContractId": "ui-library-wave-2-navigation-v1",
+  "importStatement": "import { Breadcrumb } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Breadcrumb",

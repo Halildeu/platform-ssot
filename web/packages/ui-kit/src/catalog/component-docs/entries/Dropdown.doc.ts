@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Dropdown",
   "kind": "component",
-  "importStatement": "import { Dropdown } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "forms",
-  "subgroup": "dropdown",
-  "tags": [
-    "menu",
-    "overlay",
-    "stable",
-    "wave-5"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "forms",
+  "subgroup": "dropdown",
   "taxonomyGroupId": "data_entry",
   "taxonomySubgroup": "Select / Dropdown / Combobox",
   "demoMode": "live",
@@ -38,7 +28,17 @@ const entry: DesignLabComponentDocEntry = {
   "uxPrimaryThemeId": "navigation_information_scent",
   "uxPrimarySubthemeId": "contextual_quick_actions",
   "roadmapWaveId": "wave_5_overlay",
-  "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+  "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+  "tags": [
+    "wave-5",
+    "overlay",
+    "stable",
+    "menu"
+  ],
+  "importStatement": "import { Dropdown } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Dropdown",

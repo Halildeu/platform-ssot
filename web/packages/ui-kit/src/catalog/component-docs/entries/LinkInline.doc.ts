@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "LinkInline",
   "kind": "component",
-  "importStatement": "import { LinkInline } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "content",
-  "subgroup": "link",
-  "tags": [
-    "beta",
-    "foundation-primitives",
-    "link",
-    "wave-1"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "content",
+  "subgroup": "link",
   "taxonomyGroupId": "general",
   "taxonomySubgroup": "Link",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-1",
+    "foundation-primitives",
+    "beta",
+    "link"
+  ],
   "uxPrimaryThemeId": "navigation_information_scent",
   "uxPrimarySubthemeId": "orientation_and_wayfinding",
   "roadmapWaveId": "wave_1_foundation_primitives",
-  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1",
+  "importStatement": "import { LinkInline } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "LinkInline",

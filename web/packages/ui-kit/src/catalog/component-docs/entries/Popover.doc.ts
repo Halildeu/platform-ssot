@@ -5,21 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Popover",
   "kind": "component",
-  "importStatement": "import { Popover } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "overlays",
-  "subgroup": "popover",
-  "tags": [
-    "beta",
-    "guidance",
-    "overlay",
-    "popover",
-    "wave-5"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "overlays",
+  "subgroup": "popover",
   "taxonomyGroupId": "overlays_portals",
   "taxonomySubgroup": "Popover",
   "demoMode": "live",
@@ -39,7 +28,18 @@ const entry: DesignLabComponentDocEntry = {
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "actionable_error_messages",
   "roadmapWaveId": "wave_5_overlay",
-  "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+  "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+  "tags": [
+    "wave-5",
+    "overlay",
+    "beta",
+    "popover",
+    "guidance"
+  ],
+  "importStatement": "import { Popover } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Popover",

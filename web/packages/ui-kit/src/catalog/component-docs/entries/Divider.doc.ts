@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Divider",
   "kind": "component",
-  "importStatement": "import { Divider } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "content",
-  "subgroup": "divider",
-  "tags": [
-    "beta",
-    "divider",
-    "foundation-primitives",
-    "wave-1"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "content",
+  "subgroup": "divider",
   "taxonomyGroupId": "general",
   "taxonomySubgroup": "Divider",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-1",
+    "foundation-primitives",
+    "beta",
+    "divider"
+  ],
   "uxPrimaryThemeId": "consistency_and_pattern_governance",
   "uxPrimarySubthemeId": "behavior_contracts_across_modules",
   "roadmapWaveId": "wave_1_foundation_primitives",
-  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1",
+  "importStatement": "import { Divider } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Divider",

@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "EmptyErrorLoading",
   "kind": "component",
-  "importStatement": "import { EmptyErrorLoading } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "feedback",
-  "subgroup": "state_recipes",
-  "tags": [
-    "recipes",
-    "stable",
-    "state-feedback",
-    "wave-11"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "feedback",
+  "subgroup": "state_recipes",
   "taxonomyGroupId": "feedback",
   "taxonomySubgroup": "Empty / Error / Loading recipes",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-11",
+    "recipes",
+    "stable",
+    "state-feedback"
+  ],
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "loading_empty_error_success_patterns",
   "roadmapWaveId": "wave_11_recipes",
-  "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+  "acceptanceContractId": "ui-library-wave-11-recipes-v1",
+  "importStatement": "import { EmptyErrorLoading } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "EmptyErrorLoading",

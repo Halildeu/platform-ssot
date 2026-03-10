@@ -5,21 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "EntitySummaryBlock",
   "kind": "component",
-  "importStatement": "import { EntitySummaryBlock } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "page_blocks",
-  "subgroup": "summary",
-  "tags": [
-    "beta",
-    "entity",
-    "page-blocks",
-    "summary",
-    "wave-7"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "page_blocks",
+  "subgroup": "summary",
   "taxonomyGroupId": "page_blocks",
   "taxonomySubgroup": "Summary Blocks",
   "demoMode": "live",
@@ -36,10 +25,21 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "doctor_frontend_evidence"
   ],
+  "tags": [
+    "wave-7",
+    "page-blocks",
+    "beta",
+    "summary",
+    "entity"
+  ],
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
   "roadmapWaveId": "wave_7_page_blocks",
-  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1",
+  "importStatement": "import { EntitySummaryBlock } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "EntitySummaryBlock",

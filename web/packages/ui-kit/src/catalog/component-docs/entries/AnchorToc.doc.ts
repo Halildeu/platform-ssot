@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "AnchorToc",
   "kind": "component",
-  "importStatement": "import { AnchorToc } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "navigation",
-  "subgroup": "anchor-toc",
-  "tags": [
-    "beta",
-    "contextual-navigation",
-    "navigation",
-    "wave-2"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "navigation",
+  "subgroup": "anchor-toc",
   "taxonomyGroupId": "navigation",
   "taxonomySubgroup": "Anchor / Table of contents",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-2",
+    "navigation",
+    "beta",
+    "contextual-navigation"
+  ],
   "uxPrimaryThemeId": "navigation_information_scent",
   "uxPrimarySubthemeId": "deep_link_and_shareable_state",
   "roadmapWaveId": "wave_2_navigation",
-  "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+  "acceptanceContractId": "ui-library-wave-2-navigation-v1",
+  "importStatement": "import { AnchorToc } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "AnchorToc",

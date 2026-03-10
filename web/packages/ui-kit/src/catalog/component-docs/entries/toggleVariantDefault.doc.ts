@@ -5,13 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "toggleVariantDefault",
   "kind": "function",
-  "importStatement": "import { toggleVariantDefault } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "data-grid",
-  "subgroup": "variants",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "data-grid",
+  "subgroup": "variants",
   "taxonomyGroupId": "runtime_utilities",
   "taxonomySubgroup": "Feature flags",
   "demoMode": "inspector",
@@ -24,12 +21,47 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { toggleVariantDefault } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "toggleVariantDefault",
+  "variantAxes": [
+    "variant-scope: personal | global",
+    "default-state: on | off",
+    "persistence-path: updateVariant | updatePreference"
+  ],
+  "stateModel": [
+    "personal variant update path",
+    "global preference update path",
+    "selected/default coupling for global variants"
+  ],
+  "props": [
+    {
+      "name": "variant / makeDefault",
+      "type": "GridVariant / boolean",
+      "default": "- / false",
+      "required": true,
+      "description": "Hangi varyantin varsayilan yapilacagini ve hedef state'i tanimlar."
+    },
+    {
+      "name": "deps.updateVariant / deps.updatePreference",
+      "type": "(payload) => Promise<GridVariant>",
+      "default": "-",
+      "required": true,
+      "description": "Personal varyantlarda updateVariant, global varyantlarda updatePreference akisini cagirir."
+    }
+  ],
+  "previewFocus": [
+    "personal default toggle",
+    "global preference toggle"
+  ],
+  "regressionFocus": [
+    "personal/global branch parity",
+    "gridId forwarding for personal variants",
+    "isSelected coupling for global variants"
+  ]
+},
 };
 
 export default entry;

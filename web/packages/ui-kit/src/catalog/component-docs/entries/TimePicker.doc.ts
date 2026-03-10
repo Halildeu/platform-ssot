@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "TimePicker",
   "kind": "component",
-  "importStatement": "import { TimePicker } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "forms",
-  "subgroup": "inputs",
-  "tags": [
-    "beta",
-    "forms",
-    "time-entry",
-    "wave-3"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "forms",
+  "subgroup": "inputs",
   "taxonomyGroupId": "data_entry",
   "taxonomySubgroup": "Date / Time pickers",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-3",
+    "forms",
+    "beta",
+    "time-entry"
+  ],
   "uxPrimaryThemeId": "task_completion_architecture",
   "uxPrimarySubthemeId": "cross_step_context_persistence",
   "roadmapWaveId": "wave_3_forms",
-  "acceptanceContractId": "ui-library-wave-3-forms-v1"
+  "acceptanceContractId": "ui-library-wave-3-forms-v1",
+  "importStatement": "import { TimePicker } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "TimePicker",

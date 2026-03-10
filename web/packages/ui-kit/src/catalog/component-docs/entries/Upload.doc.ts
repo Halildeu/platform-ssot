@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Upload",
   "kind": "component",
-  "importStatement": "import { Upload } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "forms",
-  "subgroup": "inputs",
-  "tags": [
-    "beta",
-    "file-entry",
-    "forms",
-    "wave-3"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "forms",
+  "subgroup": "inputs",
   "taxonomyGroupId": "data_entry",
   "taxonomySubgroup": "Upload / File picker",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-3",
+    "forms",
+    "beta",
+    "file-entry"
+  ],
   "uxPrimaryThemeId": "data_entry_validation_recovery",
   "uxPrimarySubthemeId": "dependency_aware_form_guidance",
   "roadmapWaveId": "wave_3_forms",
-  "acceptanceContractId": "ui-library-wave-3-forms-v1"
+  "acceptanceContractId": "ui-library-wave-3-forms-v1",
+  "importStatement": "import { Upload } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Upload",

@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Steps",
   "kind": "component",
-  "importStatement": "import { Steps } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "navigation",
-  "subgroup": "steps",
-  "tags": [
-    "beta",
-    "navigation",
-    "progress",
-    "wave-2"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "navigation",
+  "subgroup": "steps",
   "taxonomyGroupId": "navigation",
   "taxonomySubgroup": "Steps",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-2",
+    "navigation",
+    "beta",
+    "progress"
+  ],
   "uxPrimaryThemeId": "data_entry_validation_recovery",
   "uxPrimarySubthemeId": "multi_step_wizard_progress",
   "roadmapWaveId": "wave_2_navigation",
-  "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+  "acceptanceContractId": "ui-library-wave-2-navigation-v1",
+  "importStatement": "import { Steps } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Steps",

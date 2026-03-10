@@ -5,17 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "getThemeAxes",
   "kind": "function",
-  "importStatement": "import { getThemeAxes } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-  ],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Token viewer (semantic/raw)",
   "demoMode": "inspector",
@@ -28,12 +21,42 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { getThemeAxes } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+  ]
 },
-  apiItem: null,
+  apiItem: {
+  "name": "getThemeAxes",
+  "variantAxes": [
+    "snapshot: default | persisted",
+    "consumer: shell | entity-grid",
+    "read-timing: initial | after-update"
+  ],
+  "stateModel": [
+    "current theme axes snapshot",
+    "localStorage hydration result",
+    "overlay clamp persistence"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "() => ThemeAxes",
+      "default": "-",
+      "required": false,
+      "description": "Runtime icindeki aktif theme axes snapshot'ini senkron olarak dondurur."
+    }
+  ],
+  "previewFocus": [
+    "shell theme snapshot read",
+    "entity grid runtime binding"
+  ],
+  "regressionFocus": [
+    "default axes fallback",
+    "persisted axes hydration",
+    "post-update snapshot parity"
+  ]
+},
 };
 
 export default entry;

@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Slider",
   "kind": "component",
-  "importStatement": "import { Slider } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "forms",
-  "subgroup": "inputs",
-  "tags": [
-    "beta",
-    "forms",
-    "range-entry",
-    "wave-3"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "forms",
+  "subgroup": "inputs",
   "taxonomyGroupId": "data_entry",
   "taxonomySubgroup": "Slider",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-3",
+    "forms",
+    "beta",
+    "range-entry"
+  ],
   "uxPrimaryThemeId": "personalization_and_adaptive_productivity",
   "uxPrimarySubthemeId": "adaptive_density_layout_preferences",
   "roadmapWaveId": "wave_3_forms",
-  "acceptanceContractId": "ui-library-wave-3-forms-v1"
+  "acceptanceContractId": "ui-library-wave-3-forms-v1",
+  "importStatement": "import { Slider } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Slider",

@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "ThemePresetCompare",
   "kind": "component",
-  "importStatement": "import { ThemePresetCompare } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "theme",
-  "subgroup": "preset_compare",
-  "tags": [
-    "compare",
-    "stable",
-    "theme-presets",
-    "wave-10"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "theme",
+  "subgroup": "preset_compare",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme preset comparison",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-10",
+    "theme-presets",
+    "stable",
+    "compare"
+  ],
   "uxPrimaryThemeId": "accessibility_and_inclusive_design",
   "uxPrimarySubthemeId": "contrast_typography_readability",
   "roadmapWaveId": "wave_10_theme_presets",
-  "acceptanceContractId": "ui-library-wave-10-theme-presets-v1"
+  "acceptanceContractId": "ui-library-wave-10-theme-presets-v1",
+  "importStatement": "import { ThemePresetCompare } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "ThemePresetCompare",

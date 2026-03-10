@@ -5,24 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "DetailDrawer",
   "kind": "component",
-  "importStatement": "import { DetailDrawer } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
-    "web/apps/mfe-audit/src/app/components/AuditDetailDrawer.tsx",
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-    "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx"
-  ],
-  "group": "overlays",
-  "subgroup": "drawers",
-  "tags": [
-    "detail",
-    "drawer",
-    "overlay",
-    "stable",
-    "wave-5"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "overlays",
+  "subgroup": "drawers",
   "taxonomyGroupId": "overlays_portals",
   "taxonomySubgroup": "Drawer / Side panel",
   "demoMode": "live",
@@ -42,7 +28,21 @@ const entry: DesignLabComponentDocEntry = {
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
   "roadmapWaveId": "wave_5_overlay",
-  "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+  "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+  "tags": [
+    "wave-5",
+    "overlay",
+    "stable",
+    "drawer",
+    "detail"
+  ],
+  "importStatement": "import { DetailDrawer } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-access/src/widgets/access-management/ui/AccessRoleDrawer.ui.tsx",
+    "web/apps/mfe-audit/src/app/components/AuditDetailDrawer.tsx",
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "web/apps/mfe-users/src/widgets/user-management/ui/UserDetailDrawer.ui.tsx"
+  ]
 },
   apiItem: {
   "name": "DetailDrawer",

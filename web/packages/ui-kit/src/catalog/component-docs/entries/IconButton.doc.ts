@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "IconButton",
   "kind": "component",
-  "importStatement": "import { IconButton } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "actions",
-  "subgroup": "buttons",
-  "tags": [
-    "beta",
-    "foundation-primitives",
-    "icon-button",
-    "wave-1"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "actions",
+  "subgroup": "buttons",
   "taxonomyGroupId": "actions",
   "taxonomySubgroup": "Icon button",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-1",
+    "foundation-primitives",
+    "beta",
+    "icon-button"
+  ],
   "uxPrimaryThemeId": "task_completion_architecture",
   "uxPrimarySubthemeId": "critical_path_minimization",
   "roadmapWaveId": "wave_1_foundation_primitives",
-  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1",
+  "importStatement": "import { IconButton } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "IconButton",

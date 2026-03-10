@@ -5,13 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "buildAuthHeaders",
   "kind": "function",
-  "importStatement": "import { buildAuthHeaders } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "runtime",
-  "subgroup": "auth",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "runtime",
+  "subgroup": "auth",
   "taxonomyGroupId": "runtime_utilities",
   "taxonomySubgroup": "HTTP helpers",
   "demoMode": "inspector",
@@ -24,12 +21,40 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { buildAuthHeaders } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "buildAuthHeaders",
+  "variantAxes": [
+    "resolver-state: token | null",
+    "consumer: fetch | datasource | mutation",
+    "header-output: empty | authorization"
+  ],
+  "stateModel": [
+    "resolved token read",
+    "authorization header emission",
+    "empty object fallback"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "() => Record<string, string>",
+      "default": "-",
+      "required": false,
+      "description": "Kayitli token resolver sonucuna gore Authorization header nesnesi uretir; token yoksa bos obje dondurur."
+    }
+  ],
+  "previewFocus": [
+    "authorized request helper",
+    "empty-header fallback"
+  ],
+  "regressionFocus": [
+    "token present vs missing parity",
+    "bearer prefix correctness",
+    "safe empty object fallback"
+  ]
+},
 };
 
 export default entry;

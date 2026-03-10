@@ -5,21 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "SummaryStrip",
   "kind": "component",
-  "importStatement": "import { SummaryStrip } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "page_blocks",
-  "subgroup": "summary",
-  "tags": [
-    "beta",
-    "kpi",
-    "page-blocks",
-    "summary",
-    "wave-7"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "page_blocks",
+  "subgroup": "summary",
   "taxonomyGroupId": "page_blocks",
   "taxonomySubgroup": "Summary Blocks",
   "demoMode": "live",
@@ -36,10 +25,21 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "doctor_frontend_evidence"
   ],
+  "tags": [
+    "wave-7",
+    "page-blocks",
+    "beta",
+    "summary",
+    "kpi"
+  ],
   "uxPrimaryThemeId": "measurement_kpi_and_experimentation",
   "uxPrimarySubthemeId": "task_completion_time_p50_p95",
   "roadmapWaveId": "wave_7_page_blocks",
-  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1",
+  "importStatement": "import { SummaryStrip } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "SummaryStrip",

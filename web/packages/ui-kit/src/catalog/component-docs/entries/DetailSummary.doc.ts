@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "DetailSummary",
   "kind": "component",
-  "importStatement": "import { DetailSummary } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "page_blocks",
-  "subgroup": "recipes",
-  "tags": [
-    "detail",
-    "recipes",
-    "stable",
-    "wave-11"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "page_blocks",
+  "subgroup": "recipes",
   "taxonomyGroupId": "data_display",
   "taxonomySubgroup": "Detail summary / inspector",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-11",
+    "recipes",
+    "stable",
+    "detail"
+  ],
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
   "roadmapWaveId": "wave_11_recipes",
-  "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+  "acceptanceContractId": "ui-library-wave-11-recipes-v1",
+  "importStatement": "import { DetailSummary } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "DetailSummary",

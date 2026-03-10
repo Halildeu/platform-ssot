@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "ThemePresetGallery",
   "kind": "component",
-  "importStatement": "import { ThemePresetGallery } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "theme",
-  "subgroup": "preset_gallery",
-  "tags": [
-    "gallery",
-    "stable",
-    "theme-presets",
-    "wave-10"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "theme",
+  "subgroup": "preset_gallery",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme preset gallery",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-10",
+    "theme-presets",
+    "stable",
+    "gallery"
+  ],
   "uxPrimaryThemeId": "theming_customization",
   "uxPrimarySubthemeId": "mode_density_personalization",
   "roadmapWaveId": "wave_10_theme_presets",
-  "acceptanceContractId": "ui-library-wave-10-theme-presets-v1"
+  "acceptanceContractId": "ui-library-wave-10-theme-presets-v1",
+  "importStatement": "import { ThemePresetGallery } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "ThemePresetGallery",

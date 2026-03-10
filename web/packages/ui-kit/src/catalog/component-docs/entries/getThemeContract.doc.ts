@@ -5,16 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "getThemeContract",
   "kind": "function",
-  "importStatement": "import { getThemeContract } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
-    "web/apps/mfe-shell/src/features/theme/theme-matrix.constants.ts"
-  ],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Token viewer (semantic/raw)",
   "demoMode": "inspector",
@@ -27,12 +21,43 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { getThemeContract } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
+    "web/apps/mfe-shell/src/features/theme/theme-matrix.constants.ts"
+  ]
 },
-  apiItem: null,
+  apiItem: {
+  "name": "getThemeContract",
+  "variantAxes": [
+    "payload: generated-contract",
+    "mode-set: default-only | allowed-modes",
+    "consumer: runtime | docs"
+  ],
+  "stateModel": [
+    "generated contract access",
+    "allowed modes availability",
+    "coerce rule presence"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "() => ThemeContract",
+      "default": "-",
+      "required": false,
+      "description": "Generated theme contract JSON nesnesini runtime ve docs tuketimi icin dondurur."
+    }
+  ],
+  "previewFocus": [
+    "generated contract read",
+    "allowed mode inspection"
+  ],
+  "regressionFocus": [
+    "generated contract shape",
+    "default mode fallback",
+    "allowed mode exposure"
+  ]
+},
 };
 
 export default entry;

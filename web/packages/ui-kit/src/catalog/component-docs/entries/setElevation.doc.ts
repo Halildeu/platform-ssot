@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "setElevation",
   "kind": "function",
-  "importStatement": "import { setElevation } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
@@ -26,12 +21,39 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { setElevation } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "setElevation",
+  "variantAxes": [
+    "elevation: raised | flat",
+    "consumer: theme editor",
+    "update: single-axis patch"
+  ],
+  "stateModel": [
+    "elevation patch",
+    "DOM attr update",
+    "subscriber notification"
+  ],
+  "props": [
+    {
+      "name": "elevation",
+      "type": "'raised' | 'flat'",
+      "default": "-",
+      "required": true,
+      "description": "Elevation eksenini runtime axes state uzerinden gunceller."
+    }
+  ],
+  "previewFocus": [
+    "elevation switch"
+  ],
+  "regressionFocus": [
+    "elevation patch parity",
+    "DOM attr update",
+    "notify cascade"
+  ]
+},
 };
 
 export default entry;

@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "setMotion",
   "kind": "function",
-  "importStatement": "import { setMotion } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
@@ -26,12 +21,39 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { setMotion } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "setMotion",
+  "variantAxes": [
+    "motion: standard | reduced",
+    "consumer: accessibility-aware theme editor",
+    "update: single-axis patch"
+  ],
+  "stateModel": [
+    "motion patch",
+    "DOM attr update",
+    "subscriber notification"
+  ],
+  "props": [
+    {
+      "name": "motion",
+      "type": "'standard' | 'reduced'",
+      "default": "-",
+      "required": true,
+      "description": "Motion eksenini runtime axes state uzerinden gunceller."
+    }
+  ],
+  "previewFocus": [
+    "motion preference switch"
+  ],
+  "regressionFocus": [
+    "motion patch parity",
+    "DOM attr update",
+    "notify cascade"
+  ]
+},
 };
 
 export default entry;

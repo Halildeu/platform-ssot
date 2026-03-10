@@ -5,13 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "registerTokenResolver",
   "kind": "function",
-  "importStatement": "import { registerTokenResolver } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "runtime",
-  "subgroup": "auth",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "runtime",
+  "subgroup": "auth",
   "taxonomyGroupId": "runtime_utilities",
   "taxonomySubgroup": "HTTP helpers",
   "demoMode": "inspector",
@@ -24,12 +21,39 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { registerTokenResolver } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "registerTokenResolver",
+  "variantAxes": [
+    "resolver: custom | default",
+    "consumer: auth bootstrap | test harness",
+    "effect: runtime resolver swap"
+  ],
+  "stateModel": [
+    "custom resolver registration",
+    "default fallback restore-by-null"
+  ],
+  "props": [
+    {
+      "name": "resolver",
+      "type": "(() => string | null) | null | undefined",
+      "default": "undefined",
+      "required": false,
+      "description": "Runtime icin ozel token resolver kaydeder; null/undefined verilirse default resolver'a duser."
+    }
+  ],
+  "previewFocus": [
+    "custom token resolver bootstrap",
+    "default fallback by null"
+  ],
+  "regressionFocus": [
+    "resolver swap parity",
+    "null/undefined fallback",
+    "subsequent header reads"
+  ]
+},
 };
 
 export default entry;

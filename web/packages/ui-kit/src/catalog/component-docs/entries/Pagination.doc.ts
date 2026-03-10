@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Pagination",
   "kind": "component",
-  "importStatement": "import { Pagination } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "navigation",
-  "subgroup": "pagination",
-  "tags": [
-    "beta",
-    "flow-navigation",
-    "navigation",
-    "wave-2"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "navigation",
+  "subgroup": "pagination",
   "taxonomyGroupId": "navigation",
   "taxonomySubgroup": "Pagination",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-2",
+    "navigation",
+    "beta",
+    "flow-navigation"
+  ],
   "uxPrimaryThemeId": "task_completion_architecture",
   "uxPrimarySubthemeId": "critical_path_minimization",
   "roadmapWaveId": "wave_2_navigation",
-  "acceptanceContractId": "ui-library-wave-2-navigation-v1"
+  "acceptanceContractId": "ui-library-wave-2-navigation-v1",
+  "importStatement": "import { Pagination } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Pagination",

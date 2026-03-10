@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "subscribeThemeAxes",
   "kind": "function",
-  "importStatement": "import { subscribeThemeAxes } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
-  ],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
@@ -26,12 +21,43 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { subscribeThemeAxes } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+  ]
 },
-  apiItem: null,
+  apiItem: {
+  "name": "subscribeThemeAxes",
+  "variantAxes": [
+    "listener: immediate-fire | subsequent-updates",
+    "consumer: shell provider | entity grid",
+    "cleanup: active | unsubscribed"
+  ],
+  "stateModel": [
+    "listener registration",
+    "initial snapshot emit",
+    "unsubscribe cleanup"
+  ],
+  "props": [
+    {
+      "name": "listener",
+      "type": "(axes: ThemeAxes) => void",
+      "default": "-",
+      "required": true,
+      "description": "Aktif theme axes snapshot'ini hemen iletir ve sonraki degisimlerde dinleyiciyi bilgilendirir."
+    }
+  ],
+  "previewFocus": [
+    "provider subscription",
+    "immediate snapshot callback",
+    "unsubscribe lifecycle"
+  ],
+  "regressionFocus": [
+    "initial callback parity",
+    "unsubscribe cleanup",
+    "listener notification order"
+  ]
+},
 };
 
 export default entry;

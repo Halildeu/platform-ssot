@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "THEME_MOTION_OPTIONS",
   "kind": "const",
-  "importStatement": "import { THEME_MOTION_OPTIONS } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "options",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "options",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Density / radius / motion presets",
   "demoMode": "inspector",
@@ -26,12 +21,36 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { THEME_MOTION_OPTIONS } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "THEME_MOTION_OPTIONS",
+  "variantAxes": [
+    "motion: standard | reduced",
+    "source: static-array",
+    "consumer: accessibility-aware theme editor"
+  ],
+  "stateModel": [
+    "static motion option exposure"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "ThemeMotion[]",
+      "default": "-",
+      "required": false,
+      "description": "Motion preference seceneklerini docs ve runtime secicileri icin listeler."
+    }
+  ],
+  "previewFocus": [
+    "motion preference selector"
+  ],
+  "regressionFocus": [
+    "array contents parity",
+    "selector binding stability"
+  ]
+},
 };
 
 export default entry;

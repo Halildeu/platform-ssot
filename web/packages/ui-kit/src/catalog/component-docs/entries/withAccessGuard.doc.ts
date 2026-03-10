@@ -5,13 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "withAccessGuard",
   "kind": "function",
-  "importStatement": "import { withAccessGuard } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "runtime",
-  "subgroup": "access",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "runtime",
+  "subgroup": "access",
   "taxonomyGroupId": "auth_security_ui",
   "taxonomySubgroup": "Permission gates",
   "demoMode": "inspector",
@@ -24,12 +21,55 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { withAccessGuard } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "withAccessGuard",
+  "variantAxes": [
+    "state: full | readonly | disabled",
+    "handler: sync | async | absent",
+    "blocking: native-disabled | policy-guard"
+  ],
+  "stateModel": [
+    "preventDefault + stopPropagation",
+    "handler passthrough",
+    "external disabled precedence"
+  ],
+  "props": [
+    {
+      "name": "state",
+      "type": "AccessLevel",
+      "default": "-",
+      "required": true,
+      "description": "Event handler'in hangi access seviyesinde calisacagini belirler."
+    },
+    {
+      "name": "handler",
+      "type": "(event) => void | Promise<void>",
+      "default": "-",
+      "required": false,
+      "description": "Block edilmedigi durumda cagrilacak asil event handler."
+    },
+    {
+      "name": "externallyDisabled",
+      "type": "boolean",
+      "default": "false",
+      "required": false,
+      "description": "Native disabled veya dis policy override'i oldugunda handler'i ek olarak bloke eder."
+    }
+  ],
+  "previewFocus": [
+    "readonly click guard",
+    "disabled event suppression",
+    "handler passthrough"
+  ],
+  "regressionFocus": [
+    "preventDefault/stopPropagation parity",
+    "async handler passthrough",
+    "external disabled precedence"
+  ]
+},
 };
 
 export default entry;

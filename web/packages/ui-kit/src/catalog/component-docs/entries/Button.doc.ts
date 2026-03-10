@@ -5,26 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Button",
   "kind": "component",
-  "importStatement": "import { Button } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-    "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
-    "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
-    "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
-    "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
-    "web/apps/mfe-shell/src/widgets/app-shell/ui/LoginPopover.ui.tsx",
-    "web/apps/mfe-suggestions/src/App.tsx"
-  ],
-  "group": "actions",
-  "subgroup": "buttons",
-  "tags": [
-    "foundation-primitives",
-    "stable",
-    "wave-1"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "actions",
+  "subgroup": "buttons",
   "taxonomyGroupId": "actions",
   "taxonomySubgroup": "Button",
   "demoMode": "live",
@@ -41,10 +25,25 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-1",
+    "foundation-primitives",
+    "stable"
+  ],
   "uxPrimaryThemeId": "consistency_and_pattern_governance",
   "uxPrimarySubthemeId": "single_component_source_of_truth",
   "roadmapWaveId": "wave_1_foundation_primitives",
-  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1",
+  "importStatement": "import { Button } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "web/apps/mfe-shell/src/pages/login/LoginPage.ui.tsx",
+    "web/apps/mfe-shell/src/pages/register/RegisterPage.ui.tsx",
+    "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
+    "web/apps/mfe-shell/src/widgets/app-shell/ui/LoginPopover.ui.tsx",
+    "web/apps/mfe-suggestions/src/App.tsx"
+  ]
 },
   apiItem: {
   "name": "Button",

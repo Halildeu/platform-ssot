@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "ApprovalCheckpoint",
   "kind": "component",
-  "importStatement": "import { ApprovalCheckpoint } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "ai_helpers",
-  "subgroup": "approval_audit",
-  "tags": [
-    "ai-native-helpers",
-    "approval",
-    "beta",
-    "wave-6"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "ai_helpers",
+  "subgroup": "approval_audit",
   "taxonomyGroupId": "ai_native_helpers",
   "taxonomySubgroup": "Approval / Audit",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-6",
+    "ai-native-helpers",
+    "beta",
+    "approval"
+  ],
   "uxPrimaryThemeId": "ai_assisted_decision_experience",
   "uxPrimarySubthemeId": "human_approval_checkpoints",
   "roadmapWaveId": "wave_6_ai_native_helpers",
-  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1",
+  "importStatement": "import { ApprovalCheckpoint } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "ApprovalCheckpoint",

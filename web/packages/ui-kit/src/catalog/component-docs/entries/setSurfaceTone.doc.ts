@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "setSurfaceTone",
   "kind": "function",
-  "importStatement": "import { setSurfaceTone } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
@@ -26,12 +21,39 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { setSurfaceTone } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "setSurfaceTone",
+  "variantAxes": [
+    "surfaceTone: contract-backed ids",
+    "consumer: theme editor",
+    "update: single-axis patch"
+  ],
+  "stateModel": [
+    "surfaceTone patch",
+    "DOM attr update",
+    "subscriber notification"
+  ],
+  "props": [
+    {
+      "name": "surfaceTone",
+      "type": "string",
+      "default": "-",
+      "required": true,
+      "description": "Theme contract'tan gelen surface tone kimligini runtime axes state uzerinden gunceller."
+    }
+  ],
+  "previewFocus": [
+    "surface tone selector"
+  ],
+  "regressionFocus": [
+    "tone patch parity",
+    "DOM attr update",
+    "notify cascade"
+  ]
+},
 };
 
 export default entry;

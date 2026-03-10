@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "THEME_APPEARANCE_OPTIONS",
   "kind": "const",
-  "importStatement": "import { THEME_APPEARANCE_OPTIONS } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "options",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "options",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Density / radius / motion presets",
   "demoMode": "inspector",
@@ -26,12 +21,40 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { THEME_APPEARANCE_OPTIONS } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "THEME_APPEARANCE_OPTIONS",
+  "variantAxes": [
+    "appearance: light | dark | high-contrast",
+    "source: contract-filtered",
+    "consumer: theme selector | docs"
+  ],
+  "stateModel": [
+    "allowed appearance filtering",
+    "contract alias awareness",
+    "static array exposure"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "ThemeAppearance[]",
+      "default": "-",
+      "required": false,
+      "description": "Theme contract tarafindan izin verilen appearance seceneklerini runtime icin disari acar."
+    }
+  ],
+  "previewFocus": [
+    "theme mode selector options",
+    "contract-filtered appearance set"
+  ],
+  "regressionFocus": [
+    "allowed mode filtering",
+    "high-contrast availability parity",
+    "array ordering stability"
+  ]
+},
 };
 
 export default entry;

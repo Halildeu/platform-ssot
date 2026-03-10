@@ -5,24 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Text",
   "kind": "component",
-  "importStatement": "import { Text } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-    "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-    "web/apps/mfe-shell/src/pages/admin/UiLibrarySidebarLabPage.tsx",
-    "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
-  ],
-  "group": "content",
-  "subgroup": "text",
-  "tags": [
-    "foundation-primitives",
-    "stable",
-    "typography",
-    "wave-1"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "content",
+  "subgroup": "text",
   "taxonomyGroupId": "general",
   "taxonomySubgroup": "Typography",
   "demoMode": "live",
@@ -38,10 +24,23 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-1",
+    "foundation-primitives",
+    "stable",
+    "typography"
+  ],
   "uxPrimaryThemeId": "accessibility_and_inclusive_design",
   "uxPrimarySubthemeId": "contrast_typography_readability",
   "roadmapWaveId": "wave_1_foundation_primitives",
-  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1",
+  "importStatement": "import { Text } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+    "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Text",

@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "RecommendationCard",
   "kind": "component",
-  "importStatement": "import { RecommendationCard } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "ai_helpers",
-  "subgroup": "recommendations",
-  "tags": [
-    "ai-native-helpers",
-    "beta",
-    "recommendation",
-    "wave-6"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "ai_helpers",
+  "subgroup": "recommendations",
   "taxonomyGroupId": "ai_native_helpers",
   "taxonomySubgroup": "Recommendation / Confidence",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-6",
+    "ai-native-helpers",
+    "beta",
+    "recommendation"
+  ],
   "uxPrimaryThemeId": "ai_assisted_decision_experience",
   "uxPrimarySubthemeId": "contextual_recommendation_cards",
   "roadmapWaveId": "wave_6_ai_native_helpers",
-  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1",
+  "importStatement": "import { RecommendationCard } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "RecommendationCard",

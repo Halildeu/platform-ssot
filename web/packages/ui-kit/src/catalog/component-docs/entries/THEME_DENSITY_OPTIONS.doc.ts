@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "THEME_DENSITY_OPTIONS",
   "kind": "const",
-  "importStatement": "import { THEME_DENSITY_OPTIONS } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "options",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "options",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Density / radius / motion presets",
   "demoMode": "inspector",
@@ -26,12 +21,36 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { THEME_DENSITY_OPTIONS } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "THEME_DENSITY_OPTIONS",
+  "variantAxes": [
+    "density: comfortable | compact",
+    "source: static-array",
+    "consumer: density selector | docs"
+  ],
+  "stateModel": [
+    "static density option exposure"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "ThemeDensity[]",
+      "default": "-",
+      "required": false,
+      "description": "Resmi density seceneklerini runtime ve docs katmanina sabit liste olarak sunar."
+    }
+  ],
+  "previewFocus": [
+    "density toggle options"
+  ],
+  "regressionFocus": [
+    "array contents parity",
+    "selector binding stability"
+  ]
+},
 };
 
 export default entry;

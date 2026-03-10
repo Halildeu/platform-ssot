@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Tooltip",
   "kind": "component",
-  "importStatement": "import { Tooltip } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "feedback",
-  "subgroup": "tooltips",
-  "tags": [
-    "beta",
-    "overlay",
-    "tooltip",
-    "wave-5"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "feedback",
+  "subgroup": "tooltips",
   "taxonomyGroupId": "feedback",
   "taxonomySubgroup": "Tooltip",
   "demoMode": "live",
@@ -38,7 +28,17 @@ const entry: DesignLabComponentDocEntry = {
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "actionable_error_messages",
   "roadmapWaveId": "wave_5_overlay",
-  "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+  "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+  "tags": [
+    "wave-5",
+    "overlay",
+    "beta",
+    "tooltip"
+  ],
+  "importStatement": "import { Tooltip } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Tooltip",

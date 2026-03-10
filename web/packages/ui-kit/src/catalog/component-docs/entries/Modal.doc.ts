@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Modal",
   "kind": "component",
-  "importStatement": "import { Modal } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "overlays",
-  "subgroup": "modal",
-  "tags": [
-    "dialog",
-    "overlay",
-    "stable",
-    "wave-5"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "overlays",
+  "subgroup": "modal",
   "taxonomyGroupId": "feedback",
   "taxonomySubgroup": "Modal / Dialog / Confirm",
   "demoMode": "live",
@@ -38,7 +28,17 @@ const entry: DesignLabComponentDocEntry = {
   "uxPrimaryThemeId": "trust_privacy_security_ux",
   "uxPrimarySubthemeId": "high_risk_action_confirmation",
   "roadmapWaveId": "wave_5_overlay",
-  "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+  "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+  "tags": [
+    "wave-5",
+    "overlay",
+    "stable",
+    "dialog"
+  ],
+  "importStatement": "import { Modal } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Modal",

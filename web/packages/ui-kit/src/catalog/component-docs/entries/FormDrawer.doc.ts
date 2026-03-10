@@ -5,21 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "FormDrawer",
   "kind": "component",
-  "importStatement": "import { FormDrawer } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "overlays",
-  "subgroup": "drawers",
-  "tags": [
-    "drawer",
-    "form",
-    "overlay",
-    "stable",
-    "wave-5"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "overlays",
+  "subgroup": "drawers",
   "taxonomyGroupId": "overlays_portals",
   "taxonomySubgroup": "Drawer / Side panel",
   "demoMode": "live",
@@ -39,7 +28,18 @@ const entry: DesignLabComponentDocEntry = {
   "uxPrimaryThemeId": "data_entry_validation_recovery",
   "uxPrimarySubthemeId": "multi_step_wizard_progress",
   "roadmapWaveId": "wave_5_overlay",
-  "acceptanceContractId": "ui-library-wave-5-overlay-v1"
+  "acceptanceContractId": "ui-library-wave-5-overlay-v1",
+  "tags": [
+    "wave-5",
+    "overlay",
+    "stable",
+    "drawer",
+    "form"
+  ],
+  "importStatement": "import { FormDrawer } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "FormDrawer",

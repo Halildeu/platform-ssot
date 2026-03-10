@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "setAppearance",
   "kind": "function",
-  "importStatement": "import { setAppearance } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
@@ -26,12 +21,40 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { setAppearance } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "setAppearance",
+  "variantAxes": [
+    "appearance: light | dark | high-contrast",
+    "consumer: theme editor | shell runtime",
+    "update: single-axis patch"
+  ],
+  "stateModel": [
+    "appearance patch",
+    "data-theme update",
+    "subscriber notification"
+  ],
+  "props": [
+    {
+      "name": "appearance",
+      "type": "'light' | 'dark' | 'high-contrast'",
+      "default": "-",
+      "required": true,
+      "description": "Theme appearance eksenini runtime axes state uzerinden gunceller."
+    }
+  ],
+  "previewFocus": [
+    "appearance switch",
+    "shell theme patch"
+  ],
+  "regressionFocus": [
+    "appearance patch parity",
+    "data-theme update",
+    "notify cascade"
+  ]
+},
 };
 
 export default entry;

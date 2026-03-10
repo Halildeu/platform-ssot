@@ -64,6 +64,8 @@ import {
   AnchorToc,
   Breadcrumb,
   Divider,
+} from 'mfe-ui-kit';
+import {
   LibraryProductTree,
   LibraryQueryProvider,
   LibraryDocsSection,
@@ -81,7 +83,7 @@ import {
   LibraryUsageRecipesPanel,
   type LibraryProductTreeSelection,
   type LibraryProductTreeTrack,
-} from 'mfe-ui-kit';
+} from '../../../../../packages/ui-kit/src/catalog/design-lab-internals';
 import designLabIndexRaw from './design-lab.index.json';
 import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
 import {
@@ -183,12 +185,235 @@ type DesignLabIndex = {
       breakingChanges: string;
       migrationNotes: string;
       evidenceRefs: string[];
+      catalogMetrics?: {
+        exported: number;
+        planned: number;
+        stable: number;
+        beta: number;
+        liveDemo: number;
+        apiCatalogItems: number;
+        apiCoveragePercent: number;
+        wideAdoptionReady: number;
+        requiredVisualHarnesses: number;
+        storyCoveredComponents?: number;
+        adoptedOutsideLab?: number;
+        consumerAppsCount?: number;
+        adoptedStoryCoveragePercent?: number;
+      };
     };
     registrySummary: {
       stable: number;
       beta: number;
       apiCatalogItems: number;
     };
+  };
+  adoption?: {
+    contractId: string;
+    contractPath: string;
+    previewRoute: string;
+    packageImport: string;
+    moduleFederation: {
+      remoteName: string;
+      exposes: string[];
+    };
+    surfaceSummary: {
+      publicExports: number;
+      stableExports: number;
+      betaExports: number;
+      liveDemoExports: number;
+      consumedByAppsExports: number;
+    };
+    apiCoverage: {
+      documentedExports: number;
+      undocumentedExports: number;
+      coveragePercent: number;
+      liveDemoDocumentedExports: number;
+    };
+    releaseReadiness: {
+      wideAdoptionReady: number;
+      stableUndocumented: number;
+      betaDocumented: number;
+      betaUndocumented: number;
+    };
+    internalSurfaceProtection: {
+      status: 'protected' | 'drifted';
+      privateEntryPath: string;
+      allowedConsumers: string[];
+      runtimeExportsWithoutRegistry: number;
+    };
+    priorityBacklog: {
+      usedUndocumented: string[];
+      stableUndocumented: string[];
+      betaUndocumented: string[];
+    };
+    consumerRules: string[];
+    evidenceRefs: string[];
+  };
+  migration?: {
+    contractId: string;
+    upgradeContractPath?: string;
+    artifactPath: string;
+    summary: {
+      adoptedOutsideLabComponents: number;
+      stableAdoptedComponents: number;
+      betaAdoptedComponents: number;
+      consumerAppsCount: number;
+      adoptedStoryCoveredComponents: number;
+      adoptedStoryCoveragePercent: number;
+      stableOnlyInDesignLab: number;
+      singleAppBlastRadiusCount: number;
+      crossAppReviewComponents: number;
+      manualReviewRequiredComponents: number;
+      codemodReadyComponents: number;
+      ownerMappedAppsCount: number;
+    };
+    ownerResolution?: {
+      contractId: string;
+      contractPath: string;
+      codeownersPath: string;
+      defaultOwnerHandles: string[];
+      ownerMappedAppsCount: number;
+      unownedAppsCount: number;
+      source: string;
+      rules: string[];
+    };
+    upgradePlaybook?: {
+      contractId: string;
+      contractPath: string;
+      defaultStrategy: string;
+      codemodSupport: string;
+      summary: {
+        trackCount: number;
+        singleAppBlastRadiusCount: number;
+        crossAppReviewComponents: number;
+        manualChecklistComponents: number;
+        codemodReadyComponents: number;
+      };
+      tracks: Array<{
+        track_id: string;
+        label: string;
+        automation: string;
+        trigger: string;
+      }>;
+    };
+    upgradeChecklist?: {
+      artifactPath: string;
+      generatedStrategy: string;
+      summary: {
+        totalItems: number;
+        singleAppItems: number;
+        crossAppItems: number;
+        ownerMappedAppsCount: number;
+      };
+      items: Array<{
+        checklistId: string;
+        component: string;
+        classId: string;
+        semver: string;
+        migrationTrack: string;
+        ownerHandles: string[];
+        consumerApps: Array<{
+          appId: string;
+          ownerHandles: string[];
+          ownerSource: string;
+        }>;
+        tasks: string[];
+        evidenceRefs: string[];
+        codemodReady: boolean;
+      }>;
+    };
+    semverGuidance?: {
+      recommendedBump: string;
+      reason: string;
+      releaseNotesLabel: string;
+      summary: {
+        patchSafeLabOnly: number;
+        minorSingleAppReview: number;
+        minorBetaExternalReview: number;
+        majorCrossAppReview: number;
+      };
+      majorComponents: string[];
+      minorComponents: string[];
+      patchCandidates: string[];
+    };
+    changeClasses?: {
+      summary: {
+        patchSafeLabOnly: number;
+        minorSingleAppReview: number;
+        minorBetaExternalReview: number;
+        majorCrossAppReview: number;
+        manualReviewRequired: number;
+      };
+      components: Array<{
+        name: string;
+        lifecycle: string;
+        consumerApps: string[];
+        consumerAppCount: number;
+        classId: string;
+        semver: string;
+        migrationTrack: string;
+        ownerHandles?: string[];
+      }>;
+    };
+    consumerApps: Array<{
+      appId: string;
+      componentCount: number;
+      components: string[];
+      singleAppComponents?: string[];
+      sharedComponents?: string[];
+      highestChangeClass?: string;
+      ownerHandles?: string[];
+      ownerSource?: string;
+    }>;
+    priorityBacklog: {
+      betaUsedOutsideLab: string[];
+      adoptedWithoutStory: string[];
+      stableOnlyInDesignLab: string[];
+      singleAppBlastRadius: string[];
+    };
+    rules: string[];
+    evidenceRefs: string[];
+  };
+  visualRegression?: {
+    contractId: string;
+    storybook: {
+      configPath: string;
+      previewPath: string;
+      buildConfigPath: string;
+      buildCommand: string;
+      chromaticCommand: string;
+      chromaticTriggerPath: string;
+      staticOutputPath: string;
+    };
+    summary: {
+      designLabLiveDemoExports: number;
+      storybookStoryFiles: number;
+      mdxDocFiles: number;
+      requiredHarnessCount: number;
+      requiredHarnessPresentCount: number;
+      visualizableComponents: number;
+      storybookCoveredComponents: number;
+      mdxCoveredComponents: number;
+      combinedCoveredComponents: number;
+      storyCoveragePercent: number;
+      releaseReadyComponents: number;
+      releaseReadyStoryCoveredComponents: number;
+      releaseReadyCoveragePercent: number;
+      adoptedOutsideLabComponents: number;
+      adoptedStoryCoveredComponents: number;
+      adoptedCoveragePercent: number;
+    };
+    requiredHarnesses: Array<{
+      path: string;
+      present: boolean;
+    }>;
+    coverageBacklog: {
+      stableWithoutStory: string[];
+      adoptedWithoutStory: string[];
+      liveDemoWithoutStory: string[];
+    };
+    rules: string[];
+    evidenceRefs: string[];
   };
   themePresets?: {
     catalogId: string;
@@ -912,6 +1137,9 @@ const DesignLabPage: React.FC = () => {
   }, []);
 
   const releaseSummary = designLabIndex.release ?? null;
+  const adoptionSummary = designLabIndex.adoption ?? null;
+  const migrationSummary = designLabIndex.migration ?? null;
+  const visualRegressionSummary = designLabIndex.visualRegression ?? null;
   const themePresetSummary = designLabIndex.themePresets ?? null;
   const recipeSummary = designLabIndex.recipes ?? null;
   const readyDistributionTargetCount = useMemo(
@@ -5422,7 +5650,7 @@ const DesignLabPage: React.FC = () => {
                     density="compact"
                     columns={1}
                     items={[
-                      { key: 'datasource', label: 'Datasource', value: 'setServerSideDatasource', tone: 'info' },
+                      { key: 'datasource', label: 'Datasource', value: "setGridOption('serverSideDatasource', datasource)", tone: 'info' },
                       { key: 'loading', label: 'Loading', value: 'Overlay + request pending', tone: 'warning' },
                       { key: 'failure', label: 'Failure', value: 'fail callback', tone: 'danger' },
                     ]}
@@ -6583,6 +6811,661 @@ const DesignLabPage: React.FC = () => {
           </LibraryShowcaseCard>
         ) : null}
 
+        {adoptionSummary ? (
+          <LibraryShowcaseCard
+            eyebrow="Adoption Cockpit"
+            title="Consumer-ready surface"
+            description="Public export yüzeyi, API coverage ve yaygın tüketim readiness aynı blokta görünür. Hedef, kütüphaneyi yeni ekranların varsayılan tüketim katmanı haline getirmek."
+            badges={[
+              <SectionBadge key="adoption-contract" label={adoptionSummary.contractId} />,
+              <SectionBadge key="api-coverage" label={`API ${adoptionSummary.apiCoverage.coveragePercent}%`} />,
+              <SectionBadge key="ready-surface" label={`${adoptionSummary.releaseReadiness.wideAdoptionReady} ready`} />,
+            ]}
+          >
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                  <LibraryMetricCard
+                    label="Public surface"
+                    value={adoptionSummary.surfaceSummary.publicExports}
+                    note={`${adoptionSummary.surfaceSummary.stableExports} stable / ${adoptionSummary.surfaceSummary.betaExports} beta`}
+                  />
+                  <LibraryMetricCard
+                    label="API coverage"
+                    value={`${adoptionSummary.apiCoverage.coveragePercent}%`}
+                    note={`${adoptionSummary.apiCoverage.documentedExports} documented / ${adoptionSummary.apiCoverage.undocumentedExports} backlog`}
+                  />
+                  <LibraryMetricCard
+                    label="Wide adoption ready"
+                    value={adoptionSummary.releaseReadiness.wideAdoptionReady}
+                    note="Stable + API docs birlikte hazır olan surface"
+                  />
+                  <LibraryMetricCard
+                    label="Used by apps"
+                    value={adoptionSummary.surfaceSummary.consumedByAppsExports}
+                    note={`${adoptionSummary.surfaceSummary.liveDemoExports} export canlı demo ile gösteriliyor`}
+                  />
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Consumer rules</DetailLabel>
+                  <div className="mt-3 space-y-2">
+                    {adoptionSummary.consumerRules.map((rule) => (
+                      <Text key={rule} variant="secondary" className="block text-sm leading-6">
+                        {rule}
+                      </Text>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Used but undocumented</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {adoptionSummary.priorityBacklog.usedUndocumented.length ? (
+                        adoptionSummary.priorityBacklog.usedUndocumented.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Backlog temiz</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Stable but undocumented</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {adoptionSummary.priorityBacklog.stableUndocumented.length ? (
+                        adoptionSummary.priorityBacklog.stableUndocumented.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Stable surface temiz</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Private surface guard</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Badge tone={adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'success' : 'warning'}>
+                        {adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'Protected' : 'Drifted'}
+                      </Badge>
+                      <SectionBadge label={`${adoptionSummary.internalSurfaceProtection.allowedConsumers.length} consumer`} />
+                      <SectionBadge label={`${adoptionSummary.internalSurfaceProtection.runtimeExportsWithoutRegistry} drift`} />
+                    </div>
+                    <Text variant="secondary" className="mt-3 block text-sm leading-6">
+                      Internal barrel yalnız docs/admin yüzeyi için tutulur; public package export zincirine geri sızması gate ile engellenir.
+                    </Text>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Package import</DetailLabel>
+                  <LibraryCodeBlock code={adoptionSummary.packageImport} className="mt-3" />
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Module Federation contract</DetailLabel>
+                  <LibraryCodeBlock
+                    code={[
+                      `remote: '${adoptionSummary.moduleFederation.remoteName}'`,
+                      `previewRoute: '${adoptionSummary.previewRoute}'`,
+                      `exposes: ${JSON.stringify(adoptionSummary.moduleFederation.exposes)}`,
+                    ].join('\n')}
+                    languageLabel="contract"
+                    className="mt-3"
+                  />
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Evidence refs</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {adoptionSummary.evidenceRefs.map((entry) => (
+                      <SectionBadge key={entry} label={entry} />
+                    ))}
+                  </div>
+                  <Text variant="secondary" className="mt-3 block text-sm leading-6">
+                    Bu cockpit, manifest, public surface ve adoption enforcement kontratını aynı bağlamda tutar.
+                  </Text>
+                </div>
+              </div>
+            </div>
+          </LibraryShowcaseCard>
+        ) : null}
+
+        {migrationSummary ? (
+          <LibraryShowcaseCard
+            eyebrow="Migration"
+            title="Consumer impact ve rollout readiness"
+            description="Package veya remote surface degistiginde hangi uygulamalar etkilenecek, hangi stable componentler hala yalniz Design Lab icinde ve hangi adopted surface'in story coverage eksigi var; bu kart o etkiyi ayni yerde toplar."
+            badges={[
+              <SectionBadge key="migration-contract" label={migrationSummary.contractId} />,
+              <SectionBadge key="migration-apps" label={`${migrationSummary.summary.consumerAppsCount} consumer app`} />,
+              <SectionBadge key="migration-coverage" label={`Story ${migrationSummary.summary.adoptedStoryCoveragePercent}%`} />,
+            ]}
+          >
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                  <LibraryMetricCard
+                    label="Adopted outside lab"
+                    value={migrationSummary.summary.adoptedOutsideLabComponents}
+                    note={`${migrationSummary.summary.stableAdoptedComponents} stable / ${migrationSummary.summary.betaAdoptedComponents} beta`}
+                  />
+                  <LibraryMetricCard
+                    label="Consumer apps"
+                    value={migrationSummary.summary.consumerAppsCount}
+                    note="Public surface'i kullanan farkli uygulamalar"
+                  />
+                  <LibraryMetricCard
+                    label="Adopted story coverage"
+                    value={`${migrationSummary.summary.adoptedStoryCoveragePercent}%`}
+                    note={`${migrationSummary.summary.adoptedStoryCoveredComponents} adopted component story ile gorunur`}
+                  />
+                  <LibraryMetricCard
+                    label="Stable only in lab"
+                    value={migrationSummary.summary.stableOnlyInDesignLab}
+                    note="Genis rollout oncesi adoption backlog adayi"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  <LibraryMetricCard
+                    label="Single-app blast radius"
+                    value={migrationSummary.summary.singleAppBlastRadiusCount}
+                    note="Yalniz bir consumer app'e dokunan public surface"
+                  />
+                  <LibraryMetricCard
+                    label="Cross-app review"
+                    value={migrationSummary.summary.crossAppReviewComponents}
+                    note="Birden fazla app'i etkileyen release review surface"
+                  />
+                  <LibraryMetricCard
+                    label="Manual migration"
+                    value={migrationSummary.summary.manualReviewRequiredComponents}
+                    note={`${migrationSummary.summary.codemodReadyComponents} codemod-ready / geri kalani checklist ile ilerler`}
+                  />
+                  <LibraryMetricCard
+                    label="Owner mapped apps"
+                    value={`${migrationSummary.summary.ownerMappedAppsCount}/${migrationSummary.summary.consumerAppsCount}`}
+                    note="Consumer app owner resolution tamamlanan uygulamalar"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Beta used outside lab</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {migrationSummary.priorityBacklog.betaUsedOutsideLab.length ? (
+                        migrationSummary.priorityBacklog.betaUsedOutsideLab.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Backlog temiz</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Adopted without story</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {migrationSummary.priorityBacklog.adoptedWithoutStory.length ? (
+                        migrationSummary.priorityBacklog.adoptedWithoutStory.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Story coverage hizali</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Stable only in lab</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {migrationSummary.priorityBacklog.stableOnlyInDesignLab.length ? (
+                        migrationSummary.priorityBacklog.stableOnlyInDesignLab.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Adoption dengeli</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Single-app blast radius</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {migrationSummary.priorityBacklog.singleAppBlastRadius.length ? (
+                        migrationSummary.priorityBacklog.singleAppBlastRadius.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="info">Yogun tekil risk yok</Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {migrationSummary.changeClasses ? (
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Change classes</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={`patch-safe ${migrationSummary.changeClasses.summary.patchSafeLabOnly}`} />
+                      <SectionBadge label={`single-app ${migrationSummary.changeClasses.summary.minorSingleAppReview}`} />
+                      <SectionBadge label={`beta-review ${migrationSummary.changeClasses.summary.minorBetaExternalReview}`} />
+                      <SectionBadge label={`cross-app ${migrationSummary.changeClasses.summary.majorCrossAppReview}`} />
+                      <SectionBadge label={`manual ${migrationSummary.changeClasses.summary.manualReviewRequired}`} />
+                    </div>
+                    <div className="mt-4 space-y-2">
+                      {migrationSummary.changeClasses.components.slice(0, 6).map((entry) => (
+                        <div key={`${entry.name}-${entry.classId}`} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <Text as="div" className="text-sm font-semibold text-text-primary">
+                              {entry.name}
+                            </Text>
+                            <div className="flex flex-wrap gap-2">
+                              <SectionBadge label={entry.classId} />
+                              <SectionBadge label={`semver ${entry.semver}`} />
+                              <SectionBadge label={entry.migrationTrack} />
+                              {entry.ownerHandles?.length ? <SectionBadge label={entry.ownerHandles.join(', ')} /> : null}
+                            </div>
+                          </div>
+                          <Text variant="secondary" className="mt-2 block text-sm leading-6">
+                            {entry.consumerAppCount
+                              ? `${entry.consumerAppCount} app etkisi: ${entry.consumerApps.join(', ')}`
+                              : 'Henuz Design Lab disina cikmadi; patch-safe adoption adayi.'}
+                          </Text>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {migrationSummary.semverGuidance ? (
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Semver guidance</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={`recommended ${migrationSummary.semverGuidance.recommendedBump}`} />
+                      <SectionBadge label={migrationSummary.semverGuidance.releaseNotesLabel} />
+                      <SectionBadge label={`cross-app ${migrationSummary.semverGuidance.summary.majorCrossAppReview}`} />
+                      <SectionBadge label={`single-app ${migrationSummary.semverGuidance.summary.minorSingleAppReview}`} />
+                    </div>
+                    <Text variant="secondary" className="mt-3 block text-sm leading-6">
+                      {migrationSummary.semverGuidance.reason}
+                    </Text>
+                    <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+                      <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                        <DetailLabel>Major review queue</DetailLabel>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {migrationSummary.semverGuidance.majorComponents.length ? (
+                            migrationSummary.semverGuidance.majorComponents.map((name) => (
+                              <SectionBadge key={`major-${name}`} label={name} />
+                            ))
+                          ) : (
+                            <Badge tone="success">Bos</Badge>
+                          )}
+                        </div>
+                      </div>
+                      <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                        <DetailLabel>Minor review queue</DetailLabel>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {migrationSummary.semverGuidance.minorComponents.length ? (
+                            migrationSummary.semverGuidance.minorComponents.map((name) => (
+                              <SectionBadge key={`minor-${name}`} label={name} />
+                            ))
+                          ) : (
+                            <Badge tone="success">Bos</Badge>
+                          )}
+                        </div>
+                      </div>
+                      <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                        <DetailLabel>Patch-safe lab backlog</DetailLabel>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {migrationSummary.semverGuidance.patchCandidates.length ? (
+                            migrationSummary.semverGuidance.patchCandidates.map((name) => (
+                              <SectionBadge key={`patch-${name}`} label={name} />
+                            ))
+                          ) : (
+                            <Badge tone="info">Backlog yok</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="space-y-4">
+                {migrationSummary.upgradePlaybook ? (
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Upgrade playbook</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={migrationSummary.upgradePlaybook.contractId} />
+                      <SectionBadge label={`strategy ${migrationSummary.upgradePlaybook.defaultStrategy}`} />
+                      <SectionBadge label={`codemod ${migrationSummary.upgradePlaybook.codemodSupport}`} />
+                      <SectionBadge label={`${migrationSummary.upgradePlaybook.summary.trackCount} track`} />
+                    </div>
+                    <div className="mt-4 grid grid-cols-1 gap-3">
+                      {migrationSummary.upgradePlaybook.tracks.map((track) => (
+                        <div key={track.track_id} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <Text as="div" className="text-sm font-semibold text-text-primary">
+                              {track.label}
+                            </Text>
+                            <SectionBadge label={track.automation} />
+                          </div>
+                          <Text variant="secondary" className="mt-2 block text-sm leading-6">
+                            Trigger: {track.trigger}
+                          </Text>
+                        </div>
+                      ))}
+                    </div>
+                    <LibraryCodeBlock
+                      code={[
+                        `contract: '${migrationSummary.upgradePlaybook.contractPath}'`,
+                        `singleAppBlastRadius: ${migrationSummary.upgradePlaybook.summary.singleAppBlastRadiusCount}`,
+                        `crossAppReview: ${migrationSummary.upgradePlaybook.summary.crossAppReviewComponents}`,
+                        `manualChecklist: ${migrationSummary.upgradePlaybook.summary.manualChecklistComponents}`,
+                        `codemodReady: ${migrationSummary.upgradePlaybook.summary.codemodReadyComponents}`,
+                      ].join('\n')}
+                      languageLabel="migration"
+                      className="mt-4"
+                    />
+                  </div>
+                ) : null}
+
+                {migrationSummary.upgradeChecklist ? (
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Upgrade checklist</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={`items ${migrationSummary.upgradeChecklist.summary.totalItems}`} />
+                      <SectionBadge label={`single-app ${migrationSummary.upgradeChecklist.summary.singleAppItems}`} />
+                      <SectionBadge label={`cross-app ${migrationSummary.upgradeChecklist.summary.crossAppItems}`} />
+                      <SectionBadge label={`owners ${migrationSummary.upgradeChecklist.summary.ownerMappedAppsCount}`} />
+                    </div>
+                    <div className="mt-4 space-y-3">
+                      {migrationSummary.upgradeChecklist.items.slice(0, 4).map((item) => (
+                        <div key={item.checklistId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <Text as="div" className="text-sm font-semibold text-text-primary">
+                              {item.component}
+                            </Text>
+                            <div className="flex flex-wrap gap-2">
+                              <SectionBadge label={item.classId} />
+                              <SectionBadge label={`semver ${item.semver}`} />
+                            </div>
+                          </div>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {item.ownerHandles.length ? (
+                              item.ownerHandles.map((owner) => (
+                                <SectionBadge key={`${item.checklistId}-${owner}`} label={owner} />
+                              ))
+                            ) : (
+                              <Badge tone="warning">Owner eksik</Badge>
+                            )}
+                          </div>
+                          <div className="mt-3 space-y-2">
+                            {item.tasks.map((task) => (
+                              <Text key={`${item.checklistId}-${task}`} variant="secondary" className="block text-sm leading-6">
+                                {task}
+                              </Text>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <LibraryCodeBlock
+                      code={[
+                        `artifact: '${migrationSummary.upgradeChecklist.artifactPath}'`,
+                        `strategy: '${migrationSummary.upgradeChecklist.generatedStrategy}'`,
+                        `totalItems: ${migrationSummary.upgradeChecklist.summary.totalItems}`,
+                      ].join('\n')}
+                      languageLabel="checklist"
+                      className="mt-4"
+                    />
+                  </div>
+                ) : null}
+
+                {migrationSummary.ownerResolution ? (
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Owner registry</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <SectionBadge label={migrationSummary.ownerResolution.contractId} />
+                      <SectionBadge label={`mapped ${migrationSummary.ownerResolution.ownerMappedAppsCount}`} />
+                      <SectionBadge label={`unowned ${migrationSummary.ownerResolution.unownedAppsCount}`} />
+                      <SectionBadge label={migrationSummary.ownerResolution.source} />
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {migrationSummary.ownerResolution.defaultOwnerHandles.map((owner) => (
+                        <SectionBadge key={`default-owner-${owner}`} label={owner} />
+                      ))}
+                    </div>
+                    <LibraryCodeBlock
+                      code={[
+                        `contract: '${migrationSummary.ownerResolution.contractPath}'`,
+                        `codeowners: '${migrationSummary.ownerResolution.codeownersPath}'`,
+                      ].join('\n')}
+                      languageLabel="owners"
+                      className="mt-4"
+                    />
+                  </div>
+                ) : null}
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Consumer apps</DetailLabel>
+                  <div className="mt-3 space-y-3">
+                    {migrationSummary.consumerApps.map((consumer) => (
+                      <div key={consumer.appId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <Text as="div" className="text-sm font-semibold text-text-primary">
+                            {consumer.appId}
+                          </Text>
+                          <div className="flex flex-wrap gap-2">
+                            <SectionBadge label={`${consumer.componentCount} component`} />
+                            {consumer.highestChangeClass ? <SectionBadge label={consumer.highestChangeClass} /> : null}
+                            {consumer.ownerSource ? <SectionBadge label={consumer.ownerSource} /> : null}
+                          </div>
+                        </div>
+                        {consumer.ownerHandles?.length ? (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {consumer.ownerHandles.map((owner) => (
+                              <SectionBadge key={`${consumer.appId}-${owner}`} label={owner} />
+                            ))}
+                          </div>
+                        ) : null}
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {consumer.components.map((name) => (
+                            <SectionBadge key={`${consumer.appId}-${name}`} label={name} />
+                          ))}
+                        </div>
+                        {(consumer.singleAppComponents?.length || consumer.sharedComponents?.length) ? (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            {consumer.singleAppComponents?.length ? (
+                              <Badge tone="warning">{`${consumer.singleAppComponents.length} single-app surface`}</Badge>
+                            ) : null}
+                            {consumer.sharedComponents?.length ? (
+                              <Badge tone="info">{`${consumer.sharedComponents.length} shared surface`}</Badge>
+                            ) : null}
+                          </div>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Migration rules</DetailLabel>
+                  <div className="mt-3 space-y-2">
+                    {migrationSummary.rules.map((rule) => (
+                      <Text key={rule} variant="secondary" className="block text-sm leading-6">
+                        {rule}
+                      </Text>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Evidence refs</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {migrationSummary.evidenceRefs.map((entry) => (
+                      <SectionBadge key={entry} label={entry} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </LibraryShowcaseCard>
+        ) : null}
+
+        {visualRegressionSummary ? (
+          <LibraryShowcaseCard
+            eyebrow="Visual Contract"
+            title="Storybook ve regression harness"
+            description="Release-grade tasarim kutuphanesi icin sadece API coverage yetmez; gorsel harness, docs matrix ve static Storybook contract'i da ayni yerde izlenir."
+            badges={[
+              <SectionBadge key="visual-contract" label={visualRegressionSummary.contractId} />,
+              <SectionBadge
+                key="visual-harness"
+                label={`${visualRegressionSummary.summary.requiredHarnessPresentCount}/${visualRegressionSummary.summary.requiredHarnessCount} harness`}
+              />,
+              <SectionBadge key="visual-live" label={`${visualRegressionSummary.summary.designLabLiveDemoExports} live demo`} />,
+              <SectionBadge key="visual-story" label={`Story ${visualRegressionSummary.summary.storyCoveragePercent}%`} />,
+            ]}
+          >
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  <LibraryMetricCard
+                    label="Story files"
+                    value={visualRegressionSummary.summary.storybookStoryFiles}
+                    note="Core visual harness story dosya sayisi"
+                  />
+                  <LibraryMetricCard
+                    label="MDX docs"
+                    value={visualRegressionSummary.summary.mdxDocFiles}
+                    note="Theme/docs anlatim yuzeyi"
+                  />
+                  <LibraryMetricCard
+                    label="Story coverage"
+                    value={`${visualRegressionSummary.summary.storyCoveragePercent}%`}
+                    note={`${visualRegressionSummary.summary.storybookCoveredComponents}/${visualRegressionSummary.summary.visualizableComponents} component story ile gorunur`}
+                  />
+                  <LibraryMetricCard
+                    label="Release-ready story"
+                    value={`${visualRegressionSummary.summary.releaseReadyCoveragePercent}%`}
+                    note={`${visualRegressionSummary.summary.releaseReadyStoryCoveredComponents}/${visualRegressionSummary.summary.releaseReadyComponents} stable component coverage`}
+                  />
+                  <LibraryMetricCard
+                    label="Adopted story"
+                    value={`${visualRegressionSummary.summary.adoptedCoveragePercent}%`}
+                    note={`${visualRegressionSummary.summary.adoptedStoryCoveredComponents}/${visualRegressionSummary.summary.adoptedOutsideLabComponents} adopted component story coverage`}
+                  />
+                  <LibraryMetricCard
+                    label="Required harness"
+                    value={`${visualRegressionSummary.summary.requiredHarnessPresentCount}/${visualRegressionSummary.summary.requiredHarnessCount}`}
+                    note="Release gate oncesi zorunlu visual yuzeyler"
+                  />
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Required harnesses</DetailLabel>
+                  <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+                    {visualRegressionSummary.requiredHarnesses.map((harness) => (
+                      <div key={harness.path} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <Text as="div" className="text-sm font-semibold text-text-primary">
+                            {harness.path}
+                          </Text>
+                          <Badge tone={harness.present ? 'success' : 'warning'}>
+                            {harness.present ? 'Present' : 'Missing'}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Stable without story</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {visualRegressionSummary.coverageBacklog.stableWithoutStory.length ? (
+                        visualRegressionSummary.coverageBacklog.stableWithoutStory.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Backlog temiz</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Adopted without story</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {visualRegressionSummary.coverageBacklog.adoptedWithoutStory.length ? (
+                        visualRegressionSummary.coverageBacklog.adoptedWithoutStory.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Adopted story coverage hazir</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                    <DetailLabel>Live demo without story</DetailLabel>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {visualRegressionSummary.coverageBacklog.liveDemoWithoutStory.length ? (
+                        visualRegressionSummary.coverageBacklog.liveDemoWithoutStory.map((name) => (
+                          <SectionBadge key={name} label={name} />
+                        ))
+                      ) : (
+                        <Badge tone="success">Live demo ile story coverage dengeli</Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Visual rules</DetailLabel>
+                  <div className="mt-3 space-y-2">
+                    {visualRegressionSummary.rules.map((rule) => (
+                      <Text key={rule} variant="secondary" className="block text-sm leading-6">
+                        {rule}
+                      </Text>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Storybook contract</DetailLabel>
+                  <LibraryCodeBlock
+                    code={[
+                      `build: ${visualRegressionSummary.storybook.buildCommand}`,
+                      `chromatic: ${visualRegressionSummary.storybook.chromaticCommand}`,
+                      `config: ${visualRegressionSummary.storybook.configPath}`,
+                      `preview: ${visualRegressionSummary.storybook.previewPath}`,
+                      `static: ${visualRegressionSummary.storybook.staticOutputPath}`,
+                    ].join('\n')}
+                    languageLabel="visual"
+                    className="mt-3"
+                  />
+                </div>
+
+                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+                  <DetailLabel>Evidence refs</DetailLabel>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {visualRegressionSummary.evidenceRefs.slice(0, 10).map((entry) => (
+                      <SectionBadge key={entry} label={entry} />
+                    ))}
+                  </div>
+                  <Text variant="secondary" className="mt-3 block text-sm leading-6">
+                    Storybook, docs ve chromatic trigger zinciri release visual contract icin ayni kaynaktan okunur.
+                  </Text>
+                </div>
+              </div>
+            </div>
+          </LibraryShowcaseCard>
+        ) : null}
+
         {themePresetSummary ? (
           <LibraryShowcaseCard
             eyebrow="Theme Presets"
@@ -7619,6 +8502,61 @@ const DesignLabPage: React.FC = () => {
                             },
                           ]
                         : []),
+                  ]}
+                />
+              ) : null}
+
+              {adoptionSummary ? (
+                <LibraryMetadataPanel
+                  title="Adoption"
+                  items={[
+                    {
+                      label: 'Coverage',
+                      value: <Text as="div" className="font-semibold text-text-primary">{`${adoptionSummary.apiCoverage.coveragePercent}%`}</Text>,
+                    },
+                    {
+                      label: 'Ready Surface',
+                      value: <Text as="div" className="font-semibold text-text-primary">{String(adoptionSummary.releaseReadiness.wideAdoptionReady)}</Text>,
+                    },
+                    {
+                      label: 'Used by apps',
+                      value: <Text as="div" className="font-semibold text-text-primary">{String(adoptionSummary.surfaceSummary.consumedByAppsExports)}</Text>,
+                    },
+                    {
+                      label: 'Private guard',
+                      value: (
+                        <Text
+                          as="div"
+                          className={`font-semibold ${adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'text-state-success-text' : 'text-state-warning-text'}`}
+                        >
+                          {adoptionSummary.internalSurfaceProtection.status}
+                        </Text>
+                      ),
+                    },
+                  ]}
+                />
+              ) : null}
+
+              {migrationSummary ? (
+                <LibraryMetadataPanel
+                  title="Migration"
+                  items={[
+                    {
+                      label: 'Adopted',
+                      value: <Text as="div" className="font-semibold text-text-primary">{String(migrationSummary.summary.adoptedOutsideLabComponents)}</Text>,
+                    },
+                    {
+                      label: 'Consumer apps',
+                      value: <Text as="div" className="font-semibold text-text-primary">{String(migrationSummary.summary.consumerAppsCount)}</Text>,
+                    },
+                    {
+                      label: 'Story coverage',
+                      value: <Text as="div" className="font-semibold text-text-primary">{`${migrationSummary.summary.adoptedStoryCoveragePercent}%`}</Text>,
+                    },
+                    {
+                      label: 'Stable only lab',
+                      value: <Text as="div" className="font-semibold text-text-primary">{String(migrationSummary.summary.stableOnlyInDesignLab)}</Text>,
+                    },
                   ]}
                 />
               ) : null}

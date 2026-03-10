@@ -5,22 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "ReportFilterPanel",
   "kind": "component",
-  "importStatement": "import { ReportFilterPanel } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "page_blocks",
-  "subgroup": "filters",
-  "tags": [
-    "filters",
-    "page-blocks",
-    "reporting",
-    "stable",
-    "wave-7"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "page_blocks",
+  "subgroup": "filters",
   "taxonomyGroupId": "page_blocks",
   "taxonomySubgroup": "Filters",
   "demoMode": "live",
@@ -37,10 +25,22 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "doctor_frontend_evidence"
   ],
+  "tags": [
+    "wave-7",
+    "page-blocks",
+    "stable",
+    "filters",
+    "reporting"
+  ],
   "uxPrimaryThemeId": "data_entry_validation_recovery",
   "uxPrimarySubthemeId": "dependency_aware_form_guidance",
   "roadmapWaveId": "wave_7_page_blocks",
-  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1",
+  "importStatement": "import { ReportFilterPanel } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "ReportFilterPanel",

@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "setRadius",
   "kind": "function",
-  "importStatement": "import { setRadius } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
@@ -26,12 +21,39 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { setRadius } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "setRadius",
+  "variantAxes": [
+    "radius: rounded | sharp",
+    "consumer: theme editor",
+    "update: single-axis patch"
+  ],
+  "stateModel": [
+    "radius patch",
+    "DOM attr update",
+    "subscriber notification"
+  ],
+  "props": [
+    {
+      "name": "radius",
+      "type": "'rounded' | 'sharp'",
+      "default": "-",
+      "required": true,
+      "description": "Radius eksenini runtime axes state uzerinden gunceller."
+    }
+  ],
+  "previewFocus": [
+    "radius switch"
+  ],
+  "regressionFocus": [
+    "radius patch parity",
+    "DOM attr update",
+    "notify cascade"
+  ]
+},
 };
 
 export default entry;

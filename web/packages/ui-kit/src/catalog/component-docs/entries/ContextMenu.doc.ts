@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "ContextMenu",
   "kind": "component",
-  "importStatement": "import { ContextMenu } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "overlays",
-  "subgroup": "context_menu",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "overlays",
+  "subgroup": "context_menu",
   "taxonomyGroupId": "overlays_portals",
   "taxonomySubgroup": "Context menu",
   "demoMode": "live",
@@ -27,10 +22,14 @@ const entry: DesignLabComponentDocEntry = {
     "backlog_contract",
     "preview_before_release"
   ],
+  "roadmapWaveId": "wave_8_overlay_extensions",
+  "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1",
   "uxPrimaryThemeId": "navigation_information_scent",
   "uxPrimarySubthemeId": "contextual_quick_actions",
-  "roadmapWaveId": "wave_8_overlay_extensions",
-  "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1"
+  "importStatement": "import { ContextMenu } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "ContextMenu",

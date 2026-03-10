@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "TableSimple",
   "kind": "component",
-  "importStatement": "import { TableSimple } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "data_display",
-  "subgroup": "table_simple",
-  "tags": [
-    "beta",
-    "data-display",
-    "table",
-    "wave-4"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "data_display",
+  "subgroup": "table_simple",
   "taxonomyGroupId": "data_display",
   "taxonomySubgroup": "Table",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-4",
+    "data-display",
+    "beta",
+    "table"
+  ],
   "uxPrimaryThemeId": "measurement_kpi_and_experimentation",
   "uxPrimarySubthemeId": "task_completion_time_p50_p95",
   "roadmapWaveId": "wave_4_data_display",
-  "acceptanceContractId": "ui-library-wave-4-data-display-v1"
+  "acceptanceContractId": "ui-library-wave-4-data-display-v1",
+  "importStatement": "import { TableSimple } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "TableSimple",

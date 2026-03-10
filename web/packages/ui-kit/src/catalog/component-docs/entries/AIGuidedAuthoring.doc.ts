@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "AIGuidedAuthoring",
   "kind": "component",
-  "importStatement": "import { AIGuidedAuthoring } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "ai_helpers",
-  "subgroup": "authoring",
-  "tags": [
-    "ai-authoring",
-    "beta",
-    "recipes",
-    "wave-11"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "ai_helpers",
+  "subgroup": "authoring",
   "taxonomyGroupId": "ai_native_helpers",
   "taxonomySubgroup": "AI authoring workflows",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-11",
+    "recipes",
+    "beta",
+    "ai-authoring"
+  ],
   "uxPrimaryThemeId": "ai_assisted_decision_experience",
   "uxPrimarySubthemeId": "safe_prompt_templates_and_scope",
   "roadmapWaveId": "wave_11_recipes",
-  "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+  "acceptanceContractId": "ui-library-wave-11-recipes-v1",
+  "importStatement": "import { AIGuidedAuthoring } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "AIGuidedAuthoring",

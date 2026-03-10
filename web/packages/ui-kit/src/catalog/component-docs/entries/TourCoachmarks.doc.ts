@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "TourCoachmarks",
   "kind": "component",
-  "importStatement": "import { TourCoachmarks } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "overlays",
-  "subgroup": "tour_coachmarks",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "overlays",
+  "subgroup": "tour_coachmarks",
   "taxonomyGroupId": "overlays_portals",
   "taxonomySubgroup": "Tour / Coachmarks",
   "demoMode": "live",
@@ -27,10 +22,14 @@ const entry: DesignLabComponentDocEntry = {
     "backlog_contract",
     "preview_before_release"
   ],
+  "roadmapWaveId": "wave_8_overlay_extensions",
+  "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1",
   "uxPrimaryThemeId": "onboarding_help_and_learnability",
   "uxPrimarySubthemeId": "process_tours_for_critical_flows",
-  "roadmapWaveId": "wave_8_overlay_extensions",
-  "acceptanceContractId": "ui-library-wave-8-overlay-extensions-v1"
+  "importStatement": "import { TourCoachmarks } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "TourCoachmarks",

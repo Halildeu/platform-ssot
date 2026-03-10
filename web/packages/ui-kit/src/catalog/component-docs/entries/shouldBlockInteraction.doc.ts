@@ -5,13 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "shouldBlockInteraction",
   "kind": "function",
-  "importStatement": "import { shouldBlockInteraction } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "runtime",
-  "subgroup": "access",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "runtime",
+  "subgroup": "access",
   "taxonomyGroupId": "auth_security_ui",
   "taxonomySubgroup": "Permission gates",
   "demoMode": "inspector",
@@ -24,12 +21,40 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { shouldBlockInteraction } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "shouldBlockInteraction",
+  "variantAxes": [
+    "state: full | readonly | disabled | hidden",
+    "external-disabled: on | off",
+    "result: pass | block"
+  ],
+  "stateModel": [
+    "readonly and disabled blocking",
+    "external disabled precedence",
+    "interaction pass-through"
+  ],
+  "props": [
+    {
+      "name": "state / externallyDisabled",
+      "type": "AccessLevel / boolean",
+      "default": "full / false",
+      "required": false,
+      "description": "Event handler veya interactive control icin interaction'in bloke edilip edilmeyecegini hesaplar."
+    }
+  ],
+  "previewFocus": [
+    "readonly event blocking",
+    "external disabled precedence"
+  ],
+  "regressionFocus": [
+    "readonly block parity",
+    "disabled block parity",
+    "external override precedence"
+  ]
+},
 };
 
 export default entry;

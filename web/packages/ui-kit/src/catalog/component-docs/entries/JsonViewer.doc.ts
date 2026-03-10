@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "JsonViewer",
   "kind": "component",
-  "importStatement": "import { JsonViewer } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "data_display",
-  "subgroup": "json_viewer",
-  "tags": [
-    "beta",
-    "data-display",
-    "json-viewer",
-    "wave-4"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "data_display",
+  "subgroup": "json_viewer",
   "taxonomyGroupId": "data_display",
   "taxonomySubgroup": "Code / JSON viewer",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-4",
+    "data-display",
+    "beta",
+    "json-viewer"
+  ],
   "uxPrimaryThemeId": "trust_privacy_security_ux",
   "uxPrimarySubthemeId": "user_visible_audit_log",
   "roadmapWaveId": "wave_4_data_display",
-  "acceptanceContractId": "ui-library-wave-4-data-display-v1"
+  "acceptanceContractId": "ui-library-wave-4-data-display-v1",
+  "importStatement": "import { JsonViewer } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "JsonViewer",

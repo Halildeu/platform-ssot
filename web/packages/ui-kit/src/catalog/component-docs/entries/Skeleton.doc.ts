@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Skeleton",
   "kind": "component",
-  "importStatement": "import { Skeleton } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "feedback",
-  "subgroup": "loading",
-  "tags": [
-    "beta",
-    "foundation-primitives",
-    "loading",
-    "wave-1"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "feedback",
+  "subgroup": "loading",
   "taxonomyGroupId": "feedback",
   "taxonomySubgroup": "Skeleton / Placeholder",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-1",
+    "foundation-primitives",
+    "beta",
+    "loading"
+  ],
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "loading_empty_error_success_patterns",
   "roadmapWaveId": "wave_1_foundation_primitives",
-  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1",
+  "importStatement": "import { Skeleton } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Skeleton",

@@ -5,13 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "setOverlayOpacity",
   "kind": "function",
-  "importStatement": "import { setOverlayOpacity } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Overlay intensity tools",
   "demoMode": "inspector",
@@ -24,12 +21,39 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { setOverlayOpacity } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "setOverlayOpacity",
+  "variantAxes": [
+    "range: 0-100",
+    "consumer: theme editor",
+    "update: single-axis patch"
+  ],
+  "stateModel": [
+    "overlayOpacity clamp",
+    "CSS variable update",
+    "subscriber notification"
+  ],
+  "props": [
+    {
+      "name": "overlayOpacity",
+      "type": "number",
+      "default": "-",
+      "required": true,
+      "description": "Overlay opacity degerini runtime clamp kurallariyla guncelleyip CSS variable ve axes state'e yazar."
+    }
+  ],
+  "previewFocus": [
+    "overlay opacity slider"
+  ],
+  "regressionFocus": [
+    "range clamp parity",
+    "CSS variable update",
+    "notify cascade"
+  ]
+},
 };
 
 export default entry;

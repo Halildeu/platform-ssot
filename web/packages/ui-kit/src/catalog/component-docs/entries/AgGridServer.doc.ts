@@ -5,21 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "AgGridServer",
   "kind": "component",
-  "importStatement": "import { AgGridServer } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "data_display",
-  "subgroup": "data_grid",
-  "tags": [
-    "data-display",
-    "grid",
-    "server",
-    "stable",
-    "wave-4"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "data_display",
+  "subgroup": "data_grid",
   "taxonomyGroupId": "data_display",
   "taxonomySubgroup": "Data Grid (AG Grid / EntityGrid)",
   "demoMode": "live",
@@ -37,10 +26,21 @@ const entry: DesignLabComponentDocEntry = {
     "doctor_frontend_evidence",
     "performance_contract"
   ],
+  "tags": [
+    "wave-4",
+    "data-display",
+    "stable",
+    "grid",
+    "server"
+  ],
   "uxPrimaryThemeId": "performance_resilience_experience",
   "uxPrimarySubthemeId": "perceived_performance_optimization",
   "roadmapWaveId": "wave_4_data_display",
-  "acceptanceContractId": "ui-library-wave-4-data-display-v1"
+  "acceptanceContractId": "ui-library-wave-4-data-display-v1",
+  "importStatement": "import { AgGridServer } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "AgGridServer",

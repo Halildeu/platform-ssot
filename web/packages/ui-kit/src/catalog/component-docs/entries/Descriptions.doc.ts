@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Descriptions",
   "kind": "component",
-  "importStatement": "import { Descriptions } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "data_display",
-  "subgroup": "descriptions",
-  "tags": [
-    "beta",
-    "data-display",
-    "descriptions",
-    "wave-4"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "data_display",
+  "subgroup": "descriptions",
   "taxonomyGroupId": "data_display",
   "taxonomySubgroup": "Descriptions / Key-Value",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-4",
+    "data-display",
+    "beta",
+    "descriptions"
+  ],
   "uxPrimaryThemeId": "feedback_state_and_visibility",
   "uxPrimarySubthemeId": "confirmation_receipts_and_traceability",
   "roadmapWaveId": "wave_4_data_display",
-  "acceptanceContractId": "ui-library-wave-4-data-display-v1"
+  "acceptanceContractId": "ui-library-wave-4-data-display-v1",
+  "importStatement": "import { Descriptions } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Descriptions",

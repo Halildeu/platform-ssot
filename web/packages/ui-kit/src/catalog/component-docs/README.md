@@ -10,10 +10,9 @@ Bu klasor, Design Lab icindeki her component/hook/function/const girdisinin ayri
 
 ## Uretim
 
-Ilk ayrisim mevcut aggregate kataloglardan uretilmistir:
+Ilk ayrisim mevcut manifest katmanindan uretilir:
 
-- `web/apps/mfe-shell/src/pages/admin/design-lab.index.json`
-- `web/packages/ui-kit/src/catalog/component-api-catalog.v1.json`
+- `web/packages/ui-kit/src/catalog/component-manifest.v1.json`
 
 Jenerasyon komutu:
 

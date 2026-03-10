@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "Avatar",
   "kind": "component",
-  "importStatement": "import { Avatar } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "content",
-  "subgroup": "identity",
-  "tags": [
-    "beta",
-    "foundation-primitives",
-    "identity",
-    "wave-1"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "content",
+  "subgroup": "identity",
   "taxonomyGroupId": "general",
   "taxonomySubgroup": "Avatar & Identity",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-1",
+    "foundation-primitives",
+    "beta",
+    "identity"
+  ],
   "uxPrimaryThemeId": "trust_privacy_security_ux",
   "uxPrimarySubthemeId": "privacy_by_design_defaults",
   "roadmapWaveId": "wave_1_foundation_primitives",
-  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1"
+  "acceptanceContractId": "ui-library-wave-1-foundation-primitives-v1",
+  "importStatement": "import { Avatar } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "Avatar",

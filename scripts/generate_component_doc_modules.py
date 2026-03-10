@@ -8,8 +8,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DESIGN_LAB_INDEX_PATH = ROOT / "web/apps/mfe-shell/src/pages/admin/design-lab.index.json"
-API_CATALOG_PATH = ROOT / "web/packages/ui-kit/src/catalog/component-api-catalog.v1.json"
+MANIFEST_PATH = ROOT / "web/packages/ui-kit/src/catalog/component-manifest.v1.json"
 DOC_ROOT = ROOT / "web/packages/ui-kit/src/catalog/component-docs"
 ENTRIES_DIR = DOC_ROOT / "entries"
 INDEX_FILE = DOC_ROOT / "index.ts"
@@ -32,20 +31,10 @@ def _ts_literal(value: Any) -> str:
 
 
 def main() -> int:
-    design_lab_index = _load_json(DESIGN_LAB_INDEX_PATH)
-    api_catalog = _load_json(API_CATALOG_PATH)
-
-    items = design_lab_index.get("items")
-    api_items = api_catalog.get("items")
-    if not isinstance(items, list) or not isinstance(api_items, list):
-        raise SystemExit("design-lab index or api catalog has invalid shape")
-
-    api_map = {}
-    for api_item in api_items:
-        if isinstance(api_item, dict):
-            name = str(api_item.get("name") or "").strip()
-            if name:
-                api_map[name] = api_item
+    manifest = _load_json(MANIFEST_PATH)
+    items = manifest.get("items")
+    if not isinstance(items, list):
+        raise SystemExit("component manifest has invalid shape")
 
     ENTRIES_DIR.mkdir(parents=True, exist_ok=True)
     generated_files: list[tuple[str, str]] = []
@@ -54,14 +43,16 @@ def main() -> int:
         if not isinstance(raw_item, dict):
             continue
         name = str(raw_item.get("name") or "").strip()
+        index_item = raw_item.get("indexItem")
+        api_item = raw_item.get("apiItem")
         if not name:
             continue
+        if not isinstance(index_item, dict):
+            raise SystemExit(f"component manifest indexItem missing for {name}")
 
         safe_name = _safe_name(name)
         rel_import = f"./entries/{safe_name}.doc"
         generated_files.append((name, rel_import))
-
-        api_item = api_map.get(name)
         target = ENTRIES_DIR / f"{safe_name}.doc.ts"
         target.write_text(
             "\n".join(
@@ -70,8 +61,8 @@ def main() -> int:
                     "",
                     "const entry: DesignLabComponentDocEntry = {",
                     f"  name: {json.dumps(name, ensure_ascii=False)},",
-                    f"  indexItem: {_ts_literal(raw_item)},",
-                    f"  apiItem: {_ts_literal(api_item) if api_item is not None else 'null'},",
+                    f"  indexItem: {_ts_literal(index_item)},",
+                    f"  apiItem: {_ts_literal(api_item) if isinstance(api_item, dict) else 'null'},",
                     "};",
                     "",
                     "export default entry;",
@@ -88,11 +79,7 @@ def main() -> int:
         imports.append(f"import {symbol} from {json.dumps(rel_import)};")
         entries.append(symbol)
 
-    api_meta = {
-        "version": api_catalog.get("version"),
-        "subject_id": api_catalog.get("subject_id"),
-        "wave_id": api_catalog.get("wave_id"),
-    }
+    api_meta = manifest.get("apiCatalogMeta") or {}
 
     INDEX_FILE.write_text(
         "\n".join(

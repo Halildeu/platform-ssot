@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "CommandPalette",
   "kind": "component",
-  "importStatement": "import { CommandPalette } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "ai_helpers",
-  "subgroup": "command_palette",
-  "tags": [
-    "ai-native-helpers",
-    "beta",
-    "command",
-    "wave-6"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "ai_helpers",
+  "subgroup": "command_palette",
   "taxonomyGroupId": "ai_native_helpers",
   "taxonomySubgroup": "Command palette",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-6",
+    "ai-native-helpers",
+    "beta",
+    "command"
+  ],
   "uxPrimaryThemeId": "ai_assisted_decision_experience",
   "uxPrimarySubthemeId": "safe_prompt_templates_and_scope",
   "roadmapWaveId": "wave_6_ai_native_helpers",
-  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1",
+  "importStatement": "import { CommandPalette } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "CommandPalette",

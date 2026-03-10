@@ -5,17 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "resolveThemeModeKey",
   "kind": "function",
-  "importStatement": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
-    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
-    "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx"
-  ],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Token viewer (semantic/raw)",
   "demoMode": "inspector",
@@ -28,12 +21,46 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { resolveThemeModeKey } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/app/ShellApp.ui.tsx",
+    "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx",
+    "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.shared.ts"
+  ]
 },
-  apiItem: null,
+  apiItem: {
+  "name": "resolveThemeModeKey",
+  "variantAxes": [
+    "input: explicit-mode | appearance-density",
+    "fallback: alias | defaultMode",
+    "coerce: matched | bypassed"
+  ],
+  "stateModel": [
+    "explicit mode validation",
+    "appearance/density alias resolution",
+    "coerce rule application",
+    "default mode fallback"
+  ],
+  "props": [
+    {
+      "name": "axes",
+      "type": "{ appearance?: unknown; density?: unknown; modeKey?: unknown }",
+      "default": "{}",
+      "required": false,
+      "description": "Explicit modeKey veya appearance/density kombinasyonundan kanonik theme mode key uretir."
+    }
+  ],
+  "previewFocus": [
+    "explicit mode passthrough",
+    "appearance-density alias mapping",
+    "default mode fallback"
+  ],
+  "regressionFocus": [
+    "invalid mode fallback",
+    "coerce rule parity",
+    "alias precedence"
+  ]
+},
 };
 
 export default entry;

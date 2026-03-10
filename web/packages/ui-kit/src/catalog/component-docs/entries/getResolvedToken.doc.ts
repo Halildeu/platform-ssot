@@ -5,13 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "getResolvedToken",
   "kind": "function",
-  "importStatement": "import { getResolvedToken } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "runtime",
-  "subgroup": "auth",
-  "tags": [],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "runtime",
+  "subgroup": "auth",
   "taxonomyGroupId": "runtime_utilities",
   "taxonomySubgroup": "HTTP helpers",
   "demoMode": "inspector",
@@ -24,12 +21,40 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { getResolvedToken } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "getResolvedToken",
+  "variantAxes": [
+    "resolver: default | registered",
+    "result: token | null",
+    "error-path: safe-null fallback"
+  ],
+  "stateModel": [
+    "registered resolver invocation",
+    "null fallback",
+    "safe error handling"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "() => string | null",
+      "default": "-",
+      "required": false,
+      "description": "Kayitli token resolver'i calistirir; hata veya token yoksa guvenli bicimde null dondurur."
+    }
+  ],
+  "previewFocus": [
+    "token resolver read",
+    "safe null fallback"
+  ],
+  "regressionFocus": [
+    "resolver error handling",
+    "null fallback parity",
+    "registered resolver wiring"
+  ]
+},
 };
 
 export default entry;

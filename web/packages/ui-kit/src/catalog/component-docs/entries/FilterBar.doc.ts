@@ -5,21 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "FilterBar",
   "kind": "component",
-  "importStatement": "import { FilterBar } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "page_blocks",
-  "subgroup": "filters",
-  "tags": [
-    "filters",
-    "page-blocks",
-    "stable",
-    "toolbar",
-    "wave-7"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "page_blocks",
+  "subgroup": "filters",
   "taxonomyGroupId": "page_blocks",
   "taxonomySubgroup": "Filters",
   "demoMode": "live",
@@ -36,10 +25,21 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "doctor_frontend_evidence"
   ],
+  "tags": [
+    "wave-7",
+    "page-blocks",
+    "stable",
+    "filters",
+    "toolbar"
+  ],
   "uxPrimaryThemeId": "task_completion_architecture",
   "uxPrimarySubthemeId": "critical_path_minimization",
   "roadmapWaveId": "wave_7_page_blocks",
-  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1",
+  "importStatement": "import { FilterBar } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "FilterBar",

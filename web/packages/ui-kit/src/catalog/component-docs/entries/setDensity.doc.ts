@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "setDensity",
   "kind": "function",
-  "importStatement": "import { setDensity } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "runtime",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "runtime",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
@@ -26,12 +21,39 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { setDensity } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "setDensity",
+  "variantAxes": [
+    "density: comfortable | compact",
+    "consumer: theme editor",
+    "update: single-axis patch"
+  ],
+  "stateModel": [
+    "density patch",
+    "DOM attr update",
+    "subscriber notification"
+  ],
+  "props": [
+    {
+      "name": "density",
+      "type": "'comfortable' | 'compact'",
+      "default": "-",
+      "required": true,
+      "description": "Density eksenini runtime axes state uzerinden gunceller."
+    }
+  ],
+  "previewFocus": [
+    "density switch"
+  ],
+  "regressionFocus": [
+    "density patch parity",
+    "DOM attr update",
+    "notify cascade"
+  ]
+},
 };
 
 export default entry;

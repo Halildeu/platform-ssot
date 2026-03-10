@@ -5,26 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "PageLayout",
   "kind": "component",
-  "importStatement": "import { PageLayout } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
-    "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
-    "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-    "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
-    "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
-  ],
-  "group": "page_blocks",
-  "subgroup": "page_shell",
-  "tags": [
-    "layout",
-    "page-blocks",
-    "page-shell",
-    "stable",
-    "wave-7"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "page_blocks",
+  "subgroup": "page_shell",
   "taxonomyGroupId": "page_blocks",
   "taxonomySubgroup": "Page Shell",
   "demoMode": "live",
@@ -41,10 +25,26 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "doctor_frontend_evidence"
   ],
+  "tags": [
+    "wave-7",
+    "page-blocks",
+    "stable",
+    "layout",
+    "page-shell"
+  ],
   "uxPrimaryThemeId": "navigation_information_scent",
   "uxPrimarySubthemeId": "domain_based_information_architecture",
   "roadmapWaveId": "wave_7_page_blocks",
-  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1"
+  "acceptanceContractId": "ui-library-wave-7-page-blocks-v1",
+  "importStatement": "import { PageLayout } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-access/src/pages/access/AccessPage.ui.tsx",
+    "web/apps/mfe-reporting/src/app/reporting/ReportPage.tsx",
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+    "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx",
+    "web/apps/mfe-users/src/pages/users/UsersPage.ui.tsx"
+  ]
 },
   apiItem: {
   "name": "PageLayout",

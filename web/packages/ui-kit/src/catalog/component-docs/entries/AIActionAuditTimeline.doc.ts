@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "AIActionAuditTimeline",
   "kind": "component",
-  "importStatement": "import { AIActionAuditTimeline } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "ai_helpers",
-  "subgroup": "approval_audit",
-  "tags": [
-    "ai-native-helpers",
-    "audit",
-    "beta",
-    "wave-6"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "ai_helpers",
+  "subgroup": "approval_audit",
   "taxonomyGroupId": "ai_native_helpers",
   "taxonomySubgroup": "Approval / Audit",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-6",
+    "ai-native-helpers",
+    "beta",
+    "audit"
+  ],
   "uxPrimaryThemeId": "ai_assisted_decision_experience",
   "uxPrimarySubthemeId": "ai_action_audit_trail",
   "roadmapWaveId": "wave_6_ai_native_helpers",
-  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1"
+  "acceptanceContractId": "ui-library-wave-6-ai-native-helpers-v1",
+  "importStatement": "import { AIActionAuditTimeline } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "AIActionAuditTimeline",

@@ -5,15 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "THEME_ELEVATION_OPTIONS",
   "kind": "const",
-  "importStatement": "import { THEME_ELEVATION_OPTIONS } from 'mfe-ui-kit';",
-  "whereUsed": [],
-  "group": "theme",
-  "subgroup": "options",
-  "tags": [
-    "advanced"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "theme",
+  "subgroup": "options",
   "taxonomyGroupId": "theme_tokens",
   "taxonomySubgroup": "Density / radius / motion presets",
   "demoMode": "inspector",
@@ -26,12 +21,36 @@ const entry: DesignLabComponentDocEntry = {
   "qualityGates": [
     "registry_export_sync"
   ],
-  "uxPrimaryThemeId": "",
-  "uxPrimarySubthemeId": "",
-  "roadmapWaveId": "",
-  "acceptanceContractId": ""
+  "importStatement": "import { THEME_ELEVATION_OPTIONS } from 'mfe-ui-kit';",
+  "whereUsed": []
 },
-  apiItem: null,
+  apiItem: {
+  "name": "THEME_ELEVATION_OPTIONS",
+  "variantAxes": [
+    "elevation: raised | flat",
+    "source: static-array",
+    "consumer: theme editor"
+  ],
+  "stateModel": [
+    "static elevation option exposure"
+  ],
+  "props": [
+    {
+      "name": "signature",
+      "type": "ThemeElevation[]",
+      "default": "-",
+      "required": false,
+      "description": "Theme editor icin resmi elevation seceneklerini listeler."
+    }
+  ],
+  "previewFocus": [
+    "elevation option picker"
+  ],
+  "regressionFocus": [
+    "array contents parity",
+    "selector binding stability"
+  ]
+},
 };
 
 export default entry;

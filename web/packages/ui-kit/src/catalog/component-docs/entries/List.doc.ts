@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "List",
   "kind": "component",
-  "importStatement": "import { List } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "data_display",
-  "subgroup": "list",
-  "tags": [
-    "beta",
-    "data-display",
-    "list",
-    "wave-4"
-  ],
   "availability": "exported",
   "lifecycle": "beta",
+  "group": "data_display",
+  "subgroup": "list",
   "taxonomyGroupId": "data_display",
   "taxonomySubgroup": "List",
   "demoMode": "live",
@@ -34,10 +24,20 @@ const entry: DesignLabComponentDocEntry = {
     "registry_export_sync",
     "ux_catalog_alignment"
   ],
+  "tags": [
+    "wave-4",
+    "data-display",
+    "beta",
+    "list"
+  ],
   "uxPrimaryThemeId": "task_completion_architecture",
   "uxPrimarySubthemeId": "critical_path_minimization",
   "roadmapWaveId": "wave_4_data_display",
-  "acceptanceContractId": "ui-library-wave-4-data-display-v1"
+  "acceptanceContractId": "ui-library-wave-4-data-display-v1",
+  "importStatement": "import { List } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "List",

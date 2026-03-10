@@ -5,20 +5,10 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "SearchFilterListing",
   "kind": "component",
-  "importStatement": "import { SearchFilterListing } from 'mfe-ui-kit';",
-  "whereUsed": [
-    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-  ],
-  "group": "page_blocks",
-  "subgroup": "recipes",
-  "tags": [
-    "listing",
-    "recipes",
-    "stable",
-    "wave-11"
-  ],
   "availability": "exported",
   "lifecycle": "stable",
+  "group": "page_blocks",
+  "subgroup": "recipes",
   "taxonomyGroupId": "search_filtering",
   "taxonomySubgroup": "Search + filter listings",
   "demoMode": "live",
@@ -35,10 +25,20 @@ const entry: DesignLabComponentDocEntry = {
     "ux_catalog_alignment",
     "a11y_keyboard_support"
   ],
+  "tags": [
+    "wave-11",
+    "recipes",
+    "stable",
+    "listing"
+  ],
   "uxPrimaryThemeId": "task_completion_architecture",
   "uxPrimarySubthemeId": "critical_path_minimization",
   "roadmapWaveId": "wave_11_recipes",
-  "acceptanceContractId": "ui-library-wave-11-recipes-v1"
+  "acceptanceContractId": "ui-library-wave-11-recipes-v1",
+  "importStatement": "import { SearchFilterListing } from 'mfe-ui-kit';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
+  ]
 },
   apiItem: {
   "name": "SearchFilterListing",
