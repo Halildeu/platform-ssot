@@ -31,7 +31,7 @@ Amaç: Çok repolu ERP ürün ailesinde standardizasyon drift'ini engellemek, AI
 - Legacy standards archive manifest: `registry/archives/legacy_standards_archive.aistd.v1.json`
 - Solo branch policy guard: `scripts/check_branch_protection_solo_policy.py`
 - Lane config + runner: `ci/module_delivery_lanes.v1.json`, `ci/run_module_delivery_lane.py`, `ci/check_module_delivery_lanes.py`
-- Cache boundary guard: `docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md`, `scripts/check_cache_boundary.py`
+- Cache boundary kuralı: `docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md`
 
 ## Standart Kaynakları (Neye Göre Kontrol Eder?)
 Bu kontrat `standards.lock` içindeki `standard_sources` haritasını canonical kabul eder:
@@ -59,7 +59,7 @@ Not (Hard Cutover v2):
 - Taşeron repo sync doğrulama komutu: `python3 ci/check_standards_lock.py --repo-root <repo_root>`
 - Lane kontrat doğrulama komutu: `python3 ci/check_module_delivery_lanes.py --strict`
 - Solo branch policy doğrulama komutu: `python3 scripts/check_branch_protection_solo_policy.py --repo-slug <owner/repo>`
-- Cache boundary doğrulama komutu: `python3 scripts/check_cache_boundary.py`
+- Cache boundary doğrulama komutu: `python3 ci/check_standards_lock.py`
 - System summary kaynakları:
   - `.cache/reports/system_status.v1.json`
   - `.cache/reports/portfolio_status.v1.json`

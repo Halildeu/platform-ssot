@@ -1,9 +1,22 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
-from check_standards_lock_sections import (
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from ci.check_standards_lock_parts.constants import (
+    REQUIRED_FILES,
+    REQUIRED_COMMANDS,
+    REQUIRED_GATES,
+    REQUIRED_LOCK_KEYS,
+    REQUIRED_STANDARD_SOURCES,
+)
+from ci.check_standards_lock_parts.helpers import _fail, _is_cache_path, _load_json, _parse_args, _repo_root
+from ci.check_standards_lock_parts.lock_checks import (
     _check_branch_protection,
     _check_enforcement_workflow,
     _check_managed_repo_sync,
@@ -11,20 +24,8 @@ from check_standards_lock_sections import (
     _check_module_delivery_workflow,
     _check_required_commands,
     _check_solo_developer_policy,
+    _check_standard_sources,
 )
-from check_standards_lock_shared import (
-    REQUIRED_COMMANDS,
-    REQUIRED_FILES,
-    REQUIRED_GATES,
-    REQUIRED_LOCK_KEYS,
-    REQUIRED_STANDARD_SOURCES,
-    _fail,
-    _load_json,
-    _parse_args,
-    _repo_root,
-)
-from check_standards_lock_validators import _check_standard_sources
-
 
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
@@ -47,7 +48,7 @@ def main(argv: list[str] | None = None) -> int:
     if not isinstance(lock, dict):
         return _fail("STANDARDS_LOCK_INVALID_TYPE", "standards.lock root must be an object.")
 
-    missing_keys = [key for key in REQUIRED_LOCK_KEYS if key not in lock]
+    missing_keys = [k for k in REQUIRED_LOCK_KEYS if k not in lock]
     if missing_keys:
         return _fail(
             "STANDARDS_LOCK_MISSING_KEYS",
@@ -58,10 +59,16 @@ def main(argv: list[str] | None = None) -> int:
     if lock.get("version") != "v1":
         return _fail("STANDARDS_LOCK_VERSION_INVALID", "standards.lock version must be v1.")
 
-    if lock.get("operating_contract") != "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md":
+    operating_contract = lock.get("operating_contract")
+    if operating_contract != "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md":
         return _fail(
             "OPERATING_CONTRACT_PATH_INVALID",
             "operating_contract path must point to the v1 contract document.",
+        )
+    if _is_cache_path(str(operating_contract or "")):
+        return _fail(
+            "OPERATING_CONTRACT_UNDER_CACHE",
+            "operating_contract path must not live under .cache.",
         )
 
     required_files = lock.get("required_files")
@@ -74,6 +81,13 @@ def main(argv: list[str] | None = None) -> int:
             "REQUIRED_FILES_INCOMPLETE",
             "standards.lock required_files does not include all critical files.",
             details={"missing": missing_from_lock},
+        )
+    cache_files = sorted(rel for rel in file_set if _is_cache_path(rel))
+    if cache_files:
+        return _fail(
+            "REQUIRED_FILES_UNDER_CACHE",
+            "required_files must not contain canonical paths under .cache.",
+            details={"paths": cache_files},
         )
 
     commands_ok, command_details = _check_required_commands(lock.get("required_commands"))
@@ -158,7 +172,8 @@ def main(argv: list[str] | None = None) -> int:
     pr_gate_mode = lock.get("pr_gate_mode")
     if not isinstance(pr_gate_mode, dict):
         return _fail("PR_GATE_MODE_INVALID", "pr_gate_mode must be an object.")
-    if pr_gate_mode.get("enforcement_check_pull_request") != "blocking":
+    enf_mode = pr_gate_mode.get("enforcement_check_pull_request")
+    if enf_mode != "blocking":
         return _fail(
             "PR_GATE_MODE_NOT_BLOCKING",
             "enforcement_check_pull_request must be blocking.",

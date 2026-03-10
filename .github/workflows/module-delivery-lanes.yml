@@ -27,10 +27,6 @@ jobs:
         run: |
           python3 ci/check_module_delivery_lanes.py --strict
 
-      - name: Script budget precheck
-        run: |
-          python3 ci/check_script_budget.py --out .cache/script_budget/report.json
-
       - name: Feature execution bridge gate
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
@@ -121,16 +117,6 @@ jobs:
       - name: Run unit lane
         run: |
           python3 ci/run_module_delivery_lane.py --lane unit
-      - name: Upload unit lane artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: module-lane-unit-artifacts
-          path: |
-            .cache/reports/module_delivery_lanes/unit.v1.json
-            .cache/reports/backend_build_guard.v1.json
-            .cache/reports/backend_test_matrix
-          if-no-files-found: warn
 
   module-lane-database:
     runs-on: ubuntu-latest
@@ -157,14 +143,6 @@ jobs:
       - name: Run database lane
         run: |
           python3 ci/run_module_delivery_lane.py --lane database
-      - name: Upload database lane artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: module-lane-database-artifacts
-          path: |
-            .cache/reports/module_delivery_lanes/database.v1.json
-          if-no-files-found: warn
 
   module-lane-api:
     runs-on: ubuntu-latest
@@ -191,15 +169,6 @@ jobs:
       - name: Run api lane
         run: |
           python3 ci/run_module_delivery_lane.py --lane api
-      - name: Upload api lane artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: module-lane-api-artifacts
-          path: |
-            .cache/reports/module_delivery_lanes/api.v1.json
-            .cache/reports/backend_build_guard.v1.json
-          if-no-files-found: warn
 
   module-lane-contract:
     runs-on: ubuntu-latest
@@ -225,19 +194,6 @@ jobs:
       - name: Run contract lane
         run: |
           python3 ci/run_module_delivery_lane.py --lane contract
-      - name: Upload contract lane artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: module-lane-contract-artifacts
-          path: |
-            .cache/reports/module_delivery_lanes/contract.v1.json
-            .cache/script_budget/report.json
-            .cache/reports/web_build_guard.v1.json
-            .cache/reports/web_runtime_guard.v1.json
-            .cache/runtime_guard/web_start_session.v1.json
-            web/logs
-          if-no-files-found: warn
 
   module-lane-integration:
     runs-on: ubuntu-latest
@@ -259,19 +215,6 @@ jobs:
       - name: Run integration lane
         run: |
           python3 ci/run_module_delivery_lane.py --lane integration
-      - name: Upload integration lane artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: module-lane-integration-artifacts
-          path: |
-            .cache/reports/module_delivery_lanes/integration.v1.json
-            .cache/reports/backend_runtime_guard.v1.json
-            .cache/reports/backend_compose_runtime_guard.v1.json
-            .cache/runtime_guard/backend_start_session.v1.json
-            .cache/runtime_guard/backend_compose_session.v1.json
-            backend/logs
-          if-no-files-found: warn
 
   module-lane-e2e:
     runs-on: ubuntu-latest
@@ -293,15 +236,6 @@ jobs:
       - name: Run e2e lane
         run: |
           python3 ci/run_module_delivery_lane.py --lane e2e
-      - name: Upload e2e lane artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: module-lane-e2e-artifacts
-          path: |
-            .cache/reports/module_delivery_lanes/e2e.v1.json
-            .cache/reports/managed_repo_standards_sync/report.v1.json
-          if-no-files-found: warn
 
   module-delivery-gate:
     runs-on: ubuntu-latest

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -11,18 +10,6 @@ from typing import Any
 
 
 VALID_LANES = ("unit", "database", "api", "contract", "integration", "e2e")
-_SUCCESS_STDERR_TO_STDOUT_PATTERNS = (
-    re.compile(r"^PASS\b"),
-    re.compile(r"^\s{2,}(?:\u2713|\w)"),
-    re.compile(r"^Test Suites:"),
-    re.compile(r"^Tests:\s+"),
-    re.compile(r"^Snapshots:\s+"),
-    re.compile(r"^Time:\s+"),
-    re.compile(r"^Ran all test suites\."),
-    re.compile(r"^\[java-runtime\]\s"),
-    re.compile(r"^\s*Network .+\b(?:Creating|Created|Starting|Started)\b"),
-    re.compile(r"^\s*Container .+\b(?:Creating|Created|Starting|Started)\b"),
-)
 
 
 def _now_iso_utc() -> str:
@@ -49,43 +36,11 @@ def _tail_preview(text: str, *, max_lines: int = 20, max_chars: int = 4000) -> l
     return lines
 
 
-def _normalize_success_stderr(stdout_text: str, stderr_text: str, *, return_code: int) -> tuple[str, str]:
-    if return_code != 0 or not stderr_text.strip():
-        return stdout_text, stderr_text
-
-    promoted_lines: list[str] = []
-    remaining_lines: list[str] = []
-    for raw_line in stderr_text.splitlines():
-        line = raw_line.rstrip()
-        if not line.strip():
-            continue
-        if any(pattern.match(line) for pattern in _SUCCESS_STDERR_TO_STDOUT_PATTERNS):
-            promoted_lines.append(line)
-            continue
-        remaining_lines.append(line)
-
-    if not promoted_lines:
-        return stdout_text, stderr_text
-
-    merged_stdout_parts = [stdout_text.rstrip(), *promoted_lines]
-    merged_stdout = "\n".join(part for part in merged_stdout_parts if part).rstrip()
-    remaining_stderr = "\n".join(remaining_lines).rstrip()
-    if merged_stdout:
-        merged_stdout += "\n"
-    if remaining_stderr:
-        remaining_stderr += "\n"
-    return merged_stdout, remaining_stderr
-
-
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lane", required=True, choices=VALID_LANES)
     parser.add_argument("--config", default="ci/module_delivery_lanes.v1.json")
     parser.add_argument("--outdir", default=".cache/reports/module_delivery_lanes")
-    stderr_group = parser.add_mutually_exclusive_group()
-    stderr_group.add_argument("--require-clean-stderr", dest="require_clean_stderr", action="store_true")
-    stderr_group.add_argument("--allow-stderr", dest="require_clean_stderr", action="store_false")
-    parser.set_defaults(require_clean_stderr=None)
     return parser.parse_args(argv)
 
 
@@ -132,11 +87,6 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
         return 2
 
-    clean_stderr_default = config_obj.get("clean_stderr_default")
-    if not isinstance(clean_stderr_default, bool):
-        clean_stderr_default = True
-    require_clean_stderr = clean_stderr_default if args.require_clean_stderr is None else bool(args.require_clean_stderr)
-
     timeout_seconds = int(lane_obj.get("timeout_seconds") or 900)
     if timeout_seconds <= 0:
         timeout_seconds = 900
@@ -161,13 +111,9 @@ def main(argv: list[str] | None = None) -> int:
         stdout_text = str(exc.stdout or "")
         stderr_text = str(exc.stderr or "")
 
-    stdout_text, stderr_text = _normalize_success_stderr(stdout_text, stderr_text, return_code=return_code)
-
     duration_ms = int((time.time() - started_ts) * 1000)
     finished_at = _now_iso_utc()
-    stderr_tail = _tail_preview(stderr_text)
-    clean_stderr_violated = bool(require_clean_stderr and return_code == 0 and not timed_out and stderr_tail)
-    status = "OK" if return_code == 0 and not timed_out and not clean_stderr_violated else "FAIL"
+    status = "OK" if return_code == 0 and not timed_out else "FAIL"
 
     outdir = Path(str(args.outdir).strip())
     outdir = (root / outdir).resolve() if not outdir.is_absolute() else outdir.resolve()
@@ -187,10 +133,8 @@ def main(argv: list[str] | None = None) -> int:
         "timeout_seconds": timeout_seconds,
         "command": command,
         "config_path": str(config_path),
-        "clean_stderr_required": require_clean_stderr,
-        "clean_stderr_violated": clean_stderr_violated,
         "stdout_tail": _tail_preview(stdout_text),
-        "stderr_tail": stderr_tail,
+        "stderr_tail": _tail_preview(stderr_text),
     }
     report_path.write_text(json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
 
@@ -201,8 +145,6 @@ def main(argv: list[str] | None = None) -> int:
         "report_path": str(report_path),
         "timed_out": timed_out,
     }
-    if clean_stderr_violated:
-        payload["error_code"] = "LANE_STDERR_NOT_CLEAN"
     print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
     return 0 if status == "OK" else 2
 

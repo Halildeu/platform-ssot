@@ -24,12 +24,7 @@
       "extensions/**/src/**"
     ],
     "exclude_globs": [
-      ".cache/**",
       "**/node_modules/**",
-      "**/node_modules_old/**",
-      "**/node_modules_failed_pnpm_hoisted/**",
-      "**/__pycache__/**",
-      "**/*.pyc",
       "**/.cache/**",
       "**/dist/**",
       "**/build/**",

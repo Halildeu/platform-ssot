@@ -1,5 +1,28 @@
 # AGENTS.md – Proje Genel Agent Talimatları
 
+## 0. Authority durumu
+
+- Canonical OPO kaynakları:
+  - `standards.lock`
+  - `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`
+  - `docs/OPERATIONS/ARCHITECTURE-CONSTRAINTS.md`
+  - `docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md`
+  - `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+- Current delivery bağlamı:
+  - `docs/03-delivery/PROJECT-FLOW.md`
+  - `docs/03-delivery/STORIES/**`
+  - `docs/03-delivery/ACCEPTANCE/**`
+  - `docs/03-delivery/TEST-PLANS/**`
+- Transition-active rehber katmanı:
+  - authority map içinde tanımlı transition rehber seti
+- Archive-reference:
+  - authority map içinde tanımlı archive-reference seti
+
+Çelişki durumunda:
+- Canonical OPO kaynakları kazanır.
+- Transition-active ve archive-reference katmanı yeni normatif kural yazmak için
+  kullanılmaz.
+
 ## 1. İş tipleri
 
 - [BE]  → Backend endpoint / servis / job
@@ -13,44 +36,45 @@
 
 Her görevde önce:
 
-1. AGENT-CODEX.core.md
-2. docs/00-handbook/DOC-HIERARCHY.md (varsa)
-3. docs/00-handbook/DEV-GUIDE.md (varsa)
+1. `standards.lock`
+2. `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`
+3. `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+4. `docs/03-delivery/PROJECT-FLOW.md` (iş bağlamı gerekiyorsa)
+5. `docs/OPERATIONS/ARCHITECTURE-CONSTRAINTS.md` ve `docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md`
 
-Sonra iş tipine göre ilgili AGENT-CODEX.*.md ve layout/style dokümanları okunur.
+Sonra domain rehberi gerekiyorsa transition-active katman authority map
+üzerinden çözülür:
+
+6. Çekirdek transition rehberi
+7. Transition doküman indeksi ve süreç rehberi authority map üzerinden çözülür.
+
+İş tipine göre ilgili alan transition rehberi ve layout/style dokümanları
+yalnız rehber amaçlı kullanılır; canonical authority değildir.
 
 ### [BE] Backend işleri
-- AGENT-CODEX.backend.md
-- docs/00-handbook/BACKEND-PROJECT-LAYOUT.md
-- docs/00-handbook/STYLE-BE-001.md
-- docs/00-handbook/STYLE-API-001.md (API çıkışı varsa)
+- Backend transition rehberi
+- İlgili layout/style rehberi transition indeksinden seçilir.
 
 ### [WEB] Web frontend işleri
-- AGENT-CODEX.web.md
-- docs/00-handbook/WEB-PROJECT-LAYOUT.md
-- docs/00-handbook/STYLE-WEB-001.md
+- Web transition rehberi
+- İlgili layout/style rehberi transition indeksinden seçilir.
 
 ### [MOB] Mobil frontend işleri
-- AGENT-CODEX.mobile.md
-- docs/00-handbook/MOBILE-PROJECT-LAYOUT.md
-- docs/00-handbook/STYLE-MOB-001.md
+- Mobil transition rehberi
+- İlgili layout/style rehberi transition indeksinden seçilir.
 
 ### [AI] AI/ML işleri
-- AGENT-CODEX.ai.md
-- docs/00-handbook/AI-PROJECT-LAYOUT.md
-- docs/00-handbook/STYLE-AI-001.md
-- docs/00-handbook/DATA-GOV-001.md (varsa)
+- AI/ML transition rehberi
+- İlgili layout/style ve data governance rehberi transition indeksinden seçilir.
 
 ### [DATA] Data / rapor işleri
-- AGENT-CODEX.data.md
-- docs/00-handbook/DATA-PROJECT-LAYOUT.md
-- docs/00-handbook/STYLE-DATA-001.md
-- docs/00-handbook/NAMING.md
+- Data transition rehberi
+- İlgili layout/style ve naming rehberi transition indeksinden seçilir.
 
 ### [DOC] Doküman işleri
-- AGENT-CODEX.docs.md
-- docs/00-handbook/STYLE-DOCS-001.md
+- Doküman transition rehberi
 - docs/99-templates/* (şablonlar varsa)
+- İlgili docs style rehberi transition indeksinden seçilir.
 
 ## 3. Varsayılan cevap formatı
 

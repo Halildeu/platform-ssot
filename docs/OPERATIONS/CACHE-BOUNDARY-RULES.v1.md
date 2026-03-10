@@ -37,15 +37,9 @@ Kural:
 - `.cache/` altindaki veri silindiginde sistem davranisini belirleyen kanonik kural/dokuman kaybolmamali.
 - `.cache/` altindaki veri silindiginde yalniz turetilmis rapor/kanit/state kaybolabilir.
 
-## Worktree Ozel Yorum
-
-- Worktree registry gibi surekli kullanilan operasyon authority dosyalari `.cache/` altinda tutulmaz.
-- Worktree ile ilgili raporlar `.cache/reports/` altinda kalabilir.
-
 ## Dogrulama
 
-- `python3 scripts/check_cache_boundary.py`
-- `python3 ci/check_standards_lock.py --repo-root .`
+- `python3 ci/check_standards_lock.py`
 
 ## Fail-Closed Davranis
 
