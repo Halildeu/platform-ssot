@@ -14,6 +14,7 @@ WEB_RUNTIME_PROFILE="${WEB_RUNTIME_PROFILE:-core}"
 WEB_RUNTIME_POSTCHECK="${WEB_RUNTIME_POSTCHECK:-1}"
 WEB_RUNTIME_STRICT_WARNINGS="${WEB_RUNTIME_STRICT_WARNINGS:-0}"
 WEB_RUNTIME_TAIL="${WEB_RUNTIME_TAIL:-auto}"
+WEB_RUNTIME_CLEANUP_ON_EXIT="${WEB_RUNTIME_CLEANUP_ON_EXIT:-0}"
 WEB_RUNTIME_REPORT="${WEB_RUNTIME_REPORT:-$REPO_ROOT/.cache/reports/web_runtime_guard.v1.json}"
 WEB_RUNTIME_WAIT_SECONDS="${WEB_RUNTIME_WAIT_SECONDS:-120}"
 WEB_RUNTIME_POLL_INTERVAL="${WEB_RUNTIME_POLL_INTERVAL:-2}"
@@ -97,6 +98,12 @@ PY
 
 service_names_for_profile() {
   case "$WEB_RUNTIME_PROFILE" in
+    shell-only)
+      printf '%s\n' shell
+      ;;
+    auth-business-routes)
+      printf '%s\n' shell access audit reporting
+      ;;
     core)
       printf '%s\n' shell users access audit
       ;;
@@ -223,10 +230,17 @@ if [[ "$tail_mode" == "auto" ]]; then
 fi
 
 if [[ "$tail_mode" == "1" ]]; then
-  cleanup() {
-    WEB_RUNTIME_STOP_SILENT=1 "$ROOT_DIR/scripts/health/stop-dev-servers.sh" >/dev/null 2>&1 || true
-  }
-  trap cleanup EXIT INT TERM
+  if [[ "$WEB_RUNTIME_CLEANUP_ON_EXIT" == "1" ]]; then
+    cleanup() {
+      WEB_RUNTIME_STOP_SILENT=1 "$ROOT_DIR/scripts/health/stop-dev-servers.sh" >/dev/null 2>&1 || true
+    }
+    trap cleanup EXIT INT TERM
+  fi
   echo "[ok] Web dev server loglari tail modunda izleniyor. Cikmak icin Ctrl+C."
+  if [[ "$WEB_RUNTIME_CLEANUP_ON_EXIT" == "1" ]]; then
+    echo "[info] Tail oturumu kapaninca dev serverlar da durdurulacak."
+  else
+    echo "[info] Tail oturumu kapaninca dev serverlar calismaya devam edecek."
+  fi
   tail -n 20 -f "${selected_logs[@]}"
 fi
