@@ -59,23 +59,25 @@ export interface BulkUpdateResult {
 }
 
 export const useAccessRoles = (filters: AccessFilters) => {
-  const [data, setData] = React.useState<AccessRole[]>(() => mockAccessRoles);
+  const [data, setData] = React.useState<AccessRole[]>([]);
   const queryClient = useQueryClient();
 
-  useQuery({
+  const rolesQuery = useQuery({
     queryKey: ['roles'],
     queryFn: getRoles,
     staleTime: 30_000,
-    onSuccess: ({ items }) => {
-      if (Array.isArray(items) && items.length > 0) {
-        setData(items);
-      }
-    },
-    onError: (error) => {
-      console.warn('[useAccessRoles] Role listesi alınamadı, mock veri kullanılıyor.', error);
-      setData(mockAccessRoles);
-    },
   });
+
+  React.useEffect(() => {
+    if (Array.isArray(rolesQuery.data?.items) && rolesQuery.data.items.length > 0) {
+      setData(rolesQuery.data.items);
+      return;
+    }
+    if (rolesQuery.status === 'error') {
+      console.warn('[useAccessRoles] Role listesi alınamadı, mock veri kullanılıyor.', rolesQuery.error);
+      setData(mockAccessRoles);
+    }
+  }, [rolesQuery.data, rolesQuery.error, rolesQuery.status]);
 
   const fetchRoleDetail = React.useCallback(
     async (id: string) => {
@@ -101,7 +103,7 @@ export const useAccessRoles = (filters: AccessFilters) => {
   });
 
   const roleCloneMutation = useMutation({
-    mutationFn: (id: string) => cloneRoleApi(id),
+    mutationFn: (payload: CloneRolePayload) => cloneRoleApi(payload.sourceRoleId, payload),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['roles'] });
     },
@@ -144,9 +146,12 @@ export const useAccessRoles = (filters: AccessFilters) => {
   const cloneRole = React.useCallback(
     async (payload: CloneRolePayload): Promise<CloneRoleResult> => {
       try {
-        const cloned = await roleCloneMutation.mutateAsync(payload.sourceRoleId);
+        if (!/^\d+$/.test(payload.sourceRoleId)) {
+          throw new Error(`Mock role kaynağı backend clone için uygun değil: ${payload.sourceRoleId}`);
+        }
+        const cloned = await roleCloneMutation.mutateAsync(payload);
         await queryClient.invalidateQueries({ queryKey: ['roles'] });
-        return { role: cloned, auditId: cloned.id };
+        return { role: cloned.role, auditId: cloned.auditId ?? cloned.role.id };
       } catch (error) {
         console.warn('[useAccessRoles] Role klonlama başarısız, mock fallback.', error);
         const source = data.find((role) => role.id === payload.sourceRoleId);

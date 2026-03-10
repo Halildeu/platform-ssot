@@ -143,14 +143,31 @@ export const updateRole = async (id: string, payload: UpdateRoleRequestDto): Pro
   }
 };
 
-export const cloneRole = async (id: string): Promise<AccessRole> => {
+export type CloneRoleRequestDto = {
+  name: string;
+  description?: string;
+  copyMemberCount?: boolean;
+};
+
+export type CloneRoleResponseDto = {
+  role?: RoleDto;
+  auditId?: string;
+};
+
+export const cloneRole = async (
+  id: string,
+  payload: CloneRoleRequestDto,
+): Promise<{ role: AccessRole; auditId?: string }> => {
   try {
     const client = resolveHttpClient();
-    const res = await client.post<{ role: RoleDto }>(`/v1/roles/${encodeURIComponent(id)}/clone`);
-    return mapRole(res.data.role ?? {});
+    const res = await client.post<CloneRoleResponseDto>(`/v1/roles/${encodeURIComponent(id)}/clone`, payload);
+    return {
+      role: mapRole(res.data.role ?? {}),
+      auditId: res.data.auditId,
+    };
   } catch (err) {
     parseError(err);
-    return mapRole({});
+    return { role: mapRole({}), auditId: undefined };
   }
 };
 

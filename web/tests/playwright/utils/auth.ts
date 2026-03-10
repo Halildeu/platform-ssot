@@ -62,6 +62,36 @@ export const buildTestToken = (permissions: string[] = []): TestSession => {
 const resolveAuthMode = () => (process.env.PW_AUTH_MODE ?? DEFAULT_AUTH_MODE).trim().toLowerCase();
 
 const readInjectedToken = () => (process.env.PW_TEST_TOKEN ?? '').trim();
+const shouldUseFakeAuth = () => (process.env.PW_FAKE_AUTH ?? '').trim() === '1';
+const readFakeAuthPermissions = (fallback: string[]) => {
+  const raw = (process.env.PW_FAKE_AUTH_PERMISSIONS ?? '').trim();
+  if (!raw) return fallback;
+  return raw
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+};
+const installFakeAuthEnv = async (page: Page, permissions: string[]) => {
+  const resolvedPermissions = readFakeAuthPermissions(permissions);
+  await page.addInitScript(
+    ({ nextPermissions }) => {
+      const current = (window as Window & { __env__?: Record<string, string>; __ENV__?: Record<string, string> }).__env__ ?? {};
+      const merged = {
+        ...current,
+        VITE_AUTH_MODE: 'permitAll',
+        VITE_ENABLE_FAKE_AUTH: '1',
+        VITE_FAKE_AUTH_PERMISSIONS: nextPermissions.join(','),
+        VITE_FAKE_AUTH_EMAIL: 'runtime@test.local',
+        VITE_FAKE_AUTH_NAME: 'Runtime Test User',
+        VITE_FAKE_AUTH_DISPLAY: 'Runtime Test User',
+        VITE_FAKE_AUTH_ROLE: 'ADMIN',
+      };
+      (window as Window & { __env__?: Record<string, string>; __ENV__?: Record<string, string> }).__env__ = merged;
+      (window as Window & { __env__?: Record<string, string>; __ENV__?: Record<string, string> }).__ENV__ = merged;
+    },
+    { nextPermissions: resolvedPermissions },
+  );
+};
 
 const hasTokenEndpointConfig = () => {
   const url = (process.env.KEYCLOAK_TOKEN_URL ?? '').trim();
@@ -166,33 +196,58 @@ export const authenticateAndNavigate = async (
   targetPath: string,
   permissions: string[],
 ) => {
+  if (shouldUseFakeAuth()) {
+    const root = baseURL ?? 'http://localhost:3000';
+    await installFakeAuthEnv(page, permissions);
+    await page.goto(`${root}${targetPath}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: 30_000 });
+    return { session: buildTestToken(readFakeAuthPermissions(permissions)), root };
+  }
   const session = await buildAuthSession(permissions);
   const root = baseURL ?? 'http://localhost:3000';
+  const expiresAt = Date.now() + SESSION_TTL_MS;
   await page.goto(`${root}/login`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: 30_000 });
   await page.evaluate(
-    ({ token, user, ttl }) => {
+    ({ token, user, ttl, expiresAtMs }) => {
       const store = (window as any).__shellStore;
       if (!store) {
         console.warn('[auth.sync] shell store not available');
         return;
+      }
+      try {
+        window.localStorage.setItem('token', token);
+        window.localStorage.setItem('user', JSON.stringify(user));
+        window.localStorage.setItem('tokenExpiresAt', String(expiresAtMs));
+      } catch {
+        // ignore
       }
       store.dispatch({
         type: 'auth/setKeycloakSession',
         payload: {
           token,
           profile: user,
-          expiresAt: Date.now() + ttl,
+          expiresAt: expiresAtMs,
         },
       });
       store.dispatch({ type: 'auth/setAuthInitialized', payload: true });
     },
-    { token: session.token, user: session.user, ttl: SESSION_TTL_MS },
+    { token: session.token, user: session.user, ttl: SESSION_TTL_MS, expiresAtMs: expiresAt },
   );
-  // Bazı senaryolarda BroadcastChannel dinleyicisi geç abone olabildiğinden,
-  // auth durumunu hem login ekranında hem hedef rotada yayınlayarak garantili hale getiriyoruz.
+  await page.waitForFunction(() => {
+    const state = (window as any).__shellStore?.getState?.()?.auth;
+    return Boolean(state?.initialized && state?.token);
+  }, { timeout: 30_000 });
   await applyAuthState(page, session);
-  await page.goto(`${root}${targetPath}`, { waitUntil: 'domcontentloaded' });
+  await page.evaluate((nextPath) => {
+    window.history.pushState({}, '', nextPath);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }, targetPath);
+  await page.waitForFunction((nextPath) => window.location.pathname === nextPath, targetPath, { timeout: 30_000 });
   await applyAuthState(page, session);
+  await page.waitForFunction(() => {
+    const state = (window as any).__shellStore?.getState?.()?.auth;
+    return Boolean(state?.initialized && state?.token);
+  }, { timeout: 30_000 });
   return { session, root };
 };

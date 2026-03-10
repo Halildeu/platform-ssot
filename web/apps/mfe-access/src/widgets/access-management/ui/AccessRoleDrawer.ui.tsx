@@ -40,24 +40,26 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
   formatNumber,
   formatDate,
 }) => {
-  if (!open || !role) {
-    return null;
-  }
+  const isOpen = open && Boolean(role);
 
   const { data: permissionList = [] } = useQuery({
     queryKey: ['permissions'],
     queryFn: getPermissions,
-    enabled: open,
+    enabled: isOpen,
     staleTime: 60_000,
   });
 
   const [selectedPermissionIds, setSelectedPermissionIds] = React.useState<string[]>(
-    Array.isArray(role.permissions) ? role.permissions : [],
+    Array.isArray(role?.permissions) ? role.permissions : [],
   );
 
   React.useEffect(() => {
-    setSelectedPermissionIds(Array.isArray(role.permissions) ? role.permissions : []);
+    setSelectedPermissionIds(Array.isArray(role?.permissions) ? role.permissions : []);
   }, [role]);
+
+  if (!isOpen || !role) {
+    return null;
+  }
 
   const togglePermission = (id: string) => {
     setSelectedPermissionIds((prev) => (prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]));

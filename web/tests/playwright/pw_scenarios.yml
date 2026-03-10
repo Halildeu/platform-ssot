@@ -138,7 +138,9 @@ scenarios:
 
   - name: ui_library_page
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -154,7 +156,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - expectVisible: '[data-testid="design-lab-sidebar"]'
       - expectVisible: '[data-testid="design-lab-track-new_packages"]'
@@ -170,7 +172,9 @@ scenarios:
 
   - name: ui_library_navigation_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -186,7 +190,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - expectVisible: '[data-testid="design-lab-search"]'
       - click: '[data-testid="design-lab-group-navigation"]'
@@ -202,7 +206,9 @@ scenarios:
 
   - name: ui_library_foundation_wave_1_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -218,7 +224,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -251,7 +257,9 @@ scenarios:
 
   - name: ui_library_navigation_wave_2_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -267,7 +275,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - click: '[data-testid="design-lab-group-navigation"]'
       - fill:
@@ -282,7 +290,9 @@ scenarios:
 
   - name: ui_library_forms_wave_3_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -298,7 +308,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -384,7 +394,9 @@ scenarios:
 
   - name: ui_library_data_display_wave_4_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -400,7 +412,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -477,7 +489,9 @@ scenarios:
 
   - name: ui_library_overlay_wave_5_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -493,7 +507,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -509,10 +523,10 @@ scenarios:
           value: Dropdown
       - expectVisible: '[data-testid="design-lab-item-dropdown"]'
       - click: '[data-testid="design-lab-item-dropdown"]'
-      - click: '[data-testid="design-lab-tab-api"]'
+      - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
-      - click: 'button:has-text("Aksiyon Menüsü")'
-      - expectVisible: '[role="menu"]'
+      - click: '[data-testid="design-lab-demo-card-dropdown-action-menu"] button:has-text("Aksiyon Menüsü")'
+      - expectVisible: '[data-testid="design-lab-demo-card-dropdown-action-menu"] button:has-text("Publish")'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: Tooltip
@@ -527,8 +541,8 @@ scenarios:
       - click: '[data-testid="design-lab-item-formdrawer"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
-      - click: 'button:has-text("Yeni kayıt drawer")'
-      - expectVisible: '[role="dialog"]'
+      - click: '[data-testid="design-lab-demo-card-form-drawer-create-flow"] button:has-text("Yeni kayıt drawer")'
+      - expectVisible: '[data-testid="design-lab-demo-card-form-drawer-create-flow"] button:has-text("Kaydet")'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: DetailDrawer
@@ -536,8 +550,8 @@ scenarios:
       - click: '[data-testid="design-lab-item-detaildrawer"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
-      - click: 'button:has-text("Detay drawer")'
-      - expectVisible: '[role="dialog"]'
+      - click: '[data-testid="design-lab-demo-card-detail-drawer-tabbed-review"] button:has-text("Detay drawer")'
+      - expectVisible: '[data-testid="design-lab-demo-card-detail-drawer-tabbed-review"] button:has-text("Summary")'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: Popover
@@ -545,12 +559,14 @@ scenarios:
       - click: '[data-testid="design-lab-item-popover"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
-      - click: 'button:has-text("Popover aç")'
-      - expectVisible: '[role="dialog"]'
+      - click: '[data-testid="design-lab-demo-card-popover-rich-guidance"] button:has-text("Popover aç")'
+      - expectVisible: '[data-testid="design-lab-demo-card-popover-rich-guidance"] [role="dialog"]'
 
   - name: ui_library_ai_native_wave_6_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -566,7 +582,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -641,7 +657,7 @@ scenarios:
       - expectVisible: '[data-testid="login-title"]'
       - goto: /runtime/theme-matrix
       - expectVisible: '[data-testid="runtime-theme-matrix-root"]'
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - click: '[data-testid="design-lab-group-navigation"]'
       - click: '[data-testid="design-lab-subgroup-anchor_table_of_contents"]'
@@ -651,7 +667,9 @@ scenarios:
 
   - name: ui_library_page_blocks_wave_7_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -667,7 +685,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -894,7 +912,9 @@ scenarios:
 
   - name: ui_library_overlay_extensions_wave_8_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -910,7 +930,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -935,7 +955,9 @@ scenarios:
 
   - name: ui_library_theme_presets_wave_10_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -951,7 +973,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
@@ -970,7 +992,9 @@ scenarios:
 
   - name: ui_library_recipe_wave_11_walk
     level: 1
-    auth_required: false
+    auth_required: true
+    permissions:
+      - THEME_ADMIN
     console_error_allowlist:
       - "http://localhost:3001/remoteEntry\\.js"
       - "http://localhost:3002/remoteEntry\\.js"
@@ -986,7 +1010,7 @@ scenarios:
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3006/remoteEntry\\.js"
       - "Initialization of sharing external failed:[\\s\\S]*http://localhost:3007/remoteEntry\\.js"
     steps:
-      - goto: /ui-library
+      - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'

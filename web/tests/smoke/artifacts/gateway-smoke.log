@@ -1,18 +1,29 @@
-$ curl -i -s -H 'X-Trace-Id: smoke-401' http://127.0.0.1:4815/api/v1/users
-HTTP/1.1 401 Unauthorized
+$ GET /api/v1/users [trace=smoke-401]
+HTTP 401
+connection: close
+content-length: 123
 content-type: application/json
-Date: Sat, 29 Nov 2025 18:14:27 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-Content-Length: 102
+date: Tue, 10 Mar 2026 13:24:44 GMT
 
-{"path":"/api/v1/users","traceId":"smoke-401","authHeader":"","hasAuth":false,"error":"auth_required"}
-$ curl -i -s -H 'Authorization: Bearer demo-token' -H 'X-Trace-Id: smoke-200' http://127.0.0.1:4815/api/v1/users
-HTTP/1.1 200 OK
+{
+  "path": "/api/v1/users",
+  "traceId": "smoke-401",
+  "hasAuth": false,
+  "authHeader": "",
+  "error": "auth_required"
+}
+
+$ GET /api/v1/users [trace=smoke-200 auth=bearer]
+HTTP 200
+connection: close
+content-length: 138
 content-type: application/json
-Date: Sat, 29 Nov 2025 18:14:27 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-Content-Length: 117
+date: Tue, 10 Mar 2026 13:24:44 GMT
 
-{"path":"/api/v1/users","traceId":"smoke-200","authHeader":"Bearer demo-token","hasAuth":true,"message":"gateway-ok"}
+{
+  "path": "/api/v1/users",
+  "traceId": "smoke-200",
+  "hasAuth": true,
+  "authHeader": "Bearer demo-token",
+  "message": "gateway-ok"
+}
