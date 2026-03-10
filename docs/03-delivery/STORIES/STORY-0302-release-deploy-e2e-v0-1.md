@@ -4,7 +4,7 @@ ID: STORY-0302-release-deploy-e2e-v0-1
 Epic: OPS-RELEASE-E2E  
 Status: Planned  
 Owner: @team/platform  
-Upstream: docs/00-handbook/DEV-GUIDE.md, docs/00-handbook/DOCS-WORKFLOW.md, docs/00-handbook/DOC-HIERARCHY.md, NUMARALANDIRMA-STANDARDI.md  
+Upstream: docs/03-delivery/../00-handbook/DEV-GUIDE.md, docs/03-delivery/../00-handbook/DOCS-WORKFLOW.md, docs/03-delivery/../00-handbook/DOC-HIERARCHY.md, /Users/halilkocoglu/Documents/dev/NUMARALANDIRMA-STANDARDI.md  
 Downstream: AC-0302, TP-0302
 
 -------------------------------------------------------------------------------
@@ -71,9 +71,9 @@ Kapsam dışı (v0.1):
 - Story: docs/03-delivery/STORIES/STORY-0302-release-deploy-e2e-v0-1.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0302-release-deploy-e2e-v0-1.md  
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0302-release-deploy-e2e-v0-1.md  
-- DEV-GUIDE: docs/00-handbook/DEV-GUIDE.md  
-- DOCS-WORKFLOW: docs/00-handbook/DOCS-WORKFLOW.md  
-- DOC-HIERARCHY: docs/00-handbook/DOC-HIERARCHY.md  
+- DEV-GUIDE: docs/03-delivery/../00-handbook/DEV-GUIDE.md  
+- DOCS-WORKFLOW: docs/03-delivery/../00-handbook/DOCS-WORKFLOW.md  
+- DOC-HIERARCHY: docs/03-delivery/../00-handbook/DOC-HIERARCHY.md  
 - RUNBOOK template: docs/99-templates/RUNBOOK.template.md  
 - Web smoke runbook: docs/04-operations/RUNBOOKS/RB-web-playwright-smoke.md  
 

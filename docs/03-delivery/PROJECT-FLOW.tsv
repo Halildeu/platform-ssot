@@ -27,9 +27,9 @@ STORY-0025	0025	FE Version Pinning & MF Audit	QLTY-FE-VERSIONS	—	QLTY-FE-VERSI
 STORY-0026	0026	Doc QA & Template Automation	QLTY-DOC-QA	—	DOCS-WORKFLOW / NUMARALANDIRMA	AC-0026	🟩 Done	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
 STORY-0027	0027	STORY / AC / TP ↔ PROJECT-FLOW Consistency	QLTY-DOC-QA	—	DOCS-PROJECT-LAYOUT / PROJECT-FLOW	AC-0027	⏳ Pending	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
 STORY-0028	0028	API Docs STYLE-API-001 Compliance	QLTY-DOC-QA	—	STYLE-API-001	AC-0028	⏳ Pending	2025-01-XX	@team/backend	M1	M1	M1	L0	—
-STORY-0029	0029	Governance Migration Check	QLTY-DOC-QA	—	Legacy Governance Docs	AC-0029	⏳ Pending	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
-STORY-0030	0030	Agent Docs Contract Check	QLTY-DOC-QA	—	AGENT-CODEX / CONTEXT TEST GUIDE	AC-0030	⏳ Pending	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
-STORY-0031	0031	End-to-end Doc Chain Consistency	QLTY-DOC-QA	—	DOCS-WORKFLOW / DOCS-LAYOUT / ID	AC-0031	⏳ Pending	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
+STORY-0029	0029	Governance Migration Check	QLTY-DOC-QA	—	Legacy Governance Docs	AC-0029	🟩 Done	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
+STORY-0030	0030	Agent Docs Contract Check	QLTY-DOC-QA	—	OPO-AUTHORITY-MAP / TRANSITION CONTRACT	AC-0030	🟩 Done	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
+STORY-0031	0031	End-to-end Doc Chain Consistency	QLTY-DOC-QA	—	DOCS-WORKFLOW / DOCS-LAYOUT / ID	AC-0031	🟩 Done	2025-01-XX	@team/platform-arch	M1	M1	M1	L0	—
 STORY-0032	0032	User REST/DTO v1 Migration	QLTY-REST-USER	(SPEC-legacy)	QLTY-REST-USER-01	AC-0032	🟩 Done	2025-01-XX	@team/backend	M1	M1	M1	L0	—
 STORY-0033	0033	Auth REST/DTO v1 Migration	QLTY-REST-AUTH	(SPEC-legacy)	QLTY-REST-AUTH-01	AC-0033	🟩 Done	2025-01-XX	@team/backend	M1	M1	M1	L0	—
 STORY-0034	0034	FE Keycloak / OIDC Integration	QLTY-FE-KEYCLOAK	(SPEC-legacy)	QLTY-FE-KEYCLOAK-01, QLTY-FE-KEYCLOAK-01-	AC-0034	🟩 Done	2025-01-XX	@team/frontend	M1	M1	M1	L0	—

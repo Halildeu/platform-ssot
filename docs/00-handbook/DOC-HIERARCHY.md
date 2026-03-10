@@ -1,5 +1,11 @@
 # DOC-HIERARCHY – Doküman Hiyerarşisi ve Rol Özeti
 
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical OPO authority için
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md` ve
+> `standards.lock` kullanılır.
+
 Bu dosya, repodaki tüm önemli `.md` doküman türlerinin **ne işe yaradığını**
 ve **hangi durumda hangisine bakılması gerektiğini** özetler.
 
@@ -10,30 +16,30 @@ ve **hangi durumda hangisine bakılması gerektiğini** özetler.
 - `AGENTS.md`
   - Tüm agent’lar için iş tipi → doküman okuma rotasını tarif eder.
 
-- `AGENT-CODEX.core.md`
+- Çekirdek transition rehberi
   - Çekirdek davranış: cevap formatı, riskli komut kuralları, öncelik sırası.
 
-- `AGENT-CODEX.backend.md`
+- Backend transition rehberi
   - [BE] işleri için ek kurallar; backend layout + style entegrasyonu.
 
-- `AGENT-CODEX.web.md`
+- Web transition rehberi
   - [WEB] işleri için ek kurallar; web FE layout + style entegrasyonu.
 
-- `AGENT-CODEX.mobile.md`
+- Mobil transition rehberi
   - [MOB] işleri için ek kurallar; mobil FE layout + style entegrasyonu.
 
-- `AGENT-CODEX.ai.md`
+- AI/ML transition rehberi
   - [AI] işleri için ek kurallar; AI layout + stil + veri etik entegrasyonu.
 
-- `AGENT-CODEX.data.md`
+- Data transition rehberi
   - [DATA] işleri için ek kurallar; data-pipeline ve SQL stil entegrasyonu.
 
-- `AGENT-CODEX.docs.md`
+- Doküman transition rehberi
   - [DOC] işleri için ek kurallar; doküman yazım stili ve şablon kullanımı.
 
 ---
 
-## 2. Handbook – Genel Rehber Dokümanlar (`docs/00-handbook/`)
+## 2. Handbook – Genel Rehber Dokümanlar
 
 - `NAMING.md`
   - Tüm domain için isimlendirme standartları.

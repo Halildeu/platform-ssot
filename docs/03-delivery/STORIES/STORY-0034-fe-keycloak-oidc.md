@@ -60,9 +60,9 @@ Hariç:
 ## 5. BAĞIMLILIKLAR
 -------------------------------------------------------------------------------
 
-- backend/docs/legacy/root/05-governance/02-stories/QLTY-FE-KEYCLOAK-01-Frontend-Keycloak-OIDC.md  
-- backend/docs/legacy/root/05-governance/07-acceptance/QLTY-FE-KEYCLOAK-01.acceptance.md  
-- docs/00-handbook/STYLE-API-001.md  
+- Legacy QLTY-FE-KEYCLOAK-01 story snapshot’ı  
+- Legacy QLTY-FE-KEYCLOAK-01 acceptance snapshot’ı  
+- STYLE-API-001.md  
 - web/docs/architecture/frontend/frontend-project-layout.md (FE proje yapısı)  
 
 -------------------------------------------------------------------------------
@@ -81,5 +81,4 @@ Hariç:
 - Story: docs/03-delivery/STORIES/STORY-0034-fe-keycloak-oidc.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0034-fe-keycloak-oidc.md  
 - Test Plan: `docs/03-delivery/TEST-PLANS/TP-0034-fe-keycloak-oidc.md`  
-- Legacy Story: backend/docs/legacy/root/05-governance/02-stories/QLTY-FE-KEYCLOAK-01-Frontend-Keycloak-OIDC.md  
-- Legacy Acceptance: backend/docs/legacy/root/05-governance/07-acceptance/QLTY-FE-KEYCLOAK-01.acceptance.md  
+- Legacy input seti: QLTY-FE-KEYCLOAK-01 archive snapshot’ı  

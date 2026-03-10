@@ -2,7 +2,7 @@
 
 ID: TP-0031  
 Story: STORY-0031-doc-chain-consistency
-Status: Planned  
+Status: Done  
 Owner: @team/platform-arch
 
 Not: Aşağıdaki başlıklar ve sıralama **zorunludur**. Yeni bir Test Plan
@@ -41,10 +41,10 @@ bu başlıkların altını doldurabilir.
 4. TEST SENARYOLARI ÖZETİ
 -------------------------------------------------------------------------------
 
-- [ ] Tam zincir feature için “eksik yok” çıktısı.  
-- [ ] Eksik RUNBOOK/TP olan feature için eksik halkaların raporlanması.  
-- [ ] Sadece PB/PRD’ye sahip işler için “erken aşama” etiketi.  
-- [ ] Yanlış ID veya yanlış referans içeren dokümanlar için hata
+- [x] Tam zincir feature için “eksik yok” çıktısı.  
+- [x] Eksik RUNBOOK/TP olan feature için eksik halkaların raporlanması.  
+- [x] Sadece PB/PRD’ye sahip işler için “erken aşama” etiketi.  
+- [x] Yanlış ID veya yanlış referans içeren dokümanlar için hata
   çıktısı.
 
 -------------------------------------------------------------------------------
@@ -71,6 +71,8 @@ bu başlıkların altını doldurabilir.
 - Bu test planı, uçtan uca doküman zinciri kontrolünün temel senaryolarda
   beklendiği gibi çalıştığını ve eksik halkaları güvenilir şekilde
   raporlayabildiğini doğrular.
+- 2026-03-09 itibarıyla `python3 scripts/check_doc_chain.py` global PASS
+  sonucu vermiştir.
 
 -------------------------------------------------------------------------------
 8. LİNKLER (İSTEĞE BAĞLI)
@@ -78,4 +80,3 @@ bu başlıkların altını doldurabilir.
 
 - Story: docs/03-delivery/STORIES/STORY-0031-doc-chain-consistency.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0031-doc-chain-consistency.md  
-

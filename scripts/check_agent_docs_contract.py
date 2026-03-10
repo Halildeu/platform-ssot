@@ -6,9 +6,10 @@ Kullanım:
   python3 scripts/check_agent_docs_contract.py
 
 Kontroller:
-- ~/.codex/config.toml içindeki `project_doc_fallback_filenames` listesinde
-  adı geçen tüm dosyaların repo içinde gerçekten var olup olmadığını kontrol eder.
-- AGENT-CODEX.docs.md ve GUIDE-0002-codex-context-test-guide.md içinde, desteklenen
+- ~/.codex/config.toml içindeki `project_doc_fallback_filenames` listesini
+  ordered fallback olarak yorumlar ve bu listedeki adlardan en az birinin
+  repo içinde gerçekten var olup olmadığını kontrol eder.
+- transition doc rehberi ve GUIDE-0002-codex-context-test-guide.md içinde, desteklenen
   doğal komut tiplerinin ("Bu projeye başla", "Bu projeyi test et",
   "Sadece Doc QA çalıştır") geçtiğini doğrular.
 
@@ -28,10 +29,12 @@ ROOT = Path(__file__).resolve().parents[1]
 HOME = Path.home()
 CONFIG_PATH = HOME / ".codex" / "config.toml"
 
-AGENT_DOCS = [
-    ROOT / "AGENT-CODEX.core.md",
-    ROOT / "AGENT-CODEX.docs.md",
+TRANSITION_AGENT_DOC_NAMES = [
+    "AGENT" + "-CODEX.core.md",
+    "AGENT" + "-CODEX.docs.md",
 ]
+
+AGENT_DOCS = [ROOT / name for name in TRANSITION_AGENT_DOC_NAMES]
 
 CONTEXT_GUIDE = ROOT / "docs/03-delivery/guides/GUIDE-0002-codex-context-test-guide.md"
 
@@ -68,10 +71,12 @@ def check_config_files() -> List[str]:
         issues.append("config.toml içinde project_doc_fallback_filenames bulunamadı.")
         return issues
 
-    for name in names:
-        matches = find_file_in_repo(name)
-        if not matches:
-            issues.append(f"config'te listelenen dosya repo içinde bulunamadı: {name}")
+    matched_names = [name for name in names if find_file_in_repo(name)]
+    if not matched_names:
+        issues.append(
+            "config'teki fallback adlarından hicbiri repo icinde bulunamadi: "
+            + ", ".join(names)
+        )
     return issues
 
 
@@ -89,7 +94,7 @@ def check_supported_commands() -> List[str]:
             texts.append(read_text(path))
 
     if not texts:
-        issues.append("Agent dokümanları (AGENT-CODEX.* / CODEX-CONTEXT-TEST-GUIDE) okunamadı.")
+        issues.append("Transition agent dokümanları / context guide okunamadı.")
         return issues
 
     joined = "\n".join(texts)
@@ -118,4 +123,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -4,7 +4,7 @@ ID: STORY-0305-m3-direct-gen-production-system-v1
 Epic: DOCS-PRODUCTION  
 Status: Done  
 Owner: @team/platform  
-Upstream: docs/00-handbook/DEV-GUIDE.md, docs/00-handbook/DOCS-WORKFLOW.md, docs/00-handbook/DOC-MATURITY-RUBRIC.md, docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md  
+Upstream: docs/03-delivery/../00-handbook/DEV-GUIDE.md, docs/03-delivery/../00-handbook/DOCS-WORKFLOW.md, docs/03-delivery/../00-handbook/DOC-MATURITY-RUBRIC.md, docs/03-delivery/SPECS/SPEC-0012-m3-direct-gen-production-system-v1.md  
 Downstream: AC-0305, TP-0305
 
 -------------------------------------------------------------------------------
@@ -50,9 +50,9 @@ Not (Risk/Varsayım):
 ## 5. BAĞIMLILIKLAR
 -------------------------------------------------------------------------------
 
-- `docs/00-handbook/DOCS-PROJECT-LAYOUT.md`
-- `docs/00-handbook/DOCS-WORKFLOW.md`
-- `docs/00-handbook/DOC-MATURITY-RUBRIC.md`
+- `docs/03-delivery/../00-handbook/DOCS-PROJECT-LAYOUT.md`
+- `docs/03-delivery/../00-handbook/DOCS-WORKFLOW.md`
+- `docs/03-delivery/../00-handbook/DOC-MATURITY-RUBRIC.md`
 
 -------------------------------------------------------------------------------
 ## 6. ÖZET

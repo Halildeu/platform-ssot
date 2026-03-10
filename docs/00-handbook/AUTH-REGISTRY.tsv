@@ -19,9 +19,9 @@ CANARY_WEIGHT_100_HOOK_URL	github_secret	@team/platform	GitHub Actions secret	HT
 CANARY_WEIGHT_50_HOOK_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) POST endpoint	.github/workflows/release-canary.yml	Optional weight-specific hook for 50% rollout.
 CANARY_WEB_SMOKE_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) URL	.github/workflows/release-canary.yml	Web smoke endpoint for live canary runtime validation.
 DEPLOY_ENABLED	github_secret	@team/platform	GitHub Actions secret	string "true"/"false"	.github/workflows/deploy-web.yml,.github/workflows/deploy-backend.yml,.github/workflows/post-deploy-validate.yml	Kill-switch: deploy chain.
-GH_AUTH_VAULT_FIELD	env	@team/platform	Env var / Vault pointer	Vault KV field name	docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Points to a Vault KV field that stores a GitHub token.
-GH_AUTH_VAULT_PATH	env	@team/platform	Env var / Vault pointer	Vault KV v2 path	docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Points to a Vault KV path that stores a GitHub token.
-GH_LOCAL_AUTOPILOT_TOKEN	vault_field	@team/platform	Vault KV v2 field	GitHub token (PAT / fine-grained)	docs/00-handbook/GH-AUTH-VAULT-POINTERS.md,scripts/ops/local_ops_start.sh	Local autopilot token; value never logged.
+GH_AUTH_VAULT_FIELD	env	@team/platform	Env var / Vault pointer	Vault KV field name	GH-AUTH-VAULT-POINTERS.md	Points to a Vault KV field that stores a GitHub token.
+GH_AUTH_VAULT_PATH	env	@team/platform	Env var / Vault pointer	Vault KV v2 path	GH-AUTH-VAULT-POINTERS.md	Points to a Vault KV path that stores a GitHub token.
+GH_LOCAL_AUTOPILOT_TOKEN	vault_field	@team/platform	Vault KV v2 field	GitHub token (PAT / fine-grained)	GH-AUTH-VAULT-POINTERS.md,scripts/ops/local_ops_start.sh	Local autopilot token; value never logged.
 GH_SECRETS_SYNC_TOKEN	github_secret	@team/platform	GitHub Actions secret	PAT/fine-grained token that can update repo secrets	.github/workflows/vault-secrets-sync.yml	Used only for writing GitHub Secrets (GITHUB_TOKEN cannot).
 GH_TOKEN	env	@team/platform	Env var	GitHub token injected for gh/CLI	GitHub Actions + local ops	Preferred session token for `gh` CLI.
 GITHUB_TOKEN	github_token	@team/platform	GitHub Actions built-in token	Controlled by workflow `permissions:` blocks	GitHub Actions	Do not store as secret; permissions must be explicit per workflow.
@@ -35,8 +35,8 @@ COSIGN_PRIVATE_KEY	github_secret	@team/platform	GitHub Actions secret	Cosign pri
 NVD_API_KEY	github_secret	@team/platform	GitHub Actions secret	NVD API key	.github/workflows/security-guardrails.yml	Used by Dependency-Check to avoid NVD throttling and stale-cache fallback.
 PLAYWRIGHT_BASE_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) base URL	.github/workflows/web-playwright-nightly.yml	Base URL for Playwright tests (dispatch can override).
 ROLLBACK_ENABLED	github_secret	@team/platform	GitHub Actions secret	string "true"/"false"	.github/workflows/rollback.yml	Kill-switch: rollback workflow.
-VAULT_ADDR	github_secret	@team/platform	GitHub Actions secret	Vault address URL	.github/workflows/vault-secrets-sync.yml,docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Vault endpoint.
-VAULT_TOKEN	github_secret	@team/platform	GitHub Actions secret	Vault token	.github/workflows/vault-secrets-sync.yml,docs/00-handbook/GH-AUTH-VAULT-POINTERS.md	Vault auth token; masked.
+VAULT_ADDR	github_secret	@team/platform	GitHub Actions secret	Vault address URL	.github/workflows/vault-secrets-sync.yml,GH-AUTH-VAULT-POINTERS.md	Vault endpoint.
+VAULT_TOKEN	github_secret	@team/platform	GitHub Actions secret	Vault token	.github/workflows/vault-secrets-sync.yml,GH-AUTH-VAULT-POINTERS.md	Vault auth token; masked.
 WEB_DEPLOY_HOOK_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) POST endpoint	.github/workflows/deploy-web.yml	Web deploy hook.
 WEB_ROLLBACK_HOOK_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) POST endpoint	.github/workflows/rollback.yml	Web rollback hook.
 WEB_SMOKE_URL	github_secret	@team/platform	GitHub Actions secret	HTTP(S) URL	.github/workflows/post-deploy-validate.yml	Web smoke endpoint for validate.

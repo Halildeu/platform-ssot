@@ -1,5 +1,11 @@
 # DEV-GUIDE – Yazılım Geliştirme Süreci (Compact Final)
 
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır;
+> canonical OPO authority değildir. Canonical yönlendirme için
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md` ve
+> `standards.lock` baz alınır.
+
 Bu doküman yazılım geliştirme yaşam döngüsünü (SDLC) tek ve tutarlı bir akış
 halinde tanımlar. Amaç, her iş tipinde (WEB, MOB, BE, DATA, AI, DOC) aynı
 süreç mantığının uygulanmasını sağlamaktır.
@@ -76,7 +82,7 @@ Girdiler:
 - Gerekirse entegrasyon testleri
 
 Agent davranışı:
-- Her iş tipi kendi AGENT-CODEX dosyasındaki kurallara göre çözüm üretir.
+- Her iş tipi kendi alan transition rehberindeki kurallara göre çözüm üretir.
 - Çıktı formatı:
   - Keşif Özeti
   - Tasarım
@@ -142,9 +148,9 @@ Tüm bu adımlar DOCS-PROJECT-LAYOUT içinde tanımlanan dosya yapısına göre 
 
 Her iş tipinde agent şu sırayı izler:
 
-1. AGENT-CODEX.core.md  
+1. Çekirdek transition rehberi  
 2. AGENTS.md  
-3. İlgili iş tipine ait AGENT-CODEX (web, mobile, backend, data, ai, docs)  
+3. İlgili iş tipine ait alan transition rehberi (web, mobile, backend, data, ai, docs)  
 4. İlgili layout/stil dokümanları  
 5. İlgili domain dokümanları (PRD, TECH-DESIGN, DATA-MODEL)
 

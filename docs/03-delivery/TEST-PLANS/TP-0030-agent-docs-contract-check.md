@@ -2,7 +2,7 @@
 
 ID: TP-0030  
 Story: STORY-0030-agent-docs-contract-check
-Status: Planned  
+Status: Done  
 Owner: @team/platform-arch
 
 Not: Aşağıdaki başlıklar ve sıralama **zorunludur**. Yeni bir Test Plan
@@ -13,60 +13,61 @@ bu başlıkların altını doldurabilir.
 ## 1. AMAÇ
 -------------------------------------------------------------------------------
 
-- Agent docs contract kontrol script’inin AC-0030’da tanımlanan senaryolara
-  göre doğru çalıştığını doğrulamak.
+- Authority marker kontrolü ve transition reference consumer raporunun
+  AC-0030’daki senaryolara göre doğru çalıştığını doğrulamak.
 
 -------------------------------------------------------------------------------
 ## 2. KAPSAM
 -------------------------------------------------------------------------------
 
-- AGENT-CODEX.* dokümanları, DOCS-WORKFLOW, DOCS-PROJECT-LAYOUT,
-  NUMARALANDIRMA-STANDARDI.  
-- GUIDE-0002-codex-context-test-guide.md ve `~/.codex/config.toml`.
+- `AGENTS.md`, `AGENT-CODEX.*`, kritik handbook girişleri ve seçili
+  runbook’lar.  
+- `scripts/check_transition_authority_map.py` ve
+  `scripts/report_transition_reference_consumers.py`.  
+- `doc-qa.yml`.
 
 -------------------------------------------------------------------------------
 ## 3. STRATEJİ
 -------------------------------------------------------------------------------
 
-- Bilerek küçük path/ID hataları ekleyerek script’in bunları yakalayıp
-  yakalamadığını gözlemlemek.  
-- Gerçek config ve doküman seti üzerinde script’i çalıştırıp, raporlanan
-  eksiklerin mantıklı ve eyleme dönük olduğunu doğrulamak.  
-- Script çıktılarını CI veya etkileşimli Doc QA kullanımına bağlamak
-  (örneğin “eksik doküman” → yeni Story/AC/TP önerisi).
+- Gerçek repo durumu üzerinde authority marker check’i çalıştırıp beklenen
+  `OK` sonucunu doğrulamak.  
+- Transition reference consumer raporunu üretip sayımların ve top consumer
+  listesinin okunabilir olduğunu kontrol etmek.  
+- Aynı komutları `doc-qa.yml` içinde koşturulabilir hale getirmek.
 
 -------------------------------------------------------------------------------
 ## 4. TEST SENARYOLARI ÖZETİ
 -------------------------------------------------------------------------------
 
-- [ ] Yanlış path/ID içeren agent dokümanları için hata raporu.  
-- [ ] Config ile fiziksel doküman listesi arasındaki uyumsuzlukların
-  yakalanması.  
-- [ ] Gerçek ortamda “sıfır hata” durumu doğrulaması.
+- [x] Authority marker check için `OK` sonucu.  
+- [x] Transition consumer JSON/Markdown rapor üretimi.  
+- [x] Workflow entegrasyonu doğrulaması.
 
 -------------------------------------------------------------------------------
 ## 5. ÇEVRE VE ARAÇLAR
 -------------------------------------------------------------------------------
 
 - Python 3 çalışma ortamı.  
-- `scripts/check_agent_docs_contract.py` (veya eşdeğer agent kontrat script’i).  
-- İlgili dokümanlar ve `~/.codex/config.toml`.
+- `scripts/check_transition_authority_map.py`  
+- `scripts/report_transition_reference_consumers.py`  
+- İlgili dokümanlar ve `doc-qa.yml`
 
 -------------------------------------------------------------------------------
 ## 6. RİSKLER / ÖNCELİKLER
 -------------------------------------------------------------------------------
 
-- Script’in ortam bağımlılıklarını (özellikle config yolu) doğru
-  yönetememesi; farklı makinelerde farklı davranış.  
-- Fazla karmaşık kontrollerin yanlış pozitif/negatif üretmesi.
+- Tüketici raporunun bir kısmı kontrol scriptlerinin kendi string
+  sabitlerinden etkilenebilir.  
+- Referans sayısının fazla olması tek başına hata değildir; cleanup sırası
+  ayrıca yorumlanmalıdır.
 
 -------------------------------------------------------------------------------
 ## 7. ÖZET
 -------------------------------------------------------------------------------
 
-- Bu test planı, agent docs contract check script’inin core doküman seti
-  ile config arasındaki uyumsuzlukları güvenilir ve tekrarlanabilir şekilde
-  raporlayabildiğini doğrular.
+- Bu test planı, authority marker kontrolü ile transition reference consumer
+  raporunun güvenilir ve tekrarlanabilir biçimde çalıştığını doğrular.
 
 -------------------------------------------------------------------------------
 ## 8. LİNKLER (İSTEĞE BAĞLI)
@@ -74,4 +75,3 @@ bu başlıkların altını doldurabilir.
 
 - Story: docs/03-delivery/STORIES/STORY-0030-agent-docs-contract-check.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0030-agent-docs-contract-check.md  
-

@@ -10,7 +10,7 @@ Downstream: AC-0041, TP-0041
 ## 1. AMAÇ
 
 Web frontend tarafındaki mevcut `web/docs/**` içeriğini,
-kurulan yeni doküman mimarisi (docs/00-handbook, 01–05, 99-templates)
+kurulan yeni doküman mimarisi
 ile hizalamak; frontend için de tek ve tutarlı bir doküman sistemi
 oluşturarak agent ve ekiplerin yalnız `docs/` üzerinden çalışmasını
 sağlamak.
@@ -26,13 +26,13 @@ Dahil:
 - `web/docs/**` altındaki mimari, güvenlik, test ve örnek dokümanların
   envanterinin çıkarılması.  
 - Aşağıdaki hedef yapıya mapping yapılması:
-  - docs/00-handbook → WEB-PROJECT-LAYOUT, STYLE-WEB-001, güvenlik kılavuzları  
+  - transition handbook katmanı → WEB-PROJECT-LAYOUT, STYLE-WEB-001, güvenlik kılavuzları  
   - docs/02-architecture/clients/WEB-ARCH.md → frontend mimari üst bakışı  
   - docs/03-delivery/guides/** → FE spesifik rehberler (routing, theme, mf-check, tests)  
   - docs/04-operations/RUNBOOKS/** → FE tarafı operasyon/runbook dokümanları (jika gerekiyorsa)  
 - WEB-ARCH.md içinde `web/docs/architecture/frontend/frontend-project-layout.md`
   ve diğer önemli FE rehberlerine referans veren kompakt bir özet oluşturulması.  
-- AGENT-CODEX.web ve DOCS-PROJECT-LAYOUT referanslarının yalnız `docs/`
+- Web transition rehberi ve DOCS-PROJECT-LAYOUT referanslarının yalnız `docs/`
   altındaki FE dokümanlarına işaret edecek şekilde güncel olduğunun doğrulanması.
 
 Hariç:
@@ -47,18 +47,18 @@ Hariç:
       için gerekli değildir.  
 - [ ] `docs/02-architecture/clients/WEB-ARCH.md` dosyası mevcuttur ve
       web/docs altındaki ana mimari dokümanları kompakt şekilde özetler.  
-- [ ] AGENT-CODEX.web ve DOCS-PROJECT-LAYOUT içindeki frontend layout/stil
+- [ ] Web transition rehberi ve DOCS-PROJECT-LAYOUT içindeki frontend layout/stil
       referansları fiziksel olarak var olan `docs/` dosyalarına işaret eder.  
 - [ ] `web/docs/**` altındaki legacy rehberler yalnız “örnek ve detay”
       niteliğinde kullanılır; kanonik kaynak olarak `docs/` belirtilmiştir.
 
 ## 5. BAĞIMLILIKLAR
 
-- docs/00-handbook/WEB-PROJECT-LAYOUT.md  
-- docs/00-handbook/STYLE-WEB-001.md  
+- WEB-PROJECT-LAYOUT.md  
+- STYLE-WEB-001.md  
 - docs/03-delivery/guides/** (özellikle theme, mf-check, tests ile ilgili
   yeni rehberler)  
-- AGENT-CODEX.web.md, DOCS-PROJECT-LAYOUT.md, DOCS-WORKFLOW.md  
+- Web transition rehberi, DOCS-PROJECT-LAYOUT.md, DOCS-WORKFLOW.md  
 - `web/docs/architecture/frontend/frontend-project-layout.md` ve
   web/docs altındaki mevcut FE dokümanları
 

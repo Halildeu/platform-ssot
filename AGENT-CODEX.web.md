@@ -1,4 +1,10 @@
-# AGENT-CODEX.web – Web Frontend Görevleri (Compact)
+# Web Frontend Görevleri (Compact)
+
+> Transition Durumu: Bu dosya transition-active rehber katmanındadır.
+> Canonical kaynaklar:
+> `standards.lock`,
+> `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`,
+> `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`.
 
 Bu dosya, [WEB] tipindeki görevlerde agent’ın nasıl davranacağını tanımlar.
 Amaç: Web MFE geliştirmede tutarlı, öngörülebilir ve standardize edilmiş bir
@@ -32,18 +38,18 @@ Aşağıdaki görevler [WEB] tipine girer:
 [WEB] işi alındığında agent aşağıdaki dokümanları sırasıyla dikkate almalıdır:
 
 1. ÇEKİRDEK DAVRANIŞ  
-   - AGENT-CODEX.core.md  
+   - Çekirdek transition rehberi  
    - AGENTS.md  
 
 2. WEB LAYOUT  
-   - docs/00-handbook/WEB-PROJECT-LAYOUT.md  
+   - WEB-PROJECT-LAYOUT.md  
 
 3. WEB STİL  
-   - docs/00-handbook/STYLE-WEB-001.md  
+   - STYLE-WEB-001.md  
 
 4. DOKÜMAN & ID KURALLARI  
    - NUMARALANDIRMA-STANDARDI.md  
-   - docs/00-handbook/DOCS-PROJECT-LAYOUT.md  
+   - DOCS-PROJECT-LAYOUT.md  
 
 5. ÜRÜN DOKÜMANLARI  
    - docs/01-product/PRD/PRD-*.md  

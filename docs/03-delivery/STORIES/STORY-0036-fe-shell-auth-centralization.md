@@ -65,13 +65,13 @@ Hariç:
 ## 5. BAĞIMLILIKLAR
 -------------------------------------------------------------------------------
 
-- backend/docs/legacy/root/05-governance/02-stories/E01-S10-Auth-BroadcastChannel-Full-MFE-Sync.md  
-- backend/docs/legacy/root/05-governance/02-stories/QLTY-FE-SPA-LOGIN-01.md  
-- backend/docs/legacy/root/05-governance/02-stories/QLTY-FE-SHARED-HTTP-01.md  
+- Legacy E01-S10 auth sync snapshot’ı  
+- Legacy QLTY-FE-SPA-LOGIN-01 snapshot’ı  
+- Legacy QLTY-FE-SHARED-HTTP-01 snapshot’ı  
 - docs/03-delivery/STORIES/STORY-0009-fe-spa-login-standardization.md  
 - docs/03-delivery/STORIES/STORY-0034-fe-keycloak-oidc.md  
-- docs/00-handbook/STYLE-WEB-001.md  
-- docs/00-handbook/STYLE-API-001.md  
+- STYLE-WEB-001.md  
+- STYLE-API-001.md  
 
 -------------------------------------------------------------------------------
 ## 6. ÖZET

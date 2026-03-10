@@ -2,82 +2,91 @@
 
 ID: STORY-0030-agent-docs-contract-check  
 Epic: QLTY-DOC-QA  
-Status: Planned  
+Status: Done  
 Owner: @team/platform-arch  
-Upstream: AGENT-CODEX.core.md, AGENT-CODEX.docs.md, GUIDE-0002-codex-context-test-guide.md, DOCS-WORKFLOW.md  
+Upstream: docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md, AGENTS.md, docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md, transition handbook entrypoints  
 Downstream: AC-0030, TP-0030
 
 -------------------------------------------------------------------------------
 ## 1. AMAÇ
 -------------------------------------------------------------------------------
 
-- AGENT-CODEX.* dokümanları, DOCS-WORKFLOW, DOCS-PROJECT-LAYOUT ve
-  CODEX-CONTEXT-TEST-GUIDE arasındaki “kontrat”ın (dosya yolları, komut
-  türleri, şablon kuralları) tutarlı olmasını sağlamak.  
-- Bu kontratı otomatik kontrol eden küçük bir script tanımlayarak, agent
-  ile dokümanlar arasındaki uyumsuzlukları erken yakalamak.
+- Transition-active agent/doc katmanının canonical OPO authority ile
+  çelişmesini önlemek.  
+- `AGENTS.md`, alan transition rehberleri, kritik handbook girişleri ve
+  ilgili runbook/workflow yüzeyinin yeni authority map’e yönlendiğini otomatik
+  kontrol etmek.  
+- Kalan transition/legacy referans tüketicilerini raporlayarak cleanup
+  backlog’unu görünür tutmak.
 
 -------------------------------------------------------------------------------
 ## 2. TANIM
 -------------------------------------------------------------------------------
 
-- Dokümantasyon/AI‑Ops ekibi olarak, AGENT-CODEX, DOCS-WORKFLOW ve config dokümanlarının her zaman var olan dosyaları ve doğru komut tiplerini referans etmesini istiyoruz; böylece agent yanlış kurallara veya eksik path’lere göre davranmasın.
-- Bir ai agent olarak, bu sözleşmenin script ile düzenli kontrol edilmesini istiyorum; böylece dokümanlardaki değişiklikler fark edildiğinde beni uyarabilsin.
+- Dokümantasyon/AI‑Ops ekibi olarak, transition-active dokümanların her zaman
+  canonical OPO katmanına redirect vermesini istiyoruz; böylece eski ve yeni
+  yönetim katmanları karışmasın.
+- Bir ai agent olarak, bu sözleşmenin script ile düzenli kontrol edilmesini ve
+  transition/legacy referans tüketicilerinin raporlanmasını istiyorum; böylece
+  temizlik işlerini görünür ve ölçülebilir tutabileyim.
 
 -------------------------------------------------------------------------------
 ## 3. KAPSAM VE SINIRLAR
 -------------------------------------------------------------------------------
 
 Dahil:
-- AGENT-CODEX.core.md, AGENT-CODEX.docs.md ve diğer AGENT-CODEX.* dosyaları.  
-- DOCS-WORKFLOW.md, DOCS-PROJECT-LAYOUT.md, NUMARALANDIRMA-STANDARDI.md.  
-- GUIDE-0002-codex-context-test-guide.md ve `~/.codex/config.toml` içindeki
-  `project_doc_fallback_filenames` listesi.  
-- Bu dokümanlardaki dosya adı, path ve komut tiplerinin (örn. “Bu projeye
-  başla”, “Bu projeyi test et”, “Sadece Doc QA çalıştır”) script ile
-  kontrol edilmesi.
+- `AGENTS.md` ve alan transition rehberleri.  
+- Kritik handbook girişleri: `DEV-GUIDE.md`, `DOC-HIERARCHY.md`,
+  `DOCS-WORKFLOW.md`, `DOCS-PROJECT-LAYOUT.md`.  
+- `docs/04-operations/RUNBOOKS/RB-insansiz-flow.md` ve
+  `RB-codex-canonical-flow-v0.1.md`.  
+- `scripts/check_transition_authority_map.py` ile marker/redirect kontrolü.  
+- `scripts/report_transition_reference_consumers.py` ile transition/legacy
+  referans tüketici raporu.
 
 Hariç:
-- Agent’in cevap formatının stil detayları (ör. cümle uzunluğu); bu konular
-  AGENT-CODEX.docs’un diğer bölümlerinde ele alınmıştır.  
-- İşlevsel testler veya entegrasyon testleri (ayrı TP’lerde ele alınır).
+- Tüm transition/legacy referanslarının aynı anda sıfırlanması.  
+- Feature-level doküman zinciri kontrolü (STORY-0031 kapsamı).  
+- İşlevsel testler veya entegrasyon testleri.
 
 -------------------------------------------------------------------------------
 ## 4. ACCEPTANCE KRİTERLERİ
 -------------------------------------------------------------------------------
 
-- [ ] Script, AGENT-CODEX.* ve DOCS-WORKFLOW içindeki tüm dosya yolu ve
-  ID referanslarını okuyup, bu dosyaların gerçekten var olup olmadığını
-  kontrol eder.  
-- [ ] `~/.codex/config.toml` içindeki `project_doc_fallback_filenames`
-  değeri, ilgili dokümanların fiziksel varlığıyla tutarlıdır; eksik veya
-  eski dosya adı kalmaz.  
-- [ ] Script, desteklenen doğal komut tiplerini (“Bu projeye başla:
-  STORY-XXXX”, “Bu projeyi test et: STORY-XXXX / TP-XXXX”, “Sadece Doc QA
-  çalıştır”) kontrol eder ve dokümanlarla uyuşmayan bir durum varsa
-  raporlar.  
-- [ ] Eksikler giderildikten sonra script tekrar çalıştırıldığında aynı
-  hatalar görünmez.
+- [x] `scripts/check_transition_authority_map.py`, `AGENTS.md`,
+  alan transition rehberleri, kritik handbook entrypoint’leri ve seçili
+  runbook’larda
+  authority map referansını ve transition marker’larını doğrular.  
+- [x] `scripts/report_transition_reference_consumers.py`, archive hariç
+  transition/legacy referans tüketicilerini JSON/Markdown raporu olarak
+  üretir.  
+- [x] `doc-qa.yml`, authority map check ve transition reference consumer
+  raporunu çalıştırır.  
+- [x] Repo için transition reference ölçümü alınmış ve cleanup backlog’u
+  görünür hale getirilmiştir.
 
 -------------------------------------------------------------------------------
 ## 5. BAĞIMLILIKLAR
 -------------------------------------------------------------------------------
 
-- AGENT-CODEX.core.md, AGENT-CODEX.docs.md ve diğer AGENT-CODEX.*  
-- docs/00-handbook/DOCS-WORKFLOW.md  
-- docs/00-handbook/DOCS-PROJECT-LAYOUT.md  
-- NUMARALANDIRMA-STANDARDI.md  
-- docs/03-delivery/guides/GUIDE-0002-codex-context-test-guide.md  
-- `~/.codex/config.toml`
+- docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md  
+- AGENTS.md  
+- Çekirdek transition rehberi ve diğer alan transition rehberleri  
+- DOCS-WORKFLOW.md  
+- DOCS-PROJECT-LAYOUT.md  
+- scripts/check_transition_authority_map.py  
+- scripts/report_transition_reference_consumers.py
 
 -------------------------------------------------------------------------------
 ## 6. ÖZET
 -------------------------------------------------------------------------------
 
-- Bu Story ile agent’in dayandığı core doküman seti için otomatik bir
-  “kontrat kontrolü” mekanizması kurulmuş olur.  
-- Amaç, doküman değişikliklerinin agent davranışını bozmasını engellemek
-  ve uyumsuzlukları hızlıca yakalamaktır.
+- Bu Story ile transition-active agent/doc katmanı için otomatik bir
+  “authority kontrat kontrolü” ve tüketici görünürlüğü mekanizması
+  kurulmuş oldu.  
+- 2026-03-09 itibarıyla authority marker check `OK`, transition consumer
+  raporu ise `.cache/reports/transition_reference_consumers.v1.{json,md}`
+  altında üretilmektedir.
 
 -------------------------------------------------------------------------------
 ## 7. LİNKLER (İSTEĞE BAĞLI)

@@ -2,7 +2,7 @@
 
 ID: AC-0031  
 Story: STORY-0031-doc-chain-consistency  
-Status: Planned  
+Status: Done  
 Owner: @team/platform-arch
 
 -------------------------------------------------------------------------------
@@ -24,20 +24,20 @@ Owner: @team/platform-arch
 3. GIVEN / WHEN / THEN SENARYOLARI
 -------------------------------------------------------------------------------
 
-- [ ] Senaryo 1 – Eksiksiz zincir:  
+- [x] Senaryo 1 – Eksiksiz zincir:  
   Given: PB, PRD, TECH-DESIGN, ADR, STORY, AC, TP ve RUNBOOK dokümanları
   tanımlı bir örnek feature vardır.  
     When: `check_doc_chain.py` ilgili Story ID ile çalıştırılır.  
     Then: Script bu feature için “eksik doküman yok” sonucunu üretir.
 
-- [ ] Senaryo 2 – Eksik downstream (RUNBOOK/TP):  
+- [x] Senaryo 2 – Eksik downstream (RUNBOOK/TP):  
   Given: PB, PRD, TECH-DESIGN ve STORY dokümanları mevcut, ancak RUNBOOK
   veya TP henüz yazılmamıştır.  
     When: `check_doc_chain.py` aynı Story ID ile çalıştırılır.  
     Then: Çıktıda eksik halkalar (“RUNBOOK eksik”, “TP eksik”) net olarak
     listelenir.
 
-- [ ] Senaryo 3 – Sadece PB/PRD olan işler:  
+- [x] Senaryo 3 – Sadece PB/PRD olan işler:  
   Given: Sadece PB ve PRD yazılmış, henüz Story açılmamış feature’lar
   vardır.  
     When: `check_doc_chain.py` PB/PRD havuzu için çalıştırılır.  
@@ -59,6 +59,8 @@ Owner: @team/platform-arch
 - `check_doc_chain.py` veya eşdeğer mekanizma, örnek feature’lar üzerinde
   tüm doc zincirini güvenilir şekilde analiz edebiliyorsa ve eksik halkaları
   net biçimde raporluyorsa bu acceptance tamamlanmış sayılır.
+- 2026-03-09 global çalıştırmasında mevcut STORY zincirleri için hata
+  üretilmemiş ve mekanizma PASS vermiştir.
 
 -------------------------------------------------------------------------------
 6. LİNKLER (İSTEĞE BAĞLI)
@@ -66,4 +68,3 @@ Owner: @team/platform-arch
 
 - Story: docs/03-delivery/STORIES/STORY-0031-doc-chain-consistency.md  
 - Test Plan: docs/03-delivery/TEST-PLANS/TP-0031-doc-chain-consistency.md  
-

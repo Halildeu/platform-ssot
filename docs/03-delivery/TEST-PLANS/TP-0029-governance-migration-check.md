@@ -2,7 +2,7 @@
 
 ID: TP-0029  
 Story: STORY-0029-governance-migration-check
-Status: Planned  
+Status: Done  
 Owner: @team/platform-arch
 
 Not: Aşağıdaki başlıklar ve sıralama **zorunludur**. Yeni bir Test Plan
@@ -41,9 +41,9 @@ bu başlıkların altını doldurabilir.
 ## 4. TEST SENARYOLARI ÖZETİ
 -------------------------------------------------------------------------------
 
-- [ ] Taşınmamış governance maddeleri için öneri listesi.  
-- [ ] Zaten taşınmış maddelerin tekrar önerilmemesi.  
-- [ ] Boş veya tamamen taşınmış backlog durumunda “eksik governance yok”
+- [x] Taşınmamış governance maddeleri için öneri listesi.  
+- [x] Zaten taşınmış maddelerin tekrar önerilmemesi.  
+- [x] Boş veya tamamen taşınmış backlog durumunda “eksik governance yok”
   çıktısı.
 
 -------------------------------------------------------------------------------
@@ -71,6 +71,8 @@ bu başlıkların altını doldurabilir.
 - Bu test planı, governance migration script’inin legacy backlog ile yeni
   Story sistemi arasındaki ilişkiyi doğru okuyup eksik maddeleri güvenilir
   şekilde raporlayabildiğini doğrular.
+- 2026-03-09 doğrulamasında script beklenen davranışı üretmiş ve mevcut repo
+  durumu için `eksik governance yok` sonucu vermiştir.
 
 -------------------------------------------------------------------------------
 ## 8. LİNKLER (İSTEĞE BAĞLI)
@@ -78,4 +80,3 @@ bu başlıkların altını doldurabilir.
 
 - Story: docs/03-delivery/STORIES/STORY-0029-governance-migration-check.md  
 - Acceptance: docs/03-delivery/ACCEPTANCE/AC-0029-governance-migration-check.md  
-

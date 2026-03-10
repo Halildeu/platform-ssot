@@ -18,6 +18,10 @@ Owner: @team/platform
 
 - Repo: `Halildeu/platform-ssot`
 - Kapsam: Codex ile yapılan local iş akışı (planlama, doküman/skript değişikliği, gate, commit/push).
+- Canonical authority:
+  - `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+  - `docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md`
+  - `standards.lock`
 - Dış kapsam:
   - CI fail → log-digest → local autopilot gibi “failure loop” (ayrı runbook’ta standardize edilecek).
 
@@ -108,7 +112,8 @@ Owner: @team/platform
 7. LİNKLER (İSTEĞE BAĞLI)
 -------------------------------------------------------------------------------
 
-- SSOT: `AGENT-CODEX.core.md`
+- SSOT: `docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md`
+- Transition-active guide: `AGENT-CODEX.core.md`
 - Runbook: `docs/04-operations/RUNBOOKS/RB-codex-chat-transcript.md`
 - Script: `scripts/run_doc_qa_execution_log_local.py`
 - Script: `scripts/ops/analyze_codex_flow.py`

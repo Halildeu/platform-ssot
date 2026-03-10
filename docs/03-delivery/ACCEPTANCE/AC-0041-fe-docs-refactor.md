@@ -13,7 +13,7 @@ Owner: @team/frontend
 
 ## 2. KAPSAM
 
-- Yeni doküman mimarisi (docs/00-handbook, 01–05, 99-templates) içindeki
+- Yeni doküman mimarisi (transition handbook, 01–05, 99-templates) içindeki
   frontend ile ilgili dokümanlar.  
 - `web/docs/**` altındaki mimari, güvenlik, test ve örnek dokümanların
   envanteri ve mapping tabloları.  
@@ -24,7 +24,7 @@ Owner: @team/frontend
 
 ### Genel Kriterler
 
-- [x] Given: Yeni doküman mimarisi (docs/00-handbook, 01–05, 99-templates)
+- [x] Given: Yeni doküman mimarisi (transition handbook, 01–05, 99-templates)
       tanımlıdır.  
       When: Geliştirici veya agent frontend ile ilgili mimari/stil rehberi arar.  
       Then: Gerekli tüm rehberler (layout, stil, mimari, süreç) sadece `docs/`
@@ -38,13 +38,13 @@ Owner: @team/frontend
       Then: Ana başlıklar (shell/layout, routing, theme, auth, tests, mf-check)
       ve ilgili legacy doküman yoları bu özet içinde listelenmiştir.
 
-- [x] Given: `docs/00-handbook/WEB-PROJECT-LAYOUT.md` ve `STYLE-WEB-001.md`
+- [x] Given: `WEB-PROJECT-LAYOUT.md` ve `STYLE-WEB-001.md`
       günceldir.  
-      When: AGENT-CODEX.web ve DOCS-PROJECT-LAYOUT içindeki frontend
+      When: web transition rehberi ve DOCS-PROJECT-LAYOUT içindeki frontend
       referansları kontrol edilir.  
       Then: Tüm referanslar fiziksel olarak var olan `docs/` dosyalarına
       işaret eder; FRONTEND-PROJECT-LAYOUT / STYLE-FE gibi eski isimler
-      yalnız `backend/docs/legacy/` altında kalmıştır.
+      yalnız archive-reference alanda kalmıştır.
 
 ### Operasyonel Kriterler
 
