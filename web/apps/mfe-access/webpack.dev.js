@@ -12,7 +12,10 @@ const devConfig = {
   devServer: {
     port: 3005,
     historyApiFallback: true,
-    headers: { 'Access-Control-Allow-Origin': '*' }
+    headers: { 'Access-Control-Allow-Origin': '*' },
+    client: {
+      overlay: false,
+    },
   },
   plugins: [
     new ModuleFederationPlugin({
@@ -33,11 +36,10 @@ const devConfig = {
         'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
         '@tanstack/react-query': { singleton: true, requiredVersion: deps['@tanstack/react-query'] },
         '@tanstack/react-query-devtools': { singleton: true, requiredVersion: deps['@tanstack/react-query-devtools'] },
-        antd: { singleton: true, requiredVersion: deps.antd },
         'ag-grid-react': { singleton: true, requiredVersion: deps['ag-grid-react'] },
         'ag-grid-community': { singleton: true, requiredVersion: deps['ag-grid-community'] },
         'ag-grid-enterprise': { singleton: true, requiredVersion: deps['ag-grid-enterprise'] },
-        'mfe-ui-kit': { singleton: true, requiredVersion: false },
+        '@mfe/design-system': { singleton: true, requiredVersion: false },
         '@mfe/shared-http': { singleton: true, requiredVersion: false }
       }
     })

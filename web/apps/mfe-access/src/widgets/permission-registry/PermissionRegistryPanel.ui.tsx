@@ -1,4 +1,5 @@
 import React from 'react';
+import { Badge } from '@mfe/design-system';
 import {
   permissionRegistry,
   permissionRegistryVersion,
@@ -19,23 +20,6 @@ const toValidDate = (value: string | number | Date): Date | null => {
         ? new Date(value)
         : new Date(String(value));
   return Number.isNaN(parsed.getTime()) ? null : parsed;
-};
-
-const StatusBadge: React.FC<{ status: PermissionRegistryEntry['status']; label: string }> = ({
-  status,
-  label,
-}) => {
-  const palette =
-    status === 'active'
-      ? 'bg-state-success text-state-success-text border-state-success-border'
-      : 'bg-state-warning text-state-warning-text border-state-warning-border';
-  return (
-    <span
-      className={`inline-flex rounded-full border px-2.5 py-0.5 text-xs font-semibold uppercase ${palette}`}
-    >
-      {label}
-    </span>
-  );
 };
 
 const PermissionRegistryPanel: React.FC<PermissionRegistryPanelProps> = ({ t, formatDate }) => {
@@ -72,7 +56,10 @@ const PermissionRegistryPanel: React.FC<PermissionRegistryPanelProps> = ({ t, fo
   };
 
   return (
-    <section className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+    <section
+      data-testid="access-permission-registry"
+      className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm"
+    >
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-text-primary">{t('access.registry.title')}</h2>
@@ -117,14 +104,11 @@ const PermissionRegistryPanel: React.FC<PermissionRegistryPanelProps> = ({ t, fo
                 <td className="py-3 pr-4 text-text-primary">{entry.module}</td>
                 <td className="py-3 pr-4 text-text-primary">{entry.owner}</td>
                 <td className="py-3 pr-4">
-                  <StatusBadge
-                    status={entry.status}
-                    label={
-                      entry.status === 'active'
-                        ? t('access.registry.status.active')
-                        : t('access.registry.status.deprecated')
-                    }
-                  />
+                  <Badge tone={entry.status === 'active' ? 'success' : 'warning'}>
+                    {entry.status === 'active'
+                      ? t('access.registry.status.active')
+                      : t('access.registry.status.deprecated')}
+                  </Badge>
                 </td>
                 <td className="py-3 pr-4 text-text-primary">{renderSunset(entry)}</td>
               </tr>

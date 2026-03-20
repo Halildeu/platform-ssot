@@ -74,7 +74,7 @@ const prodConfig = {
         'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
         'react-router': { singleton: true, requiredVersion: deps['react-router'] },
         'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
-        'mfe-ui-kit': { singleton: true, requiredVersion: false },
+        '@mfe/design-system': { singleton: true, requiredVersion: false },
         'ag-grid-react': { singleton: true, requiredVersion: deps['ag-grid-react'] },
         'ag-grid-community': { singleton: true, requiredVersion: deps['ag-grid-community'] },
         'ag-grid-enterprise': { singleton: true, requiredVersion: deps['ag-grid-enterprise'] },

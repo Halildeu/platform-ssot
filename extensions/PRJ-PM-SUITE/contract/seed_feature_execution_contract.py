@@ -27,6 +27,16 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--scope", action="append", default=[])
     parser.add_argument("--change-glob", action="append", default=[])
     parser.add_argument("--affected-module", action="append", default=[])
+    parser.add_argument("--plane", action="append", default=[])
+    parser.add_argument("--primary-plane", default="")
+    parser.add_argument("--capability-id", action="append", default=[])
+    parser.add_argument("--permission-code", action="append", default=[])
+    parser.add_argument("--resource-scope", action="append", default=[])
+    parser.add_argument("--audit-action", action="append", default=[])
+    parser.add_argument("--event-name", action="append", default=[])
+    parser.add_argument("--job-name", action="append", default=[])
+    parser.add_argument("--decision-bundle-path", default="tenant/TENANT-DEFAULT/decision-bundle.v1.json")
+    parser.add_argument("--context-ref", action="append", default=[])
     parser.add_argument("--ux-mode", default="NOT_APPLICABLE")
     parser.add_argument("--ux-rationale", default="No frontend scoped change.")
     parser.add_argument(
@@ -46,6 +56,72 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def _parse_bool(raw: str) -> bool:
     return str(raw or "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _unique_text(values: list[str]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in values:
+        item = str(raw).strip()
+        if not item or item in seen:
+            continue
+        seen.add(item)
+        out.append(item)
+    return out
+
+
+def _derive_planes(scopes: list[str], change_globs: list[str], explicit_planes: list[str]) -> list[str]:
+    if explicit_planes:
+        return _unique_text(explicit_planes)
+
+    planes: list[str] = []
+    if "frontend" in scopes:
+        planes.append("web")
+        if any(glob.startswith("mobile/") for glob in change_globs):
+            planes.append("mobile")
+    if "backend" in scopes or "api" in scopes:
+        planes.append("backend")
+    if "database" in scopes:
+        planes.append("data")
+    if not planes:
+        planes.append("governance")
+    return _unique_text(planes)
+
+
+def _default_plane_globs(plane: str) -> list[str]:
+    defaults = {
+        "web": ["web/**"],
+        "mobile": ["mobile/**"],
+        "backend": ["backend/**", "api/**"],
+        "ai": ["ai/**"],
+        "data": ["data/**", "db/**", "database/**", "sql/**", "pipelines/**", "reports/**"],
+        "governance": [
+            "docs/**",
+            "tenant/**",
+            "schemas/**",
+            "policies/**",
+            "registry/**",
+            "extensions/PRJ-PM-SUITE/contract/**",
+        ],
+    }
+    return list(defaults.get(plane, ["**"]))
+
+
+def _derive_plane_path_globs(planes: list[str], change_globs: list[str]) -> dict[str, list[str]]:
+    prefix_map = {
+        "web": ("web/", "frontend/", "apps/", "ui/"),
+        "mobile": ("mobile/",),
+        "backend": ("backend/", "api/"),
+        "ai": ("ai/",),
+        "data": ("data/", "db/", "database/", "sql/", "pipelines/", "reports/"),
+        "governance": ("docs/", "tenant/", "schemas/", "policies/", "registry/", "extensions/PRJ-PM-SUITE/contract/"),
+    }
+    out: dict[str, list[str]] = {}
+    for plane in planes:
+        prefixes = prefix_map.get(plane, tuple())
+        matched = [glob for glob in change_globs if glob.startswith(prefixes)]
+        out[plane] = matched or _default_plane_globs(plane)
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -82,6 +158,19 @@ def main(argv: list[str] | None = None) -> int:
                 change_globs.append(str(default_patterns[0]))
     if not change_globs:
         change_globs = ["web/**/*"]
+
+    selected_planes = _derive_planes(selected_scopes, change_globs, [str(item) for item in args.plane])
+    primary_plane = str(args.primary_plane).strip() or selected_planes[0]
+    multi_plane_mode = "multi-plane" if len(selected_planes) > 1 else "single-plane"
+    context_refs = _unique_text(
+        [str(item).strip() for item in args.context_ref if str(item).strip()]
+        or [
+            "tenant/TENANT-DEFAULT/context.v1.md",
+            "tenant/TENANT-DEFAULT/stakeholders.v1.md",
+            "tenant/TENANT-DEFAULT/scope.v1.md",
+            "tenant/TENANT-DEFAULT/criteria.v1.md",
+        ]
+    )
 
     ux_artifacts: list[dict[str, str]] = []
     for raw in args.ux_artifact:
@@ -136,6 +225,32 @@ def main(argv: list[str] | None = None) -> int:
         "design_system_policy": "policies/policy_ui_design_system.v1.json",
         "db_migration_required": _parse_bool(str(args.db_migration_required)),
     }
+    contract["multi_plane_contract"] = {
+        "mode": multi_plane_mode,
+        "planes": selected_planes,
+        "primary_plane": primary_plane,
+        "plane_path_globs": _derive_plane_path_globs(selected_planes, change_globs),
+    }
+    contract["shared_contracts"] = {
+        "capability_ids": _unique_text([str(item) for item in args.capability_id]),
+        "permission_codes": _unique_text([str(item) for item in args.permission_code]),
+        "resource_scopes": _unique_text([str(item) for item in args.resource_scope]),
+        "audit_actions": _unique_text([str(item) for item in args.audit_action]),
+        "event_names": _unique_text([str(item) for item in args.event_name]),
+        "job_names": _unique_text([str(item) for item in args.job_name]),
+    }
+    contract["context_contract"] = {
+        "decision_bundle_path": str(args.decision_bundle_path).strip() or "tenant/TENANT-DEFAULT/decision-bundle.v1.json",
+        "context_refs": context_refs,
+        "codex_read_sequence": [
+            "standards.lock",
+            "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md",
+            "docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md",
+            "tenant/TENANT-DEFAULT/context.v1.md",
+            "tenant/TENANT-DEFAULT/decision-bundle.v1.json",
+            "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+        ],
+    }
     contract["lane_plan"] = {
         "execution_sequence": [str(item) for item in (ci_contract.get("delivery_sequence") or []) if str(item).strip()],
         "required_lanes": [str(item) for item in (ci_contract.get("required_lanes") or []) if str(item).strip()],
@@ -159,6 +274,7 @@ def main(argv: list[str] | None = None) -> int:
                 "out": str(out_path),
                 "feature_id": contract["feature_id"],
                 "service_scopes": contract["delivery_scope"]["service_scopes"],
+                "planes": contract["multi_plane_contract"]["planes"],
             },
             ensure_ascii=False,
             sort_keys=True,

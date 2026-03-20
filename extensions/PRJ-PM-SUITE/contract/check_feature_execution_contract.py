@@ -573,6 +573,111 @@ def _validate_definition_of_done(
     return errors
 
 
+def _normalize_text_list(value: Any) -> list[str]:
+    return [
+        str(item).strip()
+        for item in (value or [])
+        if isinstance(item, str) and str(item).strip()
+    ]
+
+
+def _validate_multi_plane_contract(contract: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
+    errors: list[str] = []
+    summary = {
+        "mode": "",
+        "planes": [],
+        "primary_plane": "",
+        "shared_capability_ids": [],
+        "decision_bundle_path": "",
+    }
+
+    multi_plane_contract = (
+        contract.get("multi_plane_contract") if isinstance(contract.get("multi_plane_contract"), dict) else {}
+    )
+    shared_contracts = contract.get("shared_contracts") if isinstance(contract.get("shared_contracts"), dict) else {}
+    context_contract = contract.get("context_contract") if isinstance(contract.get("context_contract"), dict) else {}
+
+    if not multi_plane_contract:
+        return errors, summary
+
+    _append_missing(
+        errors,
+        "multi_plane_contract",
+        multi_plane_contract,
+        ("mode", "planes", "primary_plane", "plane_path_globs"),
+    )
+    mode = str(multi_plane_contract.get("mode") or "").strip()
+    planes = _normalize_text_list(multi_plane_contract.get("planes"))
+    primary_plane = str(multi_plane_contract.get("primary_plane") or "").strip()
+    plane_path_globs = (
+        multi_plane_contract.get("plane_path_globs")
+        if isinstance(multi_plane_contract.get("plane_path_globs"), dict)
+        else {}
+    )
+
+    if primary_plane and primary_plane not in planes:
+        errors.append("multi_plane_contract:primary_plane_not_in_planes")
+    if mode == "multi-plane" and len(planes) < 2:
+        errors.append("multi_plane_contract:planes_below_min_for_multi_plane")
+
+    for plane in planes:
+        globs = _normalize_text_list(plane_path_globs.get(plane))
+        if not globs:
+            errors.append(f"multi_plane_contract:missing_plane_path_globs:{plane}")
+
+    if shared_contracts:
+        _append_missing(
+            errors,
+            "shared_contracts",
+            shared_contracts,
+            ("capability_ids", "permission_codes", "resource_scopes", "audit_actions"),
+        )
+    if context_contract:
+        _append_missing(
+            errors,
+            "context_contract",
+            context_contract,
+            ("decision_bundle_path", "context_refs", "codex_read_sequence"),
+        )
+
+    capability_ids = _normalize_text_list(shared_contracts.get("capability_ids"))
+    permission_codes = _normalize_text_list(shared_contracts.get("permission_codes"))
+    resource_scopes = _normalize_text_list(shared_contracts.get("resource_scopes"))
+    audit_actions = _normalize_text_list(shared_contracts.get("audit_actions"))
+    decision_bundle_path = str(context_contract.get("decision_bundle_path") or "").strip()
+    context_refs = _normalize_text_list(context_contract.get("context_refs"))
+    codex_read_sequence = _normalize_text_list(context_contract.get("codex_read_sequence"))
+
+    if mode == "multi-plane":
+        if not shared_contracts:
+            errors.append("shared_contracts:missing_for_multi_plane")
+        if not context_contract:
+            errors.append("context_contract:missing_for_multi_plane")
+        if not capability_ids:
+            errors.append("shared_contracts:capability_ids_empty_for_multi_plane")
+        if not permission_codes:
+            errors.append("shared_contracts:permission_codes_empty_for_multi_plane")
+        if not resource_scopes:
+            errors.append("shared_contracts:resource_scopes_empty_for_multi_plane")
+        if not audit_actions:
+            errors.append("shared_contracts:audit_actions_empty_for_multi_plane")
+        if not decision_bundle_path:
+            errors.append("context_contract:decision_bundle_path_empty_for_multi_plane")
+        if not context_refs:
+            errors.append("context_contract:context_refs_empty_for_multi_plane")
+        if not codex_read_sequence:
+            errors.append("context_contract:codex_read_sequence_empty_for_multi_plane")
+
+    summary = {
+        "mode": mode,
+        "planes": planes,
+        "primary_plane": primary_plane,
+        "shared_capability_ids": capability_ids,
+        "decision_bundle_path": decision_bundle_path,
+    }
+    return errors, summary
+
+
 def _validate_contract(
     contract: dict[str, Any],
     scope_context: dict[str, Any],
@@ -641,10 +746,17 @@ def _validate_contract(
             placeholder_tokens=settings["placeholder_tokens"],
         )
     )
+    multi_plane_errors, multi_plane_summary = _validate_multi_plane_contract(contract)
+    contract_errors.extend(multi_plane_errors)
     return contract_errors, [], {
         "service_scopes": service_scopes,
         "change_path_globs": change_globs,
         "artifact_globs": artifact_globs,
+        "multi_plane_mode": multi_plane_summary["mode"],
+        "planes": multi_plane_summary["planes"],
+        "primary_plane": multi_plane_summary["primary_plane"],
+        "shared_capability_ids": multi_plane_summary["shared_capability_ids"],
+        "decision_bundle_path": multi_plane_summary["decision_bundle_path"],
     }
 
 
@@ -691,6 +803,11 @@ def _build_report(
             "service_scopes": contract_summary["service_scopes"],
             "change_path_globs": contract_summary["change_path_globs"],
             "artifact_globs": contract_summary["artifact_globs"],
+            "multi_plane_mode": contract_summary["multi_plane_mode"],
+            "planes": contract_summary["planes"],
+            "primary_plane": contract_summary["primary_plane"],
+            "shared_capability_ids": contract_summary["shared_capability_ids"],
+            "decision_bundle_path": contract_summary["decision_bundle_path"],
             "expected_profile_id": baseline_context["expected_profile_id"],
             "expected_execution_sequence": baseline_context["expected_sequence"],
             "expected_required_lanes": baseline_context["expected_lanes"],

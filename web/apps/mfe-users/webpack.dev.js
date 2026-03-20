@@ -11,6 +11,9 @@ const devConfig = {
   devServer: {
     port: 3004,
     headers: { 'Access-Control-Allow-Origin': '*' },
+    client: {
+      overlay: false,
+    },
     proxy: [
       {
         context: ['/api/auth'],
@@ -50,13 +53,12 @@ const devConfig = {
           singleton: true,
           requiredVersion: deps['@tanstack/react-query'],
         },
-        antd: { singleton: true, requiredVersion: deps.antd },
         'ag-grid-react': { singleton: true, requiredVersion: deps['ag-grid-react'] },
         'ag-grid-community': { singleton: true, requiredVersion: deps['ag-grid-community'] },
         'ag-grid-enterprise': { singleton: true, requiredVersion: deps['ag-grid-enterprise'] },
         'react-router': { singleton: true, requiredVersion: deps['react-router'] },
         'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
-        'mfe-ui-kit': { singleton: true, requiredVersion: false },
+        '@mfe/design-system': { singleton: true, requiredVersion: false },
         '@mfe/shared-http': { singleton: true, requiredVersion: false },
         '@mfe/i18n-dicts': { singleton: true, requiredVersion: false },
       },

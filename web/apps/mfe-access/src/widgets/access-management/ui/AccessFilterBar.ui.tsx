@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, Segmented, Select, TextInput, createSegmentedPreset } from '@mfe/design-system';
 import type { AccessFilters, AccessLevel } from '../../../features/access-management/model/access.types';
 
 interface AccessFilterBarProps {
@@ -36,13 +37,21 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
 
   const accessLevels = React.useMemo(
     () => [
-      { label: t('access.filter.level.all'), value: 'ALL' as AccessFilters['level'] },
-      { label: t('access.filter.level.none'), value: 'NONE' as AccessFilters['level'] },
-      { label: t('access.filter.level.view'), value: 'VIEW' as AccessFilters['level'] },
-      { label: t('access.filter.level.edit'), value: 'EDIT' as AccessFilters['level'] },
-      { label: t('access.filter.level.manage'), value: 'MANAGE' as AccessFilters['level'] },
+      { label: t('access.filter.level.all'), value: 'ALL' as AccessFilters['level'], dataTestId: 'access-filter-level-all' },
+      { label: t('access.filter.level.none'), value: 'NONE' as AccessFilters['level'], dataTestId: 'access-filter-level-none' },
+      { label: t('access.filter.level.view'), value: 'VIEW' as AccessFilters['level'], dataTestId: 'access-filter-level-view' },
+      { label: t('access.filter.level.edit'), value: 'EDIT' as AccessFilters['level'], dataTestId: 'access-filter-level-edit' },
+      { label: t('access.filter.level.manage'), value: 'MANAGE' as AccessFilters['level'], dataTestId: 'access-filter-level-manage' },
     ],
     [t]
+  );
+  const levelSegmentedPreset = React.useMemo(
+    () => ({
+      ...createSegmentedPreset('filter_bar'),
+      size: 'sm' as const,
+      fullWidth: true,
+    }),
+    [],
   );
 
   const handleFieldChange = <K extends keyof AccessFilters>(key: K, value: AccessFilters[K]) => {
@@ -62,63 +71,62 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
   return (
     <form
       onSubmit={handleSubmit}
+      data-testid="access-filter-bar"
       className="flex w-full flex-wrap items-end gap-3 rounded-2xl border border-border-subtle bg-surface-default bg-opacity-70 p-4 shadow-sm"
     >
-      <label className="flex flex-1 flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
-        <span>{t('access.filter.searchPlaceholder')}</span>
-        <input
-          type="text"
-          className="mt-1 w-full rounded-xl border border-border-subtle px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline"
+      <div className="min-w-[240px] flex-1">
+        <TextInput
+          label={<span className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{t('access.filter.searchPlaceholder')}</span>}
+          data-testid="access-filter-search"
           placeholder={t('access.filter.searchPlaceholder')}
           value={localFilters.search}
-          onChange={(event) => handleFieldChange('search', event.target.value)}
+          onValueChange={(nextValue) => handleFieldChange('search', nextValue)}
+          fullWidth
+        />
+      </div>
+      <div className="min-w-[200px]">
+        <Select
+          label={<span className="text-xs font-semibold uppercase tracking-wide text-text-secondary">{t('access.filter.moduleAll')}</span>}
+          data-testid="access-filter-module"
+          value={localFilters.moduleKey}
+          onValueChange={(nextValue) => {
+            handleFieldChange('moduleKey', nextValue as AccessFilters['moduleKey']);
+            onChange({ ...localFilters, moduleKey: nextValue as AccessFilters['moduleKey'] });
+          }}
+          options={moduleOptions}
+          fullWidth
+        />
+      </div>
+      <label className="flex min-w-[280px] flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
+        <span>{t('access.filter.level.all')}</span>
+        <Segmented
+          items={accessLevels}
+          value={localFilters.level}
+          ariaLabel={t('access.filter.level.all')}
+          onValueChange={(nextValue) => handleLevelChange(nextValue as AccessLevel | 'ALL')}
+          appearance={levelSegmentedPreset.appearance}
+          shape={levelSegmentedPreset.shape}
+          size={levelSegmentedPreset.size}
+          iconPosition={levelSegmentedPreset.iconPosition}
+          fullWidth={levelSegmentedPreset.fullWidth}
+          className="mt-1 w-full"
+          classes={{ list: 'w-full', item: 'min-w-0 flex-1', content: 'w-full' }}
         />
       </label>
-      <label className="flex flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
-        <span>{t('access.filter.moduleAll')}</span>
-        <select
-          className="mt-1 min-w-[200px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
-          value={localFilters.moduleKey}
-          onChange={(event) => {
-            handleFieldChange('moduleKey', event.target.value);
-            onChange({ ...localFilters, moduleKey: event.target.value });
-          }}
-        >
-          {moduleOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="flex flex-col text-xs font-semibold uppercase tracking-wide text-text-secondary">
-        <span>{t('access.filter.level.all')}</span>
-        <select
-          className="mt-1 min-w-[180px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
-          value={localFilters.level}
-          onChange={(event) => handleLevelChange(event.target.value as AccessLevel | 'ALL')}
-        >
-          {accessLevels.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      </label>
       <div className="ml-auto flex flex-wrap gap-2">
-        <button
+        <Button
           type="submit"
-          className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90"
+          data-testid="access-filter-apply"
         >
           {t('access.filter.apply')}
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
-          className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary hover:bg-surface-muted"
+          variant="secondary"
           onClick={handleReset}
         >
           {t('access.filter.reset')}
-        </button>
+        </Button>
       </div>
     </form>
   );

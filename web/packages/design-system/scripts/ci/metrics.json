@@ -1,0 +1,11 @@
+{
+  "stories": 95,
+  "contractTests": 95,
+  "primitives": 24,
+  "components": 60,
+  "patterns": 10,
+  "testFiles": 224,
+  "totalTests": 5321,
+  "testSuites": 1628,
+  "collectedAt": "2026-03-20T19:45:57.064Z"
+}

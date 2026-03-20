@@ -1,15 +1,15 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
-import { ContextMenu } from '../packages/ui-kit/src/components/ContextMenu';
-import { DatePicker } from '../packages/ui-kit/src/components/DatePicker';
-import { Descriptions } from '../packages/ui-kit/src/components/Descriptions';
-import { Divider } from '../packages/ui-kit/src/components/Divider';
-import { IconButton } from '../packages/ui-kit/src/components/IconButton';
-import { JsonViewer } from '../packages/ui-kit/src/components/JsonViewer';
-import { LinkInline } from '../packages/ui-kit/src/components/LinkInline';
-import { Text } from '../packages/ui-kit/src/components/Text';
-import { EntitySummaryBlock } from '../packages/ui-kit/src/layout/EntitySummaryBlock';
+import { Badge } from '../packages/design-system/src/components/Badge';
+import { ContextMenu } from '../packages/design-system/src/components/ContextMenu';
+import { DatePicker } from '../packages/design-system/src/components/DatePicker';
+import { Descriptions } from '../packages/design-system/src/components/Descriptions';
+import { Divider } from '../packages/design-system/src/components/Divider';
+import { IconButton } from '../packages/design-system/src/components/IconButton';
+import { JsonViewer } from '../packages/design-system/src/components/JsonViewer';
+import { LinkInline } from '../packages/design-system/src/components/LinkInline';
+import { Text } from '../packages/design-system/src/components/Text';
+import { EntitySummaryBlock } from '../packages/design-system/src/layout/EntitySummaryBlock';
 
 const meta: Meta = {
   title: 'UI Kit/UtilityLiveDemoFoundations',

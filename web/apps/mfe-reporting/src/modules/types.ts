@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { SharedReportId } from '@platform/capabilities';
 import type { ColumnDef, GridRequest, GridResponse } from '../grid';
 
 export type TranslateFn = (key: string, params?: Record<string, unknown>) => string;
@@ -16,6 +17,7 @@ export interface FilterInitContext {
 
 export interface ReportModule<TFilters extends Record<string, unknown>, TRow> {
   id: string;
+  sharedReportId: SharedReportId;
   route: string;
   titleKey: string;
   descriptionKey: string;
@@ -26,4 +28,8 @@ export interface ReportModule<TFilters extends Record<string, unknown>, TRow> {
   getColumns: (t: TranslateFn) => ColumnDef<TRow>[];
   fetchRows: (filters: TFilters, request: GridRequest) => Promise<GridResponse<TRow>>;
   renderDetail?: (row: TRow | null, t: TranslateFn) => ReactNode;
+  exportRows?: (
+    filters: TFilters,
+    format: "csv" | "json",
+  ) => Promise<{ blob: Blob; filename: string }>;
 }

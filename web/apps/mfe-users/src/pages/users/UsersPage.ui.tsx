@@ -1,6 +1,9 @@
 import React from 'react';
-import type { PageBreadcrumbItem } from 'mfe-ui-kit';
-import { PageLayout } from 'mfe-ui-kit';
+import {
+  PageLayout,
+  createPageLayoutBreadcrumbItems,
+  createPageLayoutPreset,
+} from '@mfe/design-system';
 import { UserDetail, UserSummary, TelemetryEvent } from '@mfe/shared-types';
 import { fetchPageLayout, trackAction, resolveTraceId } from '@mfe/shared-http';
 import type { PageLayoutManifest } from '@mfe/shared-types';
@@ -39,15 +42,21 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
       });
   }, []);
 
-  const pageBreadcrumbItems = React.useMemo<PageBreadcrumbItem[] | undefined>(
-    () => usersPageManifest.layout.breadcrumbItems?.map((item) => ({
-      ...item,
-      title: t(item.title),
-    })),
+  const pageBreadcrumbItems = React.useMemo(
+    () => createPageLayoutBreadcrumbItems(
+      (usersPageManifest.layout.breadcrumbItems ?? []).map((item) => ({
+        ...item,
+        title: t(item.title as string),
+      })),
+    ),
     [t],
   );
-  const pageTitle = t(pageLayout?.title ?? usersPageManifest.layout.title);
-  const pageDescription = t(pageLayout?.description ?? usersPageManifest.layout.description);
+  const pageLayoutPreset = React.useMemo(
+    () => createPageLayoutPreset({ preset: 'content-only', pageWidth: 'full' }),
+    [],
+  );
+  const pageTitle = t((pageLayout?.title ?? usersPageManifest.layout.title) as string);
+  const pageDescription = t((pageLayout?.description ?? usersPageManifest.layout.description) as string);
 
   const { data: selectedUserDetail, isLoading: isDetailLoading } = useUserDetailQuery(
     selectedUserSummary ? { id: selectedUserSummary.id, email: selectedUserSummary.email } : null,
@@ -173,6 +182,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
         </div>
       ) : (
         <PageLayout
+          {...pageLayoutPreset}
           title={pageTitle}
           description={pageDescription}
           breadcrumbItems={pageBreadcrumbItems}

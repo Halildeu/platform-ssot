@@ -1,4 +1,5 @@
 import React from 'react';
+import { Modal, Switch } from '@mfe/design-system';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
 
 export interface RoleCloneFormValues {
@@ -66,75 +67,13 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div
-        className="absolute inset-0 bg-surface-overlay"
-        style={{
-          backgroundColor: 'var(--surface-overlay-bg)',
-          opacity: 'var(--overlay-opacity)',
-        }}
-        aria-label={t('access.clone.cancelText')}
-        onClick={onCancel}
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="access-role-clone-title"
-        className="relative z-10 w-full max-w-xl rounded-3xl bg-surface-default p-6 shadow-2xl"
-      >
-        <header className="mb-4 flex items-start justify-between">
-          <div>
-            <h2 id="access-role-clone-title" className="text-lg font-semibold text-text-primary">
-              {t('access.clone.modal.title')}
-            </h2>
-            {role ? (
-              <p className="text-sm text-text-subtle">{t('access.clone.modal.subtitle', { roleName: role.name })}</p>
-            ) : null}
-          </div>
-          <button type="button" className="text-text-subtle hover:text-text-secondary" onClick={onCancel}>
-            ×
-          </button>
-        </header>
-        <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
-            {t('access.clone.nameLabel')}
-            <input
-              type="text"
-              className={`rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-selection-outline ${errors.name ? 'border-state-danger-border' : 'border-border-subtle'}`}
-              value={formValues.name}
-              onChange={(event) => setFormValues((prev) => ({ ...prev, name: event.target.value }))}
-              placeholder={t('access.clone.namePlaceholder')}
-              autoFocus
-            />
-            {errors.name ? <span className="text-xs text-state-danger-text">{errors.name}</span> : null}
-          </label>
-          <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
-            {t('access.clone.descriptionLabel') ?? 'Açıklama'}
-            <textarea
-              className="rounded-xl border border-border-subtle px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-selection-outline"
-              rows={3}
-              value={formValues.description ?? ''}
-              onChange={(event) => setFormValues((prev) => ({ ...prev, description: event.target.value }))}
-              placeholder={t('access.clone.descriptionPlaceholder')}
-            />
-          </label>
-          <label className="flex items-center justify-between rounded-2xl border border-border-subtle bg-surface-muted px-4 py-3 text-sm">
-            <div>
-              <p className="font-semibold text-text-primary">{t('access.clone.copyMemberCount')}</p>
-              <p className="text-xs text-text-subtle">{t('access.clone.copyMemberTooltip')}</p>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={formValues.copyMemberCount}
-              onClick={() => setFormValues((prev) => ({ ...prev, copyMemberCount: !prev.copyMemberCount }))}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${formValues.copyMemberCount ? 'bg-action-primary' : 'bg-border-subtle'}`}
-            >
-              <span className="inline-block h-5 w-5 transform rounded-full bg-surface-default transition" style={{ transform: formValues.copyMemberCount ? 'translateX(20px)' : 'translateX(2px)' }} />
-            </button>
-          </label>
-        </div>
-        <div className="mt-6 flex justify-end gap-3">
+    <Modal
+      open={open}
+      title={t('access.clone.modal.title')}
+      size="lg"
+      onClose={() => onCancel()}
+      footer={(
+        <div className="flex justify-end gap-3">
           <button
             type="button"
             className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary hover:bg-surface-muted"
@@ -151,8 +90,45 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
             {confirmLoading ? `${t('access.clone.okText')}...` : t('access.clone.okText')}
           </button>
         </div>
+      )}
+    >
+      <div className="flex flex-col gap-4">
+        {role ? (
+          <p className="text-sm text-text-subtle">{t('access.clone.modal.subtitle', { roleName: role.name })}</p>
+        ) : null}
+        <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
+          {t('access.clone.nameLabel')}
+          <input
+            type="text"
+            className={`rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-selection-outline ${errors.name ? 'border-state-danger-border' : 'border-border-subtle'}`}
+            value={formValues.name}
+            onChange={(event) => setFormValues((prev) => ({ ...prev, name: event.target.value }))}
+            placeholder={t('access.clone.namePlaceholder')}
+            autoFocus
+          />
+          {errors.name ? <span className="text-xs text-state-danger-text">{errors.name}</span> : null}
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
+          {t('access.clone.descriptionLabel') ?? 'Açıklama'}
+          <textarea
+            className="rounded-xl border border-border-subtle px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-selection-outline"
+            rows={3}
+            value={formValues.description ?? ''}
+            onChange={(event) => setFormValues((prev) => ({ ...prev, description: event.target.value }))}
+            placeholder={t('access.clone.descriptionPlaceholder')}
+          />
+        </label>
+        <div className="rounded-2xl border border-border-subtle bg-surface-muted px-4 py-3">
+          <Switch
+            label={t('access.clone.copyMemberCount')}
+            description={t('access.clone.copyMemberTooltip')}
+            checked={formValues.copyMemberCount}
+            onCheckedChange={(checked) => setFormValues((prev) => ({ ...prev, copyMemberCount: checked }))}
+            fullWidth
+          />
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

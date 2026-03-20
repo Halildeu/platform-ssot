@@ -3,6 +3,17 @@
   <head>
     </head>
 <body>
+  <script>
+    // Runtime environment override for local development.
+    window.__env__ = {
+      AUTH_MODE: 'keycloak',
+    };
+    // Debug: capture first uncaught errors before React loads
+    window.__earlyErrors = [];
+    window.addEventListener('error', function(e) {
+      window.__earlyErrors.push({ msg: e.message, file: e.filename, line: e.lineno, col: e.colno });
+    });
+  </script>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
 </body>

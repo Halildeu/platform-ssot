@@ -9,10 +9,11 @@
     "test": "npm run build"
   },
   "dependencies": {
+    "@platform/capabilities": "file:../../packages/platform-capabilities",
     "@mfe/shared-http": "file:../../packages/shared-http",
     "@mfe/shared-types": "file:../../packages/shared-types",
     "@mfe/i18n-dicts": "file:../../packages/i18n-dicts",
-    "mfe-ui-kit": "file:../../packages/ui-kit",
+    "@mfe/design-system": "file:../../packages/design-system",
     "ag-grid-community": "34.3.1",
     "ag-grid-enterprise": "34.3.1",
     "ag-grid-react": "34.3.1",

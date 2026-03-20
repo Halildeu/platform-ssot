@@ -1,7 +1,8 @@
 import React from 'react';
-import { ThemePreviewCard } from 'mfe-ui-kit';
+import { Segmented, ThemePreviewCard, createSegmentedPreset } from '@mfe/design-system';
 
 import { resolveThemeAttr, type ThemeAdminRow, type ThemeDetails, type ThemeMetaState, type ThemeSummary } from './ThemeAdminPage.shared';
+import { useThemeAdminI18n } from './useThemeAdminI18n';
 
 type ThemeAdminPreviewPanelProps = {
   previewRef: React.RefObject<HTMLDivElement | null>;
@@ -16,17 +17,6 @@ type ThemeAdminPreviewPanelProps = {
   resolvedPreviewDisplayCssVars: Record<string, string>;
   onSelectTheme: (themeId: string) => void;
 };
-
-const surfacePreviewCards = [
-  { label: 'Default', className: 'bg-surface-default text-text-primary' },
-  { label: 'Raised', className: 'bg-surface-raised text-text-primary' },
-  { label: 'Muted', className: 'bg-surface-muted text-text-primary' },
-  { label: 'Panel', className: 'bg-surface-panel text-text-primary' },
-  { label: 'Header', className: 'bg-surface-header text-text-primary' },
-  { label: 'Overlay', className: 'bg-surface-overlay text-text-inverse' },
-];
-
-const shellNavLabels = ['Ana Sayfa', 'Öneriler', 'Etik', 'Erişim', 'Denetim'];
 
 const renderCssVarSwatch = (groupId: string, cssVar: string) => {
   if (groupId === 'text') {
@@ -73,59 +63,108 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
   overrides,
   resolvedPreviewDisplayCssVars,
   onSelectTheme,
-}) => (
-  <aside className="self-start overflow-auto lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)]">
+}) => {
+  const { t } = useThemeAdminI18n();
+  const surfacePreviewCards = React.useMemo(
+    () => [
+      { label: t('themeadmin.preview.surface.default'), className: 'bg-surface-default text-text-primary' },
+      { label: t('themeadmin.preview.surface.raised'), className: 'bg-surface-raised text-text-primary' },
+      { label: t('themeadmin.preview.surface.muted'), className: 'bg-surface-muted text-text-primary' },
+      { label: t('themeadmin.preview.surface.panel'), className: 'bg-surface-panel text-text-primary' },
+      { label: t('themeadmin.preview.surface.header'), className: 'bg-surface-header text-text-primary' },
+      { label: t('themeadmin.preview.surface.overlay'), className: 'bg-surface-overlay text-text-inverse' },
+    ],
+    [t],
+  );
+  const shellNavLabels = React.useMemo(
+    () => [
+      t('themeadmin.preview.nav.home'),
+      t('themeadmin.preview.nav.recommendations'),
+      t('themeadmin.preview.nav.ethics'),
+      t('themeadmin.preview.nav.access'),
+      t('themeadmin.preview.nav.audit'),
+    ],
+    [t],
+  );
+  const themePreviewCardLocaleText = React.useMemo(
+    () => ({
+      titleText: t('themeadmin.preview.themeCard.titleText'),
+      secondaryText: t('themeadmin.preview.themeCard.secondaryText'),
+      saveLabel: t('themeadmin.preview.themeCard.saveLabel'),
+      selectedLabel: t('themeadmin.preview.themeCard.selectedLabel'),
+    }),
+    [t],
+  );
+  const themePalettePreset = React.useMemo(() => createSegmentedPreset('toolbar'), []);
+  const paletteThemeItems = React.useMemo(
+    () =>
+      paletteThemes.map((theme) => {
+        const label = theme.name.replace(/^Global\s+/i, '');
+        return {
+          value: theme.id,
+          dataTestId: `theme-preview-${theme.id}`,
+          itemClassName: 'min-h-0 flex-[1_1_calc(33.333%-0.5rem)] basis-[calc(33.333%-0.5rem)] px-0 py-0',
+          label: (
+            <div className="rounded-2xl border p-2 transition text-left" title={theme.name}>
+              <span className="mb-1 block truncate text-[11px] font-semibold text-text-secondary">{label}</span>
+              <div
+                data-theme-scope
+                data-theme={resolveThemeAttr(theme.appearance, theme.axes?.density)}
+                data-accent={theme.axes?.accent ?? 'neutral'}
+                data-density={theme.axes?.density}
+                data-radius={theme.axes?.radius}
+                data-elevation={theme.axes?.elevation}
+                data-motion={theme.axes?.motion}
+                data-surface-tone={theme.surfaceTone ?? undefined}
+                className="mt-1"
+              >
+                <ThemePreviewCard selected={theme.id === selectedThemeId} localeText={themePreviewCardLocaleText} />
+              </div>
+            </div>
+          ),
+        };
+      }),
+    [paletteThemes, selectedThemeId, themePreviewCardLocaleText],
+  );
+
+  return (
+    <aside className="self-start overflow-auto lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)]">
     <details open data-theme-preview className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2">
       <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-text-secondary">
-        Önizleme
+        {t('themeadmin.preview.sectionTitle')}
       </summary>
       <div className="mt-3 flex flex-col gap-4">
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-3">
           <div className="flex items-center justify-between gap-2">
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">Tema paleti</span>
-              <span className="text-[10px] text-text-subtle">Seçip düzenleyin.</span>
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-text-secondary">{t('themeadmin.preview.paletteTitle')}</span>
+              <span className="text-[10px] text-text-subtle">{t('themeadmin.preview.paletteDescription')}</span>
             </div>
             <span className="text-[10px] font-semibold text-text-secondary">{selectedTheme?.name ?? '—'}</span>
           </div>
-          <div className="mt-2 grid grid-cols-3 gap-2" role="list">
-            {paletteThemes.map((theme) => {
-              const isActive = theme.id === selectedThemeId;
-              const label = theme.name.replace(/^Global\s+/i, '');
-              return (
-                <button
-                  key={theme.id}
-                  type="button"
-                  role="listitem"
-                  aria-pressed={isActive}
-                  onClick={() => onSelectTheme(theme.id)}
-                  className={`rounded-2xl border p-2 transition focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 ${
-                    isActive ? 'border-action-primary-border shadow-sm' : 'border-border-subtle hover:border-text-secondary'
-                  }`}
-                  title={theme.name}
-                >
-                  <span className="mb-1 block truncate text-[11px] font-semibold text-text-secondary">{label}</span>
-                  <div
-                    data-theme-scope
-                    data-theme={resolveThemeAttr(theme.appearance, theme.axes?.density)}
-                    data-accent={theme.axes?.accent ?? 'neutral'}
-                    data-density={theme.axes?.density}
-                    data-radius={theme.axes?.radius}
-                    data-elevation={theme.axes?.elevation}
-                    data-motion={theme.axes?.motion}
-                    data-surface-tone={theme.surfaceTone ?? undefined}
-                    className="mt-1"
-                  >
-                    <ThemePreviewCard selected={isActive} />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          <Segmented
+            items={paletteThemeItems}
+            value={selectedThemeId ?? ''}
+            onValueChange={(nextValue) => onSelectTheme(nextValue as string)}
+            ariaLabel={t('themeadmin.preview.paletteTitle')}
+            appearance={themePalettePreset.appearance}
+            shape={themePalettePreset.shape}
+            size={themePalettePreset.size}
+            iconPosition={themePalettePreset.iconPosition}
+            className="mt-2 w-full border-0 bg-transparent p-0"
+            classes={{
+              root: 'border-0 bg-transparent p-0',
+              list: 'w-full flex-wrap gap-2',
+              item: 'border-border-subtle bg-transparent text-left shadow-none',
+              activeItem: 'border-action-primary-border bg-transparent shadow-sm',
+              content: 'w-full',
+              label: 'w-full',
+            }}
+          />
         </div>
 
         <div className="flex items-center justify-between gap-2">
-          <span className="text-[10px] text-text-subtle">Değişiklikler yalnız bu alanda anlık uygulanır.</span>
+          <span className="text-[10px] text-text-subtle">{t('themeadmin.preview.changesHint')}</span>
           <span className="text-[10px] font-semibold text-text-secondary">{selectedTheme?.name ?? '—'}</span>
         </div>
 
@@ -147,16 +186,16 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
               <div className="flex items-center gap-2">
                 <div className="h-7 w-7 rounded-xl bg-accent-primary" aria-hidden />
                 <div className="flex flex-col leading-tight">
-                  <span className="text-[11px] font-semibold text-text-primary">Shell</span>
+                  <span className="text-[11px] font-semibold text-text-primary">{t('themeadmin.preview.shellTitle')}</span>
                   <span className="text-[10px] text-text-subtle">/admin/themes</span>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <span className="inline-flex items-center rounded-full bg-surface-panel px-2 py-1 text-[10px] font-semibold text-text-secondary">
-                  Bildirim
+                  {t('themeadmin.preview.notificationLabel')}
                 </span>
                 <span className="inline-flex items-center rounded-full bg-surface-panel px-2 py-1 text-[10px] font-semibold text-text-secondary">
-                  Profil
+                  {t('themeadmin.preview.profileLabel')}
                 </span>
               </div>
             </div>
@@ -170,7 +209,7 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
                 </span>
               ))}
               <span className="inline-flex items-center rounded-full bg-accent-soft px-2 py-1 text-[10px] font-semibold text-accent-primary">
-                shell.nav.themes
+                {t('themeadmin.preview.nav.themes')}
               </span>
             </div>
           </div>
@@ -189,55 +228,55 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
               <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex flex-col gap-0.5">
-                    <div className="text-[12px] font-semibold text-text-primary">Tema önizleme</div>
-                    <div className="text-[11px] text-text-secondary">Metin, border, accent ve overlay örnekleri</div>
+                    <div className="text-[12px] font-semibold text-text-primary">{t('themeadmin.preview.themeCard.title')}</div>
+                    <div className="text-[11px] text-text-secondary">{t('themeadmin.preview.themeCard.description')}</div>
                   </div>
-                  <ThemePreviewCard selected className="w-28 shrink-0" />
+                  <ThemePreviewCard selected={true} className="w-28 shrink-0" localeText={themePreviewCardLocaleText} />
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button type="button" className="inline-flex items-center rounded-md bg-accent-primary px-3 py-1.5 text-[11px] font-semibold text-text-inverse">
-                    Primary
+                    {t('themeadmin.preview.primaryButton')}
                   </button>
                   <button type="button" className="inline-flex items-center rounded-md bg-accent-primary-hover px-3 py-1.5 text-[11px] font-semibold text-text-inverse">
-                    Hover
+                    {t('themeadmin.preview.hoverButton')}
                   </button>
                   <button type="button" className="inline-flex items-center rounded-md border border-border-default bg-surface-default px-3 py-1.5 text-[11px] font-semibold text-text-primary">
-                    Secondary
+                    {t('themeadmin.preview.secondaryButton')}
                   </button>
                   <span className="inline-flex items-center rounded-full bg-accent-soft px-2 py-1 text-[10px] font-semibold text-accent-primary">
-                    Accent soft
+                    {t('themeadmin.preview.accentSoft')}
                   </span>
                   <span className="inline-flex items-center rounded-full bg-accent-focus px-2 py-1 text-[10px] font-semibold text-text-primary">
-                    Accent focus
+                    {t('themeadmin.preview.accentFocus')}
                   </span>
                 </div>
                 <div className="mt-3 grid gap-2">
                   <div className="rounded-xl border border-border-subtle bg-surface-default px-3 py-2">
-                    <div className="text-[11px] font-semibold text-text-primary">Başlık</div>
-                    <div className="mt-1 text-[11px] text-text-secondary">İkincil metin ve açıklama örneği</div>
-                    <div className="mt-1 text-[11px] text-text-subtle">Subtle metin örneği</div>
+                    <div className="text-[11px] font-semibold text-text-primary">{t('themeadmin.preview.headingLabel')}</div>
+                    <div className="mt-1 text-[11px] text-text-secondary">{t('themeadmin.preview.secondaryTextExample')}</div>
+                    <div className="mt-1 text-[11px] text-text-subtle">{t('themeadmin.preview.subtleTextExample')}</div>
                   </div>
                   <div className="rounded-xl border border-border-subtle bg-surface-default px-3 py-2">
-                    <div className="text-[10px] font-semibold text-text-secondary">Form alanı</div>
+                    <div className="text-[10px] font-semibold text-text-secondary">{t('themeadmin.preview.formFieldLabel')}</div>
                     <input
                       className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-default px-2 text-[11px] text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
-                      placeholder="Input placeholder"
+                      placeholder={t('themeadmin.preview.inputPlaceholder')}
                     />
                   </div>
                   <div className="overflow-hidden rounded-xl border border-border-subtle bg-surface-default">
                     <div className="grid grid-cols-3 gap-2 border-b border-border-subtle bg-surface-muted px-3 py-2 text-[10px] font-semibold text-text-secondary">
-                      <span>Kolon</span>
-                      <span>Durum</span>
-                      <span className="text-right">Tutar</span>
+                      <span>{t('themeadmin.preview.table.column')}</span>
+                      <span>{t('themeadmin.preview.table.status')}</span>
+                      <span className="text-right">{t('themeadmin.preview.table.amount')}</span>
                     </div>
                     <div className="grid grid-cols-3 gap-2 border-b border-border-subtle px-3 py-2 text-[11px] text-text-primary">
-                      <span>Satır A</span>
-                      <span className="text-text-secondary">Aktif</span>
+                      <span>{t('themeadmin.preview.table.rowA')}</span>
+                      <span className="text-text-secondary">{t('themeadmin.preview.table.active')}</span>
                       <span className="text-right font-semibold">1.234,56</span>
                     </div>
                     <div className="grid grid-cols-3 gap-2 px-3 py-2 text-[11px] text-text-primary">
-                      <span>Satır B</span>
-                      <span className="text-text-secondary">Beklemede</span>
+                      <span>{t('themeadmin.preview.table.rowB')}</span>
+                      <span className="text-text-secondary">{t('themeadmin.preview.table.pending')}</span>
                       <span className="text-right font-semibold">987,00</span>
                     </div>
                   </div>
@@ -245,19 +284,19 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
               </div>
 
               <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                <div className="text-[11px] font-semibold text-text-primary">Overlay (modal/backdrop)</div>
+                <div className="text-[11px] font-semibold text-text-primary">{t('themeadmin.preview.surface.overlay')} (modal/backdrop)</div>
                 <div className="relative mt-2 h-24 overflow-hidden rounded-xl border border-border-subtle bg-surface-default">
                   <div className="absolute inset-0 bg-surface-overlay opacity-70" aria-hidden />
                   <div className="absolute inset-0 flex items-center justify-center p-2">
                     <div className="w-full max-w-[260px] rounded-xl border border-border-subtle bg-surface-panel p-3 shadow-sm">
-                      <div className="text-[11px] font-semibold text-text-primary">Modal başlığı</div>
-                      <div className="mt-1 text-[10px] text-text-secondary">Overlay arka planı ve panel yüzeyi örneği</div>
+                      <div className="text-[11px] font-semibold text-text-primary">{t('themeadmin.preview.overlayTitle')}</div>
+                      <div className="mt-1 text-[10px] text-text-secondary">{t('themeadmin.preview.overlayDescription')}</div>
                       <div className="mt-2 flex justify-end gap-2">
                         <span className="inline-flex items-center rounded-md border border-border-default bg-surface-default px-2 py-1 text-[10px] font-semibold text-text-primary">
-                          İptal
+                          {t('themeadmin.preview.cancel')}
                         </span>
                         <span className="inline-flex items-center rounded-md bg-accent-primary px-2 py-1 text-[10px] font-semibold text-text-inverse">
-                          Onayla
+                          {t('themeadmin.preview.confirm')}
                         </span>
                       </div>
                     </div>
@@ -268,10 +307,10 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
               <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex flex-col gap-0.5">
-                    <div className="text-[11px] font-semibold text-text-primary">Token swatch’leri</div>
-                    <div className="text-[10px] text-text-subtle">Registry alanlarının tamamı (override varsa vurgulu).</div>
+                    <div className="text-[11px] font-semibold text-text-primary">{t('themeadmin.preview.tokenSwatchesTitle')}</div>
+                    <div className="text-[10px] text-text-subtle">{t('themeadmin.preview.tokenSwatchesDescription')}</div>
                   </div>
-                  <span className="text-[10px] font-semibold text-text-secondary">{Object.keys(overrides).length} override</span>
+                  <span className="text-[10px] font-semibold text-text-secondary">{t('themeadmin.preview.overrideCount', { count: Object.keys(overrides).length })}</span>
                 </div>
                 <div className="mt-2 flex flex-col gap-2">
                   {rowsByGroup.map((group) => (
@@ -322,6 +361,7 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
       </div>
     </details>
   </aside>
-);
+  );
+};
 
 export default ThemeAdminPreviewPanel;

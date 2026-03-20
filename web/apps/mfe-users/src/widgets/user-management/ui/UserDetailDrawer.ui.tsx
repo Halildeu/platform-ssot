@@ -3,7 +3,7 @@ import { UserDetail, UserModulePermission, UserModuleAccessLevel } from '@mfe/sh
 import { useUserMutations } from '../../../features/user-management/model/use-users-query.model';
 import { PERMISSIONS } from '../../../features/user-management/lib/permissions.constants';
 import { useAuthorization } from '../../../features/user-management/model/use-authorization.model';
-import { DetailDrawer } from 'mfe-ui-kit';
+import { DetailDrawer } from '@mfe/design-system';
 import { useUsersI18n } from '../../../i18n/useUsersI18n';
 import { pushToast } from '../../../shared/notifications';
 

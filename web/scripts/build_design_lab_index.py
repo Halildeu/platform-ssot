@@ -9,6 +9,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Set, TypedDict
+from build_design_lab_index_migration import build_adoption_summary, build_catalog_summary, build_migration_summary
 from zoneinfo import ZoneInfo
 
 
@@ -119,13 +120,13 @@ def collect_runtime_exports(entry_file: Path, visited: Set[Path]) -> Set[str]:
     return exports
 
 
-IMPORT_FROM_UI_KIT_RE = re.compile(
-    r"import\s+(?:type\s+)?{([^}]+)}\s+from\s+['\"]mfe-ui-kit['\"]",
+IMPORT_FROM_DESIGN_SYSTEM_RE = re.compile(
+    r"import\s+(?:type\s+)?{([^}]+)}\s+from\s+['\"]@mfe/design-system['\"]",
     flags=re.MULTILINE | re.DOTALL,
 )
 
 
-def collect_ui_kit_import_usage(
+def collect_design_system_import_usage(
     web_root: Path, exported_names: Set[str]
 ) -> dict[str, Set[str]]:
     apps_root = web_root / "apps"
@@ -144,7 +145,7 @@ def collect_ui_kit_import_usage(
         except Exception:
             continue
 
-        for match in IMPORT_FROM_UI_KIT_RE.finditer(content):
+        for match in IMPORT_FROM_DESIGN_SYSTEM_RE.finditer(content):
             spec = match.group(1)
             for raw_part in spec.split(","):
                 part = raw_part.strip()
@@ -213,6 +214,53 @@ class DesignLabIndexItem(TypedDict, total=False):
     tags: list[str]
 
 
+CURATED_INDEX_KEYS = (
+    "version",
+    "release",
+    "themePresets",
+    "recipes",
+)
+
+INDEX_GENERATED_META_KEYS = (
+    "generatedAt",
+    "generatedAtUtc",
+    "summary",
+    "adoption",
+    "migration",
+    "visualRegression",
+    "source",
+)
+
+MANIFEST_GENERATED_META_KEYS = (
+    "version",
+    "subject_id",
+    "generatedAt",
+    "generatedAtUtc",
+    "source",
+    "apiCatalogMeta",
+    "summary",
+    "diagnostics",
+    "adoption",
+    "migration",
+    "visualRegression",
+)
+
+MANIFEST_CORE_KEYS = (
+    "version",
+    "subject_id",
+    "source",
+    "apiCatalogMeta",
+)
+
+INDEX_CORE_KEYS = (
+    "version",
+    "release",
+    "themePresets",
+    "recipes",
+    "source",
+)
+
+
 def classify_kind(name: str) -> str:
     if re.match(r"^[A-Z0-9_]+$", name) and "_" in name:
         return "const"
@@ -227,24 +275,154 @@ def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def merge_curated_metadata(existing: dict, generated: dict) -> dict:
-    # Curated release, recipe and preset metadata should survive repeated index
-    # regeneration. Generated summary/adoption fields stay canonical here.
-    preserved = {
+def ensure_dict(value: object) -> dict:
+    return value if isinstance(value, dict) else {}
+
+
+def load_json_with_authorities(path: Path) -> dict:
+    payload = load_json(path)
+    if not isinstance(payload, dict):
+        raise SystemExit(f"[designlab:index] invalid json object: {path}")
+
+    source = payload.get("source")
+    if not isinstance(source, dict):
+        return payload
+
+    web_root = next((parent for parent in path.parents if parent.name == "web"), None)
+    repo_root = web_root.parent if web_root is not None else path.parent
+
+    def resolve_authority_path(relative_path: str) -> Path:
+        primary = repo_root / relative_path
+        if primary.is_file():
+            return primary
+        if web_root is not None:
+            secondary = web_root / relative_path
+            if secondary.is_file():
+                return secondary
+        return primary
+
+    generated_meta_authority = str(source.get("generatedMetaAuthority") or "").strip()
+    if generated_meta_authority:
+        generated_meta_path = resolve_authority_path(generated_meta_authority)
+        if generated_meta_path.is_file():
+            generated_payload = load_json(generated_meta_path)
+            if isinstance(generated_payload, dict):
+                for key, value in generated_payload.items():
+                    if key == "source" and isinstance(value, dict):
+                        payload["source"] = {
+                            **value,
+                            **ensure_dict(payload.get("source")),
+                        }
+                    elif key not in payload:
+                        payload[key] = value
+
+    def decode_items_payload(value: object) -> list[dict]:
+        if isinstance(value, list):
+            return [item for item in value if isinstance(item, dict)]
+        if isinstance(value, dict) and isinstance(value.get("items"), list):
+            return [item for item in value["items"] if isinstance(item, dict)]
+        return []
+
+    items_authority_value = source.get("itemsAuthority")
+    if items_authority_value and "items" not in payload:
+        item_specs = (
+            [entry for entry in items_authority_value if isinstance(entry, str) and entry.strip()]
+            if isinstance(items_authority_value, list)
+            else [items_authority_value] if isinstance(items_authority_value, str) and items_authority_value.strip() else []
+        )
+        merged_items: list[dict] = []
+        for item_spec in item_specs:
+            items_path = resolve_authority_path(item_spec)
+            if items_path.is_file():
+                merged_items.extend(decode_items_payload(load_json(items_path)))
+        payload["items"] = merged_items
+
+    return payload
+
+
+def build_shard_paths(base_path: Path, count: int, shard_size: int = 20) -> list[Path]:
+    name = base_path.name
+    suffix = ".json"
+    prefix = name[:-len(suffix)] if name.endswith(suffix) else name
+    if prefix.endswith(".v1"):
+        prefix = prefix[:-3]
+        suffix = ".v1.json"
+    shard_count = max(1, (count + shard_size - 1) // shard_size)
+    return [
+        base_path.with_name(f"{prefix}.part-{index:02d}{suffix}")
+        for index in range(1, shard_count + 1)
+    ]
+
+
+def write_item_shards(base_path: Path, items: list[dict], web_root: Path, shard_size: int = 20) -> list[str]:
+    shard_paths = build_shard_paths(base_path, len(items), shard_size=shard_size)
+    for existing in base_path.parent.glob(f"{base_path.name.split('.v1.json')[0]}.part-*{'.v1.json' if base_path.name.endswith('.v1.json') else base_path.suffix}"):
+        existing.unlink(missing_ok=True)
+    base_path.unlink(missing_ok=True)
+    relative_paths: list[str] = []
+    for index, shard_path in enumerate(shard_paths):
+        shard_items = items[index * shard_size : (index + 1) * shard_size]
+        shard_path.parent.mkdir(parents=True, exist_ok=True)
+        shard_path.write_text(
+            json.dumps({"items": shard_items}, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        relative_paths.append(shard_path.relative_to(web_root).as_posix())
+    return relative_paths
+
+
+def extract_curated_metadata(payload: dict) -> dict:
+    return {
         key: value
-        for key, value in existing.items()
-        if key
-        not in {
-            "generatedAt",
-            "generatedAtUtc",
-            "items",
-            "source",
-            "summary",
-            "adoption",
-            "migration",
-            "visualRegression",
-        }
+        for key, value in payload.items()
+        if key in CURATED_INDEX_KEYS
     }
+
+
+def extract_index_generated_metadata(payload: dict) -> dict:
+    return {
+        key: value
+        for key, value in payload.items()
+        if key in INDEX_GENERATED_META_KEYS
+    }
+
+
+def extract_manifest_generated_metadata(payload: dict) -> dict:
+    return {
+        key: value
+        for key, value in payload.items()
+        if key in MANIFEST_GENERATED_META_KEYS
+    }
+
+
+def extract_manifest_core(payload: dict) -> dict:
+    return {
+        key: value
+        for key, value in payload.items()
+        if key in MANIFEST_CORE_KEYS
+    }
+
+
+def extract_index_core(payload: dict) -> dict:
+    return {
+        key: value
+        for key, value in payload.items()
+        if key in INDEX_CORE_KEYS
+    }
+
+
+def load_curated_metadata(curated_path: Path, legacy_index_path: Path) -> dict:
+    if curated_path.is_file():
+        return extract_curated_metadata(load_json(curated_path))
+    if legacy_index_path.is_file():
+        return extract_curated_metadata(load_json(legacy_index_path))
+    return {"version": 1}
+
+
+def merge_curated_metadata(existing: dict, generated: dict) -> dict:
+    # Curated release, recipe and preset metadata ayrı authority dosyasından
+    # okunur; generated summary/adoption alanları burada canonical kalır.
+    preserved = extract_curated_metadata(existing)
     merged = {
         **preserved,
         **generated,
@@ -347,11 +525,25 @@ def sync_release_metadata(index: dict, manifest: dict, web_root: Path) -> dict:
             if isinstance(recipe_summary, dict):
                 catalog_metrics["upgradeRecipes"] = int(recipe_summary.get("totalRecipes") or 0)
                 catalog_metrics["codemodCandidateCount"] = int(recipe_summary.get("codemodCandidateCount") or 0)
+        codemod_candidates = migration.get("codemodCandidates")
+        if isinstance(codemod_candidates, dict):
+            apply_executor = codemod_candidates.get("applyExecutor")
+            apply_executor_summary = apply_executor.get("summary") if isinstance(apply_executor, dict) else {}
+            manual_review = codemod_candidates.get("manualReview")
+            manual_review_summary = manual_review.get("summary") if isinstance(manual_review, dict) else {}
+            prototypes = codemod_candidates.get("prototypes")
+            prototype_summary = prototypes.get("summary") if isinstance(prototypes, dict) else {}
+            if isinstance(apply_executor_summary, dict):
+                catalog_metrics["codemodApplyCount"] = int(apply_executor_summary.get("focusCount") or 0)
+            if isinstance(manual_review_summary, dict):
+                catalog_metrics["codemodManualReviewCount"] = int(manual_review_summary.get("focusCount") or 0)
+            if isinstance(prototype_summary, dict):
+                catalog_metrics["codemodPrototypeCount"] = int(prototype_summary.get("prototypeCount") or 0)
     latest_release["catalogMetrics"] = catalog_metrics
     latest_release["lifecycleChanges"] = (
         "exported=%d, planned=%d; stable=%d, beta=%d; apiCatalog=%d/%d; "
         "liveDemo=%d; visualHarness=%d; storyCovered=%d; wideAdoptionReady=%d; adopted=%d across %d apps; "
-        "singleApp=%d; crossApp=%d; manualReview=%d; recipes=%d; codemodCandidates=%d"
+        "singleApp=%d; crossApp=%d; manualReview=%d; recipes=%d; codemodCandidates=%d; codemodApply=%d; codemodManualReview=%d; codemodPrototypes=%d"
         % (
             catalog_metrics["exported"],
             catalog_metrics["planned"],
@@ -370,6 +562,9 @@ def sync_release_metadata(index: dict, manifest: dict, web_root: Path) -> dict:
             int(catalog_metrics.get("manualReviewRequiredComponents") or 0),
             int(catalog_metrics.get("upgradeRecipes") or 0),
             int(catalog_metrics.get("codemodCandidateCount") or 0),
+            int(catalog_metrics.get("codemodApplyCount") or 0),
+            int(catalog_metrics.get("codemodManualReviewCount") or 0),
+            int(catalog_metrics.get("codemodPrototypeCount") or 0),
         )
     )
     return index
@@ -392,7 +587,7 @@ def resolve_group_for_origin(origin: str) -> tuple[str, str] | None:
         "./components/Dropdown": ("forms", "dropdown"),
         "./components/Modal": ("overlays", "modal"),
         "./components/Tag": ("feedback", "tags"),
-        "./components/Empty": ("empty-states", "empty"),
+        "./components/EmptyState": ("empty-states", "empty"),
         "./components/Text": ("content", "text"),
         "./components/theme/ThemePreviewCard": ("theme", "preview"),
         "./layout/PageLayout": ("layout", "page"),
@@ -472,6 +667,11 @@ def load_optional_json(path: Path) -> dict:
         return {}
 
 
+def to_kebab_case(name: str) -> str:
+    first_pass = re.sub(r"(.)([A-Z][a-z]+)", r"\1-\2", name)
+    return re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", first_pass).replace("_", "-").lower()
+
+
 def normalize_owner_handles(raw: object) -> list[str]:
     if isinstance(raw, str):
         owner = raw.strip()
@@ -501,290 +701,6 @@ def read_codeowners_default_owners(codeowners_path: Path) -> list[str]:
             return sorted(set(owners))
     return []
 
-
-def build_upgrade_checklist_tasks(
-    *,
-    component_name: str,
-    class_id: str,
-    migration_track: str,
-    consumer_apps: list[str],
-) -> list[str]:
-    tasks = [
-        f"`{component_name}` icin `{migration_track}` track'i altinda package veya remote surface degisikliklerini dogrula.",
-        "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
-    ]
-    if class_id == "major-cross-app-review":
-        tasks.extend(
-            [
-                "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
-                "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit.",
-            ]
-        )
-    elif class_id == "minor-beta-external-review":
-        tasks.extend(
-            [
-                "Beta consumer kullanimini release notes icinde risk notu olarak isaretle.",
-                "Checklist evidence'inda beta surface onayini ayri satir olarak tut.",
-            ]
-        )
-    elif class_id == "minor-single-app-review":
-        target_app = consumer_apps[0] if consumer_apps else "consumer-app"
-        tasks.extend(
-            [
-                f"`{target_app}` icin smoke/regression onayini checklist'e ekle.",
-                "Semver minor guidance'i release notes ve rollout ozeti ile birlikte yayimla.",
-            ]
-        )
-    else:
-        tasks.append("Surface henuz Design Lab disina cikmadiysa patch-safe backlog olarak izle.")
-    return tasks[:4]
-
-
-def infer_upgrade_recipe_automation(
-    *,
-    component_name: str,
-    class_id: str,
-    target_files: list[str],
-) -> dict:
-    strategy_map = {
-        "Empty": "empty-state-prop-audit",
-        "ReportFilterPanel": "filter-panel-slot-audit",
-        "Select": "select-options-prop-audit",
-        "Tag": "tag-tone-access-audit",
-        "Text": "typography-prop-audit",
-        "ThemePreviewCard": "theme-preview-card-audit",
-    }
-    strategy_id = strategy_map.get(component_name, "component-prop-audit")
-    return {
-        "mode": "dry-run-audit",
-        "status": "candidate",
-        "strategyId": strategy_id,
-        "auditScript": "audit:ui-library-upgrade-recipes",
-        "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
-        "targetFileCount": len(target_files),
-        "autoApplyReady": False,
-        "confidence": "medium" if class_id == "minor-single-app-review" else "low",
-    }
-
-
-def build_upgrade_recipe_steps(
-    *,
-    component_name: str,
-    consumer_app: str,
-    target_files: list[str],
-    api_focus_props: list[str],
-    regression_focus: list[str],
-) -> list[str]:
-    first_target = target_files[0] if target_files else f"web/apps/{consumer_app}/**"
-    focus_prop_text = ", ".join(api_focus_props[:4]) if api_focus_props else "public props"
-    regression_text = ", ".join(regression_focus[:2]) if regression_focus else "UI regression cues"
-    return [
-        f"`{consumer_app}` icinde once `{first_target}` dosyasindaki `{component_name}` import ve JSX kullanimini incele.",
-        f"`{component_name}` icin ozellikle `{focus_prop_text}` alanlarinda backward-compat review yap.",
-        f"Preview/regression turunda `{regression_text}` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
-        "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister.",
-    ]
-
-
-def infer_codemod_candidate_profile(component_name: str) -> dict:
-    profile_map = {
-        "Empty": {
-            "strategyId": "empty-state-prop-codemod-candidate",
-            "transformKind": "jsx-prop-normalization",
-            "riskLevel": "low",
-            "confidence": "medium",
-            "requiredSignals": ["description", "access"],
-            "optionalSignals": ["accessReason", "className"],
-            "riskReasons": [
-                "Empty tek dosyada kullaniliyor ve public prop seti dar.",
-                "Description/access kombinasyonu gorunur oldugu icin dry-run tespiti yuksek sinyal uretir.",
-            ],
-            "blockers": [
-                "Actual JSX rewrite script'i henuz uretilmedi.",
-            ],
-        },
-        "ReportFilterPanel": {
-            "strategyId": "report-filter-panel-codemod-candidate",
-            "transformKind": "slot-prop-review",
-            "riskLevel": "high",
-            "confidence": "medium",
-            "requiredSignals": ["submitLabel", "resetLabel", "onSubmit", "onReset"],
-            "optionalSignals": ["loading", "children"],
-            "riskReasons": [
-                "Children slot ve handler ciftleri manuel davranis review'u gerektiriyor.",
-                "Yanlis rewrite submit/reset akisini sessizce bozabilir.",
-            ],
-            "blockers": [
-                "Children slot davranisi otomatik transform icin henuz guvenli degil.",
-                "Handler ciftleri icin semantic assertion katmani gerekli.",
-            ],
-        },
-        "Select": {
-            "strategyId": "select-options-codemod-candidate",
-            "transformKind": "options-prop-normalization",
-            "riskLevel": "medium",
-            "confidence": "medium",
-            "requiredSignals": ["options", "placeholder"],
-            "optionalSignals": ["access", "accessReason", "onChange"],
-            "riskReasons": [
-                "Options ve access davranisi birlikte degisirse etkileşim akisi etkilenir.",
-                "Controlled selection callback'leri manuel smoke ister.",
-            ],
-            "blockers": [
-                "Event payload rewrite'i icin ayrik test harness gerekiyor.",
-            ],
-        },
-        "Tag": {
-            "strategyId": "tag-tone-codemod-candidate",
-            "transformKind": "tone-access-normalization",
-            "riskLevel": "low",
-            "confidence": "medium",
-            "requiredSignals": ["tone", "access"],
-            "optionalSignals": ["accessReason", "className"],
-            "riskReasons": [
-                "Tag kullanimi tek dosyada ve JSX izi net.",
-                "Tone/access prop'lari regex ile kolay ayristiriliyor.",
-            ],
-            "blockers": [
-                "Semantic tone map degisirse manuel renk review'u gerekir.",
-            ],
-        },
-        "Text": {
-            "strategyId": "text-typography-codemod-candidate",
-            "transformKind": "typography-prop-normalization",
-            "riskLevel": "medium",
-            "confidence": "medium",
-            "requiredSignals": ["variant", "preset"],
-            "optionalSignals": ["truncate", "clampLines", "wrap", "align", "tabularNums"],
-            "riskReasons": [
-                "Birden fazla hedef dosyada typography semantic'i korunmali.",
-                "Clamp/truncate davranisi layout regressions uretebilir.",
-            ],
-            "blockers": [
-                "Typography rewrite'i icin visual diff olmadan auto-apply acilmamali.",
-            ],
-        },
-        "ThemePreviewCard": {
-            "strategyId": "theme-preview-card-codemod-candidate",
-            "transformKind": "selection-state-normalization",
-            "riskLevel": "low",
-            "confidence": "medium",
-            "requiredSignals": ["selected"],
-            "optionalSignals": ["className"],
-            "riskReasons": [
-                "Selected state kullanimi net ve hedef dosya sayisi dusuk.",
-                "Preview card state'i Storybook ve Design Lab ile hizali izleniyor.",
-            ],
-            "blockers": [
-                "Theme gallery etkileşimi icin owner onayi olmadan auto-apply acilmaz.",
-            ],
-        },
-    }
-    return profile_map.get(
-        component_name,
-        {
-            "strategyId": "component-codemod-candidate",
-            "transformKind": "jsx-prop-normalization",
-            "riskLevel": "medium",
-            "confidence": "low",
-            "requiredSignals": [],
-            "optionalSignals": [],
-            "riskReasons": ["Component icin generic codemod candidate profili kullanildi."],
-            "blockers": ["Component'e ozel rewrite strategy tanimlanmadi."],
-        },
-    )
-
-
-def build_codemod_candidate_steps(
-    *,
-    component_name: str,
-    consumer_app: str,
-    transform_kind: str,
-    risk_level: str,
-    required_signals: list[str],
-    target_files: list[str],
-) -> list[str]:
-    first_target = target_files[0] if target_files else f"web/apps/{consumer_app}/**"
-    signal_text = ", ".join(required_signals[:3]) if required_signals else "component sinyalleri"
-    return [
-        f"`{component_name}` icin `{consumer_app}` hedefinde `{transform_kind}` candidate'i dry-run olarak planlandi.",
-        f"Ilk eslesme turunda `{first_target}` dosyasinda `{signal_text}` sinyallerini ve import/JSX kullanimini dogrula.",
-        f"Risk seviyesi `{risk_level}` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
-        "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir.",
-    ]
-
-
-def build_codemod_candidate(
-    *,
-    component_name: str,
-    consumer_app: str,
-    class_id: str,
-    semver: str,
-    owner_handles: list[str],
-    target_files: list[str],
-    api_focus_props: list[str],
-    preview_focus: list[str],
-    regression_focus: list[str],
-    manual_checklist_ref: str,
-    upgrade_recipe_ref: str,
-    codemod_contract: dict,
-) -> dict:
-    profile = infer_codemod_candidate_profile(component_name)
-    required_signals = [str(signal).strip() for signal in profile.get("requiredSignals", []) if str(signal).strip()]
-    optional_signals = [str(signal).strip() for signal in profile.get("optionalSignals", []) if str(signal).strip()]
-    transform_kind = str(profile.get("transformKind") or "jsx-prop-normalization")
-    risk_level = str(profile.get("riskLevel") or "medium")
-    return {
-        "candidateId": f"{component_name.lower()}-{consumer_app}-codemod",
-        "component": component_name,
-        "consumerApp": consumer_app,
-        "classId": class_id,
-        "semver": semver,
-        "ownerHandles": owner_handles,
-        "transformEngine": str(codemod_contract.get("transform_engine") or "ts-morph-candidate"),
-        "transformKind": transform_kind,
-        "strategyId": str(profile.get("strategyId") or "component-codemod-candidate"),
-        "riskLevel": risk_level,
-        "riskReasons": [str(entry).strip() for entry in profile.get("riskReasons", []) if str(entry).strip()][:3],
-        "blockers": [str(entry).strip() for entry in profile.get("blockers", []) if str(entry).strip()][:3],
-        "targetFiles": target_files,
-        "estimatedTouchPoints": max(len(target_files), 1),
-        "dryRunCommand": str(codemod_contract.get("audit_script") or "audit:ui-library-codemod-candidates"),
-        "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
-        "dryRunScope": {
-            "targetFileCount": len(target_files),
-            "requiredAnySignals": required_signals,
-            "optionalSignals": optional_signals,
-            "minRequiredMatches": 1 if required_signals else 0,
-            "ownerMapped": bool(owner_handles),
-        },
-        "matchSelectors": [
-            f"import {{ {component_name} }} from 'mfe-ui-kit'",
-            f"<{component_name}",
-        ],
-        "apiFocusProps": api_focus_props[:5],
-        "previewFocus": preview_focus[:3],
-        "regressionFocus": regression_focus[:3],
-        "steps": build_codemod_candidate_steps(
-            component_name=component_name,
-            consumer_app=consumer_app,
-            transform_kind=transform_kind,
-            risk_level=risk_level,
-            required_signals=required_signals,
-            target_files=target_files,
-        ),
-        "manualChecklistRef": manual_checklist_ref,
-        "upgradeRecipeRef": upgrade_recipe_ref,
-        "applyReady": False,
-        "confidence": str(profile.get("confidence") or "low"),
-        "evidenceRefs": [
-            *target_files[:4],
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-        ],
-    }
-
-
 def collect_component_file_mentions(
     web_root: Path,
     component_names: set[str],
@@ -805,133 +721,6 @@ def collect_component_file_mentions(
         for name, paths in coverage.items()
         if paths
     }
-
-
-def extract_consumer_app_id(relative_path: str) -> str | None:
-    parts = [segment for segment in relative_path.split("/") if segment]
-    if len(parts) >= 3 and parts[0] == "web" and parts[1] == "apps":
-        return parts[2]
-    return None
-
-
-def build_catalog_summary(manifest_items: list[dict]) -> dict[str, int]:
-    index_items = [
-        item.get("indexItem")
-        for item in manifest_items
-        if isinstance(item, dict) and isinstance(item.get("indexItem"), dict)
-    ]
-    total = len(index_items)
-    return {
-        "total": total,
-        "exported": sum(1 for item in index_items if item.get("availability") == "exported"),
-        "planned": sum(1 for item in index_items if item.get("availability") == "planned"),
-        "liveDemo": sum(1 for item in index_items if item.get("demoMode") == "live"),
-        "inspector": sum(1 for item in index_items if item.get("demoMode") == "inspector"),
-    }
-
-
-def build_adoption_summary(manifest_items: list[dict], diagnostics: dict) -> dict:
-    index_items = [
-        item.get("indexItem")
-        for item in manifest_items
-        if isinstance(item, dict) and isinstance(item.get("indexItem"), dict)
-    ]
-    documented_items = [
-        item for item in manifest_items if isinstance(item, dict) and isinstance(item.get("apiItem"), dict)
-    ]
-    total = len(index_items)
-    documented_count = len(documented_items)
-    undocumented_items = [
-        item
-        for item in manifest_items
-        if isinstance(item, dict)
-        and isinstance(item.get("indexItem"), dict)
-        and not isinstance(item.get("apiItem"), dict)
-    ]
-    stable_documented = [
-        item
-        for item in manifest_items
-        if isinstance(item, dict)
-        and isinstance(item.get("indexItem"), dict)
-        and item["indexItem"].get("lifecycle") == "stable"
-        and isinstance(item.get("apiItem"), dict)
-    ]
-    stable_undocumented = [
-        str(item["indexItem"].get("name") or "").strip()
-        for item in undocumented_items
-        if item["indexItem"].get("lifecycle") == "stable"
-    ]
-    beta_undocumented = [
-        str(item["indexItem"].get("name") or "").strip()
-        for item in undocumented_items
-        if item["indexItem"].get("lifecycle") == "beta"
-    ]
-    used_undocumented = [
-        str(item["indexItem"].get("name") or "").strip()
-        for item in undocumented_items
-        if item["indexItem"].get("whereUsed")
-    ]
-
-    return {
-        "contractId": "ui-library-adoption-enforcement-contract-v1",
-        "contractPath": "docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.json",
-        "previewRoute": "/admin/design-lab",
-        "packageImport": "import { Button } from 'mfe-ui-kit';",
-        "moduleFederation": {
-            "remoteName": "mfe_ui_kit",
-            "exposes": ["./library", "./Button"],
-        },
-        "surfaceSummary": {
-            "publicExports": total,
-            "stableExports": sum(1 for item in index_items if item.get("lifecycle") == "stable"),
-            "betaExports": sum(1 for item in index_items if item.get("lifecycle") == "beta"),
-            "liveDemoExports": sum(1 for item in index_items if item.get("demoMode") == "live"),
-            "consumedByAppsExports": sum(1 for item in index_items if item.get("whereUsed")),
-        },
-        "apiCoverage": {
-            "documentedExports": documented_count,
-            "undocumentedExports": max(total - documented_count, 0),
-            "coveragePercent": percent(documented_count, total),
-            "liveDemoDocumentedExports": sum(
-                1 for item in documented_items if item["indexItem"].get("demoMode") == "live"
-            ),
-        },
-        "releaseReadiness": {
-            "wideAdoptionReady": len(stable_documented),
-            "stableUndocumented": len(stable_undocumented),
-            "betaDocumented": sum(
-                1 for item in documented_items if item["indexItem"].get("lifecycle") == "beta"
-            ),
-            "betaUndocumented": len(beta_undocumented),
-        },
-        "internalSurfaceProtection": {
-            "status": (
-                "protected"
-                if len(diagnostics.get("runtimeExportsWithoutRegistry", [])) == 0
-                else "drifted"
-            ),
-            "privateEntryPath": "packages/ui-kit/src/catalog/design-lab-internals.ts",
-            "allowedConsumers": ["apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"],
-            "runtimeExportsWithoutRegistry": len(diagnostics.get("runtimeExportsWithoutRegistry", [])),
-        },
-        "priorityBacklog": {
-            "usedUndocumented": sorted(name for name in used_undocumented if name)[:8],
-            "stableUndocumented": sorted(name for name in stable_undocumented if name)[:8],
-            "betaUndocumented": sorted(name for name in beta_undocumented if name)[:8],
-        },
-        "consumerRules": [
-            "Yeni ekranlar once recipe ailesi ile cozulur; page-level custom UI son tercihtir.",
-            "Public tuketim yalniz 'mfe-ui-kit' package import veya resmi module federation expose yuzeyi ile yapilir.",
-            "Release-ready yuzey stable lifecycle ve API katalog dokumani ile birlikte dusunulur.",
-            "Design Lab ic primitifleri public surface yerine private barrel altinda tutulur.",
-        ],
-        "evidenceRefs": [
-            "packages/ui-kit/src/catalog/component-manifest.v1.json",
-            "packages/ui-kit/src/index.ts",
-            "docs/02-architecture/context/ui-library-adoption-enforcement.contract.v1.json",
-        ],
-    }
-
 
 def build_visual_regression_summary(web_root: Path, manifest_items: list[dict]) -> tuple[dict, dict[str, set[str]]]:
     story_root = web_root / "stories"
@@ -1094,535 +883,13 @@ def build_visual_regression_summary(web_root: Path, manifest_items: list[dict]) 
     }
     return visual_regression, coverage_state
 
-
-def build_migration_summary(manifest_items: list[dict], coverage_state: dict[str, set[str]]) -> dict:
-    manifest_by_name: dict[str, dict] = {
-        str(item.get("name") or "").strip(): item
-        for item in manifest_items
-        if isinstance(item, dict) and str(item.get("name") or "").strip()
-    }
-    index_items = [
-        item.get("indexItem")
-        for item in manifest_items
-        if isinstance(item, dict) and isinstance(item.get("indexItem"), dict)
-    ]
-    component_items = [
-        item
-        for item in index_items
-        if item.get("kind") == "component" and str(item.get("name") or "").strip()
-    ]
-    story_covered_names = coverage_state.get("storyCoveredNames", set())
-    design_lab_path = "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx"
-    app_components: dict[str, set[str]] = defaultdict(set)
-    component_external_apps: dict[str, list[str]] = {}
-    adopted_outside_lab_names: set[str] = set()
-    stable_adopted_names: set[str] = set()
-    beta_adopted_names: set[str] = set()
-    stable_only_design_lab: list[str] = []
-    beta_used_outside_lab: list[str] = []
-    adopted_without_story: list[str] = []
-    single_app_blast_radius: list[str] = []
-    cross_app_review: list[str] = []
-    change_class_items: list[dict] = []
-    upgrade_checklist_items: list[dict] = []
-    upgrade_recipe_items: list[dict] = []
-    codemod_candidate_items: list[dict] = []
-
-    upgrade_contract_path = Path(__file__).resolve().parents[2] / "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json"
-    upgrade_contract = load_optional_json(upgrade_contract_path)
-    owner_contract_path = Path(__file__).resolve().parents[2] / "docs/02-architecture/context/ui-library-consumer-owner-registry.v1.json"
-    owner_contract = load_optional_json(owner_contract_path)
-    recipes_contract_path = Path(__file__).resolve().parents[2] / "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json"
-    recipes_contract = load_optional_json(recipes_contract_path)
-    codemod_contract_path = Path(__file__).resolve().parents[2] / "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json"
-    codemod_contract = load_optional_json(codemod_contract_path)
-    codeowners_relative = str(owner_contract.get("codeowners_path") or ".github/CODEOWNERS").strip()
-    codeowners_path = Path(__file__).resolve().parents[2] / codeowners_relative
-    default_owner_handles = normalize_owner_handles(owner_contract.get("default_owner_handles"))
-    default_owner_source = "owner-registry-default" if default_owner_handles else "codeowners-default"
-    if not default_owner_handles:
-        default_owner_handles = read_codeowners_default_owners(codeowners_path)
-    owner_overrides: dict[str, dict[str, object]] = {}
-    for entry in owner_contract.get("app_owner_overrides", []):
-        if not isinstance(entry, dict):
-            continue
-        app_id = str(entry.get("app_id") or "").strip()
-        owners = normalize_owner_handles(entry.get("owners"))
-        if not app_id or not owners:
-            continue
-        owner_overrides[app_id] = {
-            "owners": owners,
-            "source": str(entry.get("source") or "owner-registry-override"),
-        }
-    playbook_tracks = [
-        track
-        for track in upgrade_contract.get("playbook_tracks", [])
-        if isinstance(track, dict)
-    ]
-
-    def resolve_app_owners(app_id: str) -> tuple[list[str], str]:
-        override = owner_overrides.get(app_id)
-        if isinstance(override, dict):
-            owners = normalize_owner_handles(override.get("owners"))
-            if owners:
-                return owners, str(override.get("source") or "owner-registry-override")
-        if default_owner_handles:
-            return default_owner_handles, default_owner_source
-        return [], "unowned"
-
-    for item in component_items:
-        name = str(item.get("name") or "").strip()
-        lifecycle = str(item.get("lifecycle") or "").strip()
-        where_used = [str(entry).strip() for entry in item.get("whereUsed", []) if str(entry).strip()]
-        external_usage = [entry for entry in where_used if entry != design_lab_path]
-        external_apps = sorted(
-            {
-                app_id
-                for app_id in (extract_consumer_app_id(entry) for entry in external_usage)
-                if app_id
-            }
-        )
-        component_external_apps[name] = external_apps
-        if external_apps:
-            adopted_outside_lab_names.add(name)
-            if lifecycle == "stable":
-                stable_adopted_names.add(name)
-            elif lifecycle == "beta":
-                beta_adopted_names.add(name)
-                beta_used_outside_lab.append(name)
-            if name not in story_covered_names:
-                adopted_without_story.append(name)
-            if len(external_apps) == 1:
-                single_app_blast_radius.append(name)
-                change_class_items.append(
-                    {
-                        "name": name,
-                        "lifecycle": lifecycle,
-                        "consumerApps": external_apps,
-                        "consumerAppCount": len(external_apps),
-                        "classId": "minor-single-app-review" if lifecycle != "beta" else "minor-beta-external-review",
-                        "semver": "minor",
-                        "migrationTrack": "package-import-review",
-                    }
-                )
-            else:
-                cross_app_review.append(name)
-                change_class_items.append(
-                    {
-                        "name": name,
-                        "lifecycle": lifecycle,
-                        "consumerApps": external_apps,
-                        "consumerAppCount": len(external_apps),
-                        "classId": "major-cross-app-review",
-                        "semver": "major",
-                        "migrationTrack": "consumer-rollout-review",
-                    }
-                )
-            for app_id in external_apps:
-                app_components[app_id].add(name)
-        elif lifecycle == "stable":
-            stable_only_design_lab.append(name)
-            change_class_items.append(
-                {
-                    "name": name,
-                    "lifecycle": lifecycle,
-                    "consumerApps": [],
-                    "consumerAppCount": 0,
-                    "classId": "patch-safe-lab-only",
-                    "semver": "patch",
-                    "migrationTrack": "theme-runtime-review" if "Theme" in name else "module-federation-review",
-                }
-            )
-
-    severity_rank = {
-        "major-cross-app-review": 3,
-        "minor-beta-external-review": 2,
-        "minor-single-app-review": 1,
-        "patch-safe-lab-only": 0,
-    }
-    consumer_apps = [
-        {
-            "appId": app_id,
-            "componentCount": len(component_names),
-            "components": sorted(component_names)[:8],
-            "singleAppComponents": sorted(
-                name for name in component_names if len(component_external_apps.get(name, [])) == 1
-            )[:8],
-            "sharedComponents": sorted(
-                name for name in component_names if len(component_external_apps.get(name, [])) > 1
-            )[:8],
-            "highestChangeClass": max(
-                (
-                    next(
-                        (
-                            item["classId"]
-                            for item in change_class_items
-                            if item["name"] == name
-                        ),
-                        "patch-safe-lab-only",
-                    )
-                    for name in component_names
-                ),
-                key=lambda class_id: severity_rank.get(class_id, -1),
-                default="patch-safe-lab-only",
-            ),
-            "ownerHandles": resolve_app_owners(app_id)[0],
-            "ownerSource": resolve_app_owners(app_id)[1],
-        }
-        for app_id, component_names in sorted(
-            app_components.items(),
-            key=lambda entry: (-len(entry[1]), entry[0]),
-        )
-    ]
-    owner_mapped_apps_count = sum(1 for app in consumer_apps if app.get("ownerHandles"))
-    change_class_counts = defaultdict(int)
-    for entry in change_class_items:
-        class_id = str(entry.get("classId") or "").strip()
-        if class_id:
-            change_class_counts[class_id] += 1
-
-    for entry in change_class_items:
-        component_name = str(entry.get("name") or "").strip()
-        consumer_apps_for_component = [
-            app
-            for app in consumer_apps
-            if component_name in app.get("components", [])
-        ]
-        owner_handles = sorted(
-            {
-                owner
-                for app in consumer_apps_for_component
-                for owner in app.get("ownerHandles", [])
-            }
-        )
-        entry["ownerHandles"] = owner_handles
-        if int(entry.get("consumerAppCount") or 0) <= 0:
-            continue
-        upgrade_checklist_items.append(
-            {
-                "checklistId": f"{component_name.lower()}-{str(entry.get('classId') or '').strip()}",
-                "component": component_name,
-                "classId": str(entry.get("classId") or "").strip(),
-                "semver": str(entry.get("semver") or "").strip(),
-                "migrationTrack": str(entry.get("migrationTrack") or "").strip(),
-                "ownerHandles": owner_handles,
-                "consumerApps": [
-                    {
-                        "appId": str(app.get("appId") or "").strip(),
-                        "ownerHandles": app.get("ownerHandles", []),
-                        "ownerSource": str(app.get("ownerSource") or "").strip(),
-                    }
-                    for app in consumer_apps_for_component
-                ],
-                "tasks": build_upgrade_checklist_tasks(
-                    component_name=component_name,
-                    class_id=str(entry.get("classId") or "").strip(),
-                    migration_track=str(entry.get("migrationTrack") or "").strip(),
-                    consumer_apps=[str(app.get("appId") or "").strip() for app in consumer_apps_for_component],
-                ),
-                "evidenceRefs": [
-                    "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
-                    "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-                    "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json",
-                ],
-                "codemodReady": str(entry.get("classId") or "").strip() == "minor-single-app-review",
-            }
-        )
-        if str(entry.get("classId") or "").strip() == "minor-single-app-review":
-            manifest_entry = manifest_by_name.get(component_name, {})
-            index_item = manifest_entry.get("indexItem") if isinstance(manifest_entry, dict) else {}
-            api_item = manifest_entry.get("apiItem") if isinstance(manifest_entry, dict) else {}
-            where_used_entries = index_item.get("whereUsed") if isinstance(index_item, dict) else []
-            api_props_entries = api_item.get("props") if isinstance(api_item, dict) else []
-            preview_focus_entries = api_item.get("previewFocus") if isinstance(api_item, dict) else []
-            regression_focus_entries = api_item.get("regressionFocus") if isinstance(api_item, dict) else []
-            target_files = [
-                str(path).strip()
-                for path in (where_used_entries if isinstance(where_used_entries, list) else [])
-                if str(path).strip() != design_lab_path
-            ]
-            target_app = (
-                str(consumer_apps_for_component[0].get("appId") or "").strip()
-                if consumer_apps_for_component
-                else "consumer-app"
-            )
-            api_props = [
-                str(prop.get("name") or "").strip()
-                for prop in (api_props_entries if isinstance(api_props_entries, list) else [])
-                if isinstance(prop, dict) and str(prop.get("name") or "").strip()
-            ]
-            preview_focus = [
-                str(item).strip()
-                for item in (preview_focus_entries if isinstance(preview_focus_entries, list) else [])
-                if str(item).strip()
-            ][:3]
-            regression_focus = [
-                str(item).strip()
-                for item in (regression_focus_entries if isinstance(regression_focus_entries, list) else [])
-                if str(item).strip()
-            ][:3]
-            recipe_id = f"{component_name.lower()}-{target_app}-upgrade"
-            manual_checklist_ref = f"{component_name.lower()}-{str(entry.get('classId') or '').strip()}"
-            upgrade_recipe_items.append(
-                {
-                    "recipeId": recipe_id,
-                    "component": component_name,
-                    "consumerApp": target_app,
-                    "classId": str(entry.get("classId") or "").strip(),
-                    "semver": str(entry.get("semver") or "").strip(),
-                    "ownerHandles": owner_handles,
-                    "targetFiles": target_files,
-                    "importStatement": str(index_item.get("importStatement") or "").strip() if isinstance(index_item, dict) else "",
-                    "apiFocusProps": api_props[:5],
-                    "previewFocus": preview_focus,
-                    "regressionFocus": regression_focus,
-                    "automation": infer_upgrade_recipe_automation(
-                        component_name=component_name,
-                        class_id=str(entry.get("classId") or "").strip(),
-                        target_files=target_files,
-                    ),
-                    "steps": build_upgrade_recipe_steps(
-                        component_name=component_name,
-                        consumer_app=target_app,
-                        target_files=target_files,
-                        api_focus_props=api_props,
-                        regression_focus=regression_focus,
-                    ),
-                    "manualChecklistRef": manual_checklist_ref,
-                    "evidenceRefs": [
-                        *target_files[:4],
-                        "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
-                        "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-                    ],
-                }
-            )
-            codemod_candidate_items.append(
-                build_codemod_candidate(
-                    component_name=component_name,
-                    consumer_app=target_app,
-                    class_id=str(entry.get("classId") or "").strip(),
-                    semver=str(entry.get("semver") or "").strip(),
-                    owner_handles=owner_handles,
-                    target_files=target_files,
-                    api_focus_props=api_props,
-                    preview_focus=preview_focus,
-                    regression_focus=regression_focus,
-                    manual_checklist_ref=manual_checklist_ref,
-                    upgrade_recipe_ref=recipe_id,
-                    codemod_contract=codemod_contract,
-                )
-            )
-
-    if int(change_class_counts.get("major-cross-app-review") or 0) > 0:
-        recommended_bump = "major"
-        semver_reason = "Cross-app review gerektiren stable surface mevcut."
-    elif int(change_class_counts.get("minor-single-app-review") or 0) > 0 or int(
-        change_class_counts.get("minor-beta-external-review") or 0
-    ) > 0:
-        recommended_bump = "minor"
-        semver_reason = "Tekil consumer veya beta external review gerektiren surface mevcut."
-    else:
-        recommended_bump = "patch"
-        semver_reason = "Public consumer etkisi olmayan veya lab-only patch-safe surface baskin."
-
-    return {
-        "contractId": "ui-library-consumer-impact-contract-v1",
-        "upgradeContractPath": "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json",
-        "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json",
-        "summary": {
-            "adoptedOutsideLabComponents": len(adopted_outside_lab_names),
-            "stableAdoptedComponents": len(stable_adopted_names),
-            "betaAdoptedComponents": len(beta_adopted_names),
-            "consumerAppsCount": len(consumer_apps),
-            "adoptedStoryCoveredComponents": len(adopted_outside_lab_names & story_covered_names),
-            "adoptedStoryCoveragePercent": percent(
-                len(adopted_outside_lab_names & story_covered_names),
-                len(adopted_outside_lab_names),
-            ),
-            "stableOnlyInDesignLab": len(stable_only_design_lab),
-            "singleAppBlastRadiusCount": len(single_app_blast_radius),
-            "crossAppReviewComponents": len(cross_app_review),
-            "manualReviewRequiredComponents": len(adopted_outside_lab_names),
-            "codemodReadyComponents": len(codemod_candidate_items),
-            "ownerMappedAppsCount": owner_mapped_apps_count,
-        },
-        "ownerResolution": {
-            "contractId": str(owner_contract.get("contract_id") or "ui-library-consumer-owner-registry-v1"),
-            "contractPath": "docs/02-architecture/context/ui-library-consumer-owner-registry.v1.json",
-            "codeownersPath": codeowners_relative or ".github/CODEOWNERS",
-            "defaultOwnerHandles": default_owner_handles,
-            "ownerMappedAppsCount": owner_mapped_apps_count,
-            "unownedAppsCount": max(len(consumer_apps) - owner_mapped_apps_count, 0),
-            "source": default_owner_source if default_owner_handles else "unowned",
-            "rules": [
-                "Consumer app owner cozumlemesi explicit override yoksa CODEOWNERS fallback'i ile tamamlanir.",
-                "Owner bos kalan app sayisi sifir olmadan manual rollout checklist temiz sayilmaz.",
-            ],
-        },
-        "upgradePlaybook": {
-            "contractId": str(upgrade_contract.get("contract_id") or "ui-library-consumer-upgrade-contract-v1"),
-            "contractPath": "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json",
-            "defaultStrategy": str(upgrade_contract.get("default_strategy") or "manual-checklist"),
-            "codemodSupport": str(upgrade_contract.get("codemod_support") or "planned"),
-            "tracks": playbook_tracks,
-            "summary": {
-                "trackCount": len(playbook_tracks),
-                "singleAppBlastRadiusCount": len(single_app_blast_radius),
-                "crossAppReviewComponents": len(cross_app_review),
-                "manualChecklistComponents": len(adopted_outside_lab_names),
-                "codemodReadyComponents": len(codemod_candidate_items),
-            },
-        },
-        "upgradeChecklist": {
-            "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
-            "generatedStrategy": str(upgrade_contract.get("default_strategy") or "manual-checklist"),
-            "summary": {
-                "totalItems": len(upgrade_checklist_items),
-                "singleAppItems": int(change_class_counts.get("minor-single-app-review") or 0),
-                "crossAppItems": int(change_class_counts.get("major-cross-app-review") or 0),
-                "ownerMappedAppsCount": owner_mapped_apps_count,
-            },
-            "items": sorted(
-                upgrade_checklist_items,
-                key=lambda item: (-severity_rank.get(str(item.get("classId") or ""), -1), str(item.get("component") or "")),
-            )[:16],
-        },
-        "upgradeRecipes": {
-            "contractId": str(recipes_contract.get("contract_id") or "ui-library-consumer-upgrade-recipes-contract-v1"),
-            "contractPath": "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json",
-            "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
-            "auditArtifactPath": str(
-                recipes_contract.get("audit_artifact_path")
-                or "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.audit.v1.json"
-            ),
-            "candidateMode": str(recipes_contract.get("candidate_mode") or "dry-run-audit"),
-            "auditScript": str(recipes_contract.get("audit_script") or "audit:ui-library-upgrade-recipes"),
-            "summary": {
-                "totalRecipes": len(upgrade_recipe_items),
-                "singleAppRecipes": len(upgrade_recipe_items),
-                "codemodCandidateCount": len(codemod_candidate_items),
-                "dryRunReadyCandidates": len(upgrade_recipe_items),
-                "manualOnlyRecipes": 0,
-            },
-            "items": sorted(
-                upgrade_recipe_items,
-                key=lambda item: str(item.get("component") or ""),
-            )[:16],
-            "rules": [
-                "Single-app backlog icin recipe satiri component, owner ve target file ile birlikte uretilir.",
-                "Dry-run audit candidate'i recipe artefact'inin parcasi olarak release manifest'e baglanir.",
-                "Actual write/codemod uygulamasi bu fazda otomatik yapilmaz; recipe ve audit sonucu onay girdisi uretir.",
-            ],
-            "evidenceRefs": [
-                "docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json",
-                "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
-                "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-            ],
-        },
-        "codemodCandidates": {
-            "contractId": str(codemod_contract.get("contract_id") or "ui-library-consumer-codemod-candidates-contract-v1"),
-            "contractPath": "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json",
-            "artifactPath": str(
-                codemod_contract.get("artifact_path")
-                or "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.v1.json"
-            ),
-            "auditArtifactPath": str(
-                codemod_contract.get("audit_artifact_path")
-                or "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.audit.v1.json"
-            ),
-            "auditScript": str(codemod_contract.get("audit_script") or "audit:ui-library-codemod-candidates"),
-            "transformEngine": str(codemod_contract.get("transform_engine") or "ts-morph-candidate"),
-            "applyPolicy": str(codemod_contract.get("apply_policy") or "manual-approval-required"),
-            "summary": {
-                "totalCandidates": len(codemod_candidate_items),
-                "dryRunReadyCandidates": len(codemod_candidate_items),
-                "autoApplyReadyCandidates": sum(
-                    1 for item in codemod_candidate_items if bool(item.get("applyReady"))
-                ),
-                "lowRiskCount": sum(1 for item in codemod_candidate_items if str(item.get("riskLevel") or "") == "low"),
-                "mediumRiskCount": sum(
-                    1 for item in codemod_candidate_items if str(item.get("riskLevel") or "") == "medium"
-                ),
-                "highRiskCount": sum(1 for item in codemod_candidate_items if str(item.get("riskLevel") or "") == "high"),
-            },
-            "items": sorted(
-                codemod_candidate_items,
-                key=lambda item: (str(item.get("riskLevel") or ""), str(item.get("component") or "")),
-            )[:16],
-            "rules": [
-                *[
-                    str(rule).strip()
-                    for rule in codemod_contract.get("rules", [])
-                    if str(rule).strip()
-                ][:4],
-            ],
-            "evidenceRefs": [
-                "docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json",
-                "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
-                "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-            ],
-        },
-        "semverGuidance": {
-            "recommendedBump": recommended_bump,
-            "reason": semver_reason,
-            "releaseNotesLabel": f"{recommended_bump}-review",
-            "summary": {
-                "patchSafeLabOnly": int(change_class_counts.get("patch-safe-lab-only") or 0),
-                "minorSingleAppReview": int(change_class_counts.get("minor-single-app-review") or 0),
-                "minorBetaExternalReview": int(change_class_counts.get("minor-beta-external-review") or 0),
-                "majorCrossAppReview": int(change_class_counts.get("major-cross-app-review") or 0),
-            },
-            "majorComponents": sorted(name for name in cross_app_review if name)[:8],
-            "minorComponents": sorted({*single_app_blast_radius, *beta_used_outside_lab})[:8],
-            "patchCandidates": sorted(name for name in stable_only_design_lab if name)[:8],
-        },
-        "changeClasses": {
-            "summary": {
-                "patchSafeLabOnly": int(change_class_counts.get("patch-safe-lab-only") or 0),
-                "minorSingleAppReview": int(change_class_counts.get("minor-single-app-review") or 0),
-                "minorBetaExternalReview": int(change_class_counts.get("minor-beta-external-review") or 0),
-                "majorCrossAppReview": int(change_class_counts.get("major-cross-app-review") or 0),
-                "manualReviewRequired": len(adopted_outside_lab_names),
-            },
-            "components": sorted(
-                change_class_items,
-                key=lambda item: (-severity_rank.get(str(item.get("classId") or ""), -1), str(item.get("name") or "")),
-            )[:16],
-        },
-        "consumerApps": consumer_apps,
-        "priorityBacklog": {
-            "betaUsedOutsideLab": sorted(name for name in beta_used_outside_lab if name)[:8],
-            "adoptedWithoutStory": sorted(name for name in adopted_without_story if name)[:8],
-            "stableOnlyInDesignLab": sorted(name for name in stable_only_design_lab if name)[:8],
-            "singleAppBlastRadius": sorted(name for name in single_app_blast_radius if name)[:8],
-        },
-        "rules": [
-            "Public surface degisiklikleri, Design Lab disi tuketici uygulama etkisi ile birlikte okunur.",
-            "Stable ama yalniz Design Lab icinde kalan componentler, genis rollout oncesi adoption backlog adayi sayilir.",
-            "Dis uygulamalarda kullanilan beta surface, release cockpit'te gorunur tutulur.",
-            "Adopted componentler icin visual story coverage, rollout guveninin parcasi kabul edilir.",
-            "Single-app blast radius backlog'u upgrade playbook icinde gorunur tutulur.",
-            "Owner registry ve CODEOWNERS fallback bilgisi, consumer impact artefact'i ile ayni release turunda tasinir.",
-        ],
-        "evidenceRefs": [
-            "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json",
-            "docs/02-architecture/context/ui-library-consumer-owner-registry.v1.json",
-            "docs/04-operations/RUNBOOKS/RB-ui-library-consumer-upgrade.md",
-            ".github/CODEOWNERS",
-            "packages/ui-kit/src/catalog/component-manifest.v1.json",
-            "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-        ],
-    }
-
-
 def build_component_manifest(web_root: Path) -> dict:
-    ui_kit_index = web_root / "packages" / "ui-kit" / "src" / "index.ts"
-    if not ui_kit_index.is_file():
-        raise SystemExit(f"[designlab:index] ui-kit index not found: {ui_kit_index}")
+    design_system_index = web_root / "packages" / "design-system" / "src" / "index.ts"
+    if not design_system_index.is_file():
+        raise SystemExit(f"[designlab:index] design-system index not found: {design_system_index}")
 
-    registry_path = web_root / "packages" / "ui-kit" / "src" / "catalog" / "component-registry.v1.json"
-    api_catalog_path = web_root / "packages" / "ui-kit" / "src" / "catalog" / "component-api-catalog.v1.json"
+    registry_path = web_root / "packages" / "design-system" / "src" / "catalog" / "component-registry.v1.json"
+    api_catalog_path = web_root / "packages" / "design-system" / "src" / "catalog" / "component-api-catalog.v1.json"
     if not registry_path.is_file():
         raise SystemExit(f"[designlab:index] registry not found: {registry_path}")
     if not api_catalog_path.is_file():
@@ -1633,13 +900,13 @@ def build_component_manifest(web_root: Path) -> dict:
     if not isinstance(registry_items, list):
         raise SystemExit("[designlab:index] registry items missing or invalid")
 
-    api_catalog = load_json(api_catalog_path)
+    api_catalog = load_json_with_authorities(api_catalog_path)
     api_items = api_catalog.get("items")
     if not isinstance(api_items, list):
         raise SystemExit("[designlab:index] api catalog items missing or invalid")
 
-    exported_names = collect_runtime_exports(ui_kit_index, visited=set())
-    usage = collect_ui_kit_import_usage(web_root=web_root, exported_names=exported_names)
+    exported_names = collect_runtime_exports(design_system_index, visited=set())
+    usage = collect_design_system_import_usage(web_root=web_root, exported_names=exported_names)
     api_map = {
         str(item.get("name") or "").strip(): item
         for item in api_items
@@ -1662,7 +929,7 @@ def build_component_manifest(web_root: Path) -> dict:
 
         index_item = {
             **raw_item,
-            "importStatement": f"import {{ {name} }} from 'mfe-ui-kit';",
+            "importStatement": f"import {{ {name} }} from '@mfe/design-system';",
             "whereUsed": sorted(usage.get(name, set())),
         }
         manifest_items.append(
@@ -1693,10 +960,10 @@ def build_component_manifest(web_root: Path) -> dict:
         "generatedAt": format_ts(timestamp_tr),
         "generatedAtUtc": format_ts_utc(timestamp_tr),
         "source": {
-            "package": "mfe-ui-kit",
-            "index": "packages/ui-kit/src/index.ts",
-            "registry": "packages/ui-kit/src/catalog/component-registry.v1.json",
-            "apiCatalog": "packages/ui-kit/src/catalog/component-api-catalog.v1.json",
+            "package": "@mfe/design-system",
+            "index": "packages/design-system/src/index.ts",
+            "registry": "packages/design-system/src/catalog/component-registry.v1.json",
+            "apiCatalog": "packages/design-system/src/catalog/component-api-catalog.v1.json",
         },
         "apiCatalogMeta": {
             "version": api_catalog.get("version"),
@@ -1721,7 +988,7 @@ def build_design_lab_index_from_manifest(manifest: dict) -> dict:
         if not isinstance(index_item, dict):
             continue
         item_name = str(index_item.get("name") or "").strip()
-        import_snippet = f"import {{ {item_name} }} from 'mfe-ui-kit';"
+        import_snippet = f"import {{ {item_name} }} from '@mfe/design-system';"
         items.append(
             {
                 **index_item,
@@ -1741,11 +1008,12 @@ def build_design_lab_index_from_manifest(manifest: dict) -> dict:
         "migration": manifest.get("migration"),
         "visualRegression": manifest.get("visualRegression"),
         "source": {
-            "package": "mfe-ui-kit",
-            "index": "packages/ui-kit/src/index.ts",
-            "registry": "packages/ui-kit/src/catalog/component-registry.v1.json",
-            "apiCatalog": "packages/ui-kit/src/catalog/component-api-catalog.v1.json",
-            "manifest": "packages/ui-kit/src/catalog/component-manifest.v1.json",
+            "package": "@mfe/design-system",
+            "index": "packages/design-system/src/index.ts",
+            "registry": "packages/design-system/src/catalog/component-registry.v1.json",
+            "apiCatalog": "packages/design-system/src/catalog/component-api-catalog.v1.json",
+            "manifest": "packages/design-system/src/catalog/component-manifest.v1.json",
+            "curatedAuthority": "apps/mfe-shell/src/pages/admin/design-lab.curated.v1.json",
         },
         "items": items,
     }
@@ -1760,8 +1028,43 @@ def main(argv: Optional[list[str]] = None) -> int:
     )
     parser.add_argument(
         "--manifest-output",
-        default="packages/ui-kit/src/catalog/component-manifest.v1.json",
+        default="packages/design-system/src/catalog/component-manifest.v1.json",
         help="Manifest output JSON path, relative to web/.",
+    )
+    parser.add_argument(
+        "--manifest-items-output",
+        default="packages/design-system/src/catalog/component-manifest.items.v1.json",
+        help="Manifest items authority JSON path, relative to web/.",
+    )
+    parser.add_argument(
+        "--api-catalog-output",
+        default="packages/design-system/src/catalog/component-api-catalog.v1.json",
+        help="API catalog output JSON path, relative to web/.",
+    )
+    parser.add_argument(
+        "--api-catalog-items-output",
+        default="packages/design-system/src/catalog/component-api-catalog.items.v1.json",
+        help="API catalog items authority JSON path, relative to web/.",
+    )
+    parser.add_argument(
+        "--curated-input",
+        default="apps/mfe-shell/src/pages/admin/design-lab.curated.v1.json",
+        help="Curated release/recipe/preset authority JSON path, relative to web/.",
+    )
+    parser.add_argument(
+        "--generated-meta-output",
+        default="apps/mfe-shell/src/pages/admin/design-lab.generated-meta.v1.json",
+        help="Generated Design Lab summary/adoption authority JSON path, relative to web/.",
+    )
+    parser.add_argument(
+        "--manifest-generated-meta-output",
+        default="packages/design-system/src/catalog/component-manifest.generated-meta.v1.json",
+        help="Generated component manifest authority JSON path, relative to web/.",
+    )
+    parser.add_argument(
+        "--index-items-output",
+        default="apps/mfe-shell/src/pages/admin/design-lab.items.v1.json",
+        help="Generated Design Lab items authority JSON path, relative to web/.",
     )
     args = parser.parse_args(argv)
 
@@ -1769,24 +1072,114 @@ def main(argv: Optional[list[str]] = None) -> int:
     web_root = script_path.parents[1]
     output_path = (web_root / args.output).resolve()
     manifest_output_path = (web_root / args.manifest_output).resolve()
+    manifest_items_output_path = (web_root / args.manifest_items_output).resolve()
+    api_catalog_output_path = (web_root / args.api_catalog_output).resolve()
+    api_catalog_items_output_path = (web_root / args.api_catalog_items_output).resolve()
+    curated_input_path = (web_root / args.curated_input).resolve()
+    generated_meta_output_path = (web_root / args.generated_meta_output).resolve()
+    manifest_generated_meta_output_path = (web_root / args.manifest_generated_meta_output).resolve()
+    index_items_output_path = (web_root / args.index_items_output).resolve()
 
     manifest = build_component_manifest(web_root)
     index = build_design_lab_index_from_manifest(manifest)
-    if output_path.is_file():
-        existing = load_json(output_path)
-        index = merge_curated_metadata(existing, index)
+    curated = load_curated_metadata(curated_input_path, output_path)
+    index = merge_curated_metadata(curated, index)
     index = sync_release_metadata(index, manifest, web_root)
+
+    manifest_item_authorities = write_item_shards(
+        manifest_items_output_path,
+        [item for item in manifest.get("items", []) if isinstance(item, dict)],
+        web_root,
+    )
+    index_item_authorities = write_item_shards(
+        index_items_output_path,
+        [item for item in index.get("items", []) if isinstance(item, dict)],
+        web_root,
+    )
+    api_catalog_items = [
+        item.get("apiItem")
+        for item in manifest.get("items", [])
+        if isinstance(item, dict) and isinstance(item.get("apiItem"), dict)
+    ]
+    api_catalog_item_authorities = write_item_shards(
+        api_catalog_items_output_path,
+        [item for item in api_catalog_items if isinstance(item, dict)],
+        web_root,
+    )
+
+    manifest_generated_meta = extract_manifest_generated_metadata(manifest)
+    manifest_generated_meta["source"] = {
+        **(manifest_generated_meta.get("source") or {}),
+        "generatedMetaAuthority": manifest_generated_meta_output_path.relative_to(web_root).as_posix(),
+        "itemsAuthority": manifest_item_authorities,
+    }
+    manifest_output = extract_manifest_core(manifest)
+    manifest_output["source"] = {
+        **(manifest_output.get("source") or {}),
+        "generatedMetaAuthority": manifest_generated_meta_output_path.relative_to(web_root).as_posix(),
+        "itemsAuthority": manifest_item_authorities,
+    }
+
+    index_generated_meta = extract_index_generated_metadata(index)
+    index_generated_meta["source"] = {
+        **(index_generated_meta.get("source") or {}),
+        "generatedMetaAuthority": generated_meta_output_path.relative_to(web_root).as_posix(),
+        "itemsAuthority": index_item_authorities,
+    }
+    index_output = extract_index_core(index)
+    index_output["source"] = {
+        **(index_output.get("source") or {}),
+        "generatedMetaAuthority": generated_meta_output_path.relative_to(web_root).as_posix(),
+        "itemsAuthority": index_item_authorities,
+    }
+
+    api_catalog_output = {
+        "version": manifest.get("apiCatalogMeta", {}).get("version"),
+        "subject_id": manifest.get("apiCatalogMeta", {}).get("subject_id"),
+        "wave_id": manifest.get("apiCatalogMeta", {}).get("wave_id"),
+        "source": {
+            "itemsAuthority": api_catalog_item_authorities,
+        },
+    }
 
     manifest_output_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_output_path.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        json.dumps(manifest_output, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    manifest_generated_meta_output_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_generated_meta_output_path.write_text(
+        json.dumps(manifest_generated_meta, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    api_catalog_output_path.parent.mkdir(parents=True, exist_ok=True)
+    api_catalog_output_path.write_text(
+        json.dumps(api_catalog_output, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output_path.write_text(json.dumps(index_output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    generated_meta_output_path.parent.mkdir(parents=True, exist_ok=True)
+    generated_meta_output_path.write_text(
+        json.dumps(index_generated_meta, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     print(f"[designlab:index] wrote: {output_path.relative_to(web_root).as_posix()}")
     print(f"[designlab:index] wrote manifest: {manifest_output_path.relative_to(web_root).as_posix()}")
+    print(f"[designlab:index] wrote manifest items shards: {manifest_item_authorities}")
+    print(f"[designlab:index] wrote api catalog: {api_catalog_output_path.relative_to(web_root).as_posix()}")
+    print(f"[designlab:index] wrote api catalog items shards: {api_catalog_item_authorities}")
+    print(
+        "[designlab:index] wrote manifest generated meta: "
+        f"{manifest_generated_meta_output_path.relative_to(web_root).as_posix()}"
+    )
+    print(f"[designlab:index] wrote index items shards: {index_item_authorities}")
+    print(
+        "[designlab:index] wrote index generated meta: "
+        f"{generated_meta_output_path.relative_to(web_root).as_posix()}"
+    )
+    print(f"[designlab:index] curated authority: {curated_input_path.relative_to(web_root).as_posix()}")
     print(f"[designlab:index] items: {len(index.get('items', []))}")
     return 0
 

@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "candidateId": "select-mfe-shell-codemod",
+  "component": "Select",
+  "strategyId": "select-options-codemod-candidate",
+  "transformKind": "options-prop-normalization",
+  "reviewMode": "illustrative-dry-run",
+  "sourcePath": "web/scripts/codemods/ui-library/prototypes/select.prototype.ts",
+  "rewriteRule": "Options ve placeholder kullanimlari canonical prop sirasina alinip readonly varyantlarda accessReason doldurulur; controlled state korunur.",
+  "rewritePreview": {
+    "kind": "illustrative",
+    "before": "<Select access=\"readonly\" value=\"access\" onChange={() => {}} options={moduleOptions} placeholder=\"Yetki seviyesi\" />",
+    "after": "<Select value=\"access\" onChange={() => {}} options={moduleOptions} placeholder=\"Yetki seviyesi\" access=\"readonly\" accessReason=\"Sadece goruntuleme yetkisi\" />"
+  },
+  "matchStrategy": {
+    "requiredSelectors": [
+      "import { Select } from '@mfe/design-system'",
+      "<Select"
+    ],
+    "dryRunSignals": [
+      "options",
+      "placeholder"
+    ],
+    "astTargets": [
+      "JSXOpeningElement[name=Select]",
+      "JSXAttribute[name=options]",
+      "JSXAttribute[name=placeholder]",
+      "JSXAttribute[name=onChange]"
+    ],
+    "stopConditions": [
+      "options prop'u inline map/fonksiyon ise rewrite atlanir",
+      "value/onChange cifti eksikse controlled-flow rewrite yapilmaz"
+    ]
+  },
+  "manualValidation": {
+    "storybook": [
+      "RuntimeThemeMatrix",
+      "UtilityLiveDemoFoundations"
+    ],
+    "designLab": [
+      "controlled selection",
+      "readonly and disabled states"
+    ],
+    "smoke": [
+      "theme matrix select readonly flow",
+      "frontend-doctor ui-library preset"
+    ]
+  },
+  "rollbackPlan": [
+    "event payload parity bozulursa diff geri alinir",
+    "readonly akista accessReason kural disi metin uretiyorsa prototype reject edilir"
+  ],
+  "notes": [
+    "Controlled state ve options kaynagi degismedigi surece rewrite only-prop-normalization seviyesinde kalir."
+  ]
+}

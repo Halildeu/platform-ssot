@@ -14,7 +14,8 @@
     "single_ui_library",
     "design_tokens",
     "page_modularity",
-    "parametric_data"
+    "parametric_data",
+    "discoverability_contract"
   ],
   "properties": {
     "version": {
@@ -147,6 +148,49 @@
         },
         "theme_context_provider_path": {
           "const": "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+        }
+      }
+    },
+    "discoverability_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seo_required",
+        "geo_required",
+        "metadata_fields_required",
+        "structured_data_rules",
+        "geo_answerability_rules"
+      ],
+      "properties": {
+        "seo_required": {
+          "const": true
+        },
+        "geo_required": {
+          "const": true
+        },
+        "metadata_fields_required": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "structured_data_rules": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "geo_answerability_rules": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     }

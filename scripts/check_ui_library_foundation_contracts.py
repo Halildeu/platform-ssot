@@ -7,7 +7,7 @@ from ui_library_checks import (
     ensure_exists,
     ensure_list,
     fail,
-    load_json,
+    load_json_with_authorities,
     load_text,
     ok,
 )
@@ -23,6 +23,8 @@ INTERNAL_MODULE_EXPORTS = {
 }
 ALLOWED_INTERNAL_IMPORT_CONSUMERS = {
     "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+    "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/paginationInternals.ts",
 }
 INTERNAL_IMPORT_MARKER = "src/catalog/design-lab-internals"
 
@@ -58,11 +60,11 @@ def main() -> int:
     if missing:
         return fail(SCRIPT, [f"missing-file:{path}" for path in missing])
 
-    manifest = load_json(required[0])
-    registry = load_json(required[1])
-    api_catalog = load_json(required[2])
-    index = load_json(required[3])
-    taxonomy = load_json(required[4])
+    manifest = load_json_with_authorities(required[0])
+    registry = load_json_with_authorities(required[1])
+    api_catalog = load_json_with_authorities(required[2])
+    index = load_json_with_authorities(required[3])
+    taxonomy = load_json_with_authorities(required[4])
     public_surface = load_text(PUBLIC_SURFACE_FILE)
     diagnostics = ensure_dict(manifest.get("diagnostics"))
     problems: list[str] = []

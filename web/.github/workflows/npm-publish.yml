@@ -1,0 +1,39 @@
+name: Publish Design System
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no publish)'
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+        working-directory: packages/design-system
+      - run: npm run build
+        working-directory: packages/design-system
+      - run: npm run ci:detect-breaking
+        working-directory: packages/design-system
+      - name: Publish
+        if: ${{ !inputs.dry_run }}
+        run: npm publish --access public
+        working-directory: packages/design-system
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Dry Run
+        if: ${{ inputs.dry_run }}
+        run: npm publish --dry-run
+        working-directory: packages/design-system

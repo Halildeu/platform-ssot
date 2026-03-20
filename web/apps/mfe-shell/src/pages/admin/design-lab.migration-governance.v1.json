@@ -1,0 +1,138 @@
+{
+  "artifactVersion": "v1",
+  "generatedAt": "2026-03-15",
+  "description": "Layer-agnostic migration governance catalog - breaking change tracking, codemod readiness and version governance across all Design Lab layers",
+  "governanceDimensions": [
+    {
+      "dimensionId": "breaking_change_tracking",
+      "title": "Breaking Change Tracking",
+      "description": "Tum katmanlarda breaking change'lerin izlenmesi ve etki analizi",
+      "appliesTo": ["foundations", "components", "recipes", "pages", "ecosystem"],
+      "maturityLevels": [
+        { "level": 1, "label": "Manual", "description": "Breaking change'ler manuel olarak takip ediliyor" },
+        { "level": 2, "label": "Documented", "description": "Breaking change'ler release notes'ta dokumante ediliyor" },
+        { "level": 3, "label": "Automated", "description": "CI/CD pipeline'da otomatik breaking change detection" },
+        { "level": 4, "label": "Governed", "description": "Breaking change approval workflow + blast radius analizi" }
+      ]
+    },
+    {
+      "dimensionId": "codemod_readiness",
+      "title": "Codemod Readiness",
+      "description": "Otomatik migration script'leri ile breaking change'lerin kolaylastirilmasi",
+      "appliesTo": ["components", "recipes", "ecosystem"],
+      "maturityLevels": [
+        { "level": 1, "label": "None", "description": "Codemod destegi yok" },
+        { "level": 2, "label": "Manual scripts", "description": "Tek seferlik migration script'leri mevcut" },
+        { "level": 3, "label": "Codemod library", "description": "Reusable codemod library + test suite" },
+        { "level": 4, "label": "Auto-apply", "description": "CI'da otomatik codemod application + review" }
+      ]
+    },
+    {
+      "dimensionId": "version_governance",
+      "title": "Version Governance",
+      "description": "Semantic versioning, deprecation policy ve end-of-life yonetimi",
+      "appliesTo": ["foundations", "components", "recipes", "pages", "ecosystem"],
+      "maturityLevels": [
+        { "level": 1, "label": "Informal", "description": "Versiyon kararları informal" },
+        { "level": 2, "label": "Semver", "description": "Semantic versioning tutarli uygulanıyor" },
+        { "level": 3, "label": "Policy", "description": "Deprecation policy + migration window tanimli" },
+        { "level": 4, "label": "Automated", "description": "Otomatik version bump + changelog + migration guide" }
+      ]
+    },
+    {
+      "dimensionId": "consumer_impact_analysis",
+      "title": "Consumer Impact Analysis",
+      "description": "Degisikliklerin consumer uygulamalara etkisinin olculmesi",
+      "appliesTo": ["components", "recipes", "ecosystem"],
+      "maturityLevels": [
+        { "level": 1, "label": "Unknown", "description": "Consumer etki analizi yapilmiyor" },
+        { "level": 2, "label": "Manual count", "description": "Consumer app sayisi manuel takip ediliyor" },
+        { "level": 3, "label": "Dependency graph", "description": "Otomatik dependency graph + blast radius hesabi" },
+        { "level": 4, "label": "Real-time", "description": "Real-time consumer telemetry + usage analytics" }
+      ]
+    },
+    {
+      "dimensionId": "adoption_tracking",
+      "title": "Adoption Tracking",
+      "description": "Yeni versiyon ve pattern'lerin ekipler tarafindan benimsenmesinin izlenmesi",
+      "appliesTo": ["foundations", "components", "recipes", "pages", "ecosystem"],
+      "maturityLevels": [
+        { "level": 1, "label": "None", "description": "Adoption izlenmiyor" },
+        { "level": 2, "label": "Manual", "description": "Manuel adoption survey/raporu" },
+        { "level": 3, "label": "Metrics", "description": "Otomatik adoption metrikleri (import count, usage frequency)" },
+        { "level": 4, "label": "Dashboard", "description": "Real-time adoption dashboard + trend analizi" }
+      ]
+    }
+  ],
+  "layerGovernanceStatus": {
+    "foundations": {
+      "breaking_change_tracking": 2,
+      "codemod_readiness": 1,
+      "version_governance": 3,
+      "consumer_impact_analysis": 1,
+      "adoption_tracking": 2
+    },
+    "components": {
+      "breaking_change_tracking": 3,
+      "codemod_readiness": 2,
+      "version_governance": 3,
+      "consumer_impact_analysis": 3,
+      "adoption_tracking": 3
+    },
+    "recipes": {
+      "breaking_change_tracking": 2,
+      "codemod_readiness": 1,
+      "version_governance": 2,
+      "consumer_impact_analysis": 2,
+      "adoption_tracking": 2
+    },
+    "pages": {
+      "breaking_change_tracking": 2,
+      "codemod_readiness": 1,
+      "version_governance": 2,
+      "consumer_impact_analysis": 1,
+      "adoption_tracking": 1
+    },
+    "ecosystem": {
+      "breaking_change_tracking": 2,
+      "codemod_readiness": 1,
+      "version_governance": 2,
+      "consumer_impact_analysis": 2,
+      "adoption_tracking": 2
+    }
+  },
+  "migrationLanes": [
+    {
+      "laneId": "component_api_migration",
+      "title": "Component API Migration",
+      "layer": "components",
+      "status": "active",
+      "description": "Component prop interface degisikliklerinin yonetimi",
+      "steps": ["detect_breaking", "create_codemod", "test_consumers", "staged_rollout", "deprecate_old"]
+    },
+    {
+      "laneId": "token_migration",
+      "title": "Design Token Migration",
+      "layer": "foundations",
+      "status": "planned",
+      "description": "Token renaming, restructuring ve semantic token migration",
+      "steps": ["audit_usage", "create_mapping", "update_consumers", "remove_legacy"]
+    },
+    {
+      "laneId": "recipe_pattern_migration",
+      "title": "Recipe Pattern Migration",
+      "layer": "recipes",
+      "status": "planned",
+      "description": "Recipe pattern degisiklikleri ve workflow refactoring",
+      "steps": ["identify_affected", "create_new_pattern", "migrate_consumers", "archive_old"]
+    },
+    {
+      "laneId": "ecosystem_surface_migration",
+      "title": "Enterprise Surface Migration",
+      "layer": "ecosystem",
+      "status": "planned",
+      "description": "Enterprise surface API ve data provider migration",
+      "steps": ["version_check", "adapter_layer", "parallel_run", "cutover"]
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "items": [
+    {
+      "name": "setAppearance",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setAppearance } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "setDensity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setDensity } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "setElevation",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setElevation } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "setMotion",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setMotion } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "setOverlayIntensity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setOverlayIntensity } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "setOverlayOpacity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setOverlayOpacity } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "setRadius",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setRadius } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "setSurfaceTone",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setSurfaceTone } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "setTableSurfaceTone",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setTableSurfaceTone } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "setupAgGridLicense",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { setupAgGridLicense } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "shouldBlockInteraction",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { shouldBlockInteraction } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "spacing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { spacing } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "subscribeThemeAxes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { subscribeThemeAxes } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    },
+    {
+      "name": "suggestComponent",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { suggestComponent } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "testKeyboardNavigation",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { testKeyboardNavigation } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "tokenSetToChartColors",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { tokenSetToChartColors } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "tokenSetToCss",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { tokenSetToCss } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "tokenSetToGridTheme",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { tokenSetToGridTheme } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "updateGridVariant",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { updateGridVariant } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "updateThemeAxes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility",
+      "importStatement": "import { updateThemeAxes } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/theme/theme-context.provider.tsx"
+      ]
+    }
+  ]
+}

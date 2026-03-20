@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { DetailDrawer, Badge } from 'mfe-ui-kit';
+import { Badge, Button, Checkbox, DetailDrawer } from '@mfe/design-system';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
 import { getPermissions } from '../../../entities/permissions/api/permissions.api';
 
@@ -61,10 +61,6 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
     return null;
   }
 
-  const togglePermission = (id: string) => {
-    setSelectedPermissionIds((prev) => (prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]));
-  };
-
   const handleSavePermissions = async () => {
     if (!role || !onPermissionsSave) {
       return;
@@ -91,12 +87,12 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
       width={420}
       title={role.name}
       extra={(
-        <button type="button" className="text-sm font-medium text-text-secondary hover:text-text-primary" onClick={onClose}>
+        <Button type="button" variant="ghost" size="sm" onClick={onClose}>
           {t('access.clone.cancelText')}
-        </button>
+        </Button>
       )}
     >
-      <div className="flex flex-col gap-6">
+      <div data-testid="access-role-drawer-content" className="flex flex-col gap-6">
         <p className="text-sm text-text-subtle">{role.description || t('access.drawer.noDescription')}</p>
 
         <dl className="space-y-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
@@ -162,33 +158,33 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
                 if (!id) return null;
                 const code = perm.code ?? id;
                 return (
-                  <label key={id} className="flex items-center gap-3 rounded-xl border border-border-subtle px-3 py-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={selectedPermissionIds.includes(id)}
-                      onChange={() => togglePermission(id)}
-                      className="h-4 w-4 accent-action-primary"
-                    />
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-text-primary">{code}</span>
-                      {perm.moduleLabel ? (
-                        <span className="text-xs text-text-subtle">{perm.moduleLabel}</span>
-                      ) : null}
-                    </div>
-                  </label>
+                  <Checkbox
+                    key={id}
+                    checked={selectedPermissionIds.includes(id)}
+                    onCheckedChange={(checked) => {
+                      setSelectedPermissionIds((prev) =>
+                        checked ? (prev.includes(id) ? prev : [...prev, id]) : prev.filter((pid) => pid !== id),
+                      );
+                    }}
+                    label={code}
+                    description={perm.moduleLabel}
+                    size="sm"
+                    data-testid={`access-role-permission-${id}`}
+                  />
                 );
               })
             )}
           </div>
           <div className="flex justify-end">
-            <button
+            <Button
               type="button"
-              className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90 disabled:opacity-50"
               onClick={handleSavePermissions}
-              disabled={savingPermissions}
+              loading={savingPermissions}
+              loadingLabel={t('common.loading')}
+              data-testid="access-role-drawer-save"
             >
-              {savingPermissions ? t('common.loading') : t('common.save')}
-            </button>
+              {t('common.save')}
+            </Button>
           </div>
         </section>
 

@@ -144,6 +144,329 @@ const buildEmptyUsersResponse = (params: UsersQueryParams = {}): PaginatedRespon
   pageSize: params.pageSize ?? 25,
 });
 
+const readRuntimeEnv = (key: string): string | undefined => {
+  if (typeof process !== 'undefined' && typeof process.env?.[key] === 'string') {
+    return process.env[key];
+  }
+  if (typeof window !== 'undefined') {
+    const runtimeWindow = window as Window & {
+      __env__?: Record<string, string | undefined>;
+      __ENV__?: Record<string, string | undefined>;
+    };
+    const candidate = runtimeWindow.__env__?.[key] ?? runtimeWindow.__ENV__?.[key];
+    if (typeof candidate === 'string') {
+      return candidate;
+    }
+  }
+  return undefined;
+};
+
+const parseRuntimeBoolean = (value: string | undefined): boolean => {
+  if (!value) {
+    return false;
+  }
+  const normalized = value.trim().toLowerCase();
+  return normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on';
+};
+
+const normalizeTokenValue = (token: string | null | undefined): string => {
+  if (typeof token !== 'string') {
+    return '';
+  }
+  const normalized = token.trim();
+  if (!normalized || normalized === 'undefined' || normalized === 'null') {
+    return '';
+  }
+  return normalized;
+};
+
+const readPersistedToken = (): string => {
+  try {
+    return normalizeTokenValue(localStorage.getItem('token'));
+  } catch {
+    return '';
+  }
+};
+
+type LightweightUserProfile = {
+  email?: string | null;
+  fullName?: string | null;
+  displayName?: string | null;
+  role?: string | null;
+};
+
+const readPersistedUserProfile = (): LightweightUserProfile | null => {
+  try {
+    const raw = localStorage.getItem('user');
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') {
+      return null;
+    }
+    return parsed as LightweightUserProfile;
+  } catch {
+    return null;
+  }
+};
+
+const readShellAuthToken = (): string => {
+  try {
+    return normalizeTokenValue(getShellServices().auth.getToken());
+  } catch {
+    return '';
+  }
+};
+
+const readShellAuthUser = (): LightweightUserProfile | null => {
+  try {
+    const user = getShellServices().auth.getUser();
+    if (!user || typeof user !== 'object') {
+      return null;
+    }
+    return user as LightweightUserProfile;
+  } catch {
+    return null;
+  }
+};
+
+const isRuntimeTestProfile = (profile: LightweightUserProfile | null): boolean => {
+  if (!profile) {
+    return false;
+  }
+  const email = profile.email?.trim().toLowerCase() ?? '';
+  const fullName = profile.fullName?.trim().toLowerCase() ?? '';
+  const displayName = profile.displayName?.trim().toLowerCase() ?? '';
+
+  return email === 'runtime@test.local'
+    || fullName === 'runtime test user'
+    || displayName === 'runtime test user';
+};
+
+const shouldUseDevUsersFallback = (): boolean => {
+  const devFallbackDisabled = parseRuntimeBoolean(
+    readRuntimeEnv('VITE_USERS_DISABLE_DEV_FALLBACK') ?? readRuntimeEnv('USERS_DISABLE_DEV_FALLBACK'),
+  );
+  const authMode = (readRuntimeEnv('VITE_AUTH_MODE') ?? readRuntimeEnv('AUTH_MODE') ?? '').trim().toLowerCase();
+  const fakeAuthEnabled = parseRuntimeBoolean(
+    readRuntimeEnv('VITE_ENABLE_FAKE_AUTH') ?? readRuntimeEnv('ENABLE_FAKE_AUTH'),
+  );
+  const token = readPersistedToken().trim() || readShellAuthToken();
+  const runtimeUser = readPersistedUserProfile() ?? readShellAuthUser();
+
+  if (devFallbackDisabled) {
+    return false;
+  }
+
+  if (authMode === 'permitall') {
+    return true;
+  }
+
+  // Fake shell oturumu ".shell" ile biten sentetik JWT üretir.
+  // Bu durumda runtime env görünmese bile backend'e gitmek yerine
+  // doğrudan güvenli mock kullanıcı verisini kullanıyoruz.
+  if (token.endsWith('.shell')) {
+    return true;
+  }
+
+  if (fakeAuthEnabled) {
+    return true;
+  }
+
+  return isRuntimeTestProfile(runtimeUser);
+};
+
+const MOCK_USER_DETAILS: UserDetail[] = [
+  {
+    id: 'mock-user-001',
+    fullName: 'Selin Aydin',
+    email: 'selin.aydin@example.com',
+    role: 'ADMIN',
+    status: 'ACTIVE',
+    lastLoginAt: '2026-03-14T08:45:00Z',
+    createdAt: '2025-10-03T09:00:00Z',
+    sessionTimeoutMinutes: 30,
+    locale: 'tr-TR',
+    timezone: 'Europe/Istanbul',
+    title: 'Platform Yoneticisi',
+    phoneNumber: '+90 555 010 1001',
+    notes: 'PermitAll gelistirme modunda ornek yonetici kullanici.',
+    modulePermissions: [
+      {
+        moduleKey: 'USER_MANAGEMENT',
+        moduleLabel: 'Kullanici Modulu',
+        level: 'MANAGE',
+        roleName: 'ADMIN',
+        permissions: ['VIEW_USERS', 'EDIT_USERS', 'MANAGE_USERS'],
+      },
+      {
+        moduleKey: 'PURCHASE',
+        moduleLabel: 'Satin Alma Modulu',
+        level: 'VIEW',
+        roleName: 'PURCHASE_MANAGER',
+        permissions: ['VIEW_PURCHASE'],
+      },
+    ],
+  },
+  {
+    id: 'mock-user-002',
+    fullName: 'Emir Kara',
+    email: 'emir.kara@example.com',
+    role: 'USER',
+    status: 'ACTIVE',
+    lastLoginAt: '2026-03-13T16:20:00Z',
+    createdAt: '2025-12-11T10:15:00Z',
+    sessionTimeoutMinutes: 20,
+    locale: 'tr-TR',
+    timezone: 'Europe/Istanbul',
+    title: 'Kullanici Operasyon Uzmani',
+    phoneNumber: '+90 555 010 1002',
+    notes: 'Kullanicilari goruntuleyebilir ve sinirli duzenleme yapabilir.',
+    modulePermissions: [
+      {
+        moduleKey: 'USER_MANAGEMENT',
+        moduleLabel: 'Kullanici Modulu',
+        level: 'EDIT',
+        roleName: 'USER_MANAGER',
+        permissions: ['VIEW_USERS', 'EDIT_USERS'],
+      },
+      {
+        moduleKey: 'WAREHOUSE',
+        moduleLabel: 'Depo Modulu',
+        level: 'VIEW',
+        roleName: 'WAREHOUSE_OPERATOR',
+        permissions: ['VIEW_WAREHOUSE'],
+      },
+    ],
+  },
+  {
+    id: 'mock-user-003',
+    fullName: 'Derya Demir',
+    email: 'derya.demir@example.com',
+    role: 'USER',
+    status: 'INVITED',
+    lastLoginAt: null,
+    createdAt: '2026-01-20T14:10:00Z',
+    sessionTimeoutMinutes: 15,
+    locale: 'en-US',
+    timezone: 'Europe/Berlin',
+    title: 'Destek Uzmani',
+    phoneNumber: '+90 555 010 1003',
+    notes: 'Davet gonderilmis, ilk oturumunu henuz acmamis kullanici.',
+    modulePermissions: [
+      {
+        moduleKey: 'USER_MANAGEMENT',
+        moduleLabel: 'Kullanici Modulu',
+        level: 'VIEW',
+        roleName: 'USER_VIEWER',
+        permissions: ['VIEW_USERS'],
+      },
+    ],
+  },
+];
+
+const sortMockUsers = (items: UserDetail[], sort?: string): UserDetail[] => {
+  if (!sort) {
+    return [...items];
+  }
+
+  const [firstSort] = sort.split(';').map((segment) => segment.trim()).filter(Boolean);
+  if (!firstSort) {
+    return [...items];
+  }
+
+  const [fieldRaw, directionRaw] = firstSort.split(',');
+  const field = (fieldRaw ?? '').trim();
+  const direction = (directionRaw ?? 'asc').trim().toLowerCase() === 'desc' ? -1 : 1;
+
+  const readValue = (item: UserDetail) => {
+    switch (field) {
+      case 'name':
+      case 'fullName':
+        return item.fullName;
+      case 'email':
+        return item.email;
+      case 'role':
+        return item.role;
+      case 'status':
+        return item.status;
+      case 'lastLogin':
+      case 'lastLoginAt':
+        return item.lastLoginAt ?? '';
+      case 'sessionTimeoutMinutes':
+        return item.sessionTimeoutMinutes ?? 0;
+      default:
+        return item.fullName;
+    }
+  };
+
+  return [...items].sort((left, right) => {
+    const leftValue = readValue(left);
+    const rightValue = readValue(right);
+    if (typeof leftValue === 'number' && typeof rightValue === 'number') {
+      return (leftValue - rightValue) * direction;
+    }
+    return String(leftValue).localeCompare(String(rightValue), 'tr') * direction;
+  });
+};
+
+const buildMockUsersResponse = (params: UsersQueryParams = {}): UsersApiResponse => {
+  const search = params.search?.trim().toLocaleLowerCase('tr') ?? '';
+  const filtered = sortMockUsers(
+    MOCK_USER_DETAILS.filter((item) => {
+      const matchesSearch =
+        search.length === 0 ||
+        item.fullName.toLocaleLowerCase('tr').includes(search) ||
+        item.email.toLocaleLowerCase('tr').includes(search);
+      const matchesStatus = !params.status || params.status === 'ALL' || item.status === params.status;
+      const matchesRole = !params.role || params.role === 'ALL' || item.role === params.role;
+      const matchesModuleKey =
+        !params.moduleKey ||
+        item.modulePermissions.some((permission) => permission.moduleKey === params.moduleKey);
+      const matchesModuleLevel =
+        !params.moduleLevel ||
+        params.moduleLevel === 'ALL' ||
+        item.modulePermissions.some((permission) => permission.level === params.moduleLevel);
+
+      return matchesSearch && matchesStatus && matchesRole && matchesModuleKey && matchesModuleLevel;
+    }),
+    params.sort,
+  );
+
+  const page = params.page ?? 1;
+  const pageSize = params.pageSize ?? 25;
+
+  if (pageSize === 0) {
+    return {
+      items: filtered,
+      total: filtered.length,
+      page,
+      pageSize: filtered.length,
+      meta: { reason: 'success' },
+    };
+  }
+
+  const start = Math.max(0, (page - 1) * pageSize);
+  const end = start + pageSize;
+
+  return {
+    items: filtered.slice(start, end),
+    total: filtered.length,
+    page,
+    pageSize,
+    meta: { reason: 'success' },
+  };
+};
+
+const buildMockUserDetail = (user: { id: string; email: string }): UserDetail => {
+  const matched = MOCK_USER_DETAILS.find((item) => item.id === user.id || item.email === user.email);
+  if (matched) {
+    return matched;
+  }
+  return buildFallbackUserDetail(user);
+};
+
 const shouldUseFetchTransportStub = (): boolean => typeof fetch === 'function' && typeof document === 'undefined';
 
 const isProfileMissingPayload = (payload: unknown): boolean => {
@@ -194,6 +517,12 @@ export interface RequestScope {
   projectId?: string | number;
   warehouseId?: string | number;
 }
+
+type ControlledAccessRequestConfig = {
+  headers: Record<string, string>;
+  __suppressGlobalForbiddenToast: true;
+  __suppressGlobalProfileMissingToast: true;
+};
 
 const SCOPE_STORAGE_KEY = 'halo.scope';
 
@@ -293,12 +622,14 @@ const mergeHeaders = (scope?: RequestScope) => {
     ...buildScopeHeaders(scope),
   };
   try {
+    const shellToken = readShellAuthToken().trim();
     if (typeof window !== 'undefined' && window.localStorage) {
       const internalApiKey = window.localStorage.getItem('internalApiKey');
       if (internalApiKey) {
         headers['X-Internal-Api-Key'] = internalApiKey;
       }
-      const token = window.localStorage.getItem('token');
+      const persistedToken = normalizeTokenValue(window.localStorage.getItem('token'));
+      const token = shellToken || persistedToken;
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
@@ -308,6 +639,12 @@ const mergeHeaders = (scope?: RequestScope) => {
   }
   return headers;
 };
+
+const buildControlledAccessRequestConfig = (scope?: RequestScope): ControlledAccessRequestConfig => ({
+  headers: mergeHeaders(scope),
+  __suppressGlobalForbiddenToast: true,
+  __suppressGlobalProfileMissingToast: true,
+});
 
 const normalizeAccessLevel = (value: unknown): UserModuleAccessLevel => {
   if (typeof value === 'string') {
@@ -586,6 +923,10 @@ export const fetchUsers = async (
   params: UsersQueryParams,
   scope?: RequestScope,
 ): Promise<UsersApiResponse> => {
+  if (shouldUseDevUsersFallback()) {
+    return buildMockUsersResponse(params);
+  }
+
   let payload: UsersResponseWire;
 
   // Eğer global fetch stub'ı varsa (test ortamları), axios yerine doğrudan fetch kullan
@@ -622,7 +963,7 @@ export const fetchUsers = async (
     const client = resolveHttpClient();
     const response = await client.get<UsersResponseWire>(
       `${USERS_RESOURCE_PATH}${buildQueryString(params)}`,
-      { headers: mergeHeaders(scope) },
+      buildControlledAccessRequestConfig(scope),
     );
     payload = response.data ?? {};
   } catch (error) {
@@ -740,7 +1081,12 @@ export const fetchUserDetail = async (
   user: { id: string; email: string },
   scope?: RequestScope,
 ): Promise<UserDetail> => {
-  const headers = mergeHeaders(scope);
+  if (shouldUseDevUsersFallback()) {
+    return buildMockUserDetail(user);
+  }
+
+  const controlledConfig = buildControlledAccessRequestConfig(scope);
+  const headers = controlledConfig.headers;
 
   if (shouldUseFetchTransportStub()) {
     try {
@@ -781,7 +1127,7 @@ export const fetchUserDetail = async (
     const client = resolveHttpClient();
     const response = await client.get<UserDetailWire>(
       `${USERS_RESOURCE_PATH}/by-email?email=${encodeURIComponent(user.email)}`,
-      { headers },
+      controlledConfig,
     );
     userData = response.data as UserDetailWire;
   } catch (error) {
@@ -803,7 +1149,7 @@ export const fetchUserDetail = async (
     const client = resolveHttpClient();
     const response = await client.get<unknown>(
       `${PERMISSIONS_RESOURCE_PATH}/assignments?userId=${encodeURIComponent(user.id)}`,
-      { headers },
+      controlledConfig,
     );
     const assignmentPayload = response.data;
     assignments = Array.isArray(assignmentPayload)

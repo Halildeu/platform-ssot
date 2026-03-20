@@ -7,7 +7,7 @@
     "build": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "npm-run-all test:users test:variants",
-    "test:variants": "bash -lc 'shopt -s nullglob; files=(../../packages/ui-kit/src/lib/grid-variants/__tests__/*.test.ts); if [ ${#files[@]} -eq 0 ]; then echo \"[mfe-users] no variants tests found (skip)\"; exit 0; fi; tsx --test \"${files[@]}\"'",
+    "test:variants": "bash -lc 'shopt -s nullglob; files=(../../packages/design-system/src/lib/grid-variants/__tests__/*.test.ts); if [ ${#files[@]} -eq 0 ]; then echo \"[mfe-users] no variants tests found (skip)\"; exit 0; fi; tsx --test \"${files[@]}\"'",
     "test:users": "bash -lc 'shopt -s nullglob; files=(src/entities/user/api/__tests__/*.test.ts); if [ ${#files[@]} -eq 0 ]; then echo \"[mfe-users] no tests found (skip)\"; exit 0; fi; tsx --test \"${files[@]}\"'"
   },
   "keywords": [],
@@ -18,7 +18,7 @@
     "@mfe/shared-http": "file:../../packages/shared-http",
     "@mfe/shared-types": "file:../../packages/shared-types",
     "@mfe/i18n-dicts": "file:../../packages/i18n-dicts",
-    "mfe-ui-kit": "file:../../packages/ui-kit",
+    "@mfe/design-system": "file:../../packages/design-system",
     "@reduxjs/toolkit": "^2.8.2",
     "@tanstack/react-query": "^5.90.6",
     "ag-grid-community": "34.3.1",

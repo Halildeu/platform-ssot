@@ -14,6 +14,9 @@ const devConfig = {
   devServer: {
     port: 3001,
     headers: { 'Access-Control-Allow-Origin': '*' },
+    client: {
+      overlay: false,
+    },
   },
 
   plugins: [
@@ -37,7 +40,7 @@ const devConfig = {
         'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
         '@reduxjs/toolkit': { singleton: true, requiredVersion: deps['@reduxjs/toolkit'] },
         'react-redux':      { singleton: true, requiredVersion: deps['react-redux'] },
-        'mfe-ui-kit':       { singleton: true, requiredVersion: false },
+        '@mfe/design-system':       { singleton: true, requiredVersion: false },
         clsx:               { singleton: true, requiredVersion: deps.clsx },
         'tailwind-merge':   { singleton: true, requiredVersion: deps['tailwind-merge'] },
       },

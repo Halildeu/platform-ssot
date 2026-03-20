@@ -1,0 +1,214 @@
+{
+  "artifactVersion": "v1",
+  "generatedAt": "2026-03-14",
+  "artifactPath": "apps/mfe-shell/src/pages/admin/design-lab.legacy-replacement-matrix.v1.json",
+  "summary": {
+    "totalItems": 13,
+    "replaceable": 10,
+    "adapter": 3,
+    "missing": 0,
+    "quarantine": 0,
+    "note": "Legacy taxonomy ve variant aliaslari yeni 4 katmanli modele gore siniflandirildi. Kural: birebir karsiligi olanlar replace, kismi uyum isteyenler adapter, eksik kalanlar canonical backlog olarak ele alinacak."
+  },
+  "policy": [
+    "Legacy yuzeylere yeni feature eklenmez; sadece migration veya kritik fix yapilir.",
+    "Canonical target belirsizse alias kalici hale getirilmez; once yeni sistem hedefi uretilir.",
+    "Adapter katmani gecici kabul edilir; owner ve cikis kosulu olmadan kalici last-mile cozum yazilmaz."
+  ],
+  "topPriority": [
+    "section.ai_ux",
+    "section.visualization",
+    "menu_bar.variant.search_header",
+    "menu_bar.variant.selection_action_header"
+  ],
+  "items": [
+    {
+      "legacyId": "section.patterns",
+      "scope": "designlab-taxonomy",
+      "legacySurface": "Patterns taxonomy section",
+      "status": "replaceable",
+      "canonicalLayer": "recipes",
+      "canonicalTarget": "recipes.workflow_clusters",
+      "migrationAction": "redirect-and-cleanup",
+      "currentPain": "Eski URL ve section alias'i recipes katmanina gecince stale query ve duplicate navigation riski uretiyor.",
+      "nextAction": "Patterns girislerini deprecation redirect ile recipes section altina sabitle.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/DesignLabPage.tsx#L834",
+        "apps/mfe-shell/src/widgets/app-shell/ui/DesignLabHeaderMenu.ui.tsx#L56"
+      ]
+    },
+    {
+      "legacyId": "section.templates",
+      "scope": "designlab-taxonomy",
+      "legacySurface": "Templates taxonomy section",
+      "status": "replaceable",
+      "canonicalLayer": "pages",
+      "canonicalTarget": "pages.template_gallery",
+      "migrationAction": "redirect-and-cleanup",
+      "currentPain": "Templates alias'i pages katmanina tasinmis olsa da eski section ismi URL ve docs yuzeyinde tekrar riskini koruyor.",
+      "nextAction": "Templates derin linklerini pages lensi altinda canonical hale getir.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/DesignLabPage.tsx#L835",
+        "apps/mfe-shell/src/widgets/app-shell/ui/DesignLabHeaderMenu.ui.tsx#L57"
+      ]
+    },
+    {
+      "legacyId": "section.visualization",
+      "scope": "designlab-taxonomy",
+      "legacySurface": "Visualization taxonomy section",
+      "status": "adapter",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.data_display_and_collections",
+      "migrationAction": "adapter-lane",
+      "currentPain": "Visualization icerigi artik ayri bir top-level lens degil; data display ailesine map edilirken anlamsal kayip ve discoverability farki olusuyor.",
+      "nextAction": "Visualization girislerini component family seviyesinde adapter badge ile tasiyip eski section adini kaldir.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/DesignLabPage.tsx#L836",
+        "apps/mfe-shell/src/widgets/app-shell/ui/DesignLabHeaderMenu.ui.tsx#L58"
+      ]
+    },
+    {
+      "legacyId": "section.ai_ux",
+      "scope": "designlab-taxonomy",
+      "legacySurface": "AI UX taxonomy section",
+      "status": "adapter",
+      "canonicalLayer": "recipes",
+      "canonicalTarget": "recipes.ai_guided_authoring",
+      "migrationAction": "adapter-lane",
+      "currentPain": "Eski ai_ux section'i yeni 4 katmanli modelde yok; bu yuzden derin linkler recipes acsa bile anlamsal olarak ilk recipe'ye dusuyordu.",
+      "nextAction": "AI UX girislerini AI Workflows cluster'i ve ai_guided_authoring canonical recipe'si uzerinden ac; eski section adini sonra kaldir.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/DesignLabPage.tsx#L837",
+        "apps/mfe-shell/src/widgets/app-shell/ui/DesignLabHeaderMenu.ui.tsx#L59"
+      ]
+    },
+    {
+      "legacyId": "section.content_language",
+      "scope": "designlab-taxonomy",
+      "legacySurface": "Content language taxonomy section",
+      "status": "replaceable",
+      "canonicalLayer": "foundations",
+      "canonicalTarget": "foundations.content_and_language",
+      "migrationAction": "redirect-and-cleanup",
+      "currentPain": "Dil ve icerik governance'i artik foundations icinde; eski section ismi header ve docs tarafinda fazladan kavram yukluyor.",
+      "nextAction": "Content language girislerini foundations aileleri altinda tek isimle goster.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/DesignLabPage.tsx#L838",
+        "apps/mfe-shell/src/widgets/app-shell/ui/DesignLabHeaderMenu.ui.tsx#L60"
+      ]
+    },
+    {
+      "legacyId": "section.governance",
+      "scope": "designlab-taxonomy",
+      "legacySurface": "Governance taxonomy section",
+      "status": "replaceable",
+      "canonicalLayer": "foundations",
+      "canonicalTarget": "foundations.policy_and_governance",
+      "migrationAction": "redirect-and-cleanup",
+      "currentPain": "Governance artik top-level section olmaktan cikti ama eski alias yeni 4 katman modelini bulaniklastiriyor.",
+      "nextAction": "Governance odakli entry noktalarini foundations lens ve quality recipe baglamina dagit.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/DesignLabPage.tsx#L839",
+        "apps/mfe-shell/src/widgets/app-shell/ui/DesignLabHeaderMenu.ui.tsx#L61"
+      ]
+    },
+    {
+      "legacyId": "menu_bar.variant.header_utility",
+      "scope": "menu-bar-catalog",
+      "legacySurface": "Header utility variant id",
+      "status": "replaceable",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.menu_bar.app_header",
+      "migrationAction": "alias-removal",
+      "currentPain": "Eski varyant id'si yeni app header recipe'si ile ayni capability setini iki isimle tasiyor.",
+      "nextAction": "Story, docs ve preview secicilerinde sadece app_header id'sini birak.",
+      "evidenceRefs": [
+        "packages/design-system/src/catalog/menu-bar-variant-catalog.ts#L343"
+      ]
+    },
+    {
+      "legacyId": "menu_bar.variant.horizontal_default",
+      "scope": "menu-bar-catalog",
+      "legacySurface": "Horizontal default variant id",
+      "status": "replaceable",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.menu_bar.navigation_menu",
+      "migrationAction": "alias-removal",
+      "currentPain": "Navigation menu primitive'i varken horizontal_default id'si eski naming bagajini tasiyor.",
+      "nextAction": "Catalog ve demo secicilerinde navigation_menu disinda eski id gostermeyi durdur.",
+      "evidenceRefs": [
+        "packages/design-system/src/catalog/menu-bar-variant-catalog.ts#L344"
+      ]
+    },
+    {
+      "legacyId": "menu_bar.variant.search_header",
+      "scope": "menu-bar-catalog",
+      "legacySurface": "Search header variant id",
+      "status": "replaceable",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.menu_bar.search_command_header",
+      "migrationAction": "alias-removal",
+      "currentPain": "Search ve command davranisi ayni modern header recipe'de toplandi; eski id secici ve analytics tarafinda duplicate sinyal uretiyor.",
+      "nextAction": "MenuBar secicilerinde search_header kaydini gizleyip canonical recipe id'sine gec.",
+      "evidenceRefs": [
+        "packages/design-system/src/catalog/menu-bar-variant-catalog.ts#L345"
+      ]
+    },
+    {
+      "legacyId": "menu_bar.variant.selection_action_header",
+      "scope": "menu-bar-catalog",
+      "legacySurface": "Selection action header variant id",
+      "status": "replaceable",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.menu_bar.action_header",
+      "migrationAction": "alias-removal",
+      "currentPain": "Action header recipe'si hazirken eski selection_action_header id'si gereksiz varyant ciftligi olusturuyor.",
+      "nextAction": "Action odakli tum secim akisini action_header altinda birlestir.",
+      "evidenceRefs": [
+        "packages/design-system/src/catalog/menu-bar-variant-catalog.ts#L346"
+      ]
+    },
+    {
+      "legacyId": "menu_bar.variant.submenu_checkbox_radio",
+      "scope": "menu-bar-catalog",
+      "legacySurface": "Submenu checkbox radio variant id",
+      "status": "replaceable",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.menu_bar.desktop_menubar",
+      "migrationAction": "alias-removal",
+      "currentPain": "Desktop menubar davranisi yeni canonical recipe ile ayni alanı kapsiyor; legacy id sadece teknik uyumluluk yuku tasiyor.",
+      "nextAction": "Desktop-oriented showcase ve docs tarafinda sadece desktop_menubar adini kullan.",
+      "evidenceRefs": [
+        "packages/design-system/src/catalog/menu-bar-variant-catalog.ts#L347"
+      ]
+    },
+    {
+      "legacyId": "menu_bar.showcase.command_header",
+      "scope": "menu-bar-showcase",
+      "legacySurface": "Command Header showcase alias",
+      "status": "adapter",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.menu_bar.search_command_header",
+      "migrationAction": "adapter-lane",
+      "currentPain": "Showcase item adi ile canonical recipe adi birebir degil; eski label hala deep-link ve secici mantiginda karsilanmak zorunda.",
+      "nextAction": "Showcase UI'da sadece Search / Command Header label'i goster; eski label'i yalniz compat parse katmaninda tut.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/menu-bar/index.tsx#L16"
+      ]
+    },
+    {
+      "legacyId": "menu_bar.showcase.action_bar",
+      "scope": "menu-bar-showcase",
+      "legacySurface": "Action Bar showcase alias",
+      "status": "replaceable",
+      "canonicalLayer": "components",
+      "canonicalTarget": "components.menu_bar.action_header",
+      "migrationAction": "alias-removal",
+      "currentPain": "Action Bar label'i yeni Action Header dilini geriye cekiyor ve ayni yuzeyin iki farkli isimle okunmasina neden oluyor.",
+      "nextAction": "Showcase ve docs icinde Action Header disinda eski label'i kaldir.",
+      "evidenceRefs": [
+        "apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/menu-bar/index.tsx#L17"
+      ]
+    }
+  ]
+}

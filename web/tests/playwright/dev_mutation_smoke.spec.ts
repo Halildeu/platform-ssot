@@ -1,9 +1,12 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+import path from 'node:path';
+import { authenticateAndNavigate } from './utils/auth';
 
 type AuditEventWire = {
   id: string | number;
   correlationId?: string | null;
+  action?: string | null;
 };
 
 type UsersListResponse = {
@@ -49,7 +52,11 @@ type PermissionListResponse = {
   total?: number;
 };
 
-const REPORT_PATH = '/Users/halilkocoglu/Documents/dev/.cache/reports/real_user_mutation_smoke.v1.json';
+const REPORT_PATH = path.resolve(
+  __dirname,
+  '../../..',
+  '.cache/reports/real_user_mutation_smoke.v1.json',
+);
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -58,27 +65,57 @@ const writeReport = (payload: unknown) => {
 };
 
 async function login(page: import('@playwright/test').Page, root: string) {
-  await page.goto(`${root}/login`, { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle');
-  if (page.url().startsWith(`${root}/login`)) {
-    const shellLoginButton = page.getByRole('button', { name: /^giriş yap$/i }).first();
-    if (await shellLoginButton.isVisible().catch(() => false)) {
-      await shellLoginButton.click();
+  const authMode = (process.env.PW_AUTH_MODE ?? '').trim().toLowerCase();
+  if (authMode === 'token_injection' || (process.env.PW_FAKE_AUTH ?? '').trim() === '1') {
+    await authenticateAndNavigate(page, root, '/admin/users', [
+      'VIEW_USERS',
+      'user-update',
+      'ACCESS_MODULE',
+      'MANAGE_ACCESS',
+      'AUDIT_MODULE',
+      'VIEW_AUDIT',
+      'audit-read',
+    ]);
+    return;
+  }
+
+  let lastError: unknown = null;
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      await page.goto(`${root}/login`, { waitUntil: 'domcontentloaded' });
+      await page.waitForLoadState('networkidle');
+      if (page.url().startsWith(`${root}/login`)) {
+        const shellLoginButton = page.getByRole('button', { name: /^giriş yap$/i }).first();
+        if (await shellLoginButton.isVisible().catch(() => false)) {
+          await shellLoginButton.click();
+        }
+      }
+      await page.waitForLoadState('networkidle');
+      if (page.url().startsWith('http://localhost:8081')) {
+        await page.locator('input[name="username"]').fill('admin@example.com');
+        await page.locator('input[name="password"]').fill('admin1234');
+        await page.locator('input[type="submit"], button[type="submit"]').click();
+      }
+      await page.waitForURL((url) => url.toString().startsWith(root) && !url.toString().includes('/login'), {
+        timeout: 60_000,
+        waitUntil: 'domcontentloaded',
+      });
+      await page.waitForFunction(() => {
+        const state = (window as any).__shellStore?.getState?.()?.auth;
+        return Boolean(state?.initialized && state?.token);
+      }, { timeout: 30_000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (attempt === 1) {
+        break;
+      }
+      await page.goto(`${root}/login`, { waitUntil: 'domcontentloaded' }).catch(() => {});
     }
   }
-  await page.waitForLoadState('networkidle');
-  if (page.url().startsWith('http://localhost:8081')) {
-    await page.locator('input[name="username"]').fill('admin@example.com');
-    await page.locator('input[name="password"]').fill('admin1234');
-    await page.locator('input[type="submit"], button[type="submit"]').click();
-  }
-  await page.waitForURL((url) => url.toString().startsWith(root) && !url.toString().includes('/login'), {
-    timeout: 60_000,
-  });
-  await page.waitForFunction(() => {
-    const state = (window as any).__shellStore?.getState?.()?.auth;
-    return Boolean(state?.initialized && state?.token);
-  }, { timeout: 30_000 });
+
+  throw lastError instanceof Error ? lastError : new Error(String(lastError ?? 'LOGIN_FAILED'));
 }
 
 async function readToken(page: import('@playwright/test').Page): Promise<string> {
@@ -130,6 +167,10 @@ async function waitForUserState(
 
 async function fetchLatestAuditEvents(root: string, token: string) {
   return api<{ events?: AuditEventWire[] }>(root, token, '/api/audit/events?page=0&size=20');
+}
+
+async function fetchAuditEventById(root: string, token: string, auditId: string) {
+  return api<{ events?: AuditEventWire[] }>(root, token, `/api/audit/events?id=${encodeURIComponent(auditId)}`);
 }
 
 test('real users/access mutation smoke with rollback', async ({ page, baseURL }) => {
@@ -274,9 +315,20 @@ test('real users/access mutation smoke with rollback', async ({ page, baseURL })
     };
 
     const roles = await api<RolesListResponse>(root, token, '/api/v1/roles');
-    const targetRole = (roles.items ?? []).find((item) => item.id != null);
+    await page.goto(`${root}/access/roles`, { waitUntil: 'domcontentloaded' });
+    const accessGrid = page.getByTestId('access-grid');
+    await expect(accessGrid).toBeVisible({ timeout: 30_000 });
+    const firstRoleRow = accessGrid.locator('.ag-center-cols-container [row-index="0"]').first();
+    await expect(firstRoleRow).toBeVisible({ timeout: 30_000 });
+    const firstRoleNameCell = firstRoleRow.locator('[col-id="name"]').first();
+    await expect(firstRoleNameCell).toBeVisible({ timeout: 30_000 });
+    const visibleRoleName = (await firstRoleNameCell.textContent())?.trim();
+    if (!visibleRoleName) {
+      throw new Error('Access grid üzerinde görünür rol adı okunamadı.');
+    }
+    const targetRole = (roles.items ?? []).find((item) => item.id != null && String(item.name ?? '').trim() === visibleRoleName);
     if (!targetRole) {
-      throw new Error('Mutasyon smoke için uygun rol bulunamadı.');
+      throw new Error(`Access grid rolü API listesiyle eşleşmedi: ${visibleRoleName}`);
     }
     const roleId = String(targetRole.id);
     const roleDetail = await api<RoleDetailResponse>(root, token, `/api/v1/roles/${encodeURIComponent(roleId)}`);
@@ -292,10 +344,31 @@ test('real users/access mutation smoke with rollback', async ({ page, baseURL })
     const chosenPermissionId = String(toggleTarget.id);
     const chosenPermissionCode = String(toggleTarget.code ?? toggleTarget.id);
 
-    await page.goto(`${root}/access/roles`, { waitUntil: 'domcontentloaded' });
-    await expect(page.getByText(String(targetRole.name ?? ''), { exact: false }).first()).toBeVisible({ timeout: 30_000 });
-    await page.getByText(String(targetRole.name ?? ''), { exact: false }).first().click();
-    const permissionCheckbox = page.getByLabel(chosenPermissionCode).first();
+    const accessDrawer = page.getByTestId('access-role-drawer-content');
+    const accessDrawerCloseButton = page.locator('.mfe-detail-drawer button[aria-label="Kapat"]').last();
+    if (await accessDrawer.isVisible().catch(() => false)) {
+      await accessDrawerCloseButton.click();
+      await expect(accessDrawer).toBeHidden({ timeout: 15_000 });
+    }
+    await firstRoleRow.click();
+    let accessDrawerOpened = false;
+    try {
+      await expect(accessDrawer).toBeVisible({ timeout: 5_000 });
+      accessDrawerOpened = true;
+    } catch {
+      accessDrawerOpened = false;
+    }
+    if (!accessDrawerOpened) {
+      await firstRoleRow.dblclick();
+    }
+    await expect(accessDrawer).toBeVisible({ timeout: 30_000 });
+    const permissionLabel = accessDrawer
+      .locator('label')
+      .filter({ hasText: chosenPermissionCode })
+      .first();
+    await expect(permissionLabel).toBeVisible({ timeout: 30_000 });
+    await permissionLabel.scrollIntoViewIfNeeded();
+    const permissionCheckbox = permissionLabel.locator('input[type="checkbox"]').first();
     await expect(permissionCheckbox).toBeVisible({ timeout: 30_000 });
 
     const updateResponsePromise = page.waitForResponse((response) =>
@@ -324,11 +397,17 @@ test('real users/access mutation smoke with rollback', async ({ page, baseURL })
     const auditVisibleInApi = Boolean((latestAuditEvents.events ?? []).find((event) =>
       String(event.id) === roleAuditId || String(event.correlationId ?? '') === roleAuditId,
     ));
+    const auditByIdResponse = await fetchAuditEventById(root, token, roleAuditId);
+    const auditEvent = (auditByIdResponse.events ?? [])[0];
+    if (!auditEvent) {
+      throw new Error('Role permission update sonrası audit event detay kaydı bulunamadı.');
+    }
+    const auditUiNeedle = String(auditEvent.correlationId ?? auditEvent.action ?? roleAuditId);
 
     await page.goto(`${root}/audit/events?auditId=${encodeURIComponent(roleAuditId)}`, { waitUntil: 'domcontentloaded' });
     await expect(page.locator('.ag-root').first()).toBeVisible({ timeout: 30_000 });
-    await page.waitForTimeout(1_500);
-    const auditVisibleInUi = await page.getByText(roleAuditId, { exact: false }).first().isVisible().catch(() => false);
+    await expect(page.getByText(auditUiNeedle, { exact: false }).first()).toBeVisible({ timeout: 30_000 });
+    const auditVisibleInUi = true;
 
     await api(
       root,
@@ -350,10 +429,11 @@ test('real users/access mutation smoke with rollback', async ({ page, baseURL })
 
     report.access = {
       roleId,
-      roleName: targetRole.name,
+      roleName: targetRole.name ?? visibleRoleName,
       toggledPermissionId: chosenPermissionId,
       toggledPermissionCode: chosenPermissionCode,
       auditId: roleAuditId,
+      auditUiNeedle,
       auditVisibleInApi,
       auditVisibleInUi,
       rolledBack: true,

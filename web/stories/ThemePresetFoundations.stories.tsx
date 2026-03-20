@@ -1,12 +1,12 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
+import { Badge } from '../packages/design-system/src/components/Badge';
 import {
   ThemePresetGallery,
   type ThemePresetGalleryItem,
-} from '../packages/ui-kit/src/components/ThemePresetGallery';
-import { ThemePresetCompare } from '../packages/ui-kit/src/components/ThemePresetCompare';
-import { Text } from '../packages/ui-kit/src/components/Text';
+} from '../packages/design-system/src/components/ThemePresetGallery';
+import { ThemePresetCompare } from '../packages/design-system/src/components/ThemePresetCompare';
+import { Text } from '../packages/design-system/src/components/Text';
 
 const meta: Meta = {
   title: 'UI Kit/ThemePresetFoundations',

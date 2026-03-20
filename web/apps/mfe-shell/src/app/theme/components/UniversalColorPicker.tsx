@@ -23,6 +23,18 @@ type Props = {
   surfaceTonePalette: SurfaceTonePaletteGroup[];
   onSurfaceToneChange: (toneId: string, toneColor: RgbaColor) => void;
   onManualColorChange: (color: RgbaColor) => void;
+  localeText?: {
+    hexLabel?: string;
+    hexAriaLabel?: string;
+    rgbaLabel?: string;
+    rgbaAriaLabel?: string;
+    hslLabel?: string;
+    hslAriaLabel?: string;
+    hueLabel?: string;
+    hueAriaLabel?: string;
+    opacityLabel?: string;
+    opacityAriaLabel?: string;
+  };
 };
 
 type PickerState = {
@@ -41,6 +53,7 @@ const UniversalColorPicker: React.FC<Props> = ({
   surfaceTonePalette,
   onSurfaceToneChange,
   onManualColorChange,
+  localeText,
 }) => {
   const initHsv = useMemo(() => {
     const hsv = rgbToHsv(color.r, color.g, color.b);
@@ -137,6 +150,19 @@ const UniversalColorPicker: React.FC<Props> = ({
     onSurfaceToneChange(option.id, next);
   };
 
+  const resolvedLocaleText = {
+    hexLabel: localeText?.hexLabel ?? 'HEX',
+    hexAriaLabel: localeText?.hexAriaLabel ?? 'HEX color code',
+    rgbaLabel: localeText?.rgbaLabel ?? 'RGBA',
+    rgbaAriaLabel: localeText?.rgbaAriaLabel ?? 'RGBA color code',
+    hslLabel: localeText?.hslLabel ?? 'HSL',
+    hslAriaLabel: localeText?.hslAriaLabel ?? 'HSL color code',
+    hueLabel: localeText?.hueLabel ?? 'Hue',
+    hueAriaLabel: localeText?.hueAriaLabel ?? 'Hue value',
+    opacityLabel: localeText?.opacityLabel ?? 'Opacity',
+    opacityAriaLabel: localeText?.opacityAriaLabel ?? 'Opacity value',
+  };
+
   const renderSwatch = (option: SurfaceToneOption) => {
     const active = surfaceTone === option.id;
     return (
@@ -178,30 +204,30 @@ const UniversalColorPicker: React.FC<Props> = ({
     <div className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-panel p-3 shadow-sm">
       <div className="grid grid-cols-1 gap-2 text-xs font-semibold text-text-secondary sm:grid-cols-3">
         <label className="flex flex-col gap-1">
-          <span>HEX</span>
+          <span>{resolvedLocaleText.hexLabel}</span>
           <input
             className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={rgbaToHex(picker.rgba)}
             onChange={(e) => handleHexChange(e.target.value)}
-            aria-label="HEX renk kodu"
+            aria-label={resolvedLocaleText.hexAriaLabel}
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span>RGBA</span>
+          <span>{resolvedLocaleText.rgbaLabel}</span>
           <input
             className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={rgbaToString(picker.rgba)}
             onChange={(e) => handleRgbaChange(e.target.value)}
-            aria-label="RGBA renk kodu"
+            aria-label={resolvedLocaleText.rgbaAriaLabel}
           />
         </label>
         <label className="flex flex-col gap-1">
-          <span>HSL</span>
+          <span>{resolvedLocaleText.hslLabel}</span>
           <input
             className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={formatHsl(picker.rgba)}
             onChange={(e) => handleHslChange(e.target.value)}
-            aria-label="HSL renk kodu"
+            aria-label={resolvedLocaleText.hslAriaLabel}
           />
         </label>
       </div>
@@ -233,7 +259,7 @@ const UniversalColorPicker: React.FC<Props> = ({
         </div>
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between text-[11px] font-semibold text-text-secondary">
-            <span>Hue</span>
+            <span>{resolvedLocaleText.hueLabel}</span>
             <span className="text-text-subtle">{Math.round(picker.hue)}°</span>
           </div>
           <div className="relative w-full">
@@ -246,7 +272,7 @@ const UniversalColorPicker: React.FC<Props> = ({
               onChange={(e) => handleHueChange(Number(e.target.value))}
               className="h-6 w-full appearance-none rounded-full accent-action-primary-bg"
               style={{ background: hueTrack }}
-              aria-label="Hue değeri"
+              aria-label={resolvedLocaleText.hueAriaLabel}
               onMouseDown={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
             />
@@ -260,7 +286,7 @@ const UniversalColorPicker: React.FC<Props> = ({
           </div>
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between text-[11px] font-semibold text-text-secondary">
-              <span>Opacity</span>
+              <span>{resolvedLocaleText.opacityLabel}</span>
               <span className="text-text-subtle">{Math.round(picker.rgba.a * 100)}%</span>
             </div>
             <div className="relative w-full">
@@ -273,7 +299,7 @@ const UniversalColorPicker: React.FC<Props> = ({
                 onChange={(e) => handleAlphaChange(Number(e.target.value))}
                 className="h-6 w-full appearance-none rounded-full accent-action-primary-bg"
                 style={{ background: opacityTrack }}
-                aria-label="Opacity değeri"
+                aria-label={resolvedLocaleText.opacityAriaLabel}
                 onMouseDown={(e) => e.stopPropagation()}
                 onTouchStart={(e) => e.stopPropagation()}
               />

@@ -8,13 +8,13 @@
     "build": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "npm run test:unit && npm run build",
-    "test:unit": "tsx --tsconfig ./tsconfig.json --test src/app/App.test.ts"
+    "test:unit": "tsx --tsconfig ./tsconfig.json --test src/app/App.test.ts src/widgets/access-management/ui/AccessFilterBar.test.tsx src/widgets/access-management/ui/AccessVariantToolbar.test.tsx src/widgets/access-management/ui/BulkPermissionModal.test.tsx src/widgets/access-management/ui/RoleCloneModal.test.tsx src/widgets/access-management/ui/AccessRoleDrawer.test.tsx src/widgets/access-management/ui/AccessGrid.test.tsx src/widgets/permission-registry/PermissionRegistryPanel.test.tsx"
   },
   "dependencies": {
     "@mfe/shared-http": "file:../../packages/shared-http",
     "@tanstack/react-query": "^5.90.10",
     "@mfe/shared-types": "file:../../packages/shared-types",
-    "mfe-ui-kit": "file:../../packages/ui-kit",
+    "@mfe/design-system": "file:../../packages/design-system",
     "ag-grid-community": "34.3.1",
     "ag-grid-enterprise": "34.3.1",
     "ag-grid-react": "34.3.1",

@@ -7,4 +7,4 @@ export {
   cloneGridVariant,
   updateVariantPreference,
   deleteGridVariant,
-} from 'mfe-ui-kit';
+} from '@mfe/design-system';

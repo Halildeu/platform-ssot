@@ -4,6 +4,7 @@
   "status": "ACTIVE",
   "transform_engine": "ts-morph-candidate",
   "apply_policy": "manual-approval-required",
+  "prototype_contract_path": "docs/02-architecture/context/ui-library-consumer-codemod-prototypes.contract.v1.json",
   "artifact_path": "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.v1.json",
   "audit_script": "audit:ui-library-codemod-candidates",
   "audit_artifact_path": "web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.audit.v1.json",

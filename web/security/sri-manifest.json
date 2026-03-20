@@ -21,8 +21,8 @@
       "sri": "sha384-iCZ79inUyNx7SOdQdnoPvQr2m6RxZbuU7FhTgKHafBNAC/DeIW3C+Fmi+jA7xsVd",
       "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     },
-    "mfe-ui-kit": {
-      "artifact": "dist/ui-kit/remoteEntry.js",
+    "mfe-design-system": {
+      "artifact": "dist/design-system/remoteEntry.js",
       "sri": "sha384-g30O7HSe1OP4OVizKgOj8eZLTjqOgAzfnt1Jy/bIGHa/rVr97NDxAYH8Wb+mkpRS",
       "lastRotatedAt": "2026-03-08T16:14:36.879Z"
     }

@@ -1,0 +1,179 @@
+{
+  "artifactVersion": "v1",
+  "generatedAt": "2026-03-14",
+  "artifactPath": "apps/mfe-shell/src/pages/admin/design-lab.layer-contract-matrix.v1.json",
+  "layers": [
+    {
+      "layerId": "foundations",
+      "title": "Foundations",
+      "sidebar": {
+        "primaryNavigation": "system families",
+        "selectionModel": ["track", "group", "subgroup", "item"],
+        "mustContain": [
+          "system family context",
+          "token/theme/runtime tree",
+          "foundation-specific search copy"
+        ],
+        "mustNotContain": [
+          "recipe cluster list",
+          "page template cards",
+          "component import CTA"
+        ]
+      },
+      "hero": {
+        "subject": "foundation family",
+        "mustContain": ["foundation title", "foundation description", "foundation governance badges"]
+      },
+      "overview": {
+        "mustContain": ["token governance", "theme/runtime reference", "system diagnostics"]
+      },
+      "preview": {
+        "mustContain": ["theme preview", "token preview", "reference surfaces"],
+        "mustNotContain": ["component demo gallery", "recipe showcase"]
+      },
+      "api": {
+        "mustContain": ["token contract", "runtime contract", "foundation utilities contract"]
+      },
+      "quality": {
+        "mustContain": ["a11y", "i18n", "theme consistency", "runtime gates"]
+      },
+      "crossReferences": {
+        "allow": ["related components", "related recipes"],
+        "displayMode": "secondary"
+      },
+      "urlState": {
+        "required": ["dl_section"],
+        "optional": ["dl_track", "dl_group", "dl_subgroup", "dl_item"]
+      }
+    },
+    {
+      "layerId": "components",
+      "title": "Components",
+      "sidebar": {
+        "primaryNavigation": "product tree",
+        "selectionModel": ["track", "group", "subgroup", "item"],
+        "mustContain": [
+          "component family context",
+          "component tree",
+          "component-specific search copy"
+        ],
+        "mustNotContain": [
+          "recipe cluster cards in preview navigation",
+          "page template list",
+          "workflow-first sidebar copy"
+        ]
+      },
+      "hero": {
+        "subject": "component",
+        "mustContain": ["component title", "import action", "catalog family"]
+      },
+      "overview": {
+        "mustContain": ["catalog family", "adoption", "migration", "release context"]
+      },
+      "preview": {
+        "mustContain": ["live component showcase", "reference notes"],
+        "mustNotContain": ["recipe preview tab", "page template gallery"]
+      },
+      "api": {
+        "mustContain": ["props contract", "import contract", "variant/state model"]
+      },
+      "quality": {
+        "mustContain": ["quality gates", "usage evidence", "regression coverage"]
+      },
+      "crossReferences": {
+        "allow": ["related recipes", "related pages"],
+        "displayMode": "secondary"
+      },
+      "urlState": {
+        "required": ["dl_section"],
+        "optional": ["dl_track", "dl_group", "dl_subgroup", "dl_item"]
+      }
+    },
+    {
+      "layerId": "recipes",
+      "title": "Recipes",
+      "sidebar": {
+        "primaryNavigation": "workflow clusters",
+        "selectionModel": ["dl_recipe"],
+        "mustContain": [
+          "recipe cluster list",
+          "recipe context card",
+          "recipe-specific search copy"
+        ],
+        "mustNotContain": [
+          "component tree",
+          "foundation token tree",
+          "page template gallery"
+        ]
+      },
+      "hero": {
+        "subject": "recipe",
+        "mustContain": ["recipe title", "workflow intent", "owner blocks"]
+      },
+      "overview": {
+        "mustContain": ["workflow summary", "owner blocks", "handoff context"]
+      },
+      "preview": {
+        "mustContain": ["recipe showcase", "live/reference/recipe surfaces"],
+        "mustNotContain": ["component-only preview tabs", "page template cards"]
+      },
+      "api": {
+        "mustContain": ["recipe contract", "component bindings", "handoff contract"]
+      },
+      "quality": {
+        "mustContain": ["recipe quality gates", "workflow evidence", "binding validation"]
+      },
+      "crossReferences": {
+        "allow": ["bound components", "dependent pages"],
+        "displayMode": "secondary"
+      },
+      "urlState": {
+        "required": ["dl_section"],
+        "optional": ["dl_recipe"]
+      }
+    },
+    {
+      "layerId": "pages",
+      "title": "Pages / Templates",
+      "sidebar": {
+        "primaryNavigation": "template families",
+        "selectionModel": ["dl_recipe"],
+        "mustContain": [
+          "page family or template list",
+          "page context card",
+          "page-specific search copy"
+        ],
+        "mustNotContain": [
+          "recipe wording as primary navigation",
+          "component tree",
+          "token governance tree"
+        ]
+      },
+      "hero": {
+        "subject": "page template",
+        "mustContain": ["page title", "layout intent", "template family"]
+      },
+      "overview": {
+        "mustContain": ["page shells", "layout regions", "template families", "adoption"]
+      },
+      "preview": {
+        "mustContain": ["page preview", "template gallery", "layout reference"],
+        "mustNotContain": ["recipe-first preview copy", "component import action"]
+      },
+      "api": {
+        "mustContain": ["page contract", "layout regions", "recipe/component dependencies"]
+      },
+      "quality": {
+        "mustContain": ["page quality gates", "template adoption", "layout validation"]
+      },
+      "crossReferences": {
+        "allow": ["dependent recipes", "building-block components"],
+        "displayMode": "secondary"
+      },
+      "urlState": {
+        "required": ["dl_section"],
+        "optional": ["dl_recipe"]
+      }
+    }
+  ]
+}

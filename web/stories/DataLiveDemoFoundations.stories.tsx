@@ -1,17 +1,17 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
-import { Button } from '../packages/ui-kit/src/components/Button';
-import { Steps } from '../packages/ui-kit/src/components/Steps';
-import { TableSimple } from '../packages/ui-kit/src/components/TableSimple';
-import { TimePicker } from '../packages/ui-kit/src/components/TimePicker';
-import { Tooltip } from '../packages/ui-kit/src/components/Tooltip';
-import { TourCoachmarks } from '../packages/ui-kit/src/components/TourCoachmarks';
-import { Tree } from '../packages/ui-kit/src/components/Tree';
-import { TreeTable } from '../packages/ui-kit/src/components/TreeTable';
-import { Upload } from '../packages/ui-kit/src/components/Upload';
-import { Text } from '../packages/ui-kit/src/components/Text';
-import { SummaryStrip } from '../packages/ui-kit/src/layout/SummaryStrip/SummaryStrip';
+import { Badge } from '../packages/design-system/src/components/Badge';
+import { Button } from '../packages/design-system/src/components/Button';
+import { Steps } from '../packages/design-system/src/components/Steps';
+import { TableSimple } from '../packages/design-system/src/components/TableSimple';
+import { TimePicker } from '../packages/design-system/src/components/TimePicker';
+import { Tooltip } from '../packages/design-system/src/components/Tooltip';
+import { TourCoachmarks } from '../packages/design-system/src/components/TourCoachmarks';
+import { Tree } from '../packages/design-system/src/components/Tree';
+import { TreeTable } from '../packages/design-system/src/components/TreeTable';
+import { Upload } from '../packages/design-system/src/components/Upload';
+import { Text } from '../packages/design-system/src/components/Text';
+import { SummaryStrip } from '../packages/design-system/src/layout/SummaryStrip/SummaryStrip';
 
 const meta: Meta = {
   title: 'UI Kit/DataLiveDemoFoundations',

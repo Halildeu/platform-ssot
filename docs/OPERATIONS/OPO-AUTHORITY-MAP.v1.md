@@ -41,10 +41,15 @@ Aşağıdaki dokümanlar feature/delivery bağlamı için current kabul edilir:
 - `docs/03-delivery/ACCEPTANCE/**`
 - `docs/03-delivery/TEST-PLANS/**`
 - `docs/04-operations/RUNBOOKS/**`
+- `docs/OPERATIONS/MANAGED-REPO-CONTEXT-CONSUMPTION.v1.md`
+- `docs/OPERATIONS/MULTI-PLANE-EXECUTION-MODEL.v1.md`
+- `tenant/TENANT-DEFAULT/decision-bundle.v1.json`
 
 Not:
 - Bu grup delivery gerçekliğini taşır; ancak OPO governance kaynağı değildir.
 - OPO düzeyinde conflict olursa `CANONICAL OPO KAYNAKLARI` kazanır.
+- `tenant/TENANT-DEFAULT/decision-bundle.v1.json` core SSOT açılana kadar
+  execution mirror olarak yorumlanır; canonical governance policy yerine geçmez.
 
 -------------------------------------------------------------------------------
 ## 3. TRANSITION-ACTIVE KAYNAKLAR (REHBER / REDIRECT KATMANI)
@@ -120,5 +125,8 @@ Yorum:
   `docs/OPERATIONS/*` katmanıdır.
 - `AGENT-CODEX.*` ve `docs/00-handbook/**` artık transition-active rehber
   katmanıdır.
+- Managed repo execution baglami icin `MANAGED-REPO-CONTEXT-CONSUMPTION`,
+  `MULTI-PLANE-EXECUTION-MODEL` ve `tenant/.../decision-bundle.v1.json`
+  current-context katmaninda okunur.
 - `backend/docs/legacy/**` ve `docs/ARCHIVE/**` read-only archive-reference
   alanıdır.

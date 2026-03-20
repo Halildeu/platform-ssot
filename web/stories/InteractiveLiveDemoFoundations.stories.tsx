@@ -1,16 +1,16 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
-import { Button } from '../packages/ui-kit/src/components/Button';
-import { List } from '../packages/ui-kit/src/components/List';
-import { Popover } from '../packages/ui-kit/src/components/Popover';
-import { PromptComposer } from '../packages/ui-kit/src/components/PromptComposer';
-import { RecommendationCard } from '../packages/ui-kit/src/components/RecommendationCard';
-import { Skeleton } from '../packages/ui-kit/src/components/Skeleton';
-import { Slider } from '../packages/ui-kit/src/components/Slider';
-import { Spinner } from '../packages/ui-kit/src/components/Spinner';
-import { Text } from '../packages/ui-kit/src/components/Text';
-import { PageHeader } from '../packages/ui-kit/src/layout/PageHeader';
+import { Badge } from '../packages/design-system/src/components/Badge';
+import { Button } from '../packages/design-system/src/components/Button';
+import { List } from '../packages/design-system/src/components/List';
+import { Popover } from '../packages/design-system/src/components/Popover';
+import { PromptComposer } from '../packages/design-system/src/components/PromptComposer';
+import { RecommendationCard } from '../packages/design-system/src/components/RecommendationCard';
+import { Skeleton } from '../packages/design-system/src/components/Skeleton';
+import { Slider } from '../packages/design-system/src/components/Slider';
+import { Spinner } from '../packages/design-system/src/components/Spinner';
+import { Text } from '../packages/design-system/src/components/Text';
+import { PageHeader } from '../packages/design-system/src/layout/PageHeader';
 
 const meta: Meta = {
   title: 'UI Kit/InteractiveLiveDemoFoundations',

@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/tenant-decision-bundle.schema.json",
+  "title": "Tenant Decision Bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "tenant_id",
+    "status",
+    "bundle_mode",
+    "control_plane_repo",
+    "managed_repo",
+    "authority_chain",
+    "context_refs",
+    "platform_model",
+    "stack_defaults",
+    "delivery_rules",
+    "integration_rules"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "enum": ["v1"]
+    },
+    "tenant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["ACTIVE", "DRAFT", "ARCHIVED"]
+    },
+    "bundle_mode": {
+      "type": "string",
+      "enum": ["managed_repo_execution_mirror", "core_ssot"]
+    },
+    "control_plane_repo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "managed_repo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority_chain": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "context_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context", "stakeholders", "scope", "criteria"],
+      "properties": {
+        "context": { "type": "string", "minLength": 1 },
+        "stakeholders": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 },
+        "criteria": { "type": "string", "minLength": 1 }
+      }
+    },
+    "platform_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["managed_repo_strategy", "planes"],
+      "properties": {
+        "managed_repo_strategy": {
+          "type": "string",
+          "enum": ["single_repo_multi_plane"]
+        },
+        "planes": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string",
+            "enum": ["web", "mobile", "backend", "ai", "data", "governance"]
+          }
+        }
+      }
+    },
+    "stack_defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["backend", "web", "mobile", "ai", "data"],
+      "properties": {
+        "backend": { "type": "string", "minLength": 1 },
+        "web": { "type": "string", "minLength": 1 },
+        "mobile": { "type": "string", "minLength": 1 },
+        "ai": { "type": "string", "minLength": 1 },
+        "data": { "type": "string", "minLength": 1 }
+      }
+    },
+    "delivery_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preserve_existing_delivery_system",
+        "feature_contract_required",
+        "session_context_is_ephemeral"
+      ],
+      "properties": {
+        "preserve_existing_delivery_system": { "type": "boolean" },
+        "feature_contract_required": { "type": "boolean" },
+        "session_context_is_ephemeral": { "type": "boolean" },
+        "initial_scope_mapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mobile": { "type": "string", "minLength": 1 },
+            "ai": { "type": "string", "minLength": 1 },
+            "data": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "integration_rules": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -1,35 +1,18 @@
 import React from 'react';
+import { getSharedReport } from '@platform/capabilities';
 import type { ReportModule } from '../types';
+import { exportAuditReport, fetchAuditReport } from './api';
+import type { AuditFilters, AuditRow } from './types';
 import type { ColumnDef } from '../../grid';
-
-type AuditFilters = {
-  search: string;
-  level: string;
-};
-
-type AuditRow = {
-  id: string;
-  userEmail: string;
-  service: string;
-  action: string;
-  level: 'INFO' | 'WARN' | 'ERROR';
-  timestamp: string;
-};
 
 const LEVELS: Array<AuditRow['level']> = ['INFO', 'WARN', 'ERROR'];
 
-const auditRows: AuditRow[] = Array.from({ length: 60 }).map((_, index) => ({
-  id: `AUD-${index + 1}`,
-  userEmail: `agent${index + 1}@example.com`,
-  service: index % 2 === 0 ? 'user-service' : 'permission-service',
-  action: index % 2 === 0 ? 'ROLE_UPDATE' : 'USER_RESET_PASSWORD',
-  level: LEVELS[index % LEVELS.length],
-  timestamp: new Date(Date.now() - index * 15 * 60 * 1000).toISOString(),
-}));
+const sharedReport = getSharedReport('audit-activity');
 
 export const auditReportModule: ReportModule<AuditFilters, AuditRow> = {
-  id: 'reports.audit',
-  route: 'audit',
+  id: sharedReport.webModuleId,
+  sharedReportId: sharedReport.id,
+  route: sharedReport.webRouteSegment,
   navKey: 'reports.nav.audit',
   titleKey: 'reports.audit.title',
   descriptionKey: 'reports.audit.description',
@@ -84,17 +67,31 @@ export const auditReportModule: ReportModule<AuditFilters, AuditRow> = {
       { headerName: t('reports.audit.columns.level'), field: 'level', width: 120 },
       { headerName: t('reports.audit.columns.timestamp'), field: 'timestamp', flex: 1.2 },
     ] as ColumnDef<AuditRow>[],
-  fetchRows: async (filters) => {
-    const normalized = filters.search.trim().toLowerCase();
-    await new Promise((resolve) => setTimeout(resolve, 120));
-    const rows = auditRows.filter((row) => {
-      if (filters.level !== 'ALL' && row.level !== filters.level) return false;
-      if (!normalized) return true;
-      return `${row.userEmail} ${row.action} ${row.service}`.toLowerCase().includes(normalized);
-    });
-    return { rows, total: rows.length };
+  fetchRows: (filters, request) => fetchAuditReport(filters, request),
+  exportRows: (filters, format) => exportAuditReport(filters, format),
+  renderDetail: (row, t) => {
+    if (!row) {
+      return <span>{t('reports.detail.empty')}</span>;
+    }
+    return (
+      <dl style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 8 }}>
+        <dt>{t('reports.audit.columns.eventId')}</dt>
+        <dd>{row.id}</dd>
+        <dt>{t('reports.audit.columns.userEmail')}</dt>
+        <dd>{row.userEmail}</dd>
+        <dt>{t('reports.audit.columns.service')}</dt>
+        <dd>{row.service}</dd>
+        <dt>{t('reports.audit.columns.action')}</dt>
+        <dd>{row.action}</dd>
+        <dt>{t('reports.audit.columns.level')}</dt>
+        <dd>{row.level}</dd>
+        <dt>{t('reports.audit.columns.timestamp')}</dt>
+        <dd>{row.timestamp}</dd>
+        <dt>Correlation id</dt>
+        <dd>{row.correlationId ?? '-'}</dd>
+        <dt>Detay</dt>
+        <dd>{row.details ?? '-'}</dd>
+      </dl>
+    );
   },
-  renderDetail: (_row, t) => (
-    <span>{t('reports.audit.comingSoon')}</span>
-  ),
 };

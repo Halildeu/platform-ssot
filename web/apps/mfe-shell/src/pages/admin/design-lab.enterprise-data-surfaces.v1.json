@@ -1,0 +1,431 @@
+{
+  "artifactVersion": "v1",
+  "generatedAt": "2026-03-15",
+  "description": "Enterprise data surface catalog - Pro/Enterprise grade component specifications bridging ecosystem layer to component docs",
+  "surfaces": [
+    {
+      "surfaceId": "pro_data_grid",
+      "title": "Pro Data Grid",
+      "group": "enterprise_data",
+      "tier": "pro",
+      "coreComponents": ["AgGridServer", "EntityGridTemplate"],
+      "description": "Server-side paginated data grid with virtual scrolling, column pinning, tree data, master-detail, row grouping and inline editing",
+      "capabilities": [
+        "server_side_pagination",
+        "virtual_scroll",
+        "column_pinning",
+        "tree_data",
+        "master_detail",
+        "row_grouping",
+        "inline_editing",
+        "column_reorder",
+        "filter_model",
+        "sort_model",
+        "export_csv",
+        "export_excel"
+      ],
+      "benchmarkRef": {
+        "antDesign": "ProTable + EditableTable",
+        "mui": "MUI X Data Grid Pro/Premium"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/data-grid",
+        "propsInterface": "ProDataGridProps<TRow>",
+        "dataProvider": "ProDataGridProvider<TRow>",
+        "serverSideModel": {
+          "endpoint": "/api/v1/data-grid/{entityType}",
+          "paginationModes": ["offset", "cursor", "keyset"],
+          "defaultPageSize": 50,
+          "maxPageSize": 500
+        }
+      },
+      "qualityGates": [
+        "perf_10k_rows_under_200ms",
+        "a11y_grid_navigation",
+        "a11y_screen_reader_announce",
+        "i18n_column_headers",
+        "i18n_rtl_layout",
+        "keyboard_nav_full",
+        "virtual_scroll_stability"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": true,
+        "auditTrail": true,
+        "perfBenchmark": false,
+        "a11yWcag": false,
+        "i18nRtl": false
+      }
+    },
+    {
+      "surfaceId": "pro_table",
+      "title": "Pro Table",
+      "group": "enterprise_data",
+      "tier": "pro",
+      "coreComponents": ["TableSimple", "TreeTable"],
+      "description": "Advanced table with virtual scroll, column pinning, row spanning, expandable rows and integrated search/filter",
+      "capabilities": [
+        "virtual_scroll",
+        "column_pinning",
+        "row_spanning",
+        "expandable_rows",
+        "sticky_header",
+        "integrated_search",
+        "inline_filter",
+        "selection_model",
+        "bulk_actions"
+      ],
+      "benchmarkRef": {
+        "antDesign": "Table + ProTable",
+        "mui": "MUI X Data Grid"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/table",
+        "propsInterface": "ProTableProps<TRow>",
+        "dataProvider": "ProTableProvider<TRow>",
+        "serverSideModel": {
+          "endpoint": "/api/v1/table/{entityType}",
+          "paginationModes": ["offset", "cursor"],
+          "defaultPageSize": 25,
+          "maxPageSize": 200
+        }
+      },
+      "qualityGates": [
+        "perf_5k_rows_under_150ms",
+        "a11y_table_semantics",
+        "a11y_sortable_headers",
+        "i18n_column_labels",
+        "keyboard_nav_cells"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": true,
+        "auditTrail": false,
+        "perfBenchmark": false,
+        "a11yWcag": false,
+        "i18nRtl": false
+      }
+    },
+    {
+      "surfaceId": "pro_forms",
+      "title": "Pro Forms",
+      "group": "enterprise_data",
+      "tier": "pro",
+      "coreComponents": ["TextInput", "Select", "Checkbox", "Radio", "Switch", "Slider", "DatePicker", "TimePicker", "Upload"],
+      "description": "Enterprise form engine with conditional fields, multi-step wizard, array fields, validation schemas and draft/autosave",
+      "capabilities": [
+        "conditional_fields",
+        "multi_step_wizard",
+        "array_fields",
+        "validation_schema",
+        "draft_autosave",
+        "field_dependencies",
+        "computed_fields",
+        "custom_validators"
+      ],
+      "benchmarkRef": {
+        "antDesign": "ProForm + StepsForm + SchemaForm",
+        "mui": "MUI X Date/Time pickers + form patterns"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/forms",
+        "propsInterface": "ProFormProps<TSchema>",
+        "dataProvider": "ProFormProvider<TSchema>",
+        "serverSideModel": {
+          "endpoint": "/api/v1/forms/{formType}",
+          "validationMode": "server",
+          "draftEndpoint": "/api/v1/forms/{formType}/draft"
+        }
+      },
+      "qualityGates": [
+        "a11y_form_labels",
+        "a11y_error_announce",
+        "i18n_validation_messages",
+        "keyboard_tab_order"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": true,
+        "auditTrail": true,
+        "perfBenchmark": true,
+        "a11yWcag": false,
+        "i18nRtl": false
+      }
+    },
+    {
+      "surfaceId": "pro_export",
+      "title": "Pro Export",
+      "group": "enterprise_data",
+      "tier": "pro",
+      "coreComponents": [],
+      "description": "Streaming export engine for CSV/Excel/PDF with scheduled export, progress tracking and download management",
+      "capabilities": [
+        "streaming_csv",
+        "streaming_excel",
+        "pdf_generation",
+        "scheduled_export",
+        "progress_tracking",
+        "download_management",
+        "column_selection",
+        "filter_export"
+      ],
+      "benchmarkRef": {
+        "antDesign": "ProTable export + download utils",
+        "mui": "MUI X Data Grid export"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/export",
+        "propsInterface": "ProExportProps",
+        "dataProvider": "ProExportProvider",
+        "serverSideModel": {
+          "endpoint": "/api/v1/export/{jobId}",
+          "statusEndpoint": "/api/v1/export/{jobId}/status",
+          "downloadEndpoint": "/api/v1/export/{jobId}/download"
+        }
+      },
+      "qualityGates": [
+        "streaming_100k_rows",
+        "memory_bounded_export",
+        "a11y_progress_announce"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": true,
+        "auditTrail": true,
+        "perfBenchmark": false,
+        "a11yWcag": true,
+        "i18nRtl": true
+      }
+    },
+    {
+      "surfaceId": "kpi_dashboard_builder",
+      "title": "KPI Dashboard Builder",
+      "group": "enterprise_analytics",
+      "tier": "enterprise",
+      "coreComponents": ["SummaryStrip"],
+      "description": "Configurable KPI dashboard with drag-and-drop widget placement, real-time data binding and threshold alerts",
+      "capabilities": [
+        "drag_drop_layout",
+        "real_time_binding",
+        "threshold_alerts",
+        "widget_library",
+        "auto_refresh",
+        "date_range_filter",
+        "comparison_mode"
+      ],
+      "benchmarkRef": {
+        "antDesign": "Ant Design Charts + ProCard + StatisticCard",
+        "mui": "MUI X Charts + Dashboard templates"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/dashboard",
+        "propsInterface": "KpiDashboardProps",
+        "dataProvider": "DashboardDataProvider",
+        "serverSideModel": {
+          "endpoint": "/api/v1/dashboard/{dashboardId}",
+          "metricsEndpoint": "/api/v1/metrics",
+          "refreshInterval": 30000
+        }
+      },
+      "qualityGates": [
+        "perf_dashboard_load_under_2s",
+        "a11y_chart_labels",
+        "a11y_color_contrast",
+        "i18n_number_format"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": true,
+        "auditTrail": false,
+        "perfBenchmark": false,
+        "a11yWcag": false,
+        "i18nRtl": false
+      }
+    },
+    {
+      "surfaceId": "admin_dashboard_shell",
+      "title": "Admin Dashboard Shell",
+      "group": "enterprise_admin",
+      "tier": "enterprise",
+      "coreComponents": ["PageLayout", "PageHeader", "Breadcrumb", "Tabs"],
+      "description": "Pre-built admin dashboard shell with sidebar navigation, header, breadcrumbs, notification center and multi-tenant context switcher",
+      "capabilities": [
+        "sidebar_navigation",
+        "header_actions",
+        "breadcrumb_auto",
+        "notification_center",
+        "tenant_switcher",
+        "theme_toggle",
+        "responsive_layout",
+        "command_palette"
+      ],
+      "benchmarkRef": {
+        "antDesign": "ProLayout + PageContainer",
+        "mui": "MUI Dashboard template + AppBar"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/admin-shell",
+        "propsInterface": "AdminShellProps",
+        "dataProvider": "AdminShellProvider",
+        "serverSideModel": {
+          "endpoint": "/api/v1/admin/shell-config",
+          "navigationEndpoint": "/api/v1/admin/navigation",
+          "notificationEndpoint": "/api/v1/notifications"
+        }
+      },
+      "qualityGates": [
+        "a11y_landmark_roles",
+        "a11y_skip_navigation",
+        "a11y_focus_management",
+        "i18n_navigation_labels",
+        "keyboard_nav_sidebar"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": true,
+        "auditTrail": true,
+        "perfBenchmark": true,
+        "a11yWcag": true,
+        "i18nRtl": false
+      }
+    },
+    {
+      "surfaceId": "pro_chart",
+      "title": "Pro Chart",
+      "group": "enterprise_data_viz",
+      "tier": "pro",
+      "coreComponents": ["Chart", "Sparkline", "KPIGauge"],
+      "description": "Configurable chart engine supporting line, bar, area, pie, scatter, heatmap and combo charts with server-side aggregation, drill-down and annotation layers",
+      "capabilities": [
+        "line_chart",
+        "bar_chart",
+        "area_chart",
+        "pie_donut_chart",
+        "scatter_chart",
+        "heatmap",
+        "combo_chart",
+        "sparkline",
+        "drill_down",
+        "annotation_layer",
+        "tooltip_crosshair",
+        "legend_interactive",
+        "responsive_resize",
+        "theme_aware_palette"
+      ],
+      "benchmarkRef": {
+        "antDesign": "Ant Design Charts (G2Plot)",
+        "mui": "MUI X Charts"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/charts",
+        "propsInterface": "ProChartProps<TData>",
+        "dataProvider": "ProChartDataProvider<TData>",
+        "serverSideModel": {
+          "endpoint": "/api/v1/chart/{datasetId}",
+          "aggregationModes": ["time_series", "categorical", "statistical"],
+          "defaultPointLimit": 1000,
+          "maxPointLimit": 50000
+        }
+      },
+      "qualityGates": [
+        "perf_10k_points_under_100ms",
+        "a11y_chart_description",
+        "a11y_keyboard_data_explore",
+        "i18n_axis_labels",
+        "i18n_number_format",
+        "responsive_breakpoint",
+        "theme_palette_contrast"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": false,
+        "auditTrail": false,
+        "perfBenchmark": false,
+        "a11yWcag": false,
+        "i18nRtl": false
+      }
+    },
+    {
+      "surfaceId": "pro_report_builder",
+      "title": "Pro Report Builder",
+      "group": "enterprise_data_viz",
+      "tier": "enterprise",
+      "coreComponents": ["ReportCanvas", "WidgetGallery", "ChartComposer"],
+      "description": "Drag-and-drop report builder with chart widgets, KPI tiles, data tables and export-to-PDF/PPTX pipeline",
+      "capabilities": [
+        "drag_drop_canvas",
+        "widget_gallery",
+        "chart_widget",
+        "table_widget",
+        "kpi_widget",
+        "filter_widget",
+        "layout_grid",
+        "template_library",
+        "export_pdf",
+        "export_pptx",
+        "scheduled_report",
+        "share_dashboard"
+      ],
+      "benchmarkRef": {
+        "antDesign": "Ant Design Pro Dashboard Builder",
+        "mui": "No direct equivalent — custom dashboard builders"
+      },
+      "apiContract": {
+        "importPath": "@pro-extensions/report-builder",
+        "propsInterface": "ProReportBuilderProps",
+        "dataProvider": "ProReportDataProvider",
+        "serverSideModel": {
+          "endpoint": "/api/v1/reports/{reportId}",
+          "exportEndpoint": "/api/v1/reports/{reportId}/export",
+          "scheduleEndpoint": "/api/v1/reports/{reportId}/schedule"
+        }
+      },
+      "qualityGates": [
+        "perf_canvas_50_widgets",
+        "a11y_widget_navigation",
+        "a11y_chart_alt_text",
+        "i18n_widget_labels",
+        "i18n_date_format",
+        "export_fidelity"
+      ],
+      "readinessChecks": {
+        "multiTenant": true,
+        "rbac": true,
+        "auditTrail": true,
+        "perfBenchmark": false,
+        "a11yWcag": false,
+        "i18nRtl": false
+      }
+    }
+  ],
+  "crossSurfaceContracts": {
+    "sharedPatterns": [
+      {
+        "patternId": "server_side_data_provider",
+        "description": "All pro surfaces use a unified data provider pattern with cursor/offset pagination, filter model and sort model",
+        "appliesTo": ["pro_data_grid", "pro_table", "pro_forms", "pro_export"]
+      },
+      {
+        "patternId": "enterprise_auth_context",
+        "description": "All enterprise surfaces consume tenant context and RBAC permissions from a shared auth provider",
+        "appliesTo": ["admin_dashboard_shell", "kpi_dashboard_builder", "pro_report_builder"]
+      },
+      {
+        "patternId": "export_pipeline",
+        "description": "Data surfaces can delegate export to the Pro Export pipeline for streaming large datasets",
+        "appliesTo": ["pro_data_grid", "pro_table", "pro_export", "pro_report_builder"]
+      },
+      {
+        "patternId": "chart_data_provider",
+        "description": "Chart and report surfaces share a unified data aggregation and time-series provider for consistent visualization",
+        "appliesTo": ["pro_chart", "pro_report_builder", "kpi_dashboard_builder"]
+      }
+    ],
+    "qualityMatrix": {
+      "perf": ["pro_data_grid", "pro_table", "kpi_dashboard_builder", "pro_chart", "pro_report_builder"],
+      "a11y": ["pro_data_grid", "pro_table", "pro_forms", "admin_dashboard_shell", "pro_chart"],
+      "i18n": ["pro_forms", "pro_export", "admin_dashboard_shell", "pro_chart", "pro_report_builder"],
+      "security": ["admin_dashboard_shell", "kpi_dashboard_builder", "pro_report_builder"]
+    }
+  }
+}

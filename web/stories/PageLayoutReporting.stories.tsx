@@ -1,15 +1,20 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import Button from '../packages/ui-kit/src/components/Button';
-import { Checkbox } from '../packages/ui-kit/src/components/Checkbox';
-import { Dropdown } from '../packages/ui-kit/src/components/Dropdown';
-import { EmptyErrorLoading } from '../packages/ui-kit/src/components/EmptyErrorLoading';
-import { Select } from '../packages/ui-kit/src/components/Select';
-import { Text } from '../packages/ui-kit/src/components/Text';
-import { TextInput } from '../packages/ui-kit/src/components/TextInput';
-import { FilterBar } from '../packages/ui-kit/src/layout/FilterBar';
-import { PageLayout } from '../packages/ui-kit/src/layout/PageLayout';
-import { ReportFilterPanel } from '../packages/ui-kit/src/layout/ReportFilterPanel';
+import Button from '../packages/design-system/src/components/Button';
+import { Checkbox } from '../packages/design-system/src/components/Checkbox';
+import { Dropdown } from '../packages/design-system/src/components/Dropdown';
+import { EmptyErrorLoading } from '../packages/design-system/src/components/EmptyErrorLoading';
+import { Select } from '../packages/design-system/src/components/Select';
+import { Tabs } from '../packages/design-system/src/components/Tabs';
+import { Text } from '../packages/design-system/src/components/Text';
+import { TextInput } from '../packages/design-system/src/components/TextInput';
+import { FilterBar } from '../packages/design-system/src/layout/FilterBar';
+import {
+  PageLayout,
+  createPageLayoutBreadcrumbItems,
+  createPageLayoutPreset,
+} from '../packages/design-system/src/layout/PageLayout';
+import { ReportFilterPanel } from '../packages/design-system/src/layout/ReportFilterPanel';
 
 const meta: Meta = {
   title: 'UI Kit/PageLayoutReporting',
@@ -30,13 +35,24 @@ const ReportWorkspaceCanvas = () => {
   return (
     <div className="min-h-screen bg-surface-canvas p-6 text-text-primary">
       <PageLayout
+        {...createPageLayoutPreset({ preset: 'ops-workspace', stickyHeader: false })}
         title="Reporting workspace"
         description="PageLayout ve ReportFilterPanel ayni raporlama ekraninda tekrar kullanilan release-grade temel surface alanlaridir."
-        breadcrumbItems={[
+        breadcrumbItems={createPageLayoutBreadcrumbItems([
           { title: 'Platform', path: '#' },
           { title: 'Reporting', path: '#' },
           { title: 'Workspace' },
-        ]}
+        ])}
+        secondaryNav={(
+          <Tabs
+            listLabel="Workspace tabs"
+            items={[
+              { value: 'overview', label: 'Overview' },
+              { value: 'audit', label: 'Audit trail' },
+              { value: 'export', label: 'Export queue' },
+            ]}
+          />
+        )}
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Dropdown
@@ -85,7 +101,7 @@ const ReportWorkspaceCanvas = () => {
               <Select
                 label="Owner"
                 value={owner}
-                onChange={setOwner}
+                onValueChange={setOwner}
                 options={[
                   { value: 'all', label: 'Tum ekipler' },
                   { value: 'platform', label: 'Platform UI' },

@@ -30,7 +30,7 @@ const prodConfig = {
         'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
         '@reduxjs/toolkit': { singleton: true, requiredVersion: deps['@reduxjs/toolkit'] },
         'react-redux': { singleton: true, requiredVersion: deps['react-redux'] },
-        'mfe-ui-kit': { singleton: true, requiredVersion: false },
+        '@mfe/design-system': { singleton: true, requiredVersion: false },
       },
     }),
   ],

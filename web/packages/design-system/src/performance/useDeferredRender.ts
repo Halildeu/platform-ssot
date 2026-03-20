@@ -1,0 +1,49 @@
+import { useEffect, useState } from 'react';
+
+/**
+ * Defers rendering of non-critical content until after first paint.
+ *
+ * Returns `false` on the first render and switches to `true` after the
+ * specified delay (default 0 ms — i.e. next micro-task after paint).
+ *
+ * Useful for below-the-fold or secondary UI that should not block
+ * initial paint metrics (FCP / LCP).
+ *
+ * @example
+ * ```tsx
+ * function Dashboard() {
+ *   const ready = useDeferredRender();
+ *   return (
+ *     <>
+ *       <HeroSection />
+ *       {ready && <HeavyAnalyticsWidget />}
+ *     </>
+ *   );
+ * }
+ * ```
+ */
+export function useDeferredRender(delay = 0): boolean {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const cleanupRef: { timer?: ReturnType<typeof setTimeout> } = {};
+
+    // requestAnimationFrame ensures we are past first paint,
+    // then the optional delay pushes it further if needed.
+    const rafId = requestAnimationFrame(() => {
+      if (delay <= 0) {
+        setReady(true);
+      } else {
+        const timer = setTimeout(() => setReady(true), delay);
+        cleanupRef.timer = timer;
+      }
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      if (cleanupRef.timer != null) clearTimeout(cleanupRef.timer);
+    };
+  }, [delay]);
+
+  return ready;
+}

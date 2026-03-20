@@ -19,6 +19,18 @@ Bu dokuman, policy + catalog + checklist zincirinin insan-okunur referans ozeti 
   - Moduler sayfa kompozisyonu
   - Parametrik veri
 
+## Discoverability Contract
+
+- Tum yeni calismalar varsayilan olarak `SEO + GEO` uyumlu olmalidir.
+- `SEO` burada arama motoru bulunabilirligi, indexlenebilirlik ve metadata butunlugunu ifade eder.
+- `GEO` burada `Generative Engine Optimization` kapsamini; yani icerigin LLM/AI answer engine'ler tarafindan dogru okunabilir, alintilanabilir ve ozetlenebilir olmasini ifade eder.
+- Minimum beklentiler:
+  - anlamli `title + description + canonical` metadata zinciri
+  - uygun yuzeylerde `schema.org` / breadcrumb yapisi
+  - stabil heading hiyerarsisi ve anchorlanabilir icerik yapisi
+  - yalnizca gorsel sunuma bagimli olmayan, metinsel olarak da acik ve answer-friendly icerik
+  - yuksek niyetli sayfalarda ozet / FAQ / key takeaways benzeri aciklayici bloklar
+
 ## Domain Catalog (v1)
 
 - `component_library_management`

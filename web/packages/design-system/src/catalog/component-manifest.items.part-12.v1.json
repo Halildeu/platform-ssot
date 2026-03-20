@@ -1,0 +1,157 @@
+{
+  "items": [
+    {
+      "name": "updateVariantPreference",
+      "indexItem": {
+        "name": "updateVariantPreference",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { updateVariantPreference } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "useAgGridTablePagination",
+      "indexItem": {
+        "name": "useAgGridTablePagination",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { useAgGridTablePagination } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-access/src/widgets/access-management/ui/AccessGrid.ui.tsx",
+          "web/apps/mfe-audit/src/app/components/AuditEventFeed.tsx"
+        ]
+      },
+      "apiItem": null
+    },
+    {
+      "name": "useDatasourceModeAdapter",
+      "indexItem": {
+        "name": "useDatasourceModeAdapter",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { useDatasourceModeAdapter } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "useDeferredRender",
+      "indexItem": {
+        "name": "useDeferredRender",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { useDeferredRender } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "useIntersectionObserver",
+      "indexItem": {
+        "name": "useIntersectionObserver",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { useIntersectionObserver } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "useLocale",
+      "indexItem": {
+        "name": "useLocale",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { useLocale } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "usePaginationState",
+      "indexItem": {
+        "name": "usePaginationState",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { usePaginationState } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "useTheme",
+      "indexItem": {
+        "name": "useTheme",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { useTheme } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx"
+        ]
+      },
+      "apiItem": null
+    },
+    {
+      "name": "useToast",
+      "indexItem": {
+        "name": "useToast",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { useToast } from '@mfe/design-system';",
+        "whereUsed": [
+          "web/apps/mfe-shell/src/app/layout/ShellLayout.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+        ]
+      },
+      "apiItem": null
+    },
+    {
+      "name": "validateUsage",
+      "indexItem": {
+        "name": "validateUsage",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { validateUsage } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "withAccessGuard",
+      "indexItem": {
+        "name": "withAccessGuard",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { withAccessGuard } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    },
+    {
+      "name": "zIndex",
+      "indexItem": {
+        "name": "zIndex",
+        "availability": "exported",
+        "lifecycle": "stable",
+        "kind": "utility",
+        "importStatement": "import { zIndex } from '@mfe/design-system';",
+        "whereUsed": []
+      },
+      "apiItem": null
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "candidateId": "empty-mfe-shell-codemod",
+  "component": "Empty",
+  "strategyId": "empty-state-prop-codemod-candidate",
+  "transformKind": "jsx-prop-normalization",
+  "reviewMode": "illustrative-dry-run",
+  "sourcePath": "web/scripts/codemods/ui-library/prototypes/empty.prototype.ts",
+  "rewriteRule": "Readonly empty state kullaniminda accessReason eksikse approved fallback ile tamamlanir; description literal/expression aynen korunur.",
+  "rewritePreview": {
+    "kind": "illustrative",
+    "before": "<Empty description=\"Bos durum ornegi\" access=\"readonly\" />",
+    "after": "<Empty description=\"Bos durum ornegi\" access=\"readonly\" accessReason=\"Yalniz goruntuleme\" />"
+  },
+  "matchStrategy": {
+    "requiredSelectors": [
+      "import { Empty } from '@mfe/design-system'",
+      "<Empty"
+    ],
+    "dryRunSignals": [
+      "description",
+      "access"
+    ],
+    "astTargets": [
+      "JSXOpeningElement[name=Empty]",
+      "JSXAttribute[name=description]",
+      "JSXAttribute[name=access]"
+    ],
+    "stopConditions": [
+      "children ile custom body render ediliyorsa rewrite atlanir",
+      "description fonksiyon cagrisi ise manuel review gerekir"
+    ]
+  },
+  "manualValidation": {
+    "storybook": [
+      "UtilityLiveDemoFoundations",
+      "RuntimeThemeMatrix"
+    ],
+    "designLab": [
+      "Theme Matrix Gallery"
+    ],
+    "smoke": [
+      "frontend-doctor ui-library preset",
+      "runtime theme matrix preview"
+    ]
+  },
+  "rollbackPlan": [
+    "dry-run sonucu patch dosyasina alinmadan once owner review beklenir",
+    "inject edilen accessReason approved fallback listesinde degilse diff geri alinir"
+  ],
+  "notes": [
+    "Bu prototype source-level rewrite degil, approved fallback stratejisini gosteren iskelettir."
+  ]
+}

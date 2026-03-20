@@ -1,4 +1,5 @@
 // webpack.common.js
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const MAX_ENTRYPOINT_SIZE = 25 * 1024 * 1024; // 25 MB
@@ -47,6 +48,9 @@ module.exports = {
 
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
+    },
   },
 
   plugins: [

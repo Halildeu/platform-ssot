@@ -1,0 +1,163 @@
+{
+  "artifactVersion": "v1",
+  "generatedAt": "2026-03-15",
+  "description": "Recipe workflow catalog - state machine definitions, dependency graph and workflow quality contracts for the recipes layer",
+  "workflowStates": {
+    "lifecycle": [
+      { "stateId": "idle", "label": "Idle", "description": "Recipe tanimli ama henuz aktif degil", "color": "zinc" },
+      { "stateId": "configuring", "label": "Configuring", "description": "Owner block'lar ve binding'ler ayarlaniyor", "color": "blue" },
+      { "stateId": "active", "label": "Active", "description": "Recipe urun akisinda aktif kullaniliyor", "color": "emerald" },
+      { "stateId": "reviewing", "label": "Reviewing", "description": "Kalite gate'leri ve UX review sureci", "color": "amber" },
+      { "stateId": "stable", "label": "Stable", "description": "Tum gate'ler gecti, production-ready", "color": "violet" },
+      { "stateId": "deprecated", "label": "Deprecated", "description": "Yeni recipe ile degistirildi, migration surecinde", "color": "red" }
+    ],
+    "transitions": [
+      { "from": "idle", "to": "configuring", "trigger": "init_recipe", "label": "Initialize" },
+      { "from": "configuring", "to": "active", "trigger": "activate", "label": "Activate" },
+      { "from": "configuring", "to": "idle", "trigger": "reset", "label": "Reset" },
+      { "from": "active", "to": "reviewing", "trigger": "submit_review", "label": "Submit for review" },
+      { "from": "active", "to": "configuring", "trigger": "reconfigure", "label": "Reconfigure" },
+      { "from": "reviewing", "to": "stable", "trigger": "approve", "label": "Approve" },
+      { "from": "reviewing", "to": "active", "trigger": "request_changes", "label": "Request changes" },
+      { "from": "stable", "to": "deprecated", "trigger": "deprecate", "label": "Deprecate" },
+      { "from": "stable", "to": "reviewing", "trigger": "re_review", "label": "Re-review" },
+      { "from": "deprecated", "to": "idle", "trigger": "archive", "label": "Archive" }
+    ]
+  },
+  "workflowPatterns": [
+    {
+      "patternId": "search_filter_list",
+      "title": "Search, Filter & List",
+      "description": "Arama, filtreleme ve listeleme akislarini birlestiren temel workflow pattern",
+      "steps": ["query_input", "filter_apply", "result_render", "item_select"],
+      "complexity": "moderate",
+      "ownerBlockPattern": ["SearchInput", "FilterBar", "DataList", "Pagination"],
+      "dependsOn": [],
+      "qualityGates": ["perf_search_under_200ms", "a11y_filter_announce", "keyboard_nav_results"]
+    },
+    {
+      "patternId": "crud_management",
+      "title": "CRUD Management",
+      "description": "Kayit olusturma, okuma, guncelleme ve silme islemlerini yoneten workflow",
+      "steps": ["list_view", "create_form", "edit_form", "delete_confirm", "success_feedback"],
+      "complexity": "complex",
+      "ownerBlockPattern": ["DataTable", "FormModal", "ConfirmDialog", "Toast"],
+      "dependsOn": ["search_filter_list"],
+      "qualityGates": ["perf_crud_under_500ms", "a11y_form_labels", "optimistic_update"]
+    },
+    {
+      "patternId": "review_approval",
+      "title": "Review & Approval",
+      "description": "Inceleme, karar verme ve onay akislarini yoneten workflow",
+      "steps": ["review_queue", "detail_inspect", "decision_action", "status_update"],
+      "complexity": "complex",
+      "ownerBlockPattern": ["ReviewCard", "DetailPanel", "ActionBar", "StatusBadge"],
+      "dependsOn": ["search_filter_list"],
+      "qualityGates": ["idempotent_actions", "audit_trail", "a11y_decision_announce"]
+    },
+    {
+      "patternId": "dashboard_kpi",
+      "title": "Dashboard & KPI",
+      "description": "KPI gosterimi, metrik karsilastirma ve dashboard layout pattern",
+      "steps": ["metric_load", "chart_render", "filter_period", "drill_down"],
+      "complexity": "moderate",
+      "ownerBlockPattern": ["MetricCard", "ChartPanel", "DateRangeFilter", "DrillDownModal"],
+      "dependsOn": [],
+      "qualityGates": ["perf_dashboard_under_2s", "a11y_chart_labels", "responsive_layout"]
+    },
+    {
+      "patternId": "form_wizard",
+      "title": "Form & Wizard",
+      "description": "Cok adimli form, wizard ve onboarding akislarini yoneten workflow",
+      "steps": ["step_init", "field_validate", "step_navigate", "submit_complete"],
+      "complexity": "complex",
+      "ownerBlockPattern": ["StepIndicator", "FormSection", "ValidationSummary", "SubmitBar"],
+      "dependsOn": [],
+      "qualityGates": ["a11y_step_announce", "draft_autosave", "validation_immediate"]
+    },
+    {
+      "patternId": "settings_config",
+      "title": "Settings & Configuration",
+      "description": "Ayar yonetimi, tercih kaydetme ve guardrail pattern",
+      "steps": ["settings_load", "field_edit", "save_apply", "confirm_feedback"],
+      "complexity": "simple",
+      "ownerBlockPattern": ["SettingsSection", "Toggle", "SaveBar"],
+      "dependsOn": [],
+      "qualityGates": ["optimistic_save", "undo_support", "a11y_toggle_state"]
+    },
+    {
+      "patternId": "state_feedback",
+      "title": "State & Feedback",
+      "description": "Bos, hata, loading ve skeleton durum yonetimi pattern",
+      "steps": ["state_detect", "feedback_render", "retry_action", "recovery_complete"],
+      "complexity": "simple",
+      "ownerBlockPattern": ["EmptyState", "ErrorBoundary", "LoadingSkeleton", "RetryButton"],
+      "dependsOn": [],
+      "qualityGates": ["a11y_status_announce", "graceful_degradation", "retry_backoff"]
+    },
+    {
+      "patternId": "ai_workflow",
+      "title": "AI Workflow",
+      "description": "Prompt, sonuc, guven sinyali ve human review akisi",
+      "steps": ["prompt_input", "ai_process", "result_display", "confidence_signal", "human_review"],
+      "complexity": "complex",
+      "ownerBlockPattern": ["PromptInput", "AIResultCard", "ConfidenceBadge", "ReviewAction"],
+      "dependsOn": ["review_approval"],
+      "qualityGates": ["response_timeout", "trace_id_expose", "confidence_threshold"]
+    },
+    {
+      "patternId": "export_report",
+      "title": "Export & Report",
+      "description": "Veri disa aktarma, rapor olusturma ve indirme akisi",
+      "steps": ["select_scope", "configure_format", "generate_export", "download_deliver"],
+      "complexity": "moderate",
+      "ownerBlockPattern": ["ScopeSelector", "FormatPicker", "ProgressBar", "DownloadLink"],
+      "dependsOn": ["search_filter_list"],
+      "qualityGates": ["streaming_large_sets", "progress_announce", "memory_bounded"]
+    }
+  ],
+  "dependencyGraph": {
+    "edges": [
+      { "from": "crud_management", "to": "search_filter_list", "type": "extends" },
+      { "from": "review_approval", "to": "search_filter_list", "type": "extends" },
+      { "from": "ai_workflow", "to": "review_approval", "type": "extends" },
+      { "from": "export_report", "to": "search_filter_list", "type": "consumes" }
+    ],
+    "clusters": [
+      {
+        "clusterId": "data_flows",
+        "title": "Data Flows",
+        "patterns": ["search_filter_list", "crud_management", "export_report"]
+      },
+      {
+        "clusterId": "decision_flows",
+        "title": "Decision Flows",
+        "patterns": ["review_approval", "ai_workflow"]
+      },
+      {
+        "clusterId": "input_flows",
+        "title": "Input Flows",
+        "patterns": ["form_wizard", "settings_config"]
+      },
+      {
+        "clusterId": "system_flows",
+        "title": "System Flows",
+        "patterns": ["state_feedback", "dashboard_kpi"]
+      }
+    ]
+  },
+  "qualityContract": {
+    "requiredGatesPerComplexity": {
+      "simple": 2,
+      "moderate": 3,
+      "complex": 4
+    },
+    "crossCuttingGates": [
+      "a11y_keyboard_nav",
+      "a11y_screen_reader",
+      "i18n_labels",
+      "responsive_breakpoints",
+      "error_boundary"
+    ]
+  }
+}

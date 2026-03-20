@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CounterState } from '@mfe/shared-types';
 import { increment } from 'mfe_shell/logic';
-import { Button } from 'mfe-ui-kit';
+import { Button } from '@mfe/design-system';
 
 interface RootState {
   counter: CounterState;

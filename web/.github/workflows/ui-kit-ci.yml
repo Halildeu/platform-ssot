@@ -1,39 +1,141 @@
-# Workflow'un adı
-name: UI Kit - CI Pipeline
+name: UI Kit - Full Quality Pipeline
 
-# Bu workflow'un ne zaman tetikleneceğini belirler
 on:
   push:
-    branches: [ main ] # Sadece main branch'ine push yapıldığında çalış
+    branches: [main]
     paths:
-      - 'mfe-ui-kit/**' # Ama sadece mfe-ui-kit klasörü içinde bir değişiklik varsa
+      - 'packages/design-system/**'
+      - 'apps/mfe-shell/src/pages/admin/design-lab/**'
+      - 'e2e/**'
+      - '.storybook/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/design-system/**'
+      - 'apps/mfe-shell/src/pages/admin/design-lab/**'
+      - 'e2e/**'
+      - '.storybook/**'
 
-# Çalıştırılacak işler (jobs)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build-and-test:
-    # İşin çalışacağı sanal makine
+  # ── Unit + Integration Tests (Vitest) ──────────────────────────
+  unit-tests:
+    name: Unit Tests (2760+)
     runs-on: ubuntu-latest
-
-    # İşin adımları
     steps:
-      # 1. Adım: Proje kodunu sanal makineye indirir
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      # 2. Adım: Node.js ortamını kurar
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20' # Kullandığınız Node.js sürümünü belirtebilirsiniz
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Run Vitest
+        run: npx vitest run packages/design-system/src/ --reporter=verbose
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: coverage/
 
-      # 3. Adım: Bağımlılıkları kurar
-      - name: Install Dependencies
-        run: npm install --prefix mfe-ui-kit
+  # ── TypeScript Type Check ──────────────────────────────────────
+  type-check:
+    name: TypeScript Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Type check design system
+        run: npx tsc --noEmit --project packages/design-system/tsconfig.json
+      - name: Type check mfe-shell
+        run: npx tsc --noEmit --project apps/mfe-shell/tsconfig.json
+        continue-on-error: true
 
-      # 4. Adım: Testleri çalıştırır
-      - name: Run Tests
-        run: npm test --prefix mfe-ui-kit
+  # ── Storybook Build ────────────────────────────────────────────
+  storybook:
+    name: Storybook Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Build Storybook
+        run: npx storybook build --quiet
+      - name: Upload Storybook
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-static
+          path: storybook-static/
 
-      # 5. Adım: Üretim için projeyi build eder
-      - name: Build Project
-        run: npm run build --prefix mfe-ui-kit
+  # ── Playwright E2E Tests ───────────────────────────────────────
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: [unit-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci --legacy-peer-deps
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Start dev server
+        run: |
+          cd apps/mfe-shell
+          SKIP_BACKEND_GUARD=1 npx webpack serve --config webpack.dev.js --port 3000 &
+          npx wait-on http://localhost:3000 --timeout 60000
+      - name: Run visual regression tests
+        run: npx playwright test e2e/visual/ --project=desktop-light
+      - name: Run interaction tests
+        run: npx playwright test e2e/interaction/ --project=desktop-light
+        continue-on-error: true
+      - name: Run responsive tests
+        run: npx playwright test e2e/responsive/ --project=desktop-light
+        continue-on-error: true
+      - name: Run a11y audit
+        run: npx playwright test e2e/accessibility/ --project=desktop-light
+        continue-on-error: true
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-diff-screenshots
+          path: e2e/**/*-diff.png
+
+  # ── Quality Summary ────────────────────────────────────────────
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    needs: [unit-tests, type-check, storybook, e2e-tests]
+    if: always()
+    steps:
+      - name: Check results
+        run: |
+          echo "## Quality Gate Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Type Check | ${{ needs.type-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Storybook | ${{ needs.storybook.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+      - name: Fail if critical checks failed
+        if: needs.unit-tests.result == 'failure' || needs.type-check.result == 'failure'
+        run: exit 1

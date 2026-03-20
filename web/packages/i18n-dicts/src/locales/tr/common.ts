@@ -23,6 +23,12 @@ const common = {
   'shell.header.lastLogin': 'Son Giriş: {value}',
   'shell.header.neverLoggedIn': 'Henüz giriş yapmadı',
   'shell.header.defaultUser': 'Standart Kullanıcı',
+  'shell.header.languageSelectAria': 'Dil seçimi',
+  'shell.header.permitAllNoLogin': 'PermitAll modunda giriş gerekmiyor.',
+  'shell.header.suspenseLoading': 'Yükleniyor...',
+  'shell.userMenu.title': 'Kullanıcı',
+  'shell.toast.dismiss': 'Uyarıyı kapat',
+  'shell.nav.morePages': 'Diğer sayfalar',
 
   // Shell language names
   'shell.language.tr': 'Türkçe',
@@ -38,6 +44,58 @@ const common = {
   'shell.launcher.ethic.description': 'Etik raporlama modülü',
   'shell.launcher.access.description': 'Rol & policy yönetimi',
   'shell.launcher.users.description': 'Kullanıcı yönetimi',
+
+  // Shell shortcuts
+  'shell.shortcuts.searchSoon.title': 'Global arama kısayolu yakında',
+  'shell.shortcuts.searchSoon.description':
+    'Komut paleti tamamlanana kadar menüyü kullanabilirsiniz.',
+  'shell.shortcuts.commandPaletteSoon.title': 'Komut paleti hazırlanıyor',
+  'shell.shortcuts.commandPaletteSoon.description':
+    'Komut paleti entegrasyonu SP2-2 görevinde tamamlanacak.',
+  'shell.shortcuts.refreshDisabled.title': 'Yenileme kısayolu devre dışı',
+  'shell.shortcuts.refreshDisabled.description':
+    'MFE yenileme deneyimi üzerinde çalışıyoruz.',
+
+  // Shell theme runtime panel
+  'shell.theme.errors.loadThemes': 'Temalar yüklenemedi.',
+  'shell.theme.errors.loadRegistry': 'Tema registry yüklenemedi.',
+  'shell.theme.errors.selectPersonalTheme': 'Renk düzenlemek için kişisel bir tema seçin.',
+  'shell.theme.errors.selectPersonalThemeFirst': 'Önce kişisel bir tema seçin.',
+  'shell.theme.errors.personalThemeLimit': 'En fazla 3 kişisel tema oluşturabilirsiniz.',
+  'shell.theme.errors.copyFailed': 'Tema kopyalanamadı.',
+  'shell.theme.errors.deleteFailed': 'Tema silinemedi.',
+  'shell.theme.errors.overrideSaveFailed': 'Tema override kaydedilemedi.',
+  'shell.theme.panel.triggerAria': 'Tema paneli',
+  'shell.theme.panel.triggerText': 'Görünüm',
+  'shell.theme.panel.dialogLabel': 'Tema eksenleri',
+  'shell.theme.panel.paletteTitle': 'Tema paleti',
+  'shell.theme.panel.loadingThemes': 'Temalar yükleniyor…',
+  'shell.theme.panel.globalPaletteEmpty': 'Global tema paleti bulunamadı.',
+  'shell.theme.panel.globalThemeAria': 'Global tema: {label}',
+  'shell.theme.panel.profileThemeLabel': 'Profil teması (backend)',
+  'shell.theme.panel.myThemesCount': 'Benim temalarım ({count}/{limit})',
+  'shell.theme.panel.forkTitle.limit': 'En fazla 3 kişisel tema oluşturabilirsiniz.',
+  'shell.theme.panel.forkTitle.noPalette': 'Önce global tema paleti yüklenmeli.',
+  'shell.theme.panel.forkTitle.ready': 'Seçili global temayı kopyala ve özelleştir',
+  'shell.theme.panel.forkButton': 'Kopyala ve özelleştir',
+  'shell.theme.panel.personalLabel': 'Kişisel',
+  'shell.theme.panel.deleteThemeTitle': 'Temayı sil',
+  'shell.theme.panel.noThemes': 'Henüz tanımlı bir tema yok.',
+  'shell.theme.panel.personalColorsAction': 'Kişisel tema renkleri',
+  'shell.theme.panel.personalColorsHintSelect': 'Renk düzenlemek için kişisel tema seçin.',
+  'shell.theme.panel.personalColorsHintLoading': 'Registry yükleniyor…',
+  'shell.theme.panel.personalColorsHintMissingRegistry': 'Tema registry bulunamadı.',
+  'shell.theme.panel.personalColorsHintReady': 'Kişisel tema renklerini düzenle',
+  'shell.theme.panel.paletteHint':
+    'Tema paleti sadece tema seçimi içindir; renk ve diğer ayarları tema özelleştirme alanından düzenleyin.',
+  'shell.theme.panel.editorTitle': 'Kişisel tema renkleri',
+  'shell.theme.panel.saving': 'Kaydediliyor…',
+  'shell.theme.panel.close': 'Kapat',
+  'shell.theme.panel.registryLoading': 'Registry yükleniyor…',
+  'shell.theme.panel.noEditableRegistry': 'Düzenlenebilir registry alanı bulunamadı.',
+  'shell.theme.panel.colorInputPlaceholder': '#rrggbb veya rgba(...)',
+  'shell.theme.panel.colorPickerAria': '{label} renk seç',
+  'shell.theme.panel.clearOverride': 'Override’ı kaldır',
 
   // Login / register
   'auth.login.title': 'Giriş Yap',
@@ -83,6 +141,7 @@ const common = {
   // Session
   'auth.session.expired': 'Oturum süreniz doldu',
   'auth.session.expired.description': 'Lütfen tekrar giriş yapın.',
+  'auth.session.validating': 'Oturum doğrulanıyor...',
 };
 
 export default common;

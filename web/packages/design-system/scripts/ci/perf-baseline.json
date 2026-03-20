@@ -1,0 +1,102 @@
+{
+  "_comment": "Render time baselines in ms. Updated by perf-benchmark.mjs --update-baseline",
+  "_updated": "2026-03-20",
+  "components": {
+    "Button": {
+      "maxMs": 5,
+      "baseline": 0.17
+    },
+    "Input": {
+      "maxMs": 5,
+      "baseline": 0.22
+    },
+    "Select": {
+      "maxMs": 5,
+      "baseline": 0.28
+    },
+    "Checkbox": {
+      "maxMs": 5,
+      "baseline": 0.17
+    },
+    "Switch": {
+      "maxMs": 5,
+      "baseline": 0.17
+    },
+    "Tabs": {
+      "maxMs": 10,
+      "baseline": 0.2
+    },
+    "Dialog": {
+      "maxMs": 10,
+      "baseline": 0.06
+    },
+    "Accordion": {
+      "maxMs": 10,
+      "baseline": 0.39
+    },
+    "ToastProvider": {
+      "maxMs": 5,
+      "baseline": 0.08
+    },
+    "Tooltip": {
+      "maxMs": 5,
+      "baseline": 0.08
+    },
+    "DataGrid": {
+      "maxMs": 15,
+      "baseline": 0.1
+    },
+    "Combobox": {
+      "maxMs": 10,
+      "baseline": 0.21
+    },
+    "DatePicker": {
+      "maxMs": 15,
+      "baseline": 0.15
+    },
+    "Slider": {
+      "maxMs": 10,
+      "baseline": 0.28
+    },
+    "Pagination": {
+      "maxMs": 10,
+      "baseline": 0.23
+    },
+    "SearchInput": {
+      "maxMs": 5,
+      "baseline": 0.1
+    },
+    "Calendar": {
+      "maxMs": 15,
+      "baseline": 1.74
+    },
+    "ColorPicker": {
+      "maxMs": 15,
+      "baseline": 0.12
+    },
+    "Carousel": {
+      "maxMs": 10,
+      "baseline": 0.32
+    },
+    "CommandPalette": {
+      "maxMs": 5,
+      "baseline": 0.05
+    },
+    "TreeTable": {
+      "maxMs": 10,
+      "baseline": 0.36
+    },
+    "Transfer": {
+      "maxMs": 10,
+      "baseline": 1.23
+    },
+    "SmartDashboard": {
+      "maxMs": 15,
+      "baseline": 0.33
+    },
+    "Timeline": {
+      "maxMs": 10,
+      "baseline": 0.26
+    }
+  }
+}

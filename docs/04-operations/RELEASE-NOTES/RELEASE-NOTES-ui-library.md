@@ -17,6 +17,8 @@ Owner: @team/platform
   - `web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.audit.v1.json`
   - `web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.v1.json`
   - `web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.audit.v1.json`
+  - `web/test-results/releases/ui-library/latest/ui-library-codemod-prototypes.v1.json`
+  - `web/test-results/releases/ui-library/latest/ui-library-codemod-prototypes.audit.v1.json`
 - Bu dosya narrative release notu, rollout notu ve operator guidance tutar.
 
 ## Latest Release

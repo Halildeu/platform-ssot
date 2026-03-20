@@ -1,0 +1,119 @@
+import React, { forwardRef } from "react";
+import { cn } from "../../utils/cn";
+import { Slot } from "../_shared/Slot";
+import { Spinner } from "../spinner/Spinner";
+import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+
+/* ------------------------------------------------------------------ */
+/*  IconButton — Square button optimized for icon content              */
+/* ------------------------------------------------------------------ */
+
+export type IconButtonVariant = "primary" | "secondary" | "outline" | "ghost" | "danger";
+export type IconButtonSize = "xs" | "sm" | "md" | "lg";
+
+export interface IconButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    AccessControlledProps {
+  /** Icon element */
+  icon: React.ReactNode;
+  /** Accessible label (required since there's no visible text) */
+  label: string;
+  variant?: IconButtonVariant;
+  size?: IconButtonSize;
+  loading?: boolean;
+  /** Rounded pill shape */
+  rounded?: boolean;
+  /**
+   * Render via Slot — merges IconButton props onto the child element.
+   * @example <IconButton asChild icon={<X />} label="Close"><a href="/close" /></IconButton>
+   */
+  asChild?: boolean;
+}
+
+const variantStyles: Record<IconButtonVariant, string> = {
+  primary:
+    "bg-[var(--action-primary)] text-white hover:bg-[var(--action-primary-hover)] shadow-sm",
+  secondary:
+    "bg-[var(--surface-muted)] text-[var(--text-primary)] hover:bg-[var(--border-subtle)]",
+  outline:
+    "border border-[var(--border-default)] bg-transparent text-[var(--text-primary)] hover:bg-[var(--surface-muted)]",
+  ghost:
+    "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]",
+  danger:
+    "bg-[var(--state-error-text)] text-white hover:brightness-110 shadow-sm",
+};
+
+const sizeStyles: Record<IconButtonSize, string> = {
+  xs: "h-7 w-7 [&>svg]:h-3.5 [&>svg]:w-3.5",
+  sm: "h-8 w-8 [&>svg]:h-4 [&>svg]:w-4",
+  md: "h-9 w-9 [&>svg]:h-4.5 [&>svg]:w-4.5",
+  lg: "h-10 w-10 [&>svg]:h-5 [&>svg]:w-5",
+};
+
+export const IconButton = forwardRef<HTMLElement, IconButtonProps>(
+  (
+    {
+      icon,
+      label,
+      variant = "ghost",
+      size = "md",
+      loading = false,
+      rounded = false,
+      disabled,
+      className,
+      access = "full",
+      accessReason,
+      asChild = false,
+      children,
+      ...rest
+    },
+    ref,
+  ) => {
+    const accessState = resolveAccessState(access);
+
+    if (accessState.isHidden) return null;
+
+    const isDisabled = disabled || loading || accessState.isDisabled;
+
+    const mergedClassName = cn(
+      "inline-flex items-center justify-center transition-all duration-150",
+      "disabled:pointer-events-none disabled:opacity-50",
+      accessState.isReadonly && "cursor-default opacity-70",
+      focusRingClass("ring"),
+      variantStyles[variant],
+      sizeStyles[size],
+      rounded ? "rounded-full" : "rounded-lg",
+      className,
+    );
+
+    const sharedProps = {
+      "aria-label": label,
+      title: accessReason,
+      className: mergedClassName,
+      ...stateAttrs({ component: "icon-button", disabled: isDisabled, loading, access }),
+      ...rest,
+    };
+
+    if (asChild) {
+      return (
+        <Slot ref={ref} {...sharedProps}>
+          {children}
+        </Slot>
+      );
+    }
+
+    return (
+      <button
+        ref={ref as React.Ref<HTMLButtonElement>}
+        type="button"
+        disabled={isDisabled}
+        {...sharedProps}
+      >
+        {loading ? <Spinner size="xs" /> : icon}
+      </button>
+    );
+  },
+);
+
+IconButton.displayName = "IconButton";

@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(__dirname, '..', '..');
-const sourceDir = path.join(webRoot, 'packages', 'dist', 'ui-kit');
-const targetDir = path.join(webRoot, 'dist', 'ui-kit');
+const sourceDir = path.join(webRoot, 'packages', 'dist', 'design-system');
+const targetDir = path.join(webRoot, 'dist', 'design-system');
 const latestDir = path.join(webRoot, 'test-results', 'releases', 'ui-library', 'latest');
 const summaryPath = path.join(latestDir, 'publish-bundle.summary.v1.json');
 

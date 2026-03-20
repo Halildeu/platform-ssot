@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { Button } from 'mfe-ui-kit';
+import { Button } from '@mfe/design-system';
 import { useShellCommonI18n } from '../../app/i18n';
 import keycloak from '../../app/auth/keycloakClient';
 import { buildAppRedirectUri, isPermitAllMode } from '../../app/auth/auth-config';

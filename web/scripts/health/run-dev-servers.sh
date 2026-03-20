@@ -19,6 +19,38 @@ WEB_RUNTIME_REPORT="${WEB_RUNTIME_REPORT:-$REPO_ROOT/.cache/reports/web_runtime_
 WEB_RUNTIME_WAIT_SECONDS="${WEB_RUNTIME_WAIT_SECONDS:-120}"
 WEB_RUNTIME_POLL_INTERVAL="${WEB_RUNTIME_POLL_INTERVAL:-2}"
 STARTUP_GUARD_SCRIPT="$ROOT_DIR/scripts/health/check-web-runtime-guard.py"
+WEB_RUNTIME_REQUIRE_BACKEND_GUARD="${WEB_RUNTIME_REQUIRE_BACKEND_GUARD:-auto}"
+WEB_BACKEND_SESSION_FILE="${WEB_BACKEND_SESSION_FILE:-$REPO_ROOT/.cache/runtime_guard/backend_start_session.v1.json}"
+WEB_BACKEND_RUNTIME_REPORT="${WEB_BACKEND_RUNTIME_REPORT:-$REPO_ROOT/.cache/reports/backend_runtime_guard.v1.json}"
+WEB_BACKEND_GUARD_REPORT="${WEB_BACKEND_GUARD_REPORT:-$REPO_ROOT/.cache/reports/web_backend_guard_wait.v1.json}"
+WEB_BACKEND_WAIT_SECONDS="${WEB_BACKEND_WAIT_SECONDS:-120}"
+WEB_BACKEND_POLL_INTERVAL="${WEB_BACKEND_POLL_INTERVAL:-2}"
+BACKEND_GUARD_SCRIPT="$ROOT_DIR/scripts/health/check-backend-runtime-guard.py"
+SESSION_ENV_JSON="$(
+  python3 <<'PY'
+import json
+import os
+
+keys = [
+    "AUTH_MODE",
+    "VITE_AUTH_MODE",
+    "VITE_ENABLE_FAKE_AUTH",
+    "VITE_FAKE_AUTH_PERMISSIONS",
+    "VITE_SHELL_SKIP_REMOTE_SERVICES",
+    "SHELL_SKIP_REMOTE_SERVICES",
+    "VITE_SHELL_ENABLE_SUGGESTIONS_REMOTE",
+    "SHELL_ENABLE_SUGGESTIONS_REMOTE",
+    "VITE_SHELL_ENABLE_ETHIC_REMOTE",
+    "SHELL_ENABLE_ETHIC_REMOTE",
+]
+payload = {}
+for key in keys:
+    value = os.environ.get(key)
+    if isinstance(value, str) and value != "":
+        payload[key] = value
+print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+PY
+)"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -39,6 +71,7 @@ mkdir -p "$LOG_DIR" "$LOG_ARCHIVE_DIR" "$STATE_DIR"
 rotate_log() {
   local name="$1"; shift
   local log_path="$1"; shift
+  mkdir -p "$LOG_ARCHIVE_DIR"
   if [[ -f "$log_path" ]]; then
     mv "$log_path" "$LOG_ARCHIVE_DIR/${name}.${SESSION_ID}.log"
   fi
@@ -56,7 +89,7 @@ record_session_line() {
 }
 
 write_session_json() {
-  python3 - "$SESSION_TSV" "$SESSION_FILE" "$SESSION_ID" "$SESSION_CREATED_AT" "$WEB_RUNTIME_PROFILE" <<'PY'
+  python3 - "$SESSION_TSV" "$SESSION_FILE" "$SESSION_ID" "$SESSION_CREATED_AT" "$WEB_RUNTIME_PROFILE" "$SESSION_ENV_JSON" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -66,6 +99,7 @@ out_path = Path(sys.argv[2])
 session_id = sys.argv[3]
 created_at = sys.argv[4]
 profile = sys.argv[5]
+environment = json.loads(sys.argv[6])
 
 services = []
 for raw_line in tsv_path.read_text(encoding="utf-8").splitlines():
@@ -89,6 +123,7 @@ payload = {
     "session_id": session_id,
     "created_at": created_at,
     "profile": profile,
+    "environment": environment,
     "services": services,
 }
 out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -102,20 +137,55 @@ service_names_for_profile() {
       printf '%s\n' shell
       ;;
     auth-business-routes)
-      printf '%s\n' shell access audit reporting
+      printf '%s\n' shell users access audit reporting
       ;;
     core)
-      printf '%s\n' shell users access audit
+      printf '%s\n' shell suggestions ethic users access audit reporting
       ;;
     remotes)
       printf '%s\n' shell reporting users access
       ;;
     full|all)
-      printf '%s\n' shell suggestions ethic ui-kit users access audit reporting
+      printf '%s\n' shell suggestions ethic users access audit reporting
       ;;
     *)
       echo "[run-web] desteklenmeyen profile: $WEB_RUNTIME_PROFILE" >&2
       exit 1
+      ;;
+  esac
+}
+
+profile_requires_backend_guard() {
+  case "$WEB_RUNTIME_PROFILE" in
+    shell-only)
+      return 1
+      ;;
+    auth-business-routes|core|remotes|full|all)
+      return 0
+      ;;
+    *)
+      return 0
+      ;;
+  esac
+}
+
+should_wait_for_backend_guard() {
+  local normalized
+  normalized=$(printf '%s' "$WEB_RUNTIME_REQUIRE_BACKEND_GUARD" | tr '[:upper:]' '[:lower:]')
+  case "$normalized" in
+    1|true|yes|on)
+      return 0
+      ;;
+    0|false|no|off)
+      return 1
+      ;;
+    auto)
+      profile_requires_backend_guard
+      return $?
+      ;;
+    *)
+      profile_requires_backend_guard
+      return $?
       ;;
   esac
 }
@@ -125,7 +195,6 @@ service_port() {
     shell) printf '3000\n' ;;
     suggestions) printf '3001\n' ;;
     ethic) printf '3002\n' ;;
-    ui-kit) printf '3003\n' ;;
     users) printf '3004\n' ;;
     access) printf '3005\n' ;;
     audit) printf '3006\n' ;;
@@ -139,7 +208,6 @@ service_command() {
     shell) printf 'cd apps/mfe-shell && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
     suggestions) printf 'cd apps/mfe-suggestions && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
     ethic) printf 'cd apps/mfe-ethic && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
-    ui-kit) printf 'cd packages/ui-kit && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
     users) printf 'cd apps/mfe-users && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
     access) printf 'cd apps/mfe-access && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
     audit) printf 'cd apps/mfe-audit && exec npx webpack serve --config webpack.dev.js --hot --no-watch-options-stdin\n' ;;
@@ -153,7 +221,6 @@ service_check_url() {
     shell) printf 'http://127.0.0.1:3000/\n' ;;
     suggestions) printf 'http://127.0.0.1:3001/remoteEntry.js\n' ;;
     ethic) printf 'http://127.0.0.1:3002/remoteEntry.js\n' ;;
-    ui-kit) printf 'http://127.0.0.1:3003/remoteEntry.js\n' ;;
     users) printf 'http://127.0.0.1:3004/remoteEntry.js\n' ;;
     access) printf 'http://127.0.0.1:3005/remoteEntry.js\n' ;;
     audit) printf 'http://127.0.0.1:3006/remoteEntry.js\n' ;;
@@ -161,6 +228,19 @@ service_check_url() {
     *) return 1 ;;
   esac
 }
+
+if should_wait_for_backend_guard && [[ -f "$BACKEND_GUARD_SCRIPT" ]]; then
+  echo "[run-web] backend runtime guard bekleniyor"
+  python3 "$BACKEND_GUARD_SCRIPT" \
+    --session-file "$WEB_BACKEND_SESSION_FILE" \
+    --backend-report "$WEB_BACKEND_RUNTIME_REPORT" \
+    --report "$WEB_BACKEND_GUARD_REPORT" \
+    --wait-seconds "$WEB_BACKEND_WAIT_SECONDS" \
+    --poll-interval "$WEB_BACKEND_POLL_INTERVAL"
+  echo "[ok] Backend guard hazir: $WEB_BACKEND_GUARD_REPORT"
+else
+  echo "[info] Backend guard bekleme atlandi (WEB_RUNTIME_REQUIRE_BACKEND_GUARD=$WEB_RUNTIME_REQUIRE_BACKEND_GUARD, profile=$WEB_RUNTIME_PROFILE)"
+fi
 
 WEB_RUNTIME_STOP_SILENT=1 "$ROOT_DIR/scripts/health/stop-dev-servers.sh" >/dev/null 2>&1 || true
 

@@ -1,18 +1,18 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import Button from '../packages/ui-kit/src/components/Button';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
-import { Tag } from '../packages/ui-kit/src/components/Tag';
-import { Select } from '../packages/ui-kit/src/components/Select';
-import { Empty } from '../packages/ui-kit/src/components/Empty';
-import { DetailSummary } from '../packages/ui-kit/src/components/DetailSummary';
-import { Breadcrumb } from '../packages/ui-kit/src/components/Breadcrumb';
-import { Pagination } from '../packages/ui-kit/src/components/Pagination';
-import { Modal } from '../packages/ui-kit/src/components/Modal';
-import { Text } from '../packages/ui-kit/src/components/Text';
-import { ThemePreviewCard } from '../packages/ui-kit/src/components/theme/ThemePreviewCard';
-import { FormDrawer } from '../packages/ui-kit/src/layout/FormDrawer';
-import { DetailDrawer } from '../packages/ui-kit/src/layout/DetailDrawer';
+import Button from '../packages/design-system/src/components/Button';
+import { Badge } from '../packages/design-system/src/components/Badge';
+import { Tag } from '../packages/design-system/src/components/Tag';
+import { Select } from '../packages/design-system/src/components/Select';
+import { Empty } from '../packages/design-system/src/components/Empty';
+import { DetailSummary } from '../packages/design-system/src/components/DetailSummary';
+import { Breadcrumb } from '../packages/design-system/src/components/Breadcrumb';
+import { Pagination } from '../packages/design-system/src/components/Pagination';
+import { Modal } from '../packages/design-system/src/components/Modal';
+import { Text } from '../packages/design-system/src/components/Text';
+import { ThemePreviewCard } from '../packages/design-system/src/components/theme/ThemePreviewCard';
+import { FormDrawer } from '../packages/design-system/src/layout/FormDrawer';
+import { DetailDrawer } from '../packages/design-system/src/layout/DetailDrawer';
 
 const meta: Meta = {
   title: 'UI Kit/ReleaseMatrix',
@@ -66,7 +66,7 @@ const SurfaceOverviewCanvas = () => {
               </Text>
               <Select
                 value={themeMode}
-                onChange={setThemeMode}
+                onValueChange={setThemeMode}
                 options={[
                   { value: 'pw-light', label: 'PW Light' },
                   { value: 'pw-ocean', label: 'PW Ocean' },
@@ -102,7 +102,7 @@ const SurfaceOverviewCanvas = () => {
                     { label: 'Route', value: '/admin/design-lab', helper: 'Preview route' },
                   ]}
                   entity={{
-                    title: 'mfe-ui-kit',
+                    title: '@mfe/design-system',
                     subtitle: 'Tek noktadan yayinlanan tasarim kutuphanesi',
                     badge: <Tag tone="info">remote ./library</Tag>,
                     items: [
@@ -234,7 +234,7 @@ export const FormDrawerPreview: Story = {
             </Text>
             <Select
               value="latest"
-              onChange={() => undefined}
+              onValueChange={() => undefined}
               options={[
                 { value: 'latest', label: 'Latest' },
                 { value: 'candidate', label: 'Candidate' },

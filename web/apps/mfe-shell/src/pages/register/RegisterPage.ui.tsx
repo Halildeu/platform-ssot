@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/store/store.hooks';
 import { registerUser, resetRegistrationStatus } from '../../features/auth/model/auth.slice';
-import { Button } from 'mfe-ui-kit';
+import { Button } from '@mfe/design-system';
 import { useShellCommonI18n } from '../../app/i18n';
 
 type RegisterFormValues = {

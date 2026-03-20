@@ -13,6 +13,7 @@ Owner: @team/platform
 - `docs/02-architecture/context/ui-library-consumer-owner-registry.v1.json`
 - `docs/02-architecture/context/ui-library-consumer-upgrade-recipes.contract.v1.json`
 - `docs/02-architecture/context/ui-library-consumer-codemod-candidates.contract.v1.json`
+- `docs/02-architecture/context/ui-library-consumer-codemod-prototypes.contract.v1.json`
 - `docs/02-architecture/context/ui-library-visual-review.contract.v1.json`
 - `web/apps/mfe-shell/src/pages/admin/design-lab.index.json`
 - `web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json`
@@ -25,6 +26,8 @@ Owner: @team/platform
 - `web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.audit.v1.json`
 - `web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.v1.json`
 - `web/test-results/releases/ui-library/latest/ui-library-codemod-candidates.audit.v1.json`
+- `web/test-results/releases/ui-library/latest/ui-library-codemod-prototypes.v1.json`
+- `web/test-results/releases/ui-library/latest/ui-library-codemod-prototypes.audit.v1.json`
 
 ## Required Gates
 
@@ -34,10 +37,11 @@ Owner: @team/platform
 4. `npm -C web run release:ui-library:manifest`
 5. `npm -C web run audit:ui-library-upgrade-recipes`
 6. `npm -C web run audit:ui-library-codemod-candidates`
-7. `npm -C web run gate:ui-library-visual`
-8. `npm -C web run gate:ui-library-wave -- --wave wave_11_recipes`
-9. `npm -C web run doctor:frontend -- --preset ui-library`
-10. `npm -C web run gate:ui-library-release`
+7. `npm -C web run audit:ui-library-codemod-prototypes`
+8. `npm -C web run gate:ui-library-visual`
+9. `npm -C web run gate:ui-library-wave -- --wave wave_11_recipes`
+10. `npm -C web run doctor:frontend -- --preset ui-library`
+11. `npm -C web run gate:ui-library-release`
 
 ## Success Criteria
 
@@ -49,6 +53,7 @@ Owner: @team/platform
 - Consumer app owner resolution ve upgrade checklist artefact'lari latest release turunda uretilmeli.
 - Single-app upgrade recipe audit artefact'i latest release turunda uretilmeli ve `failCount=0` olmali.
 - Codemod candidate artefact ve audit artefact'i latest release turunda uretilmeli; `failCount=0` olmali.
+- Codemod prototype artefact ve audit artefact'i latest release turunda uretilmeli; `failCount=0` olmali.
 
 ## Failure Triage
 

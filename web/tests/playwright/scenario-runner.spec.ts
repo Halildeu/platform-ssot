@@ -8,6 +8,7 @@ import { createTelemetryCollector, type TelemetryAllowlists, type TelemetryResul
 type ScenarioStep =
   | { goto: string }
   | { click: string }
+  | { clickFirst: string }
   | { fill: { selector: string; value: string } | [string, string] }
   | { select: { selector: string; value: string } | [string, string] }
   | { waitForURL: string }
@@ -395,6 +396,38 @@ const writeSummaryReport = (stamp: string, results: ScenarioRunResult[]) => {
   fs.writeFileSync(summaryPath, lines.join('\n'), 'utf8');
 };
 
+const shouldRetryClick = (error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  return (
+    message.includes('element is not attached') ||
+    message.includes('Element is not attached') ||
+    message.includes('element was detached') ||
+    message.includes('Element is not stable') ||
+    message.includes('intercepts pointer events') ||
+    message.includes('Timeout')
+  );
+};
+
+const clickWithRetries = async (page: Page, selector: string, attempts = 4) => {
+  let lastError: unknown = null;
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const locator = page.locator(selector).first();
+    try {
+      await expect(locator).toBeVisible({ timeout: 10_000 });
+      await locator.scrollIntoViewIfNeeded();
+      await locator.click({ timeout: 10_000 });
+      return;
+    } catch (error) {
+      lastError = error;
+      if (!shouldRetryClick(error) || attempt === attempts - 1) {
+        throw error;
+      }
+      await page.waitForTimeout(150);
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error(`Click failed for ${selector}`);
+};
+
 const runStep = async (
   page: Page,
   root: string,
@@ -406,7 +439,11 @@ const runStep = async (
     return;
   }
   if ('click' in step) {
-    await page.locator(step.click).click();
+    await clickWithRetries(page, step.click);
+    return;
+  }
+  if ('clickFirst' in step) {
+    await clickWithRetries(page, step.clickFirst);
     return;
   }
   if ('fill' in step) {
@@ -432,7 +469,7 @@ const runStep = async (
     return;
   }
   if ('expectVisible' in step) {
-    await expect(page.locator(step.expectVisible)).toBeVisible();
+    await expect(page.locator(step.expectVisible)).toBeVisible({ timeout: 10_000 });
     return;
   }
   console.warn('[pw_runner] unsupported step', step);
@@ -461,6 +498,57 @@ const installThemeRegistryMock = async (page: Page) => {
 };
 
 const installApiMocks = async (page: Page) => {
+  await page.addInitScript(() => {
+    (window as Window & { __AUDIT_USE_MOCK__?: boolean }).__AUDIT_USE_MOCK__ = true;
+  });
+
+  const mockedRoles = [
+    {
+      id: '101',
+      name: 'Operasyon Yöneticisi',
+      description: 'Operasyon ekibi için yetki yönetim rolü.',
+      memberCount: 12,
+      systemRole: false,
+      lastModifiedAt: '2026-03-05T10:15:00Z',
+      lastModifiedBy: 'platform.ops',
+      policies: [
+        {
+          moduleKey: 'OPS',
+          moduleLabel: 'Operasyon',
+          level: 'MANAGE',
+          lastUpdatedAt: '2026-03-05T10:15:00Z',
+          updatedBy: 'platform.ops',
+        },
+      ],
+      permissions: ['perm-access-read', 'perm-audit-read'],
+    },
+  ];
+  const mockedPermissions = [
+    { id: 'perm-access-read', code: 'access-read', moduleKey: 'OPS', moduleLabel: 'Operasyon' },
+    { id: 'perm-audit-read', code: 'audit-read', moduleKey: 'AUDIT', moduleLabel: 'Audit' },
+    { id: 'perm-report-read', code: 'VIEW_REPORTS', moduleKey: 'REPORTS', moduleLabel: 'Reporting' },
+  ];
+  const mockedUsers = [
+    {
+      id: 'u-001',
+      fullName: 'Ayse Demir',
+      email: 'ayse.demir@example.com',
+      role: 'Operasyon Yöneticisi',
+      status: 'ACTIVE',
+      lastLoginAt: '2026-03-09T08:15:00Z',
+      createdAt: '2025-12-01T09:00:00Z',
+    },
+    {
+      id: 'u-002',
+      fullName: 'Mehmet Kaya',
+      email: 'mehmet.kaya@example.com',
+      role: 'Denetçi',
+      status: 'INACTIVE',
+      lastLoginAt: '2026-03-01T11:00:00Z',
+      createdAt: '2025-11-15T12:30:00Z',
+    },
+  ];
+
   await page.route(/\/api\/v1\/me\/theme\/resolved(?:\?.*)?$/i, async (route, request) => {
     if (request.method() !== 'GET') {
       await route.continue();
@@ -474,7 +562,15 @@ const installApiMocks = async (page: Page) => {
       await route.continue();
       return;
     }
-    await mockJson(route, { items: [], total: 0 });
+    await mockJson(route, { items: mockedRoles, total: mockedRoles.length });
+  });
+
+  await page.route(/\/api\/v1\/permissions(?:\?.*)?$/i, async (route, request) => {
+    if (request.method() !== 'GET') {
+      await route.continue();
+      return;
+    }
+    await mockJson(route, { items: mockedPermissions, total: mockedPermissions.length });
   });
 
   await page.route(/\/api\/v1\/users(?:\?.*)?$/i, async (route, request) => {
@@ -485,7 +581,7 @@ const installApiMocks = async (page: Page) => {
     const url = new URL(request.url());
     const pageNumber = Number(url.searchParams.get('page') ?? 1) || 1;
     const pageSize = Number(url.searchParams.get('pageSize') ?? 20) || 20;
-    await mockJson(route, { items: [], total: 0, page: pageNumber, pageSize });
+    await mockJson(route, { items: mockedUsers, total: mockedUsers.length, page: pageNumber, pageSize });
   });
 
   await page.route(/\/manifest\/v1\/manifest\.json(?:\?.*)?$/i, async (route, request) => {

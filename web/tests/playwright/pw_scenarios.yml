@@ -233,6 +233,7 @@ scenarios:
       - click: '[data-testid="design-lab-item-button"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-section-foundations"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: Text
@@ -247,6 +248,7 @@ scenarios:
       - click: '[data-testid="design-lab-item-linkinline"]'
       - click: '[data-testid="design-lab-tab-ux"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[data-testid="design-lab-section-components"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: IconButton
@@ -283,6 +285,7 @@ scenarios:
           value: Pagination
       - expectVisible: '[data-testid="design-lab-item-pagination"]'
       - click: '[data-testid="design-lab-item-pagination"]'
+      - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-tab-api"]'
@@ -414,9 +417,9 @@ scenarios:
     steps:
       - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
-      - fill:
-          selector: '[data-testid="design-lab-search"]'
-          value: TableSimple
+      - click: '[data-testid="design-lab-section-templates"]'
+      - expectVisible: '[data-testid="design-lab-group-data_display"]'
+      - click: '[data-testid="design-lab-group-data_display"]'
       - expectVisible: '[data-testid="design-lab-item-tablesimple"]'
       - click: '[data-testid="design-lab-item-tablesimple"]'
       - click: '[data-testid="design-lab-tab-demo"]'
@@ -452,7 +455,7 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
-          value: List
+          value: badge/meta/selection
       - expectVisible: '[data-testid="design-lab-item-list"]'
       - click: '[data-testid="design-lab-item-list"]'
       - click: '[data-testid="design-lab-tab-demo"]'
@@ -526,7 +529,7 @@ scenarios:
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-demo-card-dropdown-action-menu"] button:has-text("Aksiyon Menüsü")'
-      - expectVisible: '[data-testid="design-lab-demo-card-dropdown-action-menu"] button:has-text("Publish")'
+      - expectVisible: '[role="menuitem"]:has-text("Yayinla")'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: Tooltip
@@ -542,7 +545,7 @@ scenarios:
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-demo-card-form-drawer-create-flow"] button:has-text("Yeni kayıt drawer")'
-      - expectVisible: '[data-testid="design-lab-demo-card-form-drawer-create-flow"] button:has-text("Kaydet")'
+      - expectVisible: '[role="dialog"]:has-text("Yeni kayıt") button:has-text("Kaydet")'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: DetailDrawer
@@ -551,7 +554,7 @@ scenarios:
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
       - click: '[data-testid="design-lab-demo-card-detail-drawer-tabbed-review"] button:has-text("Detay drawer")'
-      - expectVisible: '[data-testid="design-lab-demo-card-detail-drawer-tabbed-review"] button:has-text("Summary")'
+      - expectVisible: '[role="dialog"]:has-text("Rollout detay") button:has-text("Ozet")'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: Popover
@@ -559,8 +562,9 @@ scenarios:
       - click: '[data-testid="design-lab-item-popover"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-detail-panel"]'
+      - click: '[role="tablist"][aria-label="Bileşen önizleme panelleri"] [role="tab"]:has-text("Referans")'
       - click: '[data-testid="design-lab-demo-card-popover-rich-guidance"] button:has-text("Popover aç")'
-      - expectVisible: '[data-testid="design-lab-demo-card-popover-rich-guidance"] [role="dialog"]'
+      - expectVisible: '[role="dialog"]:has-text("Politika notu")'
 
   - name: ui_library_ai_native_wave_6_walk
     level: 1
@@ -584,6 +588,7 @@ scenarios:
     steps:
       - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-ai_ux"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: CommandPalette
@@ -687,6 +692,7 @@ scenarios:
     steps:
       - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-templates"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: PageLayout
@@ -975,6 +981,7 @@ scenarios:
     steps:
       - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-foundations"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: ThemePresetGallery
@@ -1012,6 +1019,7 @@ scenarios:
     steps:
       - goto: /admin/design-lab
       - expectVisible: '[data-testid="design-lab-page"]'
+      - click: '[data-testid="design-lab-section-patterns"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: SearchFilterListing
@@ -1019,6 +1027,7 @@ scenarios:
       - click: '[data-testid="design-lab-item-searchfilterlisting"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-demo-card-search-filter-listing-default"] [data-component="search-filter-listing"]'
+      - click: '[data-testid="design-lab-section-templates"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: DetailSummary
@@ -1026,6 +1035,7 @@ scenarios:
       - click: '[data-testid="design-lab-item-detailsummary"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-demo-card-detail-summary-default"] [data-component="detail-summary"]'
+      - click: '[data-testid="design-lab-section-ai_ux"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: ApprovalReview
@@ -1033,6 +1043,7 @@ scenarios:
       - click: '[data-testid="design-lab-item-approvalreview"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: '[data-testid="design-lab-demo-card-approval-review-default"] [data-component="approval-review"]'
+      - click: '[data-testid="design-lab-section-components"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: EmptyErrorLoading
@@ -1040,6 +1051,7 @@ scenarios:
       - click: '[data-testid="design-lab-item-emptyerrorloading"]'
       - click: '[data-testid="design-lab-tab-demo"]'
       - expectVisible: ':nth-match([data-testid="design-lab-demo-card-empty-error-loading-default"] [data-component="empty-error-loading"], 1)'
+      - click: '[data-testid="design-lab-section-ai_ux"]'
       - fill:
           selector: '[data-testid="design-lab-search"]'
           value: AIGuidedAuthoring
@@ -1049,6 +1061,8 @@ scenarios:
       - expectVisible: '[data-testid="design-lab-demo-card-ai-guided-authoring-default"] [data-component="ai-guided-authoring"]'
       - click: '[data-testid="design-lab-workspace-recipes"]'
       - expectVisible: '[data-testid="design-lab-recipe-list"]'
+      - click: '[data-testid="design-lab-section-patterns"]'
       - click: '[data-testid="design-lab-recipe-search_filter_listing"]'
       - click: '[data-testid="design-lab-tab-demo"]'
+      - click: '[role="tablist"][aria-label="Reçete önizleme panelleri"] [role="tab"]:has-text("Reçete")'
       - expectVisible: '[data-testid="design-lab-recipe-demo-card-search_filter_listing-assembly-map"] [data-component="search-filter-listing"]'

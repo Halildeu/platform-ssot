@@ -1,0 +1,101 @@
+{
+  "artifactVersion": "v1",
+  "generatedAt": "2026-03-15",
+  "description": "Navigation family matrix - canonical nav patterns, component mapping and page shell connections for wayfinding parity",
+  "navigationFamilies": [
+    {
+      "familyId": "primary_nav",
+      "title": "Primary Navigation",
+      "description": "Uygulamanin ana navigasyonu: top bar, sidebar rail veya app shell header",
+      "canonicalComponents": ["MenuBar", "NavigationRail", "AppShellHeader"],
+      "recipeBindings": ["search_filter_list", "dashboard_kpi"],
+      "pageShellBindings": ["dashboard_kpi", "search_workspace", "crud_management"],
+      "wayfindingRole": "global",
+      "a11yPattern": "navigation landmark + aria-current",
+      "responsiveBehavior": "collapse_to_drawer"
+    },
+    {
+      "familyId": "secondary_nav",
+      "title": "Secondary Navigation",
+      "description": "Sayfa icindeki tab grubu, breadcrumb veya section nav",
+      "canonicalComponents": ["Tabs", "Breadcrumb", "SegmentedControl"],
+      "recipeBindings": ["settings_config", "crud_management", "review_approval"],
+      "pageShellBindings": ["settings_config", "detail_review"],
+      "wayfindingRole": "local",
+      "a11yPattern": "tablist + aria-selected",
+      "responsiveBehavior": "scroll_horizontal"
+    },
+    {
+      "familyId": "contextual_nav",
+      "title": "Contextual Navigation",
+      "description": "Dropdown menu, command palette ve context menu gibi anlik erisim yuzeyleri",
+      "canonicalComponents": ["DropdownMenu", "CommandPalette", "ContextMenu"],
+      "recipeBindings": ["search_filter_list", "ai_workflow"],
+      "pageShellBindings": ["search_workspace"],
+      "wayfindingRole": "contextual",
+      "a11yPattern": "menu + aria-haspopup + focus-trap",
+      "responsiveBehavior": "full_screen_on_mobile"
+    },
+    {
+      "familyId": "hierarchical_nav",
+      "title": "Hierarchical Navigation",
+      "description": "Tree view, nested sidebar ve multi-level navigation",
+      "canonicalComponents": ["TreeView", "NestedSidebar", "Accordion"],
+      "recipeBindings": ["crud_management", "settings_config"],
+      "pageShellBindings": ["settings_config"],
+      "wayfindingRole": "hierarchical",
+      "a11yPattern": "tree + aria-expanded + aria-level",
+      "responsiveBehavior": "drawer_overlay"
+    },
+    {
+      "familyId": "wizard_nav",
+      "title": "Wizard / Step Navigation",
+      "description": "Adim gostergesi, progress bar ve wizard flow yonetimi",
+      "canonicalComponents": ["StepIndicator", "ProgressBar", "WizardNav"],
+      "recipeBindings": ["form_wizard"],
+      "pageShellBindings": ["form_wizard"],
+      "wayfindingRole": "sequential",
+      "a11yPattern": "aria-current=step + progress announce",
+      "responsiveBehavior": "vertical_on_mobile"
+    },
+    {
+      "familyId": "action_nav",
+      "title": "Action Navigation",
+      "description": "FAB, action bar ve quick-action surface'ler",
+      "canonicalComponents": ["FloatingActionButton", "ActionBar", "SpeedDial"],
+      "recipeBindings": ["crud_management", "review_approval"],
+      "pageShellBindings": ["crud_management", "detail_review"],
+      "wayfindingRole": "action",
+      "a11yPattern": "toolbar + aria-label",
+      "responsiveBehavior": "bottom_bar_on_mobile"
+    }
+  ],
+  "crossFamilyPatterns": [
+    {
+      "patternId": "breadcrumb_tab_sync",
+      "title": "Breadcrumb + Tab Sync",
+      "description": "Breadcrumb ve tab selection ayni anda update edilir",
+      "families": ["primary_nav", "secondary_nav"]
+    },
+    {
+      "patternId": "command_palette_global",
+      "title": "Global Command Palette",
+      "description": "Cmd+K ile tum navigation family'lere tek noktadan erisim",
+      "families": ["contextual_nav", "primary_nav"]
+    },
+    {
+      "patternId": "responsive_nav_cascade",
+      "title": "Responsive Navigation Cascade",
+      "description": "Ekran daraldikca primary->drawer, secondary->scroll, contextual->fullscreen",
+      "families": ["primary_nav", "secondary_nav", "contextual_nav"]
+    }
+  ],
+  "wayfindingRoles": {
+    "global": "Uygulamanin her yerinden erisilebilen ust-duzey navigasyon",
+    "local": "Mevcut sayfa veya section icindeki alt-navigasyon",
+    "contextual": "Sag-tik, shortcut veya komut tabanlı anlik erisim",
+    "hierarchical": "Agac yapisi veya ic ice menu ile derinlik navigasyonu",
+    "sequential": "Adim-adim ilerleme ve wizard akislari",
+    "action": "Hizli aksiyon ve islem tetikleyici yuzeyler"
+  }
+}

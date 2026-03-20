@@ -58,7 +58,7 @@ const main = async () => {
       let usageCount = 0;
       if (exists) {
         const source = await readFile(absolutePath, 'utf8');
-        importFound = new RegExp(`import\\s*\\{[^}]*\\b${component}\\b[^}]*\\}\\s*from\\s*['"]mfe-ui-kit['"]`, 'm').test(source);
+        importFound = new RegExp(`import\\s*\\{[^}]*\\b${component}\\b[^}]*\\}\\s*from\\s*['"]@mfe/design-system['"]`, 'm').test(source);
         usageCount = countMatches(source, new RegExp(`(?<![A-Za-z0-9_])${component}(?![A-Za-z0-9_])`, 'g'));
       }
       fileChecks.push({

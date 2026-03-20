@@ -20,7 +20,7 @@ test('getDictionary de locale sözlüğünü döner', () => {
   const result = getDictionary('de-DE', 'access');
   assert.ok(result, 'dictionary bulunamadı');
   assert.equal(result?.locale, 'de');
-  assert.equal(result?.dictionary['access.actions.clone'], 'Clone Role');
+  assert.equal(result?.dictionary['access.actions.clone'], 'Rolle klonen');
 });
 
 test('getDictionary returns null for bilinmeyen namespace', () => {
@@ -33,7 +33,7 @@ test('available locale ve namespace listeleri beklenen değerleri döner', () =>
   assert.deepEqual(locales.sort(), ['de', 'en', 'es', 'pseudo', 'tr']);
 
   const namespaces = getAvailableNamespaces();
-  assert.deepEqual(namespaces.sort(), ['access', 'audit', 'common', 'reports']);
+  assert.deepEqual(namespaces.sort(), ['access', 'audit', 'common', 'designlab', 'reports', 'themeadmin', 'users']);
 
   assert.match(dictionaryVersion, /^\d+\.\d+\.\d+$/);
 });
@@ -46,6 +46,26 @@ test('reports namespace sözlükleri döner', () => {
   const resultEn = getDictionary('en', 'reports');
   assert.ok(resultEn);
   assert.equal(resultEn?.dictionary['reports.toolbar.refresh'], 'Refresh data');
+});
+
+test('designlab namespace sözlükleri döner', () => {
+  const resultTr = getDictionary('tr', 'designlab');
+  assert.ok(resultTr);
+  assert.equal(resultTr?.dictionary['designlab.tabs.general.label'], 'Genel');
+
+  const resultEn = getDictionary('en', 'designlab');
+  assert.ok(resultEn);
+  assert.equal(resultEn?.dictionary['designlab.tabs.general.label'], 'General');
+});
+
+test('themeadmin namespace sözlükleri döner', () => {
+  const resultTr = getDictionary('tr', 'themeadmin');
+  assert.ok(resultTr);
+  assert.equal(resultTr?.dictionary['themeadmin.page.title'], 'Tema Registry (Admin)');
+
+  const resultEn = getDictionary('en', 'themeadmin');
+  assert.ok(resultEn);
+  assert.equal(resultEn?.dictionary['themeadmin.page.title'], 'Theme Registry (Admin)');
 });
 
 test('pseudo locale istemi pseudolokalize metin döner', () => {

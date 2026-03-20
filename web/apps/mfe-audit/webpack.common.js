@@ -38,6 +38,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx']
     ,
     alias: {
+      '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
       '@mfe/shared-http': path.resolve(__dirname, '../../packages/shared-http/src'),
     }
   },

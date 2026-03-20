@@ -5,7 +5,7 @@ module.exports = {
   ...baseConfig,
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
-    '../../packages/ui-kit/src/**/*.{js,ts,jsx,tsx}',
+    '../../packages/design-system/src/**/*.{js,ts,jsx,tsx}',
   ],
 };
 

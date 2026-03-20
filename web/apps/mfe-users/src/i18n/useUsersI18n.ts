@@ -47,7 +47,7 @@ const ensureFallbackManager = (): ShellI18nManager => {
 
 export const useUsersI18n = () => {
   const resolvedManager = React.useMemo(() => ensureFallbackManager(), []);
-  const [, forceUpdate] = React.useState(0);
+  const [revision, setRevision] = React.useState(0);
 
   React.useEffect(() => {
     let active = true;
@@ -55,7 +55,7 @@ export const useUsersI18n = () => {
       await resolvedManager.preloadNamespace(NAMESPACE);
       await resolvedManager.preloadNamespace(COMMON_NAMESPACE);
       if (active) {
-        forceUpdate((value) => value + 1);
+        setRevision((value) => value + 1);
       }
     };
     load();
@@ -94,7 +94,7 @@ export const useUsersI18n = () => {
       const namespace = key.startsWith('shell.') ? COMMON_NAMESPACE : NAMESPACE;
       return resolvedManager.translateSync(key, params ?? {}, namespace);
     },
-    [resolvedManager, locale],
+    [resolvedManager, locale, revision],
   );
 
   return {

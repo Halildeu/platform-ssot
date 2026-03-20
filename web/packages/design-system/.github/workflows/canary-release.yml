@@ -1,0 +1,44 @@
+name: Canary Release
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'packages/design-system/src/**'
+
+concurrency:
+  group: canary-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - run: npm ci
+
+      - name: Publish canary
+        run: cd packages/design-system && node scripts/release/publish-canary.mjs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Comment canary version on PR
+        if: github.event_name == 'push' && success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            const pkg = require('./packages/design-system/package.json');
+            const sha = context.sha.slice(0, 7);
+            const body = `Canary published: \`npm i @mfe/design-system@canary\`\nVersion: \`${pkg.version}-canary.*\`\nCommit: ${sha}`;
+            console.log(body);

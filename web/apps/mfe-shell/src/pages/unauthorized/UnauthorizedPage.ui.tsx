@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Button } from 'mfe-ui-kit';
+import { Button } from '@mfe/design-system';
 import { useShellCommonI18n } from '../../app/i18n';
 
 const UnauthorizedPage: React.FC = () => {

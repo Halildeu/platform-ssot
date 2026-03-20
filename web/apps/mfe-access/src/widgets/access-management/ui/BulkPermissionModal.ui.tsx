@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, Modal, Segmented, Select, createSegmentedPreset } from '@mfe/design-system';
 import type { AccessLevel } from '../../../features/access-management/model/access.types';
 
 export interface BulkPermissionFormValues {
@@ -39,6 +40,22 @@ const BulkPermissionModal: React.FC<BulkPermissionModalProps> = ({
     level: '',
   });
   const [errors, setErrors] = React.useState<{ moduleKey?: string; level?: string }>({});
+  const levelSegmentedPreset = React.useMemo(
+    () => ({
+      ...createSegmentedPreset('filter_bar'),
+      size: 'sm' as const,
+      fullWidth: true,
+    }),
+    [],
+  );
+  const levelSegmentedItems = React.useMemo(
+    () => levelOptions.map((option) => ({
+      value: option.value,
+      label: option.label,
+      dataTestId: `bulk-permission-level-${String(option.value).toLowerCase()}`,
+    })),
+    [levelOptions],
+  );
 
   React.useEffect(() => {
     if (open) {
@@ -76,96 +93,67 @@ const BulkPermissionModal: React.FC<BulkPermissionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div
-        className="absolute inset-0 bg-surface-overlay"
-        style={{
-          backgroundColor: 'var(--surface-overlay-bg)',
-          opacity: 'var(--overlay-opacity)',
-        }}
-        aria-hidden="true"
-        onClick={onCancel}
-      />
-      <div className="relative z-10 w-full max-w-lg rounded-3xl bg-surface-default p-6 shadow-2xl">
-        <header className="mb-4 flex items-start justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-text-primary">{t('access.bulk.modal.title')}</h2>
-          </div>
-          <button
+    <Modal
+      open={open}
+      title={t('access.bulk.modal.title')}
+      size="lg"
+      onClose={() => onCancel()}
+      footer={(
+        <div className="flex justify-end gap-3">
+          <Button type="button" variant="secondary" onClick={onCancel}>
+            {t('access.bulk.cancelText')}
+          </Button>
+          <Button
             type="button"
-            className="text-xl font-semibold text-text-subtle hover:text-text-secondary"
-            aria-label={t('access.bulk.cancelText')}
-            onClick={onCancel}
+            onClick={handleSubmit}
+            loading={confirmLoading}
+            loadingLabel={`${t('access.bulk.okText')}...`}
           >
-            ×
-          </button>
-        </header>
-
+            {t('access.bulk.okText')}
+          </Button>
+        </div>
+      )}
+    >
+      <div className="space-y-5">
         <div className="mb-5 rounded-2xl border border-state-info-border bg-state-info px-4 py-3 text-sm text-state-info-text">
           {t('access.bulk.info', { count: formattedCount })}
         </div>
 
         <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
-            {t('access.bulk.moduleLabel')}
-            <select
-              className={`rounded-2xl border px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-selection-outline ${
-                errors.moduleKey ? 'border-state-danger-border' : 'border-border-subtle'
-              }`}
-              value={formValues.moduleKey}
-              onChange={(event) => setFormValues((prev) => ({ ...prev, moduleKey: event.target.value }))}
-            >
-              <option value="">{t('access.bulk.modulePlaceholder')}</option>
-              {moduleOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            {errors.moduleKey ? <span className="text-xs text-state-danger-text">{errors.moduleKey}</span> : null}
-          </label>
+          <Select
+            label={t('access.bulk.moduleLabel')}
+            data-testid="bulk-permission-module"
+            value={formValues.moduleKey}
+            onValueChange={(nextValue) => setFormValues((prev) => ({ ...prev, moduleKey: nextValue }))}
+            options={moduleOptions}
+            clearable
+            emptyOptionLabel={t('access.bulk.modulePlaceholder')}
+            error={errors.moduleKey}
+            fullWidth
+          />
 
           <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
             {t('access.bulk.levelLabel')}
-            <select
-              className={`rounded-2xl border px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-selection-outline ${
-                errors.level ? 'border-state-danger-border' : 'border-border-subtle'
-              }`}
+            <Segmented
+              items={levelSegmentedItems}
               value={formValues.level}
-              onChange={(event) =>
-                setFormValues((prev) => ({ ...prev, level: event.target.value as AccessLevel | '' }))
+              ariaLabel={t('access.bulk.levelLabel')}
+              onValueChange={(nextValue) =>
+                setFormValues((prev) => ({ ...prev, level: nextValue as AccessLevel | '' }))
               }
-            >
-              <option value="">{t('access.bulk.levelPlaceholder')}</option>
-              {levelOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              appearance={levelSegmentedPreset.appearance}
+              shape={levelSegmentedPreset.shape}
+              size={levelSegmentedPreset.size}
+              iconPosition={levelSegmentedPreset.iconPosition}
+              fullWidth={levelSegmentedPreset.fullWidth}
+              className={`w-full ${errors.level ? 'rounded-2xl ring-1 ring-state-danger-border' : ''}`}
+              classes={{ list: 'w-full', item: 'min-w-0 flex-1', content: 'w-full' }}
+            />
             {errors.level ? <span className="text-xs text-state-danger-text">{errors.level}</span> : null}
           </label>
         </div>
-
-        <div className="mt-6 flex justify-end gap-3">
-          <button
-            type="button"
-            className="rounded-xl border border-border-subtle px-4 py-2 text-sm font-semibold text-text-secondary hover:bg-surface-muted"
-            onClick={onCancel}
-          >
-            {t('access.bulk.cancelText')}
-          </button>
-          <button
-            type="button"
-            className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow hover:opacity-90 disabled:opacity-50"
-            onClick={handleSubmit}
-            disabled={confirmLoading}
-          >
-            {confirmLoading ? `${t('access.bulk.okText')}...` : t('access.bulk.okText')}
-          </button>
-        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

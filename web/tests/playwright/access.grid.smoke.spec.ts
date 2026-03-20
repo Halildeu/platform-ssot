@@ -11,6 +11,9 @@ test.describe('Access grid – perf & a11y smoke', () => {
     // Grid gövde konteyneri (satır olmasa bile) görünür mü?
     await expect(page.locator('.ag-center-cols-container')).toBeVisible({ timeout: 30000 });
 
+    // Reusable footer standardı görünür mü?
+    await expect(page.locator('[data-component="table-pagination"]').last()).toBeVisible({ timeout: 30000 });
+
     // Basit klavye navigasyonu – Tab ile en az bir focus hareketi
     await page.keyboard.press('Tab');
   });

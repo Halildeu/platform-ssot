@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ErrorBoundary } from '../../../../packages/ui-kit/src/lib/error/ErrorBoundary';
+import { ErrorBoundary } from '../../../../packages/design-system/src/lib/error/ErrorBoundary';
 
 // Remote components via Module Federation
 const AccessApp = React.lazy(() => import('mfe_access/AccessApp'));

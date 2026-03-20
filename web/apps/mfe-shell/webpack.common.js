@@ -1,9 +1,36 @@
 // webpack.common.js
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const MAX_ENTRYPOINT_SIZE = 25 * 1024 * 1024; // 25 MB
 const MAX_ASSET_SIZE = 8 * 1024 * 1024; // 8 MB
+
+const buildRuntimeEnv = () => {
+  const allowlist = new Set([
+    'NODE_ENV',
+    'AUTH_MODE',
+    'SHELL_SKIP_REMOTE_SERVICES',
+    'SHELL_ENABLE_SUGGESTIONS_REMOTE',
+    'SHELL_ENABLE_ETHIC_REMOTE',
+  ]);
+  const payload = {};
+  for (const [key, value] of Object.entries(process.env)) {
+    if (!allowlist.has(key) && !key.startsWith('VITE_')) {
+      continue;
+    }
+    if (typeof value !== 'string') {
+      continue;
+    }
+    payload[key] = value;
+  }
+  if (typeof payload.NODE_ENV !== 'string' || payload.NODE_ENV.length === 0) {
+    payload.NODE_ENV = process.env.NODE_ENV || 'development';
+  }
+  return payload;
+};
+
+const runtimeEnv = buildRuntimeEnv();
 
 module.exports = {
   entry: './src/index.tsx',
@@ -46,6 +73,8 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
+      '@platform/capabilities': path.resolve(__dirname, '../../packages/platform-capabilities/src'),
+      '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
       '@mfe/i18n-dicts': path.resolve(__dirname, '../../packages/i18n-dicts/src'),
       '@mfe/shared-http': path.resolve(__dirname, '../../packages/shared-http/src'),
     },
@@ -53,6 +82,9 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({ template: './public/index.html' }),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(runtimeEnv),
+    }),
   ],
   performance: {
     hints: process.env.NODE_ENV === 'production' ? 'warning' : false,

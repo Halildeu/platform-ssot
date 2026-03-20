@@ -8,7 +8,7 @@ module.exports = {
     './apps/mfe-access/src/**/*.{js,ts,jsx,tsx}',
     './apps/mfe-audit/src/**/*.{js,ts,jsx,tsx}',
     './apps/mfe-reporting/src/**/*.{js,ts,jsx,tsx}',
-    './packages/ui-kit/src/**/*.{js,ts,jsx,tsx}',
+    './packages/design-system/src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {

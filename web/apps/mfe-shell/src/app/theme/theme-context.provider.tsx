@@ -18,7 +18,7 @@ import {
   type ThemeSurfaceTone,
   getThemeContract,
   resolveThemeModeKey,
-} from 'mfe-ui-kit';
+} from '@mfe/design-system';
 import { clampRgba, parseAnyColor, type RgbaColor } from './color-utils';
 import { useAppSelector } from '../store/store.hooks';
 import { isPermitAllMode } from '../auth/auth-config';
@@ -204,7 +204,7 @@ const writeResolvedThemeCache = (storageKey: string, entry: ResolvedThemeCacheEn
 
 const paletteTokens = tokens.semantic?.theme?.palette ?? {};
 const accentTokens = tokens.semantic?.theme?.accent ?? {};
-const surfaceToneTokens = tokens.semantic?.color?.surface?.tones ?? {};
+const surfaceToneTokens = (tokens.semantic?.color?.surface as Record<string, unknown>)?.tones as Record<string, Record<string, Record<string, { value?: string }>>> ?? {};
 const paletteKeys = Object.keys(paletteTokens) as ThemeKey[];
 const defaultAppearanceMode = themeContract.defaultMode;
 const hasHighContrastAppearance = Boolean(themeContract.aliases?.appearance?.['high-contrast']);
@@ -458,12 +458,12 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
   }, [axes.appearance, axes.density]);
   const surfaceToneSwatches: SurfaceToneOption[] = useMemo(() => {
     return surfaceToneOptions.map((opt) => {
-      const modes = surfaceToneTokens?.[opt.id]?.modes ?? {};
+      const modes = surfaceToneTokens?.[opt.id]?.modes ?? {} as Record<string, { value?: string }>;
       const raw =
         opt.preview ??
-        modes[currentThemeAttr]?.value ??
-        modes[defaultAppearanceMode]?.value ??
-        Object.values(modes)[0]?.value ??
+        (modes[currentThemeAttr] as { value?: string } | undefined)?.value ??
+        (modes[defaultAppearanceMode] as { value?: string } | undefined)?.value ??
+        (Object.values(modes)[0] as { value?: string } | undefined)?.value ??
         '';
       return {
         ...opt,
@@ -510,14 +510,14 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
           const cssVars = registryByKey[key] ?? [];
           for (const cssVar of cssVars) {
             nextAppliedVars.add(cssVar);
-            targets.forEach((element) => element.style.setProperty(cssVar, value));
+            targets.forEach((element) => (element as HTMLElement).style.setProperty(cssVar, value));
           }
         }
       }
 
       appliedRegistryVarsRef.current.forEach((cssVar) => {
         if (nextAppliedVars.has(cssVar)) return;
-        targets.forEach((element) => element.style.removeProperty(cssVar));
+        targets.forEach((element) => (element as HTMLElement).style.removeProperty(cssVar));
       });
 
       appliedRegistryVarsRef.current = nextAppliedVars;
@@ -616,10 +616,10 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
           return;
         }
 
-        applyResolvedTheme(response.data);
+        applyResolvedTheme(response.data as ResolvedThemeResponse);
         if (cacheKey) {
           const etag = typeof response.headers?.etag === 'string' ? response.headers.etag : undefined;
-          writeResolvedThemeCache(cacheKey, { cachedAt: Date.now(), etag, data: response.data });
+          writeResolvedThemeCache(cacheKey, { cachedAt: Date.now(), etag, data: response.data as ResolvedThemeResponse });
         }
       } catch {
         // Backend tema profili zorunlu değil; local varsayılanlar kullanılmaya devam eder.
@@ -830,7 +830,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
 export const useThemeContext = () => {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
-    throw new Error('ThemeContext kullanımı için ThemeProvider gerekli');
+    throw new Error('ThemeProvider is required to use ThemeContext');
   }
   return ctx;
 };

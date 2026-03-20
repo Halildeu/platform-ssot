@@ -30,6 +30,17 @@ const listeners = new Set<AuthSyncListener>();
 let lastPayload: AuthSyncPayload | null = null;
 let suppressBroadcast = false;
 
+const normalizeToken = (token: unknown): string | null => {
+  if (typeof token !== 'string') {
+    return null;
+  }
+  const normalized = token.trim();
+  if (!normalized || normalized === 'undefined' || normalized === 'null') {
+    return null;
+  }
+  return normalized;
+};
+
 const notifyListeners = (payload: AuthSyncPayload) => {
   lastPayload = payload;
   listeners.forEach((listener) => {
@@ -48,7 +59,7 @@ const tryParsePayload = (data: unknown): AuthSyncPayload | null => {
     return null;
   }
   const payload = data as Record<string, unknown>;
-  const token = typeof payload.token === 'string' ? payload.token : null;
+  const token = normalizeToken(payload.token);
   const profile = (payload.profile as Partial<UserProfile> | null | undefined) ?? null;
   const expiresAt =
     typeof payload.expiresAt === 'number' || payload.expiresAt === null

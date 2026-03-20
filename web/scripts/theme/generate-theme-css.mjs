@@ -96,6 +96,72 @@ if (Object.keys(surfaceTones).length > 0) {
   }
 }
 
+/* ---- Token Bridge: component-level aliases ---- */
+/* Components use short names (--action-primary) set by ThemeProvider at runtime.
+   These aliases bridge theme.css names (--action-primary-bg) to component names
+   so components render correctly before ThemeProvider mounts. */
+const bridgeBlock = [
+  '/* Token Bridge — component-level aliases (Faz 0A.1) */',
+  ':root {',
+  '  /* Action */',
+  '  --action-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
+  '  --action-primary-hover: var(--accent-primary-hover, #1a5490);',
+  '  --action-primary-active: var(--accent-primary-hover, #155080);',
+  '  --action-primary-soft: var(--accent-soft, rgba(43, 108, 176, 0.12));',
+  '  --action-secondary: var(--action-secondary-bg, #f1f5f9);',
+  '  /* Surface */',
+  '  --surface-canvas: var(--surface-default-bg, #ffffff);',
+  '  --surface-raised: var(--surface-raised-bg, #ffffff);',
+  '  --surface-page: var(--surface-page-bg, var(--surface-default-bg, #ffffff));',
+  '  --surface-overlay: var(--surface-overlay-bg, rgba(15, 23, 42, 0.6));',
+  '  --surface-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
+  '  --surface-accent: var(--accent-soft, rgba(43, 108, 176, 0.08));',
+  '  --surface-active: var(--selection-bg, rgba(219, 234, 254, 0.6));',
+  '  --surface-inverse: var(--surface-overlay-bg, #0f172a);',
+  '  /* Text */',
+  '  --text-disabled: var(--text-subtle, #64748b);',
+  '  --text-tertiary: var(--text-subtle, #64748b);',
+  '  --text-placeholder: var(--text-subtle, #94a3b8);',
+  '  --text-danger: var(--state-danger-text, #e53e3e);',
+  '  /* Border */',
+  '  --border-strong: var(--border-bold, #2c5282);',
+  '  --border-active: var(--selection-outline, #2b6cb0);',
+  '  --border-hover: var(--border-default, #cbd5e1);',
+  '  --border-error: var(--state-danger-border, #e53e3e);',
+  '  --border-danger: var(--state-danger-border, #e53e3e);',
+  '  /* Focus */',
+  '  --focus-ring: var(--focus-outline, #2c5282);',
+  '  /* State error → danger bridge */',
+  '  --state-error-bg: var(--state-danger-bg, rgba(229, 62, 62, 0.12));',
+  '  --state-error-text: var(--state-danger-text, #e53e3e);',
+  '  --state-error-border: var(--state-danger-border, #e53e3e);',
+  '  /* State short aliases */',
+  '  --state-danger: var(--state-danger-text, #e53e3e);',
+  '  --state-success: var(--state-success-text, #38a169);',
+  '  --state-warning: var(--state-warning-text, #dd6b20);',
+  '  --state-info: var(--state-info-text, #3182ce);',
+  '  /* Feedback aliases */',
+  '  --feedback-error: var(--state-danger-text, #e53e3e);',
+  '  --feedback-success: var(--state-success-text, #38a169);',
+  '  --feedback-warning: var(--state-warning-text, #dd6b20);',
+  '  --feedback-info: var(--state-info-text, #3182ce);',
+  '  /* Legacy */',
+  '  --danger-color: var(--state-danger-text, #e53e3e);',
+  '  --success-color: var(--state-success-text, #38a169);',
+  '  --warning-color: var(--state-warning-text, #dd6b20);',
+  '  --info-color: var(--state-info-text, #3182ce);',
+  '  --bg-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
+  '  --ring-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
+  '  --ring-focus: var(--focus-outline, #2c5282);',
+  '  --ring-error: var(--state-danger-border, #e53e3e);',
+  '  --ring-color: var(--focus-outline, #2c5282);',
+  '  --accent-primary-muted: var(--accent-soft, rgba(43, 108, 176, 0.15));',
+  '}',
+];
+cssChunks.push('');
+cssChunks.push(...bridgeBlock);
+cssChunks.push('');
+
 while (cssChunks.at(-1) === '') {
   cssChunks.pop();
 }

@@ -19,6 +19,9 @@ const access = {
   'access.grid.columns.memberCount': 'Üye sayısı',
   'access.grid.columns.moduleSummary': 'Yetkili modüller',
   'access.grid.columns.lastModified': 'Son güncelleme',
+  'access.grid.pagination.rowsPerPage': 'Sayfa boyutu:',
+  'access.grid.pagination.range': '{start}-{end} / {total} rol',
+  'access.grid.pagination.pageIndicator': 'Sayfa {currentPage} / {pageCount}',
 
   'access.variants.selectPlaceholder': 'Kayıtlı bir görünüm seçin',
   'access.variants.save': 'Kaydet',

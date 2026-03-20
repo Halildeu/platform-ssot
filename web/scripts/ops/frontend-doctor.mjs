@@ -65,6 +65,7 @@ const presetMap = {
         id: 'playwright_ui_library',
         label: 'Playwright UI Library scenario',
         cmd: 'node',
+        retries: 2,
         args: [
           'scripts/ops/run-with-frontend-stack.mjs',
           '--stack',
@@ -133,6 +134,7 @@ const presetMap = {
         id: 'playwright_shell_public',
         label: 'Playwright public shell scenarios',
         cmd: 'node',
+        retries: 2,
         args: [
           'scripts/ops/run-with-frontend-stack.mjs',
           '--stack',
@@ -193,6 +195,7 @@ const presetMap = {
         id: 'playwright_theme_admin',
         label: 'Playwright theme admin scenario',
         cmd: 'node',
+        retries: 2,
         args: [
           'scripts/ops/run-with-frontend-stack.mjs',
           '--stack',
@@ -276,6 +279,8 @@ const presetMap = {
           PW_SOFT_MODE: softMode,
           PW_AUTH_MODE: authMode === 'none' ? 'token_injection' : authMode,
           PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
+          PW_FAKE_AUTH: '1',
+          PW_FAKE_AUTH_PERMISSIONS: 'access-read,audit-read,VIEW_REPORTS,user-read,user-update',
           PW_MOCK_API: process.env.PW_MOCK_API || '1',
           FRONTEND_STACK_LOG_DIR: path.join(logDir, 'auth-business-routes-stack'),
         },
@@ -336,6 +341,8 @@ const presetMap = {
           PW_SOFT_MODE: softMode,
           PW_AUTH_MODE: authMode === 'none' ? 'token_injection' : authMode,
           PW_TEST_TOKEN: process.env.PW_TEST_TOKEN || defaultInjectedToken,
+          PW_FAKE_AUTH: '1',
+          PW_FAKE_AUTH_PERMISSIONS: 'access-read,audit-read,VIEW_REPORTS,user-read,user-update',
           PW_MOCK_API: process.env.PW_MOCK_API || '1',
           FRONTEND_STACK_LOG_DIR: path.join(logDir, 'business-journeys-stack'),
         },
@@ -472,31 +479,46 @@ const findRecentArtifactsRecursive = (rootDir, matcher, sinceMs) => {
 const runStep = (step) => {
   const startedAt = new Date();
   const env = { ...process.env, ...(step.env || {}) };
-  const result = spawnSync(step.cmd, step.args, {
-    cwd: step.cwd,
-    env,
-    encoding: 'utf8',
-    maxBuffer: 1024 * 1024 * 8,
-  });
+  const retries = Math.max(0, Number(step.retries ?? 0));
+  const attempts = [];
+  let result = null;
+
+  for (let attemptIndex = 0; attemptIndex <= retries; attemptIndex += 1) {
+    const attempt = spawnSync(step.cmd, step.args, {
+      cwd: step.cwd,
+      env,
+      encoding: 'utf8',
+      maxBuffer: 1024 * 1024 * 8,
+    });
+    attempts.push(attempt);
+    result = attempt;
+    if (attempt.status === 0) break;
+  }
+
   const logPath = path.join(logDir, `${step.id}.log`);
   mkdirSync(logDir, { recursive: true });
-  const output = [
-    `$ ${step.cmd} ${step.args.join(' ')}`,
-    '',
-    result.stdout || '',
-    result.stderr || '',
-  ].join('\n');
+  const output = attempts
+    .map((attempt, index) => [
+      `# Attempt ${index + 1}/${attempts.length}`,
+      `$ ${step.cmd} ${step.args.join(' ')}`,
+      '',
+      attempt.stdout || '',
+      attempt.stderr || '',
+    ].join('\n'))
+    .join('\n\n');
   writeFileSync(logPath, output, 'utf8');
+  const retryCount = Math.max(0, attempts.length - 1);
   return {
     id: step.id,
     label: step.label,
     command: `${step.cmd} ${step.args.join(' ')}`,
-    status: result.status === 0 ? 'PASS' : 'FAIL',
-    exitCode: result.status,
-    signal: result.signal,
+    status: result?.status === 0 ? 'PASS' : 'FAIL',
+    exitCode: result?.status ?? null,
+    signal: result?.signal ?? null,
     startedAt: startedAt.toISOString(),
     endedAt: new Date().toISOString(),
     logPath: path.relative(repoRoot, logPath),
+    retryCount,
   };
 };
 

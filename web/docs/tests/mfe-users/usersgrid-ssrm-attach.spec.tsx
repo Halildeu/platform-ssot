@@ -24,7 +24,6 @@ jest.mock('ag-grid-react', () => ({
       api: {
         setGridOption: setGridOptionMock,
       },
-      columnApi: {},
     };
     // onGridReady verilmişse bir kez tetikle
     if (typeof props.onGridReady === 'function') {

@@ -1,0 +1,28 @@
+name: Visual Regression
+
+on:
+  pull_request:
+    paths:
+      - 'packages/design-system/src/**'
+      - 'packages/design-system/src/__visual__/**'
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Install Playwright
+        run: npx playwright install chromium --with-deps
+      - name: Run visual regression
+        run: |
+          cd packages/design-system
+          npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-regression-report
+          path: packages/design-system/src/__visual__/test-results/

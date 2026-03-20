@@ -42,6 +42,17 @@ export const decodeJwtPayload = (token: string): Record<string, unknown> | null 
   }
 };
 
+const normalizeAuthToken = (token: string | null | undefined): string | null => {
+  if (typeof token !== 'string') {
+    return null;
+  }
+  const normalized = token.trim();
+  if (!normalized || normalized === 'undefined' || normalized === 'null') {
+    return null;
+  }
+  return normalized;
+};
+
 // State'imizin yapısını tanımlayan arayüz
 interface AuthState {
   user: UserProfile | null;
@@ -60,13 +71,28 @@ type KeycloakSessionPayload = {
   expiresAt?: number | null;
 };
 
+type LoginResponseV1 = {
+  token: string;
+  email: string;
+  role: string;
+  permissions?: string[];
+  expiresAt?: number | null;
+  sessionTimeoutMinutes?: number | null;
+};
+
+type AuthzSnapshotV1 = {
+  userId?: string;
+  permissions?: string[];
+  superAdmin?: boolean;
+};
+
 // Persist helpers (yalın, localStorage yoksa gracefully düşer)
 const loadPersistedAuth = (): Pick<AuthState, 'user' | 'token' | 'expiresAt'> => {
   if (typeof window === 'undefined') {
     return { user: null, token: null, expiresAt: null };
   }
   try {
-    const token = window.localStorage.getItem('token');
+    const token = normalizeAuthToken(window.localStorage.getItem('token'));
     const expiresAtRaw = window.localStorage.getItem('tokenExpiresAt');
     const expiresAt = expiresAtRaw ? Number(expiresAtRaw) : null;
     const userRaw = window.localStorage.getItem('user');
@@ -96,8 +122,20 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (loginData: { email: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await api.post('/auth/login', loginData);
-      const data = response.data as { token: string; email?: string };
+      const response = await api.post('/v1/auth/sessions', loginData);
+      const data = response.data as LoginResponseV1;
+      let authzSnapshot: AuthzSnapshotV1 | null = null;
+
+      try {
+        const authzResponse = await api.get('/v1/authz/me', {
+          headers: {
+            Authorization: `Bearer ${data.token}`,
+          },
+        });
+        authzSnapshot = authzResponse.data as AuthzSnapshotV1;
+      } catch (authzError) {
+        console.warn('Authorization snapshot alınamadı:', authzError);
+      }
 
       interface RemoteProfile extends UserProfile {
         name?: string;
@@ -123,7 +161,7 @@ export const loginUser = createAsyncThunk(
         }
       }
 
-      return { ...data, profile };
+      return { ...data, profile, authzSnapshot };
     } catch (error) {
       if (isAxiosError(error)) {
         const payload = error.response?.data as { message?: string };
@@ -182,12 +220,25 @@ const authSlice = createSlice({
       state.lastRegisteredEmail = null;
     },
     setKeycloakSession: (state, action: PayloadAction<KeycloakSessionPayload>) => {
-      const { token: incomingToken, profile, expiresAt } = action.payload;
+      const incomingToken = normalizeAuthToken(action.payload.token);
+      const { profile, expiresAt } = action.payload;
       state.token = incomingToken;
       state.expiresAt = expiresAt ?? null;
       if (incomingToken) {
         const persistedUser = profile
-          ? { ...(state.user ?? {}), ...profile, email: profile.email ?? state.user?.email ?? '' }
+          ? {
+              ...(state.user ?? {
+                email: profile.email ?? '',
+                role: 'USER',
+                permissions: [],
+              }),
+              ...profile,
+              email: profile.email ?? state.user?.email ?? '',
+              role: profile.role ?? state.user?.role ?? 'USER',
+              permissions: Array.isArray(profile.permissions)
+                ? profile.permissions
+                : state.user?.permissions ?? [],
+            }
           : state.user;
         state.user = persistedUser ?? null;
         state.status = 'succeeded';
@@ -247,7 +298,12 @@ const authSlice = createSlice({
         const roleFromToken = tokenClaimsRecord && typeof tokenClaimsRecord['role'] === 'string'
           ? String(tokenClaimsRecord['role'])
           : undefined;
+        const authzUserId = action.payload.authzSnapshot?.userId;
+        const authzPermissions = Array.isArray(action.payload.authzSnapshot?.permissions)
+          ? action.payload.authzSnapshot?.permissions
+          : [];
         const inferredUserId = profile?.id
+          ?? (typeof authzUserId === 'number' || typeof authzUserId === 'string' ? authzUserId : undefined)
           ?? (typeof tokenUserId === 'number' || typeof tokenUserId === 'string' ? tokenUserId : undefined)
           ?? (action.payload as Record<string, unknown>).userId
           ?? (action.payload as Record<string, unknown>).id;
@@ -262,14 +318,16 @@ const authSlice = createSlice({
           ?? tokenSessionTimeout
           ?? action.payload.sessionTimeoutMinutes
           ?? undefined;
-        const normalizedPermissions = Array.isArray(action.payload.permissions)
-          ? action.payload.permissions
-          : permissionsFromToken;
+        const normalizedPermissions = Array.isArray(authzPermissions) && authzPermissions.length > 0
+          ? authzPermissions
+          : Array.isArray(action.payload.permissions)
+            ? action.payload.permissions
+            : permissionsFromToken;
 
         const normalizedUser: UserProfile = {
           id: inferredUserId !== undefined && inferredUserId !== null ? String(inferredUserId) : undefined,
           email: action.payload.email,
-          role: action.payload.role ?? roleFromToken ?? undefined,
+          role: action.payload.role ?? roleFromToken ?? 'USER',
           permissions: normalizedPermissions.map((permission) => String(permission)),
           displayName,
           fullName: profileFullName ?? undefined,

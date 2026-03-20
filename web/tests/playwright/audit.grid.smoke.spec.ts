@@ -16,6 +16,7 @@ test.describe('Audit grid – perf & a11y smoke', () => {
     if (hasGrid) {
       await expect.soft(gridRoot).toBeVisible({ timeout: 10000 });
       await expect.soft(page.locator('.ag-center-cols-container')).toBeVisible({ timeout: 10000 });
+      await expect.soft(page.locator('[data-component="table-pagination"]').last()).toBeVisible({ timeout: 10000 });
       // Basit klavye navigasyonu – Tab ile en az bir focus hareketi
       await page.keyboard.press('Tab');
     }

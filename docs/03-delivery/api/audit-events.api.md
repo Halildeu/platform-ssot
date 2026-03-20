@@ -57,15 +57,46 @@ Not: `page` alanı 0‑bazlıdır (0 ilk sayfa); UI tarafında sayfa numarası g
 2) Export
 -------------------------------------------------------------------------------
 
-- Method: `GET`  
-- Path: `/api/audit/events/export`
-- Query:
+- Method: `POST`
+- Path: `/api/audit/events/export-jobs`
+- Body:
   - `format=csv|json` (default: `json`)
   - `limit` (opsiyonel)
   - `sort`
-  - Listeleme ile aynı filtreler
+  - `filters` — listeleme ile ayni filtre anahtarlari
 - Response:
-  - Dosya indirme (`Content-Disposition`) — `audit-events.csv|json`.
+```json
+{
+  "id": "job-123",
+  "status": "PROCESSING",
+  "format": "csv",
+  "filename": null,
+  "contentType": null,
+  "eventCount": null,
+  "requestedBy": "admin@example.com",
+  "createdAt": "2026-03-14T09:15:00Z",
+  "completedAt": null,
+  "errorMessage": null,
+  "downloadPath": "/api/audit/events/export-jobs/job-123/download"
+}
+```
+
+Job durumu:
+- Method: `GET`
+- Path: `/api/audit/events/export-jobs/{jobId}`
+
+Hazir artefact indirme:
+- Method: `GET`
+- Path: `/api/audit/events/export-jobs/{jobId}/download`
+- Response:
+  - Dosya indirme (`Content-Disposition`) — `audit-events-<jobId>.csv|json`
+
+Legacy / gecis notu:
+- `GET /api/audit/events/export` direct download yolu gecis uyumlulugu icin
+  korunabilir; ancak canonical istemci akisi artik `export job` uzerinden
+  calisir.
+- Gateway `ExportGuardFilter` export akislarinda rate-limit ve `X-PII-Policy`
+  header zorunlulugunu uygular.
 
 -------------------------------------------------------------------------------
 3) Canlı Yayın (SSE)
@@ -77,7 +108,46 @@ Not: `page` alanı 0‑bazlıdır (0 ilk sayfa); UI tarafında sayfa numarası g
 - Açıklama: Sunucu taraflı olayları gerçek zamanlı aktarır; bağlantı koparsa UI polling’e geri dönebilir.
 
 -------------------------------------------------------------------------------
-4) Deep‑Link
+4) İç Servis Audit Ingest
+-------------------------------------------------------------------------------
+
+- Method: `POST`
+- Path: `/api/v1/internal/audit/events`
+- Header:
+  - `X-Internal-Api-Key` zorunlu
+- Amaç:
+  - `auth-service` gibi iç servislerin kendi local audit kayıtlarını merkezi
+    audit feed'e mirror etmesi.
+- Request:
+```json
+{
+  "eventType": "SESSION_CREATED",
+  "performedBy": 99,
+  "details": "Session created for user@example.com in company scope 42",
+  "userEmail": "user@example.com",
+  "service": "auth-service",
+  "level": "INFO",
+  "action": "SESSION_CREATED",
+  "correlationId": "trace-123",
+  "metadata": {
+    "companyId": 42,
+    "permissionCount": 3
+  },
+  "before": {},
+  "after": {},
+  "occurredAt": "2026-03-13T20:00:00Z"
+}
+```
+- Response:
+```json
+{
+  "status": "accepted",
+  "auditId": "77"
+}
+```
+
+-------------------------------------------------------------------------------
+5) Deep‑Link
 -------------------------------------------------------------------------------
 
 - UI deep‑link örneği: `/admin/audit?event=a-123` (alternatif: `?auditId=a-123`)  
@@ -85,7 +155,7 @@ Not: `page` alanı 0‑bazlıdır (0 ilk sayfa); UI tarafında sayfa numarası g
   vurgular ve drawer’ı açar.
 
 -------------------------------------------------------------------------------
-5) Güvenlik
+6) Güvenlik
 -------------------------------------------------------------------------------
 
 - Header: `Authorization: Bearer <jwt>`
@@ -96,7 +166,7 @@ Not: `page` alanı 0‑bazlıdır (0 ilk sayfa); UI tarafında sayfa numarası g
   + `***` ile gösterilir.
 
 -------------------------------------------------------------------------------
-6) Kabul Kriterleri
+7) Kabul Kriterleri
 -------------------------------------------------------------------------------
 
 - `id` param’ı verildiğinde tek olay döner (response `page=0`, `total=1`) veya 404 (bulunamadı).  
@@ -104,7 +174,7 @@ Not: `page` alanı 0‑bazlıdır (0 ilk sayfa); UI tarafında sayfa numarası g
 - PII alanları maskelenir; payload diff’te yalnızca gerekli alanlar gösterilir.
 
 -------------------------------------------------------------------------------
-7) Hata Durumları
+8) Hata Durumları
 -------------------------------------------------------------------------------
 
 - 400 `invalid_filter` — `from/to` tarihleri hatalı veya desteklenmeyen filtre kombinasyonu.  
@@ -112,7 +182,7 @@ Not: `page` alanı 0‑bazlıdır (0 ilk sayfa); UI tarafında sayfa numarası g
 - 429 `too_many_requests` — export endpoint’i rate‑limit nedeniyle engellendiğinde.
 
 -------------------------------------------------------------------------------
-8) Bağlantılar
+9) Bağlantılar
 -------------------------------------------------------------------------------
 
 - Permission ve user servislerinin mimari detayları için:  

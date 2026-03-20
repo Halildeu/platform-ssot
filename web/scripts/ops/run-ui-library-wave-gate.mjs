@@ -201,10 +201,10 @@ const steps = [
     cwd: repoRoot,
   },
   {
-    id: 'ui_kit_tests',
-    label: 'UI kit tests',
+    id: 'design_system_tests',
+    label: 'Design system tests',
     cmd: 'npm',
-    args: ['run', 'test:ui-kit'],
+    args: ['run', 'test:design-system'],
     cwd: webRoot,
   },
   {

@@ -1,0 +1,177 @@
+{
+  "name": "@mfe/design-system",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Unified design system — tokens, theme, primitives, components, patterns, advanced",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
+    },
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "import": "./dist/esm/tokens/index.js",
+      "require": "./dist/cjs/tokens/index.cjs"
+    },
+    "./primitives": {
+      "types": "./dist/primitives/index.d.ts",
+      "import": "./dist/esm/primitives/index.js",
+      "require": "./dist/cjs/primitives/index.cjs"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/esm/components/index.js",
+      "require": "./dist/cjs/components/index.cjs"
+    },
+    "./patterns": {
+      "types": "./dist/patterns/index.d.ts",
+      "import": "./dist/esm/patterns/index.js",
+      "require": "./dist/cjs/patterns/index.cjs"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts",
+      "import": "./dist/esm/providers/index.js",
+      "require": "./dist/cjs/providers/index.cjs"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/esm/theme/index.js",
+      "require": "./dist/cjs/theme/index.cjs"
+    },
+    "./a11y": {
+      "types": "./dist/a11y/index.d.ts",
+      "import": "./dist/esm/a11y/index.js",
+      "require": "./dist/cjs/a11y/index.cjs"
+    },
+    "./performance": {
+      "types": "./dist/performance/index.d.ts",
+      "import": "./dist/esm/performance/index.js",
+      "require": "./dist/cjs/performance/index.cjs"
+    },
+    "./headless": {
+      "types": "./dist/headless/index.d.ts",
+      "import": "./dist/esm/headless/index.js",
+      "require": "./dist/cjs/headless/index.cjs"
+    },
+    "./headless/overlay": {
+      "types": "./dist/internal/overlay-engine/index.d.ts",
+      "import": "./dist/esm/internal/overlay-engine/index.js",
+      "require": "./dist/cjs/internal/overlay-engine/index.cjs"
+    },
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/esm/icons/index.js",
+      "require": "./dist/cjs/icons/index.cjs"
+    },
+    "./advanced": {
+      "types": "./dist/advanced/index.d.ts",
+      "import": "./dist/esm/advanced/index.js",
+      "require": "./dist/cjs/advanced/index.cjs"
+    },
+    "./advanced/data-grid/setup": {
+      "types": "./dist/advanced/data-grid/setup.d.ts",
+      "import": "./dist/esm/advanced/data-grid/setup.js",
+      "require": "./dist/cjs/advanced/data-grid/setup.cjs"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/esm/server.js",
+      "require": "./dist/cjs/server.cjs"
+    },
+    "./unstable/interaction-core": {
+      "types": "./dist/internal/interaction-core/index.d.ts",
+      "import": "./dist/esm/internal/interaction-core/index.js",
+      "require": "./dist/cjs/internal/interaction-core/index.cjs"
+    },
+    "./unstable/overlay-engine": {
+      "types": "./dist/internal/overlay-engine/index.d.ts",
+      "import": "./dist/esm/internal/overlay-engine/index.js",
+      "require": "./dist/cjs/internal/overlay-engine/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
+  ],
+  "sideEffects": [
+    "./src/advanced/data-grid/setup.ts",
+    "*.css",
+    "./dist/esm/advanced/data-grid/setup.js",
+    "./dist/cjs/advanced/data-grid/setup.cjs"
+  ],
+  "scripts": {
+    "start": "npx kill-port 3004 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
+    "scaffold:component": "node scripts/scaffold-component.mjs",
+    "build": "rm -rf dist && tsup && npx tsc --project tsconfig.build.json && node scripts/post-build-use-client.mjs",
+    "lint": "../../node_modules/.bin/eslint --config eslint.config.mjs src",
+    "test": "vitest run",
+    "test:visual": "npx playwright test",
+    "test:visual:update": "npx playwright test --update-snapshots",
+    "build:tokens": "node scripts/build-tokens.mjs",
+    "migration-guide": "node scripts/generate-migration-guide.mjs",
+    "api-diff": "node scripts/component-diff.mjs",
+    "docs:api": "node scripts/generate-api-reference.mjs",
+    "typecheck": "tsc --noEmit",
+    "check:component-completeness": "node scripts/ci/component-completeness.mjs",
+    "check:authoring": "npm run check:component-completeness && npm run lint",
+    "prepack": "[ -d dist ] || npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.10",
+    "ag-charts-community": "12.3.1",
+    "ag-charts-enterprise": "12.3.1",
+    "ag-charts-react": "12.3.1",
+    "ag-grid-community": "34.3.1",
+    "ag-grid-enterprise": "34.3.1",
+    "ag-grid-react": "34.3.1",
+    "axios": "^1.7.7",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.24.0",
+    "@babel/preset-typescript": "^7.24.0",
+    "@testing-library/dom": "^9.3.0",
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^14.2.0",
+    "@testing-library/user-event": "^14.5.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "babel-loader": "^9.1.0",
+    "css-loader": "^6.10.0",
+    "eslint": "^8.57.0",
+    "html-webpack-plugin": "^5.6.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss-loader": "^8.1.0",
+    "style-loader": "^3.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.4.0",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.0",
+    "webpack-dev-server": "^5.0.0",
+    "webpack-merge": "^5.10.0"
+  },
+  "peerDependencies": {
+    "@mfe/shared-http": "*",
+    "@mfe/shared-types": "*",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@mfe/shared-http": {
+      "optional": true
+    },
+    "@mfe/shared-types": {
+      "optional": true
+    }
+  }
+}

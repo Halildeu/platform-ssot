@@ -2,6 +2,8 @@
 const pseudo = {
   "users.layout.title": "Úsér Máñágéméñt",
   "users.layout.description": "Máñágé úsér rólés, pérmíssíóñs áñd módúlé áççéss; défíñé áççóúñt séçúríty-rélátéd ópérátíóñs.",
+  "admin.users.title": "Úsér Máñágéméñt",
+  "admin.users.description": "Máñágé úsér rólés, pérmíssíóñs áñd módúlé áççéss; défíñé áççóúñt séçúríty-rélátéd ópérátíóñs.",
   "users.breadcrumb.management": "Ádmíñístrátíóñ",
   "users.breadcrumb.users": "Úsér Máñágéméñt",
   "users.actions.refresh": "Réfrésh úsérs",

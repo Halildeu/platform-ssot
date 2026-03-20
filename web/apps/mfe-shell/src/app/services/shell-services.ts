@@ -18,6 +18,8 @@ export type ShellNotificationEntry = {
   message: string;
   description?: string;
   type?: ShellNotificationType;
+  priority?: 'normal' | 'high';
+  pinned?: boolean;
   createdAt?: number;
   meta?: Record<string, unknown>;
 };
@@ -66,6 +68,17 @@ let getAuthTokenImpl: () => string | null = () => tokenCache;
 let fallbackQueryClient: QueryClient | null = null;
 let warnedUnconfigured = false;
 
+const normalizeToken = (token: string | null | undefined): string | null => {
+  if (typeof token !== 'string') {
+    return null;
+  }
+  const normalized = token.trim();
+  if (!normalized || normalized === 'undefined' || normalized === 'null') {
+    return null;
+  }
+  return normalized;
+};
+
 const defaultNotify = (entry: ShellNotificationEntry) => {
   if (process.env.NODE_ENV !== 'production') {
     console.info('[shell:notify]', entry);
@@ -83,10 +96,11 @@ let telemetryImpl = defaultTelemetry;
 let featureFlagImpl: (flag: string) => boolean = () => false;
 
 const emitTokenChange = (token: string | null) => {
-  if (tokenCache === token) {
+  const normalizedToken = normalizeToken(token);
+  if (tokenCache === normalizedToken) {
     return;
   }
-  tokenCache = token ?? null;
+  tokenCache = normalizedToken;
   authListeners.forEach((listener) => listener(tokenCache));
 };
 
@@ -103,9 +117,9 @@ export const configureShellServices = (init: ShellServicesInit): void => {
 
   unsubscribeAuthSource?.();
   if (init.subscribeAuthToken) {
-    unsubscribeAuthSource = init.subscribeAuthToken((token) => emitTokenChange(token, true));
+    unsubscribeAuthSource = init.subscribeAuthToken((token) => emitTokenChange(token));
   } else {
-    emitTokenChange(getAuthTokenImpl(), true);
+    emitTokenChange(getAuthTokenImpl());
   }
 };
 
@@ -122,7 +136,7 @@ export const getShellServices = (): ShellServices => {
       }
       return createShellServices(fallbackQueryClient);
     }
-    throw new Error('[shell] configureShellServices önce çağrılmalıdır.');
+    throw new Error('[shell] configureShellServices must be called first.');
   }
   return createShellServices(targetQueryClient);
 };
@@ -132,10 +146,10 @@ export const shellServicesContract = contract;
 function createShellServices(queryClient: QueryClient | null): ShellServices {
   return {
     auth: {
-      getToken: () => tokenCache ?? getAuthTokenImpl() ?? null,
+      getToken: () => normalizeToken(tokenCache ?? getAuthTokenImpl() ?? null),
       onTokenChange: (listener: AuthListener) => {
         authListeners.add(listener);
-        listener(tokenCache ?? getAuthTokenImpl() ?? null);
+        listener(normalizeToken(tokenCache ?? getAuthTokenImpl() ?? null));
         return () => authListeners.delete(listener);
       },
     },

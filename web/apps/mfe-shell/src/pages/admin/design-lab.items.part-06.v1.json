@@ -1,0 +1,357 @@
+{
+  "items": [
+    {
+      "name": "Switch",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Switch } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/RoleCloneModal.ui.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "THEME_APPEARANCE_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { THEME_APPEARANCE_OPTIONS } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "THEME_ATTRIBUTE_MAP",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { THEME_ATTRIBUTE_MAP } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "THEME_DENSITY_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { THEME_DENSITY_OPTIONS } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "THEME_ELEVATION_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { THEME_ELEVATION_OPTIONS } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "THEME_MOTION_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { THEME_MOTION_OPTIONS } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "THEME_RADIUS_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { THEME_RADIUS_OPTIONS } from '@mfe/design-system';",
+      "whereUsed": []
+    },
+    {
+      "name": "TablePagination",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { TablePagination } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessGrid.test.tsx",
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessGrid.ui.tsx",
+        "web/apps/mfe-audit/src/app/components/AuditEventFeed.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+      ]
+    },
+    {
+      "name": "TableSimple",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { TableSimple } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/docs/guideRegistry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabTableSimpleShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Tabs",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Tabs } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabRecipeDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Tag",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Tag } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Text",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Text } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx",
+        "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSearchModal.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/ai/SuggestedPatterns.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/api/PropsDepsGraph.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/api/PropsTableV2.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/components/EnterpriseReadyChecklist.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/compose/ComposePage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/composition/CompositionMode.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/BenchmarkParityPanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentOverviewPanels.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabRecipeDetailSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/MigrationGovernancePanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/PlatformContractsCompliancePanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/docs/GuideTab.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/ExampleCard.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/ExamplesGallery.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/insights/AdoptionHeatmap.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/interaction/InteractionPlayground.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/migration/MigrationDiffView.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabHero.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/ComponentsSidebarRenderer.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/EcosystemSidebarRenderer.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/FoundationsSidebarRenderer.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/PagesSidebarRenderer.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/RecipesSidebarRenderer.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/AdvancedListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/BundleSizePage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentGroupListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentsListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DependencyGraphPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DesignLabLanding.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DesignTokenDetail.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DesignTokensListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/EcosystemListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ExtensionDetail.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FigmaSyncPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FoundationDetail.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FoundationsListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/IconGalleryPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/InsightsDashboardPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/MigrationGuidePage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PageTemplateDetail.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PagesListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ParityDashboardPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PrimitivesListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/QualityAuditPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/RecipeDetail.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/RecipesListing.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemingGuidePage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/UsageAnalyticsPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/VisualRegressionPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/panels/A11yAuditPanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/panels/MeasureOverlay.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/panels/PerfProfilerPanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/playground/ActionsPanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/playground/ComponentPlayground.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/playground/PlaygroundControls.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/playground/PlaygroundPreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/playground/ResponsiveMode.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/shared/DesignLabTaxonomyNavigator.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabBreadcrumbShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabMenuBarShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabStepsShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabTableSimpleShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/link-inline/index.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/menu-bar/menuBarShared.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/navigation-rail/index.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationCenteredFirstLastShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationClientCompactShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationClientDefaultShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationCompactNoInfoShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationDisabledShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationEllipsisTightShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationEllipsisWideShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationGhostMobileShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationReadonlyShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationRoundedOutlinedShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDefaultShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDenseShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerNoInfoShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationSimplePillShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationUnknownTotalStreamShowcase.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/paginationShared.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildDataDisplayAnalyticsShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildNavigationUtilityLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/source/ViewSourceModal.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/tabs/StyleTab.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/tabs/TokensTab.tsx",
+        "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
+      ]
+    },
+    {
+      "name": "TextArea",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { TextArea } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "TextInput",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { TextInput } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-access/src/widgets/access-management/ui/AccessFilterBar.ui.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "Textarea",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { Textarea } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
+      ]
+    },
+    {
+      "name": "ThemePresetCompare",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ThemePresetCompare } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentOverviewPanels.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildThemeRecipeShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "ThemePresetGallery",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ThemePresetGallery } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentOverviewPanels.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildThemeRecipeShowcaseSections.tsx"
+      ]
+    },
+    {
+      "name": "ThemePreviewCard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ThemePreviewCard } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/app/layout/ThemeRuntimePanelButton.tsx",
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/ThemeAdminPreviewPanel.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
+      ]
+    },
+    {
+      "name": "ThemeProvider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { ThemeProvider } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemingGuidePage.tsx"
+      ]
+    },
+    {
+      "name": "TimePicker",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component",
+      "importStatement": "import { TimePicker } from '@mfe/design-system';",
+      "whereUsed": [
+        "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAdvancedInputLivePreview.tsx",
+        "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAdvancedInputShowcaseSections.tsx"
+      ]
+    }
+  ]
+}

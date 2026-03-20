@@ -1,4 +1,4 @@
-import type { PageBreadcrumbItem } from 'mfe-ui-kit';
+import type { PageBreadcrumbItem } from '@mfe/design-system';
 
 export interface AccessPageManifest {
   pageId: string;

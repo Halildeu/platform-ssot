@@ -1,0 +1,64 @@
+{
+  "version": "v1",
+  "tenant_id": "TENANT-DEFAULT",
+  "status": "ACTIVE",
+  "bundle_mode": "managed_repo_execution_mirror",
+  "control_plane_repo": "autonomous-orchestrator",
+  "managed_repo": "dev",
+  "authority_chain": [
+    "standards.lock",
+    "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md",
+    "docs/OPERATIONS/OPO-AUTHORITY-MAP.v1.md",
+    "tenant/TENANT-DEFAULT/context.v1.md",
+    "tenant/TENANT-DEFAULT/decision-bundle.v1.json",
+    "extensions/PRJ-PM-SUITE/contract/feature_execution_contract.v1.json",
+    "session-context"
+  ],
+  "context_refs": {
+    "context": "tenant/TENANT-DEFAULT/context.v1.md",
+    "stakeholders": "tenant/TENANT-DEFAULT/stakeholders.v1.md",
+    "scope": "tenant/TENANT-DEFAULT/scope.v1.md",
+    "criteria": "tenant/TENANT-DEFAULT/criteria.v1.md"
+  },
+  "platform_model": {
+    "managed_repo_strategy": "single_repo_multi_plane",
+    "planes": [
+      "web",
+      "mobile",
+      "backend",
+      "ai",
+      "data",
+      "governance"
+    ]
+  },
+  "stack_defaults": {
+    "backend": "java21-spring-boot-3.2-microservice",
+    "web": "react18-node20-module-federation",
+    "mobile": "expo-react-native-typescript",
+    "ai": "contract-first-backend-job-event-integrated",
+    "data": "postgres-flyway-sql-etl-conventions"
+  },
+  "delivery_rules": {
+    "preserve_existing_delivery_system": true,
+    "feature_contract_required": true,
+    "session_context_is_ephemeral": true,
+    "initial_scope_mapping": {
+      "mobile": "frontend",
+      "ai": "backend+integration",
+      "data": "database+api"
+    }
+  },
+  "integration_rules": [
+    "web and mobile surfaces talk to backend and gateway first",
+    "backend services communicate through REST, event, or shared interfaces",
+    "each table is owned by one backend service",
+    "ai writes through backend API, job, or event contracts",
+    "data changes must respect ownership and produce curated outputs",
+    "cross-plane work starts from one feature execution contract"
+  ],
+  "notes": [
+    "execution mirror until core tenant decision bundle becomes canonical",
+    "preserve existing backend-web runtime and lane chain",
+    "mobile-ai-data expansion must stay contract-first"
+  ]
+}

@@ -3,6 +3,7 @@ const { ModuleFederationPlugin } = require('webpack').container;
 const commonConfig = require('./webpack.common.js');
 const deps = require('./package.json').dependencies;
 const path = require('path');
+const { buildProdRemotes } = require('./webpack.remotes.js');
 
 const prodConfig = {
   mode: 'production',
@@ -15,14 +16,8 @@ const prodConfig = {
   plugins: [
     new ModuleFederationPlugin({
       name: 'mfe_shell',
-      remotes: {
-        mfe_suggestions: 'mfe_suggestions@/suggestions/remoteEntry.js',
-        mfe_ethic: 'mfe_ethic@/ethic/remoteEntry.js',
-        mfe_access: 'mfe_access@/access/remoteEntry.js',
-        mfe_audit: 'mfe_audit@/audit/remoteEntry.js',
-        mfe_users: 'mfe_users@/users/remoteEntry.js',
-        mfe_reporting: 'mfe_reporting@/reports/remoteEntry.js',
-      },
+      filename: 'remoteEntry.js',
+      remotes: buildProdRemotes(),
       exposes: {
         './logic': './src/exposed-logic.ts',
         './services': './src/app/services/shell-services.ts',
@@ -52,11 +47,12 @@ const prodConfig = {
           singleton: true,
           requiredVersion: deps['@tanstack/react-query'],
         },
-        'mfe-ui-kit': { singleton: true, requiredVersion: false },
+        '@mfe/design-system': { singleton: true, requiredVersion: false },
         // ➤ AG Grid tekil paylaşımlar (prod)
         'ag-grid-community':  { singleton: true, strictVersion: true, requiredVersion: deps['ag-grid-community'] },
         'ag-grid-enterprise': { singleton: true, strictVersion: true, requiredVersion: deps['ag-grid-enterprise'] },
         'ag-grid-react':      { singleton: true, strictVersion: true, requiredVersion: deps['ag-grid-react'] },
+        '@platform/capabilities': { singleton: true, requiredVersion: false },
         '@mfe/shared-http':   { singleton: true, requiredVersion: false },
         '@mfe/i18n-dicts':    { singleton: true, requiredVersion: false },
       },

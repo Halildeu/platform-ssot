@@ -2,6 +2,8 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { rules as semanticThemeRules } from './scripts/lint/eslint-plugin-semantic-theme.mjs';
+import { rules as cssVarFallbackRules } from './scripts/lint/eslint-plugin-css-var-fallback.mjs';
+import { rules as noAntImportRules } from './scripts/lint/eslint-plugin-no-ant-import.mjs';
 
 export default tseslint.config(
   {
@@ -47,9 +49,13 @@ export default tseslint.config(
     },
     plugins: {
       'semantic-theme': { rules: semanticThemeRules },
+      'css-var-fallback': { rules: cssVarFallbackRules },
+      'no-ant-import': { rules: noAntImportRules },
     },
     rules: {
       'semantic-theme/no-inline-color-literals': 'error',
+      'css-var-fallback/no-css-var-without-fallback': 'error',
+      'no-ant-import/no-new-ant-import': 'error',
     },
   },
   {

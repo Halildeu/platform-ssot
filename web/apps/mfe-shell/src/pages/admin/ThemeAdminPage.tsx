@@ -1,19 +1,26 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { PageLayout, Text } from 'mfe-ui-kit';
+import {
+  PageLayout,
+  Segmented,
+  Text,
+  createPageLayoutBreadcrumbItems,
+  createPageLayoutPreset,
+  createSegmentedPreset,
+} from '@mfe/design-system';
 import { api } from '@mfe/shared-http';
 import { useThemeContext } from '../../app/theme/theme-context.provider';
 import { parseAnyColor, rgbaToHex, rgbaToString, type RgbaColor } from '../../app/theme/color-utils';
 import ThemeAdminPreviewPanel from './ThemeAdminPreviewPanel';
 import ThemeAdminRegistryEditor from './ThemeAdminRegistryEditor';
 import {
-  accentOptions,
   contrastRatio,
-  densityOptions,
-  elevationOptions,
+  getAccentOptions,
+  getDensityOptions,
+  getElevationOptions,
   groupOrder,
-  motionOptions,
+  getMotionOptions,
   parseColor,
-  radiusOptions,
+  getRadiusOptions,
   resolveThemeAttr,
   surfaceToneOptions,
   type ThemeColorPickerState,
@@ -23,9 +30,11 @@ import {
   type ThemeRegistryEntry,
   type ThemeSummary,
 } from './ThemeAdminPage.shared';
+import { useThemeAdminI18n } from './useThemeAdminI18n';
 
 // STORY-0022: Theme Personalization v1.0
 const ThemeAdminPage: React.FC = () => {
+  const { t } = useThemeAdminI18n();
   const { currentThemeId, refreshResolvedTheme } = useThemeContext();
   const hasManualThemeSelectionRef = useRef(false);
   const previewRef = useRef<HTMLDivElement | null>(null);
@@ -51,6 +60,52 @@ const ThemeAdminPage: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [contrastWarnings, setContrastWarnings] = useState<Record<string, string>>({});
   const [activeColorPicker, setActiveColorPicker] = useState<ThemeColorPickerState | null>(null);
+
+  const accentOptions = useMemo(() => getAccentOptions(t), [t]);
+  const densityOptions = useMemo(() => getDensityOptions(t), [t]);
+  const radiusOptions = useMemo(() => getRadiusOptions(t), [t]);
+  const elevationOptions = useMemo(() => getElevationOptions(t), [t]);
+  const motionOptions = useMemo(() => getMotionOptions(t), [t]);
+  const themeAxisSegmentedPreset = useMemo(
+    () => ({
+      ...createSegmentedPreset('toolbar'),
+      size: 'sm' as const,
+      fullWidth: true,
+    }),
+    [],
+  );
+  const densitySegmentedItems = useMemo(
+    () => densityOptions.map((option) => ({
+      value: option.value,
+      label: option.label,
+      dataTestId: `theme-meta-density-${option.value}`,
+    })),
+    [densityOptions],
+  );
+  const radiusSegmentedItems = useMemo(
+    () => radiusOptions.map((option) => ({
+      value: option.value,
+      label: option.label,
+      dataTestId: `theme-meta-radius-${option.value}`,
+    })),
+    [radiusOptions],
+  );
+  const elevationSegmentedItems = useMemo(
+    () => elevationOptions.map((option) => ({
+      value: option.value,
+      label: option.label,
+      dataTestId: `theme-meta-elevation-${option.value}`,
+    })),
+    [elevationOptions],
+  );
+  const motionSegmentedItems = useMemo(
+    () => motionOptions.map((option) => ({
+      value: option.value,
+      label: option.label,
+      dataTestId: `theme-meta-motion-${option.value}`,
+    })),
+    [motionOptions],
+  );
 
   const resolveHttpErrorMessage = (error: unknown): { message: string | null; status: number | null } => {
     const anyError = error as { response?: { data?: unknown; status?: number }; message?: unknown };
@@ -185,7 +240,7 @@ const ThemeAdminPage: React.FC = () => {
         }
       } catch {
         if (!cancelled) {
-          setError('Tema registry veya global temalar yüklenemedi.');
+          setError(t('themeadmin.error.loadRegistryThemes'));
         }
       } finally {
         if (!cancelled) {
@@ -197,7 +252,7 @@ const ThemeAdminPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (hasManualThemeSelectionRef.current) return;
@@ -242,7 +297,7 @@ const ThemeAdminPage: React.FC = () => {
 	        });
       } catch {
         if (!cancelled) {
-          setError('Tema detayları yüklenemedi.');
+          setError(t('themeadmin.error.loadThemeDetails'));
           setThemeMeta(null);
         }
       }
@@ -251,7 +306,7 @@ const ThemeAdminPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [selectedThemeId]);
+  }, [selectedThemeId, t]);
 
   const registryCssVarsByKey = useMemo(() => {
     const map: Record<string, string[]> = {};
@@ -364,32 +419,32 @@ const ThemeAdminPage: React.FC = () => {
     return [
       {
         id: 'core',
-        label: 'Genel metin (text.*)',
+        label: t('themeadmin.textAreaGroup.core'),
         rows: byKey((row) => row.key.startsWith('text.')),
       },
       {
         id: 'action',
-        label: 'Buton metinleri (action.*.text)',
+        label: t('themeadmin.textAreaGroup.action'),
         rows: byKey((row) => row.key.startsWith('action.') && row.key.endsWith('.text')),
       },
       {
         id: 'status',
-        label: 'Durum metinleri (status.*.text)',
+        label: t('themeadmin.textAreaGroup.status'),
         rows: byKey((row) => row.key.startsWith('status.') && row.key.endsWith('.text')),
       },
       {
         id: 'grid',
-        label: 'Grid metinleri (grid.*.text)',
+        label: t('themeadmin.textAreaGroup.grid'),
         rows: byKey((row) => row.key.startsWith('grid.') && row.key.endsWith('.text')),
       },
       {
         id: 'accent',
-        label: 'Vurgu/link (accent.*) — bazı metinler bunu kullanır',
+        label: t('themeadmin.textAreaGroup.accent'),
         rows: byKey((row) => row.key.startsWith('accent.')),
       },
     ]
       .filter((group) => group.rows.length > 0);
-  }, [registry, overrides]);
+  }, [registry, overrides, t]);
 
   const paletteThemes = useMemo(() => {
     const preferredAccents = ['light', 'violet', 'emerald', 'sunset', 'ocean', 'graphite'];
@@ -502,7 +557,7 @@ const ThemeAdminPage: React.FC = () => {
       if (!bg || !fg) {
         setContrastWarnings((prev) => ({
           ...prev,
-          [key]: 'Renk formatı çözülemedi; kontrast hesaplanamadı.',
+          [key]: t('themeadmin.error.contrastParse'),
         }));
         return;
       }
@@ -510,7 +565,7 @@ const ThemeAdminPage: React.FC = () => {
       if (ratio < 4.5) {
         setContrastWarnings((prev) => ({
           ...prev,
-          [key]: `Kontrast oranı ${ratio.toFixed(2)}:1 – WCAG AA (4.5:1) eşiğinin altında.`,
+          [key]: t('themeadmin.error.contrastBelowThreshold', { ratio: ratio.toFixed(2) }),
         }));
       } else {
         setContrastWarnings((prev) => {
@@ -531,7 +586,7 @@ const ThemeAdminPage: React.FC = () => {
 
   const handleDefaultThemeSave = async () => {
     if (!defaultThemeId) {
-      setDefaultThemeError('Önce bir global tema seçin.');
+      setDefaultThemeError(t('themeadmin.error.selectGlobalThemeFirst'));
       return;
     }
     setDefaultThemeSaving(true);
@@ -551,10 +606,10 @@ const ThemeAdminPage: React.FC = () => {
           return theme;
         }),
       );
-      setDefaultThemeSuccess('Varsayılan global tema güncellendi.');
+      setDefaultThemeSuccess(t('themeadmin.success.defaultThemeSaved'));
       void refreshResolvedTheme({ force: true });
     } catch (error: unknown) {
-      setDefaultThemeError(formatHttpError(error, 'Varsayılan global tema güncellenemedi.'));
+      setDefaultThemeError(formatHttpError(error, t('themeadmin.error.defaultThemeSave')));
     } finally {
       setDefaultThemeSaving(false);
     }
@@ -562,17 +617,17 @@ const ThemeAdminPage: React.FC = () => {
 
   const handlePaletteSave = async () => {
     if (themes.length === 0) {
-      setPaletteError('Önce global temalar yüklenmeli.');
+      setPaletteError(t('themeadmin.error.loadThemesFirst'));
       return;
     }
     if (paletteSelectedCount === 0) {
-      setPaletteError('Görünüm paleti için en az 1 tema seçin.');
+      setPaletteError(t('themeadmin.error.paletteSelectAtLeastOne'));
       return;
     }
 
     const changed = themes.filter((theme) => Boolean(theme.activeFlag) !== Boolean(paletteDraft[theme.id]));
     if (changed.length === 0) {
-      setPaletteSuccess('Görünüm paleti zaten güncel.');
+      setPaletteSuccess(t('themeadmin.success.paletteUpToDate'));
       return;
     }
 
@@ -592,9 +647,9 @@ const ThemeAdminPage: React.FC = () => {
           activeFlag: Boolean(paletteDraft[theme.id]),
         })),
       );
-      setPaletteSuccess('Görünüm paleti başarıyla güncellendi.');
+      setPaletteSuccess(t('themeadmin.success.paletteSaved'));
     } catch (error: unknown) {
-      setPaletteError(formatHttpError(error, 'Görünüm paleti güncellenemedi.'));
+      setPaletteError(formatHttpError(error, t('themeadmin.error.paletteSave')));
     } finally {
       setPaletteSaving(false);
     }
@@ -602,11 +657,11 @@ const ThemeAdminPage: React.FC = () => {
 
   const handleSave = async () => {
     if (!selectedThemeId) {
-      setError('Önce bir global tema seçin.');
+      setError(t('themeadmin.error.selectGlobalThemeFirst'));
       return;
     }
     if (!themeMeta) {
-      setError('Tema özellikleri yüklenemedi.');
+      setError(t('themeadmin.error.themePropertiesUnavailable'));
       return;
     }
     setSaving(true);
@@ -644,31 +699,31 @@ const ThemeAdminPage: React.FC = () => {
             }
           : prev,
       );
-      setSuccess('Tema özellikleri ve registry overrides başarıyla kaydedildi.');
+      setSuccess(t('themeadmin.success.themeSaved'));
       void refreshResolvedTheme({ force: true });
     } catch (error: unknown) {
-      setError(formatHttpError(error, 'Tema kayıt edilirken bir hata oluştu.'));
+      setError(formatHttpError(error, t('themeadmin.error.themeSave')));
     } finally {
       setSaving(false);
     }
   };
 
-  const title = 'Tema Registry (Admin)';
-  const description =
-    'GLOBAL temaların registry tabanlı semantik alanlarını (surface/text/border/accent/overlay/status) THEME_ADMIN yetkisiyle düzenleyin.';
+  const title = t('themeadmin.page.title');
+  const description = t('themeadmin.page.description');
 
   return (
     <PageLayout
+      {...createPageLayoutPreset({ preset: 'ops-workspace', pageWidth: 'wide', stickyHeader: false })}
       title={title}
       description={description}
-      breadcrumbItems={[
-        { title: 'Shell', path: '/' },
-        { title: 'Tema Yönetimi', path: '/admin/themes' },
-      ]}
+      breadcrumbItems={createPageLayoutBreadcrumbItems([
+        { title: t('themeadmin.breadcrumb.shell'), path: '/' },
+        { title: t('themeadmin.breadcrumb.themes'), path: '/admin/themes' },
+      ])}
     >
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4" data-testid="theme-admin-page">
         {loading ? (
-          <Text variant="secondary">Tema registry yükleniyor…</Text>
+          <Text variant="secondary">{t('themeadmin.loading')}</Text>
 	        ) : (
 	          <>
 	            {error ? (
@@ -681,9 +736,9 @@ const ThemeAdminPage: React.FC = () => {
 	              <div className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-3">
 	                <div className="flex items-center justify-between gap-2">
 	                  <div className="flex flex-col gap-0.5">
-	                    <span className="text-xs font-semibold text-text-secondary">Global varsayılan tema</span>
+	                    <span className="text-xs font-semibold text-text-secondary">{t('themeadmin.defaultTheme.title')}</span>
 	                    <span className="text-[11px] text-text-subtle">
-	                      Kullanıcının seçimi yoksa uygulanır.
+	                      {t('themeadmin.defaultTheme.description')}
 	                    </span>
 	                  </div>
 	                  <button
@@ -692,7 +747,7 @@ const ThemeAdminPage: React.FC = () => {
 	                    onClick={() => void handleDefaultThemeSave()}
 	                    disabled={defaultThemeSaving || !defaultThemeDirty || !defaultThemeId}
 	                  >
-	                    {defaultThemeSaving ? 'Kaydediliyor…' : 'Varsayılanı kaydet'}
+	                    {defaultThemeSaving ? t('themeadmin.defaultTheme.saving') : t('themeadmin.defaultTheme.save')}
 	                  </button>
 	                </div>
 	                <select
@@ -722,9 +777,12 @@ const ThemeAdminPage: React.FC = () => {
 	              <div className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-3">
 	                <div className="flex items-center justify-between gap-2">
 	                  <div className="flex flex-col gap-0.5">
-	                    <span className="text-xs font-semibold text-text-secondary">Görünüm paleti</span>
+	                    <span className="text-xs font-semibold text-text-secondary">{t('themeadmin.palette.title')}</span>
 	                    <span className="text-[11px] text-text-subtle">
-	                      Palet’te göster ({paletteSelectedCount}/{themes.length})
+	                      {t('themeadmin.palette.description', {
+	                        selectedCount: paletteSelectedCount,
+	                        totalCount: themes.length,
+	                      })}
 	                    </span>
 	                  </div>
 	                  <button
@@ -733,7 +791,7 @@ const ThemeAdminPage: React.FC = () => {
 	                    onClick={() => void handlePaletteSave()}
 	                    disabled={paletteSaving || !paletteDirty}
 		                  >
-		                    {paletteSaving ? 'Kaydediliyor…' : 'Paleti kaydet'}
+		                    {paletteSaving ? t('themeadmin.palette.saving') : t('themeadmin.palette.save')}
 		                  </button>
 		                </div>
 		                {paletteError ? (
@@ -775,7 +833,7 @@ const ThemeAdminPage: React.FC = () => {
 
 	            <div className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-3">
 	              <div className="flex flex-wrap items-center gap-2">
-	                <span className="text-xs font-semibold text-text-secondary">Düzenlenecek global tema:</span>
+	                <span className="text-xs font-semibold text-text-secondary">{t('themeadmin.selection.title')}:</span>
 	                <select
 	                  className="h-9 rounded-md border border-border-subtle bg-surface-default px-2 text-xs font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
 	                  value={selectedThemeId ?? ''}
@@ -799,11 +857,11 @@ const ThemeAdminPage: React.FC = () => {
 	                  onClick={() => void handleSave()}
 	                  disabled={saving || !selectedThemeId || !themeMeta}
 	                >
-	                  {saving ? 'Kaydediliyor…' : 'Değişiklikleri kaydet'}
+	                  {saving ? t('themeadmin.selection.saving') : t('themeadmin.selection.save')}
 	                </button>
 	              </div>
 	              <div className="mt-2 text-[10px] text-text-subtle">
-	                Tema seçimi üst seviyedir; aşağıda seçili temanın özelliklerini ve registry renklerini düzenleyebilirsiniz.
+	                {t('themeadmin.selection.description')}
 	              </div>
 	            </div>
 
@@ -811,17 +869,17 @@ const ThemeAdminPage: React.FC = () => {
 		              <div className="flex flex-col gap-4">
 		              <details open className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-2">
 		                <summary className="cursor-pointer select-none text-xs font-semibold uppercase tracking-wide text-text-secondary">
-		                  Tema özellikleri
+		                  {t('themeadmin.meta.title')}
 		                </summary>
 	                <div className="mt-3 grid gap-3 md:grid-cols-2">
 		                  <div className="text-[11px] font-semibold text-text-secondary">
-		                    Görünüm (appearance)
+		                    {t('themeadmin.meta.appearance')}
 		                    <div className="mt-1 flex h-8 items-center rounded-md border border-border-subtle bg-surface-muted px-2 text-[11px] text-text-primary">
 		                      {themeMeta?.appearance ? themeMeta.appearance : '—'}
 		                    </div>
 		                  </div>
 		                  <label className="text-[11px] font-semibold text-text-secondary">
-		                    Accent
+		                    {t('themeadmin.meta.accent')}
 		                    <select
 		                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
 		                      value={themeMeta?.axes.accent ?? ''}
@@ -839,7 +897,7 @@ const ThemeAdminPage: React.FC = () => {
 		                    </select>
 		                  </label>
 		                  <label className="text-[11px] font-semibold text-text-secondary">
-		                    Surface tone
+		                    {t('themeadmin.meta.surfaceTone')}
 		                    <select
 		                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
 	                      value={themeMeta?.surfaceTone ?? ''}
@@ -849,7 +907,7 @@ const ThemeAdminPage: React.FC = () => {
 	                        setThemeMeta((prev) => (prev ? { ...prev, surfaceTone: next ? next : null } : prev));
 	                      }}
 	                    >
-	                      <option value="">Varsayılan</option>
+	                      <option value="">{t('themeadmin.meta.surfaceTone.default')}</option>
 	                      {surfaceToneOptions.map((tone) => (
 	                        <option key={tone} value={tone}>
 	                          {tone}
@@ -857,81 +915,89 @@ const ThemeAdminPage: React.FC = () => {
 	                      ))}
 	                    </select>
 	                  </label>
-	                  <label className="text-[11px] font-semibold text-text-secondary">
-	                    Density
-	                    <select
-	                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
-	                      value={themeMeta?.axes.density ?? ''}
-	                      disabled={!themeMeta}
-	                      onChange={(event) => {
-	                        const next = event.target.value;
-	                        setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, density: next } } : prev));
-	                      }}
-	                    >
-	                      {densityOptions.map((option) => (
-	                        <option key={option.value} value={option.value}>
-	                          {option.label}
-	                        </option>
-	                      ))}
-	                    </select>
-	                  </label>
-	                  <label className="text-[11px] font-semibold text-text-secondary">
-	                    Radius
-	                    <select
-	                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
-	                      value={themeMeta?.axes.radius ?? ''}
-	                      disabled={!themeMeta}
-	                      onChange={(event) => {
-	                        const next = event.target.value;
-	                        setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, radius: next } } : prev));
-	                      }}
-	                    >
-	                      {radiusOptions.map((option) => (
-	                        <option key={option.value} value={option.value}>
-	                          {option.label}
-	                        </option>
-	                      ))}
-	                    </select>
-	                  </label>
-	                  <label className="text-[11px] font-semibold text-text-secondary">
-	                    Elevation
-	                    <select
-	                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
-	                      value={themeMeta?.axes.elevation ?? ''}
-	                      disabled={!themeMeta}
-	                      onChange={(event) => {
-	                        const next = event.target.value;
-	                        setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, elevation: next } } : prev));
-	                      }}
-	                    >
-	                      {elevationOptions.map((option) => (
-	                        <option key={option.value} value={option.value}>
-	                          {option.label}
-	                        </option>
-	                      ))}
-	                    </select>
-	                  </label>
-	                  <label className="text-[11px] font-semibold text-text-secondary">
-	                    Motion
-	                    <select
-	                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
-	                      value={themeMeta?.axes.motion ?? ''}
-	                      disabled={!themeMeta}
-	                      onChange={(event) => {
-	                        const next = event.target.value;
-	                        setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, motion: next } } : prev));
-	                      }}
-	                    >
-	                      {motionOptions.map((option) => (
-	                        <option key={option.value} value={option.value}>
-	                          {option.label}
-	                        </option>
-	                      ))}
-	                    </select>
-	                  </label>
+		                  <div className="text-[11px] font-semibold text-text-secondary">
+		                    {t('themeadmin.meta.density')}
+                        <Segmented
+                          items={densitySegmentedItems}
+                          value={themeMeta?.axes.density ?? ''}
+                          access={themeMeta ? 'full' : 'disabled'}
+                          ariaLabel={t('themeadmin.meta.density')}
+                          onValueChange={(nextValue) => {
+                            const next = nextValue as string;
+                            setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, density: next } } : prev));
+                          }}
+                          appearance={themeAxisSegmentedPreset.appearance}
+                          shape={themeAxisSegmentedPreset.shape}
+                          size={themeAxisSegmentedPreset.size}
+                          iconPosition={themeAxisSegmentedPreset.iconPosition}
+                          fullWidth={themeAxisSegmentedPreset.fullWidth}
+                          className="mt-1 w-full"
+                          classes={{ list: 'w-full', item: 'min-w-0 flex-1', content: 'w-full' }}
+                        />
+	                  </div>
+		                  <div className="text-[11px] font-semibold text-text-secondary">
+		                    {t('themeadmin.meta.radius')}
+                        <Segmented
+                          items={radiusSegmentedItems}
+                          value={themeMeta?.axes.radius ?? ''}
+                          access={themeMeta ? 'full' : 'disabled'}
+                          ariaLabel={t('themeadmin.meta.radius')}
+                          onValueChange={(nextValue) => {
+                            const next = nextValue as string;
+                            setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, radius: next } } : prev));
+                          }}
+                          appearance={themeAxisSegmentedPreset.appearance}
+                          shape={themeAxisSegmentedPreset.shape}
+                          size={themeAxisSegmentedPreset.size}
+                          iconPosition={themeAxisSegmentedPreset.iconPosition}
+                          fullWidth={themeAxisSegmentedPreset.fullWidth}
+                          className="mt-1 w-full"
+                          classes={{ list: 'w-full', item: 'min-w-0 flex-1', content: 'w-full' }}
+                        />
+	                  </div>
+		                  <div className="text-[11px] font-semibold text-text-secondary">
+		                    {t('themeadmin.meta.elevation')}
+                        <Segmented
+                          items={elevationSegmentedItems}
+                          value={themeMeta?.axes.elevation ?? ''}
+                          access={themeMeta ? 'full' : 'disabled'}
+                          ariaLabel={t('themeadmin.meta.elevation')}
+                          onValueChange={(nextValue) => {
+                            const next = nextValue as string;
+                            setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, elevation: next } } : prev));
+                          }}
+                          appearance={themeAxisSegmentedPreset.appearance}
+                          shape={themeAxisSegmentedPreset.shape}
+                          size={themeAxisSegmentedPreset.size}
+                          iconPosition={themeAxisSegmentedPreset.iconPosition}
+                          fullWidth={themeAxisSegmentedPreset.fullWidth}
+                          className="mt-1 w-full"
+                          classes={{ list: 'w-full', item: 'min-w-0 flex-1', content: 'w-full' }}
+                        />
+	                  </div>
+		                  <div className="text-[11px] font-semibold text-text-secondary">
+		                    {t('themeadmin.meta.motion')}
+                        <Segmented
+                          items={motionSegmentedItems}
+                          value={themeMeta?.axes.motion ?? ''}
+                          access={themeMeta ? 'full' : 'disabled'}
+                          ariaLabel={t('themeadmin.meta.motion')}
+                          onValueChange={(nextValue) => {
+                            const next = nextValue as string;
+                            setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, motion: next } } : prev));
+                          }}
+                          appearance={themeAxisSegmentedPreset.appearance}
+                          shape={themeAxisSegmentedPreset.shape}
+                          size={themeAxisSegmentedPreset.size}
+                          iconPosition={themeAxisSegmentedPreset.iconPosition}
+                          fullWidth={themeAxisSegmentedPreset.fullWidth}
+                          className="mt-1 w-full"
+                          classes={{ list: 'w-full', item: 'min-w-0 flex-1', content: 'w-full' }}
+                        />
+	                  </div>
 	                </div>
 		                <div className="mt-2 text-[10px] text-text-subtle">
-		                  Değişiklikler önizlemeye anlık uygulanır; kalıcı olması için üstteki kaydet butonunu kullanın.
+		                  {t('themeadmin.meta.previewHint')}
 		                </div>
 		              </details>
 

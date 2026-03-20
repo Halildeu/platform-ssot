@@ -1,6 +1,6 @@
 import React from 'react';
-import { Badge, Button, Empty, Select, Tag, Text } from 'mfe-ui-kit';
-import type { ThemeDensity, AccessLevel } from 'mfe-ui-kit';
+import { Badge, Button, Empty, Select, Tag, Text } from '@mfe/design-system';
+import type { ThemeDensity, AccessLevel } from '@mfe/design-system';
 import {
   RUNTIME_THEME_MATRIX_THEMES,
   RUNTIME_THEME_MATRIX_DENSITIES,
@@ -104,7 +104,7 @@ const DetailDrawerPreview = () => (
     <div className="flex flex-col gap-3 px-4 py-4 text-sm text-text-primary">
       <div className="flex items-center justify-between">
         <span>Durum</span>
-        <Tag access="readonly" accessReason="Audit kaydı">
+        <Tag tone="info" access="readonly" accessReason="Audit kaydı">
           Readonly
         </Tag>
       </div>

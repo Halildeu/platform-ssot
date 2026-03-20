@@ -1,6 +1,21 @@
+.audit-grid-shell {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  background: var(--surface-default-bg);
+  box-shadow: var(--shadow-sm);
+}
+
 .ag-theme-quartz.audit-grid {
   height: calc(100vh - 200px);
   width: 100%;
+}
+
+.audit-pagination-shell {
+  border-top: 1px solid var(--border-subtle);
+  padding: 1rem;
 }
 
 .audit-grid .audit-row-highlight {

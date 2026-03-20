@@ -1,0 +1,38 @@
+{
+  "name": "mobile",
+  "version": "1.0.0",
+  "description": "Expo mobile workspace for platform-ssot",
+  "main": "index.ts",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "expo start",
+    "start:clear": "expo start --clear",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "typecheck:packages": "npm run typecheck --workspace @platform-mobile/tokens && npm run typecheck --workspace @platform-mobile/ui && npm run typecheck --workspace @platform-mobile/core",
+    "typecheck:all": "npm run typecheck && npm run typecheck:packages",
+    "doctor": "npx expo-doctor"
+  },
+  "dependencies": {
+    "@platform/capabilities": "file:../web/packages/platform-capabilities",
+    "@platform-mobile/core": "file:./packages/mobile-core",
+    "@platform-mobile/tokens": "file:./packages/mobile-tokens",
+    "@platform-mobile/ui": "file:./packages/mobile-ui",
+    "expo": "~55.0.6",
+    "expo-secure-store": "~55.0.8",
+    "expo-status-bar": "~55.0.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-native": "0.83.2",
+    "react-native-web": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~5.9.2"
+  },
+  "private": true
+}

@@ -543,10 +543,10 @@ def _evaluate_no_growth_grandfathered_file(
 ) -> dict[str, Any]:
     baseline_lines = grandfathered_entry.current_lines
     delta_lines = int(lines) - int(baseline_lines)
-    growth_status = "OK" if delta_lines == 0 else "GROWN"
+    growth_status = "OK" if delta_lines <= 0 else "GROWN"
     hard_entries: list[dict[str, Any]] = []
     bucket = "ok"
-    if delta_lines != 0:
+    if delta_lines > 0:
         hard_entries.append(
             {
                 "path": rel,

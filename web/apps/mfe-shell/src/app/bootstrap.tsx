@@ -1,20 +1,15 @@
-// frontend/mfe-shell/src/bootstrap.js dosyasının OLMASI GEREKEN son hali
+// frontend/mfe-shell/src/bootstrap.tsx
+// AG Grid setup delegated to @mfe/design-system (single owner)
 
 import React from 'react';
-// AG Grid server-side modüllerini shell seviyesinde kaydet
-import 'ag-grid-enterprise';
-import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import { AllEnterpriseModule, ServerSideRowModelModule, ServerSideRowModelApiModule } from 'ag-grid-enterprise';
-import { setupAgGridLicense } from 'mfe-ui-kit/src/lib/ag-grid-license';
-ModuleRegistry.registerModules([
-  AllCommunityModule,
-  ServerSideRowModelModule,
-  ServerSideRowModelApiModule,
-  AllEnterpriseModule,
-]);
-setupAgGridLicense();
+
+// Side-effect import: registers all AG Grid modules + license
+// This is the SINGLE source of truth for module registration.
+// Do NOT register AG Grid modules anywhere else in the monorepo.
+import '@mfe/design-system/advanced/data-grid/setup';
+
 import { createRoot } from 'react-dom/client';
-import ShellApp from './ShellApp.ui';
+import ShellApp from './ShellApp';
 
 const container = document.getElementById('root');
 if (!container) {

@@ -2,6 +2,9 @@ const users = {
   'users.layout.title': 'User Management',
   'users.layout.description':
     'Manage user roles, permissions and module access; define account security-related operations.',
+  'admin.users.title': 'User Management',
+  'admin.users.description':
+    'Manage user roles, permissions and module access; define account security-related operations.',
   'users.breadcrumb.management': 'Administration',
   'users.breadcrumb.users': 'User Management',
 

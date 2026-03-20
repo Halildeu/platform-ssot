@@ -4,9 +4,9 @@ import type {
   GridReadyEvent,
   IServerSideGetRowsParams,
   GridOptions,
+  GridApi,
   ProcessCellForExportParams,
   AdvancedFilterModel as AgAdvancedFilterModel,
-  ColumnApi,
 } from 'ag-grid-community';
 import type { GridExportConfig } from 'mfe_reporting/grid';
 import { buildEntityGridQueryParams } from 'mfe_reporting/grid';
@@ -15,7 +15,7 @@ const EntityGridTemplate = React.lazy(() =>
   import('mfe_reporting/grid').then((m) => ({ default: m.EntityGridTemplate })),
 );
 import type { UserSummary, UserModuleAccessLevel } from '@mfe/shared-types';
-import { Badge, type BadgeTone } from 'mfe-ui-kit';
+import { Badge, Button, Empty, type BadgeTone } from '@mfe/design-system';
 import UserActions from './UserActions.ui';
 import { fetchUsers } from '../../../entities/user/api/users.api';
 import type { UsersQueryParams } from '../../../features/user-management/model/user-management.types';
@@ -24,7 +24,6 @@ import { useUsersI18n } from '../../../i18n/useUsersI18n';
 declare global {
   interface Window {
     usersGridApi?: GridApi<UserSummary>;
-    usersColumnApi?: ColumnApi<UserSummary>;
   }
 }
 
@@ -105,6 +104,10 @@ interface UsersGridProps {
   onLoadingChange?: (loading: boolean) => void;
 }
 
+type GridAccessState = 'idle' | 'unauthorized' | 'profile-missing' | 'network-error';
+
+const INLINE_ONLY_ACCESS_STATES = new Set<GridAccessState>(['unauthorized', 'profile-missing']);
+
 const UsersGrid: React.FC<UsersGridProps> = ({
   onSelectUser,
   isFullscreen = false,
@@ -114,6 +117,11 @@ const UsersGrid: React.FC<UsersGridProps> = ({
   const { t, locale } = useUsersI18n();
   const [dataSourceMode, setDataSourceMode] = useState<'server' | 'client'>('server');
   const [clientRows, setClientRows] = useState<UserSummary[]>([]);
+  const [gridAccessState, setGridAccessState] = useState<GridAccessState>('idle');
+  const [accessProbeReady, setAccessProbeReady] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
+  const notifiedStatesRef = React.useRef<Set<GridAccessState>>(new Set());
+  const gridAccessStateRef = React.useRef<GridAccessState>('idle');
   const debugLog = useCallback(
     (...args: unknown[]) => {
       if (process.env.NODE_ENV !== 'production') {
@@ -122,6 +130,28 @@ const UsersGrid: React.FC<UsersGridProps> = ({
     },
     [],
   );
+
+  const notifyOnce = useCallback((state: GridAccessState, type: ToastType, message: string) => {
+    if (state === 'idle') {
+      return;
+    }
+    if (INLINE_ONLY_ACCESS_STATES.has(state)) {
+      return;
+    }
+    if (notifiedStatesRef.current.has(state)) {
+      return;
+    }
+    notifiedStatesRef.current.add(state);
+    showToast(type, message);
+  }, []);
+
+  const setGridState = useCallback((nextState: GridAccessState) => {
+    gridAccessStateRef.current = nextState;
+    setGridAccessState(nextState);
+    if (nextState === 'idle') {
+      notifiedStatesRef.current.clear();
+    }
+  }, []);
   const formatModulePermissions = useCallback(
     (permissions?: UserSummary['modulePermissions']) => {
       if (!permissions?.length) {
@@ -233,7 +263,8 @@ const UsersGrid: React.FC<UsersGridProps> = ({
         return (
           <div className="flex flex-wrap gap-2">
             {data.modulePermissions.map((permission) => {
-              const levelLabel = MODULE_LEVEL_LABELS[permission.level] ?? permission.level;
+              const levelLabelKey = MODULE_LEVEL_LABELS[permission.level];
+              const levelLabel = levelLabelKey ? t(levelLabelKey) : permission.level;
               const levelColor = MODULE_LEVEL_COLORS[permission.level] ?? 'default';
               return (
                 <Badge
@@ -481,6 +512,11 @@ const UsersGrid: React.FC<UsersGridProps> = ({
 
       return {
         getRows: async (params: IServerSideGetRowsParams<UserSummary>) => {
+          if (gridAccessStateRef.current !== 'idle') {
+            ssrmSuccessFor(params, [], 0);
+            return;
+          }
+
           const requestedBlockSize = params.request.endRow - params.request.startRow;
           const effectiveBlockSize = Number.isFinite(requestedBlockSize) && requestedBlockSize > 0
             ? requestedBlockSize
@@ -556,26 +592,30 @@ const UsersGrid: React.FC<UsersGridProps> = ({
             const response = await fetchUsers(baseParams);
             const reason = response.meta?.reason;
             if (reason === 'profile-missing') {
+              setGridState('profile-missing');
               debugLog('server:getRows:profile-missing', requestLabel, { queryParams: baseParams });
-              showToast('warning', 'Profiliniz henüz oluşturulmamış. Lütfen sistem yöneticisiyle iletişime geçin.');
+              notifyOnce('profile-missing', 'warning', 'Profiliniz henüz oluşturulmamış. Lütfen sistem yöneticisiyle iletişime geçin.');
               const batch = inFlight.get(key) ?? [];
               batch.forEach((p) => ssrmSuccessFor(p, [], 0));
               return;
             }
             if (reason === 'unauthorized') {
+              setGridState('unauthorized');
               debugLog('server:getRows:unauthorized', requestLabel, { queryParams: baseParams });
-              showToast('warning', 'Kullanıcı verilerini görmek için yetkiniz bulunmuyor.');
+              notifyOnce('unauthorized', 'warning', 'Kullanıcı verilerini görmek için yetkiniz bulunmuyor.');
               const batch = inFlight.get(key) ?? [];
               batch.forEach((p) => ssrmSuccessFor(p, [], 0));
               return;
             }
             if (reason === 'network-error') {
+              setGridState('network-error');
               debugLog('server:getRows:network-error', requestLabel, { queryParams: baseParams });
-              showToast('error', 'Kullanıcı listesi alınamadı. Lütfen bağlantınızı kontrol edin.');
+              notifyOnce('network-error', 'error', 'Kullanıcı listesi alınamadı. Lütfen bağlantınızı kontrol edin.');
               const batch = inFlight.get(key) ?? [];
-              batch.forEach((p) => ssrmFailFor(p));
+              batch.forEach((p) => ssrmSuccessFor(p, [], 0));
               return;
             }
+            setGridState('idle');
             const items = response.items ?? [];
             const total = response.total ?? items.length;
             debugLog('server:getRows:success', requestLabel, {
@@ -589,10 +629,11 @@ const UsersGrid: React.FC<UsersGridProps> = ({
             if (process.env.NODE_ENV !== 'production') {
               console.error('Kullanıcılar yüklenirken hata oluştu', error);
             }
+            setGridState('network-error');
             debugLog('server:getRows:error', requestLabel, error);
-            showToast('error', error instanceof Error ? error.message : 'Kullanıcılar yüklenirken hata oluştu.');
+            notifyOnce('network-error', 'error', error instanceof Error ? error.message : 'Kullanıcılar yüklenirken hata oluştu.');
             const batch = inFlight.get(key) ?? [];
-            batch.forEach((p) => ssrmFailFor(p));
+            batch.forEach((p) => ssrmSuccessFor(p, [], 0));
           } finally {
             onLoadingChange?.(false);
             inFlight.delete(key);
@@ -609,7 +650,6 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       // Runtime debug: grid API'yi pencereden erişilebilir yap
       try {
         window.usersGridApi = event.api;
-        window.usersColumnApi = event.columnApi;
         const apiWithOptions = event.api as GridApiWithOptions;
         debugLog('gridReady', {
           serverMode: dataSourceMode === 'server',
@@ -630,21 +670,79 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       // Client modda tüm kullanıcıları çekmek için limitsiz çağrı yapıyoruz (pageSize=0 -> backend unpaged)
       const response = await fetchUsers({ page: 1, pageSize: 0 });
       if (response.meta?.reason === 'unauthorized') {
-        showToast('warning', 'Kullanıcı verilerine erişim yetkisi bulunmuyor.');
+        setGridState('unauthorized');
+        notifyOnce('unauthorized', 'warning', 'Kullanıcı verilerine erişim yetkisi bulunmuyor.');
+        setClientRows([]);
+        return;
+      }
+      if (response.meta?.reason === 'profile-missing') {
+        setGridState('profile-missing');
+        notifyOnce('profile-missing', 'warning', 'Profiliniz henüz oluşturulmamış. Lütfen sistem yöneticisiyle iletişime geçin.');
+        setClientRows([]);
+        return;
       }
       if (response.meta?.reason === 'network-error') {
-        showToast('error', 'Kullanıcı verileri sunucudan alınamadı.');
+        setGridState('network-error');
+        notifyOnce('network-error', 'error', 'Kullanıcı verileri sunucudan alınamadı.');
+        setClientRows([]);
+        return;
       }
+      setGridState('idle');
       setClientRows(response.items ?? []);
     } catch (error) {
       if (process.env.NODE_ENV !== 'production') {
         console.error('Kullanıcılar yüklenirken hata oluştu (client mode)', error);
       }
-      showToast('error', error instanceof Error ? error.message : 'Kullanıcı verileri yüklenemedi.');
+      setGridState('network-error');
+      notifyOnce('network-error', 'error', error instanceof Error ? error.message : 'Kullanıcı verileri yüklenemedi.');
     } finally {
       onLoadingChange?.(false);
     }
-  }, [onLoadingChange]);
+  }, [notifyOnce, onLoadingChange, setGridState]);
+
+  const runAccessProbe = useCallback(async () => {
+    if (dataSourceMode !== 'server') {
+      setAccessProbeReady(true);
+      return;
+    }
+
+    setAccessProbeReady(false);
+    onLoadingChange?.(true);
+    try {
+      const response = await fetchUsers({ page: 1, pageSize: 1 });
+      const reason = response.meta?.reason;
+
+      if (reason === 'unauthorized') {
+        setGridState('unauthorized');
+        notifyOnce('unauthorized', 'warning', 'Kullanıcı verilerini görmek için yetkiniz bulunmuyor.');
+        return;
+      }
+
+      if (reason === 'profile-missing') {
+        setGridState('profile-missing');
+        notifyOnce('profile-missing', 'warning', 'Profiliniz henüz oluşturulmamış. Lütfen sistem yöneticisiyle iletişime geçin.');
+        return;
+      }
+
+      if (reason === 'network-error') {
+        setGridState('network-error');
+        notifyOnce('network-error', 'error', 'Kullanıcı listesi alınamadı. Lütfen bağlantınızı kontrol edin.');
+        return;
+      }
+
+      setGridState('idle');
+    } catch (error) {
+      setGridState('network-error');
+      notifyOnce('network-error', 'error', error instanceof Error ? error.message : 'Kullanıcı listesi alınamadı. Lütfen bağlantınızı kontrol edin.');
+    } finally {
+      setAccessProbeReady(true);
+      onLoadingChange?.(false);
+    }
+  }, [dataSourceMode, notifyOnce, onLoadingChange, setGridState]);
+
+  useEffect(() => {
+    void runAccessProbe();
+  }, [runAccessProbe, retryKey]);
 
   useEffect(() => {
     if (dataSourceMode === 'client') {
@@ -708,36 +806,78 @@ const UsersGrid: React.FC<UsersGridProps> = ({
     }
   }, []);
 
+  const handleRetry = useCallback(() => {
+    setGridState('idle');
+    setRetryKey((current) => current + 1);
+  }, [setGridState]);
+
+  const blockedStateContent = useMemo(() => {
+    if (!accessProbeReady && dataSourceMode === 'server') {
+      return (
+        <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary-border" />
+        </div>
+      );
+    }
+
+    if (gridAccessState === 'idle') {
+      return null;
+    }
+
+    const description =
+      gridAccessState === 'unauthorized'
+        ? 'Kullanıcı verilerini görmek için yetkiniz bulunmuyor.'
+        : gridAccessState === 'profile-missing'
+          ? 'Profiliniz henüz oluşturulmamış. Lütfen sistem yöneticisiyle iletişime geçin.'
+          : 'Kullanıcı verileri alınamadı. Lütfen bağlantınızı kontrol edip yeniden deneyin.';
+
+    return (
+      <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="flex max-w-xl flex-col items-center gap-4 text-center">
+          <Empty description={description} />
+          {gridAccessState === 'network-error' ? (
+            <Button type="button" onClick={handleRetry}>
+              Yeniden dene
+            </Button>
+          ) : null}
+        </div>
+      </div>
+    );
+  }, [accessProbeReady, dataSourceMode, gridAccessState, handleRetry]);
+
   return (
-    <React.Suspense fallback={<div style={{ height: 320 }} />}>
-      <EntityGridTemplate<UserSummary>
-        gridId={GRID_VARIANT_ID}
-      gridSchemaVersion={GRID_VARIANT_SCHEMA_VERSION}
-      columnDefs={columnDefs}
-      gridOptions={gridOptions}
-      exportConfig={exportConfig}
-      onRowDoubleClick={onSelectUser}
-      isFullscreen={isFullscreen}
-      onRequestFullscreen={handleRequestFullscreen}
-      dataSourceMode={dataSourceMode}
-      rowData={dataSourceMode === 'client' ? clientRows : undefined}
-      total={dataSourceMode === 'client' ? clientRows.length : undefined}
-      createServerSideDatasource={dataSourceMode === 'server' ? createServerSideDatasource : undefined}
-      onGridReady={handleGridReady}
-      toolbarExtras={toolbarExtrasWithExport}
-      themeLabel={t('users.grid.themeLabel')}
-      quickFilterLabel={t('users.grid.quickFilterLabel')}
-      variantLabel={t('users.grid.variantLabel')}
-      quickFilterPlaceholder={t('users.grid.quickFilterPlaceholder')}
-      fullscreenTooltip={t('users.grid.fullscreenTooltip')}
-      resetFiltersLabel={t('users.grid.toolbar.resetFilters')}
-      excelVisibleLabel={t('users.grid.toolbar.excelVisible')}
-      excelAllLabel={t('users.grid.toolbar.excelAll')}
-      csvVisibleLabel={t('users.grid.toolbar.csvVisible')}
-      csvAllLabel={t('users.grid.toolbar.csvAll')}
-        localeText={localeText}
-      />
-    </React.Suspense>
+    blockedStateContent ?? (
+      <React.Suspense fallback={<div style={{ height: 320 }} />}>
+        <EntityGridTemplate<UserSummary>
+          key={retryKey}
+          gridId={GRID_VARIANT_ID}
+          gridSchemaVersion={GRID_VARIANT_SCHEMA_VERSION}
+          columnDefs={columnDefs}
+          gridOptions={gridOptions}
+          exportConfig={exportConfig}
+          onRowDoubleClick={onSelectUser}
+          isFullscreen={isFullscreen}
+          onRequestFullscreen={handleRequestFullscreen}
+          dataSourceMode={dataSourceMode}
+          rowData={dataSourceMode === 'client' ? clientRows : undefined}
+          total={dataSourceMode === 'client' ? clientRows.length : undefined}
+          createServerSideDatasource={dataSourceMode === 'server' ? createServerSideDatasource : undefined}
+          onGridReady={handleGridReady}
+          toolbarExtras={toolbarExtrasWithExport}
+          themeLabel={t('users.grid.themeLabel')}
+          quickFilterLabel={t('users.grid.quickFilterLabel')}
+          variantLabel={t('users.grid.variantLabel')}
+          quickFilterPlaceholder={t('users.grid.quickFilterPlaceholder')}
+          fullscreenTooltip={t('users.grid.fullscreenTooltip')}
+          resetFiltersLabel={t('users.grid.toolbar.resetFilters')}
+          excelVisibleLabel={t('users.grid.toolbar.excelVisible')}
+          excelAllLabel={t('users.grid.toolbar.excelAll')}
+          csvVisibleLabel={t('users.grid.toolbar.csvVisible')}
+          csvAllLabel={t('users.grid.toolbar.csvAll')}
+          localeText={localeText}
+        />
+      </React.Suspense>
+    )
   );
 };
 

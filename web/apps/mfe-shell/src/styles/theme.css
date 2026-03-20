@@ -5,6 +5,13 @@
   --surface-raised-bg: color(srgb 1 1 1);
   --surface-muted-bg: color(srgb 0.9451 0.9608 0.9765);
   --surface-panel-bg: color(srgb 0.9725 0.9804 0.9882);
+  /* Component-level aliases for light mode */
+  --surface-card: rgba(255,255,255,0.98);
+  --surface-card-alt: rgba(245,246,255,0.94);
+  --surface-muted: #f1f5f9;
+  --surface-hover: #e2e8f0;
+  --surface-default: #fff;
+  --shadow-color: rgba(15,23,42,0.28);
   --surface-header-bg: color(srgb 0.9451 0.9608 0.9765);
   --surface-overlay-bg: color(srgb 0.0588 0.0902 0.1647);
   --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);
@@ -153,6 +160,13 @@
   --surface-raised-bg: color(srgb 0.0667 0.0941 0.1529);
   --surface-muted-bg: color(srgb 0.1176 0.1608 0.2314);
   --surface-panel-bg: color(srgb 0.051 0.0824 0.1569);
+  /* Component-level aliases for dark mode */
+  --surface-card: color(srgb 0.0667 0.0941 0.1529);
+  --surface-card-alt: color(srgb 0.051 0.0824 0.1569);
+  --surface-muted: color(srgb 0.1176 0.1608 0.2314);
+  --surface-hover: color(srgb 0.1569 0.2039 0.2784);
+  --surface-default: color(srgb 0.0431 0.0706 0.1255);
+  --shadow-color: rgba(0,0,0,0.6);
   --surface-header-bg: color(srgb 0.0196 0.0431 0.0863);
   --surface-overlay-bg: color(srgb 0.0078 0.0235 0.0902);
   --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);
@@ -224,6 +238,13 @@
   --surface-raised-bg: color(srgb 0.0667 0.0667 0.0667);
   --surface-muted-bg: color(srgb 0.1216 0.1216 0.1216);
   --surface-panel-bg: color(srgb 0.0667 0.0667 0.0667);
+  /* Component-level aliases for high-contrast mode */
+  --surface-card: color(srgb 0.0667 0.0667 0.0667);
+  --surface-card-alt: color(srgb 0.0667 0.0667 0.0667);
+  --surface-muted: color(srgb 0.1216 0.1216 0.1216);
+  --surface-hover: color(srgb 0.2 0.2 0.2);
+  --surface-default: color(srgb 0 0 0);
+  --shadow-color: rgba(0,0,0,0.8);
   --surface-header-bg: color(srgb 0 0 0);
   --surface-overlay-bg: color(srgb 0 0 0);
   --surface-tones-ultra-1: color(srgb 0.9686 0.9725 0.9804);

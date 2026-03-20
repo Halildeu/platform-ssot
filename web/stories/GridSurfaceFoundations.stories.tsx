@@ -1,14 +1,14 @@
-import '../packages/ui-kit/src';
+import '../packages/design-system/src';
 
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import type { ColDef } from 'ag-grid-community';
 import type { GridVariant } from '../packages/shared-types/src';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
-import { Text } from '../packages/ui-kit/src/components/Text';
-import { EntityGridTemplate } from '../packages/ui-kit/src/components/entity-grid/EntityGridTemplate';
-import { AgGridServer } from '../packages/ui-kit/src/layout/AgGridServer';
+import { Badge } from '../packages/design-system/src/components/Badge';
+import { Text } from '../packages/design-system/src/components/Text';
+import { EntityGridTemplate } from '../packages/design-system/src/components/entity-grid/EntityGridTemplate';
+import { AgGridServer } from '../packages/design-system/src/layout/AgGridServer';
 
 const meta: Meta = {
   title: 'UI Kit/GridSurfaceFoundations',

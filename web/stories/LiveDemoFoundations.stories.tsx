@@ -1,24 +1,26 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { AIGuidedAuthoring } from '../packages/ui-kit/src/components/AIGuidedAuthoring';
+import { AIGuidedAuthoring } from '../packages/design-system/src/components/AIGuidedAuthoring';
 import {
   AIActionAuditTimeline,
   type AIActionAuditTimelineItem,
-} from '../packages/ui-kit/src/components/AIActionAuditTimeline';
-import { AnchorToc } from '../packages/ui-kit/src/components/AnchorToc';
-import { ApprovalCheckpoint } from '../packages/ui-kit/src/components/ApprovalCheckpoint';
-import { Avatar } from '../packages/ui-kit/src/components/Avatar';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
+} from '../packages/design-system/src/components/AIActionAuditTimeline';
+import { AnchorToc } from '../packages/design-system/src/components/AnchorToc';
+import { ApprovalCheckpoint } from '../packages/design-system/src/components/ApprovalCheckpoint';
+import { Avatar } from '../packages/design-system/src/components/Avatar';
+import { Badge } from '../packages/design-system/src/components/Badge';
 import {
   CitationPanel,
   type CitationPanelItem,
-} from '../packages/ui-kit/src/components/CitationPanel';
+} from '../packages/design-system/src/components/CitationPanel';
 import {
   CommandPalette,
   type CommandPaletteItem,
-} from '../packages/ui-kit/src/components/CommandPalette';
-import { ConfidenceBadge } from '../packages/ui-kit/src/components/ConfidenceBadge';
-import { Text } from '../packages/ui-kit/src/components/Text';
+} from '../packages/design-system/src/components/CommandPalette';
+import { Combobox } from '../packages/design-system/src/components/Combobox';
+import { useAsyncCombobox } from '../packages/design-system/src/components/useAsyncCombobox';
+import { ConfidenceBadge } from '../packages/design-system/src/components/ConfidenceBadge';
+import { Text } from '../packages/design-system/src/components/Text';
 
 const meta: Meta = {
   title: 'UI Kit/LiveDemoFoundations',
@@ -59,6 +61,22 @@ const commandItems: CommandPaletteItem[] = [
   },
 ];
 
+const comboboxOptions = [
+  {
+    label: 'Core Modules',
+    options: [
+      { value: 'users', label: 'Users', description: 'Kimlik ve rol yonetimi', keywords: ['identity', 'roles'] },
+      { value: 'reporting', label: 'Reporting', description: 'Analitik ve export akisleri', keywords: ['analytics'] },
+    ],
+  },
+  {
+    label: 'Restricted',
+    options: [
+      { value: 'audit', label: 'Audit', description: 'Denetim timeline gorunumu', disabled: true, disabledReason: 'Admin gerekir' },
+    ],
+  },
+];
+
 const citationItems: CitationPanelItem[] = [
   {
     id: 'design-lab-index',
@@ -73,7 +91,7 @@ const citationItems: CitationPanelItem[] = [
     id: 'release-manifest',
     title: 'Release manifest evidence',
     excerpt: 'Release gate, doctor ve storybook artefactlari tek manifestte toplanir.',
-    source: 'web/dist/ui-kit/ui-library-release-manifest.v1.json',
+    source: 'web/dist/design-system/ui-library-release-manifest.v1.json',
     locator: 'latestRelease.catalogMetrics',
     kind: 'log',
   },
@@ -255,4 +273,241 @@ export const CommandPaletteOverlay: Story = {
       />
     </div>
   ),
+};
+
+export const ComboboxInlineField: Story = {
+  render: () => {
+    const ComboboxDemo = () => {
+      const [value, setValue] = React.useState<string | null>('reporting');
+      const [inputValue, setInputValue] = React.useState('Reporting');
+
+      return (
+        <div className="min-h-screen bg-surface-canvas p-8 text-text-primary">
+          <div className="mx-auto max-w-2xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+            <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+              Inline combobox
+            </Text>
+            <Text as="div" className="mt-2 text-2xl font-semibold text-text-primary">
+              Searchable field primitive
+            </Text>
+            <Text variant="secondary" className="mt-2 block text-sm leading-7">
+              `Combobox`, `Select`ten farkli olarak inline arama, filtreleme ve klavye ile secim popup’ini ayni field shell icinde sunar.
+            </Text>
+            <div className="mt-6">
+              <Combobox
+                label="Module"
+                description="Route, owner veya capability anahtarina gore filtrele."
+                value={value}
+                inputValue={inputValue}
+                onValueChange={setValue}
+                onInputChange={setInputValue}
+                options={comboboxOptions}
+                clearable
+                emptyStateLabel="Bir modul secilmedi"
+              />
+            </div>
+            <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text variant="secondary" className="block text-sm leading-6">
+                Secili deger: {value ?? 'bos'} | Input: {inputValue || 'bos'}
+              </Text>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    return <ComboboxDemo />;
+  },
+};
+
+export const ComboboxAsyncFreeSoloField: Story = {
+  render: () => {
+    const ComboboxAdvancedDemo = () => {
+      const allOptions = React.useMemo(
+        () => [
+          {
+            label: 'Delivery',
+            options: [
+              {
+                value: 'release-cockpit',
+                label: 'Release cockpit',
+                description: 'Wave gate, doctor ve publish manifest akislarini toplar',
+                keywords: ['release', 'publish', 'cockpit'],
+              },
+              {
+                value: 'migration-hub',
+                label: 'Migration hub',
+                description: 'Consumer etkisi ve upgrade backlog gorunumu',
+                keywords: ['migration', 'consumer', 'upgrade'],
+              },
+            ],
+          },
+          {
+            label: 'Observability',
+            options: [
+              {
+                value: 'coverage-matrix',
+                label: 'Coverage matrix',
+                description: 'Story, runtime smoke ve audit kapsamini ceker',
+                keywords: ['coverage', 'audit', 'matrix'],
+              },
+              {
+                value: 'audit',
+                label: 'Audit stream',
+                description: 'Sadece platform-admin rolune acik akis',
+                disabled: true,
+                disabledReason: 'Platform admin gerekir',
+                keywords: ['audit', 'restricted'],
+              },
+            ],
+          },
+        ],
+        [],
+      );
+      const [value, setValue] = React.useState<string | null>(null);
+      const [inputValue, setInputValue] = React.useState('');
+      const { query, setQuery, options, loading } = useAsyncCombobox({
+        debounceMs: 260,
+        initialOptions: allOptions,
+        loadOptions: async (nextQuery) => {
+          if (!nextQuery.trim()) {
+            return allOptions;
+          }
+
+          const normalized = nextQuery.trim().toLowerCase();
+          return allOptions
+            .map((group) => ({
+              ...group,
+              options: group.options.filter((option) =>
+                [option.label, option.description ?? '', ...(option.keywords ?? [])]
+                  .join(' ')
+                  .toLowerCase()
+                  .includes(normalized),
+              ),
+            }))
+            .filter((group) => group.options.length > 0);
+        },
+      });
+
+      return (
+        <div className="min-h-screen bg-surface-canvas p-8 text-text-primary">
+          <div className="mx-auto max-w-3xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+            <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+              Advanced combobox
+            </Text>
+            <Text as="div" className="mt-2 text-2xl font-semibold text-text-primary">
+              Async query, portal popup ve free-solo giris
+            </Text>
+            <Text variant="secondary" className="mt-2 block text-sm leading-7">
+              Bu ornek, debounced query callback ile filtrelenen bir option setini, custom render ve free-solo commit
+              davranisiyla birlestirir.
+            </Text>
+            <div className="mt-6">
+              <Combobox
+                label="Capability"
+                description="Release veya observability akislarinda arama yap; gerekirse serbest deger gir."
+                value={value}
+                inputValue={inputValue}
+                onValueChange={setValue}
+                onInputChange={setInputValue}
+                onQueryRequest={setQuery}
+                freeSolo
+                onFreeSoloCommit={setValue}
+                loading={loading}
+                options={options}
+                clearable
+                popupStrategy="portal"
+                popupAlign="start"
+                popupSide="bottom"
+                disabledItemFocusPolicy="allow"
+                emptyStateLabel="Bir capability secilmedi"
+                renderOption={(option, state) => (
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-text-primary">{option.label}</div>
+                      <div className="mt-1 text-sm leading-6 text-text-secondary">
+                        {option.description ?? (state.disabled ? option.disabledReason : 'Serbest secim icin Enter kullan.')}
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      {state.selected ? <Badge tone="success">selected</Badge> : null}
+                      {state.disabled ? <Badge tone="warning">restricted</Badge> : null}
+                      {option.groupLabel ? <Badge tone="info">{option.groupLabel}</Badge> : null}
+                    </div>
+                  </div>
+                )}
+              />
+            </div>
+            <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text variant="secondary" className="block text-sm leading-6">
+                Secili deger: {value ?? 'bos'} | Input: {inputValue || 'bos'} | Son query: {query || 'bos'}
+              </Text>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    return <ComboboxAdvancedDemo />;
+  },
+};
+
+export const ComboboxTagsField: Story = {
+  render: () => {
+    const ComboboxTagsDemo = () => {
+      const [values, setValues] = React.useState<string[]>(['users', 'release-cockpit']);
+      const [inputValue, setInputValue] = React.useState('');
+
+      return (
+        <div className="min-h-screen bg-surface-canvas p-8 text-text-primary">
+          <div className="mx-auto max-w-3xl rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+            <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
+              Tags combobox
+            </Text>
+            <Text as="div" className="mt-2 text-2xl font-semibold text-text-primary">
+              Multi-select + tag remove + free-solo tag commit
+            </Text>
+            <Text variant="secondary" className="mt-2 block text-sm leading-7">
+              `selectionMode=&quot;tags&quot;`, mevcut option secimlerini serbest metin commit’i ve chip remove davranisiyla ayni field icinde toplar.
+            </Text>
+            <div className="mt-6">
+              <Combobox
+                label="Signals"
+                description="Release, observability veya serbest etiketleri ayni primitive icinde topla."
+                selectionMode="tags"
+                values={values}
+                inputValue={inputValue}
+                onValuesChange={setValues}
+                onInputChange={setInputValue}
+                options={comboboxOptions}
+                clearable
+                emptyStateLabel="Bir sinyal secilmedi"
+                renderOption={(option, state) => (
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-text-primary">{option.label}</div>
+                      <div className="mt-1 text-sm leading-6 text-text-secondary">
+                        {option.description ?? (state.disabled ? option.disabledReason : 'Enter ile etiket olarak eklenebilir.')}
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      {state.selected ? <Badge tone="success">selected</Badge> : null}
+                      {state.disabled ? <Badge tone="warning">restricted</Badge> : null}
+                    </div>
+                  </div>
+                )}
+              />
+            </div>
+            <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text variant="secondary" className="block text-sm leading-6">
+                Secili etiketler: {values.join(', ') || 'bos'} | Input: {inputValue || 'bos'}
+              </Text>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    return <ComboboxTagsDemo />;
+  },
 };

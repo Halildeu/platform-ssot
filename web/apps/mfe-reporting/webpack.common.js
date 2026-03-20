@@ -37,6 +37,8 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
+      '@platform/capabilities': path.resolve(__dirname, '../../packages/platform-capabilities/src'),
+      '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
       '@mfe/shared-http': path.resolve(__dirname, '../../packages/shared-http/src'),
     },
   },

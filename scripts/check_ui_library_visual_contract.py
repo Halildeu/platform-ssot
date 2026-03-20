@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-from ui_library_checks import ensure_dict, ensure_exists, ensure_list, fail, load_json, ok, read_web_scripts
+from ui_library_checks import (
+    ensure_dict,
+    ensure_exists,
+    ensure_list,
+    fail,
+    load_json,
+    load_json_with_authorities,
+    ok,
+    read_web_scripts,
+)
 
 
 SCRIPT = "check_ui_library_visual_contract"
@@ -21,7 +30,7 @@ def main() -> int:
     if missing:
         return fail(SCRIPT, [f"missing-file:{path}" for path in missing])
 
-    index = load_json(required[0])
+    index = load_json_with_authorities(required[0])
     scripts = read_web_scripts()
     visual = ensure_dict(index.get("visualRegression"))
     storybook = ensure_dict(visual.get("storybook"))

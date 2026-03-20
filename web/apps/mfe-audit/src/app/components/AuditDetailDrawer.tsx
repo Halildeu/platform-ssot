@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { AuditEvent } from '../types/audit-event';
 import JsonPreview from './JsonPreview';
-import { DetailDrawer, type DetailTab } from 'mfe-ui-kit';
+import { DetailDrawer, type DetailTab } from '@mfe/design-system';
 
 export type AuditDetailDrawerProps = {
   event?: AuditEvent | null;
@@ -38,7 +38,7 @@ export const AuditDetailDrawer: React.FC<AuditDetailDrawerProps> = ({ event, ope
           {
             key: 'summary',
             content: (
-              <div className="space-y-4 text-sm">
+              <div data-testid="audit-detail-summary" className="space-y-4 text-sm">
                 <dl className="grid gap-3">
                   <div>
                     <dt className="text-xs uppercase text-text-subtle">Timestamp</dt>
@@ -108,7 +108,11 @@ export const AuditDetailDrawer: React.FC<AuditDetailDrawerProps> = ({ event, ope
       sections: [
         {
           key: 'raw',
-          content: <JsonPreview data={event} />,
+          content: (
+            <div data-testid="audit-detail-raw">
+              <JsonPreview data={event} />
+            </div>
+          ),
         },
       ],
     });

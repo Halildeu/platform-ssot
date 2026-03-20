@@ -1,4 +1,4 @@
-import { resolveThemeModeKey } from 'mfe-ui-kit';
+import { resolveThemeModeKey } from '@mfe/design-system';
 
 export type ThemeRegistryControlType = 'COLOR' | 'OPACITY' | 'RADIUS' | 'MOTION';
 export type ThemeRegistryEditableBy = 'USER_ALLOWED' | 'ADMIN_ONLY';
@@ -62,58 +62,60 @@ export type ThemeOption = {
   label: string;
 };
 
+export type ThemeAdminTranslator = (key: string, params?: Record<string, unknown>) => string;
+
 export const groupOrder = ['surface', 'text', 'border', 'selection', 'accent', 'overlay', 'grid', 'erpAction', 'status'];
 
-export const groupLabelMap: Record<string, string> = {
-  surface: 'Surface',
-  text: 'Text',
-  border: 'Border',
-  selection: 'Selection',
-  accent: 'Accent',
-  overlay: 'Overlay',
-  grid: 'Grid',
-  erpAction: 'Action',
-  status: 'Status',
-};
+export const getGroupLabelMap = (t: ThemeAdminTranslator): Record<string, string> => ({
+  surface: t('themeadmin.shared.group.surface'),
+  text: t('themeadmin.shared.group.text'),
+  border: t('themeadmin.shared.group.border'),
+  selection: t('themeadmin.shared.group.selection'),
+  accent: t('themeadmin.shared.group.accent'),
+  overlay: t('themeadmin.shared.group.overlay'),
+  grid: t('themeadmin.shared.group.grid'),
+  erpAction: t('themeadmin.shared.group.erpAction'),
+  status: t('themeadmin.shared.group.status'),
+});
 
-export const usageHintByKey: Record<string, string> = {
-  'surface.page.bg': 'Uygulama sayfa zemini (body).',
-  'surface.default.bg': 'Genel yüzeyler/kartlar (çoğu container).',
-  'surface.panel.bg': 'Popover/panel container’ları (örn: Uygulamalar menüsü).',
-  'surface.muted.bg': 'Muted/hover yüzeyi (örn: hover:bg-surface-muted, ikon balonları).',
-  'surface.header.bg': 'Header yüzeyi (bg-surface-header).',
-  'surface.raised.bg': 'Yükseltilmiş kart/yüzey (shadow ile).',
-  'overlay.bg': 'Modal/backdrop overlay (bg-surface-overlay).',
-};
+export const getUsageHintByKey = (t: ThemeAdminTranslator): Record<string, string> => ({
+  'surface.page.bg': t('themeadmin.shared.usage.surface.page.bg'),
+  'surface.default.bg': t('themeadmin.shared.usage.surface.default.bg'),
+  'surface.panel.bg': t('themeadmin.shared.usage.surface.panel.bg'),
+  'surface.muted.bg': t('themeadmin.shared.usage.surface.muted.bg'),
+  'surface.header.bg': t('themeadmin.shared.usage.surface.header.bg'),
+  'surface.raised.bg': t('themeadmin.shared.usage.surface.raised.bg'),
+  'overlay.bg': t('themeadmin.shared.usage.overlay.bg'),
+});
 
-export const densityOptions: ThemeOption[] = [
-  { value: 'comfortable', label: 'Comfortable' },
-  { value: 'compact', label: 'Compact' },
+export const getDensityOptions = (t: ThemeAdminTranslator): ThemeOption[] => [
+  { value: 'comfortable', label: t('themeadmin.options.density.comfortable') },
+  { value: 'compact', label: t('themeadmin.options.density.compact') },
 ];
 
-export const radiusOptions: ThemeOption[] = [
-  { value: 'rounded', label: 'Rounded' },
-  { value: 'sharp', label: 'Sharp' },
+export const getRadiusOptions = (t: ThemeAdminTranslator): ThemeOption[] => [
+  { value: 'rounded', label: t('themeadmin.options.radius.rounded') },
+  { value: 'sharp', label: t('themeadmin.options.radius.sharp') },
 ];
 
-export const elevationOptions: ThemeOption[] = [
-  { value: 'raised', label: 'Raised' },
-  { value: 'flat', label: 'Flat' },
+export const getElevationOptions = (t: ThemeAdminTranslator): ThemeOption[] => [
+  { value: 'raised', label: t('themeadmin.options.elevation.raised') },
+  { value: 'flat', label: t('themeadmin.options.elevation.flat') },
 ];
 
-export const motionOptions: ThemeOption[] = [
-  { value: 'standard', label: 'Standard' },
-  { value: 'reduced', label: 'Reduced' },
+export const getMotionOptions = (t: ThemeAdminTranslator): ThemeOption[] => [
+  { value: 'standard', label: t('themeadmin.options.motion.standard') },
+  { value: 'reduced', label: t('themeadmin.options.motion.reduced') },
 ];
 
-export const accentOptions: ThemeOption[] = [
-  { value: 'neutral', label: 'Neutral' },
-  { value: 'light', label: 'Light' },
-  { value: 'violet', label: 'Violet' },
-  { value: 'emerald', label: 'Emerald' },
-  { value: 'sunset', label: 'Sunset' },
-  { value: 'ocean', label: 'Ocean' },
-  { value: 'graphite', label: 'Graphite' },
+export const getAccentOptions = (t: ThemeAdminTranslator): ThemeOption[] => [
+  { value: 'neutral', label: t('themeadmin.options.accent.neutral') },
+  { value: 'light', label: t('themeadmin.options.accent.light') },
+  { value: 'violet', label: t('themeadmin.options.accent.violet') },
+  { value: 'emerald', label: t('themeadmin.options.accent.emerald') },
+  { value: 'sunset', label: t('themeadmin.options.accent.sunset') },
+  { value: 'ocean', label: t('themeadmin.options.accent.ocean') },
+  { value: 'graphite', label: t('themeadmin.options.accent.graphite') },
 ];
 
 export const surfaceToneOptions = [

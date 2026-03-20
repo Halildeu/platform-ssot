@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import json
 from pathlib import Path
+from ui_library_checks import load_json_with_authorities
 
 ROOT = Path(".")
 CONTRACT = ROOT / "docs/02-architecture/context/ui-library-wave-10-theme-presets.v1.json"
@@ -19,11 +19,6 @@ EXPECTED_GATES = {
 }
 EXPECTED_COMPONENTS = {"ThemePresetGallery", "ThemePresetCompare"}
 
-
-def load_json(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
 def main() -> int:
     required_paths = [CONTRACT, CATALOG, ROADMAP, REGISTRY, API_CATALOG, DESIGNLAB_INDEX]
     missing = [path for path in required_paths if not path.exists()]
@@ -33,12 +28,12 @@ def main() -> int:
             print(f"- missing-file:{path}")
         return 1
 
-    data = load_json(CONTRACT)
-    catalog = load_json(CATALOG)
-    roadmap = load_json(ROADMAP)
-    registry = load_json(REGISTRY)
-    api_catalog = load_json(API_CATALOG)
-    designlab_index = load_json(DESIGNLAB_INDEX)
+    data = load_json_with_authorities(CONTRACT.relative_to(ROOT).as_posix())
+    catalog = load_json_with_authorities(CATALOG.relative_to(ROOT).as_posix())
+    roadmap = load_json_with_authorities(ROADMAP.relative_to(ROOT).as_posix())
+    registry = load_json_with_authorities(REGISTRY.relative_to(ROOT).as_posix())
+    api_catalog = load_json_with_authorities(API_CATALOG.relative_to(ROOT).as_posix())
+    designlab_index = load_json_with_authorities(DESIGNLAB_INDEX.relative_to(ROOT).as_posix())
     problems: list[str] = []
 
     if data.get("wave_id") != "wave_10_theme_presets":

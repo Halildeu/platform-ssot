@@ -7,6 +7,10 @@ type TokenResolver = () => string | null;
 type TraceIdResolver = () => string | null;
 type UnauthorizedHandler = (error: AxiosError) => void;
 type EnvRecord = Record<string, string | undefined>;
+type SharedHttpRequestConfig = AxiosRequestConfig & {
+  __suppressGlobalForbiddenToast?: boolean;
+  __suppressGlobalProfileMissingToast?: boolean;
+};
 
 const getEnvValue = (key: string): string | undefined => {
   if (typeof process !== 'undefined' && typeof process.env?.[key] === 'string') {
@@ -53,10 +57,12 @@ let unauthorizedHandler: UnauthorizedHandler | null = null;
 let authMode: AuthMode = resolveAuthMode();
 let authRedirectInProgress = false;
 const PROFILE_MISSING_CODE = 'PROFILE_MISSING';
+const GLOBAL_TOAST_DEDUPE_MS = 2_000;
 // İlk yüklemede auth init tamamlanmadan gelebilecek 401'leri yutmak için küçük tolerans
 const appStartTime = Date.now();
 const INITIAL_401_GRACE_MS = 5_000;
 let initialUnauthorizedIgnored = false;
+let lastGlobalToast: { message: string; at: number } | null = null;
 
 const AUTH_STORAGE_KEYS = ['token', 'user', 'tokenExpiresAt', 'shell_auth_state', 'serban.shell.authState', 'shell-auth-sync'];
 
@@ -73,6 +79,15 @@ const clearPersistedAuth = () => {
 };
 
 const dispatchGlobalToast = (message: string) => {
+  const now = Date.now();
+  if (
+    lastGlobalToast
+    && lastGlobalToast.message === message
+    && now - lastGlobalToast.at < GLOBAL_TOAST_DEDUPE_MS
+  ) {
+    return;
+  }
+  lastGlobalToast = { message, at: now };
   if (typeof window === 'undefined') {
     return;
   }
@@ -278,6 +293,7 @@ const installInterceptors = (client: AxiosInstance) => {
     },
     (error: AxiosError) => {
       releasePendingRequest(error.config);
+      const requestConfig = (error.config ?? {}) as SharedHttpRequestConfig;
       const status = error?.response?.status;
       if (status === 401 && !isPermitAllMode()) {
         handleUnauthorized('http-401');
@@ -287,9 +303,13 @@ const installInterceptors = (client: AxiosInstance) => {
       if (status === 403) {
         const errorCode = extractErrorCode(error);
         if (errorCode === PROFILE_MISSING_CODE) {
-          handleProfileMissing();
+          if (!requestConfig.__suppressGlobalProfileMissingToast) {
+            handleProfileMissing();
+          }
         } else {
-          handleForbidden();
+          if (!requestConfig.__suppressGlobalForbiddenToast) {
+            handleForbidden();
+          }
         }
         return Promise.reject(error);
       }
@@ -315,7 +335,7 @@ export const conditionalGet = async <T>(
   }
   return api.get<T>(url, {
     ...rest,
-    headers,
+    headers: headers as unknown as import('axios').RawAxiosRequestHeaders,
     validateStatus: (status) => (status >= 200 && status < 300) || status === 304,
   });
 };

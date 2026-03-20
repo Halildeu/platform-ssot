@@ -157,7 +157,7 @@ const keycloakConfig: KeycloakConfig = {
 
 const fakeProfile: FakeAuthProfile = {
   email: getEnvValue('VITE_FAKE_AUTH_EMAIL') ?? 'dev.shell@example.com',
-  fullName: getEnvValue('VITE_FAKE_AUTH_NAME') ?? 'Dev Mode Kullanıcısı',
+  fullName: getEnvValue('VITE_FAKE_AUTH_NAME') ?? 'Dev Mode User',
   displayName: getEnvValue('VITE_FAKE_AUTH_DISPLAY') ?? 'Dev User',
   role: getEnvValue('VITE_FAKE_AUTH_ROLE') ?? 'ADMIN',
   permissions: parseList(getEnvValue('VITE_FAKE_AUTH_PERMISSIONS'), ['ADMIN']),

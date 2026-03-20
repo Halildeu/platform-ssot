@@ -5,6 +5,7 @@ export const JWT_SIGNATURE = 'shell';
 const AUTH_CHANNEL_NAME = 'shell-auth';
 const SESSION_TTL_MS = 60 * 60 * 1000;
 const DEFAULT_AUTH_MODE = 'none';
+const AUTH_WAIT_TIMEOUT_MS = 60_000;
 
 export interface TestTokenPayload {
   permissions: string[];
@@ -190,6 +191,47 @@ export const applyAuthState = async (page: Page, session: TestSession, ttlMs: nu
   );
 };
 
+const installSessionState = async (page: Page, session: TestSession, expiresAtMs: number) => {
+  await page.evaluate(
+    ({ token, user, nextExpiresAtMs }) => {
+      try {
+        window.localStorage.setItem('token', token);
+        window.localStorage.setItem('user', JSON.stringify(user));
+        window.localStorage.setItem('tokenExpiresAt', String(nextExpiresAtMs));
+      } catch {
+        // ignore
+      }
+
+      const store = (window as any).__shellStore;
+      if (!store) {
+        return;
+      }
+
+      store.dispatch({
+        type: 'auth/setKeycloakSession',
+        payload: {
+          token,
+          profile: user,
+          expiresAt: nextExpiresAtMs,
+        },
+      });
+      store.dispatch({ type: 'auth/setAuthInitialized', payload: true });
+    },
+    { token: session.token, user: session.user, nextExpiresAtMs: expiresAtMs },
+  );
+};
+
+const waitForShellStore = async (page: Page) => {
+  await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: AUTH_WAIT_TIMEOUT_MS });
+};
+
+const waitForAuthState = async (page: Page) => {
+  await page.waitForFunction(() => {
+    const state = (window as any).__shellStore?.getState?.()?.auth;
+    return Boolean(state?.initialized && state?.token);
+  }, { timeout: AUTH_WAIT_TIMEOUT_MS });
+};
+
 export const authenticateAndNavigate = async (
   page: Page,
   baseURL: string | undefined,
@@ -207,47 +249,17 @@ export const authenticateAndNavigate = async (
   const root = baseURL ?? 'http://localhost:3000';
   const expiresAt = Date.now() + SESSION_TTL_MS;
   await page.goto(`${root}/login`, { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction(() => typeof (window as any).__shellStore !== 'undefined', { timeout: 30_000 });
-  await page.evaluate(
-    ({ token, user, ttl, expiresAtMs }) => {
-      const store = (window as any).__shellStore;
-      if (!store) {
-        console.warn('[auth.sync] shell store not available');
-        return;
-      }
-      try {
-        window.localStorage.setItem('token', token);
-        window.localStorage.setItem('user', JSON.stringify(user));
-        window.localStorage.setItem('tokenExpiresAt', String(expiresAtMs));
-      } catch {
-        // ignore
-      }
-      store.dispatch({
-        type: 'auth/setKeycloakSession',
-        payload: {
-          token,
-          profile: user,
-          expiresAt: expiresAtMs,
-        },
-      });
-      store.dispatch({ type: 'auth/setAuthInitialized', payload: true });
-    },
-    { token: session.token, user: session.user, ttl: SESSION_TTL_MS, expiresAtMs: expiresAt },
-  );
-  await page.waitForFunction(() => {
-    const state = (window as any).__shellStore?.getState?.()?.auth;
-    return Boolean(state?.initialized && state?.token);
-  }, { timeout: 30_000 });
+  await waitForShellStore(page);
+  await installSessionState(page, session, expiresAt);
+  await waitForAuthState(page);
   await applyAuthState(page, session);
-  await page.evaluate((nextPath) => {
-    window.history.pushState({}, '', nextPath);
-    window.dispatchEvent(new PopStateEvent('popstate'));
-  }, targetPath);
-  await page.waitForFunction((nextPath) => window.location.pathname === nextPath, targetPath, { timeout: 30_000 });
+
+  // Full navigation is more stable than pushState for remote-mounted routes.
+  await page.goto(`${root}${targetPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction((nextPath) => window.location.pathname === nextPath, targetPath, { timeout: AUTH_WAIT_TIMEOUT_MS });
+  await waitForShellStore(page);
+  await installSessionState(page, session, expiresAt);
   await applyAuthState(page, session);
-  await page.waitForFunction(() => {
-    const state = (window as any).__shellStore?.getState?.()?.auth;
-    return Boolean(state?.initialized && state?.token);
-  }, { timeout: 30_000 });
+  await waitForAuthState(page);
   return { session, root };
 };

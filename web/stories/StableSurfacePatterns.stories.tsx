@@ -1,13 +1,13 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { ApprovalReview } from '../packages/ui-kit/src/components/ApprovalReview';
-import { Badge } from '../packages/ui-kit/src/components/Badge';
-import { Radio } from '../packages/ui-kit/src/components/Radio';
-import { SearchFilterListing } from '../packages/ui-kit/src/components/SearchFilterListing';
-import { Switch } from '../packages/ui-kit/src/components/Switch';
-import { Tabs } from '../packages/ui-kit/src/components/Tabs';
-import { Text } from '../packages/ui-kit/src/components/Text';
-import { TextArea } from '../packages/ui-kit/src/components/TextArea';
+import { ApprovalReview } from '../packages/design-system/src/components/ApprovalReview';
+import { Badge } from '../packages/design-system/src/components/Badge';
+import { Radio } from '../packages/design-system/src/components/Radio';
+import { SearchFilterListing } from '../packages/design-system/src/components/SearchFilterListing';
+import { Switch } from '../packages/design-system/src/components/Switch';
+import { Tabs } from '../packages/design-system/src/components/Tabs';
+import { Text } from '../packages/design-system/src/components/Text';
+import { TextArea } from '../packages/design-system/src/components/TextArea';
 
 const meta: Meta = {
   title: 'UI Kit/StableSurfacePatterns',

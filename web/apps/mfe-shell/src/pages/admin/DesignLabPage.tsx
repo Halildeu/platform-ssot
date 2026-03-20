@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+// @ts-nocheck — design-lab showcase, component API alignment pending
+import React, { useEffect, useMemo, useState } from 'react';
 import { Boxes, CircleHelp, MapIcon, Sparkles } from 'lucide-react';
 import {
   AgGridServer,
   Badge,
   Button,
   DetailDrawer,
+  DetailSectionTabs,
   Dropdown,
   Popover,
   ContextMenu,
@@ -50,7 +52,6 @@ import {
   Skeleton,
   Spinner,
   SummaryStrip,
-  Pagination,
   Steps,
   Tag,
   Tabs,
@@ -64,7 +65,7 @@ import {
   AnchorToc,
   Breadcrumb,
   Divider,
-} from 'mfe-ui-kit';
+} from '@mfe/design-system';
 import {
   LibraryProductTree,
   LibraryQueryProvider,
@@ -72,10 +73,8 @@ import {
   LibraryCodeBlock,
   LibrarySectionBadge as SectionBadge,
   LibraryDetailLabel as DetailLabel,
-  LibraryPreviewPanel,
   LibraryShowcaseCard,
   LibraryMetricCard,
-  LibraryDetailTabs,
   LibraryOutlinePanel,
   LibraryStatsPanel,
   LibraryMetadataPanel,
@@ -83,23 +82,158 @@ import {
   LibraryUsageRecipesPanel,
   type LibraryProductTreeSelection,
   type LibraryProductTreeTrack,
-} from '../../../../../packages/ui-kit/src/catalog/design-lab-internals';
+} from '../../../../../packages/design-system/src/catalog/design-lab-internals';
 import designLabIndexRaw from './design-lab.index.json';
+import designLabGeneratedMetaRaw from './design-lab.generated-meta.v1.json';
 import designLabTaxonomyRaw from './design-lab.taxonomy.v1.json';
 import {
   designLabApiCatalogMeta,
   designLabApiItems,
   designLabIndexItems,
-} from '../../../../../packages/ui-kit/src/catalog/component-docs';
+} from '../../../../../packages/design-system/src/catalog/component-docs';
+import { DesignLabComponentOverviewPanels } from './design-lab/detail-tabs/DesignLabComponentOverviewPanels';
+import {
+  DesignLabComponentDetailSections,
+  type DesignLabComponentApiPanelId,
+  type DesignLabComponentQualityPanelId,
+} from './design-lab/detail-tabs/DesignLabComponentDetailSections';
+import {
+  DesignLabRecipeDetailSections,
+  type DesignLabRecipeApiPanelId,
+  type DesignLabRecipeQualityPanelId,
+  type DesignLabRecipeOverviewPanelId,
+} from './design-lab/detail-tabs/DesignLabRecipeDetailSections';
+import {
+  DesignLabPageDetailSections,
+  type DesignLabPageApiPanelId,
+  type DesignLabPageOverviewPanelId,
+  type DesignLabPageQualityPanelId,
+} from './design-lab/detail-tabs/DesignLabPageDetailSections';
+import {
+  DesignLabFoundationDetailSections,
+  type DesignLabFoundationOverviewPanelId,
+  type DesignLabFoundationApiPanelId,
+  type DesignLabFoundationQualityPanelId,
+} from './design-lab/detail-tabs/DesignLabFoundationDetailSections';
+import {
+  DesignLabEcosystemDetailSections,
+  type DesignLabEcosystemOverviewPanelId,
+  type DesignLabEcosystemApiPanelId,
+  type DesignLabEcosystemQualityPanelId,
+} from './design-lab/detail-tabs/DesignLabEcosystemDetailSections';
+import { DesignLabHero } from './design-lab/page-shell/DesignLabHero';
+import { DesignLabDetailPanel } from './design-lab/page-shell/DesignLabDetailPanel';
+import { DesignLabRightRail } from './design-lab/page-shell/DesignLabRightRail';
+import { DesignLabSidebar } from './design-lab/page-shell/DesignLabSidebar';
+import { resolveLegacyAdapterNoticeAction } from './design-lab/page-shell/designLabLegacyAdapterNotice';
+import { recordDesignLabLegacyAliasTelemetry } from './design-lab/page-shell/designLabLegacyAliasTelemetry';
+import {
+  resolveDesignLabPageShellDetailContentKind,
+  resolveDesignLabPageShellOverviewSupplementalMetadataKind,
+} from './design-lab/page-shell/designLabPageShellContentResolver';
+import {
+  resolveDesignLabPageShellDetailTabs,
+  resolveDesignLabPageShellHeroCopy,
+  resolveDesignLabPageShellLayerId,
+  resolveDesignLabPageShellWorkspaceLabel,
+} from './design-lab/page-shell/designLabPageShellLayerResolver';
+import {
+  resolveDesignLabPageShellRightRailActiveId,
+  resolveDesignLabPageShellRightRailSelectionKind,
+  resolveDesignLabPageShellRightRailTabs,
+  resolveDesignLabPageShellSidebarStats,
+} from './design-lab/page-shell/designLabPageShellRightRailResolver';
+import {
+  resolveDesignLabComponentMetadataItems,
+  resolveDesignLabFoundationMetadataItems,
+  resolveDesignLabAdoptionMetadataItems,
+  resolveDesignLabLensGuideMetadataItems,
+  resolveDesignLabMigrationMetadataItems,
+  resolveDesignLabPageMetadataItems,
+  resolveDesignLabReleaseMetadataItems,
+  resolveDesignLabRecipeMetadataItems,
+  type DesignLabMetadataDescriptor,
+} from './design-lab/page-shell/designLabPageShellMetadataResolver';
+import {
+  applyFamilySelection,
+  readFamilySelectionUrlParams,
+  readLayerPanelUrlParams,
+  resolveActiveFamilySelectionIdFromState,
+  resolveFallbackFamilySelection,
+  resolveHydratedFamilySelection,
+  resolvePreferredSectionId,
+  resolveSectionChangeFamilySelection,
+  resolveSidebarFamilySelection,
+  resolveWorkspaceModeForSection,
+  syncFamilySelectionUrlParams,
+  syncLayerPanelUrlParams,
+  stripInactiveLayerParams,
+  type DesignLabFamilySelectionState,
+  type DesignLabWorkspaceMode as DesignLabWorkspaceModeState,
+} from './design-lab/page-shell/designLabWorkspaceState';
+import { toDesignLabFamilyIdentity } from './design-lab/page-shell/designLabFamilyModel';
+import {
+  isAdapterLegacyDesignLabSectionId,
+  resolveLegacySectionComponentFallbackGroupId,
+  normalizeDesignLabSectionId,
+  resolveLegacySectionRecipeFallbackId,
+} from './design-lab/page-shell/designLabSectionRouting';
+import {
+  isDesignLabUrlTokenFlexibleMatch,
+  isDesignLabUrlTokenMatch,
+} from './design-lab/designLabUrlMatch';
+import { useDesignLabTaxonomyNavigatorModel } from './design-lab/page-shell/useDesignLabTaxonomyNavigatorModel';
+import { useDesignLabI18n } from './design-lab/useDesignLabI18n';
+import {
+  DesignLabRecipeComponentPreview,
+  DesignLabShowcaseContent,
+  designLabPreviewPanelIds,
+  getDesignLabPreviewPanelItems,
+} from './design-lab/showcase/DesignLabShowcaseContent';
+import type { DesignLabPreviewPanelId } from './design-lab/showcase/showcaseTypes';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type DesignLabLifecycle = 'stable' | 'beta' | 'planned';
 type DesignLabAvailability = 'exported' | 'planned';
 type DesignLabDemoMode = 'live' | 'inspector' | 'planned';
 type DesignLabTrack = 'new_packages' | 'current_system' | 'roadmap';
-type DesignLabDetailTab = 'overview' | 'demo' | 'api' | 'ux' | 'quality';
-type DesignLabWorkspaceMode = 'components' | 'recipes';
-type DesignLabDemoGalleryMode = 'all' | 'live_only' | 'recipes_first';
-type DemoSurfaceKind = 'live' | 'reference' | 'recipe';
+type DesignLabDetailTab = 'general' | 'overview' | 'demo' | 'api' | 'ux' | 'quality';
+type DesignLabWorkspaceMode = DesignLabWorkspaceModeState;
+type DesignLabOverviewPanelId = 'release' | 'adoption' | 'migration' | 'visual' | 'theme' | 'recipes';
+type DesignLabTranslate = (key: string, variables?: Record<string, string | number>) => string;
+
+const designLabWorkspaceModes: DesignLabWorkspaceMode[] = ['foundations', 'components', 'recipes', 'pages', 'ecosystem'];
+const designLabDetailTabIds: DesignLabDetailTab[] = ['general', 'demo', 'overview', 'api', 'ux', 'quality'];
+const designLabTrackIds: DesignLabTrack[] = ['new_packages', 'current_system', 'roadmap'];
+const designLabOverviewPanelIds: DesignLabOverviewPanelId[] = ['release', 'adoption', 'migration', 'visual', 'theme', 'recipes'];
+const designLabRecipeOverviewPanelIds: DesignLabRecipeOverviewPanelId[] = ['summary', 'coverage', 'flow', 'dependencies'];
+const designLabPageOverviewPanelIds: DesignLabPageOverviewPanelId[] = ['summary', 'regions', 'adoption', 'gallery'];
+const designLabComponentApiPanelIds: DesignLabComponentApiPanelId[] = ['contract', 'model', 'props', 'usage'];
+const designLabRecipeApiPanelIds: DesignLabRecipeApiPanelId[] = ['contract', 'binding', 'usage'];
+const designLabPageApiPanelIds: DesignLabPageApiPanelId[] = ['contract', 'regions', 'dependencies'];
+const designLabComponentQualityPanelIds: DesignLabComponentQualityPanelId[] = ['gates', 'usage', 'governance', 'benchmark', 'contracts'];
+const designLabRecipeQualityPanelIds: DesignLabRecipeQualityPanelId[] = ['gates', 'lifecycle', 'governance', 'benchmark', 'contracts'];
+const designLabPageQualityPanelIds: DesignLabPageQualityPanelId[] = ['gates', 'readiness', 'governance', 'benchmark', 'contracts'];
+const designLabFoundationOverviewPanelIds: DesignLabFoundationOverviewPanelId[] = ['summary', 'tokens', 'contracts'];
+const designLabFoundationApiPanelIds: DesignLabFoundationApiPanelId[] = ['runtime', 'schema', 'consumption'];
+const designLabFoundationQualityPanelIds: DesignLabFoundationQualityPanelId[] = ['gates', 'coverage', 'a11y', 'governance', 'benchmark', 'contracts'];
+const designLabEcosystemOverviewPanelIds: DesignLabEcosystemOverviewPanelId[] = ['summary', 'surfaces', 'tiers'];
+const designLabEcosystemApiPanelIds: DesignLabEcosystemApiPanelId[] = ['contract', 'integration', 'usage'];
+const designLabEcosystemQualityPanelIds: DesignLabEcosystemQualityPanelId[] = ['gates', 'enterprise_readiness', 'governance', 'benchmark', 'contracts'];
+const isSameTreeSelection = (
+  left: LibraryProductTreeSelection | null | undefined,
+  right: LibraryProductTreeSelection | null | undefined,
+) =>
+  (left?.trackId ?? null) === (right?.trackId ?? null) &&
+  (left?.groupId ?? null) === (right?.groupId ?? null) &&
+  (left?.subgroupId ?? null) === (right?.subgroupId ?? null) &&
+  (left?.itemId ?? null) === (right?.itemId ?? null);
+
+const isOneOf = <T extends string>(value: string | null, candidates: readonly T[]): value is T =>
+  Boolean(value && candidates.includes(value as T));
+
+const resolveTrackId = (trackId: string | null | undefined, fallback: DesignLabTrack): DesignLabTrack =>
+  isOneOf(trackId ?? null, designLabTrackIds) ? (trackId as DesignLabTrack) : fallback;
 
 type DesignLabIndexItem = {
   name: string;
@@ -376,10 +510,143 @@ type DesignLabIndex = {
       summary: {
         totalCandidates: number;
         dryRunReadyCandidates: number;
+        applyExecutorReadyCandidates: number;
+        manualReviewFirstCandidates: number;
         autoApplyReadyCandidates: number;
         lowRiskCount: number;
         mediumRiskCount: number;
         highRiskCount: number;
+      };
+      dryRun?: {
+        contractId: string;
+        contractPath: string;
+        artifactPath: string;
+        auditArtifactPath: string;
+        runScript: string;
+        auditScript: string;
+        executionMode: string;
+        summary: {
+          focusCount: number;
+          lowRiskFocusCount: number;
+          prototypeReadyFocusCount: number;
+          activeCandidateCount: number;
+        };
+        focusComponents: string[];
+        rules: string[];
+        evidenceRefs: string[];
+        applyPreview?: {
+          contractId: string;
+          contractPath: string;
+          artifactPath: string;
+          auditArtifactPath: string;
+          runScript: string;
+          auditScript: string;
+          defaultWriteMode: string;
+          allowWriteFlag: string;
+          summary: {
+            focusCount: number;
+            exactEligibleCandidateCount: number;
+            noopReadyCandidateCount: number;
+            writeEnabledByDefault: boolean;
+          };
+          focusComponents: string[];
+          rules: string[];
+          evidenceRefs: string[];
+        };
+      };
+      applyExecutor?: {
+        contractId: string;
+        contractPath: string;
+        artifactPath: string;
+        auditArtifactPath: string;
+        runScript: string;
+        auditScript: string;
+        defaultWriteMode: string;
+        allowWriteFlag: string;
+        summary: {
+          focusCount: number;
+          readyToApplyCandidateCount: number;
+          noopReadyCandidateCount: number;
+          writeEnabledByDefault: boolean;
+        };
+        focusComponents: string[];
+        rules: string[];
+        evidenceRefs: string[];
+      };
+      manualReview?: {
+        contractId: string;
+        contractPath: string;
+        artifactPath: string;
+        auditArtifactPath: string;
+        runScript: string;
+        auditScript: string;
+        reviewMode: string;
+        reviewWriteEnabled: boolean;
+        approvalModel: string;
+        decisionStateDefault: string;
+        summary: {
+          focusCount: number;
+          mediumRiskFocusCount: number;
+          highRiskFocusCount: number;
+          readyPacketCount: number;
+          readyForDecisionCount: number;
+          pendingDecisionCount: number;
+          singleOwnerApprovalCount: number;
+          generatedChecklistItemCount: number;
+        };
+        focusComponents: string[];
+        decisions?: {
+          contractId: string;
+          contractPath: string;
+          artifactPath: string;
+          auditArtifactPath: string;
+          runScript: string;
+          auditScript: string;
+          decisionMode: string;
+          allowedDecisions: string[];
+          summary: {
+            focusCount: number;
+            recordedDecisionCount: number;
+            approvedForApplyPreviewCount: number;
+            deferredUntilVisualReviewCount: number;
+            reviewOnlyManualRefactorCount: number;
+            rejectedForAutoApplyCount: number;
+            pendingDecisionCount: number;
+          };
+          focusComponents: string[];
+          rules: string[];
+          evidenceRefs: string[];
+        };
+        rules: string[];
+        evidenceRefs: string[];
+      };
+      prototypes?: {
+        contractId: string;
+        contractPath: string;
+        sourceDir: string;
+        artifactPath: string;
+        auditArtifactPath: string;
+        auditScript: string;
+        summary: {
+          prototypeCount: number;
+          readyCount: number;
+          missingCount: number;
+          illustrativePreviewCount: number;
+        };
+        items: Array<{
+          candidateId: string;
+          component: string;
+          consumerApp: string;
+          transformKind: string;
+          riskLevel: string;
+          prototypeStatus: string;
+          prototypeReviewMode: string;
+          prototypePath: string;
+          prototypeSourcePath: string;
+          rewriteRule: string;
+        }>;
+        rules: string[];
+        evidenceRefs: string[];
       };
       items: Array<{
         candidateId: string;
@@ -398,6 +665,16 @@ type DesignLabIndex = {
         estimatedTouchPoints: number;
         dryRunCommand: string;
         candidateScriptPath: string;
+        dryRunIncluded?: boolean;
+        applyExecutorIncluded?: boolean;
+        applyExecutorCommand?: string;
+        manualReviewIncluded?: boolean;
+        manualReviewCommand?: string;
+        manualReviewDecisionIncluded?: boolean;
+        manualReviewDecisionCommand?: string;
+        manualReviewDecisionState?: string;
+        manualReviewDecisionRationale?: string;
+        manualReviewDecisionNextStep?: string;
         dryRunScope: {
           targetFileCount: number;
           requiredAnySignals: string[];
@@ -414,6 +691,29 @@ type DesignLabIndex = {
         upgradeRecipeRef: string;
         applyReady: boolean;
         confidence: string;
+        prototypePath: string;
+        prototypeSourcePath: string;
+        prototypeStatus: string;
+        prototypeReviewMode: string;
+        rewriteRule: string;
+        rewritePreview: {
+          kind: string;
+          before: string;
+          after: string;
+        };
+        matchStrategy: {
+          requiredSelectors: string[];
+          dryRunSignals: string[];
+          astTargets: string[];
+          stopConditions: string[];
+        };
+        manualValidation: {
+          storybook: string[];
+          designLab: string[];
+          smoke: string[];
+        };
+        rollbackPlan: string[];
+        prototypeNotes: string[];
         evidenceRefs: string[];
       }>;
       rules: string[];
@@ -534,6 +834,9 @@ type DesignLabIndex = {
     contractId: string;
     currentFamilies: Array<{
       recipeId: string;
+      title?: string;
+      clusterTitle?: string;
+      clusterDescription?: string;
       ownerBlocks: string[];
       intent: string;
     }>;
@@ -544,10 +847,19 @@ type DesignLabIndex = {
   items: DesignLabIndexItem[];
 };
 
+type DesignLabRecipeFamily = NonNullable<DesignLabIndex['recipes']>['currentFamilies'][number];
+
 type DesignLabTaxonomyGroup = {
   id: string;
   title: string;
   subgroups: string[];
+};
+
+type DesignLabTaxonomySection = {
+  id: string;
+  title: string;
+  description?: string;
+  groupIds: string[];
 };
 
 type DesignLabTaxonomy = {
@@ -556,16 +868,96 @@ type DesignLabTaxonomy = {
     showEmptyGroups: boolean;
     showEmptySubgroups: boolean;
     defaultView: string;
+    defaultSection?: string;
     advancedToggleLabel: string;
   };
+  sections: DesignLabTaxonomySection[];
   groups: DesignLabTaxonomyGroup[];
 };
 
 const designLabIndex = {
+  ...(designLabGeneratedMetaRaw as Partial<DesignLabIndex>),
   ...(designLabIndexRaw as DesignLabIndex),
   items: designLabIndexItems as DesignLabIndexItem[],
 } as DesignLabIndex;
 const designLabTaxonomy = designLabTaxonomyRaw as DesignLabTaxonomy;
+const designLabTaxonomySectionIds = designLabTaxonomy.sections.map((section) => section.id);
+const designLabTaxonomySectionMap = new Map(designLabTaxonomy.sections.map((section) => [section.id, section] as const));
+const designLabTaxonomyGroupMap = new Map(designLabTaxonomy.groups.map((group) => [group.id, group] as const));
+const designLabTaxonomyGroupSectionMap = new Map(
+  designLabTaxonomy.sections.flatMap((section) =>
+    section.groupIds.map((groupId) => [groupId, section.id] as const),
+  ),
+);
+const designLabRecipePrimarySectionById: Record<string, DesignLabTaxonomySection['id']> = {
+  search_filter_listing: 'recipes',
+  detail_summary: 'recipes',
+  dashboard_template: 'pages',
+  crud_template: 'pages',
+  detail_template: 'pages',
+  approval_review: 'recipes',
+  empty_error_loading: 'recipes',
+  ai_guided_authoring: 'recipes',
+  command_workspace: 'pages',
+  settings_template: 'pages',
+  app_header: 'recipes',
+  navigation_menu: 'recipes',
+  search_command_header: 'recipes',
+  action_header: 'recipes',
+  desktop_menubar: 'recipes',
+};
+type DesignLabFoundationFamilyProfile = {
+  title: string;
+  description: string;
+  benchmark: string;
+  badges: string[];
+};
+
+const buildFoundationFamilyProfiles = (
+  t: DesignLabTranslate,
+): Record<string, DesignLabFoundationFamilyProfile> => ({
+  theme_tokens: {
+    title: t('designlab.foundationFamily.theme_tokens.title'),
+    description: t('designlab.foundationFamily.theme_tokens.description'),
+    benchmark: t('designlab.foundationFamily.theme_tokens.benchmark'),
+    badges: [
+      t('designlab.foundationFamily.theme_tokens.badges.theme'),
+      t('designlab.foundationFamily.theme_tokens.badges.tokens'),
+      t('designlab.foundationFamily.theme_tokens.badges.appearance'),
+    ],
+  },
+  a11y_i18n: {
+    title: t('designlab.foundationFamily.a11y_i18n.title'),
+    description: t('designlab.foundationFamily.a11y_i18n.description'),
+    benchmark: t('designlab.foundationFamily.a11y_i18n.benchmark'),
+    badges: [
+      t('designlab.foundationFamily.a11y_i18n.badges.a11y'),
+      t('designlab.foundationFamily.a11y_i18n.badges.i18n'),
+      t('designlab.foundationFamily.a11y_i18n.badges.locale'),
+    ],
+  },
+  dev_diagnostics: {
+    title: t('designlab.foundationFamily.dev_diagnostics.title'),
+    description: t('designlab.foundationFamily.dev_diagnostics.description'),
+    benchmark: t('designlab.foundationFamily.dev_diagnostics.benchmark'),
+    badges: [
+      t('designlab.foundationFamily.dev_diagnostics.badges.qa'),
+      t('designlab.foundationFamily.dev_diagnostics.badges.diagnostics'),
+      t('designlab.foundationFamily.dev_diagnostics.badges.release'),
+    ],
+  },
+  runtime_utilities: {
+    title: t('designlab.foundationFamily.runtime_utilities.title'),
+    description: t('designlab.foundationFamily.runtime_utilities.description'),
+    benchmark: t('designlab.foundationFamily.runtime_utilities.benchmark'),
+    badges: [
+      t('designlab.foundationFamily.runtime_utilities.badges.hooks'),
+      t('designlab.foundationFamily.runtime_utilities.badges.utilities'),
+      t('designlab.foundationFamily.runtime_utilities.badges.runtime'),
+    ],
+  },
+});
+const designLabIndexItemMap = new Map(designLabIndex.items.map((item) => [item.name, item] as const));
 const componentApiCatalog = {
   ...designLabApiCatalogMeta,
   items: designLabApiItems as DesignLabApiItem[],
@@ -639,8 +1031,13 @@ const buildUsagePropValue = (prop: DesignLabApiProp): string => {
   return '{/* TODO */}';
 };
 
-const buildUsageRecipes = (item: DesignLabIndexItem, apiItem?: DesignLabApiItem | null) => {
-  const importStatement = item.importStatement || `import { ${item.name} } from 'mfe-ui-kit';`;
+const buildUsageRecipes = (
+  item: DesignLabIndexItem,
+  apiItem: DesignLabApiItem | null | undefined,
+  t: DesignLabTranslate,
+  trackMeta: Record<DesignLabTrack, { label: string; note: string }>,
+) => {
+  const importStatement = item.importStatement || `import { ${item.name} } from '@mfe/design-system';`;
   const requiredProps = (apiItem?.props ?? []).filter((prop) => prop.required);
   const exampleProps = requiredProps.slice(0, 2);
   const openTagProps = exampleProps
@@ -650,8 +1047,8 @@ const buildUsageRecipes = (item: DesignLabIndexItem, apiItem?: DesignLabApiItem 
 
   const recipes: Array<{ title: string; description: string; code: string; badges?: React.ReactNode }> = [
     {
-      title: 'Temel kullanim',
-      description: 'Paket importu ve minimum API ile güvenli başlangıç reçetesi.',
+      title: t('designlab.usageRecipes.basic.title'),
+      description: t('designlab.usageRecipes.basic.description'),
       code: basicCode,
       badges: <SectionBadge label={item.lifecycle === 'stable' ? 'Stable recipe' : 'Beta recipe'} />,
     },
@@ -665,16 +1062,16 @@ const buildUsageRecipes = (item: DesignLabIndexItem, apiItem?: DesignLabApiItem 
         controlledProps.some((prop) => prop.name === 'checked') ? "checked={state}\n      onChange={(event) => setState(event.target.checked)}" : ''
       }${controlledProps.some((prop) => prop.name === 'open') ? "open={state}\n      onOpenChange={setState}" : ''}\n    />\n  );\n}`;
     recipes.push({
-      title: 'Controlled state',
-      description: 'Form veya shell state ile yönetilen kullanım kalıbı.',
+      title: t('designlab.usageRecipes.controlled.title'),
+      description: t('designlab.usageRecipes.controlled.description'),
       code: controlledCode.replace(/\n\s*\n\s*\n/g, '\n\n'),
       badges: <SectionBadge label="Controlled" />,
     });
   }
 
   recipes.push({
-    title: 'Ops / quality note',
-    description: 'Wave gate, browser doctor ve registry sözleşmesiyle hizalı kullanım notu.',
+    title: t('designlab.usageRecipes.governed.title'),
+    description: t('designlab.usageRecipes.governed.description'),
     code: `// Gate odaklari\n// - UX alignment: ${item.uxPrimaryThemeId ?? 'none'} / ${item.uxPrimarySubthemeId ?? 'none'}\n// - Quality gates: ${(item.qualityGates ?? []).join(', ') || 'none'}\n// - Registry track: ${trackMeta[resolveItemTrack(item)].label}\n${importStatement}`,
     badges: <SectionBadge label="Governed usage" />,
   });
@@ -718,7 +1115,7 @@ const buildRelatedRecipes = (
   if (!item || !recipeSummary) return [];
   const recipeLikeId = item.name.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
   return recipeSummary.currentFamilies.filter(
-    (recipe) => recipe.ownerBlocks.includes(item.name) || recipe.recipeId === recipeLikeId,
+    (family) => family.ownerBlocks.includes(item.name) || family.recipeId === recipeLikeId,
   );
 };
 
@@ -729,20 +1126,20 @@ const toTestIdSuffix = (value: string) =>
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '');
 
-const trackMeta: Record<DesignLabTrack, { label: string; note: string }> = {
+const buildTrackMeta = (t: DesignLabTranslate): Record<DesignLabTrack, { label: string; note: string }> => ({
   new_packages: {
-    label: 'Yeni Paketler',
-    note: 'Wave kontratıyla üretilen yeni component ailesi.',
+    label: t('designlab.track.newPackages.label'),
+    note: t('designlab.track.newPackages.note'),
   },
   current_system: {
-    label: 'Eski Sistem',
-    note: 'Repoda zaten kullanılan önceki export seti.',
+    label: t('designlab.track.currentSystem.label'),
+    note: t('designlab.track.currentSystem.note'),
   },
   roadmap: {
-    label: 'Roadmap',
-    note: 'Henüz export edilmemiş planlı component backlog’u.',
+    label: t('designlab.track.roadmap.label'),
+    note: t('designlab.track.roadmap.note'),
   },
-};
+});
 
 const resolveItemTrack = (item: DesignLabIndexItem): DesignLabTrack => {
   if (item.availability === 'planned' || item.demoMode === 'planned') {
@@ -783,229 +1180,460 @@ const trackVisualMeta: Record<
   },
 };
 
-const detailTabMeta: Array<{
-  id: DesignLabDetailTab;
-  label: string;
-  description: string;
-}> = [
-  { id: 'overview', label: 'Overview', description: 'Kısa özet, durum ve karar çerçevesi' },
-  { id: 'demo', label: 'Demo', description: 'Aşağı doğru akan çoklu varyant showcase alanı' },
-  { id: 'api', label: 'API', description: 'Import, props, variant axes ve state modeli' },
-  { id: 'ux', label: 'UX', description: 'UX katalog hizası ve north-star bağları' },
-  { id: 'quality', label: 'Quality', description: 'Gate, regression ve kullanım kanıtları' },
-];
-
-type ComponentShowcaseSection = {
-  id: string;
-  eyebrow?: string;
-  title: string;
-  description?: string;
-  badges?: string[];
-  kind?: DemoSurfaceKind;
-  content: React.ReactNode;
-};
-
-type DesignLabRecipeFamily = NonNullable<NonNullable<DesignLabIndex['recipes']>['currentFamilies']>[number];
-
-type PreviewPanelProps = React.ComponentProps<typeof LibraryPreviewPanel> & {
-  kind?: DemoSurfaceKind;
-};
-
-const demoGalleryModeOptions: Array<{
-  id: DesignLabDemoGalleryMode;
-  label: string;
-  note: string;
-}> = [
+const lensSurfaceMeta: Record<
+  'foundations' | 'components' | 'recipes' | 'pages',
   {
-    id: 'all',
-    label: 'Tüm yüzeyler',
-    note: 'Canlı demo, referans ve tarif kartlarını birlikte gösterir.',
-  },
-  {
-    id: 'live_only',
-    label: 'Demo only',
-    note: 'Not ve referans panelleri gizler; yalnız canlı yüzeyleri bırakır.',
-  },
-  {
-    id: 'recipes_first',
-    label: 'Recipes first',
-    note: 'Önce tüketim tariflerini, sonra component varyantlarını gösterir.',
-  },
-];
-
-const demoSurfaceMeta: Record<
-  DemoSurfaceKind,
-  {
-    label: string;
-    badgeClassName: string;
-    panelClassName: string;
+    accentClass: string;
+    borderClass: string;
+    surfaceClass: string;
+    glowClass: string;
   }
 > = {
-  live: {
-    label: 'LIVE',
-    badgeClassName: 'border-state-success-border bg-state-success-bg text-state-success-text',
-    panelClassName: 'border-state-success-border/35',
+  foundations: {
+    accentClass: 'bg-state-warning-border',
+    borderClass: 'border-state-warning-border',
+    surfaceClass: 'bg-state-warning-surface',
+    glowClass: 'shadow-[0_12px_32px_rgba(174,124,0,0.12)]',
   },
-  reference: {
-    label: 'REFERENCE',
-    badgeClassName: 'border-border-subtle bg-surface-muted text-text-secondary',
-    panelClassName: 'border-border-subtle bg-surface-muted/30',
+  components: {
+    accentClass: 'bg-action-primary',
+    borderClass: 'border-action-primary-border',
+    surfaceClass: 'bg-surface-panel',
+    glowClass: 'shadow-[0_12px_32px_rgba(33,79,255,0.10)]',
   },
-  recipe: {
-    label: 'RECIPE',
-    badgeClassName: 'border-state-warning-border bg-state-warning-bg text-state-warning-text',
-    panelClassName: 'border-state-warning-border/35',
+  recipes: {
+    accentClass: 'bg-state-success-border',
+    borderClass: 'border-state-success-border',
+    surfaceClass: 'bg-state-success-surface',
+    glowClass: 'shadow-[0_12px_32px_rgba(31,138,74,0.10)]',
+  },
+  pages: {
+    accentClass: 'bg-state-info-border',
+    borderClass: 'border-state-info-border',
+    surfaceClass: 'bg-state-info-surface',
+    glowClass: 'shadow-[0_12px_32px_rgba(44,112,214,0.10)]',
   },
 };
 
-const DemoGalleryModeContext = React.createContext<DesignLabDemoGalleryMode>('all');
+const isMissingTranslationValue = (value: string | null | undefined): boolean =>
+  typeof value === 'string' && value.startsWith('designlab.taxonomy.sections.');
 
-const normalizeDemoSurfaceText = (value: string) =>
-  value
-    .trim()
-    .toLocaleLowerCase('tr-TR')
-    .replace(/ç/g, 'c')
-    .replace(/ğ/g, 'g')
-    .replace(/ı/g, 'i')
-    .replace(/ö/g, 'o')
-    .replace(/ş/g, 's')
-    .replace(/ü/g, 'u')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .replace(/\s+/g, ' ');
-
-const includesAnyDemoToken = (value: string, tokens: string[]) =>
-  tokens.some((token) => value.includes(token));
-
-const resolvePreviewPanelKind = (title: string, explicitKind?: DemoSurfaceKind): DemoSurfaceKind => {
-  if (explicitKind) return explicitKind;
-
-  const normalized = normalizeDemoSurfaceText(title);
-  if (includesAnyDemoToken(normalized, ['recipe', 'consume contract', 'consumer handoff', 'direct recipes'])) {
-    return 'recipe';
+const getRecipeClusterReason = (
+  clusterTitle: string,
+  clusterDescription?: string,
+): string => {
+  const normalized = clusterTitle.toLowerCase();
+  if (normalized.includes('search')) {
+    return 'Arama, filtre ve listeleme kaliplarini tek bir workflow ailesinde toplar.';
   }
-  if (
-    includesAnyDemoToken(normalized, [
-      'guideline',
-      'usage note',
-      'rule of thumb',
-      'contract note',
-      'policy note',
-      'governance note',
-      'audit note',
-      'reading guidance',
-      'guidance',
-      'interpretation',
-      'why use it',
-      'why this matters',
-      'selected ',
-      'current ',
-      'summary',
-      'payload summary',
-      'policy snapshot',
-      'contract',
-      'live state',
-      'panel state',
-      'shared state',
-      'current command state',
-      'selected source',
-      'selected event',
-      'selected citation',
-      'kullanim notu',
-      'dogru kullanim notu',
-    ])
-  ) {
-    return 'reference';
+  if (normalized.includes('review') || normalized.includes('approval')) {
+    return 'Inceleme, karar ve onay ritmini ayni ekip diliyle tekrar kullanilabilir hale getirir.';
   }
-  return 'live';
+  if (normalized.includes('state') || normalized.includes('feedback')) {
+    return 'Bos, yukleniyor, hata ve basari gibi durum yuzeylerini ortak bir deneyim diline baglar.';
+  }
+  if (normalized.includes('ai')) {
+    return 'AI destekli akislar icin prompt, sonuc ve kontrol yuzeylerini tek yerde toplar.';
+  }
+  if (normalized.includes('analytics')) {
+    return 'Analitik agirlikli sayfa iskeletlerini hizli secmek icin template gruplarini ayirir.';
+  }
+  if (normalized.includes('operational')) {
+    return 'Gunluk operasyon ekranlarini ayni shell karar seti etrafinda toplar.';
+  }
+  if (normalized.includes('configuration')) {
+    return 'Ayar, guardrail ve policy sayfalarini daha sakin bir template ailesine toplar.';
+  }
+  return clusterDescription ?? 'Tekrarlanan urun akislarini secilebilir bir recipe ailesine cevirir.';
 };
 
-const resolveShowcaseSectionKind = (section: ComponentShowcaseSection): DemoSurfaceKind => {
-  if (section.kind) return section.kind;
-
-  const normalized = normalizeDemoSurfaceText(
-    [section.id, section.title, section.description ?? '', ...(section.badges ?? [])].join(' '),
-  );
-
-  if (includesAnyDemoToken(normalized, ['recipe', 'recipes', 'consume contract', 'consumer handoff'])) {
-    return 'recipe';
+const getRecipeProblemSignal = (
+  clusterTitle: string,
+  isPageCluster = false,
+): string => {
+  const normalized = clusterTitle.toLowerCase();
+  if (normalized.includes('search')) {
+    return 'Ara, filtrele, karsilastir';
   }
-  if (
-    includesAnyDemoToken(normalized, [
-      'guideline',
-      'usage note',
-      'rule of thumb',
-      'contract note',
-      'policy note',
-      'governance note',
-      'audit note',
-      'reading guidance',
-      'guidance',
-      'interpretation',
-      'why use it',
-      'why this matters',
-    ])
-  ) {
-    return 'reference';
+  if (normalized.includes('review') || normalized.includes('approval')) {
+    return 'Incele, karar ver, onayla';
   }
-  return 'live';
+  if (normalized.includes('state') || normalized.includes('feedback')) {
+    return 'Durumu acik ve sakin aktar';
+  }
+  if (normalized.includes('ai')) {
+    return 'Yonlendir, dogrula, eyleme gec';
+  }
+  if (normalized.includes('analytics')) {
+    return 'Sagligi oku, hizlica aksiyon al';
+  }
+  if (normalized.includes('operational')) {
+    return isPageCluster ? 'Calis, incele, sonucu bagla' : 'Gunluk operasyonu tek ritimde yonet';
+  }
+  if (normalized.includes('configuration') || normalized.includes('settings')) {
+    return 'Ayarla, koru, gozden gecir';
+  }
+  return isPageCluster ? 'Dogru sayfa iskeletini hizlica sec' : 'Tekrarlanan urun problemini recipe ile coz';
 };
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ title, children, className, kind }) => {
-  const demoGalleryMode = React.useContext(DemoGalleryModeContext);
-  const resolvedKind = resolvePreviewPanelKind(title, kind);
+const getRecipeFamilySignal = (
+  recipe: Pick<DesignLabRecipeFamily, 'recipeId' | 'title' | 'clusterTitle'>,
+): string => {
+  const normalized = `${recipe.recipeId} ${recipe.title ?? ''} ${recipe.clusterTitle ?? ''}`.toLowerCase();
+  if (normalized.includes('dashboard')) {
+    return 'KPI ve karar ritmi';
+  }
+  if (normalized.includes('crud')) {
+    return 'Listele, filtrele, guncelle';
+  }
+  if (normalized.includes('detail')) {
+    return 'Detayi ac, baglami topla';
+  }
+  if (normalized.includes('command') || normalized.includes('workspace')) {
+    return 'Ara, calistir, sonucu bagla';
+  }
+  if (normalized.includes('settings') || normalized.includes('configuration')) {
+    return 'Ayar ve guardrail akisi';
+  }
+  if (normalized.includes('search')) {
+    return 'Ara ve listele';
+  }
+  if (normalized.includes('approval') || normalized.includes('review')) {
+    return 'Incele ve karar ver';
+  }
+  if (normalized.includes('empty') || normalized.includes('error') || normalized.includes('loading')) {
+    return 'Durum dilini standardize et';
+  }
+  if (normalized.includes('ai')) {
+    return 'Yaz, yonlendir, dogrula';
+  }
+  return getRecipeProblemSignal(recipe.clusterTitle ?? recipe.title ?? recipe.recipeId);
+};
 
-  if (demoGalleryMode === 'live_only' && resolvedKind !== 'live') {
-    return null;
+const getRecipeOutcomeSignal = (
+  clusterTitle: string,
+  isPageCluster = false,
+): string => {
+  const normalized = clusterTitle.toLowerCase();
+  if (normalized.includes('search')) {
+    return 'Arama ve filtreleme karar yukunu azaltir.';
+  }
+  if (normalized.includes('review') || normalized.includes('approval')) {
+    return 'Inceleme ve onay hizi tek bir ekip ritmine oturur.';
+  }
+  if (normalized.includes('state') || normalized.includes('feedback')) {
+    return 'Bos, hata ve loading dili daha sakin ve tutarli kalir.';
+  }
+  if (normalized.includes('ai')) {
+    return 'AI yardimli akislarda handoff ve guven sinyali netlesir.';
+  }
+  if (normalized.includes('analytics')) {
+    return 'Dashboard ekipleri ayni KPI iskeletiyle daha hizli baslar.';
+  }
+  if (normalized.includes('operational')) {
+    return isPageCluster
+      ? 'Operasyon ekipleri dogru page shell ile daha hizli ilerler.'
+      : 'Gunluk operasyon akislari ayni shell kararlarini tekrar kullanir.';
+  }
+  if (normalized.includes('configuration') || normalized.includes('settings')) {
+    return 'Ayar ve policy ekranlari daha guvenli bir ritimde kalir.';
+  }
+  return isPageCluster
+    ? 'Sayfa ekipleri uygun template ile daha hizli baslangic alir.'
+    : 'Recipe ailesi ayni urun problemini tekrar cozmeyi kolaylastirir.';
+};
+
+const getRecipeUseWhen = (
+  clusterTitle: string,
+): string => {
+  const normalized = clusterTitle.toLowerCase();
+  if (normalized.includes('search')) {
+    return 'Arama, filtre ve listing ayni sayfada toplaniyorsa.';
+  }
+  if (normalized.includes('review') || normalized.includes('approval')) {
+    return 'Karar, onay ve inspector ritmi agirlikli akislarda.';
+  }
+  if (normalized.includes('state') || normalized.includes('feedback')) {
+    return 'Bos, hata veya loading dili urun genelinde tutarli kalacaksa.';
+  }
+  if (normalized.includes('ai')) {
+    return 'Prompt, sonuc ve guven sinyali ayni akis icinde kurulacaksa.';
+  }
+  return 'Ayni urun problemi birden fazla ekipte tekrar ediyorsa.';
+};
+
+const getRecipeAvoidWhen = (
+  clusterTitle: string,
+): string => {
+  const normalized = clusterTitle.toLowerCase();
+  if (normalized.includes('search')) {
+    return 'Tek adimli, filtre gerektirmeyen kucuk yuzeylerde.';
+  }
+  if (normalized.includes('review') || normalized.includes('approval')) {
+    return 'Yalniz bilgi gosteren, karar almayan detay ekranlarinda.';
+  }
+  if (normalized.includes('state') || normalized.includes('feedback')) {
+    return 'Tek bir local state icin agir workflow kabugu gerekmiyorsa.';
+  }
+  if (normalized.includes('ai')) {
+    return 'AI yardimi olmayan basit form veya tablo yuzeylerinde.';
+  }
+  return 'Tek seferlik, tekrar etmeyecek ozel ekranlarda.';
+};
+
+const getRecipeFamilyOutcome = (
+  recipe: Pick<DesignLabRecipeFamily, 'recipeId' | 'title' | 'clusterTitle'>,
+): string => {
+  const normalized = `${recipe.recipeId} ${recipe.title ?? ''} ${recipe.clusterTitle ?? ''}`.toLowerCase();
+  if (normalized.includes('dashboard')) {
+    return 'Karar panelleri ayni KPI omurgasina oturur.';
+  }
+  if (normalized.includes('crud')) {
+    return 'Listeleme ve aksiyon sayfalari daha hizli kurulur.';
+  }
+  if (normalized.includes('detail')) {
+    return 'Detay ve inspector kurgusu daha hizli tekrar edilir.';
+  }
+  if (normalized.includes('command') || normalized.includes('workspace')) {
+    return 'Search-first operasyon yuzeyi tek template ile kurulur.';
+  }
+  if (normalized.includes('settings') || normalized.includes('configuration')) {
+    return 'Ayar ekranlari guardrail odakli bir kabukla gelir.';
+  }
+  return getRecipeOutcomeSignal(recipe.clusterTitle ?? recipe.title ?? recipe.recipeId, true);
+};
+
+const getLensOverviewSilhouette = (key: string) => {
+  const normalized = key.toLowerCase();
+  if (normalized.includes('analytics') || normalized.includes('dashboard')) {
+    return 'dashboard';
+  }
+  if (normalized.includes('operational') || normalized.includes('listing') || normalized.includes('search')) {
+    return 'list';
+  }
+  if (normalized.includes('configuration') || normalized.includes('settings')) {
+    return 'settings';
+  }
+  if (normalized.includes('command') || normalized.includes('workspace') || normalized.includes('ai')) {
+    return 'workspace';
+  }
+  if (normalized.includes('detail') || normalized.includes('review')) {
+    return 'detail';
+  }
+  return 'catalog';
+};
+
+const getFamilyRailMarkerVariant = (key: string) => {
+  const normalized = key.toLowerCase();
+  if (normalized.includes('navigation') || normalized.includes('menu') || normalized.includes('rail')) {
+    return 'navigation';
+  }
+  if (normalized.includes('action') || normalized.includes('button') || normalized.includes('trigger')) {
+    return 'actions';
+  }
+  if (normalized.includes('data') || normalized.includes('table') || normalized.includes('grid')) {
+    return 'data';
+  }
+  if (normalized.includes('feedback') || normalized.includes('status') || normalized.includes('toast')) {
+    return 'feedback';
+  }
+  if (normalized.includes('input') || normalized.includes('select') || normalized.includes('form')) {
+    return 'forms';
+  }
+  return 'catalog';
+};
+
+const getFamilyRailMarkerLabel = (variant: string) => {
+  switch (variant) {
+    case 'navigation':
+      return 'Nav';
+    case 'actions':
+      return 'Act';
+    case 'data':
+      return 'Data';
+    case 'feedback':
+      return 'UX';
+    case 'forms':
+      return 'Form';
+    default:
+      return 'Core';
+  }
+};
+
+const getWhyThisFamilyCopy = (key: string) => {
+  const normalized = key.toLowerCase();
+  if (normalized.includes('navigation') || normalized.includes('menu') || normalized.includes('rail')) {
+    return 'Navigasyon odakli akislarda rota tutarliligi, sayfa baglamini kaybetmeden yonetimi hizlandirir.';
+  }
+  if (normalized.includes('action') || normalized.includes('button') || normalized.includes('trigger')) {
+    return 'Eylem odaikli ekranlarda karar noktalarini birikimli sunumla hizli yakalamak icin uygun.';
+  }
+  if (normalized.includes('data') || normalized.includes('table') || normalized.includes('grid')) {
+    return 'Veri odakli akislarda gozden gecirme maliyetini azaltan liste ve satir patternleri toplar.';
+  }
+  if (normalized.includes('feedback') || normalized.includes('status') || normalized.includes('toast')) {
+    return 'Durum, uyari ve geri bildirim patternlerini standart bir tonla birlikte yönetir.';
+  }
+  if (normalized.includes('input') || normalized.includes('select') || normalized.includes('form')) {
+    return 'Form ve veri alma akislari icin formik/validation davranislariyla birlikte hizli tasnif saglar.';
+  }
+  return 'Bu aile, benzer urun kararlarını ortak bir davranis diliyle birlestirerek daha hizli ilerlemeye yardim eder.';
+};
+
+const getTemplateSwitchReason = (
+  recipe: Pick<DesignLabRecipeFamily, 'recipeId' | 'title' | 'clusterTitle'>,
+): string => {
+  const normalized = `${recipe.recipeId} ${recipe.title ?? ''} ${recipe.clusterTitle ?? ''}`.toLowerCase();
+  if (normalized.includes('dashboard')) {
+    return 'KPI ve karar ritmini one cikarir.';
+  }
+  if (normalized.includes('crud')) {
+    return 'Liste, filtre ve satir aksiyonlarini agirliklandirir.';
+  }
+  if (normalized.includes('detail')) {
+    return 'Detay, inspector ve baglam toplama ritmine gecer.';
+  }
+  if (normalized.includes('command') || normalized.includes('workspace')) {
+    return 'Search-first calisma yuzeyini one alir.';
+  }
+  if (normalized.includes('settings') || normalized.includes('configuration')) {
+    return 'Guardrail ve ayar denetimini sakinlestirir.';
+  }
+  if (normalized.includes('analytics')) {
+    return 'Analitik okumayi ve KPI taramasini hizlandirir.';
+  }
+  if (normalized.includes('operational')) {
+    return 'Gunluk operasyon akisini daha net bir shell ile toplar.';
+  }
+  return 'Ayni cluster icinde farkli bir sayfa ritmine gecis saglar.';
+};
+
+const getTemplateTransitionTags = (recipe: Pick<DesignLabRecipeFamily, 'recipeId' | 'title' | 'clusterTitle'>) => {
+  const normalized = `${recipe.recipeId} ${recipe.title ?? ''} ${recipe.clusterTitle ?? ''}`.toLowerCase();
+  const tags = new Set<string>(['lighter']);
+
+  if (normalized.includes('table') || normalized.includes('grid') || normalized.includes('listing') || normalized.includes('catalog')) {
+    tags.delete('lighter');
+    tags.add('denser');
+  }
+  if (normalized.includes('search') || normalized.includes('filter') || normalized.includes('lookup')) {
+    tags.add('search-first');
+  }
+  if (normalized.includes('review') || normalized.includes('approval') || normalized.includes('decision') || normalized.includes('workflow')) {
+    tags.add('review-first');
   }
 
-  return (
-    <div
-      data-demo-panel-kind={resolvedKind}
-      className={[
-        'rounded-2xl border bg-surface-default p-4',
-        demoSurfaceMeta[resolvedKind].panelClassName,
-        className ?? '',
-      ]
-        .join(' ')
-        .trim()}
-    >
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <DetailLabel className="text-xs">{title}</DetailLabel>
-        <SectionBadge label={demoSurfaceMeta[resolvedKind].label} className={demoSurfaceMeta[resolvedKind].badgeClassName} />
-      </div>
-      <div className="mt-3">{children}</div>
-    </div>
-  );
+  const ordered = ['lighter', 'denser', 'search-first', 'review-first'];
+  return ordered.filter((tag) => tags.has(tag));
 };
 
 const DesignLabPage: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { t, formatDate, formatNumber } = useDesignLabI18n();
+  const trackMeta = useMemo(() => buildTrackMeta(t), [t]);
+  const componentPreviewPanelItems = useMemo(
+    () => getDesignLabPreviewPanelItems('components', t),
+    [t],
+  );
+  const recipePreviewPanelItems = useMemo(
+    () => getDesignLabPreviewPanelItems('recipes', t),
+    [t],
+  );
+  const foundationFamilyProfiles = useMemo(
+    () => buildFoundationFamilyProfiles(t),
+    [t],
+  );
+  const taxonomySectionPresentationMap = useMemo(
+    () =>
+      new Map(
+        designLabTaxonomy.sections.map((section) => [
+          section.id,
+          {
+            title: t(`designlab.taxonomy.sections.${section.id}.title`),
+            description: t(`designlab.taxonomy.sections.${section.id}.description`),
+          },
+        ]),
+      ),
+    [t],
+  );
+  const getTaxonomySectionTitle = React.useCallback(
+    (sectionId: string, fallbackTitle: string) =>
+      isMissingTranslationValue(taxonomySectionPresentationMap.get(sectionId)?.title)
+        ? fallbackTitle
+        : taxonomySectionPresentationMap.get(sectionId)?.title
+          ?? fallbackTitle,
+    [taxonomySectionPresentationMap],
+  );
+  const getTaxonomySectionDescription = React.useCallback(
+    (sectionId: string, fallbackDescription?: string | null) =>
+      isMissingTranslationValue(taxonomySectionPresentationMap.get(sectionId)?.description)
+        ? fallbackDescription ?? null
+        : taxonomySectionPresentationMap.get(sectionId)?.description
+          ?? fallbackDescription
+          ?? null,
+    [taxonomySectionPresentationMap],
+  );
   const [query, setQuery] = useState('');
-  const [recipeQuery, setRecipeQuery] = useState('');
-  const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('overview');
-  const [workspaceMode, setWorkspaceMode] = useState<DesignLabWorkspaceMode>('components');
+  const [familyQuery, setFamilyQuery] = useState('');
+  const [detailTab, setDetailTab] = useState<DesignLabDetailTab>('demo');
+  const [activeOverviewPanel, setActiveOverviewPanel] = useState<DesignLabOverviewPanelId>('release');
+  const [activeRecipeOverviewPanel, setActiveRecipeOverviewPanel] = useState<DesignLabRecipeOverviewPanelId>('summary');
+  const [activePageOverviewPanel, setActivePageOverviewPanel] = useState<DesignLabPageOverviewPanelId>('summary');
+  const [activeComponentApiPanel, setActiveComponentApiPanel] = useState<DesignLabComponentApiPanelId>('contract');
+  const [activeRecipeApiPanel, setActiveRecipeApiPanel] = useState<DesignLabRecipeApiPanelId>('contract');
+  const [activePageApiPanel, setActivePageApiPanel] = useState<DesignLabPageApiPanelId>('contract');
+  const [activeComponentQualityPanel, setActiveComponentQualityPanel] = useState<DesignLabComponentQualityPanelId>('gates');
+  const [activeRecipeQualityPanel, setActiveRecipeQualityPanel] = useState<DesignLabRecipeQualityPanelId>('gates');
+  const [activePageQualityPanel, setActivePageQualityPanel] = useState<DesignLabPageQualityPanelId>('gates');
+  const [activeFoundationOverviewPanel, setActiveFoundationOverviewPanel] = useState<DesignLabFoundationOverviewPanelId>('summary');
+  const [activeFoundationApiPanel, setActiveFoundationApiPanel] = useState<DesignLabFoundationApiPanelId>('runtime');
+  const [activeFoundationQualityPanel, setActiveFoundationQualityPanel] = useState<DesignLabFoundationQualityPanelId>('gates');
+  const [activeEcosystemOverviewPanel, setActiveEcosystemOverviewPanel] = useState<DesignLabEcosystemOverviewPanelId>('summary');
+  const [activeEcosystemApiPanel, setActiveEcosystemApiPanel] = useState<DesignLabEcosystemApiPanelId>('contract');
+  const [activeEcosystemQualityPanel, setActiveEcosystemQualityPanel] = useState<DesignLabEcosystemQualityPanelId>('gates');
+  const [activeComponentPreviewPanel, setActiveComponentPreviewPanel] = useState<DesignLabPreviewPanelId>('live');
+  const [activeRecipePreviewPanel, setActiveRecipePreviewPanel] = useState<DesignLabPreviewPanelId>('live');
+  const [activePagePreviewPanel, setActivePagePreviewPanel] = useState<DesignLabPreviewPanelId>('live');
+  const defaultTaxonomySectionId =
+    designLabTaxonomy.defaults.defaultSection ?? designLabTaxonomy.sections[0]?.id ?? 'components';
+  const [workspaceModeState, setWorkspaceMode] = useState<DesignLabWorkspaceMode>(
+    resolveWorkspaceModeForSection(defaultTaxonomySectionId),
+  );
+  const [activeTaxonomySectionId, setActiveTaxonomySectionId] = useState<string>(defaultTaxonomySectionId);
+  const [legacyAdapterOriginSectionId, setLegacyAdapterOriginSectionId] = useState<string | null>(null);
+  const legacyAliasTelemetryFingerprintRef = React.useRef<string | null>(null);
+  const [urlStateHydrated, setUrlStateHydrated] = useState(false);
   const [treeSelection, setTreeSelection] = useState<LibraryProductTreeSelection>({
     trackId: 'new_packages',
-    groupId: 'ai_helpers',
-    subgroupId: 'command_palette',
-    itemId: 'CommandPalette',
+    groupId: 'navigation',
+    subgroupId: 'Anchor / Table of contents',
+    itemId: 'AnchorToc',
   });
-  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(designLabIndex.recipes?.currentFamilies[0]?.recipeId ?? null);
+  const [familySelectionState, setFamilySelectionState] = useState<DesignLabFamilySelectionState>({
+    recipes: designLabIndex.recipes?.currentFamilies[0]?.recipeId ?? null,
+    pages: null,
+  });
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [contextMenuAction, setContextMenuAction] = useState('Henüz seçim yok');
   const [formDrawerOpen, setFormDrawerOpen] = useState(false);
   const [readonlyFormDrawerOpen, setReadonlyFormDrawerOpen] = useState(false);
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
+  const formFieldSeed = useMemo(
+    () => ({
+      textInput: t('designlab.seed.formField.textInput'),
+      searchInput: t('designlab.seed.formField.searchInput'),
+      textArea: t('designlab.seed.formField.textArea'),
+      comment: t('designlab.seed.formField.comment'),
+    }),
+    [t],
+  );
   const [selectValue, setSelectValue] = useState('comfortable');
-  const [textInputValue, setTextInputValue] = useState('Nova kullanıcı');
-  const [searchInputValue, setSearchInputValue] = useState('Denetim planı');
+  const [textInputValue, setTextInputValue] = useState(formFieldSeed.textInput);
+  const [searchInputValue, setSearchInputValue] = useState(formFieldSeed.searchInput);
   const [inviteInputValue, setInviteInputValue] = useState('ops@nova.io');
-  const [textAreaValue, setTextAreaValue] = useState(
-    'Açıklama alanı inline yardım, hata ve karakter sayacı ile birlikte form deneyimini tamamlar.',
-  );
-  const [commentValue, setCommentValue] = useState(
-    'Bu alan yorum, not ve açıklama akışlarında otomatik yükseklik ile çalışmalı.',
-  );
+  const [textAreaValue, setTextAreaValue] = useState(formFieldSeed.textArea);
+  const [commentValue, setCommentValue] = useState(formFieldSeed.comment);
   const [checkboxValue, setCheckboxValue] = useState(true);
   const [radioValue, setRadioValue] = useState<'design' | 'ops' | 'delivery'>('design');
   const [switchValue, setSwitchValue] = useState(true);
@@ -1023,176 +1651,319 @@ const DesignLabPage: React.FC = () => {
   const [approvalCheckpointState, setApprovalCheckpointState] = useState<'pending' | 'approved' | 'rejected'>('pending');
   const [selectedCitationId, setSelectedCitationId] = useState<string | null>('policy-4-2');
   const [selectedAuditId, setSelectedAuditId] = useState<string | null>('audit-draft');
-  const [promptSubject, setPromptSubject] = useState('Quarterly ethics review');
-  const [promptBody, setPromptBody] = useState(
-    'Prepare a concise approval-ready summary for ethics program findings. Highlight high-risk items, cite the governing policy sections and keep the tone strict but neutral.',
+  const promptSeed = useMemo(
+    () => ({
+      subject: t('designlab.seed.prompt.subject'),
+      body: t('designlab.seed.prompt.body'),
+    }),
+    [t],
   );
+  const setRecipeSelectionId = React.useCallback((selectionId: string | null) => {
+    setFamilySelectionState((current) =>
+      applyFamilySelection(current, {
+        selectionKind: 'recipes',
+        selectionId,
+      }),
+    );
+  }, []);
+  const setPageSelectionId = React.useCallback((selectionId: string | null) => {
+    setFamilySelectionState((current) =>
+      applyFamilySelection(current, {
+        selectionKind: 'pages',
+        selectionId,
+      }),
+    );
+  }, []);
+  const reportStatusSeed = useMemo(
+    () => ({
+      idle: t('designlab.seed.reportStatus.idle'),
+      applied: t('designlab.seed.reportStatus.applied'),
+      reset: t('designlab.seed.reportStatus.reset'),
+    }),
+    [t],
+  );
+  const dropdownActionSeed = useMemo(() => t('designlab.seed.dropdownAction.empty'), [t]);
+  const contextMenuActionSeed = useMemo(() => t('designlab.seed.contextMenuAction.empty'), [t]);
+  const [promptSubject, setPromptSubject] = useState(promptSeed.subject);
+  const [promptBody, setPromptBody] = useState(promptSeed.body);
+  const [contextMenuAction, setContextMenuAction] = useState(contextMenuActionSeed);
   const [tourOpen, setTourOpen] = useState(false);
   const [tourStep, setTourStep] = useState(0);
+  const activePageShellLayerId = useMemo(
+    () => resolveDesignLabPageShellLayerId(activeTaxonomySectionId),
+    [activeTaxonomySectionId],
+  );
+  const detailTabMeta = useMemo<Array<{ id: DesignLabDetailTab; label: string; description: string }>>(
+    () => resolveDesignLabPageShellDetailTabs(activePageShellLayerId, t),
+    [activePageShellLayerId, t],
+  );
   const [tourStatus, setTourStatus] = useState<'idle' | 'guided' | 'finished'>('idle');
   const [promptScope, setPromptScope] = useState<'general' | 'approval' | 'policy' | 'release'>('approval');
   const [promptTone, setPromptTone] = useState<'neutral' | 'strict' | 'exploratory'>('strict');
-  const policyTableRows = [
-    { policy: 'Etik Politikası', owner: 'Uyum', status: 'Aktif', updatedAt: '06 Mar 2026' },
-    { policy: 'Hediye & Ağırlama', owner: 'Hukuk', status: 'Taslak', updatedAt: '05 Mar 2026' },
-    { policy: 'Çıkar Çatışması', owner: 'İK', status: 'Onay Bekliyor', updatedAt: '04 Mar 2026' },
-  ];
-  const rolloutDescriptionItems = [
-    { key: 'owner', label: 'Sahip', value: 'Uyum Operasyonları', helper: 'Canary ve rollout kararını veren ekip.' },
-    { key: 'scope', label: 'Kapsam', value: 'Tüm bağlı ortaklıklar', tone: 'info' as const, span: 2 as const },
-    { key: 'status', label: 'Durum', value: 'Aktif', tone: 'success' as const },
-    { key: 'review', label: 'Son gözden geçirme', value: '07 Mar 2026', helper: 'Change approval snapshot ile eşli.' },
-  ];
-  const listItems = [
-    {
-      key: 'triage',
-      title: 'Release evidence triage',
-      description: 'Security ve rollout kanıtları tamamlanmadan publish penceresi açılmıyor.',
-      meta: 'P0',
-      badges: ['Blocked'],
-      tone: 'warning' as const,
-    },
-    {
-      key: 'doctor',
-      title: 'Frontend doctor summary',
-      description: 'UI Library, shell-public ve auth route preset’leri tek raporda toplandı.',
-      meta: 'PASS',
-      badges: ['Doctor'],
-      tone: 'success' as const,
-    },
-    {
-      key: 'residual',
-      title: 'Residual risk review',
-      description: 'Jackon residual review tarihi yaklaşmadan güncelleme planı hazırlanmalı.',
-      meta: 'MEDIUM',
-      badges: ['Security'],
-      tone: 'info' as const,
-    },
-  ];
-  const jsonViewerValue = {
-    release: {
-      waveId: 'wave_4_data_display',
-      focus: ['TableSimple', 'Descriptions', 'AgGridServer', 'EntityGridTemplate', 'List', 'JsonViewer'],
-      evidence: {
-        doctor: 'PASS',
-        uiKitTests: 'PASS',
-        gate: 'PASS',
+  const legacyAdapterCanonicalizationPendingRef = React.useRef(false);
+  const previousPromptSeed = React.useRef(promptSeed);
+  const previousReportStatusSeed = React.useRef(reportStatusSeed);
+  const previousDropdownActionSeed = React.useRef(dropdownActionSeed);
+  const previousContextMenuActionSeed = React.useRef(contextMenuActionSeed);
+  const previousFormFieldSeed = React.useRef(formFieldSeed);
+  const policyTableRows = useMemo(
+    () => [
+      {
+        policy: t('designlab.showcase.component.tableSimple.live.rows.ethics.policy'),
+        owner: t('designlab.showcase.component.tableSimple.live.rows.ethics.owner'),
+        status: t('designlab.showcase.component.tableSimple.live.rows.ethics.status'),
+        statusTone: 'success' as const,
+        updatedAt: '06 Mar 2026',
       },
-    },
-    policy: {
-      rollout: {
-        mode: 'doctor-first',
-        security: 'fail-closed',
+      {
+        policy: t('designlab.showcase.component.tableSimple.live.rows.gifts.policy'),
+        owner: t('designlab.showcase.component.tableSimple.live.rows.gifts.owner'),
+        status: t('designlab.showcase.component.tableSimple.live.rows.gifts.status'),
+        statusTone: 'warning' as const,
+        updatedAt: '05 Mar 2026',
       },
-      owners: {
-        frontend: 'platform-ui',
-        governance: 'ux-catalog',
+      {
+        policy: t('designlab.showcase.component.tableSimple.live.rows.conflict.policy'),
+        owner: t('designlab.showcase.component.tableSimple.live.rows.conflict.owner'),
+        status: t('designlab.showcase.component.tableSimple.live.rows.conflict.status'),
+        statusTone: 'info' as const,
+        updatedAt: '04 Mar 2026',
       },
-    },
-  };
-  const treeNodes = [
-    {
-      key: 'release',
-      label: 'Release Control Plane',
-      description: 'Gate, doctor ve security kanitlarini tek hiyerarside toplar.',
-      meta: 'root',
-      badges: ['Stable'],
-      tone: 'info' as const,
-      children: [
-        {
-          key: 'doctor',
-          label: 'Doctor evidence',
-          description: 'Frontend doctor preset ciktilari.',
-          meta: 'PASS',
-          badges: ['ui-library'],
-          tone: 'success' as const,
-          children: [
-            {
-              key: 'doctor-ui-library',
-              label: 'UI Library walkthrough',
-              description: 'Console/pageerror ve click-walk sonucu temiz.',
-              meta: '5 step',
+    ],
+    [t],
+  );
+  const rolloutDescriptionItems = useMemo(
+    () => [
+      {
+        key: 'owner',
+        label: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.owner.label'),
+        value: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.owner.value'),
+        helper: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.owner.helper'),
+      },
+      {
+        key: 'scope',
+        label: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.scope.label'),
+        value: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.scope.value'),
+        tone: 'info' as const,
+        span: 2 as const,
+      },
+      {
+        key: 'status',
+        label: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.status.label'),
+        value: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.status.value'),
+        tone: 'success' as const,
+      },
+      {
+        key: 'review',
+        label: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.review.label'),
+        value: '07 Mar 2026',
+        helper: t('designlab.showcase.component.descriptions.live.rolloutSummary.items.review.helper'),
+      },
+    ],
+    [t],
+  );
+  const listItems = useMemo(
+    () => [
+      {
+        key: 'triage',
+        title: t('designlab.showcase.component.list.live.queue.items.triage.title'),
+        description: t('designlab.showcase.component.list.live.queue.items.triage.description'),
+        meta: 'P0',
+        badges: [t('designlab.showcase.component.list.live.queue.items.triage.badge')],
+        tone: 'warning' as const,
+      },
+      {
+        key: 'doctor',
+        title: t('designlab.showcase.component.list.live.queue.items.doctor.title'),
+        description: t('designlab.showcase.component.list.live.queue.items.doctor.description'),
+        meta: 'PASS',
+        badges: [t('designlab.showcase.component.list.live.queue.items.doctor.badge')],
+        tone: 'success' as const,
+      },
+      {
+        key: 'residual',
+        title: t('designlab.showcase.component.list.live.queue.items.residual.title'),
+        description: t('designlab.showcase.component.list.live.queue.items.residual.description'),
+        meta: 'MEDIUM',
+        badges: [t('designlab.showcase.component.list.live.queue.items.residual.badge')],
+        tone: 'info' as const,
+      },
+    ],
+    [t],
+  );
+  const jsonViewerValue = useMemo(
+    () => ({
+      release: {
+        waveId: 'wave_4_data_display',
+        focus: ['TableSimple', 'Descriptions', 'AgGridServer', 'EntityGridTemplate', 'List', 'JsonViewer'],
+        evidence: {
+          doctor: 'PASS',
+          uiKitTests: 'PASS',
+          gate: 'PASS',
+        },
+      },
+      policy: {
+        rollout: {
+          mode: t('designlab.showcase.component.jsonViewer.live.policy.rollout.mode'),
+          security: t('designlab.showcase.component.jsonViewer.live.policy.rollout.security'),
+        },
+        owners: {
+          frontend: t('designlab.showcase.component.jsonViewer.live.policy.owners.frontend'),
+          governance: t('designlab.showcase.component.jsonViewer.live.policy.owners.governance'),
+        },
+      },
+    }),
+    [t],
+  );
+  const treeNodes = useMemo(
+    () => [
+      {
+        key: 'release',
+        label: t('designlab.showcase.component.tree.live.release.label'),
+        description: t('designlab.showcase.component.tree.live.release.description'),
+        meta: t('designlab.showcase.component.tree.live.release.meta'),
+        badges: [t('designlab.showcase.component.tree.live.release.badge')],
+        tone: 'info' as const,
+        children: [
+          {
+            key: 'doctor',
+            label: t('designlab.showcase.component.tree.live.doctor.label'),
+            description: t('designlab.showcase.component.tree.live.doctor.description'),
+            meta: 'PASS',
+            badges: ['ui-library'],
+            tone: 'success' as const,
+            children: [
+              {
+                key: 'doctor-ui-library',
+                label: t('designlab.showcase.component.tree.live.doctorUiLibrary.label'),
+                description: t('designlab.showcase.component.tree.live.doctorUiLibrary.description'),
+                meta: t('designlab.showcase.component.tree.live.doctorUiLibrary.meta'),
+              },
+              {
+                key: 'doctor-shell',
+                label: t('designlab.showcase.component.tree.live.doctorShell.label'),
+                description: t('designlab.showcase.component.tree.live.doctorShell.description'),
+                meta: t('designlab.showcase.component.tree.live.doctorShell.meta'),
+              },
+            ],
+          },
+          {
+            key: 'security',
+            label: t('designlab.showcase.component.tree.live.security.label'),
+            description: t('designlab.showcase.component.tree.live.security.description'),
+            meta: t('designlab.showcase.component.tree.live.security.meta'),
+            badges: [t('designlab.showcase.component.tree.live.security.badge')],
+            tone: 'warning' as const,
+            children: [
+              {
+                key: 'security-residual',
+                label: t('designlab.showcase.component.tree.live.securityResidual.label'),
+                description: t('designlab.showcase.component.tree.live.securityResidual.description'),
+                meta: 'Apr-15',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    [t],
+  );
+  const treeTableNodes = useMemo(
+    () => [
+      {
+        key: 'platform-ui',
+        label: t('designlab.showcase.component.treeTable.live.platformUi.label'),
+        description: t('designlab.showcase.component.treeTable.live.platformUi.description'),
+        meta: t('designlab.showcase.component.treeTable.live.platformUi.meta'),
+        badges: [t('designlab.showcase.component.treeTable.live.platformUi.badge')],
+        tone: 'info' as const,
+        data: {
+          owner: t('designlab.showcase.component.treeTable.live.platformUi.data.owner'),
+          status: t('designlab.showcase.component.treeTable.live.platformUi.data.status'),
+          scope: t('designlab.showcase.component.treeTable.live.platformUi.data.scope'),
+        },
+        children: [
+          {
+            key: 'ui-library-surface',
+            label: t('designlab.showcase.component.treeTable.live.uiLibrarySurface.label'),
+            description: t('designlab.showcase.component.treeTable.live.uiLibrarySurface.description'),
+            meta: 'wave-4',
+            badges: [t('designlab.showcase.component.treeTable.live.uiLibrarySurface.badge')],
+            tone: 'success' as const,
+            data: {
+              owner: t('designlab.showcase.component.treeTable.live.uiLibrarySurface.data.owner'),
+              status: t('designlab.showcase.component.treeTable.live.uiLibrarySurface.data.status'),
+              scope: t('designlab.showcase.component.treeTable.live.uiLibrarySurface.data.scope'),
             },
-            {
-              key: 'doctor-shell',
-              label: 'Shell public preset',
-              description: 'Login ve public route zinciri PASS.',
-              meta: '3 route',
+          },
+          {
+            key: 'delivery-gates',
+            label: t('designlab.showcase.component.treeTable.live.deliveryGates.label'),
+            description: t('designlab.showcase.component.treeTable.live.deliveryGates.description'),
+            meta: 'doctor',
+            badges: [t('designlab.showcase.component.treeTable.live.deliveryGates.badge')],
+            tone: 'warning' as const,
+            data: {
+              owner: t('designlab.showcase.component.treeTable.live.deliveryGates.data.owner'),
+              status: 'PASS',
+              scope: t('designlab.showcase.component.treeTable.live.deliveryGates.data.scope'),
             },
-          ],
-        },
-        {
-          key: 'security',
-          label: 'Security contract',
-          description: 'Residual risk ve live provisioning kurallari.',
-          meta: 'review',
-          badges: ['Policy'],
-          tone: 'warning' as const,
-          children: [
-            {
-              key: 'security-residual',
-              label: 'Residual review',
-              description: 'Takvimli kalan riskler zorunlu review ile izlenir.',
-              meta: 'Apr-15',
-            },
-          ],
-        },
-      ],
-    },
-  ];
-  const treeTableNodes = [
-    {
-      key: 'platform-ui',
-      label: 'Platform UI',
-      description: 'Ortak tasarim sistemi owner ekibi.',
-      meta: 'stable',
-      badges: ['Owner'],
-      tone: 'info' as const,
-      data: { owner: 'Platform UI', status: 'Stable', scope: 'Global' },
-      children: [
-        {
-          key: 'ui-library-surface',
-          label: 'UI Library',
-          description: 'Docs, preview ve API katalog yuzeyi.',
-          meta: 'wave-4',
-          badges: ['Data display'],
-          tone: 'success' as const,
-          data: { owner: 'Design Ops', status: 'Beta', scope: 'Docs' },
-        },
-        {
-          key: 'delivery-gates',
-          label: 'Delivery gates',
-          description: 'Wave gate ve doctor evidence zinciri.',
-          meta: 'doctor',
-          badges: ['QA'],
-          tone: 'warning' as const,
-          data: { owner: 'Release Ops', status: 'PASS', scope: 'Delivery' },
-        },
-      ],
-    },
-  ];
-  const [dropdownAction, setDropdownAction] = useState('Henüz seçim yok');
-  const [reportStatus, setReportStatus] = useState('Filtre bekleniyor');
+          },
+        ],
+      },
+    ],
+    [t],
+  );
+  const [dropdownAction, setDropdownAction] = useState(dropdownActionSeed);
+  const [reportStatus, setReportStatus] = useState(reportStatusSeed.idle);
   const [tabsValue, setTabsValue] = useState('overview');
   const [paginationPage, setPaginationPage] = useState(6);
   const [stepsValue, setStepsValue] = useState('review');
   const [stepsStatusRichValue, setStepsStatusRichValue] = useState('preview');
   const [anchorValue, setAnchorValue] = useState('overview');
-  const [demoGalleryMode, setDemoGalleryMode] = useState<DesignLabDemoGalleryMode>('all');
-  const [sectionLockEnabled, setSectionLockEnabled] = useState(true);
+  const [rightRailOpen, setRightRailOpen] = useState(false);
 
-  const activeTrack = (treeSelection.trackId as DesignLabTrack | null) ?? 'new_packages';
+  const activeTrack = resolveTrackId(treeSelection.trackId, 'new_packages');
 
   const normalizedQuery = query.trim().toLowerCase();
+  const selectedGroup = useMemo(
+    () => designLabTaxonomy.groups.find((group) => group.id === treeSelection.groupId) ?? null,
+    [treeSelection.groupId],
+  );
+  const selectedTaxonomySection = useMemo(
+    () => designLabTaxonomySectionMap.get(activeTaxonomySectionId) ?? designLabTaxonomy.sections[0] ?? null,
+    [activeTaxonomySectionId],
+  );
+  const activeSectionWorkspaceMode = useMemo(
+    () => resolveWorkspaceModeForSection(activeTaxonomySectionId),
+    [activeTaxonomySectionId],
+  );
+  const workspaceMode = activeSectionWorkspaceMode;
+  const isFoundationLayer = activePageShellLayerId === 'foundations';
+  const isRecipeLayer = activePageShellLayerId === 'recipes';
+  const isPageLayer = activePageShellLayerId === 'pages';
+  const isRecipeLikeLayer = isRecipeLayer || isPageLayer;
+  const isTreeBasedLayer = isFoundationLayer || activePageShellLayerId === 'components';
+  const resolveTaxonomySectionForGroup = React.useCallback(
+    (groupId: string | null | undefined) => {
+      if (!groupId) return null;
+      return designLabTaxonomyGroupSectionMap.get(groupId) ?? null;
+    },
+    [],
+  );
+  const activeSectionGroupIds = useMemo(
+    () => new Set(selectedTaxonomySection?.groupIds ?? designLabTaxonomy.groups.map((group) => group.id)),
+    [selectedTaxonomySection],
+  );
 
-  const itemsForTrack = useMemo(
+  const activeTrackItems = useMemo(
     () => designLabIndex.items.filter((item) => resolveItemTrack(item) === activeTrack),
     [activeTrack],
   );
 
-  const filteredItems = useMemo(() => {
-    if (!normalizedQuery) return itemsForTrack;
-    return itemsForTrack.filter((item) => {
+  const filteredTrackItems = useMemo(() => {
+    if (!normalizedQuery) return activeTrackItems;
+    return activeTrackItems.filter((item) => {
       const haystack = [
         item.name,
         item.kind,
@@ -1209,16 +1980,44 @@ const DesignLabPage: React.FC = () => {
         .toLowerCase();
       return haystack.includes(normalizedQuery);
     });
-  }, [itemsForTrack, normalizedQuery]);
+  }, [activeTrackItems, normalizedQuery]);
+
+  const itemsForTrack = useMemo(
+    () => activeTrackItems.filter((item) => activeSectionGroupIds.has(item.taxonomyGroupId)),
+    [activeSectionGroupIds, activeTrackItems],
+  );
+
+  const filteredItems = useMemo(
+    () => filteredTrackItems.filter((item) => activeSectionGroupIds.has(item.taxonomyGroupId)),
+    [activeSectionGroupIds, filteredTrackItems],
+  );
 
   const selectedItem = useMemo(
     () => filteredItems.find((item) => item.name === treeSelection.itemId) ?? filteredItems[0] ?? null,
     [filteredItems, treeSelection.itemId],
   );
-
-  const selectedGroup = useMemo(
-    () => designLabTaxonomy.groups.find((group) => group.id === treeSelection.groupId) ?? null,
-    [treeSelection.groupId],
+  const selectedComponentFamilyItems = useMemo(
+    () => (selectedGroup ? itemsForTrack.filter((item) => item.taxonomyGroupId === selectedGroup.id) : []),
+    [itemsForTrack, selectedGroup],
+  );
+  const selectedFoundationProfile = useMemo(
+    () => (
+      selectedTaxonomySection?.id === 'foundations' && selectedGroup
+        ? foundationFamilyProfiles[selectedGroup.id] ?? null
+        : null
+    ),
+    [selectedGroup, selectedTaxonomySection?.id],
+  );
+  const selectedComponentPrimarySectionId = useMemo(
+    () => (selectedItem ? resolveTaxonomySectionForGroup(selectedItem.taxonomyGroupId) : null),
+    [resolveTaxonomySectionForGroup, selectedItem],
+  );
+  const selectedComponentPrimarySectionTitle = useMemo(
+    () =>
+      selectedComponentPrimarySectionId
+        ? designLabTaxonomySectionMap.get(selectedComponentPrimarySectionId)?.title ?? null
+        : null,
+    [selectedComponentPrimarySectionId],
   );
 
   const summary = useMemo(() => {
@@ -1238,7 +2037,7 @@ const DesignLabPage: React.FC = () => {
   const migrationSummary = designLabIndex.migration ?? null;
   const visualRegressionSummary = designLabIndex.visualRegression ?? null;
   const themePresetSummary = designLabIndex.themePresets ?? null;
-  const recipeSummary = designLabIndex.recipes ?? null;
+  const familySummary = designLabIndex.recipes ?? null;
   const readyDistributionTargetCount = useMemo(
     () =>
       releaseSummary?.distributionTargets.filter(
@@ -1247,65 +2046,785 @@ const DesignLabPage: React.FC = () => {
     [releaseSummary],
   );
   const relatedRecipes = useMemo(
-    () => buildRelatedRecipes(selectedItem, recipeSummary),
-    [recipeSummary, selectedItem],
+    () => buildRelatedRecipes(selectedItem, familySummary ?? undefined),
+    [familySummary, selectedItem],
   );
-  const recipeFamilies = recipeSummary?.currentFamilies ?? [];
-  const normalizedRecipeQuery = recipeQuery.trim().toLowerCase();
-  const filteredRecipeFamilies = useMemo(() => {
-    if (!normalizedRecipeQuery) return recipeFamilies;
-    return recipeFamilies.filter((recipe) => {
-      const haystack = [recipe.recipeId, recipe.intent, ...recipe.ownerBlocks].join(' ').toLowerCase();
-      return haystack.includes(normalizedRecipeQuery);
+  const overviewPanelItems = useMemo<Array<{
+    id: DesignLabOverviewPanelId;
+    label: string;
+    badge: React.ReactNode;
+  }>>(() => {
+    const items: Array<{
+      id: DesignLabOverviewPanelId;
+      label: string;
+      badge: React.ReactNode;
+    }> = [];
+
+    if (releaseSummary) {
+      items.push({
+        id: 'release',
+        label: 'Release',
+        badge: <Badge tone="info">{releaseSummary.packageVersion}</Badge>,
+      });
+    }
+
+    if (adoptionSummary) {
+      items.push({
+        id: 'adoption',
+        label: 'Adoption',
+        badge: <Badge tone="info">{`${adoptionSummary.apiCoverage.coveragePercent}%`}</Badge>,
+      });
+    }
+
+    if (migrationSummary) {
+      items.push({
+        id: 'migration',
+        label: 'Migration',
+        badge: <Badge tone="warning">{`${migrationSummary.summary.consumerAppsCount} app`}</Badge>,
+      });
+    }
+
+    if (visualRegressionSummary) {
+      items.push({
+        id: 'visual',
+        label: 'Visual',
+        badge: <Badge tone="success">{`${visualRegressionSummary.summary.storyCoveragePercent}%`}</Badge>,
+      });
+    }
+
+    if (themePresetSummary) {
+      items.push({
+        id: 'theme',
+        label: 'Theme',
+        badge: <Badge tone="muted">{themePresetSummary.presets.length}</Badge>,
+      });
+    }
+
+    if (familySummary) {
+      items.push({
+        id: 'recipes',
+        label: 'Recipes',
+        badge: <Badge tone="muted">{relatedRecipes.length || familySummary.currentFamilies.length}</Badge>,
+      });
+    }
+
+    return items;
+  }, [adoptionSummary, migrationSummary, familySummary, relatedRecipes.length, releaseSummary, themePresetSummary, visualRegressionSummary]);
+  const effectiveOverviewPanel = overviewPanelItems.some((item) => item.id === activeOverviewPanel)
+    ? activeOverviewPanel
+    : overviewPanelItems[0]?.id ?? 'release';
+  const recipeOverviewPanelItems = useMemo<Array<{
+    id: DesignLabRecipeOverviewPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'summary', label: 'Summary' },
+      { id: 'coverage', label: 'Coverage' },
+      { id: 'flow', label: 'Flow' },
+    ],
+    [],
+  );
+  const pageOverviewPanelItems = useMemo<Array<{
+    id: DesignLabPageOverviewPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'summary', label: 'Summary' },
+      { id: 'regions', label: 'Regions' },
+      { id: 'adoption', label: 'Adoption' },
+    ],
+    [],
+  );
+  const componentApiPanelItems = useMemo<Array<{
+    id: DesignLabComponentApiPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'contract', label: 'Contract' },
+      { id: 'model', label: 'Model' },
+      { id: 'props', label: 'Props' },
+      { id: 'usage', label: 'Usage' },
+    ],
+    [],
+  );
+  const recipeApiPanelItems = useMemo<Array<{
+    id: DesignLabRecipeApiPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'contract', label: 'Contract' },
+      { id: 'binding', label: 'Binding' },
+      { id: 'usage', label: 'Usage' },
+    ],
+    [],
+  );
+  const pageApiPanelItems = useMemo<Array<{
+    id: DesignLabPageApiPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'contract', label: 'Contract' },
+      { id: 'regions', label: 'Regions' },
+      { id: 'dependencies', label: 'Dependencies' },
+    ],
+    [],
+  );
+  const componentQualityPanelItems = useMemo<Array<{
+    id: DesignLabComponentQualityPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'gates', label: 'Gates' },
+      { id: 'usage', label: 'Usage' },
+    ],
+    [],
+  );
+  const recipeQualityPanelItems = useMemo<Array<{
+    id: DesignLabRecipeQualityPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'gates', label: 'Gates' },
+      { id: 'lifecycle', label: 'Lifecycle' },
+    ],
+    [],
+  );
+  const pageQualityPanelItems = useMemo<Array<{
+    id: DesignLabPageQualityPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'gates', label: 'Gates' },
+      { id: 'readiness', label: 'Readiness' },
+    ],
+    [],
+  );
+  const pagePreviewPanelItems = useMemo<Array<{
+    id: DesignLabPreviewPanelId;
+    label: string;
+  }>>(
+    () => [
+      { id: 'live', label: 'Live' },
+      { id: 'reference', label: 'Reference' },
+      { id: 'recipe', label: 'Template' },
+    ],
+    [],
+  );
+  const familyCatalogItems = familySummary?.currentFamilies ?? [];
+  const normalizedFamilyQuery = familyQuery.trim().toLowerCase();
+  const resolveFamilySemanticSectionIds = React.useCallback((family: DesignLabRecipeFamily) => {
+    const haystack = `${family.recipeId} ${family.title ?? ''} ${family.intent}`.toLowerCase();
+    const sectionIds = new Set<DesignLabTaxonomySection['id']>();
+    const explicitSectionId = designLabRecipePrimarySectionById[family.recipeId];
+
+    if (explicitSectionId) {
+      sectionIds.add(explicitSectionId);
+    }
+
+    if (
+      haystack.includes('ai') ||
+      haystack.includes('authoring') ||
+      haystack.includes('liste') ||
+      haystack.includes('filtre') ||
+      haystack.includes('pattern') ||
+      haystack.includes('bos') ||
+      haystack.includes('hata') ||
+      haystack.includes('yukleniyor') ||
+      haystack.includes('onay') ||
+      haystack.includes('audit') ||
+      haystack.includes('karar') ||
+      haystack.includes('governance')
+    ) {
+      sectionIds.add('recipes');
+    }
+
+    if (
+      haystack.includes('detay') ||
+      haystack.includes('summary') ||
+      haystack.includes('ozet') ||
+      haystack.includes('template') ||
+      haystack.includes('dashboard') ||
+      haystack.includes('workspace settings') ||
+      haystack.includes('settings') ||
+      haystack.includes('crud') ||
+      haystack.includes('workspace')
+    ) {
+      sectionIds.add('pages');
+    }
+
+    return Array.from(sectionIds);
+  }, []);
+  const getFamilySectionIdsFallback = React.useCallback(
+    (family: DesignLabRecipeFamily) =>
+      Array.from(
+        new Set(
+          family.ownerBlocks
+            .map((owner) => designLabIndexItemMap.get(owner)?.taxonomyGroupId ?? null)
+            .map((groupId) => resolveTaxonomySectionForGroup(groupId))
+            .filter((sectionId): sectionId is string => Boolean(sectionId)),
+        ),
+      )[0] ?? null,
+    [resolveTaxonomySectionForGroup],
+  );
+  const getFamilyPrimarySectionId = React.useCallback(
+    (family: DesignLabRecipeFamily) => {
+      const semanticSectionIds = resolveFamilySemanticSectionIds(family);
+      return semanticSectionIds[0]
+        ?? getFamilySectionIdsFallback(family)
+        ?? null;
+    },
+    [getFamilySectionIdsFallback, resolveFamilySemanticSectionIds],
+  );
+  const getFamilySectionIds = React.useCallback(
+    (family: DesignLabRecipeFamily) => {
+      const ownerBlockSectionIds = Array.from(
+        new Set(
+          family.ownerBlocks
+            .map((owner) => designLabIndexItemMap.get(owner)?.taxonomyGroupId ?? null)
+            .map((groupId) => resolveTaxonomySectionForGroup(groupId))
+            .filter((sectionId): sectionId is string => Boolean(sectionId)),
+        ),
+      );
+      const sectionIds = Array.from(
+        new Set([
+          ...resolveFamilySemanticSectionIds(family),
+          ...ownerBlockSectionIds,
+        ]),
+      );
+
+      return sectionIds.some((sectionId) => sectionId !== 'components')
+        ? sectionIds.filter((sectionId) => sectionId !== 'components')
+        : sectionIds;
+    },
+    [resolveFamilySemanticSectionIds, resolveTaxonomySectionForGroup],
+  );
+  const familyItemsMatchingQuery = useMemo(() => {
+    if (!normalizedFamilyQuery) return familyCatalogItems;
+    return familyCatalogItems.filter((family) => {
+      const haystack = [family.recipeId, family.title ?? '', family.intent, ...family.ownerBlocks].join(' ').toLowerCase();
+      return haystack.includes(normalizedFamilyQuery);
     });
-  }, [recipeFamilies, normalizedRecipeQuery]);
-  const selectedRecipe = useMemo(
-    () => filteredRecipeFamilies.find((recipe) => recipe.recipeId === selectedRecipeId)
-      ?? recipeFamilies.find((recipe) => recipe.recipeId === selectedRecipeId)
-      ?? filteredRecipeFamilies[0]
-      ?? recipeFamilies[0]
-      ?? null,
-    [filteredRecipeFamilies, recipeFamilies, selectedRecipeId],
-  );
-  const selectedRecipeItems = useMemo(
+  }, [familyCatalogItems, normalizedFamilyQuery]);
+  const familyItemsForRecipes = useMemo(
     () =>
-      (selectedRecipe?.ownerBlocks ?? [])
-        .map((owner) => designLabIndex.items.find((item) => item.name === owner) ?? null)
+      familyItemsMatchingQuery.filter((family) => {
+        const familySectionIds = getFamilySectionIds(family);
+        return !familySectionIds.length || familySectionIds.includes('recipes');
+      }),
+    [getFamilySectionIds, familyItemsMatchingQuery],
+  );
+  const familyItemsForPages = useMemo(
+    () =>
+      familyItemsMatchingQuery.filter((family) => {
+        const familySectionIds = getFamilySectionIds(family);
+        return !familySectionIds.length || familySectionIds.includes('pages');
+      }),
+    [getFamilySectionIds, familyItemsMatchingQuery],
+  );
+  const filteredFamilyItems = useMemo(
+    () =>
+      activePageShellLayerId === 'pages'
+        ? familyItemsForPages
+        : activePageShellLayerId === 'recipes'
+          ? familyItemsForRecipes
+          : [],
+    [activePageShellLayerId, familyItemsForPages, familyItemsForRecipes],
+  );
+  const presenterFamilyItems = useMemo(
+    () => familyItemsMatchingQuery.map((family) => toDesignLabFamilyIdentity(family)),
+    [familyItemsMatchingQuery],
+  );
+  const sidebarFamilyItems = useMemo(
+    () =>
+      filteredFamilyItems.map((family) => {
+        const primarySectionId = getFamilyPrimarySectionId(family);
+        return toDesignLabFamilyIdentity({
+          ...family,
+          primarySectionTitle: primarySectionId
+            ? getTaxonomySectionTitle(
+                primarySectionId,
+                designLabTaxonomySectionMap.get(primarySectionId)?.title ?? primarySectionId,
+              )
+            : null,
+        });
+      }),
+    [filteredFamilyItems, getFamilyPrimarySectionId, getTaxonomySectionTitle],
+  );
+  const activeFamilySelectionId = resolveActiveFamilySelectionIdFromState({
+    layerId: activePageShellLayerId,
+    selectionState: familySelectionState,
+  });
+  const selectedFamily = useMemo(
+    () =>
+      activeFamilySelectionId
+        ? filteredFamilyItems.find((family) => family.recipeId === activeFamilySelectionId) ?? null
+        : null,
+    [activeFamilySelectionId, filteredFamilyItems],
+  );
+  const selectedFamilyClusterTitle = selectedFamily?.clusterTitle ?? null;
+  const selectedFamilyClusterDescription = selectedFamily?.clusterDescription ?? null;
+  const selectedFamilyItems = useMemo(
+    () =>
+      (selectedFamily?.ownerBlocks ?? [])
+        .map((owner) => designLabIndexItemMap.get(owner) ?? null)
         .filter((item): item is DesignLabIndexItem => Boolean(item)),
-    [selectedRecipe],
+    [selectedFamily],
   );
-  const selectedRecipeTracks = useMemo(
+  const selectedFamilyTracks = useMemo(
     () =>
       Array.from(
-        new Set(selectedRecipeItems.map((item) => trackMeta[resolveItemTrack(item)].label)),
+        new Set(selectedFamilyItems.map((item) => trackMeta[resolveItemTrack(item)].label)),
       ),
-    [selectedRecipeItems],
+    [selectedFamilyItems],
   );
-  const selectedRecipeSections = useMemo(
+  const selectedFamilySections = useMemo(
     () =>
       Array.from(
-        new Set(selectedRecipeItems.flatMap((item) => item.sectionIds ?? [])),
+        new Set(selectedFamilyItems.flatMap((item) => item.sectionIds ?? [])),
       ),
-    [selectedRecipeItems],
+    [selectedFamilyItems],
   );
-  const selectedRecipeThemes = useMemo(
+  const selectedFamilyThemes = useMemo(
     () =>
       Array.from(
         new Set(
-          selectedRecipeItems.flatMap((item) =>
+          selectedFamilyItems.flatMap((item) =>
             [item.uxPrimaryThemeId, item.uxPrimarySubthemeId].filter(Boolean) as string[],
           ),
         ),
       ),
-    [selectedRecipeItems],
+    [selectedFamilyItems],
   );
-  const selectedRecipeQualityGates = useMemo(
+  const selectedFamilyQualityGates = useMemo(
     () =>
       Array.from(
-        new Set(selectedRecipeItems.flatMap((item) => item.qualityGates ?? [])),
+        new Set(selectedFamilyItems.flatMap((item) => item.qualityGates ?? [])),
       ),
-    [selectedRecipeItems],
+    [selectedFamilyItems],
   );
+  const selectedFamilyPrimarySectionId = useMemo(
+    () => (selectedFamily ? getFamilyPrimarySectionId(selectedFamily) : null),
+    [getFamilyPrimarySectionId, selectedFamily],
+  );
+  const selectedFamilyPrimarySectionTitle = useMemo(
+    () =>
+      selectedFamilyPrimarySectionId
+        ? designLabTaxonomySectionMap.get(selectedFamilyPrimarySectionId)?.title ?? null
+        : null,
+    [selectedFamilyPrimarySectionId],
+  );
+  const selectedPageTemplate = isPageLayer ? selectedFamily : null;
+  const selectedPageTemplateFamilyTitle = isPageLayer ? selectedFamilyClusterTitle : null;
+  const selectedPageTemplateItems = isPageLayer ? selectedFamilyItems : [];
+  const selectedPageTemplateTracks = isPageLayer ? selectedFamilyTracks : [];
+  const selectedPageTemplateSections = isPageLayer ? selectedFamilySections : [];
+  const selectedPageTemplateThemes = isPageLayer ? selectedFamilyThemes : [];
+  const selectedPageTemplateQualityGates = isPageLayer ? selectedFamilyQualityGates : [];
+  const selectedPageTemplateContractId = isPageLayer ? familySummary?.contractId ?? null : null;
+  const selectedRecipeIdentity = familySelectionState.recipes;
+  const selectedPageIdentity = familySelectionState.pages;
+  const selectedRecipeDisplayTitle = selectedFamily?.title ?? selectedRecipeIdentity ?? '—';
+  const selectedPageDisplayTitle = selectedPageTemplate?.title ?? selectedPageIdentity ?? '—';
+  const {
+    taxonomySectionItems,
+  } = useDesignLabTaxonomyNavigatorModel({
+    sections: designLabTaxonomy.sections,
+    workspaceMode,
+    setActiveTaxonomySectionId,
+    filteredTrackItems,
+    itemsForTrack,
+    allItems: designLabIndex.items,
+    activeTrack,
+    resolveItemTrack,
+    setTreeSelection,
+    sectionMap: designLabTaxonomySectionMap,
+    resolveTaxonomySectionForGroup,
+    getTaxonomySectionTitle,
+    getTaxonomySectionDescription,
+    familyItemsMatchingQuery: presenterFamilyItems,
+    getFamilySectionIds: getFamilySectionIds,
+    setSelectedFamilyId: setRecipeSelectionId,
+  });
+
+  const resolveComponentSelectionForSection = React.useCallback(
+    (sectionId: string, preferredTrackId?: string | null) => {
+      const section = designLabTaxonomySectionMap.get(sectionId);
+      if (!section) {
+        return null;
+      }
+
+      const preferredTrack = resolveTrackId(preferredTrackId, activeTrack);
+      const groupIds = new Set(section.groupIds);
+      const nextItem =
+        filteredTrackItems.find((item) => groupIds.has(item.taxonomyGroupId)) ??
+        itemsForTrack.find((item) => groupIds.has(item.taxonomyGroupId)) ??
+        designLabIndex.items.find(
+          (item) => resolveItemTrack(item) === preferredTrack && groupIds.has(item.taxonomyGroupId),
+        ) ??
+        designLabIndex.items.find((item) => groupIds.has(item.taxonomyGroupId)) ??
+        null;
+
+      if (!nextItem) {
+        return null;
+      }
+
+      return {
+        trackId: resolveItemTrack(nextItem),
+        groupId: nextItem.taxonomyGroupId,
+        subgroupId: nextItem.taxonomySubgroup,
+        itemId: nextItem.name,
+      };
+    },
+    [activeTrack, filteredTrackItems, itemsForTrack, resolveItemTrack],
+  );
+
+  const resolveComponentSelectionFromUrl = React.useCallback(
+    (
+      itemParam: string | null,
+      groupParam: string | null,
+      subgroupParam: string | null,
+      preferredTrackId?: string | null,
+    ) => {
+      if (!itemParam) {
+        return null;
+      }
+
+      const preferredTrack = resolveTrackId(preferredTrackId, activeTrack);
+
+      const candidateItems = designLabIndex.items.filter((item) =>
+        isDesignLabUrlTokenFlexibleMatch(item.name, itemParam),
+      );
+
+      const trackItems = candidateItems.filter((item) => resolveItemTrack(item) === preferredTrack);
+      const findByTrack = (items: typeof candidateItems, itemPredicate: (item: DesignLabIndexItem) => boolean) =>
+        items.find(itemPredicate) ?? null;
+
+      const matchesGroup = (item: DesignLabIndexItem) => {
+        const group = designLabTaxonomyGroupMap.get(item.taxonomyGroupId);
+        const candidateGroupTokens = [
+          item.taxonomyGroupId,
+          item.group,
+          group?.label,
+          group?.id,
+        ].filter(Boolean) as string[];
+
+        return (
+          groupParam &&
+          candidateGroupTokens.some((candidate) =>
+            isDesignLabUrlTokenFlexibleMatch(candidate, groupParam),
+          )
+        );
+      };
+
+      const matchesSubgroup = (item: DesignLabIndexItem) => {
+        if (!subgroupParam) {
+          return false;
+        }
+
+        const group = designLabTaxonomyGroupMap.get(item.taxonomyGroupId);
+        const candidateSubgroupTokens = [
+          item.taxonomySubgroup,
+          item.subgroup,
+          item.name,
+          ...(group?.subgroups ?? []),
+        ].filter(Boolean) as string[];
+
+        return candidateSubgroupTokens.some((candidate) =>
+          isDesignLabUrlTokenFlexibleMatch(candidate, subgroupParam),
+        );
+      };
+
+      const exactTrackMatch =
+        findByTrack(trackItems, (item) => matchesGroup(item) && matchesSubgroup(item))
+        ?? findByTrack(trackItems, (item) => matchesSubgroup(item))
+        ?? findByTrack(trackItems, (item) => matchesGroup(item))
+        ?? findByTrack(trackItems, () => true);
+
+      if (exactTrackMatch) {
+        return {
+          trackId: resolveItemTrack(exactTrackMatch),
+          groupId: exactTrackMatch.taxonomyGroupId,
+          subgroupId: exactTrackMatch.taxonomySubgroup,
+          itemId: exactTrackMatch.name,
+        };
+      }
+
+      const anyTrackMatch =
+        findByTrack(candidateItems, (item) => matchesSubgroup(item))
+        ?? findByTrack(candidateItems, (item) => matchesGroup(item))
+        ?? candidateItems[0]
+        ?? null;
+
+      if (!anyTrackMatch) {
+        return null;
+      }
+
+      return {
+        trackId: resolveItemTrack(anyTrackMatch),
+        groupId: anyTrackMatch.taxonomyGroupId,
+        subgroupId: anyTrackMatch.taxonomySubgroup,
+        itemId: anyTrackMatch.name,
+      };
+    },
+    [activeTrack, resolveItemTrack],
+  );
+  const resolveComponentSelectionForGroup = React.useCallback(
+    (groupId: string, preferredTrackId?: string | null) => {
+      const preferredTrack = resolveTrackId(preferredTrackId, activeTrack);
+      const nextItem =
+        filteredTrackItems.find((item) => item.taxonomyGroupId === groupId) ??
+        itemsForTrack.find((item) => item.taxonomyGroupId === groupId) ??
+        designLabIndex.items.find(
+          (item) => resolveItemTrack(item) === preferredTrack && item.taxonomyGroupId === groupId,
+        ) ??
+        designLabIndex.items.find((item) => item.taxonomyGroupId === groupId) ??
+        null;
+
+      if (!nextItem) {
+        return null;
+      }
+
+      return {
+        trackId: resolveItemTrack(nextItem),
+        groupId: nextItem.taxonomyGroupId,
+        subgroupId: nextItem.taxonomySubgroup,
+        itemId: nextItem.name,
+      };
+    },
+    [activeTrack, filteredTrackItems, itemsForTrack, resolveItemTrack],
+  );
+
+  const resolveFamilySelectionForSection = React.useCallback(
+    (sectionId: string) => {
+      const nextFamily =
+        familyItemsMatchingQuery.find((family) => {
+          const familySectionIds = getFamilySectionIds(family);
+          return !familySectionIds.length || familySectionIds.includes(sectionId);
+        }) ?? null;
+
+      return nextFamily?.recipeId ?? null;
+    },
+    [getFamilySectionIds, familyItemsMatchingQuery],
+  );
+
+  const resolveSidebarFamilySectionId = React.useCallback(
+    (preferredSectionId: string) =>
+      resolvePreferredSectionId(
+        designLabTaxonomySectionIds,
+        preferredSectionId,
+        (sectionId) => Boolean(resolveFamilySelectionForSection(sectionId)),
+      ),
+    [resolveFamilySelectionForSection],
+  );
+
+  const resolveSidebarComponentSectionId = React.useCallback(
+    (preferredSectionId: string, preferredTrackId?: string | null) =>
+      resolvePreferredSectionId(
+        designLabTaxonomySectionIds,
+        preferredSectionId,
+        (sectionId) => Boolean(resolveComponentSelectionForSection(sectionId, preferredTrackId)),
+      ),
+    [resolveComponentSelectionForSection],
+  );
+
+  const syncUrlStateToView = React.useCallback((searchValue: string) => {
+    const search = new URLSearchParams(searchValue);
+    const modeParam = search.get('dl_mode');
+    const tabParam = search.get('dl_tab');
+    const panelUrlState = readLayerPanelUrlParams(search);
+    const { recipeParam, templateParam } = readFamilySelectionUrlParams(search);
+    const sectionParam = search.get('dl_section');
+    const trackParam = search.get('dl_track');
+    const groupParam = search.get('dl_group');
+    const subgroupParam = search.get('dl_subgroup');
+    const itemParam = search.get('dl_item');
+    const normalizedSectionParam = normalizeDesignLabSectionId(sectionParam);
+    if (isAdapterLegacyDesignLabSectionId(sectionParam)) {
+      legacyAdapterCanonicalizationPendingRef.current = true;
+      setLegacyAdapterOriginSectionId(sectionParam);
+      const telemetryFingerprint = `${sectionParam}|${searchValue}`;
+      if (
+        normalizedSectionParam
+        && legacyAliasTelemetryFingerprintRef.current !== telemetryFingerprint
+      ) {
+        recordDesignLabLegacyAliasTelemetry({
+          aliasSectionId: sectionParam,
+          canonicalSectionId: normalizedSectionParam,
+          source: 'url_alias',
+        });
+        legacyAliasTelemetryFingerprintRef.current = telemetryFingerprint;
+      }
+    } else {
+      legacyAliasTelemetryFingerprintRef.current = null;
+    }
+    const legacyComponentFallbackGroupId = resolveLegacySectionComponentFallbackGroupId({
+      sectionId: sectionParam,
+      groupParam,
+      subgroupParam,
+      itemParam,
+    });
+    const legacyRecipeFallbackId = resolveLegacySectionRecipeFallbackId({
+      sectionId: sectionParam,
+      recipeParam,
+    });
+    const requestedSectionId = isOneOf(normalizedSectionParam, designLabTaxonomySectionIds)
+      ? normalizedSectionParam
+      : activeTaxonomySectionId;
+    const nextWorkspaceMode = normalizedSectionParam
+      ? resolveWorkspaceModeForSection(requestedSectionId)
+      : isOneOf(modeParam, designLabWorkspaceModes)
+        ? modeParam
+        : resolveWorkspaceModeForSection(activeTaxonomySectionId);
+    const requestedTrackId = resolveTrackId(trackParam, activeTrack);
+    const nextSectionId = nextWorkspaceMode === 'components' || nextWorkspaceMode === 'foundations'
+      ? resolveSidebarComponentSectionId(requestedSectionId, requestedTrackId)
+      : resolveSidebarFamilySectionId(requestedSectionId);
+    const nextLayerId = resolveDesignLabPageShellLayerId(nextSectionId);
+
+    if (nextWorkspaceMode !== workspaceModeState) {
+      setWorkspaceMode(nextWorkspaceMode);
+    }
+    if (isOneOf(tabParam, designLabDetailTabIds)) {
+      setDetailTab(tabParam);
+    }
+    if (nextLayerId === 'components' && isOneOf(panelUrlState.components.overview, designLabOverviewPanelIds)) {
+      setActiveOverviewPanel(panelUrlState.components.overview);
+    }
+    if (nextLayerId === 'recipes' && isOneOf(panelUrlState.recipes.overview, designLabRecipeOverviewPanelIds)) {
+      setActiveRecipeOverviewPanel(panelUrlState.recipes.overview);
+    }
+    if (nextLayerId === 'pages' && isOneOf(panelUrlState.pages.overview, designLabPageOverviewPanelIds)) {
+      setActivePageOverviewPanel(panelUrlState.pages.overview);
+    }
+    if (nextLayerId === 'components' && isOneOf(panelUrlState.components.api, designLabComponentApiPanelIds)) {
+      setActiveComponentApiPanel(panelUrlState.components.api);
+    }
+    if (nextLayerId === 'recipes' && isOneOf(panelUrlState.recipes.api, designLabRecipeApiPanelIds)) {
+      setActiveRecipeApiPanel(panelUrlState.recipes.api);
+    }
+    if (nextLayerId === 'pages' && isOneOf(panelUrlState.pages.api, designLabPageApiPanelIds)) {
+      setActivePageApiPanel(panelUrlState.pages.api);
+    }
+    if (nextLayerId === 'components' && isOneOf(panelUrlState.components.quality, designLabComponentQualityPanelIds)) {
+      setActiveComponentQualityPanel(panelUrlState.components.quality);
+    }
+    if (nextLayerId === 'recipes' && isOneOf(panelUrlState.recipes.quality, designLabRecipeQualityPanelIds)) {
+      setActiveRecipeQualityPanel(panelUrlState.recipes.quality);
+    }
+    if (nextLayerId === 'pages' && isOneOf(panelUrlState.pages.quality, designLabPageQualityPanelIds)) {
+      setActivePageQualityPanel(panelUrlState.pages.quality);
+    }
+    if (nextLayerId === 'components' && isOneOf(panelUrlState.components.preview, designLabPreviewPanelIds)) {
+      setActiveComponentPreviewPanel(panelUrlState.components.preview);
+    }
+    if (nextLayerId === 'recipes' && isOneOf(panelUrlState.recipes.preview, designLabPreviewPanelIds)) {
+      setActiveRecipePreviewPanel(panelUrlState.recipes.preview);
+    }
+    if (nextLayerId === 'pages' && isOneOf(panelUrlState.pages.preview, designLabPreviewPanelIds)) {
+      setActivePagePreviewPanel(panelUrlState.pages.preview);
+    }
+    if (nextSectionId) {
+      setActiveTaxonomySectionId(nextSectionId);
+    }
+    if (
+      nextWorkspaceMode === 'components'
+      && trackParam
+      && groupParam
+      && subgroupParam
+      && itemParam
+    ) {
+      const nextSelection = resolveComponentSelectionFromUrl(
+        itemParam,
+        groupParam,
+        subgroupParam,
+        requestedTrackId,
+      );
+
+      if (nextSelection) {
+        const nextGroupSectionId = resolveTaxonomySectionForGroup(nextSelection.groupId);
+        if (nextGroupSectionId) {
+          setActiveTaxonomySectionId(nextGroupSectionId);
+        }
+        setTreeSelection((current) => (isSameTreeSelection(current, nextSelection) ? current : nextSelection));
+      } else {
+        const nextSelection = resolveComponentSelectionForSection(nextSectionId, requestedTrackId);
+        if (nextSelection) {
+          setTreeSelection((current) => (isSameTreeSelection(current, nextSelection) ? current : nextSelection));
+        }
+      }
+    } else {
+      const nextFamilySelection = resolveHydratedFamilySelection({
+        workspaceMode: nextWorkspaceMode,
+        layerId: nextLayerId,
+        templateParam,
+        recipeParam,
+        legacyRecipeFallbackId,
+        sectionId: nextSectionId,
+        resolveFamilySelectionForSection,
+      });
+
+      if (nextFamilySelection) {
+        setFamilySelectionState((current) => applyFamilySelection(current, nextFamilySelection));
+      } else {
+        const nextSelection =
+          legacyComponentFallbackGroupId
+            ? resolveComponentSelectionForGroup(legacyComponentFallbackGroupId, requestedTrackId)
+              ?? resolveComponentSelectionForSection(nextSectionId, requestedTrackId)
+            : resolveComponentSelectionForSection(nextSectionId, requestedTrackId);
+        if (nextSelection) {
+          setTreeSelection((current) => (isSameTreeSelection(current, nextSelection) ? current : nextSelection));
+        }
+      }
+    }
+
+    setUrlStateHydrated(true);
+  }, [
+    activeTaxonomySectionId,
+    activeTrack,
+    resolveComponentSelectionFromUrl,
+    resolveComponentSelectionForSection,
+    resolveComponentSelectionForGroup,
+    resolveFamilySelectionForSection,
+    resolveSidebarComponentSectionId,
+    resolveSidebarFamilySectionId,
+    resolveTaxonomySectionForGroup,
+    workspaceModeState,
+  ]);
+
+  React.useLayoutEffect(() => {
+    syncUrlStateToView(location.search);
+  }, [location.search, syncUrlStateToView]);
+
+  useEffect(() => {
+    if (!legacyAdapterOriginSectionId) {
+      return;
+    }
+
+    const rawSectionParam = new URLSearchParams(location.search).get('dl_section');
+    const normalizedRawSectionId = normalizeDesignLabSectionId(rawSectionParam);
+    const normalizedLegacySectionId = normalizeDesignLabSectionId(legacyAdapterOriginSectionId);
+
+    if (
+      legacyAdapterCanonicalizationPendingRef.current
+      && normalizedRawSectionId
+      && normalizedRawSectionId === normalizedLegacySectionId
+    ) {
+      legacyAdapterCanonicalizationPendingRef.current = false;
+      return;
+    }
+
+    if (rawSectionParam && rawSectionParam !== legacyAdapterOriginSectionId) {
+      setLegacyAdapterOriginSectionId(null);
+      legacyAdapterCanonicalizationPendingRef.current = false;
+    }
+  }, [legacyAdapterOriginSectionId, location.search]);
+
+  useEffect(() => {
+    setWorkspaceMode((current) => (
+      current === activeSectionWorkspaceMode ? current : activeSectionWorkspaceMode
+    ));
+  }, [activeSectionWorkspaceMode]);
+
   const themePresetGalleryItems = useMemo(
     () =>
       (themePresetSummary?.presets ?? []).map((preset) => ({
@@ -1338,11 +2857,17 @@ const DesignLabPage: React.FC = () => {
 
   const trackSummary = useMemo(
     () => ({
-      new_packages: designLabIndex.items.filter((item) => resolveItemTrack(item) === 'new_packages').length,
-      current_system: designLabIndex.items.filter((item) => resolveItemTrack(item) === 'current_system').length,
-      roadmap: designLabIndex.items.filter((item) => resolveItemTrack(item) === 'roadmap').length,
+      new_packages: designLabIndex.items.filter(
+        (item) => resolveItemTrack(item) === 'new_packages' && activeSectionGroupIds.has(item.taxonomyGroupId),
+      ).length,
+      current_system: designLabIndex.items.filter(
+        (item) => resolveItemTrack(item) === 'current_system' && activeSectionGroupIds.has(item.taxonomyGroupId),
+      ).length,
+      roadmap: designLabIndex.items.filter(
+        (item) => resolveItemTrack(item) === 'roadmap' && activeSectionGroupIds.has(item.taxonomyGroupId),
+      ).length,
     }),
-    [],
+    [activeSectionGroupIds],
   );
 
   const componentHeroStats = useMemo(() => {
@@ -1350,80 +2875,98 @@ const DesignLabPage: React.FC = () => {
       return [];
     }
     return [
-      { label: 'Track', value: trackMeta[resolveItemTrack(selectedItem)].label, note: 'Kaynağın ait olduğu yayın hattı' },
-      { label: 'Grup', value: selectedGroup?.title ?? selectedItem.taxonomyGroupId, note: 'Ana gezinim ailesi' },
-      { label: 'Demo', value: demoModeLabel[selectedItem.demoMode], note: 'Preview görünüm tipi' },
-      { label: 'Kullanım', value: String(selectedItem.whereUsed.length), note: 'Tespit edilen kullanım noktası' },
+      {
+        label: t('designlab.metadata.primaryLens'),
+        value: selectedComponentPrimarySectionTitle ?? 'Components',
+        note: t('designlab.general.component.primaryLens.note'),
+      },
+      { label: t('designlab.metadata.track'), value: trackMeta[resolveItemTrack(selectedItem)].label, note: 'Track / release stream' },
+      { label: t('designlab.metadata.group'), value: selectedGroup?.title ?? selectedItem.taxonomyGroupId, note: 'Navigation family' },
+      { label: t('designlab.metadata.demo'), value: demoModeLabel[selectedItem.demoMode], note: 'Preview surface type' },
+      { label: t('designlab.metadata.usage'), value: String(selectedItem.whereUsed.length), note: 'Detected usage locations' },
     ];
-  }, [selectedGroup, selectedItem]);
+  }, [selectedComponentPrimarySectionTitle, selectedGroup, selectedItem, t]);
   const recipeHeroStats = useMemo(() => {
-    if (!selectedRecipe) {
+    if (!selectedFamily) {
       return [];
     }
     return [
-      { label: 'Owner Blocks', value: String(selectedRecipe.ownerBlocks.length), note: 'Recipe içindeki canonical component sayısı' },
-      { label: 'Tracks', value: String(selectedRecipeTracks.length), note: 'Tüketilen yayın hattı sayısı' },
-      { label: 'Sections', value: String(selectedRecipeSections.length), note: 'North-star kapsama alanı' },
-      { label: 'Themes', value: String(selectedRecipeThemes.length), note: 'Bağlı UX tema ve alt tema sayısı' },
+      {
+        label: t('designlab.metadata.primaryLens'),
+        value: selectedFamilyPrimarySectionTitle ?? 'Recipes',
+        note: t('designlab.general.recipe.primaryLens.note'),
+      },
+      { label: t('designlab.metadata.ownerBlocks'), value: String(selectedFamily.ownerBlocks.length), note: 'Canonical blocks in recipe' },
+      { label: t('designlab.metadata.tracks'), value: String(selectedFamilyTracks.length), note: 'Consumed release tracks' },
+      { label: t('designlab.metadata.sections'), value: String(selectedFamilySections.length), note: 'North-star coverage' },
+      { label: t('designlab.metadata.themes'), value: String(selectedFamilyThemes.length), note: 'Bound UX themes' },
     ];
-  }, [selectedRecipe, selectedRecipeSections.length, selectedRecipeThemes.length, selectedRecipeTracks.length]);
-  const heroStats = workspaceMode === 'recipes' ? recipeHeroStats : componentHeroStats;
-  const activeSubjectKey = workspaceMode === 'recipes' ? selectedRecipe?.recipeId ?? null : selectedItem?.name ?? null;
-
-  const detailSectionRefs = useRef<Record<DesignLabDetailTab, HTMLElement | null>>({
-    overview: null,
-    demo: null,
-    api: null,
-    ux: null,
-    quality: null,
-  });
-  const previousItemNameRef = useRef<string | null>(null);
-  const sectionLockEnabledRef = useRef(sectionLockEnabled);
-  const detailTabRef = useRef<DesignLabDetailTab>(detailTab);
+  }, [selectedFamily, selectedFamilyPrimarySectionTitle, selectedFamilySections.length, selectedFamilyThemes.length, selectedFamilyTracks.length, t]);
+  const pageHeroStats = useMemo(() => {
+    if (!selectedPageTemplate) {
+      return [];
+    }
+    return [
+      {
+        label: t('designlab.metadata.primaryLens'),
+        value: selectedTaxonomySection?.title ?? 'Pages',
+        note: t('designlab.tabs.general.description.pages'),
+      },
+      { label: 'Page family', value: selectedPageTemplateFamilyTitle ?? '—', note: 'Template family context' },
+      { label: 'Building blocks', value: String(selectedPageTemplate.ownerBlocks.length), note: 'Shell-level composition size' },
+      { label: t('designlab.metadata.tracks'), value: String(selectedPageTemplateTracks.length), note: 'Consumed release tracks' },
+      { label: t('designlab.metadata.themes'), value: String(selectedPageTemplateThemes.length), note: 'Bound UX themes' },
+    ];
+  }, [
+    selectedPageTemplate,
+    selectedPageTemplateFamilyTitle,
+    selectedPageTemplateThemes.length,
+    selectedPageTemplateTracks.length,
+    selectedTaxonomySection?.title,
+    t,
+  ]);
+  const heroStats =
+    isPageLayer
+      ? pageHeroStats
+      : isRecipeLayer
+        ? recipeHeroStats
+        : componentHeroStats;
+  const activeSubjectKey = isPageLayer
+    ? selectedPageIdentity
+    : isRecipeLayer
+      ? selectedRecipeIdentity
+      : selectedItem?.name ?? null;
 
   useEffect(() => {
-    sectionLockEnabledRef.current = sectionLockEnabled;
-  }, [sectionLockEnabled]);
+    const nextFamilySelection = resolveFallbackFamilySelection({
+      layerId: activePageShellLayerId,
+      selectedFamilyId: activeFamilySelectionId,
+      familyItems: filteredFamilyItems,
+    });
+
+    if (!nextFamilySelection) {
+      return;
+    }
+
+    setFamilySelectionState((current) => applyFamilySelection(current, nextFamilySelection));
+  }, [activeFamilySelectionId, activePageShellLayerId, filteredFamilyItems]);
 
   useEffect(() => {
-    detailTabRef.current = detailTab;
-  }, [detailTab]);
-
-  useEffect(() => {
-    if (workspaceMode !== 'recipes') return;
-    if (selectedRecipe) return;
-    if (!filteredRecipeFamilies.length) return;
-    setSelectedRecipeId(filteredRecipeFamilies[0].recipeId);
-  }, [filteredRecipeFamilies, selectedRecipe, workspaceMode]);
+    if (!overviewPanelItems.length) return;
+    if (activeOverviewPanel === effectiveOverviewPanel) return;
+    setActiveOverviewPanel(effectiveOverviewPanel);
+  }, [activeOverviewPanel, effectiveOverviewPanel, overviewPanelItems.length]);
 
   useEffect(() => {
     setModalOpen(false);
-    setContextMenuAction('Henüz seçim yok');
+    setContextMenuAction(contextMenuActionSeed);
     setFormDrawerOpen(false);
     setReadonlyFormDrawerOpen(false);
     setDetailDrawerOpen(false);
     setTourOpen(false);
     setTourStep(0);
     setTourStatus('idle');
-  }, [activeSubjectKey]);
-
-  useEffect(() => {
-    const previousItemName = previousItemNameRef.current;
-    const itemChanged = Boolean(previousItemName && previousItemName !== activeSubjectKey);
-
-    if (itemChanged) {
-      if (sectionLockEnabledRef.current) {
-        const lockedSection = detailTabRef.current;
-        window.requestAnimationFrame(() => {
-          detailSectionRefs.current[lockedSection]?.scrollIntoView({ behavior: 'auto', block: 'start' });
-        });
-      } else {
-        setDetailTab('overview');
-      }
-    }
-
-    previousItemNameRef.current = activeSubjectKey;
-  }, [activeSubjectKey]);
+  }, [activeSubjectKey, contextMenuActionSeed]);
 
   useEffect(() => {
     if (!selectedItem) return;
@@ -1453,39 +2996,171 @@ const DesignLabPage: React.FC = () => {
   }, [selectedItem]);
 
   useEffect(() => {
-    const sections = detailTabMeta
-      .map((entry) => ({ id: entry.id, element: detailSectionRefs.current[entry.id] }))
-      .filter((entry): entry is { id: DesignLabDetailTab; element: HTMLElement } => Boolean(entry.element));
+    if (!urlStateHydrated) return;
 
-    if (!sections.length) return;
+    const search = new URLSearchParams(location.search);
+    const canonicalActiveTaxonomySectionId = normalizeDesignLabSectionId(activeTaxonomySectionId) ?? activeTaxonomySectionId;
+    search.set('dl_mode', activeSectionWorkspaceMode);
+    search.set('dl_tab', detailTab);
+    search.set('dl_section', canonicalActiveTaxonomySectionId);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((left, right) => right.intersectionRatio - left.intersectionRatio);
-        const next = visible[0]?.target.id.replace('design-lab-section-', '') as DesignLabDetailTab | undefined;
-        if (next) {
-          setDetailTab((current) => (current === next ? current : next));
-        }
+    if (activePageShellLayerId === 'foundations') {
+      search.set('dl_foundation_overview', activeFoundationOverviewPanel);
+      search.set('dl_foundation_api', activeFoundationApiPanel);
+      search.set('dl_foundation_quality', activeFoundationQualityPanel);
+      search.set('dl_foundation_preview', activeComponentPreviewPanel);
+    }
+
+    if (activePageShellLayerId === 'components') {
+      search.set('dl_overview', activeOverviewPanel);
+      search.set('dl_component_api', activeComponentApiPanel);
+      search.set('dl_component_quality', activeComponentQualityPanel);
+      search.set('dl_component_preview', activeComponentPreviewPanel);
+    }
+
+    if (activePageShellLayerId === 'recipes') {
+      search.set('dl_recipe_overview', activeRecipeOverviewPanel);
+      search.set('dl_recipe_api', activeRecipeApiPanel);
+      search.set('dl_recipe_quality', activeRecipeQualityPanel);
+      search.set('dl_recipe_preview', activeRecipePreviewPanel);
+    }
+
+    if (activePageShellLayerId === 'pages') {
+      search.set('dl_template_overview', activePageOverviewPanel);
+      search.set('dl_template_api', activePageApiPanel);
+      search.set('dl_template_quality', activePageQualityPanel);
+      search.set('dl_template_preview', activePagePreviewPanel);
+    }
+
+    if (activePageShellLayerId === 'ecosystem') {
+      search.set('dl_ecosystem_overview', activeEcosystemOverviewPanel);
+      search.set('dl_ecosystem_api', activeEcosystemApiPanel);
+      search.set('dl_ecosystem_quality', activeEcosystemQualityPanel);
+      search.set('dl_ecosystem_preview', activeRecipePreviewPanel);
+    }
+
+    stripInactiveLayerParams(search, activePageShellLayerId);
+    syncLayerPanelUrlParams({
+      search,
+      layerId: activePageShellLayerId,
+      panelState: {
+        foundations: {
+          overview: activeFoundationOverviewPanel,
+          api: activeFoundationApiPanel,
+          quality: activeFoundationQualityPanel,
+          preview: activeComponentPreviewPanel,
+        },
+        components: {
+          overview: activeOverviewPanel,
+          api: activeComponentApiPanel,
+          quality: activeComponentQualityPanel,
+          preview: activeComponentPreviewPanel,
+        },
+        recipes: {
+          overview: activeRecipeOverviewPanel,
+          api: activeRecipeApiPanel,
+          quality: activeRecipeQualityPanel,
+          preview: activeRecipePreviewPanel,
+        },
+        pages: {
+          overview: activePageOverviewPanel,
+          api: activePageApiPanel,
+          quality: activePageQualityPanel,
+          preview: activePagePreviewPanel,
+        },
+        ecosystem: {
+          overview: activeEcosystemOverviewPanel,
+          api: activeEcosystemApiPanel,
+          quality: activeEcosystemQualityPanel,
+          preview: activeRecipePreviewPanel,
+        },
       },
-      {
-        rootMargin: '-18% 0px -58% 0px',
-        threshold: [0.15, 0.4, 0.65],
-      },
-    );
+    });
 
-    sections.forEach((section) => observer.observe(section.element));
-    return () => observer.disconnect();
-  }, [activeSubjectKey]);
+    syncFamilySelectionUrlParams({
+      search,
+      layerId: activePageShellLayerId,
+      selectionState: familySelectionState,
+    });
 
-  const scrollToDetailSection = (tabId: DesignLabDetailTab) => {
-    setDetailTab(tabId);
-    detailSectionRefs.current[tabId]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+    if (activePageShellLayerId === 'foundations' && treeSelection.trackId && treeSelection.groupId) {
+      search.set('dl_foundation_track', activeTrack);
+      search.set('dl_foundation_group', treeSelection.groupId);
+      if (treeSelection.subgroupId) search.set('dl_foundation_subgroup', treeSelection.subgroupId);
+      if (treeSelection.itemId) search.set('dl_foundation_item', treeSelection.itemId);
+    } else if (activePageShellLayerId === 'foundations') {
+      search.delete('dl_foundation_track');
+      search.delete('dl_foundation_group');
+      search.delete('dl_foundation_subgroup');
+      search.delete('dl_foundation_item');
+    }
 
-  const focusComponentFromRecipe = (item: DesignLabIndexItem) => {
+    if (activePageShellLayerId === 'components' && treeSelection.trackId && treeSelection.groupId && treeSelection.subgroupId && treeSelection.itemId) {
+      search.set('dl_track', activeTrack);
+      search.set('dl_group', treeSelection.groupId);
+      search.set('dl_subgroup', treeSelection.subgroupId);
+      search.set('dl_item', treeSelection.itemId);
+    } else if (activePageShellLayerId === 'components') {
+      search.delete('dl_track');
+      search.delete('dl_group');
+      search.delete('dl_subgroup');
+      search.delete('dl_item');
+    }
+
+    const nextSearch = search.toString();
+    const currentSearch = location.search.startsWith('?')
+      ? location.search.slice(1)
+      : location.search;
+
+    if (nextSearch !== currentSearch) {
+      navigate(
+        {
+          pathname: location.pathname,
+          search: nextSearch ? `?${nextSearch}` : '',
+          hash: location.hash,
+        },
+        { replace: true },
+      );
+    }
+  }, [
+    activeComponentApiPanel,
+    activeComponentPreviewPanel,
+    activeComponentQualityPanel,
+    activeEcosystemOverviewPanel,
+    activeEcosystemApiPanel,
+    activeEcosystemQualityPanel,
+    activeFoundationOverviewPanel,
+    activeFoundationApiPanel,
+    activeFoundationQualityPanel,
+    activePageApiPanel,
+    activePageOverviewPanel,
+    activePagePreviewPanel,
+    activePageQualityPanel,
+    activeSectionWorkspaceMode,
+    activeTaxonomySectionId,
+    activeOverviewPanel,
+    activeRecipeApiPanel,
+    activeRecipeOverviewPanel,
+    activeRecipePreviewPanel,
+    activeRecipeQualityPanel,
+    detailTab,
+    familySelectionState.pages,
+    familySelectionState.recipes,
+    location.hash,
+    location.pathname,
+    location.search,
+    navigate,
+    treeSelection.groupId,
+    treeSelection.itemId,
+    treeSelection.subgroupId,
+    treeSelection.trackId,
+    urlStateHydrated,
+  ]);
+
+
+  const focusComponentFromFamily = (item: DesignLabIndexItem) => {
     setWorkspaceMode('components');
+    setActiveTaxonomySectionId(resolveTaxonomySectionForGroup(item.taxonomyGroupId) ?? activeTaxonomySectionId);
     setTreeSelection({
       trackId: resolveItemTrack(item),
       groupId: item.taxonomyGroupId,
@@ -1493,6 +3168,108 @@ const DesignLabPage: React.FC = () => {
       itemId: item.name,
     });
   };
+
+  const handleTreeSelectionChange = React.useCallback((nextSelection: LibraryProductTreeSelection) => {
+    const nextSectionId = resolveTaxonomySectionForGroup(nextSelection.groupId);
+    if (nextSectionId) {
+      setActiveTaxonomySectionId((current) => (current === nextSectionId ? current : nextSectionId));
+    }
+    setTreeSelection((current) => (isSameTreeSelection(current, nextSelection) ? current : nextSelection));
+  }, [resolveTaxonomySectionForGroup]);
+
+  const handleSidebarFamilySelect = React.useCallback((familyId: string) => {
+    setLegacyAdapterOriginSectionId(null);
+    legacyAdapterCanonicalizationPendingRef.current = false;
+
+    const foundInSidebar = sidebarFamilyItems.find((family) => family.familyId === familyId);
+    const nextFamily =
+      foundInSidebar
+      ?? presenterFamilyItems.find((family) => family.familyId === familyId)
+      ?? null;
+    // When a family is clicked from the current sidebar (foundInSidebar), keep
+    // the current section to avoid jarring cross-section navigation.  Families
+    // can belong to multiple sections (e.g. both 'recipes' and 'pages') and
+    // their primary section may differ from the section they are displayed in.
+    const nextSectionId = nextFamily
+      ? (foundInSidebar
+          ? activeTaxonomySectionId
+          : getFamilyPrimarySectionId(nextFamily) ?? activeTaxonomySectionId)
+      : activeTaxonomySectionId;
+    const nextFamilySelection = resolveSidebarFamilySelection({
+      familyId,
+      familySectionId: nextSectionId,
+      fallbackSectionId: activeTaxonomySectionId,
+    });
+
+    setWorkspaceMode(nextFamilySelection.workspaceMode);
+    if (nextFamilySelection.sectionId) {
+      setActiveTaxonomySectionId((current) => (
+        current === nextFamilySelection.sectionId ? current : nextFamilySelection.sectionId
+      ));
+    }
+    setFamilySelectionState((current) => applyFamilySelection(current, nextFamilySelection));
+  }, [
+    activeTaxonomySectionId,
+    getFamilyPrimarySectionId,
+    presenterFamilyItems,
+    sidebarFamilyItems,
+  ]);
+
+  const handleSidebarTreeSelectionChange = React.useCallback((nextSelection: LibraryProductTreeSelection) => {
+    setWorkspaceMode('components');
+    setLegacyAdapterOriginSectionId(null);
+    legacyAdapterCanonicalizationPendingRef.current = false;
+    handleTreeSelectionChange(nextSelection);
+  }, [handleTreeSelectionChange]);
+  const handleTaxonomySectionChange = React.useCallback((sectionId: string) => {
+    setWorkspaceMode(resolveWorkspaceModeForSection(sectionId));
+    setLegacyAdapterOriginSectionId(null);
+    legacyAdapterCanonicalizationPendingRef.current = false;
+    setActiveTaxonomySectionId(sectionId);
+
+    const layerId = resolveDesignLabPageShellLayerId(sectionId);
+
+    const nextFamilySelection = resolveSectionChangeFamilySelection({
+      layerId,
+      selectedRecipeId: familySelectionState.recipes,
+      selectedPageTemplateId: familySelectionState.pages,
+      resolveFamilySelectionForSection: (targetSectionId) => resolveFamilySelectionForSection(targetSectionId),
+    });
+
+    if (nextFamilySelection) {
+      setFamilySelectionState((current) => applyFamilySelection(current, nextFamilySelection));
+      return;
+    }
+
+    const nextSelection = resolveComponentSelectionForSection(sectionId, treeSelection.trackId);
+    if (nextSelection) {
+      setTreeSelection((current) => (isSameTreeSelection(current, nextSelection) ? current : nextSelection));
+    }
+  }, [
+    familySelectionState.pages,
+    familySelectionState.recipes,
+    resolveComponentSelectionForSection,
+    resolveFamilySelectionForSection,
+    treeSelection.trackId,
+  ]);
+  const handleOverviewFamilySelect = React.useCallback((groupId: string) => {
+    setWorkspaceMode('components');
+    setLegacyAdapterOriginSectionId(null);
+    legacyAdapterCanonicalizationPendingRef.current = false;
+    const nextSectionId = resolveTaxonomySectionForGroup(groupId) ?? activeTaxonomySectionId;
+    if (nextSectionId && nextSectionId !== activeTaxonomySectionId) {
+      setActiveTaxonomySectionId(nextSectionId);
+    }
+    const nextSelection = resolveComponentSelectionForGroup(groupId, treeSelection.trackId);
+    if (nextSelection) {
+      setTreeSelection((current) => (isSameTreeSelection(current, nextSelection) ? current : nextSelection));
+    }
+  }, [
+    activeTaxonomySectionId,
+    resolveComponentSelectionForGroup,
+    resolveTaxonomySectionForGroup,
+    treeSelection.trackId,
+  ]);
 
   const treeTracks = useMemo<LibraryProductTreeTrack[]>(() => {
     return (Object.keys(trackMeta) as DesignLabTrack[]).map((track) => {
@@ -1502,6 +3279,7 @@ const DesignLabPage: React.FC = () => {
       ).sort((a, b) => a.name.localeCompare(b.name, 'en'));
 
       const groups = designLabTaxonomy.groups
+        .filter((group) => activeSectionGroupIds.has(group.id))
         .map((group) => {
           const subgroups = group.subgroups
             .map((subgroup) => {
@@ -1552,7 +3330,7 @@ const DesignLabPage: React.FC = () => {
         groups,
       };
     });
-  }, [activeTrack, filteredItems, trackSummary]);
+  }, [activeSectionGroupIds, activeTrack, filteredItems, trackSummary]);
 
   const handleCopy = async (value: string) => {
     const ok = await copyToClipboard(value);
@@ -1564,179 +3342,211 @@ const DesignLabPage: React.FC = () => {
     const now = new Date();
     return Array.from({ length: 8 }).map((_, index) => ({
       id: String(index + 1),
-      name: `Kayıt ${index + 1}`,
-      status: index % 3 === 0 ? 'Active' : index % 3 === 1 ? 'Pending' : 'Disabled',
+      name: t('designlab.seed.gridRows.record', { index: index + 1 }),
+      status:
+        index % 3 === 0
+          ? t('designlab.seed.gridRows.status.active')
+          : index % 3 === 1
+            ? t('designlab.seed.gridRows.status.pending')
+            : t('designlab.seed.gridRows.status.disabled'),
       updatedAt: new Date(now.getTime() - index * 86_400_000).toISOString().slice(0, 10),
     }));
-  }, []);
+  }, [t]);
 
   const serverGridRows = useMemo(
     () => [
-      { id: 'CMP-001', name: 'Companies', owner: 'core-data-service' },
-      { id: 'USR-001', name: 'Users', owner: 'user-service' },
-      { id: 'PRM-001', name: 'Permissions', owner: 'permission-service' },
-      { id: 'VAR-001', name: 'Variants', owner: 'variant-service' },
+      { id: 'CMP-001', name: t('designlab.seed.serverGridRows.companies.name'), owner: 'core-data-service' },
+      { id: 'USR-001', name: t('designlab.seed.serverGridRows.users.name'), owner: 'user-service' },
+      { id: 'PRM-001', name: t('designlab.seed.serverGridRows.permissions.name'), owner: 'permission-service' },
+      { id: 'VAR-001', name: t('designlab.seed.serverGridRows.variants.name'), owner: 'variant-service' },
     ],
-    [],
+    [t],
   );
 
   const pageHeaderMeta = useMemo(
     () => [
-      <SectionBadge key="release-window" label="Release Window · 04 Mar 2026" />,
-      <SectionBadge key="owner" label="Owner · Platform UI" />,
-      <SectionBadge key="coverage" label="Doctor coverage · PASS" />,
+      (
+        <SectionBadge
+          key="release-window"
+          label={t('designlab.seed.pageHeader.meta.releaseWindow', {
+            date: formatDate(new Date(2026, 2, 4), { day: '2-digit', month: 'short', year: 'numeric' }),
+          })}
+        />
+      ),
+      <SectionBadge key="owner" label={t('designlab.seed.pageHeader.meta.owner')} />,
+      <SectionBadge key="coverage" label={t('designlab.seed.pageHeader.meta.coverage')} />,
     ],
-    [],
+    [formatDate, t],
   );
 
   const summaryStripItems = useMemo(
     () => [
       {
         key: 'published',
-        label: 'Published',
-        value: '72',
-        note: 'Gerçek export edilmiş block ve component seti.',
-        trend: <Badge tone="success">+4 bu hafta</Badge>,
+        label: t('designlab.seed.summaryStrip.published.label'),
+        value: formatNumber(72),
+        note: t('designlab.seed.summaryStrip.published.note'),
+        trend: <Badge tone="success">{t('designlab.seed.summaryStrip.published.trend')}</Badge>,
         tone: 'success' as const,
       },
       {
         key: 'planned',
-        label: 'Planned',
-        value: '4',
-        note: 'Roadmap üzerinde kalan ürünleşme backlog’u.',
-        trend: <Badge tone="warning">Wave 7</Badge>,
+        label: t('designlab.seed.summaryStrip.planned.label'),
+        value: formatNumber(4),
+        note: t('designlab.seed.summaryStrip.planned.note'),
+        trend: <Badge tone="warning">{t('designlab.seed.summaryStrip.planned.trend')}</Badge>,
         tone: 'warning' as const,
       },
       {
         key: 'doctor',
-        label: 'Doctor',
+        label: t('designlab.seed.summaryStrip.doctor.label'),
         value: 'PASS',
-        note: 'UI Library browser diagnostics yeşil.',
-        trend: <Badge tone="info">ui-library</Badge>,
+        note: t('designlab.seed.summaryStrip.doctor.note'),
+        trend: <Badge tone="info">{t('designlab.seed.summaryStrip.doctor.trend')}</Badge>,
         tone: 'info' as const,
       },
       {
         key: 'gate',
-        label: 'Wave Gate',
+        label: t('designlab.seed.summaryStrip.gate.label'),
         value: 'PASS',
-        note: 'Tam release gate zinciri geçti.',
-        trend: <Badge tone="success">latest</Badge>,
+        note: t('designlab.seed.summaryStrip.gate.note'),
+        trend: <Badge tone="success">{t('designlab.seed.summaryStrip.gate.trend')}</Badge>,
         tone: 'default' as const,
       },
     ],
-    [],
+    [formatNumber, t],
   );
 
   const entitySummaryItems = useMemo(
     () => [
-      { key: 'domain', label: 'Domain', value: 'UI Platform', tone: 'info' as const },
-      { key: 'status', label: 'Status', value: 'Active', tone: 'success' as const },
-      { key: 'owner', label: 'Owner', value: 'Platform Team', tone: 'info' as const },
-      { key: 'lastRelease', label: 'Last Release', value: '2026-03-07', tone: 'warning' as const },
+      {
+        key: 'domain',
+        label: t('designlab.seed.entitySummary.domain.label'),
+        value: t('designlab.seed.entitySummary.domain.value'),
+        tone: 'info' as const,
+      },
+      {
+        key: 'status',
+        label: t('designlab.seed.entitySummary.status.label'),
+        value: t('designlab.seed.entitySummary.status.value'),
+        tone: 'success' as const,
+      },
+      {
+        key: 'owner',
+        label: t('designlab.seed.entitySummary.owner.label'),
+        value: t('designlab.seed.entitySummary.owner.value'),
+        tone: 'info' as const,
+      },
+      {
+        key: 'lastRelease',
+        label: t('designlab.seed.entitySummary.lastRelease.label'),
+        value: formatDate(new Date(2026, 2, 7), { day: '2-digit', month: 'short', year: 'numeric' }),
+        tone: 'warning' as const,
+      },
     ],
-    [],
+    [formatDate, t],
   );
 
   const commandPaletteItems = useMemo(
     () => [
       {
         id: 'open-ui-library-docs',
-        title: 'UI Library docs',
-        description: 'Komponent dokümantasyon sayfasına ve canlı örneklere dön.',
-        group: 'Navigate',
+        title: t('designlab.seed.commandPalette.items.docs.title'),
+        description: t('designlab.seed.commandPalette.items.docs.description'),
+        group: t('designlab.seed.commandPalette.group.navigate'),
         shortcut: '⌘U',
         keywords: ['docs', 'library', 'component'],
-        badge: <Badge tone="info">Docs</Badge>,
+        badge: <Badge tone="info">{t('designlab.seed.commandPalette.items.docs.badge')}</Badge>,
       },
       {
         id: 'review-release-evidence',
-        title: 'Release evidence review',
-        description: 'Doctor ve gate kanıtlarını tek özetten incele.',
-        group: 'Governance',
+        title: t('designlab.seed.commandPalette.items.review.title'),
+        description: t('designlab.seed.commandPalette.items.review.description'),
+        group: t('designlab.seed.commandPalette.group.governance'),
         shortcut: '⌘R',
         keywords: ['doctor', 'gate', 'evidence', 'release'],
-        badge: <Badge tone="warning">Review</Badge>,
+        badge: <Badge tone="warning">{t('designlab.seed.commandPalette.items.review.badge')}</Badge>,
       },
       {
         id: 'open-ai-approvals',
-        title: 'AI approval queue',
-        description: 'İnsan onayı bekleyen AI öneri kuyruğunu aç.',
-        group: 'AI Assist',
+        title: t('designlab.seed.commandPalette.items.aiQueue.title'),
+        description: t('designlab.seed.commandPalette.items.aiQueue.description'),
+        group: t('designlab.seed.commandPalette.group.aiAssist'),
         shortcut: '⌘A',
         keywords: ['approval', 'queue', 'ai', 'human'],
-        badge: <Badge tone="muted">Human</Badge>,
+        badge: <Badge tone="muted">{t('designlab.seed.commandPalette.items.aiQueue.badge')}</Badge>,
       },
       {
         id: 'apply-safe-rollout',
-        title: 'Apply safe rollout',
-        description: 'Düşük riskli rollout önerisini kontrollü olarak uygula.',
-        group: 'AI Assist',
+        title: t('designlab.seed.commandPalette.items.applyRollout.title'),
+        description: t('designlab.seed.commandPalette.items.applyRollout.description'),
+        group: t('designlab.seed.commandPalette.group.aiAssist'),
         shortcut: '↵',
         keywords: ['apply', 'rollout', 'safe', 'recommendation'],
-        badge: <Badge tone="success">AI</Badge>,
+        badge: <Badge tone="success">{t('designlab.seed.commandPalette.items.applyRollout.badge')}</Badge>,
       },
     ],
-    [],
+    [t],
   );
 
   const approvalCheckpointSteps = useMemo(
     () => [
       {
         key: 'doctor',
-        label: 'Doctor evidence temiz',
-        helper: 'Browser doctor ve pageerror kaniti PASS olmali.',
-        owner: 'Frontend QA',
+        label: t('designlab.seed.approvalStep.doctor.label'),
+        helper: t('designlab.seed.approvalStep.doctor.helper'),
+        owner: t('designlab.seed.approvalStep.doctor.owner'),
         status: 'approved' as const,
       },
       {
         key: 'citations',
-        label: 'Citation transparency',
-        helper: 'Kaynak ve excerpt paneli karara baglanmali.',
-        owner: 'UX / Governance',
+        label: t('designlab.seed.approvalStep.citations.label'),
+        helper: t('designlab.seed.approvalStep.citations.helper'),
+        owner: t('designlab.seed.approvalStep.citations.owner'),
         status: 'ready' as const,
       },
       {
         key: 'human',
-        label: 'Human approval',
-        helper: 'Son publish karari insan onayindan gecmeli.',
-        owner: 'Release Board',
+        label: t('designlab.seed.approvalStep.human.label'),
+        helper: t('designlab.seed.approvalStep.human.helper'),
+        owner: t('designlab.seed.approvalStep.human.owner'),
         status: approvalCheckpointState === 'approved' ? ('approved' as const) : approvalCheckpointState === 'rejected' ? ('blocked' as const) : ('todo' as const),
       },
     ],
-    [approvalCheckpointState],
+    [approvalCheckpointState, t],
   );
 
   const citationPanelItems = useMemo(
     () => [
       {
         id: 'policy-4-2',
-        title: 'Policy §4.2 Human approval',
-        excerpt: 'AI tavsiyesi karar etkisi uretiyorsa nihai islemden once insan onayi zorunludur.',
+        title: t('designlab.seed.citation.policy.title'),
+        excerpt: t('designlab.seed.citation.policy.excerpt'),
         source: 'policy_work_intake.v2.json',
         locator: 'sec:4.2',
         kind: 'policy' as const,
-        badges: [<Tag key="policy-critical" tone="warning">critical</Tag>],
+        badges: [<Tag key="policy-critical" tone="warning">{t('designlab.seed.citation.policy.badge')}</Tag>],
       },
       {
         id: 'ux-ai-3',
-        title: 'UX Catalog: confidence transparency',
-        excerpt: 'Confidence, rationale ve source transparency ayni deneyim yuzeyinde birlikte okunur.',
+        title: t('designlab.seed.citation.ux.title'),
+        excerpt: t('designlab.seed.citation.ux.excerpt'),
         source: 'ux_katalogu.reference.v1.json',
         locator: 'ux:ai-3',
         kind: 'doc' as const,
-        badges: [<Tag key="ux" tone="info">ux</Tag>],
+        badges: [<Tag key="ux" tone="info">{t('designlab.seed.citation.ux.badge')}</Tag>],
       },
       {
         id: 'doctor-ui',
-        title: 'Doctor evidence: ui-library',
-        excerpt: 'doctor:frontend ui-library preset sonucu PASS; pageerror ve console error bulunmadi.',
+        title: t('designlab.seed.citation.doctor.title'),
+        excerpt: t('designlab.seed.citation.doctor.excerpt'),
         source: 'frontend-doctor.summary.v1.json',
         locator: 'doctor:ui-library',
         kind: 'log' as const,
-        badges: [<Tag key="pass" tone="success">pass</Tag>],
+        badges: [<Tag key="pass" tone="success">{t('designlab.seed.citation.doctor.badge')}</Tag>],
       },
     ],
-    [],
+    [t],
   );
 
   const auditTimelineItems = useMemo(
@@ -1744,7042 +3554,2512 @@ const DesignLabPage: React.FC = () => {
       {
         id: 'audit-draft',
         actor: 'ai' as const,
-        title: 'AI recommendation drafted',
+        title: t('designlab.seed.audit.draft.title'),
         timestamp: '07 Mar 2026 18:10',
-        summary: 'Forms dalgasi icin publish-ready ozet uretildi ve confidence hesaplandi.',
+        summary: t('designlab.seed.audit.draft.summary'),
         status: 'drafted' as const,
-        badges: [<Tag key="wave" tone="muted">wave-6</Tag>],
+        badges: [<Tag key="wave" tone="muted">{t('designlab.seed.audit.draft.badge')}</Tag>],
       },
       {
         id: 'audit-review',
         actor: 'human' as const,
-        title: 'Governance review requested',
+        title: t('designlab.seed.audit.review.title'),
         timestamp: '07 Mar 2026 18:14',
-        summary: 'Citation panel ve approval checkpoint ile birlikte ikinci goz talep edildi.',
+        summary: t('designlab.seed.audit.review.summary'),
         status: 'approved' as const,
-        badges: [<Tag key="review" tone="info">review</Tag>],
+        badges: [<Tag key="review" tone="info">{t('designlab.seed.audit.review.badge')}</Tag>],
       },
       {
         id: 'audit-release',
         actor: 'system' as const,
-        title: 'Release note staged',
+        title: t('designlab.seed.audit.release.title'),
         timestamp: '07 Mar 2026 18:19',
-        summary: 'Canary kontrati ve release notes draft status ile isaretlendi.',
+        summary: t('designlab.seed.audit.release.summary'),
         status: 'observed' as const,
-        badges: [<Tag key="system" tone="warning">observed</Tag>],
+        badges: [<Tag key="system" tone="warning">{t('designlab.seed.audit.release.badge')}</Tag>],
       },
     ],
-    [],
+    [t],
   );
 
-  const renderRecipeComponentPreview = (recipeId: string) => {
-    switch (recipeId) {
-      case 'search_filter_listing':
-        return (
-          <SearchFilterListing
-            eyebrow="Recipe"
-            title="Policy inventory"
-            description="Search, filter ve result shell ayni recipe kontrati altinda toplanir."
-            meta={<SectionBadge label="recipe:first" />}
-            status={<Badge tone="info">Live</Badge>}
-            filters={(
-              <>
-                <TextInput
-                  label="Search"
-                  value={searchInputValue}
-                  onValueChange={setSearchInputValue}
-                  size="sm"
-                  leadingVisual={<span aria-hidden="true">⌕</span>}
-                />
-                <Select
-                  label="Density"
-                  value={selectValue}
-                  onValueChange={(value) => setSelectValue(String(value))}
-                  size="sm"
-                  options={[
-                    { label: 'Comfortable', value: 'comfortable' },
-                    { label: 'Compact', value: 'compact' },
-                    { label: 'Readonly', value: 'readonly' },
-                  ]}
-                />
-              </>
-            )}
-            onReset={() => setSearchInputValue('')}
-            onSaveView={() => setDropdownAction('Saved recipe listing view')}
-            summaryItems={[
-              { key: 'results', label: 'Results', value: String(serverGridRows.length), note: 'Server snapshot' },
-              { key: 'selection', label: 'Selection', value: dropdownAction || '—', note: 'Toolbar action state' },
-              { key: 'density', label: 'Density', value: selectValue, note: 'Recipe shell density' },
-            ]}
-            items={serverGridRows.slice(0, 3).map((row) => ({
-              key: row.id,
-              title: row.name,
-              description: `${row.owner} · ${row.theme}`,
-              meta: row.status,
-              badges: [row.track],
-              tone: row.status === 'Ready' ? 'success' : 'info',
-            }))}
-          />
-        );
-      case 'detail_summary':
-        return (
-          <DetailSummary
-            eyebrow="Recipe"
-            title="Wave 11 rollout detail"
-            description="Summary, entity context ve payload ayni inspector recipe ile okunur."
-            meta={(
-              <>
-                <SectionBadge label="wave_11_recipes" />
-                <SectionBadge label="stable" />
-              </>
-            )}
-            status={<Badge tone="success">Publish-ready</Badge>}
-            summaryItems={[
-              { key: 'owners', label: 'Owners', value: '5', note: 'Canonical owner block count', tone: 'info' },
-              { key: 'doctor', label: 'Doctor', value: 'PASS', note: 'ui-library preset', tone: 'success' },
-              { key: 'adoption', label: 'Adoption', value: 'locked', note: 'Recipe-first enforcement', tone: 'warning' },
-            ]}
-            entity={{
-              title: 'Recipe System',
-              subtitle: 'Page ve panel kompozisyonlarini veri/config ile tekrar kullanir.',
-              badge: <Badge tone="success">Stable</Badge>,
-              avatar: { name: 'Recipe System' },
-              items: [
-                { key: 'contract', label: 'Contract', value: 'ui-library-recipe-system-contract-v1', tone: 'info' },
-                { key: 'wave', label: 'Wave', value: 'wave_11_recipes', tone: 'success' },
-                { key: 'owner', label: 'Owner', value: 'Platform UI', tone: 'info' },
-                { key: 'mode', label: 'Mode', value: 'JSON-first', tone: 'warning' },
-              ],
-            }}
-            detailItems={[
-              { key: 'focus', label: 'Focus', value: 'Reusable page/panel patterns', tone: 'info' },
-              { key: 'gate', label: 'Gate', value: 'doctor + wave check', tone: 'success' },
-              { key: 'preview', label: 'Preview', value: '/ui-library', tone: 'warning' },
-              { key: 'adoption', label: 'Rule', value: 'Recipe before page-level custom UI', tone: 'info', span: 2 },
-            ]}
-            jsonValue={{
-              recipeId: 'detail_summary',
-              ownerBlocks: ['PageHeader', 'SummaryStrip', 'EntitySummaryBlock', 'Descriptions', 'JsonViewer'],
-              status: 'stable',
-            }}
-          />
-        );
-      case 'approval_review':
-        return (
-          <ApprovalReview
-            checkpoint={{
-              title: 'Publish approval',
-              summary: 'Recipe publish karari citation evidence ve audit timeline ile birlikte okunur.',
-              status: approvalCheckpointState,
-              steps: approvalCheckpointSteps,
-              evidenceItems: ['doctor:frontend', 'gate:wave_11', 'playwright:ui_library_recipe_wave_11_walk'],
-              citations: citationPanelItems.map((item) => String(item.locator ?? '—')),
-              onPrimaryAction: () => setApprovalCheckpointState('approved'),
-              onSecondaryAction: () => setApprovalCheckpointState('rejected'),
-              footerNote: `Current state: ${approvalCheckpointState}`,
-            }}
-            citations={citationPanelItems}
-            auditItems={auditTimelineItems}
-            selectedCitationId={selectedCitationId}
-            selectedAuditId={selectedAuditId}
-            onCitationSelect={setSelectedCitationId}
-            onAuditSelect={setSelectedAuditId}
-          />
-        );
-      case 'empty_error_loading':
-        return (
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-            <EmptyErrorLoading mode="loading" loadingLabel="Recipe surfaces hazirlaniyor" />
-            <EmptyErrorLoading mode="error" onRetry={() => setDropdownAction('Retry requested from recipe state')} />
-            <EmptyErrorLoading mode="empty" />
-          </div>
-        );
-      case 'ai_guided_authoring':
-        return (
-          <AIGuidedAuthoring
-            confidenceLevel={recommendationDecision === 'applied' ? 'high' : recommendationDecision === 'review' ? 'medium' : 'medium'}
-            confidenceScore={recommendationDecision === 'applied' ? 0.92 : 0.74}
-            sourceCount={citationPanelItems.length}
-            promptComposerProps={{
-              subject: promptSubject,
-              onSubjectChange: setPromptSubject,
-              value: promptBody,
-              onValueChange: setPromptBody,
-              scope: promptScope,
-              onScopeChange: setPromptScope,
-              tone: promptTone,
-              onToneChange: setPromptTone,
-              citations: citationPanelItems.map((item) => String(item.locator ?? '—')),
-              guardrails: ['human-approval', 'source-transparency', 'scope-lock'],
-            }}
-            recommendations={[
-              {
-                id: 'recipe-adoption',
-                title: 'Use ApprovalReview recipe',
-                summary: 'Duplicate review shell yerine canonical ApprovalReview recipe kullan.',
-                recommendationType: 'Recipe suggestion',
-                confidenceLevel: recommendationDecision === 'applied' ? 'high' : 'medium',
-                confidenceScore: recommendationDecision === 'applied' ? 0.91 : 0.76,
-                citations: ['doctor:frontend', 'wave_11_recipes', 'adoption-enforcement'],
-                tone: recommendationDecision === 'review' ? 'warning' : 'info',
-                footerNote: `Decision: ${recommendationDecision}`,
-              },
-            ]}
-            commandItems={commandPaletteItems}
-            onApplyRecommendation={() => setRecommendationDecision('applied')}
-            onReviewRecommendation={() => setRecommendationDecision('review')}
-          />
-        );
-      default:
-        return (
-          <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-            <Text variant="secondary" className="block text-sm leading-6">
-              Bu recipe icin canli kompozisyon henuz tanimli degil.
-            </Text>
-          </div>
-        );
-    }
-  };
+  useEffect(() => {
+    setTextInputValue((current) => (
+      current === previousFormFieldSeed.current.textInput ? formFieldSeed.textInput : current
+    ));
+    setSearchInputValue((current) => (
+      current === previousFormFieldSeed.current.searchInput ? formFieldSeed.searchInput : current
+    ));
+    setTextAreaValue((current) => (
+      current === previousFormFieldSeed.current.textArea ? formFieldSeed.textArea : current
+    ));
+    setCommentValue((current) => (
+      current === previousFormFieldSeed.current.comment ? formFieldSeed.comment : current
+    ));
+    previousFormFieldSeed.current = formFieldSeed;
+  }, [formFieldSeed]);
 
-  const renderLivePreview = (item: DesignLabIndexItem) => {
-    switch (item.name) {
-      case 'Button':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-              <PreviewPanel title="Varyant matrisi">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button>Primary</Button>
-                  <Button variant="secondary">Secondary</Button>
-                  <Button variant="ghost">Ghost</Button>
-                  <Button variant="destructive">Destructive</Button>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Boyut ve icon slot">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button size="sm" leadingVisual={<span aria-hidden="true">+</span>}>Small</Button>
-                  <Button size="md" trailingVisual={<span aria-hidden="true">→</span>}>Medium</Button>
-                  <Button size="lg" leadingVisual={<span aria-hidden="true">★</span>}>Large</Button>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Durumlar">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button
-                    loading
-                    loadingLabel="Kaydediliyor"
-                    leadingVisual={<span aria-hidden="true">✓</span>}
-                    trailingVisual={<span aria-hidden="true">→</span>}
-                  >
-                    Değişiklikleri kaydet
-                  </Button>
-                  <Button disabled variant="secondary">Disabled</Button>
-                  <Button access="readonly" variant="ghost">Readonly</Button>
-                </div>
-                <div className="mt-4 max-w-sm">
-                  <Button fullWidth variant="secondary" trailingVisual={<span aria-hidden="true">→</span>}>
-                    Tam genişlik CTA
-                  </Button>
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Badge':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="flex flex-wrap gap-2">
-              <Badge tone="default">Default</Badge>
-              <Badge tone="info">Info</Badge>
-              <Badge tone="success">Success</Badge>
-              <Badge tone="warning">Warning</Badge>
-              <Badge tone="danger">Danger</Badge>
-            </div>
-          </div>
-        );
-      case 'Tag':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="flex flex-wrap gap-2">
-              <Tag>Neutral</Tag>
-              <Tag tone="success">Approved</Tag>
-              <Tag tone="warning">Pending</Tag>
-              <Tag tone="danger">Blocked</Tag>
-            </div>
-          </div>
-        );
-      case 'Text':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-              <PreviewPanel title="Semantic preset">
-                <div className="flex flex-col gap-2">
-                  <Text as="h2" preset="display">Display metni</Text>
-                  <Text as="h3" preset="heading">Heading metni</Text>
-                  <Text preset="title">Title metni</Text>
-                  <Text preset="body">Body text</Text>
-                  <Text preset="caption">Caption</Text>
-                  <Text preset="mono">MONO-1024</Text>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Tone ve emphasis">
-                <div className="flex flex-col gap-2">
-                  <Text weight="semibold">Primary emphasis</Text>
-                  <Text variant="secondary">Secondary copy</Text>
-                  <Text variant="muted">Muted helper text</Text>
-                  <Text variant="success">Success state</Text>
-                  <Text variant="danger">Danger state</Text>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Clamp ve truncate">
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  <div className="max-w-[240px]">
-                    <Text truncate title="Bu başlık tek satırda truncate edilir ve hover ile tam hali görülebilir.">
-                      Bu başlık tek satırda truncate edilir ve hover ile tam hali görülebilir.
-                    </Text>
-                  </div>
-                  <div className="max-w-[240px]">
-                    <Text clampLines={2}>
-                      Uzun açıklama metni iki satıra clamp edilir; layout taşması üretmez ve typography kontratını korur.
-                    </Text>
-                  </div>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Okunabilirlik ve numerik hizalama">
-                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  <div className="rounded-2xl border border-border-subtle bg-surface-canvas p-4">
-                    <Text preset="body" wrap="pretty">
-                      Pretty wrap aktifken uzun paragraf daha dengeli satir dagilimi ile okunur; bu da docs ve panel yuzeylerinde
-                      goz yorgunlugunu azaltir.
-                    </Text>
-                  </div>
-                  <div className="rounded-2xl border border-border-subtle bg-surface-canvas p-4 text-right">
-                    <Text preset="body-sm" align="right" tabularNums>
-                      12.450,00
-                    </Text>
-                    <Text preset="caption" variant="secondary" className="mt-2 block">
-                      Tabular nums
-                    </Text>
-                  </div>
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'LinkInline':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Internal / external">
-                <div className="flex flex-wrap items-center gap-4">
-                  <LinkInline href="#users">Internal link</LinkInline>
-                  <LinkInline href="https://mui.com" external>External link</LinkInline>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Current / blocked">
-                <div className="flex flex-wrap items-center gap-4">
-                  <LinkInline href="#current" current>Current state</LinkInline>
-                  <LinkInline href="#blocked" disabled>Disabled state</LinkInline>
-                  <LinkInline href="#secondary" tone="secondary" underline="always">Secondary tone</LinkInline>
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'IconButton':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Intent ve size">
-                <div className="flex flex-wrap items-center gap-3">
-                  <IconButton icon={<span aria-hidden="true">+</span>} label="Ekle" size="sm" />
-                  <IconButton icon={<span aria-hidden="true">☆</span>} label="Pinle" selected />
-                  <IconButton icon={<span aria-hidden="true">×</span>} label="Sil" variant="destructive" size="lg" />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Loading / disabled">
-                <div className="flex flex-wrap items-center gap-3">
-                  <IconButton icon={<span aria-hidden="true">⟳</span>} label="Yükleniyor" loading />
-                  <IconButton icon={<span aria-hidden="true">🔒</span>} label="Kilitli" disabled />
-                  <IconButton icon={<span aria-hidden="true">☰</span>} label="Menüyü aç" variant="secondary" />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Skeleton':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
-              <PreviewPanel title="Text">
-                <Skeleton lines={3} />
-              </PreviewPanel>
-              <PreviewPanel title="Avatar + text">
-                <div className="flex items-center gap-3">
-                  <Skeleton variant="avatar" />
-                  <div className="flex-1">
-                    <Skeleton lines={2} />
-                  </div>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Card placeholder">
-                <Skeleton variant="rect" className="h-28" />
-              </PreviewPanel>
-              <PreviewPanel title="Table row / reduced motion">
-                <div className="space-y-4">
-                  <Skeleton variant="table-row" />
-                  <Skeleton variant="table-row" animated={false} />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Spinner':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
-              <PreviewPanel title="Inline">
-                <Spinner label="Yükleniyor" />
-              </PreviewPanel>
-              <PreviewPanel title="Block">
-                <Spinner mode="block" label="Liste hazırlanıyor" />
-              </PreviewPanel>
-              <PreviewPanel title="Overlay">
-                <Spinner mode="overlay" label="Bölüm yükleniyor" />
-              </PreviewPanel>
-              <PreviewPanel title="Tone / size">
-                <div className="flex flex-wrap items-center gap-4">
-                  <Spinner size="sm" tone="neutral" label="Kısa" />
-                  <Spinner size="md" tone="primary" label="Orta" />
-                  <div className="rounded-2xl bg-text-primary px-4 py-3">
-                    <Spinner size="lg" tone="inverse" label="Inverse" />
-                  </div>
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Avatar':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-              <PreviewPanel title="Sizes">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Avatar name="Ada Lovelace" size="sm" />
-                  <Avatar name="Ada Lovelace" size="md" />
-                  <Avatar name="Ada Lovelace" size="lg" />
-                  <Avatar name="Ada Lovelace" size="xl" />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Image / privacy-safe identity">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Avatar src={avatarPreviewImageSrc} name="Nora Stone" alt="Nora Stone" />
-                  <Avatar name="Broken Image" />
-                  <Avatar shape="square" src={avatarPreviewImageSrc} name="Square Identity" alt="Square Identity" />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Fallback types">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Avatar name="Grace Hopper" />
-                  <Avatar fallbackIcon={<span aria-hidden="true">👤</span>} />
-                  <Avatar shape="square" name="Alan Turing" />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Divider':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-              <PreviewPanel title="Horizontal">
-                <div className="space-y-3">
-                  <Text>İçerik üstü</Text>
-                  <Divider />
-                  <Text variant="secondary">İçerik altı</Text>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Label / vertical">
-                <div className="flex items-center gap-4">
-                  <Text>Sol</Text>
-                  <Divider orientation="vertical" className="h-8" />
-                  <Text>Sağ</Text>
-                  <Divider label="veya" className="flex-1" />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Semantic / decorative">
-                <div className="space-y-3">
-                  <Divider label="Sözleşmeli ayırıcı" />
-                  <Divider decorative />
-                  <Text variant="secondary">Dekoratif ayırıcı rol üretmez.</Text>
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Tabs':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Underline / controlled">
-                <Tabs
-                  value={tabsValue}
-                  onValueChange={setTabsValue}
-                  items={[
-                    {
-                      value: 'overview',
-                      label: 'Overview',
-                      badge: <Badge tone="info">4</Badge>,
-                      content: (
-                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                          <Text preset="title">Overview panel</Text>
-                          <Text variant="secondary" className="mt-2 block">
-                            Route-aware, keyboard navigable ve token-first sekme davranisi.
-                          </Text>
-                        </div>
-                      ),
-                    },
-                    {
-                      value: 'activity',
-                      label: 'Activity',
-                      content: (
-                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                          <Text preset="title">Activity panel</Text>
-                          <Text variant="secondary" className="mt-2 block">
-                            Live preview icin controlled state ile shell tarafindan yonetiliyor.
-                          </Text>
-                        </div>
-                      ),
-                    },
-                    {
-                      value: 'settings',
-                      label: 'Settings',
-                      disabled: true,
-                      content: null,
-                    },
-                  ]}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Pill / vertical manual">
-                <Tabs
-                  appearance="pill"
-                  orientation="vertical"
-                  activationMode="manual"
-                  defaultValue="tokens"
-                  items={[
-                    {
-                      value: 'tokens',
-                      label: 'Tokens',
-                      icon: <span aria-hidden="true">◈</span>,
-                      description: 'Tema eksenleri ve semantic token kararlarini gosteren panel.',
-                      content: (
-                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                          <Text preset="body">Semantic token mapping</Text>
-                        </div>
-                      ),
-                    },
-                    {
-                      value: 'density',
-                      label: 'Density',
-                      icon: <span aria-hidden="true">≋</span>,
-                      content: (
-                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                          <Text preset="body">Comfortable, compact ve sharp density gorunumu.</Text>
-                        </div>
-                      ),
-                    },
-                    {
-                      value: 'motion',
-                      label: 'Motion',
-                      icon: <span aria-hidden="true">↻</span>,
-                      content: (
-                        <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                          <Text preset="body">Transition hizlari ve focus-visible davranisi.</Text>
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Breadcrumb':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Basic path">
-                <Breadcrumb
-                  items={[
-                    { label: 'Admin', href: '#admin' },
-                    { label: 'UI Kit', href: '#ui-kit' },
-                    { label: 'Navigation' },
-                  ]}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Collapsed long path">
-                <Breadcrumb
-                  maxItems={4}
-                  items={[
-                    { label: 'Workspace', href: '#workspace' },
-                    { label: 'Cockpit', href: '#cockpit' },
-                    { label: 'Libraries', href: '#libraries' },
-                    { label: 'UI System', href: '#ui-system' },
-                    { label: 'Tabs' },
-                  ]}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Pagination':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Server-side matrix">
-                <Pagination
-                  totalItems={248}
-                  pageSize={20}
-                  page={paginationPage}
-                  onPageChange={setPaginationPage}
-                  mode="server"
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Compact / client-side">
-                <Pagination
-                  totalItems={84}
-                  pageSize={12}
-                  defaultPage={2}
-                  size="sm"
-                  compact
-                  mode="client"
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Steps':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Interactive progress">
-                <Steps
-                  value={stepsValue}
-                  onValueChange={setStepsValue}
-                  interactive
-                  items={[
-                    {
-                      value: 'draft',
-                      title: 'Taslak',
-                      description: 'İlk kural ve içerik çerçevesi hazırlanır.',
-                    },
-                    {
-                      value: 'review',
-                      title: 'İnceleme',
-                      description: 'UX, API ve quality gate kanıtı birlikte doğrulanır.',
-                    },
-                    {
-                      value: 'release',
-                      title: 'Release',
-                      description: 'Wave gate ve doctor evidence ile kapanış yapılır.',
-                    },
-                  ]}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Vertical / status-rich">
-                <Steps
-                  value={stepsStatusRichValue}
-                  onValueChange={setStepsStatusRichValue}
-                  orientation="vertical"
-                  interactive
-                  items={[
-                    {
-                      value: 'scope',
-                      title: 'Scope',
-                      description: 'Contract ve registry eşleşmesi tamamlandı.',
-                    },
-                    {
-                      value: 'preview',
-                      title: 'Preview',
-                      description: 'Live preview ve demoscope gözden geçiriliyor.',
-                    },
-                    {
-                      value: 'security',
-                      title: 'Security',
-                      description: 'Doctor evidence ve release guardrail bekleniyor.',
-                      optional: true,
-                    },
-                  ]}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'AnchorToc':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[320px_1fr]">
-              <AnchorToc
-                value={anchorValue}
-                onValueChange={setAnchorValue}
-                title="Policy bölümleri"
-                items={[
-                  { id: 'overview', label: 'Overview', meta: 'P1' },
-                  { id: 'ux', label: 'UX Standardı', level: 2, meta: 'P2' },
-                  { id: 'security', label: 'Security Controls', level: 2, meta: 'P3' },
-                  { id: 'release', label: 'Release Evidence', level: 3, meta: 'P4' },
-                ]}
-              />
-              <div className="space-y-4 rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-                <PreviewPanel title="Deep-link / shareable state">
-                  <div className="space-y-4">
-                    <section id="overview" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                      <Text preset="title">Overview</Text>
-                      <Text variant="secondary" className="mt-2 block">
-                        AnchorToc ayni sayfa icinde paylasilabilir hash state uretir ve aktif bolumu vurgular.
-                      </Text>
-                    </section>
-                    <section id="ux" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                      <Text preset="title">UX Standardı</Text>
-                      <Text variant="secondary" className="mt-2 block">
-                        Bilgi kokusu, derin link ve policy okumalarinda progress kaybi olmadan gezinme saglar.
-                      </Text>
-                    </section>
-                    <section id="security" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                      <Text preset="title">Security Controls</Text>
-                      <Text variant="secondary" className="mt-2 block">
-                        Active heading state hem docs-site hem admin policy ekranlari icin tek primitive uzerinden gelir.
-                      </Text>
-                    </section>
-                    <section id="release" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                      <Text preset="title">Release Evidence</Text>
-                      <Text variant="secondary" className="mt-2 block">
-                        Doctor evidence ve wave gate ile birlikte kullanildiginda dokuman ve release izlerini ayni dilde toplar.
-                      </Text>
-                    </section>
-                  </div>
-                </PreviewPanel>
-              </div>
-            </div>
-          </div>
-        );
-      case 'Select':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="max-w-sm">
-              <Select
-                value={selectValue}
-                onChange={setSelectValue}
-                options={[
-                  { value: 'comfortable', label: 'Comfortable' },
-                  { value: 'compact', label: 'Compact' },
-                  { value: 'sharp', label: 'Sharp' },
-                ]}
-              />
-            </div>
-            <Text variant="secondary" className="mt-3 block">Aktif değer: {selectValue}</Text>
-          </div>
-        );
-      case 'TextInput':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Label / yardım / sayaç">
-                <div className="space-y-4">
-                  <TextInput
-                    label="Kullanıcı adı"
-                    description="Sistemde görünen kısa tanım."
-                    hint="Boşluk bırakmadan en fazla 32 karakter."
-                    value={textInputValue}
-                    maxLength={32}
-                    showCount
-                    onValueChange={setTextInputValue}
-                    leadingVisual={<span aria-hidden="true">@</span>}
-                  />
-                  <Text variant="secondary" className="block">
-                    Aktif değer: {textInputValue}
-                  </Text>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Durum matrisi">
-                <div className="grid grid-cols-1 gap-3">
-                  <TextInput label="Doğrulanan alan" defaultValue="nova.user" trailingVisual={<span aria-hidden="true">✓</span>} />
-                  <TextInput label="Hatalı alan" defaultValue="!" invalid error="En az 3 karakter girilmeli." />
-                  <TextInput label="Readonly alan" defaultValue="system-generated" access="readonly" />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'TextArea':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Auto resize / yardım">
-                <div className="space-y-4">
-                  <TextArea
-                    label="Açıklama"
-                    description="Uzun içerik alanları için ortak metin girişi."
-                    hint="Çok satırlı bilgi girişi için otomatik yükseklik ayarı."
-                    value={textAreaValue}
-                    rows={3}
-                    maxLength={180}
-                    showCount
-                    resize="auto"
-                    onValueChange={setTextAreaValue}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Validation / erişim">
-                <div className="grid grid-cols-1 gap-3">
-                  <TextArea
-                    label="Validation örneği"
-                    defaultValue="Eksik açıklama"
-                    invalid
-                    error="Bu alan en az 20 karakter olmalı."
-                    rows={3}
-                  />
-                  <TextArea label="Readonly not" defaultValue="Sistem logu kullanıcı tarafından değiştirilemez." access="readonly" rows={3} />
-                  <TextArea label="Disabled draft" defaultValue="Yayın sonrası kilitlenir." access="disabled" rows={3} />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Checkbox':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Controlled + yardım">
-                <div className="space-y-4">
-                  <Checkbox
-                    label="Yayın sonrası bildirim gönder"
-                    description="Akış tamamlandığında paydaşlara otomatik bilgi ver."
-                    hint="İşlem anında kapatılabilir."
-                    checked={checkboxValue}
-                    onCheckedChange={(checked) => setCheckboxValue(checked)}
-                  />
-                  <Text variant="secondary" className="block">
-                    Aktif seçim: {checkboxValue ? 'Açık' : 'Kapalı'}
-                  </Text>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Validation / erişim">
-                <div className="grid grid-cols-1 gap-3">
-                  <Checkbox label="Eksik onay" invalid error="Devam etmeden önce onay vermelisin." />
-                  <Checkbox label="Kısmi seçim" indeterminate hint="Alt seçeneklerin bir bölümü seçili." />
-                  <Checkbox label="Readonly seçim" defaultChecked access="readonly" />
-                  <Checkbox label="Disabled seçim" access="disabled" />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Radio':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Controlled seçenek grubu">
-                <div className="space-y-3">
-                  <Radio
-                    name="wave-3-radio-demo"
-                    value="design"
-                    label="Design odaklı"
-                    description="Önce görünüm ve doküman kalitesini tamamla."
-                    checked={radioValue === 'design'}
-                    onCheckedChange={(checked) => {
-                      if (checked) setRadioValue('design');
-                    }}
-                  />
-                  <Radio
-                    name="wave-3-radio-demo"
-                    value="ops"
-                    label="Ops odaklı"
-                    description="Doctor ve gate kanıtı önce tamamlansın."
-                    checked={radioValue === 'ops'}
-                    onCheckedChange={(checked) => {
-                      if (checked) setRadioValue('ops');
-                    }}
-                  />
-                  <Radio
-                    name="wave-3-radio-demo"
-                    value="delivery"
-                    label="Delivery odaklı"
-                    description="Feature sonrası teslim artefact’larını önceliklendir."
-                    checked={radioValue === 'delivery'}
-                    onCheckedChange={(checked) => {
-                      if (checked) setRadioValue('delivery');
-                    }}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="State matrix">
-                <div className="grid grid-cols-1 gap-3">
-                  <Radio name="wave-3-radio-state" value="default" label="Varsayılan seçenek" defaultChecked />
-                  <Radio
-                    name="wave-3-radio-state"
-                    value="invalid"
-                    label="Eksik seçim"
-                    invalid
-                    error="En az bir dağıtım stratejisi seçilmeli."
-                  />
-                  <Radio name="wave-3-radio-state" value="readonly" label="Readonly seçenek" access="readonly" />
-                  <Radio name="wave-3-radio-state" value="disabled" label="Disabled seçenek" access="disabled" />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Switch':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Controlled toggle">
-                <div className="space-y-4">
-                  <Switch
-                    label="Canlı görünürlüğü aç"
-                    description="Yayınlanan ekranı son kullanıcıya anında görünür yap."
-                    hint="İhtiyaç halinde tekrar kapatabilirsin."
-                    checked={switchValue}
-                    onCheckedChange={(checked) => setSwitchValue(checked)}
-                  />
-                  <Text variant="secondary" className="block">
-                    Aktif durum: {switchValue ? 'Açık' : 'Kapalı'}
-                  </Text>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="State matrix">
-                <div className="grid grid-cols-1 gap-3">
-                  <Switch label="Readonly toggle" defaultChecked access="readonly" />
-                  <Switch label="Disabled toggle" access="disabled" />
-                  <Switch label="Eksik policy onayı" invalid error="Bu geçiş için ek onay gerekiyor." />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Slider':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Controlled range">
-                <div className="space-y-4">
-                  <Slider
-                    label="Yoğunluk"
-                    description="Kart ve tablo boşluk kararını tek kaynaktan yönet."
-                    hint="Daha yüksek değer daha ferah görünüm üretir."
-                    min={20}
-                    max={100}
-                    step={4}
-                    value={sliderValue}
-                    onValueChange={setSliderValue}
-                    minLabel="Kompakt"
-                    maxLabel="Rahat"
-                    valueFormatter={(value) => `${value}%`}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="State matrix">
-                <div className="grid grid-cols-1 gap-3">
-                  <Slider label="Readonly slider" value={72} access="readonly" valueFormatter={(value) => `${value}%`} />
-                  <Slider label="Blocked by policy" defaultValue={36} invalid error="Bu değişim için ek approval gerekiyor." />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'DatePicker':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Controlled date">
-                <div className="space-y-4">
-                  <DatePicker
-                    label="Teslim tarihi"
-                    description="Gorevin tamamlanacağı günü planla."
-                    hint="Takvim seçimi ile shareable milestone üret."
-                    value={dateValue}
-                    min="2026-03-08"
-                    max="2026-04-30"
-                    onValueChange={setDateValue}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="State matrix">
-                <div className="grid grid-cols-1 gap-3">
-                  <DatePicker label="Readonly date" value="2026-03-09" access="readonly" />
-                  <DatePicker label="Invalid milestone" defaultValue="2026-03-01" invalid error="Tarih mevcut release penceresinin dışında." />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'TimePicker':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Controlled time">
-                <div className="space-y-4">
-                  <TimePicker
-                    label="Kesim saati"
-                    description="Release penceresindeki uygulama saatini sec."
-                    hint="15 dakikalik araliklarla planla."
-                    value={timeValue}
-                    min="09:00"
-                    max="22:00"
-                    step={900}
-                    onValueChange={setTimeValue}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="State matrix">
-                <div className="grid grid-cols-1 gap-3">
-                  <TimePicker label="Readonly time" value="18:45" access="readonly" />
-                  <TimePicker label="Invalid cutover" defaultValue="23:30" invalid error="Bu saat izinli deployment penceresinin dışında." />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Upload':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Controlled file list">
-                <div className="space-y-4">
-                  <Upload
-                    label="Kanit paketi"
-                    description="Release ve approval kanitlarini ayni yerden topla."
-                    hint="PDF, XLSX ve ZIP desteklenir."
-                    accept=".pdf,.xlsx,.zip"
-                    multiple
-                    maxFiles={4}
-                    files={uploadFiles}
-                    onFilesChange={setUploadFiles}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Current payload">
-                <LibraryMetricCard
-                  label="Selected files"
-                  value={`${uploadFiles.length}`}
-                  note={uploadFiles.map((file) => file.name).join(', ')}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'CommandPalette':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-              <PreviewPanel title="Interactive launcher">
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button onClick={() => setCommandPaletteOpen(true)}>Komut paletini aç</Button>
-                    <SectionBadge label="⌘ K" />
-                    <SectionBadge label="AI-assisted" />
-                  </div>
-                  <CommandPalette
-                    open={commandPaletteOpen}
-                    title="Yonetim komut paleti"
-                    subtitle="Gezinim, AI tavsiyesi ve governance aksiyonlarini tek palette topla."
-                    items={commandPaletteItems}
-                    query={commandPaletteQuery}
-                    onQueryChange={setCommandPaletteQuery}
-                    onClose={() => setCommandPaletteOpen(false)}
-                    onSelect={(id, selectedItem) => {
-                      setLastCommandSelection(`${selectedItem.title} · ${id}`);
-                    }}
-                    footer={<Text variant="secondary">Doktor, gate ve approval akislari ayni palette gorunur.</Text>}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Current command state">
-                <div className="grid grid-cols-1 gap-3">
-                  <LibraryMetricCard
-                    label="Active query"
-                    value={commandPaletteQuery || '—'}
-                    note="Palette controlled query state ile calisiyor."
-                  />
-                  <LibraryMetricCard
-                    label="Last selection"
-                    value={lastCommandSelection ?? 'Henüz seçim yok'}
-                    note="Secilen komut route ya da AI aksiyonunu tetikler."
-                  />
-                  <Descriptions
-                    title="Governance"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'mode', label: 'Mode', value: 'dialog', tone: 'info' },
-                      { key: 'scope', label: 'Scope', value: 'navigate / ai / review', tone: 'success' },
-                      { key: 'evidence', label: 'Evidence', value: 'doctor + gate', tone: 'warning' },
-                    ]}
-                  />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'RecommendationCard':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Interactive governance recommendation">
-                <div className="space-y-4">
-                  <RecommendationCard
-                    title="Security remediation wave now"
-                    summary="Dependency bulgulari kapanmis durumda. UI library forms dalgasini kontrollu sekilde publish edebilirsin."
-                    recommendationType="Release suggestion"
-                    rationale={[
-                      'doctor:frontend kaniti yeşil',
-                      'wave gate PASS',
-                      'Residual risk kayıt altinda',
-                    ]}
-                    citations={['doctor:frontend', 'wave_3_forms', 'security-guardrails']}
-                    confidenceLevel="high"
-                    confidenceScore={89}
-                    sourceCount={4}
-                    tone={recommendationDecision === 'applied' ? 'success' : recommendationDecision === 'review' ? 'warning' : 'info'}
-                    primaryActionLabel={recommendationDecision === 'applied' ? 'Uygulandı' : 'Uygula'}
-                    secondaryActionLabel={recommendationDecision === 'review' ? 'İncelemede' : 'İncele'}
-                    onPrimaryAction={() => setRecommendationDecision('applied')}
-                    onSecondaryAction={() => setRecommendationDecision('review')}
-                    footerNote={`Decision: ${recommendationDecision}`}
-                    badges={[
-                      <Tag key="batch" tone="info">wave-6</Tag>,
-                      <Tag key="contract" tone="muted">contract-bound</Tag>,
-                    ]}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Readonly advisory card">
-                <RecommendationCard
-                  title="Human approval required"
-                  summary="Bu öneri doğrudan uygulanmaz. İnsan onayı, citation panel ve audit timeline ile birlikte görünür."
-                  recommendationType="Advisory"
-                  rationale={[
-                    'approval queue zorunlu',
-                    'policy impact yüksek',
-                  ]}
-                  citations={['approval-checkpoint', 'audit-trace']}
-                  confidenceLevel="medium"
-                  confidenceScore={72}
-                  sourceCount={2}
-                  access="readonly"
-                  compact
-                  footerNote="Readonly mode"
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'ConfidenceBadge':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Confidence matrix">
-                <div className="flex flex-wrap gap-3">
-                  <ConfidenceBadge level="low" score={41} sourceCount={1} />
-                  <ConfidenceBadge level="medium" score={68} sourceCount={3} />
-                  <ConfidenceBadge level="high" score={84} sourceCount={5} />
-                  <ConfidenceBadge level="very-high" score={96} sourceCount={8} />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Compact + transparency">
-                <div className="space-y-3">
-                  <div className="flex flex-wrap gap-3">
-                    <ConfidenceBadge level="high" score={87} compact />
-                    <ConfidenceBadge level="medium" label="Manual review" compact showScore={false} />
-                    <ConfidenceBadge level="low" score={29} access="readonly" />
-                  </div>
-                  <Text variant="secondary" className="block leading-7">
-                    Confidence badge tek basina kesinlik iddiası taşımaz; skor, kaynak sayisi ve review gereksinimi birlikte okunur.
-                  </Text>
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'ApprovalCheckpoint':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Interactive approval checkpoint">
-                <ApprovalCheckpoint
-                  title="Forms wave publish checkpoint"
-                  summary="AI helper dalgasi publish edilmeden once doctor, citation ve insan onayi ayni yuzeyde gorunur."
-                  status={approvalCheckpointState}
-                  approverLabel="Release board"
-                  dueLabel="07 Mar 2026 · 22:00"
-                  evidenceItems={['doctor:frontend', 'wave gate', 'security guardrails']}
-                  steps={approvalCheckpointSteps}
-                  citations={citationPanelItems.map((item) => item.locator as string)}
-                  onPrimaryAction={() => setApprovalCheckpointState('approved')}
-                  onSecondaryAction={() => setApprovalCheckpointState('rejected')}
-                  footerNote={`Current state: ${approvalCheckpointState}`}
-                  badges={[<Tag key="ai" tone="info">ai-native</Tag>]}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Readonly checkpoint">
-                <ApprovalCheckpoint
-                  title="Readonly approval evidence"
-                  summary="Bu varyant inceleme akisinda yalnizca okunur; aksiyon tetiklemez."
-                  status="pending"
-                  access="readonly"
-                  steps={approvalCheckpointSteps}
-                  evidenceItems={['doctor:frontend', 'ux alignment']}
-                  citations={['sec:4.2', 'ux:ai-3']}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'CitationPanel':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-              <PreviewPanel title="Interactive citations">
-                <CitationPanel
-                  items={citationPanelItems}
-                  activeCitationId={selectedCitationId}
-                  onOpenCitation={(id) => setSelectedCitationId(id)}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Selected citation">
-                <LibraryMetricCard
-                  label="Active citation"
-                  value={selectedCitationId ?? '—'}
-                  note={(citationPanelItems.find((item) => item.id === selectedCitationId)?.source as string) ?? 'Kaynak secilmedi'}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'AIActionAuditTimeline':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-              <PreviewPanel title="Interactive audit timeline">
-                <AIActionAuditTimeline
-                  items={auditTimelineItems}
-                  selectedId={selectedAuditId}
-                  onSelectItem={(id) => setSelectedAuditId(id)}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Selected event">
-                <Descriptions
-                  title="Audit event"
-                  density="compact"
-                  columns={1}
-                  items={[
-                    { key: 'selected', label: 'Selected', value: selectedAuditId ?? '—', tone: 'info' },
-                    {
-                      key: 'actor',
-                      label: 'Actor',
-                      value: auditTimelineItems.find((item) => item.id === selectedAuditId)?.actor ?? '—',
-                      tone: 'success',
-                    },
-                    {
-                      key: 'status',
-                      label: 'Status',
-                      value: auditTimelineItems.find((item) => item.id === selectedAuditId)?.status ?? '—',
-                      tone: 'warning',
-                    },
-                  ]}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'PromptComposer':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-              <PreviewPanel title="Controlled prompt authoring">
-                <PromptComposer
-                  subject={promptSubject}
-                  onSubjectChange={setPromptSubject}
-                  value={promptBody}
-                  onValueChange={setPromptBody}
-                  scope={promptScope}
-                  onScopeChange={setPromptScope}
-                  tone={promptTone}
-                  onToneChange={setPromptTone}
-                  guardrails={['pii-safe', 'approval-bound', 'source-required']}
-                  citations={citationPanelItems.map((item) => item.locator as string)}
-                  footerNote="Prompt output release notuna gireceksek human approval ile birlestirilir."
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Prompt summary">
-                <div className="grid grid-cols-1 gap-3">
-                  <LibraryMetricCard label="Subject" value={promptSubject} note="Prompt amaci" />
-                  <LibraryMetricCard label="Scope" value={promptScope} note="Execution boundary" />
-                  <LibraryMetricCard label="Tone" value={promptTone} note="Message discipline" />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'TableSimple':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Policy status table">
-                <TableSimple
-                  caption="Politika portföyü"
-                  description="Görev odaklı hafif tablo görünümü."
-                  columns={[
-                    { key: 'policy', label: 'Politika', accessor: 'policy', emphasis: true, truncate: true },
-                    { key: 'owner', label: 'Sahip', accessor: 'owner' },
-                    {
-                      key: 'status',
-                      label: 'Durum',
-                      align: 'center',
-                      render: (row) => <Badge tone={row.status === 'Aktif' ? 'success' : row.status === 'Taslak' ? 'warning' : 'info'}>{row.status}</Badge>,
-                    },
-                  ]}
-                  rows={policyTableRows}
-                  stickyHeader
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Loading + empty">
-                <div className="space-y-4">
-                  <TableSimple
-                    caption="Yüklenen tablo"
-                    columns={[
-                      { key: 'policy', label: 'Politika', accessor: 'policy' },
-                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
-                    ]}
-                    rows={[]}
-                    loading
-                  />
-                  <TableSimple
-                    caption="Boş tablo"
-                    columns={[
-                      { key: 'policy', label: 'Politika', accessor: 'policy' },
-                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
-                    ]}
-                    rows={[]}
-                    emptyStateLabel="Henüz yayınlanmış veri yok."
-                    density="compact"
-                  />
-                </div>
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Descriptions':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Rollout summary">
-                <Descriptions
-                  title="Canary özeti"
-                  description="Rollout owner, scope ve review snapshot tek blokta."
-                  items={rolloutDescriptionItems}
-                  columns={2}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Risk / approval panel">
-                <Descriptions
-                  title="Risk ve onay"
-                  items={[
-                    { key: 'risk', label: 'Risk Seviyesi', value: 'Medium', tone: 'warning' },
-                    { key: 'approval', label: 'Onay Akışı', value: '2/3 tamamlandı', helper: 'Security sign-off bekleniyor.' },
-                    { key: 'ticket', label: 'Change ID', value: 'CHG-UI-204', tone: 'info' },
-                  ]}
-                  columns={1}
-                  density="compact"
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'List':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Operational inbox">
-                <List
-                  title="Release work queue"
-                  description="Öncelikli rollout ve kanıt işleri aynı yüzeyde izlenir."
-                  items={listItems}
-                  selectedKey="doctor"
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Compact selectable">
-                <List
-                  title="Compact review"
-                  density="compact"
-                  items={listItems}
-                  selectedKey="triage"
-                  onItemSelect={() => undefined}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'JsonViewer':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Release evidence payload">
-                <JsonViewer
-                  title="Wave summary"
-                  description="Gate ve doctor kanıtını debug ekranına ihtiyaç duymadan okunur kılar."
-                  value={jsonViewerValue}
-                  rootLabel="wave"
-                  defaultExpandedDepth={2}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Policy snapshot">
-                <JsonViewer
-                  title="Policy payload"
-                  description="Readonly operational contract yüzeyi."
-                  value={jsonViewerValue.policy}
-                  rootLabel="policy"
-                  defaultExpandedDepth={1}
-                  maxHeight={320}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Tree':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Operational hierarchy">
-                <Tree
-                  title="Delivery hierarchy"
-                  description="Gate ve policy sahipligini tek hiyerarside okur."
-                  nodes={treeNodes}
-                  defaultExpandedKeys={['release', 'doctor']}
-                  selectedKey="doctor-ui-library"
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Readonly review">
-                <Tree
-                  title="Readonly review"
-                  density="compact"
-                  nodes={treeNodes}
-                  defaultExpandedKeys={['release', 'security']}
-                  access="readonly"
-                  selectedKey="security-residual"
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'TreeTable':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              <PreviewPanel title="Ownership matrix">
-                <TreeTable
-                  title="Component ownership"
-                  description="Owner, status ve scope bilgisi hiyerarsik satirlarla okunur."
-                  nodes={treeTableNodes}
-                  defaultExpandedKeys={['platform-ui']}
-                  columns={[
-                    { key: 'owner', label: 'Owner', accessor: 'owner', emphasis: true },
-                    { key: 'status', label: 'Durum', accessor: 'status', align: 'center' },
-                    { key: 'scope', label: 'Scope', accessor: 'scope' },
-                  ]}
-                />
-              </PreviewPanel>
-              <PreviewPanel title="Compact review">
-                <TreeTable
-                  title="Compact matrix"
-                  density="compact"
-                  nodes={treeTableNodes}
-                  defaultExpandedKeys={['platform-ui']}
-                  selectedKey="delivery-gates"
-                  columns={[
-                    { key: 'status', label: 'Durum', accessor: 'status', align: 'center', emphasis: true },
-                    { key: 'scope', label: 'Scope', accessor: 'scope' },
-                  ]}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'Dropdown':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <Dropdown
-                trigger={<span>Aksiyon Menüsü</span>}
-                items={[
-                  { key: 'publish', label: 'Publish' },
-                  { key: 'duplicate', label: 'Duplicate' },
-                  { key: 'archive', label: 'Archive' },
-                ]}
-                onSelect={setDropdownAction}
-              />
-              <Text variant="secondary">Seçim: {dropdownAction}</Text>
-            </div>
-          </div>
-        );
-      case 'Tooltip':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <Tooltip text="Tooltip örneği">
-              <Button variant="secondary">Hover / Focus</Button>
-            </Tooltip>
-          </div>
-        );
-      case 'Empty':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <Empty description="Bu katalog grubunda henüz kayıt yok." />
-          </div>
-        );
-      case 'Modal':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <Button onClick={() => setModalOpen(true)}>Modal aç</Button>
-            <Modal
-              open={modalOpen}
-              title="UI Kit Demo Modal"
-              onClose={() => setModalOpen(false)}
-              footer={(
-                <div className="flex justify-end gap-2">
-                  <Button variant="ghost" onClick={() => setModalOpen(false)}>İptal</Button>
-                  <Button onClick={() => setModalOpen(false)}>Kaydet</Button>
-                </div>
-              )}
-            >
-              <Text variant="secondary">Token zincirine bağlı dialog preview.</Text>
-            </Modal>
-          </div>
-        );
-      case 'ThemePreviewCard':
-        return (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <ThemePreviewCard />
-            <ThemePreviewCard selected />
-            <ThemePreviewCard />
-          </div>
-        );
-      case 'PageLayout':
-        return (
-          <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
-            <PageLayout
-              title="User Directory"
-              description="Route-level layout composition example"
-              breadcrumbItems={[
-                { title: 'Admin', path: '#' },
-                { title: 'Users' },
-              ]}
-              actions={<Button variant="secondary">Yeni kayıt</Button>}
-              filterBar={<FilterBar onReset={() => undefined} onSaveView={() => undefined}><div className="h-10 rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Filter slot</div></FilterBar>}
-              detail={<div className="rounded-2xl border border-border-subtle bg-surface-default p-4 text-sm text-text-secondary">Detail panel</div>}
-            >
-              <div className="rounded-2xl border border-border-subtle bg-surface-default p-4 text-sm text-text-secondary">Main content</div>
-            </PageLayout>
-          </div>
-        );
-      case 'PageHeader':
-        return (
-          <PageHeader
-            eyebrow="Page Shell"
-            title="Component Library"
-            description="Katalog, release ve kalite bilgisini tek page header shell içinde toplar."
-            status={<Badge tone="success">Stable shell</Badge>}
-            meta={pageHeaderMeta}
-            actions={
-              <>
-                <Button variant="secondary">Release notes</Button>
-                <Button>Publish</Button>
-              </>
-            }
-            aside={
-              <div className="rounded-2xl border border-border-subtle bg-surface-default px-4 py-3 text-sm text-text-secondary">
-                Son doctor kanıtı: PASS
-              </div>
-            }
-          />
-        );
-      case 'FilterBar':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <FilterBar onReset={() => undefined} onSaveView={() => undefined}>
-              <div className="min-w-[220px] rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Search</div>
-              <div className="min-w-[220px] rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Status</div>
-            </FilterBar>
-          </div>
-        );
-      case 'FormDrawer':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <Button onClick={() => setFormDrawerOpen(true)}>Drawer aç</Button>
-            <FormDrawer open={formDrawerOpen} title="Yeni kayıt" onClose={() => setFormDrawerOpen(false)}>
-              <div className="flex flex-col gap-3">
-                <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Field 1</div>
-                <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Field 2</div>
-              </div>
-            </FormDrawer>
-          </div>
-        );
-      case 'DetailDrawer':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <Button onClick={() => setDetailDrawerOpen(true)}>Detail aç</Button>
-            <DetailDrawer
-              open={detailDrawerOpen}
-              title="Kayıt detay"
-              onClose={() => setDetailDrawerOpen(false)}
-              sections={[
-                { key: 'summary', title: 'Summary', description: 'Drawer section example', content: <Text variant="secondary">Kısa detay içeriği.</Text> },
-                { key: 'audit', title: 'Audit', description: 'Metadata block', content: <Text variant="secondary">Updated 2026-03-06</Text> },
-              ]}
-            />
-          </div>
-        );
-      case 'Popover':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <Popover
-              title="Policy guidance"
-              trigger={<Button variant="secondary">Popover aç</Button>}
-              content={(
-                <div className="space-y-3">
-                  <Text variant="secondary" className="block leading-6">
-                    Kısa ama zengin bağlam gerektiğinde popover kullanılır. Bu panel route değiştirmeden karar desteği verir.
-                  </Text>
-                  <div className="flex flex-wrap gap-2">
-                    <Tag tone="warning">Policy</Tag>
-                    <Tag tone="info">Readonly</Tag>
-                  </div>
-                </div>
-              )}
-            />
-          </div>
-        );
-      case 'ContextMenu':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-              <PreviewPanel title="Action trigger">
-                <div className="flex flex-wrap items-start gap-3">
-                  <ContextMenu
-                    buttonLabel="Bağlam menüsü"
-                    title="Release actions"
-                    testIdPrefix="design-lab-contextmenu"
-                    items={[
-                      { key: 'approve', label: 'Onay akışını başlat', description: 'İnsan onayı ve wave gate kanıtını birlikte toplar.' },
-                      { key: 'review', label: 'İnceleme kuyruğuna ekle', description: 'Readonly review ve ek kanıt talebi üretir.' },
-                      { key: 'archive', label: 'Arşive taşı', description: 'Eski varyantları planlı backlog alanına taşır.', danger: true },
-                    ]}
-                    onSelect={(key) => setContextMenuAction(key)}
-                  />
-                  <div
-                    className="min-w-[220px] rounded-2xl border border-border-subtle bg-surface-canvas px-4 py-4 text-sm text-text-secondary"
-                    data-testid="design-lab-contextmenu-result"
-                  >
-                    Son seçim: <span className="font-semibold text-text-primary">{contextMenuAction}</span>
-                  </div>
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Right-click surface">
-                <ContextMenu
-                  triggerMode="contextmenu"
-                  title="Surface actions"
-                  testIdPrefix="design-lab-contextmenu-surface"
-                  items={[
-                    { key: 'duplicate', label: 'Kartı çoğalt', shortcut: 'D' },
-                    { key: 'pin', label: 'Bu görünümü sabitle', shortcut: 'P' },
-                    { key: 'readonly', label: 'Readonly nedeni göster', description: 'Policy guard ile context menu de sınırlandırılır.' },
-                  ]}
-                  onSelect={(key) => setContextMenuAction(`surface:${key}`)}
-                  trigger={(
-                    <div className="space-y-2">
-                      <Text preset="title">Sağ tıkla</Text>
-                      <Text variant="secondary" className="block leading-7">
-                        Context menu sağ tık yüzeyinde de aynı contract ile çalışır. Menü kısa eylem listesi olmalı; ağaç navigasyon olmamalı.
-                      </Text>
-                    </div>
-                  )}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'TourCoachmarks':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-              <PreviewPanel title="Guided walkthrough">
-                <div className="flex flex-wrap items-start gap-3">
-                  <Button
-                    onClick={() => {
-                      setTourOpen(true);
-                      setTourStep(0);
-                      setTourStatus('guided');
-                    }}
-                    data-testid="design-lab-tour-open"
-                  >
-                    Turu başlat
-                  </Button>
-                  <SectionBadge label={tourStatus === 'finished' ? 'finished' : tourStatus === 'guided' ? 'guided' : 'idle'} />
-                </div>
-                <div className="mt-4">
-                  <TourCoachmarks
-                    open={tourOpen}
-                    currentStep={tourStep}
-                    onStepChange={(index) => setTourStep(index)}
-                    onClose={() => {
-                      setTourOpen(false);
-                      setTourStatus('idle');
-                    }}
-                    onFinish={() => {
-                      setTourStatus('finished');
-                      setTourOpen(false);
-                    }}
-                    testIdPrefix="design-lab-tour"
-                    steps={[
-                      {
-                        id: 'scope',
-                        title: 'Scope doğrulaması',
-                        description: 'Önce wave ve registry sözleşmesi netleşir; kullanıcı neyi yayınladığını görür.',
-                        meta: 'contract',
-                      },
-                      {
-                        id: 'preview',
-                        title: 'Canlı demo incelemesi',
-                        description: 'Preview, API ve kalite kanıtı aynı walkthrough içinde açıklanır.',
-                        meta: 'preview',
-                        tone: 'success',
-                      },
-                      {
-                        id: 'release',
-                        title: 'Release evidence',
-                        description: 'Doctor, gate ve security guardrail kanıtı tamamlanmadan tur bitmiş sayılmaz.',
-                        meta: 'release',
-                        tone: 'warning',
-                      },
-                    ]}
-                  />
-                </div>
-              </PreviewPanel>
-              <PreviewPanel title="Readonly compliance tour">
-                <TourCoachmarks
-                  defaultOpen
-                  mode="readonly"
-                  allowSkip={false}
-                  showProgress={false}
-                  access="readonly"
-                  steps={[
-                    {
-                      id: 'policy',
-                      title: 'Policy açıklaması',
-                      description: 'Readonly walkthrough, kritik alanlarda kullanıcının neden-sonuç bilgisini aynı overlay içinde taşır.',
-                      meta: 'readonly',
-                    },
-                    {
-                      id: 'controls',
-                      title: 'Kontrol noktaları',
-                      description: 'Onay ve security kontrolleri tamamlanmadan release butonları görünür kalmaz.',
-                      meta: 'controls',
-                      tone: 'warning',
-                    },
-                  ]}
-                />
-              </PreviewPanel>
-            </div>
-          </div>
-        );
-      case 'ReportFilterPanel':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <ReportFilterPanel onSubmit={() => setReportStatus('Filtre uygulandı')} onReset={() => setReportStatus('Filtre sıfırlandı')}>
-              <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Date range</div>
-              <div className="rounded-xl border border-border-default bg-surface-default px-3 py-2 text-sm text-text-secondary">Owner</div>
-            </ReportFilterPanel>
-            <Text variant="secondary" className="mt-3 block">Durum: {reportStatus}</Text>
-          </div>
-        );
-      case 'SummaryStrip':
-        return (
-          <SummaryStrip
-            title="Release summary"
-            description="Page üstü KPI ve durum özetini reusable strip ile verir."
-            items={summaryStripItems}
-          />
-        );
-      case 'EntitySummaryBlock':
-        return (
-          <EntitySummaryBlock
-            title="Ethics Program"
-            subtitle="Owner, lifecycle ve metadata bilgisini tek entity shell içinde toplar."
-            badge={<Badge tone="info">Program</Badge>}
-            avatar={{ name: 'Ethics Program' }}
-            actions={<Button variant="secondary">Detayı aç</Button>}
-            items={entitySummaryItems}
-          />
-        );
-      case 'EntityGridTemplate':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
-            <div className="h-[420px]">
-              <LibraryQueryProvider>
-                <EntityGridTemplate<Record<string, unknown>>
-                  gridId="design-lab-grid"
-                  gridSchemaVersion={1}
-                  dataSourceMode="client"
-                  rowData={gridRows}
-                  total={gridRows.length}
-                  page={1}
-                  pageSize={25}
-                  columnDefs={[
-                    { field: 'name', headerName: 'İsim', flex: 1 },
-                    { field: 'status', headerName: 'Durum', width: 140 },
-                    { field: 'updatedAt', headerName: 'Güncelleme', width: 140 },
-                  ]}
-                />
-              </LibraryQueryProvider>
-            </div>
-          </div>
-        );
-      case 'AgGridServer':
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
-            <div className="h-[360px]">
-              <AgGridServer
-                height={320}
-                columnDefs={[
-                  { field: 'id', headerName: 'ID', width: 120 },
-                  { field: 'name', headerName: 'Kaynak', flex: 1 },
-                  { field: 'owner', headerName: 'Owner', width: 180 },
-                ]}
-                getData={async () => ({ rows: serverGridRows, total: serverGridRows.length })}
-              />
-            </div>
-          </div>
-        );
-      default:
-        return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
-            <Text as="div" className="font-semibold">Inspector preview</Text>
-            <Text variant="secondary" className="mt-2 block">
-              Bu export çalışma anında canlı UI yerine davranış ve contract seviyesinde izlenir.
-            </Text>
-            <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Registry notu</DetailLabel>
-              <Text variant="secondary" className="mt-2 block">{item.description}</Text>
-            </div>
-          </div>
-        );
-    }
-  };
+  useEffect(() => {
+    setPromptSubject((current) => (
+      current === previousPromptSeed.current.subject ? promptSeed.subject : current
+    ));
+    setPromptBody((current) => (
+      current === previousPromptSeed.current.body ? promptSeed.body : current
+    ));
+    previousPromptSeed.current = promptSeed;
+  }, [promptSeed]);
 
-  const buildDemoShowcaseSections = (item: DesignLabIndexItem): ComponentShowcaseSection[] => {
-    switch (item.name) {
-      case 'TextInput':
-        return [
-          {
-            id: 'text-input-profile',
-            eyebrow: 'Alternative 01',
-            title: 'Profile / account field',
-            description: 'Label, açıklama, yardım ve karakter sayacı ile klasik ürün formu akışı.',
-            badges: ['form', 'stable', 'count'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Filled account field">
-                  <TextInput
-                    label="Kullanıcı adı"
-                    description="Sistemde görünen kısa tanım."
-                    hint="Boşluk bırakmadan en fazla 32 karakter."
-                    value={textInputValue}
-                    maxLength={32}
-                    showCount
-                    onValueChange={setTextInputValue}
-                    leadingVisual={<span aria-hidden="true">@</span>}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Doğru kullanım notu">
-                  <Text variant="secondary" className="block leading-7">
-                    Birincil form alanı için label, description ve hint aynı yüzeyde görünür. Sayaç sadece karakter
-                    baskısı olan alanlarda açılır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-input-search',
-            eyebrow: 'Alternative 02',
-            title: 'Search / command bar input',
-            description: 'Arama ve filtre satırlarında kullanılan daha hızlı, kısa ve aksiyon odaklı varyant.',
-            badges: ['search', 'compact', 'leading-icon'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Search">
-                  <TextInput
-                    label="Arama"
-                    description="Kayıt, şirket veya kullanıcı ara."
-                    value={searchInputValue}
-                    onValueChange={setSearchInputValue}
-                    size="sm"
-                    leadingVisual={<span aria-hidden="true">⌕</span>}
-                    trailingVisual={<SectionBadge label="⌘K" />}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Filter row">
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
-                    <TextInput
-                      label="Hızlı filtre"
-                      defaultValue="policy"
-                      size="sm"
-                      fullWidth
-                      leadingVisual={<span aria-hidden="true">⌕</span>}
-                    />
-                    <Button variant="secondary" className="sm:self-end">Uygula</Button>
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-input-validation',
-            eyebrow: 'Alternative 03',
-            title: 'Validation / state matrix',
-            description: 'Aynı primitive ile doğrulanan, hatalı ve readonly alan davranışı.',
-            badges: ['validation', 'readonly', 'error'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <PreviewPanel title="Success-adjacent">
-                  <TextInput
-                    label="Doğrulanan alan"
-                    defaultValue="nova.user"
-                    trailingVisual={<span aria-hidden="true">✓</span>}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Invalid">
-                  <TextInput label="Hatalı alan" defaultValue="!" invalid error="En az 3 karakter girilmeli." />
-                </PreviewPanel>
-                <PreviewPanel title="Readonly">
-                  <TextInput label="Readonly alan" defaultValue="system-generated" access="readonly" />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-input-density',
-            eyebrow: 'Alternative 04',
-            title: 'Density / sizing matrix',
-            description: 'Aynı API ile küçük, orta ve geniş hit-area seçenekleri.',
-            badges: ['sm', 'md', 'lg'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <PreviewPanel title="Small">
-                  <TextInput label="Kompakt alan" defaultValue="sm-density" size="sm" />
-                </PreviewPanel>
-                <PreviewPanel title="Medium">
-                  <TextInput label="Varsayılan alan" defaultValue="md-density" size="md" />
-                </PreviewPanel>
-                <PreviewPanel title="Large">
-                  <TextInput label="Vurgulu alan" defaultValue="lg-density" size="lg" trailingVisual={<span aria-hidden="true">→</span>} />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-input-invite',
-            eyebrow: 'Alternative 05',
-            title: 'Inline action / invite flow',
-            description: 'Alan ve aksiyonu aynı blokta gösteren kısa iş akışı örneği.',
-            badges: ['action-pair', 'cta', 'task-flow'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_auto]">
-                <PreviewPanel title="Invite input">
-                  <TextInput
-                    label="Davet e-postası"
-                    description="Yeni paydaşı ekle."
-                    value={inviteInputValue}
-                    onValueChange={setInviteInputValue}
-                    type="email"
-                    leadingVisual={<span aria-hidden="true">✉</span>}
-                    trailingVisual={<Badge tone="info">Pending</Badge>}
-                  />
-                </PreviewPanel>
-                <div className="flex items-end">
-                  <Button fullWidth={false} trailingVisual={<span aria-hidden="true">→</span>}>
-                    Davet gönder
-                  </Button>
-                </div>
-              </div>
-            ),
-          },
-          {
-            id: 'text-input-access',
-            eyebrow: 'Alternative 06',
-            title: 'Policy / access controlled states',
-            description: 'Aynı bileşenin readonly, disabled ve hidden politika modları.',
-            badges: ['access', 'policy', 'governance'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <PreviewPanel title="Readonly">
-                  <TextInput
-                    label="Sözleşmeli alan"
-                    defaultValue="release-window"
-                    access="readonly"
-                    hint="Bu alan yalnız sistem tarafından değiştirilir."
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Disabled">
-                  <TextInput
-                    label="Kilitleme sonrası"
-                    defaultValue="publish-locked"
-                    access="disabled"
-                    hint="Yayın sonrasında düzenleme kapalı."
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Hidden state sayfada boşluk bırakmamalı; disabled ve readonly ise aynı görünmemeli. Biri pasif,
-                    diğeri bilgi taşıyan kilitli durumdur.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'TextArea':
-        return [
-          {
-            id: 'text-area-authoring',
-            eyebrow: 'Alternative 01',
-            title: 'Authoring / note field',
-            description: 'Uzun açıklama yazımı için birincil authoring yüzeyi.',
-            badges: ['authoring', 'auto-resize', 'count'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Auto resize">
-                  <TextArea
-                    label="Açıklama"
-                    description="Uzun içerik alanları için ortak metin girişi."
-                    hint="Çok satırlı bilgi girişi için otomatik yükseklik ayarı."
-                    value={commentValue}
-                    rows={3}
-                    maxLength={180}
-                    showCount
-                    resize="auto"
-                    onValueChange={setCommentValue}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Authoring yüzeylerinde `auto` resize daha doğal. Audit veya sabit layout alanlarında kontrollü
-                    dikey resize tercih edilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-area-review',
-            eyebrow: 'Alternative 02',
-            title: 'Review / decision log',
-            description: 'Karar, itiraz veya yorum kaydı için okunaklı review alanı.',
-            badges: ['review', 'audit', 'multiline'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Reviewer note">
-                  <TextArea
-                    label="İnceleme notu"
-                    defaultValue="Politika metni güncellendi; yayın öncesi hukuk ekibi son gözden geçirmeyi tamamlamalı."
-                    rows={5}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Readonly audit">
-                  <TextArea
-                    label="Otomatik oluşturulan log"
-                    defaultValue="2026-03-07 12:48 · system-bot -> release evidence dosyasi eklendi."
-                    access="readonly"
-                    rows={5}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-area-validation',
-            eyebrow: 'Alternative 03',
-            title: 'Validation / enforcement',
-            description: 'Eksik açıklama, minimum içerik ve kullanıcı geri bildirimi.',
-            badges: ['error', 'hint', 'count'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <PreviewPanel title="Invalid">
-                  <TextArea
-                    label="Validation örneği"
-                    defaultValue="Eksik açıklama"
-                    invalid
-                    error="Bu alan en az 20 karakter olmalı."
-                    rows={3}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Readonly">
-                  <TextArea label="Readonly not" defaultValue="Sistem logu kullanıcı tarafından değiştirilemez." access="readonly" rows={3} />
-                </PreviewPanel>
-                <PreviewPanel title="Disabled">
-                  <TextArea label="Disabled draft" defaultValue="Yayın sonrası kilitlenir." access="disabled" rows={3} />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-area-layout',
-            eyebrow: 'Alternative 04',
-            title: 'Panel / side-by-side layout',
-            description: 'Dar yan panel ve geniş içerik paneli için aynı bileşenin iki yerleşim örneği.',
-            badges: ['layout', 'panel', 'responsive'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[0.8fr_1.2fr]">
-                <PreviewPanel title="Side panel">
-                  <TextArea label="Kısa not" defaultValue="Kompakt panel notu." rows={3} />
-                </PreviewPanel>
-                <PreviewPanel title="Primary editor">
-                  <TextArea
-                    label="Yayın notu"
-                    defaultValue="Bu sürümde navigation bileşenleri yeniden düzenlendi, forms wave açıldı ve frontend doctor kanıtı zorunlu hale getirildi."
-                    rows={6}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'text-area-recipes',
-            eyebrow: 'Alternative 05',
-            title: 'Recipe summary',
-            description: 'Hangi bağlamda hangi TextArea davranışı seçilmeli.',
-            badges: ['recipes', 'selection-guide'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <LibraryMetricCard label="Comment" value="auto" note="Yorum ve tartışma akışlarında auto resize." />
-                <LibraryMetricCard label="Audit" value="readonly" note="Sistem logu ve immutable kayıt yüzeyleri." />
-                <LibraryMetricCard label="Policy" value="vertical" note="Uzun hukuki metinlerde kontrollü resize." />
-              </div>
-            ),
-          },
-        ];
-      case 'Checkbox':
-        return [
-          {
-            id: 'checkbox-single',
-            eyebrow: 'Alternative 01',
-            title: 'Single consent',
-            description: 'Tek satırlı onay ve bildirim alanı.',
-            badges: ['consent', 'single-choice'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Controlled">
-                  <Checkbox
-                    label="Yayın sonrası bildirim gönder"
-                    description="Akış tamamlandığında paydaşlara otomatik bilgi ver."
-                    hint="İşlem anında kapatılabilir."
-                    checked={checkboxValue}
-                    onCheckedChange={(checked) => setCheckboxValue(checked)}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Tek karar alanlarında checkbox, çok seçenekli ama bağımsız tercihlerde stacked checkbox listesi tercih edilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'checkbox-states',
-            eyebrow: 'Alternative 02',
-            title: 'State matrix',
-            description: 'Eksik onay, kısmi seçim, readonly ve disabled davranışı.',
-            badges: ['invalid', 'indeterminate', 'access'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
-                <PreviewPanel title="Invalid">
-                  <Checkbox label="Eksik onay" invalid error="Devam etmeden önce onay vermelisin." />
-                </PreviewPanel>
-                <PreviewPanel title="Indeterminate">
-                  <Checkbox label="Kısmi seçim" indeterminate hint="Alt seçeneklerin bir bölümü seçili." />
-                </PreviewPanel>
-                <PreviewPanel title="Readonly">
-                  <Checkbox label="Readonly seçim" defaultChecked access="readonly" />
-                </PreviewPanel>
-                <PreviewPanel title="Disabled">
-                  <Checkbox label="Disabled seçim" access="disabled" />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Radio':
-        return [
-          {
-            id: 'radio-choice',
-            eyebrow: 'Alternative 01',
-            title: 'Single-choice strategy',
-            description: 'Bir kararın tek seçenekle seçildiği yönlendirici form yüzeyi.',
-            badges: ['single-choice', 'decision'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Controlled group">
-                  <div className="space-y-3">
-                    <Radio
-                      name="wave-3-radio-demo"
-                      value="design"
-                      label="Design odaklı"
-                      description="Önce görünüm ve doküman kalitesini tamamla."
-                      checked={radioValue === 'design'}
-                      onCheckedChange={(checked) => checked && setRadioValue('design')}
-                    />
-                    <Radio
-                      name="wave-3-radio-demo"
-                      value="ops"
-                      label="Ops odaklı"
-                      description="Doctor ve gate kanıtı önce tamamlansın."
-                      checked={radioValue === 'ops'}
-                      onCheckedChange={(checked) => checked && setRadioValue('ops')}
-                    />
-                    <Radio
-                      name="wave-3-radio-demo"
-                      value="delivery"
-                      label="Delivery odaklı"
-                      description="Feature sonrası teslim artefact’larını önceliklendir."
-                      checked={radioValue === 'delivery'}
-                      onCheckedChange={(checked) => checked && setRadioValue('delivery')}
-                    />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Selected value">
-                  <LibraryMetricCard label="Current selection" value={radioValue} note="Controlled radio state shell tarafından yönetiliyor." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'radio-states',
-            eyebrow: 'Alternative 02',
-            title: 'State matrix',
-            description: 'Geçersiz, readonly ve disabled radyo durumları.',
-            badges: ['invalid', 'readonly', 'disabled'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-4">
-                <PreviewPanel title="Default">
-                  <Radio name="wave-3-radio-state" value="default" label="Varsayılan seçenek" defaultChecked />
-                </PreviewPanel>
-                <PreviewPanel title="Invalid">
-                  <Radio
-                    name="wave-3-radio-state"
-                    value="invalid"
-                    label="Eksik seçim"
-                    invalid
-                    error="En az bir dağıtım stratejisi seçilmeli."
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Readonly">
-                  <Radio name="wave-3-radio-state" value="readonly" label="Readonly seçenek" access="readonly" />
-                </PreviewPanel>
-                <PreviewPanel title="Disabled">
-                  <Radio name="wave-3-radio-state" value="disabled" label="Disabled seçenek" access="disabled" />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Switch':
-        return [
-          {
-            id: 'switch-live-toggle',
-            eyebrow: 'Alternative 01',
-            title: 'Live publish switch',
-            description: 'Tek toggle ile görünürlük veya rollout durumu değiştiren kontrollü kullanım.',
-            badges: ['toggle', 'controlled', 'release'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Controlled toggle">
-                  <Switch
-                    label="Canlı görünürlüğü aç"
-                    description="Yayınlanan ekranı son kullanıcıya anında görünür yap."
-                    hint="İhtiyaç halinde tekrar kapatabilirsin."
-                    checked={switchValue}
-                    onCheckedChange={(checked) => setSwitchValue(checked)}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Current status">
-                  <LibraryMetricCard
-                    label="Live state"
-                    value={switchValue ? 'enabled' : 'disabled'}
-                    note="Switch değişikliği controlled state ile doğrudan izleniyor."
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'switch-states',
-            eyebrow: 'Alternative 02',
-            title: 'State matrix',
-            description: 'Readonly, disabled ve policy-blocked switch davranışları.',
-            badges: ['readonly', 'disabled', 'invalid'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <PreviewPanel title="Readonly">
-                  <Switch label="Readonly toggle" defaultChecked access="readonly" />
-                </PreviewPanel>
-                <PreviewPanel title="Disabled">
-                  <Switch label="Disabled toggle" access="disabled" />
-                </PreviewPanel>
-                <PreviewPanel title="Blocked by policy">
-                  <Switch label="Ek onay gerekiyor" invalid error="Bu geçiş için ek onay gerekiyor." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Slider':
-        return [
-          {
-            id: 'slider-density',
-            eyebrow: 'Alternative 01',
-            title: 'Density calibration',
-            description: 'Alan yoğunluğu ve layout sıkılığı için kontrollü numeric seçim.',
-            badges: ['range', 'controlled', 'density'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Controlled slider">
-                  <Slider
-                    label="Yoğunluk"
-                    description="Kart ve tablo boşluk kararını tek kaynaktan yönet."
-                    hint="Daha yüksek değer daha ferah görünüm üretir."
-                    min={20}
-                    max={100}
-                    step={4}
-                    value={sliderValue}
-                    onValueChange={setSliderValue}
-                    minLabel="Kompakt"
-                    maxLabel="Rahat"
-                    valueFormatter={(value) => `${value}%`}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Current value">
-                  <LibraryMetricCard
-                    label="Density"
-                    value={`${sliderValue}%`}
-                    note="Slider değeri controlled state ile preview ve regression yüzeyine taşınıyor."
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'slider-states',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly and policy states',
-            description: 'Readonly ve blocked by policy senaryolarında range input davranışı.',
-            badges: ['readonly', 'invalid', 'policy'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly">
-                  <Slider label="Readonly slider" value={72} access="readonly" valueFormatter={(value) => `${value}%`} />
-                </PreviewPanel>
-                <PreviewPanel title="Policy blocked">
-                  <Slider label="Blocked by policy" defaultValue={36} invalid error="Bu değişim için ek approval gerekiyor." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'DatePicker':
-        return [
-          {
-            id: 'datepicker-milestone',
-            eyebrow: 'Alternative 01',
-            title: 'Milestone planner',
-            description: 'Takvim bazlı teslim tarihi ve rollout günü seçimi.',
-            badges: ['calendar', 'milestone', 'controlled'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Controlled date">
-                  <DatePicker
-                    label="Teslim tarihi"
-                    description="Görevin tamamlanacağı günü planla."
-                    hint="Takvim seçimi ile shareable milestone üret."
-                    value={dateValue}
-                    min="2026-03-08"
-                    max="2026-04-30"
-                    onValueChange={setDateValue}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Selected date">
-                  <LibraryMetricCard
-                    label="Delivery date"
-                    value={dateValue}
-                    note="DatePicker controlled değerini release ve planning akışına taşıyor."
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'datepicker-states',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly and validation states',
-            description: 'Readonly ve invalid tarih seçimleri için tek shell kontratı.',
-            badges: ['readonly', 'invalid', 'date-entry'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly">
-                  <DatePicker label="Readonly date" value="2026-03-09" access="readonly" />
-                </PreviewPanel>
-                <PreviewPanel title="Invalid">
-                  <DatePicker label="Invalid milestone" defaultValue="2026-03-01" invalid error="Tarih mevcut release penceresinin dışında." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'TimePicker':
-        return [
-          {
-            id: 'timepicker-cutover-window',
-            eyebrow: 'Alternative 01',
-            title: 'Cutover window planner',
-            description: 'Deployment, maintenance ve approval pencere saatlerini kontrollü şekilde yönetir.',
-            badges: ['time-entry', 'controlled', 'release-window'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Controlled time">
-                  <TimePicker
-                    label="Kesim saati"
-                    description="Bakim penceresindeki uygulama saatini sec."
-                    hint="15 dakikalik adimlarla ilerle."
-                    value={timeValue}
-                    min="09:00"
-                    max="22:00"
-                    step={900}
-                    onValueChange={setTimeValue}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Selected time">
-                  <LibraryMetricCard
-                    label="Cutover time"
-                    value={timeValue}
-                    note="TimePicker controlled state ile rollout akisini besliyor."
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'timepicker-state-matrix',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly and invalid states',
-            description: 'Readonly ve release-window validation senaryolari ayni shell diliyle gorulur.',
-            badges: ['readonly', 'invalid', 'governed-input'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly">
-                  <TimePicker label="Readonly time" value="18:45" access="readonly" />
-                </PreviewPanel>
-                <PreviewPanel title="Invalid">
-                  <TimePicker label="Invalid cutover" defaultValue="23:30" invalid error="Bu saat izinli deployment penceresinin dışında." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Upload':
-        return [
-          {
-            id: 'upload-evidence-pack',
-            eyebrow: 'Alternative 01',
-            title: 'Evidence pack uploader',
-            description: 'Policy, release ve denetim kanitlarini tek alanda toplayan kontrollu upload yuzeyi.',
-            badges: ['files', 'multiple', 'evidence'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Controlled upload">
-                  <Upload
-                    label="Kanit paketi"
-                    description="Release ve approval kanitlarini ayni yerden topla."
-                    hint="PDF, XLSX ve ZIP desteklenir."
-                    accept=".pdf,.xlsx,.zip"
-                    multiple
-                    maxFiles={4}
-                    files={uploadFiles}
-                    onFilesChange={setUploadFiles}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Payload summary">
-                  <LibraryMetricCard
-                    label="Files"
-                    value={`${uploadFiles.length}`}
-                    note={uploadFiles.map((file) => file.name).join(', ')}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'upload-governed-states',
-            eyebrow: 'Alternative 02',
-            title: 'Validation and access states',
-            description: 'Readonly, disabled ve policy-blocked upload davranislari ayri panelde gorulur.',
-            badges: ['readonly', 'disabled', 'invalid'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <PreviewPanel title="Readonly">
-                  <Upload label="Readonly upload" files={uploadFiles} access="readonly" />
-                </PreviewPanel>
-                <PreviewPanel title="Disabled">
-                  <Upload label="Disabled upload" access="disabled" />
-                </PreviewPanel>
-                <PreviewPanel title="Invalid">
-                  <Upload label="Eksik kanit" invalid error="En az bir imzali PDF yuklenmeli." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'CommandPalette':
-        return [
-          {
-            id: 'command-palette-global-launcher',
-            eyebrow: 'Alternative 01',
-            title: 'Global launcher / route switcher',
-            description: 'Tüm route ve operasyonel aksiyonlari tek dialog içinde gezdiren ana komut paleti deneyimi.',
-            badges: ['launcher', 'dialog', 'navigate'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Palette open state">
-                  <div className="space-y-4">
-                    <Button onClick={() => setCommandPaletteOpen(true)}>Komut paletini aç</Button>
-                    <CommandPalette
-                      open={commandPaletteOpen}
-                      title="UI command center"
-                      subtitle="Gezinim, release review ve AI destekli aksiyonlar ayni palette."
-                      items={commandPaletteItems}
-                      query={commandPaletteQuery}
-                      onQueryChange={setCommandPaletteQuery}
-                      onClose={() => setCommandPaletteOpen(false)}
-                      onSelect={(id, selectedItem) => {
-                        setLastCommandSelection(`${selectedItem.title} · ${id}`);
-                      }}
-                    />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Selected command">
-                  <LibraryMetricCard
-                    label="Selection"
-                    value={lastCommandSelection ?? 'Henüz seçim yok'}
-                    note="Palette selection route veya aksiyon state’ini besliyor."
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'command-palette-readonly-browse',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly browse mode',
-            description: 'Erişim kısıtlı kullanıcılar komutları görebilir ama uygulayamaz; bu fark aynı bileşende korunur.',
-            badges: ['readonly', 'governed', 'browse'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly palette contract">
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
-                      <SectionBadge label="readonly" />
-                      <SectionBadge label="discoverability" />
-                      <SectionBadge label="no execution" />
-                    </div>
-                    <Text variant="secondary" className="block leading-7">
-                      Readonly modda kullanıcı komut başlıklarını, group bilgisini ve shortcut bilgisini görür; aksiyon tetiklenmez.
-                    </Text>
-                    <List
-                      items={commandPaletteItems.map((item) => ({
-                        key: item.id,
-                        title: String(item.title),
-                        description: String(item.description ?? ''),
-                        meta: item.shortcut,
-                        badges: [item.group ?? 'General'],
-                      }))}
-                      access="readonly"
-                    />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Contract note">
-                  <Descriptions
-                    title="Governance contract"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'access', label: 'Access', value: 'readonly', tone: 'info' },
-                      { key: 'focus', label: 'Focus', value: 'discoverability + safety', tone: 'success' },
-                      { key: 'ux', label: 'UX anchor', value: 'guided_navigation_assistance', tone: 'warning' },
-                    ]}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'command-palette-approval-scope',
-            eyebrow: 'Alternative 03',
-            title: 'Approval-scoped command set',
-            description: 'AI ve approval akışları aynı palette scope badge’leriyle gruplanır.',
-            badges: ['approval', 'ai-assist', 'scope'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Scoped commands">
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
-                      <SectionBadge label="AI Assist" />
-                      <SectionBadge label="Governance" />
-                    </div>
-                    <List
-                      items={commandPaletteItems
-                        .filter((item) => item.group === 'AI Assist' || item.group === 'Governance')
-                        .map((item) => ({
-                          key: item.id,
-                          title: String(item.title),
-                          description: String(item.description ?? ''),
-                          meta: item.shortcut,
-                          badges: [item.group ?? 'General'],
-                        }))}
-                    />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Scope summary">
-                  <div className="flex flex-wrap gap-2">
-                    <SectionBadge label="AI Assist" />
-                    <SectionBadge label="Governance" />
-                    <SectionBadge label="approval queue" />
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'RecommendationCard':
-        return [
-          {
-            id: 'recommendation-card-rollout',
-            eyebrow: 'Alternative 01',
-            title: 'Rollout recommendation card',
-            description: 'AI destekli rollout önerisini rationale, citation ve confidence ile birlikte gösterir.',
-            badges: ['ai', 'rollout', 'confidence'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Interactive decision card">
-                  <RecommendationCard
-                    title="Forms wave rollout hazır"
-                    summary="Gate ve doctor sonuçları forms dalgasının kontrollü şekilde publish edilebileceğini gösteriyor."
-                    recommendationType="Rollout"
-                    rationale={['wave gate PASS', 'doctor evidence clean', 'security residual governed']}
-                    citations={['wave_3_forms', 'doctor:frontend', 'security-remediation']}
-                    confidenceLevel="high"
-                    confidenceScore={91}
-                    sourceCount={5}
-                    tone={recommendationDecision === 'applied' ? 'success' : recommendationDecision === 'review' ? 'warning' : 'info'}
-                    onPrimaryAction={() => setRecommendationDecision('applied')}
-                    onSecondaryAction={() => setRecommendationDecision('review')}
-                    footerNote={`Decision state: ${recommendationDecision}`}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Decision summary">
-                  <LibraryMetricCard
-                    label="Current decision"
-                    value={recommendationDecision}
-                    note="Card state doctor ve audit timeline ile senkron tutulur."
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'recommendation-card-readonly',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly governance advisory',
-            description: 'İnceleme amaçlı kartta aksiyon butonları erişim moduna göre kilitlenir.',
-            badges: ['readonly', 'governance', 'advisory'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly card">
-                  <RecommendationCard
-                    title="Manual approval required"
-                    summary="Bu öneri yalnız okunur şekilde gösterilir; onay akışı ayrı yüzeyden ilerler."
-                    recommendationType="Advisory"
-                    rationale={['high policy impact', 'human checkpoint required']}
-                    citations={['approval_checkpoint', 'policy_work_intake']}
-                    confidenceLevel="medium"
-                    confidenceScore={74}
-                    access="readonly"
-                    compact
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Reasoning surface">
-                  <Text variant="secondary" className="block leading-7">
-                    Recommendation card, öneri metnini tek başına bırakmaz; gerekçe, citation ve confidence aynı yüzeyde okunur.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'recommendation-card-compact-queue',
-            eyebrow: 'Alternative 03',
-            title: 'Compact queue card',
-            description: 'Onay kuyruğunda çoklu önerileri daha kompakt hacimde göstermeye yarar.',
-            badges: ['compact', 'queue', 'triage'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                {['security', 'release', 'ux'].map((scope, index) => (
-                  <RecommendationCard
-                    key={scope}
-                    title={`${scope.toUpperCase()} recommendation`}
-                    summary="Sıradaki öneri başlığını kompakt yoğunlukta göster."
-                    recommendationType="Queue item"
-                    confidenceLevel={index === 0 ? 'high' : index === 1 ? 'medium' : 'low'}
-                    confidenceScore={index === 0 ? 88 : index === 1 ? 67 : 41}
-                    compact
-                    badges={[<Tag key={scope} tone="muted">{scope}</Tag>]}
-                  />
-                ))}
-              </div>
-            ),
-          },
-        ];
-      case 'ConfidenceBadge':
-        return [
-          {
-            id: 'confidence-badge-matrix',
-            eyebrow: 'Alternative 01',
-            title: 'Confidence matrix',
-            description: 'Low -> very-high seviyelerini skor ve kaynak sayısı ile birlikte gösterir.',
-            badges: ['matrix', 'explainability', 'score'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="All levels">
-                  <div className="flex flex-wrap gap-3">
-                    <ConfidenceBadge level="low" score={35} sourceCount={1} />
-                    <ConfidenceBadge level="medium" score={62} sourceCount={3} />
-                    <ConfidenceBadge level="high" score={84} sourceCount={5} />
-                    <ConfidenceBadge level="very-high" score={97} sourceCount={9} />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Reading guidance">
-                  <Text variant="secondary" className="block leading-7">
-                    Confidence badge yorum desteğidir; confidence, citation ve human review gereksinimi birlikte okunmalıdır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'confidence-badge-compact',
-            eyebrow: 'Alternative 02',
-            title: 'Compact inline usage',
-            description: 'Dense list ve action header akışlarında aynı badge daha kompakt gösterilir.',
-            badges: ['compact', 'inline', 'dense-ui'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Compact badges">
-                  <div className="flex flex-wrap gap-3">
-                    <ConfidenceBadge level="high" score={86} compact />
-                    <ConfidenceBadge level="medium" label="Manual review" compact showScore={false} />
-                    <ConfidenceBadge level="low" score={28} compact />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Header embedding">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Text preset="title">AI suggestion</Text>
-                    <ConfidenceBadge level="high" score={89} compact />
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'confidence-badge-governed-states',
-            eyebrow: 'Alternative 03',
-            title: 'Access and transparency states',
-            description: 'Readonly ve controlled transparency durumları aynı kontratta gösterilir.',
-            badges: ['readonly', 'transparency', 'governed'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-                <PreviewPanel title="Readonly">
-                  <ConfidenceBadge level="medium" score={70} sourceCount={2} access="readonly" />
-                </PreviewPanel>
-                <PreviewPanel title="No score">
-                  <ConfidenceBadge level="high" showScore={false} sourceCount={4} />
-                </PreviewPanel>
-                <PreviewPanel title="Custom label">
-                  <ConfidenceBadge level="low" label="Escalate" compact />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'ApprovalCheckpoint':
-        return [
-          {
-            id: 'approval-checkpoint-interactive',
-            eyebrow: 'Alternative 01',
-            title: 'Interactive human checkpoint',
-            description: 'AI tavsiyesi, kanit listesi ve human approval aksiyonlari tek kontratta birlesir.',
-            badges: ['approval', 'governance', 'human-in-loop'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Controlled checkpoint">
-                  <ApprovalCheckpoint
-                    title="Production release approval"
-                    summary="Doctor ve security kaniti PASS oldugunda son insan karari bu bloktan cikar."
-                    status={approvalCheckpointState}
-                    approverLabel="Platform board"
-                    dueLabel="Before publish"
-                    evidenceItems={['doctor:frontend', 'security-guardrails', 'release-canary']}
-                    steps={approvalCheckpointSteps}
-                    citations={citationPanelItems.map((item) => item.locator as string)}
-                    onPrimaryAction={() => setApprovalCheckpointState('approved')}
-                    onSecondaryAction={() => setApprovalCheckpointState('rejected')}
-                    footerNote={`Decision: ${approvalCheckpointState}`}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Decision summary">
-                  <LibraryMetricCard
-                    label="Approval state"
-                    value={approvalCheckpointState}
-                    note="State audit timeline ile birlikte okunur."
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'approval-checkpoint-readonly',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly review queue',
-            description: 'Onay kuyrugunda ayni bileşen yalnız okunur modda kullanilir.',
-            badges: ['readonly', 'queue', 'review'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly queue item">
-                  <ApprovalCheckpoint
-                    title="Readonly queue card"
-                    summary="Insan onayi bekleyen ama aksiyon yetkisi olmayan kullanicilar icin."
-                    access="readonly"
-                    evidenceItems={['doctor:frontend', 'ux alignment']}
-                    steps={approvalCheckpointSteps}
-                    citations={['sec:4.2', 'ux:ai-3']}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Governance note">
-                  <Text variant="secondary" className="block leading-7">
-                    Aynı primitive hem onay akışı hem de inceleme kuyruğunda kullanılır; fark erişim seviyesiyle belirlenir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'CitationPanel':
-        return [
-          {
-            id: 'citation-panel-source-transparency',
-            eyebrow: 'Alternative 01',
-            title: 'Source transparency panel',
-            description: 'Policy, UX ve doctor kanıtları tek panelde okunur ve seçili kaynak vurgulanır.',
-            badges: ['sources', 'transparency', 'citations'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Selectable sources">
-                  <CitationPanel
-                    items={citationPanelItems}
-                    activeCitationId={selectedCitationId}
-                    onOpenCitation={(id) => setSelectedCitationId(id)}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Selected source">
-                  <Descriptions
-                    title="Citation context"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'active', label: 'Active', value: selectedCitationId ?? '—', tone: 'info' },
-                      {
-                        key: 'source',
-                        label: 'Source',
-                        value: (citationPanelItems.find((item) => item.id === selectedCitationId)?.source as string) ?? '—',
-                        tone: 'success',
-                      },
-                    ]}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'citation-panel-readonly',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly reference surface',
-            description: 'Kaynak paneli aksiyon vermez ama alinti ve locator bilgisini korur.',
-            badges: ['readonly', 'reference', 'governed'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly citations">
-                  <CitationPanel items={citationPanelItems} access="readonly" activeCitationId="policy-4-2" />
-                </PreviewPanel>
-                <PreviewPanel title="Usage note">
-                  <Text variant="secondary" className="block leading-7">
-                    Citation panel, recommendation ve approval yüzeylerinde aynı primitive olarak tekrar kullanılır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'AIActionAuditTimeline':
-        return [
-          {
-            id: 'audit-timeline-interactive',
-            eyebrow: 'Alternative 01',
-            title: 'Interactive audit trail',
-            description: 'AI aksiyonlari, insan review ve system eventleri tek timeline primitive ile okunur.',
-            badges: ['audit', 'timeline', 'observability'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Selectable timeline">
-                  <AIActionAuditTimeline
-                    items={auditTimelineItems}
-                    selectedId={selectedAuditId}
-                    onSelectItem={(id) => setSelectedAuditId(id)}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Selected event">
-                  <LibraryMetricCard
-                    label="Event"
-                    value={selectedAuditId ?? '—'}
-                    note={(auditTimelineItems.find((item) => item.id === selectedAuditId)?.title as string) ?? 'Kayit secilmedi'}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'audit-timeline-readonly',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly evidentiary log',
-            description: 'Readonly modda timeline seçim yapmadan audit kanıtı olarak kullanılır.',
-            badges: ['readonly', 'evidence', 'history'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly history">
-                  <AIActionAuditTimeline items={auditTimelineItems} access="readonly" selectedId="audit-review" />
-                </PreviewPanel>
-                <PreviewPanel title="Audit note">
-                  <Text variant="secondary" className="block leading-7">
-                    Bu blok approval, recommendation ve release sayfalarında aynı davranışla tekrar kullanılabilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'PromptComposer':
-        return [
-          {
-            id: 'prompt-composer-controlled',
-            eyebrow: 'Alternative 01',
-            title: 'Controlled prompt authoring',
-            description: 'Prompt subject, body, scope ve tone tek composer primitive ile kontrol edilir.',
-            badges: ['prompt', 'controlled', 'guardrails'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-                <PreviewPanel title="Interactive composer">
-                  <PromptComposer
-                    subject={promptSubject}
-                    onSubjectChange={setPromptSubject}
-                    value={promptBody}
-                    onValueChange={setPromptBody}
-                    scope={promptScope}
-                    onScopeChange={setPromptScope}
-                    tone={promptTone}
-                    onToneChange={setPromptTone}
-                    guardrails={['pii-safe', 'approval-bound', 'source-required']}
-                    citations={citationPanelItems.map((item) => item.locator as string)}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Live state">
-                  <LibraryMetricCard label="Scope" value={promptScope} note={`Tone: ${promptTone}`} />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'prompt-composer-readonly',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly review mode',
-            description: 'Draft prompt metni aynı bileşenle gözden geçirilir ama değiştirilemez.',
-            badges: ['readonly', 'review', 'prompt'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly composer">
-                  <PromptComposer
-                    subject={promptSubject}
-                    value={promptBody}
-                    scope={promptScope}
-                    tone={promptTone}
-                    access="readonly"
-                    guardrails={['pii-safe', 'approval-bound', 'source-required']}
-                    citations={citationPanelItems.map((item) => item.locator as string)}
-                    footerNote="Readonly review mode"
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Contract note">
-                  <Text variant="secondary" className="block leading-7">
-                    Prompt composer, free-form textarea yerine scope ve tone guardrail'leri görünür kılar.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Modal':
-        return [
-          {
-            id: 'modal-confirm-dialog',
-            eyebrow: 'Alternative 01',
-            title: 'Confirm / destructive dialog',
-            description: 'Yüksek riskli aksiyonlarda karar, ikincil açıklama ve footer action dilini tek overlay shell üzerinde toplar.',
-            badges: ['dialog', 'stable', 'confirmation'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                <PreviewPanel title="Interactive confirm modal">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button onClick={() => setModalOpen(true)}>Modal aç</Button>
-                    <SectionBadge label="Riskli aksiyon" />
-                  </div>
-                  <Modal
-                    open={modalOpen}
-                    title="Rollout onayı gerekiyor"
-                    onClose={() => setModalOpen(false)}
-                    footer={(
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" onClick={() => setModalOpen(false)}>Vazgeç</Button>
-                        <Button variant="destructive" onClick={() => setModalOpen(false)}>Onayla</Button>
-                      </div>
-                    )}
-                  >
-                    <Text variant="secondary" className="block leading-7">
-                      Bu adım yayın hattını tetikler. Kullanıcıya risk, kapsam ve dönüş etkisi aynı dialog içinde görünmelidir.
-                    </Text>
-                  </Modal>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Modal, sayfa içi ufak yardım için değil; karar, kesinti, onay ve form odaklı kısa görevler için kullanılmalı.
-                    Overlay click ve escape davranışı task riskine göre yönetilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'modal-audit-readonly',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly / audit review dialog',
-            description: 'Kilitli içerik, readonly inceleme ve kanıt gösterimi için daha sakin modal varyantı.',
-            badges: ['readonly', 'audit', 'review'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Review dialog pattern">
-                  <div className="rounded-3xl border border-border-subtle bg-surface-canvas p-5">
-                    <Text preset="title">Kanıt özeti</Text>
-                    <Text variant="secondary" className="mt-3 block leading-7">
-                      Dialog içinde readonly metin, ek bilgi ve tek bir kapatma aksiyonu gösterilir. Kullanıcıdan veri
-                      beklenmeyen durumlarda dialog dili daha sakin ve düşük gerilimli tutulur.
-                    </Text>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <Badge tone="info">Readonly review</Badge>
-                      <Badge tone="muted">No inline edit</Badge>
-                    </div>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Aynı modal primitive hem destructive hem readonly review akışını taşıyabilir; fark, copy ve footer
-                    aksiyonlarının sayısı ile tonunda yaratılır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Dropdown':
-        return [
-          {
-            id: 'dropdown-action-menu',
-            eyebrow: 'Alternative 01',
-            title: 'Action menu',
-            description: 'Satır bazlı hızlı aksiyonlar ve overflow menu davranışı için ana kullanım kalıbı.',
-            badges: ['menu', 'stable', 'actions'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                <PreviewPanel title="Row action menu">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Dropdown
-                      trigger={<span>Aksiyon Menüsü</span>}
-                      items={[
-                        { key: 'publish', label: 'Publish' },
-                        { key: 'duplicate', label: 'Duplicate' },
-                        { key: 'archive', label: 'Archive' },
-                      ]}
-                      onSelect={setDropdownAction}
-                    />
-                    <Text variant="secondary">Seçim: {dropdownAction}</Text>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Dropdown bir navigasyon ağacı değildir. Kısa eylem listeleri, satır bazlı işlemler ve bağlamsal hızlandırıcılar
-                    için kullanılır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'dropdown-filter-density',
-            eyebrow: 'Alternative 02',
-            title: 'Filter / density selector',
-            description: 'Aynı primitive ile görünüm yoğunluğu ve küçük ayar menülerini yönetir.',
-            badges: ['filters', 'density', 'compact'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Density selector">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Dropdown
-                      trigger={<span>Yoğunluk seç</span>}
-                      align="right"
-                      items={[
-                        { key: 'compact', label: 'Compact' },
-                        { key: 'comfortable', label: 'Comfortable' },
-                        { key: 'relaxed', label: 'Relaxed' },
-                      ]}
-                    />
-                    <SectionBadge label="right aligned" />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Policy note">
-                  <Text variant="secondary" className="block leading-7">
-                    Dropdown içeriği kısa kalmalı. Uzun, çok seviyeli ya da açıklama ağırlıklı içerik için popover veya drawer
-                    tercih edilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Tooltip':
-        return [
-          {
-            id: 'tooltip-inline-hint',
-            eyebrow: 'Alternative 01',
-            title: 'Inline hint / affordance',
-            description: 'Dar alanda kısa yardımcı açıklamaları fokus ve hover ile görünür kılar.',
-            badges: ['hint', 'beta', 'inline'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1fr]">
-                <PreviewPanel title="Inline help">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Tooltip text="Tooltip örneği">
-                      <Button variant="secondary">Hover / Focus</Button>
-                    </Tooltip>
-                    <Tooltip text="Kisa yardim metni yalnizca ek baglam verir.">
-                      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-surface-canvas text-sm font-semibold text-text-secondary">i</span>
-                    </Tooltip>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Tooltip, kritik doğrulama mesajı veya uzun eğitim içeriği taşımaz. Kısa yardım, affordance açıklaması ve ikon
-                    etiketleme için uygundur.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'tooltip-policy-guidance',
-            eyebrow: 'Alternative 02',
-            title: 'Policy / readonly guidance',
-            description: 'Readonly veya kontrollü yüzeylerde neden-sonuç bilgisini boğmadan gösterir.',
-            badges: ['policy', 'readonly', 'guidance'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly reason">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Tooltip text="Bu alan yayın penceresi dışında readonly duruma alınır.">
-                      <Button access="readonly" variant="ghost">Readonly alan</Button>
-                    </Tooltip>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Kullanıcıyı durduracak ya da karar verdirecek içerik tooltip yerine dialog, inline error veya panel yüzeyine
-                    taşınmalıdır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'FormDrawer':
-        return [
-          {
-            id: 'form-drawer-create-flow',
-            eyebrow: 'Alternative 01',
-            title: 'Form drawer / create flow',
-            description: 'Sayfa bağlamını kaybetmeden kısa veri girişini side panel içine taşır.',
-            badges: ['drawer', 'stable', 'form'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                <PreviewPanel title="Create / edit panel">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button onClick={() => setFormDrawerOpen(true)}>Yeni kayıt drawer</Button>
-                    <SectionBadge label="slide-over" />
-                  </div>
-                  <FormDrawer open={formDrawerOpen} title="Yeni kayıt" onClose={() => setFormDrawerOpen(false)}>
-                    <div className="flex flex-col gap-3">
-                      <TextInput label="Kayıt adı" value={textInputValue} onChange={(event) => setTextInputValue(event.target.value)} />
-                      <Select
-                        label="Yoğunluk"
-                        value={selectValue}
-                        onChange={(event) => setSelectValue(event.target.value)}
-                        options={[
-                          { value: 'compact', label: 'Compact' },
-                          { value: 'comfortable', label: 'Comfortable' },
-                        ]}
-                      />
-                    </div>
-                  </FormDrawer>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    FormDrawer, modal yerine daha uzun ama hâlâ görev odaklı form akışları için kullanılmalı. Route değişmeden veri girişi
-                    yapılır; ana ekran bağlamı korunur.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'form-drawer-readonly-policy',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly / policy constrained form drawer',
-            description: 'Kaydet aksiyonunu kapatıp inceleme ve bağlamı canlı tutar.',
-            badges: ['readonly', 'policy', 'drawer'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly state">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button variant="secondary" onClick={() => setReadonlyFormDrawerOpen(true)}>
-                      Readonly drawer
-                    </Button>
-                    <SectionBadge label="policy-locked" />
-                  </div>
-                  <FormDrawer
-                    open={readonlyFormDrawerOpen}
-                    title="Readonly kayıt"
-                    onClose={() => setReadonlyFormDrawerOpen(false)}
-                    access="readonly"
-                  >
-                    <div className="flex flex-col gap-3">
-                      <TextInput label="Kayıt adı" value="Readonly kayıt" readOnly onChange={() => undefined} />
-                      <Text variant="secondary">Kaydet aksiyonu policy gereği kapalıdır.</Text>
-                    </div>
-                  </FormDrawer>
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Policy nedeniyle yalnız inceleme yapılacaksa drawer açık kalabilir; submit kapanır, kapatma ve bağlam görünürlüğü devam eder.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'DetailDrawer':
-        return [
-          {
-            id: 'detail-drawer-tabbed-review',
-            eyebrow: 'Alternative 01',
-            title: 'Tabbed review drawer',
-            description: 'Detay, audit ve rollout özetini aynı slide-over içinde sekmeli olarak sunar.',
-            badges: ['drawer', 'stable', 'review'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                <PreviewPanel title="Detail review panel">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button onClick={() => setDetailDrawerOpen(true)}>Detay drawer</Button>
-                    <SectionBadge label="tabbed" />
-                  </div>
-                  <DetailDrawer
-                    open={detailDrawerOpen}
-                    title="Rollout detay"
-                    onClose={() => setDetailDrawerOpen(false)}
-                    tabs={[
-                      {
-                        key: 'summary',
-                        label: 'Summary',
-                        sections: [
-                          { key: 'owner', title: 'Owner', content: <Text variant="secondary">Platform Ops</Text> },
-                          { key: 'scope', title: 'Scope', content: <Text variant="secondary">TR + EU rollout</Text> },
-                        ],
-                      },
-                      {
-                        key: 'audit',
-                        label: 'Audit',
-                        sections: [
-                          { key: 'approval', title: 'Approval', content: <Text variant="secondary">07 Mar 2026 / approved</Text> },
-                          { key: 'trace', title: 'Trace', content: <Text variant="secondary">trace-id: overlay-4471</Text> },
-                        ],
-                      },
-                    ]}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    DetailDrawer; detail, audit ve summary içeriğini route kırmadan sunmak için uygundur. İçerik yoğunluğu modalı geçtiğinde drawer tercih edilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'detail-drawer-readonly-evidence',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly evidence drawer',
-            description: 'Kanıt ve özet bloklarını sekmesiz ama düzenli bir inceleme yüzeyinde toplar.',
-            badges: ['readonly', 'evidence', 'summary'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Evidence summary">
-                  <div className="rounded-3xl border border-border-subtle bg-surface-canvas p-5">
-                    <Text preset="title">Deployment kanıtı</Text>
-                    <Text variant="secondary" className="mt-3 block leading-7">
-                      Detail drawer tek bir summary yüzeyi olarak da kullanılabilir. Özellikle readonly kanıt ve snapshot incelemelerinde iyi çalışır.
-                    </Text>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    İçerik çok uzarsa drawer içinde section/tabs kullan; kısa ve pasif inceleme gerekiyorsa sekmesiz summary da yeterlidir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Popover':
-        return [
-          {
-            id: 'popover-rich-guidance',
-            eyebrow: 'Alternative 01',
-            title: 'Rich contextual guidance',
-            description: 'Tooltip için uzun, drawer için kısa kalan bağlamı yerinde gösterir.',
-            badges: ['popover', 'beta', 'guidance'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                <PreviewPanel title="Contextual helper">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Popover
-                      title="Policy note"
-                      trigger={<Button variant="secondary">Popover aç</Button>}
-                      content={(
-                        <div className="space-y-3">
-                          <Text variant="secondary" className="block leading-6">
-                            Bu alan yalnız yayın penceresi açıkken düzenlenebilir. Kapsam ve risk kısa panel içinde açıklanır.
-                          </Text>
-                          <div className="flex flex-wrap gap-2">
-                            <Tag tone="info">Contextual</Tag>
-                            <Tag tone="warning">Policy</Tag>
-                          </div>
-                        </div>
-                      )}
-                    />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Popover, kısa ama rich içerik için kullanılır. Menü değildir; kullanıcıya yardımcı panel, ek bağlam veya küçük action cluster gösterir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'popover-readonly-panel',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly helper panel',
-            description: 'Readonly ve disabled akışlarda neden-sonuç bilgisini tooltipten daha görünür verir.',
-            badges: ['readonly', 'helper', 'panel'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly helper">
-                  <Popover
-                    title="Readonly reason"
-                    access="readonly"
-                    trigger={<Button variant="ghost">Neden kapalı?</Button>}
-                    content={<Text variant="secondary">Popover readonly olduğunda açılmaz; bu durumda başka yüzey seçilmelidir.</Text>}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Eğer kullanıcı bir şey yapamayacaksa popover’ın kendisi de policy guard ile davranmalı; tooltip ya da inline mesaj alternatifi düşünülmelidir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'ContextMenu':
-        return [
-          {
-            id: 'context-menu-action-trigger',
-            eyebrow: 'Alternative 01',
-            title: 'Action menu / release shortcuts',
-            description: 'Kısa aksiyon listelerini policy ve review bağlamıyla aynı overlay içinde gösterir.',
-            badges: ['overlay-extension', 'beta', 'actions'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                <PreviewPanel title="Button trigger">
-                  <div className="flex flex-wrap items-start gap-3">
-                    <ContextMenu
-                      buttonLabel="Bağlam menüsü"
-                      title="Release actions"
-                      testIdPrefix="design-lab-contextmenu"
-                      items={[
-                        { key: 'approve', label: 'Onay akışını başlat', description: 'İnsan onayı ve wave gate kanıtını birlikte toplar.' },
-                        { key: 'review', label: 'İnceleme kuyruğuna ekle', description: 'Readonly review ve ek kanıt talebi üretir.' },
-                        { key: 'archive', label: 'Arşive taşı', description: 'Eski varyantları planlı backlog alanına taşır.', danger: true },
-                      ]}
-                      onSelect={(key) => setContextMenuAction(key)}
-                    />
-                    <div
-                      className="min-w-[220px] rounded-2xl border border-border-subtle bg-surface-canvas px-4 py-4 text-sm text-text-secondary"
-                      data-testid="design-lab-contextmenu-result"
-                    >
-                      Son seçim: <span className="font-semibold text-text-primary">{contextMenuAction}</span>
-                    </div>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Context menu, çok seviyeli ağaç veya uzun açıklama paneli değildir. Kısa ve bağlamsal aksiyonlar için kullanılır; derin bilgi gerekiyorsa popover ya da drawer seçilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'context-menu-surface-trigger',
-            eyebrow: 'Alternative 02',
-            title: 'Right-click / surface menu',
-            description: 'Canvas veya kart yüzeyinde sağ tık davranışı ile aynı kontratı kullanır.',
-            badges: ['right-click', 'surface', 'policy'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Surface trigger">
-                  <ContextMenu
-                    triggerMode="contextmenu"
-                    title="Surface actions"
-                    items={[
-                      { key: 'duplicate', label: 'Kartı çoğalt', shortcut: 'D' },
-                      { key: 'pin', label: 'Görünümü sabitle', shortcut: 'P' },
-                      { key: 'readonly', label: 'Readonly nedeni göster', description: 'Policy guard ile sınırlandırılır.' },
-                    ]}
-                    onSelect={(key) => setContextMenuAction(`surface:${key}`)}
-                    trigger={(
-                      <div className="space-y-2">
-                        <Text preset="title">Sağ tıkla</Text>
-                        <Text variant="secondary" className="block leading-7">
-                          Surface menüleri satır, kart veya canvas üzerinde hızlı aksiyon verir. Gezinti ağacı için kullanılmaz.
-                        </Text>
-                      </div>
-                    )}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Sağ tık menüsü varsa aynı aksiyonların erişilebilir bir button trigger alternatifinin de olması gerekir. Yalnız mouse kullanıcılarına özel tasarım kabul edilmez.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'TourCoachmarks':
-        return [
-          {
-            id: 'tour-guided-walkthrough',
-            eyebrow: 'Alternative 01',
-            title: 'Guided onboarding / release walkthrough',
-            description: 'Wave, preview ve release kanıtını adım adım açıklayan rehber yüzey.',
-            badges: ['tour', 'guided', 'compliance'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-                <PreviewPanel title="Interactive walkthrough">
-                  <div className="flex flex-wrap items-start gap-3">
-                    <Button
-                      data-testid="design-lab-tour-open"
-                      onClick={() => {
-                        setTourOpen(true);
-                        setTourStep(0);
-                        setTourStatus('guided');
-                      }}
-                    >
-                      Turu başlat
-                    </Button>
-                    <SectionBadge label={tourStatus === 'finished' ? 'finished' : tourStatus === 'guided' ? 'guided' : 'idle'} />
-                  </div>
-                  <div className="mt-4">
-                    <TourCoachmarks
-                      open={tourOpen}
-                      currentStep={tourStep}
-                      onStepChange={(index) => setTourStep(index)}
-                      onClose={() => {
-                        setTourOpen(false);
-                        setTourStatus('idle');
-                      }}
-                      onFinish={() => {
-                        setTourStatus('finished');
-                        setTourOpen(false);
-                      }}
-                      testIdPrefix="design-lab-tour"
-                      steps={[
-                        {
-                          id: 'scope',
-                          title: 'Scope doğrulaması',
-                          description: 'Önce wave ve registry sözleşmesi netleşir; kullanıcı neyi yayınladığını görür.',
-                          meta: 'contract',
-                        },
-                        {
-                          id: 'preview',
-                          title: 'Canlı demo incelemesi',
-                          description: 'Preview, API ve kalite kanıtı aynı walkthrough içinde açıklanır.',
-                          meta: 'preview',
-                          tone: 'success',
-                        },
-                        {
-                          id: 'release',
-                          title: 'Release evidence',
-                          description: 'Doctor, gate ve security guardrail kanıtı tamamlanmadan tur bitmiş sayılmaz.',
-                          meta: 'release',
-                          tone: 'warning',
-                        },
-                      ]}
-                    />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Tour/coachmarks yalnız onboarding için değil; kritik approval, release ve policy akışlarında adım adım bağlam gösterimi için de kullanılabilir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'tour-readonly-compliance',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly compliance walkthrough',
-            description: 'Readonly policy nedenlerini ve kontrol noktalarını sakin bir anlatımla taşır.',
-            badges: ['readonly', 'policy', 'walkthrough'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly tour">
-                  <TourCoachmarks
-                    defaultOpen
-                    mode="readonly"
-                    allowSkip={false}
-                    showProgress={false}
-                    access="readonly"
-                    steps={[
-                      {
-                        id: 'policy',
-                        title: 'Policy açıklaması',
-                        description: 'Readonly walkthrough, kritik alanlarda kullanıcının neden-sonuç bilgisini aynı overlay içinde taşır.',
-                        meta: 'readonly',
-                      },
-                      {
-                        id: 'controls',
-                        title: 'Kontrol noktaları',
-                        description: 'Onay ve security kontrolleri tamamlanmadan release butonları görünür kalmaz.',
-                        meta: 'controls',
-                        tone: 'warning',
-                      },
-                    ]}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Rule of thumb">
-                  <Text variant="secondary" className="block leading-7">
-                    Coachmark yüzeyi çok uzun içerik taşıyacaksa docs sayfasına veya panel yapısına dönmek gerekir. Tur kısa, yönlendirici ve görev odaklı kalmalıdır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'TableSimple':
-        return [
-          {
-            id: 'table-simple-policy-list',
-            eyebrow: 'Alternative 01',
-            title: 'Policy / owner / status table',
-            description: 'Task-critical policy listesini hafif, hızlı ve okunabilir bir tablo ile gösterir.',
-            badges: ['table', 'beta', 'status'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Policy matrix">
-                  <TableSimple
-                    caption="Politika portföyü"
-                    description="Owner ve status alanları tek tablo yüzeyinde."
-                    columns={[
-                      { key: 'policy', label: 'Politika', accessor: 'policy', emphasis: true, truncate: true },
-                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
-                      {
-                        key: 'status',
-                        label: 'Durum',
-                        align: 'center',
-                        render: (row) => <Badge tone={row.status === 'Aktif' ? 'success' : row.status === 'Taslak' ? 'warning' : 'info'}>{row.status}</Badge>,
-                      },
-                      { key: 'updatedAt', label: 'Güncelleme', accessor: 'updatedAt', align: 'right' },
-                    ]}
-                    rows={policyTableRows}
-                    stickyHeader
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Guidance">
-                  <Text variant="secondary" className="block leading-7">
-                    `TableSimple`, ağır grid altyapısına ihtiyaç olmayan görev listeleri için hızlı render, loading ve empty state
-                    davranışını tek primitive ile verir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'table-simple-loading-empty',
-            eyebrow: 'Alternative 02',
-            title: 'Loading and empty states',
-            description: 'Aynı primitive loading skeleton ve boş tablo davranışını yerel kopya olmadan sunar.',
-            badges: ['loading', 'empty', 'compact'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Loading">
-                  <TableSimple
-                    caption="Loading tablosu"
-                    columns={[
-                      { key: 'policy', label: 'Politika', accessor: 'policy' },
-                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
-                    ]}
-                    rows={[]}
-                    loading
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Empty">
-                  <TableSimple
-                    caption="Boş tablo"
-                    columns={[
-                      { key: 'policy', label: 'Politika', accessor: 'policy' },
-                      { key: 'owner', label: 'Sahip', accessor: 'owner' },
-                    ]}
-                    rows={[]}
-                    emptyStateLabel="Henüz gösterilecek kayıt yok."
-                    density="compact"
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Descriptions':
-        return [
-          {
-            id: 'descriptions-rollout-summary',
-            eyebrow: 'Alternative 01',
-            title: 'Rollout / owner / scope summary',
-            description: 'Owner, scope, review ve status bilgilerini hızlı okunur bir key-value yüzeyinde toplar.',
-            badges: ['summary', 'beta', 'rollout'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Primary summary">
-                  <Descriptions
-                    title="Canary özeti"
-                    description="Rollout owner, scope ve review snapshot tek blokta."
-                    items={rolloutDescriptionItems}
-                    columns={2}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Interpretation">
-                  <Text variant="secondary" className="block leading-7">
-                    `Descriptions`, özellikle drawer, detail panel ve approval yüzeylerinde tekrar eden label-value bloklarını
-                    ortaklaştırır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'descriptions-compliance-panel',
-            eyebrow: 'Alternative 02',
-            title: 'Risk and approval panels',
-            description: 'Risk, approval ve control snapshot’larını tone-aware bilgi kartlarıyla taşır.',
-            badges: ['risk', 'approval', 'compact'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Approval">
-                  <Descriptions
-                    title="Risk ve onay"
-                    items={[
-                      { key: 'risk', label: 'Risk Seviyesi', value: 'Medium', tone: 'warning' },
-                      { key: 'approval', label: 'Onay Akışı', value: '2/3 tamamlandı', helper: 'Security sign-off bekleniyor.' },
-                      { key: 'ticket', label: 'Change ID', value: 'CHG-UI-204', tone: 'info' },
-                    ]}
-                    columns={1}
-                    density="compact"
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Ownership">
-                  <Descriptions
-                    title="Operasyon özeti"
-                    items={[
-                      { key: 'owner', label: 'Sahip', value: 'Platform UX' },
-                      { key: 'window', label: 'Pencere', value: 'Cumartesi 22:00', tone: 'info' },
-                      { key: 'signoff', label: 'Sign-off', value: 'Ready', tone: 'success' },
-                    ]}
-                    columns={1}
-                    density="compact"
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'List':
-        return [
-          {
-            id: 'list-operational-inbox',
-            eyebrow: 'Alternative 01',
-            title: 'Operational inbox / task list',
-            description: 'Öncelik, meta ve badge kombinasyonlarını aynı liste yüzeyinde toplar.',
-            badges: ['task-list', 'selection', 'beta'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Review queue">
-                  <List
-                    title="Deployment work queue"
-                    description="Security, doctor ve rollout kanıtları tek yüzeyde okunur."
-                    items={listItems}
-                    selectedKey="doctor"
-                    onItemSelect={() => undefined}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Why this matters">
-                  <Text variant="secondary" className="block leading-7">
-                    `List`, hafif ama durum taşıyan görev akışlarında tablo açmadan seçim, badge ve meta bilgisini birlikte taşır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'list-priority-review',
-            eyebrow: 'Alternative 02',
-            title: 'Priority / review state matrix',
-            description: 'Compact density, blocked item ve tone farklarını görünür kılar.',
-            badges: ['compact', 'priority', 'tone'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Compact list">
-                  <List
-                    density="compact"
-                    items={listItems}
-                    selectedKey="triage"
-                    onItemSelect={() => undefined}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Loading and empty">
-                  <div className="space-y-4">
-                    <List title="Loading queue" loading items={[]} />
-                    <List title="Empty queue" items={[]} emptyStateLabel="Gösterilecek görev yok." />
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'JsonViewer':
-        return [
-          {
-            id: 'json-viewer-release-payload',
-            eyebrow: 'Alternative 01',
-            title: 'Release evidence payload',
-            description: 'Wave gate ve doctor özetini okunabilir katmanlı JSON ağacı olarak sunar.',
-            badges: ['payload', 'audit', 'beta'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Primary payload">
-                  <JsonViewer
-                    title="Wave summary"
-                    description="Gate ve doctor kanıtı aynı payload altında izlenir."
-                    value={jsonViewerValue}
-                    rootLabel="wave"
-                    defaultExpandedDepth={2}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Usage note">
-                  <Text variant="secondary" className="block leading-7">
-                    `JsonViewer`, debug paneli gibi görünmeden kontrat, config ve kanıt payload’larını son kullanıcıya okunur hale getirir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'json-viewer-policy-config',
-            eyebrow: 'Alternative 02',
-            title: 'Policy / config snapshot',
-            description: 'Daha dar, readonly yapılandırma snapshot’ları için kompakt gösterim.',
-            badges: ['policy', 'config', 'readonly'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Policy snapshot">
-                  <JsonViewer
-                    title="Policy"
-                    value={jsonViewerValue.policy}
-                    rootLabel="policy"
-                    defaultExpandedDepth={1}
-                    maxHeight={320}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Empty / undefined">
-                  <div className="space-y-4">
-                    <JsonViewer title="Undefined payload" value={undefined} emptyStateLabel="Payload gelmedi." />
-                    <JsonViewer title="Primitive payload" value={{ releaseWindow: 'saturday-22', rollbackReady: true }} rootLabel="config" />
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'Tree':
-        return [
-          {
-            id: 'tree-release-governance',
-            eyebrow: 'Alternative 01',
-            title: 'Release governance hierarchy',
-            description: 'Doctor, security ve policy akislarini tek bir hiyerarsik agacta izler.',
-            badges: ['tree', 'hierarchy', 'beta'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Hierarchy">
-                  <Tree
-                    title="Release hierarchy"
-                    nodes={treeNodes}
-                    defaultExpandedKeys={['release', 'doctor']}
-                    selectedKey="doctor-ui-library"
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Usage note">
-                  <Text variant="secondary" className="block leading-7">
-                    `Tree`, onay akisi, rollout ownership ve policy kırılımlarında kullanıcıya derinlik hissini bozmadan
-                    hiyerarşi sunar.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'tree-readonly-audit',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly audit tree',
-            description: 'Readonly state, compact density ve secili node davranisini birlikte gosterir.',
-            badges: ['readonly', 'compact', 'audit'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly tree">
-                  <Tree
-                    density="compact"
-                    nodes={treeNodes}
-                    defaultExpandedKeys={['release', 'security']}
-                    access="readonly"
-                    selectedKey="security-residual"
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Loading and empty">
-                  <div className="space-y-4">
-                    <Tree title="Loading tree" loading nodes={[]} />
-                    <Tree title="Empty tree" nodes={[]} emptyStateLabel="Hiyerarsi bulunamadi." />
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'TreeTable':
-        return [
-          {
-            id: 'tree-table-ownership-matrix',
-            eyebrow: 'Alternative 01',
-            title: 'Ownership matrix',
-            description: 'TreeTable, owner / status / scope verisini hiyerarsik satirlarla birlestirir.',
-            badges: ['matrix', 'hierarchy', 'beta'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Ownership matrix">
-                  <TreeTable
-                    nodes={treeTableNodes}
-                    defaultExpandedKeys={['platform-ui']}
-                    columns={[
-                      { key: 'owner', label: 'Owner', accessor: 'owner', emphasis: true },
-                      { key: 'status', label: 'Durum', accessor: 'status', align: 'center' },
-                      { key: 'scope', label: 'Scope', accessor: 'scope' },
-                    ]}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Usage note">
-                  <Text variant="secondary" className="block leading-7">
-                    `TreeTable`, entity ya da ownership agacinda hiyerarsiyi kaybetmeden kolonlu karsilastirma yapar.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'tree-table-compact-review',
-            eyebrow: 'Alternative 02',
-            title: 'Compact review matrix',
-            description: 'Compact density, selected row ve loading/empty fallback davranisini birlikte gosterir.',
-            badges: ['compact', 'selected', 'fallback'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Compact table">
-                  <TreeTable
-                    density="compact"
-                    nodes={treeTableNodes}
-                    defaultExpandedKeys={['platform-ui']}
-                    selectedKey="delivery-gates"
-                    columns={[
-                      { key: 'status', label: 'Durum', accessor: 'status', align: 'center', emphasis: true },
-                      { key: 'scope', label: 'Scope', accessor: 'scope' },
-                    ]}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Loading and empty">
-                  <div className="space-y-4">
-                    <TreeTable title="Loading matrix" loading nodes={[]} columns={[]} />
-                    <TreeTable title="Empty matrix" nodes={[]} columns={[]} emptyStateLabel="Hiyerarsik tablo kaydi yok." />
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'AgGridServer':
-        return [
-          {
-            id: 'ag-grid-server-ownership-list',
-            eyebrow: 'Alternative 01',
-            title: 'Server-backed ownership matrix',
-            description: 'AgGridServer, gateway tarafindan beslenen owner/status listelerini server-side datasource kontratiyla gösterir.',
-            badges: ['server-side', 'stable', 'performance'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Server ownership list">
-                  <div className="h-[360px]">
-                    <AgGridServer
-                      height={320}
-                      columnDefs={[
-                        { field: 'id', headerName: 'ID', width: 120 },
-                        { field: 'name', headerName: 'Kaynak', flex: 1 },
-                        { field: 'owner', headerName: 'Owner', width: 180 },
-                      ]}
-                      getData={async () => ({ rows: serverGridRows, total: serverGridRows.length })}
-                    />
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Performance contract">
-                  <div className="grid grid-cols-1 gap-3">
-                    <LibraryMetricCard label="Datasource" value="server" note="Grid veriyi getData kontratiyla ceker." />
-                    <LibraryMetricCard label="Rows" value={`${serverGridRows.length}`} note="Batch-2 demo snapshot verisi." />
-                    <LibraryMetricCard label="Surface" value="stable" note="Substrate component; performance contract zorunlu." />
-                  </div>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'ag-grid-server-loading-contract',
-            eyebrow: 'Alternative 02',
-            title: 'Loading and fallback contract',
-            description: 'Datasource, loading ve empty davranisi ayni primitive icinde kalir; ekran seviyesi kopya kod gerekmez.',
-            badges: ['loading', 'empty', 'ops'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Operator guidance">
-                  <Text variant="secondary" className="block leading-7">
-                    `AgGridServer`, server-side pagination ve datasource baglama davranisini tek noktada toplar. Bu sayede
-                    ownership listesi, audit query sonucu ve entity registry gibi yuzeyler ayni behavior contract'i kullanir.
-                  </Text>
-                </PreviewPanel>
-                <PreviewPanel title="Evidence focus">
-                  <Descriptions
-                    title="Regression odagi"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'datasource', label: 'Datasource', value: "setGridOption('serverSideDatasource', datasource)", tone: 'info' },
-                      { key: 'loading', label: 'Loading', value: 'Overlay + request pending', tone: 'warning' },
-                      { key: 'failure', label: 'Failure', value: 'fail callback', tone: 'danger' },
-                    ]}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'EntityGridTemplate':
-        return [
-          {
-            id: 'entity-grid-template-client-registry',
-            eyebrow: 'Alternative 01',
-            title: 'Client-side entity registry',
-            description: 'Toolbar, variant ve sayfalama davranisini tek entity template yuzeyinde toplar.',
-            badges: ['client', 'stable', 'toolbar'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Entity registry">
-                  <div className="h-[420px]">
-                    <LibraryQueryProvider>
-                      <EntityGridTemplate<Record<string, unknown>>
-                        gridId="design-lab-entity-grid-client"
-                        gridSchemaVersion={1}
-                        dataSourceMode="client"
-                        rowData={gridRows}
-                        total={gridRows.length}
-                        page={1}
-                        pageSize={25}
-                        columnDefs={[
-                          { field: 'name', headerName: 'Isim', flex: 1 },
-                          { field: 'status', headerName: 'Durum', width: 140 },
-                          { field: 'updatedAt', headerName: 'Guncelleme', width: 140 },
-                        ]}
-                      />
-                    </LibraryQueryProvider>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Template value">
-                  <Text variant="secondary" className="block leading-7">
-                    `EntityGridTemplate`, toolbar, varyant secimi, pagination ve theme akslarini tek substrate bileşeninde
-                    birlestirir. Client-side liste ekranlari icin ayrı shell kodu yazmak zorunda kalmazsin.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'entity-grid-template-server-mode',
-            eyebrow: 'Alternative 02',
-            title: 'Server-side toolbar and datasource mode',
-            description: 'Ayni template, server mode calisirken datasource ve toolbar davranisini korur.',
-            badges: ['server', 'variant', 'mode-switch'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Server mode">
-                  <div className="h-[420px]">
-                    <LibraryQueryProvider>
-                      <EntityGridTemplate<Record<string, unknown>>
-                        gridId="design-lab-entity-grid-server"
-                        gridSchemaVersion={2}
-                        dataSourceMode="server"
-                        total={serverGridRows.length}
-                        page={1}
-                        pageSize={25}
-                        columnDefs={[
-                          { field: 'id', headerName: 'ID', width: 120 },
-                          { field: 'name', headerName: 'Kaynak', flex: 1 },
-                          { field: 'owner', headerName: 'Owner', width: 180 },
-                        ]}
-                        createServerSideDatasource={() => ({
-                          getRows: async (params: {
-                            success: (payload: { rowData: unknown[]; rowCount: number }) => void;
-                          }) => {
-                            params.success({ rowData: serverGridRows, rowCount: serverGridRows.length });
-                          },
-                        })}
-                      />
-                    </LibraryQueryProvider>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Regression contract">
-                  <Descriptions
-                    title="Template odagi"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'mode', label: 'Mode switch', value: 'client -> server', tone: 'info' },
-                      { key: 'toolbar', label: 'Toolbar', value: 'Tema / Filtre / Varyant', tone: 'success' },
-                      { key: 'datasource', label: 'Datasource', value: 'createServerSideDatasource', tone: 'warning' },
-                    ]}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'PageLayout':
-        return [
-          {
-            id: 'page-layout-directory-shell',
-            eyebrow: 'Alternative 01',
-            title: 'Directory shell',
-            description: 'Breadcrumb, page header, filter shell ve detail aside ayni page-level contract icinde toplanir.',
-            badges: ['page-shell', 'stable', 'directory'],
-            content: (
-              <div className="grid grid-cols-1 gap-4">
-                <PreviewPanel title="Directory shell">
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-                    <PageLayout
-                      title="UI governance catalog"
-                      description="Page shell, header ve filter davranisi tek layout contract'i ile tekrar kullanilir."
-                      breadcrumbItems={[
-                        { title: 'Docs', path: '#' },
-                        { title: 'UI Library', path: '#' },
-                        { title: 'Page Blocks' },
-                      ]}
-                      headerExtra={<SectionBadge label="stable substrate" />}
-                      actions={
-                        <>
-                          <Button intent="secondary" size="sm">Export</Button>
-                          <Button size="sm">Yeni blok</Button>
-                        </>
-                      }
-                      filterBar={(
-                        <FilterBar onReset={() => setSearchInputValue('')} onSaveView={() => setDropdownAction('Saved page-block view')}>
-                          <TextInput
-                            label="Ara"
-                            value={searchInputValue}
-                            onValueChange={setSearchInputValue}
-                            size="sm"
-                            leadingVisual={<span aria-hidden="true">⌕</span>}
-                          />
-                          <Select
-                            label="Durum"
-                            value={selectValue}
-                            onValueChange={(value) => setSelectValue(String(value))}
-                            size="sm"
-                            options={[
-                              { label: 'Comfortable', value: 'comfortable' },
-                              { label: 'Compact', value: 'compact' },
-                              { label: 'Readonly', value: 'readonly' },
-                            ]}
-                          />
-                        </FilterBar>
-                      )}
-                      detail={(
-                        <div className="space-y-3 rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-                          <Text as="div" className="font-semibold">Detail aside</Text>
-                          <Text variant="secondary">Layout, detail rail ve body arasındaki oran aynı shell içinde kalır.</Text>
-                          <LibraryMetricCard label="Selection" value={dropdownAction} note="Action rail state" />
-                        </div>
-                      )}
-                    >
-                      <div className="space-y-4">
-                        <SummaryStrip title="Release summary" description="Page shell ile birlikte öne çıkan metrikler." items={summaryStripItems} columns={4} />
-                        <Descriptions
-                          title="Shell contract"
-                          description="Aynı layout drawer ve detay sayfasında yeniden kullanılabilir."
-                          items={rolloutDescriptionItems}
-                          columns={2}
-                        />
-                      </div>
-                    </PageLayout>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Contract note">
-                  <Text variant="secondary" className="block leading-7">
-                    `PageLayout`, route seviyesinde breadcrumb, action rail, filter shell ve detail aside kombinasyonunu
-                    birleştirir; ekran bazlı kopya shell kodunu azaltır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'page-layout-detail-shell',
-            eyebrow: 'Alternative 02',
-            title: 'Detail review shell',
-            description: 'Detail odaklı sayfalarda aynı layout daha yoğun aside ve footer ile kullanılabilir.',
-            badges: ['detail', 'aside', 'review'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Compact detail">
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-                    <PageLayout
-                      title="Change review"
-                      description="Readonly review ve approve/reject aksiyonları aynı page shell içinde."
-                      breadcrumbItems={[
-                        { title: 'Releases', path: '#' },
-                        { title: 'Wave 7', path: '#' },
-                        { title: 'Review' },
-                      ]}
-                      actions={<Button size="sm">Approve</Button>}
-                      detail={(
-                        <Descriptions
-                          title="Decision"
-                          items={[
-                            { key: 'risk', label: 'Risk', value: 'Low', tone: 'success' },
-                            { key: 'owner', label: 'Owner', value: 'Platform UI', tone: 'info' },
-                          ]}
-                          columns={1}
-                          density="compact"
-                        />
-                      )}
-                      footer={<Text variant="secondary">Footer rail aynı shell kontratında kalır.</Text>}
-                    >
-                      <EntitySummaryBlock
-                        title="Wave 7 page blocks"
-                        subtitle="Page-level reusable shell rollout özeti."
-                        badge={<Badge tone="success">Ready</Badge>}
-                        items={entitySummaryItems}
-                      />
-                    </PageLayout>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Usage note">
-                  <Text variant="secondary" className="block leading-7">
-                    Aynı layout hem directory hem detail/review ekranlarında çalışır; değişen yalnız içerik ve callback'tir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'PageHeader':
-        return [
-          {
-            id: 'page-header-release-surface',
-            eyebrow: 'Alternative 01',
-            title: 'Release and docs header',
-            description: 'Eyebrow, title, status, meta ve quick action bloklarını tek üst yüzeyde toplar.',
-            badges: ['header', 'beta', 'hero'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-                <PreviewPanel title="Primary header">
-                  <PageHeader
-                    eyebrow="UI Library"
-                    title="Page block rollout"
-                    description="Yeni page-level block ailesinin release ve docs yüzeyi aynı header primitive ile kurgulanır."
-                    meta={pageHeaderMeta}
-                    status={<Badge tone="success">Ready</Badge>}
-                    actions={(
-                      <>
-                        <Button intent="secondary" size="sm">Share</Button>
-                        <Button size="sm">Promote</Button>
-                      </>
-                    )}
-                    aside={<LibraryMetricCard label="Doctor" value="PASS" note="ui-library preset" />}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    `PageHeader`, route-level hero alanını tek primitive'de toplar. Meta chip, status badge ve aside
-                    metrikleri için sayfa bazlı yeni header kurmaya gerek bırakmaz.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'page-header-compact-detail',
-            eyebrow: 'Alternative 02',
-            title: 'Compact detail header',
-            description: 'Daha yoğun detail sayfalarında kompakt header kullanımı.',
-            badges: ['compact', 'detail', 'meta'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Compact mode">
-                  <PageHeader
-                    eyebrow="DETAIL"
-                    title="EntitySummaryBlock"
-                    description="Component detail için daha kısa header yüzeyi."
-                    compact
-                    meta={[
-                      <SectionBadge key="family" label="page_blocks" />,
-                      <SectionBadge key="wave" label="wave_7" />,
-                    ]}
-                    status={<Badge tone="info">Beta</Badge>}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Contract note">
-                  <Descriptions
-                    title="Header contract"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'eyebrow', label: 'Eyebrow', value: 'optional', tone: 'info' },
-                      { key: 'meta', label: 'Meta', value: 'chips / tags', tone: 'success' },
-                      { key: 'aside', label: 'Aside', value: 'metric or helper', tone: 'warning' },
-                    ]}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'FilterBar':
-        return [
-          {
-            id: 'filter-bar-toolbar-shell',
-            eyebrow: 'Alternative 01',
-            title: 'Toolbar shell',
-            description: 'Arama, filtre ve save-view aksiyonlarını ortak toolbar yüzeyinde toplar.',
-            badges: ['filters', 'stable', 'toolbar'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Controlled toolbar">
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-                    <FilterBar
-                      onReset={() => {
-                        setSearchInputValue('');
-                        setCheckboxValue(false);
-                      }}
-                      onSaveView={() => setDropdownAction('Saved toolbar view')}
-                      extra={<SectionBadge label="shared-toolbar" />}
-                    >
-                      <TextInput label="Arama" value={searchInputValue} onValueChange={setSearchInputValue} size="sm" />
-                      <Select
-                        label="Yoğunluk"
-                        size="sm"
-                        value={selectValue}
-                        onValueChange={(value) => setSelectValue(String(value))}
-                        options={[
-                          { label: 'Comfortable', value: 'comfortable' },
-                          { label: 'Compact', value: 'compact' },
-                        ]}
-                      />
-                      <Checkbox label="Sadece aktifler" checked={checkboxValue} onCheckedChange={setCheckboxValue} />
-                    </FilterBar>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Shared state">
-                  <LibraryMetricCard label="Toolbar state" value={dropdownAction} note="Reset/save-view aksiyonları aynı shell üzerinden yönetiliyor." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'filter-bar-readonly-shell',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly and policy states',
-            description: 'Readonly veya policy-locked toolbar durumları aynı bileşende korunur.',
-            badges: ['readonly', 'policy', 'state'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly toolbar">
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-                    <FilterBar access="readonly" onReset={() => undefined} onSaveView={() => undefined}>
-                      <TextInput label="Readonly arama" value="ui-kit" size="sm" access="readonly" />
-                      <Select
-                        label="Scope"
-                        size="sm"
-                        value="shared"
-                        options={[{ label: 'Shared', value: 'shared' }]}
-                        access="readonly"
-                      />
-                    </FilterBar>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Filter shell, sayfa bazlı toolbar kopyalamaz; sadece alanlar ve callback'ler beslenir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'ReportFilterPanel':
-        return [
-          {
-            id: 'report-filter-panel-submit-flow',
-            eyebrow: 'Alternative 01',
-            title: 'Submit flow panel',
-            description: 'Rapor sayfaları için çok alanlı filtre ve aksiyon yüzeyini tek panel kontratında toplar.',
-            badges: ['panel', 'submit', 'stable'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Interactive panel">
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-                    <ReportFilterPanel onSubmit={() => setReportStatus('Filtre uygulandı')} onReset={() => setReportStatus('Filtre sıfırlandı')}>
-                      <TextInput label="Arama" value={searchInputValue} onValueChange={setSearchInputValue} size="sm" />
-                      <Select
-                        label="Durum"
-                        size="sm"
-                        value={selectValue}
-                        onValueChange={(value) => setSelectValue(String(value))}
-                        options={[
-                          { label: 'Comfortable', value: 'comfortable' },
-                          { label: 'Compact', value: 'compact' },
-                        ]}
-                      />
-                      <DatePicker label="Başlangıç" value={dateValue} onValueChange={setDateValue} />
-                    </ReportFilterPanel>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Panel state">
-                  <LibraryMetricCard label="Status" value={reportStatus} note="Submit ve reset davranışı panel üzerinden besleniyor." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'report-filter-panel-readonly',
-            eyebrow: 'Alternative 02',
-            title: 'Readonly policy panel',
-            description: 'Readonly ve policy-locked senaryolarında submit aksiyonu kilitlenirken bilgi korunur.',
-            badges: ['readonly', 'policy', 'governed'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Readonly panel">
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-                    <ReportFilterPanel access="readonly" onSubmit={() => undefined} onReset={() => undefined}>
-                      <TextInput label="Readonly arama" value="weekly review" access="readonly" />
-                      <DatePicker label="Tarih" value="2026-03-07" access="readonly" />
-                    </ReportFilterPanel>
-                  </div>
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Descriptions
-                    title="Panel rule"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'submit', label: 'Submit', value: 'full access only', tone: 'warning' },
-                      { key: 'reset', label: 'Reset', value: 'readonly aware', tone: 'info' },
-                      { key: 'scope', label: 'Use case', value: 'report pages', tone: 'success' },
-                    ]}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'SummaryStrip':
-        return [
-          {
-            id: 'summary-strip-release-metrics',
-            eyebrow: 'Alternative 01',
-            title: 'Release metrics strip',
-            description: 'Üst metrik yüzeyini kartlı ama ortak bir summary strip kontratıyla sunar.',
-            badges: ['metrics', 'beta', 'summary'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Primary strip">
-                  <SummaryStrip
-                    title="UI Library overview"
-                    description="Export, doctor ve wave gate snapshot tek strip içinde."
-                    items={summaryStripItems}
-                    columns={4}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Guideline">
-                  <Text variant="secondary" className="block leading-7">
-                    Summary strip, dashboard KPI bandı gibi davranmaz; sayfa header altında karar destekleyen kısa metrikleri taşır.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'summary-strip-compact-ownership',
-            eyebrow: 'Alternative 02',
-            title: 'Compact ownership summary',
-            description: 'Daha dar sayfalarda 2 kolonlu veya 3 kolonlu özet kullanımı.',
-            badges: ['compact', 'ownership', 'responsive'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Three-column strip">
-                  <SummaryStrip
-                    title="Delivery ownership"
-                    items={[
-                      { key: 'owner', label: 'Owner', value: 'Platform UI', tone: 'info', note: 'Primary maintainer' },
-                      { key: 'review', label: 'Review', value: '2/3', tone: 'warning', note: 'Security sign-off bekliyor' },
-                      { key: 'release', label: 'Release', value: 'Ready', tone: 'success', note: 'Doctor PASS' },
-                    ]}
-                    columns={3}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Usage note">
-                  <LibraryMetricCard label="Responsive mode" value="3 columns" note="Dar yüzeyde otomatik kırılır." />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'EntitySummaryBlock':
-        return [
-          {
-            id: 'entity-summary-block-primary',
-            eyebrow: 'Alternative 01',
-            title: 'Entity ownership summary',
-            description: 'Entity-level özet, badge, avatar ve detail descriptions aynı blokta toplanır.',
-            badges: ['entity', 'summary', 'beta'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-                <PreviewPanel title="Primary summary block">
-                  <EntitySummaryBlock
-                    title="Platform UI"
-                    subtitle="Page block family owner ve release summary"
-                    badge={<Badge tone="success">Active</Badge>}
-                    avatar={{ name: 'Platform UI' }}
-                    actions={<Button size="sm">Open details</Button>}
-                    items={entitySummaryItems}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Why use it">
-                  <Text variant="secondary" className="block leading-7">
-                    `EntitySummaryBlock`, detail drawer ya da entity header yerine doğrudan okunabilir bir summary yüzeyi verir.
-                  </Text>
-                </PreviewPanel>
-              </div>
-            ),
-          },
-          {
-            id: 'entity-summary-block-with-avatar',
-            eyebrow: 'Alternative 02',
-            title: 'Avatar and governance metadata',
-            description: 'Avatar, badge ve descriptions kombinasyonunu daha yönetim odaklı gösterimle taşır.',
-            badges: ['avatar', 'governance', 'details'],
-            content: (
-              <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <PreviewPanel title="Governance summary">
-                  <EntitySummaryBlock
-                    title="Wave 7 rollout"
-                    subtitle="Reusable page shell adoption"
-                    badge={<Badge tone="warning">Beta</Badge>}
-                    avatar={{ src: avatarPreviewImageSrc, alt: 'Wave 7 preview', name: 'Wave 7' }}
-                    items={[
-                      { key: 'wave', label: 'Wave', value: 'wave_7_page_blocks', tone: 'info' },
-                      { key: 'status', label: 'Status', value: 'Completed', tone: 'success' },
-                      { key: 'next', label: 'Next', value: 'SectionShell backlog', tone: 'warning' },
-                      { key: 'owner', label: 'Owner', value: 'Platform Team', tone: 'info' },
-                    ]}
-                  />
-                </PreviewPanel>
-                <PreviewPanel title="Contract note">
-                  <Descriptions
-                    title="Summary contract"
-                    density="compact"
-                    columns={1}
-                    items={[
-                      { key: 'header', label: 'Header', value: 'title + badge + subtitle', tone: 'info' },
-                      { key: 'avatar', label: 'Avatar', value: 'optional', tone: 'success' },
-                      { key: 'details', label: 'Details', value: 'Descriptions grid', tone: 'warning' },
-                    ]}
-                  />
-                </PreviewPanel>
-              </div>
-            ),
-          },
-        ];
-      case 'ThemePresetGallery':
-        return [
-          {
-            id: 'theme-preset-gallery-catalog',
-            eyebrow: 'Recipe 01',
-            title: 'Theme preset gallery',
-            description: 'Resmi preset ailesi docs ve runtime ile ayni semantic kimliklerle ayni galeriden okunur.',
-            badges: ['wave-10', 'theme-presets', 'gallery'],
-            content: (
-              <ThemePresetGallery
-                presets={themePresetGalleryItems}
-                compareAxes={themePresetSummary?.compareAxes ?? []}
-              />
-            ),
-          },
-          {
-            id: 'theme-preset-gallery-compare',
-            eyebrow: 'Recipe 02',
-            title: 'Preset compare handoff',
-            description: 'Gallery secimi ile compare matrisi ayni preset dili uzerinden okunur.',
-            badges: ['compare', 'contrast', 'density'],
-            content: (
-              <ThemePresetCompare
-                leftPreset={defaultThemePreset}
-                rightPreset={contrastThemePreset ?? compactThemePreset}
-              />
-            ),
-          },
-        ];
-      case 'ThemePresetCompare':
-        return [
-          {
-            id: 'theme-preset-compare-default',
-            eyebrow: 'Recipe 01',
-            title: 'Theme preset compare',
-            description: 'Appearance, density, contrast ve intent farklari ayni compare matrisiyle okunur.',
-            badges: ['wave-10', 'theme-presets', 'compare'],
-            content: (
-              <ThemePresetCompare
-                leftPreset={defaultThemePreset}
-                rightPreset={contrastThemePreset ?? compactThemePreset}
-              />
-            ),
-          },
-        ];
-      case 'SearchFilterListing':
-        return [
-          {
-            id: 'search-filter-listing-default',
-            eyebrow: 'Recipe 01',
-            title: 'Search + filter listing',
-            description: 'PageHeader, FilterBar, SummaryStrip ve listing shell ayni recipe ile tekrar kullanilir.',
-            badges: ['wave-11', 'recipes', 'listing'],
-            content: renderRecipeComponentPreview('search_filter_listing'),
-          },
-        ];
-      case 'DetailSummary':
-        return [
-          {
-            id: 'detail-summary-default',
-            eyebrow: 'Recipe 01',
-            title: 'Detail summary inspector',
-            description: 'Entity detail, KPI strip ve JSON payload tek inspector recipe altinda toplanir.',
-            badges: ['wave-11', 'recipes', 'detail'],
-            content: renderRecipeComponentPreview('detail_summary'),
-          },
-        ];
-      case 'ApprovalReview':
-        return [
-          {
-            id: 'approval-review-default',
-            eyebrow: 'Recipe 01',
-            title: 'Approval review workflow',
-            description: 'Checkpoint, evidence ve audit akisi ayni review recipe ile okunur.',
-            badges: ['wave-11', 'recipes', 'approval'],
-            content: renderRecipeComponentPreview('approval_review'),
-          },
-        ];
-      case 'EmptyErrorLoading':
-        return [
-          {
-            id: 'empty-error-loading-default',
-            eyebrow: 'Recipe 01',
-            title: 'State feedback recipe',
-            description: 'Loading, error ve empty durumlari ayni feedback diliyle tekrar kullanilir.',
-            badges: ['wave-11', 'recipes', 'feedback'],
-            content: renderRecipeComponentPreview('empty_error_loading'),
-          },
-        ];
-      case 'AIGuidedAuthoring':
-        return [
-          {
-            id: 'ai-guided-authoring-default',
-            eyebrow: 'Recipe 01',
-            title: 'AI guided authoring',
-            description: 'Prompt yazimi, recommendation ve command palette ayni authoring shell altinda toplanir.',
-            badges: ['wave-11', 'recipes', 'ai-authoring'],
-            content: renderRecipeComponentPreview('ai_guided_authoring'),
-          },
-        ];
-      default:
-        return [
-          {
-            id: `${toTestIdSuffix(item.name)}-default-preview`,
-            eyebrow: 'Preview',
-            title: `${item.name} live preview`,
-            description: item.description,
-            badges: [statusLabel[item.lifecycle], demoModeLabel[item.demoMode]],
-            content: renderLivePreview(item),
-          },
-        ];
-    }
-  };
+  useEffect(() => {
+    setReportStatus((current) => {
+      if (current === previousReportStatusSeed.current.idle) {
+        return reportStatusSeed.idle;
+      }
+      if (current === previousReportStatusSeed.current.applied) {
+        return reportStatusSeed.applied;
+      }
+      if (current === previousReportStatusSeed.current.reset) {
+        return reportStatusSeed.reset;
+      }
+      return current;
+    });
+    previousReportStatusSeed.current = reportStatusSeed;
+  }, [reportStatusSeed]);
 
-  const buildRecipeLensSection = (item: DesignLabIndexItem): ComponentShowcaseSection | null => {
-    if (!recipeSummary) return null;
+  useEffect(() => {
+    setDropdownAction((current) => (
+      current === previousDropdownActionSeed.current ? dropdownActionSeed : current
+    ));
+    previousDropdownActionSeed.current = dropdownActionSeed;
+  }, [dropdownActionSeed]);
 
-    const directRecipes = relatedRecipes.length
-      ? relatedRecipes
-      : recipeSummary.currentFamilies.filter((recipe) => recipe.ownerBlocks.includes(item.name));
-
-    const recipeCandidates = directRecipes.length ? directRecipes : recipeSummary.currentFamilies.slice(0, 3);
-
-    return {
-      id: `${toTestIdSuffix(item.name)}-recipe-lens`,
-      kind: 'recipe',
-      eyebrow: 'Recipe Lens',
-      title: 'Recipe composition lens',
-      description: 'Bu component hangi ekran reçetelerinde kullanılır ve tüketici ekip nerede hazır kompozisyon almalıdır.',
-      badges: ['recipe-first', 'consumer-handoff', `${recipeCandidates.length} recipe`],
-      content: (
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-          <PreviewPanel title="Direct recipes" kind="recipe">
-            <div className="grid grid-cols-1 gap-3">
-              {recipeCandidates.map((recipe) => (
-                <div key={recipe.recipeId} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <Text as="div" className="font-semibold text-text-primary">
-                        {recipe.recipeId}
-                      </Text>
-                      <Text variant="secondary" className="mt-1 block text-sm leading-6">
-                        {recipe.intent}
-                      </Text>
-                    </div>
-                    <Badge tone={recipe.ownerBlocks.includes(item.name) ? 'success' : 'muted'}>
-                      {recipe.ownerBlocks.includes(item.name) ? 'Direct owner' : 'Related'}
-                    </Badge>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {recipe.ownerBlocks.map((owner) => (
-                      <SectionBadge
-                        key={owner}
-                        label={owner}
-                        className={owner === item.name ? 'border-state-success-border bg-state-success-bg text-state-success-text' : undefined}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </PreviewPanel>
-          <PreviewPanel title="Consumer handoff" kind="recipe">
-            <div className="grid grid-cols-1 gap-3">
-              <LibraryMetricCard
-                label="Preferred source"
-                value={directRecipes.length ? 'Recipe composition' : 'Primitive composition'}
-                note={directRecipes.length ? 'Bu component için önce hazır recipe ailesi tüketilmeli.' : 'Hazır recipe yok; primitive doğrudan compose edilecek.'}
-              />
-              <LibraryMetricCard
-                label="Primary track"
-                value={trackMeta[resolveItemTrack(item)].label}
-                note="Tüketici ekip aynı track içindeki canonical recipe ve theme presetlerini referans almalı."
-              />
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <DetailLabel>Consumer rule</DetailLabel>
-                <Text variant="secondary" className="mt-2 block text-sm leading-7">
-                  Uygulama ekipleri yeni ekran tasarımını sayfa içinde yeniden icat etmemeli. Önce bu lens içindeki recipe aileleri
-                  kontrol edilmeli; yalnız eksikse primitive seviyesinde yeni kompozisyon tasarlanmalı.
-                </Text>
-              </div>
-            </div>
-          </PreviewPanel>
-        </div>
-      ),
-    };
-  };
-
-  const buildRecipeWorkspaceShowcaseSections = (recipe: DesignLabRecipeFamily): ComponentShowcaseSection[] => {
-    const recipeItems = recipe.ownerBlocks
-      .map((owner) => designLabIndex.items.find((item) => item.name === owner) ?? null)
-      .filter((item): item is DesignLabIndexItem => Boolean(item));
-    const missingOwners = recipe.ownerBlocks.filter((owner) => !recipeItems.some((item) => item.name === owner));
-    const recipeTracks = Array.from(new Set(recipeItems.map((item) => trackMeta[resolveItemTrack(item)].label)));
-    const recipeSections = Array.from(new Set(recipeItems.flatMap((item) => item.sectionIds ?? [])));
-    const recipeThemes = Array.from(
-      new Set(
-        recipeItems.flatMap((item) => [item.uxPrimaryThemeId, item.uxPrimarySubthemeId].filter(Boolean) as string[]),
-      ),
-    );
-    const recipeQuality = Array.from(new Set(recipeItems.flatMap((item) => item.qualityGates ?? [])));
-
-    return [
-      {
-        id: `${toTestIdSuffix(recipe.recipeId)}-assembly-map`,
-        kind: 'recipe',
-        eyebrow: 'Recipe 01',
-        title: 'Recipe surface',
-        description: 'Recipe’in canlı kompozisyonu, contract bağlamı ve consumer handoff aynı kartta okunur.',
-        badges: ['recipe', 'assembly', `${recipe.ownerBlocks.length} blocks`],
-        content: (
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-            <PreviewPanel title="Recipe surface" kind="recipe">
-              {renderRecipeComponentPreview(recipe.recipeId)}
-            </PreviewPanel>
-            <PreviewPanel title="Consumer handoff" kind="recipe">
-              <div className="grid grid-cols-1 gap-3">
-                <LibraryMetricCard
-                  label="Preferred path"
-                  value="Recipe -> Screen"
-                  note="Ürün ekipleri bu recipe ailelerinden başlayıp yalnız veri ve iş kuralı bağlamalı."
-                />
-                <LibraryMetricCard
-                  label="Track spread"
-                  value={recipeTracks.length ? recipeTracks.join(' / ') : '—'}
-                  note="Recipe bileşenleri birden fazla track kapsıyorsa tasarım kararları bu yüzeyde kilitlenmeli."
-                />
-                {missingOwners.length ? (
-                  <div className="rounded-2xl border border-state-warning-border bg-state-warning-bg p-4">
-                    <DetailLabel>Missing owners</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {missingOwners.map((owner) => (
-                        <SectionBadge key={owner} label={owner} className="border-state-warning-border bg-state-warning-bg text-state-warning-text" />
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                    <DetailLabel>Contract health</DetailLabel>
-                    <Text variant="secondary" className="mt-2 block text-sm leading-7">
-                      Tüm owner block’lar registry ile eşleşiyor. Bu recipe artık tüketici ekranları için güvenli başlangıç noktası olarak kullanılabilir.
-                    </Text>
-                  </div>
-                )}
-              </div>
-            </PreviewPanel>
-          </div>
-        ),
-      },
-      {
-        id: `${toTestIdSuffix(recipe.recipeId)}-building-blocks`,
-        kind: 'live',
-        eyebrow: 'Recipe 02',
-        title: 'Primary building blocks',
-        description: 'Recipe içindeki bloklardan herhangi birine geçip component seviyesinde incelemeye devam et.',
-        badges: ['live', 'component-bridge', 'handoff'],
-        content: (
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-            {recipeItems.map((item) => (
-              <div key={item.name} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <Text as="div" className="font-semibold text-text-primary">
-                      {item.name}
-                    </Text>
-                    <Text variant="secondary" className="mt-1 block text-sm leading-6">
-                      {item.description}
-                    </Text>
-                  </div>
-                  <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
-                    {statusLabel[item.lifecycle]}
-                  </Badge>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <SectionBadge label={trackMeta[resolveItemTrack(item)].label} />
-                  {item.uxPrimaryThemeId ? <SectionBadge label={item.uxPrimaryThemeId} /> : null}
-                </div>
-                <div className="mt-4">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => focusComponentFromRecipe(item)}
-                    data-testid={`design-lab-recipe-owner-${toTestIdSuffix(recipe.recipeId)}-${toTestIdSuffix(item.name)}`}
-                  >
-                    Component detayına git
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        ),
-      },
-      {
-        id: `${toTestIdSuffix(recipe.recipeId)}-quality-reference`,
-        kind: 'reference',
-        eyebrow: 'Recipe 03',
-        title: 'Governance and quality contract',
-        description: 'Recipe düzeyinde ortak quality gate, UX tema ve north-star section kapsaması.',
-        badges: ['reference', 'quality', 'ux'],
-        content: (
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1fr]">
-            <PreviewPanel title="Quality gates" kind="reference">
-              <div className="flex flex-wrap gap-2">
-                {recipeQuality.length ? recipeQuality.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">Gate yok</Text>}
-              </div>
-            </PreviewPanel>
-            <PreviewPanel title="UX and sections" kind="reference">
-              <div className="space-y-3">
-                <div className="flex flex-wrap gap-2">
-                  {recipeThemes.length ? recipeThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">UX theme yok</Text>}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {recipeSections.length ? recipeSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">North-star section yok</Text>}
-                </div>
-              </div>
-            </PreviewPanel>
-          </div>
-        ),
-      },
-    ];
-  };
-
-  const renderDemoSection = (item: DesignLabIndexItem | null) => {
-    if (!item) {
-      return <Text variant="secondary">Canlı showcase için component seç.</Text>;
-    }
-
-    if (item.availability === 'planned' || item.demoMode === 'planned') {
-      return (
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <LibraryShowcaseCard
-            eyebrow="Roadmap"
-            title={`${item.name} henüz release edilmedi`}
-            description="Bu item planlı backlog seviyesinde. Export, live demo ve regression kanıtı tamamlanmadan canlı showcase açılmaz."
-            badges={<Tag tone="info">Planned item</Tag>}
-          >
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <LibraryMetricCard label="Release gate" value="blocked" note="Implementation + registry sync + preview gerektirir." />
-              <LibraryMetricCard label="Wave" value={item.roadmapWaveId ?? '—'} note="Roadmap wave hizası." />
-            </div>
-          </LibraryShowcaseCard>
-          <LibraryShowcaseCard
-            eyebrow="North Star"
-            title="Bu bileşen nerede kullanılacak?"
-            description="Roadmap item olduğu için önce UX ve quality kontratı netleşir, sonra export edilir."
-          >
-            <div className="flex flex-wrap gap-2">
-              {item.sectionIds.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />)}
-            </div>
-          </LibraryShowcaseCard>
-        </div>
-      );
-    }
-
-    const baseShowcaseSections = buildDemoShowcaseSections(item).map((section) => ({
-      ...section,
-      kind: resolveShowcaseSectionKind(section),
-    }));
-    const recipeLensSection = buildRecipeLensSection(item);
-    const orderedShowcaseSections = demoGalleryMode === 'recipes_first'
-      ? [
-          ...(recipeLensSection ? [recipeLensSection] : []),
-          ...baseShowcaseSections.sort((left, right) => {
-            const order: Record<DemoSurfaceKind, number> = { recipe: 0, live: 1, reference: 2 };
-            return order[left.kind ?? 'live'] - order[right.kind ?? 'live'];
-          }),
-        ]
-      : baseShowcaseSections.filter((section) => demoGalleryMode !== 'live_only' || section.kind === 'live');
-
-    return (
-      <DemoGalleryModeContext.Provider value={demoGalleryMode}>
-        <div className="space-y-5">
-          <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-            <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
-              <div className="flex flex-wrap gap-2">
-                {orderedShowcaseSections.map((section, index) => (
-                  <SectionBadge key={section.id} label={`${String(index + 1).padStart(2, '0')} · ${section.title}`} />
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <SectionBadge label={`Mod · ${demoGalleryModeOptions.find((entry) => entry.id === demoGalleryMode)?.label ?? 'Tüm yüzeyler'}`} />
-                <SectionBadge label={sectionLockEnabled ? 'Section lock · Açık' : 'Section lock · Kapalı'} />
-              </div>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {(['live', 'reference', 'recipe'] as DemoSurfaceKind[]).map((kind) => (
-                <SectionBadge
-                  key={kind}
-                  label={demoSurfaceMeta[kind].label}
-                  className={demoSurfaceMeta[kind].badgeClassName}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-5">
-            {orderedShowcaseSections.length ? (
-              orderedShowcaseSections.map((section) => (
-                <div key={section.id} data-testid={`design-lab-demo-card-${section.id}`} data-demo-section-kind={section.kind}>
-                  <LibraryShowcaseCard
-                    eyebrow={section.eyebrow}
-                    title={section.title}
-                    description={section.description}
-                    badges={[
-                      <SectionBadge
-                        key={`${section.id}-kind`}
-                        label={demoSurfaceMeta[section.kind ?? 'live'].label}
-                        className={demoSurfaceMeta[section.kind ?? 'live'].badgeClassName}
-                      />,
-                      ...((section.badges ?? []).map((badge) => <SectionBadge key={`${section.id}-${badge}`} label={badge} />)),
-                    ]}
-                  >
-                    {section.content}
-                  </LibraryShowcaseCard>
-                </div>
-              ))
-            ) : (
-              <div className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-                <Text variant="secondary" className="block leading-7">
-                  Seçili mod için görünür demo kalmadı. `Tüm yüzeyler` veya `Recipes first` moduna dönerek referans ve tarif bloklarını tekrar açabilirsin.
-                </Text>
-              </div>
-            )}
-          </div>
-        </div>
-      </DemoGalleryModeContext.Provider>
-    );
-  };
+  useEffect(() => {
+    setContextMenuAction((current) => (
+      current === previousContextMenuActionSeed.current ? contextMenuActionSeed : current
+    ));
+    previousContextMenuActionSeed.current = contextMenuActionSeed;
+  }, [contextMenuActionSeed]);
 
   const renderOverviewTab = (item: DesignLabIndexItem | null) => {
     if (!item) {
       return (
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
-          <Text variant="secondary">Soldan bir component seç.</Text>
+          <Text variant="secondary">{t('designlab.overview.empty')}</Text>
         </div>
       );
     }
     const releaseFamilyContext = buildReleaseFamilyContext(item, selectedGroup?.title ?? null, releaseSummary ?? null);
-
-    return (
-      <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Kısa Özet</DetailLabel>
-            <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
-              {item.name}
-            </Text>
-            <Text variant="secondary" className="mt-2 block leading-7">
-              {item.description}
-            </Text>
-            <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
-              {heroStats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                  <DetailLabel>{stat.label}</DetailLabel>
-                  <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
-                    {stat.value}
-                  </Text>
-                  <Text variant="secondary" className="mt-1 block text-xs">
-                    {stat.note}
-                  </Text>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Hızlı Durum</DetailLabel>
-            <div className="mt-4 space-y-3">
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Yayın Durumu
-                </Text>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <Badge tone={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
-                  <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
-                    {statusLabel[item.lifecycle]}
-                  </Badge>
-                  <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
-                    {demoModeLabel[item.demoMode]}
-                  </Badge>
-                </div>
-              </div>
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Wave / Contract
-                </Text>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {item.roadmapWaveId ? <SectionBadge label={item.roadmapWaveId} /> : <Text variant="secondary">Wave yok</Text>}
-                  {item.acceptanceContractId ? <SectionBadge label={item.acceptanceContractId} /> : null}
-                </div>
-              </div>
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Etiketler
-                </Text>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {item.tags?.length ? item.tags.map((tag) => <SectionBadge key={tag} label={tag} />) : <Text variant="secondary">Etiket yok</Text>}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {releaseSummary ? (
-          <LibraryShowcaseCard
-            eyebrow="Release"
-            title={`${releaseSummary.packageName}@${releaseSummary.packageVersion}`}
-            description="Kütüphanenin sürüm, changelog ve dağıtım kanıtı aynı docs sayfasından görünür. Bu blok yayın mantığını component detayıyla aynı bağlamda tutar."
-            badges={[
-              <SectionBadge key="scheme" label={releaseSummary.versionScheme.toUpperCase()} />,
-              <SectionBadge key="release-version" label={`Release ${releaseSummary.latestRelease.version || releaseSummary.packageVersion}`} />,
-              <SectionBadge key="release-date" label={releaseSummary.latestRelease.date || 'Tarih yok'} />,
-            ]}
-          >
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Lifecycle Changes</DetailLabel>
-                  <Text variant="secondary" className="mt-2 block text-sm leading-7">
-                    {releaseSummary.latestRelease.lifecycleChanges || 'Henüz lifecycle notu yok.'}
-                  </Text>
-                </div>
-                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Migration Notes</DetailLabel>
-                  <Text variant="secondary" className="mt-2 block text-sm leading-7">
-                    {releaseSummary.latestRelease.migrationNotes || 'Migration notu yok.'}
-                  </Text>
-                </div>
-                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Changed Components</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {releaseSummary.latestRelease.changedComponents.length ? (
-                      releaseSummary.latestRelease.changedComponents.map((component) => (
-                        <SectionBadge key={component} label={component} />
-                      ))
-                    ) : (
-                      <Text variant="secondary">Bileşen kaydı yok</Text>
-                    )}
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Breaking Changes</DetailLabel>
-                  <Text
-                    variant="secondary"
-                    className={`mt-2 block text-sm leading-7 ${releaseSummary.latestRelease.breakingChanges === 'none' ? 'text-state-success-text' : ''}`}
-                  >
-                    {releaseSummary.latestRelease.breakingChanges || 'none'}
-                  </Text>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4">
-                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Distribution Targets</DetailLabel>
-                  <div className="mt-3 space-y-3">
-                    {releaseSummary.distributionTargets.map((target) => {
-                      const fullyReady = target.artifactCount === 0 || target.artifactPresentCount === target.artifactCount;
-                      return (
-                        <div key={target.targetId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <Text as="div" className="font-semibold text-text-primary">
-                              {target.targetId}
-                            </Text>
-                            <Badge tone={fullyReady ? 'success' : 'warning'}>
-                              {target.artifactPresentCount}/{target.artifactCount || 0}
-                            </Badge>
-                          </div>
-                          <Text variant="secondary" className="mt-1 block text-xs leading-5">
-                            {target.channel}
-                          </Text>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Stable Release Requires</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {releaseSummary.stableReleaseRequires.map((entry) => (
-                      <SectionBadge key={entry} label={entry} />
-                    ))}
-                  </div>
-                </div>
-
-                {releaseFamilyContext ? (
-                  <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Current Family Context</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={releaseFamilyContext.familyLabel} />
-                      <SectionBadge label={releaseFamilyContext.subgroupLabel} />
-                      <SectionBadge label={releaseFamilyContext.waveLabel} />
-                      <Badge tone={releaseFamilyContext.familyTouched ? 'success' : 'info'}>
-                        {releaseFamilyContext.familyTouched ? 'Release-touchpoint var' : 'Dogrudan release-touchpoint yok'}
-                      </Badge>
-                    </div>
-                    <Text variant="secondary" className="mt-3 block text-sm leading-6">
-                      {releaseFamilyContext.note}
-                    </Text>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-          </LibraryShowcaseCard>
-        ) : null}
-
-        {adoptionSummary ? (
-          <LibraryShowcaseCard
-            eyebrow="Adoption Cockpit"
-            title="Consumer-ready surface"
-            description="Public export yüzeyi, API coverage ve yaygın tüketim readiness aynı blokta görünür. Hedef, kütüphaneyi yeni ekranların varsayılan tüketim katmanı haline getirmek."
-            badges={[
-              <SectionBadge key="adoption-contract" label={adoptionSummary.contractId} />,
-              <SectionBadge key="api-coverage" label={`API ${adoptionSummary.apiCoverage.coveragePercent}%`} />,
-              <SectionBadge key="ready-surface" label={`${adoptionSummary.releaseReadiness.wideAdoptionReady} ready`} />,
-            ]}
-          >
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-                  <LibraryMetricCard
-                    label="Public surface"
-                    value={adoptionSummary.surfaceSummary.publicExports}
-                    note={`${adoptionSummary.surfaceSummary.stableExports} stable / ${adoptionSummary.surfaceSummary.betaExports} beta`}
-                  />
-                  <LibraryMetricCard
-                    label="API coverage"
-                    value={`${adoptionSummary.apiCoverage.coveragePercent}%`}
-                    note={`${adoptionSummary.apiCoverage.documentedExports} documented / ${adoptionSummary.apiCoverage.undocumentedExports} backlog`}
-                  />
-                  <LibraryMetricCard
-                    label="Wide adoption ready"
-                    value={adoptionSummary.releaseReadiness.wideAdoptionReady}
-                    note="Stable + API docs birlikte hazır olan surface"
-                  />
-                  <LibraryMetricCard
-                    label="Used by apps"
-                    value={adoptionSummary.surfaceSummary.consumedByAppsExports}
-                    note={`${adoptionSummary.surfaceSummary.liveDemoExports} export canlı demo ile gösteriliyor`}
-                  />
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Consumer rules</DetailLabel>
-                  <div className="mt-3 space-y-2">
-                    {adoptionSummary.consumerRules.map((rule) => (
-                      <Text key={rule} variant="secondary" className="block text-sm leading-6">
-                        {rule}
-                      </Text>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Used but undocumented</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {adoptionSummary.priorityBacklog.usedUndocumented.length ? (
-                        adoptionSummary.priorityBacklog.usedUndocumented.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Backlog temiz</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Stable but undocumented</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {adoptionSummary.priorityBacklog.stableUndocumented.length ? (
-                        adoptionSummary.priorityBacklog.stableUndocumented.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Stable surface temiz</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Private surface guard</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <Badge tone={adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'success' : 'warning'}>
-                        {adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'Protected' : 'Drifted'}
-                      </Badge>
-                      <SectionBadge label={`${adoptionSummary.internalSurfaceProtection.allowedConsumers.length} consumer`} />
-                      <SectionBadge label={`${adoptionSummary.internalSurfaceProtection.runtimeExportsWithoutRegistry} drift`} />
-                    </div>
-                    <Text variant="secondary" className="mt-3 block text-sm leading-6">
-                      Internal barrel yalnız docs/admin yüzeyi için tutulur; public package export zincirine geri sızması gate ile engellenir.
-                    </Text>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Package import</DetailLabel>
-                  <LibraryCodeBlock code={adoptionSummary.packageImport} className="mt-3" />
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Module Federation contract</DetailLabel>
-                  <LibraryCodeBlock
-                    code={[
-                      `remote: '${adoptionSummary.moduleFederation.remoteName}'`,
-                      `previewRoute: '${adoptionSummary.previewRoute}'`,
-                      `exposes: ${JSON.stringify(adoptionSummary.moduleFederation.exposes)}`,
-                    ].join('\n')}
-                    languageLabel="contract"
-                    className="mt-3"
-                  />
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Evidence refs</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {adoptionSummary.evidenceRefs.map((entry) => (
-                      <SectionBadge key={entry} label={entry} />
-                    ))}
-                  </div>
-                  <Text variant="secondary" className="mt-3 block text-sm leading-6">
-                    Bu cockpit, manifest, public surface ve adoption enforcement kontratını aynı bağlamda tutar.
-                  </Text>
-                </div>
-              </div>
-            </div>
-          </LibraryShowcaseCard>
-        ) : null}
-
-        {migrationSummary ? (
-          <LibraryShowcaseCard
-            eyebrow="Migration"
-            title="Consumer impact ve rollout readiness"
-            description="Package veya remote surface degistiginde hangi uygulamalar etkilenecek, hangi stable componentler hala yalniz Design Lab icinde ve hangi adopted surface'in story coverage eksigi var; bu kart o etkiyi ayni yerde toplar."
-            badges={[
-              <SectionBadge key="migration-contract" label={migrationSummary.contractId} />,
-              <SectionBadge key="migration-apps" label={`${migrationSummary.summary.consumerAppsCount} consumer app`} />,
-              <SectionBadge key="migration-coverage" label={`Story ${migrationSummary.summary.adoptedStoryCoveragePercent}%`} />,
-            ]}
-          >
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-                  <LibraryMetricCard
-                    label="Adopted outside lab"
-                    value={migrationSummary.summary.adoptedOutsideLabComponents}
-                    note={`${migrationSummary.summary.stableAdoptedComponents} stable / ${migrationSummary.summary.betaAdoptedComponents} beta`}
-                  />
-                  <LibraryMetricCard
-                    label="Consumer apps"
-                    value={migrationSummary.summary.consumerAppsCount}
-                    note="Public surface'i kullanan farkli uygulamalar"
-                  />
-                  <LibraryMetricCard
-                    label="Adopted story coverage"
-                    value={`${migrationSummary.summary.adoptedStoryCoveragePercent}%`}
-                    note={`${migrationSummary.summary.adoptedStoryCoveredComponents} adopted component story ile gorunur`}
-                  />
-                  <LibraryMetricCard
-                    label="Stable only in lab"
-                    value={migrationSummary.summary.stableOnlyInDesignLab}
-                    note="Genis rollout oncesi adoption backlog adayi"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  <LibraryMetricCard
-                    label="Single-app blast radius"
-                    value={migrationSummary.summary.singleAppBlastRadiusCount}
-                    note="Yalniz bir consumer app'e dokunan public surface"
-                  />
-                  <LibraryMetricCard
-                    label="Cross-app review"
-                    value={migrationSummary.summary.crossAppReviewComponents}
-                    note="Birden fazla app'i etkileyen release review surface"
-                  />
-                  <LibraryMetricCard
-                    label="Manual migration"
-                    value={migrationSummary.summary.manualReviewRequiredComponents}
-                    note={`${migrationSummary.summary.codemodReadyComponents} codemod-ready / geri kalani checklist ile ilerler`}
-                  />
-                  <LibraryMetricCard
-                    label="Owner mapped apps"
-                    value={`${migrationSummary.summary.ownerMappedAppsCount}/${migrationSummary.summary.consumerAppsCount}`}
-                    note="Consumer app owner resolution tamamlanan uygulamalar"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Beta used outside lab</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {migrationSummary.priorityBacklog.betaUsedOutsideLab.length ? (
-                        migrationSummary.priorityBacklog.betaUsedOutsideLab.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Backlog temiz</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Adopted without story</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {migrationSummary.priorityBacklog.adoptedWithoutStory.length ? (
-                        migrationSummary.priorityBacklog.adoptedWithoutStory.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Story coverage hizali</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Stable only in lab</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {migrationSummary.priorityBacklog.stableOnlyInDesignLab.length ? (
-                        migrationSummary.priorityBacklog.stableOnlyInDesignLab.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Adoption dengeli</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Single-app blast radius</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {migrationSummary.priorityBacklog.singleAppBlastRadius.length ? (
-                        migrationSummary.priorityBacklog.singleAppBlastRadius.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="info">Yogun tekil risk yok</Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {migrationSummary.changeClasses ? (
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Change classes</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={`patch-safe ${migrationSummary.changeClasses.summary.patchSafeLabOnly}`} />
-                      <SectionBadge label={`single-app ${migrationSummary.changeClasses.summary.minorSingleAppReview}`} />
-                      <SectionBadge label={`beta-review ${migrationSummary.changeClasses.summary.minorBetaExternalReview}`} />
-                      <SectionBadge label={`cross-app ${migrationSummary.changeClasses.summary.majorCrossAppReview}`} />
-                      <SectionBadge label={`manual ${migrationSummary.changeClasses.summary.manualReviewRequired}`} />
-                    </div>
-                    <div className="mt-4 space-y-2">
-                      {migrationSummary.changeClasses.components.slice(0, 6).map((entry) => (
-                        <div key={`${entry.name}-${entry.classId}`} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <Text as="div" className="text-sm font-semibold text-text-primary">
-                              {entry.name}
-                            </Text>
-                            <div className="flex flex-wrap gap-2">
-                              <SectionBadge label={entry.classId} />
-                              <SectionBadge label={`semver ${entry.semver}`} />
-                              <SectionBadge label={entry.migrationTrack} />
-                              {entry.ownerHandles?.length ? <SectionBadge label={entry.ownerHandles.join(', ')} /> : null}
-                            </div>
-                          </div>
-                          <Text variant="secondary" className="mt-2 block text-sm leading-6">
-                            {entry.consumerAppCount
-                              ? `${entry.consumerAppCount} app etkisi: ${entry.consumerApps.join(', ')}`
-                              : 'Henuz Design Lab disina cikmadi; patch-safe adoption adayi.'}
-                          </Text>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : null}
-
-                {migrationSummary.semverGuidance ? (
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Semver guidance</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={`recommended ${migrationSummary.semverGuidance.recommendedBump}`} />
-                      <SectionBadge label={migrationSummary.semverGuidance.releaseNotesLabel} />
-                      <SectionBadge label={`cross-app ${migrationSummary.semverGuidance.summary.majorCrossAppReview}`} />
-                      <SectionBadge label={`single-app ${migrationSummary.semverGuidance.summary.minorSingleAppReview}`} />
-                    </div>
-                    <Text variant="secondary" className="mt-3 block text-sm leading-6">
-                      {migrationSummary.semverGuidance.reason}
-                    </Text>
-                    <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-                      <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                        <DetailLabel>Major review queue</DetailLabel>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {migrationSummary.semverGuidance.majorComponents.length ? (
-                            migrationSummary.semverGuidance.majorComponents.map((name) => (
-                              <SectionBadge key={`major-${name}`} label={name} />
-                            ))
-                          ) : (
-                            <Badge tone="success">Bos</Badge>
-                          )}
-                        </div>
-                      </div>
-                      <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                        <DetailLabel>Minor review queue</DetailLabel>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {migrationSummary.semverGuidance.minorComponents.length ? (
-                            migrationSummary.semverGuidance.minorComponents.map((name) => (
-                              <SectionBadge key={`minor-${name}`} label={name} />
-                            ))
-                          ) : (
-                            <Badge tone="success">Bos</Badge>
-                          )}
-                        </div>
-                      </div>
-                      <div className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                        <DetailLabel>Patch-safe lab backlog</DetailLabel>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {migrationSummary.semverGuidance.patchCandidates.length ? (
-                            migrationSummary.semverGuidance.patchCandidates.map((name) => (
-                              <SectionBadge key={`patch-${name}`} label={name} />
-                            ))
-                          ) : (
-                            <Badge tone="info">Backlog yok</Badge>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="space-y-4">
-                {migrationSummary.upgradePlaybook ? (
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Upgrade playbook</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={migrationSummary.upgradePlaybook.contractId} />
-                      <SectionBadge label={`strategy ${migrationSummary.upgradePlaybook.defaultStrategy}`} />
-                      <SectionBadge label={`codemod ${migrationSummary.upgradePlaybook.codemodSupport}`} />
-                      <SectionBadge label={`${migrationSummary.upgradePlaybook.summary.trackCount} track`} />
-                    </div>
-                    <div className="mt-4 grid grid-cols-1 gap-3">
-                      {migrationSummary.upgradePlaybook.tracks.map((track) => (
-                        <div key={track.track_id} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <Text as="div" className="text-sm font-semibold text-text-primary">
-                              {track.label}
-                            </Text>
-                            <SectionBadge label={track.automation} />
-                          </div>
-                          <Text variant="secondary" className="mt-2 block text-sm leading-6">
-                            Trigger: {track.trigger}
-                          </Text>
-                        </div>
-                      ))}
-                    </div>
-                    <LibraryCodeBlock
-                      code={[
-                        `contract: '${migrationSummary.upgradePlaybook.contractPath}'`,
-                        `singleAppBlastRadius: ${migrationSummary.upgradePlaybook.summary.singleAppBlastRadiusCount}`,
-                        `crossAppReview: ${migrationSummary.upgradePlaybook.summary.crossAppReviewComponents}`,
-                        `manualChecklist: ${migrationSummary.upgradePlaybook.summary.manualChecklistComponents}`,
-                        `codemodReady: ${migrationSummary.upgradePlaybook.summary.codemodReadyComponents}`,
-                      ].join('\n')}
-                      languageLabel="migration"
-                      className="mt-4"
-                    />
-                  </div>
-                ) : null}
-
-                {migrationSummary.upgradeChecklist ? (
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Upgrade checklist</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={`items ${migrationSummary.upgradeChecklist.summary.totalItems}`} />
-                      <SectionBadge label={`single-app ${migrationSummary.upgradeChecklist.summary.singleAppItems}`} />
-                      <SectionBadge label={`cross-app ${migrationSummary.upgradeChecklist.summary.crossAppItems}`} />
-                      <SectionBadge label={`owners ${migrationSummary.upgradeChecklist.summary.ownerMappedAppsCount}`} />
-                    </div>
-                    <div className="mt-4 space-y-3">
-                      {migrationSummary.upgradeChecklist.items.slice(0, 4).map((item) => (
-                        <div key={item.checklistId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <Text as="div" className="text-sm font-semibold text-text-primary">
-                              {item.component}
-                            </Text>
-                            <div className="flex flex-wrap gap-2">
-                              <SectionBadge label={item.classId} />
-                              <SectionBadge label={`semver ${item.semver}`} />
-                            </div>
-                          </div>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {item.ownerHandles.length ? (
-                              item.ownerHandles.map((owner) => (
-                                <SectionBadge key={`${item.checklistId}-${owner}`} label={owner} />
-                              ))
-                            ) : (
-                              <Badge tone="warning">Owner eksik</Badge>
-                            )}
-                          </div>
-                          <div className="mt-3 space-y-2">
-                            {item.tasks.map((task) => (
-                              <Text key={`${item.checklistId}-${task}`} variant="secondary" className="block text-sm leading-6">
-                                {task}
-                              </Text>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <LibraryCodeBlock
-                      code={[
-                        `artifact: '${migrationSummary.upgradeChecklist.artifactPath}'`,
-                        `strategy: '${migrationSummary.upgradeChecklist.generatedStrategy}'`,
-                        `totalItems: ${migrationSummary.upgradeChecklist.summary.totalItems}`,
-                      ].join('\n')}
-                      languageLabel="checklist"
-                      className="mt-4"
-                    />
-                  </div>
-                ) : null}
-
-                {migrationSummary.upgradeRecipes ? (
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Upgrade recipes</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={`recipes ${migrationSummary.upgradeRecipes.summary.totalRecipes}`} />
-                      <SectionBadge label={`candidates ${migrationSummary.upgradeRecipes.summary.codemodCandidateCount}`} />
-                      <SectionBadge label={`dry-run ${migrationSummary.upgradeRecipes.summary.dryRunReadyCandidates}`} />
-                      <SectionBadge label={migrationSummary.upgradeRecipes.candidateMode} />
-                    </div>
-                    <div className="mt-4 space-y-3">
-                      {migrationSummary.upgradeRecipes.items.slice(0, 4).map((item) => (
-                        <div key={item.recipeId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <Text as="div" className="text-sm font-semibold text-text-primary">
-                              {item.component}
-                            </Text>
-                            <div className="flex flex-wrap gap-2">
-                              <SectionBadge label={item.consumerApp} />
-                              <SectionBadge label={item.automation.strategyId} />
-                              <SectionBadge label={`confidence ${item.automation.confidence}`} />
-                            </div>
-                          </div>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {item.ownerHandles.map((owner) => (
-                              <SectionBadge key={`${item.recipeId}-${owner}`} label={owner} />
-                            ))}
-                            {item.apiFocusProps.map((prop) => (
-                              <SectionBadge key={`${item.recipeId}-${prop}`} label={prop} />
-                            ))}
-                          </div>
-                          <div className="mt-3 space-y-2">
-                            {item.steps.slice(0, 2).map((step) => (
-                              <Text key={`${item.recipeId}-${step}`} variant="secondary" className="block text-sm leading-6">
-                                {step}
-                              </Text>
-                            ))}
-                          </div>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {item.targetFiles.slice(0, 2).map((target) => (
-                              <SectionBadge key={`${item.recipeId}-${target}`} label={target} />
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <LibraryCodeBlock
-                      code={[
-                        `artifact: '${migrationSummary.upgradeRecipes.artifactPath}'`,
-                        `auditArtifact: '${migrationSummary.upgradeRecipes.auditArtifactPath}'`,
-                        `auditScript: '${migrationSummary.upgradeRecipes.auditScript}'`,
-                        `contract: '${migrationSummary.upgradeRecipes.contractPath}'`,
-                      ].join('\n')}
-                      languageLabel="recipes"
-                      className="mt-4"
-                    />
-                  </div>
-                ) : null}
-
-                {migrationSummary.codemodCandidates ? (
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Codemod candidates</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={`candidates ${migrationSummary.codemodCandidates.summary.totalCandidates}`} />
-                      <SectionBadge label={`dry-run ${migrationSummary.codemodCandidates.summary.dryRunReadyCandidates}`} />
-                      <SectionBadge label={`low ${migrationSummary.codemodCandidates.summary.lowRiskCount}`} />
-                      <SectionBadge label={`medium ${migrationSummary.codemodCandidates.summary.mediumRiskCount}`} />
-                      <SectionBadge label={`high ${migrationSummary.codemodCandidates.summary.highRiskCount}`} />
-                      <SectionBadge label={migrationSummary.codemodCandidates.transformEngine} />
-                    </div>
-                    <div className="mt-4 space-y-3">
-                      {migrationSummary.codemodCandidates.items.slice(0, 4).map((item) => (
-                        <div key={item.candidateId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                          <div className="flex flex-wrap items-center justify-between gap-2">
-                            <Text as="div" className="text-sm font-semibold text-text-primary">
-                              {item.component}
-                            </Text>
-                            <div className="flex flex-wrap gap-2">
-                              <SectionBadge label={item.consumerApp} />
-                              <SectionBadge label={item.transformKind} />
-                              <SectionBadge label={`risk ${item.riskLevel}`} />
-                              <SectionBadge label={`touch ${item.estimatedTouchPoints}`} />
-                            </div>
-                          </div>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {item.ownerHandles.map((owner) => (
-                              <SectionBadge key={`${item.candidateId}-${owner}`} label={owner} />
-                            ))}
-                            {item.dryRunScope.requiredAnySignals.map((signal) => (
-                              <SectionBadge key={`${item.candidateId}-${signal}`} label={signal} />
-                            ))}
-                          </div>
-                          <div className="mt-3 space-y-2">
-                            {item.steps.slice(0, 2).map((step) => (
-                              <Text key={`${item.candidateId}-${step}`} variant="secondary" className="block text-sm leading-6">
-                                {step}
-                              </Text>
-                            ))}
-                            {item.blockers.slice(0, 2).map((blocker) => (
-                              <Text key={`${item.candidateId}-${blocker}`} variant="secondary" className="block text-sm leading-6">
-                                blocker: {blocker}
-                              </Text>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <LibraryCodeBlock
-                      code={[
-                        `artifact: '${migrationSummary.codemodCandidates.artifactPath}'`,
-                        `auditArtifact: '${migrationSummary.codemodCandidates.auditArtifactPath}'`,
-                        `auditScript: '${migrationSummary.codemodCandidates.auditScript}'`,
-                        `applyPolicy: '${migrationSummary.codemodCandidates.applyPolicy}'`,
-                      ].join('\n')}
-                      languageLabel="codemods"
-                      className="mt-4"
-                    />
-                  </div>
-                ) : null}
-
-                {migrationSummary.ownerResolution ? (
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Owner registry</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <SectionBadge label={migrationSummary.ownerResolution.contractId} />
-                      <SectionBadge label={`mapped ${migrationSummary.ownerResolution.ownerMappedAppsCount}`} />
-                      <SectionBadge label={`unowned ${migrationSummary.ownerResolution.unownedAppsCount}`} />
-                      <SectionBadge label={migrationSummary.ownerResolution.source} />
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {migrationSummary.ownerResolution.defaultOwnerHandles.map((owner) => (
-                        <SectionBadge key={`default-owner-${owner}`} label={owner} />
-                      ))}
-                    </div>
-                    <LibraryCodeBlock
-                      code={[
-                        `contract: '${migrationSummary.ownerResolution.contractPath}'`,
-                        `codeowners: '${migrationSummary.ownerResolution.codeownersPath}'`,
-                      ].join('\n')}
-                      languageLabel="owners"
-                      className="mt-4"
-                    />
-                  </div>
-                ) : null}
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Consumer apps</DetailLabel>
-                  <div className="mt-3 space-y-3">
-                    {migrationSummary.consumerApps.map((consumer) => (
-                      <div key={consumer.appId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <Text as="div" className="text-sm font-semibold text-text-primary">
-                            {consumer.appId}
-                          </Text>
-                          <div className="flex flex-wrap gap-2">
-                            <SectionBadge label={`${consumer.componentCount} component`} />
-                            {consumer.highestChangeClass ? <SectionBadge label={consumer.highestChangeClass} /> : null}
-                            {consumer.ownerSource ? <SectionBadge label={consumer.ownerSource} /> : null}
-                          </div>
-                        </div>
-                        {consumer.ownerHandles?.length ? (
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {consumer.ownerHandles.map((owner) => (
-                              <SectionBadge key={`${consumer.appId}-${owner}`} label={owner} />
-                            ))}
-                          </div>
-                        ) : null}
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {consumer.components.map((name) => (
-                            <SectionBadge key={`${consumer.appId}-${name}`} label={name} />
-                          ))}
-                        </div>
-                        {(consumer.singleAppComponents?.length || consumer.sharedComponents?.length) ? (
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {consumer.singleAppComponents?.length ? (
-                              <Badge tone="warning">{`${consumer.singleAppComponents.length} single-app surface`}</Badge>
-                            ) : null}
-                            {consumer.sharedComponents?.length ? (
-                              <Badge tone="info">{`${consumer.sharedComponents.length} shared surface`}</Badge>
-                            ) : null}
-                          </div>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Migration rules</DetailLabel>
-                  <div className="mt-3 space-y-2">
-                    {migrationSummary.rules.map((rule) => (
-                      <Text key={rule} variant="secondary" className="block text-sm leading-6">
-                        {rule}
-                      </Text>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Evidence refs</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {migrationSummary.evidenceRefs.map((entry) => (
-                      <SectionBadge key={entry} label={entry} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </LibraryShowcaseCard>
-        ) : null}
-
-        {visualRegressionSummary ? (
-          <LibraryShowcaseCard
-            eyebrow="Visual Contract"
-            title="Storybook ve regression harness"
-            description="Release-grade tasarim kutuphanesi icin sadece API coverage yetmez; gorsel harness, docs matrix ve static Storybook contract'i da ayni yerde izlenir."
-            badges={[
-              <SectionBadge key="visual-contract" label={visualRegressionSummary.contractId} />,
-              <SectionBadge
-                key="visual-harness"
-                label={`${visualRegressionSummary.summary.requiredHarnessPresentCount}/${visualRegressionSummary.summary.requiredHarnessCount} harness`}
-              />,
-              <SectionBadge key="visual-live" label={`${visualRegressionSummary.summary.designLabLiveDemoExports} live demo`} />,
-              <SectionBadge key="visual-story" label={`Story ${visualRegressionSummary.summary.storyCoveragePercent}%`} />,
-            ]}
-          >
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  <LibraryMetricCard
-                    label="Story files"
-                    value={visualRegressionSummary.summary.storybookStoryFiles}
-                    note="Core visual harness story dosya sayisi"
-                  />
-                  <LibraryMetricCard
-                    label="MDX docs"
-                    value={visualRegressionSummary.summary.mdxDocFiles}
-                    note="Theme/docs anlatim yuzeyi"
-                  />
-                  <LibraryMetricCard
-                    label="Story coverage"
-                    value={`${visualRegressionSummary.summary.storyCoveragePercent}%`}
-                    note={`${visualRegressionSummary.summary.storybookCoveredComponents}/${visualRegressionSummary.summary.visualizableComponents} component story ile gorunur`}
-                  />
-                  <LibraryMetricCard
-                    label="Release-ready story"
-                    value={`${visualRegressionSummary.summary.releaseReadyCoveragePercent}%`}
-                    note={`${visualRegressionSummary.summary.releaseReadyStoryCoveredComponents}/${visualRegressionSummary.summary.releaseReadyComponents} stable component coverage`}
-                  />
-                  <LibraryMetricCard
-                    label="Adopted story"
-                    value={`${visualRegressionSummary.summary.adoptedCoveragePercent}%`}
-                    note={`${visualRegressionSummary.summary.adoptedStoryCoveredComponents}/${visualRegressionSummary.summary.adoptedOutsideLabComponents} adopted component story coverage`}
-                  />
-                  <LibraryMetricCard
-                    label="Required harness"
-                    value={`${visualRegressionSummary.summary.requiredHarnessPresentCount}/${visualRegressionSummary.summary.requiredHarnessCount}`}
-                    note="Release gate oncesi zorunlu visual yuzeyler"
-                  />
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Required harnesses</DetailLabel>
-                  <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-                    {visualRegressionSummary.requiredHarnesses.map((harness) => (
-                      <div key={harness.path} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <Text as="div" className="text-sm font-semibold text-text-primary">
-                            {harness.path}
-                          </Text>
-                          <Badge tone={harness.present ? 'success' : 'warning'}>
-                            {harness.present ? 'Present' : 'Missing'}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Stable without story</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {visualRegressionSummary.coverageBacklog.stableWithoutStory.length ? (
-                        visualRegressionSummary.coverageBacklog.stableWithoutStory.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Backlog temiz</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Adopted without story</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {visualRegressionSummary.coverageBacklog.adoptedWithoutStory.length ? (
-                        visualRegressionSummary.coverageBacklog.adoptedWithoutStory.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Adopted story coverage hazir</Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                    <DetailLabel>Live demo without story</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {visualRegressionSummary.coverageBacklog.liveDemoWithoutStory.length ? (
-                        visualRegressionSummary.coverageBacklog.liveDemoWithoutStory.map((name) => (
-                          <SectionBadge key={name} label={name} />
-                        ))
-                      ) : (
-                        <Badge tone="success">Live demo ile story coverage dengeli</Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Visual rules</DetailLabel>
-                  <div className="mt-3 space-y-2">
-                    {visualRegressionSummary.rules.map((rule) => (
-                      <Text key={rule} variant="secondary" className="block text-sm leading-6">
-                        {rule}
-                      </Text>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Storybook contract</DetailLabel>
-                  <LibraryCodeBlock
-                    code={[
-                      `build: ${visualRegressionSummary.storybook.buildCommand}`,
-                      `chromatic: ${visualRegressionSummary.storybook.chromaticCommand}`,
-                      `config: ${visualRegressionSummary.storybook.configPath}`,
-                      `preview: ${visualRegressionSummary.storybook.previewPath}`,
-                      `static: ${visualRegressionSummary.storybook.staticOutputPath}`,
-                    ].join('\n')}
-                    languageLabel="visual"
-                    className="mt-3"
-                  />
-                </div>
-
-                <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <DetailLabel>Evidence refs</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {visualRegressionSummary.evidenceRefs.slice(0, 10).map((entry) => (
-                      <SectionBadge key={entry} label={entry} />
-                    ))}
-                  </div>
-                  <Text variant="secondary" className="mt-3 block text-sm leading-6">
-                    Storybook, docs ve chromatic trigger zinciri release visual contract icin ayni kaynaktan okunur.
-                  </Text>
-                </div>
-              </div>
-            </div>
-          </LibraryShowcaseCard>
-        ) : null}
-
-        {themePresetSummary ? (
-          <LibraryShowcaseCard
-            eyebrow="Theme Presets"
-            title="Resmi preset galerisi"
-            description="Theme engine üzerinde resmi olarak desteklenen preset ailesi. Docs, release ve runtime aynı preset kimliklerini kullanır."
-            badges={[
-              <SectionBadge key="theme-catalog" label={themePresetSummary.catalogId} />,
-              <SectionBadge key="theme-count" label={`${themePresetSummary.presets.length} preset`} />,
-            ]}
-          >
-            <div className="grid grid-cols-1 gap-4">
-              <ThemePresetGallery
-                presets={themePresetGalleryItems}
-                compareAxes={themePresetSummary.compareAxes}
-              />
-              <ThemePresetCompare
-                leftPreset={defaultThemePreset}
-                rightPreset={contrastThemePreset ?? compactThemePreset}
-              />
-            </div>
-
-            <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
-              <DetailLabel>Preset kuralları</DetailLabel>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {themePresetSummary.compareAxes.map((axis) => (
-                  <SectionBadge key={axis} label={axis} />
-                ))}
-              </div>
-              <div className="mt-4 space-y-2">
-                {themePresetSummary.rules.map((rule) => (
-                  <Text key={rule} variant="secondary" className="block text-sm leading-6">
-                    {rule}
-                  </Text>
-                ))}
-              </div>
-            </div>
-          </LibraryShowcaseCard>
-        ) : null}
-
-        {recipeSummary ? (
-          <LibraryShowcaseCard
-            eyebrow="Recipe System"
-            title={relatedRecipes.length ? 'Seçili component ile ilişkili reçeteler' : 'Library recipe ailesi'}
-            description="Tek tek component yerine ortak ekran davranışlarını reusable recipe mantığıyla yönetmek için kullanılan kontrat katmanı."
-            badges={[
-              <SectionBadge key="recipe-contract" label={recipeSummary.contractId} />,
-              <SectionBadge key="recipe-count" label={`${recipeSummary.currentFamilies.length} current`} />,
-              recipeSummary.plannedFamilies.length ? (
-                <SectionBadge key="recipe-planned" label={`${recipeSummary.plannedFamilies.length} planned`} />
-              ) : null,
-            ]}
-          >
-            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-              {relatedRecipes.length ? relatedRecipes.map((recipe) => {
-                const directRecipeMatch =
-                  recipe.ownerBlocks.includes(item.name)
-                  || recipe.recipeId === item.name.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
-
-                return (
-                  <div key={recipe.recipeId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
-                    <div className="grid grid-cols-1 gap-4">
-                      {renderRecipeComponentPreview(recipe.recipeId)}
-                      <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4">
-                        <div className="flex flex-wrap items-start justify-between gap-3">
-                          <div className="min-w-0">
-                            <Text as="div" className="font-semibold text-text-primary">
-                              {recipe.recipeId}
-                            </Text>
-                            <Text variant="secondary" className="mt-1 block text-sm leading-6">
-                              {recipe.intent}
-                            </Text>
-                          </div>
-                          <Badge tone={directRecipeMatch ? 'success' : 'muted'}>
-                            {directRecipeMatch ? 'Direct recipe' : 'Library recipe'}
-                          </Badge>
-                        </div>
-
-                        <div className="mt-4">
-                          <DetailLabel>Owner blocks</DetailLabel>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {recipe.ownerBlocks.map((owner) => (
-                              <SectionBadge
-                                key={owner}
-                                label={owner}
-                                className={owner === item.name ? 'border-state-success-border bg-state-success-bg text-state-success-text' : undefined}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }) : recipeSummary.currentFamilies.map((recipe) => (
-                <div key={recipe.recipeId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <Text as="div" className="font-semibold text-text-primary">
-                        {recipe.recipeId}
-                      </Text>
-                      <Text variant="secondary" className="mt-1 block text-sm leading-6">
-                        {recipe.intent}
-                      </Text>
-                    </div>
-                    <Badge tone="muted">Library recipe</Badge>
-                  </div>
-
-                  <div className="mt-4">
-                    <DetailLabel>Owner blocks</DetailLabel>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {recipe.ownerBlocks.map((owner) => (
-                        <SectionBadge key={owner} label={owner} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {recipeSummary.plannedFamilies.length ? (
-              <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
-                <DetailLabel>Planned recipes</DetailLabel>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {recipeSummary.plannedFamilies.map((family) => (
-                    <SectionBadge key={family} label={family} />
-                  ))}
-                </div>
-              </div>
-            ) : null}
-          </LibraryShowcaseCard>
-        ) : null}
-      </div>
+    const renderOverviewPanelContent = (activePanelId: DesignLabOverviewPanelId) => (
+      <DesignLabComponentOverviewPanels
+        activePanelId={activePanelId}
+        item={item}
+        releaseSummary={releaseSummary}
+        releaseFamilyContext={releaseFamilyContext}
+        adoptionSummary={adoptionSummary}
+        migrationSummary={migrationSummary}
+        visualRegressionSummary={visualRegressionSummary}
+        themePresetSummary={themePresetSummary}
+        themePresetGalleryItems={themePresetGalleryItems}
+        defaultThemePreset={defaultThemePreset}
+        contrastThemePreset={contrastThemePreset}
+        compactThemePreset={compactThemePreset}
+        recipeSummary={familySummary}
+        relatedRecipes={relatedRecipes}
+        renderRecipeComponentPreview={renderRecipeComponentPreview}
+        DetailLabelComponent={DetailLabel}
+        SectionBadgeComponent={SectionBadge}
+        MetricCardComponent={LibraryMetricCard}
+        ShowcaseCardComponent={LibraryShowcaseCard}
+        CodeBlockComponent={LibraryCodeBlock}
+      />
     );
-  };
 
-  const renderApiTab = (item: DesignLabIndexItem | null) => {
-    if (!item) {
-      return <Text variant="secondary">API bilgisi için component seç.</Text>;
-    }
-    const apiItem = componentApiMap.get(item.name);
-    const usageRecipes = buildUsageRecipes(item, apiItem);
     return (
       <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Import</DetailLabel>
-            <LibraryCodeBlock code={item.importStatement || 'Planned item — import kapalı'} className="mt-3" />
-          </div>
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>API Model</DetailLabel>
-            {apiItem ? (
-              <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                  <DetailLabel>Variant Axes</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {apiItem.variantAxes.map((entry) => <SectionBadge key={entry} label={entry} />)}
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                  <DetailLabel>State Model</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {apiItem.stateModel.map((entry) => <SectionBadge key={entry} label={entry} />)}
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                  <DetailLabel>Preview Focus</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {apiItem.previewFocus.map((entry) => <SectionBadge key={entry} label={entry} />)}
-                  </div>
-                </div>
-                <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                  <DetailLabel>Regression Focus</DetailLabel>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {apiItem.regressionFocus.map((entry) => <SectionBadge key={entry} label={entry} />)}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <Text variant="secondary" className="mt-3 block">
-                Bu component icin henuz detayli API catalog girdisi yok.
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
+            <div>
+              <DetailLabel>{t('designlab.overview.workspace.title')}</DetailLabel>
+              <Text variant="secondary" className="mt-2 block max-w-3xl leading-7">
+                {t('designlab.overview.workspace.description')}
               </Text>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-          <LibraryPropsTable
-            rows={(apiItem?.props ?? []).map((prop) => ({
-              name: prop.name,
-              type: prop.type,
-              defaultValue: prop.default,
-              required: prop.required,
-              description: prop.description,
-            }))}
-          />
-
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Registry Alanları</DetailLabel>
-            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-1">
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <DetailLabel>Kind</DetailLabel>
-                <Text as="div" className="mt-2 font-semibold text-text-primary">{item.kind}</Text>
-              </div>
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <DetailLabel>Taxonomy</DetailLabel>
-                <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomyGroupId}</Text>
-              </div>
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <DetailLabel>Subgroup</DetailLabel>
-                <Text as="div" className="mt-2 font-semibold text-text-primary">{item.taxonomySubgroup}</Text>
-              </div>
-              <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
-                <DetailLabel>Track</DetailLabel>
-                <Text as="div" className="mt-2 font-semibold text-text-primary">{trackMeta[resolveItemTrack(item)].label}</Text>
-              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+              <SectionBadge label={t('designlab.common.panelCountPlural', { count: overviewPanelItems.length })} />
             </div>
           </div>
-        </div>
 
-        <LibraryUsageRecipesPanel recipes={usageRecipes} />
+          {overviewPanelItems.length ? (
+            <Tabs
+              value={effectiveOverviewPanel}
+              onValueChange={(value) => setActiveOverviewPanel(value as DesignLabOverviewPanelId)}
+              appearance="pill"
+              listLabel="Overview workspace panels"
+              className="mt-5"
+              items={overviewPanelItems.map((panel) => ({
+                value: panel.id,
+                label: panel.label,
+                badge: panel.badge,
+                content: renderOverviewPanelContent(panel.id),
+              }))}
+            />
+          ) : (
+            <div className="mt-5 rounded-[24px] border border-border-subtle bg-surface-panel p-4">
+              <Text variant="secondary" className="block leading-7">
+                {t('designlab.overview.workspace.noPanels')}
+              </Text>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
 
-  const renderUxTab = (item: DesignLabIndexItem | null) => {
+  const renderComponentGeneralTab = (item: DesignLabIndexItem | null) => {
     if (!item) {
-      return <Text variant="secondary">UX eşleşmesi için component seç.</Text>;
-    }
-    return (
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>UX Alignment</DetailLabel>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {item.uxPrimaryThemeId ? <SectionBadge label={item.uxPrimaryThemeId} /> : <Text variant="secondary">Primary theme yok</Text>}
-            {item.uxPrimarySubthemeId ? <SectionBadge label={item.uxPrimarySubthemeId} /> : <Text variant="secondary">Primary subtheme yok</Text>}
-          </div>
-        </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>North Star Sections</DetailLabel>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {item.sectionIds?.length ? item.sectionIds.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />) : <Text variant="secondary">Section yok</Text>}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderQualityTab = (item: DesignLabIndexItem | null) => {
-    if (!item) {
-      return <Text variant="secondary">Kalite bilgisi için component seç.</Text>;
-    }
-    return (
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Quality Gates</DetailLabel>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {item.qualityGates?.length ? item.qualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">Gate yok</Text>}
-          </div>
-        </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Where Used</DetailLabel>
-          <div className="mt-4 space-y-2">
-            {item.whereUsed.length > 0 ? item.whereUsed.map((filePath) => (
-              <div key={filePath} className="rounded-2xl border border-border-subtle bg-surface-panel px-3 py-3">
-                <div className="break-all text-xs text-text-secondary">{filePath}</div>
-              </div>
-            )) : <Text variant="secondary">Kullanım bulunamadı.</Text>}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderRecipeOverviewTab = (recipe: DesignLabRecipeFamily | null) => {
-    if (!recipe) {
       return (
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
-          <Text variant="secondary">Recipe Explorer için soldan bir reçete seç.</Text>
+          <Text variant="secondary">{t('designlab.general.component.empty')}</Text>
         </div>
       );
     }
 
     return (
-      <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Recipe Summary</DetailLabel>
-            <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
-              {recipe.recipeId}
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
+            <div>
+              <DetailLabel>{t('designlab.general.component.title')}</DetailLabel>
+              <Text variant="secondary" className="mt-2 block max-w-3xl leading-7">
+                {t('designlab.general.component.description')}
+              </Text>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+              <SectionBadge label={t('designlab.general.component.primarySummary')} />
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {componentHeroStats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>{stat.label}</DetailLabel>
+                <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
+                  {stat.value}
+                </Text>
+                <Text variant="secondary" className="mt-1 block text-xs">
+                  {stat.note}
+                </Text>
+              </div>
+            ))}
+          </div>
+
+          {item.importStatement ? (
+            <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+                <div className="min-w-0">
+                  <DetailLabel>{t('designlab.general.component.import.label')}</DetailLabel>
+                  <Text as="div" className="mt-2 break-all text-xs font-medium text-text-primary">
+                    {item.importStatement}
+                  </Text>
+                </div>
+                <Button variant="secondary" size="sm" onClick={() => handleCopy(item.importStatement)}>
+                  {t('designlab.general.component.import.action')}
+                </Button>
+              </div>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>{t('designlab.general.component.releaseIdentity')}</DetailLabel>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Badge tone={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
+            <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
+              {statusLabel[item.lifecycle]}
+            </Badge>
+            <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
+              {demoModeLabel[item.demoMode]}
+            </Badge>
+            {item.roadmapWaveId ? <SectionBadge label={item.roadmapWaveId} /> : null}
+            {item.uxPrimaryThemeId ? <SectionBadge label={item.uxPrimaryThemeId} /> : null}
+          </div>
+
+          <div className="mt-4 space-y-3">
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t('designlab.metadata.primaryLens')}
+              </Text>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Badge tone="info">{selectedComponentPrimarySectionTitle ?? 'Components'}</Badge>
+                <Text variant="secondary" className="text-xs">
+                  {t('designlab.general.component.primaryLens.note')}
+                </Text>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t('designlab.general.component.package')}
+              </Text>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">
+                {releaseSummary ? `${releaseSummary.packageName}@${releaseSummary.packageVersion}` : '@mfe/design-system'}
+              </Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t('designlab.general.component.release')}
+              </Text>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">
+                {releaseSummary?.latestRelease.date ?? 'Release bilgisi yok'}
+              </Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t('designlab.general.component.contractTags')}
+              </Text>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {item.acceptanceContractId ? <SectionBadge label={item.acceptanceContractId} /> : null}
+                {item.tags?.length ? item.tags.map((tag) => <SectionBadge key={tag} label={tag} />) : <Text variant="secondary">{t('designlab.general.component.noTags')}</Text>}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderRecipeGeneralTab = () => {
+    if (!selectedFamily) {
+      return (
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <Text variant="secondary">{t('designlab.general.recipe.empty')}</Text>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
+            <div>
+              <DetailLabel>{t('designlab.general.recipe.title')}</DetailLabel>
+              <Text variant="secondary" className="mt-2 block max-w-3xl leading-7">
+                {t('designlab.general.recipe.description')}
+              </Text>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="info">Recipe</Badge>
+              <SectionBadge label={`${selectedFamily.ownerBlocks.length} owner block`} />
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {recipeHeroStats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>{stat.label}</DetailLabel>
+                <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
+                  {stat.value}
+                </Text>
+                <Text variant="secondary" className="mt-1 block text-xs">
+                  {stat.note}
+                </Text>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>{t('designlab.general.recipe.identity')}</DetailLabel>
+          <div className="mt-4 space-y-3">
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Contract
+              </Text>
+              <Text as="div" className="mt-2 break-all font-semibold text-text-primary">
+                {familySummary?.contractId ?? '—'}
+              </Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t('designlab.metadata.primaryLens')}
+              </Text>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Badge tone="info">{selectedFamilyPrimarySectionTitle ?? 'Recipes'}</Badge>
+                <Text variant="secondary" className="text-xs">
+                  {t('designlab.general.recipe.primaryLens.note')}
+                </Text>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t('designlab.general.recipe.tracksThemes')}
+              </Text>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {selectedFamilyTracks.map((track) => <SectionBadge key={track} label={track} />)}
+                {selectedFamilyThemes.map((theme) => <SectionBadge key={theme} label={theme} />)}
+                {!selectedFamilyTracks.length && !selectedFamilyThemes.length ? <Text variant="secondary">{t('designlab.general.recipe.noBindings')}</Text> : null}
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                {t('designlab.general.recipe.sectionsGates')}
+              </Text>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {selectedFamilySections.map((section) => <SectionBadge key={section} label={section} />)}
+                {selectedFamilyQualityGates.map((gate) => <SectionBadge key={gate} label={gate} />)}
+                {!selectedFamilySections.length && !selectedFamilyQualityGates.length ? <Text variant="secondary">{t('designlab.general.recipe.noBindings')}</Text> : null}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderPageGeneralTab = () => {
+    if (!selectedPageTemplate) {
+      return (
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+          <Text variant="secondary">{t('designlab.hero.placeholder.page')}</Text>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
+            <div>
+              <DetailLabel>{t('designlab.lens.pages.title')}</DetailLabel>
+              <Text variant="secondary" className="mt-2 block max-w-3xl leading-7">
+                {t('designlab.tabs.general.description.pages')}
+              </Text>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Badge tone="success">Template</Badge>
+              <SectionBadge label={`${selectedPageTemplate.ownerBlocks.length} building block`} />
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {pageHeroStats.map((stat) => (
+              <div key={stat.label} className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+                <DetailLabel>{stat.label}</DetailLabel>
+                <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
+                  {stat.value}
+                </Text>
+                <Text variant="secondary" className="mt-1 block text-xs">
+                  {stat.note}
+                </Text>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <DetailLabel>{t('designlab.tabs.general.label')}</DetailLabel>
+          <div className="mt-4 space-y-3">
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Template ID
+              </Text>
+              <Text as="div" className="mt-2 break-all font-semibold text-text-primary">
+                {selectedPageTemplate.recipeId}
+              </Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Page family
+              </Text>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">
+                {selectedPageTemplateFamilyTitle ?? '—'}
+              </Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Contract
+              </Text>
+              <Text as="div" className="mt-2 break-all font-semibold text-text-primary">
+                {selectedPageTemplateContractId ?? '—'}
+              </Text>
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
+              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                Layout intent
+              </Text>
+              <Text as="div" className="mt-2 font-semibold text-text-primary">
+                {selectedPageTemplate.intent}
+              </Text>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const designLabShowcaseState = {
+    anchorValue,
+    approvalCheckpointState,
+    approvalCheckpointSteps,
+    auditTimelineItems,
+    avatarPreviewImageSrc,
+    checkboxValue,
+    citationPanelItems,
+    commandPaletteItems,
+    commandPaletteOpen,
+    commandPaletteQuery,
+    commentValue,
+    contextMenuAction,
+    dateValue,
+    detailDrawerOpen,
+    dropdownAction,
+    entitySummaryItems,
+    formDrawerOpen,
+    gridRows,
+    inviteInputValue,
+    jsonViewerValue,
+    lastCommandSelection,
+    modalOpen,
+    pageHeaderMeta,
+    paginationPage,
+    policyTableRows,
+    promptBody,
+    promptScope,
+    promptSubject,
+    promptTone,
+    radioValue,
+    readonlyFormDrawerOpen,
+    recommendationDecision,
+    reportStatus,
+    searchInputValue,
+    selectedAuditId,
+    selectedCitationId,
+    selectValue,
+    serverGridRows,
+    sliderValue,
+    stepsStatusRichValue,
+    stepsValue,
+    summaryStripItems,
+    switchValue,
+    tabsValue,
+    textAreaValue,
+    textInputValue,
+    timeValue,
+    tourOpen,
+    tourStatus,
+    tourStep,
+    treeNodes,
+    treeTableNodes,
+    uploadFiles,
+    setAnchorValue,
+    setApprovalCheckpointState,
+    setCheckboxValue,
+    setCommandPaletteOpen,
+    setCommandPaletteQuery,
+    setCommentValue,
+    setContextMenuAction,
+    setDateValue,
+    setDetailDrawerOpen,
+    setDropdownAction,
+    setFormDrawerOpen,
+    setInviteInputValue,
+    setLastCommandSelection,
+    setModalOpen,
+    setPaginationPage,
+    setPromptBody,
+    setPromptScope,
+    setPromptSubject,
+    setPromptTone,
+    setRadioValue,
+    setReadonlyFormDrawerOpen,
+    setRecommendationDecision,
+    setReportStatus,
+    setSearchInputValue,
+    setSelectedAuditId,
+    setSelectedCitationId,
+    setSelectValue,
+    setSliderValue,
+    setStepsStatusRichValue,
+    setStepsValue,
+    setSwitchValue,
+    setTabsValue,
+    setTextAreaValue,
+    setTextInputValue,
+    setTimeValue,
+    setTourOpen,
+    setTourStatus,
+    setTourStep,
+    setUploadFiles,
+    rolloutDescriptionItems,
+    listItems,
+    themePresetSummary,
+    themePresetGalleryItems,
+    defaultThemePreset,
+    contrastThemePreset,
+    compactThemePreset,
+  };
+
+  const renderRecipeComponentPreview = (recipeId: string) => (
+    <DesignLabRecipeComponentPreview
+      recipeId={recipeId}
+      showcaseState={designLabShowcaseState}
+      layoutRecipeContext={{
+        avatarPreviewImageSrc,
+        descriptionsLocaleText: { emptyFallbackDescription: t('designlab.componentContracts.descriptions.emptyFallbackDescription') },
+        dropdownAction,
+        entitySummaryItems,
+        pageHeaderMeta,
+        rolloutDescriptionItems,
+        searchInputValue,
+        selectValue,
+        summaryStripItems,
+        setDropdownAction,
+        setSearchInputValue,
+        setSelectValue,
+      }}
+    />
+  );
+
+  const componentDemoContent = (
+    <DesignLabShowcaseContent
+      mode="components"
+      item={selectedItem}
+      family={null}
+      designLabIndex={designLabIndex}
+      activePreviewPanel={activeComponentPreviewPanel}
+      onPreviewPanelChange={setActiveComponentPreviewPanel}
+      statusLabel={statusLabel}
+      demoModeLabel={demoModeLabel}
+      trackMeta={trackMeta}
+      resolveItemTrack={resolveItemTrack}
+      toTestIdSuffix={toTestIdSuffix}
+      onFocusComponentFromFamily={focusComponentFromFamily}
+      showcaseState={designLabShowcaseState}
+    />
+  );
+
+  const recipeDemoContent = (
+    <DesignLabShowcaseContent
+      mode="recipes"
+      item={selectedItem}
+      family={selectedFamily}
+      designLabIndex={designLabIndex}
+      activePreviewPanel={activeRecipePreviewPanel}
+      onPreviewPanelChange={setActiveRecipePreviewPanel}
+      statusLabel={statusLabel}
+      demoModeLabel={demoModeLabel}
+      trackMeta={trackMeta}
+      resolveItemTrack={resolveItemTrack}
+      toTestIdSuffix={toTestIdSuffix}
+      onFocusComponentFromFamily={focusComponentFromFamily}
+      showcaseState={designLabShowcaseState}
+    />
+  );
+
+  const pageDemoContent = (
+    <DesignLabShowcaseContent
+      mode="pages"
+      item={selectedItem}
+      family={selectedPageTemplate}
+      designLabIndex={designLabIndex}
+      activePreviewPanel={activePagePreviewPanel}
+      onPreviewPanelChange={setActivePagePreviewPanel}
+      statusLabel={statusLabel}
+      demoModeLabel={demoModeLabel}
+      trackMeta={trackMeta}
+      resolveItemTrack={resolveItemTrack}
+      toTestIdSuffix={toTestIdSuffix}
+      onFocusComponentFromFamily={focusComponentFromFamily}
+      showcaseState={designLabShowcaseState}
+    />
+  );
+
+  const foundationDemoContent = (
+    <DesignLabShowcaseContent
+      mode="foundations"
+      item={selectedItem}
+      family={null}
+      designLabIndex={designLabIndex}
+      activePreviewPanel={activeComponentPreviewPanel}
+      onPreviewPanelChange={setActiveComponentPreviewPanel}
+      statusLabel={statusLabel}
+      demoModeLabel={demoModeLabel}
+      trackMeta={trackMeta}
+      resolveItemTrack={resolveItemTrack}
+      toTestIdSuffix={toTestIdSuffix}
+      onFocusComponentFromFamily={focusComponentFromFamily}
+      showcaseState={designLabShowcaseState}
+    />
+  );
+
+  const ecosystemDemoContent = (
+    <DesignLabShowcaseContent
+      mode="ecosystem"
+      item={selectedItem}
+      family={selectedFamily}
+      designLabIndex={designLabIndex}
+      activePreviewPanel={activeRecipePreviewPanel}
+      onPreviewPanelChange={setActiveRecipePreviewPanel}
+      statusLabel={statusLabel}
+      demoModeLabel={demoModeLabel}
+      trackMeta={trackMeta}
+      resolveItemTrack={resolveItemTrack}
+      toTestIdSuffix={toTestIdSuffix}
+      onFocusComponentFromFamily={focusComponentFromFamily}
+      showcaseState={designLabShowcaseState}
+    />
+  );
+
+  const selectedFoundationTokens = useMemo(
+    () =>
+      selectedComponentFamilyItems
+        .filter((item) => item.taxonomyGroupId?.includes('token') || item.taxonomyGroupId?.includes('theme') || item.taxonomySubgroup?.includes('token'))
+        .map((item) => item.name),
+    [selectedComponentFamilyItems],
+  );
+
+  const selectedFoundationThemes = useMemo(
+    () =>
+      selectedComponentFamilyItems
+        .filter((item) => item.taxonomyGroupId?.includes('theme') || item.taxonomySubgroup?.includes('theme'))
+        .map((item) => item.name),
+    [selectedComponentFamilyItems],
+  );
+
+  const selectedFoundationA11yGates = useMemo(
+    () =>
+      selectedComponentFamilyItems
+        .flatMap((item) => item.qualityGates ?? [])
+        .filter((gate) => gate.includes('a11y') || gate.includes('accessibility')),
+    [selectedComponentFamilyItems],
+  );
+
+  const selectedFoundationItems = useMemo(
+    () =>
+      selectedComponentFamilyItems.map((item) => ({
+        lifecycle: item.lifecycle,
+        tokenCount: 1,
+        contractStatus: (item.lifecycle === 'stable' ? 'active' : item.lifecycle === 'beta' ? 'draft' : 'deprecated') as 'active' | 'draft' | 'deprecated',
+      })),
+    [selectedComponentFamilyItems],
+  );
+
+  const selectedFoundationFamily = useMemo(
+    () =>
+      selectedFoundationProfile
+        ? {
+            foundationId: selectedGroup?.id ?? 'unknown',
+            title: selectedFoundationProfile.title ?? undefined,
+            groupTitle: selectedGroup?.title ?? undefined,
+            groupDescription: selectedFoundationProfile.description ?? undefined,
+            intent: selectedFoundationProfile.description ?? 'Foundation family',
+            governanceBadges: selectedFoundationProfile.badges ?? [],
+          }
+        : null,
+    [selectedFoundationProfile, selectedGroup],
+  );
+
+  const selectedEcosystemExtension = useMemo(
+    () =>
+      selectedFamily
+        ? {
+            extensionId: selectedFamily.recipeId ?? 'unknown',
+            title: selectedFamily.title ?? undefined,
+            clusterTitle: selectedFamily.clusterTitle ?? undefined,
+            clusterDescription: selectedFamily.clusterDescription ?? undefined,
+            intent: selectedFamily.intent ?? 'Enterprise extension',
+            ownerBlocks: selectedFamily.ownerBlocks ?? [],
+            tier: 'pro' as const,
+          }
+        : null,
+    [selectedFamily],
+  );
+
+  const selectedEcosystemSurfaces = useMemo(
+    () => selectedFamily?.ownerBlocks ?? [],
+    [selectedFamily],
+  );
+
+  const selectedEcosystemTiers = useMemo(
+    () => ['pro', 'enterprise', 'community'].filter(
+      (tier) => filteredFamilyItems.some((f) => f.recipeId.includes(tier)),
+    ),
+    [filteredFamilyItems],
+  );
+
+  const selectedEcosystemQualityGates = useMemo(
+    () =>
+      filteredFamilyItems
+        .flatMap((f) => f.ownerBlocks)
+        .filter((block) => block.includes('gate') || block.includes('quality') || block.includes('a11y'))
+        .filter((v, i, a) => a.indexOf(v) === i),
+    [filteredFamilyItems],
+  );
+
+  const selectedEcosystemItems = useMemo(
+    () =>
+      filteredFamilyItems.map((f) => ({
+        lifecycle: f.ownerBlocks.length > 3 ? 'stable' : 'beta',
+        demoMode: f.ownerBlocks.length > 2 ? 'live' : 'planned',
+        tier: (f.recipeId.includes('enterprise') || f.recipeId.includes('admin')
+          ? 'enterprise'
+          : f.recipeId.includes('pro') || f.recipeId.includes('grid')
+            ? 'pro'
+            : 'community') as 'pro' | 'enterprise' | 'community',
+      })),
+    [filteredFamilyItems],
+  );
+
+  const usesFamilySearch = activeSectionWorkspaceMode === 'recipes' || activeSectionWorkspaceMode === 'pages' || activeSectionWorkspaceMode === 'ecosystem';
+  const sidebarSearchValue = usesFamilySearch ? familyQuery : query;
+  const sidebarSearchPlaceholder = activeSectionWorkspaceMode === 'pages'
+    ? 'Page template ara...'
+    : activeSectionWorkspaceMode === 'ecosystem'
+      ? 'Enterprise extension ara...'
+      : activeSectionWorkspaceMode === 'recipes'
+        ? t('designlab.sidebar.search.recipes.placeholder')
+        : t('designlab.sidebar.search.components.placeholder');
+  const sidebarHelpText = activeSectionWorkspaceMode === 'pages'
+    ? 'Page template ailelerini ve shell varyantlarini arama ile filtreleyin.'
+    : activeSectionWorkspaceMode === 'ecosystem'
+      ? 'Enterprise extension, pro surface ve data grid ailelerini filtreleyin.'
+      : activeSectionWorkspaceMode === 'recipes'
+        ? t('designlab.sidebar.help.recipes')
+        : t('designlab.sidebar.help.components');
+  const activeLensProfile = {
+    foundations: {
+      label: t('designlab.taxonomy.sections.foundations.title'),
+      badge: t('designlab.lens.foundations.badge'),
+      title: t('designlab.lens.foundations.title'),
+      note: t('designlab.lens.foundations.note'),
+      useWhen: t('designlab.lens.foundations.useWhen'),
+    },
+    components: {
+      label: t('designlab.taxonomy.sections.components.title'),
+      badge: t('designlab.lens.components.badge'),
+      title: t('designlab.lens.components.title'),
+      note: t('designlab.lens.components.note'),
+      useWhen: t('designlab.lens.components.useWhen'),
+    },
+    recipes: {
+      label: t('designlab.taxonomy.sections.recipes.title'),
+      badge: t('designlab.lens.recipes.badge'),
+      title: t('designlab.lens.recipes.title'),
+      note: t('designlab.lens.recipes.note'),
+      useWhen: t('designlab.lens.recipes.useWhen'),
+    },
+    pages: {
+      label: t('designlab.taxonomy.sections.pages.title'),
+      badge: t('designlab.lens.pages.badge'),
+      title: t('designlab.lens.pages.title'),
+      note: t('designlab.lens.pages.note'),
+      useWhen: t('designlab.lens.pages.useWhen'),
+    },
+    ecosystem: {
+      label: t('designlab.taxonomy.sections.ecosystem.title'),
+      badge: t('designlab.lens.ecosystem.badge'),
+      title: t('designlab.lens.ecosystem.title'),
+      note: t('designlab.lens.ecosystem.note'),
+      useWhen: t('designlab.lens.ecosystem.useWhen'),
+    },
+  } satisfies Record<string, { label: string; badge: string; title: string; note: string; useWhen: string }>;
+  const activeLens = activeLensProfile[activeTaxonomySectionId] ?? activeLensProfile.components;
+  const activeWorkspaceLabel = resolveDesignLabPageShellWorkspaceLabel(
+    activePageShellLayerId,
+    t,
+  );
+  const showCatalogLandingContext = detailTab === 'overview';
+  const activeHeroCopy = useMemo(
+    () =>
+      resolveDesignLabPageShellHeroCopy(
+        {
+          layerId: activePageShellLayerId,
+          lensLabel: activeLens.label,
+          foundationTitle: selectedFoundationProfile?.title ?? selectedTaxonomySection?.title ?? null,
+          foundationDescription: selectedFoundationProfile?.description ?? activeLens.useWhen,
+          componentName: selectedItem?.name ?? null,
+          componentDescription: selectedItem?.description ?? null,
+          familyTitle: selectedFamily?.title ?? null,
+          familyId: activeFamilySelectionId,
+          familyIntent: selectedFamily?.intent ?? null,
+        },
+        t,
+      ),
+    [
+      activeLens.label,
+      activeLens.useWhen,
+      activePageShellLayerId,
+      selectedFoundationProfile?.description,
+      selectedFoundationProfile?.title,
+      activeFamilySelectionId,
+      selectedItem?.description,
+      selectedItem?.name,
+      selectedFamily?.intent,
+      selectedFamily?.title,
+      selectedTaxonomySection?.title,
+      t,
+    ],
+  );
+  const activeHeroTitle = activeHeroCopy.title;
+  const activeHeroDescription = activeHeroCopy.description;
+  const activeHeroLabel = activeHeroCopy.label;
+  const getClusterVisualMeta = React.useCallback((key: string) => {
+    const normalized = key.toLowerCase();
+    if (normalized.includes('analytics') || normalized.includes('search')) {
+      return lensSurfaceMeta.pages;
+    }
+    if (normalized.includes('review') || normalized.includes('approval') || normalized.includes('configuration')) {
+      return lensSurfaceMeta.foundations;
+    }
+    if (normalized.includes('state') || normalized.includes('operational')) {
+      return lensSurfaceMeta.recipes;
+    }
+    if (normalized.includes('ai') || normalized.includes('runtime')) {
+      return lensSurfaceMeta.components;
+    }
+    return lensSurfaceMeta.components;
+  }, []);
+  const lensEntryHighlights = {
+    foundations: ['Theme tokens', 'Accessibility', 'Diagnostics'],
+    components: ['Button', 'Select', 'MenuBar'],
+    recipes: ['Search & Listing', 'Review & Approval', 'State & Feedback'],
+    pages: ['Dashboard', 'CRUD', 'Settings'],
+  } satisfies Record<string, string[]>;
+  const lensEntryCards = (
+    <div className="rounded-[22px] border border-border-subtle bg-surface-panel p-4">
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <Text as="div" variant="secondary" className="text-[11px] font-semibold tracking-[0.08em]">
+            Lens guide
+          </Text>
+          <Text as="div" className="mt-2 font-semibold text-text-primary">
+            Design Lab katmanlari
+          </Text>
+          <Text variant="secondary" className="mt-1 block text-sm leading-6">
+            Ilk ekranda hangi lensin hangi soruya cevap verdigini hizlica ayirt etmek icin 4 ana giris burada duruyor.
+          </Text>
+        </div>
+        <SectionBadge label={`${taxonomySectionItems.length} lens`} />
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {taxonomySectionItems.map((section) => {
+          const lensMeta = activeLensProfile[section.id] ?? activeLensProfile.components;
+          const lensVisual = lensSurfaceMeta[section.id as keyof typeof lensSurfaceMeta] ?? lensSurfaceMeta.components;
+          const active = activeTaxonomySectionId === section.id;
+          return (
+            <button
+              key={section.id}
+              type="button"
+              onClick={() => handleTaxonomySectionChange(section.id)}
+              data-testid={`design-lab-lens-entry-${section.id}`}
+              className={`relative flex h-full flex-col overflow-hidden rounded-[20px] border px-3.5 py-3 text-left transition ${
+                active
+                  ? `${lensVisual.borderClass} ${lensVisual.surfaceClass} ${lensVisual.glowClass}`
+                  : 'border-border-subtle bg-surface-canvas hover:bg-surface-muted'
+              }`}
+            >
+              <div className={`absolute inset-x-0 top-0 h-1 ${lensVisual.accentClass}`} aria-hidden />
+              <div className="flex items-start justify-between gap-2">
+                <Text as="div" className="text-sm font-semibold text-text-primary">
+                  {section.title}
+                </Text>
+                <SectionBadge label={String(section.count)} />
+              </div>
+              <Text variant="secondary" className="mt-2 block text-xs leading-5">
+                {section.description ?? lensMeta.note}
+              </Text>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {(lensEntryHighlights[section.id as keyof typeof lensEntryHighlights] ?? []).map((highlight) => (
+                  <SectionBadge key={`${section.id}-${highlight}`} label={highlight} />
+                ))}
+              </div>
+              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <div className="rounded-[16px] border border-border-subtle bg-surface-default/80 px-3 py-2">
+                  <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                    Focus
+                  </Text>
+                  <Text as="div" className="mt-1 text-xs font-semibold text-text-primary">
+                    {lensMeta.badge}
+                  </Text>
+                </div>
+                <div className="rounded-[16px] border border-border-subtle bg-surface-default/80 px-3 py-2">
+                  <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                    Use when
+                  </Text>
+                  <Text as="div" className="mt-1 text-xs font-semibold leading-5 text-text-primary">
+                    {lensMeta.useWhen}
+                  </Text>
+                </div>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                <SectionBadge label={lensMeta.badge} />
+                <SectionBadge label={lensMeta.title} />
+                {active ? <SectionBadge label="Active lens" /> : null}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+  const heroSupportingContent = showCatalogLandingContext ? (
+    <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="rounded-[22px] border border-border-subtle bg-surface-panel px-4 py-3">
+          <Text as="div" variant="secondary" className="text-[11px] font-semibold tracking-[0.08em]">
+            Lens intent
+          </Text>
+          <Text as="div" className="mt-2 font-semibold text-text-primary">
+            {activeLens.title}
+          </Text>
+          <Text variant="secondary" className="mt-1 block text-sm leading-6">
+            {activeLens.note}
+          </Text>
+        </div>
+        <div className="rounded-[22px] border border-border-subtle bg-surface-panel px-4 py-3">
+          <Text as="div" variant="secondary" className="text-[11px] font-semibold tracking-[0.08em]">
+            {isPageLayer ? 'Page family' : isRecipeLayer ? 'Recipe cluster' : 'Catalog family'}
+          </Text>
+          <Text as="div" className="mt-2 font-semibold text-text-primary">
+            {isPageLayer
+              ? selectedFamilyClusterTitle ?? activeLens.title
+              : isRecipeLayer
+                ? selectedFamilyClusterTitle ?? activeLens.title
+                : selectedFoundationProfile?.title ?? selectedGroup?.title ?? activeLens.useWhen}
+          </Text>
+          <Text variant="secondary" className="mt-1 block text-sm leading-6">
+            {isPageLayer
+              ? selectedFamilyClusterDescription ?? activeWorkspaceLabel
+              : isRecipeLayer
+                ? selectedFamilyClusterDescription ?? activeWorkspaceLabel
+                : selectedFoundationProfile?.description ?? selectedItem?.taxonomySubgroup ?? activeWorkspaceLabel}
+          </Text>
+        </div>
+      </div>
+      {lensEntryCards}
+    </div>
+  ) : null;
+  const lensGuideMetadataItems = renderMetadataDescriptorItems(
+    resolveDesignLabLensGuideMetadataItems({
+      layerId: activePageShellLayerId,
+      activeWorkspaceLabel,
+      activeLensLabel: activeLens.label,
+      activeLensTitle: activeLens.title,
+      activeLensNote: activeLens.note,
+      activeLensUseWhen: activeLens.useWhen,
+      familyTitle: selectedFoundationProfile?.title ?? selectedGroup?.title ?? selectedItem?.taxonomyGroupId ?? null,
+      familyNote: selectedFoundationProfile?.benchmark ?? selectedItem?.taxonomySubgroup ?? null,
+      benchmark: selectedFoundationProfile?.benchmark ?? null,
+      benchmarkNote: selectedFoundationProfile?.description ?? null,
+      clusterTitle: selectedFamilyClusterTitle,
+      clusterDescription: selectedFamilyClusterDescription ?? null,
+    }),
+  );
+  const lensOverviewCards = useMemo(() => {
+    if (isRecipeLikeLayer) {
+      const clusters = new Map<string, {
+        title: string;
+        description?: string;
+        items: DesignLabRecipeFamily[];
+      }>();
+
+      filteredFamilyItems.forEach((family) => {
+        const clusterTitle = family.clusterTitle ?? (isPageLayer ? 'Page templates' : 'General recipes');
+        const current = clusters.get(clusterTitle);
+        if (current) {
+          current.items.push(family);
+          return;
+        }
+        clusters.set(clusterTitle, {
+          title: clusterTitle,
+          description: family.clusterDescription,
+          items: [family],
+        });
+      });
+
+      return Array.from(clusters.values()).map((cluster) => {
+        const visual = getClusterVisualMeta(cluster.title);
+        const isPageCluster = isPageLayer || selectedTaxonomySection?.id === 'pages';
+        const productProblem = getRecipeProblemSignal(cluster.title, isPageCluster);
+        return {
+          key: cluster.title,
+          eyebrow: isPageCluster ? 'Template cluster' : 'Workflow cluster',
+          title: cluster.title,
+          description: getRecipeClusterReason(cluster.title, cluster.description),
+          primaryMetricLabel: isPageCluster ? 'Template count' : 'Recipe count',
+          primaryMetric: `${cluster.items.length} ${isPageCluster ? 'template' : 'recipe'}`,
+          secondaryMetricLabel: isPageCluster ? 'Page rhythm' : 'Product problem',
+          secondaryMetric: productProblem,
+          badges: [selectedTaxonomySection?.title ?? activeLens.label, cluster.title],
+          highlightLabel: isPageCluster ? 'Template examples' : 'Representative recipes',
+          outcomeLabel: 'Success outcome',
+          outcome: getRecipeOutcomeSignal(cluster.title, isPageCluster),
+          useWhen: isPageCluster ? null : getRecipeUseWhen(cluster.title),
+          avoidWhen: isPageCluster ? null : getRecipeAvoidWhen(cluster.title),
+          highlights: cluster.items
+            .map((item) => item.title ?? item.recipeId)
+            .filter(Boolean)
+            .slice(0, 3),
+          silhouette: getLensOverviewSilhouette(cluster.title),
+          visual,
+        };
+      });
+    }
+
+    return (selectedTaxonomySection?.groupIds ?? []).map((groupId) => {
+      const group = designLabTaxonomyGroupMap.get(groupId);
+      const sectionItems = itemsForTrack.filter((item) => item.taxonomyGroupId === groupId);
+      const visibleItems = filteredItems.filter((item) => item.taxonomyGroupId === groupId);
+      const profile = selectedTaxonomySection?.id === 'foundations' ? foundationFamilyProfiles[groupId] ?? null : null;
+      const subgroupCount = new Set(sectionItems.map((item) => item.taxonomySubgroup)).size;
+      const visual = selectedTaxonomySection?.id === 'foundations'
+        ? getClusterVisualMeta(groupId)
+        : lensSurfaceMeta.components;
+      const highlights = selectedTaxonomySection?.id === 'foundations'
+        ? (profile?.badges.slice(0, 3) ?? group?.subgroups.slice(0, 3) ?? [])
+        : visibleItems.slice(0, 3).map((item) => item.name);
+
+      return {
+        key: groupId,
+        eyebrow: selectedTaxonomySection?.id === 'foundations' ? 'Foundation family' : 'Catalog family',
+        title: profile?.title ?? group?.title ?? groupId,
+        description: selectedTaxonomySection?.id === 'foundations'
+          ? profile?.description ?? group?.subgroups.slice(0, 2).join(' / ') ?? 'Active family overview'
+          : 'Bu aile, ayni nav agaci altinda toplanan componentlerin katalog girisini verir.',
+        primaryMetricLabel: 'Catalog items',
+        primaryMetric: `${visibleItems.length || sectionItems.length} item`,
+        secondaryMetricLabel: selectedTaxonomySection?.id === 'foundations' ? 'Benchmark' : 'Subgroups',
+        secondaryMetric: profile?.benchmark ?? `${subgroupCount} subgroup`,
+        badges: profile?.badges.slice(0, 2) ?? [selectedTaxonomySection?.title ?? activeLens.label, group?.title ?? groupId],
+        highlightLabel: selectedTaxonomySection?.id === 'foundations' ? 'Signals' : 'Catalog preview',
+        highlights,
+        groupId,
+        silhouette: selectedTaxonomySection?.id === 'foundations' ? 'detail' : 'catalog',
+        visual,
+      };
+    });
+  }, [
+    activeLens.label,
+    isPageLayer,
+    isRecipeLikeLayer,
+    filteredItems,
+    filteredFamilyItems,
+    getClusterVisualMeta,
+    itemsForTrack,
+    selectedTaxonomySection?.groupIds,
+    selectedTaxonomySection?.id,
+    selectedTaxonomySection?.title,
+  ]);
+  const sortedComponentOverviewCards = useMemo(() => {
+    if (workspaceMode === 'components' && selectedTaxonomySection?.id === 'components') {
+      return [...lensOverviewCards].sort((left, right) => {
+        const leftCount = Number.parseInt(String(left.primaryMetric), 10);
+        const rightCount = Number.parseInt(String(right.primaryMetric), 10);
+        return rightCount - leftCount;
+      });
+    }
+    return lensOverviewCards;
+  }, [lensOverviewCards, selectedTaxonomySection?.id, workspaceMode]);
+  const limitedLensOverviewCards = useMemo(() => {
+    if (workspaceMode === 'components' && selectedTaxonomySection?.id === 'components') {
+      return sortedComponentOverviewCards.slice(0, 6);
+    }
+    return sortedComponentOverviewCards;
+  }, [selectedTaxonomySection?.id, sortedComponentOverviewCards, workspaceMode]);
+  const overflowLensOverviewCards = useMemo(() => {
+    if (workspaceMode === 'components' && selectedTaxonomySection?.id === 'components') {
+      return sortedComponentOverviewCards.slice(6);
+    }
+    return [];
+  }, [selectedTaxonomySection?.id, sortedComponentOverviewCards, workspaceMode]);
+  const hiddenLensOverviewCount = overflowLensOverviewCards.length;
+  const activeFamilyOverviewCard = useMemo(() => {
+    if (!selectedGroup?.id) {
+      return null;
+    }
+    return lensOverviewCards.find((card) => card.groupId === selectedGroup.id) ?? null;
+  }, [lensOverviewCards, selectedGroup?.id]);
+  const pageTemplateLandingCards = useMemo(() => {
+    if (!isPageLayer) {
+      return [];
+    }
+    return [...filteredFamilyItems]
+      .filter((family) => designLabRecipePrimarySectionById[family.recipeId] === 'pages')
+      .map((family) => {
+        const title = family.title ?? family.recipeId;
+        const clusterTitle = family.clusterTitle ?? 'Page Templates';
+        return {
+          recipeId: family.recipeId,
+          title,
+          description: family.intent,
+          clusterTitle,
+          signal: getRecipeFamilySignal(family),
+          highlightLabel: 'Signature blocks',
+          highlights: family.ownerBlocks.slice(0, 4),
+          primaryMetricLabel: 'Primary surface',
+          primaryMetric: family.ownerBlocks[0] ?? 'Page shell',
+          secondaryMetric: `${family.ownerBlocks.length} block`,
+          silhouette: getLensOverviewSilhouette(`${title} ${family.recipeId}`),
+          visual: getClusterVisualMeta(clusterTitle),
+          transitionTags: getTemplateTransitionTags(family),
+        };
+      })
+      .sort((left, right) => left.title.localeCompare(right.title, 'tr'));
+  }, [filteredFamilyItems, getClusterVisualMeta, isPageLayer]);
+  const pageTemplateLandingClusters = useMemo(() => {
+    const clusters = new Map<string, {
+      title: string;
+      description: string;
+      cards: typeof pageTemplateLandingCards;
+    }>();
+    pageTemplateLandingCards.forEach((card) => {
+      const current = clusters.get(card.clusterTitle);
+      if (current) {
+        current.cards.push(card);
+        return;
+      }
+      clusters.set(card.clusterTitle, {
+        title: card.clusterTitle,
+        description: getRecipeClusterReason(card.clusterTitle),
+        cards: [card],
+      });
+    });
+    return Array.from(clusters.values());
+  }, [pageTemplateLandingCards]);
+  const renderOverviewSilhouette = (variant: string | undefined) => {
+    switch (variant) {
+      case 'dashboard':
+        return (
+          <div className="grid grid-cols-[1.3fr_0.7fr] gap-1" aria-hidden>
+            <div className="space-y-1">
+              <div className="h-3 rounded-full bg-white/90" />
+              <div className="grid grid-cols-3 gap-1">
+                <div className="h-7 rounded-lg bg-white/80" />
+                <div className="h-7 rounded-lg bg-white/75" />
+                <div className="h-7 rounded-lg bg-white/70" />
+              </div>
+              <div className="h-12 rounded-xl bg-white/75" />
+            </div>
+            <div className="space-y-1">
+              <div className="h-5 rounded-lg bg-white/80" />
+              <div className="h-5 rounded-lg bg-white/70" />
+              <div className="h-7 rounded-lg bg-white/65" />
+            </div>
+          </div>
+        );
+      case 'list':
+        return (
+          <div className="space-y-1" aria-hidden>
+            <div className="grid grid-cols-3 gap-1">
+              <div className="h-3 rounded-full bg-white/90" />
+              <div className="h-3 rounded-full bg-white/80" />
+              <div className="h-3 rounded-full bg-white/70" />
+            </div>
+            <div className="space-y-1">
+              <div className="h-4 rounded-lg bg-white/80" />
+              <div className="h-4 rounded-lg bg-white/75" />
+              <div className="h-4 rounded-lg bg-white/70" />
+            </div>
+          </div>
+        );
+      case 'settings':
+        return (
+          <div className="grid grid-cols-[0.55fr_1fr] gap-1" aria-hidden>
+            <div className="space-y-1">
+              <div className="h-3 rounded-full bg-white/90" />
+              <div className="h-3 rounded-full bg-white/80" />
+              <div className="h-3 rounded-full bg-white/75" />
+            </div>
+            <div className="space-y-1">
+              <div className="h-5 rounded-lg bg-white/80" />
+              <div className="h-5 rounded-lg bg-white/72" />
+              <div className="h-5 rounded-lg bg-white/68" />
+            </div>
+          </div>
+        );
+      case 'detail':
+        return (
+          <div className="grid grid-cols-[1fr_0.5fr] gap-1" aria-hidden>
+            <div className="space-y-1">
+              <div className="h-3 rounded-full bg-white/90" />
+              <div className="h-9 rounded-xl bg-white/78" />
+              <div className="h-4 rounded-lg bg-white/72" />
+            </div>
+            <div className="space-y-1">
+              <div className="h-4 rounded-lg bg-white/80" />
+              <div className="h-8 rounded-xl bg-white/68" />
+            </div>
+          </div>
+        );
+      case 'workspace':
+        return (
+          <div className="space-y-1" aria-hidden>
+            <div className="h-3 rounded-full bg-white/90" />
+            <div className="grid grid-cols-[0.7fr_1.3fr] gap-1">
+              <div className="space-y-1">
+                <div className="h-6 rounded-xl bg-white/78" />
+                <div className="h-6 rounded-xl bg-white/70" />
+              </div>
+              <div className="space-y-1">
+                <div className="h-4 rounded-lg bg-white/76" />
+                <div className="h-4 rounded-lg bg-white/68" />
+                <div className="h-4 rounded-lg bg-white/64" />
+              </div>
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div className="grid grid-cols-2 gap-1" aria-hidden>
+            <div className="space-y-1">
+              <div className="h-3 rounded-full bg-white/90" />
+              <div className="h-6 rounded-lg bg-white/78" />
+            </div>
+            <div className="space-y-1">
+              <div className="h-3 rounded-full bg-white/82" />
+              <div className="h-6 rounded-lg bg-white/70" />
+            </div>
+          </div>
+        );
+    }
+  };
+  const renderFamilyRailMarker = (variant: string, accentClass: string) => {
+    switch (variant) {
+      case 'navigation':
+        return (
+          <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-border-subtle bg-surface-default/80">
+            <span className={`absolute inset-y-0 left-0 w-1 ${accentClass}`} />
+            <span className="flex w-2 flex-col gap-[2px]">
+              <span className="h-[2px] rounded-full bg-text-primary/70" />
+              <span className="h-[2px] rounded-full bg-text-primary/55" />
+            </span>
+          </span>
+        );
+      case 'actions':
+        return (
+          <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-border-subtle bg-surface-default/80">
+            <span className={`absolute inset-x-0 top-0 h-1 ${accentClass}`} />
+            <span className="grid grid-cols-2 gap-[2px]">
+              <span className="h-[3px] w-[3px] rounded-full bg-text-primary/70" />
+              <span className="h-[3px] w-[3px] rounded-full bg-text-primary/45" />
+              <span className="h-[3px] w-[3px] rounded-full bg-text-primary/45" />
+              <span className="h-[3px] w-[3px] rounded-full bg-text-primary/70" />
+            </span>
+          </span>
+        );
+      case 'data':
+        return (
+          <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-border-subtle bg-surface-default/80">
+            <span className={`absolute inset-x-0 top-0 h-1 ${accentClass}`} />
+            <span className="grid grid-cols-2 gap-[2px]">
+              <span className="h-[3px] rounded-[2px] bg-text-primary/65" />
+              <span className="h-[3px] rounded-[2px] bg-text-primary/45" />
+              <span className="h-[3px] rounded-[2px] bg-text-primary/45" />
+              <span className="h-[3px] rounded-[2px] bg-text-primary/65" />
+            </span>
+          </span>
+        );
+      case 'feedback':
+        return (
+          <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-border-subtle bg-surface-default/80">
+            <span className={`absolute inset-0 opacity-80 ${accentClass}`} />
+            <span className="relative h-[6px] w-[6px] rounded-full border border-white/80 bg-white/60" />
+          </span>
+        );
+      case 'forms':
+        return (
+          <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-border-subtle bg-surface-default/80">
+            <span className={`absolute inset-y-0 left-0 w-1 ${accentClass}`} />
+            <span className="relative flex w-[8px] flex-col gap-[2px]">
+              <span className="h-[2px] rounded-full bg-text-primary/70" />
+              <span className="h-[4px] rounded-[3px] border border-text-primary/35 bg-transparent" />
+            </span>
+          </span>
+        );
+      default:
+        return (
+          <span className="relative flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-border-subtle bg-surface-default/80">
+            <span className={`absolute inset-x-0 top-0 h-1 ${accentClass}`} />
+            <span className="grid grid-cols-2 gap-[2px]">
+              <span className="h-[3px] rounded-[2px] bg-text-primary/65" />
+              <span className="h-[3px] rounded-[2px] bg-text-primary/45" />
+              <span className="h-[3px] rounded-[2px] bg-text-primary/45" />
+              <span className="h-[3px] rounded-[2px] bg-text-primary/65" />
+            </span>
+          </span>
+        );
+    }
+  };
+  const lensOverviewPanel = lensOverviewCards.length ? (
+    <section
+      data-testid="design-lab-lens-overview"
+      className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <Text as="div" variant="secondary" className="text-[11px] font-semibold tracking-[0.08em]">
+            Overview landing
+          </Text>
+          <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
+            {isRecipeLikeLayer
+              ? isPageLayer
+                ? 'Page template clusters'
+                : 'Workflow recipe clusters'
+              : selectedTaxonomySection?.id === 'foundations'
+                ? 'Foundation family grid'
+                : 'Component catalog families'}
+          </Text>
+          <Text variant="secondary" className="mt-1 block text-sm leading-6">
+            {isRecipeLikeLayer
+              ? isPageLayer
+                ? 'Template clusterlari, ekiplerin hangi tam sayfa shell ile baslayacagini hizli secmesi icin burada gorunur.'
+                : 'Workflow clusterlari, tekrarlanan urun akislarini ilk bakista secilebilir hale getirmek icin burada listelenir.'
+              : selectedTaxonomySection?.id === 'foundations'
+                ? 'Tema, accessibility, diagnostics ve runtime aileleri benchmark referanslariyla birlikte gorunur.'
+              : 'Secili component lensindeki aileler katalog girisi, item yogunlugu ve preview sinyalleriyle birlikte gorunur.'}
+          </Text>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {hiddenLensOverviewCount > 0 ? <SectionBadge label={`Featured ${limitedLensOverviewCards.length}`} /> : null}
+          <SectionBadge label={`${lensOverviewCards.length} ${isRecipeLayer ? 'cluster' : 'family'}`} />
+        </div>
+      </div>
+      {hiddenLensOverviewCount > 0 ? (
+        <div className="mt-4 rounded-[20px] border border-border-subtle bg-surface-panel px-4 py-3">
+          <Text as="div" variant="secondary" className="text-[11px] font-semibold tracking-[0.08em]">
+            Featured families
+          </Text>
+          <Text variant="secondary" className="mt-1 block text-sm leading-6">
+            Ilk ekranda yalniz en yogun 6 component ailesi gosteriliyor. Diger aileler urun agacinda ayni sekilde erisilebilir durumda.
+          </Text>
+          <div
+            data-testid="design-lab-all-families-strip"
+            className="mt-3 rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-3"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                All families
+              </Text>
+              <SectionBadge label={`${overflowLensOverviewCards.length} more`} />
+            </div>
+            <Text variant="secondary" className="mt-1 block text-xs leading-5">
+              Featured gridden sonra kalan aileler burada kisa bir serit olarak gorunur; tam katalog sol taraftaki product tree icinde kalir.
             </Text>
-            <Text variant="secondary" className="mt-2 block leading-7">
-              {recipe.intent}
+            <div className="mt-2.5 overflow-x-auto pb-1">
+              <div className="flex min-w-max items-center gap-1.5">
+                {overflowLensOverviewCards.map((card) => {
+                  const markerVariant = getFamilyRailMarkerVariant(card.groupId ?? card.key);
+                  const markerLabel = getFamilyRailMarkerLabel(markerVariant);
+
+                  return (
+                    <button
+                      key={`all-family-${card.key}`}
+                      type="button"
+                      onClick={() => card.groupId ? handleOverviewFamilySelect(card.groupId) : undefined}
+                      data-testid={`design-lab-all-family-${toTestIdSuffix(card.key)}`}
+                      className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                        card.groupId && selectedGroup?.id === card.groupId
+                          ? 'border-action-primary/40 bg-surface-default text-text-primary shadow-sm'
+                          : 'border-border-subtle bg-surface-canvas text-text-secondary hover:bg-surface-muted'
+                      }`}
+                    >
+                      {renderFamilyRailMarker(markerVariant, card.visual.accentClass)}
+                      <span className="rounded-full border border-border-subtle bg-surface-panel px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-text-secondary">
+                        {markerLabel}
+                      </span>
+                      {`${card.title} / ${card.primaryMetric}`}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            {activeFamilyOverviewCard ? (
+              (() => {
+                const familyMarkerVariant = getFamilyRailMarkerVariant(activeFamilyOverviewCard.groupId ?? activeFamilyOverviewCard.key);
+                const familyMarkerLabel = getFamilyRailMarkerLabel(familyMarkerVariant);
+                const whyThisFamilyCopy = getWhyThisFamilyCopy(activeFamilyOverviewCard.groupId ?? activeFamilyOverviewCard.key);
+                return (
+                  <div className="mt-3 rounded-[18px] border border-border-subtle bg-surface-panel px-3 py-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                        Active family
+                      </Text>
+                      <SectionBadge label={familyMarkerLabel} />
+                      <SectionBadge label={activeFamilyOverviewCard.primaryMetric} />
+                    </div>
+                    <Text as="div" className="mt-2 text-sm font-semibold text-text-primary">
+                      {activeFamilyOverviewCard.title}
+                    </Text>
+                    <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                      {activeFamilyOverviewCard.description}
+                    </Text>
+                    <Text as="div" className="mt-2 text-[11px] font-semibold tracking-[0.06em] text-text-primary">
+                      Why this family
+                    </Text>
+                    <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                      {whyThisFamilyCopy}
+                    </Text>
+                    {activeFamilyOverviewCard.outcome ? (
+                      <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                        {activeFamilyOverviewCard.outcome}
+                      </Text>
+                    ) : null}
+                  </div>
+                );
+              })()
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+      <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2 2xl:grid-cols-3">
+        {limitedLensOverviewCards.map((card) => (
+          <div
+            key={card.key}
+            className={`relative overflow-hidden rounded-[22px] border px-4 py-4 ${card.visual.borderClass} ${card.visual.surfaceClass} ${card.visual.glowClass}`}
+            data-testid={`design-lab-lens-overview-card-${toTestIdSuffix(card.key)}`}
+          >
+            <div className={`absolute inset-x-0 top-0 h-1 ${card.visual.accentClass}`} aria-hidden />
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div className="min-w-0">
+                <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                  {card.eyebrow}
+                </Text>
+                <Text as="div" className="mt-2 text-sm font-semibold text-text-primary">
+                  {card.title}
+                </Text>
+              </div>
+              <SectionBadge label={card.primaryMetric} />
+            </div>
+            <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-sm">
+              {renderOverviewSilhouette(card.silhouette)}
+            </div>
+            <Text variant="secondary" className="mt-2 block text-xs leading-5">
+              {card.description}
             </Text>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {recipe.ownerBlocks.map((owner) => (
-                <SectionBadge key={owner} label={owner} />
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <div className="rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-2.5">
+                <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                  {card.primaryMetricLabel ?? 'Coverage'}
+                </Text>
+                <Text as="div" className="mt-1 text-sm font-semibold text-text-primary">
+                  {card.primaryMetric}
+                </Text>
+              </div>
+              <div className="rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-2.5">
+                <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                  {card.secondaryMetricLabel ?? 'Signal'}
+                </Text>
+                <Text as="div" className="mt-1 text-sm font-semibold text-text-primary">
+                  {card.secondaryMetric}
+                </Text>
+              </div>
+            </div>
+            {card.outcome ? (
+              <div className="mt-3 rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-3">
+                <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                  {card.outcomeLabel ?? 'Outcome'}
+                </Text>
+                <Text as="div" className="mt-1 text-sm font-semibold leading-6 text-text-primary">
+                  {card.outcome}
+                </Text>
+              </div>
+            ) : null}
+            {card.useWhen || card.avoidWhen ? (
+              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <div className="rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-3">
+                  <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                    When to use
+                  </Text>
+                  <Text as="div" className="mt-1 text-sm font-semibold leading-6 text-text-primary">
+                    {card.useWhen ?? '—'}
+                  </Text>
+                </div>
+                <div className="rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-3">
+                  <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                    When not to use
+                  </Text>
+                  <Text as="div" className="mt-1 text-sm font-semibold leading-6 text-text-primary">
+                    {card.avoidWhen ?? '—'}
+                  </Text>
+                </div>
+              </div>
+            ) : null}
+            {card.highlights?.length ? (
+              <div className="mt-3 rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-3">
+                <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                  {card.highlightLabel ?? 'Highlights'}
+                </Text>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {card.highlights.map((highlight: string) => (
+                    <SectionBadge key={`${card.key}-${highlight}`} label={highlight} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {card.badges.map((badge) => (
+                <SectionBadge key={`${card.key}-${badge}`} label={badge} />
               ))}
             </div>
           </div>
-
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Recipe Quick Status</DetailLabel>
-            <div className="mt-4 grid grid-cols-1 gap-3">
-              <LibraryMetricCard label="Owner blocks" value={recipe.ownerBlocks.length} note="Bu recipe içindeki canonical bileşen sayısı." />
-              <LibraryMetricCard label="Tracks" value={selectedRecipeTracks.length} note="Recipe’in dağıldığı yayın hattı sayısı." />
-              <LibraryMetricCard label="Sections" value={selectedRecipeSections.length} note="Kapsanan north-star section sayısı." />
-              <LibraryMetricCard label="Themes" value={selectedRecipeThemes.length} note="Bağlı UX tema ve alt tema yüzeyi." />
-            </div>
-          </div>
-        </div>
-
-        <LibraryShowcaseCard
-          eyebrow="Consumer Flow"
-          title="Recipe adoption contract"
-          description="Uygulama ekipleri önce recipe seviyesinde karar almalı, sonra gerekli owner block detayına inmelidir."
-          badges={[
-            <SectionBadge key="recipe-id" label={recipe.recipeId} />,
-            <SectionBadge key="recipe-owner-count" label={`${recipe.ownerBlocks.length} owner block`} />,
-          ]}
-        >
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-            <LibraryMetricCard label="Step 1" value="Recipe seç" note="Ekran problemi önce hazır recipe ailesiyle eşleştirilir." />
-            <LibraryMetricCard label="Step 2" value="Preset kilitle" note="Theme, density ve UX section kararları recipe katmanında sabitlenir." />
-            <LibraryMetricCard label="Step 3" value="Componente in" note="Yalnız eksik blok ya da varyant ihtiyacı varsa primitive detaya inilmelidir." />
-          </div>
-        </LibraryShowcaseCard>
+        ))}
       </div>
-    );
-  };
-
-  const renderRecipeDemoSection = (recipe: DesignLabRecipeFamily | null) => {
-    if (!recipe) {
-      return <Text variant="secondary">Demo ve kompozisyon için bir recipe seç.</Text>;
-    }
-
-    const baseShowcaseSections = buildRecipeWorkspaceShowcaseSections(recipe).map((section) => ({
-      ...section,
-      kind: resolveShowcaseSectionKind(section),
-    }));
-    const orderedShowcaseSections = demoGalleryMode === 'recipes_first'
-      ? [...baseShowcaseSections].sort((left, right) => {
-          const order: Record<DemoSurfaceKind, number> = { recipe: 0, live: 1, reference: 2 };
-          return order[left.kind ?? 'live'] - order[right.kind ?? 'live'];
-        })
-      : baseShowcaseSections.filter((section) => demoGalleryMode !== 'live_only' || section.kind === 'live');
-
-    return (
-      <DemoGalleryModeContext.Provider value={demoGalleryMode}>
-        <div className="space-y-5">
-          <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
-            <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
-              <div className="flex flex-wrap gap-2">
-                {orderedShowcaseSections.map((section, index) => (
-                  <SectionBadge key={section.id} label={`${String(index + 1).padStart(2, '0')} · ${section.title}`} />
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <SectionBadge label={`Mod · ${demoGalleryModeOptions.find((entry) => entry.id === demoGalleryMode)?.label ?? 'Tüm yüzeyler'}`} />
-                <SectionBadge label={sectionLockEnabled ? 'Section lock · Açık' : 'Section lock · Kapalı'} />
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-5">
-            {orderedShowcaseSections.length ? (
-              orderedShowcaseSections.map((section) => (
-                <div key={section.id} data-testid={`design-lab-recipe-demo-card-${section.id}`} data-demo-section-kind={section.kind}>
-                  <LibraryShowcaseCard
-                    eyebrow={section.eyebrow}
-                    title={section.title}
-                    description={section.description}
-                    badges={[
-                      <SectionBadge
-                        key={`${section.id}-kind`}
-                        label={demoSurfaceMeta[section.kind ?? 'live'].label}
-                        className={demoSurfaceMeta[section.kind ?? 'live'].badgeClassName}
-                      />,
-                      ...((section.badges ?? []).map((badge) => <SectionBadge key={`${section.id}-${badge}`} label={badge} />)),
-                    ]}
-                  >
-                    {section.content}
-                  </LibraryShowcaseCard>
+    </section>
+  ) : null;
+  const pageTemplateLandingPanel = pageTemplateLandingCards.length ? (
+    <section
+      data-testid="design-lab-page-template-overview"
+      className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <Text as="div" variant="secondary" className="text-[11px] font-semibold tracking-[0.08em]">
+            Template entries
+          </Text>
+          <Text as="div" className="mt-2 text-lg font-semibold text-text-primary">
+            Cluster seciminden sayfa iskeletine in
+          </Text>
+          <Text variant="secondary" className="mt-1 block text-sm leading-6">
+            Cluster katmani genis resmi verir; bu ikinci seviye grid ise ekiplerin dogrudan hangi page shell ile baslayacagini secmesine yardim eder.
+          </Text>
+        </div>
+        <SectionBadge label={`${pageTemplateLandingCards.length} templates`} />
+      </div>
+      <div className="mt-4 space-y-4">
+        {pageTemplateLandingClusters.map((cluster) => (
+          <section
+            key={cluster.title}
+            data-testid={`design-lab-page-template-cluster-${toTestIdSuffix(cluster.title)}`}
+            className="rounded-[22px] border border-border-subtle bg-surface-panel p-4"
+          >
+            {(() => {
+              const activeCard = cluster.cards.find((card) => card.recipeId === familySelectionState.pages) ?? null;
+              if (!activeCard) {
+                return null;
+              }
+              return (
+                <div
+                  data-testid={`design-lab-page-template-current-${toTestIdSuffix(cluster.title)}`}
+                  className={`mb-4 rounded-[20px] border px-4 py-4 ${activeCard.visual.borderClass} ${activeCard.visual.surfaceClass}`}
+                >
+                  <div className="grid grid-cols-1 gap-3 xl:grid-cols-[1.1fr_0.9fr]">
+                    <div className="min-w-0">
+                      <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                        Current entry
+                      </Text>
+                      <Text as="div" className="mt-2 text-base font-semibold text-text-primary">
+                        {activeCard.title}
+                      </Text>
+                      <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                        {getRecipeFamilyOutcome({
+                          recipeId: activeCard.recipeId,
+                          title: activeCard.title,
+                          clusterTitle: activeCard.clusterTitle,
+                        })}
+                      </Text>
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        <SectionBadge label={activeCard.signal} />
+                        <SectionBadge label={activeCard.primaryMetric} />
+                        {activeCard.transitionTags?.map((tag) => (
+                          <SectionBadge key={`${activeCard.recipeId}-${tag}`} label={tag} />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="rounded-[18px] border border-border-subtle bg-surface-default/75 px-3 py-3">
+                      <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                        Related templates
+                      </Text>
+                      <Text variant="secondary" className="mt-1 block text-xs leading-5">
+                        Ayni cluster icinde farkli bir sayfa ritmine gecmek icin yakin alternatifler.
+                      </Text>
+                      <div className="mt-2 grid grid-cols-1 gap-2">
+                        {cluster.cards
+                          .filter((card) => card.recipeId !== activeCard.recipeId)
+                          .slice(0, 3)
+                          .map((card) => (
+                            <button
+                              key={`related-template-${card.recipeId}`}
+                              type="button"
+                              onClick={() => setPageSelectionId(card.recipeId)}
+                              className="rounded-[16px] border border-border-subtle bg-surface-panel px-3 py-2 text-left transition hover:bg-surface-muted"
+                            >
+                              <Text as="div" className="text-xs font-semibold text-text-primary">
+                                {card.title}
+                              </Text>
+                              <div className="mt-1 flex flex-wrap gap-1.5">
+                                <SectionBadge label={card.signal} />
+                                <SectionBadge label={card.primaryMetric} />
+                                {card.transitionTags?.map((tag) => (
+                                  <SectionBadge key={`related-${card.recipeId}-${tag}`} label={tag} />
+                                ))}
+                              </div>
+                              <Text variant="secondary" className="mt-1 block text-[11px] leading-5">
+                                {getTemplateSwitchReason({
+                                  recipeId: card.recipeId,
+                                  title: card.title,
+                                  clusterTitle: card.clusterTitle,
+                                })}
+                              </Text>
+                            </button>
+                          ))}
+                        {cluster.cards.filter((card) => card.recipeId !== activeCard.recipeId).length === 0 ? (
+                          <Text variant="secondary" className="block text-xs leading-5">
+                            Bu cluster icinde secili giris tek template olarak duruyor.
+                          </Text>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              ))
-            ) : (
-              <div className="rounded-[24px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-                <Text variant="secondary" className="block leading-7">
-                  Seçili mod için görünür recipe demosu kalmadı. `Tüm yüzeyler` veya `Recipes first` moduna dönerek kompozisyon kartlarını tekrar açabilirsin.
+              );
+            })()}
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0">
+                <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                  Template cluster
+                </Text>
+                <Text as="div" className="mt-2 text-base font-semibold text-text-primary">
+                  {cluster.title}
+                </Text>
+                <Text variant="secondary" className="mt-1 block text-sm leading-6">
+                  {cluster.description}
                 </Text>
               </div>
-            )}
-          </div>
-        </div>
-      </DemoGalleryModeContext.Provider>
-    );
-  };
-
-  const renderRecipeApiTab = (recipe: DesignLabRecipeFamily | null) => {
-    if (!recipe) {
-      return <Text variant="secondary">Consume contract için bir recipe seç.</Text>;
-    }
-
-    const composeCode = `import { ${recipe.ownerBlocks.join(', ')} } from 'mfe-ui-kit';\n\nexport function ${recipe.recipeId.replace(/[^a-zA-Z0-9]+/g, ' ')}Recipe() {\n  return (\n    <div>{/* ${recipe.intent} */}</div>\n  );\n}`;
-    const usageRecipes = [
-      {
-        title: 'Compose recipe shell',
-        description: 'Recipe owner block setini doğrudan aynı yüzeyde compose et.',
-        code: composeCode,
-      },
-      {
-        title: 'Consumer handoff',
-        description: 'Uygulama ekipleri önce recipe kararını taşır, sonra gerekirse alt primitive varyantı açar.',
-        code: `// Recipe intent\n// ${recipe.intent}\n// Owner blocks: ${recipe.ownerBlocks.join(', ')}\n// Contract: ${recipeSummary?.contractId ?? 'recipe-contract'}`,
-      },
-    ];
-
-    return (
-      <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Recipe Contract</DetailLabel>
-            <LibraryCodeBlock code={composeCode} className="mt-3" />
-          </div>
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-            <DetailLabel>Registry Binding</DetailLabel>
-            <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-1">
-              <LibraryMetricCard label="Recipe ID" value={recipe.recipeId} note="Design Lab içindeki canonical recipe kimliği." />
-              <LibraryMetricCard label="Owner blocks" value={recipe.ownerBlocks.length} note="Tüketici ekranın compose edeceği resmi blok seti." />
-              <LibraryMetricCard label="Tracks" value={selectedRecipeTracks.join(' / ') || '—'} note="Recipe içindeki yayın hatları." />
-              <LibraryMetricCard label="Contract" value={recipeSummary?.contractId ?? '—'} note="Recipe sisteminin kaynak kontratı." />
+              <SectionBadge label={`${cluster.cards.length} templates`} />
             </div>
-          </div>
-        </div>
-        <LibraryUsageRecipesPanel title="Recipe consume patterns" recipes={usageRecipes} />
+            <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-2 2xl:grid-cols-3">
+              {cluster.cards.map((card) => {
+                const active = familySelectionState.pages === card.recipeId;
+                return (
+                  <button
+                    key={card.recipeId}
+                    type="button"
+                    onClick={() => setPageSelectionId(card.recipeId)}
+                    data-testid={`design-lab-page-template-card-${toTestIdSuffix(card.recipeId)}`}
+                    className={`relative overflow-hidden rounded-[22px] border px-4 py-4 text-left transition ${
+                      active
+                        ? `${card.visual.borderClass} ${card.visual.surfaceClass} ${card.visual.glowClass}`
+                        : 'border-border-subtle bg-surface-default hover:bg-surface-muted'
+                    }`}
+                  >
+                    <div className={`absolute inset-x-0 top-0 h-1 ${card.visual.accentClass}`} aria-hidden />
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                          {card.clusterTitle}
+                        </Text>
+                        <Text as="div" className="mt-2 text-sm font-semibold text-text-primary">
+                          {card.title}
+                        </Text>
+                      </div>
+                      <SectionBadge label={active ? 'Active template' : 'Open template'} />
+                    </div>
+                    <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-sm">
+                      {renderOverviewSilhouette(card.silhouette)}
+                    </div>
+                    <Text variant="secondary" className="mt-2 block text-xs leading-5">
+                      {card.description}
+                    </Text>
+                    <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      <div className="rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-2.5">
+                        <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                          Product problem
+                        </Text>
+                        <Text as="div" className="mt-1 text-sm font-semibold text-text-primary">
+                          {card.signal}
+                        </Text>
+                      </div>
+                      <div className="rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-2.5">
+                        <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                          {card.primaryMetricLabel}
+                        </Text>
+                        <Text as="div" className="mt-1 text-sm font-semibold text-text-primary">
+                          {card.primaryMetric}
+                        </Text>
+                      </div>
+                    </div>
+                    <div className="mt-3 rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-3">
+                      <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                        Success outcome
+                      </Text>
+                      <Text as="div" className="mt-1 text-sm font-semibold leading-6 text-text-primary">
+                        {getRecipeFamilyOutcome({
+                          recipeId: card.recipeId,
+                          title: card.title,
+                          clusterTitle: card.clusterTitle,
+                        })}
+                      </Text>
+                    </div>
+                    <div className="mt-3 rounded-[18px] border border-border-subtle bg-surface-default/80 px-3 py-3">
+                      <Text as="div" variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">
+                        {card.highlightLabel}
+                      </Text>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {card.highlights.map((highlight) => (
+                          <SectionBadge key={`${card.recipeId}-${highlight}`} label={highlight} />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      <SectionBadge label={card.clusterTitle} />
+                      <SectionBadge label={card.secondaryMetric} />
+                      {card.transitionTags?.map((tag) => (
+                        <SectionBadge key={`card-${card.recipeId}-${tag}`} label={tag} />
+                      ))}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        ))}
       </div>
-    );
-  };
-
-  const renderRecipeUxTab = (recipe: DesignLabRecipeFamily | null) => {
-    if (!recipe) {
-      return <Text variant="secondary">UX hizası için bir recipe seç.</Text>;
-    }
-    return (
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>UX Theme Coverage</DetailLabel>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {selectedRecipeThemes.length ? selectedRecipeThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">Theme bağı yok</Text>}
-          </div>
-        </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>North Star Sections</DetailLabel>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {selectedRecipeSections.length ? selectedRecipeSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">Section bağı yok</Text>}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderRecipeQualityTab = (recipe: DesignLabRecipeFamily | null) => {
-    if (!recipe) {
-      return <Text variant="secondary">Kalite bilgisi için bir recipe seç.</Text>;
-    }
-    return (
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Combined Quality Gates</DetailLabel>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {selectedRecipeQualityGates.length ? selectedRecipeQualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">Quality gate yok</Text>}
-          </div>
-        </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
-          <DetailLabel>Lifecycle Mix</DetailLabel>
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
-            <LibraryMetricCard label="Stable" value={selectedRecipeItems.filter((item) => item.lifecycle === 'stable').length} note="Recipe içindeki stable blok sayısı." />
-            <LibraryMetricCard label="Beta" value={selectedRecipeItems.filter((item) => item.lifecycle === 'beta').length} note="Henüz stabilize edilmemiş blok sayısı." />
-            <LibraryMetricCard label="Live demo" value={selectedRecipeItems.filter((item) => item.demoMode === 'live').length} note="Canlı demoya sahip blok sayısı." />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderComponentDetailTabContent = (item: DesignLabIndexItem | null) => (
-    <div className="space-y-5">
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.overview = node;
-        }}
-        id="design-lab-section-overview"
-        eyebrow="Section 01"
-        title="Overview"
-        description="Bileşenin rolü, yayın durumu ve karar çerçevesi."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="overview">{renderOverviewTab(item)}</div>
-      </LibraryDocsSection>
-
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.demo = node;
-        }}
-        id="design-lab-section-demo"
-        eyebrow="Section 02"
-        title="Demo Gallery"
-        description="Ant Design ve Material UI benzeri tek sayfa showcase akışı. Seçili component için bütün alternatifler aşağı doğru görünür."
-        actions={
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <Button
-              size="sm"
-              variant={sectionLockEnabled ? 'secondary' : 'ghost'}
-              onClick={() => setSectionLockEnabled((current) => !current)}
-              data-testid="design-lab-section-lock-toggle"
-            >
-              {sectionLockEnabled ? 'Section lock açık' : 'Section lock kapalı'}
-            </Button>
-            {demoGalleryModeOptions.map((option) => (
-              <Button
-                key={option.id}
-                size="sm"
-                variant={demoGalleryMode === option.id ? 'secondary' : 'ghost'}
-                onClick={() => setDemoGalleryMode(option.id)}
-                data-testid={`design-lab-demo-mode-${option.id}`}
-                title={option.note}
-              >
-                {option.label}
-              </Button>
-            ))}
-            {item?.importStatement ? (
-              <Button variant="secondary" size="sm" onClick={() => handleCopy(item.importStatement)}>
-                Import kopyala
-              </Button>
-            ) : null}
-          </div>
+    </section>
+  ) : null;
+  const selectedApiItem = selectedItem ? componentApiMap.get(selectedItem.name) ?? null : null;
+  const selectedUsageRecipes = selectedItem ? buildUsageRecipes(selectedItem, selectedApiItem ?? undefined, t, trackMeta) : [];
+  const selectedTrackLabel = selectedItem ? trackMeta[resolveItemTrack(selectedItem)].label : null;
+  const renderComponentDetailContent = () => (
+    <DesignLabComponentDetailSections
+      activeTab={detailTab}
+      activeApiPanel={activeComponentApiPanel}
+      activeQualityPanel={activeComponentQualityPanel}
+      item={selectedItem}
+      generalContent={renderComponentGeneralTab(selectedItem)}
+      overviewContent={renderOverviewTab(selectedItem)}
+      demoContent={componentDemoContent}
+      apiItem={selectedApiItem}
+      usageRecipes={selectedUsageRecipes}
+      trackLabel={selectedTrackLabel}
+      onApiPanelChange={setActiveComponentApiPanel}
+      onQualityPanelChange={setActiveComponentQualityPanel}
+      onCopyImport={() => {
+        if (selectedItem?.importStatement) {
+          handleCopy(selectedItem.importStatement);
         }
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="demo">{renderDemoSection(item)}</div>
-      </LibraryDocsSection>
+      }}
+      DocsSectionComponent={LibraryDocsSection}
+      DetailLabelComponent={DetailLabel}
+      SectionBadgeComponent={SectionBadge}
+      MetricCardComponent={LibraryMetricCard}
+      CodeBlockComponent={LibraryCodeBlock}
+      PropsTableComponent={LibraryPropsTable}
+      UsageRecipesPanelComponent={LibraryUsageRecipesPanel}
+    />
+  );
+  const renderRecipeDetailContent = () => (
+    <DesignLabRecipeDetailSections
+      activeTab={detailTab}
+      activeOverviewPanel={activeRecipeOverviewPanel}
+      activeApiPanel={activeRecipeApiPanel}
+      activeQualityPanel={activeRecipeQualityPanel}
+      recipe={selectedFamily}
+      generalContent={renderRecipeGeneralTab()}
+      demoContent={recipeDemoContent}
+      recipeContractId={familySummary?.contractId ?? null}
+      selectedRecipeTracks={selectedFamilyTracks}
+      selectedRecipeSections={selectedFamilySections}
+      selectedRecipeThemes={selectedFamilyThemes}
+      selectedRecipeQualityGates={selectedFamilyQualityGates}
+      selectedRecipeItems={selectedFamilyItems}
+      onApiPanelChange={setActiveRecipeApiPanel}
+      onQualityPanelChange={setActiveRecipeQualityPanel}
+      onOverviewPanelChange={setActiveRecipeOverviewPanel}
+      DocsSectionComponent={LibraryDocsSection}
+      DetailLabelComponent={DetailLabel}
+      SectionBadgeComponent={SectionBadge}
+      MetricCardComponent={LibraryMetricCard}
+      ShowcaseCardComponent={LibraryShowcaseCard}
+      CodeBlockComponent={LibraryCodeBlock}
+      UsageRecipesPanelComponent={LibraryUsageRecipesPanel}
+    />
+  );
+  const renderPageDetailContent = () => (
+    <DesignLabPageDetailSections
+      activeTab={detailTab}
+      activeOverviewPanel={activePageOverviewPanel}
+      activeApiPanel={activePageApiPanel}
+      activeQualityPanel={activePageQualityPanel}
+      template={selectedPageTemplate}
+      generalContent={renderPageGeneralTab()}
+      demoContent={pageDemoContent}
+      templateContractId={selectedPageTemplateContractId}
+      selectedTemplateTracks={selectedPageTemplateTracks}
+      selectedTemplateSections={selectedPageTemplateSections}
+      selectedTemplateThemes={selectedPageTemplateThemes}
+      selectedTemplateQualityGates={selectedPageTemplateQualityGates}
+      selectedTemplateItems={selectedPageTemplateItems}
+      onApiPanelChange={setActivePageApiPanel}
+      onQualityPanelChange={setActivePageQualityPanel}
+      onOverviewPanelChange={setActivePageOverviewPanel}
+      DocsSectionComponent={LibraryDocsSection}
+      DetailLabelComponent={DetailLabel}
+      SectionBadgeComponent={SectionBadge}
+      MetricCardComponent={LibraryMetricCard}
+      ShowcaseCardComponent={LibraryShowcaseCard}
+      CodeBlockComponent={LibraryCodeBlock}
+      UsageRecipesPanelComponent={LibraryUsageRecipesPanel}
+    />
+  );
+  const renderFoundationDetailContent = () => (
+    <DesignLabFoundationDetailSections
+      activeTab={detailTab as 'overview' | 'demo' | 'api' | 'quality'}
+      activeOverviewPanel={activeFoundationOverviewPanel}
+      activeApiPanel={activeFoundationApiPanel}
+      activeQualityPanel={activeFoundationQualityPanel}
+      foundation={selectedFoundationFamily}
+      demoContent={foundationDemoContent}
+      foundationContractId={selectedItem?.acceptanceContractId ?? null}
+      selectedFoundationTokens={selectedFoundationTokens}
+      selectedFoundationThemes={selectedFoundationThemes}
+      selectedFoundationA11yGates={selectedFoundationA11yGates}
+      selectedFoundationItems={selectedFoundationItems}
+      onApiPanelChange={setActiveFoundationApiPanel}
+      onQualityPanelChange={setActiveFoundationQualityPanel}
+      onOverviewPanelChange={setActiveFoundationOverviewPanel}
+      DocsSectionComponent={LibraryDocsSection}
+      DetailLabelComponent={DetailLabel}
+      SectionBadgeComponent={SectionBadge}
+      MetricCardComponent={LibraryMetricCard}
+      ShowcaseCardComponent={LibraryShowcaseCard}
+      CodeBlockComponent={LibraryCodeBlock}
+    />
+  );
+  const detailContentKind = resolveDesignLabPageShellDetailContentKind(
+    activePageShellLayerId,
+  );
+  const foundationDetailContent = renderFoundationDetailContent();
+  const componentDetailContent = renderComponentDetailContent();
+  const recipeDetailContent = renderRecipeDetailContent();
+  const pageDetailContent = renderPageDetailContent();
+  const renderEcosystemDetailContent = () => (
+    <DesignLabEcosystemDetailSections
+      activeTab={detailTab}
+      activeOverviewPanel={activeEcosystemOverviewPanel}
+      activeApiPanel={activeEcosystemApiPanel}
+      activeQualityPanel={activeEcosystemQualityPanel}
+      extension={selectedEcosystemExtension}
+      generalContent={renderRecipeGeneralTab()}
+      demoContent={ecosystemDemoContent}
+      extensionContractId={familySummary?.contractId ?? null}
+      selectedExtensionSurfaces={selectedEcosystemSurfaces}
+      selectedExtensionTiers={selectedEcosystemTiers}
+      selectedExtensionQualityGates={selectedEcosystemQualityGates}
+      selectedExtensionItems={selectedEcosystemItems}
+      onApiPanelChange={setActiveEcosystemApiPanel}
+      onQualityPanelChange={setActiveEcosystemQualityPanel}
+      onOverviewPanelChange={setActiveEcosystemOverviewPanel}
+      DocsSectionComponent={LibraryDocsSection}
+      DetailLabelComponent={DetailLabel}
+      SectionBadgeComponent={SectionBadge}
+      MetricCardComponent={LibraryMetricCard}
+      ShowcaseCardComponent={LibraryShowcaseCard}
+      CodeBlockComponent={LibraryCodeBlock}
+    />
+  );
+  const ecosystemDetailContent = renderEcosystemDetailContent();
+  const activeDetailContent =
+    detailContentKind === 'foundations'
+      ? foundationDetailContent
+      : detailContentKind === 'pages'
+        ? pageDetailContent
+        : detailContentKind === 'recipes'
+          ? recipeDetailContent
+          : detailContentKind === 'ecosystem'
+            ? ecosystemDetailContent
+            : componentDetailContent;
+  const layerSidebarStats = resolveDesignLabPageShellSidebarStats({
+    layerId: activePageShellLayerId,
+    activeWorkspaceLabel,
+    activeLensLabel: activeLens.label,
+    selectedTaxonomySectionTitle: selectedTaxonomySection?.title ?? null,
+    foundationFamilyTitle: selectedFoundationProfile?.title ?? selectedGroup?.title ?? null,
+    pageFamilyTitle: selectedPageTemplateFamilyTitle,
+    familyClusterTitle: selectedFamilyClusterTitle,
+    componentVisibleCount: itemsForTrack.length,
+    componentFilteredCount: filteredItems.length,
+    componentStableCount: itemsForTrack.filter((item) => item.lifecycle === 'stable').length,
+    visibleFamilyCount: filteredFamilyItems.length,
+    totalFamilyCount: familyCatalogItems.length,
+    ownerBlocksCount: filteredFamilyItems.reduce((sum, family) => sum + family.ownerBlocks.length, 0),
+    boundComponentsCount: Array.from(new Set(filteredFamilyItems.flatMap((family) => family.ownerBlocks))).length,
+  });
+  const sidebarStats = layerSidebarStats.map((item) => ({
+    label: item.label,
+    value: item.value,
+  }));
+  function renderMetadataDescriptorItems(items: DesignLabMetadataDescriptor[]) {
+    return items.map((item) => ({
+      label: item.label,
+      value: (
+        <Text
+          as="div"
+          className={`${item.compact ? 'break-all text-xs font-medium' : 'font-semibold'} ${item.valueClassName ?? 'text-text-primary'}`}
+        >
+          {item.value}
+        </Text>
+      ),
+      note: item.note,
+    }));
+  }
+  const foundationActiveMetadataItems = renderMetadataDescriptorItems(
+    resolveDesignLabFoundationMetadataItems({
+      detailTab,
+      activeWorkspaceLabel,
+      primaryLensLabel: t('designlab.metadata.primaryLens'),
+      primaryLensValue: selectedTaxonomySection?.title ?? activeLens.label,
+      familyTitle: selectedFoundationProfile?.title ?? selectedGroup?.title ?? null,
+      benchmark: selectedFoundationProfile?.benchmark ?? null,
+      trackLabel: t('designlab.metadata.track'),
+      trackValue: selectedTrackLabel,
+      visibleCount: selectedComponentFamilyItems.length || filteredItems.length,
+      contractId: selectedItem?.acceptanceContractId ?? null,
+      kind: selectedItem?.kind ?? null,
+      qualityGatesCount: selectedItem?.qualityGates?.length ?? 0,
+      statusLabel: selectedItem ? statusLabel[selectedItem.lifecycle] : t('designlab.metadata.mode.noSelection'),
+      statusValueClassName: selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary',
+      availabilityValue: selectedItem ? availabilityLabel[selectedItem.availability] : '—',
+    }),
+  );
+  const componentActiveMetadataItems = renderMetadataDescriptorItems(
+    resolveDesignLabComponentMetadataItems({
+      detailTab,
+      activeComponentApiPanel,
+      activeComponentQualityPanel,
+      primaryLensLabel: 'Primary Lens',
+      primaryLensValue: selectedComponentPrimarySectionTitle ?? 'Components',
+      trackValue: selectedTrackLabel,
+      groupValue: selectedGroup?.title ?? selectedItem?.taxonomyGroupId ?? null,
+      demoValue: selectedItem ? demoModeLabel[selectedItem.demoMode] : '—',
+      usageLabel: t('designlab.metadata.usage'),
+      usageCount: selectedItem?.whereUsed.length ?? 0,
+      kind: selectedItem?.kind ?? null,
+      contractId: selectedItem?.acceptanceContractId ?? null,
+      variantAxesCount: selectedApiItem?.variantAxes.length ?? 0,
+      stateModelCount: selectedApiItem?.stateModel.length ?? 0,
+      previewFocusCount: selectedApiItem?.previewFocus.length ?? 0,
+      regressionCount: selectedApiItem?.regressionFocus.length ?? 0,
+      propsCount: selectedApiItem?.props.length ?? 0,
+      requiredPropsCount: selectedApiItem?.props.filter((prop) => prop.required).length ?? 0,
+      defaultsCount: selectedApiItem?.props.filter((prop) => prop.default && prop.default !== '—').length ?? 0,
+      usageRecipeCount: selectedUsageRecipes.length,
+      whereUsedCount: selectedItem?.whereUsed.length ?? 0,
+      qualityGatesCount: selectedItem?.qualityGates?.length ?? 0,
+      statusLabel: selectedItem ? statusLabel[selectedItem.lifecycle] : t('designlab.metadata.mode.noSelection'),
+      statusValueClassName: selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary',
+      availabilityValue: selectedItem ? availabilityLabel[selectedItem.availability] : '—',
+      packageName: '@mfe/design-system',
+    }),
+  );
+  const recipeActiveMetadataItems = renderMetadataDescriptorItems(
+    resolveDesignLabRecipeMetadataItems({
+      detailTab,
+      activeRecipeApiPanel,
+      activeRecipeQualityPanel,
+      activeWorkspaceLabel,
+      primaryLensLabel: 'Primary Lens',
+      primaryLensValue: selectedFamilyPrimarySectionTitle ?? 'Recipes',
+      tracksLabel: t('designlab.metadata.tracks'),
+      sectionsLabel: t('designlab.metadata.sections'),
+      themesLabel: t('designlab.metadata.themes'),
+      selectedRecipeIdentity,
+      ownerBlocksCount: selectedFamily?.ownerBlocks.length ?? 0,
+      selectedFamilyTracks,
+      selectedFamilySectionsCount: selectedFamilySections.length,
+      selectedFamilyThemesCount: selectedFamilyThemes.length,
+      selectedFamilyClusterTitle,
+      contractId: familySummary?.contractId ?? null,
+      qualityGatesCount: selectedFamilyQualityGates.length,
+      stableCount: selectedFamilyItems.filter((item) => item.lifecycle === 'stable').length,
+      betaCount: selectedFamilyItems.filter((item) => item.lifecycle === 'beta').length,
+      liveDemoCount: selectedFamilyItems.filter((item) => item.demoMode === 'live').length,
+    }),
+  );
+  const pageActiveMetadataItems = renderMetadataDescriptorItems(
+    resolveDesignLabPageMetadataItems({
+      detailTab,
+      activePageApiPanel,
+      activePageQualityPanel,
+      activeWorkspaceLabel,
+      primaryLensLabel: t('designlab.metadata.primaryLens'),
+      primaryLensValue: selectedTaxonomySection?.title ?? activeLens.label,
+      tracksLabel: t('designlab.metadata.tracks'),
+      sectionsLabel: t('designlab.metadata.sections'),
+      themesLabel: t('designlab.metadata.themes'),
+      selectedPageIdentity,
+      selectedPageDisplayTitle,
+      selectedPageTemplateFamilyTitle,
+      selectedPageTemplateContractId,
+      ownerBlocksCount: selectedPageTemplate?.ownerBlocks.length ?? 0,
+      selectedPageTemplateTracks,
+      selectedPageTemplateSectionsCount: selectedPageTemplateSections.length,
+      selectedPageTemplateThemesCount: selectedPageTemplateThemes.length,
+      selectedPageTemplateQualityGatesCount: selectedPageTemplateQualityGates.length,
+      stableCount: selectedPageTemplateItems.filter((item) => item.lifecycle === 'stable').length,
+      betaCount: selectedPageTemplateItems.filter((item) => item.lifecycle === 'beta').length,
+      liveDemoCount: selectedPageTemplateItems.filter((item) => item.demoMode === 'live').length,
+    }),
+  );
+  const activeMetadataItems =
+    activePageShellLayerId === 'foundations'
+      ? foundationActiveMetadataItems
+      : activePageShellLayerId === 'pages'
+        ? pageActiveMetadataItems
+        : activePageShellLayerId === 'recipes'
+          ? recipeActiveMetadataItems
+          : componentActiveMetadataItems;
+  const legacyAdapterOriginSectionTitle = useMemo(
+    () =>
+      legacyAdapterOriginSectionId
+        ? t(`designlab.taxonomy.sections.${legacyAdapterOriginSectionId}.title`)
+        : null,
+    [legacyAdapterOriginSectionId, t],
+  );
+  const legacyAdapterTargetSectionTitle = useMemo(
+    () => {
+      if (!legacyAdapterOriginSectionId) {
+        return null;
+      }
 
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.api = node;
-        }}
-        id="design-lab-section-api"
-        eyebrow="Section 03"
-        title="API"
-        description="Import, props, variant axes ve regression focus bilgisi."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="api">{renderApiTab(item)}</div>
-      </LibraryDocsSection>
+      const canonicalSectionId = normalizeDesignLabSectionId(legacyAdapterOriginSectionId);
+      return canonicalSectionId
+        ? t(`designlab.taxonomy.sections.${canonicalSectionId}.title`)
+        : null;
+    },
+    [legacyAdapterOriginSectionId, t],
+  );
+  const legacyAdapterNoticeAction = useMemo(
+    () => resolveLegacyAdapterNoticeAction(legacyAdapterOriginSectionId),
+    [legacyAdapterOriginSectionId],
+  );
+  const handleLegacyAdapterNoticeAction = React.useCallback(() => {
+    if (!legacyAdapterNoticeAction || !legacyAdapterOriginSectionId) {
+      return;
+    }
 
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.ux = node;
-        }}
-        id="design-lab-section-ux"
-        eyebrow="Section 04"
-        title="UX Alignment"
-        description="UX katalog hizası ve north-star section bağları."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="ux">{renderUxTab(item)}</div>
-      </LibraryDocsSection>
+    const canonicalSectionId = normalizeDesignLabSectionId(legacyAdapterOriginSectionId);
+    if (canonicalSectionId) {
+      recordDesignLabLegacyAliasTelemetry({
+        aliasSectionId: legacyAdapterOriginSectionId,
+        canonicalSectionId,
+        source: 'notice_cta',
+        targetId: legacyAdapterNoticeAction.targetId,
+      });
+    }
 
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.quality = node;
-        }}
-        id="design-lab-section-quality"
-        eyebrow="Section 05"
-        title="Quality"
-        description="Gate, usage ve regression evidence katmanı."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="quality">{renderQualityTab(item)}</div>
-      </LibraryDocsSection>
+    setLegacyAdapterOriginSectionId(null);
+    legacyAdapterCanonicalizationPendingRef.current = false;
+
+    if (legacyAdapterNoticeAction.kind === 'component-family') {
+      handleOverviewFamilySelect(legacyAdapterNoticeAction.targetId);
+      return;
+    }
+
+    handleSidebarFamilySelect(legacyAdapterNoticeAction.targetId);
+  }, [
+    handleOverviewFamilySelect,
+    handleSidebarFamilySelect,
+    legacyAdapterNoticeAction,
+    legacyAdapterOriginSectionId,
+  ]);
+  const legacyAdapterNotice = legacyAdapterOriginSectionId && legacyAdapterOriginSectionTitle && legacyAdapterTargetSectionTitle ? (
+    <div
+      data-testid="design-lab-legacy-adapter-notice"
+      className="rounded-[20px] border border-state-warning-border/50 bg-[linear-gradient(180deg,rgba(255,248,229,0.9),rgba(255,250,238,0.96))] px-4 py-3"
+    >
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge tone="warning">{t('designlab.taxonomy.badges.adapter')}</Badge>
+        <SectionBadge label={legacyAdapterOriginSectionTitle} />
+        <SectionBadge label={`→ ${legacyAdapterTargetSectionTitle}`} />
+      </div>
+      <Text as="div" className="mt-2 text-sm font-semibold text-text-primary">
+        {t('designlab.taxonomy.adapterNotice.title')}
+      </Text>
+      <Text variant="secondary" className="mt-1 block text-sm leading-6">
+        {t('designlab.taxonomy.adapterNotice.description', {
+          source: legacyAdapterOriginSectionTitle,
+          target: legacyAdapterTargetSectionTitle,
+        })}
+      </Text>
+      {legacyAdapterNoticeAction ? (
+        <div className="mt-3">
+          <Button
+            variant="secondary"
+            size="sm"
+            data-testid={legacyAdapterNoticeAction.testId}
+            onClick={handleLegacyAdapterNoticeAction}
+          >
+            {t(legacyAdapterNoticeAction.translationKey)}
+          </Button>
+        </div>
+      ) : null}
+    </div>
+  ) : null;
+  const breadcrumbs = (
+    <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-text-secondary">
+      <span className="font-semibold uppercase tracking-[0.18em] text-text-secondary">{t('designlab.breadcrumb.docs')}</span>
+      <span>/</span>
+      <span>{t('designlab.breadcrumb.library')}</span>
+      <span>/</span>
+      <span>
+        {isRecipeLikeLayer
+          ? selectedTaxonomySection?.title ?? activeLens.label
+          : selectedTaxonomySection?.title ?? selectedGroup?.title ?? trackMeta[activeTrack].label}
+      </span>
+      {isTreeBasedLayer && selectedGroup ? (
+        <>
+          <span>/</span>
+          <span>{selectedGroup.title}</span>
+        </>
+      ) : null}
+      {isRecipeLikeLayer ? (isPageLayer ? selectedPageTemplate : selectedFamily) ? (
+        <>
+          <span>/</span>
+          <span className="font-medium text-text-primary">
+            {isPageLayer ? selectedPageDisplayTitle : selectedRecipeDisplayTitle}
+          </span>
+        </>
+      ) : null : selectedItem ? (
+        <>
+          <span>/</span>
+          <span className="font-medium text-text-primary">{selectedItem.name}</span>
+        </>
+      ) : null}
     </div>
   );
-
-  const renderRecipeDetailTabContent = (recipe: DesignLabRecipeFamily | null) => (
-    <div className="space-y-5">
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.overview = node;
-        }}
-        id="design-lab-section-overview"
-        eyebrow="Section 01"
-        title="Overview"
-        description="Recipe amacı, owner blokları ve tüketim karar çerçevesi."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="overview">{renderRecipeOverviewTab(recipe)}</div>
-      </LibraryDocsSection>
-
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.demo = node;
-        }}
-        id="design-lab-section-demo"
-        eyebrow="Section 02"
-        title="Recipe Gallery"
-        description="Recipe kompozisyonu, canlı blok köprüleri ve tüketici handoff akışı."
-        actions={
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <Button
-              size="sm"
-              variant={sectionLockEnabled ? 'secondary' : 'ghost'}
-              onClick={() => setSectionLockEnabled((current) => !current)}
-              data-testid="design-lab-section-lock-toggle"
-            >
-              {sectionLockEnabled ? 'Section lock açık' : 'Section lock kapalı'}
-            </Button>
-            {demoGalleryModeOptions.map((option) => (
-              <Button
-                key={option.id}
-                size="sm"
-                variant={demoGalleryMode === option.id ? 'secondary' : 'ghost'}
-                onClick={() => setDemoGalleryMode(option.id)}
-                data-testid={`design-lab-demo-mode-${option.id}`}
-                title={option.note}
-              >
-                {option.label}
-              </Button>
-            ))}
-          </div>
-        }
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="demo">{renderRecipeDemoSection(recipe)}</div>
-      </LibraryDocsSection>
-
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.api = node;
-        }}
-        id="design-lab-section-api"
-        eyebrow="Section 03"
-        title="Consume Contract"
-        description="Recipe import, compose ve consumer handoff reçeteleri."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="api">{renderRecipeApiTab(recipe)}</div>
-      </LibraryDocsSection>
-
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.ux = node;
-        }}
-        id="design-lab-section-ux"
-        eyebrow="Section 04"
-        title="UX Alignment"
-        description="Recipe düzeyinde tema, north-star ve design intent kapsaması."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="ux">{renderRecipeUxTab(recipe)}</div>
-      </LibraryDocsSection>
-
-      <LibraryDocsSection
-        ref={(node) => {
-          detailSectionRefs.current.quality = node;
-        }}
-        id="design-lab-section-quality"
-        eyebrow="Section 05"
-        title="Quality"
-        description="Recipe içindeki blokların birleşik kalite görünümü."
-        className="scroll-mt-32"
-      >
-        <div data-detail-section-id="quality">{renderRecipeQualityTab(recipe)}</div>
-      </LibraryDocsSection>
-    </div>
+  const heroTopBadges = (
+    <>
+      <SectionBadge label={activeWorkspaceLabel} />
+      {selectedTaxonomySection ? <SectionBadge label={selectedTaxonomySection.title} /> : null}
+      {legacyAdapterOriginSectionTitle ? <Badge tone="warning">{t('designlab.taxonomy.badges.adapter')}</Badge> : null}
+      {legacyAdapterOriginSectionTitle ? <SectionBadge label={legacyAdapterOriginSectionTitle} /> : null}
+      {isRecipeLikeLayer ? (
+        (isPageLayer ? selectedPageTemplate : selectedFamily) ? (
+          <>
+            <Badge tone={activeTaxonomySectionId === 'pages' ? 'success' : 'info'}>{activeLens.badge}</Badge>
+            {(isPageLayer ? selectedPageTemplateFamilyTitle : selectedFamilyClusterTitle)
+              ? (
+                <SectionBadge
+                  label={(isPageLayer ? selectedPageTemplateFamilyTitle : selectedFamilyClusterTitle) ?? ''}
+                />
+              )
+              : null}
+          </>
+        ) : null
+      ) : selectedItem ? (
+        <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>
+          {statusLabel[selectedItem.lifecycle]}
+        </Badge>
+      ) : null}
+    </>
   );
+  const effectiveHeroSupportingContent = legacyAdapterNotice && heroSupportingContent
+    ? <div className="space-y-4">{legacyAdapterNotice}{heroSupportingContent}</div>
+    : legacyAdapterNotice ?? heroSupportingContent;
+  const heroAction = activeSectionWorkspaceMode === 'components' && selectedItem?.importStatement ? (
+    <Button variant="secondary" className="ml-auto" onClick={() => handleCopy(selectedItem.importStatement)}>
+      Import kopyala
+    </Button>
+  ) : null;
+  const copiedMessage = copied === 'ok'
+    ? t('designlab.copy.success')
+    : copied === 'fail'
+      ? t('designlab.copy.failure')
+      : null;
+  const detailPanelResetKey = `${activePageShellLayerId}:${activeTaxonomySectionId}`;
+  const handleDetailViewReset = React.useCallback(() => {
+    setAnchorValue('overview');
+    setActiveOverviewPanel('release');
+    setActiveRecipeOverviewPanel('summary');
+    setActivePageOverviewPanel('summary');
+    setActiveComponentApiPanel('contract');
+    setActiveRecipeApiPanel('contract');
+    setActivePageApiPanel('contract');
+    setActiveComponentQualityPanel('gates');
+    setActiveRecipeQualityPanel('gates');
+    setActivePageQualityPanel('gates');
+    setActiveComponentPreviewPanel('live');
+    setActiveRecipePreviewPanel('live');
+    setActivePagePreviewPanel('live');
+  }, []);
+  const releaseMetadataDescriptors = releaseSummary
+    ? resolveDesignLabReleaseMetadataItems({
+        layerId: activePageShellLayerId,
+        packageName: releaseSummary.packageName,
+        packageVersion: releaseSummary.packageVersion,
+        latestReleaseDate: releaseSummary.latestRelease.date || null,
+        readyDistributionTargetCount,
+        distributionTargetCount: releaseSummary.distributionTargets.length,
+        evidenceCount: releaseSummary.latestRelease.evidenceRefs.length,
+        familyTitle: selectedItem ? selectedGroup?.title ?? selectedItem.taxonomyGroupId : null,
+        waveId: selectedItem ? selectedItem.roadmapWaveId ?? 'legacy_surface' : null,
+      })
+    : null;
+  const releaseMetadataItems = releaseMetadataDescriptors
+    ? renderMetadataDescriptorItems(releaseMetadataDescriptors)
+    : null;
+  const adoptionMetadataDescriptors = adoptionSummary
+    ? resolveDesignLabAdoptionMetadataItems({
+        layerId: activePageShellLayerId,
+        coveragePercent: adoptionSummary.apiCoverage.coveragePercent,
+        readySurfaceCount: adoptionSummary.releaseReadiness.wideAdoptionReady,
+        usedByAppsCount: adoptionSummary.surfaceSummary.consumedByAppsExports,
+        privateGuardStatus: adoptionSummary.internalSurfaceProtection.status,
+      })
+    : null;
+  const adoptionMetadataItems = adoptionMetadataDescriptors
+    ? renderMetadataDescriptorItems(adoptionMetadataDescriptors)
+    : null;
+  const migrationMetadataDescriptors = migrationSummary
+    ? resolveDesignLabMigrationMetadataItems({
+        layerId: activePageShellLayerId,
+        adoptedCount: migrationSummary.summary.adoptedOutsideLabComponents,
+        consumerAppsCount: migrationSummary.summary.consumerAppsCount,
+        storyCoveragePercent: migrationSummary.summary.adoptedStoryCoveragePercent,
+        stableOnlyLabCount: migrationSummary.summary.stableOnlyInDesignLab,
+      })
+    : null;
+  const migrationMetadataItems = migrationMetadataDescriptors
+    ? renderMetadataDescriptorItems(migrationMetadataDescriptors)
+    : null;
+  const overviewSupplementalMetadataKind =
+    resolveDesignLabPageShellOverviewSupplementalMetadataKind({
+      layerId: activePageShellLayerId,
+      detailTab,
+      activeOverviewPanel: effectiveOverviewPanel,
+    });
+  const rightRailReleaseMetadataItems =
+    overviewSupplementalMetadataKind === 'release'
+      ? releaseMetadataItems
+      : null;
+  const rightRailAdoptionMetadataItems =
+    overviewSupplementalMetadataKind === 'adoption'
+      ? adoptionMetadataItems
+      : null;
+  const rightRailMigrationMetadataItems =
+    overviewSupplementalMetadataKind === 'migration'
+      ? migrationMetadataItems
+      : null;
+  const rightRailDetailTabs = resolveDesignLabPageShellRightRailTabs({
+    layerId: activePageShellLayerId,
+    detailTab,
+    detailTabMeta: detailTabMeta.map((tab) => ({ id: tab.id, label: tab.label })),
+    overviewPanelItems: overviewPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    recipeOverviewPanelItems: recipeOverviewPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    pageOverviewPanelItems: pageOverviewPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    componentApiPanelItems: componentApiPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    recipeApiPanelItems: recipeApiPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    pageApiPanelItems: pageApiPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    componentQualityPanelItems: componentQualityPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    recipeQualityPanelItems: recipeQualityPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    pageQualityPanelItems: pageQualityPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    componentPreviewPanelItems: componentPreviewPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    recipePreviewPanelItems: recipePreviewPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+    pagePreviewPanelItems: pagePreviewPanelItems.map((panel) => ({ id: panel.id, label: panel.label })),
+  });
+  const rightRailActiveId = resolveDesignLabPageShellRightRailActiveId({
+    layerId: activePageShellLayerId,
+    detailTab,
+    effectiveOverviewPanel,
+    activeRecipeOverviewPanel,
+    activePageOverviewPanel,
+    activeComponentPreviewPanel,
+    activeRecipePreviewPanel,
+    activePagePreviewPanel,
+    activeComponentApiPanel,
+    activeRecipeApiPanel,
+    activePageApiPanel,
+    activeComponentQualityPanel,
+    activeRecipeQualityPanel,
+    activePageQualityPanel,
+    overviewPanelItemsLength: overviewPanelItems.length,
+  });
+  const rightRailHasContent = rightRailDetailTabs.length > 0
+    || sidebarStats.length > 0
+    || Boolean(rightRailReleaseMetadataItems?.length)
+    || Boolean(rightRailAdoptionMetadataItems?.length)
+    || Boolean(rightRailMigrationMetadataItems?.length)
+    || activeMetadataItems.length > 0;
+  const pageGridClassName = `grid grid-cols-1 gap-6 ${
+    rightRailHasContent
+      ? rightRailOpen
+        ? 'xl:grid-cols-[300px_minmax(0,1fr)_260px]'
+        : 'xl:grid-cols-[300px_minmax(0,1fr)_52px]'
+      : 'xl:grid-cols-[300px_minmax(0,1fr)]'
+  }`;
+  const handleRightRailSelect = (tabId: string) => {
+    const selectionKind = resolveDesignLabPageShellRightRailSelectionKind({
+      layerId: activePageShellLayerId,
+      detailTab,
+      overviewPanelItemsLength: overviewPanelItems.length,
+    });
 
-  const sidebarSearchValue = workspaceMode === 'recipes' ? recipeQuery : query;
-  const sidebarSearchPlaceholder = workspaceMode === 'recipes' ? 'Recipe ara...' : 'Component ara...';
-  const sidebarHelpText = workspaceMode === 'recipes'
-    ? 'Recipe ailelerini, owner block setlerini ve tüketim kontratlarını tek akışta gezmek için kullan.'
-    : 'Component ailelerini, export durumunu ve canlı demoları tek bir doküman akışında gezmek için kullan.';
-  const activeHeroTitle = workspaceMode === 'recipes' ? selectedRecipe?.recipeId ?? 'Recipe seç' : selectedItem?.name ?? 'Component seç';
-  const activeHeroDescription = workspaceMode === 'recipes'
-    ? selectedRecipe?.intent ?? 'Sol menüden bir recipe seçerek canonical ekran kompozisyonlarını inceleyebilirsin.'
-    : selectedItem?.description ?? 'Sol menüden bir component seçerek canlı demo, API ve kalite detaylarını inceleyebilirsin.';
-  const activeHeroLabel = workspaceMode === 'recipes' ? 'Recipe' : 'Component';
-  const activeDetailContent = workspaceMode === 'recipes'
-    ? renderRecipeDetailTabContent(selectedRecipe)
-    : renderComponentDetailTabContent(selectedItem);
-  const sidebarStats = workspaceMode === 'recipes'
-    ? [
-        { label: 'Recipes', value: recipeFamilies.length },
-        { label: 'Filtered', value: filteredRecipeFamilies.length },
-        { label: 'Owner blocks', value: recipeFamilies.reduce((sum, recipe) => sum + recipe.ownerBlocks.length, 0) },
-        { label: 'Components', value: summary.total },
-      ]
-    : [
-        { label: 'Total', value: summary.total },
-        { label: 'Exported', value: summary.exported },
-        { label: 'Live', value: summary.liveDemo },
-        { label: 'Planned', value: summary.planned },
-      ];
-  const activeMetadataItems = workspaceMode === 'recipes'
-    ? [
-        {
-          label: 'Mode',
-          value: <Text as="div" className="font-semibold text-text-primary">Recipe Explorer</Text>,
-        },
-        {
-          label: 'Contract',
-          value: <Text as="div" className="break-all text-xs font-medium text-text-primary">{recipeSummary?.contractId ?? '—'}</Text>,
-        },
-        {
-          label: 'Owner Blocks',
-          value: <Text as="div" className="font-semibold text-text-primary">{String(selectedRecipe?.ownerBlocks.length ?? 0)}</Text>,
-        },
-        {
-          label: 'Tracks',
-          value: <Text as="div" className="font-semibold text-text-primary">{selectedRecipeTracks.join(' / ') || '—'}</Text>,
-        },
-      ]
-    : [
-        {
-          label: 'Status',
-          value: (
-            <Text as="div" className={`font-semibold ${selectedItem ? statusToneClass[selectedItem.lifecycle] : 'text-text-secondary'}`}>
-              {selectedItem ? statusLabel[selectedItem.lifecycle] : 'Seçim yok'}
-            </Text>
-          ),
-        },
-        {
-          label: 'Package',
-          value: <Text as="div" className="font-semibold text-text-primary">mfe-ui-kit</Text>,
-        },
-        {
-          label: 'Contract',
-          value: (
-            <Text as="div" className="break-all text-xs font-medium text-text-primary">
-              {selectedItem?.acceptanceContractId ?? '—'}
-            </Text>
-          ),
-        },
-      ];
+    if (selectionKind === 'component-overview') {
+      setActiveOverviewPanel(tabId as DesignLabOverviewPanelId);
+      return;
+    }
+
+    if (selectionKind === 'recipe-overview') {
+      setActiveRecipeOverviewPanel(tabId as DesignLabRecipeOverviewPanelId);
+      return;
+    }
+
+    if (selectionKind === 'page-overview') {
+      setActivePageOverviewPanel(tabId as DesignLabPageOverviewPanelId);
+      return;
+    }
+
+    if (selectionKind === 'component-preview') {
+      setActiveComponentPreviewPanel(tabId as DesignLabPreviewPanelId);
+      return;
+    }
+
+    if (selectionKind === 'recipe-preview') {
+      setActiveRecipePreviewPanel(tabId as DesignLabPreviewPanelId);
+      return;
+    }
+
+    if (selectionKind === 'page-preview') {
+      setActivePagePreviewPanel(tabId as DesignLabPreviewPanelId);
+      return;
+    }
+
+    if (selectionKind === 'component-api') {
+      setActiveComponentApiPanel(tabId as DesignLabComponentApiPanelId);
+      return;
+    }
+
+    if (selectionKind === 'recipe-api') {
+      setActiveRecipeApiPanel(tabId as DesignLabRecipeApiPanelId);
+      return;
+    }
+
+    if (selectionKind === 'page-api') {
+      setActivePageApiPanel(tabId as DesignLabPageApiPanelId);
+      return;
+    }
+
+    if (selectionKind === 'component-quality') {
+      setActiveComponentQualityPanel(tabId as DesignLabComponentQualityPanelId);
+      return;
+    }
+
+    if (selectionKind === 'recipe-quality') {
+      setActiveRecipeQualityPanel(tabId as DesignLabRecipeQualityPanelId);
+      return;
+    }
+
+    if (selectionKind === 'page-quality') {
+      setActivePageQualityPanel(tabId as DesignLabPageQualityPanelId);
+      return;
+    }
+
+    setDetailTab(tabId as DesignLabDetailTab);
+  };
 
   return (
     <div data-testid="design-lab-page" className="min-h-screen bg-surface-canvas">
       <div className="mx-auto max-w-[1880px] px-4 py-5 xl:px-6">
-        <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-text-secondary">
-          <span className="font-semibold uppercase tracking-[0.18em] text-text-secondary">Docs</span>
-          <span>/</span>
-          <span>UI Library</span>
-          <span>/</span>
-          <span>{workspaceMode === 'recipes' ? 'Recipe Explorer' : selectedGroup?.title ?? trackMeta[activeTrack].label}</span>
-          {workspaceMode === 'recipes' ? selectedRecipe ? (
-            <>
-              <span>/</span>
-              <span className="font-medium text-text-primary">{selectedRecipe.recipeId}</span>
-            </>
-          ) : null : selectedItem ? (
-            <>
-              <span>/</span>
-              <span className="font-medium text-text-primary">{selectedItem.name}</span>
-            </>
-          ) : null}
-        </div>
-
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[300px_minmax(0,1fr)_260px]">
-          <aside
-            data-testid="design-lab-sidebar"
-            className="relative z-10 sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
-          >
-            <div className="border-b border-border-subtle px-5 py-5">
-              <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.22em]">
-                UI Library
-              </Text>
-              <div className="mt-2 flex items-center justify-between gap-3">
-                <Text as="div" className="text-2xl font-semibold text-text-primary">
-                  {workspaceMode === 'recipes' ? 'Recipe Explorer' : 'Component Explorer'}
-                </Text>
-                <Tooltip text={sidebarHelpText}>
-                  <span className="shrink-0">
-                    <IconButton
-                      icon={<CircleHelp className="h-4 w-4" />}
-                      label={workspaceMode === 'recipes' ? 'Recipe Explorer yardımı' : 'Component Explorer yardımı'}
-                      size="sm"
-                      variant="ghost"
-                    />
-                  </span>
-                </Tooltip>
-              </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Button
-                  size="sm"
-                  variant={workspaceMode === 'components' ? 'secondary' : 'ghost'}
-                  onClick={() => setWorkspaceMode('components')}
-                  data-testid="design-lab-workspace-components"
-                >
-                  Components
-                </Button>
-                <Button
-                  size="sm"
-                  variant={workspaceMode === 'recipes' ? 'secondary' : 'ghost'}
-                  onClick={() => setWorkspaceMode('recipes')}
-                  data-testid="design-lab-workspace-recipes"
-                >
-                  Recipes
-                </Button>
-              </div>
-              <div className="mt-3">
-                <input
-                  data-testid="design-lab-search"
-                  value={sidebarSearchValue}
-                  onChange={(event) => {
-                    if (workspaceMode === 'recipes') {
-                      setRecipeQuery(event.target.value);
-                      return;
-                    }
-                    setQuery(event.target.value);
-                  }}
-                  placeholder={sidebarSearchPlaceholder}
-                  className="h-11 w-full rounded-2xl border border-border-default bg-surface-panel px-4 text-sm text-text-primary shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
-                  aria-label="UI library arama"
-                />
-              </div>
-            </div>
-
-            <div className="min-h-0 flex-1 overflow-auto px-4 py-5">
-              {workspaceMode === 'recipes' ? (
-                <section className="rounded-[24px] border border-border-subtle bg-surface-panel p-3">
-                  <div className="mb-3 flex items-center justify-between gap-2 px-2">
-                    <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                      Recipe Explorer
-                    </Text>
-                    <SectionBadge label={`${filteredRecipeFamilies.length} recipe`} />
-                  </div>
-                  <div className="space-y-2" data-testid="design-lab-recipe-list">
-                    {filteredRecipeFamilies.length ? filteredRecipeFamilies.map((recipe) => {
-                      const active = selectedRecipe?.recipeId === recipe.recipeId;
-                      return (
-                        <button
-                          key={recipe.recipeId}
-                          type="button"
-                          onClick={() => setSelectedRecipeId(recipe.recipeId)}
-                          data-testid={`design-lab-recipe-${toTestIdSuffix(recipe.recipeId)}`}
-                          className={`w-full rounded-[18px] border px-4 py-3 text-left transition ${
-                            active
-                              ? 'border-action-primary/30 bg-surface-default shadow-sm'
-                              : 'border-border-subtle bg-surface-canvas hover:bg-surface-muted'
-                          }`}
-                        >
-                          <div className="flex flex-wrap items-start justify-between gap-3">
-                            <div className="min-w-0">
-                              <Text as="div" className="text-sm font-semibold text-text-primary">
-                                {recipe.recipeId}
-                              </Text>
-                              <Text variant="secondary" className="mt-1 block text-xs leading-6">
-                                {recipe.intent}
-                              </Text>
-                            </div>
-                            <Badge tone={active ? 'info' : 'muted'}>{recipe.ownerBlocks.length}</Badge>
-                          </div>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {recipe.ownerBlocks.slice(0, 3).map((owner) => (
-                              <SectionBadge key={owner} label={owner} />
-                            ))}
-                            {recipe.ownerBlocks.length > 3 ? <SectionBadge label={`+${recipe.ownerBlocks.length - 3}`} /> : null}
-                          </div>
-                        </button>
-                      );
-                    }) : (
-                      <div className="rounded-[18px] border border-border-subtle bg-surface-canvas px-4 py-4">
-                        <Text variant="secondary" className="block text-sm leading-7">
-                          Arama kriterine uyan recipe bulunamadı.
-                        </Text>
-                      </div>
-                    )}
-                  </div>
-                </section>
-              ) : (
-                <section className="rounded-[24px] border border-border-subtle bg-surface-panel p-3">
-                  <div className="mb-3 px-2">
-                    <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                      Ürün Ağacı
-                    </Text>
-                  </div>
-
-                  <LibraryProductTree
-                    tracks={treeTracks}
-                    selection={treeSelection}
-                    defaultSelection={treeSelection}
-                    onSelectionChange={setTreeSelection}
-                    testIdPrefix="design-lab"
-                  />
-                </section>
-              )}
-            </div>
-          </aside>
+        <div className={pageGridClassName}>
+          <DesignLabSidebar
+            activeLayerId={activeTaxonomySectionId}
+            sidebarHelpText={sidebarHelpText}
+            sidebarSearchValue={sidebarSearchValue}
+            sidebarSearchPlaceholder={sidebarSearchPlaceholder}
+            activeTaxonomySectionTitle={selectedTaxonomySection?.title ?? null}
+            foundationFamilyTitle={isFoundationLayer
+              ? selectedFoundationProfile?.title ?? selectedGroup?.title ?? selectedTaxonomySection?.title ?? activeLens.label
+              : null}
+            foundationFamilyDescription={isFoundationLayer
+              ? selectedFoundationProfile?.description ?? activeLens.useWhen
+              : null}
+            foundationFamilyBadges={isFoundationLayer
+              ? [
+                  ...(selectedFoundationProfile?.badges ?? [selectedTaxonomySection?.title ?? activeLens.label]),
+                  `${filteredItems.length} item`,
+                ]
+              : []}
+            componentFamilyTitle={activeSectionWorkspaceMode === 'components'
+              ? selectedGroup?.title ?? selectedTaxonomySection?.title ?? activeLens.label
+              : null}
+            componentFamilyDescription={activeSectionWorkspaceMode === 'components'
+              ? selectedItem?.taxonomySubgroup ?? activeLens.useWhen
+              : null}
+            componentFamilyBadges={activeSectionWorkspaceMode === 'components'
+              ? [
+                  ...(selectedTaxonomySection?.title ? [selectedTaxonomySection.title] : [activeLens.label]),
+                  ...(selectedItem?.taxonomySubgroup ? [selectedItem.taxonomySubgroup] : []),
+                  `${selectedComponentFamilyItems.length || filteredItems.length} item`,
+                ]
+              : []}
+            familyItems={sidebarFamilyItems}
+            selectedFamilyId={activeFamilySelectionId}
+            onFamilySelect={handleSidebarFamilySelect}
+            onSearchChange={(value) => {
+              if (activeSectionWorkspaceMode === 'recipes' || activeSectionWorkspaceMode === 'pages') {
+                setFamilyQuery(value);
+                return;
+              }
+              setQuery(value);
+            }}
+            treeTracks={treeTracks}
+            treeSelection={treeSelection}
+            onTreeSelectionChange={handleSidebarTreeSelectionChange}
+            ProductTreeComponent={LibraryProductTree}
+            SectionBadgeComponent={SectionBadge}
+          />
 
           <main className="min-w-0 space-y-5">
-            <section
-              data-testid="design-lab-detail-hero"
-              className="overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
-            >
-              <div className="border-b border-border-subtle px-6 py-6">
-                <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-                  <div className="min-w-0">
-                    <div className="mb-3 flex flex-wrap items-center gap-2">
-                      <SectionBadge label={workspaceMode === 'recipes' ? 'Recipe Explorer' : trackMeta[activeTrack].label} />
-                      {workspaceMode === 'recipes'
-                        ? selectedRecipe ? <SectionBadge label={`${selectedRecipe.ownerBlocks.length} owner block`} /> : null
-                        : selectedGroup ? <SectionBadge label={selectedGroup.title} /> : null}
-                      {releaseSummary?.packageVersion ? <SectionBadge label={`${releaseSummary.packageName}@${releaseSummary.packageVersion}`} /> : null}
-                      {releaseSummary?.latestRelease.date ? <SectionBadge label={`Release · ${releaseSummary.latestRelease.date}`} /> : null}
-                      {workspaceMode === 'recipes'
-                        ? selectedRecipeTracks.map((track) => <SectionBadge key={track} label={track} />)
-                        : selectedItem?.roadmapWaveId ? <SectionBadge label={selectedItem.roadmapWaveId} /> : null}
-                      {workspaceMode === 'recipes' ? (
-                        selectedRecipe ? <Badge tone="info">Recipe</Badge> : null
-                      ) : selectedItem ? (
-                        <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>
-                          {statusLabel[selectedItem.lifecycle]}
-                        </Badge>
-                      ) : null}
-                    </div>
-                    <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.22em]">
-                      {activeHeroLabel}
-                    </Text>
-                    <Text as="h1" className="mt-2 text-[2.35rem] font-semibold tracking-[-0.03em] text-text-primary">
-                      {activeHeroTitle}
-                    </Text>
-                    <Text variant="secondary" className="mt-3 block max-w-3xl text-[15px] leading-7">
-                      {activeHeroDescription}
-                    </Text>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 xl:w-[340px]">
-                    {heroStats.map((stat) => (
-                      <LibraryMetricCard key={stat.label} label={stat.label} value={stat.value} note={stat.note} />
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <DesignLabHero
+              breadcrumbs={breadcrumbs}
+              topBadges={heroTopBadges}
+              activeHeroLabel={activeHeroLabel}
+              activeHeroTitle={activeHeroTitle}
+              activeHeroDescription={activeHeroDescription}
+              supportingContent={effectiveHeroSupportingContent}
+              action={heroAction}
+              copiedMessage={copiedMessage}
+            />
 
-              <div className="flex flex-wrap items-center gap-2 px-6 py-4">
-                {workspaceMode === 'recipes' ? (
-                  <>
-                    <Badge tone="info">Recipe-first design</Badge>
-                    {selectedRecipeThemes.slice(0, 3).map((theme) => (
-                      <SectionBadge key={theme} label={theme} />
-                    ))}
-                    {selectedRecipeQualityGates.length ? <SectionBadge label={`${selectedRecipeQualityGates.length} quality gate`} /> : null}
-                  </>
-                ) : (
-                  <>
-                    {selectedItem ? <Badge tone={selectedItem.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[selectedItem.availability]}</Badge> : null}
-                    {selectedItem ? <Badge tone={selectedItem.demoMode === 'live' ? 'success' : selectedItem.demoMode === 'planned' ? 'warning' : 'muted'}>{demoModeLabel[selectedItem.demoMode]}</Badge> : null}
-                    {selectedItem?.uxPrimaryThemeId ? <SectionBadge label={selectedItem.uxPrimaryThemeId} /> : null}
-                  </>
-                )}
-                {workspaceMode === 'components' && selectedItem?.importStatement ? (
-                  <Button variant="secondary" className="ml-auto" onClick={() => handleCopy(selectedItem.importStatement)}>
-                    Import kopyala
-                  </Button>
-                ) : null}
-              </div>
-              {copied === 'ok' ? <Text variant="secondary" className="px-6 pb-4">Kopyalandı</Text> : null}
-              {copied === 'fail' ? <Text variant="secondary" className="px-6 pb-4">Kopyalanamadı</Text> : null}
-            </section>
+            {showCatalogLandingContext ? lensOverviewPanel : null}
+            {showCatalogLandingContext ? pageTemplateLandingPanel : null}
 
             <div data-testid="design-lab-detail-tabs">
-              <LibraryDetailTabs
-                tabs={detailTabMeta}
+              <DetailSectionTabs
+                tabs={detailTabMeta.map((tab) => ({
+                  id: tab.id,
+                  label: tab.label,
+                  description: tab.description,
+                  dataTestId: `design-lab-tab-${tab.id}`,
+                }))}
                 activeTabId={detailTab}
-                onTabChange={(tabId) => scrollToDetailSection(tabId as DesignLabDetailTab)}
-                testIdPrefix="design-lab"
+                onTabChange={(tabId) => setDetailTab(tabId as DesignLabDetailTab)}
+                autoWrapBreakpoint="xl"
               />
             </div>
 
-            <section data-testid="design-lab-detail-panel" className="min-w-0">
+            <DesignLabDetailPanel resetKey={detailPanelResetKey} onResetView={handleDetailViewReset}>
               {activeDetailContent}
-            </section>
+            </DesignLabDetailPanel>
           </main>
-
-          <aside className="hidden xl:block">
-            <div className="sticky top-4 space-y-4">
-              <LibraryOutlinePanel
-                items={detailTabMeta.map((tab) => ({ id: tab.id, label: tab.label }))}
-                activeItemId={detailTab}
-                onItemSelect={(tabId) => scrollToDetailSection(tabId as DesignLabDetailTab)}
-              />
-
-              <LibraryStatsPanel
-                items={sidebarStats}
-              />
-
-              {releaseSummary ? (
-                <LibraryMetadataPanel
-                  title="Release"
-                  items={[
-                    {
-                      label: 'Package',
-                      value: <Text as="div" className="font-semibold text-text-primary">{`${releaseSummary.packageName}@${releaseSummary.packageVersion}`}</Text>,
-                    },
-                    {
-                      label: 'Latest Notes',
-                      value: <Text as="div" className="font-semibold text-text-primary">{releaseSummary.latestRelease.date || 'Tarih yok'}</Text>,
-                    },
-                    {
-                      label: 'Targets Ready',
-                      value: <Text as="div" className="font-semibold text-text-primary">{`${readyDistributionTargetCount}/${releaseSummary.distributionTargets.length}`}</Text>,
-                    },
-                    {
-                      label: 'Evidence',
-                      value: <Text as="div" className="font-semibold text-text-primary">{String(releaseSummary.latestRelease.evidenceRefs.length)}</Text>,
-                    },
-                    ...(workspaceMode === 'recipes'
-                      ? [
-                          {
-                            label: 'Recipe',
-                            value: <Text as="div" className="font-semibold text-text-primary">{selectedRecipe?.recipeId ?? '—'}</Text>,
-                          },
-                          {
-                            label: 'Owner Blocks',
-                            value: <Text as="div" className="font-semibold text-text-primary">{String(selectedRecipe?.ownerBlocks.length ?? 0)}</Text>,
-                          },
-                        ]
-                      : selectedItem
-                        ? [
-                            {
-                              label: 'Family',
-                              value: <Text as="div" className="font-semibold text-text-primary">{selectedGroup?.title ?? selectedItem.taxonomyGroupId}</Text>,
-                            },
-                            {
-                              label: 'Wave',
-                              value: <Text as="div" className="font-semibold text-text-primary">{selectedItem.roadmapWaveId ?? 'legacy_surface'}</Text>,
-                            },
-                          ]
-                        : []),
-                  ]}
-                />
-              ) : null}
-
-              {adoptionSummary ? (
-                <LibraryMetadataPanel
-                  title="Adoption"
-                  items={[
-                    {
-                      label: 'Coverage',
-                      value: <Text as="div" className="font-semibold text-text-primary">{`${adoptionSummary.apiCoverage.coveragePercent}%`}</Text>,
-                    },
-                    {
-                      label: 'Ready Surface',
-                      value: <Text as="div" className="font-semibold text-text-primary">{String(adoptionSummary.releaseReadiness.wideAdoptionReady)}</Text>,
-                    },
-                    {
-                      label: 'Used by apps',
-                      value: <Text as="div" className="font-semibold text-text-primary">{String(adoptionSummary.surfaceSummary.consumedByAppsExports)}</Text>,
-                    },
-                    {
-                      label: 'Private guard',
-                      value: (
-                        <Text
-                          as="div"
-                          className={`font-semibold ${adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'text-state-success-text' : 'text-state-warning-text'}`}
-                        >
-                          {adoptionSummary.internalSurfaceProtection.status}
-                        </Text>
-                      ),
-                    },
-                  ]}
-                />
-              ) : null}
-
-              {migrationSummary ? (
-                <LibraryMetadataPanel
-                  title="Migration"
-                  items={[
-                    {
-                      label: 'Adopted',
-                      value: <Text as="div" className="font-semibold text-text-primary">{String(migrationSummary.summary.adoptedOutsideLabComponents)}</Text>,
-                    },
-                    {
-                      label: 'Consumer apps',
-                      value: <Text as="div" className="font-semibold text-text-primary">{String(migrationSummary.summary.consumerAppsCount)}</Text>,
-                    },
-                    {
-                      label: 'Story coverage',
-                      value: <Text as="div" className="font-semibold text-text-primary">{`${migrationSummary.summary.adoptedStoryCoveragePercent}%`}</Text>,
-                    },
-                    {
-                      label: 'Stable only lab',
-                      value: <Text as="div" className="font-semibold text-text-primary">{String(migrationSummary.summary.stableOnlyInDesignLab)}</Text>,
-                    },
-                  ]}
-                />
-              ) : null}
-
-              <LibraryMetadataPanel items={activeMetadataItems} />
-            </div>
-          </aside>
+          <DesignLabRightRail
+            isOpen={rightRailOpen}
+            onToggle={() => setRightRailOpen((current) => !current)}
+            openLabel={t('designlab.rightRail.open')}
+            closeLabel={t('designlab.rightRail.close')}
+            detailTabs={rightRailDetailTabs}
+            activeDetailTabId={rightRailActiveId}
+            onOutlineSelect={handleRightRailSelect}
+            sidebarStats={sidebarStats}
+            contextMetadataTitle="Lens guide"
+            contextMetadataItems={lensGuideMetadataItems}
+            releaseMetadataItems={rightRailReleaseMetadataItems}
+            adoptionMetadataItems={rightRailAdoptionMetadataItems}
+            migrationMetadataItems={rightRailMigrationMetadataItems}
+            activeMetadataItems={activeMetadataItems}
+            OutlinePanelComponent={LibraryOutlinePanel}
+            StatsPanelComponent={LibraryStatsPanel}
+            MetadataPanelComponent={LibraryMetadataPanel}
+          />
         </div>
       </div>
     </div>

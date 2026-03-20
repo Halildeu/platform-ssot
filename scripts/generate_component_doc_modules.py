@@ -5,6 +5,7 @@ import json
 import re
 from pathlib import Path
 from typing import Any
+from ui_library_checks import load_json_with_authorities
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,11 +13,6 @@ MANIFEST_PATH = ROOT / "web/packages/ui-kit/src/catalog/component-manifest.v1.js
 DOC_ROOT = ROOT / "web/packages/ui-kit/src/catalog/component-docs"
 ENTRIES_DIR = DOC_ROOT / "entries"
 INDEX_FILE = DOC_ROOT / "index.ts"
-
-
-def _load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
-
 
 def _safe_name(value: str) -> str:
     safe = re.sub(r"[^A-Za-z0-9_]+", "_", value.strip())
@@ -31,7 +27,7 @@ def _ts_literal(value: Any) -> str:
 
 
 def main() -> int:
-    manifest = _load_json(MANIFEST_PATH)
+    manifest = load_json_with_authorities(MANIFEST_PATH.relative_to(ROOT).as_posix())
     items = manifest.get("items")
     if not isinstance(items, list):
         raise SystemExit("component manifest has invalid shape")

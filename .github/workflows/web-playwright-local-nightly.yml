@@ -104,6 +104,31 @@ jobs:
           KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
           KEYCLOAK_SCOPE: ${{ secrets.KEYCLOAK_SCOPE }}
 
+      - name: Run business-routes full smoke (localhost)
+        run: npm run test:smoke:business-routes:full:stack
+        working-directory: web
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+          PW_BASE_URL: http://localhost:3000
+          PW_ALLOW_LOCALHOST: "1"
+          PW_SOFT_MODE: "1"
+          PW_AUTH_MODE: token_injection
+          PW_READONLY_ENFORCE: "1"
+          KEYCLOAK_TOKEN_URL: ${{ secrets.KEYCLOAK_TOKEN_URL }}
+          KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
+          KEYCLOAK_CLIENT_SECRET: ${{ secrets.KEYCLOAK_CLIENT_SECRET }}
+          KEYCLOAK_SCOPE: ${{ secrets.KEYCLOAK_SCOPE }}
+
+      - name: Build mutation lane summary
+        if: always()
+        run: npm run report:mutation-lane-summary -- --out-dir test-results/ops/mutation-status
+        working-directory: web
+
+      - name: Build runtime status summary
+        if: always()
+        run: npm run report:runtime-status-summary -- --out-dir test-results/ops/runtime-status
+        working-directory: web
+
       - name: Upload reports (pw)
         if: always()
         uses: actions/upload-artifact@v4
@@ -116,7 +141,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ops-local-nightly-reports
-          path: web/test-results/ops
+          path: |
+            web/test-results/ops
+            web/test-results/ops/runtime-status
+            .cache/reports/grid_pagination_runtime_smoke.v1.json
+            .cache/reports/access_audit_grid_pagination_runtime_smoke.v1.json
+            .cache/reports/real_user_mutation_smoke.v1.json
 
       - name: Cleanup (always)
         if: always()
@@ -139,4 +169,3 @@ jobs:
 
           # Backend stack'i kaldır.
           docker compose -f backend/docker-compose.yml down --remove-orphans || true
-
