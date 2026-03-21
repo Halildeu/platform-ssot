@@ -1108,8 +1108,8 @@ const NON_COMPONENT_ENTRIES: Record<string, NonComponentType> = {
   resetTokenResolver: "theme-api",
   subscribeThemeAxes: "theme-api",
   updateThemeAxes: "theme-api",
-  // Upcoming components (documented but not yet exported)
-  MobileStepper: "upcoming",
+  // MobileStepper is exported — use registry resolution
+  MobileStepper: undefined,
   // X-Suite hooks & utilities
   useScheduler: "hook",
   useRecurrence: "hook",
