@@ -1,0 +1,20 @@
+{
+  "name": "@mfe/blocks",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Internal workspace package — composable page blocks and app templates",
+  "license": "UNLICENSED",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@mfe/design-system": "*",
+    "@mfe/x-charts": "*",
+    "@mfe/x-data-grid": "*",
+    "react": "^18.0.0 || ^19.0.0"
+  }
+}
