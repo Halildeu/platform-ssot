@@ -4,13 +4,11 @@ import { createRequire } from 'node:module';
 import React from 'react';
 import TestRenderer, { act } from 'react-test-renderer';
 import type { AccessRole } from '../../../features/access-management/model/access.types';
-import { TablePagination } from '@mfe/design-system';
 
 test('AccessGrid grid selection, row click ve pagination wiring akisini surdurur', async () => {
   const require = createRequire(import.meta.url);
   (require.extensions as Record<string, () => void>)['.css'] = () => {};
   const { default: AccessGrid } = await import('./AccessGrid.ui');
-
   const rows: AccessRole[] = [
     {
       id: 'role-admin',
@@ -151,7 +149,9 @@ test('AccessGrid grid selection, row click ve pagination wiring akisini surdurur
   });
 
   let root = renderer.root;
-  const tablePagination = root.findByType(TablePagination);
+  const tablePagination = root.find(
+    (node) => node.props.pageSizeOptions != null && node.props.onPageSizeChange != null,
+  );
   assert.equal(tablePagination.props.pageSize, 10);
   assert.equal(typeof tablePagination.props.onPageSizeChange, 'function');
 

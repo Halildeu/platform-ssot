@@ -38,10 +38,9 @@ const AccessVariantToolbar: React.FC<AccessVariantToolbarProps> = ({
       <Select
         className="min-w-[220px]"
         value={selectedVariantId ?? ''}
-        onValueChange={(value) => onSelectVariant(value || null)}
+        onChange={(e) => onSelectVariant(e.target.value || null)}
         options={variantOptions}
-        clearable
-        emptyOptionLabel={t('access.variants.selectPlaceholder')}
+        placeholder={t('access.variants.selectPlaceholder')}
         aria-label={t('access.variants.selectPlaceholder')}
       />
       <Button

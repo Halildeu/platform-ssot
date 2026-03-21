@@ -47,8 +47,7 @@ KanbanCardSlot
 ### Hooks
 - `useKanban(config)` — returns board state, imperative methods (moveCard, addCard, removeCard)
 - `useDragDrop()` — returns `DragDropEngine` abstraction + legacy handlers
-  - **Current**: HTML5 Drag and Drop API behind `DragDropEngine` abstraction
-  - **Planned**: `@dnd-kit` integration for keyboard accessibility + touch support
+  - HTML5 Drag and Drop API behind `DragDropEngine` abstraction
 - `useCardDrag(cardId)` — returns drag state, handles, and preview for a single card
 - `useColumnState(columnId)` — returns column metadata: card count, collapsed state, limit status
 
@@ -64,8 +63,7 @@ KanbanCardSlot
 - `CardMoveEvent`, `ColumnReorderEvent`
 
 ### Library
-- **Current**: HTML5 Drag and Drop API (native browser) behind `DragDropEngine` interface
-- **Planned**: `@dnd-kit/core` for drag-and-drop engine + `@dnd-kit/sortable` for within-column reordering
+- HTML5 Drag and Drop API (native browser) behind `DragDropEngine` interface
 
 ### Drag-Drop Architecture
 - `DragDropEngine` interface abstracts all DnD operations (state, handlers, prop getters)
@@ -136,7 +134,7 @@ KanbanCardSlot
 - Board skeleton with column placeholders
 
 ### Client-Only (`'use client'`)
-- Drag-and-drop engine (currently HTML5 native, planned @dnd-kit)
+- Drag-and-drop engine (HTML5 native)
 - Card drag preview and drop animations
 - Column collapse/expand interaction
 - Toolbar search and filter interactions
@@ -234,8 +232,7 @@ interface CardMoveEvent {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 12 KB** gzipped (v1 HTML5 DnD, no external DnD dependency)
-- v2 budget: < 25 KB gzipped (including @dnd-kit/core ~8KB + @dnd-kit/sortable ~4KB)
+- **< 12 KB** gzipped (HTML5 DnD, no external DnD dependency)
 
 ### Render Targets
 - **100 cards** across 5 columns: initial render < 100ms
@@ -261,9 +258,21 @@ interface CardMoveEvent {
 
 ### Contract Tests
 - KanbanCardDef and KanbanColumnDef shape validation
-- v1: DragDropEngine interface contract verified; v2: @dnd-kit drag events fire correctly
+- DragDropEngine interface contract verified
 
 ### Documentation
 - API reference page with full props table
 - **6 examples** — basic board, custom card render, WIP limits, column colors, theming, readonly mode
 - **2 recipes** — project task board, sales pipeline workflow
+
+---
+
+## v2 Roadmap (Out of Scope for v1)
+
+> v1 scope is frozen. Items below are tracked for v2 and do not affect v1 quality gates.
+
+### @dnd-kit Migration
+- Replace HTML5 Drag and Drop API with `@dnd-kit/core` engine + `@dnd-kit/sortable` for within-column reordering
+- Enables keyboard-accessible drag-and-drop and touch support
+- v2 bundle budget: < 25 KB gzipped (including @dnd-kit/core ~8KB + @dnd-kit/sortable ~4KB)
+- @dnd-kit drag events contract tests

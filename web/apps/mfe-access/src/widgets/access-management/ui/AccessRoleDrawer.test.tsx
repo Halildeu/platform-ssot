@@ -10,6 +10,42 @@ import type { AccessRole } from '../../../features/access-management/model/acces
 test('AccessRoleDrawer canonical checkbox ve save aksiyonunu surdurur', async () => {
   const require = createRequire(import.meta.url);
   (require.extensions as Record<string, () => void>)['.css'] = () => {};
+
+  // Polyfill minimal document/window for react-test-renderer
+  // (overlay-engine needs document.addEventListener, document.body.style, document.documentElement.clientWidth)
+  if (typeof globalThis.document === 'undefined') {
+    const listeners = new Map<string, Set<EventListener>>();
+    const stubStyle = { overflow: '', paddingRight: '' };
+    (globalThis as Record<string, unknown>).document = {
+      addEventListener: (type: string, listener: EventListener) => {
+        if (!listeners.has(type)) listeners.set(type, new Set());
+        listeners.get(type)!.add(listener);
+      },
+      removeEventListener: (type: string, listener: EventListener) => {
+        listeners.get(type)?.delete(listener);
+      },
+      contains: () => false,
+      body: { contains: () => false, style: stubStyle },
+      documentElement: {
+        clientWidth: 1024,
+        setAttribute: () => {},
+        getAttribute: () => null,
+        style: { setProperty: () => {}, getPropertyValue: () => '', removeProperty: () => '' },
+      },
+      createElement: () => ({ style: {} }),
+    };
+  }
+  if (typeof globalThis.window === 'undefined') {
+    (globalThis as Record<string, unknown>).window = {
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => true,
+      innerWidth: 1024,
+      location: { href: 'http://localhost', origin: 'http://localhost', protocol: 'http:', host: 'localhost' },
+      getComputedStyle: () => ({}),
+    };
+  }
+
   const { default: AccessRoleDrawer } = await import('./AccessRoleDrawer.ui');
 
   configureShellServices({

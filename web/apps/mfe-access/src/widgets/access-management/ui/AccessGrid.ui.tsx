@@ -5,7 +5,7 @@ import {
   TablePagination,
   useAgGridTablePagination,
   type AgGridTablePaginationApi,
-} from '@mfe/design-system';
+} from '@mfe/design-system/advanced/data-grid/TablePagination';
 import type { ColDef, SelectionColumnDef } from 'ag-grid-community';
 import type { AccessRole, AccessLevel } from '../../../features/access-management/model/access.types';
 

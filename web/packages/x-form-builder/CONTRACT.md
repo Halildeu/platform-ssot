@@ -24,7 +24,7 @@ FormBuilder
     onSchemaChange?: (schema: FormSchema) => void;
     onSave?: (schema: FormSchema) => void;
   }
-  // v2 — drag-and-drop form designer
+  // reserved — drag-and-drop designer not active in v1
 
 FieldRegistry
   props: {
@@ -42,8 +42,7 @@ FormPreview
 
 ### Hooks
 - `useFormSchema(schema)` — returns form state, validation, and exposes `SchemaValidator` instance
-  - **Current**: Built-in `SchemaValidator` from `FormSchema` validation rules (via `createSchemaValidator()`)
-  - **Planned**: Zod/AJV adapter for external schema validation
+  - Built-in `SchemaValidator` from `FormSchema` validation rules (via `createSchemaValidator()`)
 - `useFieldValidation(field, value)` — returns validation state for a single field: `{ valid, errors, touched }`
 - `useConditionalFields(schema, data)` — returns visible field set based on conditional rules and current data
 
@@ -51,7 +50,6 @@ FormPreview
 - `validateSchema(schema)` — validates the form schema itself (meta-validation)
 - `evaluateCondition(condition, data)` — evaluates a visibility/validation condition
 - `createSchemaValidator(schema)` — creates a `SchemaValidator` from `FormSchema` rules
-- `schemaToZod(schema)` — (planned) converts form schema to zod validation schema
 - `schemaToJsonSchema(schema)` — exports to JSON Schema Draft 7
 
 ### Type Exports
@@ -65,15 +63,11 @@ FormPreview
 - Schema format: JSON Schema Draft 7 compatible with UI extensions
 
 ### Validation
-- **Current**: Built-in `SchemaValidator` that evaluates `FieldSchema.validation` rules (required, min/max, minLength/maxLength, pattern, custom)
-- **Planned**: `zod` adapter via `createZodValidator()` / `toZodSchema()` for external schema validation
-- **Planned**: `ajv` adapter for strict JSON Schema Draft 7 compliance
+- Built-in `SchemaValidator` that evaluates `FieldSchema.validation` rules (required, min/max, minLength/maxLength, pattern, custom)
 
 ### Validation Architecture
 - `SchemaValidator` interface abstracts all validation (`validate`, `validateField`)
-- `createSchemaValidator(schema)` — current built-in implementation from FormSchema rules
-- `createZodValidator(zodSchema)` — planned Zod-backed implementation (same interface)
-- `toZodSchema(formSchema)` / `fromZodSchema(zodSchema)` — planned bidirectional conversion
+- `createSchemaValidator(schema)` — built-in implementation from FormSchema rules
 
 ### Field Types
 - `text` — single-line input
@@ -146,8 +140,8 @@ FormPreview
 - Readonly/preview mode (fully server-renderable)
 
 ### Client-Only (`'use client'`)
-- FormBuilder drag-and-drop designer
-- Field validation (currently built-in SchemaValidator, planned zod/ajv runtime)
+- FormBuilder designer (reserved for v2)
+- Field validation (built-in SchemaValidator)
 - Conditional field visibility (reactive)
 - File upload interaction
 - Date picker popup
@@ -228,7 +222,7 @@ interface AsyncOptionConfig {
 
 ### Validation
 - Schema itself validated via `validateSchema()` at load time
-- Field validation runs on blur + submit via `SchemaValidator` (currently built-in, planned zod migration)
+- Field validation runs on blur + submit via built-in `SchemaValidator`
 - Cross-field validation via `GlobalValidationRule` (e.g., "end date > start date")
 - Async validation supported for uniqueness checks
 
@@ -279,9 +273,8 @@ interface AsyncOptionConfig {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 20 KB** gzipped (v1 built-in SchemaValidator; v2 budget: < 35 KB excluding zod ~13KB)
+- **< 20 KB** gzipped (built-in SchemaValidator)
 - FieldRegistry custom renderers loaded on demand
-- FormBuilder (v2) separately chunked, not included in FormRenderer bundle
 - Date picker and file upload widgets lazy-loaded
 
 ### Render Targets
@@ -305,16 +298,35 @@ interface AsyncOptionConfig {
 ## 8. Test & Docs Exit Criteria
 
 ### Tests
-- **30 unit tests** — schema parsing, validation rule generation, conditional evaluation, field type rendering (v2: add zod schema conversion)
-- **8 integration tests** — full form render, validation flow, conditional fields, async options, file upload, FormBuilder drag-and-drop
+- **30 unit tests** — schema parsing, validation rule generation, conditional evaluation, field type rendering
+- **8 integration tests** — full form render, validation flow, conditional fields, async options, file upload
 - **4 visual regression tests** — default form, dark mode, validation error states, density variants
 
 ### Contract Tests
 - JSON Schema Draft 7 compatibility for schema import/export
-- v1: SchemaValidator interface contract verified; v2: Zod schema generation correctness for all field types
+- SchemaValidator interface contract verified
 - AdaptiveForm layout contract verification
 
 ### Documentation
 - API reference page with full props table
 - **8 examples** — basic form, validation, conditional fields, custom field, async select, file upload, FormBuilder, readonly mode
 - **3 recipes** — multi-step wizard, dynamic form from API schema, embedded form with external state
+
+---
+
+## v2 Roadmap (Out of Scope for v1)
+
+> v1 scope is frozen. Items below are tracked for v2 and do not affect v1 quality gates.
+
+### FormBuilder Drag-and-Drop Designer
+- Full drag-and-drop form designer UI
+- FormBuilder separately chunked, not included in FormRenderer bundle
+- FormBuilder drag-and-drop integration tests
+
+### Zod / AJV Validation Adapters
+- `createZodValidator(zodSchema)` — Zod-backed `SchemaValidator` implementation (same interface, drop-in replacement)
+- `toZodSchema(formSchema)` / `fromZodSchema(zodSchema)` — bidirectional conversion
+- `schemaToZod(schema)` — converts FormSchema to zod validation schema
+- `ajv` adapter for strict JSON Schema Draft 7 compliance
+- Zod schema generation correctness contract tests for all field types
+- v2 bundle budget: < 35 KB gzipped (excluding zod ~13KB)

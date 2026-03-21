@@ -12,7 +12,7 @@ RichTextEditor
     format?: 'html' | 'markdown';   // output format
     editable?: boolean;
     placeholder?: string;
-    extensions?: EditorExtension[];  // v1: reserved, v2: Tiptap extensions
+    extensions?: EditorExtension[];  // reserved — not active in v1
     density?: 'compact' | 'comfortable' | 'spacious';
     onChange?: (content: string) => void;
     onBlur?: (content: string) => void;
@@ -47,8 +47,7 @@ EditorCodeBlock
 
 ### Hooks
 - `useEditor(config)` — creates editor instance with lifecycle management; returns `EditorCore` abstraction
-  - **Current**: Native `contentEditable` implementation behind `EditorCore` abstraction
-  - **Planned**: Tiptap integration via `createTiptapEditorCore()`
+  - Native `contentEditable` implementation behind `EditorCore` abstraction
 - `useEditorState(editor)` — returns reactive state: `{ isBold, isItalic, isLink, currentHeading, wordCount, ... }`
 
 ### Utilities
@@ -59,25 +58,16 @@ EditorCodeBlock
 
 ### Type Exports
 - `RichTextEditorProps`, `EditorToolbarProps`, `EditorMenuBubbleProps`
-- `EditorInstance` (v1: native EditorCore handle; v2: Tiptap editor instance)
+- `EditorInstance` (native EditorCore handle)
 - `ToolbarGroup`, `BubbleAction`
 - `EditorConfig`, `EditorState`
 
 ### Library
-- **Current**: Native `contentEditable` + `document.execCommand` (deprecated API) behind `EditorCore` interface
-- **Planned**: `@tiptap/react` React bindings + `@tiptap/starter-kit` base extensions (paragraph, heading, bold, italic, strike, code, blockquote, lists)
+- Native `contentEditable` + `document.execCommand` behind `EditorCore` interface
 
 ### Editor Architecture
 - `EditorCore` interface abstracts all editor operations (content, commands, state, selection, lifecycle)
-- `createNativeEditorCore()` — current implementation using native browser APIs
-- `createTiptapEditorCore()` — planned Tiptap implementation (same interface, drop-in replacement)
-
-### Extensions (planned — requires Tiptap migration)
-- **Mention** — `@` triggers user/entity mention with configurable data source
-- **Image** — inline and block images with upload, resize, alt text
-- **Table** — rows, columns, merge, resize
-- **Code Block** — syntax-highlighted code with language selector
-- **Link** — auto-detect URLs, editable link attributes
+- `createNativeEditorCore()` — implementation using native browser APIs
 
 ## 2. Theme / Token Integration
 
@@ -103,8 +93,7 @@ EditorCodeBlock
 
 ### Custom Theme Extension
 - `themeOverrides` prop for partial token override
-- Tiptap `editorProps.attributes` for custom class injection
-- Prose styling customizable via `.ProseMirror` CSS scope
+- Prose styling customizable via CSS scope
 
 ## 3. Access Control
 
@@ -142,16 +131,14 @@ EditorCodeBlock
 - Placeholder text
 
 ### Client-Only (`'use client'`)
-- Editor instance (v1: native contentEditable; v2: Tiptap/ProseMirror)
+- Editor instance (native contentEditable)
 - All editing interactions (typing, formatting, selection)
 - Toolbar button state (active/inactive)
 - Bubble menu positioning
-- Image upload and drag-drop (planned)
-- Mention suggestions popup (planned)
 
 ### Hydration Strategy
 - SSR renders content as sanitized HTML in a styled `<div>`
-- Editor mounts on client (v1: native contentEditable; v2: ProseMirror DOM)
+- Editor mounts on client (native contentEditable)
 - Content preserved during swap (no flash)
 
 ### Streaming SSR
@@ -165,7 +152,7 @@ EditorCodeBlock
 interface EditorConfig {
   content?: string;                // initial content (HTML or Markdown)
   format: 'html' | 'markdown';    // output format
-  extensions?: EditorExtension[];  // v1: reserved, v2: Tiptap extensions
+  extensions?: EditorExtension[];  // reserved — not active in v1
   editable?: boolean;
 }
 
@@ -248,7 +235,7 @@ interface ImageConfig {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 15 KB** gzipped (v1 native implementation; v2 budget: < 45 KB excluding Tiptap core ~60KB and ProseMirror ~80KB)
+- **< 15 KB** gzipped (native implementation)
 - Extensions loaded on demand (mention, table, code-block)
 - Syntax highlighter lazy-loaded on first code block
 
@@ -277,7 +264,7 @@ interface ImageConfig {
 - **5 visual regression tests** — default editor, dark mode, toolbar states, bubble menu, code block rendering
 
 ### Contract Tests
-- v1: EditorCore interface contract verified; v2: Tiptap extension compatibility
+- EditorCore interface contract verified
 - HTML output shape validation (no XSS vectors)
 - Markdown round-trip fidelity (HTML -> MD -> HTML)
 
@@ -285,3 +272,30 @@ interface ImageConfig {
 - API reference page with full props table
 - **8 examples** — basic editor, markdown mode, custom toolbar, mentions, image upload, code blocks, tables, readonly mode
 - **3 recipes** — comment editor (minimal), CMS content editor (full), collaborative editing setup
+
+---
+
+## v2 Roadmap (Out of Scope for v1)
+
+> v1 scope is frozen. Items below are tracked for v2 and do not affect v1 quality gates.
+
+### Tiptap Migration
+- Replace native `contentEditable` / `document.execCommand` with `@tiptap/react` bindings + `@tiptap/starter-kit`
+- `createTiptapEditorCore()` — Tiptap implementation behind the same `EditorCore` interface (drop-in replacement)
+- `EditorInstance` type expands to Tiptap editor instance
+- Tiptap `editorProps.attributes` for custom class injection; `.ProseMirror` CSS scope
+- ProseMirror DOM hydration replaces native contentEditable mount
+- v2 bundle budget: < 45 KB gzipped (excluding Tiptap core ~60KB and ProseMirror ~80KB)
+
+### Extensions (require Tiptap)
+- **Mention** — `@` triggers user/entity mention with configurable data source
+- **Image** — inline and block images with upload, resize, alt text
+- **Table** — rows, columns, merge, resize
+- **Code Block** — syntax-highlighted code with language selector
+- **Link** — auto-detect URLs, editable link attributes
+
+### Additional v2 Capabilities
+- Image upload and drag-drop in editor
+- Mention suggestions popup
+- Tiptap extension compatibility contract tests
+- `extensions` prop activation with Tiptap extension array

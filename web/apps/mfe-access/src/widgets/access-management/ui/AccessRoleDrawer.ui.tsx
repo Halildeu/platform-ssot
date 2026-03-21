@@ -84,9 +84,8 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
     <DetailDrawer
       open={open}
       onClose={onClose}
-      width={420}
       title={role.name}
-      extra={(
+      actions={(
         <Button type="button" variant="ghost" size="sm" onClick={onClose}>
           {t('access.clone.cancelText')}
         </Button>
@@ -161,7 +160,8 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
                   <Checkbox
                     key={id}
                     checked={selectedPermissionIds.includes(id)}
-                    onCheckedChange={(checked) => {
+                    onChange={(e) => {
+                      const checked = e.target.checked;
                       setSelectedPermissionIds((prev) =>
                         checked ? (prev.includes(id) ? prev : [...prev, id]) : prev.filter((pid) => pid !== id),
                       );

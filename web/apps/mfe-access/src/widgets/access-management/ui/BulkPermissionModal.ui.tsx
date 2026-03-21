@@ -121,13 +121,11 @@ const BulkPermissionModal: React.FC<BulkPermissionModalProps> = ({
 
         <div className="flex flex-col gap-4">
           <Select
-            label={t('access.bulk.moduleLabel')}
             data-testid="bulk-permission-module"
             value={formValues.moduleKey}
-            onValueChange={(nextValue) => setFormValues((prev) => ({ ...prev, moduleKey: nextValue }))}
+            onChange={(e) => setFormValues((prev) => ({ ...prev, moduleKey: e.target.value }))}
             options={moduleOptions}
-            clearable
-            emptyOptionLabel={t('access.bulk.modulePlaceholder')}
+            placeholder={t('access.bulk.modulePlaceholder')}
             error={errors.moduleKey}
             fullWidth
           />
