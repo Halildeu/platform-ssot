@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   CircleHelp, Search, Menu,
-  Palette, SlidersHorizontal, Shapes, Box, Layout, Database, BookOpen, Globe, Code,
+  Palette, Shapes, Box, Layout, BookOpen, Globe, Code,
 } from "lucide-react";
 import { IconButton, Text, Tooltip } from "@mfe/design-system";
 import { useDesignLabI18n } from "./useDesignLabI18n";
@@ -17,35 +17,29 @@ import { useDesignLabShell } from "./DesignLabShell";
 /* ------------------------------------------------------------------ */
 
 type LayerId =
-  | "design"
-  | "theme"
+  | "foundations"
   | "primitives"
   | "components"
   | "patterns"
-  | "advanced"
   | "apis"
   | "recipes"
   | "ecosystem";
 
 const LAYER_IDS: LayerId[] = [
-  "design",
-  "theme",
+  "foundations",
   "primitives",
   "components",
   "patterns",
-  "advanced",
   "apis",
   "recipes",
   "ecosystem",
 ];
 
 const LAYER_ICONS: Record<LayerId, React.ReactNode> = {
-  design: <Palette className="h-4 w-4" />,
-  theme: <SlidersHorizontal className="h-4 w-4" />,
+  foundations: <Palette className="h-4 w-4" />,
   primitives: <Shapes className="h-4 w-4" />,
   components: <Box className="h-4 w-4" />,
   patterns: <Layout className="h-4 w-4" />,
-  advanced: <Database className="h-4 w-4" />,
   apis: <Code className="h-4 w-4" />,
   recipes: <BookOpen className="h-4 w-4" />,
   ecosystem: <Globe className="h-4 w-4" />,
@@ -120,7 +114,9 @@ const THEME_AXES = [
 
 /** Map legacy paths to new layer IDs */
 const LAYER_ALIASES: Record<string, LayerId> = {
-  foundations: "design",
+  design: "foundations",
+  theme: "foundations",
+  advanced: "patterns",
   pages: "patterns",
 };
 
@@ -167,20 +163,16 @@ export const DesignLabSidebarRouter: React.FC = () => {
   /* Count for current layer */
   const layerItemCount = useMemo(() => {
     switch (activeLayer) {
-      case "design":
-        return 6; // colors, typography, spacing, radius, motion, zIndex
-      case "theme":
-        return 10; // 10 theme axes
+      case "foundations":
+        return 16; // 6 token groups + 10 theme axes
       case "primitives":
         return PRIMITIVE_NAMES.size;
       case "components":
         return index.items.filter(
-          (i) => i.availability === "exported" && !PRIMITIVE_NAMES.has(i.name),
+          (i) => i.availability === "exported" && !PRIMITIVE_NAMES.has(i.name) && !API_NAMES.has(i.name) && !ADVANCED_NAMES.has(i.name),
         ).length;
       case "patterns":
-        return index.pages?.currentFamilies.length ?? 0;
-      case "advanced":
-        return ADVANCED_NAMES.size;
+        return (index.pages?.currentFamilies.length ?? 0) + ADVANCED_NAMES.size;
       case "apis":
         return API_NAMES.size;
       case "recipes":
@@ -315,21 +307,21 @@ function SidebarLayerContent({
   onItemSelect,
 }: SidebarLayerContentProps) {
   switch (layer) {
-    case "design":
+    case "foundations":
       return (
-        <DesignTokensSidebarContent
-          activeItem={activeItem}
-          searchValue={searchValue}
-          onItemSelect={onItemSelect}
-        />
-      );
-    case "theme":
-      return (
-        <ThemeSidebarContent
-          activeItem={activeItem}
-          searchValue={searchValue}
-          onItemSelect={onItemSelect}
-        />
+        <>
+          <DesignTokensSidebarContent
+            activeItem={activeItem}
+            searchValue={searchValue}
+            onItemSelect={onItemSelect}
+          />
+          <div className="my-3 border-t border-border-subtle" />
+          <ThemeSidebarContent
+            activeItem={activeItem}
+            searchValue={searchValue}
+            onItemSelect={onItemSelect}
+          />
+        </>
       );
     case "primitives":
       return (
@@ -349,20 +341,20 @@ function SidebarLayerContent({
       );
     case "patterns":
       return (
-        <FamilySidebarContent
-          layer="pages"
-          activeItem={activeItem}
-          searchValue={searchValue}
-          onItemSelect={onItemSelect}
-        />
-      );
-    case "advanced":
-      return (
-        <AdvancedSidebarContent
-          activeItem={activeItem}
-          searchValue={searchValue}
-          onItemSelect={onItemSelect}
-        />
+        <>
+          <FamilySidebarContent
+            layer="pages"
+            activeItem={activeItem}
+            searchValue={searchValue}
+            onItemSelect={onItemSelect}
+          />
+          <div className="my-3 border-t border-border-subtle" />
+          <AdvancedSidebarContent
+            activeItem={activeItem}
+            searchValue={searchValue}
+            onItemSelect={onItemSelect}
+          />
+        </>
       );
     case "apis":
       return (
