@@ -107,6 +107,8 @@ jobs:
       - name: Run a11y audit
         run: npx playwright test e2e/accessibility/ --project=desktop-light
         continue-on-error: false
+      - name: Run performance benchmarks
+        run: pnpm bench:x-suite || true
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
