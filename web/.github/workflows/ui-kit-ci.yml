@@ -40,6 +40,22 @@ jobs:
         with:
           name: unit-test-results
           path: coverage/
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: design-system
+          directory: packages/design-system/coverage
+          fail_ci_if_error: false
+      - name: Upload x-suite coverage
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: x-suite
+          directory: packages/x-*/coverage
+          fail_ci_if_error: false
 
   # ── TypeScript Type Check ──────────────────────────────────────
   type-check:
@@ -90,25 +106,33 @@ jobs:
           cache: 'npm'
       - run: npm ci --legacy-peer-deps
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium firefox webkit
       - name: Start dev server
         run: |
           cd apps/mfe-shell
           SKIP_BACKEND_GUARD=1 npx webpack serve --config webpack.dev.js --port 3000 &
           npx wait-on http://localhost:3000 --timeout 60000
       - name: Run visual regression tests
-        run: npx playwright test e2e/visual/ --project=desktop-light
-      - name: Run interaction tests
-        run: npx playwright test e2e/interaction/ --project=desktop-light
-        continue-on-error: false
+        run: npx playwright test e2e/visual/      - name: Run interaction tests
+        run: npx playwright test e2e/interaction/        continue-on-error: false
       - name: Run responsive tests
-        run: npx playwright test e2e/responsive/ --project=desktop-light
-        continue-on-error: false
+        run: npx playwright test e2e/responsive/        continue-on-error: false
       - name: Run a11y audit
-        run: npx playwright test e2e/accessibility/ --project=desktop-light
-        continue-on-error: false
+        run: npx playwright test e2e/accessibility/        continue-on-error: false
       - name: Run performance benchmarks
         run: pnpm bench:x-suite
+      - name: Bundle size check
+        run: |
+          echo "=== Bundle Size Report ==="
+          for pkg in design-system x-data-grid x-charts x-scheduler x-kanban x-editor x-form-builder; do
+            if [ -d "packages/$pkg/dist" ]; then
+              size=$(du -sh packages/$pkg/dist | cut -f1)
+              echo "| @mfe/$pkg | $size |"
+            elif [ -f "packages/$pkg/src/index.ts" ]; then
+              lines=$(wc -l < packages/$pkg/src/index.ts)
+              echo "| @mfe/$pkg | ${lines} lines (source) |"
+            fi
+          done
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4

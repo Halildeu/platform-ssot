@@ -150,7 +150,7 @@ export function createTiptapEditorCore(
     extensions,
     content: options.initialContent || '',
     editable: !options.readOnly,
-    onUpdate: ({ editor: e }) => {
+    onUpdate: ({ editor: e }: { editor: any }) => {
       options.onChange?.(e.getHTML());
     },
   });
