@@ -3,19 +3,17 @@ import { DataGridFilterChips } from '../DataGridFilterChips';
 
 export const SingleFilter = () => (
   <DataGridFilterChips
-    filters={[{ id: '1', field: 'status', label: 'Status', value: 'Active' }]}
-    onRemove={(id) => console.log('remove', id)}
+    filters={[{ key: '1', label: 'Status', value: 'Active', onRemove: () => console.log('remove 1') }]}
   />
 );
 
 export const MultipleFilters = () => (
   <DataGridFilterChips
     filters={[
-      { id: '1', field: 'status', label: 'Status', value: 'Active' },
-      { id: '2', field: 'role', label: 'Role', value: 'Admin' },
-      { id: '3', field: 'dept', label: 'Department', value: 'Engineering' },
+      { key: '1', label: 'Status', value: 'Active', onRemove: () => console.log('remove 1') },
+      { key: '2', label: 'Role', value: 'Admin', onRemove: () => console.log('remove 2') },
+      { key: '3', label: 'Department', value: 'Engineering', onRemove: () => console.log('remove 3') },
     ]}
-    onRemove={(id) => console.log('remove', id)}
     onClearAll={() => console.log('clear all')}
   />
 );
