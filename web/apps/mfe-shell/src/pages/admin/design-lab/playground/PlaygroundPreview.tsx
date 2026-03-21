@@ -33,7 +33,7 @@ _xSuiteComponents.SparklineChart = function SparklineChartStub(props: any) {
   const max = Math.max(...data);
   const min = Math.min(...data);
   const range = max - min || 1;
-  const pts = data.map((v: number, i: number) => `${(i / (data.length - 1)) * 100},${24 - ((v - min) / range) * 20}`).join(" ");
+  const pts = (data ?? []).map((v: number, i: number) => `${(i / ((data ?? []).length - 1)) * 100},${24 - ((v - min) / range) * 20}`).join(" ");
   return React.createElement("svg", { viewBox: "0 0 100 24", width: 120, height: 24, style: { display: "block" } },
     React.createElement("polyline", { points: pts, fill: "none", stroke: "var(--action-primary, #3b82f6)", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" })
   );
@@ -41,12 +41,12 @@ _xSuiteComponents.SparklineChart = function SparklineChartStub(props: any) {
 
 _xSuiteComponents.MiniChart = function MiniChartStub(props: any) {
   const data = props.data || [{ label: "A", value: 45 }, { label: "B", value: 52 }, { label: "C", value: 48 }, { label: "D", value: 60 }];
-  const max = Math.max(...data.map((d: any) => d.value));
+  const max = Math.max(...(data ?? []).map((d: any) => d.value));
   return React.createElement("div", { style: { display: "flex", alignItems: "flex-end", gap: 3, height: 48, padding: "4px 0" } },
-    ...data.map((d: any, i: number) =>
+    ...(data ?? []).map((d: any, i: number) =>
       React.createElement("div", { key: i, style: { display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 2, flex: 1 } },
         React.createElement("div", {
-          style: { width: "100%", height: `${(d.value / max) * 36}px`, background: "var(--action-primary, #3b82f6)", borderRadius: 2, minHeight: 4, opacity: 0.7 + (i / data.length) * 0.3 }
+          style: { width: "100%", height: `${(d.value / max) * 36}px`, background: "var(--action-primary, #3b82f6)", borderRadius: 2, minHeight: 4, opacity: 0.7 + (i / (data ?? []).length) * 0.3 }
         }),
         React.createElement("span", { style: { fontSize: 8, color: "var(--text-secondary)" } }, d.label)
       )
@@ -85,7 +85,7 @@ _xSuiteComponents.ChartLegend = function ChartLegendStub(props: any) {
   return React.createElement("div", {
     style: { display: "flex", flexDirection: horiz ? "row" as const : "column" as const, gap: horiz ? 16 : 6, padding: 8 }
   },
-    ...items.map((it: any, i: number) =>
+    ...(items ?? []).map((it: any, i: number) =>
       React.createElement("div", { key: i, style: { display: "flex", alignItems: "center", gap: 6 } },
         React.createElement("div", { style: { width: 10, height: 10, borderRadius: "50%", background: it.color, flexShrink: 0 } }),
         React.createElement("span", { style: { fontSize: 12, color: "var(--text-primary)" } }, it.label),
@@ -132,22 +132,22 @@ _xSuiteComponents.GaugeChart = function GaugeChartStub(props: any) {
 
 _xSuiteComponents.RadarChart = function RadarChartStub(props: any) {
   const data = props.data || [{ label: "A", value: 80 }, { label: "B", value: 90 }, { label: "C", value: 70 }, { label: "D", value: 85 }, { label: "E", value: 75 }];
-  const n = data.length;
+  const n = (data ?? []).length;
   const cx = 60, cy = 60, r = 45;
   const getPoint = (i: number, scale: number) => {
     const a = (Math.PI * 2 * i) / n - Math.PI / 2;
     return [cx + r * scale * Math.cos(a), cy + r * scale * Math.sin(a)];
   };
-  const gridPts = (scale: number) => data.map((_: any, i: number) => getPoint(i, scale).join(",")).join(" ");
-  const dataPts = data.map((d: any, i: number) => getPoint(i, (d.value || 0) / 100).join(",")).join(" ");
+  const gridPts = (scale: number) => (data ?? []).map((_: any, i: number) => getPoint(i, scale).join(",")).join(" ");
+  const dataPts = (data ?? []).map((d: any, i: number) => getPoint(i, (d.value || 0) / 100).join(",")).join(" ");
   return React.createElement("svg", { viewBox: "0 0 120 120", width: 180, height: 180 },
     [0.25, 0.5, 0.75, 1].map((s) => React.createElement("polygon", { key: s, points: gridPts(s), fill: "none", stroke: "var(--border-subtle)", strokeWidth: 0.5 })),
-    ...data.map((_: any, i: number) => {
+    ...(data ?? []).map((_: any, i: number) => {
       const [x, y] = getPoint(i, 1);
       return React.createElement("line", { key: `l${i}`, x1: cx, y1: cy, x2: x, y2: y, stroke: "var(--border-subtle)", strokeWidth: 0.5 });
     }),
     React.createElement("polygon", { points: dataPts, fill: "var(--action-primary, #3b82f6)", fillOpacity: 0.2, stroke: "var(--action-primary, #3b82f6)", strokeWidth: 1.5 }),
-    ...data.map((d: any, i: number) => {
+    ...(data ?? []).map((d: any, i: number) => {
       const [x, y] = getPoint(i, 1.18);
       return React.createElement("text", { key: `t${i}`, x, y, textAnchor: "middle", dominantBaseline: "middle", fontSize: 8, fill: "var(--text-secondary)" }, d.label);
     })
@@ -159,14 +159,14 @@ _xSuiteComponents.RadarChart = function RadarChartStub(props: any) {
 _xSuiteComponents.DataGridFilterChips = function DataGridFilterChipsStub(props: any) {
   const filters = props.filters || [{ id: "1", label: "Status", value: "Active" }, { id: "2", label: "Role", value: "Admin" }];
   return React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap" as const, alignItems: "center" } },
-    ...filters.map((f: any) =>
+    ...(filters ?? []).map((f: any) =>
       React.createElement("span", { key: f.id, style: { display: "inline-flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 16, background: "var(--surface-muted)", fontSize: 12, color: "var(--text-primary)", border: "1px solid var(--border-subtle)" } },
         React.createElement("span", { style: { color: "var(--text-secondary)", fontWeight: 500 } }, f.label, ":"),
         f.value,
         React.createElement("span", { style: { marginLeft: 4, cursor: "pointer", color: "var(--text-secondary)", fontWeight: 700, lineHeight: 1 } }, "\u00D7")
       )
     ),
-    filters.length > 1 && React.createElement("button", { style: { fontSize: 11, color: "var(--action-primary, #3b82f6)", background: "none", border: "none", cursor: "pointer", padding: "4px 8px" } }, "Clear all")
+    (filters ?? []).length > 1 && React.createElement("button", { style: { fontSize: 11, color: "var(--action-primary, #3b82f6)", background: "none", border: "none", cursor: "pointer", padding: "4px 8px" } }, "Clear all")
   );
 };
 
@@ -220,7 +220,7 @@ _xSuiteComponents.SlashCommandMenu = function SlashCommandMenuStub(props: any) {
     style: { width: 220, border: "1px solid var(--border-subtle)", borderRadius: 8, background: "var(--surface-default)", boxShadow: "0 4px 12px rgba(0,0,0,0.1)", overflow: "hidden", fontSize: 13 }
   },
     React.createElement("div", { style: { padding: "8px 12px", fontSize: 11, color: "var(--text-secondary)", borderBottom: "1px solid var(--border-subtle)", fontWeight: 500 } }, "Commands"),
-    ...commands.map((cmd: any, i: number) =>
+    ...(commands ?? []).map((cmd: any, i: number) =>
       React.createElement("div", { key: cmd.id, style: { padding: "8px 12px", background: i === sel ? "var(--surface-muted)" : "transparent", color: "var(--text-primary)", cursor: "pointer", display: "flex", alignItems: "center", gap: 8 } },
         React.createElement("span", { style: { width: 20, height: 20, borderRadius: 4, background: "var(--surface-muted)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, color: "var(--text-secondary)" } }, cmd.label[0]),
         cmd.label
@@ -235,7 +235,7 @@ _xSuiteComponents.MentionList = function MentionListStub(props: any) {
   return React.createElement("div", {
     style: { width: 200, border: "1px solid var(--border-subtle)", borderRadius: 8, background: "var(--surface-default)", boxShadow: "0 4px 12px rgba(0,0,0,0.1)", overflow: "hidden" }
   },
-    ...items.map((it: any, i: number) =>
+    ...(items ?? []).map((it: any, i: number) =>
       React.createElement("div", { key: it.id, style: { display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", background: i === sel ? "var(--surface-muted)" : "transparent", cursor: "pointer" } },
         React.createElement("div", { style: { width: 24, height: 24, borderRadius: "50%", background: "var(--action-primary, #3b82f6)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 600, flexShrink: 0 } }, it.label.split(" ").map((w: string) => w[0]).join("").slice(0, 2)),
         React.createElement("span", { style: { fontSize: 13, color: "var(--text-primary)" } }, it.label)
@@ -305,7 +305,7 @@ _xSuiteComponents.FormRenderer = function FormRendererStub(props: any) {
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 20, background: "var(--surface-default)" } },
     schema.title && React.createElement("div", { style: { fontSize: 16, fontWeight: 600, color: "var(--text-primary)", marginBottom: 16 } }, schema.title),
     React.createElement("div", { style: { display: "grid", gridTemplateColumns: `repeat(${schema.columns || 2}, 1fr)`, gap: 16 } },
-      ...(schema.fields || []).map((f: any) =>
+      ...(schema?.fields ?? []).map((f: any) =>
         React.createElement("div", { key: f.id, style: { gridColumn: f.span ? `span ${f.span}` : undefined } },
           React.createElement("label", { style: { fontSize: 12, fontWeight: 500, color: "var(--text-secondary)", display: "block", marginBottom: 4 } }, f.label, f.required && React.createElement("span", { style: { color: "var(--state-error-text)" } }, " *")),
           React.createElement("div", { style: { height: 36, borderRadius: 6, border: "1px solid var(--border-subtle)", background: "var(--surface-muted)" } })
@@ -334,7 +334,7 @@ _xSuiteComponents.FormPreview = function FormPreviewStub(props: any) {
       React.createElement("div", { style: { flex: 1, height: 1, background: "var(--border-subtle)" } })
     ),
     schema.title && React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, schema.title),
-    ...(schema.fields || []).map((f: any) =>
+    ...(schema?.fields ?? []).map((f: any) =>
       React.createElement("div", { key: f.id, style: { marginBottom: 8 } },
         React.createElement("div", { style: { fontSize: 12, color: "var(--text-secondary)" } }, f.label),
         React.createElement("div", { style: { height: 32, borderRadius: 6, border: "1px dashed var(--border-subtle)", background: "var(--surface-default)", marginTop: 2 } })
@@ -347,7 +347,7 @@ _xSuiteComponents.FormSummary = function FormSummaryStub(props: any) {
   const schema = props.schema || { fields: [{ id: "1", label: "Name", name: "name" }, { id: "2", label: "Email", name: "email" }] };
   const values = props.values || { name: "Ahmet Yilmaz", email: "ahmet@ornek.com" };
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
-    ...(schema.fields || []).map((f: any) =>
+    ...(schema?.fields ?? []).map((f: any) =>
       React.createElement("div", { key: f.id, style: { display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid var(--border-subtle)" } },
         React.createElement("span", { style: { fontSize: 12, color: "var(--text-secondary)", fontWeight: 500 } }, f.label),
         React.createElement("span", { style: { fontSize: 13, color: "var(--text-primary)", fontWeight: 500 } }, values[f.name] || "\u2014")
@@ -363,20 +363,20 @@ _xSuiteComponents.KanbanBoard = function KanbanBoardStub(props: any) {
   const cards = props.cards || [{ id: "1", columnId: "todo", title: "Task 1", priority: "high" }, { id: "2", columnId: "todo", title: "Task 2", priority: "medium" }, { id: "3", columnId: "doing", title: "Task 3", priority: "low" }];
   const priorityColors: Record<string, string> = { high: "var(--state-error-text)", medium: "var(--state-warning-text)", low: "var(--state-success-text)" };
   return React.createElement("div", { style: { display: "flex", gap: 12, overflowX: "auto" as const, padding: 4 } },
-    ...columns.map((col: any) => {
-      const colCards = cards.filter((c: any) => c.columnId === col.id);
+    ...(columns ?? []).map((col: any) => {
+      const colCards = (cards ?? []).filter((c: any) => c.columnId === col.id);
       return React.createElement("div", { key: col.id, style: { minWidth: 220, flex: 1, background: "var(--surface-muted)", borderRadius: 12, padding: 12 } },
         React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 } },
           React.createElement("span", { style: { fontSize: 13, fontWeight: 600, color: "var(--text-primary)" } }, col.title),
-          React.createElement("span", { style: { fontSize: 11, color: "var(--text-secondary)", background: "var(--surface-default)", borderRadius: 10, padding: "2px 8px" } }, colCards.length)
+          React.createElement("span", { style: { fontSize: 11, color: "var(--text-secondary)", background: "var(--surface-default)", borderRadius: 10, padding: "2px 8px" } }, (colCards ?? []).length)
         ),
         React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 8 } },
-          ...colCards.map((card: any) =>
+          ...(colCards ?? []).map((card: any) =>
             React.createElement("div", { key: card.id, style: { padding: 12, borderRadius: 8, background: "var(--surface-default)", border: "1px solid var(--border-subtle)", cursor: "grab" } },
               React.createElement("div", { style: { fontSize: 13, fontWeight: 500, color: "var(--text-primary)", marginBottom: 6 } }, card.title),
               React.createElement("div", { style: { display: "flex", gap: 4, flexWrap: "wrap" as const } },
                 card.priority && React.createElement("span", { style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: priorityColors[card.priority] || "var(--surface-muted)", color: "#fff", fontWeight: 600, textTransform: "uppercase" as const } }, card.priority),
-                ...(card.tags || []).map((t: string) =>
+                ...(card.tags ?? []).map((t: string) =>
                   React.createElement("span", { key: t, style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "var(--surface-muted)", color: "var(--text-secondary)" } }, t)
                 )
               )
@@ -394,10 +394,10 @@ _xSuiteComponents.KanbanColumn = function KanbanColumnStub(props: any) {
   return React.createElement("div", { style: { minWidth: 240, background: "var(--surface-muted)", borderRadius: 12, padding: 12 } },
     React.createElement("div", { style: { fontSize: 13, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12, display: "flex", justifyContent: "space-between" } },
       React.createElement("span", null, col.title),
-      React.createElement("span", { style: { fontSize: 11, color: "var(--text-secondary)" } }, cards.length)
+      React.createElement("span", { style: { fontSize: 11, color: "var(--text-secondary)" } }, (cards ?? []).length)
     ),
     React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 8 } },
-      ...cards.map((card: any) =>
+      ...(cards ?? []).map((card: any) =>
         React.createElement("div", { key: card.id, style: { padding: 12, borderRadius: 8, background: "var(--surface-default)", border: "1px solid var(--border-subtle)" } },
           React.createElement("div", { style: { fontSize: 13, fontWeight: 500, color: "var(--text-primary)" } }, card.title)
         )
@@ -417,7 +417,7 @@ _xSuiteComponents.KanbanCard = function KanbanCardStub(props: any) {
     card.description && React.createElement("div", { style: { fontSize: 12, color: "var(--text-secondary)", marginTop: 4, lineHeight: 1.4 } }, card.description),
     React.createElement("div", { style: { display: "flex", gap: 4, flexWrap: "wrap" as const, marginTop: 8 } },
       card.priority && React.createElement("span", { style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: priorityColors[card.priority] || "var(--surface-muted)", color: "#fff", fontWeight: 600, textTransform: "uppercase" as const } }, card.priority),
-      ...(card.tags || []).map((t: string) =>
+      ...(card.tags ?? []).map((t: string) =>
         React.createElement("span", { key: t, style: { fontSize: 10, padding: "2px 6px", borderRadius: 4, background: "var(--surface-muted)", color: "var(--text-secondary)" } }, t)
       )
     )
@@ -438,8 +438,8 @@ _xSuiteComponents.KanbanMetrics = function KanbanMetricsStub(props: any) {
   const columns = props.columns || [{ id: "todo", title: "To Do", policy: { wipLimit: 5 } }, { id: "doing", title: "In Progress", policy: { wipLimit: 3 } }, { id: "done", title: "Done" }];
   const cards = props.cards || [{ columnId: "todo" }, { columnId: "todo" }, { columnId: "doing" }];
   return React.createElement("div", { style: { display: "flex", gap: 12, flexWrap: "wrap" as const } },
-    ...columns.map((col: any) => {
-      const count = cards.filter((c: any) => c.columnId === col.id).length;
+    ...(columns ?? []).map((col: any) => {
+      const count = (cards ?? []).filter((c: any) => c.columnId === col.id).length;
       const limit = col.policy?.wipLimit;
       const pct = limit ? Math.min((count / limit) * 100, 100) : 0;
       return React.createElement("div", { key: col.id, style: { flex: 1, minWidth: 120, padding: 12, borderRadius: 8, border: "1px solid var(--border-subtle)", background: "var(--surface-default)" } },
@@ -466,7 +466,7 @@ _xSuiteComponents.Scheduler = function SchedulerStub(props: any) {
       React.createElement("div", { key: h, style: { display: "flex", borderBottom: "1px solid var(--border-subtle)", minHeight: 40 } },
         React.createElement("div", { style: { width: 56, padding: "4px 8px", fontSize: 11, color: "var(--text-secondary)", borderRight: "1px solid var(--border-subtle)", textAlign: "right" as const, flexShrink: 0 } }, `${h}:00`),
         React.createElement("div", { style: { flex: 1, position: "relative" as const, minHeight: 40 } },
-          ...events.filter((e: any) => {
+          ...(events ?? []).filter((e: any) => {
             const eH = e.start instanceof Date ? e.start.getHours() : h;
             return eH === h;
           }).map((e: any) =>
@@ -501,7 +501,7 @@ _xSuiteComponents.AgendaView = function AgendaViewStub(props: any) {
   const formatTime = (d: Date) => d instanceof Date ? `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}` : "";
   return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, overflow: "hidden", background: "var(--surface-default)" } },
     React.createElement("div", { style: { padding: "10px 16px", background: "var(--surface-muted)", borderBottom: "1px solid var(--border-subtle)", fontSize: 13, fontWeight: 600, color: "var(--text-primary)" } }, "Today"),
-    ...events.map((e: any) =>
+    ...(events ?? []).map((e: any) =>
       React.createElement("div", { key: e.id, style: { display: "flex", alignItems: "center", gap: 12, padding: "10px 16px", borderBottom: "1px solid var(--border-subtle)" } },
         React.createElement("div", { style: { width: 4, height: 32, borderRadius: 2, background: e.color || "#3b82f6", flexShrink: 0 } }),
         React.createElement("div", { style: { flex: 1 } },
@@ -656,7 +656,7 @@ _xSuiteComponents.KanbanSwimlane = function KanbanSwimlanStub() {
       React.createElement("div", { key: lane.name, style: { marginBottom: 12 } },
         React.createElement("div", { style: { fontSize: 11, fontWeight: 600, color: "var(--text-secondary)", textTransform: "uppercase" as const, letterSpacing: 0.5, marginBottom: 6 } }, lane.name),
         React.createElement("div", { style: { display: "flex", gap: 8, overflowX: "auto" as const, paddingBottom: 4 } },
-          ...lane.cards.map((c) =>
+          ...(lane.cards ?? []).map((c) =>
             React.createElement("div", { key: c, style: { minWidth: 100, padding: "8px 12px", borderRadius: 8, border: "1px solid var(--border-subtle)", background: "var(--surface-muted)", fontSize: 12, color: "var(--text-primary)", whiteSpace: "nowrap" as const } }, c)
           )
         )
