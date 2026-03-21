@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   CircleHelp, Search, Menu,
-  Palette, SlidersHorizontal, Shapes, Box, Layout, Database, BookOpen, Globe,
+  Palette, SlidersHorizontal, Shapes, Box, Layout, Database, BookOpen, Globe, Code,
 } from "lucide-react";
 import { IconButton, Text, Tooltip } from "@mfe/design-system";
 import { useDesignLabI18n } from "./useDesignLabI18n";
@@ -23,6 +23,7 @@ type LayerId =
   | "components"
   | "patterns"
   | "advanced"
+  | "apis"
   | "recipes"
   | "ecosystem";
 
@@ -33,6 +34,7 @@ const LAYER_IDS: LayerId[] = [
   "components",
   "patterns",
   "advanced",
+  "apis",
   "recipes",
   "ecosystem",
 ];
@@ -44,6 +46,7 @@ const LAYER_ICONS: Record<LayerId, React.ReactNode> = {
   components: <Box className="h-4 w-4" />,
   patterns: <Layout className="h-4 w-4" />,
   advanced: <Database className="h-4 w-4" />,
+  apis: <Code className="h-4 w-4" />,
   recipes: <BookOpen className="h-4 w-4" />,
   ecosystem: <Globe className="h-4 w-4" />,
 };
@@ -78,6 +81,32 @@ export const ADVANCED_NAMES = new Set([
   /* X-FormBuilder */
   "FormRenderer", "FieldRenderer", "FormPreview",
   "MultiStepForm", "FormSummary", "RepeatableFieldGroup", "FieldRegistry",
+]);
+
+export const API_NAMES = new Set([
+  /* Hooks */
+  "useToast", "useAsyncCombobox", "useGridVariants", "useAgGridTablePagination", "useScheduler",
+  /* Utilities */
+  "buildAuthHeaders", "buildEntityGridQueryParams",
+  "createAccordionPreset", "createBreadcrumbItemsFromRoute", "createMenuBarPreset",
+  "createNavigationRailPreset", "createPageLayoutPreset", "createSegmentedPreset",
+  "resolveAccessState", "resolveMenuBarActiveValue", "resolveNavigationRailActiveValue",
+  "resolveSegmentedNextValue", "shouldBlockInteraction",
+  "createAccordionItemsFromSections", "createMenuBarItemsFromRoutes", "createNavigationDestinationItems",
+  "createPageHeaderStatItems", "createPageHeaderTagItems", "createPageLayoutBreadcrumbItems",
+  "createSegmentedItemsFromFilters", "createSegmentedItemsFromRoutes",
+  /* Theme API */
+  "getThemeAxes", "getThemeContract", "getResolvedToken", "registerTokenResolver",
+  "resetTokenResolver", "subscribeThemeAxes", "updateThemeAxes",
+  /* Theme Setters */
+  "setAppearance", "setDensity", "setElevation", "setMotion", "setRadius",
+  "setOverlayIntensity", "setOverlayOpacity", "setSurfaceTone", "setTableSurfaceTone",
+  "resolveThemeModeKey", "toggleVariantDefault",
+  /* Constants */
+  "THEME_APPEARANCE_OPTIONS", "THEME_DENSITY_OPTIONS", "THEME_ELEVATION_OPTIONS",
+  "THEME_MOTION_OPTIONS", "THEME_RADIUS_OPTIONS",
+  /* HOCs */
+  "withAccessGuard",
 ]);
 
 const DESIGN_TOKEN_GROUPS = [
@@ -152,6 +181,8 @@ export const DesignLabSidebarRouter: React.FC = () => {
         return index.pages?.currentFamilies.length ?? 0;
       case "advanced":
         return ADVANCED_NAMES.size;
+      case "apis":
+        return API_NAMES.size;
       case "recipes":
         return index.recipes?.currentFamilies.length ?? 0;
       case "ecosystem":
@@ -328,6 +359,14 @@ function SidebarLayerContent({
     case "advanced":
       return (
         <AdvancedSidebarContent
+          activeItem={activeItem}
+          searchValue={searchValue}
+          onItemSelect={onItemSelect}
+        />
+      );
+    case "apis":
+      return (
+        <ApisSidebarContent
           activeItem={activeItem}
           searchValue={searchValue}
           onItemSelect={onItemSelect}
@@ -525,6 +564,52 @@ function AdvancedSidebarContent({
           badge={item.lifecycle}
           onClick={() =>
             onItemSelect(`/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`)
+          }
+        />
+      ))}
+      {items.length === 0 && (
+        <EmptySidebarMessage searchValue={searchValue} />
+      )}
+    </div>
+  );
+}
+
+/* ---- APIs sidebar ---- */
+
+function ApisSidebarContent({
+  activeItem,
+  searchValue,
+  onItemSelect,
+}: {
+  activeItem: string | null;
+  searchValue: string;
+  onItemSelect: (path: string) => void;
+}) {
+  const { index } = useDesignLab();
+
+  const items = useMemo(() => {
+    const query = searchValue.toLowerCase().trim();
+    return index.items
+      .filter((i) => API_NAMES.has(i.name))
+      .filter((i) => !query || i.name.toLowerCase().includes(query))
+      .map((i) => ({
+        name: i.name,
+        description: i.description,
+        lifecycle: i.lifecycle,
+      }));
+  }, [index, searchValue]);
+
+  return (
+    <div className="space-y-1">
+      {items.map((item) => (
+        <SidebarItemButton
+          key={item.name}
+          active={activeItem === item.name}
+          title={item.name}
+          subtitle={item.description}
+          badge={item.lifecycle}
+          onClick={() =>
+            onItemSelect(`/admin/design-lab/apis/${encodeURIComponent(item.name.replace(/\//g, '~'))}`)
           }
         />
       ))}

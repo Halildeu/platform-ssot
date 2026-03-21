@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "data-grid",
   "subgroup": "variants",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "hooks",
   "taxonomySubgroup": "Hooks (useX)",
   "demoMode": "inspector",
   "description": "Grid varyantlarini kullanip durum yoneten hook.",

@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "theme",
   "subgroup": "options",
-  "taxonomyGroupId": "theme_tokens",
+  "taxonomyGroupId": "constants",
   "taxonomySubgroup": "Density / radius / motion presets",
   "demoMode": "inspector",
   "description": "THEME_ELEVATION_OPTIONS için kanonik katalog girdisi.",

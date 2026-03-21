@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "navigation",
   "subgroup": "breadcrumb",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Functions",
   "demoMode": "inspector",
   "description": "String veya typed route girdilerini BreadcrumbItem dizisine normalize eder ve current fallback'ini uygular.",

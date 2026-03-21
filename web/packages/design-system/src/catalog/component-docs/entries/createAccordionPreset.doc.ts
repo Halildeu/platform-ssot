@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "navigation",
   "subgroup": "disclosure",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Functions",
   "demoMode": "inspector",
   "description": "FAQ, compact disclosure ve settings gibi canonical accordion varsayimlarini tek helper ile dondurur.",

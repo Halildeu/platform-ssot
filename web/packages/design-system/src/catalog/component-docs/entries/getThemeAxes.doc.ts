@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "theme",
   "subgroup": "runtime",
-  "taxonomyGroupId": "theme_tokens",
+  "taxonomyGroupId": "theme_api",
   "taxonomySubgroup": "Token viewer (semantic/raw)",
   "demoMode": "inspector",
   "description": "Aktif theme axes değerlerini okur.",

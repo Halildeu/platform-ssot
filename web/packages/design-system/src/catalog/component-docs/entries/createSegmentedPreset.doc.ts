@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "navigation",
   "subgroup": "segmented_toggle",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Functions",
   "demoMode": "inspector",
   "description": "Toolbar, filter bar ve pill-tabs gibi canonical segmented presetlerini tek helper ile dondurur.",

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Search, X, Clock, Zap, GitFork, BarChart3, Moon, Sun, Palette, Figma, Image, History, Target, Activity, Blocks } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "./DesignLabProvider";
-import { PRIMITIVE_NAMES, ADVANCED_NAMES } from "./DesignLabSidebarRouter";
+import { PRIMITIVE_NAMES, ADVANCED_NAMES, API_NAMES } from "./DesignLabSidebarRouter";
 import { semanticSearch, getSearchSuggestions } from "./search/SemanticSearch";
 
 /* ------------------------------------------------------------------ */
@@ -16,7 +16,7 @@ import { semanticSearch, getSearchSuggestions } from "./search/SemanticSearch";
 
 type SearchResult = {
   name: string;
-  type: "component" | "primitive" | "recipe" | "pattern" | "ecosystem" | "token" | "advanced" | "command" | "recent";
+  type: "component" | "primitive" | "recipe" | "pattern" | "ecosystem" | "token" | "advanced" | "api" | "command" | "recent";
   description?: string;
   href: string;
   icon?: React.ReactNode;
@@ -29,6 +29,7 @@ const TYPE_BADGE_STYLES: Record<SearchResult["type"], string> = {
   component: "bg-state-info-bg text-state-info-text",
   pattern: "bg-state-warning-bg text-state-warning-text",
   advanced: "bg-orange-100 text-orange-700",
+  api: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
   recipe: "bg-state-success-bg text-state-success-text",
   ecosystem: "bg-purple-100 text-purple-700",
   command: "bg-indigo-100 text-indigo-700",
@@ -274,7 +275,7 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
       }
     }
 
-    // Components — split into primitives, components, and advanced
+    // Components — split into primitives, components, advanced, and apis
     for (const item of index.items) {
       if (out.length >= MAX) break;
       if (
@@ -284,15 +285,18 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
       ) {
         const isPrimitive = PRIMITIVE_NAMES.has(item.name);
         const isAdvanced = ADVANCED_NAMES.has(item.name);
+        const isApi = API_NAMES.has(item.name);
         out.push({
           name: item.name,
-          type: isPrimitive ? "primitive" : isAdvanced ? "advanced" : "component",
+          type: isPrimitive ? "primitive" : isApi ? "api" : isAdvanced ? "advanced" : "component",
           description: item.description,
           href: isPrimitive
             ? `/admin/design-lab/primitives/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
-            : isAdvanced
-              ? `/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
-              : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
+            : isApi
+              ? `/admin/design-lab/apis/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
+              : isAdvanced
+                ? `/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
+                : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
         });
       }
     }
@@ -354,15 +358,18 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
         if (item) {
           const isPrimitive = PRIMITIVE_NAMES.has(item.name);
           const isAdvanced = ADVANCED_NAMES.has(item.name);
+          const isApi = API_NAMES.has(item.name);
           out.push({
             name: item.name,
-            type: isPrimitive ? "primitive" : isAdvanced ? "advanced" : "component",
+            type: isPrimitive ? "primitive" : isApi ? "api" : isAdvanced ? "advanced" : "component",
             description: sr.explanation ? `AI: ${sr.explanation}` : item.description,
             href: isPrimitive
               ? `/admin/design-lab/primitives/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
-              : isAdvanced
-                ? `/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
-                : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
+              : isApi
+                ? `/admin/design-lab/apis/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
+                : isAdvanced
+                  ? `/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
+                  : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
           });
         }
       });

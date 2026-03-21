@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "page_blocks",
   "subgroup": "page_shell",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Functions",
   "demoMode": "inspector",
   "description": "Tuple veya typed stat girdilerini PageHeaderStatItem dizisine normalize eder.",

@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "runtime",
   "subgroup": "access",
-  "taxonomyGroupId": "auth_security_ui",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Permission gates",
   "demoMode": "inspector",
   "description": "shouldBlockInteraction için kanonik katalog girdisi.",

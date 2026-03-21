@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "data-grid",
   "subgroup": "variants",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "theme_setters",
   "taxonomySubgroup": "Feature flags",
   "demoMode": "inspector",
   "description": "Grid default varyantini belirleyen utility.",

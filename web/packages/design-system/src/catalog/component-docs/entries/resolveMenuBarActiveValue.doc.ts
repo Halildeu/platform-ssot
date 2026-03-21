@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "navigation",
   "subgroup": "menu_navigation",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Functions",
   "demoMode": "inspector",
   "description": "Current value, current path ve enabled root item listesine gore aktif menubar item'ini deterministik olarak hesaplar.",

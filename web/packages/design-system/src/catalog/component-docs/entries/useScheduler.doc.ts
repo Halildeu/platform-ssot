@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_scheduler",
     "subgroup": "scheduler",
-    "taxonomyGroupId": "x_scheduler",
+    "taxonomyGroupId": "hooks",
     "taxonomySubgroup": "X-Scheduler Hooks",
     "demoMode": "inspector",
     "description": "Scheduler state yonetimi, etkinlik CRUD islemleri ve gorunum gecislerini kapsayan hook.",

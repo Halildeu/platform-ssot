@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "theme",
   "subgroup": "runtime",
-  "taxonomyGroupId": "theme_tokens",
+  "taxonomyGroupId": "theme_api",
   "taxonomySubgroup": "Theme editor (axes)",
   "demoMode": "inspector",
   "description": "subscribeThemeAxes için kanonik katalog girdisi.",

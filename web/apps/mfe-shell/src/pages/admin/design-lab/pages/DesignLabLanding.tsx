@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search, ArrowRight,
-  Palette, SlidersHorizontal, Shapes, Box, Layout, Database, BookOpen, Globe,
+  Palette, SlidersHorizontal, Shapes, Box, Layout, Database, BookOpen, Globe, Code,
   Sparkles, Package, ShieldCheck, Award,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
@@ -36,6 +36,7 @@ const LAYER_ICONS: Record<string, React.ReactNode> = {
   components: <Box className="h-5 w-5" />,
   patterns: <Layout className="h-5 w-5" />,
   advanced: <Database className="h-5 w-5" />,
+  apis: <Code className="h-5 w-5" />,
   recipes: <BookOpen className="h-5 w-5" />,
   ecosystem: <Globe className="h-5 w-5" />,
 };
@@ -47,6 +48,7 @@ const LAYER_GRADIENTS: Record<string, string> = {
   components: "from-blue-500/10 to-cyan-500/5",
   patterns: "from-amber-500/10 to-orange-500/5",
   advanced: "from-orange-500/10 to-red-500/5",
+  apis: "from-cyan-500/10 to-blue-500/5",
   recipes: "from-emerald-500/10 to-teal-500/5",
   ecosystem: "from-indigo-500/10 to-blue-500/5",
 };
@@ -58,12 +60,14 @@ const LAYER_ICON_BG: Record<string, string> = {
   components: "bg-blue-500/10 text-blue-600",
   patterns: "bg-amber-500/10 text-amber-600",
   advanced: "bg-orange-500/10 text-orange-600",
+  apis: "bg-cyan-500/10 text-cyan-600",
   recipes: "bg-emerald-500/10 text-emerald-600",
   ecosystem: "bg-indigo-500/10 text-indigo-600",
 };
 
 const TYPE_BADGE_COLORS: Record<string, string> = {
   component: "bg-blue-500/10 text-blue-600",
+  api: "bg-cyan-500/10 text-cyan-600",
   recipe: "bg-emerald-500/10 text-emerald-600",
   page: "bg-amber-500/10 text-amber-600",
 };
@@ -135,6 +139,16 @@ export default function DesignLabLanding() {
         description: t("designlab.landing.layer.advanced.description"),
         count: index.items.filter((i) => i.group === "advanced" && i.availability === "exported").length || 3,
         href: "/admin/design-lab/advanced",
+      },
+      {
+        id: "apis",
+        icon: LAYER_ICONS.apis,
+        gradient: LAYER_GRADIENTS.apis,
+        iconBg: LAYER_ICON_BG.apis,
+        title: "API'ler",
+        description: "Hooks, utilities, theme API ve yardımcı fonksiyonlar",
+        count: index.items.filter((i) => ["hooks", "utilities", "theme_api", "theme_setters", "constants", "hocs"].includes(i.taxonomyGroupId)).length,
+        href: "/admin/design-lab/apis",
       },
       {
         id: "recipes",

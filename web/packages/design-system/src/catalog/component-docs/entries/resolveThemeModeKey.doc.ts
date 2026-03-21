@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "theme",
   "subgroup": "runtime",
-  "taxonomyGroupId": "theme_tokens",
+  "taxonomyGroupId": "theme_setters",
   "taxonomySubgroup": "Token viewer (semantic/raw)",
   "demoMode": "inspector",
   "description": "resolveThemeModeKey için kanonik katalog girdisi.",

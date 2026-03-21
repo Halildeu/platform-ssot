@@ -216,6 +216,10 @@ export const DesignLabRoutes: React.FC = () => (
           element={<ComponentDetail />}
         />
 
+        {/* APIs layer */}
+        <Route path="apis" element={<AdvancedListing />} />
+        <Route path="apis/:itemId" element={<ComponentDetail />} />
+
         {/* Icon Gallery */}
         <Route path="icons" element={<IconGalleryPage />} />
 

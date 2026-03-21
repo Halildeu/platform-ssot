@@ -55,6 +55,13 @@
       ]
     },
     {
+      "id": "apis",
+      "label": "API'ler",
+      "labelEn": "Programmatic APIs",
+      "description": "Hooks, utilities, theme API ve yardımcı fonksiyonlar",
+      "groupIds": ["hooks", "utilities", "theme_api", "theme_setters", "constants", "hocs"]
+    },
+    {
       "id": "ecosystem",
       "title": "Enterprise Extensions",
       "description": "Pro/enterprise data surfaces, advanced grid, charts, admin shells ve premium lane extensions",
@@ -464,6 +471,36 @@
         "Repeatable field group",
         "Field registry"
       ]
+    },
+    {
+      "id": "hooks",
+      "label": "Hooks",
+      "subgroups": ["useToast", "useAsyncCombobox", "useGridVariants", "useAgGridTablePagination", "useScheduler"]
+    },
+    {
+      "id": "utilities",
+      "label": "Utilities",
+      "subgroups": ["buildAuthHeaders", "buildEntityGridQueryParams", "createAccordionPreset", "createBreadcrumbItemsFromRoute", "createMenuBarPreset", "createNavigationRailPreset", "createPageLayoutPreset", "createSegmentedPreset", "resolveAccessState", "resolveMenuBarActiveValue", "resolveNavigationRailActiveValue", "resolveSegmentedNextValue", "shouldBlockInteraction"]
+    },
+    {
+      "id": "theme_api",
+      "label": "Theme API",
+      "subgroups": ["getThemeAxes", "getThemeContract", "getResolvedToken", "registerTokenResolver", "resetTokenResolver", "subscribeThemeAxes", "updateThemeAxes"]
+    },
+    {
+      "id": "theme_setters",
+      "label": "Theme Setters",
+      "subgroups": ["setAppearance", "setDensity", "setElevation", "setMotion", "setRadius", "setOverlayIntensity", "setOverlayOpacity", "setSurfaceTone", "setTableSurfaceTone", "resolveThemeModeKey", "toggleVariantDefault"]
+    },
+    {
+      "id": "constants",
+      "label": "Constants",
+      "subgroups": ["THEME_APPEARANCE_OPTIONS", "THEME_DENSITY_OPTIONS", "THEME_ELEVATION_OPTIONS", "THEME_MOTION_OPTIONS", "THEME_RADIUS_OPTIONS"]
+    },
+    {
+      "id": "hocs",
+      "label": "HOCs",
+      "subgroups": ["withAccessGuard"]
     }
   ]
 }

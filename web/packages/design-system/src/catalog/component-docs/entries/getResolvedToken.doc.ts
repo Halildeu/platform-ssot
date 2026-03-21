@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "runtime",
   "subgroup": "auth",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "theme_api",
   "taxonomySubgroup": "HTTP helpers",
   "demoMode": "inspector",
   "description": "getResolvedToken için kanonik katalog girdisi.",

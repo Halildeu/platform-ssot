@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "feedback",
   "subgroup": "toast_notification",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "hooks",
   "taxonomySubgroup": "Hooks (useX)",
   "demoMode": "inspector",
   "description": "Context bagli toast API'sini push, dismiss ve severity helper'lariyla sunan hook.",

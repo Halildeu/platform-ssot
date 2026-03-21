@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "page_blocks",
   "subgroup": "page_shell",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Functions",
   "demoMode": "inspector",
   "description": "String veya typed route girdilerini PageLayout breadcrumb item dizisine normalize eder ve current fallback'ini uygular.",

@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "runtime",
   "subgroup": "auth",
-  "taxonomyGroupId": "runtime_utilities",
+  "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "HTTP helpers",
   "demoMode": "inspector",
   "description": "Shared auth token resolver zincirinden header üreten helper.",
