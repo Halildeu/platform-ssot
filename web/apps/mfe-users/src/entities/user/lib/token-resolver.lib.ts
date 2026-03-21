@@ -4,4 +4,4 @@ export {
   resetTokenResolver,
   getResolvedToken,
   buildAuthHeaders,
-} from '@mfe/design-system';
+} from '@mfe/design-system/lib/auth';

@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_form_builder",
     "subgroup": "form_builder",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "x_form_builder",
     "taxonomySubgroup": "X-FormBuilder",
     "demoMode": "planned",
     "description": "Form schema icerisindeki tek bir alani tipine gore uygun input bilesenine donusturen render bileseni.",

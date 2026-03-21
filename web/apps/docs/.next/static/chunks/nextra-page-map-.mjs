@@ -17,6 +17,18 @@ export const pageMap = [{
     }
   }]
 }, {
+  name: "compatibility",
+  route: "/compatibility",
+  frontMatter: {
+    "title": "Compatibility Matrix"
+  }
+}, {
+  name: "deprecation-policy",
+  route: "/deprecation-policy",
+  frontMatter: {
+    "title": "Deprecation Policy"
+  }
+}, {
   name: "getting-started",
   route: "/getting-started",
   frontMatter: {
@@ -40,6 +52,12 @@ export const pageMap = [{
       "sidebarTitle": "Index"
     }
   }]
+}, {
+  name: "support",
+  route: "/support",
+  frontMatter: {
+    "title": "Support & Issue Triage"
+  }
 }, {
   name: "x-suite",
   route: "/x-suite",

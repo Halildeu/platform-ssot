@@ -64,6 +64,11 @@ const suppressAgGridLicenseConsoleNoise = () => {
 };
 
 export const setupAgGridLicense = (): boolean => {
+  // Skip license validation entirely in test environment
+  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'test') {
+    return false;
+  }
+
   const nextKey = resolveAgGridLicenseKey();
   if (!nextKey) {
     const isProd = typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';

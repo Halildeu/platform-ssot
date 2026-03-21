@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_editor",
     "subgroup": "editor",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "x_editor",
     "taxonomySubgroup": "X-Editor Link Dialog",
     "demoMode": "planned",
     "description": "Editor icerisinde baglanti ekleme ve duzenleme icin overlay dialog bileseni; URL, metin ve yeni sekmede acma secenekleri sunar.",

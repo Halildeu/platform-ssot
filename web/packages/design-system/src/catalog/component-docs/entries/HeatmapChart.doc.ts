@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_charts",
     "subgroup": "charts",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_charts",
     "taxonomySubgroup": "X-Charts Heatmap",
     "demoMode": "live",
     "description": "Iki boyutlu veri yogunlugunu renk skalasi ile goruntuleyen heatmap grafigi; ozel gradient ve etiket destegi sunar.",

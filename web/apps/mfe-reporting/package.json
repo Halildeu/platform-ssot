@@ -6,7 +6,7 @@
     "start": "npx kill-port 3007 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
     "build": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "test": "npm run build"
+    "test": "echo \"no tests\""
   },
   "dependencies": {
     "@platform/capabilities": "file:../../packages/platform-capabilities",

@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_charts",
     "subgroup": "charts",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_charts",
     "taxonomySubgroup": "X-Charts KPI",
     "demoMode": "planned",
     "description": "Tek bir KPI metrigini baslik, deger, trend gostergesi ve opsiyonel sparkline ile ozetleyen kart bileseni.",

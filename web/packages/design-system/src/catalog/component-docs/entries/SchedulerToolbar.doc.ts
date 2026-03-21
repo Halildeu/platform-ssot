@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_scheduler",
     "subgroup": "scheduler",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_scheduler",
     "taxonomySubgroup": "X-Scheduler",
     "demoMode": "planned",
     "description": "Takvim gorunum modu degistirme, tarih navigasyonu ve bugune don aksiyonlarini barindiran ust toolbar bileseni.",

@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_kanban",
     "subgroup": "kanban",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_kanban",
     "taxonomySubgroup": "X-Kanban Swimlane",
     "demoMode": "planned",
     "description": "Kanban tahtasinda yatay swimlane bolumleri olusturan container bileseni; kategori veya oncelik bazli kart gruplama saglar.",

@@ -29,6 +29,12 @@ console.error = (...args: unknown[]) => {
   // React DOM prop warnings from design-system internals
   if (msg.includes('React does not recognize') && msg.includes('prop on a DOM element')) return;
 
+  // AG Grid enterprise license warnings
+  if (msg.includes('AG Grid') || msg.includes('ag-grid')) return;
+
+  // ReactDOM.render deprecation warning (React 18+)
+  if (msg.includes('ReactDOM.render')) return;
+
   originalConsoleError.apply(console, args);
 };
 
@@ -51,6 +57,15 @@ console.warn = (...args: unknown[]) => {
   // Design-system deprecated prop warnings — emitted by backward-compat shims
   // and tested explicitly in individual component test suites.
   if (msg.startsWith('[DesignSystem]') && msg.includes('is deprecated')) return;
+
+  // AG Grid / ag-grid warnings
+  if (msg.includes('AG Grid') || msg.includes('ag-grid')) return;
+
+  // Deprecated API warnings (selectSize, onValueChange, etc.)
+  if (msg.includes('deprecated') || msg.includes('selectSize') || msg.includes('onValueChange')) return;
+
+  // Vite CJS build warnings
+  if (msg.includes('Vite CJS')) return;
 
   originalConsoleWarn.apply(console, args);
 };

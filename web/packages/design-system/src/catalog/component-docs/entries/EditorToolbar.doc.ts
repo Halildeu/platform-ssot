@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_editor",
     "subgroup": "editor",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "x_editor",
     "taxonomySubgroup": "X-Editor",
     "demoMode": "planned",
     "description": "Zengin metin editoru icin formatlama butonlarini barindiran toolbar bileseni. Bold, italic, liste, link gibi aksiyonlari saglar.",

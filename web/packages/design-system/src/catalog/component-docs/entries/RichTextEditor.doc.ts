@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_editor",
     "subgroup": "editor",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "x_editor",
     "taxonomySubgroup": "X-Editor",
     "demoMode": "planned",
     "description": "Zengin metin duzenleme icin ana bilesen. Bold, italic, liste, link gibi formatlama secenekleri ile HTML veya JSON cikti formatini destekler.",

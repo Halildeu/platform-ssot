@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_charts",
     "subgroup": "charts",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_charts",
     "taxonomySubgroup": "X-Charts Gauge",
     "demoMode": "live",
     "description": "Tekil metrik degerini yari daire gosterge ile goruntuleyen gauge grafigi; esik degerleri ve renk gecisleri destekler.",

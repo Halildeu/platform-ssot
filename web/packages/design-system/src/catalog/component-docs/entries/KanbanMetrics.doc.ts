@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_kanban",
     "subgroup": "kanban",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_kanban",
     "taxonomySubgroup": "X-Kanban Metrics",
     "demoMode": "planned",
     "description": "Kanban tahtasi metriklerini ozetleyen display bileseni; WIP limitleri, tamamlanma oranlari ve gecikme gostergelerini sunar.",

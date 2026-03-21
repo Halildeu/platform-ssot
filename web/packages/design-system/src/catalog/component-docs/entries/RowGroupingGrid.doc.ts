@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_data_grid",
     "subgroup": "data_grid",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_data_grid",
     "taxonomySubgroup": "X-Data-Grid Row Grouping",
     "demoMode": "planned",
     "description": "Satir gruplama islevselligi sunan grid bileseni; coklu seviye gruplama, agrega satirlari ve grup baslik ozellestirme destegi saglar.",

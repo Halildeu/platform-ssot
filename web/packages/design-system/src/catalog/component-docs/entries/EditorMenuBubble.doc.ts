@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_editor",
     "subgroup": "editor",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "x_editor",
     "taxonomySubgroup": "X-Editor",
     "demoMode": "planned",
     "description": "Metin secimi uzerinde gorunen yuzey (floating) formatlama menusu. Secim bazli hizli formatlama aksiyonlari saglar.",

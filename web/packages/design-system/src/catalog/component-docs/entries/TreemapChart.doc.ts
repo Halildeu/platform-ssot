@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_charts",
     "subgroup": "charts",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_charts",
     "taxonomySubgroup": "X-Charts Treemap",
     "demoMode": "live",
     "description": "Hiyerarsik veri dagilimini alan bazli dikdortgenlerle goruntuleyen treemap grafigi; duz ve ic ice veri yapisi destegi sunar.",

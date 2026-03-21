@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_editor",
     "subgroup": "editor",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "x_editor",
     "taxonomySubgroup": "X-Editor Table Menu",
     "demoMode": "planned",
     "description": "Editor icerisindeki tablo blogu icin satir/sutun ekleme, silme ve birlestirme islemlerini sunan interaktif menu bileseni.",

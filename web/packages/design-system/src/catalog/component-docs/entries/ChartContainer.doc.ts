@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_charts",
     "subgroup": "charts",
-    "taxonomyGroupId": "data_display",
+    "taxonomyGroupId": "x_charts",
     "taxonomySubgroup": "X-Charts Container",
     "demoMode": "live",
     "description": "Tum chart bilesenleri icin ortak sarmalayici; baslik, aciklama, loading, error ve empty state yonetimini tek noktadan saglar.",
