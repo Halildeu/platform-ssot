@@ -33,14 +33,14 @@ All X Suite packages follow consistent conventions:
 - **Type-safe** — Full TypeScript generics for data models
 
 ```tsx
-import { DataGrid } from '@mfe/x-data-grid';
+import { EntityGridTemplate } from '@mfe/x-data-grid';
 import { BarChart } from '@mfe/x-charts';
 
-function Dashboard({ data }) {
+function Dashboard({ data, columnDefs }) {
   return (
     <>
-      <BarChart data={data} xField="month" yField="revenue" />
-      <DataGrid rows={data} variant="compact" />
+      <BarChart data={data} />
+      <EntityGridTemplate gridId="dashboard" gridSchemaVersion={1} rowData={data} columnDefs={columnDefs} />
     </>
   );
 }
