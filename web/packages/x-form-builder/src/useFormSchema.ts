@@ -2,14 +2,18 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import type {
   FieldDependency,
   FieldSchema,
-  FieldValidation,
   FormErrors,
   FormSchema,
   FormValues,
 } from './types';
+import { createSchemaValidator, type SchemaValidator } from './zodAdapter';
 
 /* ------------------------------------------------------------------ */
 /*  useFormSchema — Form state management driven by FormSchema         */
+/*                                                                     */
+/*  Validation is delegated to SchemaValidator (see zodAdapter.ts).    */
+/*  Current: Built-in SchemaValidator from FormSchema rules            */
+/*  Planned: Zod/AJV adapter for external schema validation            */
 /* ------------------------------------------------------------------ */
 
 /** Evaluate a single field dependency against current form values. */
@@ -36,60 +40,6 @@ function evaluateDependency(
   }
 }
 
-/** Run built-in validators for a single field. Returns error message or null. */
-function validateFieldValue(
-  field: FieldSchema,
-  value: unknown,
-  allValues: FormValues,
-): string | null {
-  // Required check
-  if (field.required) {
-    if (value === undefined || value === null || value === '') {
-      return `${field.label} is required`;
-    }
-  }
-
-  // Skip further checks for empty optional fields
-  if (value === undefined || value === null || value === '') return null;
-
-  const v: FieldValidation | undefined = field.validation;
-  if (!v) return null;
-
-  // String-length checks
-  if (typeof value === 'string') {
-    if (v.minLength !== undefined && value.length < v.minLength) {
-      return `${field.label} must be at least ${v.minLength} characters`;
-    }
-    if (v.maxLength !== undefined && value.length > v.maxLength) {
-      return `${field.label} must be at most ${v.maxLength} characters`;
-    }
-    if (v.pattern) {
-      const re = new RegExp(v.pattern);
-      if (!re.test(value)) {
-        return v.patternMessage ?? `${field.label} format is invalid`;
-      }
-    }
-  }
-
-  // Numeric range checks
-  if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)))) {
-    const num = Number(value);
-    if (v.min !== undefined && num < v.min) {
-      return `${field.label} must be at least ${v.min}`;
-    }
-    if (v.max !== undefined && num > v.max) {
-      return `${field.label} must be at most ${v.max}`;
-    }
-  }
-
-  // Custom validator
-  if (v.custom) {
-    return v.custom(value, allValues);
-  }
-
-  return null;
-}
-
 /* ------------------------------------------------------------------ */
 /*  Hook                                                               */
 /* ------------------------------------------------------------------ */
@@ -107,6 +57,8 @@ export interface UseFormSchemaReturn {
   reset: () => void;
   handleSubmit: (onSubmit: (values: FormValues) => void) => (e: React.FormEvent) => void;
   getVisibleFields: () => FieldSchema[];
+  /** The underlying SchemaValidator — useful for external validation scenarios */
+  validator: SchemaValidator;
 }
 
 export function useFormSchema(
@@ -132,12 +84,8 @@ export function useFormSchema(
   const defaultsRef = useRef(defaults);
   defaultsRef.current = defaults;
 
-  // Field map for quick lookup
-  const fieldMap = useMemo(() => {
-    const map = new Map<string, FieldSchema>();
-    for (const f of schema.fields) map.set(f.name, f);
-    return map;
-  }, [schema]);
+  // Build validator from schema — delegates all validation logic to SchemaValidator
+  const validator = useMemo(() => createSchemaValidator(schema), [schema]);
 
   /* ---- Setters ---- */
 
@@ -163,13 +111,11 @@ export function useFormSchema(
     [],
   );
 
-  /* ---- Validation ---- */
+  /* ---- Validation (delegated to SchemaValidator) ---- */
 
   const validateField = useCallback(
     (name: string): string | null => {
-      const field = fieldMap.get(name);
-      if (!field) return null;
-      const msg = validateFieldValue(field, values[name], values);
+      const msg = validator.validateField(name, values[name], values);
       setErrors((prev) => {
         if (msg) return { ...prev, [name]: msg };
         if (!prev[name]) return prev;
@@ -179,26 +125,34 @@ export function useFormSchema(
       });
       return msg;
     },
-    [fieldMap, values],
+    [validator, values],
   );
 
   const validateForm = useCallback((): FormErrors => {
-    const result: FormErrors = {};
+    // Filter to only visible fields before validating
+    const visibleValues: Record<string, unknown> = {};
     for (const field of schema.fields) {
-      // Only validate visible fields
       if (field.hidden) continue;
       if (field.dependsOn && !evaluateDependency(field.dependsOn, values)) continue;
-
-      const msg = validateFieldValue(field, values[field.name], values);
-      if (msg) result[field.name] = msg;
+      visibleValues[field.name] = values[field.name];
     }
+
+    // Use the validator but only for visible fields
+    const allErrors = validator.validate(values);
+    const result: FormErrors = {};
+    for (const key of Object.keys(allErrors)) {
+      if (key in visibleValues) {
+        result[key] = allErrors[key];
+      }
+    }
+
     setErrors(result);
     // Mark all fields as touched
     const allTouched: Record<string, boolean> = {};
     for (const field of schema.fields) allTouched[field.name] = true;
     setTouched(allTouched);
     return result;
-  }, [schema, values]);
+  }, [schema, values, validator]);
 
   /* ---- Derived state ---- */
 
@@ -257,5 +211,6 @@ export function useFormSchema(
     reset,
     handleSubmit,
     getVisibleFields,
+    validator,
   };
 }

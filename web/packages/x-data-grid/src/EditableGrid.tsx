@@ -121,7 +121,7 @@ export function EditableGrid<TRow>({
           </button>
         </div>
       )}
-      <GridShell className={cn('ag-theme-alpine', className)}>
+      <GridShell columnDefs={columnDefs} className={cn('ag-theme-alpine', className)}>
         <AgGridReact<TRow>
           gridId={gridId}
           columnDefs={columnDefs}
@@ -130,7 +130,6 @@ export function EditableGrid<TRow>({
           editType={editType === 'fullRow' ? 'fullRow' : undefined}
           undoRedoCellEditing={undoRedoCellEditing}
           undoRedoCellEditingLimit={20}
-          enableCellChangeFlash
           onGridReady={handleGridReady}
           onCellValueChanged={handleCellValueChanged}
         />

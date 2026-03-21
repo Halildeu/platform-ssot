@@ -23,7 +23,13 @@ export { EditorImageUpload } from './EditorImageUpload';
 export type { EditorImageUploadProps } from './EditorImageUpload';
 
 export { useEditor } from './useEditor';
-export type { UseEditorOptions, UseEditorReturn } from './useEditor';
+export type {
+  UseEditorOptions,
+  UseEditorReturn,
+  EditorCore,
+  EditorCommand,
+  EditorCommandChain,
+} from './useEditor';
 
 export { useSlashCommands } from './useSlashCommands';
 export type { UseSlashCommandsReturn } from './useSlashCommands';

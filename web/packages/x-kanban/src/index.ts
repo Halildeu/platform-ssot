@@ -23,7 +23,14 @@ export { useKanban } from './useKanban';
 export type { UseKanbanReturn } from './useKanban';
 
 export { useDragDrop } from './useDragDrop';
-export type { DragDropState, DragDropHandlers, UseDragDropReturn } from './useDragDrop';
+export type {
+  DragDropState,
+  DragDropHandlers,
+  UseDragDropReturn,
+  DragDropEngine,
+  DragItem,
+  DropTarget,
+} from './useDragDrop';
 
 export { useKanbanFilter } from './useKanbanFilter';
 export type { UseKanbanFilterReturn } from './useKanbanFilter';

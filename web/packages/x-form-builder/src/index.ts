@@ -53,6 +53,10 @@ export type { FormSummaryProps } from './FormSummary';
 export { RepeatableFieldGroup } from './RepeatableFieldGroup';
 export type { RepeatableFieldGroupProps } from './RepeatableFieldGroup';
 
+/* ---- Validation adapter ---- */
+export { createSchemaValidator } from './zodAdapter';
+export type { SchemaValidator } from './zodAdapter';
+
 /* ---- Hooks ---- */
 export { useFormSchema } from './useFormSchema';
 export type { UseFormSchemaReturn } from './useFormSchema';

@@ -46,6 +46,9 @@ KanbanCardSlot
 
 ### Hooks
 - `useKanban(config)` — returns board state, imperative methods (moveCard, addCard, removeCard)
+- `useDragDrop()` — returns `DragDropEngine` abstraction + legacy handlers
+  - **Current**: HTML5 Drag and Drop API behind `DragDropEngine` abstraction
+  - **Planned**: `@dnd-kit` integration for keyboard accessibility + touch support
 - `useCardDrag(cardId)` — returns drag state, handles, and preview for a single card
 - `useColumnState(columnId)` — returns column metadata: card count, collapsed state, limit status
 
@@ -61,8 +64,14 @@ KanbanCardSlot
 - `CardMoveEvent`, `ColumnReorderEvent`
 
 ### Library
-- `@dnd-kit/core` for drag-and-drop engine
-- `@dnd-kit/sortable` for within-column reordering
+- **Current**: HTML5 Drag and Drop API (native browser) behind `DragDropEngine` interface
+- **Planned**: `@dnd-kit/core` for drag-and-drop engine + `@dnd-kit/sortable` for within-column reordering
+
+### Drag-Drop Architecture
+- `DragDropEngine` interface abstracts all DnD operations (state, handlers, prop getters)
+- `DragItem` / `DropTarget` — engine-agnostic drag/drop data types
+- `getDragHandleProps(item)` / `getDropTargetProps(target)` — attach to DOM elements for any engine
+- Legacy `DragDropHandlers` interface preserved for backward compatibility
 
 ## 2. Theme / Token Integration
 
@@ -127,14 +136,14 @@ KanbanCardSlot
 - Board skeleton with column placeholders
 
 ### Client-Only (`'use client'`)
-- @dnd-kit drag-and-drop engine
+- Drag-and-drop engine (currently HTML5 native, planned @dnd-kit)
 - Card drag preview and drop animations
 - Column collapse/expand interaction
 - Toolbar search and filter interactions
 
 ### Hydration Strategy
 - SSR renders column layout with cards as static list items
-- @dnd-kit mounts on client, wraps cards with drag handles
+- DragDropEngine mounts on client, wraps cards with drag handles
 - No layout shift: column widths fixed by density token
 
 ### Streaming SSR

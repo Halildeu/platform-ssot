@@ -46,7 +46,9 @@ EditorCodeBlock
 ```
 
 ### Hooks
-- `useEditor(config)` — creates and returns Tiptap editor instance with lifecycle management
+- `useEditor(config)` — creates editor instance with lifecycle management; returns `EditorCore` abstraction
+  - **Current**: Native `contentEditable` implementation behind `EditorCore` abstraction
+  - **Planned**: Tiptap integration via `createTiptapEditorCore()`
 - `useEditorState(editor)` — returns reactive state: `{ isBold, isItalic, isLink, currentHeading, wordCount, ... }`
 
 ### Utilities
@@ -62,10 +64,15 @@ EditorCodeBlock
 - `EditorConfig`, `EditorState`
 
 ### Library
-- `@tiptap/react` — React bindings
-- `@tiptap/starter-kit` — base extensions (paragraph, heading, bold, italic, strike, code, blockquote, lists)
+- **Current**: Native `contentEditable` + `document.execCommand` (deprecated API) behind `EditorCore` interface
+- **Planned**: `@tiptap/react` React bindings + `@tiptap/starter-kit` base extensions (paragraph, heading, bold, italic, strike, code, blockquote, lists)
 
-### Extensions (bundled)
+### Editor Architecture
+- `EditorCore` interface abstracts all editor operations (content, commands, state, selection, lifecycle)
+- `createNativeEditorCore()` — current implementation using native browser APIs
+- `createTiptapEditorCore()` — planned Tiptap implementation (same interface, drop-in replacement)
+
+### Extensions (planned — requires Tiptap migration)
 - **Mention** — `@` triggers user/entity mention with configurable data source
 - **Image** — inline and block images with upload, resize, alt text
 - **Table** — rows, columns, merge, resize

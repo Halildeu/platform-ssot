@@ -51,17 +51,17 @@ export function MasterDetailGrid<TParent, TDetail>({
             }
           : undefined,
       },
-      getDetailRowData: (params: IDetailCellRendererParams) => {
+      getDetailRowData: (params: IDetailCellRendererParams & { successCallback?: (rows: unknown[]) => void }) => {
         const result = getDetailRows(params.data as TParent);
         if (result instanceof Promise) {
           result
-            .then((rows) => params.successCallback(rows))
+            .then((rows) => params.successCallback?.(rows))
             .catch((error) => {
               console.error('[X-Data-Grid] MasterDetailGrid detail fetch error:', error);
-              params.successCallback([]);
+              params.successCallback?.([]);
             });
         } else {
-          params.successCallback(result);
+          params.successCallback?.(result);
         }
       },
     }),
@@ -82,7 +82,7 @@ export function MasterDetailGrid<TParent, TDetail>({
   );
 
   return (
-    <GridShell className={cn('ag-theme-alpine', className)}>
+    <GridShell columnDefs={parentColumnDefs} className={cn('ag-theme-alpine', className)}>
       <AgGridReact<TParent>
         gridId={gridId}
         columnDefs={parentColumnDefs}

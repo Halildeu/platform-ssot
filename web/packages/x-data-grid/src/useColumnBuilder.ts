@@ -23,7 +23,7 @@ export function useColumnBuilder<TRow>() {
     const { type = 'text', ...rest } = options;
 
     const base: ColDef<TRow> = {
-      ...rest,
+      ...(rest as unknown as ColDef<TRow>),
       sortable: rest.sortable ?? true,
       filter: rest.filter ?? true,
     };
@@ -36,7 +36,7 @@ export function useColumnBuilder<TRow>() {
       case 'boolean':
         return { ...base, filter: 'agSetColumnFilter', width: rest.width ?? 100 };
       case 'actions':
-        return { ...base, sortable: false, filter: false, pinned: rest.pinned ?? 'right', width: rest.width ?? 80, suppressMenu: true };
+        return { ...base, sortable: false, filter: false, pinned: rest.pinned ?? 'right', width: rest.width ?? 80, suppressHeaderMenuButton: true };
       default:
         return base;
     }

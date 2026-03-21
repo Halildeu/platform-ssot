@@ -54,7 +54,7 @@ export function TreeDataGrid<TRow>({
   }, []);
 
   return (
-    <GridShell className={cn('ag-theme-alpine', className)}>
+    <GridShell columnDefs={columnDefs} className={cn('ag-theme-alpine', className)}>
       <AgGridReact<TRow>
         gridId={gridId}
         columnDefs={columnDefs}

@@ -99,7 +99,7 @@ export function RowGroupingGrid<TRow>({
   }, []);
 
   return (
-    <GridShell className={cn('ag-theme-alpine', className)}>
+    <GridShell columnDefs={enrichedColumnDefs} className={cn('ag-theme-alpine', className)}>
       <AgGridReact<TRow>
         gridId={gridId}
         columnDefs={enrichedColumnDefs}
