@@ -89,5 +89,12 @@ export type {
   UseChartVariantsReturn,
 } from "./useChartVariants";
 
+/* Wave 4 — Mobile responsive hooks */
+export { useResponsiveBreakpoint, useResponsiveChartConfig } from "./useResponsiveChart";
+export type {
+  Breakpoint,
+  ResponsiveChartConfig,
+} from "./useResponsiveChart";
+
 /* Types */
 export type { ChartSize, ChartDataPoint, ChartSeries } from "@mfe/design-system";

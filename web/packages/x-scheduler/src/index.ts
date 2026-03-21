@@ -70,3 +70,10 @@ export type {
   ViewVariant,
   UseSchedulerVariantsReturn,
 } from './useSchedulerVariants';
+
+/* Wave 4 — Mobile responsive hooks */
+export { useResponsiveScheduler } from './useResponsiveScheduler';
+export type {
+  Breakpoint as SchedulerBreakpoint,
+  ResponsiveSchedulerState,
+} from './useResponsiveScheduler';

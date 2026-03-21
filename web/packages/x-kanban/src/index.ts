@@ -76,3 +76,11 @@ export type {
   BoardVariant,
   UseKanbanVariantsReturn,
 } from './useKanbanVariants';
+
+/* Wave 4 — Mobile responsive hooks */
+export { useResponsiveKanban } from './useResponsiveKanban';
+export type {
+  Breakpoint as KanbanBreakpoint,
+  ResponsiveKanbanState,
+  UseResponsiveKanbanOptions,
+} from './useResponsiveKanban';
