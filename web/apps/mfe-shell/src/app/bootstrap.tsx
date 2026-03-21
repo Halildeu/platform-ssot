@@ -20,6 +20,31 @@ initRUM();
 import { initFeatureFlags } from '../lib/feature-flags';
 initFeatureFlags();
 
+// Quiet-green: suppress known non-actionable console noise in development
+if (process.env.NODE_ENV === 'development') {
+  const KNOWN_NOISE = [
+    'AG Grid:',
+    'ag-grid',
+    'Unknown event handler property',
+    'onValueChange',
+    'act(...)',
+    'ReactDOM.render is no longer supported',
+    'Vite CJS',
+  ];
+  const origWarn = console.warn;
+  const origError = console.error;
+  console.warn = (...args: unknown[]) => {
+    const msg = String(args[0] ?? '');
+    if (KNOWN_NOISE.some((n) => msg.includes(n))) return;
+    origWarn.apply(console, args);
+  };
+  console.error = (...args: unknown[]) => {
+    const msg = String(args[0] ?? '');
+    if (KNOWN_NOISE.some((n) => msg.includes(n))) return;
+    origError.apply(console, args);
+  };
+}
+
 import { createRoot } from 'react-dom/client';
 import ShellApp from './ShellApp';
 
