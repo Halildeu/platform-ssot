@@ -62,7 +62,6 @@ const entry: DesignLabComponentDocEntry = {
     "behaviorModel": [
       "current",
       "readonly-access",
-      "external",
       "theme-aware token resolution"
     ],
   "props": [

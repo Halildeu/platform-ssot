@@ -1,10 +1,12 @@
 /**
- * Vitest global setup — suppress runtime noise that is not actionable.
- *
- * Categories silenced:
- *  1. jsdom "Not implemented" stubs (e.g. HTMLCanvasElement.prototype.toDataURL)
- *  2. AG Grid enterprise license info log (console.info from ag-grid-license.ts)
+ * Vitest global setup
+ *  - jest-dom matchers (toBeInTheDocument, toHaveAttribute, etc.)
+ *  - suppress runtime noise that is not actionable
  */
+import * as matchers from '@testing-library/jest-dom/matchers';
+import { expect } from 'vitest';
+
+expect.extend(matchers);
 
 const originalConsoleError = console.error;
 const originalConsoleInfo = console.info;

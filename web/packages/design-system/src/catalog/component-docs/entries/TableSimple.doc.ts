@@ -70,9 +70,7 @@ const entry: DesignLabComponentDocEntry = {
     ],
     "behaviorModel": [
       "loading skeleton row rendering",
-      "empty state fallback",
-      "sticky header scroll context",
-      "access-aware visibility"
+      "empty state fallback"
     ],
   "props": [
     {

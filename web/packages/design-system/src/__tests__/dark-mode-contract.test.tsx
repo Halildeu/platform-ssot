@@ -128,18 +128,85 @@ beforeAll(() => {
     };
   }
 
-  // jsdom canvas getContext returns null — stub for Watermark
-  HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
+  // jsdom canvas getContext returns null — stub for Watermark & AG Charts
+  const ctxStub = {
     font: '',
     measureText: () => ({ width: 50 }),
     clearRect: vi.fn(),
+    fillRect: vi.fn(),
     fillText: vi.fn(),
+    strokeText: vi.fn(),
+    strokeRect: vi.fn(),
     rotate: vi.fn(),
     translate: vi.fn(),
+    scale: vi.fn(),
     save: vi.fn(),
     restore: vi.fn(),
-    canvas: { toDataURL: () => 'data:image/png;base64,AAAA' },
-  }) as unknown as typeof HTMLCanvasElement.prototype.getContext;
+    beginPath: vi.fn(),
+    moveTo: vi.fn(),
+    lineTo: vi.fn(),
+    arc: vi.fn(),
+    arcTo: vi.fn(),
+    closePath: vi.fn(),
+    stroke: vi.fn(),
+    fill: vi.fn(),
+    clip: vi.fn(),
+    rect: vi.fn(),
+    quadraticCurveTo: vi.fn(),
+    bezierCurveTo: vi.fn(),
+    setTransform: vi.fn(),
+    getTransform: vi.fn().mockReturnValue({ a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }),
+    resetTransform: vi.fn(),
+    transform: vi.fn(),
+    createLinearGradient: vi.fn().mockReturnValue({ addColorStop: vi.fn() }),
+    createRadialGradient: vi.fn().mockReturnValue({ addColorStop: vi.fn() }),
+    createPattern: vi.fn(),
+    drawImage: vi.fn(),
+    putImageData: vi.fn(),
+    getImageData: vi.fn().mockReturnValue({ data: new Uint8ClampedArray(4) }),
+    createImageData: vi.fn(),
+    setLineDash: vi.fn(),
+    getLineDash: vi.fn().mockReturnValue([]),
+    isPointInPath: vi.fn().mockReturnValue(false),
+    isPointInStroke: vi.fn().mockReturnValue(false),
+    ellipse: vi.fn(),
+    lineWidth: 1,
+    lineCap: 'butt',
+    lineJoin: 'miter',
+    miterLimit: 10,
+    lineDashOffset: 0,
+    strokeStyle: '#000',
+    fillStyle: '#000',
+    globalAlpha: 1,
+    globalCompositeOperation: 'source-over',
+    shadowBlur: 0,
+    shadowColor: 'rgba(0,0,0,0)',
+    shadowOffsetX: 0,
+    shadowOffsetY: 0,
+    textAlign: 'start',
+    textBaseline: 'alphabetic',
+    direction: 'inherit',
+    imageSmoothingEnabled: true,
+    canvas: { toDataURL: () => 'data:image/png;base64,AAAA', width: 300, height: 150 },
+  };
+  HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(ctxStub) as unknown as typeof HTMLCanvasElement.prototype.getContext;
+
+  // AG Charts requires Path2D in jsdom
+  if (typeof globalThis.Path2D === 'undefined') {
+    (globalThis as any).Path2D = class Path2D {
+      constructor(_path?: string | Path2D) {}
+      addPath() {}
+      closePath() {}
+      moveTo() {}
+      lineTo() {}
+      bezierCurveTo() {}
+      quadraticCurveTo() {}
+      arc() {}
+      arcTo() {}
+      ellipse() {}
+      rect() {}
+    };
+  }
 });
 
 /*

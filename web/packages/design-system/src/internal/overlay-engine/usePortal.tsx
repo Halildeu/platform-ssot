@@ -57,7 +57,9 @@ export function usePortal(options: UsePortalOptions = {}) {
     portalRef.current = el;
 
     return () => {
-      target.removeChild(el);
+      if (el.parentNode === target) {
+        target.removeChild(el);
+      }
       portalRef.current = null;
     };
   }, [enabled, container, id]);
