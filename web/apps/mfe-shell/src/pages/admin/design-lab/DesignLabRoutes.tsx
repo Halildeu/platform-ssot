@@ -75,6 +75,9 @@ const ComposePage = lazy(() => import("./compose/ComposePage"));
 /* Cross-Component Interaction Playground */
 const InteractionPlayground = lazy(() => import("./interaction/InteractionPlayground"));
 
+/* X Suite Runtime Preview (iframe target for Design Lab dual preview) */
+const XSuiteRuntimePreview = lazy(() => import("./XSuiteRuntimePreview"));
+
 /* Legacy — kept for backward-compat redirects */
 const FoundationsListing = lazy(() => import("./pages/FoundationsListing"));
 const FoundationDetail = lazy(() => import("./pages/FoundationDetail"));
@@ -277,6 +280,9 @@ export const DesignLabRoutes: React.FC = () => (
         {/* Legacy query-param redirect (catch-all within layout) */}
         <Route path="*" element={<LegacyUrlRedirect />} />
       </Route>
+
+      {/* X Suite Runtime Preview — standalone (no shell chrome) for iframe embedding */}
+      <Route path="runtime-preview" element={<XSuiteRuntimePreview />} />
     </Routes>
   </Suspense>
 );
