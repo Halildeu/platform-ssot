@@ -15,6 +15,11 @@ export type {
   FormSchema,
   FormValues,
   FormErrors,
+  FormSection,
+  FormStep,
+  ConditionalRule,
+  AsyncValidator,
+  MultiStepFormSchema,
 } from './types';
 
 /* ---- Core components ---- */
@@ -35,9 +40,31 @@ export {
 } from './FieldRegistry';
 export type { FieldRegistry, FieldRegistryProviderProps } from './FieldRegistry';
 
+/* ---- Sections & Multi-step ---- */
+export { FormSectionComponent } from './FormSection';
+export type { FormSectionProps } from './FormSection';
+
+export { MultiStepForm } from './MultiStepForm';
+export type { MultiStepFormProps } from './MultiStepForm';
+
+export { FormSummary } from './FormSummary';
+export type { FormSummaryProps } from './FormSummary';
+
+export { RepeatableFieldGroup } from './RepeatableFieldGroup';
+export type { RepeatableFieldGroupProps } from './RepeatableFieldGroup';
+
 /* ---- Hooks ---- */
 export { useFormSchema } from './useFormSchema';
 export type { UseFormSchemaReturn } from './useFormSchema';
+
+export { useConditionalLogic } from './useConditionalLogic';
+export type { ConditionalLogicResult } from './useConditionalLogic';
+
+export { useAsyncValidation } from './useAsyncValidation';
+export type { AsyncValidationResult } from './useAsyncValidation';
+
+export { useMultiStepForm } from './useMultiStepForm';
+export type { UseMultiStepFormReturn } from './useMultiStepForm';
 
 /* ---- Default field renderers (for custom registries) ---- */
 export {

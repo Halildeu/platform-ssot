@@ -17,6 +17,8 @@ const VIEW_LABELS: Record<SchedulerView, string> = {
   day: 'Day',
   week: 'Week',
   month: 'Month',
+  agenda: 'Agenda',
+  resource: 'Resource',
 };
 
 function formatTitle(date: Date, view: SchedulerView, locale: string): string {
@@ -25,6 +27,7 @@ function formatTitle(date: Date, view: SchedulerView, locale: string): string {
 
   switch (view) {
     case 'day':
+    case 'resource':
       return dtf({ weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     case 'week': {
       const weekStart = new Date(date);
@@ -42,6 +45,7 @@ function formatTitle(date: Date, view: SchedulerView, locale: string): string {
       return `${fmtStart} – ${fmtEnd}`;
     }
     case 'month':
+    case 'agenda':
       return dtf({ year: 'numeric', month: 'long' });
   }
 }
@@ -95,7 +99,7 @@ export const SchedulerToolbar: React.FC<SchedulerToolbarProps> = ({
 
       {/* Right group: view switcher */}
       <div className="x-scheduler-toolbar__views" role="tablist" aria-label="Calendar view">
-        {(['day', 'week', 'month'] as SchedulerView[]).map((v) => (
+        {(['day', 'week', 'month', 'agenda', 'resource'] as SchedulerView[]).map((v) => (
           <button
             key={v}
             type="button"

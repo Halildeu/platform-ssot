@@ -65,3 +65,65 @@ export interface FormSchema {
 
 export type FormValues = Record<string, unknown>;
 export type FormErrors = Record<string, string>;
+
+/* ------------------------------------------------------------------ */
+/*  Sections & Multi-step                                              */
+/* ------------------------------------------------------------------ */
+
+export interface FormSection {
+  id: string;
+  title: string;
+  description?: string;
+  fields: string[]; // field IDs
+  collapsible?: boolean;
+  defaultCollapsed?: boolean;
+  condition?: FieldDependency;
+}
+
+export interface FormStep {
+  id: string;
+  title: string;
+  description?: string;
+  sections?: FormSection[];
+  fields?: string[]; // field IDs (flat, if no sections)
+  validation?: 'onNext' | 'onSubmit';
+}
+
+/* ------------------------------------------------------------------ */
+/*  Conditional logic engine                                           */
+/* ------------------------------------------------------------------ */
+
+export interface ConditionalRule {
+  id: string;
+  conditions: Array<{
+    field: string;
+    operator: 'equals' | 'notEquals' | 'contains' | 'greaterThan' | 'lessThan' | 'isEmpty' | 'isNotEmpty';
+    value?: unknown;
+  }>;
+  logic: 'and' | 'or';
+  actions: Array<{
+    type: 'show' | 'hide' | 'enable' | 'disable' | 'setValue' | 'setRequired';
+    target: string; // field ID
+    value?: unknown;
+  }>;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Async validation                                                   */
+/* ------------------------------------------------------------------ */
+
+export interface AsyncValidator {
+  field: string;
+  validate: (value: unknown, formData: FormValues) => Promise<string | null>;
+  debounceMs?: number;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Multi-step form schema                                             */
+/* ------------------------------------------------------------------ */
+
+export interface MultiStepFormSchema extends FormSchema {
+  steps: FormStep[];
+  showProgress?: boolean;
+  allowStepNavigation?: boolean;
+}

@@ -1,10 +1,13 @@
 import React, { useCallback } from 'react';
 import { cn } from '@mfe/design-system';
-import type { SchedulerEvent, SchedulerResource, SchedulerView, TimeSlot } from './types';
+import type { Resource, SchedulerEvent, SchedulerResource, SchedulerView, TimeSlot } from './types';
 import { SchedulerToolbar } from './SchedulerToolbar';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
+import { AgendaView } from './AgendaView';
+import { ResourceView } from './ResourceView';
+import { getVisibleRange } from './useScheduler';
 
 /* ------------------------------------------------------------------ */
 /*  Props                                                              */
@@ -13,6 +16,8 @@ import { MonthView } from './MonthView';
 export interface SchedulerProps {
   events: SchedulerEvent[];
   resources?: SchedulerResource[];
+  /** Extended resources for the resource view (with name, avatar, capacity) */
+  resourceList?: Resource[];
   view: SchedulerView;
   date: Date;
   onViewChange?: (view: SchedulerView) => void;
@@ -32,7 +37,8 @@ export interface SchedulerProps {
 
 export const Scheduler: React.FC<SchedulerProps> = ({
   events,
-  // resources — reserved for future resource lane support
+  // resources — reserved for legacy resource support
+  resourceList = [],
   view,
   date,
   onViewChange,
@@ -52,12 +58,14 @@ export const Scheduler: React.FC<SchedulerProps> = ({
     const d = new Date(date);
     switch (view) {
       case 'day':
+      case 'resource':
         d.setDate(d.getDate() - 1);
         break;
       case 'week':
         d.setDate(d.getDate() - 7);
         break;
       case 'month':
+      case 'agenda':
         d.setMonth(d.getMonth() - 1);
         break;
     }
@@ -68,12 +76,14 @@ export const Scheduler: React.FC<SchedulerProps> = ({
     const d = new Date(date);
     switch (view) {
       case 'day':
+      case 'resource':
         d.setDate(d.getDate() + 1);
         break;
       case 'week':
         d.setDate(d.getDate() + 7);
         break;
       case 'month':
+      case 'agenda':
         d.setMonth(d.getMonth() + 1);
         break;
     }
@@ -114,6 +124,35 @@ export const Scheduler: React.FC<SchedulerProps> = ({
         {view === 'day' && <DayView {...viewProps} />}
         {view === 'week' && <WeekView {...viewProps} />}
         {view === 'month' && <MonthView {...viewProps} />}
+        {view === 'agenda' && (() => {
+          const range = getVisibleRange('month', date);
+          return (
+            <AgendaView
+              events={events}
+              startDate={range.start}
+              endDate={range.end}
+              locale={locale}
+              onEventClick={onEventClick}
+            />
+          );
+        })()}
+        {view === 'resource' && (
+          <ResourceView
+            events={events}
+            resources={resourceList}
+            date={date}
+            hourStart={hourStart}
+            hourEnd={hourEnd}
+            locale={locale}
+            onEventClick={onEventClick}
+            onSlotClick={
+              onSlotClick
+                ? (resource, slotDate) =>
+                    onSlotClick({ start: slotDate, end: new Date(slotDate.getTime() + 3600_000), resourceId: resource.id })
+                : undefined
+            }
+          />
+        )}
       </div>
     </div>
   );

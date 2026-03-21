@@ -1,6 +1,12 @@
 import React, { useCallback } from 'react';
-import type { KanbanColumn as KanbanColumnType, KanbanCard as KanbanCardType, DragResult } from './types';
+import type {
+  KanbanColumn as KanbanColumnType,
+  KanbanCard as KanbanCardType,
+  DragResult,
+  Swimlane,
+} from './types';
 import { KanbanColumn } from './KanbanColumn';
+import { KanbanSwimlane } from './KanbanSwimlane';
 import { useDragDrop } from './useDragDrop';
 
 export interface KanbanBoardProps {
@@ -12,6 +18,9 @@ export interface KanbanBoardProps {
   renderCard?: (card: KanbanCardType) => React.ReactNode;
   className?: string;
   addColumnLabel?: string;
+  /** When provided, cards are grouped by swimlaneId into horizontal rows. */
+  swimlanes?: Swimlane[];
+  onToggleSwimlane?: (swimlaneId: string) => void;
 }
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({
@@ -23,6 +32,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   renderCard,
   className,
   addColumnLabel = '+ Add Column',
+  swimlanes,
+  onToggleSwimlane,
 }) => {
   const {
     draggedCardId,
@@ -53,6 +64,82 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     [onCardMove, cards, draggedCardId, sourceColumnId],
   );
 
+  /* ---------------------------------------------------------------- */
+  /*  Swimlane mode                                                    */
+  /* ---------------------------------------------------------------- */
+  if (swimlanes && swimlanes.length > 0) {
+    return (
+      <div
+        className={className}
+        role="region"
+        aria-label="Kanban board"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+          padding: '8px 4px',
+          minHeight: '400px',
+        }}
+      >
+        {swimlanes.map((swimlane) => {
+          const swimlaneCards = cards.filter(
+            (c) => c.swimlaneId === swimlane.id,
+          );
+          return (
+            <KanbanSwimlane
+              key={swimlane.id}
+              swimlane={swimlane}
+              columns={columns}
+              cards={swimlaneCards}
+              onToggleCollapse={onToggleSwimlane}
+              onCardClick={onCardClick}
+              renderCard={renderCard}
+              draggedCardId={draggedCardId}
+              dragOverColumnId={dragOverColumnId}
+              dragOverIndex={dragOverIndex}
+              onDrop={(cardId, columnId, toIndex) =>
+                handleColumnDrop(cardId, columnId, toIndex)
+              }
+              onDragStart={handlers.onDragStart}
+              onDragEnd={handlers.onDragEnd}
+              onDragOverCard={handlers.onDragOver}
+              onDragEnter={handlers.onDragEnter}
+              onDragLeave={handlers.onDragLeave}
+              onDropColumn={handlers.onDrop}
+            />
+          );
+        })}
+
+        {/* Cards without a swimlane */}
+        {cards.some((c) => !c.swimlaneId) && (
+          <KanbanSwimlane
+            swimlane={{ id: '__unassigned', title: 'Unassigned' }}
+            columns={columns}
+            cards={cards.filter((c) => !c.swimlaneId)}
+            onToggleCollapse={onToggleSwimlane}
+            onCardClick={onCardClick}
+            renderCard={renderCard}
+            draggedCardId={draggedCardId}
+            dragOverColumnId={dragOverColumnId}
+            dragOverIndex={dragOverIndex}
+            onDrop={(cardId, columnId, toIndex) =>
+              handleColumnDrop(cardId, columnId, toIndex)
+            }
+            onDragStart={handlers.onDragStart}
+            onDragEnd={handlers.onDragEnd}
+            onDragOverCard={handlers.onDragOver}
+            onDragEnter={handlers.onDragEnter}
+            onDragLeave={handlers.onDragLeave}
+            onDropColumn={handlers.onDrop}
+          />
+        )}
+      </div>
+    );
+  }
+
+  /* ---------------------------------------------------------------- */
+  /*  Flat mode (original)                                             */
+  /* ---------------------------------------------------------------- */
   return (
     <div
       className={className}

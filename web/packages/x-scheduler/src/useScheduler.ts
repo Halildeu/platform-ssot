@@ -66,10 +66,12 @@ export function getVisibleRange(
 ): { start: Date; end: Date } {
   switch (view) {
     case 'day':
+    case 'resource':
       return { start: startOfDay(date), end: endOfDay(date) };
     case 'week':
       return { start: startOfWeek(date, weekStartsOn), end: endOfWeek(date, weekStartsOn) };
-    case 'month': {
+    case 'month':
+    case 'agenda': {
       const ms = startOfMonth(date);
       const me = endOfMonth(date);
       // extend to full weeks for the grid
@@ -131,10 +133,12 @@ export function useScheduler(opts: UseSchedulerOptions = {}): UseSchedulerReturn
     setDate((prev) => {
       switch (view) {
         case 'day':
+        case 'resource':
           return addDays(prev, 1);
         case 'week':
           return addDays(prev, 7);
         case 'month':
+        case 'agenda':
           return addMonths(prev, 1);
       }
     });
@@ -144,10 +148,12 @@ export function useScheduler(opts: UseSchedulerOptions = {}): UseSchedulerReturn
     setDate((prev) => {
       switch (view) {
         case 'day':
+        case 'resource':
           return addDays(prev, -1);
         case 'week':
           return addDays(prev, -7);
         case 'month':
+        case 'agenda':
           return addMonths(prev, -1);
       }
     });

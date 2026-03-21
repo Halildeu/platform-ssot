@@ -32,5 +32,27 @@ export type { WaterfallChartProps } from "./WaterfallChart";
 export { ChartContainer } from "./ChartContainer";
 export type { ChartContainerProps } from "./ChartContainer";
 
+/* Dashboard composition */
+export { ChartDashboard } from "./ChartDashboard";
+export type { ChartDashboardProps, ChartDashboardItemProps } from "./ChartDashboard";
+
+/* Sparklines & mini charts */
+export { SparklineChart } from "./SparklineChart";
+export type { SparklineChartProps } from "./SparklineChart";
+
+export { MiniChart } from "./MiniChart";
+export type { MiniChartProps, MiniChartDataPoint } from "./MiniChart";
+
+/* Dashboard widgets */
+export { KPICard } from "./KPICard";
+export type { KPICardProps, KPICardTrend } from "./KPICard";
+
+export { StatWidget } from "./StatWidget";
+export type { StatWidgetProps } from "./StatWidget";
+
+/* Standalone legend */
+export { ChartLegend } from "./ChartLegend";
+export type { ChartLegendProps, ChartLegendItem } from "./ChartLegend";
+
 /* Types */
 export type { ChartSize, ChartDataPoint, ChartSeries } from "@mfe/design-system";

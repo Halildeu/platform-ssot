@@ -1,5 +1,8 @@
 /* Types */
 export type {
+  RecurrenceRule,
+  Resource,
+  SchedulerConflict,
   SchedulerEvent,
   SchedulerResource,
   SchedulerView,
@@ -25,6 +28,20 @@ export type { WeekViewProps } from './WeekView';
 export { MonthView } from './MonthView';
 export type { MonthViewProps } from './MonthView';
 
+export { AgendaView } from './AgendaView';
+export type { AgendaViewProps } from './AgendaView';
+
+export { ResourceView } from './ResourceView';
+export type { ResourceViewProps } from './ResourceView';
+
+export { EventForm } from './EventForm';
+export type { EventFormProps } from './EventForm';
+
 /* Hooks */
 export { useScheduler, getVisibleRange } from './useScheduler';
 export type { UseSchedulerOptions, UseSchedulerReturn } from './useScheduler';
+
+export { useRecurrence } from './useRecurrence';
+
+export { useConflictDetection } from './useConflictDetection';
+export type { UseConflictDetectionReturn } from './useConflictDetection';
