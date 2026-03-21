@@ -178,7 +178,9 @@ export const DesignLabSidebarRouter: React.FC = () => {
       case "recipes":
         return index.recipes?.currentFamilies.length ?? 0;
       case "ecosystem":
-        return index.ecosystem?.currentFamilies.length ?? 0;
+        return (index.ecosystem?.currentFamilies.length ?? 0) + index.items.filter(
+          (i) => ["x_data_grid", "x_charts", "x_scheduler", "x_kanban", "x_editor", "x_form_builder"].includes(i.taxonomyGroupId) && i.availability === "exported",
+        ).length;
     }
   }, [activeLayer, index]);
 
