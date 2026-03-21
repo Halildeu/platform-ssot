@@ -61,7 +61,13 @@
       "groupIds": [
         "enterprise_data",
         "enterprise_admin",
-        "enterprise_analytics"
+        "enterprise_analytics",
+        "x_data_grid",
+        "x_charts",
+        "x_scheduler",
+        "x_kanban",
+        "x_editor",
+        "x_form_builder"
       ]
     }
   ],
@@ -367,6 +373,96 @@
         "Scheduled report viewer",
         "Data export center",
         "Real-time metrics dashboard"
+      ]
+    },
+    {
+      "id": "x_data_grid",
+      "title": "X-Data-Grid",
+      "subgroups": [
+        "Filter chips",
+        "Selection bar",
+        "Server data source",
+        "Column builder",
+        "Master-detail grid",
+        "Tree data grid",
+        "Pivot grid",
+        "Editable grid",
+        "Row grouping grid"
+      ]
+    },
+    {
+      "id": "x_charts",
+      "title": "X-Charts",
+      "subgroups": [
+        "Chart container",
+        "Scatter chart",
+        "Radar chart",
+        "Treemap chart",
+        "Heatmap chart",
+        "Gauge chart",
+        "Waterfall chart",
+        "Chart dashboard",
+        "KPI card",
+        "Sparkline chart",
+        "Stat widget",
+        "Chart legend",
+        "Chart toolbar",
+        "Mini chart"
+      ]
+    },
+    {
+      "id": "x_scheduler",
+      "title": "X-Scheduler",
+      "subgroups": [
+        "Scheduler",
+        "Day view",
+        "Week view",
+        "Month view",
+        "Scheduler event",
+        "Scheduler toolbar",
+        "Agenda view",
+        "Resource view",
+        "Event form"
+      ]
+    },
+    {
+      "id": "x_kanban",
+      "title": "X-Kanban",
+      "subgroups": [
+        "Kanban board",
+        "Kanban column",
+        "Kanban card",
+        "Kanban toolbar",
+        "Kanban swimlane",
+        "Kanban card detail",
+        "Kanban metrics"
+      ]
+    },
+    {
+      "id": "x_editor",
+      "title": "X-Editor",
+      "subgroups": [
+        "Rich text editor",
+        "Editor toolbar",
+        "Editor menu bubble",
+        "Slash command menu",
+        "Mention list",
+        "Editor link dialog",
+        "Editor image upload",
+        "Editor table menu"
+      ]
+    },
+    {
+      "id": "x_form_builder",
+      "title": "X-Form-Builder",
+      "subgroups": [
+        "Form renderer",
+        "Field renderer",
+        "Form preview",
+        "Multi-step form",
+        "Form summary",
+        "Repeatable field group",
+        "Field registry"
       ]
     }
   ]

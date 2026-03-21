@@ -8,7 +8,7 @@ const entry: DesignLabComponentDocEntry = {
     "availability": "exported",
     "lifecycle": "stable",
     "maturity": "beta",
-    "group": "data_display",
+    "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "data_display",
     "taxonomySubgroup": "X-Charts Scatter & Bubble",

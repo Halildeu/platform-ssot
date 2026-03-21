@@ -8,7 +8,7 @@ const entry: DesignLabComponentDocEntry = {
     "availability": "planned",
     "lifecycle": "stable",
     "maturity": "beta",
-    "group": "forms_data_entry",
+    "group": "x_editor",
     "subgroup": "editor",
     "taxonomyGroupId": "forms_data_entry",
     "taxonomySubgroup": "X-Editor",

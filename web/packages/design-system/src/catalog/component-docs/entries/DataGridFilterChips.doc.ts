@@ -8,7 +8,7 @@ const entry: DesignLabComponentDocEntry = {
     "availability": "exported",
     "lifecycle": "stable",
     "maturity": "beta",
-    "group": "data_display",
+    "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "data_display",
     "taxonomySubgroup": "X-Data-Grid Filter Controls",

@@ -8,7 +8,7 @@ const entry: DesignLabComponentDocEntry = {
     "availability": "planned",
     "lifecycle": "stable",
     "maturity": "beta",
-    "group": "data_display",
+    "group": "x_kanban",
     "subgroup": "kanban",
     "taxonomyGroupId": "data_display",
     "taxonomySubgroup": "X-Kanban Swimlane",
