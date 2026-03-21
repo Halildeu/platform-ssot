@@ -148,9 +148,17 @@
     "format:check": "prettier --check ."
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": ["prettier --write", "eslint --fix --max-warnings 0"],
-    "*.{json,md,mdx,yml,yaml}": ["prettier --write"],
-    "*.css": ["prettier --write", "stylelint --fix"]
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix --max-warnings 0"
+    ],
+    "*.{json,md,mdx,yml,yaml}": [
+      "prettier --write"
+    ],
+    "*.css": [
+      "prettier --write",
+      "stylelint --fix"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -203,6 +211,7 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.1.1",
+    "prettier": "^3.8.1",
     "rimraf": "^6.0.1",
     "size-limit": "^11.1.4",
     "storybook": "^10.3.0",
