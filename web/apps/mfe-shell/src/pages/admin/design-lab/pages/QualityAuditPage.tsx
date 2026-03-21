@@ -19,6 +19,7 @@ import { hasGuide } from "../docs/guideRegistry";
 import { hasTokens } from "../tabs/componentTokenMap";
 import { hasExamples } from "../examples/registry";
 import { hasPlayground } from "../playground";
+import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 
 /* ------------------------------------------------------------------ */
 /*  QualityAuditPage                                                   */
@@ -259,9 +260,12 @@ export default function QualityAuditPage() {
           <ShieldCheck className="h-5 w-5 text-emerald-600" />
         </div>
         <div>
-          <Text as="h1" className="text-xl font-bold text-text-primary">
-            Kalite Denetim Paneli
-          </Text>
+          <div className="flex items-center gap-2">
+            <Text as="h1" className="text-xl font-bold text-text-primary">
+              Kalite Denetim Paneli
+            </Text>
+            <DataProvenanceBadge level="derived" />
+          </div>
           <Text variant="secondary" className="text-sm">
             {rows.length} bilesen icin kapsam durumu (katalogda {index.items.length} oge)
           </Text>

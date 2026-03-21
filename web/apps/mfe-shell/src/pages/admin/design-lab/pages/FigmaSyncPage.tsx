@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
+import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 
 /* ------------------------------------------------------------------ */
 /*  FigmaSyncPage — Figma token sync status & drift indicator          */
@@ -254,9 +255,12 @@ export const FigmaSyncPage: React.FC = () => {
             <Figma className="h-5 w-5" />
           </div>
           <div>
-            <Text as="h1" className="text-xl font-bold text-text-primary">
-              Figma Token Sync
-            </Text>
+            <div className="flex items-center gap-2">
+              <Text as="h1" className="text-xl font-bold text-text-primary">
+                Figma Token Sync
+              </Text>
+              <DataProvenanceBadge level="simulated" />
+            </div>
             <Text variant="secondary" className="text-sm">
               Monitor design token synchronization between Figma and code
             </Text>

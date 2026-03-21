@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
+import { API_NAMES } from "../DesignLabSidebarRouter";
 
 /* ------------------------------------------------------------------ */
 /*  DesignLabLanding — Modern overview / search page                   */
@@ -117,7 +118,7 @@ export default function DesignLabLanding() {
         iconBg: LAYER_ICON_BG.components,
         title: t("designlab.landing.layer.components.title"),
         description: t("designlab.landing.layer.components.description"),
-        count: index.items.filter((i) => i.availability === "exported").length,
+        count: index.items.filter((i) => i.availability === "exported" && !API_NAMES.has(i.name)).length,
         href: "/admin/design-lab/components",
       },
       {
@@ -181,17 +182,20 @@ export default function DesignLabLanding() {
 
     const results: Array<{ name: string; type: string; href: string; description?: string }> = [];
 
-    // Components
+    // Components & APIs
     for (const item of index.items) {
       if (
         item.name.toLowerCase().includes(query) ||
         item.description.toLowerCase().includes(query)
       ) {
+        const isApi = API_NAMES.has(item.name);
         results.push({
           name: item.name,
-          type: "component",
+          type: isApi ? "api" : "component",
           description: item.description,
-          href: `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
+          href: isApi
+            ? `/admin/design-lab/apis/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
+            : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
         });
       }
       if (results.length >= 20) break;

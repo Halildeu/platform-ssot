@@ -36,6 +36,7 @@ import { CoverageMatrix } from "../components/CoverageMatrix";
 import type { CoverageItem } from "../components/CoverageMatrix";
 import { QualityGatesOverview } from "../components/QualityGatesOverview";
 import { SecurityPosture } from "../components/SecurityPosture";
+import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 
 /* ------------------------------------------------------------------ */
 /*  Quality Command Center                                             */
@@ -354,9 +355,12 @@ export default function QualityDashboardPage() {
             <Award className="h-5 w-5 text-indigo-600" />
           </div>
           <div>
-            <Text as="h1" className="text-xl font-bold text-text-primary">
-              Quality Command Center
-            </Text>
+            <div className="flex items-center gap-2">
+              <Text as="h1" className="text-xl font-bold text-text-primary">
+                Quality Command Center
+              </Text>
+              <DataProvenanceBadge level="derived" />
+            </div>
             <Text variant="secondary" className="text-sm">
               {scoredComponents.length} bileşen, {packageData.length} paket
             </Text>

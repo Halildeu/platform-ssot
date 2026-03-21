@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
+import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 
 /* ------------------------------------------------------------------ */
 /*  VisualRegressionPage — Per-component visual regression dashboard    */
@@ -221,9 +222,12 @@ export const VisualRegressionPage: React.FC = () => {
             <Image className="h-5 w-5" />
           </div>
           <div>
-            <Text as="h1" className="text-xl font-bold text-text-primary">
-              Visual Regression
-            </Text>
+            <div className="flex items-center gap-2">
+              <Text as="h1" className="text-xl font-bold text-text-primary">
+                Visual Regression
+              </Text>
+              <DataProvenanceBadge level="simulated" />
+            </div>
             <Text variant="secondary" className="text-sm">
               Per-component snapshot comparison & change detection
             </Text>
