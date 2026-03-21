@@ -19,17 +19,13 @@ import { KanbanBoard } from '@mfe/x-kanban';
 
 | Component | Purpose |
 |-----------|---------|
-| `KanbanBoard` | Full board with columns |
+| `KanbanBoard` | Full board with columns and drag-and-drop |
 | `KanbanColumn` | Single column container |
 | `KanbanCard` | Draggable card item |
 | `KanbanSwimlane` | Horizontal row grouping |
-| `KanbanHeader` | Column header with actions |
-| `KanbanFooter` | Column footer (add item) |
-| `KanbanFilter` | Board-level filter bar |
-| `KanbanAvatar` | Assignee avatar chip |
-| `KanbanLabel` | Color-coded label tag |
-| `KanbanWipLimit` | WIP limit indicator |
-| `KanbanCollapsed` | Collapsed column state |
+| `KanbanToolbar` | Board-level action toolbar |
+| `KanbanCardDetail` | Expanded card detail view |
+| `KanbanMetrics` | Board metrics and analytics display |
 
 ## WIP Limits
 
@@ -61,7 +57,24 @@ Group cards horizontally by a field:
 />
 ```
 
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useKanban` | Board state management |
+| `useDragDrop` | Drag-and-drop engine (framework-agnostic) |
+| `useDndKitKanban` | dnd-kit integration for kanban |
+| `useSortableCard` | dnd-kit sortable card binding |
+| `useDroppableColumn` | dnd-kit droppable column binding |
+| `useKanbanFilter` | Board filtering logic |
+| `useWipPolicy` | WIP limit enforcement and violation detection |
+| `useKanbanVariants` | Board variant configuration |
+| `useKanbanSchedulerSync` | Cross-package: kanban-to-scheduler sync |
+| `useResponsiveKanban` | Mobile-responsive board layout |
+
 ## Drag and Drop
 
 Cards support drag-and-drop between columns with animated transitions.
 The `onMove` callback receives source and destination metadata.
+Use `useDndKitKanban` for the dnd-kit powered engine, or `useDragDrop`
+for the framework-agnostic fallback.

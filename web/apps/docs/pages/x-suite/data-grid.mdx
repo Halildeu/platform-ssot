@@ -1,12 +1,12 @@
 # X-Data-Grid
 
-Recipe layer over AG Grid 34.3 with variant persistence,
-column builder, and server-side patterns.
+Recipe layer over AG Grid 34.3 with column builder,
+server-side patterns, and cross-package composition.
 
 ## Quick Start
 
 ```tsx
-import { DataGrid, useColumnBuilder } from '@mfe/x-data-grid';
+import { EntityGridTemplate, useColumnBuilder } from '@mfe/x-data-grid';
 
 const columns = useColumnBuilder<Invoice>()
   .text('invoiceNo', { header: 'Invoice #', pinned: 'left' })
@@ -15,17 +15,30 @@ const columns = useColumnBuilder<Invoice>()
   .status('status', { variants: ['draft', 'sent', 'paid'] })
   .build();
 
-<DataGrid rows={invoices} columns={columns} variant="compact" />
+<EntityGridTemplate rows={invoices} columns={columns} />
 ```
 
-## Variants
+## Core Components
 
-| Variant | Description |
-|---------|-------------|
-| `default` | Standard row height, full feature set |
-| `compact` | Dense layout for data-heavy views |
-| `master-detail` | Expandable rows with nested grids |
-| `tree` | Hierarchical row grouping |
+| Export | Description |
+|--------|-------------|
+| `EntityGridTemplate` | Primary grid component (re-exported from design-system) |
+| `GridShell` | Low-level grid shell wrapper |
+| `GridToolbar` | Toolbar for grid actions |
+| `TablePagination` | Pagination control |
+
+## Recipe Components
+
+| Export | Description |
+|--------|-------------|
+| `DataGridFilterChips` | Active filter chip display |
+| `DataGridSelectionBar` | Bulk-selection action bar |
+| `ServerDataSource` | Server-side data source adapter |
+| `MasterDetailGrid` | Expandable rows with nested grids |
+| `TreeDataGrid` | Hierarchical row grouping |
+| `PivotGrid` | Pivot table layout |
+| `EditableGrid` | Inline cell editing |
+| `RowGroupingGrid` | Row grouping with aggregation |
 
 ## Column Builder
 
@@ -42,19 +55,20 @@ const columns = useColumnBuilder<Product>()
 
 ## Server-Side Data
 
-For large datasets, enable server-side row model:
+For large datasets, use the `ServerDataSource` component:
 
 ```tsx
-<DataGrid
-  rows={[]}
-  columns={columns}
-  serverSide
-  datasource={serverDatasource}
-  cacheBlockSize={100}
-/>
+import { ServerDataSource } from '@mfe/x-data-grid';
+
+<ServerDataSource config={{ endpoint: '/api/invoices', pageSize: 100 }} />
 ```
 
-## Variant Persistence
+## Hooks
 
-Grid state (column order, sort, filters) persists automatically
-per user and per variant via the `useGridPersistence` hook.
+| Hook | Purpose |
+|------|---------|
+| `useColumnBuilder` | Fluent column definition API |
+| `useGridExport` | Excel/CSV export (`ExcelExportOptions`, `CsvExportOptions`) |
+| `useGridState` | Grid state persistence (column order, sort, filters) |
+| `useGridChartDrilldown` | Cross-package: grid-to-chart drill-down |
+| `useGridFormSync` | Cross-package: grid-to-form synchronization |

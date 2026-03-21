@@ -1,7 +1,7 @@
 # X-Charts
 
-Data visualization package with 18 chart components built
-for enterprise dashboards and reporting.
+Data visualization package with chart components, dashboard widgets,
+and composition hooks for enterprise dashboards.
 
 ## Quick Start
 
@@ -29,7 +29,20 @@ import { BarChart, LineChart, PieChart } from '@mfe/x-charts';
 | `GaugeChart` | KPI indicators |
 | `HeatmapChart` | Density visualization |
 | `TreemapChart` | Hierarchical proportions |
-| `FunnelChart` | Conversion pipelines |
+| `WaterfallChart` | Incremental value changes |
+
+## Dashboard Widgets
+
+| Component | Purpose |
+|-----------|---------|
+| `ChartDashboard` | Grid layout for multiple charts |
+| `ChartContainer` | Wrapper with loading/error states |
+| `SparklineChart` | Inline mini sparkline |
+| `MiniChart` | Compact chart for cards |
+| `KPICard` | KPI metric display with trend |
+| `StatWidget` | Single-stat summary widget |
+| `ChartLegend` | Standalone legend component |
+| `ChartToolbar` | Chart action toolbar (zoom, export) |
 
 ## Theming
 
@@ -46,6 +59,18 @@ Override per-chart with the `color` or `palette` props:
 />
 ```
 
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useChartInteractions` | Click, hover, and selection handlers |
+| `useChartResize` | Responsive container resize observer |
+| `useRealTimeData` | Live-updating data stream adapter |
+| `useChartVariants` | Chart variant configuration |
+| `useDashboardComposition` | Cross-package: dashboard with shared date range |
+| `useResponsiveBreakpoint` | Breakpoint detection for responsive charts |
+| `useResponsiveChartConfig` | Auto-adjust chart config per breakpoint |
+
 ## Responsive Behavior
 
 All charts are responsive by default. Use the `aspectRatio` prop
@@ -53,12 +78,4 @@ to control proportions:
 
 ```tsx
 <BarChart data={data} xField="q" yField="sales" aspectRatio={16 / 9} />
-```
-
-## Export
-
-Export charts as PNG or SVG using the `useChartExport` hook:
-
-```tsx
-const { exportPng, exportSvg } = useChartExport(chartRef);
 ```

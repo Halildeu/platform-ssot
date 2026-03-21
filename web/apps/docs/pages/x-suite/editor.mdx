@@ -1,14 +1,14 @@
 # X-Editor
 
-Rich text editing package with 13 components for content authoring,
-inline annotations, and collaborative editing patterns.
+Rich text editing package with Tiptap-based components for content
+authoring, slash commands, mentions, and collaborative editing patterns.
 
 ## Quick Start
 
 ```tsx
-import { RichEditor } from '@mfe/x-editor';
+import { RichTextEditor } from '@mfe/x-editor';
 
-<RichEditor
+<RichTextEditor
   value={content}
   onChange={setContent}
   toolbar={['bold', 'italic', 'heading', 'link', 'image', 'table']}
@@ -19,26 +19,22 @@ import { RichEditor } from '@mfe/x-editor';
 
 | Component | Purpose |
 |-----------|---------|
-| `RichEditor` | Full-featured WYSIWYG editor |
-| `MarkdownEditor` | Markdown source with live preview |
-| `InlineEditor` | Click-to-edit inline text |
-| `CodeBlock` | Syntax-highlighted code editing |
-| `MentionPlugin` | @mention autocomplete |
-| `CommentThread` | Inline annotation threads |
-| `ImageUploader` | Drag-and-drop image insertion |
-| `TableEditor` | Visual table manipulation |
-| `EmojiPicker` | Emoji insertion palette |
-| `LinkDialog` | URL insertion with preview |
-| `SlashCommand` | Slash-command block insertion |
-| `ToolbarButton` | Custom toolbar extension point |
-| `EditorProvider` | Context provider for nested editors |
+| `RichTextEditor` | Full-featured WYSIWYG editor |
+| `TiptapEditor` | Direct Tiptap integration editor |
+| `EditorToolbar` | Configurable toolbar strip |
+| `EditorMenuBubble` | Floating selection menu |
+| `SlashCommandMenu` | Slash-command block insertion menu |
+| `MentionList` | @mention autocomplete dropdown |
+| `EditorTableMenu` | Table manipulation controls |
+| `EditorLinkDialog` | URL insertion with preview |
+| `EditorImageUpload` | Drag-and-drop image insertion |
 
 ## Toolbar Customization
 
 Build custom toolbars by composing toolbar items:
 
 ```tsx
-<RichEditor
+<RichTextEditor
   toolbar={[
     'bold', 'italic', 'underline',
     '|',
@@ -49,12 +45,34 @@ Build custom toolbars by composing toolbar items:
 />
 ```
 
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useEditor` | Core editor state and commands |
+| `useTiptapEditor` | Tiptap-specific editor binding |
+| `useSlashCommands` | Slash command registration and handling |
+| `useMentions` | Mention autocomplete logic |
+| `useEditorFormField` | Cross-package: editor as a form field |
+
+## Tiptap Integration
+
+For advanced use cases, access Tiptap directly:
+
+```tsx
+import { createTiptapEditorCore, isTiptapAvailable } from '@mfe/x-editor';
+
+if (isTiptapAvailable()) {
+  const core = createTiptapEditorCore({ extensions: [...] });
+}
+```
+
 ## Output Formats
 
 The editor supports multiple serialization formats:
 
 ```tsx
-<RichEditor
+<RichTextEditor
   outputFormat="html"    // 'html' | 'markdown' | 'json'
   value={content}
   onChange={setContent}

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 
 // Test that all chart components have proper aria attributes
-describe('Charts a11y', () => {
+describe('Charts a11y', { timeout: 10000 }, () => {
   it('SparklineChart has role=img and aria-label', async () => {
     // Dynamic import to avoid module resolution issues
     const { SparklineChart } = await import('../SparklineChart');

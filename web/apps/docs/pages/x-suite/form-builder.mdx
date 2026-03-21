@@ -1,36 +1,50 @@
 # X-Form-Builder
 
-Dynamic form generation from JSON schema with 12 components
-for building, rendering, and validating complex forms.
+Schema-driven form renderer with JSON-schema-based runtime,
+extensible field registry, and validation adapters.
+Visual form designer (FormBuilder) is planned for v2.
 
 ## Quick Start
 
 ```tsx
-import { FormBuilder, FormRenderer } from '@mfe/x-form-builder';
+import { FormRenderer } from '@mfe/x-form-builder';
 
-// Design mode
-<FormBuilder schema={schema} onChange={setSchema} />
-
-// Render mode
 <FormRenderer schema={schema} onSubmit={handleSubmit} />
 ```
 
-## Components
+## Core Components
 
 | Component | Purpose |
 |-----------|---------|
-| `FormBuilder` | Visual drag-and-drop form designer |
-| `FormRenderer` | Renders forms from JSON schema |
-| `FieldPalette` | Available field type sidebar |
-| `FieldConfig` | Field property editor panel |
-| `SectionBlock` | Grouped field section |
-| `ConditionalRule` | Show/hide logic builder |
-| `ValidationRule` | Field validation configurator |
-| `RepeatableGroup` | Dynamic array of field groups |
+| `FormRenderer` | Renders forms from a `FormSchema` |
 | `FormPreview` | Live form preview pane |
-| `SchemaImport` | Import schema from JSON/YAML |
-| `SchemaExport` | Export schema to JSON/YAML |
-| `SubmissionViewer` | View submitted form data |
+| `FieldRenderer` | Single field renderer (with 12 built-in field types) |
+| `FormSectionComponent` | Grouped field section |
+| `MultiStepForm` | Multi-step wizard form |
+| `FormSummary` | Review summary before submission |
+| `RepeatableFieldGroup` | Dynamic array of field groups |
+
+## Field Registry
+
+Register custom field renderers:
+
+```tsx
+import { FieldRegistryProvider, createFieldRegistry } from '@mfe/x-form-builder';
+
+const registry = createFieldRegistry();
+registry.register('color-picker', MyColorPicker);
+
+<FieldRegistryProvider registry={registry}>
+  <FormRenderer schema={schema} onSubmit={handleSubmit} />
+</FieldRegistryProvider>
+```
+
+## Built-in Field Renderers
+
+`TextFieldRenderer`, `NumberFieldRenderer`, `SelectFieldRenderer`,
+`MultiselectFieldRenderer`, `CheckboxFieldRenderer`, `RadioFieldRenderer`,
+`SwitchFieldRenderer`, `TextareaFieldRenderer`, `DateFieldRenderer`,
+`TimeFieldRenderer`, `FileFieldRenderer`, `CustomFieldRenderer`
 
 ## Schema Format
 
@@ -62,7 +76,20 @@ Show or hide fields based on other field values:
 }
 ```
 
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useFormSchema` | Form state from a `FormSchema` |
+| `useZodForm` | Zod-powered form validation |
+| `useConditionalLogic` | Evaluate conditional visibility rules |
+| `useAsyncValidation` | Async field validation |
+| `useMultiStepForm` | Multi-step wizard navigation and state |
+
 ## Validation
 
 Built-in validators include `required`, `min`, `max`, `pattern`,
 `email`, `url`, and custom async validators.
+
+Zod integration is available via `createZodValidator`, `toZodSchema`,
+and `fromZodSchema` utilities.

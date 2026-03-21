@@ -1,6 +1,6 @@
 # X-Scheduler
 
-Calendar and scheduling package with 14 components for
+Calendar and scheduling package with view components for
 event management, resource booking, and timeline views.
 
 ## Quick Start
@@ -24,16 +24,13 @@ import { Scheduler } from '@mfe/x-scheduler';
 | `DayView` | Single day hour grid |
 | `WeekView` | 7-day columnar layout |
 | `MonthView` | Monthly calendar grid |
-| `TimelineView` | Horizontal resource timeline |
 | `AgendaView` | List-based event display |
-| `EventCard` | Draggable event block |
-| `ResourceColumn` | Resource allocation column |
-| `DateNavigator` | Date range navigation bar |
-| `ViewSwitcher` | View mode toggle |
-| `MiniCalendar` | Compact date picker sidebar |
-| `RecurrenceEditor` | Recurrence rule builder |
-| `ConflictIndicator` | Overlapping event warning |
-| `AvailabilityOverlay` | Working hours highlight |
+| `ResourceView` | Resource allocation view |
+| `SchedulerEventCard` | Draggable event block |
+| `SchedulerToolbar` | Navigation and view controls |
+| `EventForm` | Event create/edit form |
+| `CurrentTimeIndicator` | Current time line overlay |
+| `MiniMonthNav` | Compact month navigation sidebar |
 
 ## Views
 
@@ -42,8 +39,8 @@ Switch between views with the `view` prop:
 ```tsx
 <Scheduler
   events={events}
-  view="month"        // 'day' | 'week' | 'month' | 'timeline' | 'agenda'
-  resources={rooms}   // Required for timeline view
+  view="month"        // 'day' | 'week' | 'month' | 'agenda'
+  resources={rooms}   // Required for resource view
 />
 ```
 
@@ -53,7 +50,7 @@ Assign events to resources (rooms, people, equipment):
 
 ```tsx
 <Scheduler
-  view="timeline"
+  view="resource"
   resources={[
     { id: 'room-a', title: 'Conference Room A' },
     { id: 'room-b', title: 'Conference Room B' },
@@ -62,14 +59,25 @@ Assign events to resources (rooms, people, equipment):
 />
 ```
 
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useScheduler` | Core scheduler state and navigation |
+| `useRecurrence` | Recurrence rule expansion |
+| `useConflictDetection` | Overlapping event detection |
+| `useTimezone` | Timezone conversion utilities |
+| `useEventDrag` | Drag-to-reschedule event handling |
+| `useExternalDrop` | External item drop onto calendar |
+| `useSchedulerVariants` | View variant configuration |
+| `useResponsiveScheduler` | Mobile-responsive scheduler layout |
+
 ## Recurring Events
 
-Use the built-in recurrence editor for repeating events:
+Use the `useRecurrence` hook for repeating events:
 
 ```tsx
-<RecurrenceEditor
-  value={rrule}
-  onChange={setRrule}
-  maxOccurrences={52}
-/>
+import { useRecurrence } from '@mfe/x-scheduler';
+
+const { expandedEvents } = useRecurrence(events);
 ```
