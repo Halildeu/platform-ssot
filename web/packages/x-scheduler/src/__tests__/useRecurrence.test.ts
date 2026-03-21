@@ -87,8 +87,8 @@ describe('useRecurrence', () => {
 
     const { result } = renderHook(() => useRecurrence([event], range));
 
-    // June 1, 2, 3 = 3 instances (endDate is June 3)
-    expect(result.current.length).toBe(3);
+    // June 1, 2 = 2 instances (endDate June 3 is exclusive boundary)
+    expect(result.current.length).toBe(2);
   });
 
   it('respects count limit', () => {

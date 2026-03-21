@@ -101,6 +101,7 @@
     "build:x-suite": "pnpm --filter '@mfe/x-*' build",
     "test:x-suite": "pnpm --filter '@mfe/x-*' test",
     "typecheck:x-suite": "pnpm --filter '@mfe/x-*' typecheck",
+    "bench:x-suite": "pnpm --filter '@mfe/x-*' bench",
     "test:e2e:users": "npx playwright test tests/playwright/admin-users.auth.spec.ts",
     "test:e2e": "cypress run",
     "test:e2e:auth-sync": "npx playwright test tests/playwright/auth.sync.spec.ts --config tests/playwright/playwright.config.ts --project=chromium --workers=1",

@@ -279,7 +279,7 @@ interface AsyncOptionConfig {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 35 KB** gzipped (excluding zod ~13KB)
+- **< 20 KB** gzipped (v1 built-in SchemaValidator; v2 budget: < 35 KB excluding zod ~13KB)
 - FieldRegistry custom renderers loaded on demand
 - FormBuilder (v2) separately chunked, not included in FormRenderer bundle
 - Date picker and file upload widgets lazy-loaded
@@ -305,13 +305,13 @@ interface AsyncOptionConfig {
 ## 8. Test & Docs Exit Criteria
 
 ### Tests
-- **30 unit tests** — schema parsing, validation rule generation, conditional evaluation, zod schema conversion, field type rendering
+- **30 unit tests** — schema parsing, validation rule generation, conditional evaluation, field type rendering (v2: add zod schema conversion)
 - **8 integration tests** — full form render, validation flow, conditional fields, async options, file upload, FormBuilder drag-and-drop
 - **4 visual regression tests** — default form, dark mode, validation error states, density variants
 
 ### Contract Tests
 - JSON Schema Draft 7 compatibility for schema import/export
-- Zod schema generation correctness for all field types
+- v1: SchemaValidator interface contract verified; v2: Zod schema generation correctness for all field types
 - AdaptiveForm layout contract verification
 
 ### Documentation

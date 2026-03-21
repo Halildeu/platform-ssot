@@ -5,7 +5,7 @@ import type { AgChartOptions } from "ag-charts-community";
 // React 18/19 types compatibility shim
 const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
 import { cn } from "@mfe/design-system";
-import { getChartThemeOverrides, getChartColorPalette } from "@mfe/design-system/advanced";
+import { getChartThemeOverrides, getChartColorPalette } from "./chart-theme-bridge";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */

@@ -11,7 +11,7 @@ export interface UseKanbanFilterReturn {
 }
 
 function matchesFilter(card: KanbanCard, filter: KanbanFilter): boolean {
-  const value = (card as Record<string, unknown>)[filter.field];
+  const value = (card as unknown as Record<string, unknown>)[filter.field];
 
   switch (filter.operator) {
     case 'equals':

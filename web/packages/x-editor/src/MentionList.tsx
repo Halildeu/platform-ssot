@@ -113,7 +113,9 @@ export const MentionList: React.FC<MentionListProps> = ({
 
   // Scroll selected item into view
   useEffect(() => {
-    selectedRef.current?.scrollIntoView({ block: 'nearest' });
+    if (typeof selectedRef.current?.scrollIntoView === 'function') {
+      selectedRef.current.scrollIntoView({ block: 'nearest' });
+    }
   }, [selectedIndex]);
 
   // Close on outside click

@@ -3,9 +3,9 @@ import { render } from '@testing-library/react';
 
 describe('FormBuilder a11y', () => {
   it('FormSection has accessible expand/collapse', async () => {
-    const { FormSection } = await import('../FormSection');
+    const { FormSectionComponent: FormSection } = await import('../FormSection');
     const { container } = render(
-      <FormSection section={{ id: 's1', title: 'Details', fields: [] }}>
+      <FormSection section={{ id: 's1', title: 'Details', fields: [], collapsible: true }}>
         <div>content</div>
       </FormSection>
     );

@@ -82,7 +82,7 @@ describe('useColumnBuilder', () => {
     expect(col.filter).toBe(false);
     expect(col.pinned).toBe('right');
     expect(col.width).toBe(80);
-    expect(col.suppressMenu).toBe(true);
+    expect(col.suppressHeaderMenuButton).toBe(true);
     expect(col.cellRenderer).toBe(renderer);
   });
 

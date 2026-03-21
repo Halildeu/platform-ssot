@@ -12,7 +12,7 @@ RichTextEditor
     format?: 'html' | 'markdown';   // output format
     editable?: boolean;
     placeholder?: string;
-    extensions?: TiptapExtension[];  // additional Tiptap extensions
+    extensions?: EditorExtension[];  // v1: reserved, v2: Tiptap extensions
     density?: 'compact' | 'comfortable' | 'spacious';
     onChange?: (content: string) => void;
     onBlur?: (content: string) => void;
@@ -59,7 +59,7 @@ EditorCodeBlock
 
 ### Type Exports
 - `RichTextEditorProps`, `EditorToolbarProps`, `EditorMenuBubbleProps`
-- `EditorInstance` (Tiptap editor instance type)
+- `EditorInstance` (v1: native EditorCore handle; v2: Tiptap editor instance)
 - `ToolbarGroup`, `BubbleAction`
 - `EditorConfig`, `EditorState`
 
@@ -142,16 +142,16 @@ EditorCodeBlock
 - Placeholder text
 
 ### Client-Only (`'use client'`)
-- Tiptap/ProseMirror editor instance
+- Editor instance (v1: native contentEditable; v2: Tiptap/ProseMirror)
 - All editing interactions (typing, formatting, selection)
 - Toolbar button state (active/inactive)
 - Bubble menu positioning
-- Image upload and drag-drop
-- Mention suggestions popup
+- Image upload and drag-drop (planned)
+- Mention suggestions popup (planned)
 
 ### Hydration Strategy
 - SSR renders content as sanitized HTML in a styled `<div>`
-- Tiptap mounts on client, replaces static HTML with ProseMirror DOM
+- Editor mounts on client (v1: native contentEditable; v2: ProseMirror DOM)
 - Content preserved during swap (no flash)
 
 ### Streaming SSR
@@ -165,7 +165,7 @@ EditorCodeBlock
 interface EditorConfig {
   content?: string;                // initial content (HTML or Markdown)
   format: 'html' | 'markdown';    // output format
-  extensions?: TiptapExtension[];  // additional extensions
+  extensions?: EditorExtension[];  // v1: reserved, v2: Tiptap extensions
   editable?: boolean;
 }
 
@@ -248,7 +248,7 @@ interface ImageConfig {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 45 KB** gzipped (excluding Tiptap core ~60KB and ProseMirror ~80KB)
+- **< 15 KB** gzipped (v1 native implementation; v2 budget: < 45 KB excluding Tiptap core ~60KB and ProseMirror ~80KB)
 - Extensions loaded on demand (mention, table, code-block)
 - Syntax highlighter lazy-loaded on first code block
 
@@ -260,7 +260,7 @@ interface ImageConfig {
 
 ### Memory Budget
 - Editor instance: < 5MB for 10K word document
-- ProseMirror document model grows linearly with content
+- Document model grows linearly with content
 - Image blobs cleaned up after upload
 
 ### Lazy Loading
@@ -277,7 +277,7 @@ interface ImageConfig {
 - **5 visual regression tests** — default editor, dark mode, toolbar states, bubble menu, code block rendering
 
 ### Contract Tests
-- Tiptap extension compatibility verified against installed versions
+- v1: EditorCore interface contract verified; v2: Tiptap extension compatibility
 - HTML output shape validation (no XSS vectors)
 - Markdown round-trip fidelity (HTML -> MD -> HTML)
 

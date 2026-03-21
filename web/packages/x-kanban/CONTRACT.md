@@ -234,9 +234,8 @@ interface CardMoveEvent {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 25 KB** gzipped (including @dnd-kit)
-- @dnd-kit/core ~8KB, @dnd-kit/sortable ~4KB
-- Remaining budget for board logic and styling
+- **< 12 KB** gzipped (v1 HTML5 DnD, no external DnD dependency)
+- v2 budget: < 25 KB gzipped (including @dnd-kit/core ~8KB + @dnd-kit/sortable ~4KB)
 
 ### Render Targets
 - **100 cards** across 5 columns: initial render < 100ms
@@ -262,7 +261,7 @@ interface CardMoveEvent {
 
 ### Contract Tests
 - KanbanCardDef and KanbanColumnDef shape validation
-- @dnd-kit integration: drag events fire correctly
+- v1: DragDropEngine interface contract verified; v2: @dnd-kit drag events fire correctly
 
 ### Documentation
 - API reference page with full props table
