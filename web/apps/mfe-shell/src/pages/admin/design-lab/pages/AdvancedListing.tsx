@@ -63,7 +63,7 @@ export default function AdvancedListing() {
           <button
             key={item.name}
             type="button"
-            onClick={() => navigate(`/admin/design-lab/advanced/${encodeURIComponent(item.name)}`)}
+            onClick={() => navigate(`/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`)}
             className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

@@ -60,7 +60,7 @@ export default function ComponentGroupListing() {
                   type="button"
                   onClick={() =>
                     navigate(
-                      `/admin/design-lab/components/${groupId}/${encodeURIComponent(itemName)}`,
+                      `/admin/design-lab/components/${groupId}/${encodeURIComponent(itemName.replace(/\//g, '~'))}`,
                     )
                   }
                   className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left shadow-sm transition hover:border-action-primary/30 hover:shadow-md"

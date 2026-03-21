@@ -502,7 +502,7 @@ function ExtComponents({
           key={comp.name}
           type="button"
           onClick={() =>
-            navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${encodeURIComponent(comp.name)}`)
+            navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${encodeURIComponent(comp.name.replace(/\//g, '~'))}`)
           }
           className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary/30 hover:shadow-sm"
         >

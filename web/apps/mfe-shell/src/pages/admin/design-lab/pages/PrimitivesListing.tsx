@@ -68,7 +68,7 @@ export default function PrimitivesListing() {
             type="button"
             onClick={() =>
               navigate(
-                `/admin/design-lab/primitives/${prim.groupId}/${encodeURIComponent(prim.name)}`,
+                `/admin/design-lab/primitives/${prim.groupId}/${encodeURIComponent(prim.name.replace(/\//g, '~'))}`,
               )
             }
             className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"

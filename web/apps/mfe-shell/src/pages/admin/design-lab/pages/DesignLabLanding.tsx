@@ -177,7 +177,7 @@ export default function DesignLabLanding() {
           name: item.name,
           type: "component",
           description: item.description,
-          href: `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name)}`,
+          href: `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
         });
       }
       if (results.length >= 20) break;

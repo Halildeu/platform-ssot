@@ -179,12 +179,20 @@ export default function ComponentDetail() {
     for (const key of indexItemMap.keys()) {
       if (isDesignLabUrlTokenFlexibleMatch(key, itemId)) return key;
     }
-    // Try decoding the URL (handles %20 etc.)
+    // Try decoding the URL (handles %20 etc.) and ~ → / restoration
     try {
-      const decoded = decodeURIComponent(itemId);
+      const decoded = decodeURIComponent(itemId).replace(/~/g, ' / ');
       if (indexItemMap.has(decoded)) return decoded;
       for (const key of indexItemMap.keys()) {
         if (isDesignLabUrlTokenFlexibleMatch(key, decoded)) return key;
+      }
+      // Also try without ~ restoration (plain decode)
+      const plainDecoded = decodeURIComponent(itemId);
+      if (plainDecoded !== decoded) {
+        if (indexItemMap.has(plainDecoded)) return plainDecoded;
+        for (const key of indexItemMap.keys()) {
+          if (isDesignLabUrlTokenFlexibleMatch(key, plainDecoded)) return key;
+        }
       }
     } catch { /* noop */ }
     return undefined;

@@ -289,10 +289,10 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
           type: isPrimitive ? "primitive" : isAdvanced ? "advanced" : "component",
           description: item.description,
           href: isPrimitive
-            ? `/admin/design-lab/primitives/${item.taxonomyGroupId}/${encodeURIComponent(item.name)}`
+            ? `/admin/design-lab/primitives/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
             : isAdvanced
-              ? `/admin/design-lab/advanced/${encodeURIComponent(item.name)}`
-              : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name)}`,
+              ? `/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
+              : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
         });
       }
     }
@@ -359,10 +359,10 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
             type: isPrimitive ? "primitive" : isAdvanced ? "advanced" : "component",
             description: sr.explanation ? `AI: ${sr.explanation}` : item.description,
             href: isPrimitive
-              ? `/admin/design-lab/primitives/${item.taxonomyGroupId}/${encodeURIComponent(item.name)}`
+              ? `/admin/design-lab/primitives/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
               : isAdvanced
-                ? `/admin/design-lab/advanced/${encodeURIComponent(item.name)}`
-                : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name)}`,
+                ? `/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`
+                : `/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name.replace(/\//g, '~'))}`,
           });
         }
       });
