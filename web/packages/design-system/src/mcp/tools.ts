@@ -156,10 +156,10 @@ function buildA11yNotes(entry: DesignLabComponentDocEntry): string[] {
     if (api.props.some((p) => p.name.includes('label') || p.name.includes('Label'))) {
       notes.push('Erisilebilir etiket (label) destegi vardir.');
     }
-    if (api.stateModel.some((s) => s.includes('disabled'))) {
+    if (api.stateModel?.some((s) => s.includes('disabled'))) {
       notes.push('Disabled durumda interaction otomatik olarak engellenir.');
     }
-    if (api.stateModel.some((s) => s.includes('focus'))) {
+    if (api.stateModel?.some((s) => s.includes('focus'))) {
       notes.push('Focus yonetimi ve focus-visible destegi vardir.');
     }
   }

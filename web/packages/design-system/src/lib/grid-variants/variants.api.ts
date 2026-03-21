@@ -498,7 +498,7 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
         : Array.isArray((payload as PagedResultDto<VariantDto>).items)
           ? (payload as PagedResultDto<VariantDto>).items
           : [];
-      const normalized = list
+      const normalized = (list ?? [])
         .map((variant) => mapVariantDtoToGridVariant(variant as VariantDto))
         .sort(compareGridVariants);
       writeLocalVariants(gridId, normalized);
@@ -519,7 +519,7 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
       : Array.isArray((payload as PagedResultDto<VariantDto>).items)
         ? (payload as PagedResultDto<VariantDto>).items
         : [];
-    const normalized = list
+    const normalized = (list ?? [])
       .map((variant) => mapVariantDtoToGridVariant(variant as VariantDto))
       .sort(compareGridVariants);
 

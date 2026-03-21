@@ -204,7 +204,7 @@ export const FocusTrap: React.FC<FocusTrapProps> = ({
   const ref = useFocusTrap({ active, autoFocus, restoreFocus, initialFocusRef });
 
   return (
-    <div ref={ref} className={className} data-focus-trap={active ? "" : undefined}>
+    <div ref={ref as React.RefObject<HTMLDivElement>} className={className} data-focus-trap={active ? "" : undefined}>
       {children}
     </div>
   );

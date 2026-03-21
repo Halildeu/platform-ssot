@@ -18,7 +18,7 @@ const meta: Meta<typeof Tooltip> = {
     showArrow: { control: 'boolean' },
   },
   decorators: [
-    (Story) => (
+    (Story: React.ComponentType) => (
       <div style={{ padding: 80, display: 'flex', justifyContent: 'center' }}>
         <Story />
       </div>

@@ -236,11 +236,11 @@ export const VariantIntegration = <RowData = unknown,>({
 
   // ── Derived lists ──────────────────────────────────────────────────
   const personalVariants = useMemo(
-    () => variants.filter((v) => !v.isGlobal).sort(compareGridVariants),
+    () => variants.filter((v) => !v.isGlobal).sort(compareGridVariants as (a: GridVariant, b: GridVariant) => number),
     [variants],
   );
   const globalVariants = useMemo(
-    () => variants.filter((v) => v.isGlobal).sort(compareGridVariants),
+    () => variants.filter((v) => v.isGlobal).sort(compareGridVariants as (a: GridVariant, b: GridVariant) => number),
     [variants],
   );
 

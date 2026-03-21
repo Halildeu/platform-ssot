@@ -127,42 +127,42 @@ export function createLazyComponent<P extends Record<string, unknown>>(
 
 /** Lazy AG Grid */
 export const LazyAgGrid = createLazyComponent(
-  () => import('../advanced/data-grid').then((m) => ({ default: m.EntityGridTemplate as unknown as ComponentType<Record<string, unknown>> })),
+  () => import('../advanced/data-grid').then((m) => ({ default: m.EntityGridTemplate as unknown as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyAgGrid',
 );
 
 /** Lazy Calendar */
 export const LazyCalendar = createLazyComponent(
-  () => import('../components/calendar').then((m) => ({ default: m.Calendar as unknown as ComponentType<Record<string, unknown>> })),
+  () => import('../components/calendar').then((m) => ({ default: m.Calendar as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyCalendar',
 );
 
 /** Lazy Charts (BarChart) */
 export const LazyCharts = createLazyComponent(
-  () => import('../components/charts').then((m) => ({ default: m.BarChart as unknown as ComponentType<Record<string, unknown>> })),
+  () => import('../components/charts').then((m) => ({ default: m.BarChart as unknown as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyCharts',
 );
 
 /** Lazy ColorPicker */
 export const LazyColorPicker = createLazyComponent(
-  () => import('../components/color-picker').then((m) => ({ default: m.ColorPicker as unknown as ComponentType<Record<string, unknown>> })),
+  () => import('../components/color-picker').then((m) => ({ default: m.ColorPicker as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyColorPicker',
 );
 
 /** Lazy Transfer */
 export const LazyTransfer = createLazyComponent(
-  () => import('../components/transfer').then((m) => ({ default: m.Transfer as unknown as ComponentType<Record<string, unknown>> })),
+  () => import('../components/transfer').then((m) => ({ default: m.Transfer as unknown as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyTransfer',
 );
 
 /** Lazy JsonViewer */
 export const LazyJsonViewer = createLazyComponent(
-  () => import('../components/json-viewer').then((m) => ({ default: m.JsonViewer as unknown as ComponentType<Record<string, unknown>> })),
+  () => import('../components/json-viewer').then((m) => ({ default: m.JsonViewer as unknown as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyJsonViewer',
 );
 
 /** Lazy TreeTable */
 export const LazyTreeTable = createLazyComponent(
-  () => import('../components/tree-table').then((m) => ({ default: m.TreeTable as unknown as ComponentType<Record<string, unknown>> })),
+  () => import('../components/tree-table').then((m) => ({ default: m.TreeTable as unknown as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyTreeTable',
 );
