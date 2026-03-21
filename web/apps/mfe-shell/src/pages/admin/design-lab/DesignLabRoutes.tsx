@@ -247,11 +247,10 @@ export const DesignLabRoutes: React.FC = () => (
         {/* Adoption Insights */}
         <Route path="insights" element={<InsightsDashboardPage />} />
 
-        {/* Quality Audit */}
-        <Route path="quality-audit" element={<QualityAuditPage />} />
-
-        {/* Quality Dashboard */}
+        {/* Quality Command Center (merged audit + dashboard) */}
         <Route path="quality-dashboard" element={<QualityDashboardPage />} />
+        {/* Legacy redirect: quality-audit → quality-dashboard */}
+        <Route path="quality-audit" element={<QualityDashboardPage />} />
 
         {/* Visual Composition Builder */}
         <Route path="compose" element={<ComposePage />} />

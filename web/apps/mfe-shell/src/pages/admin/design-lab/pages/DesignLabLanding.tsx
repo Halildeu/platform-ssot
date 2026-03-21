@@ -427,7 +427,7 @@ export default function DesignLabLanding() {
         </button>
         <button
           type="button"
-          onClick={() => navigate("/admin/design-lab/quality-audit")}
+          onClick={() => navigate("/admin/design-lab/quality-dashboard")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 transition-transform duration-300 group-hover:scale-110">

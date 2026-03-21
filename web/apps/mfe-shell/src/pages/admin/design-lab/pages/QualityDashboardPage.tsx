@@ -487,6 +487,27 @@ export default function QualityDashboardPage() {
         </div>
       </div>
 
+      {/* ─── Coverage KPIs ─── */}
+      <div className="grid grid-cols-5 gap-3">
+        {(() => {
+          const total = coverageItems.length || 1;
+          const dims = [
+            { label: "Rehber", count: coverageItems.filter(c => c.hasGuide).length, color: "indigo" },
+            { label: "Token'lar", count: coverageItems.filter(c => c.hasTokens).length, color: "violet" },
+            { label: "Örnekler", count: coverageItems.filter(c => c.hasExamples).length, color: "blue" },
+            { label: "Oyun Alanı", count: coverageItems.filter(c => c.hasPlayground).length, color: "cyan" },
+            { label: "Testler", count: coverageItems.filter(c => c.hasTests).length, color: "emerald" },
+          ];
+          return dims.map(d => (
+            <div key={d.label} className="rounded-xl border border-border-subtle bg-surface-default p-4 text-center">
+              <Text className="text-2xl font-bold text-text-primary">{Math.round((d.count / total) * 100)}%</Text>
+              <Text className="text-xs text-text-secondary">{d.label}</Text>
+              <Text className="text-[10px] text-text-tertiary">{d.count}/{coverageItems.length}</Text>
+            </div>
+          ));
+        })()}
+      </div>
+
       {/* ─── Coverage Gaps Matrix ─── */}
       <div id="coverage-matrix">
         <CoverageMatrix items={coverageItems} onNavigate={handleComponentNavigate} />
