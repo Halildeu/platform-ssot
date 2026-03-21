@@ -1,0 +1,48 @@
+# @mfe/design-system
+
+Enterprise-grade React component library with 100+ components,
+6 X Suite packages, and a composable block system.
+
+## Quick Start
+
+```bash
+pnpm add @mfe/design-system
+```
+
+```tsx
+import { Button, ThemeProvider } from '@mfe/design-system';
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <Button variant="contained" color="primary">
+        Get Started
+      </Button>
+    </ThemeProvider>
+  );
+}
+```
+
+## Packages
+
+| Package | Components | Tests |
+|---------|-----------|-------|
+| @mfe/design-system | 112 | 5274 |
+| @mfe/x-data-grid | 11 | 75 |
+| @mfe/x-charts | 18 | 119 |
+| @mfe/x-editor | 13 | 40 |
+| @mfe/x-kanban | 11 | 59 |
+| @mfe/x-scheduler | 14 | 76 |
+| @mfe/x-form-builder | 12 | 45 |
+| @mfe/blocks | 14 | 16 |
+
+## Architecture
+
+The design system follows a layered architecture:
+
+- **Core** — Theme tokens, utility hooks, base primitives
+- **Components** — 112 production-ready UI components
+- **X Suite** — Six domain-specific enterprise packages
+- **Blocks** — Composable page-level building blocks
+
+All packages share a single theme provider and are tree-shakeable.

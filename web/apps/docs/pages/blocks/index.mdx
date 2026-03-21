@@ -1,0 +1,57 @@
+# Blocks & App Kits
+
+Composable page blocks for rapid application development.
+Blocks are pre-wired layouts that combine multiple design system
+components into production-ready page sections.
+
+## Available Blocks
+
+| Block | Description |
+|-------|-------------|
+| `PageHeader` | Title, breadcrumbs, and action toolbar |
+| `DataPageLayout` | Grid + filters + toolbar composition |
+| `DetailPageLayout` | Form + sidebar + tab navigation |
+| `DashboardGrid` | Responsive widget grid layout |
+| `StatsRow` | KPI metric cards in a row |
+| `FilterBar` | Composable filter chip bar |
+| `EmptyState` | Illustrated empty state placeholder |
+| `ErrorBoundary` | Error fallback with retry action |
+| `LoadingSkeleton` | Shimmer loading placeholders |
+| `WizardLayout` | Multi-step wizard container |
+| `SplitView` | Resizable two-pane layout |
+| `CommandPalette` | Keyboard-driven command search |
+| `NotificationCenter` | Toast and notification stack |
+| `ConfirmDialog` | Confirmation modal with variants |
+
+## Usage
+
+Blocks compose core components with sensible defaults:
+
+```tsx
+import { DataPageLayout, FilterBar, StatsRow } from '@mfe/blocks';
+import { DataGrid } from '@mfe/x-data-grid';
+
+function InvoicesPage() {
+  return (
+    <DataPageLayout
+      title="Invoices"
+      stats={<StatsRow items={kpis} />}
+      filters={<FilterBar filters={filterConfig} />}
+    >
+      <DataGrid rows={invoices} columns={columns} />
+    </DataPageLayout>
+  );
+}
+```
+
+## Customization
+
+Override block defaults via props or wrap with custom styles:
+
+```tsx
+<PageHeader
+  title="Dashboard"
+  breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Dashboard' }]}
+  actions={<Button>Export</Button>}
+/>
+```

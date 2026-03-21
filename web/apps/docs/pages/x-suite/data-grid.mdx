@@ -1,0 +1,60 @@
+# X-Data-Grid
+
+Recipe layer over AG Grid 34.3 with variant persistence,
+column builder, and server-side patterns.
+
+## Quick Start
+
+```tsx
+import { DataGrid, useColumnBuilder } from '@mfe/x-data-grid';
+
+const columns = useColumnBuilder<Invoice>()
+  .text('invoiceNo', { header: 'Invoice #', pinned: 'left' })
+  .currency('amount', { header: 'Amount' })
+  .date('dueDate', { header: 'Due Date' })
+  .status('status', { variants: ['draft', 'sent', 'paid'] })
+  .build();
+
+<DataGrid rows={invoices} columns={columns} variant="compact" />
+```
+
+## Variants
+
+| Variant | Description |
+|---------|-------------|
+| `default` | Standard row height, full feature set |
+| `compact` | Dense layout for data-heavy views |
+| `master-detail` | Expandable rows with nested grids |
+| `tree` | Hierarchical row grouping |
+
+## Column Builder
+
+The fluent `useColumnBuilder` API provides type-safe column definitions:
+
+```tsx
+const columns = useColumnBuilder<Product>()
+  .text('name', { flex: 2 })
+  .number('stock', { editable: true })
+  .currency('price', { currency: 'TRY' })
+  .action('edit', { icon: 'pencil', onClick: handleEdit })
+  .build();
+```
+
+## Server-Side Data
+
+For large datasets, enable server-side row model:
+
+```tsx
+<DataGrid
+  rows={[]}
+  columns={columns}
+  serverSide
+  datasource={serverDatasource}
+  cacheBlockSize={100}
+/>
+```
+
+## Variant Persistence
+
+Grid state (column order, sort, filters) persists automatically
+per user and per variant via the `useGridPersistence` hook.

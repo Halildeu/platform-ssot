@@ -1,0 +1,68 @@
+# X-Form-Builder
+
+Dynamic form generation from JSON schema with 12 components
+for building, rendering, and validating complex forms.
+
+## Quick Start
+
+```tsx
+import { FormBuilder, FormRenderer } from '@mfe/x-form-builder';
+
+// Design mode
+<FormBuilder schema={schema} onChange={setSchema} />
+
+// Render mode
+<FormRenderer schema={schema} onSubmit={handleSubmit} />
+```
+
+## Components
+
+| Component | Purpose |
+|-----------|---------|
+| `FormBuilder` | Visual drag-and-drop form designer |
+| `FormRenderer` | Renders forms from JSON schema |
+| `FieldPalette` | Available field type sidebar |
+| `FieldConfig` | Field property editor panel |
+| `SectionBlock` | Grouped field section |
+| `ConditionalRule` | Show/hide logic builder |
+| `ValidationRule` | Field validation configurator |
+| `RepeatableGroup` | Dynamic array of field groups |
+| `FormPreview` | Live form preview pane |
+| `SchemaImport` | Import schema from JSON/YAML |
+| `SchemaExport` | Export schema to JSON/YAML |
+| `SubmissionViewer` | View submitted form data |
+
+## Schema Format
+
+Forms are defined as JSON schemas:
+
+```json
+{
+  "title": "Contact Form",
+  "fields": [
+    { "type": "text", "name": "fullName", "label": "Full Name", "required": true },
+    { "type": "email", "name": "email", "label": "Email" },
+    { "type": "select", "name": "department", "label": "Department",
+      "options": ["Engineering", "Sales", "Support"] },
+    { "type": "textarea", "name": "message", "label": "Message" }
+  ]
+}
+```
+
+## Conditional Logic
+
+Show or hide fields based on other field values:
+
+```json
+{
+  "type": "text",
+  "name": "otherReason",
+  "label": "Please specify",
+  "condition": { "field": "reason", "eq": "other" }
+}
+```
+
+## Validation
+
+Built-in validators include `required`, `min`, `max`, `pattern`,
+`email`, `url`, and custom async validators.

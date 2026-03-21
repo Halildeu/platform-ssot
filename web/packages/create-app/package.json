@@ -1,0 +1,19 @@
+{
+  "name": "@mfe/create-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CLI scaffold generator for @mfe/design-system applications",
+  "license": "UNLICENSED",
+  "bin": {
+    "create-mfe-app": "./src/cli.ts"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "prompts": "^2.4.0",
+    "kleur": "^4.1.0"
+  }
+}

@@ -1,0 +1,62 @@
+# X-Editor
+
+Rich text editing package with 13 components for content authoring,
+inline annotations, and collaborative editing patterns.
+
+## Quick Start
+
+```tsx
+import { RichEditor } from '@mfe/x-editor';
+
+<RichEditor
+  value={content}
+  onChange={setContent}
+  toolbar={['bold', 'italic', 'heading', 'link', 'image', 'table']}
+/>
+```
+
+## Components
+
+| Component | Purpose |
+|-----------|---------|
+| `RichEditor` | Full-featured WYSIWYG editor |
+| `MarkdownEditor` | Markdown source with live preview |
+| `InlineEditor` | Click-to-edit inline text |
+| `CodeBlock` | Syntax-highlighted code editing |
+| `MentionPlugin` | @mention autocomplete |
+| `CommentThread` | Inline annotation threads |
+| `ImageUploader` | Drag-and-drop image insertion |
+| `TableEditor` | Visual table manipulation |
+| `EmojiPicker` | Emoji insertion palette |
+| `LinkDialog` | URL insertion with preview |
+| `SlashCommand` | Slash-command block insertion |
+| `ToolbarButton` | Custom toolbar extension point |
+| `EditorProvider` | Context provider for nested editors |
+
+## Toolbar Customization
+
+Build custom toolbars by composing toolbar items:
+
+```tsx
+<RichEditor
+  toolbar={[
+    'bold', 'italic', 'underline',
+    '|',
+    'heading', 'bulletList', 'orderedList',
+    '|',
+    'link', 'image', 'table',
+  ]}
+/>
+```
+
+## Output Formats
+
+The editor supports multiple serialization formats:
+
+```tsx
+<RichEditor
+  outputFormat="html"    // 'html' | 'markdown' | 'json'
+  value={content}
+  onChange={setContent}
+/>
+```

@@ -1,0 +1,67 @@
+# X-Kanban
+
+Board and workflow visualization with drag-and-drop columns,
+swimlanes, and WIP limits.
+
+## Quick Start
+
+```tsx
+import { KanbanBoard } from '@mfe/x-kanban';
+
+<KanbanBoard
+  columns={['Backlog', 'In Progress', 'Review', 'Done']}
+  items={tasks}
+  onMove={handleMove}
+/>
+```
+
+## Components
+
+| Component | Purpose |
+|-----------|---------|
+| `KanbanBoard` | Full board with columns |
+| `KanbanColumn` | Single column container |
+| `KanbanCard` | Draggable card item |
+| `KanbanSwimlane` | Horizontal row grouping |
+| `KanbanHeader` | Column header with actions |
+| `KanbanFooter` | Column footer (add item) |
+| `KanbanFilter` | Board-level filter bar |
+| `KanbanAvatar` | Assignee avatar chip |
+| `KanbanLabel` | Color-coded label tag |
+| `KanbanWipLimit` | WIP limit indicator |
+| `KanbanCollapsed` | Collapsed column state |
+
+## WIP Limits
+
+Set work-in-progress limits per column to enforce workflow policies:
+
+```tsx
+<KanbanBoard
+  columns={[
+    { title: 'Backlog' },
+    { title: 'In Progress', wipLimit: 5 },
+    { title: 'Review', wipLimit: 3 },
+    { title: 'Done' },
+  ]}
+  items={tasks}
+  onMove={handleMove}
+/>
+```
+
+## Swimlanes
+
+Group cards horizontally by a field:
+
+```tsx
+<KanbanBoard
+  columns={columns}
+  items={tasks}
+  swimlaneField="priority"
+  onMove={handleMove}
+/>
+```
+
+## Drag and Drop
+
+Cards support drag-and-drop between columns with animated transitions.
+The `onMove` callback receives source and destination metadata.

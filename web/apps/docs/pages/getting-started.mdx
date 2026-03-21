@@ -1,0 +1,75 @@
+# Getting Started
+
+## Installation
+
+Install the core design system package:
+
+```bash
+pnpm add @mfe/design-system
+```
+
+For X Suite packages, install individually:
+
+```bash
+pnpm add @mfe/x-data-grid @mfe/x-charts @mfe/x-editor
+```
+
+## First Component
+
+Wrap your application with `ThemeProvider` and start using components:
+
+```tsx
+import { ThemeProvider, Button, TextField } from '@mfe/design-system';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <TextField label="Email" variant="outlined" />
+      <Button variant="contained">Submit</Button>
+    </ThemeProvider>
+  );
+}
+```
+
+## Theming
+
+Create a custom theme by extending the default tokens:
+
+```tsx
+import { createTheme, ThemeProvider } from '@mfe/design-system';
+
+const theme = createTheme({
+  palette: {
+    primary: { main: '#1a56db' },
+    secondary: { main: '#6b7280' },
+  },
+  shape: { borderRadius: 8 },
+});
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      {/* Your app */}
+    </ThemeProvider>
+  );
+}
+```
+
+## TypeScript Support
+
+All components ship with full TypeScript declarations. Extend theme types
+for custom tokens:
+
+```ts
+declare module '@mfe/design-system' {
+  interface PaletteOptions {
+    brand?: { main: string; light: string; dark: string };
+  }
+}
+```
+
+## Next Steps
+
+- Explore the [X Suite](/x-suite) packages for enterprise features
+- Browse [Blocks](/blocks) for pre-built page compositions
+- Check [Migration](/migration) guides if coming from another library

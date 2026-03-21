@@ -1,0 +1,64 @@
+# X-Charts
+
+Data visualization package with 18 chart components built
+for enterprise dashboards and reporting.
+
+## Quick Start
+
+```tsx
+import { BarChart, LineChart, PieChart } from '@mfe/x-charts';
+
+<BarChart
+  data={salesData}
+  xField="month"
+  yField="revenue"
+  color="primary"
+/>
+```
+
+## Chart Types
+
+| Component | Use Case |
+|-----------|----------|
+| `BarChart` | Category comparisons |
+| `LineChart` | Trends over time |
+| `AreaChart` | Volume trends |
+| `PieChart` | Part-to-whole ratios |
+| `ScatterChart` | Correlation analysis |
+| `RadarChart` | Multi-axis comparison |
+| `GaugeChart` | KPI indicators |
+| `HeatmapChart` | Density visualization |
+| `TreemapChart` | Hierarchical proportions |
+| `FunnelChart` | Conversion pipelines |
+
+## Theming
+
+Charts inherit the global palette from `ThemeProvider` automatically.
+Override per-chart with the `color` or `palette` props:
+
+```tsx
+<LineChart
+  data={metrics}
+  xField="date"
+  yField="users"
+  palette={['#1a56db', '#e74c3c', '#2ecc71']}
+  animate
+/>
+```
+
+## Responsive Behavior
+
+All charts are responsive by default. Use the `aspectRatio` prop
+to control proportions:
+
+```tsx
+<BarChart data={data} xField="q" yField="sales" aspectRatio={16 / 9} />
+```
+
+## Export
+
+Export charts as PNG or SVG using the `useChartExport` hook:
+
+```tsx
+const { exportPng, exportSvg } = useChartExport(chartRef);
+```

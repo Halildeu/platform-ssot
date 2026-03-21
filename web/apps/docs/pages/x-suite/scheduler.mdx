@@ -1,0 +1,75 @@
+# X-Scheduler
+
+Calendar and scheduling package with 14 components for
+event management, resource booking, and timeline views.
+
+## Quick Start
+
+```tsx
+import { Scheduler } from '@mfe/x-scheduler';
+
+<Scheduler
+  events={events}
+  view="week"
+  onEventCreate={handleCreate}
+  onEventMove={handleMove}
+/>
+```
+
+## Components
+
+| Component | Purpose |
+|-----------|---------|
+| `Scheduler` | Full calendar with view switching |
+| `DayView` | Single day hour grid |
+| `WeekView` | 7-day columnar layout |
+| `MonthView` | Monthly calendar grid |
+| `TimelineView` | Horizontal resource timeline |
+| `AgendaView` | List-based event display |
+| `EventCard` | Draggable event block |
+| `ResourceColumn` | Resource allocation column |
+| `DateNavigator` | Date range navigation bar |
+| `ViewSwitcher` | View mode toggle |
+| `MiniCalendar` | Compact date picker sidebar |
+| `RecurrenceEditor` | Recurrence rule builder |
+| `ConflictIndicator` | Overlapping event warning |
+| `AvailabilityOverlay` | Working hours highlight |
+
+## Views
+
+Switch between views with the `view` prop:
+
+```tsx
+<Scheduler
+  events={events}
+  view="month"        // 'day' | 'week' | 'month' | 'timeline' | 'agenda'
+  resources={rooms}   // Required for timeline view
+/>
+```
+
+## Resource Scheduling
+
+Assign events to resources (rooms, people, equipment):
+
+```tsx
+<Scheduler
+  view="timeline"
+  resources={[
+    { id: 'room-a', title: 'Conference Room A' },
+    { id: 'room-b', title: 'Conference Room B' },
+  ]}
+  events={bookings}
+/>
+```
+
+## Recurring Events
+
+Use the built-in recurrence editor for repeating events:
+
+```tsx
+<RecurrenceEditor
+  value={rrule}
+  onChange={setRrule}
+  maxOccurrences={52}
+/>
+```
