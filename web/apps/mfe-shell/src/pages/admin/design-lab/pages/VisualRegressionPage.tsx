@@ -37,43 +37,56 @@ type VRResult = {
   snapshotUrl?: string;
 };
 
-/* ---- Generate simulated VR data from index ---- */
+/* ---- Derived VR data from repo structure & Playwright config ---- */
+
+/**
+ * Derived from actual repo structure:
+ * - Playwright projects: chromium, firefox, webkit (from playwright.config.ts)
+ * - Chromatic workflow: .github/workflows/chromatic.yml
+ * - Visual regression workflow: packages/design-system/.github/workflows/visual-regression.yml
+ * - Test file count derived from index items (each component = 1 potential spec)
+ */
 
 function useVisualRegressionData() {
   const { index } = useDesignLab();
 
   return useMemo(() => {
-    const results: VRResult[] = index.items.map((item, idx) => {
-      // Deterministic status distribution based on index
-      const statusPool: VRStatus[] = ["pass", "pass", "pass", "pass", "pass", "pass", "changed", "changed", "fail", "new"];
-      const status = statusPool[idx % statusPool.length];
-      const storyCount = 3 + (idx % 5);
-      const changedStories = status === "changed" ? 1 + (idx % 2) : status === "fail" ? storyCount : 0;
+    // Derive from actual Playwright config & workflow presence
+    const playwrightBrowsers = ["Chromium", "Firefox", "WebKit"] as const;
+    const thresholdPixelRatio = 0.01;
+    const chromaticWorkflowExists = true;   // .github/workflows/chromatic.yml
+    const visualRegressionWorkflowExists = true; // packages/design-system/.github/workflows/visual-regression.yml
 
-      return {
-        componentName: item.name,
-        layer: item.taxonomyGroupId ?? "components",
-        status,
-        storyCount,
-        changedStories,
-        lastChecked: new Date(Date.now() - (idx * 3600000) % (48 * 3600000)),
-      };
-    });
+    // Each indexed component represents a potential visual test target
+    const results: VRResult[] = index.items.map((item) => ({
+      componentName: item.name,
+      layer: item.taxonomyGroupId ?? "components",
+      // No live CI data — show "pending" for all; actual pass/fail comes from CI artefacts
+      status: "skipped" as VRStatus,
+      storyCount: 0,
+      changedStories: 0,
+      lastChecked: new Date(0), // No live run data
+    }));
 
-    const passCount = results.filter((r) => r.status === "pass").length;
-    const failCount = results.filter((r) => r.status === "fail").length;
-    const changedCount = results.filter((r) => r.status === "changed").length;
-    const newCount = results.filter((r) => r.status === "new").length;
-    const totalSnapshots = results.reduce((sum, r) => sum + r.storyCount, 0);
-    const acceptanceRate = results.length > 0 ? Math.round((passCount / results.length) * 100) : 0;
+    const passCount = 0;
+    const failCount = 0;
+    const changedCount = 0;
+    const newCount = 0;
+    const totalSnapshots = index.items.length * playwrightBrowsers.length;
+    const acceptanceRate = 0; // No live results available
 
-    // Simulated build info
+    // Derived build info — no live CI data
     const buildInfo = {
-      buildNumber: 847,
+      buildNumber: null as number | null,
       branch: "main",
-      commit: "a3f9c12",
-      triggeredAt: new Date(Date.now() - 4 * 3600000),
-      duration: "4m 23s",
+      commit: null as string | null,
+      triggeredAt: null as Date | null,
+      duration: null as string | null,
+      // Infrastructure summary
+      browsers: playwrightBrowsers,
+      thresholdPixelRatio,
+      chromaticWorkflow: chromaticWorkflowExists,
+      playwrightWorkflow: visualRegressionWorkflowExists,
     };
 
     return { results, passCount, failCount, changedCount, newCount, totalSnapshots, acceptanceRate, buildInfo };
@@ -226,7 +239,7 @@ export const VisualRegressionPage: React.FC = () => {
               <Text as="h1" className="text-xl font-bold text-text-primary">
                 Visual Regression
               </Text>
-              <DataProvenanceBadge level="simulated" />
+              <DataProvenanceBadge level="derived" />
             </div>
             <Text variant="secondary" className="text-sm">
               Per-component snapshot comparison & change detection
@@ -242,20 +255,39 @@ export const VisualRegressionPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Build Info Banner */}
-      <div className="flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default px-5 py-3">
-        <div className="flex items-center gap-2">
-          <GitBranch className="h-4 w-4 text-text-secondary" />
-          <Text className="text-sm font-medium text-text-primary">Build #{data.buildInfo.buildNumber}</Text>
+      {/* Build Info Banner — derived from repo config */}
+      <div className="flex flex-col gap-2 rounded-2xl border border-border-subtle bg-surface-default px-5 py-3">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <GitBranch className="h-4 w-4 text-text-secondary" />
+            <Text className="text-sm font-medium text-text-primary">
+              {data.buildInfo.browsers.join(" · ")}
+            </Text>
+          </div>
+          <span className="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-mono text-text-secondary">
+            threshold: {data.buildInfo.thresholdPixelRatio}
+          </span>
+          {data.buildInfo.chromaticWorkflow && (
+            <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+              Chromatic CI
+            </span>
+          )}
+          {data.buildInfo.playwrightWorkflow && (
+            <span className="rounded-md bg-blue-100 px-2 py-0.5 text-[10px] font-semibold text-blue-700">
+              Playwright CI
+            </span>
+          )}
         </div>
-        <span className="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-mono text-text-secondary">
-          {data.buildInfo.branch}
-        </span>
-        <span className="rounded-md bg-surface-muted px-2 py-0.5 text-xs font-mono text-text-secondary">
-          {data.buildInfo.commit}
-        </span>
-        <Text variant="secondary" className="ml-auto text-xs">
-          {data.buildInfo.duration} · {getTimeAgo(data.buildInfo.triggeredAt)}
+        <Text variant="secondary" className="text-xs">
+          Son sonuclar CI artefaktindan alinacak.{" "}
+          <a
+            href="https://github.com/Halildeu/web/actions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-action-primary underline"
+          >
+            GitHub Actions
+          </a>
         </Text>
       </div>
 

@@ -11,54 +11,51 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
-import { AdoptionHeatmap, TrendSparkline } from "../insights/AdoptionHeatmap";
+import { AdoptionHeatmap } from "../insights/AdoptionHeatmap";
 import {
   getAdoptionData,
-  getTopRising,
-  getTopDeclining,
+  getMostUsed,
+  getLeastUsed,
   getUndocumentedBacklog,
-  CONSUMER_APPS,
+  getAdoptionRate,
+  deriveConsumerApps,
 } from "../insights/insightsUtils";
 import type { AdoptionEntry } from "../insights/insightsUtils";
+import { useDesignLab } from "../DesignLabProvider";
+import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 
 /* ------------------------------------------------------------------ */
 /*  InsightsDashboardPage — Component adoption metrics & trends        */
 /*                                                                     */
-/*  Sections:                                                          */
-/*  1. Summary cards (total, documented, rising, declining)            */
-/*  2. Adoption heatmap (component × app)                              */
-/*  3. Rising / Declining lists with sparklines                        */
-/*  4. Undocumented backlog with priority scores                       */
+/*  Derived from real doc entry whereUsed data.                        */
+/*  No simulated/mock data — adoption is calculated from actual usage. */
 /* ------------------------------------------------------------------ */
 
 type ViewMode = "heatmap" | "table";
 
 const STATUS_ICON: Record<string, React.ReactNode> = {
-  rising: <ArrowUpRight className="h-3.5 w-3.5 text-emerald-500" />,
-  declining: <ArrowDownRight className="h-3.5 w-3.5 text-red-500" />,
-  stable: <Minus className="h-3.5 w-3.5 text-[var(--text-subtle)]" />,
+  adopted: <ArrowUpRight className="h-3.5 w-3.5 text-emerald-500" />,
+  unused: <Minus className="h-3.5 w-3.5 text-[var(--text-subtle)]" />,
 };
 
 const STATUS_BADGE: Record<string, string> = {
-  rising: "bg-emerald-100 text-emerald-700",
-  declining: "bg-red-100 text-red-700",
-  stable: "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
+  adopted: "bg-emerald-100 text-emerald-700",
+  unused: "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
 };
 
 export default function InsightsDashboardPage() {
+  const { index, docEntryMap } = useDesignLab();
   const [viewMode, setViewMode] = useState<ViewMode>("heatmap");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const data = useMemo(() => getAdoptionData(), []);
-  const rising = useMemo(() => getTopRising(data), [data]);
-  const declining = useMemo(() => getTopDeclining(data), [data]);
+  const consumerApps = useMemo(() => deriveConsumerApps(index.items), [index]);
+  const data = useMemo(() => getAdoptionData(index.items, docEntryMap, consumerApps), [index, docEntryMap, consumerApps]);
+  const mostUsed = useMemo(() => getMostUsed(data), [data]);
+  const leastUsed = useMemo(() => getLeastUsed(data), [data]);
   const backlog = useMemo(() => getUndocumentedBacklog(data), [data]);
+  const adoptionRate = useMemo(() => getAdoptionRate(data), [data]);
 
   const documented = data.filter((d) => d.documented).length;
-  const totalApps = CONSUMER_APPS.length;
-  const avgAdoption = Math.round(
-    data.reduce((sum, d) => sum + Object.values(d.apps).filter(Boolean).length, 0) / data.length * 100 / totalApps,
-  );
 
   const filtered = useMemo(() => {
     if (!searchQuery) return data;
@@ -74,9 +71,12 @@ export default function InsightsDashboardPage() {
           <Activity className="h-5 w-5 text-violet-600" />
         </div>
         <div>
-          <Text as="h1" className="text-xl font-bold text-text-primary">Adoption Insights</Text>
+          <div className="flex items-center gap-2">
+            <Text as="h1" className="text-xl font-bold text-text-primary">Adoption Insights</Text>
+            <DataProvenanceBadge level="derived" />
+          </div>
           <Text variant="secondary" className="text-sm">
-            {data.length} components tracked across {totalApps} consumer apps
+            {data.length} bilesen, {consumerApps.length} tuketici uygulamada izleniyor (whereUsed verisinden)
           </Text>
         </div>
       </div>
@@ -84,28 +84,29 @@ export default function InsightsDashboardPage() {
       {/* Summary Cards */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <SummaryCard
-          label="Total Components"
+          label="Toplam Bilesen"
           value={data.length}
           icon={<BarChart3 className="h-4 w-4 text-indigo-500" />}
           color="bg-indigo-50"
         />
         <SummaryCard
-          label="Documented"
+          label="Dokumante"
           value={`${documented}/${data.length}`}
-          sub={`${Math.round((documented / data.length) * 100)}%`}
+          sub={`${data.length > 0 ? Math.round((documented / data.length) * 100) : 0}%`}
           icon={<FileQuestion className="h-4 w-4 text-amber-500" />}
           color="bg-amber-50"
         />
         <SummaryCard
-          label="Rising"
-          value={rising.length}
+          label="Kullanilan"
+          value={data.filter((d) => d.status === "adopted").length}
+          sub={`${adoptionRate}% benimseme`}
           icon={<TrendingUp className="h-4 w-4 text-emerald-500" />}
           color="bg-emerald-50"
         />
         <SummaryCard
-          label="Avg Adoption"
-          value={`${avgAdoption}%`}
-          sub={`across ${totalApps} apps`}
+          label="Kullanilmayan"
+          value={data.filter((d) => d.status === "unused").length}
+          sub="whereUsed bos"
           icon={<Activity className="h-4 w-4 text-violet-500" />}
           color="bg-violet-50"
         />
@@ -134,7 +135,7 @@ export default function InsightsDashboardPage() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Filter components..."
+          placeholder="Bilesen filtrele..."
           className="rounded-lg border border-border-subtle bg-surface-default px-3 py-1.5 text-xs outline-none focus:border-action-primary"
         />
       </div>
@@ -142,19 +143,18 @@ export default function InsightsDashboardPage() {
       {/* Main Content */}
       {viewMode === "heatmap" ? (
         <div className="overflow-x-auto rounded-2xl border border-border-subtle bg-surface-default p-4">
-          <AdoptionHeatmap data={filtered} />
+          <AdoptionHeatmap data={filtered} consumerApps={consumerApps} />
         </div>
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-border-subtle">
           <table className="w-full">
             <thead>
               <tr className="bg-surface-canvas text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-                <th className="px-4 py-3 text-left">Component</th>
-                <th className="px-3 py-3 text-center">Apps</th>
-                <th className="px-3 py-3 text-center">Trend</th>
-                <th className="px-3 py-3 text-center">Status</th>
-                <th className="px-3 py-3 text-center">Documented</th>
-                <th className="px-3 py-3 text-center">Priority</th>
+                <th className="px-4 py-3 text-left">Bilesen</th>
+                <th className="px-3 py-3 text-center">Uygulamalar</th>
+                <th className="px-3 py-3 text-center">Durum</th>
+                <th className="px-3 py-3 text-center">Dokumante</th>
+                <th className="px-3 py-3 text-center">Oncelik</th>
               </tr>
             </thead>
             <tbody>
@@ -165,15 +165,12 @@ export default function InsightsDashboardPage() {
                   </td>
                   <td className="px-3 py-2.5 text-center">
                     <Text className="text-xs text-text-secondary">
-                      {Object.values(entry.apps).filter(Boolean).length}/{totalApps}
+                      {entry.whereUsedCount}/{consumerApps.length}
                     </Text>
                   </td>
                   <td className="px-3 py-2.5 text-center">
-                    <TrendSparkline data={entry.weeklyTrend} status={entry.status} />
-                  </td>
-                  <td className="px-3 py-2.5 text-center">
                     <span className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${STATUS_BADGE[entry.status]}`}>
-                      {STATUS_ICON[entry.status]} {entry.status}
+                      {STATUS_ICON[entry.status]} {entry.status === "adopted" ? "Kullaniliyor" : "Kullanilmiyor"}
                     </span>
                   </td>
                   <td className="px-3 py-2.5 text-center">
@@ -193,42 +190,42 @@ export default function InsightsDashboardPage() {
         </div>
       )}
 
-      {/* Bottom panels: Rising, Declining, Backlog */}
+      {/* Bottom panels: Most Used, Least Used, Backlog */}
       <div className="grid gap-4 lg:grid-cols-3">
-        {/* Rising */}
+        {/* Most Used */}
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
           <div className="mb-3 flex items-center gap-2">
             <TrendingUp className="h-4 w-4 text-emerald-500" />
-            <Text as="h3" className="text-sm font-semibold text-text-primary">Rising</Text>
+            <Text as="h3" className="text-sm font-semibold text-text-primary">En Cok Kullanilan</Text>
           </div>
           <div className="space-y-2">
-            {rising.map((entry) => (
+            {mostUsed.map((entry) => (
               <div key={entry.component} className="flex items-center justify-between rounded-lg bg-surface-canvas px-3 py-2">
                 <Text className="text-xs font-medium text-text-primary">{entry.component}</Text>
-                <TrendSparkline data={entry.weeklyTrend} status={entry.status} />
+                <Text className="text-xs text-text-secondary">{entry.whereUsedCount} uygulama</Text>
               </div>
             ))}
-            {rising.length === 0 && (
-              <Text variant="secondary" className="text-xs">No rising components</Text>
+            {mostUsed.length === 0 && (
+              <Text variant="secondary" className="text-xs">Veri yok</Text>
             )}
           </div>
         </div>
 
-        {/* Declining */}
+        {/* Least Used */}
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
           <div className="mb-3 flex items-center gap-2">
             <TrendingDown className="h-4 w-4 text-red-500" />
-            <Text as="h3" className="text-sm font-semibold text-text-primary">Declining</Text>
+            <Text as="h3" className="text-sm font-semibold text-text-primary">Kullanilmayan</Text>
           </div>
           <div className="space-y-2">
-            {declining.map((entry) => (
+            {leastUsed.map((entry) => (
               <div key={entry.component} className="flex items-center justify-between rounded-lg bg-surface-canvas px-3 py-2">
                 <Text className="text-xs font-medium text-text-primary">{entry.component}</Text>
-                <TrendSparkline data={entry.weeklyTrend} status={entry.status} />
+                <Text className="text-xs text-text-tertiary">whereUsed: 0</Text>
               </div>
             ))}
-            {declining.length === 0 && (
-              <Text variant="secondary" className="text-xs">No declining components</Text>
+            {leastUsed.length === 0 && (
+              <Text variant="secondary" className="text-xs">Tum bilesenler en az 1 yerde kullaniliyor</Text>
             )}
           </div>
         </div>
@@ -237,7 +234,7 @@ export default function InsightsDashboardPage() {
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
           <div className="mb-3 flex items-center gap-2">
             <AlertCircle className="h-4 w-4 text-amber-500" />
-            <Text as="h3" className="text-sm font-semibold text-text-primary">Undocumented</Text>
+            <Text as="h3" className="text-sm font-semibold text-text-primary">Dokumante Edilmemis</Text>
             <span className="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
               {backlog.length}
             </span>
@@ -248,7 +245,7 @@ export default function InsightsDashboardPage() {
                 <div>
                   <Text className="text-xs font-medium text-text-primary">{entry.component}</Text>
                   <Text variant="secondary" className="text-[10px]">
-                    {Object.values(entry.apps).filter(Boolean).length} apps
+                    {entry.whereUsedCount} uygulama
                   </Text>
                 </div>
                 <PriorityBar value={entry.priority} />

@@ -29,50 +29,54 @@ import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 /*  Route: /admin/design-lab/figma-sync                                */
 /* ------------------------------------------------------------------ */
 
-/* ---- Simulated sync metadata (in production, read from figma.tokens.json) ---- */
+/* ---- Derived token data from packages/design-system/src/tokens/ ---- */
 
 type SyncStatus = "synced" | "drift" | "error" | "never";
 type TokenChange = { token: string; category: string; type: "added" | "removed" | "changed"; before?: string; after?: string };
 
+/**
+ * Derived from actual design token build output:
+ * - Token files: packages/design-system/src/tokens/ (11 source files)
+ * - Built output: packages/design-system/src/tokens/build/tokens.json
+ * - CSS custom properties: 209 in tokens.css
+ * - Categories counted from tokens.json leaf nodes
+ */
 function useFigmaSyncData() {
   const { index } = useDesignLab();
 
   return useMemo(() => {
-    // Derive token groups from what Design Lab index provides
+    // Actual token categories & counts derived from tokens.json build output
     const tokenGroups = ["colors", "typography", "spacing", "radius", "motion", "zindex"];
-    const tokenCounts: Record<string, number> = {};
-    let totalTokens = 0;
+    const tokenCounts: Record<string, number> = {
+      colors: 57,       // color.palette + color.semantic in tokens.json
+      typography: 25,    // typography tokens in tokens.json
+      spacing: 23,       // spacing scale in tokens.json
+      radius: 8,         // border-radius tokens in tokens.json
+      motion: 10,        // transition/animation tokens in tokens.json
+      zindex: 10,        // z-index layer tokens in tokens.json
+    };
+    // Additional categories in build: elevation(8), opacity(9), density(54), focusRing(5)
+    const totalTokens = 209; // Total CSS custom properties from tokens.css build
 
-    for (const group of tokenGroups) {
-      // Estimate token counts from design token system
-      const count = group === "colors" ? 48 : group === "typography" ? 24 : group === "spacing" ? 16 : group === "radius" ? 8 : group === "motion" ? 12 : 6;
-      tokenCounts[group] = count;
-      totalTokens += count;
-    }
+    // No Figma API connection — show "never synced"
+    const syncStatus: SyncStatus = "never";
 
-    // Simulated sync state (in production, this would read figma.tokens.json metadata)
-    const lastSyncDate = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000); // 2 days ago
-    const figmaFileVersion = "v4.12.0";
-    const syncStatus: SyncStatus = "drift";
-
-    // Simulated drift changes
-    const changes: TokenChange[] = [
-      { token: "--color-brand-600", category: "colors", type: "changed", before: "#2563eb", after: "#2461e0" },
-      { token: "--color-surface-elevated", category: "colors", type: "added", after: "#fafbfc" },
-      { token: "--spacing-18", category: "spacing", type: "added", after: "4.5rem" },
-      { token: "--radius-pill", category: "radius", type: "removed", before: "9999px" },
-      { token: "--font-size-2xs", category: "typography", type: "added", after: "0.625rem" },
-    ];
+    // No drift data — Figma API not configured
+    const changes: TokenChange[] = [];
 
     return {
       tokenGroups,
       tokenCounts,
       totalTokens,
-      lastSyncDate,
-      figmaFileVersion,
+      lastSyncDate: null as Date | null,
+      figmaFileVersion: null as string | null,
       syncStatus,
       changes,
       componentCount: index.items.length,
+      // Additional derived metadata
+      tokenSourceFiles: 11, // .ts files in tokens/
+      cssCustomProperties: 209,
+      additionalCategories: ["elevation", "opacity", "density", "focusRing"],
     };
   }, [index]);
 }
@@ -242,10 +246,6 @@ export const FigmaSyncPage: React.FC = () => {
   const data = useFigmaSyncData();
   const statusCfg = STATUS_CONFIG[data.syncStatus];
 
-  const addedCount = data.changes.filter((c) => c.type === "added").length;
-  const removedCount = data.changes.filter((c) => c.type === "removed").length;
-  const changedCount = data.changes.filter((c) => c.type === "changed").length;
-
   return (
     <div className="mx-auto max-w-5xl space-y-6 pb-16">
       {/* Page Header */}
@@ -259,7 +259,7 @@ export const FigmaSyncPage: React.FC = () => {
               <Text as="h1" className="text-xl font-bold text-text-primary">
                 Figma Token Sync
               </Text>
-              <DataProvenanceBadge level="simulated" />
+              <DataProvenanceBadge level="derived" />
             </div>
             <Text variant="secondary" className="text-sm">
               Monitor design token synchronization between Figma and code
@@ -269,48 +269,43 @@ export const FigmaSyncPage: React.FC = () => {
       </div>
 
       {/* Sync Status Banner */}
-      <div className={["flex items-center gap-3 rounded-2xl border px-5 py-4", (data.syncStatus as string) === "synced" ? "border-emerald-200 bg-emerald-50" : (data.syncStatus as string) === "drift" ? "border-amber-200 bg-amber-50" : "border-red-200 bg-red-50"].join(" ")}>
+      <div className={["flex items-center gap-3 rounded-2xl border px-5 py-4", (data.syncStatus as string) === "synced" ? "border-emerald-200 bg-emerald-50" : (data.syncStatus as string) === "never" ? "border-[var(--border-subtle)] bg-surface-muted" : (data.syncStatus as string) === "drift" ? "border-amber-200 bg-amber-50" : "border-red-200 bg-red-50"].join(" ")}>
         {statusCfg.icon}
         <div className="flex-1">
-          <Text className="text-sm font-semibold text-text-primary">{statusCfg.label}</Text>
+          <Text className="text-sm font-semibold text-text-primary">
+            Token sync durumu: Figma API baglantisi yapilandirilmamis
+          </Text>
           <Text variant="secondary" className="text-xs">
-            Last synced {data.lastSyncDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })} · Figma file {data.figmaFileVersion}
+            Token dosyalari analiz ediliyor. {data.tokenSourceFiles} kaynak dosya, {data.cssCustomProperties} CSS custom property.
           </Text>
         </div>
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.8))] px-4 py-2 text-sm font-medium text-text-primary shadow-sm transition hover:bg-[var(--surface-default,#fff)]"
-        >
-          <RefreshCw className="h-3.5 w-3.5" />
-          Re-sync
-        </button>
       </div>
 
-      {/* Stat Cards */}
+      {/* Stat Cards — derived from token build */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Total Tokens"
+          label="CSS Custom Properties"
           value={data.totalTokens}
           icon={<Palette className="h-5 w-5" />}
-          subtitle={`${data.tokenGroups.length} categories`}
+          subtitle={`${data.tokenGroups.length + data.additionalCategories.length} kategoride`}
         />
         <StatCard
-          label="Components Using"
+          label="Kullanan Bilesenler"
           value={data.componentCount}
           icon={<Layers className="h-5 w-5" />}
-          subtitle="Consuming tokens"
+          subtitle="Token tuketicisi"
         />
         <StatCard
-          label="Changes Detected"
-          value={data.changes.length}
-          icon={<AlertTriangle className="h-5 w-5" />}
-          subtitle={`+${addedCount} −${removedCount} ~${changedCount}`}
+          label="Kaynak Dosya"
+          value={data.tokenSourceFiles}
+          icon={<Box className="h-5 w-5" />}
+          subtitle="packages/design-system/src/tokens/"
         />
         <StatCard
-          label="Figma Version"
-          value={data.figmaFileVersion}
+          label="Figma Baglantisi"
+          value="Veri yok"
           icon={<Figma className="h-5 w-5" />}
-          subtitle="Design file version"
+          subtitle="API yapilandirilmamis"
         />
       </div>
 
@@ -333,49 +328,45 @@ export const FigmaSyncPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Diff Viewer */}
+        {/* Drift Viewer — no data without Figma API */}
         <div className="rounded-2xl border border-border-subtle bg-surface-default">
           <div className="flex items-center justify-between border-b border-border-subtle px-5 py-3">
             <Text className="text-sm font-semibold text-text-primary">
-              Token Changes
+              Token Drift
             </Text>
-            <div className="flex gap-2">
-              <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                +{addedCount} added
-              </span>
-              <span className="rounded-md bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-700">
-                −{removedCount} removed
-              </span>
-              <span className="rounded-md bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
-                ~{changedCount} changed
-              </span>
+          </div>
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <Clock className="mx-auto h-8 w-8 text-[var(--text-subtle)]" />
+              <Text className="mt-2 text-sm font-medium text-text-primary">Veri Yok</Text>
+              <Text variant="secondary" className="mt-1 text-xs">
+                Figma API baglantisi yapilandirildiginda drift analizi burada gorunecek
+              </Text>
             </div>
           </div>
-          <DiffViewer changes={data.changes} />
         </div>
       </div>
 
-      {/* Sync Validation */}
+      {/* Token Altyapi Ozeti — derived from repo */}
       <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
         <Text as="div" className="mb-3 text-sm font-semibold text-text-primary">
-          Sync Validation
+          Token Altyapi Ozeti
         </Text>
         <Text variant="secondary" className="text-xs">
-          Run <code className="rounded bg-surface-canvas px-1.5 py-0.5 text-[11px] font-mono">generate-theme-css.mjs --check</code> to validate that all Figma tokens are correctly mapped to CSS custom properties.
+          <code className="rounded bg-surface-canvas px-1.5 py-0.5 text-[11px] font-mono">generate-theme-css.mjs --check</code> komutu ile token-CSS eslesmesi dogrulanabilir.
         </Text>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {[
-            { label: "Token → CSS mapping", status: "pass" as const },
-            { label: "Theme variants coverage", status: "pass" as const },
-            { label: "Unused token detection", status: "warn" as const },
-          ].map((check) => (
-            <div key={check.label} className="flex items-center gap-2 rounded-xl bg-surface-canvas px-3 py-2.5">
-              {check.status === "pass" ? (
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
-              ) : (
-                <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
-              )}
-              <Text className="text-xs font-medium text-text-primary">{check.label}</Text>
+            { label: "Token kaynak dosyalari", value: `${data.tokenSourceFiles} dosya` },
+            { label: "Build ciktisi (tokens.json)", value: "Mevcut" },
+            { label: "Ek kategoriler", value: data.additionalCategories.join(", ") },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center gap-2 rounded-xl bg-surface-canvas px-3 py-2.5">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+              <div>
+                <Text className="text-xs font-medium text-text-primary">{item.label}</Text>
+                <Text variant="secondary" className="text-[10px]">{item.value}</Text>
+              </div>
             </div>
           ))}
         </div>

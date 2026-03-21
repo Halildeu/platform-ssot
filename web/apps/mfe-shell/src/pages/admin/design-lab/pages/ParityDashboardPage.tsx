@@ -1,83 +1,73 @@
 import React, { useState, useMemo } from "react";
-import { Target, ChevronRight, CheckCircle2, AlertTriangle, XCircle, Trophy } from "lucide-react";
+import { Target, CheckCircle2, XCircle, BarChart3 } from "lucide-react";
 import { Text } from "@mfe/design-system";
+import { useDesignLab } from "../DesignLabProvider";
+import type { DesignLabComponentDocEntry } from "../DesignLabProvider";
+import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 
 /* ------------------------------------------------------------------ */
-/*  ParityDashboardPage — Feature parity matrix vs competitors          */
+/*  ParityDashboardPage — Component quality parity derived from docs   */
 /*                                                                     */
-/*  Rows: Feature categories                                           */
-/*  Cols: Our DS, MUI, AntD, Storybook, Shadcn                        */
-/*  Cells: green (parity+), yellow (partial), red (gap)                */
-/*  Overall score per competitor                                       */
+/*  For each component, checks presence of:                            */
+/*  - props docs (apiItem.props.length > 0)                            */
+/*  - stateModel (apiItem.stateModel)                                  */
+/*  - variantAxes (apiItem.variantAxes)                                */
+/*  - previewStates (apiItem.previewStates)                            */
+/*  - behaviorModel (apiItem.behaviorModel)                            */
+/*  - regressionFocus (apiItem.regressionFocus)                        */
 /*                                                                     */
-/*  Unique feature — self-improvement dashboard                        */
+/*  All data is REAL — derived from actual doc entries.                 */
 /* ------------------------------------------------------------------ */
 
-type ParityStatus = "ahead" | "parity" | "partial" | "gap";
+type QualityDimension = "props" | "stateModel" | "variantAxes" | "previewStates" | "behaviorModel" | "regressionFocus";
 
-type CompetitorId = "mui" | "antd" | "storybook" | "shadcn";
+const DIMENSIONS: { id: QualityDimension; label: string }[] = [
+  { id: "props", label: "Props Docs" },
+  { id: "stateModel", label: "State Model" },
+  { id: "variantAxes", label: "Variant Axes" },
+  { id: "previewStates", label: "Preview States" },
+  { id: "behaviorModel", label: "Behavior Model" },
+  { id: "regressionFocus", label: "Regression Focus" },
+];
 
-type FeatureRow = {
+type ParityRow = {
+  name: string;
   category: string;
-  feature: string;
-  ours: ParityStatus;
-  competitors: Record<CompetitorId, ParityStatus>;
+  dimensions: Record<QualityDimension, boolean>;
+  score: number; // 0-6
 };
 
-const COMPETITORS: { id: CompetitorId; name: string; color: string }[] = [
-  { id: "mui", name: "MUI", color: "#007FFF" },
-  { id: "antd", name: "Ant Design", color: "#1677ff" },
-  { id: "storybook", name: "Storybook", color: "#FF4785" },
-  { id: "shadcn", name: "Shadcn/ui", color: "#000000" },
-];
+function deriveParityData(docEntryMap: Map<string, DesignLabComponentDocEntry>): ParityRow[] {
+  const rows: ParityRow[] = [];
 
-const STATUS_META: Record<ParityStatus, { label: string; color: string; bg: string; icon: React.ReactNode; score: number }> = {
-  ahead: { label: "Ahead", color: "text-emerald-600", bg: "bg-emerald-100", icon: <Trophy className="h-3 w-3" />, score: 3 },
-  parity: { label: "Parity", color: "text-blue-600", bg: "bg-blue-100", icon: <CheckCircle2 className="h-3 w-3" />, score: 2 },
-  partial: { label: "Partial", color: "text-amber-600", bg: "bg-amber-100", icon: <AlertTriangle className="h-3 w-3" />, score: 1 },
-  gap: { label: "Gap", color: "text-red-600", bg: "bg-red-100", icon: <XCircle className="h-3 w-3" />, score: 0 },
-};
+  for (const [name, entry] of docEntryMap) {
+    const api = entry.apiItem;
+    const idx = entry.indexItem;
 
-const FEATURES: FeatureRow[] = [
-  // Playground
-  { category: "Playground", feature: "Interactive prop editor", ours: "ahead", competitors: { mui: "partial", antd: "partial", storybook: "parity", shadcn: "gap" } },
-  { category: "Playground", feature: "Event logger (Actions)", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "parity", shadcn: "gap" } },
-  { category: "Playground", feature: "Responsive multi-viewport", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "partial", shadcn: "gap" } },
-  { category: "Playground", feature: "Measure & outline tools", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "parity", shadcn: "gap" } },
-  { category: "Playground", feature: "Performance profiler", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "gap", shadcn: "gap" } },
-  { category: "Playground", feature: "Composition/slot editor", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "gap", shadcn: "gap" } },
+    // Only include components (not hooks/functions/const)
+    if (idx.kind !== "component") continue;
 
-  // Documentation
-  { category: "Documentation", feature: "Narrative guide (When to Use)", ours: "ahead", competitors: { mui: "partial", antd: "parity", storybook: "partial", shadcn: "partial" } },
-  { category: "Documentation", feature: "Component anatomy diagram", ours: "parity", competitors: { mui: "parity", antd: "partial", storybook: "gap", shadcn: "gap" } },
-  { category: "Documentation", feature: "Anti-patterns section", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "gap", shadcn: "gap" } },
-  { category: "Documentation", feature: "Migration guides", ours: "ahead", competitors: { mui: "partial", antd: "partial", storybook: "gap", shadcn: "gap" } },
-  { category: "Documentation", feature: "Curated code examples", ours: "parity", competitors: { mui: "parity", antd: "parity", storybook: "parity", shadcn: "parity" } },
+    const dims: Record<QualityDimension, boolean> = {
+      props: (api?.props?.length ?? 0) > 0,
+      stateModel: (api?.stateModel?.length ?? 0) > 0,
+      variantAxes: (api?.variantAxes?.length ?? 0) > 0,
+      previewStates: ((api as Record<string, unknown>)?.previewStates as string[] | undefined)?.length ? true : false,
+      behaviorModel: ((api as Record<string, unknown>)?.behaviorModel as string[] | undefined)?.length ? true : false,
+      regressionFocus: (api?.regressionFocus?.length ?? 0) > 0,
+    };
 
-  // API
-  { category: "API", feature: "Rich props table", ours: "ahead", competitors: { mui: "parity", antd: "parity", storybook: "parity", shadcn: "partial" } },
-  { category: "API", feature: "Props dependency graph", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "gap", shadcn: "gap" } },
-  { category: "API", feature: "Design token documentation", ours: "ahead", competitors: { mui: "partial", antd: "parity", storybook: "gap", shadcn: "gap" } },
-  { category: "API", feature: "View component source", ours: "parity", competitors: { mui: "partial", antd: "gap", storybook: "partial", shadcn: "parity" } },
+    const score = Object.values(dims).filter(Boolean).length;
 
-  // Theming
-  { category: "Theming", feature: "Multi-theme preview", ours: "ahead", competitors: { mui: "partial", antd: "partial", storybook: "partial", shadcn: "gap" } },
-  { category: "Theming", feature: "Theme builder UI", ours: "parity", competitors: { mui: "gap", antd: "gap", storybook: "gap", shadcn: "gap" } },
-  { category: "Theming", feature: "Theming documentation", ours: "parity", competitors: { mui: "parity", antd: "parity", storybook: "partial", shadcn: "partial" } },
-  { category: "Theming", feature: "Token override generator", ours: "ahead", competitors: { mui: "gap", antd: "partial", storybook: "gap", shadcn: "gap" } },
+    rows.push({
+      name,
+      category: idx.taxonomyGroupId ?? "components",
+      dimensions: dims,
+      score,
+    });
+  }
 
-  // Accessibility
-  { category: "Accessibility", feature: "A11y scorecard", ours: "parity", competitors: { mui: "partial", antd: "partial", storybook: "parity", shadcn: "gap" } },
-  { category: "Accessibility", feature: "Live a11y audit", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "parity", shadcn: "gap" } },
-  { category: "Accessibility", feature: "WCAG guideline links", ours: "parity", competitors: { mui: "parity", antd: "partial", storybook: "parity", shadcn: "partial" } },
-
-  // Developer Experience
-  { category: "DX", feature: "⌘K command palette", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "partial", shadcn: "gap" } },
-  { category: "DX", feature: "Dependency graph", ours: "ahead", competitors: { mui: "gap", antd: "gap", storybook: "gap", shadcn: "gap" } },
-  { category: "DX", feature: "Usage analytics", ours: "parity", competitors: { mui: "gap", antd: "gap", storybook: "partial", shadcn: "gap" } },
-  { category: "DX", feature: "Visual regression", ours: "parity", competitors: { mui: "gap", antd: "gap", storybook: "parity", shadcn: "gap" } },
-  { category: "DX", feature: "Figma token sync", ours: "parity", competitors: { mui: "partial", antd: "gap", storybook: "partial", shadcn: "gap" } },
-];
+  return rows.sort((a, b) => b.score - a.score);
+}
 
 /* ---- Progress Ring SVG ---- */
 
@@ -104,22 +94,38 @@ function ProgressRing({ score, max, size = 60, color }: { score: number; max: nu
 }
 
 export default function ParityDashboardPage() {
+  const { docEntryMap } = useDesignLab();
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
-  const categories = useMemo(() => Array.from(new Set(FEATURES.map((f) => f.category))), []);
-
+  const rows = useMemo(() => deriveParityData(docEntryMap), [docEntryMap]);
+  const categories = useMemo(() => Array.from(new Set(rows.map((r) => r.category))).sort(), [rows]);
   const filtered = useMemo(
-    () => filterCategory === "all" ? FEATURES : FEATURES.filter((f) => f.category === filterCategory),
-    [filterCategory],
+    () => filterCategory === "all" ? rows : rows.filter((r) => r.category === filterCategory),
+    [filterCategory, rows],
   );
 
-  // Calculate scores
-  const maxScore = FEATURES.length * 3;
-  const ourScore = FEATURES.reduce((s, f) => s + STATUS_META[f.ours].score, 0);
-  const competitorScores = COMPETITORS.map((c) => ({
-    ...c,
-    score: FEATURES.reduce((s, f) => s + STATUS_META[f.competitors[c.id]].score, 0),
+  const maxScore = DIMENSIONS.length; // 6
+  const totalPossible = rows.length * maxScore;
+  const totalAchieved = rows.reduce((s, r) => s + r.score, 0);
+
+  // Per-dimension coverage
+  const dimensionCoverage = DIMENSIONS.map((dim) => ({
+    ...dim,
+    count: rows.filter((r) => r.dimensions[dim.id]).length,
+    pct: rows.length > 0 ? Math.round((rows.filter((r) => r.dimensions[dim.id]).length / rows.length) * 100) : 0,
   }));
+
+  // Per-category coverage
+  const categoryCoverage = categories.map((cat) => {
+    const catRows = rows.filter((r) => r.category === cat);
+    const catMax = catRows.length * maxScore;
+    const catAchieved = catRows.reduce((s, r) => s + r.score, 0);
+    return {
+      category: cat,
+      count: catRows.length,
+      pct: catMax > 0 ? Math.round((catAchieved / catMax) * 100) : 0,
+    };
+  });
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-6">
@@ -129,24 +135,38 @@ export default function ParityDashboardPage() {
           <Target className="h-5 w-5 text-emerald-600" />
         </div>
         <div>
-          <Text as="h1" className="text-xl font-bold text-text-primary">Feature Parity Dashboard</Text>
+          <div className="flex items-center gap-2">
+            <Text as="h1" className="text-xl font-bold text-text-primary">Bilesen Kalite Paritesi</Text>
+            <DataProvenanceBadge level="derived" />
+          </div>
           <Text variant="secondary" className="text-sm">
-            Design Lab vs MUI, AntD, Storybook, Shadcn — {FEATURES.length} features tracked
+            {rows.length} bilesen, {DIMENSIONS.length} kalite boyutunda analiz ediliyor
           </Text>
         </div>
       </div>
 
-      {/* Score rings */}
+      {/* Score summary */}
       <div className="flex items-center gap-6 rounded-2xl border border-border-subtle bg-surface-default p-5">
         <div className="text-center">
-          <ProgressRing score={ourScore} max={maxScore} size={70} color="#22c55e" />
-          <Text as="div" className="mt-1 text-xs font-bold text-text-primary">Our DS</Text>
+          <ProgressRing score={totalAchieved} max={totalPossible} size={70} color="#22c55e" />
+          <Text as="div" className="mt-1 text-xs font-bold text-text-primary">Genel Puan</Text>
         </div>
         <div className="h-12 w-px bg-border-subtle" />
-        {competitorScores.map((c) => (
-          <div key={c.id} className="text-center">
-            <ProgressRing score={c.score} max={maxScore} size={60} color={c.color} />
-            <Text as="div" className="mt-1 text-[10px] font-medium text-text-secondary">{c.name}</Text>
+        {dimensionCoverage.map((dim) => (
+          <div key={dim.id} className="text-center">
+            <ProgressRing score={dim.count} max={rows.length} size={50} color={dim.pct >= 70 ? "#22c55e" : dim.pct >= 40 ? "#f59e0b" : "#ef4444"} />
+            <Text as="div" className="mt-1 text-[10px] font-medium text-text-secondary">{dim.label}</Text>
+          </div>
+        ))}
+      </div>
+
+      {/* Category coverage summary */}
+      <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {categoryCoverage.map((cat) => (
+          <div key={cat.category} className="rounded-2xl border border-border-subtle bg-surface-default p-4">
+            <Text variant="secondary" className="text-[10px] font-medium uppercase tracking-wider">{cat.category}</Text>
+            <Text className="mt-1 text-xl font-bold text-text-primary">{cat.pct}%</Text>
+            <Text variant="secondary" className="text-[10px]">{cat.count} bilesen</Text>
           </div>
         ))}
       </div>
@@ -161,7 +181,7 @@ export default function ParityDashboardPage() {
             filterCategory === "all" ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary hover:text-text-primary",
           ].join(" ")}
         >
-          All ({FEATURES.length})
+          Tumu ({rows.length})
         </button>
         {categories.map((cat) => (
           <button
@@ -178,49 +198,56 @@ export default function ParityDashboardPage() {
         ))}
       </div>
 
-      {/* Feature matrix table */}
+      {/* Parity matrix table */}
       <div className="overflow-x-auto rounded-2xl border border-border-subtle">
         <table className="w-full">
           <thead>
             <tr className="bg-surface-canvas text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-              <th className="px-4 py-3 text-left">Feature</th>
-              <th className="px-3 py-3 text-center">Our DS</th>
-              {COMPETITORS.map((c) => (
-                <th key={c.id} className="px-3 py-3 text-center">{c.name}</th>
+              <th className="px-4 py-3 text-left">Bilesen</th>
+              {DIMENSIONS.map((dim) => (
+                <th key={dim.id} className="px-3 py-3 text-center">{dim.label}</th>
               ))}
+              <th className="px-3 py-3 text-center">Puan</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((row, idx) => (
-              <tr key={idx} className="border-t border-border-subtle hover:bg-surface-muted/30 transition">
+            {filtered.map((row) => (
+              <tr key={row.name} className="border-t border-border-subtle hover:bg-surface-muted/30 transition">
                 <td className="px-4 py-2.5">
                   <div className="flex items-center gap-2">
                     <span className="rounded bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium text-text-tertiary">{row.category}</span>
-                    <Text className="text-xs text-text-primary">{row.feature}</Text>
+                    <Text className="text-xs text-text-primary">{row.name}</Text>
                   </div>
                 </td>
-                <td className="px-3 py-2.5 text-center">
-                  <StatusCell status={row.ours} />
-                </td>
-                {COMPETITORS.map((c) => (
-                  <td key={c.id} className="px-3 py-2.5 text-center">
-                    <StatusCell status={row.competitors[c.id]} />
+                {DIMENSIONS.map((dim) => (
+                  <td key={dim.id} className="px-3 py-2.5 text-center">
+                    {row.dimensions[dim.id] ? (
+                      <CheckCircle2 className="mx-auto h-3.5 w-3.5 text-emerald-500" />
+                    ) : (
+                      <XCircle className="mx-auto h-3.5 w-3.5 text-red-300" />
+                    )}
                   </td>
                 ))}
+                <td className="px-3 py-2.5 text-center">
+                  <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+                    row.score >= 5 ? "bg-emerald-100 text-emerald-700" :
+                    row.score >= 3 ? "bg-amber-100 text-amber-700" :
+                    "bg-red-100 text-red-700"
+                  }`}>
+                    {row.score}/{maxScore}
+                  </span>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </div>
-  );
-}
 
-function StatusCell({ status }: { status: ParityStatus }) {
-  const meta = STATUS_META[status];
-  return (
-    <span className={`inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-semibold ${meta.bg} ${meta.color}`}>
-      {meta.icon} {meta.label}
-    </span>
+      {filtered.length === 0 && (
+        <div className="flex items-center justify-center py-12">
+          <Text variant="secondary" className="text-sm">Bu kategoride bilesen bulunamadi</Text>
+        </div>
+      )}
+    </div>
   );
 }

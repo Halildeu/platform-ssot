@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { Text } from "@mfe/design-system";
 import type { AdoptionEntry } from "./insightsUtils";
-import { CONSUMER_APPS } from "./insightsUtils";
 
 /* ------------------------------------------------------------------ */
 /*  AdoptionHeatmap — SVG heatmap showing component × app usage        */
 /*                                                                     */
 /*  Rows: components (sorted by adoption count desc)                   */
-/*  Cols: consumer apps                                                */
+/*  Cols: consumer apps (derived from whereUsed, passed as prop)       */
 /*  Cells: green (used) / gray (not used)                              */
 /*  Hover: tooltip with component + app name                           */
 /* ------------------------------------------------------------------ */
 
 type Props = {
   data: AdoptionEntry[];
+  consumerApps: string[];
 };
 
 const CELL_W = 56;
@@ -21,7 +21,7 @@ const CELL_H = 28;
 const LABEL_W = 100;
 const HEADER_H = 60;
 
-export const AdoptionHeatmap: React.FC<Props> = ({ data }) => {
+export const AdoptionHeatmap: React.FC<Props> = ({ data, consumerApps }) => {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
 
   const sorted = [...data].sort((a, b) => {
@@ -30,7 +30,7 @@ export const AdoptionHeatmap: React.FC<Props> = ({ data }) => {
     return bCount - aCount;
   });
 
-  const width = LABEL_W + CONSUMER_APPS.length * CELL_W + 20;
+  const width = LABEL_W + consumerApps.length * CELL_W + 20;
   const height = HEADER_H + sorted.length * CELL_H + 20;
 
   return (
@@ -42,7 +42,7 @@ export const AdoptionHeatmap: React.FC<Props> = ({ data }) => {
         onMouseLeave={() => setTooltip(null)}
       >
         {/* Column headers */}
-        {CONSUMER_APPS.map((app, ci) => (
+        {consumerApps.map((app, ci) => (
           <text
             key={app}
             x={LABEL_W + ci * CELL_W + CELL_W / 2}
@@ -70,7 +70,7 @@ export const AdoptionHeatmap: React.FC<Props> = ({ data }) => {
               </text>
 
               {/* Cells */}
-              {CONSUMER_APPS.map((app, ci) => {
+              {consumerApps.map((app, ci) => {
                 const used = entry.apps[app];
                 const cx = LABEL_W + ci * CELL_W;
                 return (
@@ -97,11 +97,11 @@ export const AdoptionHeatmap: React.FC<Props> = ({ data }) => {
 
               {/* Adoption count */}
               <text
-                x={LABEL_W + CONSUMER_APPS.length * CELL_W + 8}
+                x={LABEL_W + consumerApps.length * CELL_W + 8}
                 y={y + CELL_H / 2 + 4}
                 className="fill-text-tertiary text-[10px]"
               >
-                {Object.values(entry.apps).filter(Boolean).length}/{CONSUMER_APPS.length}
+                {Object.values(entry.apps).filter(Boolean).length}/{consumerApps.length}
               </text>
             </g>
           );
@@ -124,38 +124,5 @@ export const AdoptionHeatmap: React.FC<Props> = ({ data }) => {
     </div>
   );
 };
-
-/* ---- Mini Sparkline for trend column ---- */
-
-export function TrendSparkline({ data, status }: { data: number[]; status: string }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = max - min || 1;
-  const w = 80;
-  const h = 24;
-
-  const points = data
-    .map((v, i) => {
-      const x = (i / (data.length - 1)) * w;
-      const y = h - ((v - min) / range) * (h - 4) - 2;
-      return `${x},${y}`;
-    })
-    .join(" ");
-
-  const color = status === "rising" ? "#22c55e" : status === "declining" ? "#ef4444" : "#94a3b8";
-
-  return (
-    <svg width={w} height={h} className="inline-block">
-      <polyline
-        points={points}
-        fill="none"
-        stroke={color}
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 export default AdoptionHeatmap;
