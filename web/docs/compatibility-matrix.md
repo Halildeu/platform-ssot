@@ -14,7 +14,7 @@
 |---------|--------|-------|
 | Webpack 5 | ✓ Supported | Module Federation compatible |
 | Vite 5 | ✓ Supported | Primary dev/test bundler |
-| Next.js 14-15 | ✓ Supported | Docs portal uses Next.js 15 |
+| Next.js 14-15 | ✓ Supported | Docs portal uses Next.js 14 |
 
 ## Browser Support
 | Browser | Minimum |

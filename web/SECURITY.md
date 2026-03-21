@@ -12,7 +12,7 @@
 If you discover a security vulnerability, please report it responsibly:
 
 1. **Do NOT** open a public GitHub issue
-2. Email security concerns to: security@company.com
+2. Email security concerns to: security@platform-team.dev (replace with your organization's actual contact address)
 3. Include a description of the vulnerability and steps to reproduce
 4. We will acknowledge receipt within 48 hours
 5. We will provide a fix timeline within 5 business days

@@ -10,7 +10,8 @@
 - Bundle sizes measured with `esbuild --bundle --minify` piped through `gzip -9`.
 - Scroll performance measured as p95 frame time during programmatic scroll of 500px/s for 5 seconds.
 - All dependencies at latest stable versions as of March 2026.
-- Source code for all benchmarks available in `packages/benchmarks/`.
+- Source code for per-package benchmarks available in `packages/x-*/src/__tests__/perf.bench.ts`.
+- **Disclaimer**: All figures are from internal testing on the hardware listed below. Results may differ on other configurations; relative comparisons are more meaningful than absolute numbers.
 
 ---
 
@@ -110,12 +111,10 @@ Full platform evaluation: all components needed for an enterprise dashboard.
 ### Reproducibility
 
 ```bash
-git clone https://github.com/example/mfe-platform.git
-cd packages/benchmarks
+# From the repository root:
 pnpm install
-pnpm bench              # Render + interaction benchmarks
-pnpm bench:bundle       # Bundle size comparison
-pnpm bench:lighthouse   # Lighthouse CI comparison
+pnpm bench:x-suite      # Per-package benchmarks (packages/x-*/src/__tests__/perf.bench.ts)
+pnpm bench              # All benchmarks across the monorepo
 ```
 
 Results vary by hardware. The relative differences between libraries are more meaningful than absolute numbers.

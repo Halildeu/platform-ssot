@@ -29,7 +29,7 @@ Examples of unacceptable behavior:
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project team at conduct@company.com. All complaints will be
+reported to the project team at conduct@platform-team.dev (replace with your organization's actual contact address). All complaints will be
 reviewed and investigated promptly and fairly.
 
 ## Attribution

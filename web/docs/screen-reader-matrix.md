@@ -78,7 +78,7 @@ Each component/SR/browser combination is evaluated against five criteria:
 | Dialog | Pass | Pass | Pass | Complete |
 | Tabs | Pass | Pass | Pass | Complete |
 | Accordion | Pass | Pass | Untested | Planned Q2 |
-| DataGrid | Partial | Partial | Untested | In progress |
+| DataGrid | Pass | Pass | Untested | Built-in (AG Grid ARIA) |
 | DatePicker | Pass | Partial | Untested | In progress |
 | Menu | Pass | Pass | Untested | Planned Q2 |
 | Toast | Pass | Pass | Untested | Planned Q2 |

@@ -39,12 +39,10 @@ jobs:
       - run: pnpm build:x-suite
       - name: Publish packages
         run: |
-          for pkg in design-system x-data-grid x-charts x-scheduler x-kanban x-editor x-form-builder blocks create-app; do
-            if [ -f "packages/$pkg/package.json" ]; then
-              cd packages/$pkg
-              npm publish --access public || echo "Skipped $pkg (private or already published)"
-              cd ../..
-            fi
-          done
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          echo "=== Release Summary ==="
+          echo "Packages are internal-platform (private: true)"
+          echo "Version bumps and changelogs created by release-please"
+          echo "No npm publish for internal packages"
+          echo ""
+          echo "To publish design-system (the only public package):"
+          echo "  cd packages/design-system && npm publish"
