@@ -143,7 +143,14 @@
     "e2e:responsive": "playwright test e2e/responsive/",
     "e2e:a11y": "playwright test e2e/accessibility/",
     "e2e:update": "playwright test --update-snapshots",
-    "e2e:report": "playwright show-report"
+    "e2e:report": "playwright show-report",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": ["prettier --write", "eslint --fix --max-warnings 0"],
+    "*.{json,md,mdx,yml,yaml}": ["prettier --write"],
+    "*.css": ["prettier --write", "stylelint --fix"]
   },
   "keywords": [],
   "author": "",

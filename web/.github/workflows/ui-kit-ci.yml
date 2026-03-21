@@ -56,7 +56,7 @@ jobs:
         run: npx tsc --noEmit --project packages/design-system/tsconfig.json
       - name: Type check mfe-shell
         run: npx tsc --noEmit --project apps/mfe-shell/tsconfig.json
-        continue-on-error: true
+        continue-on-error: false
 
   # ── Storybook Build ────────────────────────────────────────────
   storybook:
@@ -100,13 +100,13 @@ jobs:
         run: npx playwright test e2e/visual/ --project=desktop-light
       - name: Run interaction tests
         run: npx playwright test e2e/interaction/ --project=desktop-light
-        continue-on-error: true
+        continue-on-error: false
       - name: Run responsive tests
         run: npx playwright test e2e/responsive/ --project=desktop-light
-        continue-on-error: true
+        continue-on-error: false
       - name: Run a11y audit
         run: npx playwright test e2e/accessibility/ --project=desktop-light
-        continue-on-error: true
+        continue-on-error: false
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4

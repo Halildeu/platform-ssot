@@ -1,0 +1,8 @@
+node_modules
+dist
+.next
+coverage
+*.min.js
+*.min.css
+pnpm-lock.yaml
+apps/docs/.next
