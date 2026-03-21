@@ -17,6 +17,18 @@ console.error = (...args: unknown[]) => {
   // jsdom "Not implemented" stubs — not actionable in unit tests
   if (msg.includes('Not implemented')) return;
 
+  // React act() warnings — expected in Vitest when using Testing Library
+  if (msg.includes('act(...)') || msg.includes('act(() =>')) return;
+
+  // AG Charts canvas/Path2D stubs — jsdom has no canvas support
+  if (msg.includes('Path2D') || msg.includes('setTransform') || msg.includes('getContext')) return;
+
+  // React unknown event handler warnings — design-system internal props
+  if (msg.includes('Unknown event handler property')) return;
+
+  // React DOM prop warnings from design-system internals
+  if (msg.includes('React does not recognize') && msg.includes('prop on a DOM element')) return;
+
   originalConsoleError.apply(console, args);
 };
 

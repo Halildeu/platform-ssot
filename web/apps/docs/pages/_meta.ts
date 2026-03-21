@@ -4,4 +4,7 @@ export default {
   'x-suite': 'X Suite',
   blocks: 'Blocks',
   migration: 'Migration',
+  compatibility: 'Compatibility Matrix',
+  'deprecation-policy': 'Deprecation Policy',
+  support: 'Support & Issue Triage',
 };

@@ -1,0 +1,36 @@
+---
+title: Deprecation Policy
+---
+
+# Deprecation Policy
+
+## Semver Commitment
+
+We follow [Semantic Versioning 2.0](https://semver.org/):
+
+- **Patch** (1.0.x): Bug fixes, no API changes
+- **Minor** (1.x.0): New features, backward-compatible
+- **Major** (x.0.0): Breaking changes with migration path
+
+## Deprecation Timeline
+
+1. **Deprecation notice**: Feature marked deprecated with console warning in dev mode
+2. **Migration guide**: Published in docs with codemod when possible
+3. **Minimum 2 minor versions**: Deprecated API remains functional
+4. **Removal**: In next major version only
+
+## Current Deprecations
+
+| Component | Deprecated API | Replacement | Since | Removal Target |
+|---|---|---|---|---|
+| Badge | `tone` prop | `variant` prop | v2.8 | v3.0 |
+| Segmented | `appearance` prop | `variant` prop | v2.8 | v3.0 |
+| Select | `selectSize` prop | `size` prop | v2.7 | v3.0 |
+
+## Codemod Support
+
+Automated codemods are provided for most breaking changes:
+
+```bash
+npx @mfe/codemod@latest --transform badge-tone-to-variant ./src
+```

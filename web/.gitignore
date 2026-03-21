@@ -4,3 +4,5 @@ packages/design-system/dist
 
 *storybook.log
 storybook-static
+apps/docs/.next/
+apps/docs/out/

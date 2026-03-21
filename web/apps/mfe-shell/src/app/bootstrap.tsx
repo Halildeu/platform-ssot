@@ -8,6 +8,10 @@ import React from 'react';
 // Do NOT register AG Grid modules anywhere else in the monorepo.
 import '@mfe/design-system/advanced/data-grid/setup';
 
+// Observability: init Sentry early, before React tree mounts
+import { initSentry } from '../lib/sentry';
+initSentry();
+
 import { createRoot } from 'react-dom/client';
 import ShellApp from './ShellApp';
 
