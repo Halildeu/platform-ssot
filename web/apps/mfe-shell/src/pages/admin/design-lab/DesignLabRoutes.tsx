@@ -24,6 +24,7 @@ const ComponentGroupListing = lazy(
   () => import("./pages/ComponentGroupListing"),
 );
 const ComponentDetail = lazy(() => import("./pages/ComponentDetail"));
+const APIDetail = lazy(() => import("./pages/APIDetail"));
 
 /* Patterns (was: Pages) */
 const PagesListing = lazy(() => import("./pages/PagesListing"));
@@ -218,7 +219,7 @@ export const DesignLabRoutes: React.FC = () => (
 
         {/* APIs layer */}
         <Route path="apis" element={<AdvancedListing />} />
-        <Route path="apis/:itemId" element={<ComponentDetail />} />
+        <Route path="apis/:itemId" element={<APIDetail />} />
 
         {/* Icon Gallery */}
         <Route path="icons" element={<IconGalleryPage />} />
