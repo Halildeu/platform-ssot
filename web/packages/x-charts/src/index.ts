@@ -54,5 +54,24 @@ export type { StatWidgetProps } from "./StatWidget";
 export { ChartLegend } from "./ChartLegend";
 export type { ChartLegendProps, ChartLegendItem } from "./ChartLegend";
 
+/* Chart interactions */
+export { useChartInteractions } from "./useChartInteractions";
+export type {
+  ChartInteractionState,
+  ChartInteractionOptions,
+  ChartInteractionHandlers,
+} from "./useChartInteractions";
+
+export { ChartToolbar } from "./ChartToolbar";
+export type { ChartToolbarProps } from "./ChartToolbar";
+
+/* Responsive resize */
+export { useChartResize } from "./useChartResize";
+export type { ChartResizeState, UseChartResizeOptions } from "./useChartResize";
+
+/* Real-time data */
+export { useRealTimeData } from "./useRealTimeData";
+export type { RealTimeDataOptions, RealTimeDataState } from "./useRealTimeData";
+
 /* Types */
 export type { ChartSize, ChartDataPoint, ChartSeries } from "@mfe/design-system";

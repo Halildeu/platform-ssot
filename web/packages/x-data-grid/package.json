@@ -25,7 +25,9 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "bench": "vitest bench"
+    "bench": "vitest bench",
+    "test:e2e": "playwright test",
+    "test:perf": "vitest bench"
   },
   "peerDependencies": {
     "@mfe/design-system": "*",

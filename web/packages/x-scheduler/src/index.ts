@@ -37,6 +37,13 @@ export type { ResourceViewProps } from './ResourceView';
 export { EventForm } from './EventForm';
 export type { EventFormProps } from './EventForm';
 
+/* Wave 2.2 Components */
+export { CurrentTimeIndicator } from './CurrentTimeIndicator';
+export type { CurrentTimeIndicatorProps } from './CurrentTimeIndicator';
+
+export { MiniMonthNav } from './MiniMonthNav';
+export type { MiniMonthNavProps } from './MiniMonthNav';
+
 /* Hooks */
 export { useScheduler, getVisibleRange } from './useScheduler';
 export type { UseSchedulerOptions, UseSchedulerReturn } from './useScheduler';
@@ -45,3 +52,13 @@ export { useRecurrence } from './useRecurrence';
 
 export { useConflictDetection } from './useConflictDetection';
 export type { UseConflictDetectionReturn } from './useConflictDetection';
+
+/* Wave 2.2 Hooks */
+export { useTimezone } from './useTimezone';
+export type { TimezoneState } from './useTimezone';
+
+export { useEventDrag } from './useEventDrag';
+export type { EventDragState, UseEventDragOptions, UseEventDragReturn } from './useEventDrag';
+
+export { useExternalDrop } from './useExternalDrop';
+export type { UseExternalDropOptions, UseExternalDropReturn } from './useExternalDrop';

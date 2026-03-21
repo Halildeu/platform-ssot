@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { cn } from '@mfe/design-system';
 import type { SchedulerEvent, TimeSlot } from './types';
 import { SchedulerEventCard } from './SchedulerEvent';
+import { CurrentTimeIndicator } from './CurrentTimeIndicator';
+import { useEventDrag } from './useEventDrag';
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -47,8 +49,16 @@ export interface WeekViewProps {
   weekStartsOn?: 0 | 1;
   onEventClick?: (event: SchedulerEvent) => void;
   onEventDrop?: (event: SchedulerEvent, newStart: Date, newEnd: Date) => void;
+  /** Wave 2.2: drag-to-move callback */
+  onEventMove?: (eventId: string, newStart: Date, newEnd: Date) => void;
+  /** Wave 2.2: drag-to-resize callback */
+  onEventResize?: (eventId: string, newStart: Date, newEnd: Date) => void;
   onSlotClick?: (slot: TimeSlot) => void;
   onDragStart?: (event: SchedulerEvent) => void;
+  /** IANA timezone (informational) */
+  timezone?: string;
+  /** Show current-time indicator (default true) */
+  currentTimeIndicator?: boolean;
   className?: string;
 }
 
@@ -63,8 +73,12 @@ export const WeekView: React.FC<WeekViewProps> = ({
   weekStartsOn = 1,
   onEventClick,
   onEventDrop,
+  onEventMove,
+  onEventResize,
   onSlotClick,
   onDragStart,
+  timezone: _timezone,
+  currentTimeIndicator = true,
   className,
 }) => {
   const hours = useMemo(() => {
@@ -74,6 +88,14 @@ export const WeekView: React.FC<WeekViewProps> = ({
   }, [hourStart, hourEnd]);
 
   const totalMinutes = (hourEnd - hourStart) * 60;
+
+  /* Wave 2.2: drag-to-move and resize */
+  const { state: dragState, getEventDragProps, getSlotDropProps, getResizeHandleProps } = useEventDrag({
+    events,
+    onEventMove,
+    onEventResize,
+    snapMinutes: 15,
+  });
 
   /* Week days */
   const weekDays = useMemo(() => {
@@ -181,8 +203,18 @@ export const WeekView: React.FC<WeekViewProps> = ({
   const nowInRange = nowMinuteOffset >= hourStart * 60 && nowMinuteOffset < hourEnd * 60;
   const nowTop = ((nowMinuteOffset - hourStart * 60) / totalMinutes) * 100;
 
+  /** Build a slot Date for the drag hook */
+  const buildSlotDate = useCallback(
+    (day: Date, hour: number): Date => {
+      const d = new Date(day);
+      d.setHours(hour, 0, 0, 0);
+      return d;
+    },
+    [],
+  );
+
   return (
-    <div className={cn('x-scheduler-week', className)}>
+    <div className={cn('x-scheduler-week', 'x-scheduler-week--responsive', className)}>
       {/* All-day row */}
       {allDayEvents.length > 0 && (
         <div className="x-scheduler-week__allday-row">
@@ -239,40 +271,80 @@ export const WeekView: React.FC<WeekViewProps> = ({
           return (
             <div key={day.toISOString()} className="x-scheduler-week__column" style={{ position: 'relative' }}>
               {/* Hour slots */}
-              {hours.map((h) => (
-                <div
-                  key={h}
-                  className="x-scheduler-week__slot"
-                  style={{ height: HOUR_HEIGHT }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${dayNameFmt.format(day)} ${hourFmt.format(new Date(2000, 0, 1, h))}`}
-                  onClick={() => handleSlotClick(day, h)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleSlotClick(day, h);
-                    }
-                  }}
-                  onDrop={(e) => handleDrop(e, day, h)}
-                  onDragOver={handleDragOver}
-                />
-              ))}
+              {hours.map((h) => {
+                const slotDropProps = getSlotDropProps(buildSlotDate(day, h));
+                return (
+                  <div
+                    key={h}
+                    className={cn(
+                      'x-scheduler-week__slot',
+                      dragState.isDragging && 'x-scheduler-week__slot--drop-target',
+                    )}
+                    style={{ height: HOUR_HEIGHT }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${dayNameFmt.format(day)} ${hourFmt.format(new Date(2000, 0, 1, h))}`}
+                    onClick={() => handleSlotClick(day, h)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleSlotClick(day, h);
+                      }
+                    }}
+                    onDrop={(e) => {
+                      handleDrop(e, day, h);
+                      slotDropProps.onDrop?.(e as React.DragEvent<HTMLElement>);
+                    }}
+                    onDragOver={(e) => {
+                      handleDragOver(e);
+                      slotDropProps.onDragOver?.(e as React.DragEvent<HTMLElement>);
+                    }}
+                  />
+                );
+              })}
 
-              {/* Events */}
-              {dayEvts.map((evt) => (
-                <SchedulerEventCard
-                  key={evt.id}
-                  event={evt}
-                  locale={locale}
-                  onClick={onEventClick}
-                  onDragStart={onDragStart}
-                  style={eventStyle(evt)}
-                />
-              ))}
+              {/* Events with resize handles */}
+              {dayEvts.map((evt) => {
+                const dragProps = getEventDragProps(evt.id);
+                return (
+                  <div
+                    key={evt.id}
+                    style={{ ...eventStyle(evt), position: 'absolute' }}
+                    className="x-scheduler-week__event-wrapper"
+                    {...dragProps}
+                  >
+                    {/* Top resize handle */}
+                    {evt.editable !== false && onEventResize && (
+                      <div {...getResizeHandleProps(evt.id, 'top')} className="x-scheduler-week__resize-handle x-scheduler-week__resize-handle--top" />
+                    )}
 
-              {/* Now line */}
-              {showNow && (
+                    <SchedulerEventCard
+                      event={evt}
+                      locale={locale}
+                      onClick={onEventClick}
+                      onDragStart={onDragStart}
+                      style={{ position: 'static', height: '100%' }}
+                    />
+
+                    {/* Bottom resize handle */}
+                    {evt.editable !== false && onEventResize && (
+                      <div {...getResizeHandleProps(evt.id, 'bottom')} className="x-scheduler-week__resize-handle x-scheduler-week__resize-handle--bottom" />
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Current-time indicator (Wave 2.2) */}
+              {currentTimeIndicator && showNow && (
+                <CurrentTimeIndicator
+                  hourStart={hourStart}
+                  hourEnd={hourEnd}
+                  className="x-scheduler-week__now"
+                />
+              )}
+
+              {/* Legacy now indicator fallback */}
+              {!currentTimeIndicator && showNow && (
                 <div
                   className="x-scheduler-week__now"
                   style={{ top: `${nowTop}%` }}

@@ -7,6 +7,7 @@ import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
 import { AgendaView } from './AgendaView';
 import { ResourceView } from './ResourceView';
+import { MiniMonthNav } from './MiniMonthNav';
 import { getVisibleRange } from './useScheduler';
 
 /* ------------------------------------------------------------------ */
@@ -24,11 +25,21 @@ export interface SchedulerProps {
   onDateChange?: (date: Date) => void;
   onEventClick?: (event: SchedulerEvent) => void;
   onEventDrop?: (event: SchedulerEvent, newStart: Date, newEnd: Date) => void;
+  /** Drag-to-move callback (Wave 2.2) */
+  onEventMove?: (eventId: string, newStart: Date, newEnd: Date) => void;
+  /** Drag-to-resize callback (Wave 2.2) */
+  onEventResize?: (eventId: string, newStart: Date, newEnd: Date) => void;
   onSlotClick?: (slot: TimeSlot) => void;
   locale?: string;
   className?: string;
   hourStart?: number;
   hourEnd?: number;
+  /** IANA timezone string (e.g. "America/New_York"). Defaults to browser tz. */
+  timezone?: string;
+  /** Show the red current-time indicator line (default true) */
+  currentTimeIndicator?: boolean;
+  /** Show the mini month navigation sidebar (default false) */
+  miniMonthNav?: boolean;
 }
 
 /* ------------------------------------------------------------------ */
@@ -45,11 +56,16 @@ export const Scheduler: React.FC<SchedulerProps> = ({
   onDateChange,
   onEventClick,
   onEventDrop,
+  onEventMove,
+  onEventResize,
   onSlotClick,
   locale = 'en',
   className,
   hourStart = 8,
   hourEnd = 20,
+  timezone,
+  currentTimeIndicator = true,
+  miniMonthNav = false,
 }) => {
   /* Navigation helpers */
   const goToday = useCallback(() => onDateChange?.(new Date()), [onDateChange]);
@@ -104,8 +120,12 @@ export const Scheduler: React.FC<SchedulerProps> = ({
     locale,
     onEventClick,
     onEventDrop,
+    onEventMove,
+    onEventResize,
     onSlotClick,
     onDragStart: handleDragStart,
+    timezone,
+    currentTimeIndicator,
   };
 
   return (
@@ -121,6 +141,12 @@ export const Scheduler: React.FC<SchedulerProps> = ({
       />
 
       <div className="x-scheduler__body">
+        {miniMonthNav && onDateChange && (
+          <div className="x-scheduler__sidebar">
+            <MiniMonthNav date={date} onDateChange={onDateChange} events={events} />
+          </div>
+        )}
+        <div className="x-scheduler__main">
         {view === 'day' && <DayView {...viewProps} />}
         {view === 'week' && <WeekView {...viewProps} />}
         {view === 'month' && <MonthView {...viewProps} />}
@@ -153,6 +179,7 @@ export const Scheduler: React.FC<SchedulerProps> = ({
             }
           />
         )}
+        </div>
       </div>
     </div>
   );
