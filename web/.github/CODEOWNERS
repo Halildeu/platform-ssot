@@ -1,0 +1,46 @@
+# Platform CODEOWNERS
+# Each line is a file pattern followed by one or more owners.
+
+# ── Root & CI ──
+/.github/                          @platform-core
+/package.json                      @platform-core
+/pnpm-workspace.yaml               @platform-core
+/.prettierrc                       @platform-core
+/.husky/                           @platform-core
+
+# ── Design System ──
+/packages/design-system/           @design-system-team
+/packages/design-system/src/primitives/  @design-system-team
+/packages/design-system/src/components/  @design-system-team
+/packages/design-system/src/advanced/    @design-system-team @enterprise-suite-team
+
+# ── Enterprise X Suite ──
+/packages/x-data-grid/             @enterprise-suite-team
+/packages/x-charts/                @enterprise-suite-team
+/packages/x-scheduler/             @enterprise-suite-team
+/packages/x-kanban/                @enterprise-suite-team
+/packages/x-editor/                @enterprise-suite-team
+/packages/x-form-builder/          @enterprise-suite-team
+
+# ── Blocks & Templates ──
+/packages/blocks/                  @design-system-team @enterprise-suite-team
+/packages/create-app/              @platform-core
+
+# ── Applications ──
+/apps/mfe-shell/                   @platform-core
+/apps/mfe-suggestions/             @product-team
+/apps/mfe-ethic/                   @product-team
+/apps/mfe-access/                  @product-team
+/apps/mfe-audit/                   @product-team
+/apps/mfe-users/                   @product-team
+/apps/mfe-reporting/               @product-team
+/apps/docs/                        @design-system-team
+
+# ── Security ──
+/SECURITY.md                       @platform-core @security-team
+/.github/workflows/security-guardrails.yml  @security-team
+
+# ── Documentation ──
+/docs/                             @design-system-team
+/CHANGELOG.md                      @platform-core
+/CONTRIBUTING.md                   @platform-core

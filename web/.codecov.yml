@@ -1,0 +1,41 @@
+codecov:
+  require_ci_to_pass: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "60...90"
+
+  status:
+    project:
+      default:
+        target: 70%
+        threshold: 2%
+    patch:
+      default:
+        target: 80%
+        threshold: 5%
+
+comment:
+  layout: "reach,diff,flags,files"
+  behavior: default
+  require_changes: true
+
+flags:
+  design-system:
+    paths:
+      - packages/design-system/src/
+    carryforward: true
+  x-suite:
+    paths:
+      - packages/x-*/src/
+    carryforward: true
+
+ignore:
+  - "**/*.stories.*"
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/*.bench.*"
+  - "**/dist/**"
+  - "**/node_modules/**"
+  - "apps/**"

@@ -1,0 +1,154 @@
+# Block Customization
+
+Blocks are prebuilt UI sections that ship with sensible defaults but are designed
+to be customized for your application's needs.
+
+## Override Block Props
+
+Every block accepts a props object that maps to its internal components. Pass
+overrides to change behavior without forking the block:
+
+```tsx
+import { InvoiceListBlock } from '@mfe/blocks';
+
+export function InvoicePage() {
+  return (
+    <InvoiceListBlock
+      title="Recent Invoices"
+      pageSize={25}
+      columns={['number', 'customer', 'amount', 'status', 'date']}
+      onRowClick={(invoice) => router.push(`/invoices/${invoice.id}`)}
+      emptyState={<EmptyInvoices />}
+    />
+  );
+}
+```
+
+Props are merged with the block's defaults. Any prop you do not provide falls
+back to the built-in default value.
+
+### Common Override Patterns
+
+| Prop Pattern    | Purpose                                |
+|-----------------|----------------------------------------|
+| `columns`       | Control which data columns are visible |
+| `pageSize`      | Set default pagination size            |
+| `onRowClick`    | Handle row selection behavior          |
+| `emptyState`    | Custom empty-state component           |
+| `toolbar`       | Replace or extend the toolbar actions  |
+| `filterConfig`  | Preset active filters                  |
+
+## Custom Theme Integration
+
+Blocks inherit the active theme from the design-system `ThemeProvider`. To apply
+a custom theme:
+
+```tsx
+import { ThemeProvider, createTheme } from '@mfe/design-system';
+import { DashboardBlock } from '@mfe/blocks';
+
+const customTheme = createTheme({
+  palette: {
+    primary: { main: '#1a56db' },
+    background: { default: '#f8fafc' },
+  },
+  shape: { borderRadius: 12 },
+});
+
+export function Dashboard() {
+  return (
+    <ThemeProvider theme={customTheme}>
+      <DashboardBlock />
+    </ThemeProvider>
+  );
+}
+```
+
+Blocks use design tokens internally, so they automatically adapt to your custom
+palette, typography, spacing, and shape values.
+
+### Token Override Granularity
+
+For fine-grained control, override specific tokens in the theme:
+
+```tsx
+const theme = createTheme({
+  components: {
+    MfeBlockCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          border: '1px solid var(--color-border-subtle)',
+        },
+      },
+    },
+  },
+});
+```
+
+## Slot-Based Composition
+
+Blocks expose named **slots** for replacing internal sections without overriding
+the entire block:
+
+```tsx
+import { CustomerDetailBlock } from '@mfe/blocks';
+
+export function CustomerPage() {
+  return (
+    <CustomerDetailBlock
+      slots={{
+        header: <CustomHeader />,
+        sidebar: <CustomSidebar />,
+        footer: null, // remove the footer entirely
+      }}
+      slotProps={{
+        header: { showBreadcrumb: true },
+        sidebar: { collapsible: true },
+      }}
+    />
+  );
+}
+```
+
+### Available Slots
+
+Each block documents its slots in its TypeScript interface. Common slots include:
+
+| Slot       | Description                             |
+|------------|-----------------------------------------|
+| `header`   | Top section with title and actions      |
+| `toolbar`  | Action bar above the main content       |
+| `content`  | Primary content area                    |
+| `sidebar`  | Optional side panel                     |
+| `footer`   | Bottom section with pagination or CTAs  |
+
+Pass `null` to any slot to remove that section. Pass a React element to replace
+it entirely.
+
+### Slot Props Forwarding
+
+Use `slotProps` to pass props to slot components without wrapping them manually:
+
+```tsx
+<OrderListBlock
+  slots={{ toolbar: <AdvancedToolbar /> }}
+  slotProps={{
+    toolbar: {
+      showExport: true,
+      showColumnToggle: true,
+      exportFormats: ['csv', 'xlsx'],
+    },
+  }}
+/>
+```
+
+## Creating Custom Blocks
+
+When the built-in customization options are not enough, you can create a fully
+custom block. See the [Creating Blocks](/blocks/creating-blocks) guide for the
+full walkthrough.
+
+The recommended approach is to compose existing x-suite components and
+design-system primitives into your own block, then register it in the block
+registry so it appears in the Design Lab catalog.

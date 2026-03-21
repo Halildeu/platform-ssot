@@ -1,0 +1,49 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "packages": {
+    "packages/design-system": {
+      "component": "design-system",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/x-data-grid": {
+      "component": "x-data-grid",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/x-charts": {
+      "component": "x-charts",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/x-scheduler": {
+      "component": "x-scheduler",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/x-kanban": {
+      "component": "x-kanban",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/x-editor": {
+      "component": "x-editor",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/x-form-builder": {
+      "component": "x-form-builder",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/blocks": {
+      "component": "blocks",
+      "changelog-path": "CHANGELOG.md"
+    },
+    "packages/create-app": {
+      "component": "create-app",
+      "changelog-path": "CHANGELOG.md"
+    }
+  },
+  "changelog-sections": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "perf", "section": "Performance" },
+    { "type": "docs", "section": "Documentation" },
+    { "type": "chore", "section": "Maintenance", "hidden": true }
+  ]
+}

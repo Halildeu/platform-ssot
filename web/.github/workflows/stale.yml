@@ -1,0 +1,22 @@
+name: Stale Issues
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: 'This issue has been inactive for 90 days. It will be closed in 30 days unless there is new activity.'
+          close-issue-message: 'Closed due to inactivity. Reopen if still relevant.'
+          days-before-stale: 90
+          days-before-close: 30
+          exempt-issue-labels: 'P0,P1,security,breaking,pinned'
+          stale-issue-label: 'stale'
+          stale-pr-message: 'This PR has been inactive for 30 days.'
+          days-before-pr-stale: 30
+          days-before-pr-close: 14
+          exempt-pr-labels: 'WIP,blocked'
