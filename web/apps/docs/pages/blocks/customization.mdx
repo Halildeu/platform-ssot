@@ -9,11 +9,11 @@ Every block accepts a props object that maps to its internal components. Pass
 overrides to change behavior without forking the block:
 
 ```tsx
-import { InvoiceListBlock } from '@mfe/blocks';
+import { DataListBlock } from '@mfe/blocks';
 
 export function InvoicePage() {
   return (
-    <InvoiceListBlock
+    <DataListBlock
       title="Recent Invoices"
       pageSize={25}
       columns={['number', 'customer', 'amount', 'status', 'date']}
@@ -45,7 +45,7 @@ a custom theme:
 
 ```tsx
 import { ThemeProvider, createTheme } from '@mfe/design-system';
-import { DashboardBlock } from '@mfe/blocks';
+import { KPIDashboardBlock } from '@mfe/blocks';
 
 const customTheme = createTheme({
   palette: {
@@ -58,7 +58,7 @@ const customTheme = createTheme({
 export function Dashboard() {
   return (
     <ThemeProvider theme={customTheme}>
-      <DashboardBlock />
+      <KPIDashboardBlock />
     </ThemeProvider>
   );
 }
@@ -92,11 +92,11 @@ Blocks expose named **slots** for replacing internal sections without overriding
 the entire block:
 
 ```tsx
-import { CustomerDetailBlock } from '@mfe/blocks';
+import { DetailViewBlock } from '@mfe/blocks';
 
 export function CustomerPage() {
   return (
-    <CustomerDetailBlock
+    <DetailViewBlock
       slots={{
         header: <CustomHeader />,
         sidebar: <CustomSidebar />,

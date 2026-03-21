@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text } from '@mfe/design-system';
+import { isEnabled } from '../../lib/feature-flags';
 
 // Direct imports from design-system (already works in mfe-shell)
 // X-Charts: only import our custom SVG/React components, not AG Charts wrappers
@@ -14,38 +15,47 @@ let DataGridSelectionBar: React.FC<any> | null = null;
 let RichTextEditor: React.FC<any> | null = null;
 let FormRenderer: React.FC<any> | null = null;
 
-try {
-  const xCharts = require('@mfe/x-charts');
-  ChartDashboard = xCharts.ChartDashboard;
-  KPICard = xCharts.KPICard;
-  StatWidget = xCharts.StatWidget;
-  SparklineChart = xCharts.SparklineChart;
-  ChartContainer = xCharts.ChartContainer;
-  ChartLegend = xCharts.ChartLegend;
-} catch (e) {
-  console.warn('[X-Suite] x-charts not available:', e);
+// Feature-flag gated loading — kill switches allow runtime disable
+if (isEnabled('x-charts-dashboard')) {
+  try {
+    const xCharts = require('@mfe/x-charts');
+    ChartDashboard = xCharts.ChartDashboard;
+    KPICard = xCharts.KPICard;
+    StatWidget = xCharts.StatWidget;
+    SparklineChart = xCharts.SparklineChart;
+    ChartContainer = xCharts.ChartContainer;
+    ChartLegend = xCharts.ChartLegend;
+  } catch (e) {
+    console.warn('[X-Suite] x-charts not available:', e);
+  }
 }
 
-try {
-  const xGrid = require('@mfe/x-data-grid');
-  DataGridFilterChips = xGrid.DataGridFilterChips;
-  DataGridSelectionBar = xGrid.DataGridSelectionBar;
-} catch (e) {
-  console.warn('[X-Suite] x-data-grid not available:', e);
+if (isEnabled('x-data-grid')) {
+  try {
+    const xGrid = require('@mfe/x-data-grid');
+    DataGridFilterChips = xGrid.DataGridFilterChips;
+    DataGridSelectionBar = xGrid.DataGridSelectionBar;
+  } catch (e) {
+    console.warn('[X-Suite] x-data-grid not available:', e);
+  }
 }
 
-try {
-  const xEditor = require('@mfe/x-editor');
-  RichTextEditor = xEditor.RichTextEditor;
-} catch (e) {
-  console.warn('[X-Suite] x-editor not available:', e);
+if (isEnabled('x-editor-tiptap')) {
+  try {
+    const xEditor = require('@mfe/x-editor');
+    RichTextEditor = xEditor.RichTextEditor;
+  } catch (e) {
+    console.warn('[X-Suite] x-editor not available:', e);
+  }
 }
 
-try {
-  const xFormBuilder = require('@mfe/x-form-builder');
-  FormRenderer = xFormBuilder.FormRenderer;
-} catch (e) {
-  console.warn('[X-Suite] x-form-builder not available:', e);
+if (isEnabled('x-form-builder')) {
+  try {
+    const xFormBuilder = require('@mfe/x-form-builder');
+    FormRenderer = xFormBuilder.FormRenderer;
+  } catch (e) {
+    console.warn('[X-Suite] x-form-builder not available:', e);
+  }
 }
 
 export default function XSuiteDashboardPage() {

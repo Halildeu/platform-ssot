@@ -83,7 +83,7 @@ Replace the mock data source with your API:
 
 ```typescript
 import { useQuery } from '@tanstack/react-query';
-import { DataGrid } from '@mfe/x-data-grid';
+import { EntityGridTemplate } from '@mfe/x-data-grid';
 
 function OrdersPage() {
   const { data, isLoading } = useQuery({
@@ -92,7 +92,7 @@ function OrdersPage() {
   });
 
   return (
-    <DataGrid
+    <EntityGridTemplate
       rows={data ?? []}
       columns={orderColumns}
       loading={isLoading}
@@ -146,9 +146,9 @@ VITE_KEYCLOAK_CLIENT_ID=mfe-shell
 Build a master-detail data page:
 
 ```typescript
-import { DataGrid, type ColDef } from '@mfe/x-data-grid';
+import { EntityGridTemplate, useColumnBuilder } from '@mfe/x-data-grid';
 
-const columns: ColDef[] = [
+const columns = [
   { field: 'id', headerName: 'ID', width: 80 },
   { field: 'name', headerName: 'Customer', flex: 1 },
   { field: 'status', headerName: 'Status', cellRenderer: 'statusBadge' },
@@ -157,7 +157,7 @@ const columns: ColDef[] = [
 ];
 
 // Server-side row model for 100K+ rows
-<DataGrid
+<EntityGridTemplate
   columns={columns}
   rowModelType="serverSide"
   serverSideDatasource={yourDatasource}

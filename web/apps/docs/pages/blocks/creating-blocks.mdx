@@ -31,7 +31,7 @@ packages/blocks/src/
 // packages/blocks/src/blocks/invoice-list/InvoiceListBlock.tsx
 
 import { Card, Stack, Typography } from '@mfe/design-system';
-import { DataGrid } from '@mfe/x-data-grid';
+import { EntityGridTemplate } from '@mfe/x-data-grid';
 import type { BlockSlots, BlockSlotProps } from '../../types';
 
 export interface InvoiceListBlockProps {
@@ -73,7 +73,7 @@ export function InvoiceListBlock({
       <Stack spacing={2} padding={3}>
         {Header}
         {slots.toolbar !== null && (slots.toolbar ?? <DefaultToolbar {...slotProps.toolbar} />)}
-        <DataGrid
+        <EntityGridTemplate
           columns={buildColumnDefs(columns)}
           pageSize={pageSize}
           onRowClick={onRowClick}
@@ -110,7 +110,7 @@ export function InvoiceListBlock({ useData = useInvoiceData, ...props }) {
   if (error) return <ErrorState error={error} />;
 
   return (
-    <DataGrid
+    <EntityGridTemplate
       rows={data}
       loading={isLoading}
       {...props}

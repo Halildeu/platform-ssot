@@ -16,6 +16,10 @@ initSentry();
 import { initRUM } from '../lib/rum';
 initRUM();
 
+// Feature flags: runtime kill switches for safe rollout
+import { initFeatureFlags } from '../lib/feature-flags';
+initFeatureFlags();
+
 import { createRoot } from 'react-dom/client';
 import ShellApp from './ShellApp';
 
