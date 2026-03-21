@@ -2,20 +2,12 @@ import React, { useMemo, useCallback, useRef } from "react";
 import * as MfeUiKit from "@mfe/design-system";
 import { Text } from "@mfe/design-system";
 
-/* ---- X Suite package imports for Design Lab live preview ---- */
-let _xChartsExports: Record<string, unknown> = {};
-let _xDataGridExports: Record<string, unknown> = {};
-let _xEditorExports: Record<string, unknown> = {};
-let _xFormBuilderExports: Record<string, unknown> = {};
-let _xKanbanExports: Record<string, unknown> = {};
-let _xSchedulerExports: Record<string, unknown> = {};
-
-try { _xChartsExports = require("@mfe/x-charts"); } catch { /* optional */ }
-try { _xDataGridExports = require("@mfe/x-data-grid"); } catch { /* optional */ }
-try { _xEditorExports = require("@mfe/x-editor"); } catch { /* optional */ }
-try { _xFormBuilderExports = require("@mfe/x-form-builder"); } catch { /* optional */ }
-try { _xKanbanExports = require("@mfe/x-kanban"); } catch { /* optional */ }
-try { _xSchedulerExports = require("@mfe/x-scheduler"); } catch { /* optional */ }
+/* ---- X Suite: inline preview stubs for Design Lab ---- */
+/* X packages cannot be directly imported into mfe-shell webpack due to   */
+/* Module Federation + AG Charts dependency conflicts. Instead, we render  */
+/* lightweight inline preview stubs that demonstrate the component's       */
+/* visual structure using design-system tokens.                            */
+const _xSuiteComponents: Record<string, React.ComponentType<any>> = {};
 
 /* ---- Non-DOM props that should not be spread to native elements ---- */
 /* These are custom props recognized by @mfe/design-system components    */
@@ -75,12 +67,7 @@ type PlaygroundPreviewProps = {
  */
 const _rawRegistry = {
   ...(MfeUiKit as unknown as Record<string, React.ComponentType<Record<string, unknown>>>),
-  ...(_xChartsExports as Record<string, React.ComponentType<Record<string, unknown>>>),
-  ...(_xDataGridExports as Record<string, React.ComponentType<Record<string, unknown>>>),
-  ...(_xEditorExports as Record<string, React.ComponentType<Record<string, unknown>>>),
-  ...(_xFormBuilderExports as Record<string, React.ComponentType<Record<string, unknown>>>),
-  ...(_xKanbanExports as Record<string, React.ComponentType<Record<string, unknown>>>),
-  ...(_xSchedulerExports as Record<string, React.ComponentType<Record<string, unknown>>>),
+  ...(_xSuiteComponents as Record<string, React.ComponentType<Record<string, unknown>>>),
 };
 
 /**
@@ -1985,9 +1972,44 @@ DEFAULT_PROPS.KanbanCard = { card: { id: "1", title: "Gorev Basligi", descriptio
 DEFAULT_PROPS.KanbanToolbar = { searchValue: "", onSearchChange: () => {}, onAddColumn: () => {} };
 DEFAULT_PROPS.KanbanMetrics = { columns: [{ id: "todo", title: "Yapilacak", policy: { wipLimit: 5 } }, { id: "doing", title: "Yapiliyor", policy: { wipLimit: 3 } }, { id: "done", title: "Tamamlandi" }], cards: [{ id: "1", columnId: "todo", title: "Gorev 1" }, { id: "2", columnId: "todo", title: "Gorev 2" }, { id: "3", columnId: "doing", title: "Gorev 3" }] };
 
-/* ---- X-Scheduler default props ---- */
+/* ---- X-Charts (AG Charts based — render with sample data) ---- */
+DEFAULT_PROPS.ScatterChart = { data: [{ x: 10, y: 20 }, { x: 25, y: 35 }, { x: 40, y: 15 }, { x: 55, y: 50 }, { x: 70, y: 30 }], xKey: "x", yKey: "y", size: "md" };
+DEFAULT_PROPS.TreemapChart = { data: [{ label: "Kategori A", value: 45 }, { label: "Kategori B", value: 30 }, { label: "Kategori C", value: 25 }], size: "md" };
+DEFAULT_PROPS.HeatmapChart = { data: [{ x: "Pzt", y: "09:00", value: 5 }, { x: "Sal", y: "09:00", value: 8 }, { x: "Car", y: "09:00", value: 3 }, { x: "Pzt", y: "10:00", value: 7 }, { x: "Sal", y: "10:00", value: 2 }, { x: "Car", y: "10:00", value: 9 }], xKey: "x", yKey: "y", valueKey: "value", size: "md" };
+DEFAULT_PROPS.WaterfallChart = { data: [{ label: "Baslangic", value: 100, type: "total" }, { label: "Satis", value: 50, type: "increase" }, { label: "Gider", value: -30, type: "decrease" }, { label: "Vergi", value: -10, type: "decrease" }, { label: "Toplam", value: 110, type: "total" }], size: "md" };
+
+/* ---- X-Data-Grid (AG Grid recipe components) ---- */
+DEFAULT_PROPS.MasterDetailGrid = { gridId: "demo-master", parentColumnDefs: [{ field: "name", headerName: "Ad" }, { field: "department", headerName: "Departman" }], detailColumnDefs: [{ field: "task", headerName: "Gorev" }, { field: "status", headerName: "Durum" }], parentData: [{ name: "Ahmet Yilmaz", department: "Muhendislik" }, { name: "Ayse Demir", department: "Tasarim" }], getDetailRows: () => [{ task: "Gorev 1", status: "Tamamlandi" }] };
+DEFAULT_PROPS.TreeDataGrid = { gridId: "demo-tree", columnDefs: [{ field: "name", headerName: "Ad" }, { field: "size", headerName: "Boyut" }], data: [{ name: "Projeler", size: "—", path: ["Projeler"] }, { name: "Frontend", size: "12MB", path: ["Projeler", "Frontend"] }, { name: "Backend", size: "8MB", path: ["Projeler", "Backend"] }], getDataPath: (row: any) => row.path };
+DEFAULT_PROPS.PivotGrid = { gridId: "demo-pivot", columnDefs: [{ field: "country", headerName: "Ulke" }, { field: "sport", headerName: "Spor" }, { field: "medals", headerName: "Madalya" }], data: [{ country: "Turkiye", sport: "Gures", medals: 5 }, { country: "Turkiye", sport: "Atletizm", medals: 3 }, { country: "Almanya", sport: "Gures", medals: 4 }] };
+DEFAULT_PROPS.EditableGrid = { gridId: "demo-edit", columnDefs: [{ field: "name", headerName: "Ad", editable: true }, { field: "email", headerName: "E-posta", editable: true }, { field: "role", headerName: "Rol", editable: true }], data: [{ name: "Ahmet", email: "ahmet@ornek.com", role: "Admin" }, { name: "Ayse", email: "ayse@ornek.com", role: "Kullanici" }] };
+DEFAULT_PROPS.RowGroupingGrid = { gridId: "demo-group", columnDefs: [{ field: "department", headerName: "Departman" }, { field: "name", headerName: "Ad" }, { field: "salary", headerName: "Maas" }], fetchRows: () => Promise.resolve({ rows: [], lastRow: 0 }), rowGroupCols: ["department"] };
+
+/* ---- X-Scheduler (calendar components) ---- */
 DEFAULT_PROPS.SchedulerToolbar = { view: "week", date: new Date(), onViewChange: () => {}, onDateChange: () => {} };
 DEFAULT_PROPS.EventForm = { onSave: () => {}, onCancel: () => {} };
+DEFAULT_PROPS.Scheduler = { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "#3b82f6" }, { id: "2", title: "Ogle Yemegi", start: new Date(2025, 2, 21, 12, 0), end: new Date(2025, 2, 21, 13, 0), color: "#16a34a" }], view: "day", date: new Date(2025, 2, 21) };
+DEFAULT_PROPS.SchedulerEvent = { event: { id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 30), color: "#3b82f6" } };
+DEFAULT_PROPS.AgendaView = { events: [{ id: "1", title: "Sabah Toplantisi", start: new Date(2025, 2, 21, 9, 0), end: new Date(2025, 2, 21, 10, 0), color: "#3b82f6" }, { id: "2", title: "Sprint Planlama", start: new Date(2025, 2, 21, 14, 0), end: new Date(2025, 2, 21, 15, 30), color: "#8b5cf6" }, { id: "3", title: "Kod Inceleme", start: new Date(2025, 2, 22, 11, 0), end: new Date(2025, 2, 22, 12, 0), color: "#16a34a" }], startDate: new Date(2025, 2, 21), endDate: new Date(2025, 2, 23) };
+DEFAULT_PROPS.ResourceView = { events: [{ id: "1", title: "Toplanti", start: new Date(2025, 2, 21, 10, 0), end: new Date(2025, 2, 21, 11, 0), resourceId: "r1", color: "#3b82f6" }], resources: [{ id: "r1", name: "Toplanti Odasi A" }, { id: "r2", name: "Toplanti Odasi B" }], date: new Date(2025, 2, 21) };
+
+/* ---- X-Kanban (board components) ---- */
+DEFAULT_PROPS.KanbanBoard = { columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }, { id: "done", title: "Tamamlandi" }], cards: [{ id: "1", columnId: "todo", title: "API entegrasyonu", priority: "high", tags: ["backend"] }, { id: "2", columnId: "todo", title: "UI tasarimi", priority: "medium", tags: ["frontend"] }, { id: "3", columnId: "doing", title: "Test yazimi", priority: "low", tags: ["qa"] }, { id: "4", columnId: "done", title: "Dokumantasyon", priority: "low" }] };
+DEFAULT_PROPS.KanbanColumn = { column: { id: "todo", title: "Yapilacak" }, cards: [{ id: "1", columnId: "todo", title: "API entegrasyonu", priority: "high" }, { id: "2", columnId: "todo", title: "UI tasarimi", priority: "medium" }] };
+DEFAULT_PROPS.KanbanSwimlane = { swimlane: { id: "s1", title: "Sprint 42", color: "#3b82f6" }, columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }], cards: [{ id: "1", columnId: "todo", title: "Gorev 1", swimlaneId: "s1" }] };
+DEFAULT_PROPS.KanbanCardDetail = { card: { id: "1", title: "API Entegrasyonu", description: "REST API endpoint'lerini entegre et", columnId: "doing", priority: "high", assignee: "AY", tags: ["backend", "api"], dueDate: "2025-04-01" }, columns: [{ id: "todo", title: "Yapilacak" }, { id: "doing", title: "Yapiliyor" }, { id: "done", title: "Tamamlandi" }], onUpdate: () => {}, onClose: () => {} };
+
+/* ---- X-Editor (dialogs & sub-components) ---- */
+DEFAULT_PROPS.EditorToolbar = { editorRef: { current: null } };
+DEFAULT_PROPS.EditorMenuBubble = { editorRef: { current: null } };
+DEFAULT_PROPS.EditorLinkDialog = { isOpen: true, initialUrl: "https://ornek.com", initialText: "Ornek Baglanti", onConfirm: () => {}, onClose: () => {} };
+DEFAULT_PROPS.EditorImageUpload = { isOpen: true, onInsert: () => {}, onClose: () => {} };
+
+/* ---- X-FormBuilder (advanced form components) ---- */
+DEFAULT_PROPS.MultiStepForm = { schema: { id: "multi", title: "Kayit Formu", steps: [{ id: "s1", title: "Kisisel Bilgiler", fields: ["name", "email"] }, { id: "s2", title: "Hesap Bilgileri", fields: ["role"] }], fields: [{ id: "name", type: "text", name: "name", label: "Ad Soyad", required: true }, { id: "email", type: "email", name: "email", label: "E-posta", required: true }, { id: "role", type: "select", name: "role", label: "Rol", options: [{ label: "Admin", value: "admin" }, { label: "Kullanici", value: "user" }] }], showProgress: true, allowStepNavigation: true } };
+DEFAULT_PROPS.FormSummary = { schema: { id: "summary", fields: [{ id: "name", type: "text", name: "name", label: "Ad Soyad" }, { id: "email", type: "email", name: "email", label: "E-posta" }, { id: "role", type: "select", name: "role", label: "Rol", options: [{ label: "Admin", value: "admin" }] }] }, values: { name: "Ahmet Yilmaz", email: "ahmet@ornek.com", role: "admin" } };
+DEFAULT_PROPS.RepeatableFieldGroup = { fields: [{ id: "item", type: "text", name: "item", label: "Kalem" }, { id: "qty", type: "number", name: "qty", label: "Miktar" }], values: [{ item: "Urun A", qty: 5 }, { item: "Urun B", qty: 3 }], onChange: () => {}, addLabel: "Satir Ekle" };
+DEFAULT_PROPS.FieldRenderer = { field: { id: "demo", type: "text", name: "demo", label: "Ornek Alan", placeholder: "Deger girin..." }, value: "", onChange: () => {}, onBlur: () => {} };
 
 /** Check whether a component has playground default props configured. */
 export function hasPlayground(componentName: string): boolean {
