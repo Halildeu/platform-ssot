@@ -478,7 +478,7 @@ function PrimitivesSidebarContent({
           subtitle={item.description}
           badge={item.lifecycle}
           onClick={() =>
-            onItemSelect(`/admin/design-lab/primitives/${item.groupId}/${item.name}`)
+            onItemSelect(`/admin/design-lab/primitives/${item.groupId}/${encodeURIComponent(item.name)}`)
           }
         />
       ))}
@@ -524,7 +524,7 @@ function AdvancedSidebarContent({
           subtitle={item.description}
           badge={item.lifecycle}
           onClick={() =>
-            onItemSelect(`/admin/design-lab/advanced/${item.name}`)
+            onItemSelect(`/admin/design-lab/advanced/${encodeURIComponent(item.name)}`)
           }
         />
       ))}
@@ -593,7 +593,7 @@ function ComponentsSidebarContent({
                     badge={indexItem?.lifecycle}
                     onClick={() =>
                       onItemSelect(
-                        `/admin/design-lab/components/${group.id}/${itemName}`,
+                        `/admin/design-lab/components/${group.id}/${encodeURIComponent(itemName)}`,
                       )
                     }
                   />

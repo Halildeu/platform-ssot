@@ -319,7 +319,7 @@ function PageRegions({
                 key={comp.name}
                 type="button"
                 onClick={() =>
-                  navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${comp.name}`)
+                  navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${encodeURIComponent(comp.name)}`)
                 }
                 className="group flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-default p-3 text-left transition hover:border-action-primary/30 hover:shadow-sm"
               >
@@ -368,7 +368,7 @@ function ZoneCard({
           <button
             key={block}
             type="button"
-            onClick={() => navigate(`/admin/design-lab/components/actions/${block}`)}
+            onClick={() => navigate(`/admin/design-lab/components/actions/${encodeURIComponent(block)}`)}
             className="rounded-lg bg-surface-default px-3 py-1.5 text-xs font-medium text-text-primary shadow-sm transition hover:bg-action-primary/10 hover:text-action-primary"
           >
             {block}
@@ -405,7 +405,7 @@ function PageComponents({
           key={comp.name}
           type="button"
           onClick={() =>
-            navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${comp.name}`)
+            navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${encodeURIComponent(comp.name)}`)
           }
           className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary/30 hover:shadow-sm"
         >

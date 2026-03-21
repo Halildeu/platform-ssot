@@ -132,7 +132,7 @@ function LegacyUrlRedirect() {
 
     case "components":
       if (group && item) {
-        targetPath += `/components/${group}/${item}`;
+        targetPath += `/components/${group}/${encodeURIComponent(item)}`;
       } else if (group) {
         targetPath += `/components/${group}`;
       } else {

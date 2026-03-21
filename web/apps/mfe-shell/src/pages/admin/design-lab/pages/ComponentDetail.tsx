@@ -521,13 +521,13 @@ function OverviewTab({
           componentName={indexItem.name}
           states={getEffectivePreviewStates(apiItem)}
           componentProps={new Set((apiItem.props ?? []).map((p) => p.name))}
-          isExplicitPreviewStates={!!(apiItem.previewStates && apiItem.previewStates.length > 0)}
+          isExplicitPreviewStates={!!(apiItem?.previewStates && apiItem.previewStates.length > 0)}
         />
       )}
 
       {/* 5. Metadata Cards — Modern grid */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {apiItem && apiItem.props.length > 0 && (
+        {apiItem && (apiItem.props ?? []).length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10">
@@ -537,11 +537,11 @@ function OverviewTab({
                 {t("designlab.detail.overview.keyProps")}
               </Text>
               <span className="ml-auto rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-semibold tabular-nums text-text-secondary">
-                {apiItem.props.length}
+                {(apiItem.props ?? []).length}
               </span>
             </div>
             <div className="space-y-1.5">
-              {apiItem.props.slice(0, 8).map((prop) => (
+              {(apiItem.props ?? []).slice(0, 8).map((prop) => (
                 <div
                   key={prop.name}
                   className="flex items-baseline justify-between gap-4 rounded-lg px-2 py-1.5 transition-colors hover:bg-surface-canvas"
@@ -554,16 +554,16 @@ function OverviewTab({
                   </code>
                 </div>
               ))}
-              {apiItem.props.length > 8 && (
+              {(apiItem.props ?? []).length > 8 && (
                 <Text variant="secondary" className="px-2 text-xs">
-                  +{apiItem.props.length - 8} more
+                  +{(apiItem.props ?? []).length - 8} more
                 </Text>
               )}
             </div>
           </div>
         )}
 
-        {apiItem && apiItem.variantAxes.length > 0 && (
+        {apiItem && (apiItem.variantAxes ?? []).length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10">
@@ -574,7 +574,7 @@ function OverviewTab({
               </Text>
             </div>
             <div className="flex flex-wrap gap-2">
-              {apiItem.variantAxes.map((axis) => (
+              {(apiItem.variantAxes ?? []).map((axis) => (
                 <span
                   key={axis}
                   className="rounded-lg border border-border-subtle bg-surface-canvas px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-border-default hover:text-text-primary"
@@ -635,7 +635,7 @@ function OverviewTab({
           </div>
         )}
 
-        {indexItem.whereUsed.length > 0 && (
+        {(indexItem?.whereUsed ?? []).length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
@@ -645,11 +645,11 @@ function OverviewTab({
                 {t("designlab.detail.overview.whereUsed")}
               </Text>
               <span className="ml-auto rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-semibold tabular-nums text-text-secondary">
-                {indexItem.whereUsed.length}
+                {(indexItem?.whereUsed ?? []).length}
               </span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {indexItem.whereUsed.slice(0, 8).map((app) => (
+              {(indexItem?.whereUsed ?? []).slice(0, 8).map((app) => (
                 <span
                   key={app}
                   className="rounded-lg border border-border-subtle bg-surface-canvas px-3 py-1.5 text-xs font-medium text-text-secondary transition-colors hover:border-border-default hover:text-text-primary"
@@ -844,7 +844,7 @@ function getEffectivePreviewStates(apiItem: ApiItem | null | undefined): string[
     return apiItem.previewStates;
   }
   // Fallback: filter stateModel to only entries that have a STATE_PROP_MAP mapping
-  return apiItem.stateModel.filter((s) => STATE_PROP_MAP[s] !== undefined);
+  return (apiItem.stateModel ?? []).filter((s) => STATE_PROP_MAP[s] !== undefined);
 }
 
 /**
@@ -857,7 +857,7 @@ function getEffectiveBehaviorModel(apiItem: ApiItem | null | undefined): string[
     return apiItem.behaviorModel;
   }
   // Fallback: stateModel entries that are NOT preview-mappable
-  return apiItem.stateModel.filter((s) => STATE_PROP_MAP[s] === undefined);
+  return (apiItem.stateModel ?? []).filter((s) => STATE_PROP_MAP[s] === undefined);
 }
 
 // Imported from shared module — single source of truth for state→prop mappings.
@@ -986,7 +986,7 @@ function StateDemoSection({
 function ApiTab({ apiItem, componentName }: { apiItem: ApiItem; componentName?: string }) {
   const { t } = useDesignLab();
 
-  if (!apiItem || apiItem.props.length === 0) {
+  if (!apiItem || (apiItem.props ?? []).length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-2xl border border-border-subtle bg-surface-canvas py-16">
         <FileCode2 className="mb-3 h-8 w-8 text-text-secondary/40" />
@@ -1009,13 +1009,13 @@ function ApiTab({ apiItem, componentName }: { apiItem: ApiItem; componentName?: 
             Component API
           </Text>
           <Text variant="secondary" className="text-xs">
-            {apiItem.props.length} props &middot; {apiItem.props.filter((p: { required: boolean }) => p.required).length} required
+            {(apiItem.props ?? []).length} props &middot; {(apiItem.props ?? []).filter((p: { required: boolean }) => p.required).length} required
           </Text>
         </div>
       </div>
 
       <PropsTableV2
-        props={apiItem.props}
+        props={apiItem.props ?? []}
         componentName={componentName ?? apiItem.name}
       />
 
@@ -1499,9 +1499,9 @@ function QualityTab({
             {t("designlab.detail.quality.gates")}
           </Text>
         </div>
-        {indexItem.qualityGates.length > 0 ? (
+        {(indexItem?.qualityGates ?? []).length > 0 ? (
           <div className="divide-y divide-border-subtle">
-            {indexItem.qualityGates.map((gate) => (
+            {(indexItem?.qualityGates ?? []).map((gate) => (
               <div
                 key={gate}
                 className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-surface-canvas/30"
@@ -1583,7 +1583,7 @@ function QualityTab({
             Props Count
           </Text>
           <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-blue-600">
-            {apiItem?.props.length ?? 0}
+            {apiItem?.props?.length ?? 0}
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
@@ -1592,7 +1592,7 @@ function QualityTab({
             Where Used
           </Text>
           <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-violet-600">
-            {indexItem.whereUsed.length}
+            {(indexItem?.whereUsed ?? []).length}
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
@@ -1601,7 +1601,7 @@ function QualityTab({
             Bundle Impact
           </Text>
           <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-rose-600">
-            {estimateBundleSize(indexItem.name, apiItem?.props.length ?? 0)}
+            {estimateBundleSize(indexItem.name, apiItem?.props?.length ?? 0)}
           </Text>
           <Text variant="secondary" className="mt-0.5 text-[9px]">
             gzip estimate
@@ -1623,13 +1623,13 @@ function QualityTab({
         <div className="grid divide-x divide-border-subtle sm:grid-cols-3">
           <ComplexityMetric
             label="Props"
-            value={apiItem?.props.length ?? 0}
+            value={apiItem?.props?.length ?? 0}
             max={40}
             color="blue"
           />
           <ComplexityMetric
             label="Variants"
-            value={apiItem?.variantAxes.length ?? 0}
+            value={apiItem?.variantAxes?.length ?? 0}
             max={8}
             color="violet"
           />

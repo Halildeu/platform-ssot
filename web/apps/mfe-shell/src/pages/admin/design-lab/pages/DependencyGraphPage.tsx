@@ -206,11 +206,11 @@ export default function DependencyGraphPage() {
         if (item) {
           const layer = getLayerFromItem(item);
           if (layer === "primitives") {
-            navigate(`/admin/design-lab/primitives/${item.taxonomyGroupId}/${item.name}`);
+            navigate(`/admin/design-lab/primitives/${item.taxonomyGroupId}/${encodeURIComponent(item.name)}`);
           } else if (layer === "advanced") {
-            navigate(`/admin/design-lab/advanced/${item.name}`);
+            navigate(`/admin/design-lab/advanced/${encodeURIComponent(item.name)}`);
           } else {
-            navigate(`/admin/design-lab/components/${item.taxonomyGroupId}/${item.name}`);
+            navigate(`/admin/design-lab/components/${item.taxonomyGroupId}/${encodeURIComponent(item.name)}`);
           }
         }
       } else {
