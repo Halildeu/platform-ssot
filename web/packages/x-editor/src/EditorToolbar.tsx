@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import type { EditorCore } from './useEditor';
 
 export interface EditorToolbarProps {
   editorRef: React.RefObject<HTMLDivElement | null>;
+  /** When provided, commands are dispatched via EditorCore instead of document.execCommand */
+  editorCore?: EditorCore | null;
   className?: string;
 }
 
@@ -81,7 +84,7 @@ const separatorStyles: React.CSSProperties = {
   backgroundColor: 'var(--border-subtle, #e2e8f0)',
 };
 
-export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editorRef, className }) => {
+export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editorRef, editorCore, className }) => {
   const [, setForceUpdate] = useState(0);
 
   // Re-render on selection change to update active states
@@ -93,6 +96,49 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editorRef, classNa
 
   const execCommand = useCallback(
     (command: string, value?: string) => {
+      // Prefer EditorCore commands when available (Tiptap or future engines)
+      if (editorCore) {
+        const coreCommandMap: Record<string, () => void> = {
+          bold: () => editorCore.toggleBold(),
+          italic: () => editorCore.toggleItalic(),
+          underline: () => editorCore.toggleUnderline(),
+          strikeThrough: () => editorCore.toggleStrike(),
+          insertUnorderedList: () => editorCore.toggleBulletList(),
+          insertOrderedList: () => editorCore.toggleOrderedList(),
+          insertHorizontalRule: () => editorCore.insertHorizontalRule(),
+          removeFormat: () => {
+            // No direct EditorCore equivalent; fall through to native
+            editorRef.current?.focus();
+            document.execCommand('removeFormat');
+          },
+        };
+
+        if (command === 'createLink') {
+          const url = window.prompt('Enter URL:');
+          if (url) editorCore.setLink(url);
+          return;
+        }
+
+        if (command === 'formatBlock' && value) {
+          const blockMap: Record<string, () => void> = {
+            h1: () => editorCore.toggleHeading(1),
+            h2: () => editorCore.toggleHeading(2),
+            h3: () => editorCore.toggleHeading(3),
+            blockquote: () => editorCore.toggleBlockquote(),
+            pre: () => editorCore.toggleCodeBlock(),
+          };
+          blockMap[value]?.();
+          return;
+        }
+
+        const handler = coreCommandMap[command];
+        if (handler) {
+          handler();
+          return;
+        }
+      }
+
+      // Fallback: native document.execCommand
       editorRef.current?.focus();
       if (command === 'createLink') {
         const url = window.prompt('Enter URL:');
@@ -107,25 +153,59 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editorRef, classNa
       }
       document.execCommand(command, false, value);
     },
-    [editorRef],
+    [editorRef, editorCore],
   );
 
-  const isActive = useCallback((command: string, value?: string): boolean => {
-    try {
-      if (command === 'formatBlock' && value) {
-        return document.queryCommandValue('formatBlock').toLowerCase() === value.toLowerCase();
+  const isActive = useCallback(
+    (command: string, value?: string): boolean => {
+      // Prefer EditorCore isActive when available
+      if (editorCore) {
+        if (command === 'bold') return editorCore.isActive('bold');
+        if (command === 'italic') return editorCore.isActive('italic');
+        if (command === 'underline') return editorCore.isActive('underline');
+        if (command === 'strikeThrough') return editorCore.isActive('strike');
+        if (command === 'formatBlock' && value) {
+          const blockNameMap: Record<string, string> = {
+            h1: 'heading',
+            h2: 'heading',
+            h3: 'heading',
+            blockquote: 'blockquote',
+            pre: 'codeBlock',
+          };
+          const name = blockNameMap[value];
+          if (name === 'heading') {
+            const level = parseInt(value.replace('h', ''), 10);
+            return editorCore.isActive('heading', { level });
+          }
+          if (name) return editorCore.isActive(name);
+        }
+        if (command === 'insertUnorderedList') return editorCore.isActive('bulletList');
+        if (command === 'insertOrderedList') return editorCore.isActive('orderedList');
+        return false;
       }
-      return document.queryCommandState(command);
-    } catch {
-      return false;
-    }
-  }, []);
 
-  // Keyboard shortcut handler
+      // Fallback: native queryCommandState
+      try {
+        if (command === 'formatBlock' && value) {
+          return document.queryCommandValue('formatBlock').toLowerCase() === value.toLowerCase();
+        }
+        return document.queryCommandState(command);
+      } catch {
+        return false;
+      }
+    },
+    [editorCore],
+  );
+
+  // Keyboard shortcut handler — uses EditorCore when available
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const mod = e.ctrlKey || e.metaKey;
       if (!mod) return;
+
+      // When using EditorCore (e.g. Tiptap), keyboard shortcuts are
+      // handled by ProseMirror's keymap. Only intercept for native.
+      if (editorCore) return;
 
       const el = editorRef.current;
       if (!el || !el.contains(document.activeElement ?? null)) return;
@@ -147,7 +227,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editorRef, classNa
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [editorRef]);
+  }, [editorRef, editorCore]);
 
   return (
     <div

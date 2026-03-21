@@ -68,6 +68,12 @@ FormPreview
 ### Validation Architecture
 - `SchemaValidator` interface abstracts all validation (`validate`, `validateField`)
 - `createSchemaValidator(schema)` — built-in implementation from FormSchema rules
+- `createZodValidator(zodSchema)` — Zod-backed `SchemaValidator` (same interface, drop-in replacement)
+- `toZodSchema(formSchema)` — convert FormSchema validation rules to a Zod schema object (returns `null` if `zod` not installed)
+- `fromZodSchema(zodSchema, meta?)` — convert a Zod schema to a FormSchema
+- `isZodAvailable()` — runtime check for `zod` peer dependency
+- `useZodForm(zodSchema, meta?, initialValues?)` — convenience hook for Zod-first usage
+- **Note**: `zod` is an optional peer dependency. Built-in validator always works without it.
 
 ### Field Types
 - `text` — single-line input
@@ -323,10 +329,10 @@ interface AsyncOptionConfig {
 - FormBuilder separately chunked, not included in FormRenderer bundle
 - FormBuilder drag-and-drop integration tests
 
-### Zod / AJV Validation Adapters
-- `createZodValidator(zodSchema)` — Zod-backed `SchemaValidator` implementation (same interface, drop-in replacement)
-- `toZodSchema(formSchema)` / `fromZodSchema(zodSchema)` — bidirectional conversion
-- `schemaToZod(schema)` — converts FormSchema to zod validation schema
+### Zod Validation Adapters — MOVED TO v1
+- Zod adapter shipped in v1 as optional peer dependency (`zod ^3.0.0`)
+- See **Validation Architecture** section above for full API
+
+### AJV Validation Adapter
 - `ajv` adapter for strict JSON Schema Draft 7 compliance
-- Zod schema generation correctness contract tests for all field types
 - v2 bundle budget: < 35 KB gzipped (excluding zod ~13KB)

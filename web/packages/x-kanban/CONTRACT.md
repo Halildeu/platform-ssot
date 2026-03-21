@@ -63,13 +63,20 @@ KanbanCardSlot
 - `CardMoveEvent`, `ColumnReorderEvent`
 
 ### Library
-- HTML5 Drag and Drop API (native browser) behind `DragDropEngine` interface
+- `@dnd-kit/core` + `@dnd-kit/sortable` — primary drag-and-drop engine (keyboard + touch + pointer)
+- HTML5 Drag and Drop API — fallback when @dnd-kit is not installed (optional peer deps)
+- Runtime detection via `hasDndKit()` — auto-selects best available engine
 
 ### Drag-Drop Architecture
 - `DragDropEngine` interface abstracts all DnD operations (state, handlers, prop getters)
 - `DragItem` / `DropTarget` — engine-agnostic drag/drop data types
 - `getDragHandleProps(item)` / `getDropTargetProps(target)` — attach to DOM elements for any engine
 - Legacy `DragDropHandlers` interface preserved for backward compatibility
+- `useDndKitKanban(options)` — board-level hook providing DndContext props + DragOverlay state
+- `useSortableCard(cardId)` — per-card hook wrapping @dnd-kit/sortable's useSortable
+- `useDroppableColumn(columnId, cards)` — per-column hook for SortableContext setup
+- Sensors: PointerSensor (5px activation), TouchSensor (250ms delay), KeyboardSensor
+- ARIA live region for drag announcements (picked up / over column / dropped)
 
 ## 2. Theme / Token Integration
 
@@ -134,7 +141,7 @@ KanbanCardSlot
 - Board skeleton with column placeholders
 
 ### Client-Only (`'use client'`)
-- Drag-and-drop engine (HTML5 native)
+- Drag-and-drop engine (@dnd-kit primary, HTML5 native fallback)
 - Card drag preview and drop animations
 - Column collapse/expand interaction
 - Toolbar search and filter interactions
@@ -232,7 +239,8 @@ interface CardMoveEvent {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 12 KB** gzipped (HTML5 DnD, no external DnD dependency)
+- **< 25 KB** gzipped (including @dnd-kit/core ~8KB + @dnd-kit/sortable ~4KB)
+- Without @dnd-kit (HTML5 fallback only): < 12 KB gzipped
 
 ### Render Targets
 - **100 cards** across 5 columns: initial render < 100ms
@@ -271,8 +279,6 @@ interface CardMoveEvent {
 
 > v1 scope is frozen. Items below are tracked for v2 and do not affect v1 quality gates.
 
-### @dnd-kit Migration
-- Replace HTML5 Drag and Drop API with `@dnd-kit/core` engine + `@dnd-kit/sortable` for within-column reordering
-- Enables keyboard-accessible drag-and-drop and touch support
-- v2 bundle budget: < 25 KB gzipped (including @dnd-kit/core ~8KB + @dnd-kit/sortable ~4KB)
-- @dnd-kit drag events contract tests
+### @dnd-kit Swimlane Support
+- Extend @dnd-kit integration to swimlane mode (currently swimlanes use HTML5 DnD fallback)
+- Cross-swimlane drag-and-drop with keyboard navigation

@@ -63,11 +63,15 @@ EditorCodeBlock
 - `EditorConfig`, `EditorState`
 
 ### Library
-- Native `contentEditable` + `document.execCommand` behind `EditorCore` interface
+- **Primary**: `@tiptap/react` + ProseMirror via `createTiptapEditorCore()` behind `EditorCore` interface
+- **Fallback**: Native `contentEditable` + `document.execCommand` when Tiptap peer deps are not installed
 
 ### Editor Architecture
 - `EditorCore` interface abstracts all editor operations (content, commands, state, selection, lifecycle)
-- `createNativeEditorCore()` — implementation using native browser APIs
+- `createTiptapEditorCore()` — primary implementation using Tiptap/ProseMirror
+- `createNativeEditorCore()` — fallback implementation using native browser APIs
+- Auto-detection: `RichTextEditor` dynamically probes for Tiptap and falls back to native
+- `engine` prop on `RichTextEditor` to force `'tiptap'`, `'native'`, or `'auto'` (default)
 
 ## 2. Theme / Token Integration
 
@@ -235,8 +239,10 @@ interface ImageConfig {
 ## 7. Performance Budget
 
 ### Bundle Size
-- **< 15 KB** gzipped (native implementation)
+- **< 45 KB** gzipped (Tiptap engine, excluding Tiptap core ~60KB and ProseMirror ~80KB as peer deps)
+- **< 15 KB** gzipped (native fallback only)
 - Extensions loaded on demand (mention, table, code-block)
+- Tiptap modules lazy-loaded via dynamic import — zero cost when not installed
 - Syntax highlighter lazy-loaded on first code block
 
 ### Render Targets
@@ -279,23 +285,21 @@ interface ImageConfig {
 
 > v1 scope is frozen. Items below are tracked for v2 and do not affect v1 quality gates.
 
-### Tiptap Migration
-- Replace native `contentEditable` / `document.execCommand` with `@tiptap/react` bindings + `@tiptap/starter-kit`
-- `createTiptapEditorCore()` — Tiptap implementation behind the same `EditorCore` interface (drop-in replacement)
-- `EditorInstance` type expands to Tiptap editor instance
-- Tiptap `editorProps.attributes` for custom class injection; `.ProseMirror` CSS scope
-- ProseMirror DOM hydration replaces native contentEditable mount
-- v2 bundle budget: < 45 KB gzipped (excluding Tiptap core ~60KB and ProseMirror ~80KB)
+### ~~Tiptap Migration~~ (MOVED TO v1)
+> Completed: Tiptap engine is now the primary EditorCore implementation in v1.
+> See "Library" and "Editor Architecture" sections above.
 
-### Extensions (require Tiptap)
+### Extensions (enabled by Tiptap in v1 — advanced configuration in v2)
 - **Mention** — `@` triggers user/entity mention with configurable data source
 - **Image** — inline and block images with upload, resize, alt text
-- **Table** — rows, columns, merge, resize
-- **Code Block** — syntax-highlighted code with language selector
-- **Link** — auto-detect URLs, editable link attributes
+- **Table** — rows, columns, merge, resize (basic support in v1 via Table extensions)
+- **Code Block** — syntax-highlighted code with language selector (lowlight in v2)
+- **Link** — auto-detect URLs, editable link attributes (basic link set/unset in v1)
 
 ### Additional v2 Capabilities
 - Image upload and drag-drop in editor
 - Mention suggestions popup
 - Tiptap extension compatibility contract tests
 - `extensions` prop activation with Tiptap extension array
+- Tiptap `editorProps.attributes` for custom class injection; `.ProseMirror` CSS scope
+- ProseMirror DOM hydration replacing native contentEditable mount

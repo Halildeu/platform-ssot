@@ -132,13 +132,12 @@ function createHTML5DragDropEngine(
   };
 }
 
-/* Future: @dnd-kit implementation
- * function createDndKitEngine(...): DragDropEngine {
- *   // Uses @dnd-kit/core DndContext and useSortable
- *   // Provides keyboard sensor, touch sensor, and pointer sensor
- *   // Returns the same DragDropEngine interface
- * }
- */
+/* ------------------------------------------------------------------ */
+/*  @dnd-kit engine — available when @dnd-kit packages are installed   */
+/*  See createDndKitEngine.ts for the React-hook-based implementation  */
+/*  that wraps DndContext + SortableContext.                            */
+/* ------------------------------------------------------------------ */
+export { hasDndKit } from './createDndKitEngine';
 
 /* ------------------------------------------------------------------ */
 /*  Legacy interface — kept for backward compatibility                 */

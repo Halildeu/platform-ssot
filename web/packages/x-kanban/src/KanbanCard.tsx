@@ -1,5 +1,6 @@
 import React, { type DragEvent } from 'react';
 import type { KanbanCard as KanbanCardType } from './types';
+import { useSortableCard } from './createDndKitEngine';
 
 const PRIORITY_COLORS: Record<string, string> = {
   low: 'var(--color-success, #22c55e)',
@@ -14,6 +15,8 @@ export interface KanbanCardProps {
   onDragStart?: (e: DragEvent<HTMLElement>, cardId: string, columnId: string) => void;
   onDragEnd?: (e: DragEvent<HTMLElement>) => void;
   isDragging?: boolean;
+  /** When true, uses @dnd-kit useSortable instead of HTML5 draggable. */
+  useDndKit?: boolean;
 }
 
 function formatDueDate(date: Date): string {
@@ -27,69 +30,15 @@ function formatDueDate(date: Date): string {
   return `${days}d left`;
 }
 
-export const KanbanCard: React.FC<KanbanCardProps> = ({
-  card,
-  onClick,
-  onDragStart,
-  onDragEnd,
-  isDragging = false,
-}) => {
-  const handleClick = () => onClick?.(card);
+/* ------------------------------------------------------------------ */
+/*  Card content (shared between both engines)                         */
+/* ------------------------------------------------------------------ */
 
-  const handleDragStart = (e: DragEvent<HTMLElement>) => {
-    onDragStart?.(e, card.id, card.columnId);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClick?.(card);
-    }
-  };
-
+const CardContent: React.FC<{ card: KanbanCardType }> = ({ card }) => {
   const isOverdue = card.dueDate && new Date(card.dueDate) < new Date();
 
   return (
-    <div
-      draggable
-      role="button"
-      tabIndex={0}
-      aria-label={`Card: ${card.title}`}
-      aria-grabbed={isDragging}
-      onDragStart={handleDragStart}
-      onDragEnd={onDragEnd}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      style={{
-        background: 'var(--surface-default, #fff)',
-        border: '1px solid var(--border-subtle, #e5e7eb)',
-        borderRadius: 'var(--radius-md, 8px)',
-        padding: '12px',
-        cursor: 'grab',
-        transition: 'box-shadow 0.15s ease, opacity 0.15s ease, transform 0.15s ease',
-        opacity: isDragging ? 0.5 : 1,
-        transform: isDragging ? 'rotate(2deg)' : 'none',
-        boxShadow: isDragging
-          ? '0 4px 12px rgba(0,0,0,0.15)'
-          : '0 1px 2px rgba(0,0,0,0.05)',
-        userSelect: 'none',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px',
-      }}
-      onMouseEnter={(e) => {
-        if (!isDragging) {
-          (e.currentTarget as HTMLElement).style.boxShadow =
-            '0 2px 8px rgba(0,0,0,0.1)';
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isDragging) {
-          (e.currentTarget as HTMLElement).style.boxShadow =
-            '0 1px 2px rgba(0,0,0,0.05)';
-        }
-      }}
-    >
+    <>
       {/* Header: drag handle + priority */}
       <div
         style={{
@@ -245,6 +194,125 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
           )}
         </div>
       )}
+    </>
+  );
+};
+
+/* ------------------------------------------------------------------ */
+/*  KanbanCard — public component                                      */
+/* ------------------------------------------------------------------ */
+
+export const KanbanCard: React.FC<KanbanCardProps> = ({
+  card,
+  onClick,
+  onDragStart,
+  onDragEnd,
+  isDragging = false,
+  useDndKit: useDndKitProp = false,
+}) => {
+  const handleClick = () => onClick?.(card);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick?.(card);
+    }
+  };
+
+  /* ---- @dnd-kit path ---- */
+  if (useDndKitProp) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks -- condition is stable
+    const sortable = useSortableCard(card.id);
+
+    return (
+      <div
+        ref={sortable.ref}
+        role="button"
+        tabIndex={0}
+        aria-label={`Card: ${card.title}`}
+        aria-roledescription="sortable card"
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        style={{
+          ...cardBaseStyle(sortable.isDragging),
+          ...sortable.style,
+        }}
+        {...sortable.attributes}
+        {...sortable.listeners}
+        onMouseEnter={(e) => {
+          if (!sortable.isDragging) {
+            (e.currentTarget as HTMLElement).style.boxShadow =
+              '0 2px 8px rgba(0,0,0,0.1)';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!sortable.isDragging) {
+            (e.currentTarget as HTMLElement).style.boxShadow =
+              '0 1px 2px rgba(0,0,0,0.05)';
+          }
+        }}
+      >
+        <CardContent card={card} />
+      </div>
+    );
+  }
+
+  /* ---- HTML5 DnD path (original) ---- */
+
+  const handleDragStart = (e: DragEvent<HTMLElement>) => {
+    onDragStart?.(e, card.id, card.columnId);
+  };
+
+  return (
+    <div
+      draggable
+      role="button"
+      tabIndex={0}
+      aria-label={`Card: ${card.title}`}
+      aria-grabbed={isDragging}
+      onDragStart={handleDragStart}
+      onDragEnd={onDragEnd}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      style={cardBaseStyle(isDragging)}
+      onMouseEnter={(e) => {
+        if (!isDragging) {
+          (e.currentTarget as HTMLElement).style.boxShadow =
+            '0 2px 8px rgba(0,0,0,0.1)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isDragging) {
+          (e.currentTarget as HTMLElement).style.boxShadow =
+            '0 1px 2px rgba(0,0,0,0.05)';
+        }
+      }}
+    >
+      <CardContent card={card} />
     </div>
   );
 };
+
+/* ------------------------------------------------------------------ */
+/*  Shared styles                                                      */
+/* ------------------------------------------------------------------ */
+
+function cardBaseStyle(isDragging: boolean): React.CSSProperties {
+  return {
+    background: 'var(--surface-default, #fff)',
+    border: '1px solid var(--border-subtle, #e5e7eb)',
+    borderRadius: 'var(--radius-md, 8px)',
+    padding: '12px',
+    cursor: 'grab',
+    transition: 'box-shadow 0.15s ease, opacity 0.15s ease, transform 0.15s ease',
+    opacity: isDragging ? 0.5 : 1,
+    transform: isDragging ? 'rotate(2deg)' : 'none',
+    boxShadow: isDragging
+      ? '0 4px 12px rgba(0,0,0,0.15)'
+      : '0 1px 2px rgba(0,0,0,0.05)',
+    userSelect: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  };
+}

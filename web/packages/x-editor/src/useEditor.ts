@@ -1,11 +1,12 @@
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import type { EditorFormat, OutputFormat, TableOptions } from './types';
+import { loadTiptapModules, isTiptapAvailable, createTiptapEditorCore } from './createTiptapEditorCore';
 
 /* ------------------------------------------------------------------ */
 /*  EditorCore — engine-agnostic editor abstraction                    */
 /*                                                                     */
-/*  Current: Native contentEditable implementation                     */
-/*  Planned: Tiptap integration via createTiptapEditorCore()           */
+/*  Primary:  Tiptap/ProseMirror via createTiptapEditorCore()          */
+/*  Fallback: Native contentEditable via createNativeEditorCore()      */
 /* ------------------------------------------------------------------ */
 
 export interface EditorCommand {
@@ -254,36 +255,9 @@ function createNativeEditorCore(
   return core;
 }
 
-/* Future: Tiptap implementation
- * function createTiptapEditorCore(
- *   element: HTMLElement,
- *   options: NativeEditorCoreOptions,
- * ): EditorCore {
- *   const editor = new Editor({
- *     element,
- *     extensions: [StarterKit, ...],
- *     content: '',
- *     onUpdate: ({ editor }) => options.onChange?.(editor.getHTML()),
- *   });
- *   return {
- *     getHTML: () => editor.getHTML(),
- *     getJSON: () => editor.getJSON(),
- *     getMarkdown: () => editor.storage.markdown?.getMarkdown?.() ?? '',
- *     setContent: (c) => editor.commands.setContent(c),
- *     isEmpty: () => editor.isEmpty,
- *     chain: () => editor.chain().focus(),
- *     toggleBold: () => editor.chain().focus().toggleBold().run(),
- *     // ... map all commands to Tiptap equivalents
- *     isActive: (name, attrs) => editor.isActive(name, attrs),
- *     isFocused: editor.isFocused,
- *     getSelectedText: () => { ... },
- *     getSelectionPosition: () => { ... },
- *     focus: () => editor.commands.focus(),
- *     blur: () => editor.commands.blur(),
- *     destroy: () => editor.destroy(),
- *   };
- * }
- */
+/* Tiptap implementation lives in ./createTiptapEditorCore.ts
+ * It is loaded dynamically to allow graceful degradation when Tiptap
+ * peer dependencies are not installed. */
 
 /* ------------------------------------------------------------------ */
 /*  useEditor hook — public API                                        */
@@ -411,5 +385,184 @@ export function useEditor(options?: UseEditorOptions): UseEditorReturn {
     isEmpty,
     exec,
     isFormatActive,
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/*  useTiptapEditor — Tiptap-first hook with auto-detection            */
+/* ------------------------------------------------------------------ */
+
+export type EditorEngine = 'tiptap' | 'native';
+
+export interface UseTiptapEditorOptions extends UseEditorOptions {
+  /** Override engine selection. Default: auto-detect (tiptap if available). */
+  engine?: EditorEngine;
+  placeholder?: string;
+  readOnly?: boolean;
+}
+
+export interface UseTiptapEditorReturn extends UseEditorReturn {
+  /** Which engine is currently active */
+  engine: EditorEngine;
+  /** True while Tiptap modules are being loaded (only on first render) */
+  loading: boolean;
+}
+
+/**
+ * Enhanced editor hook that automatically uses the Tiptap engine when
+ * available, falling back to native contentEditable otherwise.
+ *
+ * On first mount it performs an async probe for Tiptap modules.
+ * While probing, `loading` is true and the hook returns a native editor.
+ * Once resolved, if Tiptap is available the core is swapped transparently.
+ */
+export function useTiptapEditor(options?: UseTiptapEditorOptions): UseTiptapEditorReturn {
+  const {
+    initialContent = '',
+    onChange,
+    engine: engineOverride,
+    placeholder,
+    readOnly,
+  } = options ?? {};
+
+  const [probed, setProbed] = useState(isTiptapAvailable());
+  const [tiptapOk, setTiptapOk] = useState(isTiptapAvailable());
+  const coreRef = useRef<EditorCore | null>(null);
+  const [coreReady, setCoreReady] = useState(false);
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  const [content, setContentState] = useState(initialContent);
+
+  const handleChange = useCallback(
+    (html: string) => {
+      setContentState(html);
+      onChange?.(html);
+    },
+    [onChange],
+  );
+
+  // Probe for Tiptap on mount (if not already probed)
+  useEffect(() => {
+    if (probed) return;
+    let cancelled = false;
+    loadTiptapModules().then((modules) => {
+      if (!cancelled) {
+        setTiptapOk(modules != null);
+        setProbed(true);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [probed]);
+
+  const resolvedEngine: EditorEngine =
+    engineOverride ?? (tiptapOk ? 'tiptap' : 'native');
+
+  // Initialize core based on resolved engine
+  useEffect(() => {
+    // For tiptap engine, we don't need a DOM element
+    if (resolvedEngine === 'tiptap') {
+      const core = createTiptapEditorCore({
+        initialContent,
+        placeholder,
+        readOnly,
+        onChange: handleChange,
+      });
+      coreRef.current = core;
+      setCoreReady(true);
+
+      return () => {
+        core.destroy();
+        coreRef.current = null;
+        setCoreReady(false);
+      };
+    }
+
+    // Native engine path
+    const el = editorRef.current;
+    if (!el) {
+      coreRef.current = null;
+      setCoreReady(false);
+      return;
+    }
+
+    const core = createNativeEditorCore(el, { onChange: handleChange });
+    if (initialContent) el.innerHTML = initialContent;
+
+    const handleInput = () => handleChange(el.innerHTML);
+    el.addEventListener('input', handleInput);
+
+    coreRef.current = core;
+    setCoreReady(true);
+
+    return () => {
+      el.removeEventListener('input', handleInput);
+      core.destroy();
+      coreRef.current = null;
+      setCoreReady(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resolvedEngine, handleChange]);
+
+  const editorCore = useMemo(() => (coreReady ? coreRef.current : null), [coreReady]);
+
+  const setContent = useCallback(
+    (html: string) => {
+      if (coreRef.current) {
+        coreRef.current.setContent(html);
+      } else {
+        const el = editorRef.current;
+        if (el) el.innerHTML = html;
+        setContentState(html);
+        onChange?.(html);
+      }
+    },
+    [onChange],
+  );
+
+  const focus = useCallback(() => {
+    coreRef.current?.focus() ?? editorRef.current?.focus();
+  }, []);
+
+  const clear = useCallback(() => {
+    setContent('');
+  }, [setContent]);
+
+  const isEmpty = content === '' || content === '<br>' || content === '<div><br></div>';
+
+  const exec = useCallback(
+    (command: string, value?: string) => {
+      if (resolvedEngine === 'native' && coreRef.current) {
+        editorRef.current?.focus();
+        execNativeCommand(command, value);
+        handleChange(editorRef.current?.innerHTML ?? '');
+      }
+    },
+    [resolvedEngine, handleChange],
+  );
+
+  const isFormatActive = useCallback(
+    (format: EditorFormat): boolean => {
+      if (coreRef.current) {
+        return coreRef.current.isActive(format);
+      }
+      if (format === 'code') return false;
+      return queryNativeCommandState(FORMAT_COMMAND_MAP[format]);
+    },
+    [],
+  );
+
+  return {
+    editorRef,
+    editorCore,
+    content,
+    setContent,
+    focus,
+    clear,
+    isEmpty,
+    exec,
+    isFormatActive,
+    engine: resolvedEngine,
+    loading: !probed,
   };
 }

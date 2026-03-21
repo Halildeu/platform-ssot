@@ -22,14 +22,27 @@ export type { EditorLinkDialogProps } from './EditorLinkDialog';
 export { EditorImageUpload } from './EditorImageUpload';
 export type { EditorImageUploadProps } from './EditorImageUpload';
 
-export { useEditor } from './useEditor';
+export { useEditor, useTiptapEditor } from './useEditor';
 export type {
   UseEditorOptions,
   UseEditorReturn,
   EditorCore,
   EditorCommand,
   EditorCommandChain,
+  EditorEngine,
+  UseTiptapEditorOptions,
+  UseTiptapEditorReturn,
 } from './useEditor';
+
+export {
+  createTiptapEditorCore,
+  loadTiptapModules,
+  isTiptapAvailable,
+} from './createTiptapEditorCore';
+export type { TiptapEditorCoreOptions } from './createTiptapEditorCore';
+
+export { TiptapEditor, ensureTiptapReactModules } from './TiptapEditor';
+export type { TiptapEditorProps, TiptapEditorHandle } from './TiptapEditor';
 
 export { useSlashCommands } from './useSlashCommands';
 export type { UseSlashCommandsReturn } from './useSlashCommands';

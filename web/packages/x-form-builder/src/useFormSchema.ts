@@ -6,7 +6,12 @@ import type {
   FormSchema,
   FormValues,
 } from './types';
-import { createSchemaValidator, type SchemaValidator } from './zodAdapter';
+import {
+  createSchemaValidator,
+  createZodValidator,
+  fromZodSchema,
+  type SchemaValidator,
+} from './zodAdapter';
 
 /* ------------------------------------------------------------------ */
 /*  useFormSchema — Form state management driven by FormSchema         */
@@ -61,9 +66,16 @@ export interface UseFormSchemaReturn {
   validator: SchemaValidator;
 }
 
+export interface UseFormSchemaOptions {
+  /** Pass a Zod schema to use Zod-powered validation instead of built-in. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  zodSchema?: any;
+}
+
 export function useFormSchema(
   schema: FormSchema,
   initialValues?: FormValues,
+  options?: UseFormSchemaOptions,
 ): UseFormSchemaReturn {
   // Build default values from schema + caller overrides
   const defaults = useMemo(() => {
@@ -85,7 +97,13 @@ export function useFormSchema(
   defaultsRef.current = defaults;
 
   // Build validator from schema — delegates all validation logic to SchemaValidator
-  const validator = useMemo(() => createSchemaValidator(schema), [schema]);
+  // If a Zod schema is provided, use the Zod-powered validator; otherwise built-in.
+  const validator = useMemo(() => {
+    if (options?.zodSchema) {
+      return createZodValidator(options.zodSchema);
+    }
+    return createSchemaValidator(schema);
+  }, [schema, options?.zodSchema]);
 
   /* ---- Setters ---- */
 
@@ -213,4 +231,28 @@ export function useFormSchema(
     getVisibleFields,
     validator,
   };
+}
+
+/* ------------------------------------------------------------------ */
+/*  useZodForm — convenience hook for Zod-first usage                  */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Convenience hook that accepts a Zod schema as the primary input,
+ * derives a FormSchema via `fromZodSchema`, and wires Zod validation.
+ *
+ * ```ts
+ * import { z } from 'zod';
+ * const schema = z.object({ name: z.string().min(1), age: z.number() });
+ * const form = useZodForm(schema, { id: 'user-form', title: 'User' });
+ * ```
+ */
+export function useZodForm(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  zodSchema: any,
+  meta?: Partial<FormSchema>,
+  initialValues?: FormValues,
+): UseFormSchemaReturn {
+  const formSchema = useMemo(() => fromZodSchema(zodSchema, meta), [zodSchema, meta]);
+  return useFormSchema(formSchema, initialValues, { zodSchema });
 }

@@ -54,12 +54,12 @@ export { RepeatableFieldGroup } from './RepeatableFieldGroup';
 export type { RepeatableFieldGroupProps } from './RepeatableFieldGroup';
 
 /* ---- Validation adapter ---- */
-export { createSchemaValidator } from './zodAdapter';
+export { createSchemaValidator, createZodValidator, toZodSchema, fromZodSchema, isZodAvailable } from './zodAdapter';
 export type { SchemaValidator } from './zodAdapter';
 
 /* ---- Hooks ---- */
-export { useFormSchema } from './useFormSchema';
-export type { UseFormSchemaReturn } from './useFormSchema';
+export { useFormSchema, useZodForm } from './useFormSchema';
+export type { UseFormSchemaReturn, UseFormSchemaOptions } from './useFormSchema';
 
 export { useConditionalLogic } from './useConditionalLogic';
 export type { ConditionalLogicResult } from './useConditionalLogic';

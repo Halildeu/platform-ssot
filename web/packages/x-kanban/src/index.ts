@@ -32,6 +32,19 @@ export type {
   DropTarget,
 } from './useDragDrop';
 
+export {
+  hasDndKit,
+  useDndKitKanban,
+  useSortableCard,
+  useDroppableColumn,
+} from './createDndKitEngine';
+export type {
+  DndKitKanbanOptions,
+  DndKitKanbanReturn,
+  SortableCardReturn,
+  DroppableColumnReturn,
+} from './createDndKitEngine';
+
 export { useKanbanFilter } from './useKanbanFilter';
 export type { UseKanbanFilterReturn } from './useKanbanFilter';
 
