@@ -5,7 +5,7 @@ const entry: DesignLabComponentDocEntry = {
   indexItem: {
   "name": "MobileStepper",
   "kind": "component",
-  "availability": "exported",
+  "availability": "planned",
   "lifecycle": "stable",
   "maturity": "beta",
   "group": "navigation",

@@ -1838,6 +1838,26 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     },
   },
   MobileStepper: { steps: 4, activeStep: 1, variant: "dots" },
+  AvatarGroup: {
+    items: [
+      { key: "1", name: "Ahmet Yilmaz", src: "" },
+      { key: "2", name: "Elif Demir", src: "" },
+      { key: "3", name: "Can Ozturk", src: "" },
+      { key: "4", name: "Zeynep Kaya", src: "" },
+      { key: "5", name: "Murat Celik", src: "" },
+    ],
+    max: 4,
+    size: "md",
+    shape: "circle",
+  },
+  Timeline: {
+    items: [
+      { key: "1", title: "Proje basladi", description: "Ilk tasarim toplantisi yapildi", status: "completed" },
+      { key: "2", title: "Gelistirme", description: "Sprint 1 tamamlandi", status: "completed" },
+      { key: "3", title: "Test asamasi", description: "QA sureci devam ediyor", status: "active" },
+      { key: "4", title: "Yayinlama", description: "Production deploy bekleniyor", status: "pending" },
+    ],
+  },
 
   /* ---- AI components ---- */
   PromptComposer: {
