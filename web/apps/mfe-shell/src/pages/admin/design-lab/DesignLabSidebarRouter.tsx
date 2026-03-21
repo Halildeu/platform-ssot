@@ -59,6 +59,19 @@ export const PRIMITIVE_NAMES = new Set([
 
 export const ADVANCED_NAMES = new Set([
   "EntityGrid", "AgGridServer", "TreeTable",
+  /* X-Data-Grid */
+  "DataGridFilterChips", "DataGridSelectionBar", "ServerDataSource",
+  /* X-Charts */
+  "ChartContainer", "ScatterChart", "RadarChart", "TreemapChart",
+  "HeatmapChart", "GaugeChart", "WaterfallChart",
+  /* X-Scheduler */
+  "Scheduler", "SchedulerEvent", "SchedulerToolbar", "useScheduler",
+  /* X-Kanban */
+  "KanbanBoard", "KanbanColumn", "KanbanCard", "KanbanToolbar",
+  /* X-Editor */
+  "RichTextEditor", "EditorToolbar", "EditorMenuBubble",
+  /* X-FormBuilder */
+  "FormRenderer", "FieldRenderer", "FormPreview",
 ]);
 
 const DESIGN_TOKEN_GROUPS = [
