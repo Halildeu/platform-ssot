@@ -12,6 +12,10 @@ import '@mfe/design-system/advanced/data-grid/setup';
 import { initSentry } from '../lib/sentry';
 initSentry();
 
+// RUM: Web Vitals collection after Sentry is ready
+import { initRUM } from '../lib/rum';
+initRUM();
+
 import { createRoot } from 'react-dom/client';
 import ShellApp from './ShellApp';
 

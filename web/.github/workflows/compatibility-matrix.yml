@@ -1,0 +1,42 @@
+name: Compatibility Matrix
+on:
+  schedule:
+    - cron: '0 4 * * 1' # Weekly Monday 4am
+  workflow_dispatch:
+
+jobs:
+  matrix:
+    name: Node ${{ matrix.node }} / React ${{ matrix.react }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22']
+        react: ['18.2', '18.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Override React version
+        if: matrix.react != '18.3'
+        run: |
+          pnpm --filter '@mfe/design-system' add react@${{ matrix.react }}.0 react-dom@${{ matrix.react }}.0 --save-dev
+      - name: Typecheck
+        run: pnpm --filter '@mfe/design-system' typecheck
+      - name: Unit tests
+        run: pnpm --filter '@mfe/design-system' test
+      - name: Build
+        run: pnpm --filter '@mfe/design-system' build
+      - name: Report
+        if: always()
+        run: |
+          echo "## Compatibility: Node ${{ matrix.node }} / React ${{ matrix.react }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Typecheck: ${{ steps.typecheck.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Tests: ${{ steps.test.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Build: ${{ steps.build.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
