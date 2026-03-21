@@ -6,6 +6,8 @@ import '@testing-library/jest-dom/vitest';
 const SUPPRESSED_PATTERNS = [
   'AG Grid',
   'ag-grid',
+  'AG Charts',
+  'ag-charts',
   'deprecated',
   'selectSize',
   'onValueChange',
@@ -16,8 +18,14 @@ const SUPPRESSED_PATTERNS = [
   'Vite CJS',
   'Path2D',
   'setTransform',
+  'content layer',
+  'tailwind',
+  'canvas',
   'getContext',
+  'not implemented',
   'Not implemented',
+  'Error: Not implemented',
+  'Could not parse CSS',
   'React does not recognize',
 ];
 

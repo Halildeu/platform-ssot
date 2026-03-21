@@ -19,12 +19,12 @@ pnpm add @mfe/x-data-grid @mfe/x-charts @mfe/x-editor
 Wrap your application with `ThemeProvider` and start using components:
 
 ```tsx
-import { ThemeProvider, Button, TextField } from '@mfe/design-system';
+import { ThemeProvider, Button, Input } from '@mfe/design-system';
 
 function App() {
   return (
     <ThemeProvider>
-      <TextField label="Email" variant="outlined" />
+      <Input placeholder="Email" />
       <Button variant="contained">Submit</Button>
     </ThemeProvider>
   );
@@ -33,22 +33,21 @@ function App() {
 
 ## Theming
 
-Create a custom theme by extending the default tokens:
+Customize the theme by passing `defaultAxes` to `ThemeProvider`:
 
 ```tsx
-import { createTheme, ThemeProvider } from '@mfe/design-system';
+import { ThemeProvider } from '@mfe/design-system';
+import type { ThemeAxes } from '@mfe/design-system';
 
-const theme = createTheme({
-  palette: {
-    primary: { main: '#1a56db' },
-    secondary: { main: '#6b7280' },
-  },
-  shape: { borderRadius: 8 },
-});
+const axes: Partial<ThemeAxes> = {
+  appearance: 'light',
+  density: 'comfortable',
+  radius: 'md',
+};
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider defaultAxes={axes}>
       {/* Your app */}
     </ThemeProvider>
   );
@@ -57,15 +56,11 @@ function App() {
 
 ## TypeScript Support
 
-All components ship with full TypeScript declarations. Extend theme types
-for custom tokens:
+All components ship with full TypeScript declarations.
+Import the `ThemeAxes` type for type-safe theme configuration:
 
 ```ts
-declare module '@mfe/design-system' {
-  interface PaletteOptions {
-    brand?: { main: string; light: string; dark: string };
-  }
-}
+import type { ThemeAxes, ThemeAppearance, ThemeDensity } from '@mfe/design-system';
 ```
 
 ## Next Steps

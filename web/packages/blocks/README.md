@@ -98,6 +98,13 @@ export function CustomPage() {
 
 Full props documentation: [/api/blocks](/api/blocks)
 
+## Related
+
+- **Create a new app** — Use `@mfe/create-app` to scaffold a full application with blocks pre-configured
+- **Customize blocks** — See [Block Customization Guide](../../apps/docs/pages/blocks/customization.mdx)
+- **Create your own block** — See [Creating Blocks Guide](../../apps/docs/pages/blocks/creating-blocks.mdx)
+- **Quality standards** — See [Performance SLA](../../docs/performance-sla.md)
+
 ## License
 
 Private -- internal use only.

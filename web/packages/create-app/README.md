@@ -70,3 +70,20 @@ pnpm test
 # Type check
 pnpm typecheck
 ```
+
+## Next Steps
+
+After scaffolding your app:
+
+1. **Explore the docs portal** — Run `pnpm --filter @mfe/docs dev` to browse component docs, API references, and guides
+2. **Add pre-built blocks** — Import from `@mfe/blocks` for dashboard widgets, CRUD templates, and admin panels
+3. **Customize your theme** — Use the Theme Builder in Design Lab at `/admin/design-lab`
+4. **Check quality** — Run `npm run verify` to validate typecheck + tests + build
+
+### Useful Links
+
+- [Architecture Overview](../../docs/architecture-overview.md)
+- [Troubleshooting Guide](../../apps/docs/pages/troubleshooting.mdx)
+- [First Contribution](../../docs/first-contribution.md)
+- [Performance SLA](../../docs/performance-sla.md)
+- [Compatibility Matrix](../../docs/compatibility-matrix.md)
