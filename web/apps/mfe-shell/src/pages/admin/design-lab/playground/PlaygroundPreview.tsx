@@ -2,6 +2,21 @@ import React, { useMemo, useCallback, useRef } from "react";
 import * as MfeUiKit from "@mfe/design-system";
 import { Text } from "@mfe/design-system";
 
+/* ---- X Suite package imports for Design Lab live preview ---- */
+let _xChartsExports: Record<string, unknown> = {};
+let _xDataGridExports: Record<string, unknown> = {};
+let _xEditorExports: Record<string, unknown> = {};
+let _xFormBuilderExports: Record<string, unknown> = {};
+let _xKanbanExports: Record<string, unknown> = {};
+let _xSchedulerExports: Record<string, unknown> = {};
+
+try { _xChartsExports = require("@mfe/x-charts"); } catch { /* optional */ }
+try { _xDataGridExports = require("@mfe/x-data-grid"); } catch { /* optional */ }
+try { _xEditorExports = require("@mfe/x-editor"); } catch { /* optional */ }
+try { _xFormBuilderExports = require("@mfe/x-form-builder"); } catch { /* optional */ }
+try { _xKanbanExports = require("@mfe/x-kanban"); } catch { /* optional */ }
+try { _xSchedulerExports = require("@mfe/x-scheduler"); } catch { /* optional */ }
+
 /* ---- Non-DOM props that should not be spread to native elements ---- */
 /* These are custom props recognized by @mfe/design-system components    */
 /* but cause React warnings when they leak to native DOM elements.       */
@@ -58,10 +73,15 @@ type PlaygroundPreviewProps = {
  * Component registry — maps component name to the actual React component.
  * We cast @mfe/design-system exports as a record so we can dynamically look up.
  */
-const _rawRegistry = MfeUiKit as unknown as Record<
-  string,
-  React.ComponentType<Record<string, unknown>>
->;
+const _rawRegistry = {
+  ...(MfeUiKit as unknown as Record<string, React.ComponentType<Record<string, unknown>>>),
+  ...(_xChartsExports as Record<string, React.ComponentType<Record<string, unknown>>>),
+  ...(_xDataGridExports as Record<string, React.ComponentType<Record<string, unknown>>>),
+  ...(_xEditorExports as Record<string, React.ComponentType<Record<string, unknown>>>),
+  ...(_xFormBuilderExports as Record<string, React.ComponentType<Record<string, unknown>>>),
+  ...(_xKanbanExports as Record<string, React.ComponentType<Record<string, unknown>>>),
+  ...(_xSchedulerExports as Record<string, React.ComponentType<Record<string, unknown>>>),
+};
 
 /**
  * Alias map — doc names that differ from the actual export name.
@@ -157,6 +177,28 @@ const NON_COMPONENT_ENTRIES: Record<string, NonComponentType> = {
   updateThemeAxes: "theme-api",
   // Upcoming components (documented but not yet exported)
   MobileStepper: "upcoming",
+  // X-Suite hooks & utilities
+  useScheduler: "hook",
+  useRecurrence: "hook",
+  useConflictDetection: "hook",
+  useKanban: "hook",
+  useDragDrop: "hook",
+  useKanbanFilter: "hook",
+  useWipPolicy: "hook",
+  useEditor: "hook",
+  useSlashCommands: "hook",
+  useMentions: "hook",
+  useFormSchema: "hook",
+  useConditionalLogic: "hook",
+  useAsyncValidation: "hook",
+  useMultiStepForm: "hook",
+  useColumnBuilder: "hook",
+  useGridExport: "hook",
+  useGridState: "hook",
+  ServerDataSource: "utility",
+  createFieldRegistry: "utility",
+  createSchemaValidator: "utility",
+  defaultSlashCommands: "constant",
   // Theme constants
   THEME_APPEARANCE_OPTIONS: "constant",
   THEME_DENSITY_OPTIONS: "constant",
@@ -341,6 +383,65 @@ const DEFAULT_CHILDREN: Record<string, React.ReactNode> = {
   "Settings Template": undefined,
   "Command Workspace": undefined,
   ToastProvider: undefined,
+
+  /* ---- X-Charts ---- */
+  ChartContainer: undefined,
+  ScatterChart: undefined,
+  RadarChart: undefined,
+  TreemapChart: undefined,
+  HeatmapChart: undefined,
+  GaugeChart: undefined,
+  WaterfallChart: undefined,
+  SparklineChart: undefined,
+  MiniChart: undefined,
+  KPICard: undefined,
+  ChartDashboard: undefined,
+  StatWidget: undefined,
+  ChartLegend: undefined,
+
+  /* ---- X-Data-Grid ---- */
+  DataGridFilterChips: undefined,
+  DataGridSelectionBar: undefined,
+  MasterDetailGrid: undefined,
+  TreeDataGrid: undefined,
+  PivotGrid: undefined,
+  EditableGrid: undefined,
+  RowGroupingGrid: undefined,
+
+  /* ---- X-Scheduler ---- */
+  Scheduler: undefined,
+  SchedulerEvent: undefined,
+  SchedulerToolbar: undefined,
+  AgendaView: undefined,
+  ResourceView: undefined,
+  EventForm: undefined,
+
+  /* ---- X-Kanban ---- */
+  KanbanBoard: undefined,
+  KanbanColumn: undefined,
+  KanbanCard: undefined,
+  KanbanToolbar: undefined,
+  KanbanSwimlane: undefined,
+  KanbanCardDetail: undefined,
+  KanbanMetrics: undefined,
+
+  /* ---- X-Editor ---- */
+  RichTextEditor: undefined,
+  EditorToolbar: undefined,
+  EditorMenuBubble: undefined,
+  SlashCommandMenu: undefined,
+  MentionList: undefined,
+  EditorTableMenu: undefined,
+  EditorLinkDialog: undefined,
+  EditorImageUpload: undefined,
+
+  /* ---- X-FormBuilder ---- */
+  FormRenderer: undefined,
+  FieldRenderer: undefined,
+  FormPreview: undefined,
+  MultiStepForm: undefined,
+  FormSummary: undefined,
+  RepeatableFieldGroup: undefined,
 };
 
 /**
@@ -1853,6 +1954,40 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
     ),
   },
 };
+
+/* ---- X-Charts default props ---- */
+DEFAULT_PROPS.KPICard = { title: "Toplam Kullanici", value: "12,847", trend: { direction: "up", value: "+12.5%", positive: true } };
+DEFAULT_PROPS.StatWidget = { label: "API Cagrilari", value: 45230, previousValue: 42100, format: "number" };
+DEFAULT_PROPS.SparklineChart = { data: [10, 12, 8, 15, 13, 17, 20, 18, 22], type: "area" };
+DEFAULT_PROPS.MiniChart = { data: [{ label: "Oca", value: 45 }, { label: "Sub", value: 52 }, { label: "Mar", value: 48 }], type: "bar" };
+DEFAULT_PROPS.ChartContainer = { title: "Grafik Basligi", description: "Aciklama metni", height: 200, children: React.createElement("div", { className: "flex h-full items-center justify-center text-sm text-[var(--text-secondary)]" }, "Grafik icerigi burada gorunur") };
+DEFAULT_PROPS.ChartLegend = { items: [{ label: "Web", color: "var(--action-primary,#3b82f6)", value: "45%" }, { label: "Mobile", color: "var(--state-success-text,#16a34a)", value: "30%" }, { label: "API", color: "var(--state-warning-text,#d97706)", value: "25%" }], direction: "horizontal" };
+DEFAULT_PROPS.ChartDashboard = { columns: 3, gap: "md", children: React.createElement(React.Fragment, null, React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4 text-sm" }, "Kart 1"), React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4 text-sm" }, "Kart 2"), React.createElement("div", { className: "rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4 text-sm" }, "Kart 3")) };
+DEFAULT_PROPS.GaugeChart = { value: 72, min: 0, max: 100, label: "Performans" };
+DEFAULT_PROPS.RadarChart = { data: [{ label: "Hiz", value: 80 }, { label: "Guvenilirlik", value: 90 }, { label: "Olceklenebilirlik", value: 70 }, { label: "Kullanilabilirlik", value: 85 }, { label: "Guvenlik", value: 75 }], categories: ["Hiz", "Guvenilirlik", "Olceklenebilirlik", "Kullanilabilirlik", "Guvenlik"] };
+
+/* ---- X-Data-Grid default props ---- */
+DEFAULT_PROPS.DataGridFilterChips = { filters: [{ id: "1", field: "status", label: "Durum", value: "Aktif" }, { id: "2", field: "role", label: "Rol", value: "Admin" }], onRemove: () => {}, onClearAll: () => {} };
+DEFAULT_PROPS.DataGridSelectionBar = { selectedCount: 3, onClearSelection: () => {}, children: React.createElement("button", { className: "rounded bg-[var(--action-primary,#3b82f6)] px-3 py-1 text-xs text-white" }, "Toplu Sil") };
+
+/* ---- X-Editor default props ---- */
+DEFAULT_PROPS.RichTextEditor = { placeholder: "Icerik yazin...", minHeight: 200 };
+DEFAULT_PROPS.SlashCommandMenu = { commands: [{ id: "h1", label: "Baslik 1", category: "Temel", execute: () => {} }, { id: "h2", label: "Baslik 2", category: "Temel", execute: () => {} }], isOpen: true, position: { top: 0, left: 0 }, selectedIndex: 0, onSelect: () => {}, onClose: () => {} };
+DEFAULT_PROPS.MentionList = { items: [{ id: "1", label: "Ahmet Yilmaz" }, { id: "2", label: "Ayse Demir" }], isOpen: true, position: { top: 0, left: 0 }, selectedIndex: 0, onSelect: () => {}, onClose: () => {} };
+DEFAULT_PROPS.EditorTableMenu = { onInsertTable: () => {}, onAddRowBefore: () => {}, onAddRowAfter: () => {}, onAddColBefore: () => {}, onAddColAfter: () => {}, onDeleteRow: () => {}, onDeleteCol: () => {}, onDeleteTable: () => {}, onMergeCells: () => {}, onSplitCell: () => {} };
+
+/* ---- X-FormBuilder default props ---- */
+DEFAULT_PROPS.FormRenderer = { schema: { id: "demo", title: "Kullanici Bilgileri", columns: 2, fields: [{ id: "name", type: "text", name: "name", label: "Ad Soyad", required: true, span: 1 }, { id: "email", type: "email", name: "email", label: "E-posta", required: true, span: 1 }, { id: "role", type: "select", name: "role", label: "Rol", options: [{ label: "Admin", value: "admin" }, { label: "Kullanici", value: "user" }], span: 1 }], submitLabel: "Kaydet" }, onSubmit: () => {} };
+DEFAULT_PROPS.FormPreview = { schema: { id: "preview", title: "Form Onizleme", fields: [{ id: "name", type: "text", name: "name", label: "Ad Soyad" }] } };
+
+/* ---- X-Kanban default props ---- */
+DEFAULT_PROPS.KanbanCard = { card: { id: "1", title: "Gorev Basligi", description: "Gorev aciklamasi", priority: "high", assignee: "AY", tags: ["bug", "urgent"] } };
+DEFAULT_PROPS.KanbanToolbar = { searchValue: "", onSearchChange: () => {}, onAddColumn: () => {} };
+DEFAULT_PROPS.KanbanMetrics = { columns: [{ id: "todo", title: "Yapilacak", policy: { wipLimit: 5 } }, { id: "doing", title: "Yapiliyor", policy: { wipLimit: 3 } }, { id: "done", title: "Tamamlandi" }], cards: [{ id: "1", columnId: "todo", title: "Gorev 1" }, { id: "2", columnId: "todo", title: "Gorev 2" }, { id: "3", columnId: "doing", title: "Gorev 3" }] };
+
+/* ---- X-Scheduler default props ---- */
+DEFAULT_PROPS.SchedulerToolbar = { view: "week", date: new Date(), onViewChange: () => {}, onDateChange: () => {} };
+DEFAULT_PROPS.EventForm = { onSave: () => {}, onCancel: () => {} };
 
 /** Check whether a component has playground default props configured. */
 export function hasPlayground(componentName: string): boolean {

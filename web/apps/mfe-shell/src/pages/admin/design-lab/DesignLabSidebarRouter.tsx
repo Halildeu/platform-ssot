@@ -61,17 +61,23 @@ export const ADVANCED_NAMES = new Set([
   "EntityGrid", "AgGridServer", "TreeTable",
   /* X-Data-Grid */
   "DataGridFilterChips", "DataGridSelectionBar", "ServerDataSource",
+  "MasterDetailGrid", "TreeDataGrid", "PivotGrid", "EditableGrid", "RowGroupingGrid",
   /* X-Charts */
   "ChartContainer", "ScatterChart", "RadarChart", "TreemapChart",
   "HeatmapChart", "GaugeChart", "WaterfallChart",
+  "KPICard", "SparklineChart", "MiniChart", "ChartDashboard", "StatWidget", "ChartLegend",
   /* X-Scheduler */
   "Scheduler", "SchedulerEvent", "SchedulerToolbar", "useScheduler",
+  "AgendaView", "ResourceView", "EventForm",
   /* X-Kanban */
   "KanbanBoard", "KanbanColumn", "KanbanCard", "KanbanToolbar",
+  "KanbanSwimlane", "KanbanCardDetail", "KanbanMetrics",
   /* X-Editor */
   "RichTextEditor", "EditorToolbar", "EditorMenuBubble",
+  "SlashCommandMenu", "MentionList", "EditorTableMenu", "EditorLinkDialog", "EditorImageUpload",
   /* X-FormBuilder */
   "FormRenderer", "FieldRenderer", "FormPreview",
+  "MultiStepForm", "FormSummary", "RepeatableFieldGroup", "FieldRegistry",
 ]);
 
 const DESIGN_TOKEN_GROUPS = [
