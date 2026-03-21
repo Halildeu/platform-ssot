@@ -104,7 +104,7 @@ const PermissionRegistryPanel: React.FC<PermissionRegistryPanelProps> = ({ t, fo
                 <td className="py-3 pr-4 text-text-primary">{entry.module}</td>
                 <td className="py-3 pr-4 text-text-primary">{entry.owner}</td>
                 <td className="py-3 pr-4">
-                  <Badge tone={entry.status === 'active' ? 'success' : 'warning'}>
+                  <Badge variant={entry.status === 'active' ? 'success' : 'warning'}>
                     {entry.status === 'active'
                       ? t('access.registry.status.active')
                       : t('access.registry.status.deprecated')}

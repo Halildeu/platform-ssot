@@ -5165,7 +5165,7 @@ import { LinkInline } from '@mfe/design-system';
 <LinkInline href="/dashboard">Dashboard</LinkInline>
 <LinkInline href="https://example.com" external>Harici Kaynak</LinkInline>
 <LinkInline href="/settings" current>Ayarlar</LinkInline>
-<LinkInline tone="secondary" underline="always" href="/help">Yardim</LinkInline>
+<LinkInline variant="secondary" underline="always" href="/help">Yardim</LinkInline>
 <LinkInline disabled>Erisim Engellendi</LinkInline>
 \`\`\``,
       },

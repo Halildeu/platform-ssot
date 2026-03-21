@@ -40,8 +40,8 @@ const SurfaceOverviewCanvas = () => {
               <Text as="h2" className="text-3xl font-semibold tracking-[-0.04em] text-text-primary">
                 UI Kit visual preview matrix
               </Text>
-              <Badge tone="success">Stable</Badge>
-              <Tag tone="info">Storybook</Tag>
+              <Badge variant="success">Stable</Badge>
+              <Tag variant="info">Storybook</Tag>
             </div>
             <Text variant="secondary" className="block max-w-3xl text-sm leading-7">
               Bu harness, design systemin tuketiciye hazir ana surface alanlarini tek Storybook rotasinda gorsel olarak yan yana toplar.
@@ -52,8 +52,8 @@ const SurfaceOverviewCanvas = () => {
             <Button>Primary action</Button>
             <Button variant="secondary">Secondary action</Button>
             <Button variant="ghost">Ghost action</Button>
-            <Badge tone="warning">Beta-aware</Badge>
-            <Tag tone="success">Design Lab</Tag>
+            <Badge variant="warning">Beta-aware</Badge>
+            <Tag variant="success">Design Lab</Tag>
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-[0.7fr_1.3fr]">
@@ -94,7 +94,7 @@ const SurfaceOverviewCanvas = () => {
                   eyebrow="Consumer Preview"
                   title="Rollout summary"
                   description="Stable component ve overlay surface ayni release preview icinde dogrulanir."
-                  status={<Badge tone="success">Ready</Badge>}
+                  status={<Badge variant="success">Ready</Badge>}
                   summaryItems={[
                     { label: 'Exports', value: '92', helper: 'Public package surface' },
                     { label: 'Coverage', value: '100%', helper: 'API catalog coverage' },
@@ -104,7 +104,7 @@ const SurfaceOverviewCanvas = () => {
                   entity={{
                     title: '@mfe/design-system',
                     subtitle: 'Tek noktadan yayinlanan tasarim kutuphanesi',
-                    badge: <Tag tone="info">remote ./library</Tag>,
+                    badge: <Tag variant="info">remote ./library</Tag>,
                     items: [
                       { label: 'Version', value: '1.1.0' },
                       { label: 'Channel', value: 'latest' },

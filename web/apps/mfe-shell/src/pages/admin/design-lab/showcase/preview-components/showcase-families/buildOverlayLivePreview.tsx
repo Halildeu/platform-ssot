@@ -174,8 +174,8 @@ export const buildOverlayLivePreview = (
                   {t('designlab.showcase.component.popover.live.description')}
                 </Text>
                 <div className="flex flex-wrap gap-2">
-                  <Tag tone="warning">{t('designlab.showcase.component.popover.live.badge.policy')}</Tag>
-                  <Tag tone="info">{t('designlab.showcase.component.popover.live.badge.readonly')}</Tag>
+                  <Tag variant="warning">{t('designlab.showcase.component.popover.live.badge.policy')}</Tag>
+                  <Tag variant="info">{t('designlab.showcase.component.popover.live.badge.readonly')}</Tag>
                 </div>
               </div>
             )}

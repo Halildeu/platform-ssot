@@ -244,7 +244,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                           <Text as="div" className="font-semibold text-text-primary">
                             {target.targetId}
                           </Text>
-                          <Badge tone={fullyReady ? 'success' : 'warning'}>
+                          <Badge variant={fullyReady ? 'success' : 'warning'}>
                             {target.artifactPresentCount}/{target.artifactCount || 0}
                           </Badge>
                         </div>
@@ -273,7 +273,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                     <SectionBadge label={releaseFamilyContext.familyLabel} />
                     <SectionBadge label={releaseFamilyContext.subgroupLabel} />
                     <SectionBadge label={releaseFamilyContext.waveLabel} />
-                    <Badge tone={releaseFamilyContext.familyTouched ? 'success' : 'info'}>
+                    <Badge variant={releaseFamilyContext.familyTouched ? 'success' : 'info'}>
                       {releaseFamilyContext.familyTouched ? 'Release-touchpoint var' : 'Dogrudan release-touchpoint yok'}
                     </Badge>
                   </div>
@@ -343,7 +343,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Backlog temiz</Badge>
+                      <Badge variant="success">Backlog temiz</Badge>
                     )}
                   </div>
                 </div>
@@ -355,14 +355,14 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Stable surface temiz</Badge>
+                      <Badge variant="success">Stable surface temiz</Badge>
                     )}
                   </div>
                 </div>
                 <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                   <DetailLabel>Private surface guard</DetailLabel>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <Badge tone={adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'success' : 'warning'}>
+                    <Badge variant={adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'success' : 'warning'}>
                       {adoptionSummary.internalSurfaceProtection.status === 'protected' ? 'Protected' : 'Drifted'}
                     </Badge>
                     <SectionBadge label={`${adoptionSummary.internalSurfaceProtection.allowedConsumers.length} consumer`} />
@@ -478,7 +478,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Backlog temiz</Badge>
+                      <Badge variant="success">Backlog temiz</Badge>
                     )}
                   </div>
                 </div>
@@ -490,7 +490,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Story coverage hizali</Badge>
+                      <Badge variant="success">Story coverage hizali</Badge>
                     )}
                   </div>
                 </div>
@@ -502,7 +502,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Adoption dengeli</Badge>
+                      <Badge variant="success">Adoption dengeli</Badge>
                     )}
                   </div>
                 </div>
@@ -514,7 +514,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="info">Yogun tekil risk yok</Badge>
+                      <Badge variant="info">Yogun tekil risk yok</Badge>
                     )}
                   </div>
                 </div>
@@ -523,10 +523,10 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Legacy replacement matrix</DetailLabel>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <Badge tone="success">replaceable {legacyReplacementMatrix.summary.replaceable}</Badge>
-                  <Badge tone="info">adapter {legacyReplacementMatrix.summary.adapter}</Badge>
-                  <Badge tone="warning">missing {legacyReplacementMatrix.summary.missing}</Badge>
-                  <Badge tone="danger">quarantine {legacyReplacementMatrix.summary.quarantine}</Badge>
+                  <Badge variant="success">replaceable {legacyReplacementMatrix.summary.replaceable}</Badge>
+                  <Badge variant="info">adapter {legacyReplacementMatrix.summary.adapter}</Badge>
+                  <Badge variant="warning">missing {legacyReplacementMatrix.summary.missing}</Badge>
+                  <Badge variant="danger">quarantine {legacyReplacementMatrix.summary.quarantine}</Badge>
                   <SectionBadge label={`total ${legacyReplacementMatrix.summary.totalItems}`} />
                 </div>
                 <Text variant="secondary" className="mt-3 block text-sm leading-6">
@@ -546,7 +546,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                           <Text as="div" className="text-sm font-semibold text-text-primary">
                             {entry.legacySurface}
                           </Text>
-                          <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
+                          <Badge variant={statusMeta.tone}>{statusMeta.label}</Badge>
                         </div>
                         <Text variant="secondary" className="mt-2 block text-sm leading-6">
                           {entry.currentPain}
@@ -592,10 +592,10 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>AntD / MUI parity matrix</DetailLabel>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <Badge tone="success">aligned {benchmarkParityMatrix.summary.aligned}</Badge>
-                  <Badge tone="info">partial {benchmarkParityMatrix.summary.partial}</Badge>
-                  <Badge tone="warning">misplaced {benchmarkParityMatrix.summary.misplaced}</Badge>
-                  <Badge tone="danger">missing {benchmarkParityMatrix.summary.missing}</Badge>
+                  <Badge variant="success">aligned {benchmarkParityMatrix.summary.aligned}</Badge>
+                  <Badge variant="info">partial {benchmarkParityMatrix.summary.partial}</Badge>
+                  <Badge variant="warning">misplaced {benchmarkParityMatrix.summary.misplaced}</Badge>
+                  <Badge variant="danger">missing {benchmarkParityMatrix.summary.missing}</Badge>
                   <SectionBadge label={`overall ${benchmarkParityMatrix.summary.overallParityPercent}%`} />
                   <SectionBadge label={`total ${benchmarkParityMatrix.summary.totalCapabilities}`} />
                 </div>
@@ -632,7 +632,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             {entry.capability}
                           </Text>
                           <div className="flex flex-wrap gap-2">
-                            <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
+                            <Badge variant={statusMeta.tone}>{statusMeta.label}</Badge>
                             <SectionBadge label={entry.priority} />
                             <SectionBadge label={`${entry.currentScore}%`} />
                           </div>
@@ -725,7 +725,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             <SectionBadge key={`major-${name}`} label={name} />
                           ))
                         ) : (
-                          <Badge tone="success">Bos</Badge>
+                          <Badge variant="success">Bos</Badge>
                         )}
                       </div>
                     </div>
@@ -737,7 +737,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             <SectionBadge key={`minor-${name}`} label={name} />
                           ))
                         ) : (
-                          <Badge tone="success">Bos</Badge>
+                          <Badge variant="success">Bos</Badge>
                         )}
                       </div>
                     </div>
@@ -749,7 +749,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             <SectionBadge key={`patch-${name}`} label={name} />
                           ))
                         ) : (
-                          <Badge tone="info">Backlog yok</Badge>
+                          <Badge variant="info">Backlog yok</Badge>
                         )}
                       </div>
                     </div>
@@ -824,7 +824,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                               <SectionBadge key={`${entry.checklistId}-${owner}`} label={owner} />
                             ))
                           ) : (
-                            <Badge tone="warning">Owner eksik</Badge>
+                            <Badge variant="warning">Owner eksik</Badge>
                           )}
                         </div>
                         <div className="mt-3 space-y-2">
@@ -1142,10 +1142,10 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                       {(consumer.singleAppComponents?.length || consumer.sharedComponents?.length) ? (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {consumer.singleAppComponents?.length ? (
-                            <Badge tone="warning">{`${consumer.singleAppComponents.length} single-app surface`}</Badge>
+                            <Badge variant="warning">{`${consumer.singleAppComponents.length} single-app surface`}</Badge>
                           ) : null}
                           {consumer.sharedComponents?.length ? (
-                            <Badge tone="info">{`${consumer.sharedComponents.length} shared surface`}</Badge>
+                            <Badge variant="info">{`${consumer.sharedComponents.length} shared surface`}</Badge>
                           ) : null}
                         </div>
                       ) : null}
@@ -1237,7 +1237,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <Text as="div" className="text-sm font-semibold text-text-primary">
                           {harness.path}
                         </Text>
-                        <Badge tone={harness.present ? 'success' : 'warning'}>
+                        <Badge variant={harness.present ? 'success' : 'warning'}>
                           {harness.present ? 'Present' : 'Missing'}
                         </Badge>
                       </div>
@@ -1255,7 +1255,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Backlog temiz</Badge>
+                      <Badge variant="success">Backlog temiz</Badge>
                     )}
                   </div>
                 </div>
@@ -1267,7 +1267,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Adopted story coverage hazir</Badge>
+                      <Badge variant="success">Adopted story coverage hazir</Badge>
                     )}
                   </div>
                 </div>
@@ -1279,7 +1279,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                         <SectionBadge key={name} label={name} />
                       ))
                     ) : (
-                      <Badge tone="success">Live demo ile story coverage dengeli</Badge>
+                      <Badge variant="success">Live demo ile story coverage dengeli</Badge>
                     )}
                   </div>
                 </div>
@@ -1395,7 +1395,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             {recipe.intent}
                           </Text>
                         </div>
-                        <Badge tone={directRecipeMatch ? 'success' : 'muted'}>
+                        <Badge variant={directRecipeMatch ? 'success' : 'muted'}>
                           {directRecipeMatch ? 'Direct recipe' : 'Library recipe'}
                         </Badge>
                       </div>
@@ -1427,7 +1427,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                       {recipe.intent}
                     </Text>
                   </div>
-                  <Badge tone="muted">Library recipe</Badge>
+                  <Badge variant="muted">Library recipe</Badge>
                 </div>
 
                 <div className="mt-4">

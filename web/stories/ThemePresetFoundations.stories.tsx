@@ -28,7 +28,7 @@ const themePresets: ThemePresetGalleryItem[] = [
     density: 'comfortable',
     intent: 'Operasyon ekranlari ve yuksek okunabilirlik',
     isDefaultMode: true,
-    badges: [<Badge key="light" tone="success">Shipping</Badge>],
+    badges: [<Badge key="light" variant="success">Shipping</Badge>],
   },
   {
     presetId: 'pw-ocean',
@@ -37,7 +37,7 @@ const themePresets: ThemePresetGalleryItem[] = [
     appearance: 'ocean',
     density: 'comfortable',
     intent: 'AI-native ve insight agirlikli paneller',
-    badges: [<Badge key="ocean" tone="info">Signal-rich</Badge>],
+    badges: [<Badge key="ocean" variant="info">Signal-rich</Badge>],
   },
   {
     presetId: 'pw-graphite',
@@ -47,7 +47,7 @@ const themePresets: ThemePresetGalleryItem[] = [
     density: 'compact',
     intent: 'Denetim ve uzun sureli gozetim ekranlari',
     isHighContrast: true,
-    badges: [<Badge key="graphite" tone="warning">High contrast</Badge>],
+    badges: [<Badge key="graphite" variant="warning">High contrast</Badge>],
   },
 ];
 

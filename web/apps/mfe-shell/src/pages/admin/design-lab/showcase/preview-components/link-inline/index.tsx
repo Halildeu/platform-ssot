@@ -20,11 +20,11 @@ const LinkInlineNavigationStates = () => (
         <LinkInline href="/admin/design-lab" current leadingVisual={<span aria-hidden="true">•</span>}>
           Design Lab current
         </LinkInline>
-        <Badge tone="info">current</Badge>
+        <Badge variant="info">current</Badge>
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <LinkInline href="/admin/users">Kullanici yonetimi</LinkInline>
-        <LinkInline href="/admin/reporting" tone="secondary">
+        <LinkInline href="/admin/reporting" variant="secondary">
           Raporlama
         </LinkInline>
       </div>
@@ -50,7 +50,7 @@ const LinkInlineInformationScent = () => (
         <LinkInline href="/admin/design-lab" underline="hover">
           Hover underline
         </LinkInline>
-        <LinkInline href="/admin/design-lab" underline="none" tone="secondary" trailingVisual={<span aria-hidden="true">→</span>}>
+        <LinkInline href="/admin/design-lab" underline="none" variant="secondary" trailingVisual={<span aria-hidden="true">→</span>}>
           Minimal handoff
         </LinkInline>
       </div>

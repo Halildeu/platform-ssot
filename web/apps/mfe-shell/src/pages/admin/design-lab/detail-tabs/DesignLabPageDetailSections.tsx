@@ -306,7 +306,7 @@ const PageOverviewTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
           <SectionBadge label={t('designlab.common.panelCountPlural', { count: 4 })} />
         </div>
       </div>
@@ -321,7 +321,7 @@ const PageOverviewTab: React.FC<{
           {
             value: 'summary',
             label: 'Summary',
-            badge: <Badge tone="info">{template.ownerBlocks.length}</Badge>,
+            badge: <Badge variant="info">{template.ownerBlocks.length}</Badge>,
             content: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
@@ -363,7 +363,7 @@ const PageOverviewTab: React.FC<{
           {
             value: 'regions',
             label: 'Regions',
-            badge: <Badge tone="warning">{selectedTemplateSections.length}</Badge>,
+            badge: <Badge variant="warning">{selectedTemplateSections.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -396,7 +396,7 @@ const PageOverviewTab: React.FC<{
           {
             value: 'adoption',
             label: 'Adoption',
-            badge: <Badge tone="success">3 step</Badge>,
+            badge: <Badge variant="success">3 step</Badge>,
             content: (
               <ShowcaseCard
                 eyebrow="Template adoption"
@@ -418,7 +418,7 @@ const PageOverviewTab: React.FC<{
           {
             value: 'gallery',
             label: 'Gallery',
-            badge: <Badge tone="warning">{TEMPLATE_GALLERY_ITEMS.length}</Badge>,
+            badge: <Badge variant="warning">{TEMPLATE_GALLERY_ITEMS.length}</Badge>,
             content: (
               <div className="space-y-4">
                 <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -442,7 +442,7 @@ const PageOverviewTab: React.FC<{
                       >
                         <div className="flex items-center justify-between gap-2">
                           <Text className="text-sm font-semibold text-text-primary">{item.title}</Text>
-                          <Badge tone={COMPLEXITY_BADGE_TONE[item.complexity] ?? 'muted'}>{item.complexity}</Badge>
+                          <Badge variant={COMPLEXITY_BADGE_TONE[item.complexity] ?? 'muted'}>{item.complexity}</Badge>
                         </div>
                         <Text variant="secondary" className="mt-1.5 block text-xs leading-5">
                           {item.intent}
@@ -547,8 +547,8 @@ const PageApiTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
-          <Badge tone="muted">{t('designlab.common.panelCountPlural', { count: 3 })}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="muted">{t('designlab.common.panelCountPlural', { count: 3 })}</Badge>
         </div>
       </div>
 
@@ -564,7 +564,7 @@ const PageApiTab: React.FC<{
           {
             value: 'contract',
             label: 'Contract',
-            badge: <Badge tone="info">{template.ownerBlocks.length}</Badge>,
+            badge: <Badge variant="info">{template.ownerBlocks.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Template contract</DetailLabel>
@@ -575,7 +575,7 @@ const PageApiTab: React.FC<{
           {
             value: 'regions',
             label: 'Regions',
-            badge: <Badge tone="warning">{selectedTemplateTracks.length || '—'}</Badge>,
+            badge: <Badge variant="warning">{selectedTemplateTracks.length || '—'}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Template region model</DetailLabel>
@@ -591,7 +591,7 @@ const PageApiTab: React.FC<{
           {
             value: 'dependencies',
             label: 'Dependencies',
-            badge: <Badge tone="success">{usageRecipes.length}</Badge>,
+            badge: <Badge variant="success">{usageRecipes.length}</Badge>,
             content: <UsageRecipesPanel title="Template consume patterns" recipes={usageRecipes} />,
           },
         ]}
@@ -683,7 +683,7 @@ const PageUxTab: React.FC<{
             </Text>
           </div>
           {matchedTemplate ? (
-            <Badge tone={COMPLEXITY_BADGE_TONE[matchedTemplate.complexity] ?? 'muted'}>
+            <Badge variant={COMPLEXITY_BADGE_TONE[matchedTemplate.complexity] ?? 'muted'}>
               {matchedTemplate.complexity}
             </Badge>
           ) : null}
@@ -797,8 +797,8 @@ const PageQualityTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
-          <Badge tone="muted">{t('designlab.common.panelCountPlural', { count: 5 })}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="muted">{t('designlab.common.panelCountPlural', { count: 5 })}</Badge>
         </div>
       </div>
 
@@ -814,7 +814,7 @@ const PageQualityTab: React.FC<{
           {
             value: 'gates',
             label: 'Gates',
-            badge: <Badge tone="info">{selectedTemplateQualityGates.length}</Badge>,
+            badge: <Badge variant="info">{selectedTemplateQualityGates.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Template quality gates</DetailLabel>
@@ -827,7 +827,7 @@ const PageQualityTab: React.FC<{
           {
             value: 'readiness',
             label: 'Readiness',
-            badge: <Badge tone="success">{selectedTemplateItems.length}</Badge>,
+            badge: <Badge variant="success">{selectedTemplateItems.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Template readiness</DetailLabel>
@@ -842,7 +842,7 @@ const PageQualityTab: React.FC<{
           {
             value: 'governance',
             label: 'Governance',
-            badge: <Badge tone="warning">5 dim</Badge>,
+            badge: <Badge variant="warning">5 dim</Badge>,
             content: (
               <MigrationGovernancePanel
                 layer="pages"
@@ -855,7 +855,7 @@ const PageQualityTab: React.FC<{
           {
             value: 'benchmark',
             label: 'Benchmark',
-            badge: <Badge tone="info">12</Badge>,
+            badge: <Badge variant="info">12</Badge>,
             content: (
               <BenchmarkParityPanel
                 layerFilter="pages"
@@ -868,7 +868,7 @@ const PageQualityTab: React.FC<{
           {
             value: 'contracts',
             label: 'Contracts',
-            badge: <Badge tone="success">8</Badge>,
+            badge: <Badge variant="success">8</Badge>,
             content: (
               <PlatformContractsCompliancePanel
                 layerFilter="pages"

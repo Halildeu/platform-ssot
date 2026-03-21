@@ -435,7 +435,7 @@ export const DesignLabRecipeComponentPreview: React.FC<DesignLabRecipeComponentP
           title={t('designlab.showcase.recipe.searchFilterListing.title')}
           description={t('designlab.showcase.recipe.searchFilterListing.description')}
           meta={<SectionBadge label="recipe:first" />}
-          status={<Badge tone="info">Live</Badge>}
+          status={<Badge variant="info">Live</Badge>}
           filters={(
             <>
               <TextInput
@@ -449,7 +449,7 @@ export const DesignLabRecipeComponentPreview: React.FC<DesignLabRecipeComponentP
                 label={t('designlab.showcase.recipe.searchFilterListing.densityLabel')}
                 value={selectValue}
                 onValueChange={(value) => setSelectValue(String(value))}
-                selectSize="sm"
+                size="sm"
                 options={[
                   { label: t('designlab.showcase.recipe.searchFilterListing.density.comfortable'), value: 'comfortable' },
                   { label: t('designlab.showcase.recipe.searchFilterListing.density.compact'), value: 'compact' },
@@ -484,8 +484,8 @@ export const DesignLabRecipeComponentPreview: React.FC<DesignLabRecipeComponentP
             <div key={String(row.id)}>
               <Text preset="body" weight="medium">{String(row.name)}</Text>
               <Text variant="secondary" preset="caption">{`${String(row.owner)} · ${String(row.theme)}`}</Text>
-              <Badge tone={row.status === 'Ready' ? 'success' : 'info'}>{String(row.status)}</Badge>
-              <Badge tone="muted">{String(row.track)}</Badge>
+              <Badge variant={row.status === 'Ready' ? 'success' : 'info'}>{String(row.status)}</Badge>
+              <Badge variant="muted">{String(row.track)}</Badge>
             </div>
           ))}
         />
@@ -502,7 +502,7 @@ export const DesignLabRecipeComponentPreview: React.FC<DesignLabRecipeComponentP
               <SectionBadge label="stable" />
             </>
           )}
-          status={<Badge tone="success">{t('designlab.showcase.recipe.detailSummary.status')}</Badge>}
+          status={<Badge variant="success">{t('designlab.showcase.recipe.detailSummary.status')}</Badge>}
           summaryItems={[
             { key: 'owners', label: 'Owners', value: '5', note: t('designlab.showcase.recipe.detailSummary.summary.owners.note'), tone: 'info' },
             { key: 'doctor', label: 'Doctor', value: 'PASS', note: t('designlab.showcase.recipe.detailSummary.summary.doctor.note'), tone: 'success' },
@@ -517,7 +517,7 @@ export const DesignLabRecipeComponentPreview: React.FC<DesignLabRecipeComponentP
           entity={{
             title: 'Recipe System',
             subtitle: t('designlab.showcase.recipe.detailSummary.entity.subtitle'),
-            badge: <Badge tone="success">Stable</Badge>,
+            badge: <Badge variant="success">Stable</Badge>,
             avatar: { name: 'Recipe System' },
             items: [
               { key: 'contract', label: 'Contract', value: 'ui-library-recipe-system-contract-v1', tone: 'info' },
@@ -874,7 +874,7 @@ const PreviewWorkspace: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">Tabbed</Badge>
+          <Badge variant="info">Tabbed</Badge>
           <SectionBadge label={t('designlab.showcase.preview.workspace.showcaseCount', { count: visibleSections.length })} />
         </div>
       </div>
@@ -888,7 +888,7 @@ const PreviewWorkspace: React.FC<{
           key: panel.id,
           label: panel.label,
           disabled: sectionCountByKind[panel.id] === 0,
-          badge: <Badge tone={panel.id === 'live' ? 'success' : panel.id === 'recipe' ? 'warning' : 'muted'}>{sectionCountByKind[panel.id]}</Badge>,
+          badge: <Badge variant={panel.id === 'live' ? 'success' : panel.id === 'recipe' ? 'warning' : 'muted'}>{sectionCountByKind[panel.id]}</Badge>,
           content: renderPanelContent(panel.id),
         }))}
       />
@@ -1465,7 +1465,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
                     {
                       value: 'overview',
                       label: t('designlab.showcase.component.tabs.controlled.overview.label'),
-                      badge: <Badge tone="info">4</Badge>,
+                      badge: <Badge variant="info">4</Badge>,
                       content: (
                         <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
                           <Text preset="title">{t('designlab.showcase.component.tabs.controlled.overview.title')}</Text>
@@ -1736,7 +1736,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
           <PageHeader
             title={t('designlab.showcase.component.pageHeader.live.title')}
             subtitle={t('designlab.showcase.component.pageHeader.live.description')}
-            tags={<Badge tone="success">{t('designlab.showcase.component.pageHeader.live.status')}</Badge>}
+            tags={<Badge variant="success">{t('designlab.showcase.component.pageHeader.live.status')}</Badge>}
             actions={
               <>
                 <Button variant="secondary">{t('designlab.showcase.component.pageHeader.live.action.notes')}</Button>
@@ -1782,7 +1782,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
           <EntitySummaryBlock
             title={t('designlab.showcase.component.entitySummaryBlock.live.title')}
             subtitle={t('designlab.showcase.component.entitySummaryBlock.live.subtitle')}
-            badge={<Badge tone="info">{t('designlab.showcase.component.entitySummaryBlock.live.badge')}</Badge>}
+            badge={<Badge variant="info">{t('designlab.showcase.component.entitySummaryBlock.live.badge')}</Badge>}
             avatar={{ name: t('designlab.showcase.component.entitySummaryBlock.live.title') }}
             actions={<Button variant="secondary">{t('designlab.showcase.component.entitySummaryBlock.live.action')}</Button>}
             items={entitySummaryItems}
@@ -2175,7 +2175,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
                       {item.description}
                     </Text>
                   </div>
-                  <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
+                  <Badge variant={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
                     {statusLabel[item.lifecycle]}
                   </Badge>
                 </div>
@@ -2267,7 +2267,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
             eyebrow={t('designlab.showcase.component.planned.roadmap')}
             title={t('designlab.showcase.component.planned.title', { name: item.name })}
             description={t('designlab.showcase.component.planned.description')}
-            badges={<Tag tone="info">{t('designlab.showcase.component.planned.badge')}</Tag>}
+            badges={<Tag variant="info">{t('designlab.showcase.component.planned.badge')}</Tag>}
           >
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <LibraryMetricCard

@@ -41,7 +41,7 @@ const commandItems: CommandPaletteItem[] = [
     group: 'Navigation',
     shortcut: 'G R',
     keywords: ['design lab', 'release', 'migration'],
-    badge: <Badge tone="info">AI</Badge>,
+    badge: <Badge variant="info">AI</Badge>,
   },
   {
     id: 'run-wave-gate',
@@ -85,7 +85,7 @@ const citationItems: CitationPanelItem[] = [
     source: 'apps/mfe-shell/src/pages/admin/design-lab.index.json',
     locator: 'visualRegression.summary',
     kind: 'code',
-    badges: [<Badge key="generated" tone="success">generated</Badge>],
+    badges: [<Badge key="generated" variant="success">generated</Badge>],
   },
   {
     id: 'release-manifest',
@@ -105,7 +105,7 @@ const auditItems: AIActionAuditTimelineItem[] = [
     timestamp: '11:18',
     summary: 'Live demo surface icin eksik Storybook harness listesi cikarildi.',
     status: 'approved',
-    badges: [<Badge key="scan" tone="info">scan</Badge>],
+    badges: [<Badge key="scan" variant="info">scan</Badge>],
   },
   {
     id: 'audit-2',
@@ -134,7 +134,7 @@ const LiveDemoCanvas = () => {
             </div>
             <div className="ml-auto flex flex-wrap items-center gap-2">
               <ConfidenceBadge level="high" score={91} sourceCount={12} />
-              <Badge tone="success">Release-grade</Badge>
+              <Badge variant="success">Release-grade</Badge>
             </div>
           </div>
         </section>
@@ -184,7 +184,7 @@ const LiveDemoCanvas = () => {
                       'frontend doctor PASS',
                     ],
                     citations: ['visualRegression.summary', 'ui-library-release-gate.summary'],
-                    badges: [<Badge key="coverage" tone="success">coverage</Badge>],
+                    badges: [<Badge key="coverage" variant="success">coverage</Badge>],
                   },
                 ]}
                 commandItems={commandItems}
@@ -204,7 +204,7 @@ const LiveDemoCanvas = () => {
                 ]}
                 citations={['design-lab.index', 'release-manifest']}
                 footerNote="Owner: Platform UI"
-                badges={[<Badge key="human" tone="info">human-in-loop</Badge>]}
+                badges={[<Badge key="human" variant="info">human-in-loop</Badge>]}
               />
 
               <AIActionAuditTimeline
@@ -430,9 +430,9 @@ export const ComboboxAsyncFreeSoloField: Story = {
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
-                      {state.selected ? <Badge tone="success">selected</Badge> : null}
-                      {state.disabled ? <Badge tone="warning">restricted</Badge> : null}
-                      {option.groupLabel ? <Badge tone="info">{option.groupLabel}</Badge> : null}
+                      {state.selected ? <Badge variant="success">selected</Badge> : null}
+                      {state.disabled ? <Badge variant="warning">restricted</Badge> : null}
+                      {option.groupLabel ? <Badge variant="info">{option.groupLabel}</Badge> : null}
                     </div>
                   </div>
                 )}
@@ -491,8 +491,8 @@ export const ComboboxTagsField: Story = {
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
-                      {state.selected ? <Badge tone="success">selected</Badge> : null}
-                      {state.disabled ? <Badge tone="warning">restricted</Badge> : null}
+                      {state.selected ? <Badge variant="success">selected</Badge> : null}
+                      {state.disabled ? <Badge variant="warning">restricted</Badge> : null}
                     </div>
                   </div>
                 )}

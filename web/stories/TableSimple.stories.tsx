@@ -49,7 +49,7 @@ const policyColumns = [
     label: 'Status',
     render: (row: PolicyRow) => (
       <Badge
-        tone={row.status === 'Healthy' ? 'success' : row.status === 'Review' ? 'warning' : 'danger'}
+        variant={row.status === 'Healthy' ? 'success' : row.status === 'Review' ? 'warning' : 'danger'}
       >
         {row.status}
       </Badge>
@@ -59,7 +59,7 @@ const policyColumns = [
     key: 'risk',
     label: 'Risk',
     render: (row: PolicyRow) => (
-      <Badge tone={row.risk === 'Low' ? 'success' : row.risk === 'Medium' ? 'warning' : 'danger'}>
+      <Badge variant={row.risk === 'Low' ? 'success' : row.risk === 'Medium' ? 'warning' : 'danger'}>
         {row.risk}
       </Badge>
     ),
@@ -94,7 +94,7 @@ const queueColumns = [
   {
     key: 'lane',
     label: 'Lane',
-    render: (row: QueueRow) => <Badge tone="info">{row.lane}</Badge>,
+    render: (row: QueueRow) => <Badge variant="info">{row.lane}</Badge>,
     align: 'right' as const,
   },
 ] satisfies React.ComponentProps<typeof TableSimple<QueueRow>>['columns'];

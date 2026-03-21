@@ -128,7 +128,7 @@ export const BenchmarkParityPanel: React.FC<BenchmarkParityPanelProps> = ({
               {layerFilter !== 'all' ? ` (${layerFilter} katmani)` : ''}
             </Text>
           </div>
-          <Badge tone={summary.overallParityPercent >= 90 ? 'success' : 'warning'}>
+          <Badge variant={summary.overallParityPercent >= 90 ? 'success' : 'warning'}>
             {summary.overallParityPercent}% overall
           </Badge>
         </div>
@@ -173,7 +173,7 @@ export const BenchmarkParityPanel: React.FC<BenchmarkParityPanelProps> = ({
                   </Text>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <Badge tone={STATUS_TONE[item.status] ?? 'muted'}>{item.status}</Badge>
+                  <Badge variant={STATUS_TONE[item.status] ?? 'muted'}>{item.status}</Badge>
                 </div>
               </div>
 

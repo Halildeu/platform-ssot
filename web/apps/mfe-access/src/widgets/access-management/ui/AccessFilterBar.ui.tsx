@@ -104,7 +104,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
           value={localFilters.level}
           ariaLabel={t('access.filter.level.all')}
           onValueChange={(nextValue) => handleLevelChange(nextValue as AccessLevel | 'ALL')}
-          appearance={levelSegmentedPreset.appearance}
+          variant={levelSegmentedPreset.variant}
           shape={levelSegmentedPreset.shape}
           size={levelSegmentedPreset.size}
           iconPosition={levelSegmentedPreset.iconPosition}

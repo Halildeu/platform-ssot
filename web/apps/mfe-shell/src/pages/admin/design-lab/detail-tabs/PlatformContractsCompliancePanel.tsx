@@ -107,7 +107,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
               {layerFilter !== 'all' ? ` (${layerFilter} katmani)` : ''}
             </Text>
           </div>
-          <Badge tone="info">
+          <Badge variant="info">
             {filteredContracts.length} contract
           </Badge>
         </div>
@@ -157,11 +157,11 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
                     </Text>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <Badge tone={ENFORCEMENT_TONE[contract.enforcement] ?? 'muted'}>
+                    <Badge variant={ENFORCEMENT_TONE[contract.enforcement] ?? 'muted'}>
                       {contract.enforcement}
                     </Badge>
                     {isEnforcer ? (
-                      <Badge tone="success">enforcer</Badge>
+                      <Badge variant="success">enforcer</Badge>
                     ) : null}
                   </div>
                 </div>

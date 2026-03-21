@@ -243,11 +243,11 @@ export const DesignLabTaxonomyNavigator: React.FC<DesignLabTaxonomyNavigatorProp
                   ) : null}
                   {item.auxiliaryBadgeLabel ? (
                     <div className="mt-2">
-                      <Badge tone={item.auxiliaryBadgeTone ?? 'warning'}>{item.auxiliaryBadgeLabel}</Badge>
+                      <Badge variant={item.auxiliaryBadgeTone ?? 'warning'}>{item.auxiliaryBadgeLabel}</Badge>
                     </div>
                   ) : null}
                 </div>
-                <Badge tone={isActive ? 'info' : 'muted'}>{item.count}</Badge>
+                <Badge variant={isActive ? 'info' : 'muted'}>{item.count}</Badge>
               </div>
             </button>
           );

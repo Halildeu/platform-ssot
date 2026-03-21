@@ -73,7 +73,7 @@ export const DesignLabMenuBarShowcase: React.FC<DesignLabMenuBarShowcaseProps> =
     <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
       <div className="mb-4 flex flex-wrap gap-2">
         {variantLabels.map((entry) => (
-          <Badge key={entry.id} tone="info" className="rounded-full">
+          <Badge key={entry.id} variant="info" className="rounded-full">
             {entry.label}
           </Badge>
         ))}
@@ -92,7 +92,7 @@ export const DesignLabMenuBarShowcase: React.FC<DesignLabMenuBarShowcaseProps> =
                 <Text as="div" className="text-xs font-semibold text-text-primary">
                   {profile.label}
                 </Text>
-                <Badge tone={profile.score >= 30 ? 'success' : profile.score >= 24 ? 'warning' : 'muted'} className="rounded-full">
+                <Badge variant={profile.score >= 30 ? 'success' : profile.score >= 24 ? 'warning' : 'muted'} className="rounded-full">
                   Skor {profile.score}
                 </Badge>
               </div>
@@ -162,7 +162,7 @@ export const DesignLabMenuBarShowcase: React.FC<DesignLabMenuBarShowcaseProps> =
             {descriptor.description}
           </Text>
         </div>
-        <Badge tone="info" className="rounded-full">
+        <Badge variant="info" className="rounded-full">
           {sections.length} variant
         </Badge>
       </div>
@@ -188,7 +188,7 @@ export const DesignLabMenuBarShowcase: React.FC<DesignLabMenuBarShowcaseProps> =
               {section.badges?.length ? (
                 <div className="flex flex-wrap justify-end gap-1.5">
                   {section.badges.map((badge) => (
-                    <Badge key={`${section.id}-${badge}`} tone="muted" className="rounded-full">
+                    <Badge key={`${section.id}-${badge}`} variant="muted" className="rounded-full">
                       {badge}
                     </Badge>
                   ))}

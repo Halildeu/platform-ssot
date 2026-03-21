@@ -96,6 +96,8 @@ export function resolveSegmentedNextValue(
 
 export interface SegmentedPreset {
   size: "sm" | "md" | "lg";
+  variant: "default" | "outline" | "ghost";
+  /** @deprecated Use `variant` instead. Will be removed in v3.0.0. */
   appearance: "default" | "outline" | "ghost";
   shape: "rounded" | "pill";
   iconPosition?: "start" | "end" | "top";
@@ -106,11 +108,11 @@ export function createSegmentedPreset(
 ): SegmentedPreset {
   switch (kind) {
     case "toolbar":
-      return { size: "sm", appearance: "outline", shape: "rounded" };
+      return { size: "sm", variant: "outline", appearance: "outline", shape: "rounded" };
     case "filter_bar":
-      return { size: "sm", appearance: "ghost", shape: "pill" };
+      return { size: "sm", variant: "ghost", appearance: "ghost", shape: "pill" };
     case "pill_tabs":
-      return { size: "md", appearance: "default", shape: "pill" };
+      return { size: "md", variant: "default", appearance: "default", shape: "pill" };
   }
 }
 

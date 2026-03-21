@@ -139,7 +139,7 @@ const BulkPermissionModal: React.FC<BulkPermissionModalProps> = ({
               onValueChange={(nextValue) =>
                 setFormValues((prev) => ({ ...prev, level: nextValue as AccessLevel | '' }))
               }
-              appearance={levelSegmentedPreset.appearance}
+              variant={levelSegmentedPreset.variant}
               shape={levelSegmentedPreset.shape}
               size={levelSegmentedPreset.size}
               iconPosition={levelSegmentedPreset.iconPosition}

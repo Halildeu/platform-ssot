@@ -526,7 +526,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
               title="Wave 12 delivery pack"
               description="Release hazirligi, owner ve machine-readable payload ayni detail shell altinda toplanir."
               meta={<SectionBadge label="delivery-pack" />}
-              status={<Badge tone="success">Ready</Badge>}
+              status={<Badge variant="success">Ready</Badge>}
               summaryItems={[
                 { key: 'lane', label: 'Lane', value: 'delivery', note: 'Aktif publish lane', tone: 'info' },
                 { key: 'seo', label: 'SEO/GEO', value: 'Ready', note: 'Evidence paketi tamam', tone: 'success' },
@@ -535,7 +535,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
               entity={{
                 title: 'Design system release',
                 subtitle: 'Wave 12 package overview',
-                badge: <Badge tone="success">Stable</Badge>,
+                badge: <Badge variant="success">Stable</Badge>,
                 avatar: { name: 'Design system release' },
                 items: [
                   { key: 'owner', label: 'Owner', value: 'Platform UI', tone: 'info' },
@@ -569,7 +569,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
               eyebrow="Readonly detail"
               title="Governed component contract"
               description="Karar verilmis bir surface icin degistirilemeyen contract ozeti sunar."
-              status={<Badge tone="info">Locked</Badge>}
+              status={<Badge variant="info">Locked</Badge>}
               access="readonly"
               summaryItems={[
                 { key: 'mode', label: 'Mode', value: 'Readonly', note: 'No edit surface', tone: 'info' },
@@ -604,7 +604,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
               title="Runtime incident triage"
               description="Escalation owner, impact ve remediation baglami tek detail shell ile okunur."
               meta={<SectionBadge label="incident-runtime" />}
-              status={<Badge tone="warning">Investigating</Badge>}
+              status={<Badge variant="warning">Investigating</Badge>}
               summaryItems={[
                 { key: 'impact', label: 'Impact', value: 'Medium', note: 'Kullanici akisinda kismi etki', tone: 'warning' },
                 { key: 'owner', label: 'Owner', value: 'Platform shell', note: 'Aktif owner lane', tone: 'info' },
@@ -613,7 +613,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
               entity={{
                 title: 'Session audit deeplink',
                 subtitle: 'Runtime regression summary',
-                badge: <Badge tone="warning">Investigating</Badge>,
+                badge: <Badge variant="warning">Investigating</Badge>,
                 avatar: { name: 'Session audit deeplink' },
                 items: [
                   { key: 'surface', label: 'Surface', value: 'mfe-shell', tone: 'info' },
@@ -647,7 +647,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
               title="Component adoption readiness"
               description="Yeni component ailesinin katalog, docs, tests ve SEO/GEO readiness durumunu tek özet yüzeyde sunar."
               meta={<SectionBadge label="adoption-board" />}
-              status={<Badge tone="success">Ready</Badge>}
+              status={<Badge variant="success">Ready</Badge>}
               summaryItems={[
                 { key: 'docs', label: 'Docs', value: 'Ready', note: 'Catalog + story tamam', tone: 'success' },
                 { key: 'seo', label: 'SEO/GEO', value: 'Aligned', note: 'Evidence kuralı bağlı', tone: 'info' },
@@ -656,7 +656,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
               entity={{
                 title: 'DetailSectionTabs',
                 subtitle: 'Recipe-level detail navigation surface',
-                badge: <Badge tone="success">Adopted</Badge>,
+                badge: <Badge variant="success">Adopted</Badge>,
                 avatar: { name: 'DetailSectionTabs' },
                 items: [
                   { key: 'family', label: 'Family', value: 'Navigation & workspace', tone: 'info' },

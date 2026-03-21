@@ -991,7 +991,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
       { value: "finance", label: "Finans" },
     ],
     placeholder: "Departman secin",
-    selectSize: "md",
+    size: "md",
     fullWidth: true,
   },
   Checkbox: { label: "Kosullari kabul ediyorum", description: "Kullanim sartlarini okudum ve onayliyorum." },
@@ -2621,7 +2621,7 @@ export const PlaygroundPreview: React.FC<PlaygroundPreviewProps> = ({
         filtered.filters = React.createElement(React.Fragment, null,
           React.createElement((MfeUiKit as unknown as Record<string, React.ComponentType<Record<string, unknown>>>).TextInput, { label: "Arama", value: "", size: "sm" }),
           React.createElement((MfeUiKit as unknown as Record<string, React.ComponentType<Record<string, unknown>>>).Select, {
-            label: "Durum", selectSize: "sm", value: "all",
+            label: "Durum", size: "sm", value: "all",
             options: [{ label: "Tumunu goster", value: "all" }, { label: "Aktif", value: "active" }, { label: "Incelemede", value: "review" }],
           }),
         );

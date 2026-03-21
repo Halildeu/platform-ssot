@@ -57,7 +57,7 @@ export const buildTabsFeedbackShowcaseSections = (
                   items={[
                     { key: 'overview', label: 'Overview', content: <Text variant="secondary">Genel karar yuzeyi.</Text> },
                     { key: 'activity', label: 'Activity', content: <Text variant="secondary">Olay akisi ve son hareketler.</Text> },
-                    { key: 'preview', label: 'Preview', badge: <Badge tone="info">2</Badge>, content: <Text variant="secondary">Canli onizleme alani.</Text> },
+                    { key: 'preview', label: 'Preview', badge: <Badge variant="info">2</Badge>, content: <Text variant="secondary">Canli onizleme alani.</Text> },
                     { key: 'api', label: 'API', content: <Text variant="secondary">Prop ve durum modeli.</Text> },
                     { key: 'quality', label: 'Quality', content: <Text variant="secondary">Gate ve regresyon kanitlari.</Text> },
                     { key: 'migration', label: 'Migration', content: <Text variant="secondary">Adoption ve gecis plani.</Text> },
@@ -97,7 +97,7 @@ export const buildTabsFeedbackShowcaseSections = (
                       key: 'preview',
                       label: 'Evidence',
                       description: 'Source ve citation stack.',
-                      badge: <Badge tone="warning">manual</Badge>,
+                      badge: <Badge variant="warning">manual</Badge>,
                       content: <Text variant="secondary">Evidence lane klavye ile kontrollu acilir.</Text>,
                     },
                     {
@@ -136,21 +136,21 @@ export const buildTabsFeedbackShowcaseSections = (
                       key: 'overview',
                       label: 'Genel',
                       description: 'Kimlik, durum ve hizli karar cercevesi',
-                      badge: <Badge tone="muted">1</Badge>,
+                      badge: <Badge variant="muted">1</Badge>,
                       content: <Text variant="secondary">Ozet metrikler ve owner bilgileri.</Text>,
                     },
                     {
                       key: 'preview',
                       label: 'Onizleme',
                       description: 'Canli demo ve varyant yuzeyi',
-                      badge: <Badge tone="success">live</Badge>,
+                      badge: <Badge variant="success">live</Badge>,
                       content: <Text variant="secondary">Tek aktif calisma alaninda demo ve recete gorunumu.</Text>,
                     },
                     {
                       key: 'api',
                       label: 'API',
                       description: 'Ice aktarma, props ve durum modeli',
-                      badge: <Badge tone="info">14</Badge>,
+                      badge: <Badge variant="info">14</Badge>,
                       content: <Text variant="secondary">Prop sozlesmesi ve kullanim ornekleri.</Text>,
                     },
                   ]}

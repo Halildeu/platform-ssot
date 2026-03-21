@@ -214,7 +214,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
             ? t('users.filters.role.user')
             : value;
         const tone = typeof value === 'string' && value.toUpperCase() === 'ADMIN' ? 'danger' : 'info';
-        return <Badge tone={tone}>{formatted}</Badge>;
+        return <Badge variant={tone}>{formatted}</Badge>;
       },
     },
     {
@@ -233,7 +233,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           INVITED: 'warning',
           SUSPENDED: 'danger',
         };
-        return <Badge tone={colorMap[value] ?? 'default'}>{value}</Badge>;
+        return <Badge variant={colorMap[value] ?? 'default'}>{value}</Badge>;
       },
     },
     {
@@ -269,7 +269,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
               return (
                 <Badge
                   key={`${permission.moduleKey}-${permission.level}`}
-                  tone={levelColor}
+                  variant={levelColor}
                   title={`Modül: ${permission.moduleLabel ?? permission.moduleKey}`}
                 >
                   {permission.moduleLabel ?? permission.moduleKey} - {levelLabel}

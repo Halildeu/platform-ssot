@@ -56,7 +56,7 @@ export const DesignLabTableSimpleShowcase: React.FC<DesignLabTableSimpleShowcase
                 key: 'status',
                 label: t('designlab.showcase.component.tableSimple.shared.columns.status'),
                 align: 'center',
-                render: (row) => <Badge tone={(row as TableSimpleSectionRow).statusTone}>{(row as TableSimpleSectionRow).status}</Badge>,
+                render: (row) => <Badge variant={(row as TableSimpleSectionRow).statusTone}>{(row as TableSimpleSectionRow).status}</Badge>,
               },
             ]}
             rows={policyTableRows}
@@ -139,7 +139,7 @@ export const getDesignLabTableSimpleSectionShowcase = ({
                   key: 'status',
                   label: t('designlab.showcase.component.tableSimple.shared.columns.status'),
                   align: 'center',
-                  render: (row) => <Badge tone={(row as TableSimpleSectionRow).statusTone}>{(row as TableSimpleSectionRow).status}</Badge>,
+                  render: (row) => <Badge variant={(row as TableSimpleSectionRow).statusTone}>{(row as TableSimpleSectionRow).status}</Badge>,
                 },
                 {
                   key: 'updatedAt',
@@ -222,7 +222,7 @@ export const getDesignLabTableSimpleSectionShowcase = ({
                   key: 'status',
                   label: t('designlab.showcase.component.tableSimple.shared.columns.status'),
                   align: 'center',
-                  render: (row) => <Badge tone={(row as TableSimpleSectionRow).statusTone}>{(row as TableSimpleSectionRow).status}</Badge>,
+                  render: (row) => <Badge variant={(row as TableSimpleSectionRow).statusTone}>{(row as TableSimpleSectionRow).status}</Badge>,
                 },
                 {
                   key: 'updatedAt',

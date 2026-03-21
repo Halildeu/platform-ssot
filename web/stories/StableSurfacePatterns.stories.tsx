@@ -49,7 +49,7 @@ const StableSurfaceCanvas = () => {
               {
                 value: 'summary',
                 label: 'Summary',
-                badge: <Badge tone="success">Stable</Badge>,
+                badge: <Badge variant="success">Stable</Badge>,
                 content: (
                   <div className="space-y-4 rounded-[24px] border border-border-subtle bg-surface-panel p-4">
                     <Radio
@@ -102,7 +102,7 @@ const StableSurfaceCanvas = () => {
             title="SearchFilterListing release recipe"
             description="Header, filter ve result shell ayni stable recipe icinde yeniden kullanilir."
             meta="wave_11_recipes"
-            status={<Badge tone="success">Ready</Badge>}
+            status={<Badge variant="success">Ready</Badge>}
             filters={(
               <>
                 <div className="min-w-[200px]">
@@ -120,7 +120,7 @@ const StableSurfaceCanvas = () => {
               setNotifyConsumers(true);
             }}
             onSaveView={() => undefined}
-            filterExtra={<Badge tone="info">release-ops</Badge>}
+            filterExtra={<Badge variant="info">release-ops</Badge>}
             summaryItems={[
               { label: 'Stable', value: '34', helper: 'Wide adoption ready' },
               { label: 'Coverage', value: 'guncel', helper: 'Storybook visual contract' },

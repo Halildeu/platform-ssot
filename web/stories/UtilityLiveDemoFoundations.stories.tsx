@@ -42,7 +42,7 @@ const UtilityLiveDemoCanvas = () => {
             <EntitySummaryBlock
               title="Design Lab release entity"
               subtitle="EntitySummaryBlock, owner, lifecycle ve rollout notlarini tek summary shell altinda toplar."
-              badge={<Badge tone="success">live-demo</Badge>}
+              badge={<Badge variant="success">live-demo</Badge>}
               avatar={{ name: 'Platform UI' }}
               actions={
                 <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ const UtilityLiveDemoCanvas = () => {
                 <LinkInline href="/admin/design-lab" current>
                   Design Lab route
                 </LinkInline>
-                <LinkInline href="https://github.com/Halildeu/frontend" external tone="secondary">
+                <LinkInline href="https://github.com/Halildeu/frontend" external variant="secondary">
                   Repo evidence
                 </LinkInline>
                 <Divider orientation="vertical" decorative className="mx-1 h-8" />

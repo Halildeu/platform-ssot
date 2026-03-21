@@ -308,14 +308,14 @@ const buildInteractiveVariantConfig = (
         mobileFallback: 'menu',
         utilityCollapse: 'hide',
         initialPath: '/app/approval',
-        startSlot: <Badge tone="muted">{t('Platform', 'Platform')}</Badge>,
+        startSlot: <Badge variant="muted">{t('Platform', 'Platform')}</Badge>,
         endSlot: (
           <MenuBarSlotCluster>
-            <Badge tone="info">Admin</Badge>
+            <Badge variant="info">Admin</Badge>
             <MenuBarIconChip>
               <Bell className={iconClassName} />
             </MenuBarIconChip>
-            <Badge tone="muted">HK</Badge>
+            <Badge variant="muted">HK</Badge>
           </MenuBarSlotCluster>
         ),
         contextTitle: t('Canonical app header', 'Canonical app header'),
@@ -347,8 +347,8 @@ const buildInteractiveVariantConfig = (
             ),
             menuSurfaceMeta: (
               <div className="flex flex-wrap gap-2">
-                <Badge tone="info">{t('Visual', 'Visual')}</Badge>
-                <Badge tone="success">{t('Layout', 'Layout')}</Badge>
+                <Badge variant="info">{t('Visual', 'Visual')}</Badge>
+                <Badge variant="success">{t('Layout', 'Layout')}</Badge>
               </div>
             ),
             menuItems: [
@@ -369,9 +369,9 @@ const buildInteractiveVariantConfig = (
         overflowLabel: t('Daha fazla', 'More'),
         maxVisibleItems: 4,
         initialPath: '/library/packages',
-        currentBadge: <Badge tone="info">{t('Current', 'Current')}</Badge>,
-        startSlot: <Badge tone="muted">{t('Library', 'Library')}</Badge>,
-        endSlot: <Badge tone="success">v3.4</Badge>,
+        currentBadge: <Badge variant="info">{t('Current', 'Current')}</Badge>,
+        startSlot: <Badge variant="muted">{t('Library', 'Library')}</Badge>,
+        endSlot: <Badge variant="success">v3.4</Badge>,
         contextTitle: t('Canonical navigation menu', 'Canonical navigation menu'),
         contextDescription: t(
           'Bilgi kokusu yuksek, route gruplari okunur ve submenu paneli aciklayicidir. Buyuk IA icin menu bar’dan navigation menu hissine gecis verir.',
@@ -404,8 +404,8 @@ const buildInteractiveVariantConfig = (
             ),
             menuSurfaceMeta: (
               <div className="flex flex-wrap gap-2">
-                <Badge tone="warning">{t('4 sıcak öğe', '4 hot items')}</Badge>
-                <Badge tone="info">⌘K</Badge>
+                <Badge variant="warning">{t('4 sıcak öğe', '4 hot items')}</Badge>
+                <Badge variant="info">⌘K</Badge>
               </div>
             ),
             menuItems: [
@@ -448,13 +448,13 @@ const buildInteractiveVariantConfig = (
           <div className="flex items-center gap-2 rounded-full border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.78))] px-3 py-1.5 shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
             <Search className={iconClassName} />
             <Text variant="secondary" className="text-xs">{t('Ara, komut çalıştır, rota aç', 'Search, run a command, open a route')}</Text>
-            <Badge tone="muted">⌘K</Badge>
+            <Badge variant="muted">⌘K</Badge>
           </div>
         ),
         endSlot: (
           <MenuBarSlotCluster>
-            <Badge tone="info">{t('Search', 'Search')}</Badge>
-            <Badge tone="success">{t('Canlı', 'Live')}</Badge>
+            <Badge variant="info">{t('Search', 'Search')}</Badge>
+            <Badge variant="success">{t('Canlı', 'Live')}</Badge>
           </MenuBarSlotCluster>
         ),
         contextTitle: t('Canonical search / command header', 'Canonical search / command header'),
@@ -495,11 +495,11 @@ const buildInteractiveVariantConfig = (
         labelVisibility: 'responsive',
         labelCollapseBreakpoint: '(max-width: 1200px)',
         initialValue: 'assign',
-        startSlot: <Badge tone="warning">{t('24 seçim', '24 selected')}</Badge>,
+        startSlot: <Badge variant="warning">{t('24 seçim', '24 selected')}</Badge>,
         endSlot: (
           <MenuBarSlotCluster>
-            <Badge tone="info">{t('Toplu işlem', 'Bulk action')}</Badge>
-            <Badge tone="muted">{t('Review mode', 'Review mode')}</Badge>
+            <Badge variant="info">{t('Toplu işlem', 'Bulk action')}</Badge>
+            <Badge variant="muted">{t('Review mode', 'Review mode')}</Badge>
           </MenuBarSlotCluster>
         ),
         contextTitle: t('Canonical action header', 'Canonical action header'),
@@ -557,8 +557,8 @@ const buildInteractiveVariantConfig = (
         labelCollapseBreakpoint: '(max-width: 1200px)',
         submenuTrigger: 'hover',
         initialValue: 'file',
-        startSlot: <Badge tone="muted">{t('Desktop mode', 'Desktop mode')}</Badge>,
-        endSlot: <Badge tone="info">{t('Local app', 'Local app')}</Badge>,
+        startSlot: <Badge variant="muted">{t('Desktop mode', 'Desktop mode')}</Badge>,
+        endSlot: <Badge variant="info">{t('Local app', 'Local app')}</Badge>,
         contextTitle: t('Canonical desktop menubar', 'Canonical desktop menubar'),
         contextDescription: t(
           'Gercek masaustu hissi icin file/view/tools yapisi ve typed submenu parity gerekir; hover/click duzeni bu tarifte gorunur.',
@@ -587,8 +587,8 @@ const buildInteractiveVariantConfig = (
         overflowLabel: t('Daha fazla', 'More'),
         maxVisibleItems: 3,
         initialPath: '/release/approvals',
-        currentBadge: <Badge tone="warning">{t('Odak', 'Focus')}</Badge>,
-        endSlot: <Badge tone="danger">{t('İnsident 1', 'Incident 1')}</Badge>,
+        currentBadge: <Badge variant="warning">{t('Odak', 'Focus')}</Badge>,
+        endSlot: <Badge variant="danger">{t('İnsident 1', 'Incident 1')}</Badge>,
         contextTitle: t('Overflow kontrollü release bar', 'Overflow-controlled release bar'),
         contextDescription: t(
           'AntD benzeri More davranışını yalnız dar ekranda değil, büyük IA büyüdüğünde de bilinçli sadeleştirme için kullanır.',
@@ -610,7 +610,7 @@ const buildInteractiveVariantConfig = (
                   {t('Gizlenen rotalar bağlamı kaybetmiyor', 'Hidden routes do not lose context')}
                 </Text>
               </div>
-              <Badge tone="warning" className="rounded-full">
+              <Badge variant="warning" className="rounded-full">
                 priority
               </Badge>
             </div>
@@ -677,11 +677,11 @@ const buildInteractiveVariantConfig = (
           { label: t('Inbox', 'Inbox'), value: '12', tone: 'warning' },
           { label: t('SLA riski', 'SLA risk'), value: '2h', tone: 'danger' },
         ],
-        startSlot: <Badge tone="muted">{t('Support', 'Support')}</Badge>,
+        startSlot: <Badge variant="muted">{t('Support', 'Support')}</Badge>,
         endSlot: (
           <MenuBarSlotCluster>
-            <Badge tone="warning">SLA 2h</Badge>
-            <Badge tone="info">{t('Canlı', 'Live')}</Badge>
+            <Badge variant="warning">SLA 2h</Badge>
+            <Badge variant="info">{t('Canlı', 'Live')}</Badge>
           </MenuBarSlotCluster>
         ),
         supportingPanel: (
@@ -739,14 +739,14 @@ const buildInteractiveVariantConfig = (
           { label: t('Yeni alarm', 'New alerts'), value: '3', tone: 'danger' },
           { label: t('Rol', 'Role'), value: 'Admin', tone: 'info' },
         ],
-        startSlot: <Badge tone="success">{t('Product', 'Product')}</Badge>,
+        startSlot: <Badge variant="success">{t('Product', 'Product')}</Badge>,
         endSlot: (
           <MenuBarSlotCluster>
-            <Badge tone="info">Admin</Badge>
+            <Badge variant="info">Admin</Badge>
             <MenuBarIconChip>
               <Bell className={iconClassName} />
             </MenuBarIconChip>
-            <Badge tone="muted">HK</Badge>
+            <Badge variant="muted">HK</Badge>
           </MenuBarSlotCluster>
         ),
         supportingPanel: (
@@ -804,8 +804,8 @@ const buildInteractiveVariantConfig = (
           { label: t('Toplam root', 'Total roots'), value: '6', tone: 'info' },
           { label: t('Overflow', 'Overflow'), value: t('Favoriler dışı', 'Non-favorites'), tone: 'muted' },
         ],
-        startSlot: <Badge tone="warning">{t('Pinned', 'Pinned')}</Badge>,
-        endSlot: <Badge tone="info">{t('Kurumsal IA', 'Enterprise IA')}</Badge>,
+        startSlot: <Badge variant="warning">{t('Pinned', 'Pinned')}</Badge>,
+        endSlot: <Badge variant="info">{t('Kurumsal IA', 'Enterprise IA')}</Badge>,
         supportingPanel: (
           <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(240px,0.9fr)]">
             <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
@@ -813,9 +813,9 @@ const buildInteractiveVariantConfig = (
                 {t('Sabit favoriler', 'Pinned favorites')}
               </Text>
               <div className="mt-3 flex flex-wrap gap-2">
-                <Badge tone="warning" className="rounded-full">{t('Onaylar', 'Approvals')}</Badge>
-                <Badge tone="info" className="rounded-full">{t('Denetim', 'Audit')}</Badge>
-                <Badge tone="success" className="rounded-full">{t('Sahipler', 'Owners')}</Badge>
+                <Badge variant="warning" className="rounded-full">{t('Onaylar', 'Approvals')}</Badge>
+                <Badge variant="info" className="rounded-full">{t('Denetim', 'Audit')}</Badge>
+                <Badge variant="success" className="rounded-full">{t('Sahipler', 'Owners')}</Badge>
               </div>
               <Text variant="secondary" className="mt-3 text-xs leading-6">
                 {t(
@@ -834,7 +834,7 @@ const buildInteractiveVariantConfig = (
                     <Text as="div" preset="body-sm" className="text-sm font-semibold text-text-primary">
                       {entry}
                     </Text>
-                    <Badge tone="muted" className="rounded-full">
+                    <Badge variant="muted" className="rounded-full">
                       more
                     </Badge>
                   </div>
@@ -868,7 +868,7 @@ const buildInteractiveVariantConfig = (
         labelVisibility: 'always',
         access: 'readonly',
         initialValue: 'review',
-        endSlot: <Badge tone="muted">{t('Readonly', 'Readonly')}</Badge>,
+        endSlot: <Badge variant="muted">{t('Readonly', 'Readonly')}</Badge>,
       };
     case 'analytics_dense':
       return {
@@ -904,8 +904,8 @@ const buildInteractiveVariantConfig = (
           { label: t('Watchlist', 'Watchlist'), value: '4', tone: 'warning' },
           { label: t('Alan', 'Surface'), value: t('Yoğun', 'Dense'), tone: 'info' },
         ],
-        currentBadge: <Badge tone="success">{t('Aktif', 'Active')}</Badge>,
-        endSlot: <Badge tone="info">v2</Badge>,
+        currentBadge: <Badge variant="success">{t('Aktif', 'Active')}</Badge>,
+        endSlot: <Badge variant="info">v2</Badge>,
         supportingPanel: (
           <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
             <div className="grid gap-3 md:grid-cols-3">
@@ -948,8 +948,8 @@ const buildInteractiveVariantConfig = (
             ),
             menuSurfaceMeta: (
               <div className="flex flex-wrap gap-2">
-                <Badge tone="warning">Queue 4</Badge>
-                <Badge tone="info">⌘R / ⌘P</Badge>
+                <Badge variant="warning">Queue 4</Badge>
+                <Badge variant="info">⌘R / ⌘P</Badge>
               </div>
             ),
             menuItems: [
@@ -980,16 +980,16 @@ const buildInteractiveVariantConfig = (
           { label: t('Lane', 'Lane'), value: t('Active', 'Active'), tone: 'success' },
           { label: t('Kısayol', 'Shortcut'), value: '⌘K', tone: 'info' },
         ],
-        currentBadge: <Badge tone="success">{t('Canlı', 'Live')}</Badge>,
+        currentBadge: <Badge variant="success">{t('Canlı', 'Live')}</Badge>,
         startSlot: (
           <MenuBarSlotCluster>
             <MenuBarIconChip>
               <Search className={iconClassName} />
             </MenuBarIconChip>
-            <Badge tone="muted">⌘K</Badge>
+            <Badge variant="muted">⌘K</Badge>
           </MenuBarSlotCluster>
         ),
-        endSlot: <Badge tone="warning">Queue 4</Badge>,
+        endSlot: <Badge variant="warning">Queue 4</Badge>,
         supportingPanel: (
           <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.72fr)]">
             <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
@@ -997,9 +997,9 @@ const buildInteractiveVariantConfig = (
                 {t('Önerilen komut akışı', 'Suggested command flow')}
               </Text>
               <div className="mt-3 flex flex-wrap gap-2">
-                <Badge tone="info" className="rounded-full">resume lane</Badge>
-                <Badge tone="warning" className="rounded-full">pause lane</Badge>
-                <Badge tone="success" className="rounded-full">budget</Badge>
+                <Badge variant="info" className="rounded-full">resume lane</Badge>
+                <Badge variant="warning" className="rounded-full">pause lane</Badge>
+                <Badge variant="success" className="rounded-full">budget</Badge>
               </div>
             </div>
             <div className="rounded-[22px] border border-border-subtle/70 bg-surface-default p-4">
@@ -1057,9 +1057,9 @@ const buildInteractiveVariantConfig = (
           { label: t('Sürüm', 'Release'), value: 'v3.4', tone: 'success' },
           { label: t('Açık rota', 'Active route'), value: t('Packages', 'Packages'), tone: 'warning' },
         ],
-        startSlot: <Badge tone="muted">{t('Library', 'Library')}</Badge>,
-        currentBadge: <Badge tone="info">{t('Current', 'Current')}</Badge>,
-        endSlot: <Badge tone="success">v3.4</Badge>,
+        startSlot: <Badge variant="muted">{t('Library', 'Library')}</Badge>,
+        currentBadge: <Badge variant="info">{t('Current', 'Current')}</Badge>,
+        endSlot: <Badge variant="success">v3.4</Badge>,
         supportingPanel: (
           <div className="rounded-[22px] border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] p-4 shadow-[0_20px_38px_-30px_var(--shadow-color,rgba(15,23,42,0.2))]">
             <div className="grid gap-3 md:grid-cols-2">
@@ -1124,7 +1124,7 @@ const buildInteractiveVariantConfig = (
             <Palette className={iconClassName} />
           </MenuBarIconChip>
         ),
-        endSlot: <Badge tone="info">{t('Premium tema', 'Premium theme')}</Badge>,
+        endSlot: <Badge variant="info">{t('Premium tema', 'Premium theme')}</Badge>,
         frameClassName:
           'rounded-[28px] border border-fuchsia-200/70 bg-[radial-gradient(circle_at_top_right,rgba(245,208,254,0.34),transparent_34%),linear-gradient(180deg,rgba(253,244,255,0.98),var(--surface-default,rgba(255,255,255,0.94)))] p-4 shadow-[0_34px_72px_-52px_var(--shadow-color,rgba(192,38,211,0.18))]',
       };
@@ -1266,12 +1266,12 @@ const InteractiveMenuBarSurface: React.FC<{
             {config.showFavoriteToggle || config.enableSearchHandoff ? (
               <div className="flex flex-wrap gap-2">
                 {config.showFavoriteToggle ? (
-                  <Badge tone="warning" className="rounded-full">
+                  <Badge variant="warning" className="rounded-full">
                     {(isTurkish ? 'Favoriler' : 'Favorites') + `: ${favoriteValues.length}`}
                   </Badge>
                 ) : null}
                 {config.enableSearchHandoff ? (
-                  <Badge tone="muted" className="rounded-full">
+                  <Badge variant="muted" className="rounded-full">
                     {(isTurkish ? 'Recent' : 'Recent') + `: ${recentValues.length}`}
                   </Badge>
                 ) : null}
@@ -1280,12 +1280,12 @@ const InteractiveMenuBarSurface: React.FC<{
           </div>
           <div className="flex flex-wrap justify-end gap-2">
             {currentPath ? (
-              <Badge tone="info" className="rounded-full">
+              <Badge variant="info" className="rounded-full">
                 {currentPath}
               </Badge>
             ) : null}
             {config.enableSearchHandoff ? (
-              <Badge tone="success" className="rounded-full">
+              <Badge variant="success" className="rounded-full">
                 {config.searchPlaceholder ?? (isTurkish ? 'Arama açık' : 'Search ready')}
               </Badge>
             ) : null}

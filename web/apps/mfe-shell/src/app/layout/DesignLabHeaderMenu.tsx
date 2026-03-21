@@ -325,7 +325,7 @@ export const DesignLabHeaderMenu: React.FC<DesignLabHeaderMenuProps> = ({
               {tDesignLab('designlab.sidebar.section.title')}
             </Text>
           </div>
-          <Badge tone={activeSectionWorkspaceMode === 'recipes' ? 'warning' : 'info'}>
+          <Badge variant={activeSectionWorkspaceMode === 'recipes' ? 'warning' : 'info'}>
             {activeLayerLabel}
           </Badge>
         </div>
@@ -344,7 +344,7 @@ export const DesignLabHeaderMenu: React.FC<DesignLabHeaderMenuProps> = ({
           {adapterItems.length ? (
             <div className="mt-3 flex flex-wrap gap-2" data-testid="design-lab-header-adapter-badges">
               {adapterItems.map((item) => (
-                <Badge key={item.id} tone={item.auxiliaryBadgeTone ?? 'warning'}>
+                <Badge key={item.id} variant={item.auxiliaryBadgeTone ?? 'warning'}>
                   {`${item.title} · ${item.auxiliaryBadgeLabel}`}
                 </Badge>
               ))}

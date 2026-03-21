@@ -42,14 +42,14 @@ export const RouterAwareWorkspace: Story = {
               listLabel="Workspace tabs"
               getTabLinkProps={({ value: tabValue }) => ({ href: `/design-lab/${tabValue}` })}
               tabBarExtraContent={{
-                end: <Badge tone="info">Route-aware</Badge>,
+                end: <Badge variant="info">Route-aware</Badge>,
               }}
               items={[
                 { value: 'overview', label: 'Overview', content: <Text variant="secondary">Workspace ozeti.</Text> },
                 {
                   value: 'preview',
                   label: 'Preview',
-                  badge: <Badge tone="success">live</Badge>,
+                  badge: <Badge variant="success">live</Badge>,
                   content: <Text variant="secondary">Canli preview ve benchmark yuzeyi.</Text>,
                 },
                 { value: 'api', label: 'API', content: <Text variant="secondary">Public API authority.</Text> },

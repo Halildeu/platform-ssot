@@ -166,7 +166,7 @@ export const buildAiGovernanceShowcaseSections = (
                   confidenceLevel={index === 0 ? 'high' : index === 1 ? 'medium' : 'low'}
                   confidenceScore={index === 0 ? 88 : index === 1 ? 67 : 41}
                   compact
-                  badges={[<Tag key={scope} tone="default">{t(`designlab.showcase.component.recommendationCard.sections.queue.items.${scope}.badge`)}</Tag>]}
+                  badges={[<Tag key={scope} variant="default">{t(`designlab.showcase.component.recommendationCard.sections.queue.items.${scope}.badge`)}</Tag>]}
                 />
               ))}
             </div>
@@ -199,8 +199,8 @@ export const buildAiGovernanceShowcaseSections = (
                   onSecondaryAction={() => setRecommendationDecision('review')}
                   footerNote={`Karar durumu: ${recommendationDecisionLabels[recommendationDecision]}`}
                   badges={[
-                    <Tag key="governance" tone="default">governance</Tag>,
-                    <Tag key="release" tone="default">release</Tag>,
+                    <Tag key="governance" variant="default">governance</Tag>,
+                    <Tag key="release" variant="default">release</Tag>,
                   ]}
                 />
               </PreviewPanel>
@@ -245,8 +245,8 @@ export const buildAiGovernanceShowcaseSections = (
                   onSecondaryAction={() => setRecommendationDecision('pending')}
                   footerNote="Ops ve UI konsolidasyonu icin orta seviye guven"
                   badges={[
-                    <Tag key="ops" tone="default">ops</Tag>,
-                    <Tag key="cleanup" tone="default">cleanup</Tag>,
+                    <Tag key="ops" variant="default">ops</Tag>,
+                    <Tag key="cleanup" variant="default">cleanup</Tag>,
                   ]}
                 />
               </PreviewPanel>
@@ -278,7 +278,7 @@ export const buildAiGovernanceShowcaseSections = (
                 confidenceLevel="high"
                 confidenceScore={85}
                 compact
-                badges={[<Tag key="docs" tone="default">docs</Tag>]}
+                badges={[<Tag key="docs" variant="default">docs</Tag>]}
               />
               <RecommendationCard
                 title="Responsive audit"
@@ -287,7 +287,7 @@ export const buildAiGovernanceShowcaseSections = (
                 confidenceLevel="medium"
                 confidenceScore={69}
                 compact
-                badges={[<Tag key="responsive" tone="default">responsive</Tag>]}
+                badges={[<Tag key="responsive" variant="default">responsive</Tag>]}
               />
               <RecommendationCard
                 title="SEO/GEO evidence"
@@ -296,7 +296,7 @@ export const buildAiGovernanceShowcaseSections = (
                 confidenceLevel="high"
                 confidenceScore={92}
                 compact
-                badges={[<Tag key="seo-geo" tone="default">seo-geo</Tag>]}
+                badges={[<Tag key="seo-geo" variant="default">seo-geo</Tag>]}
               />
             </div>
           ),
@@ -327,7 +327,7 @@ export const buildAiGovernanceShowcaseSections = (
                   onPrimaryAction={() => setRecommendationDecision('review')}
                   onSecondaryAction={() => setRecommendationDecision('pending')}
                   footerNote="Delta review acildi"
-                  badges={[<Tag key="delta" tone="default">delta</Tag>]}
+                  badges={[<Tag key="delta" variant="default">delta</Tag>]}
                 />
               </PreviewPanel>
               <PreviewPanel title="Delta note">
@@ -801,9 +801,9 @@ export const buildAiGovernanceShowcaseSections = (
               <PreviewPanel title="Inline metadata">
                 <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
                   <div className="flex flex-wrap gap-2">
-                    <Tag tone="default">{`id:${selectedCitationId ?? 'policy-4-2'}`}</Tag>
-                    <Tag tone="default">owner: governance</Tag>
-                    <Tag tone="default">lane: review</Tag>
+                    <Tag variant="default">{`id:${selectedCitationId ?? 'policy-4-2'}`}</Tag>
+                    <Tag variant="default">owner: governance</Tag>
+                    <Tag variant="default">lane: review</Tag>
                   </div>
                   <Text variant="secondary" className="mt-3 block leading-7">
                     Secili source icin owner, lane ve review baglamini ayri panel yerine ayni inspector blokta gosterir.

@@ -94,8 +94,8 @@ export const HorizontalDefault: Story = {
       <MenuBar
         ariaLabel="Workspace menu bar"
         currentPath="/workspace/recipes"
-        startSlot={<Badge tone="muted">Platform</Badge>}
-        endSlot={<Badge tone="success">UI Kit</Badge>}
+        startSlot={<Badge variant="muted">Platform</Badge>}
+        endSlot={<Badge variant="success">UI Kit</Badge>}
         items={[
           { value: 'overview', label: 'Overview', href: '/workspace/overview' },
           { value: 'packages', label: 'Packages', href: '/workspace/packages' },
@@ -148,14 +148,14 @@ export const SearchHeader: Story = {
             <Text variant="secondary" className="text-xs">
               Ara, komut çalıştır, rota aç
             </Text>
-            <Badge tone="muted">⌘K</Badge>
+            <Badge variant="muted">⌘K</Badge>
           </div>
         }
         endSlot={
           <div className="flex items-center gap-2">
-            <Badge tone="info">Search</Badge>
-            <Badge tone="success">Live</Badge>
-            <Badge tone="muted">v2</Badge>
+            <Badge variant="info">Search</Badge>
+            <Badge variant="success">Live</Badge>
+            <Badge variant="muted">v2</Badge>
           </div>
         }
         items={[
@@ -171,7 +171,7 @@ export const SearchHeader: Story = {
             keywords: ['approve', 'policy', 'review'],
             menuSurfaceTitle: 'Approval cockpit',
             menuSurfaceDescription: 'High-signal approval routes and review commands grouped in a richer panel.',
-            menuSurfaceMeta: <div className="flex flex-wrap gap-2"><Badge tone="warning">4 hot items</Badge><Badge tone="info">Cmd-ready</Badge></div>,
+            menuSurfaceMeta: <div className="flex flex-wrap gap-2"><Badge variant="warning">4 hot items</Badge><Badge variant="info">Cmd-ready</Badge></div>,
             menuItems: [
               { key: 'pending', label: 'Pending approvals', groupLabel: 'Review', description: 'Open approval queue' },
               { key: 'history', label: 'Decision history', groupLabel: 'Review', description: 'Inspect previous decisions' },
@@ -216,8 +216,8 @@ export const OverflowMore: Story = {
           overflowLabel="More"
           maxVisibleItems={4}
           currentPath="/workspace/approval"
-          startSlot={<Badge tone="muted">Release</Badge>}
-          endSlot={<Badge tone="warning">Incident 1</Badge>}
+          startSlot={<Badge variant="muted">Release</Badge>}
+          endSlot={<Badge variant="warning">Incident 1</Badge>}
           items={[
             { value: 'overview', label: 'Overview', href: '/workspace/overview', overflowPriority: 6, group: 'primary' },
             { value: 'approval', label: 'Approval', href: '/workspace/approval', overflowPriority: 10, group: 'primary', emphasis: 'promoted' },
@@ -261,11 +261,11 @@ export const ResponsiveAppHeader: Story = {
           mobileFallback="menu"
           utilityCollapse="hide"
           currentPath="/support/inbox"
-          startSlot={<Badge tone="muted">Support</Badge>}
+          startSlot={<Badge variant="muted">Support</Badge>}
           endSlot={
             <div className="flex items-center gap-2">
-              <Badge tone="warning">SLA 2h</Badge>
-              <Badge tone="info">Live</Badge>
+              <Badge variant="warning">SLA 2h</Badge>
+              <Badge variant="info">Live</Badge>
             </div>
           }
           items={[
@@ -313,8 +313,8 @@ export const PinnedFavorites: Story = {
         showFavoriteToggle
         defaultFavoriteValues={['approval', 'audit', 'owners']}
         currentPath="/approval"
-        startSlot={<Badge tone="warning">Pinned</Badge>}
-        endSlot={<Badge tone="info">Enterprise IA</Badge>}
+        startSlot={<Badge variant="warning">Pinned</Badge>}
+        endSlot={<Badge variant="info">Enterprise IA</Badge>}
         items={[
           { value: 'approval', label: 'Approval', href: '/approval', overflowPriority: 10, pinned: true, group: 'primary', emphasis: 'promoted' },
           { value: 'audit', label: 'Audit', href: '/audit', overflowPriority: 9, pinned: true, group: 'primary' },
@@ -372,7 +372,7 @@ export const CommandHybrid: Story = {
       ],
       {
         currentPath: '/ops/lanes',
-        currentBadge: <Badge tone="success">Live</Badge>,
+        currentBadge: <Badge variant="success">Live</Badge>,
       },
     );
 
@@ -397,13 +397,13 @@ export const CommandHybrid: Story = {
         defaultRecentValues={['lanes', 'freeze']}
         startSlot={
             <div className="flex items-center gap-2">
-              <Badge tone="muted">⌘K</Badge>
+              <Badge variant="muted">⌘K</Badge>
               <Text variant="secondary" className="text-xs">
                 search lanes
               </Text>
             </div>
           }
-          endSlot={<Badge tone="warning">Queue 4</Badge>}
+          endSlot={<Badge variant="warning">Queue 4</Badge>}
           items={items}
         />
       </StoryShell>

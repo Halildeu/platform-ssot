@@ -713,7 +713,7 @@ const RecipeOverviewTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
           <SectionBadge label={t('designlab.common.panelCountPlural', { count: 4 })} />
         </div>
       </div>
@@ -728,7 +728,7 @@ const RecipeOverviewTab: React.FC<{
           {
             value: 'summary',
             label: 'Summary',
-            badge: <Badge tone="info">{recipe.ownerBlocks.length}</Badge>,
+            badge: <Badge variant="info">{recipe.ownerBlocks.length}</Badge>,
             content: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
@@ -773,7 +773,7 @@ const RecipeOverviewTab: React.FC<{
           {
             value: 'coverage',
             label: 'Coverage',
-            badge: <Badge tone="warning">{selectedRecipeTracks.length}</Badge>,
+            badge: <Badge variant="warning">{selectedRecipeTracks.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -806,7 +806,7 @@ const RecipeOverviewTab: React.FC<{
           {
             value: 'flow',
             label: 'State Machine',
-            badge: <Badge tone="success">{recipeWorkflowCatalog.workflowStates.lifecycle.length} states</Badge>,
+            badge: <Badge variant="success">{recipeWorkflowCatalog.workflowStates.lifecycle.length} states</Badge>,
             content: (
               <RecipeStateMachineVisualizer
                 recipe={recipe}
@@ -819,7 +819,7 @@ const RecipeOverviewTab: React.FC<{
           {
             value: 'dependencies',
             label: 'Dependencies',
-            badge: <Badge tone="warning">{recipeWorkflowCatalog.dependencyGraph.edges.length}</Badge>,
+            badge: <Badge variant="warning">{recipeWorkflowCatalog.dependencyGraph.edges.length}</Badge>,
             content: (
               <RecipeDependencyGraph
                 recipe={recipe}
@@ -903,8 +903,8 @@ const RecipeApiTab: React.FC<{
           </Text>
         </div>
       <div className="flex flex-wrap gap-2">
-        <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
-        <Badge tone="muted">{t('designlab.common.panelCountPlural', { count: 3 })}</Badge>
+        <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
+        <Badge variant="muted">{t('designlab.common.panelCountPlural', { count: 3 })}</Badge>
       </div>
       </div>
 
@@ -924,7 +924,7 @@ const RecipeApiTab: React.FC<{
           {
             value: 'contract',
             label: t('designlab.recipe.api.contract'),
-            badge: <Badge tone="info">{recipe.ownerBlocks.length}</Badge>,
+            badge: <Badge variant="info">{recipe.ownerBlocks.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>{t('designlab.recipe.api.contractTitle')}</DetailLabel>
@@ -938,7 +938,7 @@ const RecipeApiTab: React.FC<{
               subjectKind === 'page'
                 ? subjectLabels.bindingPanel
                 : t('designlab.recipe.api.binding'),
-            badge: <Badge tone="warning">{selectedRecipeTracks.length || '—'}</Badge>,
+            badge: <Badge variant="warning">{selectedRecipeTracks.length || '—'}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>{t('designlab.recipe.api.bindingTitle')}</DetailLabel>
@@ -957,7 +957,7 @@ const RecipeApiTab: React.FC<{
               subjectKind === 'page'
                 ? subjectLabels.usagePanel
                 : t('designlab.recipe.api.usage'),
-            badge: <Badge tone="success">{usageRecipes.length}</Badge>,
+            badge: <Badge variant="success">{usageRecipes.length}</Badge>,
             content: (
               <UsageRecipesPanel
                 title={subjectLabels.usagePanelTitle}
@@ -1037,7 +1037,7 @@ const RecipeUxTab: React.FC<{
             </Text>
           </div>
           {primaryPattern ? (
-            <Badge tone={COMPLEXITY_COLORS[primaryPattern.complexity] ? 'info' : 'muted'}>
+            <Badge variant={COMPLEXITY_COLORS[primaryPattern.complexity] ? 'info' : 'muted'}>
               {primaryPattern.complexity}
             </Badge>
           ) : null}
@@ -1253,8 +1253,8 @@ const RecipeQualityTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
-          <Badge tone="muted">{t('designlab.common.panelCountPlural', { count: 5 })}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="muted">{t('designlab.common.panelCountPlural', { count: 5 })}</Badge>
         </div>
       </div>
 
@@ -1274,7 +1274,7 @@ const RecipeQualityTab: React.FC<{
           {
             value: 'gates',
             label: 'Gates',
-            badge: <Badge tone="info">{selectedRecipeQualityGates.length}</Badge>,
+            badge: <Badge variant="info">{selectedRecipeQualityGates.length}</Badge>,
             content: (
               <RecipeQualityGatesContent
                 recipe={recipe}
@@ -1288,7 +1288,7 @@ const RecipeQualityTab: React.FC<{
           {
             value: 'lifecycle',
             label: t('designlab.recipe.quality.lifecycle'),
-            badge: <Badge tone="success">{selectedRecipeItems.length}</Badge>,
+            badge: <Badge variant="success">{selectedRecipeItems.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>{t('designlab.recipe.quality.lifecycle.title')}</DetailLabel>
@@ -1303,7 +1303,7 @@ const RecipeQualityTab: React.FC<{
           {
             value: 'governance',
             label: 'Governance',
-            badge: <Badge tone="warning">5 dim</Badge>,
+            badge: <Badge variant="warning">5 dim</Badge>,
             content: (
               <MigrationGovernancePanel
                 layer={subjectKind === 'page' ? 'pages' : 'recipes'}
@@ -1316,7 +1316,7 @@ const RecipeQualityTab: React.FC<{
           {
             value: 'benchmark',
             label: 'Benchmark',
-            badge: <Badge tone="info">12</Badge>,
+            badge: <Badge variant="info">12</Badge>,
             content: (
               <BenchmarkParityPanel
                 layerFilter="recipes"
@@ -1329,7 +1329,7 @@ const RecipeQualityTab: React.FC<{
           {
             value: 'contracts',
             label: 'Contracts',
-            badge: <Badge tone="success">8</Badge>,
+            badge: <Badge variant="success">8</Badge>,
             content: (
               <PlatformContractsCompliancePanel
                 layerFilter="recipes"

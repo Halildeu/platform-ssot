@@ -65,7 +65,7 @@ const AppShellPreview = () => (
   <div className="rounded-2xl border border-border-subtle bg-surface p-4">
     <div className="mb-3 flex items-center justify-between">
       <span className="text-sm font-semibold text-text-primary">Shell Header</span>
-      <Badge tone="info">AppShell</Badge>
+      <Badge variant="info">AppShell</Badge>
     </div>
     <div className="flex flex-wrap gap-2">
       {['Dashboard', 'Users', 'Access', 'Audit', 'Reports'].map((item, index) => (
@@ -104,13 +104,13 @@ const DetailDrawerPreview = () => (
     <div className="flex flex-col gap-3 px-4 py-4 text-sm text-text-primary">
       <div className="flex items-center justify-between">
         <span>Durum</span>
-        <Tag tone="info" access="readonly" accessReason="Audit kaydı">
+        <Tag variant="info" access="readonly" accessReason="Audit kaydı">
           Readonly
         </Tag>
       </div>
       <div className="flex items-center justify-between">
         <span>Yetki</span>
-        <Badge tone="warning">Onay bekliyor</Badge>
+        <Badge variant="warning">Onay bekliyor</Badge>
       </div>
       <div className="flex flex-col gap-1 text-xs text-text-secondary">
         <span>Değişiklik Notu</span>
@@ -164,7 +164,7 @@ const AccessDrawerPreview = () => (
     <div className="flex flex-col gap-3 px-4 py-4 text-sm text-text-primary">
       <div className="flex items-center justify-between">
         <span>Modül</span>
-        <Tag tone="info">USER_MANAGEMENT</Tag>
+        <Tag variant="info">USER_MANAGEMENT</Tag>
       </div>
       <div className="flex items-center gap-2">
         <Button access="readonly" className="flex-1" variant="secondary" accessReason="Sadece izle">
@@ -211,7 +211,7 @@ const ReportingPreview = () => (
   >
     <div className="mb-3 flex items-center justify-between text-xs font-semibold text-text-secondary">
       <span>Reporting Toolbar</span>
-      <Badge tone="info">Reporting</Badge>
+      <Badge variant="info">Reporting</Badge>
     </div>
     <div className="grid gap-3 md:grid-cols-2">
       <label className="text-xs font-semibold text-text-secondary">
@@ -303,7 +303,7 @@ const ThemeScopeCard = ({
       <div className="rounded-2xl border border-border-subtle bg-surface p-4">
         <div className="flex items-center justify-between text-xs font-semibold text-text-secondary">
           <span>Users/Entity Grid Önizleme</span>
-          <Badge tone="muted">Grid</Badge>
+          <Badge variant="muted">Grid</Badge>
         </div>
         <div className="mt-3 rounded-xl border border-border-subtle">
           <div className="flex items-center justify-between border-b border-border-subtle bg-surface-muted px-3 py-2 text-xs font-medium text-text-secondary">
@@ -330,7 +330,7 @@ const ThemeScopeCard = ({
       <ReportingPreview />
       <NotificationPreview />
       <div className="flex items-center gap-3">
-        <Badge tone="muted">Tema</Badge>
+        <Badge variant="muted">Tema</Badge>
         <Text variant="secondary">Semantic token zinciri tüm bileşenlerde etkin.</Text>
       </div>
       <Empty description="Boş durum örneği" access="readonly" accessReason="Yalnız görüntüleme" />

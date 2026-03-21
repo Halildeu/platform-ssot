@@ -130,7 +130,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
               Bu katmanin migration governance olgunluk durumu ve aktif migration lane&apos;leri.
             </Text>
           </div>
-          <Badge tone={overallPercent >= 75 ? 'success' : overallPercent >= 50 ? 'warning' : 'muted'}>
+          <Badge variant={overallPercent >= 75 ? 'success' : overallPercent >= 50 ? 'warning' : 'muted'}>
             {overallPercent}% maturity
           </Badge>
         </div>
@@ -234,7 +234,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
               >
                 <div className="flex items-center justify-between gap-3">
                   <Text className="text-sm font-semibold text-text-primary">{lane.title}</Text>
-                  <Badge tone={LANE_STATUS_TONE[lane.status] ?? 'muted'}>{lane.status}</Badge>
+                  <Badge variant={LANE_STATUS_TONE[lane.status] ?? 'muted'}>{lane.status}</Badge>
                 </div>
                 <Text variant="secondary" className="mt-1.5 block text-xs leading-5">
                   {lane.description}

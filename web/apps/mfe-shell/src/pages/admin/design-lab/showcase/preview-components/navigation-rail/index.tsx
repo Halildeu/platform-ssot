@@ -24,7 +24,7 @@ const workspaceItems = [
     label: 'Audit',
     description: 'Events',
     icon: <span aria-hidden="true">◎</span>,
-    badge: <Badge tone="info">3</Badge>,
+    badge: <Badge variant="info">3</Badge>,
   },
   {
     value: 'policy',
@@ -44,7 +44,7 @@ const compactItems = [
     value: 'search',
     label: 'Search',
     icon: <span aria-hidden="true">⌕</span>,
-    badge: <Badge tone="success">2</Badge>,
+    badge: <Badge variant="success">2</Badge>,
   },
   {
     value: 'files',
@@ -75,7 +75,7 @@ const routeAwareItems = createNavigationDestinationItems(
       icon: <span aria-hidden="true">⛨</span>,
     },
   ],
-  { currentBadge: <Badge tone="warning">Current</Badge> },
+  { currentBadge: <Badge variant="warning">Current</Badge> },
 );
 
 const presetProps = createNavigationRailPreset('ops_side_nav');

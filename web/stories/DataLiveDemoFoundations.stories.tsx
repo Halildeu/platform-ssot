@@ -156,7 +156,7 @@ const DataLiveDemoCanvas = () => {
                 {
                   key: 'status',
                   label: 'Status',
-                  render: (row) => <Badge tone="success">{String(row.status)}</Badge>,
+                  render: (row) => <Badge variant="success">{String(row.status)}</Badge>,
                   align: 'right',
                 },
               ]}
@@ -169,7 +169,7 @@ const DataLiveDemoCanvas = () => {
               <Tooltip text="Tooltip primitive'i inline aciklama katmani olarak burada gorunur.">
                 <Button variant="secondary" fullWidth={false}>Hover clue</Button>
               </Tooltip>
-              <Badge tone="info">tree-coverage</Badge>
+              <Badge variant="info">tree-coverage</Badge>
             </div>
 
             <Tree

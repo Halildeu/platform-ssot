@@ -95,7 +95,7 @@ export const buildLayoutShowcaseSections = (
       key: 'status',
       label: 'Durum',
       render: (row: (typeof templateTableRows)[number]) => (
-        <Badge tone={row.status === 'Ready' ? 'success' : row.status === 'Review' ? 'warning' : 'danger'}>{row.status}</Badge>
+        <Badge variant={row.status === 'Ready' ? 'success' : row.status === 'Review' ? 'warning' : 'danger'}>{row.status}</Badge>
       ),
     },
     { key: 'updated', label: 'Guncelleme', accessor: 'updated' as const, align: 'right' as const },
@@ -430,7 +430,7 @@ export const buildLayoutShowcaseSections = (
                           label="Durum"
                           value={selectValue}
                           onValueChange={(value) => setSelectValue(String(value))}
-                          selectSize="sm"
+                          size="sm"
                           options={[
                             { label: 'Ready', value: 'ready' },
                             { label: 'Review', value: 'review' },
@@ -524,7 +524,7 @@ export const buildLayoutShowcaseSections = (
                       <EntitySummaryBlock
                         title="Decision package"
                         subtitle="Wave 5 access review"
-                        badge={<Badge tone="warning">Pending</Badge>}
+                        badge={<Badge variant="warning">Pending</Badge>}
                         items={entitySummaryItems}
                       />
                       <Descriptions
@@ -594,7 +594,7 @@ export const buildLayoutShowcaseSections = (
                           label="Lane"
                           value={selectValue}
                           onValueChange={(value) => setSelectValue(String(value))}
-                          selectSize="sm"
+                          size="sm"
                           options={[
                             { label: 'Runtime', value: 'runtime' },
                             { label: 'Release', value: 'release' },
@@ -762,7 +762,7 @@ export const buildLayoutShowcaseSections = (
                           label={t('designlab.showcase.component.pageLayout.sections.directory.filter.status')}
                           value={selectValue}
                           onValueChange={(value) => setSelectValue(String(value))}
-                          selectSize="sm"
+                          size="sm"
                           options={[
                             { label: t('designlab.showcase.component.pageLayout.sections.directory.options.comfortable'), value: 'comfortable' },
                             { label: t('designlab.showcase.component.pageLayout.sections.directory.options.compact'), value: 'compact' },
@@ -868,7 +868,7 @@ export const buildLayoutShowcaseSections = (
                     <EntitySummaryBlock
                       title={t('designlab.showcase.component.pageLayout.sections.detail.entity.title')}
                       subtitle={t('designlab.showcase.component.pageLayout.sections.detail.entity.subtitle')}
-                      badge={<Badge tone="success">{t('designlab.showcase.component.pageLayout.sections.detail.entity.badge')}</Badge>}
+                      badge={<Badge variant="success">{t('designlab.showcase.component.pageLayout.sections.detail.entity.badge')}</Badge>}
                       items={entitySummaryItems}
                     />
                   </PageLayout>
@@ -946,7 +946,7 @@ export const buildLayoutShowcaseSections = (
                 <PageHeader
                   title={t('designlab.showcase.component.pageHeader.sections.release.header.title')}
                   subtitle={t('designlab.showcase.component.pageHeader.sections.release.header.description')}
-                  tags={<Badge tone="success">{t('designlab.showcase.component.pageHeader.sections.release.header.status')}</Badge>}
+                  tags={<Badge variant="success">{t('designlab.showcase.component.pageHeader.sections.release.header.status')}</Badge>}
                   actions={(
                     <>
                       <Button variant="secondary" size="sm">{t('designlab.showcase.component.pageHeader.sections.release.header.action.share')}</Button>
@@ -986,7 +986,7 @@ export const buildLayoutShowcaseSections = (
                 <PageHeader
                   title={t('designlab.showcase.component.pageHeader.sections.compact.header.title')}
                   subtitle={t('designlab.showcase.component.pageHeader.sections.compact.header.description')}
-                  tags={<Badge tone="info">{t('designlab.showcase.component.pageHeader.sections.compact.header.status')}</Badge>}
+                  tags={<Badge variant="info">{t('designlab.showcase.component.pageHeader.sections.compact.header.status')}</Badge>}
                   extra={
                     <div className="flex gap-2">
                       <SectionBadge label="page_blocks" />
@@ -1039,7 +1039,7 @@ export const buildLayoutShowcaseSections = (
                   title="Wave 3 rollout"
                   subtitle="Consumer adoption, policy lock ve evidence packet"
                   breadcrumb={<Breadcrumb items={[{ label: 'Admin', href: '#' }, { label: 'Rollout', href: '#' }, { label: 'Wave 3' }]} />}
-                  tags={<Badge tone="success">Ready</Badge>}
+                  tags={<Badge variant="success">Ready</Badge>}
                   actions={<Button variant="secondary">Evidence packet</Button>}
                   footer={(
                     <Tabs
@@ -1192,7 +1192,7 @@ export const buildLayoutShowcaseSections = (
                 <EntitySummaryBlock
                   title={t('designlab.showcase.component.entitySummaryBlock.sections.primary.card.title')}
                   subtitle={t('designlab.showcase.component.entitySummaryBlock.sections.primary.card.subtitle')}
-                  badge={<Badge tone="success">{t('designlab.showcase.component.entitySummaryBlock.sections.primary.card.badge')}</Badge>}
+                  badge={<Badge variant="success">{t('designlab.showcase.component.entitySummaryBlock.sections.primary.card.badge')}</Badge>}
                   avatar={{ name: t('designlab.showcase.component.entitySummaryBlock.sections.primary.card.title') }}
                   actions={<Button size="sm">{t('designlab.showcase.component.entitySummaryBlock.sections.primary.card.action')}</Button>}
                   items={entitySummaryItems}
@@ -1222,7 +1222,7 @@ export const buildLayoutShowcaseSections = (
                 <EntitySummaryBlock
                   title={t('designlab.showcase.component.entitySummaryBlock.sections.withAvatar.card.title')}
                   subtitle={t('designlab.showcase.component.entitySummaryBlock.sections.withAvatar.card.subtitle')}
-                  badge={<Badge tone="warning">{t('designlab.showcase.component.entitySummaryBlock.sections.withAvatar.card.badge')}</Badge>}
+                  badge={<Badge variant="warning">{t('designlab.showcase.component.entitySummaryBlock.sections.withAvatar.card.badge')}</Badge>}
                   avatar={{
                     src: avatarPreviewImageSrc,
                     alt: t('designlab.showcase.component.entitySummaryBlock.sections.withAvatar.card.avatarAlt'),

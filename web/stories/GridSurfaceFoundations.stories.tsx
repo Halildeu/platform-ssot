@@ -104,7 +104,7 @@ const GridSurfaceCanvas = () => {
               <Text as="div" className="text-lg font-semibold text-text-primary">
                 Server datasource
               </Text>
-              <Badge tone="info">AgGridServer</Badge>
+              <Badge variant="info">AgGridServer</Badge>
             </div>
             <Text variant="secondary" className="mt-2 block text-sm leading-6">
               Ownership ve release evidence listeleri server-side datasource kontrati ile tek primitive icinde gosterilir.
@@ -127,7 +127,7 @@ const GridSurfaceCanvas = () => {
               <Text as="div" className="text-lg font-semibold text-text-primary">
                 Entity grid template
               </Text>
-              <Badge tone="success">EntityGridTemplate</Badge>
+              <Badge variant="success">EntityGridTemplate</Badge>
             </div>
             <Text variant="secondary" className="mt-2 block text-sm leading-6">
               Toolbar, variant secimi ve istemci tarafli listeleme ayni reusable template ustunde calisir.

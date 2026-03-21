@@ -520,7 +520,7 @@ const EcosystemOverviewTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
           <SectionBadge label={`${selectedExtensionItems.length} extensions`} />
         </div>
       </div>
@@ -760,7 +760,7 @@ const EcosystemApiTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
         </div>
       </div>
 
@@ -1007,7 +1007,7 @@ const EcosystemQualityTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
         </div>
       </div>
 

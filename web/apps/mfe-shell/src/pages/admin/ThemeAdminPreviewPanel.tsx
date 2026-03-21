@@ -147,7 +147,7 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
             value={selectedThemeId ?? ''}
             onValueChange={(nextValue) => onSelectTheme(nextValue as string)}
             ariaLabel={t('themeadmin.preview.paletteTitle')}
-            appearance={themePalettePreset.appearance}
+            variant={themePalettePreset.variant}
             shape={themePalettePreset.shape}
             size={themePalettePreset.size}
             iconPosition={themePalettePreset.iconPosition}

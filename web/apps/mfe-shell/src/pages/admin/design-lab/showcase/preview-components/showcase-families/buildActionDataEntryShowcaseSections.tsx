@@ -210,17 +210,17 @@ export const buildActionDataEntryShowcaseSections = (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
               <PreviewPanel title="Stable">
                 <div className="flex flex-wrap gap-3">
-                  <Button size="sm" leftIcon={<Badge tone="success">ok</Badge>}>Deploy</Button>
+                  <Button size="sm" leftIcon={<Badge variant="success">ok</Badge>}>Deploy</Button>
                 </div>
               </PreviewPanel>
               <PreviewPanel title="Warn">
                 <div className="flex flex-wrap gap-3">
-                  <Button size="sm" variant="secondary" leftIcon={<Badge tone="warning">2</Badge>}>Review</Button>
+                  <Button size="sm" variant="secondary" leftIcon={<Badge variant="warning">2</Badge>}>Review</Button>
                 </div>
               </PreviewPanel>
               <PreviewPanel title="Info">
                 <div className="flex flex-wrap gap-3">
-                  <Button size="sm" variant="ghost" rightIcon={<Badge tone="info">new</Badge>}>Docs'i ac</Button>
+                  <Button size="sm" variant="ghost" rightIcon={<Badge variant="info">new</Badge>}>Docs'i ac</Button>
                 </div>
               </PreviewPanel>
             </div>
@@ -298,7 +298,7 @@ export const buildActionDataEntryShowcaseSections = (
                   />
                   <Select
                     label="Yoğunluk"
-                    selectSize="sm"
+                    size="sm"
                     value={selectValue}
                     onValueChange={setSelectValue}
                     options={[
@@ -373,7 +373,7 @@ export const buildActionDataEntryShowcaseSections = (
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr_auto]">
                   <Select
                     label="Owner"
-                    selectSize="sm"
+                    size="sm"
                     value={selectValue}
                     onValueChange={setSelectValue}
                     options={[
@@ -384,7 +384,7 @@ export const buildActionDataEntryShowcaseSections = (
                   />
                   <Select
                     label="Lane"
-                    selectSize="sm"
+                    size="sm"
                     defaultValue="review"
                     options={[
                       { value: 'review', label: 'Review lane', metaLabel: 'Human', tone: 'warning' },
@@ -414,7 +414,7 @@ export const buildActionDataEntryShowcaseSections = (
               <PreviewPanel title="Draft">
                 <Select
                   label="State"
-                  selectSize="sm"
+                  size="sm"
                   defaultValue="draft"
                   options={[
                     { value: 'draft', label: 'Draft', description: 'Henuz reviewe cikmadi.', metaLabel: 'WIP', tone: 'muted' },
@@ -425,7 +425,7 @@ export const buildActionDataEntryShowcaseSections = (
               <PreviewPanel title="Clearable">
                 <Select
                   label="Opsiyonel lane"
-                  selectSize="sm"
+                  size="sm"
                   clearable
                   emptyOptionLabel="Atama yok"
                   options={[
@@ -437,7 +437,7 @@ export const buildActionDataEntryShowcaseSections = (
               <PreviewPanel title="Readonly">
                 <Select
                   label="Managed scope"
-                  selectSize="sm"
+                  size="sm"
                   value="core"
                   access="readonly"
                   options={[
@@ -668,7 +668,7 @@ export const buildActionDataEntryShowcaseSections = (
                   onValueChange={setInviteInputValue}
                   type="email"
                   leadingVisual={<span aria-hidden="true">✉</span>}
-                  trailingVisual={<Badge tone="info">{t('designlab.showcase.component.textInput.sections.invite.pending')}</Badge>}
+                  trailingVisual={<Badge variant="info">{t('designlab.showcase.component.textInput.sections.invite.pending')}</Badge>}
                 />
               </PreviewPanel>
               <div className="flex items-end">
@@ -739,7 +739,7 @@ export const buildActionDataEntryShowcaseSections = (
                     defaultValue="anchor-toc"
                     size="sm"
                     hint="Docs, preview ve policy derin linkleri icin kullanilir."
-                    trailingVisual={<Badge tone="info">stable</Badge>}
+                    trailingVisual={<Badge variant="info">stable</Badge>}
                   />
                 </div>
               </PreviewPanel>
@@ -771,7 +771,7 @@ export const buildActionDataEntryShowcaseSections = (
                     defaultValue="detail-section-tabs"
                     size="sm"
                     leadingVisual={<span aria-hidden="true">#</span>}
-                    trailingVisual={<Badge tone="info">stable</Badge>}
+                    trailingVisual={<Badge variant="info">stable</Badge>}
                   />
                 </div>
               </PreviewPanel>
@@ -812,7 +812,7 @@ export const buildActionDataEntryShowcaseSections = (
                   label="Issue"
                   defaultValue="SEO-GEO-12"
                   size="sm"
-                  trailingVisual={<Badge tone="warning">open</Badge>}
+                  trailingVisual={<Badge variant="warning">open</Badge>}
                 />
               </PreviewPanel>
             </div>
@@ -844,7 +844,7 @@ export const buildActionDataEntryShowcaseSections = (
                     />
                     <Select
                       label={t('designlab.showcase.component.filterBar.sections.toolbar.fields.density')}
-                      selectSize="sm"
+                      size="sm"
                       value={selectValue}
                       onValueChange={(value) => setSelectValue(String(value))}
                       options={[
@@ -893,7 +893,7 @@ export const buildActionDataEntryShowcaseSections = (
                     />
                     <Select
                       label={t('designlab.showcase.component.filterBar.sections.readonly.fields.scope')}
-                      selectSize="sm"
+                      size="sm"
                       value="shared"
                       options={[{ label: t('designlab.showcase.component.filterBar.sections.readonly.options.shared'), value: 'shared' }]}
                       access="readonly"
@@ -968,7 +968,7 @@ export const buildActionDataEntryShowcaseSections = (
                   <FilterBar>
                     <Select
                       label="Gorunum"
-                      selectSize="sm"
+                      size="sm"
                       value={selectValue}
                       onValueChange={(value) => setSelectValue(String(value))}
                       options={[
@@ -1009,7 +1009,7 @@ export const buildActionDataEntryShowcaseSections = (
                   <FilterBar>
                     <Select
                       label="Policy state"
-                      selectSize="sm"
+                      size="sm"
                       value={selectValue}
                       onValueChange={(value) => setSelectValue(String(value))}
                       options={[

@@ -61,12 +61,12 @@ const InteractiveLiveDemoCanvas = () => {
           eyebrow="Interactive live demo surface"
           title="Prompt, recommendation ve loading primitive'leri ayni release workbench icinde"
           description="Bu harness, kalan live demo komponentlerini tek bir interactive canvas altinda toplar ve Storybook coverage tarayicisina dogrudan gorunur hale getirir."
-          status={<Badge tone="success">live-demo</Badge>}
+          status={<Badge variant="success">live-demo</Badge>}
           meta={
             <>
-              <Badge tone="info">story contract</Badge>
-              <Badge tone="default">release cockpit</Badge>
-              <Badge tone="warning">interactive</Badge>
+              <Badge variant="info">story contract</Badge>
+              <Badge variant="default">release cockpit</Badge>
+              <Badge variant="warning">interactive</Badge>
             </>
           }
           actions={
@@ -121,9 +121,9 @@ const InteractiveLiveDemoCanvas = () => {
                         Preview route, doctor sonucu ve publish artefact'i ayni kisa menude toplanir.
                       </Text>
                       <div className="flex flex-wrap gap-2">
-                        <Badge tone="info">/admin/design-lab</Badge>
-                        <Badge tone="success">doctor PASS</Badge>
-                        <Badge tone="warning">gate PASS</Badge>
+                        <Badge variant="info">/admin/design-lab</Badge>
+                        <Badge variant="success">doctor PASS</Badge>
+                        <Badge variant="warning">gate PASS</Badge>
                       </div>
                     </div>
                   }
@@ -160,7 +160,7 @@ const InteractiveLiveDemoCanvas = () => {
                 'Full release gate tekrar yesile doner',
               ]}
               citations={['design-lab.index.json', 'ui-library-release-manifest.v1.json']}
-              badges={[<Badge key="coverage" tone="success">coverage</Badge>]}
+              badges={[<Badge key="coverage" variant="success">coverage</Badge>]}
               primaryActionLabel="Accept"
               secondaryActionLabel="Inspect"
               footerNote="Owner: Platform UI"

@@ -138,7 +138,7 @@ const ComponentApiTab: React.FC<{
     {
       value: 'contract',
       label: 'Contract',
-      badge: <Badge tone="info">{item.kind}</Badge>,
+      badge: <Badge variant="info">{item.kind}</Badge>,
       content: (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
@@ -172,7 +172,7 @@ const ComponentApiTab: React.FC<{
     {
       value: 'model',
       label: 'Model',
-      badge: <Badge tone="muted">{apiItem ? `${apiItem.variantAxes.length + apiItem.stateModel.length}` : '—'}</Badge>,
+      badge: <Badge variant="muted">{apiItem ? `${apiItem.variantAxes.length + apiItem.stateModel.length}` : '—'}</Badge>,
       content: (
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
           <DetailLabel>{t('designlab.component.api.model.title')}</DetailLabel>
@@ -214,7 +214,7 @@ const ComponentApiTab: React.FC<{
     {
       value: 'props',
       label: 'Props',
-      badge: <Badge tone="info">{apiItem?.props.length ?? 0}</Badge>,
+      badge: <Badge variant="info">{apiItem?.props.length ?? 0}</Badge>,
       content: (
         <PropsTable
           rows={(apiItem?.props ?? []).map((prop) => ({
@@ -230,7 +230,7 @@ const ComponentApiTab: React.FC<{
     {
       value: 'usage',
       label: 'Usage',
-      badge: <Badge tone="success">{usageRecipes.length}</Badge>,
+      badge: <Badge variant="success">{usageRecipes.length}</Badge>,
       content: <UsageRecipesPanel recipes={usageRecipes} />,
     },
   ] satisfies Array<{
@@ -250,7 +250,7 @@ const ComponentApiTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
           <SectionBadge label={t('designlab.common.panelCountPlural', { count: apiPanelItems.length })} />
         </div>
       </div>
@@ -404,7 +404,7 @@ const ComponentUxTab: React.FC<{
                       {pattern.title}
                     </Text>
                     {isRelevant ? (
-                      <Badge tone="info">active match</Badge>
+                      <Badge variant="info">active match</Badge>
                     ) : null}
                   </div>
                   <Text variant="secondary" className="mt-1 block text-xs leading-5">
@@ -476,7 +476,7 @@ const ComponentQualityTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
           <SectionBadge label={t('designlab.common.panelCountPlural', { count: 5 })} />
         </div>
       </div>
@@ -491,7 +491,7 @@ const ComponentQualityTab: React.FC<{
           {
             value: 'gates',
             label: t('designlab.component.quality.gates'),
-            badge: <Badge tone="info">{item.qualityGates?.length ?? 0}</Badge>,
+            badge: <Badge variant="info">{item.qualityGates?.length ?? 0}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>{t('designlab.component.quality.gates')}</DetailLabel>
@@ -504,7 +504,7 @@ const ComponentQualityTab: React.FC<{
           {
             value: 'usage',
             label: t('designlab.component.quality.usage'),
-            badge: <Badge tone="success">{item.whereUsed.length}</Badge>,
+            badge: <Badge variant="success">{item.whereUsed.length}</Badge>,
             content: (
               <div className="space-y-4">
                 {/* Adoption metrics summary */}
@@ -557,7 +557,7 @@ const ComponentQualityTab: React.FC<{
             {
               value: 'governance' as const,
               label: 'Governance',
-              badge: <Badge tone="warning">5 dim</Badge>,
+              badge: <Badge variant="warning">5 dim</Badge>,
               content: (
                 <MigrationGovernancePanel
                   layer="components"
@@ -570,7 +570,7 @@ const ComponentQualityTab: React.FC<{
             {
               value: 'benchmark' as const,
               label: 'Benchmark',
-              badge: <Badge tone="info">12</Badge>,
+              badge: <Badge variant="info">12</Badge>,
               content: (
                 <BenchmarkParityPanel
                   layerFilter="components"
@@ -583,7 +583,7 @@ const ComponentQualityTab: React.FC<{
             {
               value: 'contracts' as const,
               label: 'Contracts',
-              badge: <Badge tone="success">8</Badge>,
+              badge: <Badge variant="success">8</Badge>,
               content: (
                 <PlatformContractsCompliancePanel
                   layerFilter="components"

@@ -2064,7 +2064,7 @@ const DesignLabPage: React.FC = () => {
       items.push({
         id: 'release',
         label: 'Release',
-        badge: <Badge tone="info">{releaseSummary.packageVersion}</Badge>,
+        badge: <Badge variant="info">{releaseSummary.packageVersion}</Badge>,
       });
     }
 
@@ -2072,7 +2072,7 @@ const DesignLabPage: React.FC = () => {
       items.push({
         id: 'adoption',
         label: 'Adoption',
-        badge: <Badge tone="info">{`${adoptionSummary.apiCoverage.coveragePercent}%`}</Badge>,
+        badge: <Badge variant="info">{`${adoptionSummary.apiCoverage.coveragePercent}%`}</Badge>,
       });
     }
 
@@ -2080,7 +2080,7 @@ const DesignLabPage: React.FC = () => {
       items.push({
         id: 'migration',
         label: 'Migration',
-        badge: <Badge tone="warning">{`${migrationSummary.summary.consumerAppsCount} app`}</Badge>,
+        badge: <Badge variant="warning">{`${migrationSummary.summary.consumerAppsCount} app`}</Badge>,
       });
     }
 
@@ -2088,7 +2088,7 @@ const DesignLabPage: React.FC = () => {
       items.push({
         id: 'visual',
         label: 'Visual',
-        badge: <Badge tone="success">{`${visualRegressionSummary.summary.storyCoveragePercent}%`}</Badge>,
+        badge: <Badge variant="success">{`${visualRegressionSummary.summary.storyCoveragePercent}%`}</Badge>,
       });
     }
 
@@ -2096,7 +2096,7 @@ const DesignLabPage: React.FC = () => {
       items.push({
         id: 'theme',
         label: 'Theme',
-        badge: <Badge tone="muted">{themePresetSummary.presets.length}</Badge>,
+        badge: <Badge variant="muted">{themePresetSummary.presets.length}</Badge>,
       });
     }
 
@@ -2104,7 +2104,7 @@ const DesignLabPage: React.FC = () => {
       items.push({
         id: 'recipes',
         label: 'Recipes',
-        badge: <Badge tone="muted">{relatedRecipes.length || familySummary.currentFamilies.length}</Badge>,
+        badge: <Badge variant="muted">{relatedRecipes.length || familySummary.currentFamilies.length}</Badge>,
       });
     }
 
@@ -3386,7 +3386,7 @@ const DesignLabPage: React.FC = () => {
         label: t('designlab.seed.summaryStrip.published.label'),
         value: formatNumber(72),
         note: t('designlab.seed.summaryStrip.published.note'),
-        trend: <Badge tone="success">{t('designlab.seed.summaryStrip.published.trend')}</Badge>,
+        trend: <Badge variant="success">{t('designlab.seed.summaryStrip.published.trend')}</Badge>,
         tone: 'success' as const,
       },
       {
@@ -3394,7 +3394,7 @@ const DesignLabPage: React.FC = () => {
         label: t('designlab.seed.summaryStrip.planned.label'),
         value: formatNumber(4),
         note: t('designlab.seed.summaryStrip.planned.note'),
-        trend: <Badge tone="warning">{t('designlab.seed.summaryStrip.planned.trend')}</Badge>,
+        trend: <Badge variant="warning">{t('designlab.seed.summaryStrip.planned.trend')}</Badge>,
         tone: 'warning' as const,
       },
       {
@@ -3402,7 +3402,7 @@ const DesignLabPage: React.FC = () => {
         label: t('designlab.seed.summaryStrip.doctor.label'),
         value: 'PASS',
         note: t('designlab.seed.summaryStrip.doctor.note'),
-        trend: <Badge tone="info">{t('designlab.seed.summaryStrip.doctor.trend')}</Badge>,
+        trend: <Badge variant="info">{t('designlab.seed.summaryStrip.doctor.trend')}</Badge>,
         tone: 'info' as const,
       },
       {
@@ -3410,7 +3410,7 @@ const DesignLabPage: React.FC = () => {
         label: t('designlab.seed.summaryStrip.gate.label'),
         value: 'PASS',
         note: t('designlab.seed.summaryStrip.gate.note'),
-        trend: <Badge tone="success">{t('designlab.seed.summaryStrip.gate.trend')}</Badge>,
+        trend: <Badge variant="success">{t('designlab.seed.summaryStrip.gate.trend')}</Badge>,
         tone: 'default' as const,
       },
     ],
@@ -3456,7 +3456,7 @@ const DesignLabPage: React.FC = () => {
         group: t('designlab.seed.commandPalette.group.navigate'),
         shortcut: '⌘U',
         keywords: ['docs', 'library', 'component'],
-        badge: <Badge tone="info">{t('designlab.seed.commandPalette.items.docs.badge')}</Badge>,
+        badge: <Badge variant="info">{t('designlab.seed.commandPalette.items.docs.badge')}</Badge>,
       },
       {
         id: 'review-release-evidence',
@@ -3465,7 +3465,7 @@ const DesignLabPage: React.FC = () => {
         group: t('designlab.seed.commandPalette.group.governance'),
         shortcut: '⌘R',
         keywords: ['doctor', 'gate', 'evidence', 'release'],
-        badge: <Badge tone="warning">{t('designlab.seed.commandPalette.items.review.badge')}</Badge>,
+        badge: <Badge variant="warning">{t('designlab.seed.commandPalette.items.review.badge')}</Badge>,
       },
       {
         id: 'open-ai-approvals',
@@ -3474,7 +3474,7 @@ const DesignLabPage: React.FC = () => {
         group: t('designlab.seed.commandPalette.group.aiAssist'),
         shortcut: '⌘A',
         keywords: ['approval', 'queue', 'ai', 'human'],
-        badge: <Badge tone="muted">{t('designlab.seed.commandPalette.items.aiQueue.badge')}</Badge>,
+        badge: <Badge variant="muted">{t('designlab.seed.commandPalette.items.aiQueue.badge')}</Badge>,
       },
       {
         id: 'apply-safe-rollout',
@@ -3483,7 +3483,7 @@ const DesignLabPage: React.FC = () => {
         group: t('designlab.seed.commandPalette.group.aiAssist'),
         shortcut: '↵',
         keywords: ['apply', 'rollout', 'safe', 'recommendation'],
-        badge: <Badge tone="success">{t('designlab.seed.commandPalette.items.applyRollout.badge')}</Badge>,
+        badge: <Badge variant="success">{t('designlab.seed.commandPalette.items.applyRollout.badge')}</Badge>,
       },
     ],
     [t],
@@ -3525,7 +3525,7 @@ const DesignLabPage: React.FC = () => {
         source: 'policy_work_intake.v2.json',
         locator: 'sec:4.2',
         kind: 'policy' as const,
-        badges: [<Tag key="policy-critical" tone="warning">{t('designlab.seed.citation.policy.badge')}</Tag>],
+        badges: [<Tag key="policy-critical" variant="warning">{t('designlab.seed.citation.policy.badge')}</Tag>],
       },
       {
         id: 'ux-ai-3',
@@ -3534,7 +3534,7 @@ const DesignLabPage: React.FC = () => {
         source: 'ux_katalogu.reference.v1.json',
         locator: 'ux:ai-3',
         kind: 'doc' as const,
-        badges: [<Tag key="ux" tone="info">{t('designlab.seed.citation.ux.badge')}</Tag>],
+        badges: [<Tag key="ux" variant="info">{t('designlab.seed.citation.ux.badge')}</Tag>],
       },
       {
         id: 'doctor-ui',
@@ -3543,7 +3543,7 @@ const DesignLabPage: React.FC = () => {
         source: 'frontend-doctor.summary.v1.json',
         locator: 'doctor:ui-library',
         kind: 'log' as const,
-        badges: [<Tag key="pass" tone="success">{t('designlab.seed.citation.doctor.badge')}</Tag>],
+        badges: [<Tag key="pass" variant="success">{t('designlab.seed.citation.doctor.badge')}</Tag>],
       },
     ],
     [t],
@@ -3558,7 +3558,7 @@ const DesignLabPage: React.FC = () => {
         timestamp: '07 Mar 2026 18:10',
         summary: t('designlab.seed.audit.draft.summary'),
         status: 'drafted' as const,
-        badges: [<Tag key="wave" tone="muted">{t('designlab.seed.audit.draft.badge')}</Tag>],
+        badges: [<Tag key="wave" variant="muted">{t('designlab.seed.audit.draft.badge')}</Tag>],
       },
       {
         id: 'audit-review',
@@ -3567,7 +3567,7 @@ const DesignLabPage: React.FC = () => {
         timestamp: '07 Mar 2026 18:14',
         summary: t('designlab.seed.audit.review.summary'),
         status: 'approved' as const,
-        badges: [<Tag key="review" tone="info">{t('designlab.seed.audit.review.badge')}</Tag>],
+        badges: [<Tag key="review" variant="info">{t('designlab.seed.audit.review.badge')}</Tag>],
       },
       {
         id: 'audit-release',
@@ -3576,7 +3576,7 @@ const DesignLabPage: React.FC = () => {
         timestamp: '07 Mar 2026 18:19',
         summary: t('designlab.seed.audit.release.summary'),
         status: 'observed' as const,
-        badges: [<Tag key="system" tone="warning">{t('designlab.seed.audit.release.badge')}</Tag>],
+        badges: [<Tag key="system" variant="warning">{t('designlab.seed.audit.release.badge')}</Tag>],
       },
     ],
     [t],
@@ -3683,7 +3683,7 @@ const DesignLabPage: React.FC = () => {
               </Text>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+              <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
               <SectionBadge label={t('designlab.common.panelCountPlural', { count: overviewPanelItems.length })} />
             </div>
           </div>
@@ -3734,7 +3734,7 @@ const DesignLabPage: React.FC = () => {
               </Text>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+              <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
               <SectionBadge label={t('designlab.general.component.primarySummary')} />
             </div>
           </div>
@@ -3773,11 +3773,11 @@ const DesignLabPage: React.FC = () => {
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
           <DetailLabel>{t('designlab.general.component.releaseIdentity')}</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
-            <Badge tone={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
-            <Badge tone={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
+            <Badge variant={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
+            <Badge variant={item.lifecycle === 'stable' ? 'success' : item.lifecycle === 'beta' ? 'warning' : 'info'}>
               {statusLabel[item.lifecycle]}
             </Badge>
-            <Badge tone={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
+            <Badge variant={item.demoMode === 'live' ? 'success' : item.demoMode === 'planned' ? 'warning' : 'muted'}>
               {demoModeLabel[item.demoMode]}
             </Badge>
             {item.roadmapWaveId ? <SectionBadge label={item.roadmapWaveId} /> : null}
@@ -3790,7 +3790,7 @@ const DesignLabPage: React.FC = () => {
                 {t('designlab.metadata.primaryLens')}
               </Text>
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge tone="info">{selectedComponentPrimarySectionTitle ?? 'Components'}</Badge>
+                <Badge variant="info">{selectedComponentPrimarySectionTitle ?? 'Components'}</Badge>
                 <Text variant="secondary" className="text-xs">
                   {t('designlab.general.component.primaryLens.note')}
                 </Text>
@@ -3847,7 +3847,7 @@ const DesignLabPage: React.FC = () => {
               </Text>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge tone="info">Recipe</Badge>
+              <Badge variant="info">Recipe</Badge>
               <SectionBadge label={`${selectedFamily.ownerBlocks.length} owner block`} />
             </div>
           </div>
@@ -3883,7 +3883,7 @@ const DesignLabPage: React.FC = () => {
                 {t('designlab.metadata.primaryLens')}
               </Text>
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge tone="info">{selectedFamilyPrimarySectionTitle ?? 'Recipes'}</Badge>
+                <Badge variant="info">{selectedFamilyPrimarySectionTitle ?? 'Recipes'}</Badge>
                 <Text variant="secondary" className="text-xs">
                   {t('designlab.general.recipe.primaryLens.note')}
                 </Text>
@@ -3935,7 +3935,7 @@ const DesignLabPage: React.FC = () => {
               </Text>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge tone="success">Template</Badge>
+              <Badge variant="success">Template</Badge>
               <SectionBadge label={`${selectedPageTemplate.ownerBlocks.length} building block`} />
             </div>
           </div>
@@ -5667,7 +5667,7 @@ const DesignLabPage: React.FC = () => {
       className="rounded-[20px] border border-state-warning-border/50 bg-[linear-gradient(180deg,rgba(255,248,229,0.9),rgba(255,250,238,0.96))] px-4 py-3"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <Badge tone="warning">{t('designlab.taxonomy.badges.adapter')}</Badge>
+        <Badge variant="warning">{t('designlab.taxonomy.badges.adapter')}</Badge>
         <SectionBadge label={legacyAdapterOriginSectionTitle} />
         <SectionBadge label={`→ ${legacyAdapterTargetSectionTitle}`} />
       </div>
@@ -5730,12 +5730,12 @@ const DesignLabPage: React.FC = () => {
     <>
       <SectionBadge label={activeWorkspaceLabel} />
       {selectedTaxonomySection ? <SectionBadge label={selectedTaxonomySection.title} /> : null}
-      {legacyAdapterOriginSectionTitle ? <Badge tone="warning">{t('designlab.taxonomy.badges.adapter')}</Badge> : null}
+      {legacyAdapterOriginSectionTitle ? <Badge variant="warning">{t('designlab.taxonomy.badges.adapter')}</Badge> : null}
       {legacyAdapterOriginSectionTitle ? <SectionBadge label={legacyAdapterOriginSectionTitle} /> : null}
       {isRecipeLikeLayer ? (
         (isPageLayer ? selectedPageTemplate : selectedFamily) ? (
           <>
-            <Badge tone={activeTaxonomySectionId === 'pages' ? 'success' : 'info'}>{activeLens.badge}</Badge>
+            <Badge variant={activeTaxonomySectionId === 'pages' ? 'success' : 'info'}>{activeLens.badge}</Badge>
             {(isPageLayer ? selectedPageTemplateFamilyTitle : selectedFamilyClusterTitle)
               ? (
                 <SectionBadge
@@ -5746,7 +5746,7 @@ const DesignLabPage: React.FC = () => {
           </>
         ) : null
       ) : selectedItem ? (
-        <Badge tone={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>
+        <Badge variant={selectedItem.lifecycle === 'stable' ? 'success' : selectedItem.lifecycle === 'beta' ? 'warning' : 'info'}>
           {statusLabel[selectedItem.lifecycle]}
         </Badge>
       ) : null}

@@ -154,8 +154,8 @@ export const buildOverlayShowcaseSections = (
                     {t('designlab.showcase.component.modal.sections.readonly.card.body')}
                   </Text>
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <Badge tone="info">{t('designlab.showcase.component.modal.sections.readonly.card.badgeReview')}</Badge>
-                    <Badge tone="muted">{t('designlab.showcase.component.modal.sections.readonly.card.badgeNoEdit')}</Badge>
+                    <Badge variant="info">{t('designlab.showcase.component.modal.sections.readonly.card.badgeReview')}</Badge>
+                    <Badge variant="muted">{t('designlab.showcase.component.modal.sections.readonly.card.badgeNoEdit')}</Badge>
                   </div>
                 </div>
               </PreviewPanel>
@@ -182,7 +182,7 @@ export const buildOverlayShowcaseSections = (
                     Hafif vurgu, sakin aksiyon seti ve düşük riskli akışlar için uygun bir dil üretir.
                   </Text>
                   <div className="mt-4 flex gap-2">
-                    <Badge tone="info">confirm</Badge>
+                    <Badge variant="info">confirm</Badge>
                     <SectionBadge label="primary + secondary" />
                   </div>
                 </div>
@@ -194,7 +194,7 @@ export const buildOverlayShowcaseSections = (
                     Silme, reset veya erişim kaldırma gibi geri alınamaz işlemler için daha sert bir sınır kullanır.
                   </Text>
                   <div className="mt-4 flex gap-2">
-                    <Badge tone="danger">destructive</Badge>
+                    <Badge variant="danger">destructive</Badge>
                     <SectionBadge label="confirm only" />
                   </div>
                 </div>
@@ -206,7 +206,7 @@ export const buildOverlayShowcaseSections = (
                     Kanıt, kaynak ve karar bağlamını daha sakin ama yoğun bir yüzeyde toplar.
                   </Text>
                   <div className="mt-4 flex gap-2">
-                    <Badge tone="muted">audit</Badge>
+                    <Badge variant="muted">audit</Badge>
                     <SectionBadge label="read-heavy" />
                   </div>
                 </div>
@@ -428,7 +428,7 @@ export const buildOverlayShowcaseSections = (
                           Public surface ise canonical import ve package alias aynı anda belgelenmeli.
                         </Text>
                         <div className="flex gap-2">
-                          <Badge tone="info">api</Badge>
+                          <Badge variant="info">api</Badge>
                           <SectionBadge label="contract" />
                         </div>
                       </div>
@@ -669,8 +669,8 @@ export const buildOverlayShowcaseSections = (
                           {t('designlab.showcase.component.popover.sections.rich.body')}
                         </Text>
                         <div className="flex flex-wrap gap-2">
-                          <Tag tone="info">{t('designlab.showcase.component.popover.sections.rich.tag.contextual')}</Tag>
-                          <Tag tone="warning">{t('designlab.showcase.component.popover.sections.rich.tag.policy')}</Tag>
+                          <Tag variant="info">{t('designlab.showcase.component.popover.sections.rich.tag.contextual')}</Tag>
+                          <Tag variant="warning">{t('designlab.showcase.component.popover.sections.rich.tag.policy')}</Tag>
                         </div>
                       </div>
                     )}
@@ -738,8 +738,8 @@ export const buildOverlayShowcaseSections = (
                         </Text>
                       </div>
                       <div className="flex gap-2">
-                        <Badge tone="success">stable</Badge>
-                        <Badge tone="info">12 component</Badge>
+                        <Badge variant="success">stable</Badge>
+                        <Badge variant="info">12 component</Badge>
                       </div>
                       <Text variant="secondary" className="block leading-6">
                         Hover-card yaklaşımı, kısa profil veya ownership bağlamı için modal ya da drawer’dan daha hafif kalır.

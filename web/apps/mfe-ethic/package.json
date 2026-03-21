@@ -12,8 +12,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@mfe/design-system": "file:../../packages/design-system",
-    "@mfe/shared-types": "file:../../packages/shared-types",
+    "@mfe/design-system": "*",
+    "@mfe/shared-types": "*",
     "@reduxjs/toolkit": "^2.8.2",
     "clsx": "^2.1.1",
     "react": "~18.2.0",

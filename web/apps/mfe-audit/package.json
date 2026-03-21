@@ -9,14 +9,14 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@mfe/shared-http": "file:../../packages/shared-http",
-    "@mfe/shared-types": "file:../../packages/shared-types",
+    "@mfe/shared-http": "*",
+    "@mfe/shared-types": "*",
     "@tanstack/react-query": "^5.90.2",
     "ag-grid-community": "34.3.1",
     "ag-grid-enterprise": "34.3.1",
     "ag-grid-react": "34.3.1",
     "clsx": "^2.1.1",
-    "@mfe/design-system": "file:../../packages/design-system",
+    "@mfe/design-system": "*",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "react-router": "^6.27.0",

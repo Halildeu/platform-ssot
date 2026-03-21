@@ -926,7 +926,7 @@ const ThemeAdminPage: React.FC = () => {
                             const next = nextValue as string;
                             setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, density: next } } : prev));
                           }}
-                          appearance={themeAxisSegmentedPreset.appearance}
+                          variant={themeAxisSegmentedPreset.variant}
                           shape={themeAxisSegmentedPreset.shape}
                           size={themeAxisSegmentedPreset.size}
                           iconPosition={themeAxisSegmentedPreset.iconPosition}
@@ -946,7 +946,7 @@ const ThemeAdminPage: React.FC = () => {
                             const next = nextValue as string;
                             setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, radius: next } } : prev));
                           }}
-                          appearance={themeAxisSegmentedPreset.appearance}
+                          variant={themeAxisSegmentedPreset.variant}
                           shape={themeAxisSegmentedPreset.shape}
                           size={themeAxisSegmentedPreset.size}
                           iconPosition={themeAxisSegmentedPreset.iconPosition}
@@ -966,7 +966,7 @@ const ThemeAdminPage: React.FC = () => {
                             const next = nextValue as string;
                             setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, elevation: next } } : prev));
                           }}
-                          appearance={themeAxisSegmentedPreset.appearance}
+                          variant={themeAxisSegmentedPreset.variant}
                           shape={themeAxisSegmentedPreset.shape}
                           size={themeAxisSegmentedPreset.size}
                           iconPosition={themeAxisSegmentedPreset.iconPosition}
@@ -986,7 +986,7 @@ const ThemeAdminPage: React.FC = () => {
                             const next = nextValue as string;
                             setThemeMeta((prev) => (prev ? { ...prev, axes: { ...prev.axes, motion: next } } : prev));
                           }}
-                          appearance={themeAxisSegmentedPreset.appearance}
+                          variant={themeAxisSegmentedPreset.variant}
                           shape={themeAxisSegmentedPreset.shape}
                           size={themeAxisSegmentedPreset.size}
                           iconPosition={themeAxisSegmentedPreset.iconPosition}

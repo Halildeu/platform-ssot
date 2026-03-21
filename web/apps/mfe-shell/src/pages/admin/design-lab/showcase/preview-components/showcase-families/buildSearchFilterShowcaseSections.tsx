@@ -281,7 +281,7 @@ export const buildSearchFilterShowcaseSections = (
                     }}
                     footer={(
                       <div className="flex flex-wrap items-center gap-2">
-                        <Badge tone="muted">Cmd+K</Badge>
+                        <Badge variant="muted">Cmd+K</Badge>
                         <Text variant="secondary">Global navigation, AI assist ve governance aksiyonlari tek kanalda.</Text>
                       </div>
                     )}
@@ -362,7 +362,7 @@ export const buildSearchFilterShowcaseSections = (
                     />
                     <Select
                       label={t('designlab.showcase.component.reportFilterPanel.sections.submit.fields.status')}
-                      selectSize="sm"
+                      size="sm"
                       value={selectValue}
                       onValueChange={(value) => setSelectValue(String(value))}
                       options={[
@@ -471,7 +471,7 @@ export const buildSearchFilterShowcaseSections = (
                     />
                     <Select
                       label="Yoğunluk"
-                      selectSize="sm"
+                      size="sm"
                       value={selectValue}
                       onValueChange={(value) => setSelectValue(String(value))}
                       options={[
@@ -526,7 +526,7 @@ export const buildSearchFilterShowcaseSections = (
               title="Incident ve release queue"
               description="Filter shell, summary strip ve sonuc listesi ayni karar akisinda birlikte calisir."
               meta={<SectionBadge label="ops-search" />}
-              status={<Badge tone="warning">Review</Badge>}
+              status={<Badge variant="warning">Review</Badge>}
               actions={<Button size="sm">Saved view olustur</Button>}
               filters={(
                 <>
@@ -541,7 +541,7 @@ export const buildSearchFilterShowcaseSections = (
                     label="Surface"
                     value={selectValue}
                     onValueChange={(value) => setSelectValue(String(value))}
-                    selectSize="sm"
+                    size="sm"
                     options={[
                       { label: 'All', value: 'all' },
                       { label: 'Components', value: 'components' },
@@ -563,7 +563,7 @@ export const buildSearchFilterShowcaseSections = (
                     <Text className="font-medium">{row.name}</Text>
                     <Text variant="secondary" className="block text-sm">{row.owner} · {row.theme}</Text>
                   </div>
-                  <Badge tone={row.status === 'Ready' ? 'success' : 'warning'}>{row.status}</Badge>
+                  <Badge variant={row.status === 'Ready' ? 'success' : 'warning'}>{row.status}</Badge>
                 </div>
               ))}
             />
@@ -592,7 +592,7 @@ export const buildSearchFilterShowcaseSections = (
                     label="Lane"
                     value={selectValue}
                     onValueChange={(value) => setSelectValue(String(value))}
-                    selectSize="sm"
+                    size="sm"
                     options={[
                       { label: 'Stable', value: 'stable' },
                       { label: 'Beta', value: 'beta' },
@@ -623,7 +623,7 @@ export const buildSearchFilterShowcaseSections = (
               title="Owner handoff listing"
               description="Search shell, review kuyruğu ve kısa karar özeti aynı yüzeyde birleşir."
               meta={<SectionBadge label="handoff-queue" />}
-              status={<Badge tone="warning">Pending</Badge>}
+              status={<Badge variant="warning">Pending</Badge>}
               actions={<Button size="sm">Queue export</Button>}
               filters={(
                 <>
@@ -638,7 +638,7 @@ export const buildSearchFilterShowcaseSections = (
                     label="Owner lane"
                     value={selectValue}
                     onValueChange={(value) => setSelectValue(String(value))}
-                    selectSize="sm"
+                    size="sm"
                     options={[
                       { label: 'All lanes', value: 'all' },
                       { label: 'Governance', value: 'governance' },
@@ -653,7 +653,7 @@ export const buildSearchFilterShowcaseSections = (
                 setSelectValue('all');
               }}
               onSaveView={() => setDropdownAction('Review handoff gorunumu kaydedildi')}
-              filterExtra={<Badge tone="info">Escalation aware</Badge>}
+              filterExtra={<Badge variant="info">Escalation aware</Badge>}
               summaryItems={[
                 { key: 'pending', label: 'Pending', value: '14', note: 'Degerlenecek handoff', tone: 'warning' },
                 { key: 'lane', label: 'Lane', value: selectValue || 'all', note: 'Aktif owner lane', tone: 'info' },
@@ -666,8 +666,8 @@ export const buildSearchFilterShowcaseSections = (
                     <Text variant="secondary" className="block text-sm">{row.owner} · {row.track}</Text>
                   </div>
                   <div className="flex gap-2">
-                    <Badge tone={row.status === 'Ready' ? 'success' : 'warning'}>{row.status}</Badge>
-                    <Badge tone="info">{row.track}</Badge>
+                    <Badge variant={row.status === 'Ready' ? 'success' : 'warning'}>{row.status}</Badge>
+                    <Badge variant="info">{row.track}</Badge>
                   </div>
                 </div>
               ))}
@@ -686,7 +686,7 @@ export const buildSearchFilterShowcaseSections = (
               title="Reusable filter library"
               description="Sık kullanılan filter/query kombinasyonları ve sonuç özetleri tek recipe altında tutulur."
               meta={<SectionBadge label="saved-views" />}
-              status={<Badge tone="info">Managed</Badge>}
+              status={<Badge variant="info">Managed</Badge>}
               actions={<Button size="sm">Yeni görünüm</Button>}
               filters={(
                 <>
@@ -700,7 +700,7 @@ export const buildSearchFilterShowcaseSections = (
                     label="Tip"
                     value={selectValue}
                     onValueChange={(value) => setSelectValue(String(value))}
-                    selectSize="sm"
+                    size="sm"
                     options={[
                       { label: 'All', value: 'all' },
                       { label: 'Ops', value: 'ops' },
@@ -728,21 +728,21 @@ export const buildSearchFilterShowcaseSections = (
                     <Text className="font-medium">Ops review queue</Text>
                     <Text variant="secondary" className="block text-sm">Release ve incident kuyruğunu tek görünümde toplar.</Text>
                   </div>
-                  <Badge tone="warning">12 result</Badge>
+                  <Badge variant="warning">12 result</Badge>
                 </div>,
                 <div key="governance-ready" className="flex items-center justify-between rounded-lg border border-border-subtle p-3">
                   <div>
                     <Text className="font-medium">Governance readiness</Text>
                     <Text variant="secondary" className="block text-sm">SEO/GEO ve approval evidence yüzeylerini filtreler.</Text>
                   </div>
-                  <Badge tone="success">7 result</Badge>
+                  <Badge variant="success">7 result</Badge>
                 </div>,
                 <div key="analytics-window" className="flex items-center justify-between rounded-lg border border-border-subtle p-3">
                   <div>
                     <Text className="font-medium">Analytics window</Text>
                     <Text variant="secondary" className="block text-sm">Time-window ve owner lensleriyle rapor sonuçlarını izler.</Text>
                   </div>
-                  <Badge tone="info">23 result</Badge>
+                  <Badge variant="info">23 result</Badge>
                 </div>,
               ]}
             />

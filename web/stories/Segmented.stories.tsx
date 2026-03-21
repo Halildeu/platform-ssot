@@ -98,7 +98,7 @@ export const SurfaceVariants: Story = {
         <Segmented
           ariaLabel="Surface variant tabs"
           defaultValue="overview"
-          appearance="outline"
+          variant="outline"
           shape="pill"
           iconPosition="end"
           allowEmptySelection
@@ -161,7 +161,7 @@ export const AdaptersAndPresets: Story = {
             defaultValue="policy"
             items={routeItems}
             shape="pill"
-            appearance="ghost"
+            variant="ghost"
           />
           <Segmented
             ariaLabel="Filter adapters"

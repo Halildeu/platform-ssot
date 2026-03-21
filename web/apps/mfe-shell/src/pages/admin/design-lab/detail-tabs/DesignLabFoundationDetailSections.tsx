@@ -205,7 +205,7 @@ const FoundationOverviewTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
           <SectionBadge label={t('designlab.common.panelCountPlural', { count: 3 })} />
         </div>
       </div>
@@ -220,7 +220,7 @@ const FoundationOverviewTab: React.FC<{
           {
             value: 'summary',
             label: 'Summary',
-            badge: <Badge tone="info">{foundation.governanceBadges.length}</Badge>,
+            badge: <Badge variant="info">{foundation.governanceBadges.length}</Badge>,
             content: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
@@ -262,7 +262,7 @@ const FoundationOverviewTab: React.FC<{
           {
             value: 'tokens',
             label: 'Tokens',
-            badge: <Badge tone="warning">{selectedFoundationTokens.length}</Badge>,
+            badge: <Badge variant="warning">{selectedFoundationTokens.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -293,7 +293,7 @@ const FoundationOverviewTab: React.FC<{
           {
             value: 'contracts',
             label: 'Contracts',
-            badge: <Badge tone="success">3 layer</Badge>,
+            badge: <Badge variant="success">3 layer</Badge>,
             content: (
               <ShowcaseCard
                 eyebrow="Platform contract"
@@ -361,8 +361,8 @@ const FoundationApiTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
-          <Badge tone="muted">{t('designlab.common.panelCountPlural', { count: 3 })}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="muted">{t('designlab.common.panelCountPlural', { count: 3 })}</Badge>
         </div>
       </div>
 
@@ -378,7 +378,7 @@ const FoundationApiTab: React.FC<{
           {
             value: 'runtime',
             label: 'Runtime',
-            badge: <Badge tone="info">{foundation.governanceBadges.length}</Badge>,
+            badge: <Badge variant="info">{foundation.governanceBadges.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Runtime hook contract</DetailLabel>
@@ -389,7 +389,7 @@ const FoundationApiTab: React.FC<{
           {
             value: 'schema',
             label: 'Schema',
-            badge: <Badge tone="warning">{selectedFoundationTokens.length}</Badge>,
+            badge: <Badge variant="warning">{selectedFoundationTokens.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Token schema</DetailLabel>
@@ -406,7 +406,7 @@ const FoundationApiTab: React.FC<{
           {
             value: 'consumption',
             label: 'Consumption',
-            badge: <Badge tone="success">3</Badge>,
+            badge: <Badge variant="success">3</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Consumer patterns</DetailLabel>
@@ -469,8 +469,8 @@ const FoundationQualityTab: React.FC<{
           </Text>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge tone="info">{t('designlab.common.tabbed')}</Badge>
-          <Badge tone="muted">{t('designlab.common.panelCountPlural', { count: 6 })}</Badge>
+          <Badge variant="info">{t('designlab.common.tabbed')}</Badge>
+          <Badge variant="muted">{t('designlab.common.panelCountPlural', { count: 6 })}</Badge>
         </div>
       </div>
 
@@ -486,7 +486,7 @@ const FoundationQualityTab: React.FC<{
           {
             value: 'gates',
             label: 'Gates',
-            badge: <Badge tone="info">{selectedFoundationA11yGates.length}</Badge>,
+            badge: <Badge variant="info">{selectedFoundationA11yGates.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Platform quality gates</DetailLabel>
@@ -504,7 +504,7 @@ const FoundationQualityTab: React.FC<{
           {
             value: 'coverage',
             label: 'Coverage',
-            badge: <Badge tone="warning">{selectedFoundationItems.length}</Badge>,
+            badge: <Badge variant="warning">{selectedFoundationItems.length}</Badge>,
             content: (
               <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
                 <DetailLabel>Foundation coverage metrics</DetailLabel>
@@ -519,7 +519,7 @@ const FoundationQualityTab: React.FC<{
           {
             value: 'a11y',
             label: 'Accessibility',
-            badge: <Badge tone="success">{selectedFoundationThemes.length}</Badge>,
+            badge: <Badge variant="success">{selectedFoundationThemes.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                 <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
@@ -544,7 +544,7 @@ const FoundationQualityTab: React.FC<{
           {
             value: 'governance',
             label: 'Governance',
-            badge: <Badge tone="warning">5 dim</Badge>,
+            badge: <Badge variant="warning">5 dim</Badge>,
             content: (
               <MigrationGovernancePanel
                 layer="foundations"
@@ -557,7 +557,7 @@ const FoundationQualityTab: React.FC<{
           {
             value: 'benchmark',
             label: 'Benchmark',
-            badge: <Badge tone="info">12</Badge>,
+            badge: <Badge variant="info">12</Badge>,
             content: (
               <BenchmarkParityPanel
                 layerFilter="foundations"
@@ -570,7 +570,7 @@ const FoundationQualityTab: React.FC<{
           {
             value: 'contracts',
             label: 'Contracts',
-            badge: <Badge tone="success">8</Badge>,
+            badge: <Badge variant="success">8</Badge>,
             content: (
               <PlatformContractsCompliancePanel
                 layerFilter="foundations"

@@ -509,7 +509,7 @@ export function PolitikaListesi() {
           <TextInput label="Arama" value={query} onValueChange={setQuery} size="sm" />
           <Select
             label="Durum"
-            selectSize="sm"
+            size="sm"
             value={durum}
             onValueChange={setDurum}
             options={[
@@ -787,7 +787,7 @@ export function KompaktListe() {
           <TextInput label="Servis ara" value="" size="sm" />
           <Select
             label="Ortam"
-            selectSize="sm"
+            size="sm"
             value="prod"
             options={[
               { label: 'Uretim', value: 'prod' },
@@ -907,7 +907,7 @@ export function FiltreliBosDurum() {
           <TextInput label="Arama" value="mevcut-olmayan-kayit" size="sm" />
           <Select
             label="Kategori"
-            selectSize="sm"
+            size="sm"
             value="archived"
             options={[
               { label: 'Tumu', value: 'all' },
@@ -2507,9 +2507,9 @@ export function Example() {
       onClose={() => setOpen(false)}
       onSelect={(id) => console.log('Calistirildi:', id)}
       items={[
-        { id: 'ai-suggest', title: 'AI Oneri Al', group: 'AI', badge: <Badge tone="info">Beta</Badge> },
-        { id: 'ai-review', title: 'Kod Incelemesi', group: 'AI', badge: <Badge tone="success">Hazir</Badge> },
-        { id: 'ai-generate', title: 'Test Uret', group: 'AI', badge: <Badge tone="warning">Deneysel</Badge>, disabled: true },
+        { id: 'ai-suggest', title: 'AI Oneri Al', group: 'AI', badge: <Badge variant="info">Beta</Badge> },
+        { id: 'ai-review', title: 'Kod Incelemesi', group: 'AI', badge: <Badge variant="success">Hazir</Badge> },
+        { id: 'ai-generate', title: 'Test Uret', group: 'AI', badge: <Badge variant="warning">Deneysel</Badge>, disabled: true },
         { id: 'export', title: 'Rapor Indir', group: 'Genel', shortcut: 'Ctrl+E' },
       ]}
     />
@@ -2857,7 +2857,7 @@ export function Example() {
       }
       title="Kampanya Yonetimi"
       subtitle="2024 Q4 hedefleri icin aktif kampanya detaylari."
-      tags={<Badge tone="success">Aktif</Badge>}
+      tags={<Badge variant="success">Aktif</Badge>}
       actions={
         <div className="flex gap-2">
           <Button variant="secondary"><Download className="h-4 w-4 mr-1" /> Rapor</Button>
@@ -3228,8 +3228,8 @@ export function Example() {
         subtitle="Premium uye — 2 yildir aktif"
         tags={
           <>
-            <Badge tone="success">Aktif</Badge>
-            <Badge tone="info">Premium</Badge>
+            <Badge variant="success">Aktif</Badge>
+            <Badge variant="info">Premium</Badge>
           </>
         }
         actions={
@@ -3846,9 +3846,9 @@ const items = [
 export function Example() {
   return (
     <div className="flex flex-col gap-4">
-      <Segmented items={items} defaultValue="liste" appearance="default" />
-      <Segmented items={items} defaultValue="liste" appearance="outline" />
-      <Segmented items={items} defaultValue="liste" appearance="ghost" />
+      <Segmented items={items} defaultValue="liste" variant="default" />
+      <Segmented items={items} defaultValue="liste" variant="outline" />
+      <Segmented items={items} defaultValue="liste" variant="ghost" />
     </div>
   );
 }`,
@@ -4188,8 +4188,8 @@ export function Example() {
 export function Example() {
   return (
     <div className="flex gap-4">
-      <LinkInline href="/page" tone="primary">Primary Bağlantı</LinkInline>
-      <LinkInline href="/page" tone="secondary">Secondary Bağlantı</LinkInline>
+      <LinkInline href="/page" variant="primary">Primary Bağlantı</LinkInline>
+      <LinkInline href="/page" variant="secondary">Secondary Bağlantı</LinkInline>
     </div>
   );
 }`,

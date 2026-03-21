@@ -136,7 +136,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
                         })}
                       </p>
                     </div>
-                    <Badge tone={levelToneMap[policy.level] ?? 'default'}>
+                    <Badge variant={levelToneMap[policy.level] ?? 'default'}>
                       {t(`access.filter.level.${policy.level.toLowerCase()}`)}
                     </Badge>
                   </div>
