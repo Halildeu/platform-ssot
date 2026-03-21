@@ -62,3 +62,11 @@ export type { EventDragState, UseEventDragOptions, UseEventDragReturn } from './
 
 export { useExternalDrop } from './useExternalDrop';
 export type { UseExternalDropOptions, UseExternalDropReturn } from './useExternalDrop';
+
+/* Wave 3 — Variant system */
+export { useSchedulerVariants } from './useSchedulerVariants';
+export type {
+  ViewConfig,
+  ViewVariant,
+  UseSchedulerVariantsReturn,
+} from './useSchedulerVariants';

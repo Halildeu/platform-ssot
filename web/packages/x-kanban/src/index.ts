@@ -60,3 +60,19 @@ export type {
   KanbanFilter,
   CardTemplate,
 } from './types';
+
+/* Wave 3 — Cross-package composition */
+export { useKanbanSchedulerSync } from './composition/useKanbanSchedulerSync';
+export type {
+  SchedulerEvent as KanbanSchedulerEvent,
+  UseKanbanSchedulerSyncOptions,
+  UseKanbanSchedulerSyncReturn,
+} from './composition/useKanbanSchedulerSync';
+
+/* Wave 3 — Variant system */
+export { useKanbanVariants } from './useKanbanVariants';
+export type {
+  BoardState,
+  BoardVariant,
+  UseKanbanVariantsReturn,
+} from './useKanbanVariants';

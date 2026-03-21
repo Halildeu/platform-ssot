@@ -73,5 +73,21 @@ export type { ChartResizeState, UseChartResizeOptions } from "./useChartResize";
 export { useRealTimeData } from "./useRealTimeData";
 export type { RealTimeDataOptions, RealTimeDataState } from "./useRealTimeData";
 
+/* Wave 3 — Cross-package composition */
+export { useDashboardComposition } from "./composition/useDashboardComposition";
+export type {
+  DateRange,
+  UseDashboardCompositionOptions,
+  UseDashboardCompositionReturn,
+} from "./composition/useDashboardComposition";
+
+/* Wave 3 — Variant system */
+export { useChartVariants } from "./useChartVariants";
+export type {
+  ChartConfig,
+  ChartVariant,
+  UseChartVariantsReturn,
+} from "./useChartVariants";
+
 /* Types */
 export type { ChartSize, ChartDataPoint, ChartSeries } from "@mfe/design-system";

@@ -69,6 +69,9 @@ const InsightsDashboardPage = lazy(() => import("./pages/InsightsDashboardPage")
 /* Quality Audit */
 const QualityAuditPage = lazy(() => import("./pages/QualityAuditPage"));
 
+/* Quality Dashboard */
+const QualityDashboardPage = lazy(() => import("./pages/QualityDashboardPage"));
+
 /* Visual Composition Builder */
 const ComposePage = lazy(() => import("./compose/ComposePage"));
 
@@ -241,6 +244,9 @@ export const DesignLabRoutes: React.FC = () => (
 
         {/* Quality Audit */}
         <Route path="quality-audit" element={<QualityAuditPage />} />
+
+        {/* Quality Dashboard */}
+        <Route path="quality-dashboard" element={<QualityDashboardPage />} />
 
         {/* Visual Composition Builder */}
         <Route path="compose" element={<ComposePage />} />

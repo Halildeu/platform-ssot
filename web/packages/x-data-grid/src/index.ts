@@ -30,3 +30,16 @@ export type { RowGroupingGridProps } from './RowGroupingGrid';
 export { useGridExport } from './useGridExport';
 export type { ExcelExportOptions, CsvExportOptions } from './useGridExport';
 export { useGridState } from './useGridState';
+
+/* Wave 3 — Cross-package composition */
+export { useGridChartDrilldown } from './composition/useGridChartDrilldown';
+export type {
+  UseGridChartDrilldownReturn,
+  UseGridChartDrilldownOptions,
+} from './composition/useGridChartDrilldown';
+
+export { useGridFormSync } from './composition/useGridFormSync';
+export type {
+  UseGridFormSyncReturn,
+  UseGridFormSyncOptions,
+} from './composition/useGridFormSync';

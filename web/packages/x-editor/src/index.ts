@@ -62,3 +62,12 @@ export type {
   TableOptions,
   EditorCollabConfig,
 } from './types';
+
+/* Wave 3 — Cross-package composition */
+export { useEditorFormField } from './composition/useEditorFormField';
+export type {
+  EditorFormFieldOptions,
+  EditorFieldMeta,
+  EditorFieldProps,
+  UseEditorFormFieldReturn,
+} from './composition/useEditorFormField';

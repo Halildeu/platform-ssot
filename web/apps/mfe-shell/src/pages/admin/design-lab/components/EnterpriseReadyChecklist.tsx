@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Check, AlertTriangle } from 'lucide-react';
 import { Text } from '@mfe/design-system';
+import { QualityBadge } from './QualityBadge';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -322,6 +323,8 @@ export function EnterpriseReadyChecklist({
             </Text>
           </div>
         </div>
+
+        <QualityBadge score={pct} size="sm" />
 
         {/* Progress ring */}
         <div className="relative flex h-12 w-12 items-center justify-center">
