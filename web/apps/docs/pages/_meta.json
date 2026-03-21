@@ -1,9 +1,0 @@
-{
-  "index": "Introduction",
-  "getting-started": "Getting Started",
-  "x-suite": "X Suite",
-  "blocks": "Blocks",
-  "migration": "Migration",
-  "---": { "type": "separator" },
-  "api": "API Reference"
-}
