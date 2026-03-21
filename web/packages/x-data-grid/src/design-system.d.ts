@@ -40,7 +40,17 @@ declare module '@mfe/design-system' {
   export const PieChart: React.FC<any>;
   // AG Grid
   export const EntityGridTemplate: React.FC<any>;
+  export const GridShell: React.FC<any>;
+  export const GridToolbar: React.FC<any>;
   export const TablePagination: React.FC<any>;
+  // AG Grid types
+  export type EntityGridTemplateProps = any;
+  export type GridShellProps = any;
+  export type GridToolbarProps = any;
+  export type ColDef = any;
+  export type GridOptions = any;
+  export type GridApi = any;
+  export type GridReadyEvent = any;
   // Types — exported as any for ambient compatibility
   export type ChartSize = any;
   export type ChartDataPoint = any;
