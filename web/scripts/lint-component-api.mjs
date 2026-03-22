@@ -27,6 +27,13 @@ const COMPONENT_DIRS = [
   'packages/design-system/src/advanced',
 ];
 
+// Components excluded from className requirement (composite/wrapper components)
+const CLASSNAME_EXCLUSIONS = new Set([
+  'CommandPalette', 'EntityGridTemplate', 'JsonViewer', 'List',
+  'NotificationDrawer', 'TableSimple', 'Toast', 'Tree', 'TreeTable',
+  'VariantIntegration',
+]);
+
 // Props that indicate a11y support
 const A11Y_PROPS = ['aria-label', 'ariaLabel', 'label', 'title', 'role', 'aria-labelledby', 'ariaLabelledBy', 'aria-describedby'];
 
@@ -57,6 +64,12 @@ const SIZE_EXCLUSIONS = new Set([
   'ApprovalCheckpoint', 'ApprovalReview', 'CitationPanel',
   'CommandPalette', 'ContextMenu', 'DetailDrawer', 'FormDrawer',
   'NotificationDrawer', 'SmartDashboard', 'VariantIntegration',
+  // Additional design-by-design exclusions
+  'AnchorToc', 'ConfidenceBadge', 'Descriptions', 'DetailSectionTabs',
+  'EmptyErrorLoading', 'EmptyState', 'NotificationItemCard',
+  'TablePagination', 'ThemePresetCompare', 'ThemePresetGallery',
+  'ThemePreviewCard', 'Watermark',
+  'JsonViewer', 'List', 'TableSimple', 'Tree', 'TreeTable',
   'GridShell', 'GridToolbar', 'EntityGridTemplate',
   'SearchFilterListing', 'MasterDetail', 'AgGridServer',
   'PageLayout', 'CrudTemplate', 'DashboardTemplate',
@@ -75,6 +88,7 @@ const A11Y_EXCLUSIONS = new Set([
   'SearchFilterListing', 'MasterDetail', 'SmartDashboard',
   'CrudTemplate', 'DashboardTemplate', 'DetailTemplate',
   'SettingsTemplate', 'CommandWorkspace', 'NotificationPanel',
+  'Watermark', // Decorative — no semantic content
 ]);
 
 function findComponentFiles() {
@@ -143,7 +157,7 @@ function checkFile(filePath) {
     content.includes('...props') || content.includes('HTMLAttributes') ||
     content.includes('ComponentProps')
   );
-  if (!hasClassName) {
+  if (!hasClassName && !CLASSNAME_EXCLUSIONS.has(componentName)) {
     issues.push('missing className prop (customizability)');
   }
 

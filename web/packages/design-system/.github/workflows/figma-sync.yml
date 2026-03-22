@@ -1,0 +1,66 @@
+name: Figma Token Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      direction:
+        description: 'Sync direction'
+        required: true
+        default: 'figma-to-code'
+        type: choice
+        options:
+          - figma-to-code
+          - code-to-figma
+          - diff-only
+  schedule:
+    - cron: '0 9 * * 1-5' # Weekdays 9 AM
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web/packages/design-system
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build tokens from DTCG source
+        run: npm run build:tokens
+
+      - name: Generate token diff report
+        run: node scripts/figma-token-diff.mjs --output token-diff-report.json
+        continue-on-error: true
+
+      - name: Check for token divergence
+        id: diff
+        run: |
+          if [ -f token-diff-report.json ]; then
+            CHANGES=$(node -e "const r=require('./token-diff-report.json'); console.log(r.changes || 0)")
+            echo "changes=$CHANGES" >> $GITHUB_OUTPUT
+          else
+            echo "changes=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR if tokens changed
+        if: steps.diff.outputs.changes != '0'
+        run: |
+          git config user.name "figma-sync[bot]"
+          git config user.email "figma-sync@mfe.dev"
+          git checkout -b figma-sync/$(date +%Y%m%d-%H%M%S)
+          git add tokens/ dist/tokens/
+          git commit -m "chore(tokens): sync from Figma $(date +%Y-%m-%d)"
+          git push origin HEAD
+          gh pr create --title "chore(tokens): Figma token sync" --body "Automated token sync from Figma. Review changes in tokens/ directory."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
