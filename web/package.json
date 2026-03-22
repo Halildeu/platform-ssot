@@ -44,6 +44,7 @@
     "start:raw": "npx concurrently \"npm start --prefix apps/mfe-shell\" \"npm start --prefix apps/mfe-suggestions\" \"npm start --prefix apps/mfe-ethic\" \"npm start --prefix apps/mfe-users\" \"npm start --prefix apps/mfe-access\" \"npm start --prefix apps/mfe-audit\" \"npm start --prefix apps/mfe-reporting\"",
     "start": "bash ./scripts/health/run-dev-servers.sh --profile full",
     "build-storybook": "storybook build",
+    "test:storybook": "test-storybook --url http://localhost:6006",
     "chromatic": "chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --build-script-name build-storybook",
     "clean": "rimraf dist",
     "tokens:build": "node ./scripts/tokens/build-tokens.mjs",
