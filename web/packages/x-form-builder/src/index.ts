@@ -1,10 +1,23 @@
 /* ------------------------------------------------------------------ */
 /*  @mfe/x-form-builder — Schema-driven form renderer                  */
 /*                                                                     */
-/*  Extends @mfe/design-system AdaptiveForm with a JSON-schema-based   */
-/*  runtime renderer, extensible field registry, and form state hook.  */
-/*  FormBuilder (visual designer) is planned for v2.                   */
+/*  @deprecated This package is superseded by @mfe/design-system/form  */
+/*  which provides useForm, useFormField, ConnectedInput/Select/etc,   */
+/*  createZodValidator, zodResolver, and RHF adapter out of the box.   */
+/*                                                                     */
+/*  Migration: import { useForm, createZodValidator, ConnectedInput }  */
+/*             from '@mfe/design-system/form';                         */
+/*                                                                     */
+/*  This package will be removed in the next major version.            */
 /* ------------------------------------------------------------------ */
+
+if (typeof console !== 'undefined' && process.env.NODE_ENV === 'development') {
+  console.warn(
+    '[@mfe/x-form-builder] This package is deprecated. ' +
+    'Use @mfe/design-system/form instead. ' +
+    'See: web/packages/design-system/docs/recipes/react-hook-form.md',
+  );
+}
 
 /* ---- Types ---- */
 export type {

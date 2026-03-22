@@ -21,6 +21,8 @@ jobs:
           - '@mfe/x-kanban'
           - '@mfe/x-editor'
           - '@mfe/x-form-builder'
+          - 'mfe-shell'
+          - 'x-suite'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

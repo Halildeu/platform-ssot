@@ -22,6 +22,8 @@ const entry = [
   // Advanced
   'src/advanced/data-grid/setup.ts',
   'src/advanced/index.ts',
+  // Form Validation Adapter (F4A)
+  'src/form/index.ts',
   // Server-safe entry (NO "use client")
   'src/server.ts',
 ];

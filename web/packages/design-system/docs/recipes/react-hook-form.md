@@ -1,5 +1,90 @@
 # react-hook-form Integration
 
+## Recommended: Connected Components (New)
+
+The simplest way to build validated forms. Connected components auto-bind to
+form context — no `register()`, no `Controller`, no manual error wiring.
+
+### Standalone Mode (no react-hook-form needed)
+
+```bash
+npm install zod
+```
+
+```tsx
+import { useForm, ConnectedInput, ConnectedSelect, createZodValidator } from '@mfe/design-system/form';
+import { Button } from '@mfe/design-system';
+import { z } from 'zod';
+
+const schema = z.object({
+  name: z.string().min(1, 'Ad zorunludur'),
+  department: z.string().min(1, 'Departman seçiniz'),
+});
+
+export function ContactForm() {
+  const form = useForm({
+    defaultValues: { name: '', department: '' },
+    validator: createZodValidator(schema),
+  });
+
+  return (
+    <form.FormProvider>
+      <form onSubmit={form.handleSubmit(console.log)} className="flex flex-col gap-4">
+        <ConnectedInput name="name" label="Ad Soyad" required />
+        <ConnectedSelect
+          name="department"
+          label="Departman"
+          options={[
+            { value: 'eng', label: 'Engineering' },
+            { value: 'design', label: 'Design' },
+          ]}
+        />
+        <Button type="submit" variant="primary">Kaydet</Button>
+      </form>
+    </form.FormProvider>
+  );
+}
+```
+
+### With react-hook-form (advanced forms)
+
+```bash
+npm install react-hook-form zod
+```
+
+```tsx
+import { useForm } from 'react-hook-form';
+import { RHFFormProvider, zodResolver, ConnectedInput } from '@mfe/design-system/form';
+import { Button } from '@mfe/design-system';
+import { z } from 'zod';
+
+const schema = z.object({ name: z.string().min(2), role: z.enum(['admin', 'editor']) });
+type FormValues = z.infer<typeof schema>;
+
+export function RHFForm() {
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { name: '', role: 'editor' },
+  });
+
+  return (
+    <RHFFormProvider rhfForm={form}>
+      <form onSubmit={form.handleSubmit(console.log)} className="flex flex-col gap-4">
+        <ConnectedInput name="name" label="Name" required />
+        <Button type="submit" variant="primary">Save</Button>
+      </form>
+    </RHFFormProvider>
+  );
+}
+```
+
+---
+
+## Legacy: Manual Integration
+
+> The patterns below still work and are useful for migration. For new forms,
+> prefer Connected Components above.
+
 ## Setup
 
 ```bash

@@ -1,5 +1,51 @@
 # Zod Schema Validation
 
+## Recommended: Design System Form Adapter
+
+The design system provides built-in Zod integration via `@mfe/design-system/form`.
+No need for `@hookform/resolvers` — use `createZodValidator` for standalone mode
+or `zodResolver` for react-hook-form.
+
+```bash
+npm install zod
+```
+
+```tsx
+import { useForm, ConnectedInput, ConnectedCheckbox, createZodValidator } from '@mfe/design-system/form';
+import { Button } from '@mfe/design-system';
+import { z } from 'zod';
+
+const loginSchema = z.object({
+  email: z.string().email('Geçerli e-posta giriniz'),
+  password: z.string().min(8, 'En az 8 karakter'),
+  rememberMe: z.boolean().optional(),
+});
+
+export function LoginForm() {
+  const form = useForm({
+    defaultValues: { email: '', password: '', rememberMe: false },
+    validator: createZodValidator(loginSchema),
+  });
+
+  return (
+    <form.FormProvider>
+      <form onSubmit={form.handleSubmit(console.log)} className="flex flex-col gap-4">
+        <ConnectedInput name="email" label="E-posta" type="email" required />
+        <ConnectedInput name="password" label="Şifre" type="password" required />
+        <ConnectedCheckbox name="rememberMe" label="Beni hatırla" />
+        <Button type="submit" variant="primary">Giriş</Button>
+      </form>
+    </form.FormProvider>
+  );
+}
+```
+
+---
+
+## Legacy: Manual Zod + react-hook-form
+
+> The pattern below still works. For new forms, prefer the adapter above.
+
 ## Setup
 
 ```bash

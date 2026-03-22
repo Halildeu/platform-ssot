@@ -46,3 +46,13 @@ jobs:
           echo ""
           echo "To publish design-system (the only public package):"
           echo "  cd packages/design-system && npm publish"
+      - name: Create Sentry release
+        if: steps.release.outputs.release_created
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          npx @sentry/cli releases new ${{ steps.release.outputs.tag_name }} || true
+          npx @sentry/cli releases set-commits ${{ steps.release.outputs.tag_name }} --auto || true
+          npx @sentry/cli releases finalize ${{ steps.release.outputs.tag_name }} || true
