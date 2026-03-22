@@ -206,7 +206,7 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
       <>
         <Spinner size={size === "xs" || size === "sm" ? "xs" : "sm"} />
         {!iconOnly && children && (
-          <span className="ml-1.5">{children}</span>
+          <span className="ms-1.5">{children}</span>
         )}
       </>
     ) : (

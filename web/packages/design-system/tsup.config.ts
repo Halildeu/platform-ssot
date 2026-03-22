@@ -24,6 +24,8 @@ const entry = [
   'src/advanced/index.ts',
   // Form Validation Adapter (F4A)
   'src/form/index.ts',
+  // Motion & Animation System (F4B)
+  'src/motion/index.ts',
   // Server-safe entry (NO "use client")
   'src/server.ts',
 ];

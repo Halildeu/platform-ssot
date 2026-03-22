@@ -79,7 +79,7 @@ const resolveInlinePlacementClassName = (side: PopoverSide, align: PopoverAlign)
     : align === 'end'
       ? 'bottom-0'
       : 'top-1/2 -translate-y-1/2';
-  const horizontalClassName = side === 'left' ? 'right-full mr-3' : 'left-full ml-3';
+  const horizontalClassName = side === 'left' ? 'end-full me-3' : 'start-full ms-3';
   return `${verticalClassName} ${horizontalClassName}`;
 };
 
