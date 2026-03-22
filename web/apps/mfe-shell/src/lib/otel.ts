@@ -76,6 +76,15 @@ export function initOtel(options?: { serviceName?: string; environment?: string 
   // Monkey-patch fetch to add traceparent header
   originalFetch = window.fetch;
   window.fetch = function patchedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+    // Skip trace headers for cross-origin auth requests (Keycloak, OAuth)
+    // Adding custom headers to these causes CORS preflight failures
+    const url = typeof input === 'string' ? input : input instanceof URL ? input.href : (input as Request).url;
+    const isAuthEndpoint = url.includes('/realms/') || url.includes('/openid-connect/') || url.includes('/oauth2/');
+
+    if (isAuthEndpoint) {
+      return originalFetch!.call(window, input, init);
+    }
+
     const headers = new Headers(init?.headers);
 
     // Only add trace headers if not already present

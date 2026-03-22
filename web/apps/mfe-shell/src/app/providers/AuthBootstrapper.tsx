@@ -154,7 +154,8 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
             dispatch(setKeycloakSession({ token: null }));
           }
         }
-      } catch {
+      } catch (err) {
+        console.error('[AuthBootstrapper] keycloak.init() failed:', err);
         if (mounted && !tokenRef.current) {
           dispatch(setKeycloakSession({ token: null }));
         }

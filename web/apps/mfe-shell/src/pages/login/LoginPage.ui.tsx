@@ -24,7 +24,7 @@ const LoginPage = () => {
       return;
     }
     const redirectUri = buildAppRedirectUri(`/login?redirect=${encodeURIComponent(redirectPath)}`);
-    keycloak.login({ redirectUri }).catch(() => undefined);
+    keycloak.login({ redirectUri }).catch((err) => console.error('[LoginPage] keycloak.login() failed:', err));
   };
 
   if (initialized && token) {
