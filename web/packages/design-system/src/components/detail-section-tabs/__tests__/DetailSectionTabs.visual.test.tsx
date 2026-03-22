@@ -1,0 +1,22 @@
+import { describe, it, expect } from 'vitest';
+import { render } from 'vitest-browser-react';
+import { DetailSectionTabs } from '../DetailSectionTabs';
+
+describe('DetailSectionTabs Visual Regression', () => {
+  it('tabs layout matches screenshot', async () => {
+    const screen = render(
+      <div style={{ padding: 20, background: '#fff', width: 500 }}>
+        <DetailSectionTabs
+          tabs={[
+            { id: 'overview', label: 'Overview' },
+            { id: 'details', label: 'Details' },
+            { id: 'history', label: 'History' },
+          ]}
+          activeTabId="overview"
+          onTabChange={() => {}}
+        />
+      </div>,
+    );
+    await expect(screen.container).toMatchScreenshot();
+  });
+});
