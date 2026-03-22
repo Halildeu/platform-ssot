@@ -79,6 +79,9 @@ const ComposePage = lazy(() => import("./compose/ComposePage"));
 /* Cross-Component Interaction Playground */
 const InteractionPlayground = lazy(() => import("./interaction/InteractionPlayground"));
 
+/* Governance Plane */
+const GovernancePage = lazy(() => import("./pages/GovernancePage"));
+
 /* X Suite Runtime Preview (iframe target for Design Lab dual preview) */
 const XSuiteRuntimePreview = lazy(() => import("./XSuiteRuntimePreview"));
 
@@ -257,6 +260,9 @@ export const DesignLabRoutes: React.FC = () => (
 
         {/* Cross-Component Interaction */}
         <Route path="interactions" element={<InteractionPlayground />} />
+
+        {/* Governance Plane */}
+        <Route path="governance" element={<GovernancePage />} />
 
         {/* Recipes layer */}
         <Route path="recipes" element={<RecipesListing />} />
