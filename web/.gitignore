@@ -6,3 +6,6 @@ packages/design-system/dist
 storybook-static
 apps/docs/.next/
 apps/docs/out/
+
+# Evidence registry (generated)
+.evidence/

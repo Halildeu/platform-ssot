@@ -14,6 +14,8 @@ import {
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
 import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
+import { useEvidence, FALLBACK_REGISTRY } from "../evidence/useEvidence";
+import type { EvidenceStatus } from "../evidence/useEvidence";
 
 /* ------------------------------------------------------------------ */
 /*  VisualRegressionPage — Per-component visual regression dashboard    */
@@ -49,48 +51,65 @@ type VRResult = {
 
 function useVisualRegressionData() {
   const { index } = useDesignLab();
+  const evidenceState = useEvidence();
 
   return useMemo(() => {
+    const evidence =
+      evidenceState.status === 'loaded'
+        ? evidenceState.data.visual_regression
+        : FALLBACK_REGISTRY.visual_regression;
+    const evidenceAvailable = evidenceState.status === 'loaded';
+    const evidenceStatus: EvidenceStatus = evidenceAvailable
+      ? evidence.status
+      : 'no_data';
+
     // Derive from actual Playwright config & workflow presence
     const playwrightBrowsers = ["Chromium", "Firefox", "WebKit"] as const;
     const thresholdPixelRatio = 0.01;
-    const chromaticWorkflowExists = true;   // .github/workflows/chromatic.yml
-    const visualRegressionWorkflowExists = true; // packages/design-system/.github/workflows/visual-regression.yml
+    const chromaticWorkflowExists = evidence.workflow_exists;
+    const visualRegressionWorkflowExists = true;
 
-    // Each indexed component represents a potential visual test target
+    // Map VR status from evidence to per-component display
+    const defaultVRStatus: VRStatus =
+      evidenceStatus === 'passing' ? 'pass' :
+      evidenceStatus === 'failing' ? 'fail' :
+      'skipped';
+
     const results: VRResult[] = index.items.map((item) => ({
       componentName: item.name,
       layer: item.taxonomyGroupId ?? "components",
-      // No live CI data — show "pending" for all; actual pass/fail comes from CI artefacts
-      status: "skipped" as VRStatus,
+      status: defaultVRStatus,
       storyCount: 0,
       changedStories: 0,
-      lastChecked: new Date(0), // No live run data
+      lastChecked: evidence.last_run ? new Date(evidence.last_run) : new Date(0),
     }));
 
-    const passCount = 0;
-    const failCount = 0;
-    const changedCount = 0;
-    const newCount = 0;
-    const totalSnapshots = index.items.length * playwrightBrowsers.length;
-    const acceptanceRate = 0; // No live results available
+    // Use evidence stats when available
+    const passCount = evidence.stats.pass;
+    const failCount = evidence.stats.fail;
+    const changedCount = evidence.stats.changed;
+    const newCount = evidence.stats.new;
+    const totalSnapshots = evidenceAvailable
+      ? passCount + failCount + changedCount + newCount + evidence.stats.skipped
+      : index.items.length * playwrightBrowsers.length;
+    const acceptanceRate = totalSnapshots > 0
+      ? Math.round((passCount / totalSnapshots) * 100)
+      : 0;
 
-    // Derived build info — no live CI data
     const buildInfo = {
       buildNumber: null as number | null,
       branch: "main",
       commit: null as string | null,
-      triggeredAt: null as Date | null,
+      triggeredAt: evidence.last_run ? new Date(evidence.last_run) : null,
       duration: null as string | null,
-      // Infrastructure summary
       browsers: playwrightBrowsers,
       thresholdPixelRatio,
       chromaticWorkflow: chromaticWorkflowExists,
       playwrightWorkflow: visualRegressionWorkflowExists,
     };
 
-    return { results, passCount, failCount, changedCount, newCount, totalSnapshots, acceptanceRate, buildInfo };
-  }, [index]);
+    return { results, passCount, failCount, changedCount, newCount, totalSnapshots, acceptanceRate, buildInfo, evidenceStatus };
+  }, [index, evidenceState]);
 }
 
 /* ---- Status config ---- */
@@ -257,6 +276,40 @@ export const VisualRegressionPage: React.FC = () => {
           Open Chromatic
         </button>
       </div>
+
+      {/* Evidence Status Banner */}
+      {data.evidenceStatus === 'no_data' && (
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3">
+          <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <Text className="text-sm text-amber-800">
+            Evidence registry bulunamadi. <code className="rounded bg-amber-100 px-1 text-xs">npm run collect:evidence</code> komutunu calistirin.
+          </Text>
+        </div>
+      )}
+      {data.evidenceStatus === 'configured' && (
+        <div className="flex items-center gap-3 rounded-2xl border border-blue-200 bg-blue-50 px-5 py-3">
+          <Clock className="h-4 w-4 text-blue-600" />
+          <Text className="text-sm text-blue-800">
+            Yapilandirilmis — henuz kosulmadi. CI pipeline ilk calistirildiginda sonuclar burada gorunecek.
+          </Text>
+        </div>
+      )}
+      {data.evidenceStatus === 'passing' && (
+        <div className="flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+          <Text className="text-sm text-emerald-800">
+            Tum gorsel regresyon testleri gecti.
+          </Text>
+        </div>
+      )}
+      {data.evidenceStatus === 'failing' && (
+        <div className="flex items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-5 py-3">
+          <XCircle className="h-4 w-4 text-red-600" />
+          <Text className="text-sm text-red-800">
+            Gorsel regresyon testlerinde basarisizlik var — asagidaki detaylari inceleyin.
+          </Text>
+        </div>
+      )}
 
       {/* Build Info Banner — derived from repo config */}
       <div className="flex flex-col gap-2 rounded-2xl border border-border-subtle bg-surface-default px-5 py-3">

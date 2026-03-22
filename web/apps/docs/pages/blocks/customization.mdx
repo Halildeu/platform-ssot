@@ -44,10 +44,11 @@ Blocks inherit the active theme from the design-system `ThemeProvider`. To apply
 a custom theme:
 
 ```tsx
-import { ThemeProvider, createTheme } from '@mfe/design-system';
+import { ThemeProvider, setAppearance } from '@mfe/design-system';
 import { KPIDashboardBlock } from '@mfe/blocks';
 
-const customTheme = createTheme({
+// Configure appearance via the design-system API
+setAppearance({
   palette: {
     primary: { main: '#1a56db' },
     background: { default: '#f8fafc' },
@@ -57,7 +58,7 @@ const customTheme = createTheme({
 
 export function Dashboard() {
   return (
-    <ThemeProvider theme={customTheme}>
+    <ThemeProvider>
       <KPIDashboardBlock />
     </ThemeProvider>
   );
@@ -72,7 +73,8 @@ palette, typography, spacing, and shape values.
 For fine-grained control, override specific tokens in the theme:
 
 ```tsx
-const theme = createTheme({
+// Use setAppearance to override component tokens
+setAppearance({
   components: {
     MfeBlockCard: {
       styleOverrides: {

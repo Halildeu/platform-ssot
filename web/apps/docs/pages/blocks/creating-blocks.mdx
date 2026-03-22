@@ -30,7 +30,7 @@ packages/blocks/src/
 ```tsx
 // packages/blocks/src/blocks/invoice-list/InvoiceListBlock.tsx
 
-import { Card, Stack, Typography } from '@mfe/design-system';
+import { Card, Stack, Text } from '@mfe/design-system';
 import { EntityGridTemplate } from '@mfe/x-data-grid';
 import type { BlockSlots, BlockSlotProps } from '../../types';
 
@@ -63,9 +63,9 @@ export function InvoiceListBlock({
   slotProps = {},
 }: InvoiceListBlockProps) {
   const Header = slots.header ?? (
-    <Typography variant="h5" {...slotProps.header}>
+    <Text variant="h5" {...slotProps.header}>
       {title}
-    </Typography>
+    </Text>
   );
 
   return (

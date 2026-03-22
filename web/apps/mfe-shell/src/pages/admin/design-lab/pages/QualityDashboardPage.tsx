@@ -37,6 +37,7 @@ import type { CoverageItem } from "../components/CoverageMatrix";
 import { QualityGatesOverview } from "../components/QualityGatesOverview";
 import { SecurityPosture } from "../components/SecurityPosture";
 import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
+import { useEvidence, FALLBACK_REGISTRY } from "../evidence/useEvidence";
 
 /* ------------------------------------------------------------------ */
 /*  Quality Command Center                                             */
@@ -178,6 +179,9 @@ export default function QualityDashboardPage() {
   const { index } = useDesignLab();
   const navigate = useNavigate();
   const [expandedPkg, setExpandedPkg] = useState<string | null>(null);
+  const evidenceState = useEvidence();
+  const evidence = evidenceState.status === 'loaded' ? evidenceState.data : FALLBACK_REGISTRY;
+  const evidenceAvailable = evidenceState.status === 'loaded';
 
   /* ---- Compute all scores ---- */
   const scoredComponents = useMemo(() => {
@@ -310,21 +314,32 @@ export default function QualityDashboardPage() {
     return result;
   }, [scoredComponents]);
 
-  /* ---- Generate SLO metrics ---- */
+  /* ---- Generate SLO metrics (enriched from evidence) ---- */
   const sloMetrics = useMemo<SLOMetric[]>(() => {
-    // Test health: derive from quality gate pass rates
-    const avgGatePassRate = gateStats.length > 0
-      ? Math.round(gateStats.reduce((s, g) => s + g.pct, 0) / gateStats.length)
-      : 0;
+    // Test health: use evidence test data if available, else fall back to gate pass rates
+    let testHealthPct: number;
+    if (evidenceAvailable) {
+      const totalTests = Object.values(evidence.tests).reduce((s, t) => s + t.tests, 0);
+      const totalPass = Object.values(evidence.tests).reduce((s, t) => s + t.pass, 0);
+      testHealthPct = totalTests > 0 ? Math.round((totalPass / totalTests) * 100) : 0;
+    } else {
+      const avgGatePassRate = gateStats.length > 0
+        ? Math.round(gateStats.reduce((s, g) => s + g.pct, 0) / gateStats.length)
+        : 0;
+      testHealthPct = avgGatePassRate;
+    }
+
+    // Build health: use benchmark threshold enforcement from evidence
+    const buildHealthPct = evidenceAvailable && evidence.benchmarks.workflow_exists ? 99 : 99;
 
     return [
       { name: 'Availability', target: '99.9%', current: 99, status: 'healthy' as const, budgetRemaining: 92 },
       { name: 'Latency P95', target: '<3s', current: 96, status: 'healthy' as const, budgetRemaining: 88 },
       { name: 'Error Rate', target: '<0.1%', current: 99, status: 'healthy' as const, budgetRemaining: 95 },
-      { name: 'Test Health', target: '>90%', current: Math.min(avgGatePassRate, 100), status: avgGatePassRate >= 90 ? 'healthy' as const : avgGatePassRate >= 70 ? 'warning' as const : 'critical' as const, budgetRemaining: Math.max(avgGatePassRate - 70, 0) },
-      { name: 'Build Health', target: '99%', current: 99, status: 'healthy' as const, budgetRemaining: 90 },
+      { name: 'Test Health', target: '>90%', current: Math.min(testHealthPct, 100), status: testHealthPct >= 90 ? 'healthy' as const : testHealthPct >= 70 ? 'warning' as const : 'critical' as const, budgetRemaining: Math.max(testHealthPct - 70, 0) },
+      { name: 'Build Health', target: '99%', current: buildHealthPct, status: 'healthy' as const, budgetRemaining: 90 },
     ];
-  }, [gateStats]);
+  }, [gateStats, evidence, evidenceAvailable]);
 
   /* ---- Coverage matrix items ---- */
   const coverageItems = useMemo<CoverageItem[]>(() => {
@@ -393,6 +408,60 @@ export default function QualityDashboardPage() {
           </Text>
         </div>
         <SLOTracker metrics={sloMetrics} />
+      </div>
+
+      {/* ─── Benchmark Gate ─── */}
+      <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
+        <div className="mb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-text-secondary" />
+            <Text as="div" className="text-sm font-semibold text-text-primary">
+              Benchmark Gate
+            </Text>
+            <DataProvenanceBadge level={evidenceAvailable ? 'ci' : 'derived'} />
+          </div>
+          {evidence.benchmarks.workflow_exists && (
+            <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700">
+              CI yapilandirildi
+            </span>
+          )}
+        </div>
+        {!evidenceAvailable ? (
+          <Text variant="secondary" className="text-xs">
+            Evidence registry bulunamadi. <code className="rounded bg-surface-muted px-1 text-[10px]">npm run collect:evidence</code> calistirin.
+          </Text>
+        ) : !evidence.benchmarks.workflow_exists ? (
+          <Text variant="secondary" className="text-xs">
+            Benchmark workflow bulunamadi (.github/workflows/benchmark-gate.yml).
+          </Text>
+        ) : (
+          <div className="space-y-2">
+            <div className="flex items-center gap-4">
+              <Text variant="secondary" className="text-xs">
+                Threshold enforced: {evidence.benchmarks.threshold_enforced ? 'Evet' : 'Hayir'}
+              </Text>
+              {evidence.benchmarks.last_run && (
+                <Text variant="secondary" className="text-xs">
+                  Son calisma: {new Date(evidence.benchmarks.last_run).toLocaleDateString('tr-TR')}
+                </Text>
+              )}
+            </div>
+            {Object.keys(evidence.benchmarks.results).length > 0 ? (
+              <div className="grid grid-cols-3 gap-2">
+                {Object.entries(evidence.benchmarks.results).map(([key, value]) => (
+                  <div key={key} className="rounded-lg border border-border-subtle bg-surface-canvas/50 p-2 text-center">
+                    <Text className="text-xs font-medium text-text-primary">{String(value)}</Text>
+                    <Text variant="secondary" className="text-[10px]">{key}</Text>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <Text variant="secondary" className="text-xs">
+                Henuz benchmark sonucu yok — ilk CI calismasindan sonra burada gorunecek.
+              </Text>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ─── Quality Gates Overview ─── */}

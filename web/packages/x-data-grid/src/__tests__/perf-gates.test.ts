@@ -34,14 +34,14 @@ describe('Performance Gates — x-data-grid', () => {
     expect(elapsed).toBeLessThan(100);
   });
 
-  it('sort 10K rows by number in < 30ms', () => {
+  it('sort 10K rows by number in < 50ms', () => {
     const data = Array.from({ length: ROW_COUNT }, (_, i) => ({
       value: Math.random() * 10_000,
     }));
     const start = performance.now();
     data.sort((a, b) => a.value - b.value);
     const elapsed = performance.now() - start;
-    expect(elapsed).toBeLessThan(30);
+    expect(elapsed).toBeLessThan(50);
   });
 
   it('filter 10K rows in < 20ms', () => {

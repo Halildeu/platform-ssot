@@ -61,9 +61,9 @@ npx create-mfe-app my-project --template dashboard
 Edit `src/theme.ts` to match your brand:
 
 ```typescript
-import { createTheme } from '@mfe/design-system';
+import { setAppearance } from '@mfe/design-system';
 
-export const theme = createTheme({
+export const theme = setAppearance({
   colors: {
     primary: '#1a56db',    // Your brand blue
     secondary: '#7c3aed',  // Your brand purple
@@ -190,7 +190,8 @@ import { LineChart, BarChart, PieChart } from '@mfe/x-charts';
 ### Hour 7-8: Forms with Validation
 
 ```typescript
-import { Form, Input, Select, DatePicker, Button } from '@mfe/design-system';
+import { Input, Select, DatePicker, Button } from '@mfe/design-system';
+import { FormRenderer } from '@mfe/x-form-builder';
 import { useForm } from '@mfe/design-system/form';
 
 const form = useForm({
@@ -198,14 +199,14 @@ const form = useForm({
   defaultValues: { status: 'draft' },
 });
 
-<Form form={form} onSubmit={handleSubmit}>
+<FormRenderer form={form} onSubmit={handleSubmit}>
   <Input name="customerName" label="Customer" required />
   <Select name="status" label="Status" options={statusOptions} />
   <DatePicker name="dueDate" label="Due Date" minDate={new Date()} />
   <Button type="submit" loading={form.isSubmitting}>
     Create Order
   </Button>
-</Form>
+</FormRenderer>
 ```
 
 **Result**: A production-ready enterprise starter with auth, grid, charts, and forms — all sharing a consistent theme and permission model.
@@ -221,7 +222,7 @@ const form = useForm({
 | `@mui/material/Button` | `@mfe/design-system` Button | Similar API, different prop names |
 | `@mui/x-data-grid-pro` | `@mfe/x-data-grid` | AG Grid-based, different column API |
 | `@mui/x-charts` | `@mfe/x-charts` | Similar declarative API |
-| `ThemeProvider` + `createTheme` | `ThemeProvider` + `createTheme` | Token-based instead of style overrides |
+| `ThemeProvider` + `createTheme` | `ThemeProvider` + `setAppearance` | Token-based instead of style overrides |
 | `sx` prop | `className` + CSS modules / tokens | No runtime CSS-in-JS |
 
 **Migration codemod**:
