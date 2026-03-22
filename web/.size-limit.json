@@ -1,0 +1,10 @@
+[
+  { "path": "packages/design-system/dist/esm/index.js", "limit": "250 kB", "name": "design-system" },
+  { "path": "packages/x-data-grid/dist/index.js", "limit": "50 kB", "name": "x-data-grid" },
+  { "path": "packages/x-charts/dist/index.js", "limit": "40 kB", "name": "x-charts" },
+  { "path": "packages/x-editor/dist/index.js", "limit": "30 kB", "name": "x-editor" },
+  { "path": "packages/x-kanban/dist/index.js", "limit": "20 kB", "name": "x-kanban" },
+  { "path": "packages/x-scheduler/dist/index.js", "limit": "30 kB", "name": "x-scheduler" },
+  { "path": "packages/x-form-builder/dist/index.js", "limit": "25 kB", "name": "x-form-builder" },
+  { "path": "packages/blocks/dist/index.js", "limit": "30 kB", "name": "blocks" }
+]
