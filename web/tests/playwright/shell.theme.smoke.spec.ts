@@ -1,11 +1,10 @@
 import { test, expect } from '@playwright/test';
-import {
-  RUNTIME_THEME_MATRIX_THEMES,
-  RUNTIME_THEME_MATRIX_DENSITIES,
-  RUNTIME_THEME_MATRIX_APPEARANCE_MAP,
-  RUNTIME_THEME_MATRIX_ACCESS_STATES,
-  THEME_MATRIX_HIDDEN_LABEL,
-} from '../../apps/mfe-shell/src/features/theme/theme-matrix.constants';
+// Inline constants to avoid importing source files in Playwright
+const RUNTIME_THEME_MATRIX_THEMES = ['quartz', 'balham', 'alpine', 'material'] as const;
+const RUNTIME_THEME_MATRIX_DENSITIES = ['comfortable', 'compact'] as const;
+const RUNTIME_THEME_MATRIX_APPEARANCE_MAP = { light: 'light', dark: 'dark' } as const;
+const RUNTIME_THEME_MATRIX_ACCESS_STATES = ['full', 'readonly', 'disabled', 'hidden'] as const;
+const THEME_MATRIX_HIDDEN_LABEL = 'Hidden';
 
 test.describe('Shell theme attributes', () => {
   test('sets html theme axes attributes', async ({ page, baseURL }) => {
