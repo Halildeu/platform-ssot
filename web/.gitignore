@@ -9,3 +9,4 @@ apps/docs/out/
 
 # Evidence registry (generated)
 .evidence/
+apps/mfe-shell/.env.local
