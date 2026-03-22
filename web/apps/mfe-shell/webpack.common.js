@@ -1,27 +1,10 @@
 // webpack.common.js
 const path = require('path');
-const fs = require('fs');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const MAX_ENTRYPOINT_SIZE = 25 * 1024 * 1024; // 25 MB
 const MAX_ASSET_SIZE = 8 * 1024 * 1024; // 8 MB
-
-// Load .env.local if exists (for AI/automated browser dev sessions)
-const envLocalPath = path.resolve(__dirname, '.env.local');
-if (fs.existsSync(envLocalPath)) {
-  const lines = fs.readFileSync(envLocalPath, 'utf8').split('\n');
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
-    const eqIdx = trimmed.indexOf('=');
-    if (eqIdx > 0) {
-      const key = trimmed.slice(0, eqIdx).trim();
-      const val = trimmed.slice(eqIdx + 1).trim();
-      if (!process.env[key]) process.env[key] = val;
-    }
-  }
-}
 
 const buildRuntimeEnv = () => {
   const allowlist = new Set([

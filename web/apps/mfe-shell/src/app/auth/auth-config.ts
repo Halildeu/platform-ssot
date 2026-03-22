@@ -20,45 +20,13 @@ export type AuthConfig = {
   fakeUser: FakeAuthProfile;
 };
 
-/**
- * Read environment values from webpack DefinePlugin or window.__env__.
- *
- * IMPORTANT: webpack DefinePlugin does static string replacement at compile time.
- * `process.env[key]` (dynamic access) is NOT replaced — only `process.env.KEY`
- * (static access) gets replaced. We build a static lookup map so DefinePlugin
- * can replace each value correctly.
- */
 const getEnvValue = (key: string): string | undefined => {
-  // Static map — DefinePlugin replaces these at compile time
-  const staticEnv: Record<string, string | undefined> = {
-    NODE_ENV: process.env.NODE_ENV,
-    AUTH_MODE: process.env.AUTH_MODE,
-    VITE_AUTH_MODE: process.env.VITE_AUTH_MODE,
-    VITE_KEYCLOAK_URL: process.env.VITE_KEYCLOAK_URL,
-    KEYCLOAK_URL: process.env.KEYCLOAK_URL,
-    VITE_KEYCLOAK_REALM: process.env.VITE_KEYCLOAK_REALM,
-    KEYCLOAK_REALM: process.env.KEYCLOAK_REALM,
-    VITE_KEYCLOAK_CLIENT_ID: process.env.VITE_KEYCLOAK_CLIENT_ID,
-    KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
-    VITE_ENABLE_FAKE_AUTH: process.env.VITE_ENABLE_FAKE_AUTH,
-    VITE_FRONTEND_PUBLIC_ORIGIN: process.env.VITE_FRONTEND_PUBLIC_ORIGIN,
-    FRONTEND_PUBLIC_ORIGIN: process.env.FRONTEND_PUBLIC_ORIGIN,
-    VITE_APP_PUBLIC_ORIGIN: process.env.VITE_APP_PUBLIC_ORIGIN,
-    APP_PUBLIC_ORIGIN: process.env.APP_PUBLIC_ORIGIN,
-    VITE_KEYCLOAK_SILENT_CHECK_URI: process.env.VITE_KEYCLOAK_SILENT_CHECK_URI,
-    VITE_KEYCLOAK_ENABLE_SILENT_CHECK_SSO: process.env.VITE_KEYCLOAK_ENABLE_SILENT_CHECK_SSO,
-    KEYCLOAK_ENABLE_SILENT_CHECK_SSO: process.env.KEYCLOAK_ENABLE_SILENT_CHECK_SSO,
-    SHELL_SKIP_REMOTE_SERVICES: process.env.SHELL_SKIP_REMOTE_SERVICES,
-    SHELL_ENABLE_SUGGESTIONS_REMOTE: process.env.SHELL_ENABLE_SUGGESTIONS_REMOTE,
-    SHELL_ENABLE_ETHIC_REMOTE: process.env.SHELL_ENABLE_ETHIC_REMOTE,
-  };
-
-  const fromStatic = staticEnv[key];
-  if (typeof fromStatic === 'string' && fromStatic.length > 0) {
-    return fromStatic;
+  // webpack DefinePlugin replaces process.env with a JSON object at compile time.
+  // Dynamic access process.env[key] works because DefinePlugin replaces the
+  // entire process.env reference.
+  if (typeof process !== 'undefined' && typeof process.env?.[key] === 'string') {
+    return process.env[key];
   }
-
-  // Runtime fallback: window.__env__ (for runtime config injection)
   if (typeof window !== 'undefined') {
     const win = window as Window & {
       __env__?: Record<string, string | undefined>;
