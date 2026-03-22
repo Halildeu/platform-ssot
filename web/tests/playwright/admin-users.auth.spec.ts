@@ -64,6 +64,10 @@ test.describe('Admin Users auth flow', () => {
   });
 
   test('profil eksik kullanıcı login ekranına düşmeden uyarı görür', async ({ page, baseURL }) => {
+    const isPermitAll = (process.env.PW_FAKE_AUTH ?? '').trim() === '1'
+      || (process.env.AUTH_MODE ?? '').trim().toLowerCase() === 'permitall';
+    test.skip(isPermitAll, 'Requires real auth profile setup — skipped in permitAll');
+
     await page.route('**/api/v1/users**', async (route) => {
       await route.fulfill({
         status: 403,

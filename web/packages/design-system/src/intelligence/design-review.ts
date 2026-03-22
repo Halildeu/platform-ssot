@@ -18,10 +18,10 @@ export interface ReviewResult {
 
 /** Anti-pattern detection rules */
 const RULES: Array<{ id: string; severity: ReviewSeverity; pattern: RegExp; message: string; fix: string }> = [
-  { id: 'hardcoded-color', severity: 'error', pattern: /#[0-9a-fA-F]{3,8}\b/g, message: 'Hardcoded color detected', fix: 'Use CSS variable: var(--surface-*) or var(--text-*)' },
+  { id: 'hardcoded-color', severity: 'error', pattern: /(?<!var\(--)#[0-9a-fA-F]{3,8}\b/g, message: 'Hardcoded color detected', fix: 'Use CSS variable: var(--surface-*) or var(--text-*)' },
   { id: 'hardcoded-px', severity: 'warning', pattern: /(?<!\w)(\d+)px(?!\w)/g, message: 'Hardcoded pixel value', fix: 'Use spacing token or Tailwind utility' },
   { id: 'inline-style-color', severity: 'error', pattern: /style=\{[^}]*color\s*:/g, message: 'Inline style with color property', fix: 'Use className with CSS variable' },
-  { id: 'no-aria-label', severity: 'warning', pattern: /<(button|a|input|select)(?![^>]*aria-label)(?![^>]*aria-labelledby)[^>]*>/g, message: 'Interactive element may be missing accessible label', fix: 'Add aria-label or aria-labelledby prop' },
+  { id: 'no-aria-label', severity: 'warning', pattern: /<(button|a|input|select)(?![^>]*(?:aria-label|label=))(?![^>]*aria-labelledby)[^>]*>/g, message: 'Interactive element may be missing accessible label', fix: 'Add aria-label or aria-labelledby prop' },
   { id: 'ant-import', severity: 'error', pattern: /from ['"]antd['"]/g, message: 'Ant Design import detected — use @mfe/design-system', fix: 'Replace with @mfe/design-system equivalent' },
   { id: 'mui-import', severity: 'error', pattern: /from ['"]@mui\//g, message: 'MUI import detected — use @mfe/design-system', fix: 'Replace with @mfe/design-system equivalent' },
   { id: 'physical-css', severity: 'warning', pattern: /\b(ml-|mr-|pl-|pr-|text-left|text-right|border-l-|border-r-)\d/g, message: 'Physical CSS property (not RTL-safe)', fix: 'Use logical properties: ms-/me-/ps-/pe-/text-start/text-end/border-s-/border-e-' },

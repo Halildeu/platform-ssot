@@ -56,7 +56,7 @@ export const v1ToV2Transforms: MigrationTransform[] = [
     description: 'Rename Badge tone prop to variant',
     fromVersion: '1.0.0',
     toVersion: '2.0.0',
-    pattern: /(<Badge[\s\S]*?)tone=/g,
+    pattern: /(<Badge\b[^>]*?)tone=/g,
     replacement: '$1variant=',
   },
   {

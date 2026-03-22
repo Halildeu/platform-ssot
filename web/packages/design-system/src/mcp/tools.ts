@@ -756,10 +756,15 @@ function resolveDarkValue(tokenName: string): string {
 
 const INTENT_KEYWORDS: Record<string, MCPLayoutProposal['intent']> = {
   dashboard: 'overview', overview: 'overview', summary: 'overview', kpi: 'overview',
+  report: 'overview', analytics: 'overview', home: 'overview', cockpit: 'overview',
   detail: 'detail', edit: 'detail', form: 'detail', profile: 'detail',
+  settings: 'detail', config: 'detail', create: 'detail', update: 'detail',
   compare: 'comparison', diff: 'comparison', versus: 'comparison',
+  benchmark: 'comparison', sidebyside: 'comparison',
   workflow: 'workflow', process: 'workflow', step: 'workflow', kanban: 'workflow',
+  pipeline: 'workflow', approval: 'workflow', queue: 'workflow',
   monitor: 'monitoring', alert: 'monitoring', health: 'monitoring', log: 'monitoring',
+  status: 'monitoring', incident: 'monitoring', uptime: 'monitoring', trace: 'monitoring',
 };
 
 /** 10. proposeLayout — Natural language → layout config */
@@ -774,25 +779,95 @@ export function proposeLayout(
   }
 
   const blocks: MCPLayoutBlock[] = [];
-  if (lower.includes('metric') || lower.includes('kpi') || lower.includes('stat'))
-    blocks.push({ key: 'metrics', type: 'metric', priority: 'high', span: 4, title: 'Key Metrics' });
-  if (lower.includes('chart') || lower.includes('graph') || lower.includes('trend'))
-    blocks.push({ key: 'chart', type: 'chart', priority: 'medium', span: 2, title: 'Chart' });
-  if (lower.includes('table') || lower.includes('grid') || lower.includes('list') || lower.includes('data'))
-    blocks.push({ key: 'data', type: 'table', priority: 'medium', span: 2, title: 'Data Table' });
-  if (lower.includes('form') || lower.includes('input') || lower.includes('edit'))
-    blocks.push({ key: 'form', type: 'form', priority: 'high', span: 2, title: 'Form' });
-  if (lower.includes('action') || lower.includes('button'))
-    blocks.push({ key: 'actions', type: 'action', priority: 'low', span: 1, title: 'Actions' });
+  const reasons: string[] = [];
 
-  if (blocks.length === 0) {
-    blocks.push(
-      { key: 'metrics', type: 'metric', priority: 'high', span: 4, title: 'Overview' },
-      { key: 'content', type: 'table', priority: 'medium', span: 4, title: 'Content' },
-    );
+  // Keyword → block type mappings
+  if (lower.includes('metric') || lower.includes('kpi') || lower.includes('stat') || lower.includes('number')) {
+    blocks.push({ key: 'metrics', type: 'metric', priority: 'high', span: 4, title: 'Key Metrics' });
+    reasons.push('Metrics block added because the description references quantitative indicators');
+  }
+  if (lower.includes('chart') || lower.includes('graph') || lower.includes('trend') || lower.includes('visual') || lower.includes('plot')) {
+    blocks.push({ key: 'chart', type: 'chart', priority: 'medium', span: 2, title: 'Chart' });
+    reasons.push('Chart block added for visual data representation');
+  }
+  if (lower.includes('table') || lower.includes('grid') || lower.includes('list') || lower.includes('data') || lower.includes('record')) {
+    blocks.push({ key: 'data', type: 'table', priority: 'medium', span: 2, title: 'Data Table' });
+    reasons.push('Table block added for structured data display');
+  }
+  if (lower.includes('form') || lower.includes('input') || lower.includes('edit') || lower.includes('create') || lower.includes('field')) {
+    blocks.push({ key: 'form', type: 'form', priority: 'high', span: 2, title: 'Form' });
+    reasons.push('Form block added for user data entry');
+  }
+  if (lower.includes('action') || lower.includes('button') || lower.includes('toolbar') || lower.includes('command')) {
+    blocks.push({ key: 'actions', type: 'action', priority: 'low', span: 1, title: 'Actions' });
+    reasons.push('Actions block added for primary user operations');
+  }
+  if (lower.includes('timeline') || lower.includes('history') || lower.includes('activity') || lower.includes('event')) {
+    blocks.push({ key: 'timeline', type: 'table', priority: 'medium', span: 2, title: 'Timeline' });
+    reasons.push('Timeline block added to display chronological activity');
+  }
+  if (lower.includes('alert') || lower.includes('notification') || lower.includes('warning') || lower.includes('error')) {
+    blocks.push({ key: 'alerts', type: 'metric', priority: 'high', span: 4, title: 'Alerts' });
+    reasons.push('Alerts block added for critical notifications that need immediate visibility');
+  }
+  if (lower.includes('filter') || lower.includes('search') || lower.includes('query')) {
+    blocks.push({ key: 'filters', type: 'form', priority: 'medium', span: 4, title: 'Filters' });
+    reasons.push('Filters block added to narrow down displayed data');
+  }
+  if (lower.includes('summary') || lower.includes('overview') || lower.includes('snapshot')) {
+    blocks.push({ key: 'summary', type: 'metric', priority: 'high', span: 4, title: 'Summary' });
+    reasons.push('Summary block added for a high-level overview of key data points');
   }
 
-  return { blocks, intent, rationale: `Layout for "${description}" using ${intent} intent with ${blocks.length} blocks.` };
+  // Intent-specific default layouts when no keywords matched
+  if (blocks.length === 0) {
+    switch (intent) {
+      case 'monitoring':
+        blocks.push(
+          { key: 'alerts', type: 'metric', priority: 'high', span: 4, title: 'Active Alerts' },
+          { key: 'timeline', type: 'table', priority: 'medium', span: 2, title: 'Event Timeline' },
+          { key: 'metrics', type: 'metric', priority: 'high', span: 2, title: 'Health Metrics' },
+        );
+        reasons.push('Monitoring layout: alerts for immediate attention, timeline for recent events, metrics for system health');
+        break;
+      case 'detail':
+        blocks.push(
+          { key: 'header', type: 'metric', priority: 'high', span: 4, title: 'Details' },
+          { key: 'form', type: 'form', priority: 'high', span: 2, title: 'Edit Form' },
+          { key: 'related', type: 'table', priority: 'medium', span: 2, title: 'Related Items' },
+        );
+        reasons.push('Detail layout: header for entity identity, form for editing, related items for context');
+        break;
+      case 'comparison':
+        blocks.push(
+          { key: 'metrics', type: 'metric', priority: 'high', span: 4, title: 'Comparison Summary' },
+          { key: 'chart', type: 'chart', priority: 'medium', span: 2, title: 'Side-by-Side Chart' },
+          { key: 'data', type: 'table', priority: 'medium', span: 2, title: 'Differences' },
+        );
+        reasons.push('Comparison layout: summary metrics for quick delta, chart for visual contrast, table for detailed differences');
+        break;
+      case 'workflow':
+        blocks.push(
+          { key: 'steps', type: 'metric', priority: 'high', span: 4, title: 'Workflow Steps' },
+          { key: 'current', type: 'form', priority: 'high', span: 2, title: 'Current Step' },
+          { key: 'history', type: 'table', priority: 'medium', span: 2, title: 'Step History' },
+        );
+        reasons.push('Workflow layout: step overview for progress tracking, current step for active input, history for audit trail');
+        break;
+      default: // overview
+        blocks.push(
+          { key: 'metrics', type: 'metric', priority: 'high', span: 4, title: 'Overview' },
+          { key: 'content', type: 'table', priority: 'medium', span: 4, title: 'Content' },
+        );
+        reasons.push('Default overview layout: top-level metrics with a content table for drill-down');
+    }
+  }
+
+  const rationale = reasons.length > 0
+    ? reasons.join('. ') + '.'
+    : `Default ${intent} layout applied with ${blocks.length} blocks.`;
+
+  return { blocks, intent, rationale };
 }
 
 /** 11. reviewAccessibility — a11y audit for a component */

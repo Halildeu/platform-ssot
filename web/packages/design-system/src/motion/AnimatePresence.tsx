@@ -41,7 +41,6 @@ export function AnimatePresence({
 
   // Track which keys are currently in the DOM (including exiting)
   const [presentChildren, setPresentChildren] = useState<React.ReactNode>(children);
-  const exitingKeys = useRef(new Set<string>());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cleanup = useCallback(() => {
@@ -71,7 +70,6 @@ export function AnimatePresence({
     for (const key of prevKeys) {
       if (!currentKeys.has(key)) {
         removed.add(key);
-        exitingKeys.current.add(key);
       }
     }
 
@@ -85,9 +83,6 @@ export function AnimatePresence({
     // After duration, remove them
     cleanup();
     timerRef.current = setTimeout(() => {
-      for (const key of removed) {
-        exitingKeys.current.delete(key);
-      }
       setPresentChildren(children);
       onExitComplete?.();
     }, effectiveDuration);

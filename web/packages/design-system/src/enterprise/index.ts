@@ -1,0 +1,76 @@
+'use client';
+/* ------------------------------------------------------------------ */
+/*  Enterprise Components — domain-agnostic building blocks             */
+/*  for executive dashboards, governance, and business intelligence.    */
+/* ------------------------------------------------------------------ */
+
+// Shared types & utilities
+export {
+  formatValue,
+  getTrendColor,
+  getTrendIcon,
+  getToneClasses,
+} from './types';
+export type {
+  NumberFormat,
+  FormatOptions,
+  TrendDirection,
+  TrendInfo,
+  EnterpriseTone,
+} from './types';
+
+// KPI & Metrics
+export { ExecutiveKPIStrip } from './ExecutiveKPIStrip';
+
+// Workflow & Approvals
+export { ApprovalWorkflow } from './ApprovalWorkflow';
+
+// Risk & Governance
+export { RiskMatrix } from './RiskMatrix';
+export { GovernanceBoard } from './GovernanceBoard';
+
+// Project & Timeline
+export { GanttTimeline } from './GanttTimeline';
+
+// Financial & Analytics
+export { AgingBuckets } from './AgingBuckets';
+export { FunnelChart } from './FunnelChart';
+export { ComparisonTable } from './ComparisonTable';
+
+// HR & Training
+export { TrainingTracker } from './TrainingTracker';
+
+// Visualization
+export { BulletChart } from './BulletChart';
+export { MicroChart } from './MicroChart';
+export { TreemapChart } from './TreemapChart';
+export { SankeyDiagram } from './SankeyDiagram';
+export { RadarChart } from './RadarChart';
+
+// Date & Time
+export { DateRangePicker } from './DateRangePicker';
+
+// Layout
+export { ThemeLayout } from './ThemeLayout';
+
+// Process & Flow
+export { ProcessFlow } from './ProcessFlow';
+export { ValueStream } from './ValueStream';
+
+// Status & Timeline
+export { StatusTimeline } from './StatusTimeline';
+
+// Notifications
+export { NotificationCenter } from './NotificationCenter';
+
+// Editing
+export { InlineEdit } from './InlineEdit';
+
+// Empty States
+export { EmptyStateBuilder } from './EmptyStateBuilder';
+
+// Filters
+export { FilterPresets } from './FilterPresets';
+
+// Export
+export { DataExportDialog } from './DataExportDialog';

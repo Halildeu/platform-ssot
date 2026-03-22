@@ -17,8 +17,14 @@ describe('errorMessages', () => {
   });
 
   it('getErrorMessages falls back to English for unknown locale', () => {
-    expect(getErrorMessages('fr')).toBe(errorMessagesEn);
-    expect(getErrorMessages('de')).toBe(errorMessagesEn);
+    expect(getErrorMessages('xx-unknown')).toBe(errorMessagesEn);
+    expect(getErrorMessages('zzz')).toBe(errorMessagesEn);
+  });
+
+  it('getErrorMessages resolves extended locales (fr, de)', () => {
+    const fr = getErrorMessages('fr');
+    expect(fr).toBeDefined();
+    expect(fr.required('Nom')).not.toBe(errorMessagesEn.required('Nom'));
   });
 
   it('Turkish messages produce correct strings', () => {

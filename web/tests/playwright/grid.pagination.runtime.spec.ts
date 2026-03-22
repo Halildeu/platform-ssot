@@ -50,6 +50,10 @@ async function changePageSize(footer: Locator, nextValue: string) {
 
 test.describe('Entity grid pagination runtime smoke', () => {
   test('users server/client ve reporting server footer akislari calisir', async ({ page, baseURL }) => {
+    const isPermitAll = (process.env.PW_FAKE_AUTH ?? '').trim() === '1'
+      || (process.env.AUTH_MODE ?? '').trim().toLowerCase() === 'permitall';
+    test.skip(isPermitAll, 'Requires real backend data for pagination — skipped in permitAll');
+
     test.setTimeout(240_000);
     const root = baseURL ?? 'http://localhost:3000';
     const report: Record<string, unknown> = {

@@ -174,6 +174,10 @@ async function fetchAuditEventById(root: string, token: string, auditId: string)
 }
 
 test('real users/access mutation smoke with rollback', async ({ page, baseURL }) => {
+  const isPermitAll = (process.env.PW_FAKE_AUTH ?? '').trim() === '1'
+    || (process.env.AUTH_MODE ?? '').trim().toLowerCase() === 'permitall';
+  test.skip(isPermitAll, 'Requires real backend CRUD + rollback — skipped in permitAll');
+
   test.setTimeout(240_000);
   const root = baseURL ?? 'http://localhost:3000';
   const report: Record<string, unknown> = {
