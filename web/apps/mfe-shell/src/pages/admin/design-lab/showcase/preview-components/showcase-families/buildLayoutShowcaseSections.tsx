@@ -429,7 +429,7 @@ export const buildLayoutShowcaseSections = (
                         <Select
                           label="Durum"
                           value={selectValue}
-                          onValueChange={(value) => setSelectValue(String(value))}
+                          onChange={(e) => setSelectValue(e.target.value)}
                           size="sm"
                           options={[
                             { label: 'Ready', value: 'ready' },
@@ -593,7 +593,7 @@ export const buildLayoutShowcaseSections = (
                         <Select
                           label="Lane"
                           value={selectValue}
-                          onValueChange={(value) => setSelectValue(String(value))}
+                          onChange={(e) => setSelectValue(e.target.value)}
                           size="sm"
                           options={[
                             { label: 'Runtime', value: 'runtime' },
@@ -761,7 +761,7 @@ export const buildLayoutShowcaseSections = (
                         <Select
                           label={t('designlab.showcase.component.pageLayout.sections.directory.filter.status')}
                           value={selectValue}
-                          onValueChange={(value) => setSelectValue(String(value))}
+                          onChange={(e) => setSelectValue(e.target.value)}
                           size="sm"
                           options={[
                             { label: t('designlab.showcase.component.pageLayout.sections.directory.options.comfortable'), value: 'comfortable' },

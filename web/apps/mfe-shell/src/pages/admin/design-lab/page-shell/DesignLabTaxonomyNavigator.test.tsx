@@ -1,7 +1,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { DesignLabTaxonomyNavigator } from './DesignLabTaxonomyNavigator';
 
 describe('DesignLabTaxonomyNavigator', () => {
@@ -97,7 +97,9 @@ describe('DesignLabTaxonomyNavigator', () => {
     Object.defineProperty(nav, 'scrollWidth', { configurable: true, value: 640 });
     Object.defineProperty(nav, 'scrollLeft', { configurable: true, writable: true, value: 0 });
 
-    window.dispatchEvent(new Event('resize'));
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
 
     await waitFor(() => {
       expect(nav).toHaveAttribute('data-scrollable', 'true');
