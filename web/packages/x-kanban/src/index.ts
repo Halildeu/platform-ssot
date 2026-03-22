@@ -77,6 +77,21 @@ export type {
   UseKanbanVariantsReturn,
 } from './useKanbanVariants';
 
+/* Wave 4 — Keyboard + Touch parity hooks */
+export { useKeyboardDragDrop } from './useKeyboardDragDrop';
+export type {
+  KeyboardDragDropOptions,
+  KeyboardDragDropState,
+  UseKeyboardDragDropReturn,
+} from './useKeyboardDragDrop';
+
+export { useTouchDragDrop } from './useTouchDragDrop';
+export type {
+  TouchDragDropOptions,
+  TouchDragDropState,
+  UseTouchDragDropReturn,
+} from './useTouchDragDrop';
+
 /* Wave 4 — Mobile responsive hooks */
 export { useResponsiveKanban } from './useResponsiveKanban';
 export type {

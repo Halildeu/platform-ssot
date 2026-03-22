@@ -5,7 +5,13 @@ import type { KanbanCard } from './types';
 /*  DragDropEngine — engine-agnostic drag-and-drop abstraction         */
 /*                                                                     */
 /*  Current: HTML5 Drag and Drop API behind DragDropEngine interface   */
-/*  Planned: @dnd-kit integration for keyboard accessibility + touch   */
+/*                                                                     */
+/*  @deprecated This hook uses the HTML5 DnD API which lacks keyboard  */
+/*  and touch accessibility. Prefer using useKanban() + <KanbanBoard>  */
+/*  which auto-selects @dnd-kit when available, or use the dedicated   */
+/*  useKeyboardDragDrop / useTouchDragDrop hooks for parity.           */
+/*  This module will be removed in v1.0.                               */
+/*  See DND_MIGRATION.md for the migration guide.                      */
 /* ------------------------------------------------------------------ */
 
 export interface DragItem {

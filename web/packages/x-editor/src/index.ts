@@ -63,6 +63,14 @@ export type {
   EditorCollabConfig,
 } from './types';
 
+/* Wave 4 — Tiptap extension re-exports (dynamic loaders for optional deps) */
+export { loadTaskList, loadTaskItem } from './extensions/TaskList';
+export type { TaskListExtension, TaskItemExtension } from './extensions/TaskList';
+export { loadHighlight } from './extensions/Highlight';
+export type { HighlightExtension } from './extensions/Highlight';
+export { loadTextAlign } from './extensions/TextAlign';
+export type { TextAlignExtension } from './extensions/TextAlign';
+
 /* Wave 3 — Cross-package composition */
 export { useEditorFormField } from './composition/useEditorFormField';
 export type {

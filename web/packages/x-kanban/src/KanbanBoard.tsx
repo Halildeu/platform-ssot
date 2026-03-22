@@ -14,6 +14,7 @@ import {
   getDndKitCore,
   useDndKitKanban,
 } from './createDndKitEngine';
+import { useKeyboardDragDrop } from './useKeyboardDragDrop';
 
 export interface KanbanBoardProps {
   columns: KanbanColumnType[];
@@ -55,6 +56,12 @@ const DndKitBoard: React.FC<
     [onCardMove],
   );
 
+  /* Keyboard drag-drop for a11y — works alongside @dnd-kit pointer/mouse */
+  const keyboard = useKeyboardDragDrop({
+    columns: columns.map((c) => c.id),
+    onMove: handleCardMove,
+  });
+
   const {
     contextProps,
     activeCard,
@@ -70,6 +77,9 @@ const DndKitBoard: React.FC<
   if (!core || !contextProps) return null;
 
   const { DndContext } = core;
+
+  /* Merge dnd-kit + keyboard announcements */
+  const liveAnnouncement = keyboard.announcement || announcement;
 
   return (
     <DndContext {...contextProps}>
@@ -90,13 +100,15 @@ const DndKitBoard: React.FC<
           border: 0,
         }}
       >
-        {announcement}
+        {liveAnnouncement}
       </div>
 
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         className={className}
         role="region"
         aria-label="Kanban board"
+        onKeyDown={keyboard.boardKeyDownHandler}
         style={{
           display: 'flex',
           gap: '16px',
