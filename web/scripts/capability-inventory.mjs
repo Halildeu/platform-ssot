@@ -77,6 +77,9 @@ const inventory = {
     files: grepCount('*perf*', 'packages') + grepCount('*bench*', 'packages'),
     workflow: exists('.github/workflows/benchmark-gate.yml'),
   },
+  browserTests: grepCount('*.browser.test.*', 'packages'),
+  visualTests: grepCount('*.visual.test.*', 'packages'),
+  vitestWorkspace: exists('vitest.workspace.ts'),
   a11yTests: grepCount('*a11y*', 'packages'),
   security: {
     codeql: exists('.github/workflows/codeql.yml'),
@@ -105,6 +108,8 @@ console.log('━'.repeat(50));
 console.log(`Components:     ${inventory.components.docEntries} doc entries`);
 console.log(`Stories:        ${inventory.stories} files`);
 console.log(`Playwright:     ${inventory.playwright.specs} specs`);
+console.log(`Browser tests:  ${inventory.browserTests} files`);
+console.log(`Visual tests:   ${inventory.visualTests} files`);
 console.log(`A11y tests:     ${inventory.a11yTests} files`);
 console.log(`Benchmarks:     ${inventory.benchmarks.files} files`);
 console.log(`X-Suite:        ${inventory.xSuitePackages} packages`);
@@ -116,6 +121,7 @@ console.log(`  Storybook:    ${inventory.storybook.config ? '✅' : '❌'}`);
 console.log(`  Playwright:   ${inventory.playwright.config ? '✅' : '❌'}`);
 console.log(`  axe-core:     ${inventory.axeCore.cli ? '✅' : '❌'}`);
 console.log(`  Chromatic:    ${inventory.chromatic.workflow ? '✅' : '❌'}`);
+console.log(`  Vitest WS:    ${inventory.vitestWorkspace ? '✅' : '❌'}`);
 console.log(`  Tiptap:       ${inventory.tiptap.installed ? '✅' : '❌'}`);
 console.log(`  @dnd-kit:     ${inventory.dndKit.installed ? '✅' : '❌'}`);
 console.log(`  Tokens:       ${inventory.tokens.figmaTokens ? '✅' : '❌'}`);

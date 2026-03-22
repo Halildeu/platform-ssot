@@ -17,6 +17,7 @@
 import { readFileSync, existsSync, mkdirSync, writeFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execSync } from 'node:child_process';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -174,6 +175,54 @@ function collectCompatibility() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Browser Tests                                                       */
+/* ------------------------------------------------------------------ */
+
+function collectBrowserTests() {
+  const dir = join(ROOT, 'packages');
+  let count = 0;
+  try {
+    count = parseInt(
+      execSync(
+        'find . -name "*.browser.test.*" -not -path "*/node_modules/*" 2>/dev/null | wc -l',
+        { cwd: dir, encoding: 'utf-8' },
+      ).trim(),
+      10,
+    ) || 0;
+  } catch {
+    // fallback
+  }
+  return {
+    files: count,
+    provider: 'playwright',
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/*  Visual Regression Tests (vitest-screenshot)                         */
+/* ------------------------------------------------------------------ */
+
+function collectVisualRegressionTests() {
+  const dir = join(ROOT, 'packages');
+  let count = 0;
+  try {
+    count = parseInt(
+      execSync(
+        'find . -name "*.visual.test.*" -not -path "*/node_modules/*" 2>/dev/null | wc -l',
+        { cwd: dir, encoding: 'utf-8' },
+      ).trim(),
+      10,
+    ) || 0;
+  } catch {
+    // fallback
+  }
+  return {
+    files: count,
+    provider: 'vitest-screenshot',
+  };
+}
+
+/* ------------------------------------------------------------------ */
 /*  Tests                                                               */
 /* ------------------------------------------------------------------ */
 
@@ -221,6 +270,8 @@ function main() {
     timestamp: new Date().toISOString(),
     version: '1.0.0',
     visual_regression: collectVisualRegression(),
+    browser_tests: collectBrowserTests(),
+    visual_regression_tests: collectVisualRegressionTests(),
     security: collectSecurity(),
     benchmarks: collectBenchmarks(),
     coverage: collectCoverage(),

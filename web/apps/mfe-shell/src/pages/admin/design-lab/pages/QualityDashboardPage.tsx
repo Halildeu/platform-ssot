@@ -59,6 +59,8 @@ const QUALITY_GATES = [
   { key: "design_tokens", label: "Design Tokens", icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
   { key: "a11y_keyboard_support", label: "Keyboard A11y", icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
   { key: "ux_catalog_alignment", label: "UX Catalog", icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
+  { key: "browser_tests", label: "Browser Tests", icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
+  { key: "visual_regression", label: "Visual Regression", icon: <CheckCircle2 className="h-3.5 w-3.5" /> },
 ] as const;
 
 /* ---- Package grouping ---- */
