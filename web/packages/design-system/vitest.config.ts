@@ -5,6 +5,12 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/__tests__/setup.ts'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/*.browser.test.{ts,tsx}',
+      '**/*.visual.test.{ts,tsx}',
+    ],
     coverage: {
       provider: 'v8',
       thresholds: {
