@@ -17,7 +17,7 @@ describe('SearchInput (Browser)', () => {
 
   it('shows clear button when value is present and fires onClear', async () => {
     const onClear = vi.fn();
-    render(
+    const screen = await render(
       <SearchInput value="test query" onChange={() => {}} onClear={onClear} />,
     );
     const clearBtn = screen.getByLabelText('Clear search');
@@ -50,7 +50,7 @@ describe('SearchInput (Browser)', () => {
   });
 
   it('shows loading spinner instead of clear button', async () => {
-    render(
+    const screen = await render(
       <SearchInput value="loading" onChange={() => {}} loading />,
     );
     // Loading state should show spinner, not clear button

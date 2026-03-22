@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render, cleanup } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Drawer } from '../Drawer';
 
@@ -8,7 +8,7 @@ describe('Drawer (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders content when open', async () => {
-    render(
+    const screen = await render(
       <Drawer open onClose={() => {}} title="Test Drawer">
         <p>Drawer body</p>
       </Drawer>,
@@ -17,7 +17,7 @@ describe('Drawer (Browser)', () => {
   });
 
   it('does not render when closed', async () => {
-    render(
+    await render(
       <Drawer open={false} onClose={() => {}}>
         <p>Hidden content</p>
       </Drawer>,
@@ -30,7 +30,7 @@ describe('Drawer (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('close button fires onClose', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <Drawer open onClose={onClose} title="Closable Drawer">
         <p>Content</p>
       </Drawer>,
@@ -46,7 +46,7 @@ describe('Drawer (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onClose on Escape key', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <Drawer open onClose={onClose} title="Esc Test">
         <p>Content</p>
       </Drawer>,
@@ -58,7 +58,7 @@ describe('Drawer (Browser)', () => {
 
   it('does not fire onClose on Escape when closeOnEscape is false', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <Drawer open onClose={onClose} closeOnEscape={false} title="No Esc">
         <p>Content</p>
       </Drawer>,
@@ -72,7 +72,7 @@ describe('Drawer (Browser)', () => {
   /*  4. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('has role="dialog" and aria-modal="true"', async () => {
-    render(
+    await render(
       <Drawer open onClose={() => {}} title="ARIA">
         <p>Content</p>
       </Drawer>,
@@ -83,7 +83,7 @@ describe('Drawer (Browser)', () => {
   });
 
   it('has aria-labelledby referencing title', async () => {
-    render(
+    await render(
       <Drawer open onClose={() => {}} title="My Drawer">
         <p>Content</p>
       </Drawer>,
@@ -100,7 +100,7 @@ describe('Drawer (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onClose on overlay click', async () => {
     const onClose = vi.fn();
-    render(
+    await render(
       <Drawer open onClose={onClose} title="Overlay">
         <p>Content</p>
       </Drawer>,
@@ -112,7 +112,7 @@ describe('Drawer (Browser)', () => {
 
   it('does not fire onClose on overlay when closeOnOverlayClick is false', async () => {
     const onClose = vi.fn();
-    render(
+    await render(
       <Drawer open onClose={onClose} closeOnOverlayClick={false} title="No overlay">
         <p>Content</p>
       </Drawer>,
@@ -128,13 +128,13 @@ describe('Drawer (Browser)', () => {
   it('renders all placements without error', async () => {
     const placements = ['left', 'right', 'top', 'bottom'] as const;
     for (const placement of placements) {
-      render(
+      await cleanup();
+      const screen = await render(
         <Drawer open onClose={() => {}} placement={placement} title={`${placement} drawer`}>
           <p>Content</p>
         </Drawer>,
       );
       await expect.element(screen.getByText('Content')).toBeVisible();
-      
     }
   });
 
@@ -142,7 +142,7 @@ describe('Drawer (Browser)', () => {
   /*  7. Footer                                                           */
   /* ------------------------------------------------------------------ */
   it('renders footer content', async () => {
-    render(
+    const screen = await render(
       <Drawer open onClose={() => {}} title="Footer" footer={<button>Save</button>}>
         <p>Body</p>
       </Drawer>,
@@ -156,13 +156,13 @@ describe('Drawer (Browser)', () => {
   it('renders all sizes without error', async () => {
     const sizes = ['sm', 'md', 'lg', 'full'] as const;
     for (const size of sizes) {
-      render(
+      await cleanup();
+      const screen = await render(
         <Drawer open onClose={() => {}} size={size} title={`${size}`}>
           <p>Content</p>
         </Drawer>,
       );
       await expect.element(screen.getByText('Content')).toBeVisible();
-      
     }
   });
 
@@ -170,7 +170,7 @@ describe('Drawer (Browser)', () => {
   /*  9. Focus management — panel gets focus on open                      */
   /* ------------------------------------------------------------------ */
   it('panel receives focus on open', async () => {
-    render(
+    await render(
       <Drawer open onClose={() => {}} title="Focus">
         <p>Content</p>
       </Drawer>,

@@ -5,7 +5,7 @@ import { AIActionAuditTimeline } from '../AIActionAuditTimeline';
 
 describe('AIActionAuditTimeline Visual Regression', () => {
   it('timeline with items matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <AIActionAuditTimeline
           items={[

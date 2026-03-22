@@ -19,7 +19,7 @@ describe('DetailSummary (Browser)', () => {
   });
 
   it('renders description', async () => {
-    render(
+    const screen = await render(
       <DetailSummary title="Invoice" description="Invoice details" entity={baseEntity} />,
     );
     await expect.element(screen.getByText('Invoice details')).toBeVisible();
@@ -32,7 +32,7 @@ describe('DetailSummary (Browser)', () => {
   });
 
   it('renders summary strip items', async () => {
-    render(
+    const screen = await render(
       <DetailSummary
         title="Dashboard"
         entity={baseEntity}
@@ -44,14 +44,14 @@ describe('DetailSummary (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    render(
+    const screen = await render(
       <DetailSummary title="Hidden" entity={baseEntity} access="hidden" />,
     );
     expect(document.body.textContent).toBe('');
   });
 
   it('renders actions slot', async () => {
-    render(
+    const screen = await render(
       <DetailSummary title="Order" entity={baseEntity} actions={<button>Edit</button>} />,
     );
     await expect.element(screen.getByText('Edit')).toBeVisible();

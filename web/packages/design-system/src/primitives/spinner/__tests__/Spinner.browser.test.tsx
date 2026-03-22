@@ -32,7 +32,7 @@ describe('Spinner (Browser)', () => {
   });
 
   it('renders different sizes', async () => {
-    render(
+    const screen = await render(
       <div>
         <Spinner size="xs" label="XS" />
         <Spinner size="lg" label="LG" />

@@ -23,7 +23,7 @@ describe('Calendar (Browser)', () => {
 
   it('selects a date and fires onValueChange', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <Calendar defaultMonth={new Date(2025, 0, 1)} onValueChange={onValueChange} />,
     );
     await screen.getByText('15').click();
@@ -39,7 +39,7 @@ describe('Calendar (Browser)', () => {
 
   it('disables dates via disabledDates callback', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <Calendar
         defaultMonth={new Date(2025, 0, 1)}
         disabledDates={(d) => d.getDate() === 10}
@@ -58,7 +58,7 @@ describe('Calendar (Browser)', () => {
 
   it('fires onMonthChange when navigating', async () => {
     const onMonthChange = vi.fn();
-    render(
+    const screen = await render(
       <Calendar defaultMonth={new Date(2025, 0, 1)} onMonthChange={onMonthChange} />,
     );
     await screen.getByLabelText('Sonraki ay').click();

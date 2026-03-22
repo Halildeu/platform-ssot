@@ -5,7 +5,7 @@ import { EntityGridTemplate } from '../EntityGridTemplate';
 
 describe('EntityGridTemplate Visual Regression', () => {
   it('grid container matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600, height: 400 }}>
         <EntityGridTemplate
           gridId="visual-test"

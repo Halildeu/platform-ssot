@@ -54,7 +54,7 @@ describe('TableSimple (Browser)', () => {
   });
 
   it('renders with custom render function', async () => {
-    render(
+    const screen = await render(
       <TableSimple
         columns={[
           { key: 'name', label: 'Name' },

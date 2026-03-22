@@ -5,7 +5,7 @@ import { NotificationDrawer } from '../NotificationDrawer';
 
 describe('NotificationDrawer Visual Regression', () => {
   it('open drawer matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ width: 500, height: 400, position: 'relative' }}>
         <NotificationDrawer
           open

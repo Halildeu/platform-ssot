@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render, cleanup } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Tooltip } from '../Tooltip';
 
@@ -8,7 +8,7 @@ describe('Tooltip (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders trigger content', async () => {
-    render(
+    const screen = await render(
       <Tooltip content="Tooltip text">
         <button>Hover me</button>
       </Tooltip>,
@@ -20,7 +20,7 @@ describe('Tooltip (Browser)', () => {
   /*  2. Shows on hover                                                   */
   /* ------------------------------------------------------------------ */
   it('shows tooltip on hover', async () => {
-    render(
+    const screen = await render(
       <Tooltip content="Tooltip text" delay={0}>
         <button>Hover me</button>
       </Tooltip>,
@@ -33,7 +33,7 @@ describe('Tooltip (Browser)', () => {
   /*  3. Hides on mouse leave                                             */
   /* ------------------------------------------------------------------ */
   it('hides tooltip on mouse leave', async () => {
-    render(
+    const screen = await render(
       <div>
         <Tooltip content="Tooltip text" delay={0}>
           <button>Hover me</button>
@@ -52,7 +52,7 @@ describe('Tooltip (Browser)', () => {
   /*  4. Shows on keyboard focus                                          */
   /* ------------------------------------------------------------------ */
   it('shows tooltip on keyboard focus', async () => {
-    render(
+    const screen = await render(
       <Tooltip content="Focus tip" delay={0}>
         <button>Focus me</button>
       </Tooltip>,
@@ -65,7 +65,7 @@ describe('Tooltip (Browser)', () => {
   /*  5. Escape hides tooltip                                             */
   /* ------------------------------------------------------------------ */
   it('hides tooltip on Escape key', async () => {
-    render(
+    const screen = await render(
       <Tooltip content="Escape tip" delay={0}>
         <button>Press Esc</button>
       </Tooltip>,
@@ -80,7 +80,7 @@ describe('Tooltip (Browser)', () => {
   /*  6. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('tooltip has role="tooltip"', async () => {
-    render(
+    const screen = await render(
       <Tooltip content="ARIA" delay={0}>
         <button>Hover</button>
       </Tooltip>,
@@ -93,7 +93,7 @@ describe('Tooltip (Browser)', () => {
   /*  7. Disabled tooltip                                                 */
   /* ------------------------------------------------------------------ */
   it('does not show tooltip when disabled', async () => {
-    render(
+    const screen = await render(
       <Tooltip content="Disabled tip" disabled delay={0}>
         <button>Hover me</button>
       </Tooltip>,
@@ -108,14 +108,14 @@ describe('Tooltip (Browser)', () => {
   it('renders with different placements without error', async () => {
     const placements = ['top', 'bottom', 'left', 'right'] as const;
     for (const placement of placements) {
-      render(
+      await cleanup();
+      const screen = await render(
         <Tooltip content={`${placement} tip`} placement={placement} delay={0}>
           <button>Hover</button>
         </Tooltip>,
       );
       await screen.getByText('Hover').hover();
       await expect.element(screen.getByRole('tooltip')).toBeVisible();
-      
     }
   });
 
@@ -123,7 +123,7 @@ describe('Tooltip (Browser)', () => {
   /*  9. No content returns children directly                             */
   /* ------------------------------------------------------------------ */
   it('renders children without wrapper when no content', async () => {
-    render(
+    const screen = await render(
       <Tooltip content="">
         <button>No tooltip</button>
       </Tooltip>,

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render, cleanup } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Dialog } from '../Dialog';
 
@@ -8,7 +8,7 @@ describe('Dialog (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders content when open', async () => {
-    render(
+    const screen = await render(
       <Dialog open onClose={() => {}}>
         <p>Dialog body content</p>
       </Dialog>,
@@ -17,7 +17,7 @@ describe('Dialog (Browser)', () => {
   });
 
   it('does not render when closed', async () => {
-    render(
+    await render(
       <Dialog open={false} onClose={() => {}}>
         <p>Hidden content</p>
       </Dialog>,
@@ -30,7 +30,7 @@ describe('Dialog (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('renders title and close button', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <Dialog open title="Test Dialog" onClose={onClose}>
         <p>Content</p>
       </Dialog>,
@@ -47,7 +47,7 @@ describe('Dialog (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onClose on Escape key', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <Dialog open title="Esc Test" onClose={onClose}>
         <p>Content</p>
       </Dialog>,
@@ -59,7 +59,7 @@ describe('Dialog (Browser)', () => {
 
   it('does not fire onClose on Escape when closeOnEscape is false', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <Dialog open title="No Esc" onClose={onClose} closeOnEscape={false}>
         <p>Content</p>
       </Dialog>,
@@ -75,7 +75,7 @@ describe('Dialog (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onClose on backdrop click', async () => {
     const onClose = vi.fn();
-    render(
+    await render(
       <Dialog open title="Backdrop" onClose={onClose}>
         <p>Content</p>
       </Dialog>,
@@ -87,7 +87,7 @@ describe('Dialog (Browser)', () => {
 
   it('does not fire onClose on backdrop when closeOnBackdrop is false', async () => {
     const onClose = vi.fn();
-    render(
+    await render(
       <Dialog open title="No Backdrop" onClose={onClose} closeOnBackdrop={false}>
         <p>Content</p>
       </Dialog>,
@@ -101,7 +101,7 @@ describe('Dialog (Browser)', () => {
   /*  5. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('renders as a <dialog> element (native modal)', async () => {
-    render(
+    await render(
       <Dialog open onClose={() => {}}>
         <p>Content</p>
       </Dialog>,
@@ -114,7 +114,7 @@ describe('Dialog (Browser)', () => {
   /*  6. Footer                                                           */
   /* ------------------------------------------------------------------ */
   it('renders footer content', async () => {
-    render(
+    const screen = await render(
       <Dialog open title="Footer" footer={<button>Save</button>} onClose={() => {}}>
         <p>Body</p>
       </Dialog>,
@@ -126,7 +126,7 @@ describe('Dialog (Browser)', () => {
   /*  7. Description                                                      */
   /* ------------------------------------------------------------------ */
   it('renders description below title', async () => {
-    render(
+    const screen = await render(
       <Dialog open title="Main Title" description="Extra context here" onClose={() => {}}>
         <p>Body</p>
       </Dialog>,
@@ -140,13 +140,13 @@ describe('Dialog (Browser)', () => {
   it('renders all sizes without error', async () => {
     const sizes = ['sm', 'md', 'lg', 'xl', 'full'] as const;
     for (const size of sizes) {
-      render(
+      await cleanup();
+      const screen = await render(
         <Dialog open title={`${size}`} size={size} onClose={() => {}}>
           <p>Content</p>
         </Dialog>,
       );
       await expect.element(screen.getByText('Content')).toBeVisible();
-      
     }
   });
 
@@ -154,7 +154,7 @@ describe('Dialog (Browser)', () => {
   /*  9. Focus management — close button is focusable                     */
   /* ------------------------------------------------------------------ */
   it('close button is focusable', async () => {
-    render(
+    const screen = await render(
       <Dialog open title="Focus" onClose={() => {}}>
         <p>Content</p>
       </Dialog>,

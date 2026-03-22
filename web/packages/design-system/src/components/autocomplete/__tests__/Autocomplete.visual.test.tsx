@@ -10,7 +10,7 @@ const options = [
 
 describe('Autocomplete Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Autocomplete options={options} placeholder="Search..." />
       </div>,
@@ -19,7 +19,7 @@ describe('Autocomplete Visual Regression', () => {
   });
 
   it('with label matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Autocomplete options={options} label="Fruit" placeholder="Pick one" />
       </div>,

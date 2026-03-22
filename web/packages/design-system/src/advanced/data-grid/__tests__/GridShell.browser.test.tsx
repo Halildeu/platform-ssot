@@ -4,7 +4,7 @@ import { GridShell } from '../GridShell';
 
 describe('GridShell (Browser)', () => {
   it('renders grid container with theme class', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]} theme="quartz" />,
     );
     const el = document.querySelector('.ag-theme-quartz');
@@ -12,7 +12,7 @@ describe('GridShell (Browser)', () => {
   });
 
   it('renders with density attribute', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]} density="compact" />,
     );
     const el = document.querySelector('[data-density="compact"]');
@@ -20,7 +20,7 @@ describe('GridShell (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]} />,
     );
     const el = document.querySelector('[data-component="grid-shell"]');
@@ -28,7 +28,7 @@ describe('GridShell (Browser)', () => {
   });
 
   it('renders with alpine theme', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]} theme="alpine" />,
     );
     const el = document.querySelector('.ag-theme-alpine');
@@ -36,7 +36,7 @@ describe('GridShell (Browser)', () => {
   });
 
   it('renders with material theme', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]} theme="material" />,
     );
     const el = document.querySelector('.ag-theme-material');
@@ -44,7 +44,7 @@ describe('GridShell (Browser)', () => {
   });
 
   it('renders children below the grid', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]}>
         <div data-testid="grid-footer">Footer content</div>
       </GridShell>,
@@ -53,7 +53,7 @@ describe('GridShell (Browser)', () => {
   });
 
   it('applies custom className', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]} className="my-custom-grid" />,
     );
     const el = document.querySelector('.my-custom-grid');
@@ -61,7 +61,7 @@ describe('GridShell (Browser)', () => {
   });
 
   it('renders comfortable density by default', async () => {
-    render(
+    const screen = await render(
       <GridShell columnDefs={[{ field: 'id' }]} rowData={[]} />,
     );
     const el = document.querySelector('[data-density="comfortable"]');

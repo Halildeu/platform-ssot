@@ -5,7 +5,7 @@ import { DetailSummary } from '../DetailSummary';
 
 describe('DetailSummary Visual Regression', () => {
   it('default layout matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <DetailSummary
           title="Order #1234"

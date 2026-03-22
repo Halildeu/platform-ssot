@@ -15,7 +15,7 @@ describe('AdaptiveForm (Browser)', () => {
   });
 
   it('renders all specified field types', async () => {
-    render(
+    const screen = await render(
       <AdaptiveForm
         fields={[
           { key: 'name', type: 'text', label: 'Full Name' },
@@ -42,7 +42,7 @@ describe('AdaptiveForm (Browser)', () => {
   });
 
   it('renders required field indicator', async () => {
-    render(
+    const screen = await render(
       <AdaptiveForm fields={[{ key: 'email', type: 'text', label: 'Email', required: true }]} />,
     );
     await expect.element(screen.getByText('*')).toBeVisible();
@@ -60,7 +60,7 @@ describe('AdaptiveForm (Browser)', () => {
   });
 
   it('renders select field with options', async () => {
-    render(
+    const screen = await render(
       <AdaptiveForm
         fields={[{
           key: 'color',

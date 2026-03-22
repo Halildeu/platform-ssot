@@ -14,7 +14,7 @@ describe('EntitySummaryBlock (Browser)', () => {
   });
 
   it('renders subtitle', async () => {
-    render(
+    const screen = await render(
       <EntitySummaryBlock title="John" subtitle="Software Engineer" items={items} />,
     );
     await expect.element(screen.getByText('Software Engineer')).toBeVisible();
@@ -28,14 +28,14 @@ describe('EntitySummaryBlock (Browser)', () => {
   });
 
   it('renders badge', async () => {
-    render(
+    const screen = await render(
       <EntitySummaryBlock title="Entity" badge={<span>Active</span>} items={items} />,
     );
     await expect.element(screen.getByText('Active')).toBeVisible();
   });
 
   it('renders actions slot', async () => {
-    render(
+    const screen = await render(
       <EntitySummaryBlock title="Entity" items={items} actions={<button>Edit</button>} />,
     );
     await expect.element(screen.getByText('Edit')).toBeVisible();

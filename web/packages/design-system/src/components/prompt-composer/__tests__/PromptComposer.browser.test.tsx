@@ -41,7 +41,7 @@ describe('PromptComposer (Browser)', () => {
   });
 
   it('renders custom title and description', async () => {
-    render(
+    const screen = await render(
       <PromptComposer title="Custom Composer" description="Write your prompt" />,
     );
     await expect.element(screen.getByText('Custom Composer')).toBeVisible();
@@ -49,7 +49,7 @@ describe('PromptComposer (Browser)', () => {
   });
 
   it('renders guardrails when provided', async () => {
-    render(
+    const screen = await render(
       <PromptComposer guardrails={['No PII', 'No financial advice']} />,
     );
     await expect.element(screen.getByText('No PII')).toBeVisible();

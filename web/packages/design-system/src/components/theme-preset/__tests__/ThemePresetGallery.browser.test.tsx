@@ -21,7 +21,7 @@ describe('ThemePresetGallery (Browser)', () => {
 
   it('calls onSelectPreset when preset is clicked', async () => {
     const onSelect = vi.fn();
-    render(
+    const screen = await render(
       <ThemePresetGallery presets={presets} onSelectPreset={onSelect} />,
     );
     await screen.getByText('Dark Mode').click();
@@ -45,7 +45,7 @@ describe('ThemePresetGallery (Browser)', () => {
   });
 
   it('renders selected preset indicator', async () => {
-    render(
+    const screen = await render(
       <ThemePresetGallery presets={presets} selectedPresetId="light" />,
     );
     await expect.element(screen.getByText('Light Mode')).toBeVisible();

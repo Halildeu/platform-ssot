@@ -5,7 +5,7 @@ import { Spinner } from '../Spinner';
 
 describe('Spinner Visual Regression', () => {
   it('default spinner matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Spinner />
       </div>,
@@ -14,7 +14,7 @@ describe('Spinner Visual Regression', () => {
   });
 
   it('different sizes match screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', gap: 12, alignItems: 'center' }}>
         <Spinner size="xs" />
         <Spinner size="sm" />
@@ -27,7 +27,7 @@ describe('Spinner Visual Regression', () => {
   });
 
   it('block mode matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Spinner mode="block" label="Loading data" />
       </div>,

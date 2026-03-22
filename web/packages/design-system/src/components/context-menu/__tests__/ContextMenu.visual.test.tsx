@@ -10,7 +10,7 @@ const items = [
 
 describe('ContextMenu Visual Regression', () => {
   it('trigger matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <ContextMenu items={items}>
           <button>Right click me</button>

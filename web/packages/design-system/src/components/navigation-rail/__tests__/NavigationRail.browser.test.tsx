@@ -18,7 +18,7 @@ describe('NavigationRail (Browser)', () => {
   });
 
   it('renders navigation landmark with aria-label', async () => {
-    render(
+    const screen = await render(
       <NavigationRail items={items} ariaLabel="Main navigation" />,
     );
     const nav = screen.getByRole('navigation');
@@ -34,7 +34,7 @@ describe('NavigationRail (Browser)', () => {
 
   it('fires onValueChange when clicking a destination', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <NavigationRail items={items} onValueChange={onValueChange} />,
     );
     await screen.getByText('Reports').click();
@@ -65,7 +65,7 @@ describe('NavigationRail (Browser)', () => {
       { value: 'orders', label: 'Orders', disabled: true },
     ];
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <NavigationRail items={disabledItems} onValueChange={onValueChange} />,
     );
     await screen.getByText('Orders').click();
@@ -73,7 +73,7 @@ describe('NavigationRail (Browser)', () => {
   });
 
   it('renders footer slot', async () => {
-    render(
+    const screen = await render(
       <NavigationRail items={items} footer={<span>Footer</span>} />,
     );
     await expect.element(screen.getByText('Footer')).toBeVisible();

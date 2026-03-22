@@ -5,7 +5,7 @@ import { SearchInput } from '../SearchInput';
 
 describe('SearchInput Visual Regression', () => {
   it('empty search input matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <SearchInput placeholder="Search..." />
       </div>,
@@ -14,7 +14,7 @@ describe('SearchInput Visual Regression', () => {
   });
 
   it('search input with value matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <SearchInput value="hello" onChange={() => {}} onClear={() => {}} />
       </div>,

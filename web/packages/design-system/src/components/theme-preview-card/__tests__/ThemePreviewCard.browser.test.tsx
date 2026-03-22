@@ -25,7 +25,7 @@ describe('ThemePreviewCard (Browser)', () => {
   });
 
   it('renders custom locale text', async () => {
-    render(
+    const screen = await render(
       <ThemePreviewCard
         localeText={{
           titleText: 'Title text',

@@ -5,7 +5,7 @@ import { AnchorToc } from '../AnchorToc';
 
 describe('AnchorToc Visual Regression', () => {
   it('default toc matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 280 }}>
         <AnchorToc
           items={[

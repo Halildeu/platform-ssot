@@ -4,7 +4,7 @@ import { FormField } from '../FormField';
 
 describe('FormField (Browser)', () => {
   it('renders label and children', async () => {
-    render(
+    const screen = await render(
       <FormField label="Username">
         <input type="text" />
       </FormField>,
@@ -13,7 +13,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('shows error message', async () => {
-    render(
+    const screen = await render(
       <FormField label="Email" error="Invalid email">
         <input type="text" />
       </FormField>,
@@ -22,7 +22,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('shows required indicator', async () => {
-    render(
+    const screen = await render(
       <FormField label="Name" required>
         <input type="text" />
       </FormField>,
@@ -31,7 +31,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('shows optional indicator', async () => {
-    render(
+    const screen = await render(
       <FormField label="Nickname" optional>
         <input type="text" />
       </FormField>,
@@ -40,7 +40,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('renders help text', async () => {
-    render(
+    const screen = await render(
       <FormField label="Password" help="At least 8 characters">
         <input type="password" />
       </FormField>,
@@ -49,7 +49,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('applies disabled styling', async () => {
-    render(
+    const screen = await render(
       <FormField label="Disabled field" disabled>
         <input type="text" />
       </FormField>,
@@ -60,7 +60,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('renders in horizontal layout', async () => {
-    render(
+    const screen = await render(
       <FormField label="Field" horizontal>
         <input type="text" />
       </FormField>,
@@ -70,7 +70,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('connects label to input via htmlFor', async () => {
-    render(
+    const screen = await render(
       <FormField label="Custom" htmlFor="my-input">
         <input type="text" id="my-input" />
       </FormField>,

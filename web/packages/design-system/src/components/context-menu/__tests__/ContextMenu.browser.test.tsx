@@ -11,7 +11,7 @@ const items = [
 
 describe('ContextMenu (Browser)', () => {
   it('renders trigger element', async () => {
-    render(
+    const screen = await render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -20,7 +20,7 @@ describe('ContextMenu (Browser)', () => {
   });
 
   it('menu is hidden by default', async () => {
-    render(
+    const screen = await render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -29,7 +29,7 @@ describe('ContextMenu (Browser)', () => {
   });
 
   it('opens menu on right-click (contextmenu event)', async () => {
-    render(
+    const screen = await render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -46,7 +46,7 @@ describe('ContextMenu (Browser)', () => {
       { key: 'copy', label: 'Copy', onClick },
       { key: 'paste', label: 'Paste' },
     ];
-    render(
+    const screen = await render(
       <ContextMenu items={clickableItems}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -59,7 +59,7 @@ describe('ContextMenu (Browser)', () => {
   });
 
   it('closes menu on Escape', async () => {
-    render(
+    const screen = await render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -73,7 +73,7 @@ describe('ContextMenu (Browser)', () => {
   });
 
   it('does not open when disabled', async () => {
-    render(
+    const screen = await render(
       <ContextMenu items={items} disabled>
         <button>Right click me</button>
       </ContextMenu>,
@@ -90,7 +90,7 @@ describe('ContextMenu (Browser)', () => {
       { type: 'separator' as const, key: 'sep1' },
       { key: 'delete', label: 'Delete' },
     ];
-    render(
+    const screen = await render(
       <ContextMenu items={itemsWithSep}>
         <button>Right click me</button>
       </ContextMenu>,

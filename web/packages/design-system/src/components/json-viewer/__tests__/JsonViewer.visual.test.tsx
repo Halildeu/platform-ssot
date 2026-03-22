@@ -5,7 +5,7 @@ import { JsonViewer } from '../JsonViewer';
 
 describe('JsonViewer Visual Regression', () => {
   it('expanded JSON tree matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <JsonViewer value={{ name: 'Alice', active: true }} defaultExpandedDepth={2} />
       </div>,

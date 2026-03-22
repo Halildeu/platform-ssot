@@ -6,7 +6,7 @@ import { Tooltip } from '../Tooltip';
 describe('Tooltip Visual Regression', () => {
   /* ---- 1. Default (top placement) ---- */
   it('top placement visible tooltip matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 80, background: '#fff', display: 'flex', justifyContent: 'center' }}>
         <Tooltip content="Helpful tip" delay={0} placement="top">
           <button>Hover target</button>
@@ -20,7 +20,7 @@ describe('Tooltip Visual Regression', () => {
 
   /* ---- 2. Bottom placement ---- */
   it('bottom placement tooltip matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 80, background: '#fff', display: 'flex', justifyContent: 'center' }}>
         <Tooltip content="Bottom tip" delay={0} placement="bottom">
           <button>Hover below</button>
@@ -34,7 +34,7 @@ describe('Tooltip Visual Regression', () => {
 
   /* ---- 3. With arrow ---- */
   it('tooltip with arrow matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 80, background: '#fff', display: 'flex', justifyContent: 'center' }}>
         <Tooltip content="Arrow tip" delay={0} showArrow>
           <button>Hover me</button>
@@ -48,7 +48,7 @@ describe('Tooltip Visual Regression', () => {
 
   /* ---- 4. Dark mode ---- */
   it('dark theme tooltip matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div data-theme="dark" style={{ padding: 80, background: '#1a1a2e', display: 'flex', justifyContent: 'center' }}>
         <Tooltip content="Dark tooltip" delay={0}>
           <button>Hover dark</button>

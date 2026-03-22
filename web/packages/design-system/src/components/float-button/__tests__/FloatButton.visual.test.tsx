@@ -5,7 +5,7 @@ import { FloatButton } from '../FloatButton';
 
 describe('FloatButton Visual Regression', () => {
   it('default button matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 80, background: '#fff', position: 'relative', width: 200, height: 200 }}>
         <FloatButton position="bottom-right" offset={[16, 16]} />
       </div>,

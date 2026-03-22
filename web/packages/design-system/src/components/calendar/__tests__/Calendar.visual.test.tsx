@@ -5,7 +5,7 @@ import { Calendar } from '../Calendar';
 
 describe('Calendar Visual Regression', () => {
   it('month view matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Calendar defaultMonth={new Date(2025, 0, 1)} />
       </div>,
@@ -14,7 +14,7 @@ describe('Calendar Visual Regression', () => {
   });
 
   it('with selected date matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Calendar defaultMonth={new Date(2025, 0, 1)} defaultValue={new Date(2025, 0, 15)} />
       </div>,

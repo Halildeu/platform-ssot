@@ -5,7 +5,7 @@ import { ReportFilterPanel } from '../ReportFilterPanel';
 
 describe('ReportFilterPanel Visual Regression', () => {
   it('filter panel matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600 }}>
         <ReportFilterPanel onSubmit={() => {}} onReset={() => {}}>
           <input placeholder="Start date" />

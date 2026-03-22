@@ -5,7 +5,7 @@ import { ThemePresetGallery } from '../ThemePresetGallery';
 
 describe('ThemePresetGallery Visual Regression', () => {
   it('gallery with presets matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 700 }}>
         <ThemePresetGallery
           presets={[

@@ -5,7 +5,7 @@ import { AdaptiveForm } from '../AdaptiveForm';
 
 describe('AdaptiveForm Visual Regression', () => {
   it('default layout matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <AdaptiveForm
           fields={[

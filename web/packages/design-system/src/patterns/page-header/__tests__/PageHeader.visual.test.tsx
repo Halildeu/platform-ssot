@@ -5,7 +5,7 @@ import { PageHeader } from '../PageHeader';
 
 describe('PageHeader Visual Regression', () => {
   it('page header with title and actions matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ background: '#fff', width: 800 }}>
         <PageHeader
           title="Order Management"
@@ -18,7 +18,7 @@ describe('PageHeader Visual Regression', () => {
   });
 
   it('page header with breadcrumb matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ background: '#fff', width: 800 }}>
         <PageHeader
           title="Product Detail"

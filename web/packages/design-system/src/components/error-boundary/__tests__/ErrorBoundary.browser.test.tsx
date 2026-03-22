@@ -10,7 +10,7 @@ const BadChild = () => {
 
 describe('ErrorBoundary (Browser)', () => {
   it('renders children when no error', async () => {
-    render(
+    const screen = await render(
       <ErrorBoundary>
         <GoodChild />
       </ErrorBoundary>,
@@ -19,7 +19,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders default fallback when child throws', async () => {
-    render(
+    const screen = await render(
       <ErrorBoundary>
         <BadChild />
       </ErrorBoundary>,
@@ -29,7 +29,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('displays error message in fallback', async () => {
-    render(
+    const screen = await render(
       <ErrorBoundary>
         <BadChild />
       </ErrorBoundary>,
@@ -38,7 +38,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders Try again button in default fallback', async () => {
-    render(
+    const screen = await render(
       <ErrorBoundary>
         <BadChild />
       </ErrorBoundary>,
@@ -47,7 +47,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders custom static fallback', async () => {
-    render(
+    const screen = await render(
       <ErrorBoundary fallback={<div>Custom fallback content</div>}>
         <BadChild />
       </ErrorBoundary>,
@@ -56,7 +56,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders custom fallback render function', async () => {
-    render(
+    const screen = await render(
       <ErrorBoundary fallback={(error) => <div>Error: {error.message}</div>}>
         <BadChild />
       </ErrorBoundary>,
@@ -66,7 +66,7 @@ describe('ErrorBoundary (Browser)', () => {
 
   it('calls onError callback when error occurs', async () => {
     const onError = vi.fn();
-    render(
+    const screen = await render(
       <ErrorBoundary onError={onError}>
         <BadChild />
       </ErrorBoundary>,
@@ -78,7 +78,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    render(
+    const screen = await render(
       <ErrorBoundary>
         <GoodChild />
       </ErrorBoundary>,

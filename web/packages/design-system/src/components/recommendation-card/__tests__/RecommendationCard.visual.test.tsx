@@ -5,7 +5,7 @@ import { RecommendationCard } from '../RecommendationCard';
 
 describe('RecommendationCard Visual Regression', () => {
   it('info tone matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <RecommendationCard title="Upgrade" summary="Recommended upgrade" tone="info" />
       </div>,

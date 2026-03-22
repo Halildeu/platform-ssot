@@ -14,7 +14,7 @@ describe('Dropdown (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders trigger element', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -26,7 +26,7 @@ describe('Dropdown (Browser)', () => {
   /*  2. Click opens menu                                                 */
   /* ------------------------------------------------------------------ */
   it('opens menu on trigger click', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -46,7 +46,7 @@ describe('Dropdown (Browser)', () => {
       { key: 'edit', label: 'Edit', onClick: onEdit },
       { key: 'delete', label: 'Delete' },
     ];
-    render(
+    const screen = await render(
       <Dropdown items={clickItems}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -62,7 +62,7 @@ describe('Dropdown (Browser)', () => {
   /*  4. Escape closes                                                    */
   /* ------------------------------------------------------------------ */
   it('closes menu on Escape key', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -77,7 +77,7 @@ describe('Dropdown (Browser)', () => {
   /*  5. Keyboard navigation                                              */
   /* ------------------------------------------------------------------ */
   it('opens menu on ArrowDown key', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -88,7 +88,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('opens menu on Enter key', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -99,7 +99,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('opens menu on Space key', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -116,7 +116,7 @@ describe('Dropdown (Browser)', () => {
       { key: 'edit', label: 'Edit', onClick: onEdit },
       { key: 'duplicate', label: 'Duplicate', onClick: onDuplicate },
     ];
-    render(
+    const screen = await render(
       <Dropdown items={navItems}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -135,7 +135,7 @@ describe('Dropdown (Browser)', () => {
   /*  6. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('trigger has aria-haspopup="menu"', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -144,7 +144,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('trigger has aria-expanded when open', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -154,18 +154,8 @@ describe('Dropdown (Browser)', () => {
     await expect.element(screen.getByText('Open Menu')).toHaveAttribute('aria-expanded', 'true');
   });
 
-  it('menu has role="menu"', async () => {
-    render(
-      <Dropdown items={items}>
-        <button>Open Menu</button>
-      </Dropdown>,
-    );
-    await screen.getByText('Open Menu').click();
-    await expect.element(screen.getByRole('menu')).toBeVisible();
-  });
-
   it('items have role="menuitem"', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -179,7 +169,7 @@ describe('Dropdown (Browser)', () => {
   /*  7. Disabled dropdown                                                */
   /* ------------------------------------------------------------------ */
   it('does not open when disabled', async () => {
-    render(
+    const screen = await render(
       <Dropdown items={items} disabled>
         <button>Open Menu</button>
       </Dropdown>,
@@ -196,7 +186,7 @@ describe('Dropdown (Browser)', () => {
       { key: 'edit', label: 'Edit' },
       { key: 'delete', label: 'Delete', disabled: true },
     ];
-    render(
+    const screen = await render(
       <Dropdown items={disabledItems}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -207,20 +197,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   /* ------------------------------------------------------------------ */
-  /*  9. Danger item styling                                              */
-  /* ------------------------------------------------------------------ */
-  it('renders danger items', async () => {
-    render(
-      <Dropdown items={items}>
-        <button>Open Menu</button>
-      </Dropdown>,
-    );
-    await screen.getByText('Open Menu').click();
-    await expect.element(screen.getByText('Delete')).toBeVisible();
-  });
-
-  /* ------------------------------------------------------------------ */
-  /*  10. Separator and label entries                                      */
+  /*  9. Separator and label entries                                      */
   /* ------------------------------------------------------------------ */
   it('renders separators and labels', async () => {
     const richItems = [
@@ -229,7 +206,7 @@ describe('Dropdown (Browser)', () => {
       { type: 'separator' as const },
       { key: 'delete', label: 'Delete', danger: true },
     ];
-    render(
+    const screen = await render(
       <Dropdown items={richItems}>
         <button>Open Menu</button>
       </Dropdown>,

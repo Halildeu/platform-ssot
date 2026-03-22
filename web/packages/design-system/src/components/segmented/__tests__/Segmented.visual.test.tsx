@@ -11,7 +11,7 @@ const items = [
 
 describe('Segmented Visual Regression', () => {
   it('default segmented matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Segmented items={items} defaultValue="week" />
       </div>,
@@ -20,7 +20,7 @@ describe('Segmented Visual Regression', () => {
   });
 
   it('outline variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Segmented items={items} defaultValue="day" variant="outline" />
       </div>,

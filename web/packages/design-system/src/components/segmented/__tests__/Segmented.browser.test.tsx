@@ -26,7 +26,7 @@ describe('Segmented (Browser)', () => {
 
   it('changes selection on click and fires onValueChange', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <Segmented items={items} defaultValue="day" onValueChange={onValueChange} />,
     );
     await screen.getByText('Month').click();

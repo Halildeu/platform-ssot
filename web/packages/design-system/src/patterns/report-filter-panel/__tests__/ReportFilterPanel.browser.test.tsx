@@ -4,7 +4,7 @@ import { ReportFilterPanel } from '../ReportFilterPanel';
 
 describe('ReportFilterPanel (Browser)', () => {
   it('renders submit and reset buttons', async () => {
-    render(
+    const screen = await render(
       <ReportFilterPanel onSubmit={() => {}} onReset={() => {}}>
         <input placeholder="Date from" />
       </ReportFilterPanel>,
@@ -14,7 +14,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders children inputs', async () => {
-    render(
+    const screen = await render(
       <ReportFilterPanel>
         <input placeholder="Search" />
       </ReportFilterPanel>,
@@ -24,7 +24,7 @@ describe('ReportFilterPanel (Browser)', () => {
 
   it('calls onSubmit when submit button is clicked', async () => {
     const onSubmit = vi.fn();
-    render(
+    const screen = await render(
       <ReportFilterPanel onSubmit={onSubmit}>
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -35,7 +35,7 @@ describe('ReportFilterPanel (Browser)', () => {
 
   it('calls onReset when reset button is clicked', async () => {
     const onReset = vi.fn();
-    render(
+    const screen = await render(
       <ReportFilterPanel onReset={onReset}>
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -45,7 +45,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders custom button labels', async () => {
-    render(
+    const screen = await render(
       <ReportFilterPanel submitLabel="Apply" resetLabel="Clear">
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -55,7 +55,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    render(
+    const screen = await render(
       <ReportFilterPanel access="hidden">
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -64,7 +64,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders form element', async () => {
-    render(
+    const screen = await render(
       <ReportFilterPanel><input placeholder="X" /></ReportFilterPanel>,
     );
     const form = document.querySelector('form');

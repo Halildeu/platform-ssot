@@ -49,7 +49,7 @@ describe('TourCoachmarks (Browser)', () => {
 
   it('navigates to next step on next button click', async () => {
     const onStepChange = vi.fn();
-    render(
+    const screen = await render(
       <TourCoachmarks steps={steps} defaultOpen onStepChange={onStepChange} />,
     );
     await screen.getByText(/Sonraki|Next/).click();

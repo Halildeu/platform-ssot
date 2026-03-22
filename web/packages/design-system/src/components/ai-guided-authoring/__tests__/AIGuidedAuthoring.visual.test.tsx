@@ -5,7 +5,7 @@ import { AIGuidedAuthoring } from '../AIGuidedAuthoring';
 
 describe('AIGuidedAuthoring Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <AIGuidedAuthoring />
       </div>,

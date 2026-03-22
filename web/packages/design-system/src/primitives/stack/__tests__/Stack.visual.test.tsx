@@ -5,7 +5,7 @@ import { Stack, HStack } from '../Stack';
 
 describe('Stack Visual Regression', () => {
   it('vertical stack matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Stack gap={4}>
           <div style={{ padding: 8, background: '#eee' }}>Item 1</div>
@@ -18,7 +18,7 @@ describe('Stack Visual Regression', () => {
   });
 
   it('horizontal stack matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <HStack gap={4}>
           <div style={{ padding: 8, background: '#eee' }}>Left</div>

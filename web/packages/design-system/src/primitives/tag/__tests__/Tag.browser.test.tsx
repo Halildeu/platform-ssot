@@ -43,7 +43,7 @@ describe('Tag (Browser)', () => {
   });
 
   it('renders different sizes', async () => {
-    render(
+    const screen = await render(
       <div>
         <Tag size="sm" data-testid="sm">Small</Tag>
         <Tag size="md" data-testid="md">Medium</Tag>

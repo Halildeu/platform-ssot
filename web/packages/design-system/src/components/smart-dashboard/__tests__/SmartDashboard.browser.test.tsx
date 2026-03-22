@@ -21,7 +21,7 @@ describe('SmartDashboard (Browser)', () => {
   });
 
   it('renders greeting banner', async () => {
-    render(
+    const screen = await render(
       <SmartDashboard widgets={[]} greeting="Good morning, Admin" />,
     );
     await expect.element(screen.getByText('Good morning, Admin')).toBeVisible();
@@ -39,7 +39,7 @@ describe('SmartDashboard (Browser)', () => {
   });
 
   it('renders custom title and description', async () => {
-    render(
+    const screen = await render(
       <SmartDashboard widgets={[]} title="My Dashboard" description="Overview" />,
     );
     await expect.element(screen.getByText('My Dashboard')).toBeVisible();
@@ -47,7 +47,7 @@ describe('SmartDashboard (Browser)', () => {
   });
 
   it('renders with trend indicators', async () => {
-    render(
+    const screen = await render(
       <SmartDashboard
         widgets={[
           { key: 'w1', title: 'Sales', type: 'kpi', value: '100', trend: { direction: 'up', percentage: 12 } },
@@ -59,7 +59,7 @@ describe('SmartDashboard (Browser)', () => {
   });
 
   it('renders pinned widgets', async () => {
-    render(
+    const screen = await render(
       <SmartDashboard
         widgets={[
           { key: 'pinned', title: 'Pinned Widget', type: 'kpi', value: '42', pinned: true },

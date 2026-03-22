@@ -5,7 +5,7 @@ import { AgGridServer } from '../AgGridServer';
 
 describe('AgGridServer Visual Regression', () => {
   it('server grid matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500, height: 350 }}>
         <AgGridServer
           columnDefs={[{ field: 'name', headerName: 'Name' }]}

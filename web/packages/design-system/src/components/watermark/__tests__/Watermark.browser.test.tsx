@@ -4,7 +4,7 @@ import { Watermark } from '../Watermark';
 
 describe('Watermark (Browser)', () => {
   it('renders children content', async () => {
-    render(
+    const screen = await render(
       <Watermark content="Confidential">
         <div>Protected Content</div>
       </Watermark>,
@@ -13,7 +13,7 @@ describe('Watermark (Browser)', () => {
   });
 
   it('renders overlay element', async () => {
-    render(
+    const screen = await render(
       <Watermark content="Draft">
         <div>Content</div>
       </Watermark>,
@@ -22,7 +22,7 @@ describe('Watermark (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    render(
+    const screen = await render(
       <Watermark content="Test"><div>Body</div></Watermark>,
     );
     const el = document.querySelector('[data-component="watermark"]');
@@ -30,7 +30,7 @@ describe('Watermark (Browser)', () => {
   });
 
   it('renders with array content', async () => {
-    render(
+    const screen = await render(
       <Watermark content={['Line 1', 'Line 2']}>
         <div>Body</div>
       </Watermark>,
@@ -39,7 +39,7 @@ describe('Watermark (Browser)', () => {
   });
 
   it('renders without content (image mode)', async () => {
-    render(
+    const screen = await render(
       <Watermark image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQI12NgAAIABQABNjN9GQAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAABR0RVh0Q29tbWVudA==">
         <div>Image watermark</div>
       </Watermark>,
@@ -48,7 +48,7 @@ describe('Watermark (Browser)', () => {
   });
 
   it('applies custom className', async () => {
-    render(
+    const screen = await render(
       <Watermark content="Test" className="my-watermark"><div>Content</div></Watermark>,
     );
     const el = document.querySelector('.my-watermark');
@@ -56,7 +56,7 @@ describe('Watermark (Browser)', () => {
   });
 
   it('renders overlay with pointer-events-none', async () => {
-    render(
+    const screen = await render(
       <Watermark content="Test"><div>Content</div></Watermark>,
     );
     const overlay = screen.getByTestId('watermark-overlay');

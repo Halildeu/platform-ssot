@@ -9,7 +9,7 @@ const BadChild = () => {
 
 describe('ErrorBoundary Visual Regression', () => {
   it('error fallback matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <ErrorBoundary>
           <BadChild />

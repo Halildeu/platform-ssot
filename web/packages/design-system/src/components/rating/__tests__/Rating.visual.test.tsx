@@ -5,7 +5,7 @@ import { Rating } from '../Rating';
 
 describe('Rating Visual Regression', () => {
   it('empty rating matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Rating defaultValue={0} />
       </div>,
@@ -14,7 +14,7 @@ describe('Rating Visual Regression', () => {
   });
 
   it('filled rating matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Rating defaultValue={4} showValue />
       </div>,

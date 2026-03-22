@@ -4,7 +4,7 @@ import { RecommendationCard } from '../RecommendationCard';
 
 describe('RecommendationCard (Browser)', () => {
   it('renders title and summary', async () => {
-    render(
+    const screen = await render(
       <RecommendationCard title="Upgrade Node" summary="Node 20 is recommended" />,
     );
     await expect.element(screen.getByText('Upgrade Node')).toBeVisible();
@@ -12,7 +12,7 @@ describe('RecommendationCard (Browser)', () => {
   });
 
   it('renders default action buttons', async () => {
-    render(
+    const screen = await render(
       <RecommendationCard title="Test" summary="Summary" />,
     );
     await expect.element(screen.getByText('Apply')).toBeVisible();
@@ -20,7 +20,7 @@ describe('RecommendationCard (Browser)', () => {
   });
 
   it('renders custom action labels', async () => {
-    render(
+    const screen = await render(
       <RecommendationCard title="T" summary="S" primaryActionLabel="Accept" secondaryActionLabel="Skip" />,
     );
     await expect.element(screen.getByText('Accept')).toBeVisible();
@@ -29,7 +29,7 @@ describe('RecommendationCard (Browser)', () => {
 
   it('calls onPrimaryAction when apply is clicked', async () => {
     const onPrimary = vi.fn();
-    render(
+    const screen = await render(
       <RecommendationCard title="T" summary="S" onPrimaryAction={onPrimary} />,
     );
     await screen.getByText('Apply').click();
@@ -38,7 +38,7 @@ describe('RecommendationCard (Browser)', () => {
 
   it('calls onSecondaryAction when review is clicked', async () => {
     const onSecondary = vi.fn();
-    render(
+    const screen = await render(
       <RecommendationCard title="T" summary="S" onSecondaryAction={onSecondary} />,
     );
     await screen.getByText('Review').click();
@@ -46,7 +46,7 @@ describe('RecommendationCard (Browser)', () => {
   });
 
   it('renders data-tone attribute', async () => {
-    render(
+    const screen = await render(
       <RecommendationCard title="T" summary="S" tone="warning" />,
     );
     const el = document.querySelector('[data-tone="warning"]');
@@ -54,14 +54,14 @@ describe('RecommendationCard (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    render(
+    const screen = await render(
       <RecommendationCard title="T" summary="S" access="hidden" />,
     );
     expect(document.body.textContent).toBe('');
   });
 
   it('renders confidence badge', async () => {
-    render(
+    const screen = await render(
       <RecommendationCard title="T" summary="S" confidenceLevel="high" confidenceScore={90} />,
     );
     await expect.element(screen.getByText(/Yuksek guven/)).toBeVisible();

@@ -4,7 +4,7 @@ import { EntityGridTemplate } from '../EntityGridTemplate';
 
 describe('EntityGridTemplate (Browser)', () => {
   it('renders grid wrapper container', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="test-grid"
         gridSchemaVersion={1}
@@ -18,7 +18,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders with data-grid-id attribute', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="orders-grid"
         gridSchemaVersion={1}
@@ -32,7 +32,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders toolbar with quick filter', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="toolbar-grid"
         gridSchemaVersion={1}
@@ -46,7 +46,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders GridShell with ag-theme class', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="theme-grid"
         gridSchemaVersion={1}
@@ -61,7 +61,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders pagination footer in client mode', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="page-grid"
         gridSchemaVersion={1}
@@ -76,7 +76,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders toolbar extras slot', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="extras-grid"
         gridSchemaVersion={1}
@@ -90,7 +90,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders with multiple column definitions', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="multi-col-grid"
         gridSchemaVersion={1}
@@ -104,7 +104,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('accepts custom messages prop', async () => {
-    render(
+    const screen = await render(
       <EntityGridTemplate
         gridId="msg-grid"
         gridSchemaVersion={1}

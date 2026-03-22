@@ -5,7 +5,7 @@ import { SearchFilterListing } from '../SearchFilterListing';
 
 describe('SearchFilterListing Visual Regression', () => {
   it('empty state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600 }}>
         <SearchFilterListing title="Products" description="All products" />
       </div>,

@@ -47,7 +47,7 @@ describe('TreeTable (Browser)', () => {
 
   it('fires onExpandedKeysChange when toggling', async () => {
     const onExpandedKeysChange = vi.fn();
-    render(
+    const screen = await render(
       <TreeTable nodes={nodes} columns={columns} onExpandedKeysChange={onExpandedKeysChange} />,
     );
     await screen.getByLabelText('Expand branch').click();

@@ -5,7 +5,7 @@ import { EmptyErrorLoading } from '../EmptyErrorLoading';
 
 describe('EmptyErrorLoading Visual Regression', () => {
   it('empty mode matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <EmptyErrorLoading mode="empty" />
       </div>,

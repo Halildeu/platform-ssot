@@ -25,7 +25,7 @@ describe('MenuBar (Browser)', () => {
 
   it('fires onValueChange when clicking an item', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <MenuBar items={items} onValueChange={onValueChange} />,
     );
     await screen.getByText('Settings').click();
@@ -34,7 +34,7 @@ describe('MenuBar (Browser)', () => {
 
   it('fires onItemClick with value and event', async () => {
     const onItemClick = vi.fn();
-    render(
+    const screen = await render(
       <MenuBar items={items} onItemClick={onItemClick} />,
     );
     await screen.getByText('Home').click();
@@ -53,7 +53,7 @@ describe('MenuBar (Browser)', () => {
       { value: 'products', label: 'Products', disabled: true },
     ];
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <MenuBar items={disabledItems} onValueChange={onValueChange} />,
     );
     await screen.getByText('Products').click();
@@ -66,7 +66,7 @@ describe('MenuBar (Browser)', () => {
   });
 
   it('renders start and end slots', async () => {
-    render(
+    const screen = await render(
       <MenuBar items={items} startSlot={<span data-testid="start">Logo</span>} endSlot={<span data-testid="end">User</span>} />,
     );
     await expect.element(screen.getByText('Logo')).toBeVisible();

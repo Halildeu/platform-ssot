@@ -6,7 +6,7 @@ import { Switch } from '../Switch';
 describe('Switch Visual Regression', () => {
   /* ---- 1. Default (off) state ---- */
   it('off state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Switch label="Off" />
       </div>,
@@ -16,7 +16,7 @@ describe('Switch Visual Regression', () => {
 
   /* ---- 2. On state ---- */
   it('on state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Switch label="On" defaultChecked />
       </div>,
@@ -26,7 +26,7 @@ describe('Switch Visual Regression', () => {
 
   /* ---- 3. All sizes ---- */
   it('all sizes match screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <Switch label="Small" size="sm" defaultChecked />
         <Switch label="Medium" size="md" defaultChecked />
@@ -38,7 +38,7 @@ describe('Switch Visual Regression', () => {
 
   /* ---- 4. Disabled ---- */
   it('disabled states match screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <Switch label="Disabled off" disabled />
         <Switch label="Disabled on" disabled defaultChecked />
@@ -49,7 +49,7 @@ describe('Switch Visual Regression', () => {
 
   /* ---- 5. Destructive variant ---- */
   it('destructive variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <Switch label="Destructive off" variant="destructive" />
         <Switch label="Destructive on" variant="destructive" defaultChecked />
@@ -60,7 +60,7 @@ describe('Switch Visual Regression', () => {
 
   /* ---- 6. Dark mode ---- */
   it('dark theme matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div data-theme="dark" style={{ padding: 20, background: '#1a1a2e', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <Switch label="Off" />
         <Switch label="On" defaultChecked />

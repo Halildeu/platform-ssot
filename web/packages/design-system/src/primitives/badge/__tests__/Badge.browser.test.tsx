@@ -40,7 +40,7 @@ describe('Badge (Browser)', () => {
   });
 
   it('renders different sizes', async () => {
-    render(
+    const screen = await render(
       <div>
         <Badge size="sm" data-testid="sm">Small</Badge>
         <Badge size="md" data-testid="md">Medium</Badge>

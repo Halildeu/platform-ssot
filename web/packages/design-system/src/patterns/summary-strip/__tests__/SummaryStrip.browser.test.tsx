@@ -32,21 +32,21 @@ describe('SummaryStrip (Browser)', () => {
   });
 
   it('renders description when provided', async () => {
-    render(
+    const screen = await render(
       <SummaryStrip items={items} title="KPI" description="Last 30 days" />,
     );
     await expect.element(screen.getByText('Last 30 days')).toBeVisible();
   });
 
   it('renders with note text', async () => {
-    render(
+    const screen = await render(
       <SummaryStrip items={[{ key: 'k1', label: 'Total', value: '100', note: 'vs last month' }]} />,
     );
     await expect.element(screen.getByText('vs last month')).toBeVisible();
   });
 
   it('renders with icon', async () => {
-    render(
+    const screen = await render(
       <SummaryStrip
         items={[{ key: 'k1', label: 'Users', value: '50', icon: <span data-testid="icon">I</span> }]}
       />,

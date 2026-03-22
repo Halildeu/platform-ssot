@@ -24,7 +24,7 @@ describe('JsonViewer (Browser)', () => {
   });
 
   it('expands nodes when clicked', async () => {
-    render(
+    const screen = await render(
       <JsonViewer value={{ nested: { deep: 'value' } }} defaultExpandedDepth={0} />,
     );
     // Initially collapsed - click to expand
@@ -42,7 +42,7 @@ describe('JsonViewer (Browser)', () => {
   });
 
   it('renders title and description', async () => {
-    render(
+    const screen = await render(
       <JsonViewer value={{ a: 1 }} title="Response" description="API response data" />,
     );
     await expect.element(screen.getByText('Response')).toBeVisible();
@@ -50,7 +50,7 @@ describe('JsonViewer (Browser)', () => {
   });
 
   it('shows type badges when showTypes is enabled', async () => {
-    render(
+    const screen = await render(
       <JsonViewer value={{ name: 'test' }} showTypes defaultExpandedDepth={2} />,
     );
     await expect.element(screen.getByText('string')).toBeVisible();

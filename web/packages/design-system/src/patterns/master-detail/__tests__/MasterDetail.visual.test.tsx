@@ -5,7 +5,7 @@ import { MasterDetail } from '../MasterDetail';
 
 describe('MasterDetail Visual Regression', () => {
   it('split layout matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 700, height: 300 }}>
         <MasterDetail
           master={<div style={{ padding: 16 }}>Master list</div>}

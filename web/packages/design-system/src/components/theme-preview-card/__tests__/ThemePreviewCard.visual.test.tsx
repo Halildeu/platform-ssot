@@ -5,7 +5,7 @@ import { ThemePreviewCard } from '../ThemePreviewCard';
 
 describe('ThemePreviewCard Visual Regression', () => {
   it('default card matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 200 }}>
         <ThemePreviewCard />
       </div>,
@@ -14,7 +14,7 @@ describe('ThemePreviewCard Visual Regression', () => {
   });
 
   it('selected card matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 200 }}>
         <ThemePreviewCard selected />
       </div>,

@@ -10,7 +10,7 @@ const steps = [
 
 describe('TourCoachmarks Visual Regression', () => {
   it('open tour matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <TourCoachmarks steps={steps} defaultOpen />
       </div>,

@@ -12,7 +12,7 @@ const options = [
 describe('Select Visual Regression', () => {
   /* ---- 1. Default state ---- */
   it('default state with placeholder matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Select options={options} placeholder="Choose one" />
       </div>,
@@ -22,7 +22,7 @@ describe('Select Visual Regression', () => {
 
   /* ---- 2. All sizes ---- */
   it('all sizes match screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', flexDirection: 'column', gap: 12, width: 300 }}>
         <Select options={options} size="sm" defaultValue="a" />
         <Select options={options} size="md" defaultValue="a" />
@@ -34,7 +34,7 @@ describe('Select Visual Regression', () => {
 
   /* ---- 3. Disabled state ---- */
   it('disabled state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Select options={options} defaultValue="a" disabled />
       </div>,
@@ -44,7 +44,7 @@ describe('Select Visual Regression', () => {
 
   /* ---- 4. Error state ---- */
   it('error state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Select options={options} defaultValue="a" error />
       </div>,
@@ -54,7 +54,7 @@ describe('Select Visual Regression', () => {
 
   /* ---- 5. Loading state ---- */
   it('loading state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Select options={options} defaultValue="a" loading />
       </div>,
@@ -64,7 +64,7 @@ describe('Select Visual Regression', () => {
 
   /* ---- 6. Dark mode ---- */
   it('dark theme matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div data-theme="dark" style={{ padding: 20, background: '#1a1a2e', width: 300 }}>
         <Select options={options} defaultValue="a" />
       </div>,

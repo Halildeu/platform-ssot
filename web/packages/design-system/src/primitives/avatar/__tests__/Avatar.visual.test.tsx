@@ -5,7 +5,7 @@ import { Avatar } from '../Avatar';
 
 describe('Avatar Visual Regression', () => {
   it('initials avatar matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Avatar initials="JD" size="lg" />
       </div>,
@@ -14,7 +14,7 @@ describe('Avatar Visual Regression', () => {
   });
 
   it('fallback icon avatar matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Avatar size="lg" />
       </div>,
@@ -23,7 +23,7 @@ describe('Avatar Visual Regression', () => {
   });
 
   it('different sizes match screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', gap: 8, alignItems: 'center' }}>
         <Avatar initials="XS" size="xs" />
         <Avatar initials="SM" size="sm" />

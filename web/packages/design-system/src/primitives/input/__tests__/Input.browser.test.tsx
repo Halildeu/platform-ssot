@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render, cleanup } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Input } from '../Input';
 
@@ -144,6 +144,7 @@ describe('Input (Browser)', () => {
   it('renders all sizes without error', async () => {
     const sizes = ['sm', 'md', 'lg'] as const;
     for (const size of sizes) {
+    await cleanup();
     const screen = await render(<Input size={size} placeholder={size} />);
       await expect.element(screen.getByRole('textbox')).toBeVisible();
       

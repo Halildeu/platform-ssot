@@ -10,7 +10,7 @@ const items = [
 
 describe('CommandPalette Visual Regression', () => {
   it('open state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600, height: 400 }}>
         <CommandPalette open items={items} />
       </div>,

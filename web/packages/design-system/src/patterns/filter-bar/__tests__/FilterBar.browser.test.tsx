@@ -4,7 +4,7 @@ import { FilterBar } from '../FilterBar';
 
 describe('FilterBar (Browser)', () => {
   it('renders children filters', async () => {
-    render(
+    const screen = await render(
       <FilterBar>
         <span>Status filter</span>
         <span>Date filter</span>
@@ -15,7 +15,7 @@ describe('FilterBar (Browser)', () => {
   });
 
   it('renders more filters toggle button', async () => {
-    render(
+    const screen = await render(
       <FilterBar moreFilters={<span>Advanced</span>}>
         <span>Basic</span>
       </FilterBar>,
@@ -24,7 +24,7 @@ describe('FilterBar (Browser)', () => {
   });
 
   it('reveals more filters when toggle is clicked', async () => {
-    render(
+    const screen = await render(
       <FilterBar moreFilters={<span>Advanced filter</span>}>
         <span>Basic</span>
       </FilterBar>,
@@ -34,7 +34,7 @@ describe('FilterBar (Browser)', () => {
   });
 
   it('renders search slot', async () => {
-    render(
+    const screen = await render(
       <FilterBar search={<input placeholder="Search..." />}>
         <span>Filters</span>
       </FilterBar>,
@@ -43,7 +43,7 @@ describe('FilterBar (Browser)', () => {
   });
 
   it('renders actions slot', async () => {
-    render(
+    const screen = await render(
       <FilterBar actions={<button>Apply</button>}>
         <span>Filter</span>
       </FilterBar>,
@@ -52,7 +52,7 @@ describe('FilterBar (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    render(
+    const screen = await render(
       <FilterBar><span>F</span></FilterBar>,
     );
     const el = document.querySelector('[data-component="filter-bar"]');
@@ -60,7 +60,7 @@ describe('FilterBar (Browser)', () => {
   });
 
   it('renders active filter count badge', async () => {
-    render(
+    const screen = await render(
       <FilterBar activeCount={3} moreFilters={<span>More</span>}>
         <span>Basic</span>
       </FilterBar>,

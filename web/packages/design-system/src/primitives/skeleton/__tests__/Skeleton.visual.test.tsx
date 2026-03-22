@@ -5,7 +5,7 @@ import { Skeleton } from '../Skeleton';
 
 describe('Skeleton Visual Regression', () => {
   it('default skeleton matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Skeleton height={16} animated={false} />
       </div>,

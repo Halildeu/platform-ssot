@@ -23,14 +23,14 @@ describe('Timeline (Browser)', () => {
   });
 
   it('renders with labels', async () => {
-    render(
+    const screen = await render(
       <Timeline items={[{ key: '1', children: 'Event', label: '2024-01-15' }]} />,
     );
     await expect.element(screen.getByText('2024-01-15')).toBeVisible();
   });
 
   it('renders pending item at the end', async () => {
-    render(
+    const screen = await render(
       <Timeline items={timelineItems} pending="Processing..." />,
     );
     await expect.element(screen.getByText('Processing...')).toBeVisible();
@@ -47,7 +47,7 @@ describe('Timeline (Browser)', () => {
   });
 
   it('renders with custom dot icon', async () => {
-    render(
+    const screen = await render(
       <Timeline items={[{ key: '1', children: 'Custom', dot: <span data-testid="custom-dot">*</span> }]} />,
     );
     await expect.element(screen.getByTestId('custom-dot')).toBeVisible();

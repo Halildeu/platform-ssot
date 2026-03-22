@@ -10,7 +10,7 @@ const baseProps = {
 
 describe('ApprovalReview (Browser)', () => {
   it('renders default title', async () => {
-    render(
+    const screen = await render(
       <ApprovalReview checkpoint={{ title: 'Gate', summary: 'Summary' }} citations={[]} auditItems={[]} />,
     );
     await expect.element(screen.getByText('Approval review')).toBeVisible();
@@ -43,7 +43,7 @@ describe('ApprovalReview (Browser)', () => {
   });
 
   it('renders custom title and description', async () => {
-    render(
+    const screen = await render(
       <ApprovalReview {...baseProps} title="Custom Review" description="Custom description" />,
     );
     await expect.element(screen.getByText('Custom Review')).toBeVisible();
@@ -51,7 +51,7 @@ describe('ApprovalReview (Browser)', () => {
   });
 
   it('renders with empty citations and audit items', async () => {
-    render(
+    const screen = await render(
       <ApprovalReview checkpoint={{ title: 'Gate', summary: 'Sum' }} citations={[]} auditItems={[]} />,
     );
     await expect.element(screen.getByText('Gate')).toBeVisible();

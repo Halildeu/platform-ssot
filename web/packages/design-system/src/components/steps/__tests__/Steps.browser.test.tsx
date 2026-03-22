@@ -17,7 +17,7 @@ describe('Steps (Browser)', () => {
   });
 
   it('renders step descriptions', async () => {
-    render(
+    const screen = await render(
       <Steps
         items={[{ key: 's1', title: 'Step 1', description: 'First step detail' }]}
         current={0}
@@ -45,7 +45,7 @@ describe('Steps (Browser)', () => {
   });
 
   it('renders disabled step', async () => {
-    render(
+    const screen = await render(
       <Steps items={[...stepItems, { key: 'disabled', title: 'Disabled', disabled: true }]} current={0} />,
     );
     await expect.element(screen.getByText('Disabled')).toBeVisible();

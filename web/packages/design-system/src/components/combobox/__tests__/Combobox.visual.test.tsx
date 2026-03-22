@@ -11,7 +11,7 @@ const options = [
 
 describe('Combobox Visual Regression', () => {
   it('closed combobox matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Combobox label="Fruit" placeholder="Select..." options={options} />
       </div>,
@@ -20,7 +20,7 @@ describe('Combobox Visual Regression', () => {
   });
 
   it('combobox with value matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <Combobox label="Fruit" options={options} defaultValue="banana" />
       </div>,

@@ -5,7 +5,7 @@ import { ConfidenceBadge } from '../ConfidenceBadge';
 
 describe('ConfidenceBadge Visual Regression', () => {
   it('high confidence matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <ConfidenceBadge level="high" score={95} sourceCount={3} />
       </div>,

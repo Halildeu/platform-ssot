@@ -5,7 +5,7 @@ import { QRCode } from '../QRCode';
 
 describe('QRCode Visual Regression', () => {
   it('default QR code matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <QRCode value="https://example.com" size={128} />
       </div>,

@@ -4,7 +4,7 @@ import { DetailDrawer } from '../DetailDrawer';
 
 describe('DetailDrawer (Browser)', () => {
   it('renders title and content when open', async () => {
-    render(
+    const screen = await render(
       <DetailDrawer open onClose={() => {}} title="Order #1234">
         <p>Order details here</p>
       </DetailDrawer>,
@@ -14,7 +14,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('does not render dialog when closed', async () => {
-    render(
+    const screen = await render(
       <DetailDrawer open={false} onClose={() => {}} title="Hidden">
         <p>Hidden content</p>
       </DetailDrawer>,
@@ -23,7 +23,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders close button', async () => {
-    render(
+    const screen = await render(
       <DetailDrawer open onClose={() => {}} title="Closable">
         <p>Content</p>
       </DetailDrawer>,
@@ -33,7 +33,7 @@ describe('DetailDrawer (Browser)', () => {
 
   it('calls onClose when close button is clicked', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <DetailDrawer open onClose={onClose} title="Test">
         <p>Content</p>
       </DetailDrawer>,
@@ -43,7 +43,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders subtitle when provided', async () => {
-    render(
+    const screen = await render(
       <DetailDrawer open onClose={() => {}} title="Order" subtitle="Order details">
         <p>Body</p>
       </DetailDrawer>,
@@ -52,7 +52,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders sections', async () => {
-    render(
+    const screen = await render(
       <DetailDrawer
         open
         onClose={() => {}}
@@ -67,7 +67,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders footer slot', async () => {
-    render(
+    const screen = await render(
       <DetailDrawer open onClose={() => {}} title="Test" footer={<button>Save</button>}>
         <p>Content</p>
       </DetailDrawer>,
@@ -76,7 +76,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders dialog with role attribute', async () => {
-    render(
+    const screen = await render(
       <DetailDrawer open onClose={() => {}} title="Dialog">
         <p>Content</p>
       </DetailDrawer>,

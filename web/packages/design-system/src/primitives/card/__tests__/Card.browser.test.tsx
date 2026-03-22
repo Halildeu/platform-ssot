@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody, CardFooter } from '../Card';
 
 describe('Card (Browser)', () => {
   it('renders children content', async () => {
-    render(
+    const screen = await render(
       <Card>
         <CardHeader title="Card Title" />
         <CardBody>Card body content</CardBody>
@@ -15,28 +15,28 @@ describe('Card (Browser)', () => {
   });
 
   it('renders elevated variant', async () => {
-    render(
+    const screen = await render(
       <Card variant="elevated" data-testid="elevated">Elevated</Card>,
     );
     await expect.element(screen.getByTestId('elevated')).toBeVisible();
   });
 
   it('renders outlined variant', async () => {
-    render(
+    const screen = await render(
       <Card variant="outlined" data-testid="outlined">Outlined</Card>,
     );
     await expect.element(screen.getByTestId('outlined')).toBeVisible();
   });
 
   it('renders filled variant', async () => {
-    render(
+    const screen = await render(
       <Card variant="filled" data-testid="filled">Filled</Card>,
     );
     await expect.element(screen.getByTestId('filled')).toBeVisible();
   });
 
   it('renders hoverable card', async () => {
-    render(
+    const screen = await render(
       <Card hoverable data-testid="hover-card">Hoverable content</Card>,
     );
     await expect.element(screen.getByTestId('hover-card')).toBeVisible();
@@ -49,7 +49,7 @@ describe('Card (Browser)', () => {
   });
 
   it('renders CardFooter slot', async () => {
-    render(
+    const screen = await render(
       <Card>
         <CardBody>Body</CardBody>
         <CardFooter>Footer actions</CardFooter>
@@ -59,7 +59,7 @@ describe('Card (Browser)', () => {
   });
 
   it('renders ghost variant', async () => {
-    render(
+    const screen = await render(
       <Card variant="ghost" data-testid="ghost">Ghost card</Card>,
     );
     await expect.element(screen.getByTestId('ghost')).toBeVisible();

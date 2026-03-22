@@ -5,7 +5,7 @@ import { EmptyState } from '../EmptyState';
 
 describe('EmptyState Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <EmptyState
           title="No results"

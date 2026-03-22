@@ -10,7 +10,7 @@ function ToastTrigger({ variant, message }: { variant: 'success' | 'error'; mess
 
 describe('Toast Visual Regression', () => {
   it('success toast matches screenshot', async () => {
-    render(
+    const screen = await render(
       <ToastProvider position="top-right">
         <ToastTrigger variant="success" message="Saved successfully" />
       </ToastProvider>,
@@ -20,7 +20,7 @@ describe('Toast Visual Regression', () => {
   });
 
   it('error toast matches screenshot', async () => {
-    render(
+    const screen = await render(
       <ToastProvider position="top-right">
         <ToastTrigger variant="error" message="Failed to save" />
       </ToastProvider>,

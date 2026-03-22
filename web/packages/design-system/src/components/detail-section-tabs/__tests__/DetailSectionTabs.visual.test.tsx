@@ -5,7 +5,7 @@ import { DetailSectionTabs } from '../DetailSectionTabs';
 
 describe('DetailSectionTabs Visual Regression', () => {
   it('tabs layout matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <DetailSectionTabs
           tabs={[

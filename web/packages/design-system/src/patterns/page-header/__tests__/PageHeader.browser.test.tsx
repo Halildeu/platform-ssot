@@ -15,7 +15,7 @@ describe('PageHeader (Browser)', () => {
   });
 
   it('renders actions slot', async () => {
-    render(
+    const screen = await render(
       <PageHeader title="Invoices" actions={<button>Create Invoice</button>} />,
     );
     await expect.element(screen.getByText('Create Invoice')).toBeVisible();
@@ -28,28 +28,28 @@ describe('PageHeader (Browser)', () => {
   });
 
   it('renders breadcrumb slot', async () => {
-    render(
+    const screen = await render(
       <PageHeader title="Detail" breadcrumb={<nav>Home / Detail</nav>} />,
     );
     await expect.element(screen.getByText('Home / Detail')).toBeVisible();
   });
 
   it('renders tags slot', async () => {
-    render(
+    const screen = await render(
       <PageHeader title="Order" tags={<span>Urgent</span>} />,
     );
     await expect.element(screen.getByText('Urgent')).toBeVisible();
   });
 
   it('renders footer slot', async () => {
-    render(
+    const screen = await render(
       <PageHeader title="Page" footer={<div>Tab bar</div>} />,
     );
     await expect.element(screen.getByText('Tab bar')).toBeVisible();
   });
 
   it('renders avatar slot', async () => {
-    render(
+    const screen = await render(
       <PageHeader title="Profile" avatar={<span data-testid="avatar">AV</span>} />,
     );
     await expect.element(screen.getByTestId('avatar')).toBeVisible();

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render, cleanup } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Select } from '../Select';
 
@@ -110,6 +110,7 @@ describe('Select (Browser)', () => {
   it('renders all sizes without error', async () => {
     const sizes = ['sm', 'md', 'lg'] as const;
     for (const size of sizes) {
+    await cleanup();
     const screen = await render(<Select options={options} size={size} />);
       await expect.element(screen.getByRole('combobox')).toBeVisible();
       

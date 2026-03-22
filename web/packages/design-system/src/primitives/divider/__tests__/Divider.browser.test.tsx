@@ -9,7 +9,7 @@ describe('Divider (Browser)', () => {
   });
 
   it('renders vertical divider', async () => {
-    render(
+    const screen = await render(
       <div style={{ height: 40, display: 'flex' }}>
         <Divider orientation="vertical" data-testid="v-divider" />
       </div>,
@@ -24,7 +24,7 @@ describe('Divider (Browser)', () => {
   });
 
   it('renders with separator role for vertical', async () => {
-    render(
+    const screen = await render(
       <div style={{ height: 40, display: 'flex' }}>
         <Divider orientation="vertical" />
       </div>,
@@ -39,7 +39,7 @@ describe('Divider (Browser)', () => {
   });
 
   it('renders with different spacing', async () => {
-    render(
+    const screen = await render(
       <div>
         <Divider spacing="sm" data-testid="sm" />
         <Divider spacing="lg" data-testid="lg" />

@@ -5,7 +5,7 @@ import { DatePicker } from '../DatePicker';
 
 describe('DatePicker Visual Regression', () => {
   it('empty date picker matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <DatePicker label="Start date" />
       </div>,
@@ -14,7 +14,7 @@ describe('DatePicker Visual Regression', () => {
   });
 
   it('date picker with value matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <DatePicker label="End date" defaultValue="2024-06-15" />
       </div>,

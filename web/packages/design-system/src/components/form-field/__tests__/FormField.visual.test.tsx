@@ -5,7 +5,7 @@ import { FormField } from '../FormField';
 
 describe('FormField Visual Regression', () => {
   it('field with label and help matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 320 }}>
         <FormField label="Email" help="Enter your work email" required>
           <input type="text" placeholder="email@company.com" />

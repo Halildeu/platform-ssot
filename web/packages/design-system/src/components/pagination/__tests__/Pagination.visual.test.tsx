@@ -5,7 +5,7 @@ import { Pagination } from '../Pagination';
 
 describe('Pagination Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Pagination total={100} current={3} pageSize={10} />
       </div>,

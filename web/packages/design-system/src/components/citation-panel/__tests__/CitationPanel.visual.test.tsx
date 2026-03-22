@@ -5,7 +5,7 @@ import { CitationPanel } from '../CitationPanel';
 
 describe('CitationPanel Visual Regression', () => {
   it('panel with citations matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <CitationPanel
           items={[

@@ -5,7 +5,7 @@ import { Steps } from '../Steps';
 
 describe('Steps Visual Regression', () => {
   it('default with 3 steps matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <Steps
           items={[

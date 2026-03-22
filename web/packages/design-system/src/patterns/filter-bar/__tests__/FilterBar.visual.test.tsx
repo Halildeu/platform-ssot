@@ -5,7 +5,7 @@ import { FilterBar } from '../FilterBar';
 
 describe('FilterBar Visual Regression', () => {
   it('filter bar with controls matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600 }}>
         <FilterBar>
           <span>Status</span>

@@ -5,7 +5,7 @@ import { PageLayout } from '../PageLayout';
 
 describe('PageLayout Visual Regression', () => {
   it('basic page layout matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ background: '#fff', width: 800, minHeight: 400 }}>
         <PageLayout
           title="Dashboard"
@@ -20,7 +20,7 @@ describe('PageLayout Visual Regression', () => {
   });
 
   it('page layout with footer matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ background: '#fff', width: 800, minHeight: 400 }}>
         <PageLayout
           title="Settings"

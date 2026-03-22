@@ -5,7 +5,7 @@ import { Breadcrumb } from '../Breadcrumb';
 
 describe('Breadcrumb Visual Regression', () => {
   it('default with 3 items matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Breadcrumb
           items={[

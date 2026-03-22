@@ -5,7 +5,7 @@ import { Tag } from '../Tag';
 
 describe('Tag Visual Regression', () => {
   it('default variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Tag>Default</Tag>
       </div>,
@@ -14,7 +14,7 @@ describe('Tag Visual Regression', () => {
   });
 
   it('closable variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Tag closable>Closable</Tag>
       </div>,
@@ -23,7 +23,7 @@ describe('Tag Visual Regression', () => {
   });
 
   it('color variants match screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', gap: 8 }}>
         <Tag variant="primary">Primary</Tag>
         <Tag variant="success">Success</Tag>

@@ -5,7 +5,7 @@ import { ApprovalReview } from '../ApprovalReview';
 
 describe('ApprovalReview Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <ApprovalReview
           checkpoint={{ title: 'Gate', summary: 'Summary' }}

@@ -10,7 +10,7 @@ const items = [
 
 describe('List Visual Regression', () => {
   it('default list matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <List items={items} title="Records" />
       </div>,

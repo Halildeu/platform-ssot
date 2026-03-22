@@ -11,7 +11,7 @@ const items = [
 
 describe('AvatarGroup Visual Regression', () => {
   it('default group matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <AvatarGroup items={items} />
       </div>,
@@ -20,7 +20,7 @@ describe('AvatarGroup Visual Regression', () => {
   });
 
   it('with overflow matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <AvatarGroup items={[...items, { key: '4', name: 'Diana' }, { key: '5', name: 'Eve' }]} max={3} />
       </div>,

@@ -9,7 +9,7 @@ describe('Skeleton (Browser)', () => {
   });
 
   it('renders multiple lines', async () => {
-    render(
+    const screen = await render(
       <div data-testid="skeleton-lines">
         <Skeleton lines={3} />
       </div>,

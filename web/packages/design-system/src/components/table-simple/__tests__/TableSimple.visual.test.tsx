@@ -15,7 +15,7 @@ const rows = [
 
 describe('TableSimple Visual Regression', () => {
   it('default table matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <TableSimple columns={columns} rows={rows} caption="Team Members" />
       </div>,

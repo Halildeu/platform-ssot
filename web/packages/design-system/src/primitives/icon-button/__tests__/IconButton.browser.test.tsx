@@ -39,7 +39,7 @@ describe('IconButton (Browser)', () => {
   });
 
   it('renders different variants', async () => {
-    render(
+    const screen = await render(
       <div>
         <IconButton icon={<TestIcon />} label="Primary" variant="primary" data-testid="primary" />
         <IconButton icon={<TestIcon />} label="Ghost" variant="ghost" data-testid="ghost" />
@@ -52,7 +52,7 @@ describe('IconButton (Browser)', () => {
   });
 
   it('renders different sizes', async () => {
-    render(
+    const screen = await render(
       <div>
         <IconButton icon={<TestIcon />} label="XS" size="xs" data-testid="xs" />
         <IconButton icon={<TestIcon />} label="LG" size="lg" data-testid="lg" />

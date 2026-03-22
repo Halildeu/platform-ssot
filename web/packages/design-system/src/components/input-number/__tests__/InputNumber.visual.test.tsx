@@ -5,7 +5,7 @@ import { InputNumber } from '../InputNumber';
 
 describe('InputNumber Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <InputNumber defaultValue={10} label="Quantity" />
       </div>,

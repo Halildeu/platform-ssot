@@ -5,7 +5,7 @@ import { Timeline } from '../Timeline';
 
 describe('Timeline Visual Regression', () => {
   it('default with 3 items matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <Timeline
           items={[

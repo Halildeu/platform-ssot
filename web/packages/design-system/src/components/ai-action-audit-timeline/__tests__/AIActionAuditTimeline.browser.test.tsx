@@ -26,7 +26,7 @@ describe('AIActionAuditTimeline (Browser)', () => {
   });
 
   it('renders status badge when provided', async () => {
-    render(
+    const screen = await render(
       <AIActionAuditTimeline
         items={[{ id: '1', actor: 'ai', title: 'Scan', timestamp: '09:00', status: 'rejected' }]}
       />,
@@ -36,7 +36,7 @@ describe('AIActionAuditTimeline (Browser)', () => {
 
   it('calls onSelectItem when item is clicked', async () => {
     const onSelect = vi.fn();
-    render(
+    const screen = await render(
       <AIActionAuditTimeline items={sampleItems} onSelectItem={onSelect} />,
     );
     await screen.getByText('Generated report').click();
@@ -55,7 +55,7 @@ describe('AIActionAuditTimeline (Browser)', () => {
   });
 
   it('renders custom title and description', async () => {
-    render(
+    const screen = await render(
       <AIActionAuditTimeline items={[]} title="Audit Log" description="Review actions" />,
     );
     await expect.element(screen.getByText('Audit Log')).toBeVisible();

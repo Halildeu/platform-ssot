@@ -10,7 +10,7 @@ const items = [
 
 describe('Descriptions Visual Regression', () => {
   it('default layout matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <Descriptions items={items} title="User Info" />
       </div>,

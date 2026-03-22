@@ -9,7 +9,7 @@ const TestIcon = () => (
 
 describe('IconButton Visual Regression', () => {
   it('ghost variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <IconButton icon={<TestIcon />} label="Ghost" variant="ghost" />
       </div>,
@@ -18,7 +18,7 @@ describe('IconButton Visual Regression', () => {
   });
 
   it('primary variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <IconButton icon={<TestIcon />} label="Primary" variant="primary" />
       </div>,

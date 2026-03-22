@@ -42,7 +42,7 @@ describe('Text (Browser)', () => {
   });
 
   it('renders with different sizes', async () => {
-    render(
+    const screen = await render(
       <div>
         <Text size="xs">Extra small</Text>
         <Text size="lg">Large</Text>

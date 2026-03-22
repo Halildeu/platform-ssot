@@ -23,7 +23,7 @@ describe('AnchorToc (Browser)', () => {
 
   it('calls onValueChange when item is clicked', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <AnchorToc items={tocItems} syncWithHash={false} onValueChange={onValueChange} />,
     );
     await screen.getByText('Details').click();
@@ -38,7 +38,7 @@ describe('AnchorToc (Browser)', () => {
 
   it('renders disabled item without interaction', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <AnchorToc
         items={[{ id: 'disabled', label: 'Disabled', disabled: true }]}
         syncWithHash={false}
@@ -49,7 +49,7 @@ describe('AnchorToc (Browser)', () => {
   });
 
   it('renders custom title', async () => {
-    render(
+    const screen = await render(
       <AnchorToc items={tocItems} syncWithHash={false} title="Table of Contents" />,
     );
     await expect.element(screen.getByText('Table of Contents')).toBeVisible();
@@ -61,7 +61,7 @@ describe('AnchorToc (Browser)', () => {
   });
 
   it('highlights the active item', async () => {
-    render(
+    const screen = await render(
       <AnchorToc items={tocItems} syncWithHash={false} value="details" />,
     );
     await expect.element(screen.getByText('Details')).toBeVisible();

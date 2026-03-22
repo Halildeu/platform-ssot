@@ -9,7 +9,7 @@ describe('SearchFilterListing (Browser)', () => {
   });
 
   it('renders with items', async () => {
-    render(
+    const screen = await render(
       <SearchFilterListing
         title="Orders"
         items={[<div key="1">Order 1</div>, <div key="2">Order 2</div>]}
@@ -20,14 +20,14 @@ describe('SearchFilterListing (Browser)', () => {
   });
 
   it('renders description', async () => {
-    render(
+    const screen = await render(
       <SearchFilterListing title="Products" description="All available products" />,
     );
     await expect.element(screen.getByText('All available products')).toBeVisible();
   });
 
   it('renders actions slot', async () => {
-    render(
+    const screen = await render(
       <SearchFilterListing title="Items" actions={<button>Add Item</button>} />,
     );
     await expect.element(screen.getByText('Add Item')).toBeVisible();
@@ -45,14 +45,14 @@ describe('SearchFilterListing (Browser)', () => {
   });
 
   it('renders filters slot', async () => {
-    render(
+    const screen = await render(
       <SearchFilterListing title="Items" filters={<span>Status filter</span>} />,
     );
     await expect.element(screen.getByText('Status filter')).toBeVisible();
   });
 
   it('renders summary strip items', async () => {
-    render(
+    const screen = await render(
       <SearchFilterListing
         title="Dashboard"
         summaryItems={[{ key: 'total', label: 'Total', value: '42' }]}

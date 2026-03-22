@@ -43,7 +43,7 @@ describe('EmptyErrorLoading (Browser)', () => {
   });
 
   it('renders custom title and description', async () => {
-    render(
+    const screen = await render(
       <EmptyErrorLoading mode="empty" title="Custom Title" description="Custom Desc" />,
     );
     await expect.element(screen.getByText('Custom Title')).toBeVisible();

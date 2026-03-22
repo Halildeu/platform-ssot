@@ -11,7 +11,7 @@ describe('Pagination (Browser)', () => {
 
   it('navigates to next page on click', async () => {
     const onChange = vi.fn();
-    render(
+    const screen = await render(
       <Pagination total={50} current={1} pageSize={10} onChange={onChange} />,
     );
     await screen.getByLabelText('Next page').click();
@@ -20,7 +20,7 @@ describe('Pagination (Browser)', () => {
 
   it('navigates to previous page on click', async () => {
     const onChange = vi.fn();
-    render(
+    const screen = await render(
       <Pagination total={50} current={3} pageSize={10} onChange={onChange} />,
     );
     await screen.getByLabelText('Previous page').click();
@@ -45,7 +45,7 @@ describe('Pagination (Browser)', () => {
 
   it('fires onChange when clicking a specific page number', async () => {
     const onChange = vi.fn();
-    render(
+    const screen = await render(
       <Pagination total={50} current={1} pageSize={10} onChange={onChange} />,
     );
     await screen.getByText('4').click();

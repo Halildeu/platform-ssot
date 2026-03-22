@@ -12,7 +12,7 @@ const nodes = [
 
 describe('Tree Visual Regression', () => {
   it('collapsed state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <Tree nodes={nodes} />
       </div>,
@@ -21,7 +21,7 @@ describe('Tree Visual Regression', () => {
   });
 
   it('expanded state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <Tree nodes={nodes} defaultExpandedKeys={['1']} />
       </div>,

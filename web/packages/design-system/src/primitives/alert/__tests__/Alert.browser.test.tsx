@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render, cleanup } from 'vitest-browser-react';
 import { Alert } from '../Alert';
 
 describe('Alert (Browser)', () => {
@@ -7,7 +7,7 @@ describe('Alert (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders with title and description', async () => {
-    render(
+    const screen = await render(
       <Alert title="Heads up">This is an info alert.</Alert>,
     );
     await expect.element(screen.getByText('Heads up')).toBeVisible();
@@ -24,7 +24,7 @@ describe('Alert (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('renders close button when closable and fires onClose', async () => {
     const onClose = vi.fn();
-    render(
+    const screen = await render(
       <Alert closable onClose={onClose}>Closable alert</Alert>,
     );
     const closeBtn = screen.getByLabelText('Dismiss');
@@ -34,7 +34,7 @@ describe('Alert (Browser)', () => {
   });
 
   it('does not render close button when not closable', async () => {
-    const screen = await render(<Alert>Not closable</Alert>);
+    await render(<Alert>Not closable</Alert>);
     expect(document.querySelector('[aria-label="Dismiss"]')).toBeNull();
   });
 
@@ -52,27 +52,27 @@ describe('Alert (Browser)', () => {
   it('renders all variants without error', async () => {
     const variants = ['info', 'success', 'warning', 'error'] as const;
     for (const variant of variants) {
-      render(
+      await cleanup();
+      const screen = await render(
         <Alert variant={variant} title={variant}>
           {variant} message
         </Alert>,
       );
       await expect.element(screen.getByRole('alert')).toBeVisible();
       await expect.element(screen.getByText(`${variant} message`)).toBeVisible();
-      
     }
   });
 
   it('renders default icon for each variant', async () => {
     const variants = ['info', 'success', 'warning', 'error'] as const;
     for (const variant of variants) {
-      render(
+      await cleanup();
+      const screen = await render(
         <Alert variant={variant}>Content</Alert>,
       );
       // Each variant should render an SVG icon
       const alert = screen.getByRole('alert');
       expect(alert.element().querySelector('svg')).not.toBeNull();
-      
     }
   });
 
@@ -80,7 +80,7 @@ describe('Alert (Browser)', () => {
   /*  5. Custom icon                                                      */
   /* ------------------------------------------------------------------ */
   it('renders custom icon when provided', async () => {
-    render(
+    const screen = await render(
       <Alert icon={<span data-testid="custom-icon">!</span>}>Custom</Alert>,
     );
     await expect.element(screen.getByText('!')).toBeVisible();
@@ -90,7 +90,7 @@ describe('Alert (Browser)', () => {
   /*  6. Action node                                                      */
   /* ------------------------------------------------------------------ */
   it('renders action node', async () => {
-    render(
+    const screen = await render(
       <Alert action={<button>Retry</button>}>Something failed</Alert>,
     );
     await expect.element(screen.getByText('Retry')).toBeVisible();
@@ -100,7 +100,7 @@ describe('Alert (Browser)', () => {
   /*  7. Focus management — close button is focusable                     */
   /* ------------------------------------------------------------------ */
   it('close button is focusable', async () => {
-    render(
+    const screen = await render(
       <Alert closable onClose={() => {}}>Closable</Alert>,
     );
     const closeBtn = screen.getByLabelText('Dismiss').element();

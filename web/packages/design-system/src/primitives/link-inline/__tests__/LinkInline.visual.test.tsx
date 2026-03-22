@@ -5,7 +5,7 @@ import { LinkInline } from '../LinkInline';
 
 describe('LinkInline Visual Regression', () => {
   it('primary link matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <LinkInline href="/test" variant="primary">Primary Link</LinkInline>
       </div>,
@@ -14,7 +14,7 @@ describe('LinkInline Visual Regression', () => {
   });
 
   it('secondary link matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <LinkInline href="/test" variant="secondary">Secondary Link</LinkInline>
       </div>,

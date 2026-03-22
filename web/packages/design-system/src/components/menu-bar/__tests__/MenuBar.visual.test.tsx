@@ -11,7 +11,7 @@ const items = [
 
 describe('MenuBar Visual Regression', () => {
   it('default menu bar matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600 }}>
         <MenuBar items={items} defaultValue="home" />
       </div>,
@@ -20,7 +20,7 @@ describe('MenuBar Visual Regression', () => {
   });
 
   it('ghost appearance matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600 }}>
         <MenuBar items={items} defaultValue="products" appearance="ghost" />
       </div>,

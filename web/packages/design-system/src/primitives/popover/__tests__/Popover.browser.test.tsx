@@ -8,7 +8,7 @@ describe('Popover (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders trigger element', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Open</button>} content="Popover content" disablePortal />,
     );
     await expect.element(screen.getByText('Open')).toBeVisible();
@@ -18,7 +18,7 @@ describe('Popover (Browser)', () => {
   /*  2. Click trigger opens                                              */
   /* ------------------------------------------------------------------ */
   it('opens popover on trigger click', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Toggle</button>} content="Visible content" disablePortal />,
     );
     await screen.getByText('Toggle').click();
@@ -29,14 +29,14 @@ describe('Popover (Browser)', () => {
   /*  3. Shows/hides based on open prop (controlled)                      */
   /* ------------------------------------------------------------------ */
   it('shows popover content when controlled open', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Toggle</button>} content="Controlled" open disablePortal />,
     );
     await expect.element(screen.getByText('Controlled')).toBeVisible();
   });
 
   it('hides popover content when controlled closed', async () => {
-    render(
+    await render(
       <Popover trigger={<button>Toggle</button>} content="Hidden" open={false} disablePortal />,
     );
     expect(document.querySelector('[role="dialog"]')).toBeNull();
@@ -47,7 +47,7 @@ describe('Popover (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('closes popover on Escape key', async () => {
     const onOpenChange = vi.fn();
-    render(
+    const screen = await render(
       <Popover
         trigger={<button>Toggle</button>}
         content="Escapable"
@@ -65,28 +65,28 @@ describe('Popover (Browser)', () => {
   /*  5. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('trigger has aria-haspopup="dialog"', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Open</button>} content="Content" disablePortal />,
     );
     await expect.element(screen.getByText('Open')).toHaveAttribute('aria-haspopup', 'dialog');
   });
 
   it('trigger has aria-expanded when open', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Open</button>} content="Content" open disablePortal />,
     );
     await expect.element(screen.getByText('Open')).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('trigger has aria-expanded=false when closed', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Open</button>} content="Content" open={false} disablePortal />,
     );
     await expect.element(screen.getByText('Open')).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('popover panel has role="dialog"', async () => {
-    render(
+    await render(
       <Popover trigger={<button>Open</button>} content="Dialog" open disablePortal />,
     );
     const dialog = document.querySelector('[role="dialog"]');
@@ -97,7 +97,7 @@ describe('Popover (Browser)', () => {
   /*  6. Title                                                            */
   /* ------------------------------------------------------------------ */
   it('renders title when provided', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Open</button>} content="Body" title="Info" open disablePortal />,
     );
     await expect.element(screen.getByText('Info')).toBeVisible();
@@ -108,7 +108,7 @@ describe('Popover (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onOpenChange when toggled', async () => {
     const onOpenChange = vi.fn();
-    render(
+    const screen = await render(
       <Popover trigger={<button>Toggle</button>} content="Content" onOpenChange={onOpenChange} disablePortal />,
     );
     await screen.getByText('Toggle').click();
@@ -119,7 +119,7 @@ describe('Popover (Browser)', () => {
   /*  8. Keyboard trigger (Enter/Space opens)                             */
   /* ------------------------------------------------------------------ */
   it('opens on Enter key', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Open</button>} content="KB content" disablePortal />,
     );
     screen.getByText('Open').element().focus();
@@ -128,7 +128,7 @@ describe('Popover (Browser)', () => {
   });
 
   it('opens on Space key', async () => {
-    render(
+    const screen = await render(
       <Popover trigger={<button>Open</button>} content="Space content" disablePortal />,
     );
     screen.getByText('Open').element().focus();

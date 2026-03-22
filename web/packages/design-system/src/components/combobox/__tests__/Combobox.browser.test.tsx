@@ -11,7 +11,7 @@ const options = [
 
 describe('Combobox (Browser)', () => {
   it('renders label and placeholder', async () => {
-    render(
+    const screen = await render(
       <Combobox label="Fruit" placeholder="Select a fruit" options={options} />,
     );
     await expect.element(screen.getByText('Fruit')).toBeVisible();
@@ -19,7 +19,7 @@ describe('Combobox (Browser)', () => {
   });
 
   it('shows options when opened and filters on type', async () => {
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={options} placeholder="Search..." />,
     );
     const input = screen.getByPlaceholderText('Search...');
@@ -32,7 +32,7 @@ describe('Combobox (Browser)', () => {
 
   it('selects option and fires onValueChange', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={options} onValueChange={onValueChange} defaultOpen />,
     );
     await screen.getByText('Banana').click();
@@ -41,7 +41,7 @@ describe('Combobox (Browser)', () => {
 
   it('navigates options with keyboard and selects with Enter', async () => {
     const onValueChange = vi.fn();
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={options} onValueChange={onValueChange} placeholder="Pick" />,
     );
     const input = screen.getByPlaceholderText('Pick');
@@ -53,7 +53,7 @@ describe('Combobox (Browser)', () => {
   });
 
   it('closes dropdown on Escape', async () => {
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={options} defaultOpen />,
     );
     await expect.element(screen.getByText('Apple')).toBeVisible();
@@ -63,7 +63,7 @@ describe('Combobox (Browser)', () => {
   });
 
   it('renders combobox ARIA role and attributes', async () => {
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={options} placeholder="Pick" />,
     );
     const input = screen.getByRole('combobox');
@@ -72,21 +72,21 @@ describe('Combobox (Browser)', () => {
   });
 
   it('shows error message when error prop is provided', async () => {
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={options} error="Selection required" />,
     );
     await expect.element(screen.getByText('Selection required')).toBeVisible();
   });
 
   it('shows loading state', async () => {
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={[]} loading defaultOpen />,
     );
     await expect.element(screen.getByText('Loading...')).toBeVisible();
   });
 
   it('shows no-options text when nothing matches', async () => {
-    render(
+    const screen = await render(
       <Combobox label="Fruit" options={options} placeholder="Search..." noOptionsText="No results" />,
     );
     const input = screen.getByPlaceholderText('Search...');

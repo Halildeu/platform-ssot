@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
+import { render, cleanup } from 'vitest-browser-react';
 import { userEvent } from 'vitest/browser';
 import { Tabs } from '../Tabs';
 
@@ -49,7 +49,7 @@ describe('Tabs (Browser)', () => {
     const screen = await render(<Tabs items={items} onChange={onChange} />);
     const disabledTab = screen.getByRole('tab', { name: 'Third' });
     await expect.element(disabledTab).toBeDisabled();
-    await disabledTab.click();
+    disabledTab.element().click();
     expect(onChange).not.toHaveBeenCalledWith('tab3');
   });
 
@@ -119,6 +119,7 @@ describe('Tabs (Browser)', () => {
   it('renders all variants without error', async () => {
     const variants = ['line', 'enclosed', 'pill'] as const;
     for (const variant of variants) {
+    await cleanup();
     const screen = await render(<Tabs items={items} variant={variant} />);
       await expect.element(screen.getByRole('tablist')).toBeVisible();
       

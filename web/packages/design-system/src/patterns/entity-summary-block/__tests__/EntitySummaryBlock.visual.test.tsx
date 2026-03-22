@@ -5,7 +5,7 @@ import { EntitySummaryBlock } from '../EntitySummaryBlock';
 
 describe('EntitySummaryBlock Visual Regression', () => {
   it('summary block matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <EntitySummaryBlock
           title="Jane Smith"

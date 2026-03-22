@@ -12,7 +12,7 @@ const items = [
 
 describe('SummaryStrip Visual Regression', () => {
   it('4-column strip matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <SummaryStrip items={items} columns={4} />
       </div>,
@@ -21,7 +21,7 @@ describe('SummaryStrip Visual Regression', () => {
   });
 
   it('strip with title matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <SummaryStrip items={items} title="Monthly Overview" description="Last 30 days" />
       </div>,

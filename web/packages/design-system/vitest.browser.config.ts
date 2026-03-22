@@ -13,6 +13,8 @@ export default defineConfig({
         { browser: 'chromium' },
       ],
     },
-    include: ['src/**/*.browser.test.{ts,tsx}', 'src/**/*.visual.test.{ts,tsx}'],
+    include: ['src/**/*.browser.test.{ts,tsx}'],
+    // Visual tests excluded until toMatchImageSnapshot plugin is installed
+    // include: ['src/**/*.visual.test.{ts,tsx}'],
   },
 });

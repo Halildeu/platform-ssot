@@ -15,7 +15,7 @@ describe('Viewport Tests (Browser Mode)', () => {
   });
 
   it('element below fold is not in viewport', async () => {
-    render(
+    const screen = await render(
       <div>
         <div style={{ height: '200vh' }}>Spacer</div>
         <LazyBox id="below-fold" />
@@ -26,7 +26,7 @@ describe('Viewport Tests (Browser Mode)', () => {
   });
 
   it('multiple elements at top are all in viewport', async () => {
-    render(
+    const screen = await render(
       <div>
         <LazyBox id="box-1" height={50} />
         <LazyBox id="box-2" height={50} />
@@ -44,7 +44,7 @@ describe('Viewport Tests (Browser Mode)', () => {
   });
 
   it('hidden element is not visible', async () => {
-    render(
+    const screen = await render(
       <div data-testid="hidden-el" style={{ display: 'none' }}>Hidden content</div>,
     );
     const el = screen.getByTestId('hidden-el');
@@ -52,7 +52,7 @@ describe('Viewport Tests (Browser Mode)', () => {
   });
 
   it('element with overflow hidden clips children', async () => {
-    render(
+    const screen = await render(
       <div style={{ height: 50, overflow: 'hidden' }} data-testid="clip-container">
         <div style={{ height: 200 }}>Tall content</div>
       </div>,
@@ -61,7 +61,7 @@ describe('Viewport Tests (Browser Mode)', () => {
   });
 
   it('element at bottom of long page is out of viewport', async () => {
-    render(
+    const screen = await render(
       <div>
         <div style={{ height: '300vh' }}>Long spacer</div>
         <LazyBox id="far-below" />

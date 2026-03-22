@@ -10,7 +10,7 @@ const tabs = [
 
 describe('DetailSectionTabs (Browser)', () => {
   it('renders all tabs', async () => {
-    render(
+    const screen = await render(
       <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={() => {}} />,
     );
     await expect.element(screen.getByText('Overview')).toBeVisible();
@@ -19,7 +19,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders with badges', async () => {
-    render(
+    const screen = await render(
       <DetailSectionTabs
         tabs={[{ id: 'tab1', label: 'Tab 1', badge: <span>3</span> }]}
         activeTabId="tab1"
@@ -31,7 +31,7 @@ describe('DetailSectionTabs (Browser)', () => {
 
   it('calls onTabChange when a tab is clicked', async () => {
     const onTabChange = vi.fn();
-    render(
+    const screen = await render(
       <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={onTabChange} />,
     );
     await screen.getByText('Details').click();
@@ -39,7 +39,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    render(
+    const screen = await render(
       <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={() => {}} />,
     );
     const el = document.querySelector('[data-component="detail-section-tabs"]');
@@ -47,7 +47,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders disabled tab', async () => {
-    render(
+    const screen = await render(
       <DetailSectionTabs
         tabs={[
           { id: 'active', label: 'Active' },
@@ -61,7 +61,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders with custom ariaLabel', async () => {
-    render(
+    const screen = await render(
       <DetailSectionTabs
         tabs={tabs}
         activeTabId="overview"
@@ -74,7 +74,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders with test id prefix', async () => {
-    render(
+    const screen = await render(
       <DetailSectionTabs
         tabs={[{ id: 'tab1', label: 'Tab 1' }]}
         activeTabId="tab1"

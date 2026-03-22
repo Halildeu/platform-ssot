@@ -5,7 +5,7 @@ import { AILayoutBuilder } from '../AILayoutBuilder';
 
 describe('AILayoutBuilder Visual Regression', () => {
   it('overview layout matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 600 }}>
         <AILayoutBuilder
           blocks={[

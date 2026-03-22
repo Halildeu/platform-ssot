@@ -10,7 +10,7 @@ describe('LinkInline (Browser)', () => {
   });
 
   it('renders external link with indicator', async () => {
-    render(
+    const screen = await render(
       <LinkInline href="https://example.com" external>External</LinkInline>,
     );
     const link = screen.getByRole('link', { name: /External/ });

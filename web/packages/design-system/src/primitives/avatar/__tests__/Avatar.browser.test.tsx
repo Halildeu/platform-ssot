@@ -25,7 +25,7 @@ describe('Avatar (Browser)', () => {
   });
 
   it('renders different sizes', async () => {
-    render(
+    const screen = await render(
       <div>
         <Avatar initials="SM" size="sm" data-testid="sm" />
         <Avatar initials="LG" size="lg" data-testid="lg" />
@@ -43,7 +43,7 @@ describe('Avatar (Browser)', () => {
   });
 
   it('renders custom icon fallback', async () => {
-    render(
+    const screen = await render(
       <Avatar icon={<svg data-testid="custom-icon"><circle cx="8" cy="8" r="6" /></svg>} />,
     );
     await expect.element(screen.getByTestId('custom-icon')).toBeVisible();

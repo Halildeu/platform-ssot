@@ -12,7 +12,7 @@ const items = [
 describe('Dropdown Visual Regression', () => {
   /* ---- 1. Closed state ---- */
   it('closed state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Dropdown items={items}>
           <button>Actions</button>
@@ -24,7 +24,7 @@ describe('Dropdown Visual Regression', () => {
 
   /* ---- 2. Open state ---- */
   it('open state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, paddingBottom: 200, background: '#fff' }}>
         <Dropdown items={items}>
           <button>Actions</button>
@@ -42,7 +42,7 @@ describe('Dropdown Visual Regression', () => {
       { key: 'duplicate', label: 'Duplicate', disabled: true },
       { key: 'delete', label: 'Delete', danger: true },
     ];
-    render(
+    const screen = await render(
       <div style={{ padding: 20, paddingBottom: 200, background: '#fff' }}>
         <Dropdown items={disabledItems}>
           <button>Actions</button>
@@ -63,7 +63,7 @@ describe('Dropdown Visual Regression', () => {
       { type: 'label' as const, label: 'Danger zone' },
       { key: 'delete', label: 'Delete', danger: true },
     ];
-    render(
+    const screen = await render(
       <div style={{ padding: 20, paddingBottom: 300, background: '#fff' }}>
         <Dropdown items={richItems}>
           <button>Actions</button>
@@ -76,7 +76,7 @@ describe('Dropdown Visual Regression', () => {
 
   /* ---- 5. Disabled dropdown ---- */
   it('disabled dropdown matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Dropdown items={items} disabled>
           <button>Disabled</button>
@@ -88,7 +88,7 @@ describe('Dropdown Visual Regression', () => {
 
   /* ---- 6. Dark mode ---- */
   it('dark theme matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div data-theme="dark" style={{ padding: 20, paddingBottom: 200, background: '#1a1a2e' }}>
         <Dropdown items={items}>
           <button>Actions</button>

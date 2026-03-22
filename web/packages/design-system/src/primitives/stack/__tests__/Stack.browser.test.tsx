@@ -4,7 +4,7 @@ import { Stack, HStack, VStack } from '../Stack';
 
 describe('Stack (Browser)', () => {
   it('renders children in vertical layout by default', async () => {
-    render(
+    const screen = await render(
       <Stack>
         <span>Item 1</span>
         <span>Item 2</span>
@@ -15,7 +15,7 @@ describe('Stack (Browser)', () => {
   });
 
   it('HStack renders horizontal layout', async () => {
-    render(
+    const screen = await render(
       <HStack>
         <span>Left</span>
         <span>Right</span>
@@ -26,7 +26,7 @@ describe('Stack (Browser)', () => {
   });
 
   it('VStack renders vertical layout', async () => {
-    render(
+    const screen = await render(
       <VStack gap={4}>
         <span>Top</span>
         <span>Bottom</span>
@@ -37,7 +37,7 @@ describe('Stack (Browser)', () => {
   });
 
   it('renders with row direction', async () => {
-    render(
+    const screen = await render(
       <Stack direction="row" data-testid="row-stack">
         <span>A</span>
         <span>B</span>
@@ -47,7 +47,7 @@ describe('Stack (Browser)', () => {
   });
 
   it('renders with custom gap', async () => {
-    render(
+    const screen = await render(
       <Stack gap={8} data-testid="gap-stack">
         <span>X</span>
         <span>Y</span>
@@ -57,7 +57,7 @@ describe('Stack (Browser)', () => {
   });
 
   it('renders with wrap enabled', async () => {
-    render(
+    const screen = await render(
       <Stack direction="row" wrap data-testid="wrap-stack">
         <span>1</span>
         <span>2</span>
@@ -68,7 +68,7 @@ describe('Stack (Browser)', () => {
   });
 
   it('renders as different HTML element', async () => {
-    render(
+    const screen = await render(
       <Stack as="section" data-testid="section-stack">
         <span>Content</span>
       </Stack>,

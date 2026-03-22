@@ -12,7 +12,7 @@ const nodes = [
 
 describe('TreeTable Visual Regression', () => {
   it('expanded state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />
       </div>,

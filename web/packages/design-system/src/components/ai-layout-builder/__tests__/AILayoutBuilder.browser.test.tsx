@@ -21,7 +21,7 @@ describe('AILayoutBuilder (Browser)', () => {
   });
 
   it('renders with custom title and description', async () => {
-    render(
+    const screen = await render(
       <AILayoutBuilder
         blocks={[{ key: 'b1', type: 'text', content: <span>Hello</span> }]}
         title="Dashboard"
@@ -50,7 +50,7 @@ describe('AILayoutBuilder (Browser)', () => {
   });
 
   it('renders collapsible blocks', async () => {
-    render(
+    const screen = await render(
       <AILayoutBuilder
         blocks={[{ key: 'c1', type: 'text', title: 'Collapsible', content: <span>Body</span>, collapsible: true }]}
       />,
@@ -59,7 +59,7 @@ describe('AILayoutBuilder (Browser)', () => {
   });
 
   it('sorts blocks by priority', async () => {
-    render(
+    const screen = await render(
       <AILayoutBuilder
         blocks={[
           { key: 'low', type: 'text', title: 'Low', content: <span>L</span>, priority: 'low' },

@@ -9,7 +9,7 @@ describe('AIGuidedAuthoring (Browser)', () => {
   });
 
   it('renders with recommendations', async () => {
-    render(
+    const screen = await render(
       <AIGuidedAuthoring
         recommendations={[
           { id: 'r1', title: 'Rec 1', summary: 'Summary 1' },
@@ -20,14 +20,14 @@ describe('AIGuidedAuthoring (Browser)', () => {
   });
 
   it('renders confidence badge with level', async () => {
-    render(
+    const screen = await render(
       <AIGuidedAuthoring confidenceLevel="high" confidenceScore={95} />,
     );
     await expect.element(screen.getByText(/Yuksek guven/)).toBeVisible();
   });
 
   it('renders custom title and description', async () => {
-    render(
+    const screen = await render(
       <AIGuidedAuthoring title="Custom Title" description="Custom Desc" />,
     );
     await expect.element(screen.getByText('Custom Title')).toBeVisible();
@@ -52,7 +52,7 @@ describe('AIGuidedAuthoring (Browser)', () => {
   });
 
   it('renders multiple recommendations', async () => {
-    render(
+    const screen = await render(
       <AIGuidedAuthoring
         recommendations={[
           { id: 'r1', title: 'First', summary: 'S1' },

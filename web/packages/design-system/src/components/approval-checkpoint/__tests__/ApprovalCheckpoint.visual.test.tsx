@@ -5,7 +5,7 @@ import { ApprovalCheckpoint } from '../ApprovalCheckpoint';
 
 describe('ApprovalCheckpoint Visual Regression', () => {
   it('pending state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <ApprovalCheckpoint title="Release Gate" summary="Approval required" status="pending" />
       </div>,

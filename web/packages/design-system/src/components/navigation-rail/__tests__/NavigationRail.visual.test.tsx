@@ -11,7 +11,7 @@ const items = [
 
 describe('NavigationRail Visual Regression', () => {
   it('default navigation rail matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <NavigationRail items={items} defaultValue="dashboard" />
       </div>,
@@ -20,7 +20,7 @@ describe('NavigationRail Visual Regression', () => {
   });
 
   it('compact navigation rail matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <NavigationRail items={items} defaultValue="orders" compact />
       </div>,

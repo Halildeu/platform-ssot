@@ -5,7 +5,7 @@ import { Badge } from '../Badge';
 
 describe('Badge Visual Regression', () => {
   it('default variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Badge>Default</Badge>
       </div>,
@@ -14,7 +14,7 @@ describe('Badge Visual Regression', () => {
   });
 
   it('success variant matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Badge variant="success">Success</Badge>
       </div>,
@@ -23,7 +23,7 @@ describe('Badge Visual Regression', () => {
   });
 
   it('warning and error variants match screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', gap: 8 }}>
         <Badge variant="warning">Warning</Badge>
         <Badge variant="error">Error</Badge>

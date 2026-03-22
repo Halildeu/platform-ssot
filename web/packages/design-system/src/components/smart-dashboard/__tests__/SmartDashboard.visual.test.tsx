@@ -5,7 +5,7 @@ import { SmartDashboard } from '../SmartDashboard';
 
 describe('SmartDashboard Visual Regression', () => {
   it('dashboard with KPIs matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 700 }}>
         <SmartDashboard
           title="Overview"

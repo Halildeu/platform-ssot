@@ -10,7 +10,7 @@ const slides = [
 
 describe('Carousel Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    render(
+    const screen = await render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <Carousel items={slides} />
       </div>,
