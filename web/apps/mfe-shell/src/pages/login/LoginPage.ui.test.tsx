@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment jsdom
+ */
 import React from 'react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
@@ -56,8 +59,9 @@ describe('LoginPage', () => {
       </MemoryRouter>,
     );
 
-    const buttons = screen.getAllByTestId('corporate-login-button');
-    expect(buttons[0]).toBeInTheDocument();
+    const button = screen.getByTestId('corporate-login-button');
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveTextContent('Güvenli Kurumsal Giriş');
   });
 
   it('calls keycloak.login on click with redirect', async () => {
@@ -68,14 +72,14 @@ describe('LoginPage', () => {
       </MemoryRouter>,
     );
 
-    const button = screen.getAllByTestId('corporate-login-button')[0];
+    const button = screen.getByTestId('corporate-login-button');
     fireEvent.click(button);
 
     expect(loginSpy).toHaveBeenCalledTimes(1);
     expect(loginSpy).toHaveBeenCalledWith({ redirectUri: 'http://localhost:3000/login?redirect=%2Faccess%2Froles' });
   });
 
-  it('shows permitAll banner instead of corporate button', () => {
+  it('shows permitAll mode with Devam Et button', () => {
     authModeMock.permitAll = true;
     render(
       <MemoryRouter initialEntries={['/login']} future={routerFuture}>
@@ -83,7 +87,8 @@ describe('LoginPage', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByTestId('permitall-login-banner')).toBeInTheDocument();
+    expect(screen.getByText(/Geliştirme modunda/)).toBeInTheDocument();
+    expect(screen.getByText('Devam Et')).toBeInTheDocument();
     expect(screen.queryByTestId('corporate-login-button')).toBeNull();
   });
 });
