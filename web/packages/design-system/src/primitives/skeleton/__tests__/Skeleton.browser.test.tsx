@@ -16,4 +16,31 @@ describe('Skeleton (Browser)', () => {
     );
     await expect.element(screen.getByTestId('skeleton-lines')).toBeVisible();
   });
+
+  it('renders data-component attribute', async () => {
+    const screen = render(<Skeleton />);
+    const el = screen.container.querySelector('[data-component="skeleton"]');
+    expect(el).not.toBeNull();
+  });
+
+  it('renders circle shape', async () => {
+    const screen = render(<Skeleton circle height={40} data-testid="circle" />);
+    await expect.element(screen.getByTestId('circle')).toBeVisible();
+  });
+
+  it('renders with custom width and height', async () => {
+    const screen = render(<Skeleton width={200} height={24} data-testid="custom" />);
+    await expect.element(screen.getByTestId('custom')).toBeVisible();
+  });
+
+  it('renders without animation when animated is false', async () => {
+    const screen = render(<Skeleton animated={false} data-testid="static" />);
+    await expect.element(screen.getByTestId('static')).toBeVisible();
+  });
+
+  it('renders loading aria state', async () => {
+    const screen = render(<Skeleton />);
+    const el = screen.container.querySelector('[data-loading="true"]');
+    expect(el).not.toBeNull();
+  });
 });

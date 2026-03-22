@@ -35,4 +35,45 @@ describe('Stack (Browser)', () => {
     await expect.element(screen.getByText('Top')).toBeVisible();
     await expect.element(screen.getByText('Bottom')).toBeVisible();
   });
+
+  it('renders with row direction', async () => {
+    const screen = render(
+      <Stack direction="row" data-testid="row-stack">
+        <span>A</span>
+        <span>B</span>
+      </Stack>,
+    );
+    await expect.element(screen.getByTestId('row-stack')).toBeVisible();
+  });
+
+  it('renders with custom gap', async () => {
+    const screen = render(
+      <Stack gap={8} data-testid="gap-stack">
+        <span>X</span>
+        <span>Y</span>
+      </Stack>,
+    );
+    await expect.element(screen.getByTestId('gap-stack')).toBeVisible();
+  });
+
+  it('renders with wrap enabled', async () => {
+    const screen = render(
+      <Stack direction="row" wrap data-testid="wrap-stack">
+        <span>1</span>
+        <span>2</span>
+        <span>3</span>
+      </Stack>,
+    );
+    await expect.element(screen.getByTestId('wrap-stack')).toBeVisible();
+  });
+
+  it('renders as different HTML element', async () => {
+    const screen = render(
+      <Stack as="section" data-testid="section-stack">
+        <span>Content</span>
+      </Stack>,
+    );
+    const el = screen.container.querySelector('section[data-testid="section-stack"]');
+    expect(el).not.toBeNull();
+  });
 });

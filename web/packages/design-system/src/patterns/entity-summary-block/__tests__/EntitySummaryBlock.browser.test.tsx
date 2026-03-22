@@ -2,30 +2,53 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { EntitySummaryBlock } from '../EntitySummaryBlock';
 
+const items = [
+  { key: 'dept', label: 'Department', value: 'Engineering' },
+  { key: 'loc', label: 'Location', value: 'Istanbul' },
+];
+
 describe('EntitySummaryBlock (Browser)', () => {
-  it('renders title and description items', async () => {
-    const screen = render(
-      <EntitySummaryBlock
-        title="John Doe"
-        subtitle="Software Engineer"
-        items={[
-          { key: 'dept', label: 'Department', value: 'Engineering' },
-          { key: 'loc', label: 'Location', value: 'Istanbul' },
-        ]}
-      />,
-    );
+  it('renders title', async () => {
+    const screen = render(<EntitySummaryBlock title="John Doe" items={items} />);
     await expect.element(screen.getByText('John Doe')).toBeVisible();
-    await expect.element(screen.getByText('Engineering')).toBeVisible();
   });
 
-  it('renders with badge', async () => {
+  it('renders subtitle', async () => {
     const screen = render(
-      <EntitySummaryBlock
-        title="Entity"
-        badge={<span>Active</span>}
-        items={[{ key: 'k1', label: 'L1', value: 'V1' }]}
-      />,
+      <EntitySummaryBlock title="John" subtitle="Software Engineer" items={items} />,
+    );
+    await expect.element(screen.getByText('Software Engineer')).toBeVisible();
+  });
+
+  it('renders description items', async () => {
+    const screen = render(<EntitySummaryBlock title="John" items={items} />);
+    await expect.element(screen.getByText('Department')).toBeVisible();
+    await expect.element(screen.getByText('Engineering')).toBeVisible();
+    await expect.element(screen.getByText('Istanbul')).toBeVisible();
+  });
+
+  it('renders badge', async () => {
+    const screen = render(
+      <EntitySummaryBlock title="Entity" badge={<span>Active</span>} items={items} />,
     );
     await expect.element(screen.getByText('Active')).toBeVisible();
+  });
+
+  it('renders actions slot', async () => {
+    const screen = render(
+      <EntitySummaryBlock title="Entity" items={items} actions={<button>Edit</button>} />,
+    );
+    await expect.element(screen.getByText('Edit')).toBeVisible();
+  });
+
+  it('renders data-component attribute', async () => {
+    const screen = render(<EntitySummaryBlock title="Test" items={items} />);
+    const el = screen.container.querySelector('[data-component="entity-summary-block"]');
+    expect(el).not.toBeNull();
+  });
+
+  it('renders nothing when access is hidden', async () => {
+    const screen = render(<EntitySummaryBlock title="Hidden" items={items} access="hidden" />);
+    expect(screen.container.querySelector('[data-component="entity-summary-block"]')).toBeNull();
   });
 });

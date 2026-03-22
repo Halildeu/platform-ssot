@@ -1,31 +1,85 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { DetailSectionTabs } from '../DetailSectionTabs';
 
+const tabs = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'details', label: 'Details' },
+  { id: 'history', label: 'History' },
+];
+
 describe('DetailSectionTabs (Browser)', () => {
-  it('renders tabs with active state', async () => {
+  it('renders all tabs', async () => {
     const screen = render(
-      <DetailSectionTabs
-        tabs={[
-          { id: 'overview', label: 'Overview' },
-          { id: 'details', label: 'Details' },
-        ]}
-        activeTabId="overview"
-        onTabChange={() => {}}
-      />,
+      <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={() => {}} />,
     );
     await expect.element(screen.getByText('Overview')).toBeVisible();
     await expect.element(screen.getByText('Details')).toBeVisible();
+    await expect.element(screen.getByText('History')).toBeVisible();
   });
 
   it('renders with badges', async () => {
     const screen = render(
       <DetailSectionTabs
-        tabs={[
-          { id: 'tab1', label: 'Tab 1', badge: <span>3</span> },
-        ]}
+        tabs={[{ id: 'tab1', label: 'Tab 1', badge: <span>3</span> }]}
         activeTabId="tab1"
         onTabChange={() => {}}
+      />,
+    );
+    await expect.element(screen.getByText('3')).toBeVisible();
+  });
+
+  it('calls onTabChange when a tab is clicked', async () => {
+    const onTabChange = vi.fn();
+    const screen = render(
+      <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={onTabChange} />,
+    );
+    await screen.getByText('Details').click();
+    expect(onTabChange).toHaveBeenCalledWith('details');
+  });
+
+  it('renders data-component attribute', async () => {
+    const screen = render(
+      <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={() => {}} />,
+    );
+    const el = screen.container.querySelector('[data-component="detail-section-tabs"]');
+    expect(el).not.toBeNull();
+  });
+
+  it('renders disabled tab', async () => {
+    const screen = render(
+      <DetailSectionTabs
+        tabs={[
+          { id: 'active', label: 'Active' },
+          { id: 'disabled', label: 'Disabled', disabled: true },
+        ]}
+        activeTabId="active"
+        onTabChange={() => {}}
+      />,
+    );
+    await expect.element(screen.getByText('Disabled')).toBeVisible();
+  });
+
+  it('renders with custom ariaLabel', async () => {
+    const screen = render(
+      <DetailSectionTabs
+        tabs={tabs}
+        activeTabId="overview"
+        onTabChange={() => {}}
+        ariaLabel="Section navigation"
+      />,
+    );
+    const el = screen.container.querySelector('[data-component="detail-section-tabs"]');
+    expect(el).not.toBeNull();
+  });
+
+  it('renders with test id prefix', async () => {
+    const screen = render(
+      <DetailSectionTabs
+        tabs={[{ id: 'tab1', label: 'Tab 1' }]}
+        activeTabId="tab1"
+        onTabChange={() => {}}
+        testIdPrefix="order"
       />,
     );
     await expect.element(screen.getByText('Tab 1')).toBeVisible();

@@ -22,4 +22,31 @@ describe('LinkInline (Browser)', () => {
     await expect.element(screen.getByText('Disabled')).toBeVisible();
     expect(screen.container.querySelector('a')).toBeNull();
   });
+
+  it('renders data-component attribute', async () => {
+    const screen = render(<LinkInline href="/test">Link</LinkInline>);
+    const el = screen.container.querySelector('[data-component="link-inline"]');
+    expect(el).not.toBeNull();
+  });
+
+  it('renders primary tone by default', async () => {
+    const screen = render(<LinkInline href="/test">Primary</LinkInline>);
+    await expect.element(screen.getByRole('link', { name: 'Primary' })).toBeVisible();
+  });
+
+  it('renders secondary tone', async () => {
+    const screen = render(<LinkInline href="/test" tone="secondary">Secondary</LinkInline>);
+    await expect.element(screen.getByText('Secondary')).toBeVisible();
+  });
+
+  it('renders with current aria attribute', async () => {
+    const screen = render(<LinkInline href="/current" current>Current Page</LinkInline>);
+    const link = screen.container.querySelector('[aria-current="page"]');
+    expect(link).not.toBeNull();
+  });
+
+  it('renders nothing when access is hidden', async () => {
+    const screen = render(<LinkInline href="/test" access="hidden">Hidden</LinkInline>);
+    expect(screen.container.textContent).toBe('');
+  });
 });

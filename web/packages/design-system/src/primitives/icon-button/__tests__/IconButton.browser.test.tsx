@@ -22,7 +22,48 @@ describe('IconButton (Browser)', () => {
 
   it('is disabled when disabled prop is set', async () => {
     const screen = render(<IconButton icon={<TestIcon />} label="Delete" disabled />);
-    const btn = screen.getByRole('button');
-    await expect.element(btn).toBeDisabled();
+    await expect.element(screen.getByRole('button')).toBeDisabled();
+  });
+
+  it('does not fire onClick when disabled', async () => {
+    const onClick = vi.fn();
+    const screen = render(<IconButton icon={<TestIcon />} label="Action" disabled onClick={onClick} />);
+    await screen.getByRole('button').click();
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('renders data-component attribute', async () => {
+    const screen = render(<IconButton icon={<TestIcon />} label="Test" />);
+    const el = screen.container.querySelector('[data-component="icon-button"]');
+    expect(el).not.toBeNull();
+  });
+
+  it('renders different variants', async () => {
+    const screen = render(
+      <div>
+        <IconButton icon={<TestIcon />} label="Primary" variant="primary" data-testid="primary" />
+        <IconButton icon={<TestIcon />} label="Ghost" variant="ghost" data-testid="ghost" />
+        <IconButton icon={<TestIcon />} label="Danger" variant="danger" data-testid="danger" />
+      </div>,
+    );
+    await expect.element(screen.getByTestId('primary')).toBeVisible();
+    await expect.element(screen.getByTestId('ghost')).toBeVisible();
+    await expect.element(screen.getByTestId('danger')).toBeVisible();
+  });
+
+  it('renders different sizes', async () => {
+    const screen = render(
+      <div>
+        <IconButton icon={<TestIcon />} label="XS" size="xs" data-testid="xs" />
+        <IconButton icon={<TestIcon />} label="LG" size="lg" data-testid="lg" />
+      </div>,
+    );
+    await expect.element(screen.getByTestId('xs')).toBeVisible();
+    await expect.element(screen.getByTestId('lg')).toBeVisible();
+  });
+
+  it('renders nothing when access is hidden', async () => {
+    const screen = render(<IconButton icon={<TestIcon />} label="Hidden" access="hidden" />);
+    expect(screen.container.querySelector('button')).toBeNull();
   });
 });

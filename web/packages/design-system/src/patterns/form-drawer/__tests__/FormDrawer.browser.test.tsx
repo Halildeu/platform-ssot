@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { FormDrawer } from '../FormDrawer';
 
@@ -12,13 +12,69 @@ describe('FormDrawer (Browser)', () => {
     expect(screen.container.textContent).toBe('');
   });
 
-  it('renders dialog when open', async () => {
+  it('renders title when open', async () => {
     const screen = render(
       <FormDrawer open onClose={() => {}} title="Create Item">
         <div>Form content</div>
       </FormDrawer>,
     );
     await expect.element(screen.getByText('Create Item')).toBeVisible();
-    await expect.element(screen.getByText('Form content')).toBeVisible();
+  });
+
+  it('renders children content when open', async () => {
+    const screen = render(
+      <FormDrawer open onClose={() => {}} title="Create">
+        <div>Form fields here</div>
+      </FormDrawer>,
+    );
+    await expect.element(screen.getByText('Form fields here')).toBeVisible();
+  });
+
+  it('renders dialog with role', async () => {
+    const screen = render(
+      <FormDrawer open onClose={() => {}} title="Dialog">
+        <div>Content</div>
+      </FormDrawer>,
+    );
+    const dialog = screen.container.querySelector('[role="dialog"]');
+    expect(dialog).not.toBeNull();
+  });
+
+  it('renders close button', async () => {
+    const screen = render(
+      <FormDrawer open onClose={() => {}} title="Test">
+        <div>Content</div>
+      </FormDrawer>,
+    );
+    await expect.element(screen.getByLabelText('Close drawer')).toBeVisible();
+  });
+
+  it('calls onClose when close button is clicked', async () => {
+    const onClose = vi.fn();
+    const screen = render(
+      <FormDrawer open onClose={onClose} title="Test">
+        <div>Content</div>
+      </FormDrawer>,
+    );
+    await screen.getByLabelText('Close drawer').click();
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it('renders footer slot', async () => {
+    const screen = render(
+      <FormDrawer open onClose={() => {}} title="Test" footer={<button>Submit</button>}>
+        <div>Content</div>
+      </FormDrawer>,
+    );
+    await expect.element(screen.getByText('Submit')).toBeVisible();
+  });
+
+  it('renders subtitle', async () => {
+    const screen = render(
+      <FormDrawer open onClose={() => {}} title="Create" subtitle="Fill in the details">
+        <div>Content</div>
+      </FormDrawer>,
+    );
+    await expect.element(screen.getByText('Fill in the details')).toBeVisible();
   });
 });

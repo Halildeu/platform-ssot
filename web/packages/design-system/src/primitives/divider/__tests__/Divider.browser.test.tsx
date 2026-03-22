@@ -16,4 +16,41 @@ describe('Divider (Browser)', () => {
     );
     await expect.element(screen.getByTestId('v-divider')).toBeVisible();
   });
+
+  it('renders with separator role for horizontal', async () => {
+    const screen = render(<Divider />);
+    const sep = screen.container.querySelector('[role="separator"]');
+    expect(sep).not.toBeNull();
+  });
+
+  it('renders with separator role for vertical', async () => {
+    const screen = render(
+      <div style={{ height: 40, display: 'flex' }}>
+        <Divider orientation="vertical" />
+      </div>,
+    );
+    const sep = screen.container.querySelector('[aria-orientation="vertical"]');
+    expect(sep).not.toBeNull();
+  });
+
+  it('renders with label', async () => {
+    const screen = render(<Divider label="OR" />);
+    await expect.element(screen.getByText('OR')).toBeVisible();
+  });
+
+  it('renders with different spacing', async () => {
+    const screen = render(
+      <div>
+        <Divider spacing="sm" data-testid="sm" />
+        <Divider spacing="lg" data-testid="lg" />
+      </div>,
+    );
+    await expect.element(screen.getByTestId('sm')).toBeVisible();
+    await expect.element(screen.getByTestId('lg')).toBeVisible();
+  });
+
+  it('renders with no spacing', async () => {
+    const screen = render(<Divider spacing="none" data-testid="none" />);
+    await expect.element(screen.getByTestId('none')).toBeVisible();
+  });
 });

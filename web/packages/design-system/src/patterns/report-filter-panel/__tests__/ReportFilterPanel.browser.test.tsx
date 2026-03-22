@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { ReportFilterPanel } from '../ReportFilterPanel';
 
@@ -7,7 +7,6 @@ describe('ReportFilterPanel (Browser)', () => {
     const screen = render(
       <ReportFilterPanel onSubmit={() => {}} onReset={() => {}}>
         <input placeholder="Date from" />
-        <input placeholder="Date to" />
       </ReportFilterPanel>,
     );
     await expect.element(screen.getByText('Filtrele')).toBeVisible();
@@ -21,5 +20,54 @@ describe('ReportFilterPanel (Browser)', () => {
       </ReportFilterPanel>,
     );
     await expect.element(screen.getByPlaceholder('Search')).toBeVisible();
+  });
+
+  it('calls onSubmit when submit button is clicked', async () => {
+    const onSubmit = vi.fn();
+    const screen = render(
+      <ReportFilterPanel onSubmit={onSubmit}>
+        <input placeholder="Filter" />
+      </ReportFilterPanel>,
+    );
+    await screen.getByText('Filtrele').click();
+    expect(onSubmit).toHaveBeenCalledOnce();
+  });
+
+  it('calls onReset when reset button is clicked', async () => {
+    const onReset = vi.fn();
+    const screen = render(
+      <ReportFilterPanel onReset={onReset}>
+        <input placeholder="Filter" />
+      </ReportFilterPanel>,
+    );
+    await screen.getByText('Sifirla').click();
+    expect(onReset).toHaveBeenCalledOnce();
+  });
+
+  it('renders custom button labels', async () => {
+    const screen = render(
+      <ReportFilterPanel submitLabel="Apply" resetLabel="Clear">
+        <input placeholder="Filter" />
+      </ReportFilterPanel>,
+    );
+    await expect.element(screen.getByText('Apply')).toBeVisible();
+    await expect.element(screen.getByText('Clear')).toBeVisible();
+  });
+
+  it('renders nothing when access is hidden', async () => {
+    const screen = render(
+      <ReportFilterPanel access="hidden">
+        <input placeholder="Filter" />
+      </ReportFilterPanel>,
+    );
+    expect(screen.container.querySelector('form')).toBeNull();
+  });
+
+  it('renders form element', async () => {
+    const screen = render(
+      <ReportFilterPanel><input placeholder="X" /></ReportFilterPanel>,
+    );
+    const form = screen.container.querySelector('form');
+    expect(form).not.toBeNull();
   });
 });

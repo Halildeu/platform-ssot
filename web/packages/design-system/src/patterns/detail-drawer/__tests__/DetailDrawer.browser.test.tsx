@@ -13,7 +13,7 @@ describe('DetailDrawer (Browser)', () => {
     await expect.element(screen.getByText('Order details here')).toBeVisible();
   });
 
-  it('does not render when closed', async () => {
+  it('does not render dialog when closed', async () => {
     const screen = render(
       <DetailDrawer open={false} onClose={() => {}} title="Hidden">
         <p>Hidden content</p>
@@ -23,13 +23,65 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders close button', async () => {
-    const onClose = vi.fn();
     const screen = render(
-      <DetailDrawer open onClose={onClose} title="Closable">
+      <DetailDrawer open onClose={() => {}} title="Closable">
         <p>Content</p>
       </DetailDrawer>,
     );
-    const closeBtn = screen.getByLabelText('Close drawer');
-    await expect.element(closeBtn).toBeVisible();
+    await expect.element(screen.getByLabelText('Close drawer')).toBeVisible();
+  });
+
+  it('calls onClose when close button is clicked', async () => {
+    const onClose = vi.fn();
+    const screen = render(
+      <DetailDrawer open onClose={onClose} title="Test">
+        <p>Content</p>
+      </DetailDrawer>,
+    );
+    await screen.getByLabelText('Close drawer').click();
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it('renders subtitle when provided', async () => {
+    const screen = render(
+      <DetailDrawer open onClose={() => {}} title="Order" subtitle="Order details">
+        <p>Body</p>
+      </DetailDrawer>,
+    );
+    await expect.element(screen.getByText('Order details')).toBeVisible();
+  });
+
+  it('renders sections', async () => {
+    const screen = render(
+      <DetailDrawer
+        open
+        onClose={() => {}}
+        title="Detail"
+        sections={[
+          { key: 's1', title: 'Section 1', content: <p>Section content</p> },
+        ]}
+      />,
+    );
+    await expect.element(screen.getByText('Section 1')).toBeVisible();
+    await expect.element(screen.getByText('Section content')).toBeVisible();
+  });
+
+  it('renders footer slot', async () => {
+    const screen = render(
+      <DetailDrawer open onClose={() => {}} title="Test" footer={<button>Save</button>}>
+        <p>Content</p>
+      </DetailDrawer>,
+    );
+    await expect.element(screen.getByText('Save')).toBeVisible();
+  });
+
+  it('renders dialog with role attribute', async () => {
+    const screen = render(
+      <DetailDrawer open onClose={() => {}} title="Dialog">
+        <p>Content</p>
+      </DetailDrawer>,
+    );
+    const dialog = screen.container.querySelector('[role="dialog"]');
+    expect(dialog).not.toBeNull();
   });
 });
