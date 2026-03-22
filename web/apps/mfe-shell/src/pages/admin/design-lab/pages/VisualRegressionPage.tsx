@@ -244,6 +244,9 @@ export const VisualRegressionPage: React.FC = () => {
             <Text variant="secondary" className="text-sm">
               Per-component snapshot comparison & change detection
             </Text>
+            <Text variant="secondary" className="text-[10px] mt-0.5">
+              Altyapı yapılandırması türetilmiş · CI sonuçları henüz bağlı değil
+            </Text>
           </div>
         </div>
         <button

@@ -38,7 +38,7 @@ type TokenChange = { token: string; category: string; type: "added" | "removed" 
  * Derived from actual design token build output:
  * - Token files: packages/design-system/src/tokens/ (11 source files)
  * - Built output: packages/design-system/src/tokens/build/tokens.json
- * - CSS custom properties: 209 in tokens.css
+ * - CSS custom properties: ~209 in tokens.css (yaklaşık — build zamanında değişebilir)
  * - Categories counted from tokens.json leaf nodes
  */
 function useFigmaSyncData() {
@@ -56,7 +56,8 @@ function useFigmaSyncData() {
       zindex: 10,        // z-index layer tokens in tokens.json
     };
     // Additional categories in build: elevation(8), opacity(9), density(54), focusRing(5)
-    const totalTokens = 209; // Total CSS custom properties from tokens.css build
+    // yaklaşık değer — build zamanında hesaplanır (tokens.css custom property sayısı)
+    const totalTokens = 209;
 
     // No Figma API connection — show "never synced"
     const syncStatus: SyncStatus = "never";
@@ -263,6 +264,9 @@ export const FigmaSyncPage: React.FC = () => {
             </div>
             <Text variant="secondary" className="text-sm">
               Monitor design token synchronization between Figma and code
+            </Text>
+            <Text variant="secondary" className="text-[10px] mt-0.5">
+              Token envanteri türetilmiş · Figma API bağlantısı yapılandırılmamış
             </Text>
           </div>
         </div>

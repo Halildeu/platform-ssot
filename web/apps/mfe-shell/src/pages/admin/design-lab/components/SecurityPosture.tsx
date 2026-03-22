@@ -128,6 +128,9 @@ export function SecurityPosture() {
       </div>
 
       <Text variant="secondary" className="mt-3 text-[10px]">
+        Yapılandırma durumu türetilmiş · CI koşu sonuçları henüz bağlı değil
+      </Text>
+      <Text variant="secondary" className="mt-1 text-[10px]">
         Yapilandirildi = dosya repoda mevcut. Gercek basarili/basarisiz durumu CI calisma sonuclarindan gelir.
       </Text>
     </div>

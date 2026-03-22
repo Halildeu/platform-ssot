@@ -17,6 +17,7 @@ import {
   BookOpenCheck,
   Paintbrush,
   Palette,
+  Clock,
 } from "lucide-react";
 import { Text, IconButton } from "@mfe/design-system";
 import {
@@ -1737,62 +1738,14 @@ const CHANGELOG_TYPE_CONFIG: Record<ChangelogEntry["type"], { label: string; col
   refactor: { label: "Refactor", color: "bg-purple-100 text-purple-700", dot: "bg-purple-500" },
 };
 
-function generateComponentChangelog(componentName: string): ChangelogEntry[] {
-  // Deterministic simulated changelog based on component name
-  const seed = componentName.length;
-  const types: ChangelogEntry["type"][] = ["feature", "fix", "breaking", "deprecation", "refactor"];
-  const entries: ChangelogEntry[] = [];
-
-  const descriptions: Record<ChangelogEntry["type"], string[]> = {
-    feature: [
-      `Added new size variant "xs" to ${componentName}`,
-      `Added aria-live region support for dynamic content`,
-      `New "ghost" variant with transparent background`,
-      `Added forwardRef support for DOM access`,
-    ],
-    fix: [
-      `Fixed focus ring visibility in high-contrast mode`,
-      `Resolved layout shift during SSR hydration`,
-      `Fixed incorrect padding in RTL layouts`,
-      `Corrected ARIA role assignment for screen readers`,
-    ],
-    breaking: [
-      `Renamed "type" prop to "variant" for consistency`,
-      `Removed deprecated "size" values: "tiny", "huge"`,
-      `Changed default border-radius from 4px to 8px`,
-    ],
-    deprecation: [
-      `Deprecated "outline" variant, use "ghost" instead`,
-      `Deprecated "onAction" prop in favor of "onClick"`,
-    ],
-    refactor: [
-      `Migrated to CSS custom properties for theming`,
-      `Converted to compound component pattern`,
-      `Reduced bundle size by 23% via tree-shaking improvements`,
-    ],
-  };
-
-  // Generate 6-10 entries
-  const count = 6 + (seed % 5);
-  for (let i = 0; i < count; i++) {
-    const type = types[(seed + i * 3) % types.length];
-    const pool = descriptions[type];
-    const desc = pool[(seed + i) % pool.length];
-    const major = 2 - Math.floor(i / 4);
-    const minor = 4 - (i % 4);
-    const patch = (seed + i) % 3;
-    const daysAgo = i * 14 + (seed % 7);
-    const date = new Date(Date.now() - daysAgo * 86400000);
-
-    entries.push({
-      version: `${Math.max(1, major)}.${Math.max(0, minor)}.${patch}`,
-      date: date.toISOString().split("T")[0],
-      type,
-      description: desc,
-    });
-  }
-
-  return entries;
+/**
+ * Changelog data is not yet available.
+ * When CHANGELOG.md parsing is implemented, this function will derive
+ * entries from the actual file for each component.
+ */
+function generateComponentChangelog(_componentName: string): ChangelogEntry[] {
+  // No simulated data — return empty until CHANGELOG.md integration is built
+  return [];
 }
 
 function ChangelogTab({ componentName }: { componentName: string }) {
@@ -1809,49 +1762,61 @@ function ChangelogTab({ componentName }: { componentName: string }) {
         </Text>
       </div>
 
-      {/* Timeline */}
-      <div className="relative">
-        {/* Vertical line */}
-        <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border-subtle" />
+      {entries.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-border-subtle bg-surface-default py-12 px-6 text-center">
+          <Clock className="h-8 w-8 text-[var(--text-subtle)]" />
+          <Text className="mt-3 text-sm font-medium text-text-primary">
+            Değişiklik günlüğü henüz mevcut değil
+          </Text>
+          <Text variant="secondary" className="mt-1 text-xs max-w-sm">
+            CHANGELOG.md dosyasından otomatik oluşturulacak.
+          </Text>
+        </div>
+      ) : (
+        /* Timeline */
+        <div className="relative">
+          {/* Vertical line */}
+          <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border-subtle" />
 
-        <div className="space-y-0">
-          {entries.map((entry, i) => {
-            const cfg = CHANGELOG_TYPE_CONFIG[entry.type];
-            const isFirst = i === 0;
-            return (
-              <div key={`${entry.version}-${i}`} className="relative flex gap-4 py-3">
-                {/* Dot on timeline */}
-                <div className="relative z-10 flex h-[30px] w-[30px] shrink-0 items-center justify-center">
-                  <div className={["h-3 w-3 rounded-full ring-4 ring-surface-default", cfg.dot, isFirst ? "h-3.5 w-3.5" : ""].join(" ")} />
-                </div>
+          <div className="space-y-0">
+            {entries.map((entry, i) => {
+              const cfg = CHANGELOG_TYPE_CONFIG[entry.type];
+              const isFirst = i === 0;
+              return (
+                <div key={`${entry.version}-${i}`} className="relative flex gap-4 py-3">
+                  {/* Dot on timeline */}
+                  <div className="relative z-10 flex h-[30px] w-[30px] shrink-0 items-center justify-center">
+                    <div className={["h-3 w-3 rounded-full ring-4 ring-surface-default", cfg.dot, isFirst ? "h-3.5 w-3.5" : ""].join(" ")} />
+                  </div>
 
-                {/* Content */}
-                <div className={["min-w-0 flex-1 rounded-xl border border-border-subtle bg-surface-default px-4 py-3 transition", isFirst ? "ring-1 ring-action-primary/20" : ""].join(" ")}>
-                  <div className="flex items-center gap-2">
-                    <Text className="text-sm font-bold text-text-primary">
-                      v{entry.version}
-                    </Text>
-                    <span className={["rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase", cfg.color].join(" ")}>
-                      {cfg.label}
-                    </span>
-                    {isFirst && (
-                      <span className="rounded-md bg-action-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-action-primary">
-                        Latest
+                  {/* Content */}
+                  <div className={["min-w-0 flex-1 rounded-xl border border-border-subtle bg-surface-default px-4 py-3 transition", isFirst ? "ring-1 ring-action-primary/20" : ""].join(" ")}>
+                    <div className="flex items-center gap-2">
+                      <Text className="text-sm font-bold text-text-primary">
+                        v{entry.version}
+                      </Text>
+                      <span className={["rounded-md px-1.5 py-0.5 text-[10px] font-semibold uppercase", cfg.color].join(" ")}>
+                        {cfg.label}
                       </span>
-                    )}
-                    <Text variant="secondary" className="ml-auto text-[11px]">
-                      {entry.date}
+                      {isFirst && (
+                        <span className="rounded-md bg-action-primary/10 px-1.5 py-0.5 text-[10px] font-semibold text-action-primary">
+                          Latest
+                        </span>
+                      )}
+                      <Text variant="secondary" className="ml-auto text-[11px]">
+                        {entry.date}
+                      </Text>
+                    </div>
+                    <Text variant="secondary" className="mt-1 text-sm">
+                      {entry.description}
                     </Text>
                   </div>
-                  <Text variant="secondary" className="mt-1 text-sm">
-                    {entry.description}
-                  </Text>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
