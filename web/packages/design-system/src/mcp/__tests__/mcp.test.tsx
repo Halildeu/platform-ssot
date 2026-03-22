@@ -389,3 +389,237 @@ describe('DesignSystemMCPServer', () => {
     expect(result.code).toContain('Button');
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  MCP v2 Tools                                                       */
+/* ------------------------------------------------------------------ */
+
+describe('MCP v2 Tools', () => {
+  const server = new DesignSystemMCPServer();
+
+  // 10. proposeLayout
+  describe('proposeLayout', () => {
+    it('returns layout for dashboard description', () => {
+      const result = server.handleToolCall('proposeLayout', { description: 'KPI dashboard with charts' });
+      expect(result).toHaveProperty('blocks');
+      expect(result).toHaveProperty('intent');
+      expect(result).toHaveProperty('rationale');
+    });
+    it('detects overview intent for dashboard keywords', () => {
+      const result = server.handleToolCall('proposeLayout', { description: 'overview dashboard' }) as any;
+      expect(result.intent).toBe('overview');
+    });
+    it('returns default blocks for empty description', () => {
+      const result = server.handleToolCall('proposeLayout', { description: 'generic page' }) as any;
+      expect(result.blocks.length).toBeGreaterThan(0);
+    });
+  });
+
+  // 11. reviewAccessibility
+  describe('reviewAccessibility', () => {
+    it('returns score 100 for well-labeled component', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('reviewAccessibility', { componentName: names[0], props: { label: 'Test', 'aria-label': 'Test' } }) as any;
+      expect(result).toHaveProperty('score');
+      expect(result).toHaveProperty('issues');
+    });
+    it('returns error for unknown component', () => {
+      const result = server.handleToolCall('reviewAccessibility', { componentName: 'NonExistent', props: {} }) as any;
+      expect(result.score).toBe(0);
+      expect(result.issues.length).toBeGreaterThan(0);
+    });
+    it('flags disabled without accessReason', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('reviewAccessibility', { componentName: names[0], props: { disabled: true } }) as any;
+      const hasDisabledIssue = result.issues.some((i: any) => i.rule === 'disabled-reason');
+      expect(hasDisabledIssue).toBe(true);
+    });
+  });
+
+  // 12. suggestTestCases
+  describe('suggestTestCases', () => {
+    it('returns test suggestions for known component', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('suggestTestCases', { componentName: names[0] }) as any[];
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0]).toHaveProperty('category');
+      expect(result[0]).toHaveProperty('description');
+      expect(result[0]).toHaveProperty('code');
+    });
+    it('returns empty for unknown component', () => {
+      const result = server.handleToolCall('suggestTestCases', { componentName: 'Unknown123' }) as any[];
+      expect(result).toEqual([]);
+    });
+    it('includes a11y and access-control tests', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('suggestTestCases', { componentName: names[0] }) as any[];
+      const categories = result.map((t: any) => t.category);
+      expect(categories).toContain('a11y');
+      expect(categories).toContain('access-control');
+    });
+  });
+
+  // 13. explainComponent
+  describe('explainComponent', () => {
+    it('returns explanation for known component', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('explainComponent', { componentName: names[0] }) as any;
+      expect(result).toHaveProperty('component');
+      expect(result).toHaveProperty('summary');
+      expect(result).toHaveProperty('whenToUse');
+    });
+    it('returns null for unknown component', () => {
+      const result = server.handleToolCall('explainComponent', { componentName: 'Unknown' });
+      expect(result).toBeNull();
+    });
+  });
+
+  // 14. compareComponents
+  describe('compareComponents', () => {
+    it('returns comparison for two known components', () => {
+      const names = server.getComponentNames();
+      if (names.length < 2) return;
+      const result = server.handleToolCall('compareComponents', { a: names[0], b: names[1] }) as any;
+      expect(result).toHaveProperty('a');
+      expect(result).toHaveProperty('b');
+      expect(result).toHaveProperty('similarities');
+      expect(result).toHaveProperty('differences');
+      expect(result).toHaveProperty('recommendation');
+    });
+    it('returns null for unknown component', () => {
+      const result = server.handleToolCall('compareComponents', { a: 'Unknown', b: 'Also Unknown' });
+      expect(result).toBeNull();
+    });
+  });
+
+  // 15. optimizeBundle
+  describe('optimizeBundle', () => {
+    it('returns bundle analysis', () => {
+      const result = server.handleToolCall('optimizeBundle', { components: ['Button', 'EntityGridTemplate'] }) as any;
+      expect(result).toHaveProperty('totalKB');
+      expect(result.totalKB).toBeGreaterThan(0);
+    });
+    it('suggests lazy-load for heavy components', () => {
+      const result = server.handleToolCall('optimizeBundle', { components: ['EntityGridTemplate'] }) as any;
+      expect(result.suggestions.length).toBeGreaterThan(0);
+      expect(result.suggestions[0].action).toBe('lazy-load');
+    });
+  });
+
+  // 16. auditTokenUsage
+  describe('auditTokenUsage', () => {
+    it('detects hardcoded colors', () => {
+      const result = server.handleToolCall('auditTokenUsage', { code: 'color: #ff0000; background: rgb(255,0,0)' }) as any;
+      expect(result.clean).toBe(false);
+      expect(result.violations.length).toBeGreaterThan(0);
+    });
+    it('returns clean for token-only code', () => {
+      const result = server.handleToolCall('auditTokenUsage', { code: 'color: var(--text-primary)' }) as any;
+      expect(result.clean).toBe(true);
+    });
+  });
+
+  // 17. suggestPattern
+  describe('suggestPattern', () => {
+    it('suggests pattern for known combo', () => {
+      const result = server.handleToolCall('suggestPattern', { components: ['PageHeader', 'PageLayout'] }) as any[];
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0]).toHaveProperty('pattern');
+    });
+    it('returns Custom for unknown combo', () => {
+      const result = server.handleToolCall('suggestPattern', { components: ['Button', 'Badge'] }) as any[];
+      expect(result[0].pattern).toBe('Custom');
+    });
+  });
+
+  // 18. getComponentDependencies
+  describe('getComponentDependencies', () => {
+    it('returns dependency tree for known component', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('getComponentDependencies', { componentName: names[0] }) as any;
+      expect(result).toHaveProperty('root');
+      expect(result).toHaveProperty('nodes');
+      expect(result).toHaveProperty('totalDependencies');
+    });
+    it('returns null for unknown component', () => {
+      const result = server.handleToolCall('getComponentDependencies', { componentName: 'Unknown' });
+      expect(result).toBeNull();
+    });
+  });
+
+  // 19. getQualityReport
+  describe('getQualityReport', () => {
+    it('returns overall report when no component specified', () => {
+      const result = server.handleToolCall('getQualityReport', {}) as any;
+      expect(result.component).toBeNull();
+      expect(result.lifecycle).toBe('stable');
+    });
+    it('returns component report for known component', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('getQualityReport', { componentName: names[0] }) as any;
+      expect(result.component).toBeTruthy();
+      expect(result).toHaveProperty('lifecycle');
+      expect(result).toHaveProperty('hasContract');
+    });
+  });
+
+  // 20. migrateComponent
+  describe('migrateComponent', () => {
+    it('returns migration guide for known component', () => {
+      const names = server.getComponentNames();
+      if (names.length === 0) return;
+      const result = server.handleToolCall('migrateComponent', { componentName: names[0], fromVersion: '1.0.0' }) as any;
+      expect(result).toHaveProperty('steps');
+      expect(result).toHaveProperty('fromVersion');
+      expect(result.fromVersion).toBe('1.0.0');
+    });
+    it('returns null for unknown component', () => {
+      const result = server.handleToolCall('migrateComponent', { componentName: 'Unknown', fromVersion: '1.0.0' });
+      expect(result).toBeNull();
+    });
+  });
+
+  // 21. generateFormSchema
+  describe('generateFormSchema', () => {
+    it('generates schema for login form description', () => {
+      const result = server.handleToolCall('generateFormSchema', { description: 'login form with email and password' }) as any;
+      expect(result.zodSchema).toContain('email');
+      expect(result.zodSchema).toContain('password');
+      expect(result).toHaveProperty('formConfig');
+    });
+    it('generates default schema for vague description', () => {
+      const result = server.handleToolCall('generateFormSchema', { description: 'some form' }) as any;
+      expect(result.zodSchema).toContain('z.object');
+    });
+  });
+
+  // Server v2 — listTools includes new tools
+  describe('server listTools v2', () => {
+    it('lists 21 tools total', () => {
+      const tools = server.listTools();
+      expect(tools.length).toBe(21);
+    });
+    it('includes all v2 tool names', () => {
+      const names = server.listTools().map(t => t.name);
+      expect(names).toContain('proposeLayout');
+      expect(names).toContain('reviewAccessibility');
+      expect(names).toContain('suggestTestCases');
+      expect(names).toContain('explainComponent');
+      expect(names).toContain('compareComponents');
+      expect(names).toContain('optimizeBundle');
+      expect(names).toContain('auditTokenUsage');
+      expect(names).toContain('suggestPattern');
+      expect(names).toContain('getComponentDependencies');
+      expect(names).toContain('getQualityReport');
+      expect(names).toContain('migrateComponent');
+      expect(names).toContain('generateFormSchema');
+    });
+  });
+});

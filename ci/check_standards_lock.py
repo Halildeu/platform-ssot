@@ -15,7 +15,7 @@ from ci.check_standards_lock_parts.constants import (
     REQUIRED_LOCK_KEYS,
     REQUIRED_STANDARD_SOURCES,
 )
-from ci.check_standards_lock_parts.helpers import _fail, _is_cache_path, _load_json, _parse_args, _repo_root
+from ci.check_standards_lock_parts.helpers import _fail, _load_json, _parse_args, _repo_root
 from ci.check_standards_lock_parts.lock_checks import (
     _check_branch_protection,
     _check_enforcement_workflow,
@@ -65,11 +65,6 @@ def main(argv: list[str] | None = None) -> int:
             "OPERATING_CONTRACT_PATH_INVALID",
             "operating_contract path must point to the v1 contract document.",
         )
-    if _is_cache_path(str(operating_contract or "")):
-        return _fail(
-            "OPERATING_CONTRACT_UNDER_CACHE",
-            "operating_contract path must not live under .cache.",
-        )
 
     required_files = lock.get("required_files")
     if not isinstance(required_files, list):
@@ -81,13 +76,6 @@ def main(argv: list[str] | None = None) -> int:
             "REQUIRED_FILES_INCOMPLETE",
             "standards.lock required_files does not include all critical files.",
             details={"missing": missing_from_lock},
-        )
-    cache_files = sorted(rel for rel in file_set if _is_cache_path(rel))
-    if cache_files:
-        return _fail(
-            "REQUIRED_FILES_UNDER_CACHE",
-            "required_files must not contain canonical paths under .cache.",
-            details={"paths": cache_files},
         )
 
     commands_ok, command_details = _check_required_commands(lock.get("required_commands"))

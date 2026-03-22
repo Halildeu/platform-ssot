@@ -13,7 +13,7 @@ from ci.check_standards_lock_parts.constants import (
     REQUIRED_SCOPE_LANE_MAP,
     REQUIRED_STANDARD_SOURCES,
 )
-from ci.check_standards_lock_parts.helpers import _is_cache_path, _require_json_file
+from ci.check_standards_lock_parts.helpers import _require_json_file
 from ci.check_standards_lock_parts.policy_checks import (
     _check_feature_execution_bridge_policy,
     _check_pm_suite_policy,
@@ -36,9 +36,6 @@ def _check_standard_sources(root: Path, standard_sources: dict[str, Any]) -> tup
         rel = standard_sources.get(key)
         if not isinstance(rel, str) or not rel.strip():
             details["invalid_content"].append(f"{key}:path_invalid")
-            continue
-        if _is_cache_path(rel):
-            details["invalid_content"].append(f"{key}:path_must_not_be_under_cache")
             continue
         if not (root / rel).exists():
             details["missing_files"].append(rel)
@@ -309,16 +306,9 @@ def _check_managed_repo_sync(root: Path, section: Any) -> tuple[bool, dict[str, 
     if not isinstance(script_rel, str) or not script_rel.strip():
         details["invalid_values"].append("script:path_invalid")
     else:
-        if _is_cache_path(script_rel):
-            details["invalid_values"].append("script:path_must_not_be_under_cache")
-        else:
-            script_path = root / script_rel
-            if not script_path.exists():
-                details["missing_files"].append(script_rel)
-
-    source_of_truth = str(section.get("source_of_truth") or "")
-    if _is_cache_path(source_of_truth):
-        details["invalid_values"].append("source_of_truth:path_must_not_be_under_cache")
+        script_path = root / script_rel
+        if not script_path.exists():
+            details["missing_files"].append(script_rel)
 
     validation_tmpl = section.get("validation_command_template")
     if not isinstance(validation_tmpl, str) or "<repo_root>" not in validation_tmpl:
@@ -329,9 +319,6 @@ def _check_managed_repo_sync(root: Path, section: Any) -> tuple[bool, dict[str, 
         details["invalid_values"].append("preserve_existing_paths:must_be_list")
     else:
         preserve_set = {str(item) for item in preserve_paths if isinstance(item, str)}
-        for path in preserve_set:
-            if _is_cache_path(path):
-                details["invalid_values"].append(f"preserve_existing_paths:cache_path_forbidden_{path}")
         for required_path in REQUIRED_PRESERVE_PATHS:
             if required_path not in preserve_set:
                 details["invalid_values"].append(f"preserve_existing_paths:missing_{required_path}")

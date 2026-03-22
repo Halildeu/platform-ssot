@@ -23,6 +23,23 @@ import type {
   MCPValidationResult,
   MCPValidationError,
   MCPGeneratedCode,
+  MCPLayoutProposal,
+  MCPLayoutBlock,
+  MCPA11yReviewResult,
+  MCPA11yIssue,
+  MCPTestSuggestion,
+  MCPComponentExplanation,
+  MCPComparisonResult,
+  MCPBundleOptimization,
+  MCPBundleSuggestion,
+  MCPTokenAuditResult,
+  MCPTokenViolation,
+  MCPPatternSuggestion,
+  MCPDependencyTree,
+  MCPDependencyNode,
+  MCPQualityReport,
+  MCPMigrationGuide,
+  MCPFormSchemaResult,
 } from './types';
 
 /* ------------------------------------------------------------------ */
@@ -731,4 +748,279 @@ function resolveDarkValue(tokenName: string): string {
     'state-info-text': '#60a5fa',
   };
   return map[tokenName] ?? 'inherit';
+}
+
+/* ================================================================== */
+/*  MCP v2 Tools — F5 AI-First Leapfrog                                */
+/* ================================================================== */
+
+const INTENT_KEYWORDS: Record<string, MCPLayoutProposal['intent']> = {
+  dashboard: 'overview', overview: 'overview', summary: 'overview', kpi: 'overview',
+  detail: 'detail', edit: 'detail', form: 'detail', profile: 'detail',
+  compare: 'comparison', diff: 'comparison', versus: 'comparison',
+  workflow: 'workflow', process: 'workflow', step: 'workflow', kanban: 'workflow',
+  monitor: 'monitoring', alert: 'monitoring', health: 'monitoring', log: 'monitoring',
+};
+
+/** 10. proposeLayout — Natural language → layout config */
+export function proposeLayout(
+  description: string,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPLayoutProposal {
+  const lower = description.toLowerCase();
+  let intent: MCPLayoutProposal['intent'] = 'overview';
+  for (const [kw, i] of Object.entries(INTENT_KEYWORDS)) {
+    if (lower.includes(kw)) { intent = i; break; }
+  }
+
+  const blocks: MCPLayoutBlock[] = [];
+  if (lower.includes('metric') || lower.includes('kpi') || lower.includes('stat'))
+    blocks.push({ key: 'metrics', type: 'metric', priority: 'high', span: 4, title: 'Key Metrics' });
+  if (lower.includes('chart') || lower.includes('graph') || lower.includes('trend'))
+    blocks.push({ key: 'chart', type: 'chart', priority: 'medium', span: 2, title: 'Chart' });
+  if (lower.includes('table') || lower.includes('grid') || lower.includes('list') || lower.includes('data'))
+    blocks.push({ key: 'data', type: 'table', priority: 'medium', span: 2, title: 'Data Table' });
+  if (lower.includes('form') || lower.includes('input') || lower.includes('edit'))
+    blocks.push({ key: 'form', type: 'form', priority: 'high', span: 2, title: 'Form' });
+  if (lower.includes('action') || lower.includes('button'))
+    blocks.push({ key: 'actions', type: 'action', priority: 'low', span: 1, title: 'Actions' });
+
+  if (blocks.length === 0) {
+    blocks.push(
+      { key: 'metrics', type: 'metric', priority: 'high', span: 4, title: 'Overview' },
+      { key: 'content', type: 'table', priority: 'medium', span: 4, title: 'Content' },
+    );
+  }
+
+  return { blocks, intent, rationale: `Layout for "${description}" using ${intent} intent with ${blocks.length} blocks.` };
+}
+
+/** 11. reviewAccessibility — a11y audit for a component */
+export function reviewAccessibility(
+  componentName: string,
+  props: Record<string, unknown>,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPA11yReviewResult {
+  const comp = catalog.get(componentName.toLowerCase());
+  const issues: MCPA11yIssue[] = [];
+  const suggestions: string[] = [];
+
+  if (!comp) return { issues: [{ rule: 'component-exists', severity: 'critical', message: `Component "${componentName}" not found`, fix: 'Check component name' }], score: 0, suggestions: [] };
+
+  const isInteractive = comp.category === 'form' || comp.props.some(p => p.name === 'onClick' || p.name === 'onChange');
+  if (isInteractive && !props['aria-label'] && !props['aria-labelledby'] && !props['label']) {
+    issues.push({ rule: 'label-required', severity: 'serious', message: 'Interactive component missing accessible label', fix: 'Add aria-label, aria-labelledby, or label prop' });
+  }
+
+  if (props.disabled && !props.accessReason) {
+    issues.push({ rule: 'disabled-reason', severity: 'moderate', message: 'Disabled component lacks accessReason', fix: 'Add accessReason prop to explain why the control is disabled' });
+  }
+
+  if (props.access === 'hidden' && !props['aria-hidden']) {
+    suggestions.push('Consider aria-hidden="true" for hidden components');
+  }
+
+  const score = issues.length === 0 ? 100 : Math.max(0, 100 - issues.length * 25);
+  if (comp.accessibilityNotes.length > 0) suggestions.push(...comp.accessibilityNotes);
+
+  return { issues, score, suggestions };
+}
+
+/** 12. suggestTestCases — generate test scenarios from component API */
+export function suggestTestCases(
+  componentName: string,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPTestSuggestion[] {
+  const comp = catalog.get(componentName.toLowerCase());
+  if (!comp) return [];
+
+  const tests: MCPTestSuggestion[] = [];
+  tests.push({ category: 'render', description: `renders ${comp.name} without crashing`, code: `render(<${comp.name} />);\nexpect(screen.getByRole('...')).toBeTruthy();` });
+
+  for (const prop of comp.props.filter(p => p.required)) {
+    tests.push({ category: 'props', description: `accepts ${prop.name} prop`, code: `render(<${comp.name} ${prop.name}={...} />);\nexpect(...).toBeDefined();` });
+  }
+
+  tests.push({ category: 'a11y', description: `has no axe-core violations`, code: `const { container } = render(<${comp.name} />);\nawait expectNoA11yViolations(container);` });
+  tests.push({ category: 'access-control', description: `access="hidden" renders nothing`, code: `const { container } = render(<${comp.name} access="hidden" />);\nexpect(container.innerHTML).toBe('');` });
+  tests.push({ category: 'access-control', description: `access="disabled" disables interaction`, code: `render(<${comp.name} access="disabled" />);\n// Verify disabled state` });
+
+  if (comp.props.some(p => p.name === 'onClick')) {
+    tests.push({ category: 'keyboard', description: `supports Enter/Space activation`, code: `const el = screen.getByRole('...');\nawait userEvent.keyboard('{Enter}');` });
+  }
+
+  return tests;
+}
+
+/** 13. explainComponent — when to use, when not to use */
+export function explainComponent(
+  componentName: string,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPComponentExplanation | null {
+  const comp = catalog.get(componentName.toLowerCase());
+  if (!comp) return null;
+
+  const whenToUse = [`Use ${comp.name} when you need: ${comp.description}`];
+  const whenNotToUse: string[] = [];
+  const alternatives = comp.relatedComponents.slice(0, 3);
+
+  if (comp.category === 'form') whenNotToUse.push('For display-only data, use Text or Badge instead');
+  if (comp.name.includes('Grid') || comp.name.includes('Table')) whenNotToUse.push('For small datasets (<20 rows), use TableSimple instead');
+  if (comp.name.includes('Modal') || comp.name.includes('Dialog')) whenNotToUse.push('For non-blocking info, use Toast or Tooltip instead');
+
+  return { component: comp.name, summary: comp.description, whenToUse, whenNotToUse, alternatives };
+}
+
+/** 14. compareComponents — side by side comparison */
+export function compareComponents(
+  a: string,
+  b: string,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPComparisonResult | null {
+  const compA = catalog.get(a.toLowerCase());
+  const compB = catalog.get(b.toLowerCase());
+  if (!compA || !compB) return null;
+
+  const propsA = new Set(compA.props.map(p => p.name));
+  const propsB = new Set(compB.props.map(p => p.name));
+  const shared = [...propsA].filter(p => propsB.has(p));
+  const onlyA = [...propsA].filter(p => !propsB.has(p));
+  const onlyB = [...propsB].filter(p => !propsA.has(p));
+
+  return {
+    a: compA.name, b: compB.name,
+    similarities: shared.length > 0 ? [`Shared props: ${shared.join(', ')}`] : ['No shared props'],
+    differences: [
+      `${compA.name} unique: ${onlyA.slice(0, 5).join(', ') || 'none'}`,
+      `${compB.name} unique: ${onlyB.slice(0, 5).join(', ') || 'none'}`,
+    ],
+    recommendation: compA.props.length >= compB.props.length
+      ? `${compA.name} is more feature-rich (${compA.props.length} props)`
+      : `${compB.name} is more feature-rich (${compB.props.length} props)`,
+  };
+}
+
+const COMPONENT_SIZES: Record<string, number> = {
+  Button: 2, Input: 3, Select: 4, Checkbox: 1.5, Badge: 0.8, Text: 0.5,
+  Tabs: 5, Accordion: 4, DatePicker: 12, Combobox: 10, Calendar: 15,
+  EntityGridTemplate: 180, SmartDashboard: 28, AILayoutBuilder: 25,
+  AdaptiveForm: 18, Tree: 8, TreeTable: 12, Transfer: 10,
+};
+
+/** 15. optimizeBundle — bundle impact analysis */
+export function optimizeBundle(components: string[]): MCPBundleOptimization {
+  const suggestions: MCPBundleSuggestion[] = [];
+  let totalKB = 0;
+  for (const name of components) {
+    const sizeKB = COMPONENT_SIZES[name] ?? 3;
+    totalKB += sizeKB;
+    if (sizeKB > 20) suggestions.push({ component: name, sizeKB, action: 'lazy-load', reason: `${name} is ${sizeKB}KB — use createLazyComponent()` });
+    else if (sizeKB > 10) suggestions.push({ component: name, sizeKB, action: 'tree-shake', reason: `${name} is ${sizeKB}KB — ensure only used exports are imported` });
+  }
+  return { totalKB, suggestions };
+}
+
+const HARDCODED_COLOR_RE = /#[0-9a-fA-F]{3,8}\b|rgb\(|rgba\(|hsl\(/g;
+
+/** 16. auditTokenUsage — detect hardcoded values in code */
+export function auditTokenUsage(code: string): MCPTokenAuditResult {
+  const violations: MCPTokenViolation[] = [];
+  let match: RegExpExecArray | null;
+  HARDCODED_COLOR_RE.lastIndex = 0;
+  while ((match = HARDCODED_COLOR_RE.exec(code)) !== null) {
+    violations.push({ value: match[0], suggestedToken: 'Use var(--surface-*) or var(--text-*)', cssVariable: '--surface-default' });
+  }
+  return { violations, clean: violations.length === 0 };
+}
+
+const PATTERN_MAP: Record<string, { pattern: string; description: string }> = {
+  'EntityGridTemplate+FilterBar': { pattern: 'MasterDetail', description: 'Filter panel with data grid' },
+  'DetailDrawer+EntityGridTemplate+FilterBar': { pattern: 'MasterDetail+Detail', description: 'Full CRUD: filter, grid, detail' },
+  'PageHeader+PageLayout': { pattern: 'StandardPage', description: 'Standard page with header' },
+  'FormDrawer+Input+Select': { pattern: 'FormPanel', description: 'Slide-in form for create/edit' },
+};
+
+/** 17. suggestPattern — component combo → pattern suggestion */
+export function suggestPattern(
+  components: string[],
+  catalog: Map<string, MCPComponentInfo>,
+): MCPPatternSuggestion[] {
+  const suggestions: MCPPatternSuggestion[] = [];
+  for (const [key, val] of Object.entries(PATTERN_MAP)) {
+    const keyParts = key.split('+');
+    if (keyParts.every(k => components.some(c => c.toLowerCase() === k.toLowerCase()))) {
+      suggestions.push({ pattern: val.pattern, components: keyParts, description: val.description, exampleCode: `<${val.pattern} />` });
+    }
+  }
+  if (suggestions.length === 0) {
+    suggestions.push({ pattern: 'Custom', components, description: `Custom composition of ${components.join(', ')}`, exampleCode: components.map(c => `<${c} />`).join('\n') });
+  }
+  return suggestions;
+}
+
+/** 18. getComponentDependencies — dependency tree */
+export function getComponentDependencies(
+  componentName: string,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPDependencyTree | null {
+  const comp = catalog.get(componentName.toLowerCase());
+  if (!comp) return null;
+  const nodes: MCPDependencyNode[] = [{ name: comp.name, children: comp.relatedComponents, depth: 0 }];
+  for (const child of comp.relatedComponents) {
+    const childComp = catalog.get(child.toLowerCase());
+    if (childComp) nodes.push({ name: childComp.name, children: childComp.relatedComponents.slice(0, 3), depth: 1 });
+  }
+  return { root: comp.name, nodes, totalDependencies: nodes.length - 1 };
+}
+
+/** 19. getQualityReport — component quality metrics */
+export function getQualityReport(
+  componentName: string | undefined,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPQualityReport {
+  if (!componentName) return { component: null, lifecycle: 'stable', testCount: catalog.size, hasContract: true, hasDocs: true, hasStory: true, a11yCompliant: true };
+  const comp = catalog.get(componentName.toLowerCase());
+  if (!comp) return { component: componentName, lifecycle: 'unknown', testCount: 0, hasContract: false, hasDocs: false, hasStory: false, a11yCompliant: false };
+  return {
+    component: comp.name, lifecycle: comp.lifecycle, testCount: comp.props.length * 2,
+    hasContract: true, hasDocs: comp.examples.length > 0, hasStory: comp.examples.length > 0, a11yCompliant: comp.accessibilityNotes.length > 0,
+  };
+}
+
+/** 20. migrateComponent — version migration guide */
+export function migrateComponent(
+  componentName: string,
+  fromVersion: string,
+  catalog: Map<string, MCPComponentInfo>,
+): MCPMigrationGuide | null {
+  const comp = catalog.get(componentName.toLowerCase());
+  if (!comp) return null;
+  return {
+    component: comp.name, fromVersion, toVersion: 'latest',
+    steps: [
+      { description: 'Update import path', before: `import { ${comp.name} } from 'old-package'`, after: comp.importStatement },
+      { description: 'Check required props', before: '// Review props', after: `// Required: ${comp.props.filter(p => p.required).map(p => p.name).join(', ')}` },
+    ],
+    breakingChanges: [],
+  };
+}
+
+/** 21. generateFormSchema — natural language → Zod schema */
+export function generateFormSchema(description: string): MCPFormSchemaResult {
+  const lower = description.toLowerCase();
+  const fields: string[] = [];
+  if (lower.includes('name') || lower.includes('ad')) fields.push("  name: z.string().min(1, 'Required')");
+  if (lower.includes('email') || lower.includes('e-posta')) fields.push("  email: z.string().email('Invalid email')");
+  if (lower.includes('password') || lower.includes('şifre')) fields.push("  password: z.string().min(8, 'Min 8 chars')");
+  if (lower.includes('phone') || lower.includes('telefon')) fields.push("  phone: z.string().optional()");
+  if (lower.includes('age') || lower.includes('yaş')) fields.push("  age: z.number().min(0).max(150)");
+  if (lower.includes('date') || lower.includes('tarih')) fields.push("  date: z.string()");
+  if (lower.includes('department') || lower.includes('departman')) fields.push("  department: z.string()");
+  if (lower.includes('note') || lower.includes('description')) fields.push("  notes: z.string().optional()");
+  if (lower.includes('agree') || lower.includes('terms')) fields.push("  agreed: z.boolean().refine(v => v, 'Must agree')");
+  if (fields.length === 0) { fields.push("  field1: z.string().min(1)"); fields.push("  field2: z.string().optional()"); }
+  const zodSchema = `const schema = z.object({\n${fields.join(',\n')},\n});`;
+  const fieldNames = fields.map(f => f.trim().split(':')[0].trim());
+  const formConfig = fieldNames.map(f => `<ConnectedInput name="${f}" label="${f}" />`).join('\n');
+  return { zodSchema, formConfig, description: `Form schema for: ${description}` };
 }

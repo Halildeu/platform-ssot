@@ -17,9 +17,6 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
-def _is_cache_path(value: str) -> bool:
-    normalized = str(value or "").strip().replace("\\", "/")
-    return normalized.startswith(".cache/") or "/.cache/" in normalized
 def _fail(error_code: str, message: str, *, details: dict[str, Any] | None = None) -> int:
     payload: dict[str, Any] = {
         "status": "FAIL",

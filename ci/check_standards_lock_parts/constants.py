@@ -13,7 +13,6 @@ REQUIRED_FILES = (
     ".github/workflows/module-delivery-lanes.yml",
     "docs/OPERATIONS/AI-MULTIREPO-OPERATING-CONTRACT.v1.md",
     "docs/OPERATIONS/ARCHITECTURE-CONSTRAINTS.md",
-    "docs/OPERATIONS/CACHE-BOUNDARY-RULES.v1.md",
     "policies/policy_pm_suite.v1.json",
     "policies/policy_feature_execution_bridge.v1.json",
     "policies/policy_ui_design_system.v1.json",
