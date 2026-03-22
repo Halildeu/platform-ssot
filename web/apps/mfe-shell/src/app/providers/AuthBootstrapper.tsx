@@ -98,6 +98,11 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
         const isLoginRoute =
           typeof window !== "undefined" &&
           window.location?.pathname?.startsWith("/login");
+        // Detect auth code in URL (from Keycloak redirect after login)
+        const urlHasAuthCode =
+          typeof window !== "undefined" &&
+          (window.location?.hash?.includes("code=") ||
+           window.location?.search?.includes("code="));
         const initOptions: {
           pkceMethod: "S256";
           checkLoginIframe: false;
@@ -107,7 +112,12 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
           pkceMethod: "S256",
           checkLoginIframe: false,
         };
-        if (!isLoginRoute && authConfig.keycloak.enableSilentCheckSso) {
+        // If URL has auth code, always use check-sso so keycloak.init()
+        // processes the code and exchanges it for a token via PKCE.
+        // Without onLoad, keycloak-js ignores the code in the URL.
+        if (urlHasAuthCode) {
+          initOptions.onLoad = "check-sso";
+        } else if (!isLoginRoute && authConfig.keycloak.enableSilentCheckSso) {
           initOptions.onLoad = "check-sso";
           initOptions.silentCheckSsoRedirectUri =
             authConfig.keycloak.silentCheckSsoRedirectUri;
