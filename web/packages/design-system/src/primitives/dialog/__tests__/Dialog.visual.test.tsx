@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-react';
 import { Dialog } from '../Dialog';
 
 describe('Dialog Visual Regression', () => {
+  /* ---- 1. Default open ---- */
   it('open dialog with title matches screenshot', async () => {
     const screen = render(
       <div style={{ padding: 20, background: '#fff', minHeight: 300 }}>
@@ -14,11 +15,69 @@ describe('Dialog Visual Regression', () => {
     await expect(screen.container).toMatchScreenshot();
   });
 
+  /* ---- 2. All sizes ---- */
   it('small dialog matches screenshot', async () => {
     const screen = render(
       <div style={{ padding: 20, background: '#fff', minHeight: 300 }}>
         <Dialog open title="Small Dialog" size="sm" onClose={() => {}}>
           <p>Compact content</p>
+        </Dialog>
+      </div>,
+    );
+    await expect(screen.container).toMatchScreenshot();
+  });
+
+  it('large dialog matches screenshot', async () => {
+    const screen = render(
+      <div style={{ padding: 20, background: '#fff', minHeight: 300 }}>
+        <Dialog open title="Large Dialog" size="lg" onClose={() => {}}>
+          <p>Spacious content area</p>
+        </Dialog>
+      </div>,
+    );
+    await expect(screen.container).toMatchScreenshot();
+  });
+
+  /* ---- 3. With description ---- */
+  it('dialog with description matches screenshot', async () => {
+    const screen = render(
+      <div style={{ padding: 20, background: '#fff', minHeight: 300 }}>
+        <Dialog open title="Settings" description="Manage your preferences" onClose={() => {}}>
+          <p>Settings content</p>
+        </Dialog>
+      </div>,
+    );
+    await expect(screen.container).toMatchScreenshot();
+  });
+
+  /* ---- 4. With footer ---- */
+  it('dialog with footer matches screenshot', async () => {
+    const screen = render(
+      <div style={{ padding: 20, background: '#fff', minHeight: 300 }}>
+        <Dialog
+          open
+          title="Save Changes"
+          footer={
+            <>
+              <button>Cancel</button>
+              <button>Save</button>
+            </>
+          }
+          onClose={() => {}}
+        >
+          <p>Your changes will be saved.</p>
+        </Dialog>
+      </div>,
+    );
+    await expect(screen.container).toMatchScreenshot();
+  });
+
+  /* ---- 5. Dark mode ---- */
+  it('dark theme matches screenshot', async () => {
+    const screen = render(
+      <div data-theme="dark" style={{ padding: 20, background: '#1a1a2e', minHeight: 300 }}>
+        <Dialog open title="Dark Dialog" onClose={() => {}}>
+          <p>Dark themed content</p>
         </Dialog>
       </div>,
     );
