@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { MasterDetail } from '../MasterDetail';
 
 describe('MasterDetail Visual Regression', () => {
   it('split layout matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 700, height: 300 }}>
         <MasterDetail
           master={<div style={{ padding: 16 }}>Master list</div>}
@@ -12,6 +13,6 @@ describe('MasterDetail Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

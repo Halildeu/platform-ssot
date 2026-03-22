@@ -4,7 +4,7 @@ import { DetailDrawer } from '../DetailDrawer';
 
 describe('DetailDrawer (Browser)', () => {
   it('renders title and content when open', async () => {
-    const screen = render(
+    render(
       <DetailDrawer open onClose={() => {}} title="Order #1234">
         <p>Order details here</p>
       </DetailDrawer>,
@@ -14,16 +14,16 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('does not render dialog when closed', async () => {
-    const screen = render(
+    render(
       <DetailDrawer open={false} onClose={() => {}} title="Hidden">
         <p>Hidden content</p>
       </DetailDrawer>,
     );
-    expect(screen.container.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
   });
 
   it('renders close button', async () => {
-    const screen = render(
+    render(
       <DetailDrawer open onClose={() => {}} title="Closable">
         <p>Content</p>
       </DetailDrawer>,
@@ -33,7 +33,7 @@ describe('DetailDrawer (Browser)', () => {
 
   it('calls onClose when close button is clicked', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <DetailDrawer open onClose={onClose} title="Test">
         <p>Content</p>
       </DetailDrawer>,
@@ -43,7 +43,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders subtitle when provided', async () => {
-    const screen = render(
+    render(
       <DetailDrawer open onClose={() => {}} title="Order" subtitle="Order details">
         <p>Body</p>
       </DetailDrawer>,
@@ -52,7 +52,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders sections', async () => {
-    const screen = render(
+    render(
       <DetailDrawer
         open
         onClose={() => {}}
@@ -67,7 +67,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders footer slot', async () => {
-    const screen = render(
+    render(
       <DetailDrawer open onClose={() => {}} title="Test" footer={<button>Save</button>}>
         <p>Content</p>
       </DetailDrawer>,
@@ -76,12 +76,12 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders dialog with role attribute', async () => {
-    const screen = render(
+    render(
       <DetailDrawer open onClose={() => {}} title="Dialog">
         <p>Content</p>
       </DetailDrawer>,
     );
-    const dialog = screen.container.querySelector('[role="dialog"]');
+    const dialog = document.querySelector('[role="dialog"]');
     expect(dialog).not.toBeNull();
   });
 });

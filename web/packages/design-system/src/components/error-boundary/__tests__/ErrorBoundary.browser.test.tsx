@@ -10,7 +10,7 @@ const BadChild = () => {
 
 describe('ErrorBoundary (Browser)', () => {
   it('renders children when no error', async () => {
-    const screen = render(
+    render(
       <ErrorBoundary>
         <GoodChild />
       </ErrorBoundary>,
@@ -19,7 +19,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders default fallback when child throws', async () => {
-    const screen = render(
+    render(
       <ErrorBoundary>
         <BadChild />
       </ErrorBoundary>,
@@ -29,7 +29,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('displays error message in fallback', async () => {
-    const screen = render(
+    render(
       <ErrorBoundary>
         <BadChild />
       </ErrorBoundary>,
@@ -38,7 +38,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders Try again button in default fallback', async () => {
-    const screen = render(
+    render(
       <ErrorBoundary>
         <BadChild />
       </ErrorBoundary>,
@@ -47,7 +47,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders custom static fallback', async () => {
-    const screen = render(
+    render(
       <ErrorBoundary fallback={<div>Custom fallback content</div>}>
         <BadChild />
       </ErrorBoundary>,
@@ -56,7 +56,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders custom fallback render function', async () => {
-    const screen = render(
+    render(
       <ErrorBoundary fallback={(error) => <div>Error: {error.message}</div>}>
         <BadChild />
       </ErrorBoundary>,
@@ -78,12 +78,12 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(
+    render(
       <ErrorBoundary>
         <GoodChild />
       </ErrorBoundary>,
     );
-    const el = screen.container.querySelector('[data-component="error-boundary"]');
+    const el = document.querySelector('[data-component="error-boundary"]');
     expect(el).not.toBeNull();
   });
 });

@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { Steps } from '../Steps';
 
 describe('Steps Visual Regression', () => {
   it('default with 3 steps matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <Steps
           items={[
@@ -16,6 +17,6 @@ describe('Steps Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

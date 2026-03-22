@@ -4,31 +4,31 @@ import { JsonViewer } from '../JsonViewer';
 
 describe('JsonViewer (Browser)', () => {
   it('renders JSON tree with root label', async () => {
-    const screen = render(<JsonViewer value={{ name: 'Alice', age: 30 }} />);
+    const screen = await render(<JsonViewer value={{ name: 'Alice', age: 30 }} />);
     await expect.element(screen.getByText('payload')).toBeVisible();
   });
 
   it('renders primitive string values', async () => {
-    const screen = render(<JsonViewer value={{ greeting: 'hello' }} defaultExpandedDepth={2} />);
+    const screen = await render(<JsonViewer value={{ greeting: 'hello' }} defaultExpandedDepth={2} />);
     await expect.element(screen.getByText('"hello"')).toBeVisible();
   });
 
   it('renders number values', async () => {
-    const screen = render(<JsonViewer value={{ count: 42 }} defaultExpandedDepth={2} />);
+    const screen = await render(<JsonViewer value={{ count: 42 }} defaultExpandedDepth={2} />);
     await expect.element(screen.getByText('42')).toBeVisible();
   });
 
   it('renders custom root label', async () => {
-    const screen = render(<JsonViewer value={{ a: 1 }} rootLabel="data" />);
+    const screen = await render(<JsonViewer value={{ a: 1 }} rootLabel="data" />);
     await expect.element(screen.getByText('data')).toBeVisible();
   });
 
   it('expands nodes when clicked', async () => {
-    const screen = render(
+    render(
       <JsonViewer value={{ nested: { deep: 'value' } }} defaultExpandedDepth={0} />,
     );
     // Initially collapsed - click to expand
-    const expandBtns = screen.container.querySelectorAll('button');
+    const expandBtns = document.querySelectorAll('button');
     if (expandBtns.length > 0) {
       (expandBtns[0] as HTMLElement).click();
     }
@@ -37,12 +37,12 @@ describe('JsonViewer (Browser)', () => {
   });
 
   it('renders array values', async () => {
-    const screen = render(<JsonViewer value={[1, 2, 3]} defaultExpandedDepth={2} />);
+    const screen = await render(<JsonViewer value={[1, 2, 3]} defaultExpandedDepth={2} />);
     await expect.element(screen.getByText('1')).toBeVisible();
   });
 
   it('renders title and description', async () => {
-    const screen = render(
+    render(
       <JsonViewer value={{ a: 1 }} title="Response" description="API response data" />,
     );
     await expect.element(screen.getByText('Response')).toBeVisible();
@@ -50,14 +50,14 @@ describe('JsonViewer (Browser)', () => {
   });
 
   it('shows type badges when showTypes is enabled', async () => {
-    const screen = render(
+    render(
       <JsonViewer value={{ name: 'test' }} showTypes defaultExpandedDepth={2} />,
     );
     await expect.element(screen.getByText('string')).toBeVisible();
   });
 
   it('renders null values', async () => {
-    const screen = render(<JsonViewer value={{ empty: null }} defaultExpandedDepth={2} />);
+    const screen = await render(<JsonViewer value={{ empty: null }} defaultExpandedDepth={2} />);
     await expect.element(screen.getByText('null')).toBeVisible();
   });
 });

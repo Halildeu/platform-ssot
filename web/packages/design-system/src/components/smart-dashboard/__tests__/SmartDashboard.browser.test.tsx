@@ -9,37 +9,37 @@ const widgets = [
 
 describe('SmartDashboard (Browser)', () => {
   it('renders widget titles', async () => {
-    const screen = render(<SmartDashboard widgets={widgets} />);
+    const screen = await render(<SmartDashboard widgets={widgets} />);
     await expect.element(screen.getByText('Users')).toBeVisible();
     await expect.element(screen.getByText('Revenue')).toBeVisible();
   });
 
   it('renders widget values', async () => {
-    const screen = render(<SmartDashboard widgets={widgets} />);
+    const screen = await render(<SmartDashboard widgets={widgets} />);
     await expect.element(screen.getByText('1,234')).toBeVisible();
     await expect.element(screen.getByText('$56K')).toBeVisible();
   });
 
   it('renders greeting banner', async () => {
-    const screen = render(
+    render(
       <SmartDashboard widgets={[]} greeting="Good morning, Admin" />,
     );
     await expect.element(screen.getByText('Good morning, Admin')).toBeVisible();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<SmartDashboard widgets={widgets} />);
-    const el = screen.container.querySelector('[data-component="smart-dashboard"]');
+    const screen = await render(<SmartDashboard widgets={widgets} />);
+    const el = document.querySelector('[data-component="smart-dashboard"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<SmartDashboard widgets={widgets} access="hidden" />);
-    expect(screen.container.querySelector('[data-component="smart-dashboard"]')).toBeNull();
+    const screen = await render(<SmartDashboard widgets={widgets} access="hidden" />);
+    expect(document.querySelector('[data-component="smart-dashboard"]')).toBeNull();
   });
 
   it('renders custom title and description', async () => {
-    const screen = render(
+    render(
       <SmartDashboard widgets={[]} title="My Dashboard" description="Overview" />,
     );
     await expect.element(screen.getByText('My Dashboard')).toBeVisible();
@@ -47,7 +47,7 @@ describe('SmartDashboard (Browser)', () => {
   });
 
   it('renders with trend indicators', async () => {
-    const screen = render(
+    render(
       <SmartDashboard
         widgets={[
           { key: 'w1', title: 'Sales', type: 'kpi', value: '100', trend: { direction: 'up', percentage: 12 } },
@@ -59,7 +59,7 @@ describe('SmartDashboard (Browser)', () => {
   });
 
   it('renders pinned widgets', async () => {
-    const screen = render(
+    render(
       <SmartDashboard
         widgets={[
           { key: 'pinned', title: 'Pinned Widget', type: 'kpi', value: '42', pinned: true },

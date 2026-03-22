@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { ContextMenu } from '../ContextMenu';
 
 const items = [
@@ -11,7 +11,7 @@ const items = [
 
 describe('ContextMenu (Browser)', () => {
   it('renders trigger element', async () => {
-    const screen = render(
+    render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -20,16 +20,16 @@ describe('ContextMenu (Browser)', () => {
   });
 
   it('menu is hidden by default', async () => {
-    const screen = render(
+    render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
     );
-    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
   });
 
   it('opens menu on right-click (contextmenu event)', async () => {
-    const screen = render(
+    render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -46,7 +46,7 @@ describe('ContextMenu (Browser)', () => {
       { key: 'copy', label: 'Copy', onClick },
       { key: 'paste', label: 'Paste' },
     ];
-    const screen = render(
+    render(
       <ContextMenu items={clickableItems}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -59,7 +59,7 @@ describe('ContextMenu (Browser)', () => {
   });
 
   it('closes menu on Escape', async () => {
-    const screen = render(
+    render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -69,11 +69,11 @@ describe('ContextMenu (Browser)', () => {
     );
     await expect.element(screen.getByText('Copy')).toBeVisible();
     await userEvent.keyboard('{Escape}');
-    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
   });
 
   it('does not open when disabled', async () => {
-    const screen = render(
+    render(
       <ContextMenu items={items} disabled>
         <button>Right click me</button>
       </ContextMenu>,
@@ -81,7 +81,7 @@ describe('ContextMenu (Browser)', () => {
     screen.getByText('Right click me').element().dispatchEvent(
       new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }),
     );
-    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
   });
 
   it('renders separator entries', async () => {
@@ -90,7 +90,7 @@ describe('ContextMenu (Browser)', () => {
       { type: 'separator' as const, key: 'sep1' },
       { key: 'delete', label: 'Delete' },
     ];
-    const screen = render(
+    render(
       <ContextMenu items={itemsWithSep}>
         <button>Right click me</button>
       </ContextMenu>,
@@ -98,7 +98,7 @@ describe('ContextMenu (Browser)', () => {
     screen.getByText('Right click me').element().dispatchEvent(
       new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }),
     );
-    const separator = screen.container.querySelector('[role="separator"]');
+    const separator = document.querySelector('[role="separator"]');
     expect(separator).not.toBeNull();
   });
 });

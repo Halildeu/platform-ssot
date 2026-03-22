@@ -4,21 +4,21 @@ import { NotificationDrawer } from '../NotificationDrawer';
 
 describe('NotificationDrawer (Browser)', () => {
   it('renders nothing when closed', async () => {
-    const screen = render(
+    render(
       <NotificationDrawer open={false} items={[]} disablePortal />,
     );
-    expect(screen.container.textContent).toBe('');
+    expect(document.body.textContent).toBe('');
   });
 
   it('renders drawer title when open', async () => {
-    const screen = render(
+    render(
       <NotificationDrawer open items={[]} disablePortal title="Bildirimler" />,
     );
     await expect.element(screen.getByText('Bildirimler')).toBeVisible();
   });
 
   it('renders notification items when open', async () => {
-    const screen = render(
+    render(
       <NotificationDrawer
         open
         disablePortal
@@ -31,16 +31,16 @@ describe('NotificationDrawer (Browser)', () => {
   });
 
   it('renders close button when open', async () => {
-    const screen = render(
+    render(
       <NotificationDrawer open items={[]} disablePortal />,
     );
-    const closeBtn = screen.container.querySelector('[aria-label]');
+    const closeBtn = document.querySelector('[aria-label]');
     expect(closeBtn).not.toBeNull();
   });
 
   it('calls onClose when close button is clicked', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <NotificationDrawer open items={[]} disablePortal onClose={onClose} />,
     );
     const closeBtn = screen.getByLabelText('Bildirim merkezini kapat');
@@ -49,15 +49,15 @@ describe('NotificationDrawer (Browser)', () => {
   });
 
   it('renders with custom dialog label', async () => {
-    const screen = render(
+    render(
       <NotificationDrawer open items={[]} disablePortal dialogLabel="Notifications Panel" />,
     );
-    const dialog = screen.container.querySelector('[aria-label="Notifications Panel"]');
+    const dialog = document.querySelector('[aria-label="Notifications Panel"]');
     expect(dialog).not.toBeNull();
   });
 
   it('renders empty state when no items', async () => {
-    const screen = render(
+    render(
       <NotificationDrawer open items={[]} disablePortal />,
     );
     await expect.element(screen.getByText('Bildirimler')).toBeVisible();

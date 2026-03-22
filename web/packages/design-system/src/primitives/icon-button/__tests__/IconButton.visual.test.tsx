@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { IconButton } from '../IconButton';
 
 const TestIcon = () => (
@@ -8,20 +9,20 @@ const TestIcon = () => (
 
 describe('IconButton Visual Regression', () => {
   it('ghost variant matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <IconButton icon={<TestIcon />} label="Ghost" variant="ghost" />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   it('primary variant matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <IconButton icon={<TestIcon />} label="Primary" variant="primary" />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

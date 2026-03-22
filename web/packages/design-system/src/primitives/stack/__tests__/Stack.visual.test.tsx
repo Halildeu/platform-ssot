@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { Stack, HStack } from '../Stack';
 
 describe('Stack Visual Regression', () => {
   it('vertical stack matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Stack gap={4}>
           <div style={{ padding: 8, background: '#eee' }}>Item 1</div>
@@ -13,11 +14,11 @@ describe('Stack Visual Regression', () => {
         </Stack>
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   it('horizontal stack matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <HStack gap={4}>
           <div style={{ padding: 8, background: '#eee' }}>Left</div>
@@ -26,6 +27,6 @@ describe('Stack Visual Regression', () => {
         </HStack>
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

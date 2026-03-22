@@ -4,28 +4,28 @@ import { ApprovalCheckpoint } from '../ApprovalCheckpoint';
 
 describe('ApprovalCheckpoint (Browser)', () => {
   it('renders with title and summary', async () => {
-    const screen = render(
+    render(
       <ApprovalCheckpoint title="Release Gate" summary="Needs human approval" />,
     );
     await expect.element(screen.getByText('Release Gate')).toBeVisible();
   });
 
   it('renders primary action button', async () => {
-    const screen = render(
+    render(
       <ApprovalCheckpoint title="Gate" summary="Summary" />,
     );
     await expect.element(screen.getByText('Onayla')).toBeVisible();
   });
 
   it('renders status badge for approved', async () => {
-    const screen = render(
+    render(
       <ApprovalCheckpoint title="Gate" summary="Summary" status="approved" />,
     );
     await expect.element(screen.getByText('Onaylandi')).toBeVisible();
   });
 
   it('renders status badge for rejected', async () => {
-    const screen = render(
+    render(
       <ApprovalCheckpoint title="Gate" summary="Summary" status="rejected" />,
     );
     await expect.element(screen.getByText('Reddedildi')).toBeVisible();
@@ -33,7 +33,7 @@ describe('ApprovalCheckpoint (Browser)', () => {
 
   it('calls onPrimaryAction when approve button is clicked', async () => {
     const onPrimary = vi.fn();
-    const screen = render(
+    render(
       <ApprovalCheckpoint title="Gate" summary="Summary" onPrimaryAction={onPrimary} />,
     );
     await screen.getByText('Onayla').click();
@@ -41,22 +41,22 @@ describe('ApprovalCheckpoint (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(
+    render(
       <ApprovalCheckpoint title="Gate" summary="Summary" />,
     );
-    const el = screen.container.querySelector('[data-component="approval-checkpoint"]');
+    const el = document.querySelector('[data-component="approval-checkpoint"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(
+    render(
       <ApprovalCheckpoint title="Gate" summary="Summary" access="hidden" />,
     );
-    expect(screen.container.querySelector('[data-component="approval-checkpoint"]')).toBeNull();
+    expect(document.querySelector('[data-component="approval-checkpoint"]')).toBeNull();
   });
 
   it('renders custom action labels', async () => {
-    const screen = render(
+    render(
       <ApprovalCheckpoint
         title="Gate"
         summary="Summary"

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { NavigationRail } from '../NavigationRail';
 
 const items = [
@@ -10,20 +11,20 @@ const items = [
 
 describe('NavigationRail Visual Regression', () => {
   it('default navigation rail matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <NavigationRail items={items} defaultValue="dashboard" />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   it('compact navigation rail matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <NavigationRail items={items} defaultValue="orders" compact />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Modal } from '../Modal';
 
 describe('Modal (Browser)', () => {
@@ -8,7 +8,7 @@ describe('Modal (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders content when open', async () => {
-    const screen = render(
+    render(
       <Modal open title="Test Modal" disablePortal>
         <p>Modal body content</p>
       </Modal>,
@@ -17,12 +17,12 @@ describe('Modal (Browser)', () => {
   });
 
   it('does not render when closed', async () => {
-    const screen = render(
+    render(
       <Modal open={false} title="Hidden Modal" disablePortal>
         <p>Should not be visible</p>
       </Modal>,
     );
-    expect(screen.container.querySelector('dialog')).toBeNull();
+    expect(document.querySelector('dialog')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
@@ -30,7 +30,7 @@ describe('Modal (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('close button fires onClose with reason', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <Modal open title="Closable" onClose={onClose} disablePortal>
         <p>Content</p>
       </Modal>,
@@ -46,7 +46,7 @@ describe('Modal (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onClose with escape reason on Escape key', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <Modal open title="Esc Test" onClose={onClose} disablePortal>
         <p>Content</p>
       </Modal>,
@@ -58,7 +58,7 @@ describe('Modal (Browser)', () => {
 
   it('does not fire onClose on Escape when closeOnEscape is false', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <Modal open title="No Esc" onClose={onClose} closeOnEscape={false} disablePortal>
         <p>Content</p>
       </Modal>,
@@ -73,25 +73,25 @@ describe('Modal (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onClose with overlay reason on backdrop click', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <Modal open title="Backdrop" onClose={onClose} disablePortal>
         <p>Content</p>
       </Modal>,
     );
     // Click on the dialog element itself (backdrop area)
-    const dialog = screen.container.querySelector('dialog')!;
+    const dialog = document.querySelector('dialog')!;
     dialog.click();
     expect(onClose).toHaveBeenCalledWith('overlay');
   });
 
   it('does not fire onClose on backdrop when closeOnOverlayClick is false', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <Modal open title="No Backdrop" onClose={onClose} closeOnOverlayClick={false} disablePortal>
         <p>Content</p>
       </Modal>,
     );
-    const dialog = screen.container.querySelector('dialog')!;
+    const dialog = document.querySelector('dialog')!;
     dialog.click();
     expect(onClose).not.toHaveBeenCalledWith('overlay');
   });
@@ -100,12 +100,12 @@ describe('Modal (Browser)', () => {
   /*  5. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('renders as a <dialog> element', async () => {
-    const screen = render(
+    render(
       <Modal open title="ARIA" disablePortal>
         <p>Content</p>
       </Modal>,
     );
-    const dialog = screen.container.querySelector('dialog');
+    const dialog = document.querySelector('dialog');
     expect(dialog).not.toBeNull();
   });
 
@@ -113,7 +113,7 @@ describe('Modal (Browser)', () => {
   /*  6. Footer                                                           */
   /* ------------------------------------------------------------------ */
   it('renders footer content', async () => {
-    const screen = render(
+    render(
       <Modal open title="With Footer" footer={<button>Save</button>} disablePortal>
         <p>Body</p>
       </Modal>,
@@ -127,13 +127,13 @@ describe('Modal (Browser)', () => {
   it('renders all sizes without error', async () => {
     const sizes = ['sm', 'md', 'lg'] as const;
     for (const size of sizes) {
-      const screen = render(
+      render(
         <Modal open title={`Size ${size}`} size={size} disablePortal>
           <p>Content</p>
         </Modal>,
       );
       await expect.element(screen.getByText('Content')).toBeVisible();
-      screen.unmount();
+      
     }
   });
 
@@ -143,13 +143,13 @@ describe('Modal (Browser)', () => {
   it('renders all variants without error', async () => {
     const variants = ['base', 'confirm', 'destructive', 'audit'] as const;
     for (const variant of variants) {
-      const screen = render(
+      render(
         <Modal open title={variant} variant={variant} disablePortal>
           <p>Content</p>
         </Modal>,
       );
       await expect.element(screen.getByText('Content')).toBeVisible();
-      screen.unmount();
+      
     }
   });
 });

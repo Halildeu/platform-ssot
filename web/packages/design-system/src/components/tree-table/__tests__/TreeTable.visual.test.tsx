@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { TreeTable } from '../TreeTable';
 
 const columns = [{ key: 'status', label: 'Status' }];
@@ -11,11 +12,11 @@ const nodes = [
 
 describe('TreeTable Visual Regression', () => {
   it('expanded state matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

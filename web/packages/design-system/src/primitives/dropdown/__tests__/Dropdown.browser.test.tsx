@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Dropdown } from '../Dropdown';
 
 const items = [
@@ -14,7 +14,7 @@ describe('Dropdown (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders trigger element', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -26,7 +26,7 @@ describe('Dropdown (Browser)', () => {
   /*  2. Click opens menu                                                 */
   /* ------------------------------------------------------------------ */
   it('opens menu on trigger click', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -46,7 +46,7 @@ describe('Dropdown (Browser)', () => {
       { key: 'edit', label: 'Edit', onClick: onEdit },
       { key: 'delete', label: 'Delete' },
     ];
-    const screen = render(
+    render(
       <Dropdown items={clickItems}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -55,14 +55,14 @@ describe('Dropdown (Browser)', () => {
     await screen.getByText('Edit').click();
     expect(onEdit).toHaveBeenCalledOnce();
     // Menu should close after selection
-    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
   /*  4. Escape closes                                                    */
   /* ------------------------------------------------------------------ */
   it('closes menu on Escape key', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -70,14 +70,14 @@ describe('Dropdown (Browser)', () => {
     await screen.getByText('Open Menu').click();
     await expect.element(screen.getByRole('menu')).toBeVisible();
     await userEvent.keyboard('{Escape}');
-    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
   /*  5. Keyboard navigation                                              */
   /* ------------------------------------------------------------------ */
   it('opens menu on ArrowDown key', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -88,7 +88,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('opens menu on Enter key', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -99,7 +99,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('opens menu on Space key', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -116,7 +116,7 @@ describe('Dropdown (Browser)', () => {
       { key: 'edit', label: 'Edit', onClick: onEdit },
       { key: 'duplicate', label: 'Duplicate', onClick: onDuplicate },
     ];
-    const screen = render(
+    render(
       <Dropdown items={navItems}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -135,7 +135,7 @@ describe('Dropdown (Browser)', () => {
   /*  6. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('trigger has aria-haspopup="menu"', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -144,7 +144,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('trigger has aria-expanded when open', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -155,7 +155,7 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('menu has role="menu"', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -165,13 +165,13 @@ describe('Dropdown (Browser)', () => {
   });
 
   it('items have role="menuitem"', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
     );
     await screen.getByText('Open Menu').click();
-    const menuItems = screen.container.querySelectorAll('[role="menuitem"]');
+    const menuItems = document.querySelectorAll('[role="menuitem"]');
     expect(menuItems.length).toBe(3);
   });
 
@@ -179,13 +179,13 @@ describe('Dropdown (Browser)', () => {
   /*  7. Disabled dropdown                                                */
   /* ------------------------------------------------------------------ */
   it('does not open when disabled', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items} disabled>
         <button>Open Menu</button>
       </Dropdown>,
     );
     await screen.getByText('Open Menu').click();
-    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
@@ -196,7 +196,7 @@ describe('Dropdown (Browser)', () => {
       { key: 'edit', label: 'Edit' },
       { key: 'delete', label: 'Delete', disabled: true },
     ];
-    const screen = render(
+    render(
       <Dropdown items={disabledItems}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -210,7 +210,7 @@ describe('Dropdown (Browser)', () => {
   /*  9. Danger item styling                                              */
   /* ------------------------------------------------------------------ */
   it('renders danger items', async () => {
-    const screen = render(
+    render(
       <Dropdown items={items}>
         <button>Open Menu</button>
       </Dropdown>,
@@ -229,7 +229,7 @@ describe('Dropdown (Browser)', () => {
       { type: 'separator' as const },
       { key: 'delete', label: 'Delete', danger: true },
     ];
-    const screen = render(
+    render(
       <Dropdown items={richItems}>
         <button>Open Menu</button>
       </Dropdown>,

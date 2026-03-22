@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Tooltip } from '../Tooltip';
 
 describe('Tooltip (Browser)', () => {
@@ -8,7 +8,7 @@ describe('Tooltip (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders trigger content', async () => {
-    const screen = render(
+    render(
       <Tooltip content="Tooltip text">
         <button>Hover me</button>
       </Tooltip>,
@@ -20,7 +20,7 @@ describe('Tooltip (Browser)', () => {
   /*  2. Shows on hover                                                   */
   /* ------------------------------------------------------------------ */
   it('shows tooltip on hover', async () => {
-    const screen = render(
+    render(
       <Tooltip content="Tooltip text" delay={0}>
         <button>Hover me</button>
       </Tooltip>,
@@ -33,7 +33,7 @@ describe('Tooltip (Browser)', () => {
   /*  3. Hides on mouse leave                                             */
   /* ------------------------------------------------------------------ */
   it('hides tooltip on mouse leave', async () => {
-    const screen = render(
+    render(
       <div>
         <Tooltip content="Tooltip text" delay={0}>
           <button>Hover me</button>
@@ -45,14 +45,14 @@ describe('Tooltip (Browser)', () => {
     await expect.element(screen.getByRole('tooltip')).toBeVisible();
     // Move mouse away
     await screen.getByText('Other').hover();
-    expect(screen.container.querySelector('[role="tooltip"]')).toBeNull();
+    expect(document.querySelector('[role="tooltip"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
   /*  4. Shows on keyboard focus                                          */
   /* ------------------------------------------------------------------ */
   it('shows tooltip on keyboard focus', async () => {
-    const screen = render(
+    render(
       <Tooltip content="Focus tip" delay={0}>
         <button>Focus me</button>
       </Tooltip>,
@@ -65,7 +65,7 @@ describe('Tooltip (Browser)', () => {
   /*  5. Escape hides tooltip                                             */
   /* ------------------------------------------------------------------ */
   it('hides tooltip on Escape key', async () => {
-    const screen = render(
+    render(
       <Tooltip content="Escape tip" delay={0}>
         <button>Press Esc</button>
       </Tooltip>,
@@ -73,14 +73,14 @@ describe('Tooltip (Browser)', () => {
     await screen.getByText('Press Esc').hover();
     await expect.element(screen.getByRole('tooltip')).toBeVisible();
     await userEvent.keyboard('{Escape}');
-    expect(screen.container.querySelector('[role="tooltip"]')).toBeNull();
+    expect(document.querySelector('[role="tooltip"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
   /*  6. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('tooltip has role="tooltip"', async () => {
-    const screen = render(
+    render(
       <Tooltip content="ARIA" delay={0}>
         <button>Hover</button>
       </Tooltip>,
@@ -93,13 +93,13 @@ describe('Tooltip (Browser)', () => {
   /*  7. Disabled tooltip                                                 */
   /* ------------------------------------------------------------------ */
   it('does not show tooltip when disabled', async () => {
-    const screen = render(
+    render(
       <Tooltip content="Disabled tip" disabled delay={0}>
         <button>Hover me</button>
       </Tooltip>,
     );
     await screen.getByText('Hover me').hover();
-    expect(screen.container.querySelector('[role="tooltip"]')).toBeNull();
+    expect(document.querySelector('[role="tooltip"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
@@ -108,14 +108,14 @@ describe('Tooltip (Browser)', () => {
   it('renders with different placements without error', async () => {
     const placements = ['top', 'bottom', 'left', 'right'] as const;
     for (const placement of placements) {
-      const screen = render(
+      render(
         <Tooltip content={`${placement} tip`} placement={placement} delay={0}>
           <button>Hover</button>
         </Tooltip>,
       );
       await screen.getByText('Hover').hover();
       await expect.element(screen.getByRole('tooltip')).toBeVisible();
-      screen.unmount();
+      
     }
   });
 
@@ -123,7 +123,7 @@ describe('Tooltip (Browser)', () => {
   /*  9. No content returns children directly                             */
   /* ------------------------------------------------------------------ */
   it('renders children without wrapper when no content', async () => {
-    const screen = render(
+    render(
       <Tooltip content="">
         <button>No tooltip</button>
       </Tooltip>,

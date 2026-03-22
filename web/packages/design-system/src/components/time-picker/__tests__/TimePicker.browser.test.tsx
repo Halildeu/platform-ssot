@@ -4,30 +4,30 @@ import { TimePicker } from '../TimePicker';
 
 describe('TimePicker (Browser)', () => {
   it('renders time input', async () => {
-    const screen = render(<TimePicker />);
-    const input = screen.container.querySelector('input[type="time"]');
+    const screen = await render(<TimePicker />);
+    const input = document.querySelector('input[type="time"]');
     expect(input).not.toBeNull();
   });
 
   it('renders with label', async () => {
-    const screen = render(<TimePicker label="Start Time" />);
+    const screen = await render(<TimePicker label="Start Time" />);
     await expect.element(screen.getByText('Start Time')).toBeVisible();
   });
 
   it('shows default empty value label', async () => {
-    const screen = render(<TimePicker />);
+    const screen = await render(<TimePicker />);
     await expect.element(screen.getByText('Saat secin')).toBeVisible();
   });
 
   it('displays current value when controlled', async () => {
-    const screen = render(<TimePicker value="14:30" />);
+    const screen = await render(<TimePicker value="14:30" />);
     await expect.element(screen.getByText('14:30')).toBeVisible();
   });
 
   it('fires onValueChange when time changes', async () => {
     const onValueChange = vi.fn();
-    const screen = render(<TimePicker onValueChange={onValueChange} />);
-    const input = screen.container.querySelector('input[type="time"]') as HTMLInputElement;
+    const screen = await render(<TimePicker onValueChange={onValueChange} />);
+    const input = document.querySelector('input[type="time"]') as HTMLInputElement;
     const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
     nativeSetter?.call(input, '10:30');
     input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -35,19 +35,19 @@ describe('TimePicker (Browser)', () => {
   });
 
   it('is disabled when disabled prop is set', async () => {
-    const screen = render(<TimePicker label="Time" disabled />);
-    const input = screen.container.querySelector('input[type="time"]') as HTMLInputElement;
+    const screen = await render(<TimePicker label="Time" disabled />);
+    const input = document.querySelector('input[type="time"]') as HTMLInputElement;
     expect(input.disabled).toBe(true);
   });
 
   it('shows error message', async () => {
-    const screen = render(<TimePicker error="Invalid time" />);
+    const screen = await render(<TimePicker error="Invalid time" />);
     await expect.element(screen.getByText('Invalid time')).toBeVisible();
   });
 
   it('renders as readonly when access is readonly', async () => {
-    const screen = render(<TimePicker access="readonly" />);
-    const input = screen.container.querySelector('input[type="time"]') as HTMLInputElement;
+    const screen = await render(<TimePicker access="readonly" />);
+    const input = document.querySelector('input[type="time"]') as HTMLInputElement;
     expect(input.getAttribute('aria-readonly')).toBe('true');
   });
 });

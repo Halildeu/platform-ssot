@@ -4,7 +4,7 @@ import { FormField } from '../FormField';
 
 describe('FormField (Browser)', () => {
   it('renders label and children', async () => {
-    const screen = render(
+    render(
       <FormField label="Username">
         <input type="text" />
       </FormField>,
@@ -13,7 +13,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('shows error message', async () => {
-    const screen = render(
+    render(
       <FormField label="Email" error="Invalid email">
         <input type="text" />
       </FormField>,
@@ -22,7 +22,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('shows required indicator', async () => {
-    const screen = render(
+    render(
       <FormField label="Name" required>
         <input type="text" />
       </FormField>,
@@ -31,7 +31,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('shows optional indicator', async () => {
-    const screen = render(
+    render(
       <FormField label="Nickname" optional>
         <input type="text" />
       </FormField>,
@@ -40,7 +40,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('renders help text', async () => {
-    const screen = render(
+    render(
       <FormField label="Password" help="At least 8 characters">
         <input type="password" />
       </FormField>,
@@ -49,33 +49,33 @@ describe('FormField (Browser)', () => {
   });
 
   it('applies disabled styling', async () => {
-    const screen = render(
+    render(
       <FormField label="Disabled field" disabled>
         <input type="text" />
       </FormField>,
     );
     // The wrapper should have opacity for disabled state
-    const wrapper = screen.container.firstElementChild;
+    const wrapper = document.body.firstElementChild;
     expect(wrapper?.className).toContain('opacity');
   });
 
   it('renders in horizontal layout', async () => {
-    const screen = render(
+    render(
       <FormField label="Field" horizontal>
         <input type="text" />
       </FormField>,
     );
-    const wrapper = screen.container.firstElementChild;
+    const wrapper = document.body.firstElementChild;
     expect(wrapper?.className).toContain('flex');
   });
 
   it('connects label to input via htmlFor', async () => {
-    const screen = render(
+    render(
       <FormField label="Custom" htmlFor="my-input">
         <input type="text" id="my-input" />
       </FormField>,
     );
-    const label = screen.container.querySelector('label');
+    const label = document.querySelector('label');
     expect(label?.getAttribute('for')).toBe('my-input');
   });
 });

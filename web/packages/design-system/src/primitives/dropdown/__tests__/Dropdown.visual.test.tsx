@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { Dropdown } from '../Dropdown';
 
 const items = [
@@ -11,19 +12,19 @@ const items = [
 describe('Dropdown Visual Regression', () => {
   /* ---- 1. Closed state ---- */
   it('closed state matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Dropdown items={items}>
           <button>Actions</button>
         </Dropdown>
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   /* ---- 2. Open state ---- */
   it('open state matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, paddingBottom: 200, background: '#fff' }}>
         <Dropdown items={items}>
           <button>Actions</button>
@@ -31,7 +32,7 @@ describe('Dropdown Visual Regression', () => {
       </div>,
     );
     await screen.getByText('Actions').click();
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   /* ---- 3. With disabled item ---- */
@@ -41,7 +42,7 @@ describe('Dropdown Visual Regression', () => {
       { key: 'duplicate', label: 'Duplicate', disabled: true },
       { key: 'delete', label: 'Delete', danger: true },
     ];
-    const screen = render(
+    render(
       <div style={{ padding: 20, paddingBottom: 200, background: '#fff' }}>
         <Dropdown items={disabledItems}>
           <button>Actions</button>
@@ -49,7 +50,7 @@ describe('Dropdown Visual Regression', () => {
       </div>,
     );
     await screen.getByText('Actions').click();
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   /* ---- 4. With labels and separators ---- */
@@ -62,7 +63,7 @@ describe('Dropdown Visual Regression', () => {
       { type: 'label' as const, label: 'Danger zone' },
       { key: 'delete', label: 'Delete', danger: true },
     ];
-    const screen = render(
+    render(
       <div style={{ padding: 20, paddingBottom: 300, background: '#fff' }}>
         <Dropdown items={richItems}>
           <button>Actions</button>
@@ -70,24 +71,24 @@ describe('Dropdown Visual Regression', () => {
       </div>,
     );
     await screen.getByText('Actions').click();
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   /* ---- 5. Disabled dropdown ---- */
   it('disabled dropdown matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Dropdown items={items} disabled>
           <button>Disabled</button>
         </Dropdown>
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   /* ---- 6. Dark mode ---- */
   it('dark theme matches screenshot', async () => {
-    const screen = render(
+    render(
       <div data-theme="dark" style={{ padding: 20, paddingBottom: 200, background: '#1a1a2e' }}>
         <Dropdown items={items}>
           <button>Actions</button>
@@ -95,6 +96,6 @@ describe('Dropdown Visual Regression', () => {
       </div>,
     );
     await screen.getByText('Actions').click();
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

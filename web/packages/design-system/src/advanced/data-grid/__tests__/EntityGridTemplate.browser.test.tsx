@@ -4,7 +4,7 @@ import { EntityGridTemplate } from '../EntityGridTemplate';
 
 describe('EntityGridTemplate (Browser)', () => {
   it('renders grid wrapper container', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="test-grid"
         gridSchemaVersion={1}
@@ -13,12 +13,12 @@ describe('EntityGridTemplate (Browser)', () => {
         dataSourceMode="client"
       />,
     );
-    const el = screen.container.querySelector('[data-component="entity-grid-template"]');
+    const el = document.querySelector('[data-component="entity-grid-template"]');
     expect(el).not.toBeNull();
   });
 
   it('renders with data-grid-id attribute', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="orders-grid"
         gridSchemaVersion={1}
@@ -27,12 +27,12 @@ describe('EntityGridTemplate (Browser)', () => {
         dataSourceMode="client"
       />,
     );
-    const el = screen.container.querySelector('[data-grid-id="orders-grid"]');
+    const el = document.querySelector('[data-grid-id="orders-grid"]');
     expect(el).not.toBeNull();
   });
 
   it('renders toolbar with quick filter', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="toolbar-grid"
         gridSchemaVersion={1}
@@ -41,12 +41,12 @@ describe('EntityGridTemplate (Browser)', () => {
         dataSourceMode="client"
       />,
     );
-    const toolbar = screen.container.querySelector('[data-component="grid-toolbar"]');
+    const toolbar = document.querySelector('[data-component="grid-toolbar"]');
     expect(toolbar).not.toBeNull();
   });
 
   it('renders GridShell with ag-theme class', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="theme-grid"
         gridSchemaVersion={1}
@@ -56,12 +56,12 @@ describe('EntityGridTemplate (Browser)', () => {
         initialTheme="quartz"
       />,
     );
-    const themeEl = screen.container.querySelector('.ag-theme-quartz');
+    const themeEl = document.querySelector('.ag-theme-quartz');
     expect(themeEl).not.toBeNull();
   });
 
   it('renders pagination footer in client mode', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="page-grid"
         gridSchemaVersion={1}
@@ -71,12 +71,12 @@ describe('EntityGridTemplate (Browser)', () => {
         total={2}
       />,
     );
-    const pagination = screen.container.querySelector('[data-component="table-pagination"]');
+    const pagination = document.querySelector('[data-component="table-pagination"]');
     expect(pagination).not.toBeNull();
   });
 
   it('renders toolbar extras slot', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="extras-grid"
         gridSchemaVersion={1}
@@ -90,7 +90,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders with multiple column definitions', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="multi-col-grid"
         gridSchemaVersion={1}
@@ -99,12 +99,12 @@ describe('EntityGridTemplate (Browser)', () => {
         dataSourceMode="client"
       />,
     );
-    const el = screen.container.querySelector('[data-component="entity-grid-template"]');
+    const el = document.querySelector('[data-component="entity-grid-template"]');
     expect(el).not.toBeNull();
   });
 
   it('accepts custom messages prop', async () => {
-    const screen = render(
+    render(
       <EntityGridTemplate
         gridId="msg-grid"
         gridSchemaVersion={1}
@@ -114,7 +114,7 @@ describe('EntityGridTemplate (Browser)', () => {
         messages={{ quickFilterPlaceholder: 'Search items...' }}
       />,
     );
-    const el = screen.container.querySelector('[data-component="entity-grid-template"]');
+    const el = document.querySelector('[data-component="entity-grid-template"]');
     expect(el).not.toBeNull();
   });
 });

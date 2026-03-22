@@ -10,38 +10,38 @@ const items = [
 
 describe('List (Browser)', () => {
   it('renders all list items', async () => {
-    const screen = render(<List items={items} />);
+    const screen = await render(<List items={items} />);
     await expect.element(screen.getByText('Item One')).toBeVisible();
     await expect.element(screen.getByText('Item Two')).toBeVisible();
     await expect.element(screen.getByText('Item Three')).toBeVisible();
   });
 
   it('renders title when provided', async () => {
-    const screen = render(<List items={items} title="My List" />);
+    const screen = await render(<List items={items} title="My List" />);
     await expect.element(screen.getByText('My List')).toBeVisible();
   });
 
   it('renders description when provided', async () => {
-    const screen = render(<List items={items} description="A helpful description" />);
+    const screen = await render(<List items={items} description="A helpful description" />);
     await expect.element(screen.getByText('A helpful description')).toBeVisible();
   });
 
   it('fires onItemSelect when clicking an item', async () => {
     const onItemSelect = vi.fn();
-    const screen = render(<List items={items} onItemSelect={onItemSelect} />);
+    const screen = await render(<List items={items} onItemSelect={onItemSelect} />);
     await screen.getByText('Item Two').click();
     expect(onItemSelect).toHaveBeenCalledWith('2');
   });
 
   it('shows loading skeleton when loading', async () => {
-    const screen = render(<List items={[]} loading />);
-    const skeletons = screen.container.querySelectorAll('[data-component="skeleton"]');
+    const screen = await render(<List items={[]} loading />);
+    const skeletons = document.querySelectorAll('[data-component="skeleton"]');
     expect(skeletons.length).toBeGreaterThan(0);
   });
 
   it('shows empty state when no items', async () => {
-    const screen = render(<List items={[]} />);
-    const emptyState = screen.container.querySelector('[data-component="empty-state"]');
+    const screen = await render(<List items={[]} />);
+    const emptyState = document.querySelector('[data-component="empty-state"]');
     expect(emptyState).not.toBeNull();
   });
 
@@ -49,7 +49,7 @@ describe('List (Browser)', () => {
     const richItems = [
       { key: '1', title: 'Task', description: 'Complete by Friday' },
     ];
-    const screen = render(<List items={richItems} />);
+    const screen = await render(<List items={richItems} />);
     await expect.element(screen.getByText('Complete by Friday')).toBeVisible();
   });
 
@@ -57,7 +57,7 @@ describe('List (Browser)', () => {
     const badgeItems = [
       { key: '1', title: 'Priority', badges: ['High'] },
     ];
-    const screen = render(<List items={badgeItems} />);
+    const screen = await render(<List items={badgeItems} />);
     await expect.element(screen.getByText('High')).toBeVisible();
   });
 });

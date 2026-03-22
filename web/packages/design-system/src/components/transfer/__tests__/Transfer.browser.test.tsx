@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Transfer } from '../Transfer';
 
 const data = [
@@ -11,27 +11,27 @@ const data = [
 
 describe('Transfer (Browser)', () => {
   it('renders two panels', async () => {
-    const screen = render(<Transfer dataSource={data} />);
+    const screen = await render(<Transfer dataSource={data} />);
     await expect.element(screen.getByTestId('transfer-panel-left')).toBeVisible();
     await expect.element(screen.getByTestId('transfer-panel-right')).toBeVisible();
   });
 
   it('renders items in source panel', async () => {
-    const screen = render(<Transfer dataSource={data} />);
+    const screen = await render(<Transfer dataSource={data} />);
     await expect.element(screen.getByText('Item A')).toBeVisible();
     await expect.element(screen.getByText('Item B')).toBeVisible();
     await expect.element(screen.getByText('Item C')).toBeVisible();
   });
 
   it('renders items in target panel when targetKeys given', async () => {
-    const screen = render(<Transfer dataSource={data} defaultTargetKeys={['b']} />);
+    const screen = await render(<Transfer dataSource={data} defaultTargetKeys={['b']} />);
     // Item B should be in the right panel
     await expect.element(screen.getByText('Item B')).toBeVisible();
   });
 
   it('moves items to target on selection and transfer', async () => {
     const onChange = vi.fn();
-    const screen = render(<Transfer dataSource={data} onChange={onChange} />);
+    const screen = await render(<Transfer dataSource={data} onChange={onChange} />);
     // Click on Item A checkbox to select it
     await screen.getByText('Item A').click();
     // Click the move-right button
@@ -41,24 +41,24 @@ describe('Transfer (Browser)', () => {
   });
 
   it('renders panel titles', async () => {
-    const screen = render(<Transfer dataSource={data} titles={['Source', 'Target']} />);
+    const screen = await render(<Transfer dataSource={data} titles={['Source', 'Target']} />);
     await expect.element(screen.getByText('Source')).toBeVisible();
     await expect.element(screen.getByText('Target')).toBeVisible();
   });
 
   it('supports search in panels', async () => {
-    const screen = render(<Transfer dataSource={data} searchable />);
-    const searchInputs = screen.container.querySelectorAll('input[type="search"], input[placeholder]');
+    const screen = await render(<Transfer dataSource={data} searchable />);
+    const searchInputs = document.querySelectorAll('input[type="search"], input[placeholder]');
     expect(searchInputs.length).toBeGreaterThan(0);
   });
 
   it('shows empty state when no items', async () => {
-    const screen = render(<Transfer dataSource={[]} />);
+    const screen = await render(<Transfer dataSource={[]} />);
     await expect.element(screen.getByText('Sonuc bulunamadi')).toBeVisible();
   });
 
   it('renders default panel titles', async () => {
-    const screen = render(<Transfer dataSource={data} />);
+    const screen = await render(<Transfer dataSource={data} />);
     await expect.element(screen.getByText('Kaynak')).toBeVisible();
     await expect.element(screen.getByText('Hedef')).toBeVisible();
   });

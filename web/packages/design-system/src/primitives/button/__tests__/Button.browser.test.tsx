@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Button } from '../Button';
 
 describe('Button (Browser)', () => {
@@ -8,12 +8,12 @@ describe('Button (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders with correct text', async () => {
-    const screen = render(<Button>Click me</Button>);
+    const screen = await render(<Button>Click me</Button>);
     await expect.element(screen.getByRole('button', { name: 'Click me' })).toBeVisible();
   });
 
   it('renders as type="button" by default (no accidental form submit)', async () => {
-    const screen = render(<Button>Submit</Button>);
+    const screen = await render(<Button>Submit</Button>);
     await expect.element(screen.getByRole('button')).toHaveAttribute('type', 'button');
   });
 
@@ -22,7 +22,7 @@ describe('Button (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onClick when clicked', async () => {
     const onClick = vi.fn();
-    const screen = render(<Button onClick={onClick}>Press</Button>);
+    const screen = await render(<Button onClick={onClick}>Press</Button>);
     await screen.getByRole('button').click();
     expect(onClick).toHaveBeenCalledOnce();
   });
@@ -31,13 +31,13 @@ describe('Button (Browser)', () => {
   /*  3. Disabled state blocks interaction                                */
   /* ------------------------------------------------------------------ */
   it('is disabled when disabled prop is set', async () => {
-    const screen = render(<Button disabled>Disabled</Button>);
+    const screen = await render(<Button disabled>Disabled</Button>);
     await expect.element(screen.getByRole('button')).toBeDisabled();
   });
 
   it('does not fire onClick when disabled', async () => {
     const onClick = vi.fn();
-    const screen = render(<Button disabled onClick={onClick}>Disabled</Button>);
+    const screen = await render(<Button disabled onClick={onClick}>Disabled</Button>);
     await screen.getByRole('button').click();
     expect(onClick).not.toHaveBeenCalled();
   });
@@ -47,7 +47,7 @@ describe('Button (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('activates on Enter key', async () => {
     const onClick = vi.fn();
-    const screen = render(<Button onClick={onClick}>KB</Button>);
+    const screen = await render(<Button onClick={onClick}>KB</Button>);
     screen.getByRole('button').element().focus();
     await userEvent.keyboard('{Enter}');
     expect(onClick).toHaveBeenCalledOnce();
@@ -55,7 +55,7 @@ describe('Button (Browser)', () => {
 
   it('activates on Space key', async () => {
     const onClick = vi.fn();
-    const screen = render(<Button onClick={onClick}>KB</Button>);
+    const screen = await render(<Button onClick={onClick}>KB</Button>);
     screen.getByRole('button').element().focus();
     await userEvent.keyboard(' ');
     expect(onClick).toHaveBeenCalledOnce();
@@ -63,7 +63,7 @@ describe('Button (Browser)', () => {
 
   it('does not activate on Enter when disabled', async () => {
     const onClick = vi.fn();
-    const screen = render(<Button disabled onClick={onClick}>KB</Button>);
+    const screen = await render(<Button disabled onClick={onClick}>KB</Button>);
     screen.getByRole('button').element().focus();
     await userEvent.keyboard('{Enter}');
     expect(onClick).not.toHaveBeenCalled();
@@ -73,17 +73,17 @@ describe('Button (Browser)', () => {
   /*  5. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('has aria-label when provided', async () => {
-    const screen = render(<Button aria-label="Close dialog" iconOnly>X</Button>);
+    const screen = await render(<Button aria-label="Close dialog" iconOnly>X</Button>);
     await expect.element(screen.getByRole('button')).toHaveAttribute('aria-label', 'Close dialog');
   });
 
   it('sets aria-busy when loading', async () => {
-    const screen = render(<Button loading>Saving</Button>);
+    const screen = await render(<Button loading>Saving</Button>);
     await expect.element(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true');
   });
 
   it('sets aria-disabled when disabled', async () => {
-    const screen = render(<Button disabled>No</Button>);
+    const screen = await render(<Button disabled>No</Button>);
     await expect.element(screen.getByRole('button')).toHaveAttribute('aria-disabled', 'true');
   });
 
@@ -92,7 +92,7 @@ describe('Button (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('renders spinner and disables interaction when loading', async () => {
     const onClick = vi.fn();
-    const screen = render(<Button loading onClick={onClick}>Save</Button>);
+    const screen = await render(<Button loading onClick={onClick}>Save</Button>);
     const btn = screen.getByRole('button');
     await expect.element(btn).toBeDisabled();
     await btn.click();
@@ -100,7 +100,7 @@ describe('Button (Browser)', () => {
   });
 
   it('shows loading text alongside spinner', async () => {
-    const screen = render(<Button loading>Saving</Button>);
+    const screen = await render(<Button loading>Saving</Button>);
     await expect.element(screen.getByText('Saving')).toBeVisible();
   });
 
@@ -108,7 +108,7 @@ describe('Button (Browser)', () => {
   /*  7. Focus management                                                 */
   /* ------------------------------------------------------------------ */
   it('is focusable via tab', async () => {
-    const screen = render(<Button>Focus me</Button>);
+    const screen = await render(<Button>Focus me</Button>);
     await userEvent.keyboard('{Tab}');
     const btn = screen.getByRole('button').element();
     expect(document.activeElement).toBe(btn);
@@ -120,9 +120,9 @@ describe('Button (Browser)', () => {
   it('applies all variant classes without error', async () => {
     const variants = ['primary', 'secondary', 'outline', 'ghost', 'danger', 'link'] as const;
     for (const variant of variants) {
-      const screen = render(<Button variant={variant}>{variant}</Button>);
+    const screen = await render(<Button variant={variant}>{variant}</Button>);
       await expect.element(screen.getByRole('button', { name: variant })).toBeVisible();
-      screen.unmount();
+      
     }
   });
 
@@ -132,9 +132,9 @@ describe('Button (Browser)', () => {
   it('renders all sizes without error', async () => {
     const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
     for (const size of sizes) {
-      const screen = render(<Button size={size}>Sz-{size}</Button>);
+    const screen = await render(<Button size={size}>Sz-{size}</Button>);
       await expect.element(screen.getByRole('button')).toBeVisible();
-      screen.unmount();
+      
     }
   });
 
@@ -142,7 +142,7 @@ describe('Button (Browser)', () => {
   /*  10. Icon button                                                     */
   /* ------------------------------------------------------------------ */
   it('renders icon-only button with aria-label', async () => {
-    const screen = render(
+    render(
       <Button iconOnly aria-label="Settings">
         <svg data-testid="icon" />
       </Button>,
@@ -154,7 +154,7 @@ describe('Button (Browser)', () => {
   /*  11. Left / Right icon                                               */
   /* ------------------------------------------------------------------ */
   it('renders left and right icons alongside text', async () => {
-    const screen = render(
+    render(
       <Button leftIcon={<span data-testid="left" />} rightIcon={<span data-testid="right" />}>
         With Icons
       </Button>,
@@ -166,7 +166,7 @@ describe('Button (Browser)', () => {
   /*  12. fullWidth                                                       */
   /* ------------------------------------------------------------------ */
   it('stretches to full width when fullWidth is set', async () => {
-    const screen = render(<Button fullWidth>Wide</Button>);
+    const screen = await render(<Button fullWidth>Wide</Button>);
     await expect.element(screen.getByRole('button')).toBeVisible();
   });
 });

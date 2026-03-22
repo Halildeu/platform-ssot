@@ -4,7 +4,7 @@ import { MasterDetail } from '../MasterDetail';
 
 describe('MasterDetail (Browser)', () => {
   it('renders master and detail panels', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 300 }}>
         <MasterDetail master={<div>Item list</div>} detail={<div>Item detail</div>} />
       </div>,
@@ -14,7 +14,7 @@ describe('MasterDetail (Browser)', () => {
   });
 
   it('shows empty state when no selection', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 300 }}>
         <MasterDetail master={<div>List</div>} detail={<div>Detail</div>} hasSelection={false} />
       </div>,
@@ -23,17 +23,17 @@ describe('MasterDetail (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 300 }}>
         <MasterDetail master={<div>M</div>} detail={<div>D</div>} />
       </div>,
     );
-    const el = screen.container.querySelector('[data-component="master-detail"]');
+    const el = document.querySelector('[data-component="master-detail"]');
     expect(el).not.toBeNull();
   });
 
   it('renders custom detail empty state', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 300 }}>
         <MasterDetail
           master={<div>List</div>}
@@ -47,7 +47,7 @@ describe('MasterDetail (Browser)', () => {
   });
 
   it('renders master header', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 300 }}>
         <MasterDetail
           master={<div>List</div>}
@@ -60,7 +60,7 @@ describe('MasterDetail (Browser)', () => {
   });
 
   it('renders detail header', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 300 }}>
         <MasterDetail
           master={<div>List</div>}
@@ -73,7 +73,7 @@ describe('MasterDetail (Browser)', () => {
   });
 
   it('renders with collapsible master panel', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 300 }}>
         <MasterDetail master={<div>List</div>} detail={<div>Detail</div>} collapsible />
       </div>,

@@ -13,41 +13,41 @@ const nodes = [
 
 describe('TreeTable (Browser)', () => {
   it('renders table with tree column and data columns', async () => {
-    const screen = render(<TreeTable nodes={nodes} columns={columns} />);
+    const screen = await render(<TreeTable nodes={nodes} columns={columns} />);
     await expect.element(screen.getByText('Parent')).toBeVisible();
     await expect.element(screen.getByText('Status')).toBeVisible();
   });
 
   it('shows children when expanded by default', async () => {
-    const screen = render(<TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />);
+    const screen = await render(<TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />);
     await expect.element(screen.getByText('Child')).toBeVisible();
     await expect.element(screen.getByText('Pending')).toBeVisible();
   });
 
   it('expands row on toggle button click', async () => {
-    const screen = render(<TreeTable nodes={nodes} columns={columns} />);
+    const screen = await render(<TreeTable nodes={nodes} columns={columns} />);
     const expandBtn = screen.getByLabelText('Expand branch');
     await expandBtn.click();
     await expect.element(screen.getByText('Child')).toBeVisible();
   });
 
   it('collapses row on toggle button click', async () => {
-    const screen = render(<TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />);
+    const screen = await render(<TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />);
     const collapseBtn = screen.getByLabelText('Collapse branch');
     await collapseBtn.click();
-    expect(screen.container.textContent).not.toContain('Pending');
+    expect(document.body.textContent).not.toContain('Pending');
   });
 
   it('fires onNodeSelect when clicking a row', async () => {
     const onNodeSelect = vi.fn();
-    const screen = render(<TreeTable nodes={nodes} columns={columns} onNodeSelect={onNodeSelect} />);
+    const screen = await render(<TreeTable nodes={nodes} columns={columns} onNodeSelect={onNodeSelect} />);
     await screen.getByText('Standalone').click();
     expect(onNodeSelect).toHaveBeenCalledWith('2');
   });
 
   it('fires onExpandedKeysChange when toggling', async () => {
     const onExpandedKeysChange = vi.fn();
-    const screen = render(
+    render(
       <TreeTable nodes={nodes} columns={columns} onExpandedKeysChange={onExpandedKeysChange} />,
     );
     await screen.getByLabelText('Expand branch').click();
@@ -55,19 +55,19 @@ describe('TreeTable (Browser)', () => {
   });
 
   it('renders column data values', async () => {
-    const screen = render(<TreeTable nodes={nodes} columns={columns} />);
+    const screen = await render(<TreeTable nodes={nodes} columns={columns} />);
     await expect.element(screen.getByText('Active')).toBeVisible();
     await expect.element(screen.getByText('Done')).toBeVisible();
   });
 
   it('shows empty state when no nodes', async () => {
-    const screen = render(<TreeTable nodes={[]} columns={columns} />);
-    const empty = screen.container.querySelector('[data-component="empty-state"]');
+    const screen = await render(<TreeTable nodes={[]} columns={columns} />);
+    const empty = document.querySelector('[data-component="empty-state"]');
     expect(empty).not.toBeNull();
   });
 
   it('renders expand/collapse aria attributes', async () => {
-    const screen = render(<TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />);
+    const screen = await render(<TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />);
     const collapseBtn = screen.getByLabelText('Collapse branch');
     await expect.element(collapseBtn).toHaveAttribute('aria-expanded', 'true');
   });

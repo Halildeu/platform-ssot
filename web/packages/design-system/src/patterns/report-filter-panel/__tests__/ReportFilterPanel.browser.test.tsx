@@ -4,7 +4,7 @@ import { ReportFilterPanel } from '../ReportFilterPanel';
 
 describe('ReportFilterPanel (Browser)', () => {
   it('renders submit and reset buttons', async () => {
-    const screen = render(
+    render(
       <ReportFilterPanel onSubmit={() => {}} onReset={() => {}}>
         <input placeholder="Date from" />
       </ReportFilterPanel>,
@@ -14,7 +14,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders children inputs', async () => {
-    const screen = render(
+    render(
       <ReportFilterPanel>
         <input placeholder="Search" />
       </ReportFilterPanel>,
@@ -24,7 +24,7 @@ describe('ReportFilterPanel (Browser)', () => {
 
   it('calls onSubmit when submit button is clicked', async () => {
     const onSubmit = vi.fn();
-    const screen = render(
+    render(
       <ReportFilterPanel onSubmit={onSubmit}>
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -35,7 +35,7 @@ describe('ReportFilterPanel (Browser)', () => {
 
   it('calls onReset when reset button is clicked', async () => {
     const onReset = vi.fn();
-    const screen = render(
+    render(
       <ReportFilterPanel onReset={onReset}>
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -45,7 +45,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders custom button labels', async () => {
-    const screen = render(
+    render(
       <ReportFilterPanel submitLabel="Apply" resetLabel="Clear">
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -55,19 +55,19 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(
+    render(
       <ReportFilterPanel access="hidden">
         <input placeholder="Filter" />
       </ReportFilterPanel>,
     );
-    expect(screen.container.querySelector('form')).toBeNull();
+    expect(document.querySelector('form')).toBeNull();
   });
 
   it('renders form element', async () => {
-    const screen = render(
+    render(
       <ReportFilterPanel><input placeholder="X" /></ReportFilterPanel>,
     );
-    const form = screen.container.querySelector('form');
+    const form = document.querySelector('form');
     expect(form).not.toBeNull();
   });
 });

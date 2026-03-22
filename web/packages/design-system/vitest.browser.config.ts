@@ -1,11 +1,14 @@
 import { defineConfig } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright';
+import path from 'path';
 
 export default defineConfig({
   test: {
     name: 'browser',
+    root: path.resolve(__dirname),
     browser: {
       enabled: true,
-      provider: 'playwright',
+      provider: playwright(),
       instances: [
         { browser: 'chromium' },
       ],

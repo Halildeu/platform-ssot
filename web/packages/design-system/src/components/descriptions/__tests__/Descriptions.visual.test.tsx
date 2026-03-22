@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { Descriptions } from '../Descriptions';
 
 const items = [
@@ -9,11 +10,11 @@ const items = [
 
 describe('Descriptions Visual Regression', () => {
   it('default layout matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <Descriptions items={items} title="User Info" />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

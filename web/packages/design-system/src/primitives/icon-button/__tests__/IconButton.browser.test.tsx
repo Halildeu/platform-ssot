@@ -8,38 +8,38 @@ const TestIcon = () => (
 
 describe('IconButton (Browser)', () => {
   it('renders with aria-label', async () => {
-    const screen = render(<IconButton icon={<TestIcon />} label="Close" />);
+    const screen = await render(<IconButton icon={<TestIcon />} label="Close" />);
     const btn = screen.getByRole('button', { name: 'Close' });
     await expect.element(btn).toBeVisible();
   });
 
   it('calls onClick when clicked', async () => {
     const onClick = vi.fn();
-    const screen = render(<IconButton icon={<TestIcon />} label="Edit" onClick={onClick} />);
+    const screen = await render(<IconButton icon={<TestIcon />} label="Edit" onClick={onClick} />);
     await screen.getByRole('button').click();
     expect(onClick).toHaveBeenCalledOnce();
   });
 
   it('is disabled when disabled prop is set', async () => {
-    const screen = render(<IconButton icon={<TestIcon />} label="Delete" disabled />);
+    const screen = await render(<IconButton icon={<TestIcon />} label="Delete" disabled />);
     await expect.element(screen.getByRole('button')).toBeDisabled();
   });
 
   it('does not fire onClick when disabled', async () => {
     const onClick = vi.fn();
-    const screen = render(<IconButton icon={<TestIcon />} label="Action" disabled onClick={onClick} />);
+    const screen = await render(<IconButton icon={<TestIcon />} label="Action" disabled onClick={onClick} />);
     await screen.getByRole('button').click();
     expect(onClick).not.toHaveBeenCalled();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<IconButton icon={<TestIcon />} label="Test" />);
-    const el = screen.container.querySelector('[data-component="icon-button"]');
+    const screen = await render(<IconButton icon={<TestIcon />} label="Test" />);
+    const el = document.querySelector('[data-component="icon-button"]');
     expect(el).not.toBeNull();
   });
 
   it('renders different variants', async () => {
-    const screen = render(
+    render(
       <div>
         <IconButton icon={<TestIcon />} label="Primary" variant="primary" data-testid="primary" />
         <IconButton icon={<TestIcon />} label="Ghost" variant="ghost" data-testid="ghost" />
@@ -52,7 +52,7 @@ describe('IconButton (Browser)', () => {
   });
 
   it('renders different sizes', async () => {
-    const screen = render(
+    render(
       <div>
         <IconButton icon={<TestIcon />} label="XS" size="xs" data-testid="xs" />
         <IconButton icon={<TestIcon />} label="LG" size="lg" data-testid="lg" />
@@ -63,7 +63,7 @@ describe('IconButton (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<IconButton icon={<TestIcon />} label="Hidden" access="hidden" />);
-    expect(screen.container.querySelector('button')).toBeNull();
+    const screen = await render(<IconButton icon={<TestIcon />} label="Hidden" access="hidden" />);
+    expect(document.querySelector('button')).toBeNull();
   });
 });

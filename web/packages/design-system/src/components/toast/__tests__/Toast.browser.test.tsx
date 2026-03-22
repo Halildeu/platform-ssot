@@ -9,7 +9,7 @@ function ToastTrigger({ variant, message, title }: { variant: 'success' | 'error
 
 describe('Toast (Browser)', () => {
   it('renders success toast on trigger', async () => {
-    const screen = render(
+    render(
       <ToastProvider>
         <ToastTrigger variant="success" message="Item saved!" />
       </ToastProvider>,
@@ -19,7 +19,7 @@ describe('Toast (Browser)', () => {
   });
 
   it('renders error toast', async () => {
-    const screen = render(
+    render(
       <ToastProvider>
         <ToastTrigger variant="error" message="Something went wrong" />
       </ToastProvider>,
@@ -29,7 +29,7 @@ describe('Toast (Browser)', () => {
   });
 
   it('renders info toast', async () => {
-    const screen = render(
+    render(
       <ToastProvider>
         <ToastTrigger variant="info" message="FYI: Update available" />
       </ToastProvider>,
@@ -39,7 +39,7 @@ describe('Toast (Browser)', () => {
   });
 
   it('renders warning toast', async () => {
-    const screen = render(
+    render(
       <ToastProvider>
         <ToastTrigger variant="warning" message="Disk space low" />
       </ToastProvider>,
@@ -49,7 +49,7 @@ describe('Toast (Browser)', () => {
   });
 
   it('renders toast with title', async () => {
-    const screen = render(
+    render(
       <ToastProvider>
         <ToastTrigger variant="success" message="Done!" title="Operation Complete" />
       </ToastProvider>,
@@ -59,7 +59,7 @@ describe('Toast (Browser)', () => {
   });
 
   it('renders dismiss button on toast', async () => {
-    const screen = render(
+    render(
       <ToastProvider>
         <ToastTrigger variant="success" message="Dismissable" />
       </ToastProvider>,
@@ -71,7 +71,7 @@ describe('Toast (Browser)', () => {
   });
 
   it('renders children inside provider', async () => {
-    const screen = render(
+    render(
       <ToastProvider>
         <div>App Content</div>
       </ToastProvider>,

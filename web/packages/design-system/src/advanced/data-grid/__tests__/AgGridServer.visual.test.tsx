@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { AgGridServer } from '../AgGridServer';
 
 describe('AgGridServer Visual Regression', () => {
   it('server grid matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 500, height: 350 }}>
         <AgGridServer
           columnDefs={[{ field: 'name', headerName: 'Name' }]}
@@ -13,6 +14,6 @@ describe('AgGridServer Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

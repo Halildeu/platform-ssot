@@ -9,24 +9,24 @@ const sampleItems = [
 
 describe('AIActionAuditTimeline (Browser)', () => {
   it('renders timeline with items', async () => {
-    const screen = render(<AIActionAuditTimeline items={sampleItems} />);
+    const screen = await render(<AIActionAuditTimeline items={sampleItems} />);
     await expect.element(screen.getByText('Generated report')).toBeVisible();
     await expect.element(screen.getByText('Approved')).toBeVisible();
   });
 
   it('renders empty state when no items', async () => {
-    const screen = render(<AIActionAuditTimeline items={[]} />);
+    const screen = await render(<AIActionAuditTimeline items={[]} />);
     await expect.element(screen.getByText('Timeline kaydi bulunamadi.')).toBeVisible();
   });
 
   it('renders actor badge for each item', async () => {
-    const screen = render(<AIActionAuditTimeline items={sampleItems} />);
+    const screen = await render(<AIActionAuditTimeline items={sampleItems} />);
     await expect.element(screen.getByText('ai')).toBeVisible();
     await expect.element(screen.getByText('human')).toBeVisible();
   });
 
   it('renders status badge when provided', async () => {
-    const screen = render(
+    render(
       <AIActionAuditTimeline
         items={[{ id: '1', actor: 'ai', title: 'Scan', timestamp: '09:00', status: 'rejected' }]}
       />,
@@ -36,7 +36,7 @@ describe('AIActionAuditTimeline (Browser)', () => {
 
   it('calls onSelectItem when item is clicked', async () => {
     const onSelect = vi.fn();
-    const screen = render(
+    render(
       <AIActionAuditTimeline items={sampleItems} onSelectItem={onSelect} />,
     );
     await screen.getByText('Generated report').click();
@@ -44,18 +44,18 @@ describe('AIActionAuditTimeline (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<AIActionAuditTimeline items={sampleItems} />);
-    const el = screen.container.querySelector('[data-component="ai-action-audit-timeline"]');
+    const screen = await render(<AIActionAuditTimeline items={sampleItems} />);
+    const el = document.querySelector('[data-component="ai-action-audit-timeline"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<AIActionAuditTimeline items={sampleItems} access="hidden" />);
-    expect(screen.container.querySelector('[data-component="ai-action-audit-timeline"]')).toBeNull();
+    const screen = await render(<AIActionAuditTimeline items={sampleItems} access="hidden" />);
+    expect(document.querySelector('[data-component="ai-action-audit-timeline"]')).toBeNull();
   });
 
   it('renders custom title and description', async () => {
-    const screen = render(
+    render(
       <AIActionAuditTimeline items={[]} title="Audit Log" description="Review actions" />,
     );
     await expect.element(screen.getByText('Audit Log')).toBeVisible();

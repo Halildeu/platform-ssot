@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { CitationPanel } from '../CitationPanel';
 
 describe('CitationPanel Visual Regression', () => {
   it('panel with citations matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <CitationPanel
           items={[
@@ -13,6 +14,6 @@ describe('CitationPanel Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

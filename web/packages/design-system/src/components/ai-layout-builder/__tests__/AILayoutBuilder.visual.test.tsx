@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { AILayoutBuilder } from '../AILayoutBuilder';
 
 describe('AILayoutBuilder Visual Regression', () => {
   it('overview layout matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 600 }}>
         <AILayoutBuilder
           blocks={[
@@ -15,6 +16,6 @@ describe('AILayoutBuilder Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

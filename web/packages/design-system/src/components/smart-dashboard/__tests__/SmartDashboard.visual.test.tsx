@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { SmartDashboard } from '../SmartDashboard';
 
 describe('SmartDashboard Visual Regression', () => {
   it('dashboard with KPIs matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 700 }}>
         <SmartDashboard
           title="Overview"
@@ -15,6 +16,6 @@ describe('SmartDashboard Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

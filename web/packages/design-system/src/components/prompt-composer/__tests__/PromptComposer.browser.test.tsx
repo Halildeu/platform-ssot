@@ -4,12 +4,12 @@ import { PromptComposer } from '../PromptComposer';
 
 describe('PromptComposer (Browser)', () => {
   it('renders title', async () => {
-    const screen = render(<PromptComposer />);
+    const screen = await render(<PromptComposer />);
     await expect.element(screen.getByText('Prompt olusturucu')).toBeVisible();
   });
 
   it('renders scope buttons', async () => {
-    const screen = render(<PromptComposer />);
+    const screen = await render(<PromptComposer />);
     await expect.element(screen.getByText('general')).toBeVisible();
     await expect.element(screen.getByText('approval')).toBeVisible();
     await expect.element(screen.getByText('policy')).toBeVisible();
@@ -17,31 +17,31 @@ describe('PromptComposer (Browser)', () => {
   });
 
   it('renders tone buttons', async () => {
-    const screen = render(<PromptComposer />);
+    const screen = await render(<PromptComposer />);
     await expect.element(screen.getByText('neutral')).toBeVisible();
     await expect.element(screen.getByText('strict')).toBeVisible();
     await expect.element(screen.getByText('exploratory')).toBeVisible();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<PromptComposer />);
-    const el = screen.container.querySelector('[data-component="prompt-composer"]');
+    const screen = await render(<PromptComposer />);
+    const el = document.querySelector('[data-component="prompt-composer"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<PromptComposer access="hidden" />);
-    expect(screen.container.querySelector('[data-component="prompt-composer"]')).toBeNull();
+    const screen = await render(<PromptComposer access="hidden" />);
+    expect(document.querySelector('[data-component="prompt-composer"]')).toBeNull();
   });
 
   it('renders disabled state', async () => {
-    const screen = render(<PromptComposer access="disabled" />);
-    const el = screen.container.querySelector('[data-access-state="disabled"]');
+    const screen = await render(<PromptComposer access="disabled" />);
+    const el = document.querySelector('[data-access-state="disabled"]');
     expect(el).not.toBeNull();
   });
 
   it('renders custom title and description', async () => {
-    const screen = render(
+    render(
       <PromptComposer title="Custom Composer" description="Write your prompt" />,
     );
     await expect.element(screen.getByText('Custom Composer')).toBeVisible();
@@ -49,7 +49,7 @@ describe('PromptComposer (Browser)', () => {
   });
 
   it('renders guardrails when provided', async () => {
-    const screen = render(
+    render(
       <PromptComposer guardrails={['No PII', 'No financial advice']} />,
     );
     await expect.element(screen.getByText('No PII')).toBeVisible();

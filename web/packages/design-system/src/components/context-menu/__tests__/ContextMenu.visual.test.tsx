@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { ContextMenu } from '../ContextMenu';
 
 const items = [
@@ -9,13 +10,13 @@ const items = [
 
 describe('ContextMenu Visual Regression', () => {
   it('trigger matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff' }}>
         <ContextMenu items={items}>
           <button>Right click me</button>
         </ContextMenu>
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

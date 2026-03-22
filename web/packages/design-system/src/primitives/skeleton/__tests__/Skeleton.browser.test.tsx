@@ -4,12 +4,12 @@ import { Skeleton } from '../Skeleton';
 
 describe('Skeleton (Browser)', () => {
   it('renders with default animation', async () => {
-    const screen = render(<Skeleton data-testid="skeleton" />);
+    const screen = await render(<Skeleton data-testid="skeleton" />);
     await expect.element(screen.getByTestId('skeleton')).toBeVisible();
   });
 
   it('renders multiple lines', async () => {
-    const screen = render(
+    render(
       <div data-testid="skeleton-lines">
         <Skeleton lines={3} />
       </div>,
@@ -18,29 +18,29 @@ describe('Skeleton (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<Skeleton />);
-    const el = screen.container.querySelector('[data-component="skeleton"]');
+    const screen = await render(<Skeleton />);
+    const el = document.querySelector('[data-component="skeleton"]');
     expect(el).not.toBeNull();
   });
 
   it('renders circle shape', async () => {
-    const screen = render(<Skeleton circle height={40} data-testid="circle" />);
+    const screen = await render(<Skeleton circle height={40} data-testid="circle" />);
     await expect.element(screen.getByTestId('circle')).toBeVisible();
   });
 
   it('renders with custom width and height', async () => {
-    const screen = render(<Skeleton width={200} height={24} data-testid="custom" />);
+    const screen = await render(<Skeleton width={200} height={24} data-testid="custom" />);
     await expect.element(screen.getByTestId('custom')).toBeVisible();
   });
 
   it('renders without animation when animated is false', async () => {
-    const screen = render(<Skeleton animated={false} data-testid="static" />);
+    const screen = await render(<Skeleton animated={false} data-testid="static" />);
     await expect.element(screen.getByTestId('static')).toBeVisible();
   });
 
   it('renders loading aria state', async () => {
-    const screen = render(<Skeleton />);
-    const el = screen.container.querySelector('[data-loading="true"]');
+    const screen = await render(<Skeleton />);
+    const el = document.querySelector('[data-loading="true"]');
     expect(el).not.toBeNull();
   });
 });

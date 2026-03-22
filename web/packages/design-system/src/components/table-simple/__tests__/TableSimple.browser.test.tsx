@@ -14,47 +14,47 @@ const rows = [
 
 describe('TableSimple (Browser)', () => {
   it('renders column headers', async () => {
-    const screen = render(<TableSimple columns={columns} rows={rows} />);
+    const screen = await render(<TableSimple columns={columns} rows={rows} />);
     await expect.element(screen.getByText('Name')).toBeVisible();
     await expect.element(screen.getByText('Age')).toBeVisible();
   });
 
   it('renders row data', async () => {
-    const screen = render(<TableSimple columns={columns} rows={rows} />);
+    const screen = await render(<TableSimple columns={columns} rows={rows} />);
     await expect.element(screen.getByText('Alice')).toBeVisible();
     await expect.element(screen.getByText('Bob')).toBeVisible();
   });
 
   it('renders table element with role', async () => {
-    const screen = render(<TableSimple columns={columns} rows={rows} />);
-    const table = screen.container.querySelector('table');
+    const screen = await render(<TableSimple columns={columns} rows={rows} />);
+    const table = document.querySelector('table');
     expect(table).not.toBeNull();
   });
 
   it('renders empty state when no rows', async () => {
-    const screen = render(<TableSimple columns={columns} rows={[]} />);
-    const el = screen.container.querySelector('[data-component="table-simple"]');
+    const screen = await render(<TableSimple columns={columns} rows={[]} />);
+    const el = document.querySelector('[data-component="table-simple"]');
     expect(el).not.toBeNull();
   });
 
   it('renders caption when provided', async () => {
-    const screen = render(<TableSimple columns={columns} rows={rows} caption="User Table" />);
+    const screen = await render(<TableSimple columns={columns} rows={rows} caption="User Table" />);
     await expect.element(screen.getByText('User Table')).toBeVisible();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<TableSimple columns={columns} rows={rows} />);
-    const el = screen.container.querySelector('[data-component="table-simple"]');
+    const screen = await render(<TableSimple columns={columns} rows={rows} />);
+    const el = document.querySelector('[data-component="table-simple"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<TableSimple columns={columns} rows={rows} access="hidden" />);
-    expect(screen.container.querySelector('table')).toBeNull();
+    const screen = await render(<TableSimple columns={columns} rows={rows} access="hidden" />);
+    expect(document.querySelector('table')).toBeNull();
   });
 
   it('renders with custom render function', async () => {
-    const screen = render(
+    render(
       <TableSimple
         columns={[
           { key: 'name', label: 'Name' },

@@ -4,12 +4,12 @@ import { AIGuidedAuthoring } from '../AIGuidedAuthoring';
 
 describe('AIGuidedAuthoring (Browser)', () => {
   it('renders default title', async () => {
-    const screen = render(<AIGuidedAuthoring />);
+    const screen = await render(<AIGuidedAuthoring />);
     await expect.element(screen.getByText('AI guided authoring')).toBeVisible();
   });
 
   it('renders with recommendations', async () => {
-    const screen = render(
+    render(
       <AIGuidedAuthoring
         recommendations={[
           { id: 'r1', title: 'Rec 1', summary: 'Summary 1' },
@@ -20,14 +20,14 @@ describe('AIGuidedAuthoring (Browser)', () => {
   });
 
   it('renders confidence badge with level', async () => {
-    const screen = render(
+    render(
       <AIGuidedAuthoring confidenceLevel="high" confidenceScore={95} />,
     );
     await expect.element(screen.getByText(/Yuksek guven/)).toBeVisible();
   });
 
   it('renders custom title and description', async () => {
-    const screen = render(
+    render(
       <AIGuidedAuthoring title="Custom Title" description="Custom Desc" />,
     );
     await expect.element(screen.getByText('Custom Title')).toBeVisible();
@@ -35,24 +35,24 @@ describe('AIGuidedAuthoring (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<AIGuidedAuthoring access="hidden" />);
-    expect(screen.container.textContent).toBe('');
+    const screen = await render(<AIGuidedAuthoring access="hidden" />);
+    expect(document.body.textContent).toBe('');
   });
 
   it('renders disabled state', async () => {
-    const screen = render(<AIGuidedAuthoring access="disabled" />);
-    const el = screen.container.querySelector('[data-access-state="disabled"]');
+    const screen = await render(<AIGuidedAuthoring access="disabled" />);
+    const el = document.querySelector('[data-access-state="disabled"]');
     expect(el).not.toBeNull();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<AIGuidedAuthoring />);
-    const el = screen.container.querySelector('[data-component="ai-guided-authoring"]');
+    const screen = await render(<AIGuidedAuthoring />);
+    const el = document.querySelector('[data-component="ai-guided-authoring"]');
     expect(el).not.toBeNull();
   });
 
   it('renders multiple recommendations', async () => {
-    const screen = render(
+    render(
       <AIGuidedAuthoring
         recommendations={[
           { id: 'r1', title: 'First', summary: 'S1' },

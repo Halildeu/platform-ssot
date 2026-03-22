@@ -10,7 +10,7 @@ const tabs = [
 
 describe('DetailSectionTabs (Browser)', () => {
   it('renders all tabs', async () => {
-    const screen = render(
+    render(
       <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={() => {}} />,
     );
     await expect.element(screen.getByText('Overview')).toBeVisible();
@@ -19,7 +19,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders with badges', async () => {
-    const screen = render(
+    render(
       <DetailSectionTabs
         tabs={[{ id: 'tab1', label: 'Tab 1', badge: <span>3</span> }]}
         activeTabId="tab1"
@@ -31,7 +31,7 @@ describe('DetailSectionTabs (Browser)', () => {
 
   it('calls onTabChange when a tab is clicked', async () => {
     const onTabChange = vi.fn();
-    const screen = render(
+    render(
       <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={onTabChange} />,
     );
     await screen.getByText('Details').click();
@@ -39,15 +39,15 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(
+    render(
       <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={() => {}} />,
     );
-    const el = screen.container.querySelector('[data-component="detail-section-tabs"]');
+    const el = document.querySelector('[data-component="detail-section-tabs"]');
     expect(el).not.toBeNull();
   });
 
   it('renders disabled tab', async () => {
-    const screen = render(
+    render(
       <DetailSectionTabs
         tabs={[
           { id: 'active', label: 'Active' },
@@ -61,7 +61,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders with custom ariaLabel', async () => {
-    const screen = render(
+    render(
       <DetailSectionTabs
         tabs={tabs}
         activeTabId="overview"
@@ -69,12 +69,12 @@ describe('DetailSectionTabs (Browser)', () => {
         ariaLabel="Section navigation"
       />,
     );
-    const el = screen.container.querySelector('[data-component="detail-section-tabs"]');
+    const el = document.querySelector('[data-component="detail-section-tabs"]');
     expect(el).not.toBeNull();
   });
 
   it('renders with test id prefix', async () => {
-    const screen = render(
+    render(
       <DetailSectionTabs
         tabs={[{ id: 'tab1', label: 'Tab 1' }]}
         activeTabId="tab1"

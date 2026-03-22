@@ -4,12 +4,12 @@ import { Divider } from '../Divider';
 
 describe('Divider (Browser)', () => {
   it('renders horizontal divider', async () => {
-    const screen = render(<Divider data-testid="h-divider" />);
+    const screen = await render(<Divider data-testid="h-divider" />);
     await expect.element(screen.getByTestId('h-divider')).toBeVisible();
   });
 
   it('renders vertical divider', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 40, display: 'flex' }}>
         <Divider orientation="vertical" data-testid="v-divider" />
       </div>,
@@ -18,28 +18,28 @@ describe('Divider (Browser)', () => {
   });
 
   it('renders with separator role for horizontal', async () => {
-    const screen = render(<Divider />);
-    const sep = screen.container.querySelector('[role="separator"]');
+    const screen = await render(<Divider />);
+    const sep = document.querySelector('[role="separator"]');
     expect(sep).not.toBeNull();
   });
 
   it('renders with separator role for vertical', async () => {
-    const screen = render(
+    render(
       <div style={{ height: 40, display: 'flex' }}>
         <Divider orientation="vertical" />
       </div>,
     );
-    const sep = screen.container.querySelector('[aria-orientation="vertical"]');
+    const sep = document.querySelector('[aria-orientation="vertical"]');
     expect(sep).not.toBeNull();
   });
 
   it('renders with label', async () => {
-    const screen = render(<Divider label="OR" />);
+    const screen = await render(<Divider label="OR" />);
     await expect.element(screen.getByText('OR')).toBeVisible();
   });
 
   it('renders with different spacing', async () => {
-    const screen = render(
+    render(
       <div>
         <Divider spacing="sm" data-testid="sm" />
         <Divider spacing="lg" data-testid="lg" />
@@ -50,7 +50,7 @@ describe('Divider (Browser)', () => {
   });
 
   it('renders with no spacing', async () => {
-    const screen = render(<Divider spacing="none" data-testid="none" />);
+    const screen = await render(<Divider spacing="none" data-testid="none" />);
     await expect.element(screen.getByTestId('none')).toBeVisible();
   });
 });

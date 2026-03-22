@@ -10,22 +10,22 @@ const items = [
 
 describe('MenuBar (Browser)', () => {
   it('renders all menu items', async () => {
-    const screen = render(<MenuBar items={items} />);
+    const screen = await render(<MenuBar items={items} />);
     await expect.element(screen.getByText('Home')).toBeVisible();
     await expect.element(screen.getByText('Products')).toBeVisible();
     await expect.element(screen.getByText('Settings')).toBeVisible();
   });
 
   it('marks default value as active with aria-current', async () => {
-    const screen = render(<MenuBar items={items} defaultValue="products" />);
-    const activeItem = screen.container.querySelector('[aria-current="page"]');
+    const screen = await render(<MenuBar items={items} defaultValue="products" />);
+    const activeItem = document.querySelector('[aria-current="page"]');
     expect(activeItem).not.toBeNull();
     expect(activeItem!.textContent).toContain('Products');
   });
 
   it('fires onValueChange when clicking an item', async () => {
     const onValueChange = vi.fn();
-    const screen = render(
+    render(
       <MenuBar items={items} onValueChange={onValueChange} />,
     );
     await screen.getByText('Settings').click();
@@ -34,7 +34,7 @@ describe('MenuBar (Browser)', () => {
 
   it('fires onItemClick with value and event', async () => {
     const onItemClick = vi.fn();
-    const screen = render(
+    render(
       <MenuBar items={items} onItemClick={onItemClick} />,
     );
     await screen.getByText('Home').click();
@@ -42,7 +42,7 @@ describe('MenuBar (Browser)', () => {
   });
 
   it('renders navigation landmark with aria-label', async () => {
-    const screen = render(<MenuBar items={items} ariaLabel="Main menu" />);
+    const screen = await render(<MenuBar items={items} ariaLabel="Main menu" />);
     const nav = screen.getByRole('navigation');
     await expect.element(nav).toHaveAttribute('aria-label', 'Main menu');
   });
@@ -53,7 +53,7 @@ describe('MenuBar (Browser)', () => {
       { value: 'products', label: 'Products', disabled: true },
     ];
     const onValueChange = vi.fn();
-    const screen = render(
+    render(
       <MenuBar items={disabledItems} onValueChange={onValueChange} />,
     );
     await screen.getByText('Products').click();
@@ -61,12 +61,12 @@ describe('MenuBar (Browser)', () => {
   });
 
   it('renders with different sizes', async () => {
-    const screen = render(<MenuBar items={items} size="sm" />);
+    const screen = await render(<MenuBar items={items} size="sm" />);
     await expect.element(screen.getByText('Home')).toBeVisible();
   });
 
   it('renders start and end slots', async () => {
-    const screen = render(
+    render(
       <MenuBar items={items} startSlot={<span data-testid="start">Logo</span>} endSlot={<span data-testid="end">User</span>} />,
     );
     await expect.element(screen.getByText('Logo')).toBeVisible();

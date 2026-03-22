@@ -7,7 +7,7 @@ describe('Alert (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders with title and description', async () => {
-    const screen = render(
+    render(
       <Alert title="Heads up">This is an info alert.</Alert>,
     );
     await expect.element(screen.getByText('Heads up')).toBeVisible();
@@ -15,7 +15,7 @@ describe('Alert (Browser)', () => {
   });
 
   it('renders description-only alert', async () => {
-    const screen = render(<Alert>Simple alert message</Alert>);
+    const screen = await render(<Alert>Simple alert message</Alert>);
     await expect.element(screen.getByText('Simple alert message')).toBeVisible();
   });
 
@@ -24,7 +24,7 @@ describe('Alert (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('renders close button when closable and fires onClose', async () => {
     const onClose = vi.fn();
-    const screen = render(
+    render(
       <Alert closable onClose={onClose}>Closable alert</Alert>,
     );
     const closeBtn = screen.getByLabelText('Dismiss');
@@ -34,15 +34,15 @@ describe('Alert (Browser)', () => {
   });
 
   it('does not render close button when not closable', async () => {
-    const screen = render(<Alert>Not closable</Alert>);
-    expect(screen.container.querySelector('[aria-label="Dismiss"]')).toBeNull();
+    const screen = await render(<Alert>Not closable</Alert>);
+    expect(document.querySelector('[aria-label="Dismiss"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */
   /*  3. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('has role="alert"', async () => {
-    const screen = render(<Alert>Alert content</Alert>);
+    const screen = await render(<Alert>Alert content</Alert>);
     await expect.element(screen.getByRole('alert')).toBeVisible();
   });
 
@@ -52,27 +52,27 @@ describe('Alert (Browser)', () => {
   it('renders all variants without error', async () => {
     const variants = ['info', 'success', 'warning', 'error'] as const;
     for (const variant of variants) {
-      const screen = render(
+      render(
         <Alert variant={variant} title={variant}>
           {variant} message
         </Alert>,
       );
       await expect.element(screen.getByRole('alert')).toBeVisible();
       await expect.element(screen.getByText(`${variant} message`)).toBeVisible();
-      screen.unmount();
+      
     }
   });
 
   it('renders default icon for each variant', async () => {
     const variants = ['info', 'success', 'warning', 'error'] as const;
     for (const variant of variants) {
-      const screen = render(
+      render(
         <Alert variant={variant}>Content</Alert>,
       );
       // Each variant should render an SVG icon
       const alert = screen.getByRole('alert');
       expect(alert.element().querySelector('svg')).not.toBeNull();
-      screen.unmount();
+      
     }
   });
 
@@ -80,7 +80,7 @@ describe('Alert (Browser)', () => {
   /*  5. Custom icon                                                      */
   /* ------------------------------------------------------------------ */
   it('renders custom icon when provided', async () => {
-    const screen = render(
+    render(
       <Alert icon={<span data-testid="custom-icon">!</span>}>Custom</Alert>,
     );
     await expect.element(screen.getByText('!')).toBeVisible();
@@ -90,7 +90,7 @@ describe('Alert (Browser)', () => {
   /*  6. Action node                                                      */
   /* ------------------------------------------------------------------ */
   it('renders action node', async () => {
-    const screen = render(
+    render(
       <Alert action={<button>Retry</button>}>Something failed</Alert>,
     );
     await expect.element(screen.getByText('Retry')).toBeVisible();
@@ -100,7 +100,7 @@ describe('Alert (Browser)', () => {
   /*  7. Focus management — close button is focusable                     */
   /* ------------------------------------------------------------------ */
   it('close button is focusable', async () => {
-    const screen = render(
+    render(
       <Alert closable onClose={() => {}}>Closable</Alert>,
     );
     const closeBtn = screen.getByLabelText('Dismiss').element();

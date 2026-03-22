@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { SummaryStrip } from '../SummaryStrip';
 
 const items = [
@@ -11,20 +12,20 @@ const items = [
 
 describe('SummaryStrip Visual Regression', () => {
   it('4-column strip matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <SummaryStrip items={items} columns={4} />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   it('strip with title matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <SummaryStrip items={items} title="Monthly Overview" description="Last 30 days" />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

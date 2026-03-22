@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Accordion } from '../Accordion';
 
 const items = [
@@ -14,7 +14,7 @@ describe('Accordion (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders all section titles', async () => {
-    const screen = render(<Accordion items={items} />);
+    const screen = await render(<Accordion items={items} />);
     await expect.element(screen.getByText('Section One')).toBeVisible();
     await expect.element(screen.getByText('Section Two')).toBeVisible();
     await expect.element(screen.getByText('Section Three')).toBeVisible();
@@ -24,18 +24,18 @@ describe('Accordion (Browser)', () => {
   /*  2. Expand / collapse on click                                       */
   /* ------------------------------------------------------------------ */
   it('expands an item on click', async () => {
-    const screen = render(<Accordion items={items} />);
+    const screen = await render(<Accordion items={items} />);
     await screen.getByText('Section One').click();
     await expect.element(screen.getByText('Content of section one')).toBeVisible();
   });
 
   it('collapses an expanded item on second click (single mode)', async () => {
-    const screen = render(<Accordion items={items} selectionMode="single" />);
+    const screen = await render(<Accordion items={items} selectionMode="single" />);
     await screen.getByText('Section One').click();
     await expect.element(screen.getByText('Content of section one')).toBeVisible();
     await screen.getByText('Section One').click();
     // Content should be hidden
-    const panel = screen.container.querySelector('[data-slot="panel"]');
+    const panel = document.querySelector('[data-slot="panel"]');
     expect(panel?.hasAttribute('hidden') || panel === null).toBe(true);
   });
 
@@ -43,7 +43,7 @@ describe('Accordion (Browser)', () => {
   /*  3. Multiple mode                                                    */
   /* ------------------------------------------------------------------ */
   it('allows multiple panels open in multiple mode', async () => {
-    const screen = render(<Accordion items={items} selectionMode="multiple" />);
+    const screen = await render(<Accordion items={items} selectionMode="multiple" />);
     await screen.getByText('Section One').click();
     await screen.getByText('Section Two').click();
     await expect.element(screen.getByText('Content of section one')).toBeVisible();
@@ -51,13 +51,13 @@ describe('Accordion (Browser)', () => {
   });
 
   it('single mode only allows one panel open', async () => {
-    const screen = render(<Accordion items={items} selectionMode="single" />);
+    const screen = await render(<Accordion items={items} selectionMode="single" />);
     await screen.getByText('Section One').click();
     await expect.element(screen.getByText('Content of section one')).toBeVisible();
     await screen.getByText('Section Two').click();
     await expect.element(screen.getByText('Content of section two')).toBeVisible();
     // Section one should now be collapsed
-    const panels = screen.container.querySelectorAll('[data-slot="panel"]:not([hidden])');
+    const panels = document.querySelectorAll('[data-slot="panel"]:not([hidden])');
     expect(panels.length).toBe(1);
   });
 
@@ -65,16 +65,16 @@ describe('Accordion (Browser)', () => {
   /*  4. Keyboard — Enter/Space expands                                   */
   /* ------------------------------------------------------------------ */
   it('expands on Enter key', async () => {
-    const screen = render(<Accordion items={items} />);
-    const trigger = screen.container.querySelector('[aria-expanded]') as HTMLElement;
+    const screen = await render(<Accordion items={items} />);
+    const trigger = document.querySelector('[aria-expanded]') as HTMLElement;
     trigger.focus();
     await userEvent.keyboard('{Enter}');
     await expect.element(screen.getByText('Content of section one')).toBeVisible();
   });
 
   it('expands on Space key', async () => {
-    const screen = render(<Accordion items={items} />);
-    const trigger = screen.container.querySelector('[aria-expanded]') as HTMLElement;
+    const screen = await render(<Accordion items={items} />);
+    const trigger = document.querySelector('[aria-expanded]') as HTMLElement;
     trigger.focus();
     await userEvent.keyboard(' ');
     await expect.element(screen.getByText('Content of section one')).toBeVisible();
@@ -84,25 +84,25 @@ describe('Accordion (Browser)', () => {
   /*  5. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('sets aria-expanded on trigger', async () => {
-    const screen = render(<Accordion items={items} />);
-    const trigger = screen.container.querySelector('[aria-expanded]') as HTMLElement;
+    const screen = await render(<Accordion items={items} />);
+    const trigger = document.querySelector('[aria-expanded]') as HTMLElement;
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     await trigger.click();
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
   });
 
   it('trigger has aria-controls pointing to panel', async () => {
-    const screen = render(<Accordion items={items} defaultValue="item-1" />);
-    const trigger = screen.container.querySelector('[aria-expanded="true"]') as HTMLElement;
+    const screen = await render(<Accordion items={items} defaultValue="item-1" />);
+    const trigger = document.querySelector('[aria-expanded="true"]') as HTMLElement;
     const controls = trigger.getAttribute('aria-controls');
     expect(controls).toBeTruthy();
-    const panel = screen.container.querySelector(`#${controls}`);
+    const panel = document.querySelector(`#${controls}`);
     expect(panel).not.toBeNull();
   });
 
   it('panel has role="region"', async () => {
-    const screen = render(<Accordion items={items} defaultValue="item-1" />);
-    const regions = screen.container.querySelectorAll('[role="region"]');
+    const screen = await render(<Accordion items={items} defaultValue="item-1" />);
+    const regions = document.querySelectorAll('[role="region"]');
     expect(regions.length).toBeGreaterThan(0);
   });
 
@@ -111,7 +111,7 @@ describe('Accordion (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onValueChange when toggled', async () => {
     const onValueChange = vi.fn();
-    const screen = render(<Accordion items={items} onValueChange={onValueChange} />);
+    const screen = await render(<Accordion items={items} onValueChange={onValueChange} />);
     await screen.getByText('Section One').click();
     expect(onValueChange).toHaveBeenCalledWith(['item-1']);
   });
@@ -124,8 +124,8 @@ describe('Accordion (Browser)', () => {
       { value: 'item-1', title: 'Disabled Section', content: 'Hidden', disabled: true },
       { value: 'item-2', title: 'Normal', content: 'Visible' },
     ];
-    const screen = render(<Accordion items={disabledItems} />);
-    const trigger = screen.container.querySelector('[aria-disabled="true"]');
+    const screen = await render(<Accordion items={disabledItems} />);
+    const trigger = document.querySelector('[aria-disabled="true"]');
     expect(trigger).not.toBeNull();
   });
 
@@ -133,7 +133,7 @@ describe('Accordion (Browser)', () => {
   /*  8. defaultValue                                                     */
   /* ------------------------------------------------------------------ */
   it('uses defaultValue to initially expand an item', async () => {
-    const screen = render(<Accordion items={items} defaultValue="item-2" />);
+    const screen = await render(<Accordion items={items} defaultValue="item-2" />);
     await expect.element(screen.getByText('Content of section two')).toBeVisible();
   });
 });

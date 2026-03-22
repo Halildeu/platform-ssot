@@ -4,43 +4,43 @@ import { Badge } from '../Badge';
 
 describe('Badge (Browser)', () => {
   it('renders with text', async () => {
-    const screen = render(<Badge>New</Badge>);
+    const screen = await render(<Badge>New</Badge>);
     await expect.element(screen.getByText('New')).toBeVisible();
   });
 
   it('renders success variant', async () => {
-    const screen = render(<Badge variant="success">Success</Badge>);
+    const screen = await render(<Badge variant="success">Success</Badge>);
     await expect.element(screen.getByText('Success')).toBeVisible();
   });
 
   it('renders error variant', async () => {
-    const screen = render(<Badge variant="error">Error</Badge>);
+    const screen = await render(<Badge variant="error">Error</Badge>);
     await expect.element(screen.getByText('Error')).toBeVisible();
   });
 
   it('renders warning variant', async () => {
-    const screen = render(<Badge variant="warning">Warning</Badge>);
+    const screen = await render(<Badge variant="warning">Warning</Badge>);
     await expect.element(screen.getByText('Warning')).toBeVisible();
   });
 
   it('renders info variant', async () => {
-    const screen = render(<Badge variant="info">Info</Badge>);
+    const screen = await render(<Badge variant="info">Info</Badge>);
     await expect.element(screen.getByText('Info')).toBeVisible();
   });
 
   it('renders as a dot', async () => {
-    const screen = render(<Badge dot variant="success" data-testid="dot-badge" />);
+    const screen = await render(<Badge dot variant="success" data-testid="dot-badge" />);
     await expect.element(screen.getByTestId('dot-badge')).toBeVisible();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<Badge>Test</Badge>);
-    const el = screen.container.querySelector('[data-component="badge"]');
+    const screen = await render(<Badge>Test</Badge>);
+    const el = document.querySelector('[data-component="badge"]');
     expect(el).not.toBeNull();
   });
 
   it('renders different sizes', async () => {
-    const screen = render(
+    render(
       <div>
         <Badge size="sm" data-testid="sm">Small</Badge>
         <Badge size="md" data-testid="md">Medium</Badge>

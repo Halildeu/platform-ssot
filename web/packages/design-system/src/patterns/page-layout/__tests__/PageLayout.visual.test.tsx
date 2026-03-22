@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { PageLayout } from '../PageLayout';
 
 describe('PageLayout Visual Regression', () => {
   it('basic page layout matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ background: '#fff', width: 800, minHeight: 400 }}>
         <PageLayout
           title="Dashboard"
@@ -15,11 +16,11 @@ describe('PageLayout Visual Regression', () => {
         </PageLayout>
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 
   it('page layout with footer matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ background: '#fff', width: 800, minHeight: 400 }}>
         <PageLayout
           title="Settings"
@@ -29,6 +30,6 @@ describe('PageLayout Visual Regression', () => {
         </PageLayout>
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

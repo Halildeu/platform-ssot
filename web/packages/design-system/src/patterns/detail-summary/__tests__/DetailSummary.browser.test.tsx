@@ -9,30 +9,30 @@ const baseEntity = {
 
 describe('DetailSummary (Browser)', () => {
   it('renders title', async () => {
-    const screen = render(<DetailSummary title="Order #1234" entity={baseEntity} />);
+    const screen = await render(<DetailSummary title="Order #1234" entity={baseEntity} />);
     await expect.element(screen.getByText('Order #1234')).toBeVisible();
   });
 
   it('renders entity block', async () => {
-    const screen = render(<DetailSummary title="Order" entity={baseEntity} />);
+    const screen = await render(<DetailSummary title="Order" entity={baseEntity} />);
     await expect.element(screen.getByText('Acme Corp')).toBeVisible();
   });
 
   it('renders description', async () => {
-    const screen = render(
+    render(
       <DetailSummary title="Invoice" description="Invoice details" entity={baseEntity} />,
     );
     await expect.element(screen.getByText('Invoice details')).toBeVisible();
   });
 
   it('renders entity description items', async () => {
-    const screen = render(<DetailSummary title="Order" entity={baseEntity} />);
+    const screen = await render(<DetailSummary title="Order" entity={baseEntity} />);
     await expect.element(screen.getByText('Status')).toBeVisible();
     await expect.element(screen.getByText('Active')).toBeVisible();
   });
 
   it('renders summary strip items', async () => {
-    const screen = render(
+    render(
       <DetailSummary
         title="Dashboard"
         entity={baseEntity}
@@ -44,14 +44,14 @@ describe('DetailSummary (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(
+    render(
       <DetailSummary title="Hidden" entity={baseEntity} access="hidden" />,
     );
-    expect(screen.container.textContent).toBe('');
+    expect(document.body.textContent).toBe('');
   });
 
   it('renders actions slot', async () => {
-    const screen = render(
+    render(
       <DetailSummary title="Order" entity={baseEntity} actions={<button>Edit</button>} />,
     );
     await expect.element(screen.getByText('Edit')).toBeVisible();

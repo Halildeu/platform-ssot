@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { AdaptiveForm } from '../AdaptiveForm';
 
 describe('AdaptiveForm Visual Regression', () => {
   it('default layout matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 400 }}>
         <AdaptiveForm
           fields={[
@@ -14,6 +15,6 @@ describe('AdaptiveForm Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

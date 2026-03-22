@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Switch } from '../Switch';
 
 describe('Switch (Browser)', () => {
@@ -8,12 +8,12 @@ describe('Switch (Browser)', () => {
   /*  1. Basic render                                                     */
   /* ------------------------------------------------------------------ */
   it('renders with label', async () => {
-    const screen = render(<Switch label="Enable notifications" />);
+    const screen = await render(<Switch label="Enable notifications" />);
     await expect.element(screen.getByText('Enable notifications')).toBeVisible();
   });
 
   it('renders switch role', async () => {
-    const screen = render(<Switch label="Toggle" />);
+    const screen = await render(<Switch label="Toggle" />);
     await expect.element(screen.getByRole('switch')).toBeVisible();
   });
 
@@ -22,7 +22,7 @@ describe('Switch (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('fires onCheckedChange when toggled', async () => {
     const onCheckedChange = vi.fn();
-    const screen = render(<Switch label="Toggle" onCheckedChange={onCheckedChange} />);
+    const screen = await render(<Switch label="Toggle" onCheckedChange={onCheckedChange} />);
     await screen.getByRole('switch').click();
     expect(onCheckedChange).toHaveBeenCalledWith(true);
   });
@@ -31,13 +31,13 @@ describe('Switch (Browser)', () => {
   /*  3. Disabled state                                                   */
   /* ------------------------------------------------------------------ */
   it('is disabled when disabled prop is set', async () => {
-    const screen = render(<Switch label="Disabled" disabled />);
+    const screen = await render(<Switch label="Disabled" disabled />);
     await expect.element(screen.getByRole('switch')).toBeDisabled();
   });
 
   it('does not toggle when disabled', async () => {
     const onCheckedChange = vi.fn();
-    const screen = render(<Switch label="No" disabled onCheckedChange={onCheckedChange} />);
+    const screen = await render(<Switch label="No" disabled onCheckedChange={onCheckedChange} />);
     await screen.getByRole('switch').click();
     expect(onCheckedChange).not.toHaveBeenCalled();
   });
@@ -46,7 +46,7 @@ describe('Switch (Browser)', () => {
   /*  4. Keyboard — Space toggles                                         */
   /* ------------------------------------------------------------------ */
   it('toggles on Space key', async () => {
-    const screen = render(<Switch label="KB" />);
+    const screen = await render(<Switch label="KB" />);
     const sw = screen.getByRole('switch');
     await expect.element(sw).not.toBeChecked();
     sw.element().focus();
@@ -58,17 +58,17 @@ describe('Switch (Browser)', () => {
   /*  5. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('has role="switch"', async () => {
-    const screen = render(<Switch label="A" />);
+    const screen = await render(<Switch label="A" />);
     await expect.element(screen.getByRole('switch')).toBeVisible();
   });
 
   it('reflects checked state', async () => {
-    const screen = render(<Switch label="On" defaultChecked />);
+    const screen = await render(<Switch label="On" defaultChecked />);
     await expect.element(screen.getByRole('switch')).toBeChecked();
   });
 
   it('sets aria-invalid when error is truthy', async () => {
-    const screen = render(<Switch label="Err" error />);
+    const screen = await render(<Switch label="Err" error />);
     await expect.element(screen.getByRole('switch')).toHaveAttribute('aria-invalid', 'true');
   });
 
@@ -76,7 +76,7 @@ describe('Switch (Browser)', () => {
   /*  6. Label association                                                */
   /* ------------------------------------------------------------------ */
   it('toggles when label is clicked', async () => {
-    const screen = render(<Switch label="Click label" />);
+    const screen = await render(<Switch label="Click label" />);
     const sw = screen.getByRole('switch');
     await expect.element(sw).not.toBeChecked();
     await screen.getByText('Click label').click();
@@ -87,7 +87,7 @@ describe('Switch (Browser)', () => {
   /*  7. Uncontrolled toggle                                              */
   /* ------------------------------------------------------------------ */
   it('toggles on/off in uncontrolled mode', async () => {
-    const screen = render(<Switch label="Toggle" />);
+    const screen = await render(<Switch label="Toggle" />);
     const sw = screen.getByRole('switch');
     await expect.element(sw).not.toBeChecked();
     await sw.click();
@@ -101,7 +101,7 @@ describe('Switch (Browser)', () => {
   /* ------------------------------------------------------------------ */
   it('is non-interactive when loading', async () => {
     const onCheckedChange = vi.fn();
-    const screen = render(<Switch label="Loading" loading onCheckedChange={onCheckedChange} />);
+    const screen = await render(<Switch label="Loading" loading onCheckedChange={onCheckedChange} />);
     await expect.element(screen.getByRole('switch')).toBeDisabled();
   });
 
@@ -111,9 +111,9 @@ describe('Switch (Browser)', () => {
   it('renders all sizes without error', async () => {
     const sizes = ['sm', 'md', 'lg'] as const;
     for (const size of sizes) {
-      const screen = render(<Switch label={size} size={size} />);
+    const screen = await render(<Switch label={size} size={size} />);
       await expect.element(screen.getByRole('switch')).toBeVisible();
-      screen.unmount();
+      
     }
   });
 
@@ -121,7 +121,7 @@ describe('Switch (Browser)', () => {
   /*  10. Focus management                                                */
   /* ------------------------------------------------------------------ */
   it('is focusable via tab', async () => {
-    const screen = render(<Switch label="Focusable" />);
+    const screen = await render(<Switch label="Focusable" />);
     await userEvent.keyboard('{Tab}');
     expect(document.activeElement).toBe(screen.getByRole('switch').element());
   });

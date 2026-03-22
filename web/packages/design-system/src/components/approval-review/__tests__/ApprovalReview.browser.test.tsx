@@ -10,40 +10,40 @@ const baseProps = {
 
 describe('ApprovalReview (Browser)', () => {
   it('renders default title', async () => {
-    const screen = render(
+    render(
       <ApprovalReview checkpoint={{ title: 'Gate', summary: 'Summary' }} citations={[]} auditItems={[]} />,
     );
     await expect.element(screen.getByText('Approval review')).toBeVisible();
   });
 
   it('renders checkpoint section', async () => {
-    const screen = render(<ApprovalReview {...baseProps} />);
+    const screen = await render(<ApprovalReview {...baseProps} />);
     await expect.element(screen.getByText('Deploy Gate')).toBeVisible();
   });
 
   it('renders citation items', async () => {
-    const screen = render(<ApprovalReview {...baseProps} />);
+    const screen = await render(<ApprovalReview {...baseProps} />);
     await expect.element(screen.getByText('Policy')).toBeVisible();
   });
 
   it('renders audit timeline items', async () => {
-    const screen = render(<ApprovalReview {...baseProps} />);
+    const screen = await render(<ApprovalReview {...baseProps} />);
     await expect.element(screen.getByText('Scan')).toBeVisible();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<ApprovalReview {...baseProps} />);
-    const el = screen.container.querySelector('[data-component="approval-review"]');
+    const screen = await render(<ApprovalReview {...baseProps} />);
+    const el = document.querySelector('[data-component="approval-review"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<ApprovalReview {...baseProps} access="hidden" />);
-    expect(screen.container.querySelector('[data-component="approval-review"]')).toBeNull();
+    const screen = await render(<ApprovalReview {...baseProps} access="hidden" />);
+    expect(document.querySelector('[data-component="approval-review"]')).toBeNull();
   });
 
   it('renders custom title and description', async () => {
-    const screen = render(
+    render(
       <ApprovalReview {...baseProps} title="Custom Review" description="Custom description" />,
     );
     await expect.element(screen.getByText('Custom Review')).toBeVisible();
@@ -51,7 +51,7 @@ describe('ApprovalReview (Browser)', () => {
   });
 
   it('renders with empty citations and audit items', async () => {
-    const screen = render(
+    render(
       <ApprovalReview checkpoint={{ title: 'Gate', summary: 'Sum' }} citations={[]} auditItems={[]} />,
     );
     await expect.element(screen.getByText('Gate')).toBeVisible();

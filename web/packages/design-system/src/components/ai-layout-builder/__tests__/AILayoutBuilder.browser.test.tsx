@@ -9,19 +9,19 @@ const sampleBlocks = [
 
 describe('AILayoutBuilder (Browser)', () => {
   it('renders blocks with their titles', async () => {
-    const screen = render(<AILayoutBuilder blocks={sampleBlocks} />);
+    const screen = await render(<AILayoutBuilder blocks={sampleBlocks} />);
     await expect.element(screen.getByText('Revenue')).toBeVisible();
     await expect.element(screen.getByText('Sales chart')).toBeVisible();
   });
 
   it('renders block content', async () => {
-    const screen = render(<AILayoutBuilder blocks={sampleBlocks} />);
+    const screen = await render(<AILayoutBuilder blocks={sampleBlocks} />);
     await expect.element(screen.getByText('$1000')).toBeVisible();
     await expect.element(screen.getByText('Chart')).toBeVisible();
   });
 
   it('renders with custom title and description', async () => {
-    const screen = render(
+    render(
       <AILayoutBuilder
         blocks={[{ key: 'b1', type: 'text', content: <span>Hello</span> }]}
         title="Dashboard"
@@ -33,24 +33,24 @@ describe('AILayoutBuilder (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = render(<AILayoutBuilder blocks={sampleBlocks} />);
-    const el = screen.container.querySelector('[data-component="ai-layout-builder"]');
+    const screen = await render(<AILayoutBuilder blocks={sampleBlocks} />);
+    const el = document.querySelector('[data-component="ai-layout-builder"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = render(<AILayoutBuilder blocks={sampleBlocks} access="hidden" />);
-    expect(screen.container.textContent).toBe('');
+    const screen = await render(<AILayoutBuilder blocks={sampleBlocks} access="hidden" />);
+    expect(document.body.textContent).toBe('');
   });
 
   it('renders disabled state', async () => {
-    const screen = render(<AILayoutBuilder blocks={sampleBlocks} access="disabled" />);
-    const el = screen.container.querySelector('[data-access-state="disabled"]');
+    const screen = await render(<AILayoutBuilder blocks={sampleBlocks} access="disabled" />);
+    const el = document.querySelector('[data-access-state="disabled"]');
     expect(el).not.toBeNull();
   });
 
   it('renders collapsible blocks', async () => {
-    const screen = render(
+    render(
       <AILayoutBuilder
         blocks={[{ key: 'c1', type: 'text', title: 'Collapsible', content: <span>Body</span>, collapsible: true }]}
       />,
@@ -59,7 +59,7 @@ describe('AILayoutBuilder (Browser)', () => {
   });
 
   it('sorts blocks by priority', async () => {
-    const screen = render(
+    render(
       <AILayoutBuilder
         blocks={[
           { key: 'low', type: 'text', title: 'Low', content: <span>L</span>, priority: 'low' },

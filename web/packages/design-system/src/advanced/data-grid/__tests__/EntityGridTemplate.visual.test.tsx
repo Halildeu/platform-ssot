@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { EntityGridTemplate } from '../EntityGridTemplate';
 
 describe('EntityGridTemplate Visual Regression', () => {
   it('grid container matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ padding: 20, background: '#fff', width: 600, height: 400 }}>
         <EntityGridTemplate
           gridId="visual-test"
@@ -15,6 +16,6 @@ describe('EntityGridTemplate Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { Cascader } from '../Cascader';
 
 const options = [
@@ -15,13 +15,13 @@ const options = [
 
 describe('Cascader (Browser)', () => {
   it('renders trigger with placeholder', async () => {
-    const screen = render(<Cascader options={options} placeholder="Select region" />);
+    const screen = await render(<Cascader options={options} placeholder="Select region" />);
     await expect.element(screen.getByRole('combobox')).toBeVisible();
     await expect.element(screen.getByText('Select region')).toBeVisible();
   });
 
   it('opens dropdown on click and shows top-level options', async () => {
-    const screen = render(<Cascader options={options} />);
+    const screen = await render(<Cascader options={options} />);
     await screen.getByRole('combobox').click();
     await expect.element(screen.getByRole('listbox')).toBeVisible();
     await expect.element(screen.getByText('Asia')).toBeVisible();
@@ -29,7 +29,7 @@ describe('Cascader (Browser)', () => {
   });
 
   it('shows child options when parent is clicked', async () => {
-    const screen = render(<Cascader options={options} />);
+    const screen = await render(<Cascader options={options} />);
     await screen.getByRole('combobox').click();
     await screen.getByText('Asia').click();
     await expect.element(screen.getByText('China')).toBeVisible();
@@ -38,7 +38,7 @@ describe('Cascader (Browser)', () => {
 
   it('fires onValueChange when leaf is selected', async () => {
     const onValueChange = vi.fn();
-    const screen = render(<Cascader options={options} onValueChange={onValueChange} />);
+    const screen = await render(<Cascader options={options} onValueChange={onValueChange} />);
     await screen.getByRole('combobox').click();
     await screen.getByText('Asia').click();
     await screen.getByText('China').click();
@@ -49,25 +49,25 @@ describe('Cascader (Browser)', () => {
   });
 
   it('closes dropdown on Escape', async () => {
-    const screen = render(<Cascader options={options} />);
+    const screen = await render(<Cascader options={options} />);
     await screen.getByRole('combobox').click();
     await expect.element(screen.getByRole('listbox')).toBeVisible();
     await userEvent.keyboard('{Escape}');
-    expect(screen.container.querySelector('[role="listbox"]')).toBeNull();
+    expect(document.querySelector('[role="listbox"]')).toBeNull();
   });
 
   it('renders with label', async () => {
-    const screen = render(<Cascader options={options} label="Region" />);
+    const screen = await render(<Cascader options={options} label="Region" />);
     await expect.element(screen.getByText('Region')).toBeVisible();
   });
 
   it('displays selected value in trigger', async () => {
-    const screen = render(<Cascader options={options} defaultValue={['asia', 'china']} />);
+    const screen = await render(<Cascader options={options} defaultValue={['asia', 'china']} />);
     await expect.element(screen.getByText('Asia / China')).toBeVisible();
   });
 
   it('supports searchable mode', async () => {
-    const screen = render(<Cascader options={options} searchable />);
+    const screen = await render(<Cascader options={options} searchable />);
     await screen.getByRole('combobox').click();
     await userEvent.type(screen.getByRole('combobox').element(), 'Ger');
     await expect.element(screen.getByText('Germany')).toBeVisible();

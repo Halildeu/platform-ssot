@@ -1,10 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { page } from 'vitest/browser';
 import { NotificationDrawer } from '../NotificationDrawer';
 
 describe('NotificationDrawer Visual Regression', () => {
   it('open drawer matches screenshot', async () => {
-    const screen = render(
+    render(
       <div style={{ width: 500, height: 400, position: 'relative' }}>
         <NotificationDrawer
           open
@@ -14,6 +15,6 @@ describe('NotificationDrawer Visual Regression', () => {
         />
       </div>,
     );
-    await expect(screen.container).toMatchScreenshot();
+    await expect(page.screenshot()).toMatchImageSnapshot();
   });
 });
