@@ -14,10 +14,6 @@
       "web/**",
       "frontend/**",
       "mobile/**",
-      "ai/**",
-      "data/**",
-      "pipelines/**",
-      "reports/**",
       "apps/**",
       "ui/**",
       "api/**",
@@ -47,7 +43,6 @@
       "backend": [
         "backend/**",
         "services/**",
-        "ai/**",
         "extensions/**/src/main/**"
       ],
       "frontend": [
@@ -62,9 +57,6 @@
       "database": [
         "db/**",
         "database/**",
-        "data/**",
-        "pipelines/**",
-        "reports/**",
         "sql/**",
         "backend/**/db/**",
         "backend/**/migration/**"

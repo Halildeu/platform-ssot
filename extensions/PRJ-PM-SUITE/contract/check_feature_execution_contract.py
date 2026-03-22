@@ -143,107 +143,98 @@ def _append_missing(errors: list[str], prefix: str, payload: dict[str, Any], req
             errors.append(f"{prefix}:missing_key:{key}")
 
 
-def _write_report(out_path: Path, report: dict[str, Any]) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-
-def _emit_policy_missing(repo_root: Path, policy_path: Path, out_path: Path) -> int:
-    report = {
-        "version": "v1",
-        "kind": "feature-execution-contract-check-report",
-        "generated_at": _now_iso(),
-        "status": "FAIL",
-        "repo_root": str(repo_root),
-        "policy_path": str(policy_path),
-        "errors": [f"policy_missing:{policy_path.as_posix()}"],
-        "warnings": [],
-    }
-    _write_report(out_path, report)
-    print(json.dumps({"status": "FAIL", "error_code": "POLICY_MISSING", "out": str(out_path)}, ensure_ascii=False))
-    return 2
-
-
-def _resolve_out_path(repo_root: Path, raw_out: str) -> Path:
-    out_path = Path(str(raw_out))
+def main(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv)
+    repo_root = Path(str(args.repo_root)).resolve()
+    policy_path = (repo_root / str(args.policy_path)).resolve()
+    out_path = Path(str(args.out))
     if not out_path.is_absolute():
         out_path = (repo_root / out_path).resolve()
-    return out_path
 
+    errors: list[str] = []
+    warnings: list[str] = []
 
-def _resolve_policy_paths(repo_root: Path, policy: dict[str, Any]) -> dict[str, Any]:
+    if not policy_path.exists():
+        report = {
+            "version": "v1",
+            "kind": "feature-execution-contract-check-report",
+            "generated_at": _now_iso(),
+            "status": "FAIL",
+            "repo_root": str(repo_root),
+            "policy_path": str(policy_path),
+            "errors": [f"policy_missing:{policy_path.as_posix()}"],
+            "warnings": [],
+        }
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        print(json.dumps({"status": "FAIL", "error_code": "POLICY_MISSING", "out": str(out_path)}, ensure_ascii=False))
+        return 2
+
+    policy = _load_json(policy_path)
+    enforcement_mode = str(policy.get("enforcement_mode") or "blocking").strip().lower()
     contract_path_rel = str(policy.get("contract_path") or "").strip()
     contract_schema_path_rel = str(policy.get("contract_schema_path") or "").strip()
     baseline_path_rel = str(policy.get("technical_baseline_path") or "").strip()
     ux_lock_path_rel = str(policy.get("ux_lock_path") or "").strip()
-    return {
-        "contract_path_rel": contract_path_rel,
-        "contract_schema_path_rel": contract_schema_path_rel,
-        "baseline_path_rel": baseline_path_rel,
-        "ux_lock_path_rel": ux_lock_path_rel,
-        "contract_path": (repo_root / contract_path_rel).resolve() if contract_path_rel else Path(""),
-        "contract_schema_path": (repo_root / contract_schema_path_rel).resolve() if contract_schema_path_rel else Path(""),
-        "baseline_path": (repo_root / baseline_path_rel).resolve() if baseline_path_rel else Path(""),
-        "ux_lock_path": (repo_root / ux_lock_path_rel).resolve() if ux_lock_path_rel else Path(""),
-    }
 
+    contract_path = (repo_root / contract_path_rel).resolve() if contract_path_rel else Path("")
+    contract_schema_path = (repo_root / contract_schema_path_rel).resolve() if contract_schema_path_rel else Path("")
+    baseline_path = (repo_root / baseline_path_rel).resolve() if baseline_path_rel else Path("")
+    ux_lock_path = (repo_root / ux_lock_path_rel).resolve() if ux_lock_path_rel else Path("")
 
-def _collect_path_errors(paths: dict[str, Any]) -> list[str]:
-    errors: list[str] = []
-    if not paths["contract_path_rel"]:
+    if not contract_path_rel:
         errors.append("policy:contract_path_missing")
-    elif not paths["contract_path"].exists():
-        errors.append(f"contract_missing:{paths['contract_path_rel']}")
-    if not paths["contract_schema_path_rel"] or not paths["contract_schema_path"].exists():
-        errors.append(f"contract_schema_missing:{paths['contract_schema_path_rel'] or 'unset'}")
-    if not paths["baseline_path_rel"] or not paths["baseline_path"].exists():
-        errors.append(f"technical_baseline_missing:{paths['baseline_path_rel'] or 'unset'}")
-    if not paths["ux_lock_path_rel"] or not paths["ux_lock_path"].exists():
-        errors.append(f"ux_lock_missing:{paths['ux_lock_path_rel'] or 'unset'}")
-    return errors
+    elif not contract_path.exists():
+        errors.append(f"contract_missing:{contract_path_rel}")
+    if not contract_schema_path_rel or not contract_schema_path.exists():
+        errors.append(f"contract_schema_missing:{contract_schema_path_rel or 'unset'}")
+    if not baseline_path_rel or not baseline_path.exists():
+        errors.append(f"technical_baseline_missing:{baseline_path_rel or 'unset'}")
+    if not ux_lock_path_rel or not ux_lock_path.exists():
+        errors.append(f"ux_lock_missing:{ux_lock_path_rel or 'unset'}")
 
-
-def _extract_policy_settings(policy: dict[str, Any]) -> dict[str, Any]:
     scope_detection = policy.get("scope_detection") if isinstance(policy.get("scope_detection"), dict) else {}
+    include_globs = [str(x).strip() for x in (scope_detection.get("include_globs") or []) if str(x).strip()]
+    exclude_globs = [str(x).strip() for x in (scope_detection.get("exclude_globs") or []) if str(x).strip()]
+    scope_globs = scope_detection.get("scope_globs") if isinstance(scope_detection.get("scope_globs"), dict) else {}
     ux_scope = policy.get("ux_scope") if isinstance(policy.get("ux_scope"), dict) else {}
+    ux_required_globs = [str(x).strip() for x in (ux_scope.get("required_globs") or []) if str(x).strip()]
     validation = policy.get("validation") if isinstance(policy.get("validation"), dict) else {}
-    return {
-        "enforcement_mode": str(policy.get("enforcement_mode") or "blocking").strip().lower(),
-        "include_globs": [str(x).strip() for x in (scope_detection.get("include_globs") or []) if str(x).strip()],
-        "exclude_globs": [str(x).strip() for x in (scope_detection.get("exclude_globs") or []) if str(x).strip()],
-        "scope_globs": scope_detection.get("scope_globs") if isinstance(scope_detection.get("scope_globs"), dict) else {},
-        "ux_required_globs": [str(x).strip() for x in (ux_scope.get("required_globs") or []) if str(x).strip()],
-        "placeholder_tokens": [str(x).strip() for x in (validation.get("placeholder_tokens") or []) if str(x).strip()],
-        "required_source_refs_min": int(validation.get("required_source_refs_min") or 1),
-        "active_status_on_scoped_change": bool(validation.get("active_status_on_scoped_change", True)),
-        "require_sequence_from_lock": bool(validation.get("required_execution_sequence_from_lock", True)),
-        "require_lanes_from_lock": bool(validation.get("required_lanes_from_lock", True)),
-        "require_ux_on_frontend_changes": bool(ux_scope.get("require_ux_on_frontend_changes", True)),
-    }
+    placeholder_tokens = [str(x).strip() for x in (validation.get("placeholder_tokens") or []) if str(x).strip()]
+    required_source_refs_min = int(validation.get("required_source_refs_min") or 1)
+    active_status_on_scoped_change = bool(validation.get("active_status_on_scoped_change", True))
+    require_sequence_from_lock = bool(validation.get("required_execution_sequence_from_lock", True))
+    require_lanes_from_lock = bool(validation.get("required_lanes_from_lock", True))
+    require_ux_on_frontend_changes = bool(ux_scope.get("require_ux_on_frontend_changes", True))
 
-
-def _collect_changed_files(repo_root: Path, args: argparse.Namespace) -> tuple[list[str], str, str]:
     changed_files: list[str] = []
     diff_base = str(args.base or "").strip()
     diff_head = str(args.head or "").strip()
-    raw_changed = str(args.changed_files or "").strip()
-    if raw_changed:
-        changed_files = sorted(
-            {
-                _normalize_rel(item)
-                for item in raw_changed.split(",")
-                if _normalize_rel(item)
-            }
-        )
-        return changed_files, diff_base, diff_head
+    try:
+        raw_changed = str(args.changed_files or "").strip()
+        if raw_changed:
+            changed_files = sorted(
+                {
+                    _normalize_rel(item)
+                    for item in raw_changed.split(",")
+                    if _normalize_rel(item)
+                }
+            )
+        else:
+            if not diff_base or not diff_head:
+                diff_base, diff_head = _default_diff_refs(repo_root)
+            changed_files = _git_changed_files(repo_root, diff_base, diff_head)
+    except Exception as exc:
+        errors.append(f"diff_collect_failed:{exc}")
 
-    if not diff_base or not diff_head:
-        diff_base, diff_head = _default_diff_refs(repo_root)
-    changed_files = _git_changed_files(repo_root, diff_base, diff_head)
-    return changed_files, diff_base, diff_head
+    scoped_files = [
+        path
+        for path in changed_files
+        if (not include_globs or _match_any(path, include_globs))
+        and not (exclude_globs and _match_any(path, exclude_globs))
+    ]
+    ux_scoped_files = [path for path in scoped_files if _match_any(path, ux_required_globs)]
 
-
-def _detect_scopes(scoped_files: list[str], scope_globs: dict[str, Any]) -> set[str]:
     detected_scopes: set[str] = set()
     for scope_name, patterns in scope_globs.items():
         if not isinstance(patterns, list):
@@ -251,531 +242,244 @@ def _detect_scopes(scoped_files: list[str], scope_globs: dict[str, Any]) -> set[
         normalized_patterns = [str(item).strip() for item in patterns if isinstance(item, str) and str(item).strip()]
         if any(_match_any(path, normalized_patterns) for path in scoped_files):
             detected_scopes.add(str(scope_name))
-    return detected_scopes
 
-
-def _collect_scope_context(
-    repo_root: Path,
-    args: argparse.Namespace,
-    settings: dict[str, Any],
-    errors: list[str],
-) -> dict[str, Any]:
-    changed_files: list[str] = []
-    diff_base = str(args.base or "").strip()
-    diff_head = str(args.head or "").strip()
-    try:
-        changed_files, diff_base, diff_head = _collect_changed_files(repo_root, args)
-    except Exception as exc:
-        errors.append(f"diff_collect_failed:{exc}")
-
-    scoped_files = [
-        path
-        for path in changed_files
-        if (not settings["include_globs"] or _match_any(path, settings["include_globs"]))
-        and not (settings["exclude_globs"] and _match_any(path, settings["exclude_globs"]))
-    ]
-    ux_scoped_files = [path for path in scoped_files if _match_any(path, settings["ux_required_globs"])]
-    detected_scopes = _detect_scopes(scoped_files, settings["scope_globs"])
-    return {
-        "changed_files": changed_files,
-        "diff_base": diff_base,
-        "diff_head": diff_head,
-        "scoped_files": scoped_files,
-        "ux_scoped_files": ux_scoped_files,
-        "detected_scopes": detected_scopes,
-    }
-
-
-def _load_contract(paths: dict[str, Any], errors: list[str]) -> dict[str, Any]:
     contract: dict[str, Any] = {}
-    if paths["contract_path_rel"] and paths["contract_path"].exists():
+    if contract_path_rel and contract_path.exists():
         try:
-            contract = _load_json(paths["contract_path"])
+            contract = _load_json(contract_path)
         except Exception as exc:
             errors.append(f"contract_invalid_json:{exc}")
-    return contract
 
-
-def _load_baseline_context(paths: dict[str, Any], errors: list[str]) -> dict[str, Any]:
     baseline: dict[str, Any] = {}
     expected_profile_id = ""
     expected_sequence: list[str] = []
     expected_lanes: list[str] = []
-    if paths["baseline_path_rel"] and paths["baseline_path"].exists():
+    if baseline_path_rel and baseline_path.exists():
         try:
-            baseline = _load_json(paths["baseline_path"])
+            baseline = _load_json(baseline_path)
             expected_profile_id = str(baseline.get("profile_id") or "").strip()
             ci_contract = baseline.get("ci_contract") if isinstance(baseline.get("ci_contract"), dict) else {}
             expected_sequence = [str(x) for x in (ci_contract.get("delivery_sequence") or []) if str(x).strip()]
             expected_lanes = [str(x) for x in (ci_contract.get("required_lanes") or []) if str(x).strip()]
         except Exception as exc:
             errors.append(f"technical_baseline_invalid_json:{exc}")
-    return {
-        "expected_profile_id": expected_profile_id,
-        "expected_sequence": expected_sequence,
-        "expected_lanes": expected_lanes,
-        "baseline": baseline,
-    }
 
-
-def _load_ux_context(paths: dict[str, Any], errors: list[str]) -> dict[str, Any]:
     ux_theme_ids: set[str] = set()
     ux_subthemes_by_theme: dict[str, set[str]] = {}
-    if paths["ux_lock_path_rel"] and paths["ux_lock_path"].exists():
+    if ux_lock_path_rel and ux_lock_path.exists():
         try:
-            ux_lock = _load_json(paths["ux_lock_path"])
+            ux_lock = _load_json(ux_lock_path)
             ux_theme_ids, ux_subthemes_by_theme = _load_ux_index(ux_lock)
         except Exception as exc:
             errors.append(f"ux_lock_invalid_json:{exc}")
-    return {
-        "ux_theme_ids": ux_theme_ids,
-        "ux_subthemes_by_theme": ux_subthemes_by_theme,
-    }
 
-
-def _validate_contract_presence(scoped_files: list[str], contract: dict[str, Any]) -> list[str]:
-    errors: list[str] = []
-    if not scoped_files:
-        return errors
-    if not contract:
-        errors.append("contract_required_for_scoped_changes")
-        return errors
-    _append_missing(
-        errors,
-        "contract",
-        contract,
-        (
-            "version",
-            "kind",
-            "status",
-            "feature_id",
-            "title",
-            "summary",
-            "source_context",
-            "delivery_scope",
-            "ux_contract",
-            "technical_contract",
-            "lane_plan",
-            "definition_of_done",
-            "notes",
-        ),
-    )
-    return errors
-
-
-def _validate_contract_metadata(
-    contract: dict[str, Any],
-    scoped_files: list[str],
-    *,
-    active_status_on_scoped_change: bool,
-    placeholder_tokens: list[str],
-) -> list[str]:
-    errors: list[str] = []
-    if str(contract.get("version") or "") != "v1":
-        errors.append("contract:version_must_be_v1")
-    if str(contract.get("kind") or "") != "feature-execution-contract":
-        errors.append("contract:kind_invalid")
-    status = str(contract.get("status") or "").strip()
-    if active_status_on_scoped_change and scoped_files and status != "ACTIVE":
-        errors.append("contract:status_must_be_ACTIVE_for_scoped_changes")
-    for key in ("feature_id", "title", "summary"):
-        value = str(contract.get(key) or "").strip()
-        if not value:
-            errors.append(f"contract:{key}_missing")
-        elif scoped_files and _contains_placeholder(value, placeholder_tokens):
-            errors.append(f"contract:{key}_contains_placeholder")
-    return errors
-
-
-def _validate_source_context(
-    contract: dict[str, Any],
-    scoped_files: list[str],
-    *,
-    required_source_refs_min: int,
-    placeholder_tokens: list[str],
-) -> list[str]:
-    errors: list[str] = []
-    source_context = contract.get("source_context") if isinstance(contract.get("source_context"), dict) else {}
-    _append_missing(
-        errors,
-        "source_context",
-        source_context,
-        ("source_type", "source_refs", "business_goal", "requested_outcome"),
-    )
-    source_refs = source_context.get("source_refs") if isinstance(source_context.get("source_refs"), list) else []
-    if len(source_refs) < required_source_refs_min:
-        errors.append("source_context:source_refs_below_min")
-    if not scoped_files:
-        return errors
-    for key in ("business_goal", "requested_outcome"):
-        if _contains_placeholder(source_context.get(key), placeholder_tokens):
-            errors.append(f"source_context:{key}_contains_placeholder")
-    for idx, item in enumerate(source_refs):
-        if _contains_placeholder(item, placeholder_tokens):
-            errors.append(f"source_context:source_refs_contains_placeholder:{idx}")
-    return errors
-
-
-def _validate_delivery_scope(contract: dict[str, Any], scoped_files: list[str], detected_scopes: set[str]) -> tuple[list[str], list[str], list[str]]:
-    errors: list[str] = []
-    delivery_scope = contract.get("delivery_scope") if isinstance(contract.get("delivery_scope"), dict) else {}
-    _append_missing(
-        errors,
-        "delivery_scope",
-        delivery_scope,
-        ("repo_root", "service_scopes", "change_path_globs", "affected_modules"),
-    )
-    contract_service_scopes = [
-        str(item).strip()
-        for item in (delivery_scope.get("service_scopes") or [])
-        if isinstance(item, str) and str(item).strip()
-    ]
-    contract_change_globs = [
-        str(item).strip()
-        for item in (delivery_scope.get("change_path_globs") or [])
-        if isinstance(item, str) and str(item).strip()
-    ]
-    if scoped_files and not contract_service_scopes:
-        errors.append("delivery_scope:service_scopes_empty")
-    if scoped_files and not contract_change_globs:
-        errors.append("delivery_scope:change_path_globs_empty")
-    undeclared_scopes = sorted(detected_scopes - set(contract_service_scopes))
-    if undeclared_scopes:
-        errors.append(f"delivery_scope:missing_detected_scopes:{','.join(undeclared_scopes)}")
-    uncovered_files = [path for path in scoped_files if not _match_any(path, contract_change_globs)]
-    if uncovered_files:
-        errors.extend([f"delivery_scope:uncovered_change:{path}" for path in uncovered_files])
-    return errors, contract_service_scopes, contract_change_globs
-
-
-def _validate_ux_contract(
-    contract: dict[str, Any],
-    ux_scoped_files: list[str],
-    *,
-    ux_theme_ids: set[str],
-    ux_subthemes_by_theme: dict[str, set[str]],
-    require_ux_on_frontend_changes: bool,
-    placeholder_tokens: list[str],
-) -> tuple[list[str], list[str]]:
-    errors: list[str] = []
+    contract_errors: list[str] = []
+    contract_warnings: list[str] = []
+    contract_change_globs: list[str] = []
+    contract_service_scopes: list[str] = []
     artifact_globs: list[str] = []
-    ux_contract = contract.get("ux_contract") if isinstance(contract.get("ux_contract"), dict) else {}
-    _append_missing(errors, "ux_contract", ux_contract, ("mode", "rationale", "artifacts"))
-    ux_mode = str(ux_contract.get("mode") or "").strip()
-    artifacts = ux_contract.get("artifacts") if isinstance(ux_contract.get("artifacts"), list) else []
-    for idx, item in enumerate(artifacts):
-        if not isinstance(item, dict):
-            errors.append(f"ux_contract:artifact_not_object:{idx}")
-            continue
-        path_glob = str(item.get("path_glob") or "").strip()
-        theme_id = str(item.get("ux_theme_id") or "").strip()
-        subtheme_id = str(item.get("ux_subtheme_id") or "").strip()
-        if not path_glob or not theme_id or not subtheme_id:
-            errors.append(f"ux_contract:artifact_missing_fields:{idx}")
-            continue
-        artifact_globs.append(path_glob)
-        if ux_theme_ids and theme_id not in ux_theme_ids:
-            errors.append(f"ux_contract:invalid_theme_id:{theme_id}")
-        elif ux_subthemes_by_theme and subtheme_id not in ux_subthemes_by_theme.get(theme_id, set()):
-            errors.append(f"ux_contract:invalid_subtheme_id:{theme_id}:{subtheme_id}")
-    if require_ux_on_frontend_changes and ux_scoped_files:
-        if ux_mode != "REQUIRED":
-            errors.append("ux_contract:mode_must_be_REQUIRED_for_frontend_changes")
-        missing_ux_coverage = [path for path in ux_scoped_files if not _match_any(path, artifact_globs)]
-        if missing_ux_coverage:
-            errors.extend([f"ux_contract:uncovered_ui_change:{path}" for path in missing_ux_coverage])
-    rationale = ux_contract.get("rationale")
-    if _contains_placeholder(rationale, placeholder_tokens) and (ux_scoped_files or ux_mode == "NOT_APPLICABLE"):
-        errors.append("ux_contract:rationale_contains_placeholder")
-    return errors, artifact_globs
 
-
-def _validate_technical_contract(contract: dict[str, Any], *, expected_profile_id: str) -> list[str]:
-    errors: list[str] = []
-    technical_contract = contract.get("technical_contract") if isinstance(contract.get("technical_contract"), dict) else {}
-    _append_missing(
-        errors,
-        "technical_contract",
-        technical_contract,
-        ("baseline_profile_id", "api_version_prefix", "design_system_policy", "db_migration_required"),
-    )
-    if expected_profile_id and str(technical_contract.get("baseline_profile_id") or "").strip() != expected_profile_id:
-        errors.append("technical_contract:baseline_profile_id_mismatch")
-    if str(technical_contract.get("api_version_prefix") or "").strip() != "/api/v1":
-        errors.append("technical_contract:api_version_prefix_invalid")
-    if str(technical_contract.get("design_system_policy") or "").strip() != "policies/policy_ui_design_system.v1.json":
-        errors.append("technical_contract:design_system_policy_invalid")
-    if not isinstance(technical_contract.get("db_migration_required"), bool):
-        errors.append("technical_contract:db_migration_required_must_be_boolean")
-    return errors
-
-
-def _validate_lane_plan(
-    contract: dict[str, Any],
-    *,
-    expected_sequence: list[str],
-    expected_lanes: list[str],
-    require_sequence_from_lock: bool,
-    require_lanes_from_lock: bool,
-) -> list[str]:
-    errors: list[str] = []
-    lane_plan = contract.get("lane_plan") if isinstance(contract.get("lane_plan"), dict) else {}
-    _append_missing(errors, "lane_plan", lane_plan, ("execution_sequence", "required_lanes", "notes"))
-    actual_sequence = [
-        str(item).strip()
-        for item in (lane_plan.get("execution_sequence") or [])
-        if isinstance(item, str) and str(item).strip()
-    ]
-    actual_lanes = [
-        str(item).strip()
-        for item in (lane_plan.get("required_lanes") or [])
-        if isinstance(item, str) and str(item).strip()
-    ]
-    if require_sequence_from_lock and expected_sequence and actual_sequence != expected_sequence:
-        errors.append("lane_plan:execution_sequence_mismatch")
-    if require_lanes_from_lock and expected_lanes and actual_lanes != expected_lanes:
-        errors.append("lane_plan:required_lanes_mismatch")
-    return errors
-
-
-def _validate_definition_of_done(
-    contract: dict[str, Any],
-    scoped_files: list[str],
-    *,
-    placeholder_tokens: list[str],
-) -> list[str]:
-    errors: list[str] = []
-    definition_of_done = contract.get("definition_of_done") if isinstance(contract.get("definition_of_done"), dict) else {}
-    _append_missing(
-        errors,
-        "definition_of_done",
-        definition_of_done,
-        ("acceptance_criteria", "evidence_paths"),
-    )
-    acceptance_criteria = (
-        definition_of_done.get("acceptance_criteria")
-        if isinstance(definition_of_done.get("acceptance_criteria"), list)
-        else []
-    )
-    evidence_paths = (
-        definition_of_done.get("evidence_paths")
-        if isinstance(definition_of_done.get("evidence_paths"), list)
-        else []
-    )
-    if not acceptance_criteria:
-        errors.append("definition_of_done:acceptance_criteria_empty")
-    if not evidence_paths:
-        errors.append("definition_of_done:evidence_paths_empty")
     if scoped_files:
-        for idx, item in enumerate(acceptance_criteria):
-            if _contains_placeholder(item, placeholder_tokens):
-                errors.append(f"definition_of_done:acceptance_contains_placeholder:{idx}")
-    return errors
+        if not contract:
+            contract_errors.append("contract_required_for_scoped_changes")
+        else:
+            _append_missing(
+                contract_errors,
+                "contract",
+                contract,
+                (
+                    "version",
+                    "kind",
+                    "status",
+                    "feature_id",
+                    "title",
+                    "summary",
+                    "source_context",
+                    "delivery_scope",
+                    "ux_contract",
+                    "technical_contract",
+                    "lane_plan",
+                    "definition_of_done",
+                    "notes",
+                ),
+            )
 
+    if contract:
+        if str(contract.get("version") or "") != "v1":
+            contract_errors.append("contract:version_must_be_v1")
+        if str(contract.get("kind") or "") != "feature-execution-contract":
+            contract_errors.append("contract:kind_invalid")
+        status = str(contract.get("status") or "").strip()
+        if active_status_on_scoped_change and scoped_files and status != "ACTIVE":
+            contract_errors.append("contract:status_must_be_ACTIVE_for_scoped_changes")
 
-def _normalize_text_list(value: Any) -> list[str]:
-    return [
-        str(item).strip()
-        for item in (value or [])
-        if isinstance(item, str) and str(item).strip()
-    ]
+        for key in ("feature_id", "title", "summary"):
+            value = str(contract.get(key) or "").strip()
+            if not value:
+                contract_errors.append(f"contract:{key}_missing")
+            elif scoped_files and _contains_placeholder(value, placeholder_tokens):
+                contract_errors.append(f"contract:{key}_contains_placeholder")
 
-
-def _validate_multi_plane_contract(contract: dict[str, Any]) -> tuple[list[str], dict[str, Any]]:
-    errors: list[str] = []
-    summary = {
-        "mode": "",
-        "planes": [],
-        "primary_plane": "",
-        "shared_capability_ids": [],
-        "decision_bundle_path": "",
-    }
-
-    multi_plane_contract = (
-        contract.get("multi_plane_contract") if isinstance(contract.get("multi_plane_contract"), dict) else {}
-    )
-    shared_contracts = contract.get("shared_contracts") if isinstance(contract.get("shared_contracts"), dict) else {}
-    context_contract = contract.get("context_contract") if isinstance(contract.get("context_contract"), dict) else {}
-
-    if not multi_plane_contract:
-        return errors, summary
-
-    _append_missing(
-        errors,
-        "multi_plane_contract",
-        multi_plane_contract,
-        ("mode", "planes", "primary_plane", "plane_path_globs"),
-    )
-    mode = str(multi_plane_contract.get("mode") or "").strip()
-    planes = _normalize_text_list(multi_plane_contract.get("planes"))
-    primary_plane = str(multi_plane_contract.get("primary_plane") or "").strip()
-    plane_path_globs = (
-        multi_plane_contract.get("plane_path_globs")
-        if isinstance(multi_plane_contract.get("plane_path_globs"), dict)
-        else {}
-    )
-
-    if primary_plane and primary_plane not in planes:
-        errors.append("multi_plane_contract:primary_plane_not_in_planes")
-    if mode == "multi-plane" and len(planes) < 2:
-        errors.append("multi_plane_contract:planes_below_min_for_multi_plane")
-
-    for plane in planes:
-        globs = _normalize_text_list(plane_path_globs.get(plane))
-        if not globs:
-            errors.append(f"multi_plane_contract:missing_plane_path_globs:{plane}")
-
-    if shared_contracts:
+        source_context = contract.get("source_context") if isinstance(contract.get("source_context"), dict) else {}
         _append_missing(
-            errors,
-            "shared_contracts",
-            shared_contracts,
-            ("capability_ids", "permission_codes", "resource_scopes", "audit_actions"),
+            contract_errors,
+            "source_context",
+            source_context,
+            ("source_type", "source_refs", "business_goal", "requested_outcome"),
         )
-    if context_contract:
+        source_refs = source_context.get("source_refs") if isinstance(source_context.get("source_refs"), list) else []
+        if len(source_refs) < required_source_refs_min:
+            contract_errors.append("source_context:source_refs_below_min")
+        if scoped_files:
+            for key in ("business_goal", "requested_outcome"):
+                if _contains_placeholder(source_context.get(key), placeholder_tokens):
+                    contract_errors.append(f"source_context:{key}_contains_placeholder")
+            for idx, item in enumerate(source_refs):
+                if _contains_placeholder(item, placeholder_tokens):
+                    contract_errors.append(f"source_context:source_refs_contains_placeholder:{idx}")
+
+        delivery_scope = contract.get("delivery_scope") if isinstance(contract.get("delivery_scope"), dict) else {}
         _append_missing(
-            errors,
-            "context_contract",
-            context_contract,
-            ("decision_bundle_path", "context_refs", "codex_read_sequence"),
+            contract_errors,
+            "delivery_scope",
+            delivery_scope,
+            ("repo_root", "service_scopes", "change_path_globs", "affected_modules"),
         )
+        contract_service_scopes = [
+            str(item).strip()
+            for item in (delivery_scope.get("service_scopes") or [])
+            if isinstance(item, str) and str(item).strip()
+        ]
+        contract_change_globs = [
+            str(item).strip()
+            for item in (delivery_scope.get("change_path_globs") or [])
+            if isinstance(item, str) and str(item).strip()
+        ]
+        if scoped_files and not contract_service_scopes:
+            contract_errors.append("delivery_scope:service_scopes_empty")
+        if scoped_files and not contract_change_globs:
+            contract_errors.append("delivery_scope:change_path_globs_empty")
+        undeclared_scopes = sorted(detected_scopes - set(contract_service_scopes))
+        if undeclared_scopes:
+            contract_errors.append(f"delivery_scope:missing_detected_scopes:{','.join(undeclared_scopes)}")
+        uncovered_files = [path for path in scoped_files if not _match_any(path, contract_change_globs)]
+        if uncovered_files:
+            contract_errors.extend([f"delivery_scope:uncovered_change:{path}" for path in uncovered_files])
 
-    capability_ids = _normalize_text_list(shared_contracts.get("capability_ids"))
-    permission_codes = _normalize_text_list(shared_contracts.get("permission_codes"))
-    resource_scopes = _normalize_text_list(shared_contracts.get("resource_scopes"))
-    audit_actions = _normalize_text_list(shared_contracts.get("audit_actions"))
-    decision_bundle_path = str(context_contract.get("decision_bundle_path") or "").strip()
-    context_refs = _normalize_text_list(context_contract.get("context_refs"))
-    codex_read_sequence = _normalize_text_list(context_contract.get("codex_read_sequence"))
+        ux_contract = contract.get("ux_contract") if isinstance(contract.get("ux_contract"), dict) else {}
+        _append_missing(contract_errors, "ux_contract", ux_contract, ("mode", "rationale", "artifacts"))
+        ux_mode = str(ux_contract.get("mode") or "").strip()
+        artifacts = ux_contract.get("artifacts") if isinstance(ux_contract.get("artifacts"), list) else []
+        artifact_entries: list[dict[str, str]] = []
+        for idx, item in enumerate(artifacts):
+            if not isinstance(item, dict):
+                contract_errors.append(f"ux_contract:artifact_not_object:{idx}")
+                continue
+            path_glob = str(item.get("path_glob") or "").strip()
+            theme_id = str(item.get("ux_theme_id") or "").strip()
+            subtheme_id = str(item.get("ux_subtheme_id") or "").strip()
+            if not path_glob or not theme_id or not subtheme_id:
+                contract_errors.append(f"ux_contract:artifact_missing_fields:{idx}")
+                continue
+            artifact_entries.append(
+                {
+                    "path_glob": path_glob,
+                    "ux_theme_id": theme_id,
+                    "ux_subtheme_id": subtheme_id,
+                }
+            )
+            artifact_globs.append(path_glob)
+            if ux_theme_ids and theme_id not in ux_theme_ids:
+                contract_errors.append(f"ux_contract:invalid_theme_id:{theme_id}")
+            elif ux_subthemes_by_theme and subtheme_id not in ux_subthemes_by_theme.get(theme_id, set()):
+                contract_errors.append(f"ux_contract:invalid_subtheme_id:{theme_id}:{subtheme_id}")
+        if require_ux_on_frontend_changes and ux_scoped_files:
+            if ux_mode != "REQUIRED":
+                contract_errors.append("ux_contract:mode_must_be_REQUIRED_for_frontend_changes")
+            missing_ux_coverage = [path for path in ux_scoped_files if not _match_any(path, artifact_globs)]
+            if missing_ux_coverage:
+                contract_errors.extend([f"ux_contract:uncovered_ui_change:{path}" for path in missing_ux_coverage])
+        if not ux_scoped_files and ux_mode == "NOT_APPLICABLE" and _contains_placeholder(
+            ux_contract.get("rationale"), placeholder_tokens
+        ):
+            contract_errors.append("ux_contract:rationale_contains_placeholder")
+        if ux_scoped_files and _contains_placeholder(ux_contract.get("rationale"), placeholder_tokens):
+            contract_errors.append("ux_contract:rationale_contains_placeholder")
 
-    if mode == "multi-plane":
-        if not shared_contracts:
-            errors.append("shared_contracts:missing_for_multi_plane")
-        if not context_contract:
-            errors.append("context_contract:missing_for_multi_plane")
-        if not capability_ids:
-            errors.append("shared_contracts:capability_ids_empty_for_multi_plane")
-        if not permission_codes:
-            errors.append("shared_contracts:permission_codes_empty_for_multi_plane")
-        if not resource_scopes:
-            errors.append("shared_contracts:resource_scopes_empty_for_multi_plane")
-        if not audit_actions:
-            errors.append("shared_contracts:audit_actions_empty_for_multi_plane")
-        if not decision_bundle_path:
-            errors.append("context_contract:decision_bundle_path_empty_for_multi_plane")
-        if not context_refs:
-            errors.append("context_contract:context_refs_empty_for_multi_plane")
-        if not codex_read_sequence:
-            errors.append("context_contract:codex_read_sequence_empty_for_multi_plane")
-
-    summary = {
-        "mode": mode,
-        "planes": planes,
-        "primary_plane": primary_plane,
-        "shared_capability_ids": capability_ids,
-        "decision_bundle_path": decision_bundle_path,
-    }
-    return errors, summary
-
-
-def _validate_contract(
-    contract: dict[str, Any],
-    scope_context: dict[str, Any],
-    settings: dict[str, Any],
-    baseline_context: dict[str, Any],
-    ux_context: dict[str, Any],
-) -> tuple[list[str], list[str], dict[str, Any]]:
-    contract_errors = _validate_contract_presence(scope_context["scoped_files"], contract)
-    if not contract:
-        return contract_errors, [], {
-            "service_scopes": [],
-            "change_path_globs": [],
-            "artifact_globs": [],
-        }
-
-    contract_errors.extend(
-        _validate_contract_metadata(
-            contract,
-            scope_context["scoped_files"],
-            active_status_on_scoped_change=settings["active_status_on_scoped_change"],
-            placeholder_tokens=settings["placeholder_tokens"],
+        technical_contract = (
+            contract.get("technical_contract") if isinstance(contract.get("technical_contract"), dict) else {}
         )
-    )
-    contract_errors.extend(
-        _validate_source_context(
-            contract,
-            scope_context["scoped_files"],
-            required_source_refs_min=settings["required_source_refs_min"],
-            placeholder_tokens=settings["placeholder_tokens"],
+        _append_missing(
+            contract_errors,
+            "technical_contract",
+            technical_contract,
+            ("baseline_profile_id", "api_version_prefix", "design_system_policy", "db_migration_required"),
         )
-    )
-    delivery_errors, service_scopes, change_globs = _validate_delivery_scope(
-        contract,
-        scope_context["scoped_files"],
-        scope_context["detected_scopes"],
-    )
-    contract_errors.extend(delivery_errors)
-    ux_errors, artifact_globs = _validate_ux_contract(
-        contract,
-        scope_context["ux_scoped_files"],
-        ux_theme_ids=ux_context["ux_theme_ids"],
-        ux_subthemes_by_theme=ux_context["ux_subthemes_by_theme"],
-        require_ux_on_frontend_changes=settings["require_ux_on_frontend_changes"],
-        placeholder_tokens=settings["placeholder_tokens"],
-    )
-    contract_errors.extend(ux_errors)
-    contract_errors.extend(
-        _validate_technical_contract(
-            contract,
-            expected_profile_id=baseline_context["expected_profile_id"],
-        )
-    )
-    contract_errors.extend(
-        _validate_lane_plan(
-            contract,
-            expected_sequence=baseline_context["expected_sequence"],
-            expected_lanes=baseline_context["expected_lanes"],
-            require_sequence_from_lock=settings["require_sequence_from_lock"],
-            require_lanes_from_lock=settings["require_lanes_from_lock"],
-        )
-    )
-    contract_errors.extend(
-        _validate_definition_of_done(
-            contract,
-            scope_context["scoped_files"],
-            placeholder_tokens=settings["placeholder_tokens"],
-        )
-    )
-    multi_plane_errors, multi_plane_summary = _validate_multi_plane_contract(contract)
-    contract_errors.extend(multi_plane_errors)
-    return contract_errors, [], {
-        "service_scopes": service_scopes,
-        "change_path_globs": change_globs,
-        "artifact_globs": artifact_globs,
-        "multi_plane_mode": multi_plane_summary["mode"],
-        "planes": multi_plane_summary["planes"],
-        "primary_plane": multi_plane_summary["primary_plane"],
-        "shared_capability_ids": multi_plane_summary["shared_capability_ids"],
-        "decision_bundle_path": multi_plane_summary["decision_bundle_path"],
-    }
+        if expected_profile_id and str(technical_contract.get("baseline_profile_id") or "").strip() != expected_profile_id:
+            contract_errors.append("technical_contract:baseline_profile_id_mismatch")
+        if str(technical_contract.get("api_version_prefix") or "").strip() != "/api/v1":
+            contract_errors.append("technical_contract:api_version_prefix_invalid")
+        if (
+            str(technical_contract.get("design_system_policy") or "").strip()
+            != "policies/policy_ui_design_system.v1.json"
+        ):
+            contract_errors.append("technical_contract:design_system_policy_invalid")
+        if not isinstance(technical_contract.get("db_migration_required"), bool):
+            contract_errors.append("technical_contract:db_migration_required_must_be_boolean")
 
+        lane_plan = contract.get("lane_plan") if isinstance(contract.get("lane_plan"), dict) else {}
+        _append_missing(contract_errors, "lane_plan", lane_plan, ("execution_sequence", "required_lanes", "notes"))
+        actual_sequence = [
+            str(item).strip()
+            for item in (lane_plan.get("execution_sequence") or [])
+            if isinstance(item, str) and str(item).strip()
+        ]
+        actual_lanes = [
+            str(item).strip()
+            for item in (lane_plan.get("required_lanes") or [])
+            if isinstance(item, str) and str(item).strip()
+        ]
+        if require_sequence_from_lock and expected_sequence and actual_sequence != expected_sequence:
+            contract_errors.append("lane_plan:execution_sequence_mismatch")
+        if require_lanes_from_lock and expected_lanes and actual_lanes != expected_lanes:
+            contract_errors.append("lane_plan:required_lanes_mismatch")
 
-def _build_report(
-    *,
-    repo_root: Path,
-    policy_path: Path,
-    paths: dict[str, Any],
-    enforcement_mode: str,
-    errors: list[str],
-    warnings: list[str],
-    scope_context: dict[str, Any],
-    contract_summary: dict[str, Any],
-    baseline_context: dict[str, Any],
-) -> dict[str, Any]:
+        definition_of_done = (
+            contract.get("definition_of_done") if isinstance(contract.get("definition_of_done"), dict) else {}
+        )
+        _append_missing(
+            contract_errors,
+            "definition_of_done",
+            definition_of_done,
+            ("acceptance_criteria", "evidence_paths"),
+        )
+        acceptance_criteria = (
+            definition_of_done.get("acceptance_criteria")
+            if isinstance(definition_of_done.get("acceptance_criteria"), list)
+            else []
+        )
+        evidence_paths = (
+            definition_of_done.get("evidence_paths")
+            if isinstance(definition_of_done.get("evidence_paths"), list)
+            else []
+        )
+        if not acceptance_criteria:
+            contract_errors.append("definition_of_done:acceptance_criteria_empty")
+        if not evidence_paths:
+            contract_errors.append("definition_of_done:evidence_paths_empty")
+        if scoped_files:
+            for idx, item in enumerate(acceptance_criteria):
+                if _contains_placeholder(item, placeholder_tokens):
+                    contract_errors.append(f"definition_of_done:acceptance_contains_placeholder:{idx}")
+
+    errors.extend(contract_errors)
+    warnings.extend(contract_warnings)
+
     status = "OK"
     if errors:
         status = "FAIL" if enforcement_mode == "blocking" else "WARN"
-    return {
+
+    report = {
         "version": "v1",
         "kind": "feature-execution-contract-check-report",
         "generated_at": _now_iso(),
@@ -783,89 +487,43 @@ def _build_report(
         "enforcement_mode": enforcement_mode,
         "repo_root": str(repo_root),
         "policy_path": str(policy_path.relative_to(repo_root)),
-        "contract_path": paths["contract_path_rel"],
-        "contract_schema_path": paths["contract_schema_path_rel"],
-        "technical_baseline_path": paths["baseline_path_rel"],
-        "ux_lock_path": paths["ux_lock_path_rel"],
+        "contract_path": contract_path_rel,
+        "contract_schema_path": contract_schema_path_rel,
+        "technical_baseline_path": baseline_path_rel,
+        "ux_lock_path": ux_lock_path_rel,
         "diff": {
-            "base": scope_context["diff_base"],
-            "head": scope_context["diff_head"],
-            "changed_files_count": len(scope_context["changed_files"]),
-            "scoped_changed_files_count": len(scope_context["scoped_files"]),
-            "scoped_changed_files": scope_context["scoped_files"],
+            "base": diff_base,
+            "head": diff_head,
+            "changed_files_count": len(changed_files),
+            "scoped_changed_files_count": len(scoped_files),
+            "scoped_changed_files": scoped_files,
         },
         "scope_detection": {
-            "detected_scopes": sorted(scope_context["detected_scopes"]),
-            "ux_scoped_changed_files_count": len(scope_context["ux_scoped_files"]),
-            "ux_scoped_changed_files": scope_context["ux_scoped_files"],
+            "detected_scopes": sorted(detected_scopes),
+            "ux_scoped_changed_files_count": len(ux_scoped_files),
+            "ux_scoped_changed_files": ux_scoped_files,
         },
         "contract_summary": {
-            "service_scopes": contract_summary["service_scopes"],
-            "change_path_globs": contract_summary["change_path_globs"],
-            "artifact_globs": contract_summary["artifact_globs"],
-            "multi_plane_mode": contract_summary["multi_plane_mode"],
-            "planes": contract_summary["planes"],
-            "primary_plane": contract_summary["primary_plane"],
-            "shared_capability_ids": contract_summary["shared_capability_ids"],
-            "decision_bundle_path": contract_summary["decision_bundle_path"],
-            "expected_profile_id": baseline_context["expected_profile_id"],
-            "expected_execution_sequence": baseline_context["expected_sequence"],
-            "expected_required_lanes": baseline_context["expected_lanes"],
+            "service_scopes": contract_service_scopes,
+            "change_path_globs": contract_change_globs,
+            "artifact_globs": artifact_globs,
+            "expected_profile_id": expected_profile_id,
+            "expected_execution_sequence": expected_sequence,
+            "expected_required_lanes": expected_lanes,
         },
         "errors": errors,
         "warnings": warnings,
     }
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-
-def main(argv: list[str] | None = None) -> int:
-    args = _parse_args(argv)
-    repo_root = Path(str(args.repo_root)).resolve()
-    policy_path = (repo_root / str(args.policy_path)).resolve()
-    out_path = _resolve_out_path(repo_root, str(args.out))
-    if not policy_path.exists():
-        return _emit_policy_missing(repo_root, policy_path, out_path)
-
-    errors: list[str] = []
-    warnings: list[str] = []
-    policy = _load_json(policy_path)
-    settings = _extract_policy_settings(policy)
-    paths = _resolve_policy_paths(repo_root, policy)
-    errors.extend(_collect_path_errors(paths))
-
-    scope_context = _collect_scope_context(repo_root, args, settings, errors)
-    contract = _load_contract(paths, errors)
-    baseline_context = _load_baseline_context(paths, errors)
-    ux_context = _load_ux_context(paths, errors)
-    contract_errors, contract_warnings, contract_summary = _validate_contract(
-        contract,
-        scope_context,
-        settings,
-        baseline_context,
-        ux_context,
-    )
-    errors.extend(contract_errors)
-    warnings.extend(contract_warnings)
-
-    report = _build_report(
-        repo_root=repo_root,
-        policy_path=policy_path,
-        paths=paths,
-        enforcement_mode=settings["enforcement_mode"],
-        errors=errors,
-        warnings=warnings,
-        scope_context=scope_context,
-        contract_summary=contract_summary,
-        baseline_context=baseline_context,
-    )
-    _write_report(out_path, report)
-    status = str(report["status"])
     print(
         json.dumps(
             {
                 "status": status,
-                "enforcement_mode": settings["enforcement_mode"],
-                "scoped_changed_files_count": len(scope_context["scoped_files"]),
-                "detected_scopes": sorted(scope_context["detected_scopes"]),
+                "enforcement_mode": enforcement_mode,
+                "scoped_changed_files_count": len(scoped_files),
+                "detected_scopes": sorted(detected_scopes),
                 "errors": len(errors),
                 "warnings": len(warnings),
                 "out": str(out_path),
@@ -874,7 +532,7 @@ def main(argv: list[str] | None = None) -> int:
             sort_keys=True,
         )
     )
-    if status == "FAIL" and settings["enforcement_mode"] == "blocking":
+    if status == "FAIL" and enforcement_mode == "blocking":
         return 2
     return 0
 

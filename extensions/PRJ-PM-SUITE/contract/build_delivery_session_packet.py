@@ -65,14 +65,6 @@ def _phase_related_globs(phase: str, contract_globs: list[str]) -> list[str]:
     return matched or _phase_default_globs(phase)
 
 
-def _normalize_text_list(value: Any) -> list[str]:
-    return [
-        str(item).strip()
-        for item in (value or [])
-        if isinstance(item, str) and str(item).strip()
-    ]
-
-
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv)
     repo_root = Path(str(args.repo_root)).resolve()
@@ -107,11 +99,6 @@ def main(argv: list[str] | None = None) -> int:
     definition_of_done = (
         contract.get("definition_of_done") if isinstance(contract.get("definition_of_done"), dict) else {}
     )
-    multi_plane_contract = (
-        contract.get("multi_plane_contract") if isinstance(contract.get("multi_plane_contract"), dict) else {}
-    )
-    shared_contracts = contract.get("shared_contracts") if isinstance(contract.get("shared_contracts"), dict) else {}
-    context_contract = contract.get("context_contract") if isinstance(contract.get("context_contract"), dict) else {}
     module_delivery_contract = (
         standards_lock.get("module_delivery_contract")
         if isinstance(standards_lock.get("module_delivery_contract"), dict)
@@ -205,8 +192,6 @@ def main(argv: list[str] | None = None) -> int:
             "extensions/PRJ-UX-NORTH-STAR/contract/ux_katalogu.final_lock.v1.json",
             "extensions/PRJ-UX-NORTH-STAR/contract/ux_change_map.v1.json",
         ]
-        + _normalize_text_list(context_contract.get("context_refs"))
-        + ([str(context_contract.get("decision_bundle_path")).strip()] if str(context_contract.get("decision_bundle_path") or "").strip() else [])
     )
 
     report_path = str(delivery_session.get("guard_report_path") or ".cache/reports/delivery_session_guard.v1.json")
@@ -236,20 +221,15 @@ def main(argv: list[str] | None = None) -> int:
             "change_map_path": "extensions/PRJ-UX-NORTH-STAR/contract/ux_change_map.v1.json",
             "artifacts": ux_contract.get("artifacts") if isinstance(ux_contract.get("artifacts"), list) else [],
         },
-        "multi_plane_context": {
-            "mode": str(multi_plane_contract.get("mode") or "").strip(),
-            "planes": _normalize_text_list(multi_plane_contract.get("planes")),
-            "primary_plane": str(multi_plane_contract.get("primary_plane") or "").strip(),
-            "decision_bundle_path": str(context_contract.get("decision_bundle_path") or "").strip(),
-        },
-        "shared_contracts": {
-            "capability_ids": _normalize_text_list(shared_contracts.get("capability_ids")),
-            "permission_codes": _normalize_text_list(shared_contracts.get("permission_codes")),
-            "resource_scopes": _normalize_text_list(shared_contracts.get("resource_scopes")),
-            "audit_actions": _normalize_text_list(shared_contracts.get("audit_actions")),
-            "event_names": _normalize_text_list(shared_contracts.get("event_names")),
-            "job_names": _normalize_text_list(shared_contracts.get("job_names")),
-        },
+        "required_roles": _unique(
+            [str(item) for item in (lane_plan.get("required_roles") or []) if isinstance(item, str)]
+            or ["planner", "implementer", "reviewer", "verifier"]
+        ),
+        "target_id": str(delivery_scope.get("target_id") or "").strip() or None,
+        "pre_gates": _unique(
+            [str(item) for item in (lane_plan.get("pre_gates") or []) if isinstance(item, str)]
+            or ["ai-entry-pack-build", "execution-target-resolve", "policy-check --source both"]
+        ),
         "stop_conditions": [
             "scope_expansion_requires_packet_rebuild",
             "frontend_without_ux_mapping_blocked",

@@ -209,38 +209,44 @@ def _load_lock_defaults(lock_path: Path) -> tuple[str, list[str], dict[str, Any]
     return default_branch, sorted(set(required_checks)), solo_policy, "lock"
 
 
-def _build_unverified_repo_result(
+def _evaluate_repo(
     *,
     repo_slug: str,
     branch: str,
     required_checks: list[str],
     solo_policy: dict[str, Any],
-    error: str,
 ) -> dict[str, Any]:
-    return {
-        "repo_slug": repo_slug,
-        "branch": branch,
-        "status": "UNVERIFIED",
-        "source": "github_live_check",
-        "error": error or "protection_unavailable",
-        "required_checks": required_checks,
-        "missing_required_checks": [],
-        "required_present": None,
-        "strict": None,
-        "enforce_admins": None,
-        "required_pull_request_reviews": None,
-        "collaborator_write_count": None,
-        "collaborator_write_users": [],
-        "solo_policy": {
-            "enabled": bool(solo_policy.get("enabled")),
+    protection_ok, protection_obj, protection_error = _run_gh_api(
+        f"repos/{repo_slug}/branches/{branch}/protection"
+    )
+    if not protection_ok or not isinstance(protection_obj, dict):
+        return {
+            "repo_slug": repo_slug,
+            "branch": branch,
             "status": "UNVERIFIED",
-            "rule": "unknown",
-            "violations": ["protection_unavailable"],
-        },
-    }
+            "source": "github_live_check",
+            "error": protection_error or "protection_unavailable",
+            "required_checks": required_checks,
+            "missing_required_checks": [],
+            "required_present": None,
+            "strict": None,
+            "enforce_admins": None,
+            "required_pull_request_reviews": None,
+            "collaborator_write_count": None,
+            "collaborator_write_users": [],
+            "solo_policy": {
+                "enabled": bool(solo_policy.get("enabled")),
+                "status": "UNVERIFIED",
+                "rule": "unknown",
+                "violations": ["protection_unavailable"],
+            },
+        }
 
+    contexts = _extract_contexts(protection_obj)
+    required_set = set(required_checks)
+    missing_required_checks = [check for check in required_checks if check not in set(contexts)]
+    required_present = not missing_required_checks and bool(required_checks)
 
-def _extract_review_settings(protection_obj: dict[str, Any]) -> tuple[dict[str, Any], int, bool, bool | None, bool | None]:
     required_status_checks = (
         protection_obj.get("required_status_checks")
         if isinstance(protection_obj.get("required_status_checks"), dict)
@@ -266,27 +272,10 @@ def _extract_review_settings(protection_obj: dict[str, Any]) -> tuple[dict[str, 
     review_count = int(review_count) if isinstance(review_count, int) else 0
     require_code_owner = reviews_obj.get("require_code_owner_reviews")
     require_code_owner = require_code_owner if isinstance(require_code_owner, bool) else False
-    return reviews_obj, review_count, require_code_owner, strict, enforce_admins
 
-
-def _load_collaborator_state(repo_slug: str) -> tuple[int | None, list[str], str]:
     collab_ok, collab_obj, collab_error = _run_gh_api(f"repos/{repo_slug}/collaborators?per_page=100")
-    if not collab_ok:
-        return None, [], collab_error
-    return _extract_write_collaborators(collab_obj)
+    write_count, write_users, write_error = _extract_write_collaborators(collab_obj) if collab_ok else (None, [], collab_error)
 
-
-def _evaluate_solo_policy(
-    *,
-    solo_policy: dict[str, Any],
-    write_count: int | None,
-    write_error: str,
-    review_count: int,
-    require_code_owner: bool,
-    strict: bool | None,
-    enforce_admins: bool | None,
-    missing_required_checks: list[str],
-) -> dict[str, Any]:
     policy_enabled = bool(solo_policy.get("enabled"))
     policy_status = "SKIPPED" if not policy_enabled else "OK"
     policy_rule = "none"
@@ -307,7 +296,9 @@ def _evaluate_solo_policy(
                 "require_code_owner_reviews": bool(solo_policy.get("single_writer_require_code_owner_reviews")),
             }
             if review_count != expected["required_approving_review_count"]:
-                violations.append("single_writer_required_approving_review_count_mismatch")
+                violations.append(
+                    "single_writer_required_approving_review_count_mismatch"
+                )
             if require_code_owner is not expected["require_code_owner_reviews"]:
                 violations.append("single_writer_require_code_owner_reviews_mismatch")
         else:
@@ -331,66 +322,13 @@ def _evaluate_solo_policy(
         if policy_status != "UNVERIFIED":
             policy_status = "FAIL" if violations else "OK"
 
-    return {
-        "enabled": policy_enabled,
-        "status": policy_status,
-        "rule": policy_rule,
-        "expected": expected,
-        "actual": {
-            "required_approving_review_count": review_count,
-            "require_code_owner_reviews": require_code_owner,
-            "strict_required_status_checks": strict,
-            "enforce_admins": enforce_admins,
-            "collaborator_write_count": write_count,
-        },
-        "violations": sorted(set(violations)),
-    }
-
-
-def _derive_repo_status(missing_required_checks: list[str], policy_status: str) -> str:
-    repo_status = "FAIL" if missing_required_checks else "OK"
+    repo_status = "OK"
+    if missing_required_checks:
+        repo_status = "FAIL"
     if policy_status == "FAIL":
-        return "FAIL"
-    if policy_status == "UNVERIFIED" and repo_status == "OK":
-        return "UNVERIFIED"
-    return repo_status
-
-
-def _evaluate_repo(
-    *,
-    repo_slug: str,
-    branch: str,
-    required_checks: list[str],
-    solo_policy: dict[str, Any],
-) -> dict[str, Any]:
-    protection_ok, protection_obj, protection_error = _run_gh_api(
-        f"repos/{repo_slug}/branches/{branch}/protection"
-    )
-    if not protection_ok or not isinstance(protection_obj, dict):
-        return _build_unverified_repo_result(
-            repo_slug=repo_slug,
-            branch=branch,
-            required_checks=required_checks,
-            solo_policy=solo_policy,
-            error=protection_error,
-        )
-
-    contexts = _extract_contexts(protection_obj)
-    missing_required_checks = [check for check in required_checks if check not in set(contexts)]
-    required_present = not missing_required_checks and bool(required_checks)
-    reviews_obj, review_count, require_code_owner, strict, enforce_admins = _extract_review_settings(protection_obj)
-    write_count, write_users, write_error = _load_collaborator_state(repo_slug)
-    policy_result = _evaluate_solo_policy(
-        solo_policy=solo_policy,
-        write_count=write_count,
-        write_error=write_error,
-        review_count=review_count,
-        require_code_owner=require_code_owner,
-        strict=strict,
-        enforce_admins=enforce_admins,
-        missing_required_checks=missing_required_checks,
-    )
-    repo_status = _derive_repo_status(missing_required_checks, str(policy_result.get("status") or "SKIPPED"))
+        repo_status = "FAIL"
+    elif policy_status == "UNVERIFIED" and repo_status == "OK":
+        repo_status = "UNVERIFIED"
 
     return {
         "repo_slug": repo_slug,
@@ -413,7 +351,20 @@ def _evaluate_repo(
         },
         "collaborator_write_count": write_count,
         "collaborator_write_users": write_users,
-        "solo_policy": policy_result,
+        "solo_policy": {
+            "enabled": policy_enabled,
+            "status": policy_status,
+            "rule": policy_rule,
+            "expected": expected,
+            "actual": {
+                "required_approving_review_count": review_count,
+                "require_code_owner_reviews": require_code_owner,
+                "strict_required_status_checks": strict,
+                "enforce_admins": enforce_admins,
+                "collaborator_write_count": write_count,
+            },
+            "violations": sorted(set(violations)),
+        },
     }
 
 

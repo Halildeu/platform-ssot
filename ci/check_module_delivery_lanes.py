@@ -85,15 +85,15 @@ def _contains_placeholder(value: str) -> bool:
     return False
 
 
-def _resolve_paths(args: argparse.Namespace, root: Path) -> tuple[Path, Path]:
+def main(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv)
+    root = _repo_root()
+
     config_path = Path(str(args.config).strip())
     config_path = (root / config_path).resolve() if not config_path.is_absolute() else config_path.resolve()
     workflow_path = Path(str(args.workflow).strip())
     workflow_path = (root / workflow_path).resolve() if not workflow_path.is_absolute() else workflow_path.resolve()
-    return config_path, workflow_path
 
-
-def _validate_required_paths(config_path: Path, workflow_path: Path) -> int | None:
     if not config_path.exists():
         return _fail(
             "LANE_CONFIG_MISSING",
@@ -106,28 +106,30 @@ def _validate_required_paths(config_path: Path, workflow_path: Path) -> int | No
             "module delivery workflow template is missing.",
             details={"workflow_path": str(workflow_path)},
         )
-    return None
 
-
-def _load_config_object(config_path: Path) -> tuple[dict[str, Any] | None, int | None]:
     try:
         config_obj = _load_json(config_path)
     except Exception:
-        return None, _fail(
+        return _fail(
             "LANE_CONFIG_INVALID_JSON",
             "module delivery lane config must be valid JSON.",
             details={"config_path": str(config_path)},
         )
+
     if not isinstance(config_obj, dict):
-        return None, _fail("LANE_CONFIG_INVALID_TYPE", "module delivery lane config root must be an object.")
-    return config_obj, None
+        return _fail("LANE_CONFIG_INVALID_TYPE", "module delivery lane config root must be an object.")
 
+    if config_obj.get("version") != "v1":
+        return _fail("LANE_CONFIG_VERSION_INVALID", "module delivery lane config version must be v1.")
+    if config_obj.get("merge_requires_all_green") is not True:
+        return _fail(
+            "MERGE_GATE_NOT_STRICT",
+            "merge_requires_all_green must be true in lane config.",
+        )
 
-def _validate_scope_lane_map(config_obj: dict[str, Any]) -> int | None:
     scope_lane_map = config_obj.get("scope_lane_map")
     if not isinstance(scope_lane_map, dict):
         return _fail("SCOPE_LANE_MAP_INVALID", "scope_lane_map must be an object.")
-
     invalid_scope_map: dict[str, Any] = {}
     for scope, expected_lane in REQUIRED_SCOPE_LANE_MAP.items():
         actual_lane = scope_lane_map.get(scope)
@@ -139,10 +141,7 @@ def _validate_scope_lane_map(config_obj: dict[str, Any]) -> int | None:
             "scope_lane_map must map backend/database/api/frontend/integration/e2e_gate to required lane ids.",
             details={"mismatches": invalid_scope_map},
         )
-    return None
 
-
-def _validate_execution_sequence(config_obj: dict[str, Any]) -> int | None:
     execution_sequence = config_obj.get("execution_sequence")
     if not isinstance(execution_sequence, list) or not execution_sequence:
         return _fail(
@@ -159,10 +158,7 @@ def _validate_execution_sequence(config_obj: dict[str, Any]) -> int | None:
                 "actual_sequence": sequence_normalized,
             },
         )
-    return None
 
-
-def _validate_lanes(config_obj: dict[str, Any], *, strict: bool) -> int | None:
     lanes = config_obj.get("lanes")
     if not isinstance(lanes, dict):
         return _fail("LANES_SECTION_INVALID", "lanes section must be an object.")
@@ -194,36 +190,13 @@ def _validate_lanes(config_obj: dict[str, Any], *, strict: bool) -> int | None:
             "lane commands must be non-empty strings.",
             details={"invalid_lanes": invalid_commands},
         )
-    if placeholder_commands and strict:
+    if placeholder_commands and bool(args.strict):
         return _fail(
             "LANE_COMMANDS_PLACEHOLDER",
             "strict mode does not allow placeholder lane commands.",
             details={"placeholder_lanes": placeholder_commands},
         )
-    return None
 
-
-def _validate_config(config_obj: dict[str, Any], *, strict: bool) -> int | None:
-    if config_obj.get("version") != "v1":
-        return _fail("LANE_CONFIG_VERSION_INVALID", "module delivery lane config version must be v1.")
-    if config_obj.get("merge_requires_all_green") is not True:
-        return _fail(
-            "MERGE_GATE_NOT_STRICT",
-            "merge_requires_all_green must be true in lane config.",
-        )
-
-    for validator in (
-        _validate_scope_lane_map,
-        _validate_execution_sequence,
-    ):
-        result = validator(config_obj)
-        if result is not None:
-            return result
-
-    return _validate_lanes(config_obj, strict=strict)
-
-
-def _validate_workflow(workflow_path: Path) -> int | None:
     workflow_text = workflow_path.read_text(encoding="utf-8")
     missing_sentinels = [item for item in WORKFLOW_SENTINELS if item not in workflow_text]
     if missing_sentinels:
@@ -239,29 +212,6 @@ def _validate_workflow(workflow_path: Path) -> int | None:
             "module delivery workflow must enforce backend->database->api->frontend->integration->e2e order.",
             details={"missing_markers": missing_sequence_markers},
         )
-    return None
-
-
-def main(argv: list[str] | None = None) -> int:
-    args = _parse_args(argv)
-    root = _repo_root()
-    config_path, workflow_path = _resolve_paths(args, root)
-
-    path_error = _validate_required_paths(config_path, workflow_path)
-    if path_error is not None:
-        return path_error
-
-    config_obj, config_error = _load_config_object(config_path)
-    if config_error is not None or config_obj is None:
-        return config_error or 1
-
-    config_validation_error = _validate_config(config_obj, strict=bool(args.strict))
-    if config_validation_error is not None:
-        return config_validation_error
-
-    workflow_validation_error = _validate_workflow(workflow_path)
-    if workflow_validation_error is not None:
-        return workflow_validation_error
 
     print(
         json.dumps(
