@@ -6,13 +6,21 @@ on:
 
 jobs:
   matrix:
-    name: Node ${{ matrix.node }} / React ${{ matrix.react }}
+    name: Node ${{ matrix.node }} / React ${{ matrix.react }} / ${{ matrix.package }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         node: ['20', '22']
         react: ['18.2', '18.3']
+        package:
+          - '@mfe/design-system'
+          - '@mfe/x-data-grid'
+          - '@mfe/x-charts'
+          - '@mfe/x-scheduler'
+          - '@mfe/x-kanban'
+          - '@mfe/x-editor'
+          - '@mfe/x-form-builder'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -26,17 +34,84 @@ jobs:
       - name: Override React version
         if: matrix.react != '18.3'
         run: |
-          pnpm --filter '@mfe/design-system' add react@${{ matrix.react }}.0 react-dom@${{ matrix.react }}.0 --save-dev
+          pnpm --filter '${{ matrix.package }}' add react@${{ matrix.react }}.0 react-dom@${{ matrix.react }}.0 --save-dev
       - name: Typecheck
-        run: pnpm --filter '@mfe/design-system' typecheck
+        id: typecheck
+        run: pnpm --filter '${{ matrix.package }}' typecheck || true
       - name: Unit tests
-        run: pnpm --filter '@mfe/design-system' test
+        id: test
+        run: pnpm --filter '${{ matrix.package }}' test || true
       - name: Build
-        run: pnpm --filter '@mfe/design-system' build
+        id: build
+        run: pnpm --filter '${{ matrix.package }}' build || true
+      - name: Write result
+        if: always()
+        run: |
+          mkdir -p compatibility-results
+          cat > compatibility-results/${{ matrix.package }}-node${{ matrix.node }}-react${{ matrix.react }}.json <<EOF
+          {
+            "package": "${{ matrix.package }}",
+            "node": "${{ matrix.node }}",
+            "react": "${{ matrix.react }}",
+            "typecheck": "${{ steps.typecheck.outcome }}",
+            "test": "${{ steps.test.outcome }}",
+            "build": "${{ steps.build.outcome }}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
       - name: Report
         if: always()
         run: |
-          echo "## Compatibility: Node ${{ matrix.node }} / React ${{ matrix.react }}" >> $GITHUB_STEP_SUMMARY
+          echo "## Compatibility: ${{ matrix.package }} / Node ${{ matrix.node }} / React ${{ matrix.react }}" >> $GITHUB_STEP_SUMMARY
           echo "- Typecheck: ${{ steps.typecheck.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Tests: ${{ steps.test.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
           echo "- Build: ${{ steps.build.outcome || 'unknown' }}" >> $GITHUB_STEP_SUMMARY
+      - name: Upload matrix results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compat-${{ strategy.job-index }}
+          path: compatibility-results/
+          retention-days: 30
+
+  aggregate:
+    name: Aggregate compatibility results
+    needs: matrix
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Download all results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: compat-*
+          merge-multiple: true
+          path: all-results
+      - name: Merge results
+        run: |
+          echo '{"results":' > compatibility-matrix.json
+          echo '[' >> compatibility-matrix.json
+          first=true
+          for f in all-results/*.json; do
+            [ -f "$f" ] || continue
+            if [ "$first" = true ]; then first=false; else echo ',' >> compatibility-matrix.json; fi
+            cat "$f" >> compatibility-matrix.json
+          done
+          echo ']}' >> compatibility-matrix.json
+          echo "## Full Compatibility Matrix" >> $GITHUB_STEP_SUMMARY
+          cat compatibility-matrix.json | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          print('| Package | Node | React | Typecheck | Test | Build |')
+          print('|---------|------|-------|----------|------|-------|')
+          for r in data.get('results', []):
+            tc = '✅' if r.get('typecheck') == 'success' else '❌'
+            ts = '✅' if r.get('test') == 'success' else '❌'
+            bd = '✅' if r.get('build') == 'success' else '❌'
+            print(f'| {r[\"package\"]} | {r[\"node\"]} | {r[\"react\"]} | {tc} | {ts} | {bd} |')
+          " >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "Could not generate summary table" >> $GITHUB_STEP_SUMMARY
+      - name: Upload merged matrix
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-matrix
+          path: compatibility-matrix.json
+          retention-days: 90

@@ -16,6 +16,10 @@ initSentry();
 import { initRUM } from '../lib/rum';
 initRUM();
 
+// OpenTelemetry: distributed trace context propagation
+import { initOtel } from '../lib/otel';
+initOtel();
+
 // Feature flags: runtime kill switches for safe rollout
 import { initFeatureFlags } from '../lib/feature-flags';
 initFeatureFlags();

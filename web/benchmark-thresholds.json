@@ -1,0 +1,16 @@
+{
+  "x-data-grid": {
+    "render-10k-rows": { "max_ms": 100, "description": "Render 10K rows" },
+    "sort-10k-rows": { "max_ms": 50, "description": "Sort 10K rows by number" },
+    "filter-10k-rows": { "max_ms": 100, "description": "Filter 10K rows by string" }
+  },
+  "x-charts": {
+    "render-1k-points": { "max_ms": 200, "description": "Render scatter with 1K points" }
+  },
+  "x-scheduler": {
+    "render-month-100-events": { "max_ms": 50, "description": "Month view with 100 events" }
+  },
+  "x-kanban": {
+    "render-50-cards": { "max_ms": 30, "description": "Board with 50 cards across 5 columns" }
+  }
+}
