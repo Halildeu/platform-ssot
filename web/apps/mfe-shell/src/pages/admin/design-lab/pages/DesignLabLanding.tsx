@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Search, ArrowRight,
   Palette, SlidersHorizontal, Shapes, Box, Layout, Database, BookOpen, Globe, Code,
-  Sparkles, Package, ShieldCheck, Award, Activity,
+  Sparkles, Package, ShieldCheck, Award, Activity, Brain,
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
@@ -475,6 +475,24 @@ export default function DesignLabLanding() {
             </Text>
             <Text variant="secondary" className="mt-0.5 line-clamp-1 text-xs">
               RBAC, approvals, ownership, audit trail, release health
+            </Text>
+          </div>
+          <ArrowRight className="h-4 w-4 shrink-0 text-text-secondary opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate("/admin/design-lab/intelligence")}
+          className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
+        >
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 transition-transform duration-300 group-hover:scale-110">
+            <Brain className="h-5 w-5 text-violet-600" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <Text as="div" className="text-sm font-semibold text-text-primary">
+              Impact Intelligence
+            </Text>
+            <Text variant="secondary" className="mt-0.5 line-clamp-1 text-xs">
+              Blast-radius, AI asistan, consumer heatmap, codegen, MCP export
             </Text>
           </div>
           <ArrowRight className="h-4 w-4 shrink-0 text-text-secondary opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
