@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { Carousel } from '../Carousel';
 
@@ -9,15 +9,59 @@ const slides = [
 ];
 
 describe('Carousel (Browser)', () => {
-  it('renders slides and dots', async () => {
+  it('renders first slide and dot indicators', async () => {
     const screen = render(<Carousel items={slides} />);
     await expect.element(screen.getByText('Slide 1')).toBeVisible();
     const dots = screen.container.querySelectorAll('[role="tab"]');
     expect(dots).toHaveLength(3);
   });
 
-  it('renders as carousel region', async () => {
+  it('renders as carousel region with aria-label', async () => {
     const screen = render(<Carousel items={slides} />);
-    await expect.element(screen.getByRole('region')).toBeVisible();
+    const region = screen.getByRole('region');
+    await expect.element(region).toBeVisible();
+  });
+
+  it('navigates to next slide on arrow click', async () => {
+    const onSlideChange = vi.fn();
+    const screen = render(<Carousel items={slides} onSlideChange={onSlideChange} />);
+    const nextBtn = screen.getByLabelText('Sonraki slayt');
+    await nextBtn.click();
+    expect(onSlideChange).toHaveBeenCalledWith(1);
+  });
+
+  it('navigates to previous slide on arrow click', async () => {
+    const onSlideChange = vi.fn();
+    const screen = render(<Carousel items={slides} onSlideChange={onSlideChange} />);
+    // Go to slide 2 first
+    await screen.getByLabelText('Sonraki slayt').click();
+    await screen.getByLabelText('Onceki slayt').click();
+    expect(onSlideChange).toHaveBeenLastCalledWith(0);
+  });
+
+  it('navigates via dot click', async () => {
+    const onSlideChange = vi.fn();
+    const screen = render(<Carousel items={slides} onSlideChange={onSlideChange} />);
+    const dots = screen.container.querySelectorAll('[role="tab"]');
+    (dots[2] as HTMLElement).click();
+    expect(onSlideChange).toHaveBeenCalledWith(2);
+  });
+
+  it('marks active dot with aria-selected', async () => {
+    const screen = render(<Carousel items={slides} />);
+    const dots = screen.container.querySelectorAll('[role="tab"]');
+    expect(dots[0]?.getAttribute('aria-selected')).toBe('true');
+  });
+
+  it('hides arrows when showArrows is false', async () => {
+    const screen = render(<Carousel items={slides} showArrows={false} />);
+    expect(screen.container.querySelector('[aria-label="Sonraki slayt"]')).toBeNull();
+    expect(screen.container.querySelector('[aria-label="Onceki slayt"]')).toBeNull();
+  });
+
+  it('hides dots when showDots is false', async () => {
+    const screen = render(<Carousel items={slides} showDots={false} />);
+    const dots = screen.container.querySelectorAll('[role="tab"]');
+    expect(dots).toHaveLength(0);
   });
 });

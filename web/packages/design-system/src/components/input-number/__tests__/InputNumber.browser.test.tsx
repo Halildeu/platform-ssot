@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { userEvent } from '@vitest/browser/context';
 import { InputNumber } from '../InputNumber';
 
 describe('InputNumber (Browser)', () => {
@@ -12,5 +13,57 @@ describe('InputNumber (Browser)', () => {
     const screen = render(<InputNumber defaultValue={5} />);
     await expect.element(screen.getByLabelText('Increment')).toBeVisible();
     await expect.element(screen.getByLabelText('Decrement')).toBeVisible();
+  });
+
+  it('increments value on button click', async () => {
+    const onChange = vi.fn();
+    const screen = render(<InputNumber defaultValue={5} step={1} onChange={onChange} />);
+    await screen.getByLabelText('Increment').click();
+    expect(onChange).toHaveBeenCalledWith(6);
+  });
+
+  it('decrements value on button click', async () => {
+    const onChange = vi.fn();
+    const screen = render(<InputNumber defaultValue={5} step={1} onChange={onChange} />);
+    await screen.getByLabelText('Decrement').click();
+    expect(onChange).toHaveBeenCalledWith(4);
+  });
+
+  it('respects min boundary', async () => {
+    const onChange = vi.fn();
+    const screen = render(<InputNumber defaultValue={0} min={0} onChange={onChange} />);
+    await screen.getByLabelText('Decrement').click();
+    expect(onChange).toHaveBeenCalledWith(0);
+  });
+
+  it('respects max boundary', async () => {
+    const onChange = vi.fn();
+    const screen = render(<InputNumber defaultValue={10} max={10} onChange={onChange} />);
+    await screen.getByLabelText('Increment').click();
+    expect(onChange).toHaveBeenCalledWith(10);
+  });
+
+  it('is disabled when disabled prop is set', async () => {
+    const screen = render(<InputNumber defaultValue={5} disabled />);
+    await expect.element(screen.getByRole('spinbutton')).toBeDisabled();
+  });
+
+  it('shows error message and aria-invalid', async () => {
+    const screen = render(<InputNumber error="Value too high" />);
+    await expect.element(screen.getByText('Value too high')).toBeVisible();
+    const input = screen.getByRole('spinbutton');
+    await expect.element(input).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('renders label', async () => {
+    const screen = render(<InputNumber label="Quantity" />);
+    await expect.element(screen.getByText('Quantity')).toBeVisible();
+  });
+
+  it('supports custom step', async () => {
+    const onChange = vi.fn();
+    const screen = render(<InputNumber defaultValue={0} step={5} onChange={onChange} />);
+    await screen.getByLabelText('Increment').click();
+    expect(onChange).toHaveBeenCalledWith(5);
   });
 });

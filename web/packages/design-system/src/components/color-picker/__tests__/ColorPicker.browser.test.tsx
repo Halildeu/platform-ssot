@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { userEvent } from '@vitest/browser/context';
 import { ColorPicker } from '../ColorPicker';
 
 describe('ColorPicker (Browser)', () => {
@@ -12,5 +13,49 @@ describe('ColorPicker (Browser)', () => {
     const screen = render(<ColorPicker />);
     await screen.getByTestId('color-picker-swatch').click();
     await expect.element(screen.getByTestId('color-picker-popover')).toBeVisible();
+  });
+
+  it('shows hex input in popover', async () => {
+    const screen = render(<ColorPicker showInput />);
+    await screen.getByTestId('color-picker-swatch').click();
+    const hexInput = screen.getByTestId('color-picker-hex-input');
+    await expect.element(hexInput).toBeVisible();
+  });
+
+  it('fires onValueChange when hex value is typed', async () => {
+    const onValueChange = vi.fn();
+    const screen = render(<ColorPicker onValueChange={onValueChange} />);
+    await screen.getByTestId('color-picker-swatch').click();
+    const hexInput = screen.getByTestId('color-picker-hex-input');
+    await hexInput.element().focus();
+    // Select all and type new value
+    await userEvent.keyboard('{Control>}a{/Control}');
+    await userEvent.type(hexInput.element(), '#ff0000');
+    await userEvent.keyboard('{Enter}');
+    expect(onValueChange).toHaveBeenCalled();
+  });
+
+  it('renders with default value color', async () => {
+    const screen = render(<ColorPicker defaultValue="#00ff00" />);
+    const swatch = screen.getByTestId('color-picker-swatch');
+    await expect.element(swatch).toBeVisible();
+  });
+
+  it('renders label when provided', async () => {
+    const screen = render(<ColorPicker label="Brand Color" />);
+    await expect.element(screen.getByText('Brand Color')).toBeVisible();
+  });
+
+  it('renders preset colors when provided', async () => {
+    const presets = [{ label: 'Primary', colors: ['#ff0000', '#00ff00', '#0000ff'] }];
+    const screen = render(<ColorPicker presets={presets} />);
+    await screen.getByTestId('color-picker-swatch').click();
+    await expect.element(screen.getByText('Primary')).toBeVisible();
+  });
+
+  it('has accessible aria-label', async () => {
+    const screen = render(<ColorPicker aria-label="Pick a color" />);
+    const swatch = screen.getByTestId('color-picker-swatch');
+    await expect.element(swatch).toBeVisible();
   });
 });

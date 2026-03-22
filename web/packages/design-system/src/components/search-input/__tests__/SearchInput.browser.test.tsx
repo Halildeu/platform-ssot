@@ -1,25 +1,61 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { userEvent } from '@vitest/browser/context';
 import { SearchInput } from '../SearchInput';
 
 describe('SearchInput (Browser)', () => {
   it('renders with placeholder', async () => {
     const screen = render(<SearchInput placeholder="Search..." />);
-    const input = screen.getByPlaceholderText('Search...');
-    await expect.element(input).toBeVisible();
+    await expect.element(screen.getByPlaceholderText('Search...')).toBeVisible();
   });
 
-  it('shows clear button when value is present', async () => {
+  it('renders search input type', async () => {
+    const screen = render(<SearchInput placeholder="Search..." />);
+    const input = screen.container.querySelector('input[type="search"]');
+    expect(input).not.toBeNull();
+  });
+
+  it('shows clear button when value is present and fires onClear', async () => {
+    const onClear = vi.fn();
     const screen = render(
-      <SearchInput value="test query" onChange={() => {}} onClear={() => {}} />,
+      <SearchInput value="test query" onChange={() => {}} onClear={onClear} />,
     );
     const clearBtn = screen.getByLabelText('Clear search');
     await expect.element(clearBtn).toBeVisible();
+    await clearBtn.click();
+    expect(onClear).toHaveBeenCalledOnce();
+  });
+
+  it('hides clear button when value is empty', async () => {
+    const screen = render(<SearchInput value="" onChange={() => {}} />);
+    expect(screen.container.querySelector('[aria-label="Clear search"]')).toBeNull();
   });
 
   it('is disabled when disabled prop is set', async () => {
     const screen = render(<SearchInput placeholder="Disabled" disabled />);
-    const input = screen.getByPlaceholderText('Disabled');
-    await expect.element(input).toBeDisabled();
+    await expect.element(screen.getByPlaceholderText('Disabled')).toBeDisabled();
+  });
+
+  it('fires onChange on typing', async () => {
+    const onChange = vi.fn();
+    const screen = render(<SearchInput placeholder="Type here" onChange={onChange} />);
+    const input = screen.getByPlaceholderText('Type here');
+    await userEvent.type(input.element(), 'hello');
+    expect(onChange).toHaveBeenCalled();
+  });
+
+  it('shows shortcut hint when no value', async () => {
+    const screen = render(<SearchInput shortcutHint="⌘K" value="" onChange={() => {}} />);
+    await expect.element(screen.getByText('⌘K')).toBeVisible();
+  });
+
+  it('shows loading spinner instead of clear button', async () => {
+    const screen = render(
+      <SearchInput value="loading" onChange={() => {}} loading />,
+    );
+    // Loading state should show spinner, not clear button
+    expect(screen.container.querySelector('[aria-label="Clear search"]')).toBeNull();
+    const spinner = screen.container.querySelector('.animate-spin');
+    expect(spinner).not.toBeNull();
   });
 });

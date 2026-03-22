@@ -1,10 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { userEvent } from '@vitest/browser/context';
 import { Mentions } from '../Mentions';
 
 const options = [
   { key: 'alice', label: 'Alice' },
   { key: 'bob', label: 'Bob' },
+  { key: 'charlie', label: 'Charlie' },
 ];
 
 describe('Mentions (Browser)', () => {
@@ -16,5 +18,52 @@ describe('Mentions (Browser)', () => {
   it('renders combobox wrapper', async () => {
     const screen = render(<Mentions options={options} />);
     await expect.element(screen.getByRole('combobox')).toBeVisible();
+  });
+
+  it('shows suggestions when typing trigger character', async () => {
+    const screen = render(<Mentions options={options} />);
+    const textarea = screen.container.querySelector('textarea') as HTMLTextAreaElement;
+    await textarea.focus();
+    await userEvent.type(textarea, '@');
+    await expect.element(screen.getByText('Alice')).toBeVisible();
+    await expect.element(screen.getByText('Bob')).toBeVisible();
+  });
+
+  it('fires onSelect when a suggestion is clicked', async () => {
+    const onSelect = vi.fn();
+    const screen = render(<Mentions options={options} onSelect={onSelect} />);
+    const textarea = screen.container.querySelector('textarea') as HTMLTextAreaElement;
+    await textarea.focus();
+    await userEvent.type(textarea, '@');
+    await screen.getByText('Alice').click();
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ key: 'alice' }));
+  });
+
+  it('filters suggestions based on typed text', async () => {
+    const screen = render(<Mentions options={options} />);
+    const textarea = screen.container.querySelector('textarea') as HTMLTextAreaElement;
+    await textarea.focus();
+    await userEvent.type(textarea, '@bo');
+    await expect.element(screen.getByText('Bob')).toBeVisible();
+  });
+
+  it('renders label when provided', async () => {
+    const screen = render(<Mentions options={options} label="Comment" />);
+    await expect.element(screen.getByText('Comment')).toBeVisible();
+  });
+
+  it('renders default placeholder', async () => {
+    const screen = render(<Mentions options={options} />);
+    const textarea = screen.container.querySelector('textarea');
+    expect(textarea?.getAttribute('placeholder')).toBe('Bir sey yazin...');
+  });
+
+  it('fires onValueChange when typing', async () => {
+    const onValueChange = vi.fn();
+    const screen = render(<Mentions options={options} onValueChange={onValueChange} />);
+    const textarea = screen.container.querySelector('textarea') as HTMLTextAreaElement;
+    await textarea.focus();
+    await userEvent.type(textarea, 'Hello');
+    expect(onValueChange).toHaveBeenCalled();
   });
 });

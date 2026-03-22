@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { userEvent } from '@vitest/browser/context';
 import { NavigationRail } from '../NavigationRail';
 
 const items = [
@@ -16,16 +17,65 @@ describe('NavigationRail (Browser)', () => {
     await expect.element(screen.getByText('Reports')).toBeVisible();
   });
 
-  it('selects default value', async () => {
-    const screen = render(<NavigationRail items={items} defaultValue="orders" />);
-    await expect.element(screen.getByText('Orders')).toBeVisible();
-  });
-
-  it('renders with aria label', async () => {
+  it('renders navigation landmark with aria-label', async () => {
     const screen = render(
       <NavigationRail items={items} ariaLabel="Main navigation" />,
     );
     const nav = screen.getByRole('navigation');
-    await expect.element(nav).toBeVisible();
+    await expect.element(nav).toHaveAttribute('aria-label', 'Main navigation');
+  });
+
+  it('marks default value as active with aria-current', async () => {
+    const screen = render(<NavigationRail items={items} defaultValue="orders" />);
+    const activeItem = screen.container.querySelector('[aria-current="page"]');
+    expect(activeItem).not.toBeNull();
+    expect(activeItem!.textContent).toContain('Orders');
+  });
+
+  it('fires onValueChange when clicking a destination', async () => {
+    const onValueChange = vi.fn();
+    const screen = render(
+      <NavigationRail items={items} onValueChange={onValueChange} />,
+    );
+    await screen.getByText('Reports').click();
+    expect(onValueChange).toHaveBeenCalledWith('reports');
+  });
+
+  it('navigates with ArrowDown/ArrowUp keyboard', async () => {
+    const screen = render(<NavigationRail items={items} defaultValue="dashboard" />);
+    const firstItem = screen.container.querySelector('[data-slot="item"][tabindex="0"]') as HTMLElement;
+    firstItem.focus();
+    await userEvent.keyboard('{ArrowDown}');
+    const focused = document.activeElement;
+    expect(focused?.textContent).toContain('Orders');
+  });
+
+  it('renders badge on item', async () => {
+    const badgeItems = [
+      { value: 'dashboard', label: 'Dashboard', badge: '5' },
+      { value: 'orders', label: 'Orders' },
+    ];
+    const screen = render(<NavigationRail items={badgeItems} />);
+    await expect.element(screen.getByText('5')).toBeVisible();
+  });
+
+  it('disables items with disabled prop', async () => {
+    const disabledItems = [
+      { value: 'dashboard', label: 'Dashboard' },
+      { value: 'orders', label: 'Orders', disabled: true },
+    ];
+    const onValueChange = vi.fn();
+    const screen = render(
+      <NavigationRail items={disabledItems} onValueChange={onValueChange} />,
+    );
+    await screen.getByText('Orders').click();
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
+  it('renders footer slot', async () => {
+    const screen = render(
+      <NavigationRail items={items} footer={<span>Footer</span>} />,
+    );
+    await expect.element(screen.getByText('Footer')).toBeVisible();
   });
 });

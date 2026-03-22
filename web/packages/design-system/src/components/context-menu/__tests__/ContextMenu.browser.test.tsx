@@ -1,10 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { userEvent } from '@vitest/browser/context';
 import { ContextMenu } from '../ContextMenu';
 
 const items = [
   { key: 'copy', label: 'Copy' },
   { key: 'paste', label: 'Paste' },
+  { key: 'delete', label: 'Delete', danger: true },
 ];
 
 describe('ContextMenu (Browser)', () => {
@@ -23,7 +25,80 @@ describe('ContextMenu (Browser)', () => {
         <button>Right click me</button>
       </ContextMenu>,
     );
-    const menu = screen.container.querySelector('[role="menu"]');
-    expect(menu).toBeNull();
+    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+  });
+
+  it('opens menu on right-click (contextmenu event)', async () => {
+    const screen = render(
+      <ContextMenu items={items}>
+        <button>Right click me</button>
+      </ContextMenu>,
+    );
+    const trigger = screen.getByText('Right click me');
+    trigger.element().dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }));
+    await expect.element(screen.getByText('Copy')).toBeVisible();
+    await expect.element(screen.getByText('Paste')).toBeVisible();
+  });
+
+  it('fires onClick when menu item is clicked', async () => {
+    const onClick = vi.fn();
+    const clickableItems = [
+      { key: 'copy', label: 'Copy', onClick },
+      { key: 'paste', label: 'Paste' },
+    ];
+    const screen = render(
+      <ContextMenu items={clickableItems}>
+        <button>Right click me</button>
+      </ContextMenu>,
+    );
+    screen.getByText('Right click me').element().dispatchEvent(
+      new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }),
+    );
+    await screen.getByText('Copy').click();
+    expect(onClick).toHaveBeenCalled();
+  });
+
+  it('closes menu on Escape', async () => {
+    const screen = render(
+      <ContextMenu items={items}>
+        <button>Right click me</button>
+      </ContextMenu>,
+    );
+    screen.getByText('Right click me').element().dispatchEvent(
+      new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }),
+    );
+    await expect.element(screen.getByText('Copy')).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+  });
+
+  it('does not open when disabled', async () => {
+    const screen = render(
+      <ContextMenu items={items} disabled>
+        <button>Right click me</button>
+      </ContextMenu>,
+    );
+    screen.getByText('Right click me').element().dispatchEvent(
+      new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }),
+    );
+    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
+  });
+
+  it('renders separator entries', async () => {
+    const itemsWithSep = [
+      { key: 'copy', label: 'Copy' },
+      { type: 'separator' as const, key: 'sep1' },
+      { key: 'delete', label: 'Delete' },
+    ];
+    const screen = render(
+      <ContextMenu items={itemsWithSep}>
+        <button>Right click me</button>
+      </ContextMenu>,
+    );
+    screen.getByText('Right click me').element().dispatchEvent(
+      new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }),
+    );
+    const separator = screen.container.querySelector('[role="separator"]');
+    expect(separator).not.toBeNull();
   });
 });
