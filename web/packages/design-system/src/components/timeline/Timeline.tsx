@@ -285,7 +285,7 @@ export const Timeline: React.FC<TimelineProps> = ({
               <div
                 className={cn(
                   "flex-1 min-w-0",
-                  isItemRight ? "text-right pr-4" : "text-right pr-4",
+                  isItemRight ? "text-end pe-4" : "text-end pe-4",
                 )}
               >
                 {isItemRight ? (
@@ -349,7 +349,7 @@ export const Timeline: React.FC<TimelineProps> = ({
               <div
                 className={cn(
                   "flex-1 min-w-0",
-                  isItemRight ? "text-left pl-4" : "text-left pl-4",
+                  isItemRight ? "text-start ps-4" : "text-start ps-4",
                 )}
               >
                 {isItemRight ? (
@@ -390,7 +390,7 @@ export const Timeline: React.FC<TimelineProps> = ({
               <div
                 className={cn(
                   "flex-1 min-w-0",
-                  isRight ? "pr-4 text-right order-first" : "pl-4",
+                  isRight ? "pe-4 text-end order-first" : "ps-4",
                 )}
               >
                 {/* Label above content in non-alternate modes */}

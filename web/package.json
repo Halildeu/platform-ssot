@@ -4,7 +4,7 @@
   "description": "MFE Kök Dizini",
   "private": true,
   "engines": {
-    "node": "22.x"
+    "node": "20.x || 22.x"
   },
   "workspaces": [
     "apps/mfe-reporting",
@@ -237,7 +237,7 @@
     "concurrently": "^8.2.2",
     "css-loader": "^7.1.2",
     "cypress": "^14.5.1",
-    "eslint": "^9.39.1",
+    "eslint": "^10.1.0",
     "globals": "^15.15.0",
     "html-webpack-plugin": "^5.6.3",
     "kill-port": "^2.0.1",
@@ -259,7 +259,7 @@
     "vitest": "^4.1.0",
     "vitest-browser-react": "^2.1.0",
     "webpack": "^5.105.0",
-    "webpack-cli": "^6.0.1",
+    "webpack-cli": "^7.0.0",
     "webpack-dev-server": "^5.2.3",
     "webpack-merge": "^6.0.1"
   },

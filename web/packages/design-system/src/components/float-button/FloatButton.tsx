@@ -324,7 +324,7 @@ export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
         >
           {icon ?? <PlusIcon size={sizeConfig.icon} />}
           {label && (
-            <span className={cn("ml-2", sizeConfig.font)}>{label}</span>
+            <span className={cn("ms-2", sizeConfig.font)}>{label}</span>
           )}
           <Badge badge={badgeProp} size={size} />
         </button>

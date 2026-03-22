@@ -24,9 +24,9 @@ export interface SummaryStripProps {
 }
 
 const TONE_BORDER: Record<string, string> = {
-  info: "border-l-[var(--state-info-border)]",
-  success: "border-l-[var(--state-success-border)]",
-  warning: "border-l-[var(--state-warning-border)]",
+  info: "border-s-[var(--state-info-border)]",
+  success: "border-s-[var(--state-success-border)]",
+  warning: "border-s-[var(--state-warning-border)]",
 };
 
 export const SummaryStrip: React.FC<SummaryStripProps> = ({
@@ -65,7 +65,7 @@ export const SummaryStrip: React.FC<SummaryStripProps> = ({
             key={item.key}
             className={cn(
               "relative rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-card,var(--surface-default))] px-4 py-4",
-              hasToneBorder && "border-l-2",
+              hasToneBorder && "border-s-2",
               hasToneBorder && TONE_BORDER[tone],
             )}
           >

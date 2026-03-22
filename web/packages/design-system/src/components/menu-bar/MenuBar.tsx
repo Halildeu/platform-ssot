@@ -1155,7 +1155,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
           aria-label={ariaLabel}
           className={cn(
             'flex min-w-0 flex-1 items-center gap-1',
-            overflowBehavior === 'scroll' && 'overflow-x-auto pb-1 -mb-1 pr-1',
+            overflowBehavior === 'scroll' && 'overflow-x-auto pb-1 -mb-1 pe-1',
             classes?.list,
           )}
         >
@@ -1184,7 +1184,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
                 : itemEmphasis === 'subtle'
                   ? 'bg-transparent text-text-subtle hover:-translate-y-px hover:border-border-subtle/60 hover:bg-[var(--surface-card)] hover:text-text-primary hover:shadow-[0_12px_26px_-24px_var(--shadow-color)]'
                   : 'bg-transparent text-text-secondary hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-card)] hover:text-text-primary hover:shadow-[0_12px_26px_-24px_var(--shadow-color)]',
-            showFavoriteControl && 'pr-10',
+            showFavoriteControl && 'pe-10',
             isBlocked && 'cursor-not-allowed opacity-60',
             item.itemClassName,
             classes?.item,

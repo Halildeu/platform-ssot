@@ -64,12 +64,12 @@ export const FormField: React.FC<FormFieldProps> = ({
         >
           {label}
           {required && (
-            <span className="ml-0.5 text-[var(--state-error-text)]" aria-hidden>
+            <span className="ms-0.5 text-[var(--state-error-text)]" aria-hidden>
               *
             </span>
           )}
           {optional && (
-            <span className="ml-1 text-xs font-normal text-[var(--text-disabled)]">
+            <span className="ms-1 text-xs font-normal text-[var(--text-disabled)]">
               (optional)
             </span>
           )}

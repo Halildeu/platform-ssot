@@ -42,17 +42,17 @@ export interface TooltipProps {
 }
 
 const placementStyles: Record<TooltipPlacement, string> = {
-  top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-  bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-  left: "right-full top-1/2 -translate-y-1/2 mr-2",
-  right: "left-full top-1/2 -translate-y-1/2 ml-2",
+  top: "bottom-full start-1/2 -translate-x-1/2 mb-2",
+  bottom: "top-full start-1/2 -translate-x-1/2 mt-2",
+  left: "end-full top-1/2 -translate-y-1/2 me-2",
+  right: "start-full top-1/2 -translate-y-1/2 ms-2",
 };
 
 const arrowStyles: Record<TooltipPlacement, string> = {
-  top: "top-full left-1/2 -translate-x-1/2 border-t-[var(--text-primary)] border-x-transparent border-b-transparent",
-  bottom: "bottom-full left-1/2 -translate-x-1/2 border-b-[var(--text-primary)] border-x-transparent border-t-transparent",
-  left: "left-full top-1/2 -translate-y-1/2 border-l-[var(--text-primary)] border-y-transparent border-r-transparent",
-  right: "right-full top-1/2 -translate-y-1/2 border-r-[var(--text-primary)] border-y-transparent border-l-transparent",
+  top: "top-full start-1/2 -translate-x-1/2 border-t-[var(--text-primary)] border-x-transparent border-b-transparent",
+  bottom: "bottom-full start-1/2 -translate-x-1/2 border-b-[var(--text-primary)] border-x-transparent border-t-transparent",
+  left: "start-full top-1/2 -translate-y-1/2 border-s-[var(--text-primary)] border-y-transparent border-e-transparent",
+  right: "end-full top-1/2 -translate-y-1/2 border-e-[var(--text-primary)] border-y-transparent border-s-transparent",
 };
 
 export const Tooltip: React.FC<TooltipProps> = ({

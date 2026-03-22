@@ -179,24 +179,24 @@ describe('Descriptions — bordered', () => {
 
 describe('Descriptions — item tone', () => {
   it.each(['info', 'success', 'warning', 'danger'] as const)(
-    'tone="%s" iken border-l-2 class uygulanir',
+    'tone="%s" iken border-s-2 class uygulanir',
     (tone) => {
       const items: DescriptionsItem[] = [
         { key: 't', label: 'L', value: 'V', tone },
       ];
       const { container } = render(<Descriptions items={items} />);
       const cell = container.querySelector('dl > div');
-      expect(cell?.className).toContain('border-l-2');
+      expect(cell?.className).toContain('border-s-2');
     },
   );
 
-  it('tone="default" iken border-l-2 class uygulanmaz', () => {
+  it('tone="default" iken border-s-2 class uygulanmaz', () => {
     const items: DescriptionsItem[] = [
       { key: 't', label: 'L', value: 'V', tone: 'default' },
     ];
     const { container } = render(<Descriptions items={items} />);
     const cell = container.querySelector('dl > div');
-    expect(cell?.className).not.toContain('border-l-2');
+    expect(cell?.className).not.toContain('border-s-2');
   });
 });
 

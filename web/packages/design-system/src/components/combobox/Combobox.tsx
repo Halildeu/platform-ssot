@@ -791,10 +791,10 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
           ? 'overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-xl'
           : 'absolute z-30 w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-xl',
         popupClassName ?? '',
-        popupStrategy === 'inline' && popupAlign === 'end' ? 'right-0' : '',
-        popupStrategy === 'inline' && popupAlign === 'start' ? 'left-0' : '',
+        popupStrategy === 'inline' && popupAlign === 'end' ? 'end-0' : '',
+        popupStrategy === 'inline' && popupAlign === 'start' ? 'start-0' : '',
         popupStrategy === 'inline' && resolvedPopupSide === 'top' ? 'bottom-full mb-2 mt-0' : '',
-        popupStrategy === 'inline' && resolvedPopupSide === 'bottom' ? 'left-0 mt-2' : '',
+        popupStrategy === 'inline' && resolvedPopupSide === 'bottom' ? 'start-0 mt-2' : '',
       ]
         .join(' ')
         .trim()}

@@ -314,7 +314,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
           {showDropdown ? (
             <div
               ref={listboxRef}
-              className="absolute left-0 z-30 mt-2 w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-xl"
+              className="absolute start-0 z-30 mt-2 w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-xl"
               role="presentation"
             >
               <div

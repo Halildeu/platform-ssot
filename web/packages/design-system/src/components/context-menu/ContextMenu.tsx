@@ -220,9 +220,9 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
                 )}
               >
                 {item.icon && <span className="flex-shrink-0 w-4 h-4">{item.icon}</span>}
-                <span className="flex-1 text-left">{item.label}</span>
+                <span className="flex-1 text-start">{item.label}</span>
                 {item.shortcut && (
-                  <span className="ml-auto pl-4 text-xs text-[var(--text-tertiary)]">
+                  <span className="ms-auto ps-4 text-xs text-[var(--text-tertiary)]">
                     {item.shortcut}
                   </span>
                 )}

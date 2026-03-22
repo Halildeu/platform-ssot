@@ -74,7 +74,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         "hover:border-[var(--action-primary)]/30 hover:shadow-md",
         "active:scale-[0.99]",
       ],
-      !asChild && Tag === "button" && "w-full text-left",
+      !asChild && Tag === "button" && "w-full text-start",
       className,
       slotProps?.root?.className,
     );

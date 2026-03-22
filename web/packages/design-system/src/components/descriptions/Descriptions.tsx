@@ -28,10 +28,10 @@ export interface DescriptionsProps {
 }
 
 const TONE_BORDER: Record<string, string> = {
-  info: "border-l-[var(--state-info-border)]",
-  success: "border-l-[var(--state-success-border)]",
-  warning: "border-l-[var(--state-warning-border)]",
-  danger: "border-l-[var(--state-danger-border)]",
+  info: "border-s-[var(--state-info-border)]",
+  success: "border-s-[var(--state-success-border)]",
+  warning: "border-s-[var(--state-warning-border)]",
+  danger: "border-s-[var(--state-danger-border)]",
 };
 
 export const Descriptions: React.FC<DescriptionsProps> = ({
@@ -116,7 +116,7 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
                 cellPadding,
                 bordered &&
                   "border-b border-r border-[var(--border-subtle)] last:border-b-0 [&:nth-last-child(-n+1)]:border-b-0",
-                hasToneBorder && "border-l-2",
+                hasToneBorder && "border-s-2",
                 hasToneBorder && TONE_BORDER[tone],
               )}
               style={

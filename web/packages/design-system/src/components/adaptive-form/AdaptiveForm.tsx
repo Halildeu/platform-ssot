@@ -278,7 +278,7 @@ const FieldRenderer: React.FC<{
           disabled={disabled}
           className={cn(
             sc.input,
-            "w-full cursor-pointer rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-default-bg,var(--surface-default))] text-[var(--text-secondary)] file:mr-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg,var(--action-primary))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-white",
+            "w-full cursor-pointer rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-default-bg,var(--surface-default))] text-[var(--text-secondary)] file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg,var(--action-primary))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-white",
           )}
           aria-invalid={hasError}
           aria-describedby={hasError ? `${id}-error` : undefined}
@@ -470,7 +470,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
                 >
                   {field.label}
                   {field.required && (
-                    <span className="ml-0.5 text-[var(--danger-color,var(--state-error-text))]">
+                    <span className="ms-0.5 text-[var(--danger-color,var(--state-error-text))]">
                       *
                     </span>
                   )}

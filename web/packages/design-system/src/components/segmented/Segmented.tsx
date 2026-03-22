@@ -390,7 +390,7 @@ export const Segmented = React.forwardRef<HTMLDivElement, SegmentedProps>(
                   <span
                     className={cn(
                       "shrink-0 [&>svg]:h-[1em] [&>svg]:w-[1em]",
-                      iconPosition === "top" ? "mb-1" : "mr-1.5",
+                      iconPosition === "top" ? "mb-1" : "me-1.5",
                       classes?.icon,
                     )}
                   >
@@ -425,7 +425,7 @@ export const Segmented = React.forwardRef<HTMLDivElement, SegmentedProps>(
                 {item.icon && iconPosition === "end" && (
                   <span
                     className={cn(
-                      "shrink-0 [&>svg]:h-[1em] [&>svg]:w-[1em] ml-1.5",
+                      "shrink-0 [&>svg]:h-[1em] [&>svg]:w-[1em] ms-1.5",
                       classes?.icon,
                     )}
                   >
@@ -437,7 +437,7 @@ export const Segmented = React.forwardRef<HTMLDivElement, SegmentedProps>(
                 {item.badge && (
                   <span
                     className={cn(
-                      "shrink-0 ml-1.5",
+                      "shrink-0 ms-1.5",
                       classes?.badge,
                       item.badgeClassName,
                     )}

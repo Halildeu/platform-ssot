@@ -95,7 +95,7 @@ describe('TableSimple — column features', () => {
     ];
     const { container } = render(<TableSimple columns={rightCols} rows={rows} />);
     const th = container.querySelector('th');
-    expect(th?.className).toContain('text-right');
+    expect(th?.className).toContain('text-end');
   });
 });
 

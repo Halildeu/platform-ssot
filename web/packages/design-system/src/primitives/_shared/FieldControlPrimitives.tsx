@@ -150,7 +150,7 @@ export const FieldControlShell: React.FC<FieldControlShellProps> = ({
           >
             {label}
             {required ? (
-              <span aria-hidden="true" className="ml-1 text-[var(--state-error-text)]">
+              <span aria-hidden="true" className="ms-1 text-[var(--state-error-text)]">
                 *
               </span>
             ) : null}

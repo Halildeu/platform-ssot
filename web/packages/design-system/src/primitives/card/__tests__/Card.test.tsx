@@ -104,7 +104,7 @@ describe('Card — as prop', () => {
   it('as="button" iken w-full ve text-left uygulanir', () => {
     const { container } = render(<Card as="button">Test</Card>);
     expect(container.firstElementChild?.className).toContain('w-full');
-    expect(container.firstElementChild?.className).toContain('text-left');
+    expect(container.firstElementChild?.className).toContain('text-start');
   });
 
   it('as="button" iken tabIndex=0 olur', () => {

@@ -179,7 +179,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   setOpen(false);
                 }}
                 className={cn(
-                  "flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm transition",
+                  "flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm transition",
                   "disabled:pointer-events-none disabled:opacity-40",
                   item.danger
                     ? "text-[var(--state-error-text)] hover:bg-[var(--state-error-bg)]"

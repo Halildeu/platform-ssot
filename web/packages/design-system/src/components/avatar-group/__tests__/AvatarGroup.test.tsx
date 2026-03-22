@@ -138,23 +138,23 @@ describe("AvatarGroup - size & shape", () => {
 /* ------------------------------------------------------------------ */
 
 describe("AvatarGroup - spacing", () => {
-  it("tight spacing ile -ml-3 sinifi uygular", () => {
+  it("tight spacing ile -ms-3 sinifi uygular", () => {
     render(<AvatarGroup items={makeItems(3)} spacing="tight" />);
     const items = screen.getAllByTestId("avatar-group-item");
     // 2nd item should have tight margin
-    expect(items[1]).toHaveClass("-ml-3");
+    expect(items[1]).toHaveClass("-ms-3");
   });
 
-  it("loose spacing ile -ml-1 sinifi uygular", () => {
+  it("loose spacing ile -ms-1 sinifi uygular", () => {
     render(<AvatarGroup items={makeItems(3)} spacing="loose" />);
     const items = screen.getAllByTestId("avatar-group-item");
-    expect(items[1]).toHaveClass("-ml-1");
+    expect(items[1]).toHaveClass("-ms-1");
   });
 
   it("ilk avatar negatif margin almaz", () => {
     render(<AvatarGroup items={makeItems(3)} spacing="tight" />);
     const items = screen.getAllByTestId("avatar-group-item");
-    expect(items[0]).not.toHaveClass("-ml-3");
+    expect(items[0]).not.toHaveClass("-ms-3");
   });
 });
 

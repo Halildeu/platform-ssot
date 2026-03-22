@@ -45,9 +45,9 @@ export interface AvatarGroupProps extends AccessControlledProps {
 /* ------------------------------------------------------------------ */
 
 const SPACING_ML: Record<AvatarGroupSpacing, string> = {
-  tight: "-ml-3",
-  normal: "-ml-2",
-  loose: "-ml-1",
+  tight: "-ms-3",
+  normal: "-ms-2",
+  loose: "-ms-1",
 };
 
 /* ------------------------------------------------------------------ */

@@ -140,7 +140,7 @@ export const Tree: React.FC<TreeProps> = ({
           className={[
             "rounded-[24px] border shadow-sm transition-colors",
             toneClass[tone],
-            depth > 0 ? "ml-0" : "",
+            depth > 0 ? "ms-0" : "",
             selected ? "ring-2 ring-[var(--state-info-border)]/60" : "",
           ].join(" ")}
           data-selected={selected ? "true" : "false"}
@@ -225,7 +225,7 @@ export const Tree: React.FC<TreeProps> = ({
         </div>
 
         {hasChildren && expanded ? (
-          <ul className="space-y-2 border-l border-[var(--border-subtle)]/70 pl-4">
+          <ul className="space-y-2 border-s border-[var(--border-subtle)]/70 ps-4">
             {node.children?.map((child) => renderNode(child, depth + 1))}
           </ul>
         ) : null}

@@ -44,9 +44,9 @@ const densityClass: Record<AnchorTocDensity, string> = {
 };
 
 const levelClass: Record<1 | 2 | 3, string> = {
-  1: "pl-0",
-  2: "pl-4",
-  3: "pl-8",
+  1: "ps-0",
+  2: "ps-4",
+  3: "ps-8",
 };
 
 const readHashId = () => {
@@ -187,7 +187,7 @@ export const AnchorToc = React.forwardRef<HTMLElement, AnchorTocProps>(
                     </span>
                   </span>
                   {item.meta ? (
-                    <span className="ml-3 shrink-0 text-[11px] font-medium text-[var(--text-secondary)]">
+                    <span className="ms-3 shrink-0 text-[11px] font-medium text-[var(--text-secondary)]">
                       {item.meta}
                     </span>
                   ) : null}

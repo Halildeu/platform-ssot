@@ -84,12 +84,12 @@ const TONE_PRIORITY: Record<WidgetTone, number> = {
 
 const TONE_BORDER: Record<WidgetTone, string> = {
   danger:
-    "border-l-4 border-l-[var(--danger-color)]",
+    "border-s-4 border-s-[var(--danger-color)]",
   warning:
-    "border-l-4 border-l-[var(--warning-color)]",
-  info: "border-l-4 border-l-[var(--info-color)]",
+    "border-s-4 border-s-[var(--warning-color)]",
+  info: "border-s-4 border-s-[var(--info-color)]",
   success:
-    "border-l-4 border-l-[var(--success-color)]",
+    "border-s-4 border-s-[var(--success-color)]",
   default: "",
 };
 

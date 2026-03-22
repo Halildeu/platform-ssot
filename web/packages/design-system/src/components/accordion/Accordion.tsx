@@ -347,7 +347,7 @@ export const Accordion: React.FC<AccordionProps> = ({
               <div
                 {...slotProps?.trigger}
                 className={cn(
-                  "accordion-trigger flex w-full items-start gap-3 text-left font-semibold text-text-primary",
+                  "accordion-trigger flex w-full items-start gap-3 text-start font-semibold text-text-primary",
                   triggerPaddingClass,
                   ghost && "rounded-[20px]",
                   disableGutters && "px-0",
@@ -398,7 +398,7 @@ export const Accordion: React.FC<AccordionProps> = ({
                     id={headerId}
                     type="button"
                     className={cn(
-                      "flex w-full items-start gap-3 rounded-[18px] px-2 py-1 text-left transition hover:bg-[var(--surface-hover)] hover:shadow-[0_18px_34px_-28px_var(--shadow-color)]",
+                      "flex w-full items-start gap-3 rounded-[18px] px-2 py-1 text-start transition hover:bg-[var(--surface-hover)] hover:shadow-[0_18px_34px_-28px_var(--shadow-color)]",
                       focusRingClass("ring"),
                       expanded &&
                         "bg-[var(--surface-hover)] shadow-[0_20px_40px_-30px_var(--shadow-color)]",

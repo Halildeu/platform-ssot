@@ -117,7 +117,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   return (
     <nav aria-label="Pagination" title={accessReason} className={cn("flex items-center gap-1.5", isAccessDisabled && "opacity-50 pointer-events-none", className)} {...stateAttrs({ component: "pagination", disabled: isAccessDisabled, access })}>
       {showTotal && (
-        <span className="mr-2 text-xs text-[var(--text-secondary)]">
+        <span className="me-2 text-xs text-[var(--text-secondary)]">
           {total} items
         </span>
       )}

@@ -73,7 +73,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
                 type="button"
                 onClick={() => setCollapsed(true)}
                 className={cn(
-                  "ml-2 rounded-lg p-1 text-[var(--text-tertiary)]",
+                  "ms-2 rounded-lg p-1 text-[var(--text-tertiary)]",
                   "hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]",
                   focusRingClass("ring"),
                 )}
@@ -105,7 +105,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
           onClick={() => setCollapsed(false)}
           className={cn(
             "flex-shrink-0 flex items-center justify-center w-6",
-            "bg-[var(--surface-default)] border-r border-[var(--border-subtle)]",
+            "bg-[var(--surface-default)] border-e border-[var(--border-subtle)]",
             "text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]",
             focusRingClass("ring"),
             "transition-colors",

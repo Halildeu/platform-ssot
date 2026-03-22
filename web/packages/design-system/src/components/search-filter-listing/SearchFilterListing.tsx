@@ -152,7 +152,7 @@ const FilterChips: React.FC<{
           <button
             type="button"
             onClick={f.onRemove}
-            className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--action-primary-bg,var(--action-primary))] hover:text-white"
+            className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--action-primary-bg,var(--action-primary))] hover:text-white"
             aria-label={`${f.label} filtresini kaldir`}
           >
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">

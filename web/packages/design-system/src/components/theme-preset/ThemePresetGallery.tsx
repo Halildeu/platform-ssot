@@ -99,7 +99,7 @@ export const ThemePresetGallery: React.FC<ThemePresetGalleryProps> = ({
               <button
                 key={preset.presetId}
                 type="button"
-                className={`w-full rounded-[26px] border px-4 py-4 text-left transition ${
+                className={`w-full rounded-[26px] border px-4 py-4 text-start transition ${
                   selected
                     ? "border-[var(--action-primary-border)] bg-[var(--action-primary-soft)]"
                     : "border-[var(--border-subtle)] bg-[var(--surface-default)] hover:bg-[var(--surface-muted)]"

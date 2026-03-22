@@ -81,24 +81,24 @@ describe('SummaryStrip — item props', () => {
 
 describe('SummaryStrip — tone', () => {
   it.each(['info', 'success', 'warning'] as const)(
-    'tone="%s" durumunda border-l-2 class uygulanir',
+    'tone="%s" durumunda border-s-2 class uygulanir',
     (tone) => {
       const items: SummaryStripItem[] = [
         { key: '1', label: 'X', value: '0', tone },
       ];
       const { container } = render(<SummaryStrip items={items} />);
       const article = container.querySelector('article');
-      expect(article?.className).toContain('border-l-2');
+      expect(article?.className).toContain('border-s-2');
     },
   );
 
-  it('tone="default" durumunda border-l-2 class uygulanmaz', () => {
+  it('tone="default" durumunda border-s-2 class uygulanmaz', () => {
     const items: SummaryStripItem[] = [
       { key: '1', label: 'X', value: '0', tone: 'default' },
     ];
     const { container } = render(<SummaryStrip items={items} />);
     const article = container.querySelector('article');
-    expect(article?.className).not.toContain('border-l-2');
+    expect(article?.className).not.toContain('border-s-2');
   });
 });
 

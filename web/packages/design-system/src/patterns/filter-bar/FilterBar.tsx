@@ -73,7 +73,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           >
             {moreLabel}
             {activeCount != null && activeCount > 0 && (
-              <span className="ml-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--action-primary)] px-1.5 text-xs font-medium text-white">
+              <span className="ms-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--action-primary)] px-1.5 text-xs font-medium text-white">
                 {activeCount}
               </span>
             )}

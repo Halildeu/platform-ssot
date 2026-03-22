@@ -25,15 +25,15 @@ export interface SearchInputProps
 }
 
 const sizeStyles: Record<SearchInputSize, string> = {
-  sm: "h-8 text-xs pl-8 pr-3",
-  md: "h-9 text-sm pl-9 pr-3",
-  lg: "h-11 text-base pl-10 pr-4",
+  sm: "h-8 text-xs ps-8 pe-3",
+  md: "h-9 text-sm ps-9 pe-3",
+  lg: "h-11 text-base ps-10 pe-4",
 };
 
 const iconSizes: Record<SearchInputSize, string> = {
-  sm: "left-2.5 h-3.5 w-3.5",
-  md: "left-3 h-4 w-4",
-  lg: "left-3.5 h-4.5 w-4.5",
+  sm: "start-2.5 h-3.5 w-3.5",
+  md: "start-3 h-4 w-4",
+  lg: "start-3.5 h-4.5 w-4.5",
 };
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
@@ -99,14 +99,14 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             "focus:border-[var(--action-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--action-primary)]/20",
             "[&::-webkit-search-cancel-button]:hidden",
             sizeStyles[resolvedSize],
-            (hasValue && clearable) || shortcutHint ? "pr-14" : "",
+            (hasValue && clearable) || shortcutHint ? "pe-14" : "",
             className,
           )}
           {...rest}
         />
 
         {/* Right side: loading / clear / shortcut hint */}
-        <div className="absolute right-2.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
+        <div className="absolute end-2.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
           {loading && (
             <svg className="h-4 w-4 animate-spin text-[var(--text-secondary)]" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />

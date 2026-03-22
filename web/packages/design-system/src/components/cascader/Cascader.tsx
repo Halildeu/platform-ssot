@@ -376,7 +376,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
         aria-readonly={accessState.isReadonly || undefined}
         disabled={accessState.isDisabled}
         className={cn(
-          "inline-flex w-full items-center justify-between rounded-md border bg-[var(--surface-canvas)] text-left transition-colors",
+          "inline-flex w-full items-center justify-between rounded-md border bg-[var(--surface-canvas)] text-start transition-colors",
           SIZE_CLASS[size],
           error
             ? "border-[var(--border-danger)]"
@@ -400,7 +400,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
         </span>
         <svg
           className={cn(
-            "ml-2 h-4 w-4 shrink-0 text-[var(--text-secondary)] transition-transform",
+            "ms-2 h-4 w-4 shrink-0 text-[var(--text-secondary)] transition-transform",
             isOpen && "rotate-180",
           )}
           fill="none"
@@ -496,7 +496,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
                       <span>{option.label}</span>
                       {option.children && option.children.length > 0 && (
                         <svg
-                          className="ml-2 h-3 w-3 text-[var(--text-secondary)]"
+                          className="ms-2 h-3 w-3 text-[var(--text-secondary)]"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

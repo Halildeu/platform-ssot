@@ -55,9 +55,9 @@ export interface SelectProps
 }
 
 const sizeStyles: Record<SelectSize, string> = {
-  sm: "h-8 text-xs px-2.5 pr-8",
-  md: "h-9 text-sm px-3 pr-9",
-  lg: "h-11 text-base px-3.5 pr-10",
+  sm: "h-8 text-xs px-2.5 pe-8",
+  md: "h-9 text-sm px-3 pe-9",
+  lg: "h-11 text-base px-3.5 pe-10",
 };
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(

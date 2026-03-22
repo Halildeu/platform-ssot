@@ -55,9 +55,9 @@ const densityRowClass: Record<TableSimpleDensity, string> = {
 };
 
 const alignClass: Record<TableSimpleAlign, string> = {
-  left: "text-left",
+  left: "text-start",
   center: "text-center",
-  right: "text-right",
+  right: "text-end",
 };
 
 const resolveCellValue = <Row extends Record<string, unknown>>(

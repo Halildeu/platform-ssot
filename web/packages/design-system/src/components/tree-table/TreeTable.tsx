@@ -77,9 +77,9 @@ const densityClass: Record<TreeTableDensity, string> = {
 };
 
 const alignClass: Record<TreeTableAlign, string> = {
-  left: "text-left",
+  left: "text-start",
   center: "text-center",
-  right: "text-right",
+  right: "text-end",
 };
 
 const toneClass: Record<TreeTableTone, string> = {
@@ -209,7 +209,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
             <table className="min-w-full border-collapse text-sm text-[var(--text-primary)]">
               <thead className="bg-[var(--surface-muted)]">
                 <tr>
-                  <th className="border-b border-[var(--border-subtle)] px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+                  <th className="border-b border-[var(--border-subtle)] px-4 py-3 text-start text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
                     {resolvedTreeColumnLabel}
                   </th>
                   {columns.map((column) => (
@@ -280,7 +280,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                               <button
                                 type="button"
                                 className={[
-                                  "min-w-0 flex-1 rounded-2xl px-1 text-left transition-colors",
+                                  "min-w-0 flex-1 rounded-2xl px-1 text-start transition-colors",
                                   blocked ? "cursor-not-allowed opacity-70" : onNodeSelect ? "hover:bg-[var(--surface-muted)] active:bg-[var(--surface-muted)]/80" : "",
                                 ]
                                   .filter(Boolean)

@@ -234,20 +234,20 @@ describe('SmartDashboard — auto-sort', () => {
 /* ------------------------------------------------------------------ */
 
 describe('SmartDashboard — tone border', () => {
-  it('danger tonlu widget border-l class tasir', () => {
+  it('danger tonlu widget border-s class tasir', () => {
     const { container } = render(
       <SmartDashboard widgets={[makeWidget({ tone: 'danger' })]} />,
     );
     const card = container.querySelector('[data-widget-tone="danger"]');
-    expect(card?.className).toContain('border-l-4');
+    expect(card?.className).toContain('border-s-4');
   });
 
-  it('default tonlu widget border-l class tasimaz', () => {
+  it('default tonlu widget border-s class tasimaz', () => {
     const { container } = render(
       <SmartDashboard widgets={[makeWidget({ tone: 'default' })]} />,
     );
     const card = container.querySelector('[data-widget-tone="default"]');
-    expect(card?.className).not.toContain('border-l-4');
+    expect(card?.className).not.toContain('border-s-4');
   });
 });
 

@@ -294,7 +294,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
       {searchable && (
         <div className="border-b border-[var(--border-subtle)]/40 px-2 py-1.5">
           <div className="relative">
-            <SearchIcon className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-secondary)]" />
+            <SearchIcon className="pointer-events-none absolute start-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-secondary)]" />
             <input
               type="search"
               value={searchValue}
@@ -302,7 +302,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
               placeholder={locale.searchPlaceholder}
               disabled={blocked}
               className={cn(
-                "w-full rounded-lg border border-[var(--border-subtle)]/60 pl-7",
+                "w-full rounded-lg border border-[var(--border-subtle)]/60 ps-7",
                 "bg-[var(--surface-canvas)] text-[var(--text-primary)]",
                 "placeholder:text-[var(--text-disabled)]",
                 "focus:border-[var(--action-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--action-primary)]/20",

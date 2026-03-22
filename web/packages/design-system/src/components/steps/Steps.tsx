@@ -239,7 +239,7 @@ export const Steps: React.FC<StepsProps> = ({
             {/* Title & description */}
             <div
               className={cn(
-                isVertical ? "ml-3 pt-0.5" : "mt-2 text-center px-1",
+                isVertical ? "ms-3 pt-0.5" : "mt-2 text-center px-1",
               )}
             >
               <div className={cn(sizes.title, "font-medium leading-tight", colors.titleText)}>

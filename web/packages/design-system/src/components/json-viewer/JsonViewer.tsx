@@ -142,7 +142,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
     const typeInfo = typeInfoFor(nodeValue, localeText);
     const expandable = isExpandable(nodeValue);
     const expanded = expandable ? isExpanded(path, depth) : false;
-    const indentClass = depth === 0 ? "" : "ml-4 border-l border-[var(--border-subtle)] pl-4";
+    const indentClass = depth === 0 ? "" : "ms-4 border-s border-[var(--border-subtle)] ps-4";
 
     if (!expandable) {
       return (

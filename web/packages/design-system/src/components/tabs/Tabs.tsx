@@ -210,7 +210,7 @@ export const Tabs: React.FC<TabsProps> = ({
                   role="button"
                   tabIndex={0}
                   aria-label="Close tab"
-                  className="ml-1 shrink-0 rounded-sm p-0.5 opacity-60 transition hover:opacity-100"
+                  className="ms-1 shrink-0 rounded-sm p-0.5 opacity-60 transition hover:opacity-100"
                   onClick={(e) => {
                     e.stopPropagation();
                     onCloseTab(itemKey);
