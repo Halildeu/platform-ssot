@@ -690,8 +690,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       keycloak-js:
-        specifier: ^26.0.5
-        version: 26.2.1
+        specifier: ^26.2.3
+        version: 26.2.3
       react:
         specifier: ~18.2.0
         version: 18.2.0
@@ -968,6 +968,8 @@ importers:
       webpack-merge:
         specifier: ^6.0.1
         version: 6.0.1
+
+  packages/benchmarks: {}
 
   packages/blocks:
     dependencies:
@@ -7740,8 +7742,8 @@ packages:
     resolution: {integrity: sha512-1DJcK/L05k1Y9Gf7wMcyuqFOL6BiY3vY0CFcAM/LPRN04NALxcl6u7lOWNsp3f/bCHWxigzQl6FbR95XJ4R84Q==}
     hasBin: true
 
-  keycloak-js@26.2.1:
-    resolution: {integrity: sha512-bZt6fQj/TLBAmivXSxSlqAJxBx/knNZDQGJIW4ensGYGN4N6tUKV8Zj3Y7/LOV8eIpvWsvqV70fbACihK8Ze0Q==}
+  keycloak-js@26.2.3:
+    resolution: {integrity: sha512-widjzw/9T6bHRgEp6H/Se3NCCarU7u5CwFKBcwtu7xfA1IfdZb+7Q7/KGusAnBo34Vtls8Oz9vzSqkQvQ7+b4Q==}
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -18554,7 +18556,7 @@ snapshots:
     dependencies:
       commander: 8.3.0
 
-  keycloak-js@26.2.1: {}
+  keycloak-js@26.2.3: {}
 
   keyv@4.5.4:
     dependencies:
