@@ -13,7 +13,7 @@
 | Components | ✅ Güçlü | 232 exported, 211 doc entry |
 | Tests | ✅ Güçlü | 5,910 pass, verify EXIT 0 |
 | X-Suite | ✅ Güçlü | 6 paket, 414 test, build green |
-| Storybook | ✅ Var | .storybook/ config + 128 story |
+| Storybook | ✅ Var | .storybook/ config + ~139 story |
 | Playwright | ✅ Var | 18 spec, CI'da koşuyor |
 | axe-core | ✅ Var | @axe-core/cli + @axe-core/playwright |
 | Chromatic | ✅ Var | Workflow mevcut, CI'da |
@@ -44,17 +44,25 @@
 | Kanban | dnd-kit path var | Swimlane + touch + keyboard parity yok | P2 |
 | Benchmarks | Workflow var | Threshold registry + hard regression blocker yok | P1 |
 | Security | CI var | Live posture + incident evidence cockpit yok | P1 |
-| AI | Başlangıç var | Grounded assistant + codegen sandbox yok | P2 |
+| AI/MCP | MCP surface + başlangıç var | Grounded assistant + safe codegen + approval loop yok | P2 |
 | Design drift | Derived sinyal var | Live sync + real diff + owner workflow yok | P1 |
-| Governance | Docs var | RBAC + audit trail + approvals yok | P1 |
+| Governance | UI/doküman temeli var | Enforced RBAC + audit trail + approval workflow yok | P1 |
 | Impact graph | whereUsed var | Blast-radius + migration impact yok | P2 |
 
 ---
 
 ## 8 WAVE PROGRAM (180 GÜN)
 
-### WAVE 1 — Truth Plane (0-15 gün)
-> Amaç: Design Lab'de görünen her kartın arkasında gerçek artefact olsun
+### WAVE 0.5 — Capability Inventory Automation (0-3 gün)
+> Amaç: Roadmap tablosunun tekrar eskimesini engellemek
+
+| # | İş | Done Criteria | KPI |
+|---|-----|---------------|-----|
+| 0.1 | Otomatik envanter scripti | `scripts/capability-inventory.mjs` repo'dan sayar | Stale satır = 0 |
+| 0.2 | Story/test/spec/token sayıları otomatik | Elle güncelleme gerekmiyor | Accuracy = %100 |
+
+### WAVE 1 — Truth Plane + Docs Truth (0-15 gün)
+> Amaç: Design Lab'de görünen her kartın arkasında gerçek artefact + docs doğruluğu
 
 | # | İş | Done Criteria | KPI |
 |---|-----|---------------|-----|
@@ -63,6 +71,9 @@
 | 1.3 | Security posture live outcomes | CodeQL/Trivy/gitleaks job sonucu akar | Live checks = 5 |
 | 1.4 | Benchmark artefakt ingestion | PR/release bazlı sonuç görünür | Benchmark = live |
 | 1.5 | Provenance zorunlu kural | Her panel Live/Derived/NoData | Simüle = 0 |
+| 1.6 | Docs snippet compile check | Code örnekleri derlenir | Compile error = 0 |
+| 1.7 | Import/export validation genişleme | Phantom import = 0 | Docs drift = 0 |
+| 1.8 | Doc example freshness check | Eski API kullanan örnek = 0 | Stale example = 0 |
 
 ### WAVE 2 — Token Platform + Design Sync (15-30 gün)
 > Amaç: Token pipeline ve Figma köprüsünü kurmak
@@ -86,6 +97,9 @@
 | 3.4 | A11y e2e gate | axe + Playwright a11y spec blocker | Critical = 0 |
 | 3.5 | Quiet-green | 0 recurring CI warning | Warning = 0 |
 | 3.6 | Component API lint rules | size/className/aria zorunlu | Violation = 0 |
+| 3.7 | Story governance — orphan detection | Exported ama story'siz component = 0 | Orphan = 0 |
+| 3.8 | Story governance — coverage threshold | Her component ailesinde min 1 story | Coverage > %95 |
+| 3.9 | Story governance — ownership | Her story dosyasının CODEOWNER'ı var | Ownership = %100 |
 
 ### WAVE 4 — Engine Productization (30-60 gün)
 > Amaç: Tiptap ve dnd-kit path'lerini ürün seviyesine çıkarmak
