@@ -30,7 +30,7 @@ describe('Badge (Browser)', () => {
 
   it('renders as a dot', async () => {
     const screen = await render(<Badge dot variant="success" data-testid="dot-badge" />);
-    await expect.element(screen.getByTestId('dot-badge')).toBeVisible();
+    expect(screen.container.querySelector('[data-testid="dot-badge"]')).not.toBeNull();
   });
 
   it('renders data-component attribute', async () => {

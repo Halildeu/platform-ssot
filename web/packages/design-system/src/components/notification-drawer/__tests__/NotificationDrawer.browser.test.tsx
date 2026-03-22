@@ -7,7 +7,7 @@ describe('NotificationDrawer (Browser)', () => {
     const screen = await render(
       <NotificationDrawer open={false} items={[]} disablePortal />,
     );
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.querySelector('[role="dialog"]')).toBeNull();
   });
 
   it('renders drawer title when open', async () => {

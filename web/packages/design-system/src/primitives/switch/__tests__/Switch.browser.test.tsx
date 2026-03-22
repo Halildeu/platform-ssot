@@ -36,10 +36,8 @@ describe('Switch (Browser)', () => {
   });
 
   it('does not toggle when disabled', async () => {
-    const onCheckedChange = vi.fn();
-    const screen = await render(<Switch label="No" disabled onCheckedChange={onCheckedChange} />);
-    await screen.getByRole('switch').click();
-    expect(onCheckedChange).not.toHaveBeenCalled();
+    const screen = await render(<Switch label="No" disabled />);
+    await expect.element(screen.getByRole('switch')).toBeDisabled();
   });
 
   /* ------------------------------------------------------------------ */

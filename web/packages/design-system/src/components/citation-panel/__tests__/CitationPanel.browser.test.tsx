@@ -21,8 +21,8 @@ describe('CitationPanel (Browser)', () => {
 
   it('renders kind badge for each citation', async () => {
     const screen = await render(<CitationPanel items={sampleItems} />);
-    await expect.element(screen.getByText('policy')).toBeVisible();
-    await expect.element(screen.getByText('code')).toBeVisible();
+    await expect.element(screen.getByText('policy', { exact: true })).toBeVisible();
+    await expect.element(screen.getByText('code', { exact: true })).toBeVisible();
   });
 
   it('renders source information', async () => {

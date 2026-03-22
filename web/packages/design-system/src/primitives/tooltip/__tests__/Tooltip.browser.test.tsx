@@ -70,10 +70,12 @@ describe('Tooltip (Browser)', () => {
         <button>Press Esc</button>
       </Tooltip>,
     );
-    await screen.getByText('Press Esc').hover();
+    // Focus the button to activate tooltip and allow keydown to reach it
+    screen.getByText('Press Esc').element().focus();
     await expect.element(screen.getByRole('tooltip')).toBeVisible();
     await userEvent.keyboard('{Escape}');
-    expect(document.querySelector('[role="tooltip"]')).toBeNull();
+    // After Escape the tooltip should be hidden
+    await expect.element(screen.getByRole('tooltip')).not.toBeInTheDocument();
   });
 
   /* ------------------------------------------------------------------ */

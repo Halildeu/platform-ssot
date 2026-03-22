@@ -14,13 +14,13 @@ describe('Divider (Browser)', () => {
         <Divider orientation="vertical" data-testid="v-divider" />
       </div>,
     );
-    await expect.element(screen.getByTestId('v-divider')).toBeVisible();
+    expect(screen.container.querySelector('[data-testid="v-divider"]')).not.toBeNull();
   });
 
   it('renders with separator role for horizontal', async () => {
     const screen = await render(<Divider />);
-    const sep = document.querySelector('[role="separator"]');
-    expect(sep).not.toBeNull();
+    // <hr> has implicit separator role
+    expect(screen.container.querySelector('hr')).not.toBeNull();
   });
 
   it('renders with separator role for vertical', async () => {

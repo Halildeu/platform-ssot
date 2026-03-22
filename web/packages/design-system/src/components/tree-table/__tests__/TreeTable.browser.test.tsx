@@ -62,8 +62,7 @@ describe('TreeTable (Browser)', () => {
 
   it('shows empty state when no nodes', async () => {
     const screen = await render(<TreeTable nodes={[]} columns={columns} />);
-    const empty = document.querySelector('[data-component="empty-state"]');
-    expect(empty).not.toBeNull();
+    await expect.element(screen.getByText('No records found for this tree table.')).toBeVisible();
   });
 
   it('renders expand/collapse aria attributes', async () => {

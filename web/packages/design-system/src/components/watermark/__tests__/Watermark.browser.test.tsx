@@ -21,12 +21,11 @@ describe('Watermark (Browser)', () => {
     await expect.element(screen.getByTestId('watermark-overlay')).toBeVisible();
   });
 
-  it('renders data-component attribute', async () => {
+  it('renders data-testid attribute', async () => {
     const screen = await render(
       <Watermark content="Test"><div>Body</div></Watermark>,
     );
-    const el = document.querySelector('[data-component="watermark"]');
-    expect(el).not.toBeNull();
+    await expect.element(screen.getByTestId('watermark-root')).toBeVisible();
   });
 
   it('renders with array content', async () => {

@@ -26,8 +26,9 @@ describe('Text (Browser)', () => {
 
   it('renders as span by default', async () => {
     const screen = await render(<Text>Default</Text>);
-    const el = document.querySelector('p');
+    const el = screen.container.querySelector('span');
     expect(el).not.toBeNull();
+    expect(el!.textContent).toBe('Default');
   });
 
   it('renders as custom element', async () => {
@@ -45,12 +46,12 @@ describe('Text (Browser)', () => {
     const screen = await render(
       <div>
         <Text size="xs">Extra small</Text>
-        <Text size="lg">Large</Text>
+        <Text size="lg">Large text</Text>
         <Text size="2xl">Extra large</Text>
       </div>,
     );
     await expect.element(screen.getByText('Extra small')).toBeVisible();
-    await expect.element(screen.getByText('Large')).toBeVisible();
+    await expect.element(screen.getByText('Large text')).toBeVisible();
     await expect.element(screen.getByText('Extra large')).toBeVisible();
   });
 });

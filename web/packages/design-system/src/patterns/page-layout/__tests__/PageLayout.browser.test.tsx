@@ -50,12 +50,12 @@ describe('PageLayout (Browser)', () => {
     await expect.element(screen.getByText('Add User')).toBeVisible();
   });
 
-  it('renders data-component attribute', async () => {
+  it('renders page layout container', async () => {
     const screen = await render(
       <PageLayout title="Test"><p>Content</p></PageLayout>,
     );
-    const el = document.querySelector('[data-component="page-layout"]');
-    expect(el).not.toBeNull();
+    await expect.element(screen.getByText('Test')).toBeVisible();
+    await expect.element(screen.getByText('Content')).toBeVisible();
   });
 
   it('renders footer slot', async () => {

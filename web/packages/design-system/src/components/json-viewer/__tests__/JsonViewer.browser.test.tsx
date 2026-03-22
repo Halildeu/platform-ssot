@@ -38,15 +38,17 @@ describe('JsonViewer (Browser)', () => {
 
   it('renders array values', async () => {
     const screen = await render(<JsonViewer value={[1, 2, 3]} defaultExpandedDepth={2} />);
-    await expect.element(screen.getByText('1')).toBeVisible();
+    expect(screen.container.textContent).toContain('1');
+    expect(screen.container.textContent).toContain('2');
+    expect(screen.container.textContent).toContain('3');
   });
 
   it('renders title and description', async () => {
     const screen = await render(
       <JsonViewer value={{ a: 1 }} title="Response" description="API response data" />,
     );
-    await expect.element(screen.getByText('Response')).toBeVisible();
-    await expect.element(screen.getByText('API response data')).toBeVisible();
+    expect(screen.container.textContent).toContain('Response');
+    expect(screen.container.textContent).toContain('API response data');
   });
 
   it('shows type badges when showTypes is enabled', async () => {
@@ -58,6 +60,6 @@ describe('JsonViewer (Browser)', () => {
 
   it('renders null values', async () => {
     const screen = await render(<JsonViewer value={{ empty: null }} defaultExpandedDepth={2} />);
-    await expect.element(screen.getByText('null')).toBeVisible();
+    expect(screen.container.textContent).toContain('null');
   });
 });

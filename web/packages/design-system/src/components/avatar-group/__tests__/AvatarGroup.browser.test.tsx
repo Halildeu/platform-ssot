@@ -31,8 +31,8 @@ describe('AvatarGroup (Browser)', () => {
   it('fires onClick when an avatar is clicked', async () => {
     const onClick = vi.fn();
     const screen = await render(<AvatarGroup items={items} onClick={onClick} max={5} />);
-    const avatars = document.querySelectorAll('[data-testid="avatar-group-item"]');
-    (avatars[0] as HTMLElement).click();
+    // Click the first avatar by its initial letter
+    await screen.getByText('A').click();
     expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ key: '1', name: 'Alice' }));
   });
 

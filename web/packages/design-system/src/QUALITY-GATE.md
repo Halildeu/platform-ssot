@@ -219,13 +219,39 @@ ESLint rules preventing cross-layer imports.
 
 ---
 
+## F4+ Target Gates (Planned)
+
+F4 sonrası eklenmesi planlanan gate'ler. Her gate CI'da blocking olacak.
+
+| # | Gate | Phase | What It Checks |
+|---|---|---|---|
+| 15 | Form Validation | F4A | useFormField + FormProvider + zod adapter testleri PASS |
+| 16 | RTL Logical CSS | F4C | ESLint no-physical-properties → 0 violation |
+| 17 | Motion A11y | F4B | prefers-reduced-motion → animasyon sıfır |
+| 18 | X-Suite Isolation | F4D | X bileşenleri core bundle'a sızmaz |
+| 19 | MCP Grounding | F5A | MCP tool çıktıları catalog-verified |
+| 20 | AI Test Quality | F5B | Üretilen testler assertion depth check |
+| 21 | Privacy Audit | F5C | Zero external data transmission |
+| 22 | Adaptive Fallback | F5C | AI off → standard behavior testi |
+| 23 | Docs Coverage | F6B | %100 public API documented |
+| 24 | Block Quality | F6A | Her block: test + a11y + visual |
+| 25 | Figma Parity | F6C | Token divergence = 0 |
+| 26 | Semver Compliance | F7 | Conventional commit → correct version |
+| 27 | Codemod Idempotent | F7 | Migration 2x çalıştır → same result |
+| 28 | AI Review Accuracy | F8 | False positive rate ≤ %5 |
+
+**Hedef: F8 sonunda 28 gate (mevcut 14 + 14 yeni)**
+
+---
+
 ## Progression
 
 1. ✅ F0 — Release Truth (13/13 gate pass, 14 total, 1 skippable: clean-tree)
 2. ✅ F1 — Package Topology (15 deep imports, boundary enforcement)
 3. ✅ F2 — Foundation (tokens, icons, headless hooks, a11y)
-4. ✅ F3 — Core Completeness (0 deprecated, v2.0.0 ready, 5,310 tests)
-5. ⬜ F4 — Enterprise X Suite (Scheduler, Kanban, Editor)
-6. ⬜ F5 — Blocks & App Kits
-7. ⬜ F6 — Docs & DX
-8. ⬜ F7 — Commercial Readiness
+4. ✅ F3 — Core Completeness (0 deprecated, v2.0.0 ready, 5,321 tests)
+5. ⬜ F4 — Gap Closer & Enterprise Suite (+form, motion, RTL, X suite)
+6. ⬜ F5 — AI-First Leapfrog (MCP v2, AI testing, intelligent runtime)
+7. ⬜ F6 — DX & Ecosystem (blocks, docs, Figma round-trip)
+8. ⬜ F7 — Commercial Hardening (LTS, migration, RFC)
+9. ⬜ F8 — AI Runtime Intelligence (design review, prediction, a11y guardian)

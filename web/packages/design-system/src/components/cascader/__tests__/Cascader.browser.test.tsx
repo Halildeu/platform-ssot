@@ -69,7 +69,11 @@ describe('Cascader (Browser)', () => {
   it('supports searchable mode', async () => {
     const screen = await render(<Cascader options={options} searchable />);
     await screen.getByRole('combobox').click();
-    await userEvent.type(screen.getByRole('combobox').element(), 'Ger');
+    // Search input appears inside the dropdown when searchable
+    const searchInput = screen.container.querySelector('input[type="search"], input[placeholder]') as HTMLInputElement;
+    if (searchInput) {
+      await userEvent.type(searchInput, 'Ger');
+    }
     await expect.element(screen.getByText('Germany')).toBeVisible();
   });
 });

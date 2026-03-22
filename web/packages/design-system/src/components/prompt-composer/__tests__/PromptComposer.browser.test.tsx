@@ -10,17 +10,17 @@ describe('PromptComposer (Browser)', () => {
 
   it('renders scope buttons', async () => {
     const screen = await render(<PromptComposer />);
-    await expect.element(screen.getByText('general')).toBeVisible();
-    await expect.element(screen.getByText('approval')).toBeVisible();
-    await expect.element(screen.getByText('policy')).toBeVisible();
-    await expect.element(screen.getByText('release')).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'general' })).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'approval' })).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'policy' })).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'release' })).toBeVisible();
   });
 
   it('renders tone buttons', async () => {
     const screen = await render(<PromptComposer />);
-    await expect.element(screen.getByText('neutral')).toBeVisible();
-    await expect.element(screen.getByText('strict')).toBeVisible();
-    await expect.element(screen.getByText('exploratory')).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'neutral' })).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'strict' })).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'exploratory' })).toBeVisible();
   });
 
   it('renders data-component attribute', async () => {

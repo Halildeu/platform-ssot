@@ -56,7 +56,7 @@ describe('AdaptiveForm (Browser)', () => {
 
   it('renders nothing when access is hidden', async () => {
     const screen = await render(<AdaptiveForm fields={basicFields} access="hidden" />);
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.innerHTML.trim()).toBe('');
   });
 
   it('renders select field with options', async () => {

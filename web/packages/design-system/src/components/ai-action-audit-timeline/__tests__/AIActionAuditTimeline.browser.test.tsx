@@ -11,7 +11,7 @@ describe('AIActionAuditTimeline (Browser)', () => {
   it('renders timeline with items', async () => {
     const screen = await render(<AIActionAuditTimeline items={sampleItems} />);
     await expect.element(screen.getByText('Generated report')).toBeVisible();
-    await expect.element(screen.getByText('Approved')).toBeVisible();
+    await expect.element(screen.getByText('Approved', { exact: true })).toBeVisible();
   });
 
   it('renders empty state when no items', async () => {
@@ -21,8 +21,8 @@ describe('AIActionAuditTimeline (Browser)', () => {
 
   it('renders actor badge for each item', async () => {
     const screen = await render(<AIActionAuditTimeline items={sampleItems} />);
-    await expect.element(screen.getByText('ai')).toBeVisible();
-    await expect.element(screen.getByText('human')).toBeVisible();
+    await expect.element(screen.getByText('ai', { exact: true })).toBeVisible();
+    await expect.element(screen.getByText('human', { exact: true })).toBeVisible();
   });
 
   it('renders status badge when provided', async () => {

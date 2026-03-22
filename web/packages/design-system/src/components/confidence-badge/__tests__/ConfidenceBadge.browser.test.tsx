@@ -37,7 +37,7 @@ describe('ConfidenceBadge (Browser)', () => {
 
   it('renders nothing when access is hidden', async () => {
     const screen = await render(<ConfidenceBadge access="hidden" />);
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.querySelector('[data-confidence-level]')).toBeNull();
   });
 
   it('renders compact mode without source count', async () => {

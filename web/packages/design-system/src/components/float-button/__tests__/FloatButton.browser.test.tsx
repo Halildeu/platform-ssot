@@ -32,8 +32,8 @@ describe('FloatButton (Browser)', () => {
     ];
     const screen = await render(<FloatButton items={groupItems} />);
     await screen.getByTestId('float-button-trigger').click();
-    await expect.element(screen.getByText('Edit')).toBeVisible();
-    await expect.element(screen.getByText('Delete')).toBeVisible();
+    await expect.element(screen.getByTestId('float-button-item-edit')).toBeVisible();
+    await expect.element(screen.getByTestId('float-button-item-delete')).toBeVisible();
   });
 
   it('fires group item onClick', async () => {
@@ -43,7 +43,7 @@ describe('FloatButton (Browser)', () => {
     ];
     const screen = await render(<FloatButton items={groupItems} />);
     await screen.getByTestId('float-button-trigger').click();
-    await screen.getByText('Edit').click();
+    await screen.getByTestId('float-button-item-edit').click();
     expect(onClick).toHaveBeenCalled();
   });
 

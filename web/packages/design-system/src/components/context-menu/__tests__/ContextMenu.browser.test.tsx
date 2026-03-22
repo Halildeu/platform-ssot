@@ -98,6 +98,8 @@ describe('ContextMenu (Browser)', () => {
     screen.getByText('Right click me').element().dispatchEvent(
       new MouseEvent('contextmenu', { bubbles: true, clientX: 100, clientY: 100 }),
     );
+    // Wait for menu to open first
+    await expect.element(screen.getByText('Copy')).toBeVisible();
     const separator = document.querySelector('[role="separator"]');
     expect(separator).not.toBeNull();
   });

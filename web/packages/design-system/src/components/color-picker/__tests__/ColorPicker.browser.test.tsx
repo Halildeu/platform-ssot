@@ -18,7 +18,7 @@ describe('ColorPicker (Browser)', () => {
   it('shows hex input in popover', async () => {
     const screen = await render(<ColorPicker showInput />);
     await screen.getByTestId('color-picker-swatch').click();
-    const hexInput = screen.getByTestId('color-picker-hex-input');
+    const hexInput = screen.getByTestId('color-picker-input');
     await expect.element(hexInput).toBeVisible();
   });
 
@@ -26,12 +26,10 @@ describe('ColorPicker (Browser)', () => {
     const onValueChange = vi.fn();
     const screen = await render(<ColorPicker onValueChange={onValueChange} />);
     await screen.getByTestId('color-picker-swatch').click();
-    const hexInput = screen.getByTestId('color-picker-hex-input');
-    await hexInput.element().focus();
-    // Select all and type new value
-    await userEvent.keyboard('{Control>}a{/Control}');
+    const hexInput = screen.getByTestId('color-picker-input');
+    // Clear the existing value and type a new valid hex
+    await userEvent.clear(hexInput.element());
     await userEvent.type(hexInput.element(), '#ff0000');
-    await userEvent.keyboard('{Enter}');
     expect(onValueChange).toHaveBeenCalled();
   });
 

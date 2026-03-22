@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { Combobox } from '../Combobox';
 
 const options = [
@@ -15,14 +15,14 @@ describe('Combobox (Browser)', () => {
       <Combobox label="Fruit" placeholder="Select a fruit" options={options} />,
     );
     await expect.element(screen.getByText('Fruit')).toBeVisible();
-    await expect.element(screen.getByPlaceholderText('Select a fruit')).toBeVisible();
+    await expect.element(page.getByPlaceholder('Select a fruit')).toBeVisible();
   });
 
   it('shows options when opened and filters on type', async () => {
     const screen = await render(
       <Combobox label="Fruit" options={options} placeholder="Search..." />,
     );
-    const input = screen.getByPlaceholderText('Search...');
+    const input = page.getByPlaceholder('Search...');
     await input.click();
     await expect.element(screen.getByText('Apple')).toBeVisible();
     await expect.element(screen.getByText('Banana')).toBeVisible();
@@ -44,7 +44,7 @@ describe('Combobox (Browser)', () => {
     const screen = await render(
       <Combobox label="Fruit" options={options} onValueChange={onValueChange} placeholder="Pick" />,
     );
-    const input = screen.getByPlaceholderText('Pick');
+    const input = page.getByPlaceholder('Pick');
     await input.click();
     await userEvent.keyboard('{ArrowDown}');
     await userEvent.keyboard('{ArrowDown}');
@@ -57,9 +57,11 @@ describe('Combobox (Browser)', () => {
       <Combobox label="Fruit" options={options} defaultOpen />,
     );
     await expect.element(screen.getByText('Apple')).toBeVisible();
+    // Focus the input first so Escape event reaches the component
+    screen.getByRole('combobox').element().focus();
     await userEvent.keyboard('{Escape}');
     // After escape the listbox should be hidden
-    expect(document.querySelector('[role="listbox"]')).toBeNull();
+    await expect.element(screen.getByRole('listbox')).not.toBeInTheDocument();
   });
 
   it('renders combobox ARIA role and attributes', async () => {
@@ -82,14 +84,14 @@ describe('Combobox (Browser)', () => {
     const screen = await render(
       <Combobox label="Fruit" options={[]} loading defaultOpen />,
     );
-    await expect.element(screen.getByText('Loading...')).toBeVisible();
+    await expect.element(screen.getByText('Yukleniyor...')).toBeVisible();
   });
 
   it('shows no-options text when nothing matches', async () => {
     const screen = await render(
       <Combobox label="Fruit" options={options} placeholder="Search..." noOptionsText="No results" />,
     );
-    const input = screen.getByPlaceholderText('Search...');
+    const input = page.getByPlaceholder('Search...');
     await input.click();
     await userEvent.type(input.element(), 'zzzzz');
     await expect.element(screen.getByText('No results')).toBeVisible();

@@ -29,7 +29,9 @@ describe('Steps (Browser)', () => {
   it('calls onChange when step is clicked', async () => {
     const onChange = vi.fn();
     const screen = await render(<Steps items={stepItems} current={0} onChange={onChange} />);
-    await screen.getByText('Review').click();
+    // Click the step button (indicator) for step 2 (Review)
+    const stepBtn = screen.container.querySelector('button[aria-label*="Review"]') as HTMLElement;
+    stepBtn.click();
     expect(onChange).toHaveBeenCalledWith(1);
   });
 

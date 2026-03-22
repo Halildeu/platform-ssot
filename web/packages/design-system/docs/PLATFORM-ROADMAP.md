@@ -1,8 +1,9 @@
 # @mfe/design-system — Platform Yol Haritası
 
-> **Tarih:** 2026-03-20
+> **Tarih:** 2026-03-22
 > **Prensip:** Bir katman tam olgunlaşmadan sonrakine geçilmez.
-> **Hedef:** Tek vizyon, çok katman, tek kontrat, tek truth.
+> **Hedef:** Dünya standardı AI-native design system liderliği — Ant Design / MUI / shadcn/ui'ı geçmek.
+> **Vizyon:** Tek vizyon, çok katman, tek kontrat, tek truth.
 
 ---
 
@@ -337,148 +338,153 @@ Dependency Rule (TEK YÖNLÜ — asla yukarı bağımlılık olmaz):
 
 ---
 
-### F4 — Enterprise X Suite (F3 done + 4-8 ay)
+### F4 — Gap Closer & Enterprise Suite (~12 hafta)
 
-**Amaç:** Ağır enterprise yüzeyler ayrı ürün ailesi olarak büyür.
+**Amaç:** Rekabet gap'lerini kapat + enterprise yüzeyler tamamla. Skor 45 → 50/60.
 
 **Kapsam:**
 
-#### 4a. X-Grid Maturity
-- Grid variant system doygunluğu
-- Server-side pagination / filtering / sorting
-- Export (CSV, Excel, PDF)
-- Column pinning, grouping, aggregation
-- Master-detail row expansion
-- Public API docs + recipes
+#### 4A. Form Validation Adapter (Hafta 1-3)
+- `@mfe/design-system/form` deep import
+- `useFormField()` hook — react-hook-form + zod adapter
+- `FormProvider`, `createFormSchema()` — Zod schema builder
+- Tüm field bileşenleri Controller-uyumlu
+- 15+ form recipe
 
-#### 4b. X-Charts Maturity
-- Chart türleri: Bar, Line, Area, Pie, Donut, Scatter, Heatmap, Treemap, Funnel, Radar
-- Theme integration (dark mode, accent renkleri)
-- Responsive resize
-- Tooltip + legend + annotation
-- Public API docs
+#### 4B. Motion & Animation System (Hafta 2-4)
+- `@mfe/design-system/motion` deep import
+- `AnimatePresence`, `Transition`, `StaggerGroup`, `useMotion()`
+- Overlay entegrasyonu (Modal, Dialog, Drawer, Popover, Tooltip)
+- Zero-dep: Web Animations API + CSS transitions
+- `prefers-reduced-motion` saygı
 
-#### 4c. X-Workflow (Yeni)
-- **Scheduler:** Haftalık/aylık/günlük takvim + event management
-- **Kanban:** Sürükle-bırak board + swimlane
-- **Gantt:** Timeline + dependency + milestone (optional — yüksek karmaşıklık)
+#### 4C. RTL & Logical CSS Migration (Hafta 3-5)
+- Physical → logical CSS (84+ bileşen)
+- ESLint `no-physical-properties` rule
+- RTL visual regression (50+ snapshot)
 
-#### 4d. X-Editor (Yeni)
-- Rich text editor (Tiptap veya ProseMirror tabanlı)
-- Mention, emoji, slash command desteği
-- Toolbar customization
-- Markdown ↔ HTML dönüşümü
-
-#### 4e. X-FormBuilder (Yeni)
-- JSON schema → form rendering
-- Drag-drop form designer
-- Conditional logic
-- Validation rules
-- `adaptive-form` genişletmesi
+#### 4D. Enterprise X Suite (Hafta 4-12)
+- **X-Grid:** 30+ recipe, server-side, export
+- **X-Charts:** 10+ chart type, theme-aware
+- **Scheduler:** Haftalık/aylık/günlük + event CRUD
+- **Kanban:** Drag-drop board + swimlane
+- **Editor:** Tiptap, mention, slash command
+- **FormBuilder:** JSON schema → form render + drag-drop
 
 **Done Criteria:**
 ```
-✅ X-Grid    → 30+ recipe, server-side demo, export working
-✅ X-Charts  → 10+ chart type, theme-aware
-✅ Scheduler → haftalık/aylık view, event CRUD
-✅ Kanban    → drag-drop, swimlane, filter
-✅ Editor    → basic rich text, mention, slash command
-✅ Her X paket → ayrı deep import, <100KB gzip (x-grid hariç)
+✅ Form    → useFormField + FormProvider + 30+ test
+✅ Motion  → AnimatePresence + overlay entegre + reduced-motion
+✅ RTL     → 0 physical CSS violation + 50+ visual
+✅ X-Grid  → 30+ recipe, server-side, export
+✅ X-Charts→ 10+ chart type, theme-aware
+✅ X-Suite → Scheduler + Kanban + Editor + FormBuilder
+✅ Tests   → ≥ 6,000
+✅ Gates   → 16/16 PASS
 ```
 
 ---
 
-### F5 — Blocks & App Kits (F4 done + 6-9 ay)
+### F5 — AI-First Leapfrog (~10 hafta)
 
-**Amaç:** Copy-paste ready uygulama blokları ve starter template'ler.
+**Amaç:** AI-native yeteneklerle rakipleri geç. Hiçbir rakibin olmadığı boyutta liderlik kur.
 
 **Kapsam:**
-- **Dashboard Blocks:** Metric card, chart panel, activity feed, KPI grid
-- **CRUD Blocks:** List + filter + detail + create/edit form
-- **Admin Blocks:** Settings panel, user management, role matrix
-- **Review Blocks:** Approval flow, audit timeline, comparison view
-- **Starter Templates:** Dashboard app, CRUD app, admin panel
-- **Block Registry:** Searchable catalog, copy-paste CLI
+- **AI Developer Copilot:** MCP v2 (20+ tool), `npx @mfe/ds copilot` CLI, VS Code extension
+- **AI-Powered Testing:** Contract test generation, a11y test generation, visual scenario generation
+- **Intelligent Runtime:** `useAdaptiveLayout()`, SmartDashboard v2, AdaptiveForm v2, ContextAwareTooltip
+- **Privacy-first:** Tüm adaptasyon client-side, zero external data
 
 **Done Criteria:**
 ```
-✅ Block count      → 20+ production-ready block
-✅ Template count   → 3+ starter template
-✅ CLI: npx @mfe/create-app → working scaffold
-✅ Her block         → dark mode + responsive + a11y tested
+✅ MCP tools      → 20+ tool, catalog-verified, 0% halüsinasyon
+✅ CLI            → 10+ komut smoke test PASS
+✅ AI tests       → %100 compile, %95+ PASS
+✅ Adaptive       → useAdaptiveLayout + SmartDashboard v2 + AdaptiveForm v2
+✅ Privacy        → Zero external data audit PASS
+✅ Fallback       → AI off → standard behavior PASS
+✅ Tests          → ≥ 6,500
 ```
 
 ---
 
-### F6 — Docs & DX (F5 done + 8-10 ay)
+### F6 — DX & Ecosystem (~8 hafta)
 
-**Amaç:** Tek birleşik docs portal, live playground, migration assistant.
+**Amaç:** Blocks marketplace + public docs portal + Figma round-trip.
 
 **Kapsam:**
-- **Docs Portal:** Searchable, categorized, versioned
-- **Live Playground:** In-browser component playground (StackBlitz / CodeSandbox embed)
-- **Interactive Examples:** Her component için editable props + live preview
-- **Migration Assistant:** CLI tool — "v1 → v2 neler değişti, neler yapmalısın"
-- **Learning Tracks:** Task-based öğrenme patikaları (form building, data display, overlay patterns)
-- **Component Selection Guide:** "X yapmak istiyorum → şu component'i kullan"
+- **Blocks Marketplace:** 30+ block, `npx @mfe/ds add` CLI (shadcn DX)
+- **Docs Portal:** Astro/Starlight, API reference, playground, search, versioned, TR+EN
+- **Figma Round-Trip:** Bidirectional token sync, GitHub Actions otomasyonu
 
 **Done Criteria:**
 ```
-✅ Docs portal      → public URL, searchable, versioned
-✅ Playground        → 50+ interactive example
-✅ Migration CLI     → working v1→v2 guide
-✅ Selection guide   → decision tree for 90%+ use cases
+✅ Blocks         → 30+ block, CLI çalışıyor, themed + a11y
+✅ Docs portal    → public URL, %100 API covered, Lighthouse 95+
+✅ Figma sync     → Token change → PR ≤ 5 dakika, divergence = 0
 ```
 
 ---
 
-### F7 — Commercial Readiness (F6 done + 10-12 ay)
+### F7 — Commercial Hardening (~6 hafta)
 
-**Amaç:** Enterprise-grade governance, support ve adoption.
+**Amaç:** Enterprise-grade release channels, migration automation, governance.
 
 **Kapsam:**
-- **Release Channels:** Canary (daily) → Stable (biweekly) → LTS (quarterly)
-- **Support Policy:** Response time, escalation path, SLA
-- **Security Policy:** Vulnerability disclosure, patch cadence
-- **RFC Process:** Public proposal → review → approval → implementation
-- **Adoption Telemetry:** Hangi component ne kadar kullanılıyor (opt-in)
-- **Changelog Automation:** Conventional commits → auto CHANGELOG
-- **Breaking Change Policy:** 6 ay deprecation window, codemod zorunluluğu
+- **Release Channels:** Canary (her commit) → Stable (haftalık) → LTS (3 aylık)
+- **Migration Automation:** `npx @mfe/ds migrate` AST codemod engine
+- **RFC Process:** Template + 7 gün review + 2 approver
+- **Adoption Telemetry:** Opt-in anonymous analytics + Design Lab dashboard
 
 **Done Criteria:**
 ```
-✅ LTS release       → en az 1 LTS version
-✅ Support SLA        → documented response times
-✅ Security policy    → published disclosure process
-✅ RFC process        → en az 3 RFC completed
-✅ Adoption metrics   → dashboard with real data
+✅ LTS release    → en az 1 LTS version
+✅ Migration CLI  → dry-run + 50+ transform PASS
+✅ RFC            → en az 3 RFC completed
+✅ Telemetry      → dashboard + zero PII
 ```
 
 ---
 
-## 12 Aylık Gantt Özeti
+### F8 — AI Runtime Intelligence (~8 hafta)
 
+**Amaç:** AI ile design system kullanım kalitesini otomatik denetle, pattern öner. Dünya-ilk yetenekler.
+
+**Kapsam:**
+- **AI Design Review:** PR review bot, anti-pattern detection, fix suggestion, quality score
+- **Predictive Intelligence:** Usage pattern analysis, component combination patterns, bundle prediction
+- **AI Accessibility Guardian:** Runtime a11y monitoring, screen reader simulation, contrast auto-fix
+
+**Done Criteria:**
 ```
-Ay:  1   2   3   4   5   6   7   8   9  10  11  12
-     ├───┤
-     F0 Release Truth
-         ├───────┤
-         F1 Package Topology
-              ├──────────────┤
-              F2 Foundation Completion
-                        ├───────────────────┤
-                        F3 Core Completeness
-                                    ├──────────────────────┤
-                                    F4 Enterprise X Suite
-                                                ├──────────────┤
-                                                F5 Blocks & Kits
-                                                        ├──────────┤
-                                                        F6 Docs & DX
-                                                              ├────────┤
-                                                              F7 Commercial
+✅ PR review bot   → False positive ≤ %5
+✅ Pattern detect   → ≥ 10 anti-pattern türü
+✅ A11y guardian   → ≤ 2ms overhead, contrast auto-fix
+✅ Tests           → ≥ 7,500
+✅ Gates           → 28 total
 ```
 
-**Not:** Fazlar overlap edebilir ama **ancak önceki fazın done criteria'sı sağlandıktan sonra**. F3 başlamadan F4'e kesinlikle geçilmez.
+---
+
+## ~44 Haftalık Gantt Özeti
+
+```
+Hafta: 1       4       8      12      16      20      24      28      32      36      40      44
+       ├───────────────────────┤
+       F4 Gap Closer & Enterprise Suite (12 hf)
+                                ├──────────────────────┤
+                                F5 AI-First Leapfrog (10 hf)
+                                                        ├──────────────────┤
+                                                        F6 DX & Ecosystem (8 hf)
+                                                                            ├──────────────┤
+                                                                            F7 Commercial (6 hf)
+                                                                                            ├──────────────────┤
+                                                                                            F8 AI Runtime (8 hf)
+```
+
+**Toplam:** ~44 hafta (F4'ten F8 sonuna)
+
+**Not:** Fazlar overlap edebilir ama **ancak önceki fazın done criteria'sı sağlandıktan sonra**.
 
 ---
 
@@ -519,34 +525,30 @@ HER ZAMAN:
 
 ---
 
-## Mevcut Durum (2026-03-20)
+## Mevcut Durum (2026-03-22)
 
 **F0 ✅ DONE** — Release Truth (build, test, pack, 13/13 gate)
 **F1 ✅ DONE** — Package Topology (15 deep imports, ESLint boundaries, layer isolation)
-**F2 ✅ DONE** — Foundation Completion:
-  - ✅ Token build pipeline + contrastRatio axis
-  - ✅ Icon System (51 icons, 7 categories, tree-shakeable)
-  - ✅ Headless Hooks (8 hooks: useCombobox, useSelect, useDialog, useTooltip, useAccordion, useMenu, useTabs, useSlider)
-  - ✅ A11y Depth (axe-core in 24+ contract tests)
-**F3 ✅ DONE** — Core Completeness:
-  - ✅ Contract test saturation (95 dosya, 95/95 component kapsama)
-  - ✅ Visual regression (Playwright + 447 visual tests: 149 scenarios × 3 browsers)
-  - ✅ Drawer, InputNumber, Autocomplete eklendi
-  - ✅ v2.0.0 deprecated temizlik (107 → 0, codemod + migration guide)
-  - ✅ Consumer TS errors fixed (Badge tone→variant, Skeleton variant, SearchInput/Select size rename)
-  - ✅ 5,321 tests across 224 test files
+**F2 ✅ DONE** — Foundation Completion (token pipeline, 51 icons, 8 headless hooks, axe-core)
+**F3 ✅ DONE** — Core Completeness (0 deprecated, 95 contract, 5,321 tests, v2.0.0 ready)
+**F4 ⬜ SIRADA** — Gap Closer & Enterprise Suite (form, motion, RTL + X suite)
+**F5 ⬜ BEKLİYOR** — AI-First Leapfrog (MCP v2, AI testing, intelligent runtime)
+**F6 ⬜ BEKLİYOR** — DX & Ecosystem (blocks, docs, Figma round-trip)
+**F7 ⬜ BEKLİYOR** — Commercial Hardening (LTS, migration, RFC)
+**F8 ⬜ BEKLİYOR** — AI Runtime Intelligence (design review, prediction, a11y guardian)
 
-### Rakamlar
+### Rakamlar (F3 Baseline)
 ```
-Test Dosyası:    224
-Test Sayısı:     5,321
+Test Dosyası:    224         → Hedef F8: 400+
+Test Sayısı:     5,321       → Hedef F8: 7,500+
 Primitives:      24
-Components:      60
+Components:      60          → Hedef F4: 70+
 Patterns:        10
 Icons:           51
 Headless Hooks:  8
 Contract Tests:  95
-Stories:         95/95 (100% kapsama)
-Deep Imports:    15
-Release Gates:   13/13 PASS (14 total, 1 skippable: clean-tree)
+Stories:         95/95 (100%)
+Deep Imports:    15          → Hedef F4: 18+ (form, motion, x-suite)
+Release Gates:   14 (13/13)  → Hedef F8: 28
+Rekabet Skoru:   45/60       → Hedef F8: 55/60
 ```

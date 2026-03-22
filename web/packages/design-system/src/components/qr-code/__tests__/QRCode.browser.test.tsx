@@ -18,10 +18,9 @@ describe('QRCode (Browser)', () => {
     await expect.element(screen.getByTestId('qrcode-svg')).toBeVisible();
   });
 
-  it('renders data-component attribute', async () => {
+  it('renders data-testid attribute', async () => {
     const screen = await render(<QRCode value="test" />);
-    const el = document.querySelector('[data-component="qr-code"]');
-    expect(el).not.toBeNull();
+    await expect.element(screen.getByTestId('qrcode-root')).toBeVisible();
   });
 
   it('renders nothing when access is hidden', async () => {
@@ -41,7 +40,6 @@ describe('QRCode (Browser)', () => {
 
   it('renders loading status overlay', async () => {
     const screen = await render(<QRCode value="test" status="loading" />);
-    const el = document.querySelector('[data-component="qr-code"]');
-    expect(el).not.toBeNull();
+    await expect.element(screen.getByTestId('qrcode-loading')).toBeVisible();
   });
 });

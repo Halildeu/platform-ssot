@@ -11,8 +11,8 @@ describe('Slider (Browser)', () => {
 
   it('shows min and max labels', async () => {
     const screen = await render(<Slider min={0} max={100} defaultValue={50} />);
-    await expect.element(screen.getByText('0')).toBeVisible();
-    await expect.element(screen.getByText('100')).toBeVisible();
+    await expect.element(screen.getByText('0', { exact: true })).toBeVisible();
+    await expect.element(screen.getByText('100', { exact: true })).toBeVisible();
   });
 
   it('displays current value', async () => {

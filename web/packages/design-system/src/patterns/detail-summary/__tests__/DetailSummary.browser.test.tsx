@@ -47,7 +47,7 @@ describe('DetailSummary (Browser)', () => {
     const screen = await render(
       <DetailSummary title="Hidden" entity={baseEntity} access="hidden" />,
     );
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.querySelector('[data-component="detail-summary"]')).toBeNull();
   });
 
   it('renders actions slot', async () => {

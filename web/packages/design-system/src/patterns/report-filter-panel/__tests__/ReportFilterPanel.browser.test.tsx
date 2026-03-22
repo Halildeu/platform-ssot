@@ -46,7 +46,7 @@ describe('ReportFilterPanel (Browser)', () => {
 
   it('renders custom button labels', async () => {
     const screen = await render(
-      <ReportFilterPanel submitLabel="Apply" resetLabel="Clear">
+      <ReportFilterPanel submitLabel="Apply" resetLabel="Clear" onReset={() => {}}>
         <input placeholder="Filter" />
       </ReportFilterPanel>,
     );

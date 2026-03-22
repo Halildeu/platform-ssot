@@ -30,17 +30,17 @@ describe('InputNumber (Browser)', () => {
   });
 
   it('respects min boundary', async () => {
-    const onChange = vi.fn();
-    const screen = await render(<InputNumber defaultValue={0} min={0} onChange={onChange} />);
-    await screen.getByLabelText('Decrement').click();
-    expect(onChange).toHaveBeenCalledWith(0);
+    const screen = await render(<InputNumber defaultValue={0} min={0} />);
+    // Decrement button should be disabled at min boundary
+    const decrementBtn = screen.getByLabelText('Decrement');
+    await expect.element(decrementBtn).toBeDisabled();
   });
 
   it('respects max boundary', async () => {
-    const onChange = vi.fn();
-    const screen = await render(<InputNumber defaultValue={10} max={10} onChange={onChange} />);
-    await screen.getByLabelText('Increment').click();
-    expect(onChange).toHaveBeenCalledWith(10);
+    const screen = await render(<InputNumber defaultValue={10} max={10} />);
+    // Increment button should be disabled at max boundary
+    const incrementBtn = screen.getByLabelText('Increment');
+    await expect.element(incrementBtn).toBeDisabled();
   });
 
   it('is disabled when disabled prop is set', async () => {

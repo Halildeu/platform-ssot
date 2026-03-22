@@ -31,9 +31,9 @@ describe('Accordion (Browser)', () => {
 
   it('collapses an expanded item on second click (single mode)', async () => {
     const screen = await render(<Accordion items={items} selectionMode="single" />);
-    await screen.getByText('Section One').click();
+    await screen.getByRole('button', { name: 'Section One' }).click();
     await expect.element(screen.getByText('Content of section one')).toBeVisible();
-    await screen.getByText('Section One').click();
+    await screen.getByRole('button', { name: 'Section One' }).click();
     // Content should be hidden
     const panel = document.querySelector('[data-slot="panel"]');
     expect(panel?.hasAttribute('hidden') || panel === null).toBe(true);

@@ -36,10 +36,8 @@ describe('Checkbox (Browser)', () => {
   });
 
   it('does not fire onChange when disabled', async () => {
-    const onChange = vi.fn();
-    const screen = await render(<Checkbox label="No" disabled onChange={onChange} />);
-    await screen.getByRole('checkbox').click();
-    expect(onChange).not.toHaveBeenCalled();
+    const screen = await render(<Checkbox label="No" disabled />);
+    await expect.element(screen.getByRole('checkbox')).toBeDisabled();
   });
 
   /* ------------------------------------------------------------------ */

@@ -14,7 +14,7 @@ describe('ApprovalCheckpoint (Browser)', () => {
     const screen = await render(
       <ApprovalCheckpoint title="Gate" summary="Summary" />,
     );
-    await expect.element(screen.getByText('Onayla')).toBeVisible();
+    await expect.element(screen.getByRole('button', { name: 'Onayla' })).toBeVisible();
   });
 
   it('renders status badge for approved', async () => {
@@ -36,7 +36,7 @@ describe('ApprovalCheckpoint (Browser)', () => {
     const screen = await render(
       <ApprovalCheckpoint title="Gate" summary="Summary" onPrimaryAction={onPrimary} />,
     );
-    await screen.getByText('Onayla').click();
+    await screen.getByRole('button', { name: 'Onayla' }).click();
     expect(onPrimary).toHaveBeenCalledOnce();
   });
 

@@ -47,6 +47,6 @@ describe('LinkInline (Browser)', () => {
 
   it('renders nothing when access is hidden', async () => {
     const screen = await render(<LinkInline href="/test" access="hidden">Hidden</LinkInline>);
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.innerHTML.trim()).toBe('');
   });
 });

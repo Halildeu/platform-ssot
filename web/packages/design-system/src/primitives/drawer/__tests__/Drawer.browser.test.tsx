@@ -91,7 +91,7 @@ describe('Drawer (Browser)', () => {
     const dialog = document.querySelector('[role="dialog"]')!;
     const labelledby = dialog.getAttribute('aria-labelledby');
     expect(labelledby).toBeTruthy();
-    const title = document.querySelector(`#${labelledby}`);
+    const title = document.getElementById(labelledby!);
     expect(title?.textContent).toBe('My Drawer');
   });
 

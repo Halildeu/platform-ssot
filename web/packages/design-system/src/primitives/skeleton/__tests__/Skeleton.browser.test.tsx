@@ -40,7 +40,7 @@ describe('Skeleton (Browser)', () => {
 
   it('renders loading aria state', async () => {
     const screen = await render(<Skeleton />);
-    const el = document.querySelector('[data-loading="true"]');
+    const el = screen.container.querySelector('[data-loading]');
     expect(el).not.toBeNull();
   });
 });

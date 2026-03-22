@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { Mentions } from '../Mentions';
 
 const options = [
@@ -12,7 +12,7 @@ const options = [
 describe('Mentions (Browser)', () => {
   it('renders textarea with placeholder', async () => {
     const screen = await render(<Mentions options={options} placeholder="Type something..." />);
-    await expect.element(screen.getByPlaceholderText('Type something...')).toBeVisible();
+    await expect.element(page.getByPlaceholder('Type something...')).toBeVisible();
   });
 
   it('renders combobox wrapper', async () => {

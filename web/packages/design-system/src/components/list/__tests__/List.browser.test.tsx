@@ -41,8 +41,7 @@ describe('List (Browser)', () => {
 
   it('shows empty state when no items', async () => {
     const screen = await render(<List items={[]} />);
-    const emptyState = document.querySelector('[data-component="empty-state"]');
-    expect(emptyState).not.toBeNull();
+    await expect.element(screen.getByText('No records found for this list.')).toBeVisible();
   });
 
   it('renders item with description', async () => {

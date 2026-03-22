@@ -174,8 +174,11 @@ describe('Dropdown (Browser)', () => {
         <button>Open Menu</button>
       </Dropdown>,
     );
-    await screen.getByText('Open Menu').click();
-    expect(document.querySelector('[role="menu"]')).toBeNull();
+    // Trigger should be disabled
+    const trigger = screen.container.querySelector('button');
+    expect(trigger?.disabled || trigger?.getAttribute('aria-disabled') === 'true').toBe(true);
+    // Menu should not be rendered
+    expect(screen.container.querySelector('[role="menu"]')).toBeNull();
   });
 
   /* ------------------------------------------------------------------ */

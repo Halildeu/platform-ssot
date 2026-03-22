@@ -73,7 +73,6 @@ describe('Stack (Browser)', () => {
         <span>Content</span>
       </Stack>,
     );
-    const el = document.querySelector('section[data-testid="section-stack"]');
-    expect(el).not.toBeNull();
+    await expect.element(screen.getByTestId('section-stack')).toBeVisible();
   });
 });

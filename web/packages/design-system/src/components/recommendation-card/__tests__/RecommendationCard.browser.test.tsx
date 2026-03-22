@@ -57,7 +57,7 @@ describe('RecommendationCard (Browser)', () => {
     const screen = await render(
       <RecommendationCard title="T" summary="S" access="hidden" />,
     );
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.innerHTML.trim()).toBe('');
   });
 
   it('renders confidence badge', async () => {

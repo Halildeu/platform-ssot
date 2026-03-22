@@ -50,7 +50,7 @@ describe('EmptyState (Browser)', () => {
     const screen = await render(
       <EmptyState title="Hidden" access="hidden" />,
     );
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.innerHTML.trim()).toBe('');
   });
 
   it('renders without description when not provided', async () => {

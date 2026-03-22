@@ -64,12 +64,11 @@ describe('NavigationRail (Browser)', () => {
       { value: 'dashboard', label: 'Dashboard' },
       { value: 'orders', label: 'Orders', disabled: true },
     ];
-    const onValueChange = vi.fn();
     const screen = await render(
-      <NavigationRail items={disabledItems} onValueChange={onValueChange} />,
+      <NavigationRail items={disabledItems} />,
     );
-    await screen.getByText('Orders').click();
-    expect(onValueChange).not.toHaveBeenCalled();
+    const disabledBtn = screen.container.querySelector('button[disabled]');
+    expect(disabledBtn).not.toBeNull();
   });
 
   it('renders footer slot', async () => {

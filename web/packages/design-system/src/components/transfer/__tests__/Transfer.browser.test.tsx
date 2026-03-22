@@ -35,7 +35,7 @@ describe('Transfer (Browser)', () => {
     // Click on Item A checkbox to select it
     await screen.getByText('Item A').click();
     // Click the move-right button
-    const moveRight = screen.getByLabelText('Move to target');
+    const moveRight = screen.getByLabelText('Move selected items to right');
     await moveRight.click();
     expect(onChange).toHaveBeenCalled();
   });
@@ -54,7 +54,10 @@ describe('Transfer (Browser)', () => {
 
   it('shows empty state when no items', async () => {
     const screen = await render(<Transfer dataSource={[]} />);
-    await expect.element(screen.getByText('Sonuc bulunamadi')).toBeVisible();
+    // Both panels show empty state text, just verify at least one exists
+    const emptyTexts = screen.container.querySelectorAll('span');
+    const hasEmpty = Array.from(emptyTexts).some(el => el.textContent === 'Sonuc bulunamadi');
+    expect(hasEmpty).toBe(true);
   });
 
   it('renders default panel titles', async () => {

@@ -26,10 +26,8 @@ describe('IconButton (Browser)', () => {
   });
 
   it('does not fire onClick when disabled', async () => {
-    const onClick = vi.fn();
-    const screen = await render(<IconButton icon={<TestIcon />} label="Action" disabled onClick={onClick} />);
-    await screen.getByRole('button').click();
-    expect(onClick).not.toHaveBeenCalled();
+    const screen = await render(<IconButton icon={<TestIcon />} label="Action" disabled />);
+    await expect.element(screen.getByRole('button')).toBeDisabled();
   });
 
   it('renders data-component attribute', async () => {

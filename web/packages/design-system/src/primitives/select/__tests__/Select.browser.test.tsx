@@ -30,8 +30,10 @@ describe('Select (Browser)', () => {
   it('fires onChange when a different option is selected', async () => {
     const onChange = vi.fn();
     const screen = await render(<Select options={options} defaultValue="a" onChange={onChange} />);
-    const select = screen.getByRole('combobox');
-    await select.fill('b');
+    const selectEl = screen.container.querySelector('select') as HTMLSelectElement;
+    const nativeSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
+    nativeSetter?.call(selectEl, 'b');
+    selectEl.dispatchEvent(new Event('change', { bubbles: true }));
     expect(onChange).toHaveBeenCalled();
   });
 

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
+import { page, userEvent } from 'vitest/browser';
 import { SearchInput } from '../SearchInput';
 
 describe('SearchInput (Browser)', () => {
   it('renders with placeholder', async () => {
     const screen = await render(<SearchInput placeholder="Search..." />);
-    await expect.element(screen.getByPlaceholderText('Search...')).toBeVisible();
+    await expect.element(page.getByPlaceholder('Search...')).toBeVisible();
   });
 
   it('renders search input type', async () => {
@@ -33,13 +33,13 @@ describe('SearchInput (Browser)', () => {
 
   it('is disabled when disabled prop is set', async () => {
     const screen = await render(<SearchInput placeholder="Disabled" disabled />);
-    await expect.element(screen.getByPlaceholderText('Disabled')).toBeDisabled();
+    await expect.element(page.getByPlaceholder('Disabled')).toBeDisabled();
   });
 
   it('fires onChange on typing', async () => {
     const onChange = vi.fn();
     const screen = await render(<SearchInput placeholder="Type here" onChange={onChange} />);
-    const input = screen.getByPlaceholderText('Type here');
+    const input = page.getByPlaceholder('Type here');
     await userEvent.type(input.element(), 'hello');
     expect(onChange).toHaveBeenCalled();
   });

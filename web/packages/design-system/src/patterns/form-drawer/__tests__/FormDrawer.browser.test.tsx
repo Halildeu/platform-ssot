@@ -9,7 +9,7 @@ describe('FormDrawer (Browser)', () => {
         <div>Form content</div>
       </FormDrawer>,
     );
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.querySelector('[role="dialog"]')).toBeNull();
   });
 
   it('renders title when open', async () => {

@@ -17,7 +17,7 @@ describe('AILayoutBuilder (Browser)', () => {
   it('renders block content', async () => {
     const screen = await render(<AILayoutBuilder blocks={sampleBlocks} />);
     await expect.element(screen.getByText('$1000')).toBeVisible();
-    await expect.element(screen.getByText('Chart')).toBeVisible();
+    await expect.element(screen.getByText('Chart', { exact: true })).toBeVisible();
   });
 
   it('renders with custom title and description', async () => {
@@ -40,7 +40,7 @@ describe('AILayoutBuilder (Browser)', () => {
 
   it('renders nothing when access is hidden', async () => {
     const screen = await render(<AILayoutBuilder blocks={sampleBlocks} access="hidden" />);
-    expect(document.body.textContent).toBe('');
+    expect(screen.container.innerHTML.trim()).toBe('');
   });
 
   it('renders disabled state', async () => {

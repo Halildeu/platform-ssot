@@ -54,8 +54,7 @@ describe('FormField (Browser)', () => {
         <input type="text" />
       </FormField>,
     );
-    // The wrapper should have opacity for disabled state
-    const wrapper = document.body.firstElementChild;
+    const wrapper = screen.container.firstElementChild;
     expect(wrapper?.className).toContain('opacity');
   });
 
@@ -65,7 +64,7 @@ describe('FormField (Browser)', () => {
         <input type="text" />
       </FormField>,
     );
-    const wrapper = document.body.firstElementChild;
+    const wrapper = screen.container.firstElementChild;
     expect(wrapper?.className).toContain('flex');
   });
 

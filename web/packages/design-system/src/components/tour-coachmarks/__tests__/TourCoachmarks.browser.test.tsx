@@ -11,7 +11,7 @@ const steps = [
 describe('TourCoachmarks (Browser)', () => {
   it('renders tour step when open', async () => {
     const screen = await render(<TourCoachmarks steps={steps} defaultOpen />);
-    await expect.element(screen.getByText('Welcome')).toBeVisible();
+    await expect.element(screen.getByText('Welcome', { exact: true })).toBeVisible();
     await expect.element(screen.getByText('This is the first step.')).toBeVisible();
   });
 
