@@ -1,6 +1,9 @@
 /* ------------------------------------------------------------------ */
 /*  Default Error Messages — TR/EN with factory pattern                */
+/*  Extended with 50+ locale packs via ./locales                       */
 /* ------------------------------------------------------------------ */
+
+import { allLocales } from './locales';
 
 export interface ErrorMessageMap {
   required: (label: string) => string;
@@ -38,6 +41,7 @@ export const errorMessagesEn: ErrorMessageMap = {
 const localeMap: Record<string, ErrorMessageMap> = {
   tr: errorMessagesTr,
   en: errorMessagesEn,
+  ...allLocales,
 };
 
 /**
