@@ -88,6 +88,9 @@ const ObservabilityPage = lazy(() => import("./pages/ObservabilityPage"));
 /* Intelligence */
 const IntelligencePage = lazy(() => import("./pages/IntelligencePage"));
 
+/* Leadership Proof */
+const LeadershipProofPage = lazy(() => import("./pages/LeadershipProofPage"));
+
 /* X Suite Runtime Preview (iframe target for Design Lab dual preview) */
 const XSuiteRuntimePreview = lazy(() => import("./XSuiteRuntimePreview"));
 
@@ -275,6 +278,9 @@ export const DesignLabRoutes: React.FC = () => (
 
         {/* Intelligence */}
         <Route path="intelligence" element={<IntelligencePage />} />
+
+        {/* Leadership Proof */}
+        <Route path="leadership" element={<LeadershipProofPage />} />
 
         {/* Recipes layer */}
         <Route path="recipes" element={<RecipesListing />} />

@@ -1,6 +1,18 @@
-# Platform Health Badges
+# Quality Badges
 
-Markdown badges for use in README and documentation.
+## Usage in README
+
+![Tests](https://img.shields.io/badge/tests-5910%20pass-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-85%25-green)
+![TypeScript](https://img.shields.io/badge/typescript-strict-blue)
+![Components](https://img.shields.io/badge/components-232-blue)
+![Stories](https://img.shields.io/badge/stories-139-blue)
+![Bundle](https://img.shields.io/badge/bundle-gated-green)
+![A11y](https://img.shields.io/badge/a11y-axe--core-purple)
+![Tokens](https://img.shields.io/badge/tokens-DTCG-orange)
+![License](https://img.shields.io/badge/license-UNLICENSED-red)
+![Node](https://img.shields.io/badge/node-20%20%7C%2022-green)
+![React](https://img.shields.io/badge/react-18.2%20%7C%2018.3-blue)
 
 ## Badge Definitions
 
@@ -11,27 +23,57 @@ Markdown badges for use in README and documentation.
 
 ### Test Count
 ```markdown
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen?logo=vitest)](https://github.com/{owner}/{repo}/actions)
+![Tests](https://img.shields.io/badge/tests-5910%20pass-brightgreen)
 ```
 
 ### Coverage
 ```markdown
-[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen?logo=codecov)](https://github.com/{owner}/{repo}/actions)
+![Coverage](https://img.shields.io/badge/coverage-85%25-green)
 ```
 
 ### TypeScript Strict
 ```markdown
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+![TypeScript](https://img.shields.io/badge/typescript-strict-blue)
+```
+
+### Components
+```markdown
+![Components](https://img.shields.io/badge/components-232-blue)
+```
+
+### Stories
+```markdown
+![Stories](https://img.shields.io/badge/stories-139-blue)
+```
+
+### Bundle Gating
+```markdown
+![Bundle](https://img.shields.io/badge/bundle-gated-green)
+```
+
+### Accessibility
+```markdown
+![A11y](https://img.shields.io/badge/a11y-axe--core-purple)
+```
+
+### Design Tokens
+```markdown
+![Tokens](https://img.shields.io/badge/tokens-DTCG-orange)
 ```
 
 ### License
 ```markdown
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+![License](https://img.shields.io/badge/license-UNLICENSED-red)
 ```
 
-### Accessibility Compliance
+### Node Support
 ```markdown
-[![A11y](https://img.shields.io/badge/a11y-WCAG%202.1%20AA-blue?logo=accessibility)](./ACCESSIBILITY.md)
+![Node](https://img.shields.io/badge/node-20%20%7C%2022-green)
+```
+
+### React Support
+```markdown
+![React](https://img.shields.io/badge/react-18.2%20%7C%2018.3-blue)
 ```
 
 ## Combined Badge Row
@@ -39,12 +81,17 @@ Markdown badges for use in README and documentation.
 Copy this block into your README for a complete status row:
 
 ```markdown
-[![Build Status](https://github.com/{owner}/{repo}/actions/workflows/design-system-gate.yml/badge.svg?branch=main)](https://github.com/{owner}/{repo}/actions/workflows/design-system-gate.yml)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen?logo=vitest)](https://github.com/{owner}/{repo}/actions)
-[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen?logo=codecov)](https://github.com/{owner}/{repo}/actions)
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
-[![A11y](https://img.shields.io/badge/a11y-WCAG%202.1%20AA-blue?logo=accessibility)](./ACCESSIBILITY.md)
+![Tests](https://img.shields.io/badge/tests-5910%20pass-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-85%25-green)
+![TypeScript](https://img.shields.io/badge/typescript-strict-blue)
+![Components](https://img.shields.io/badge/components-232-blue)
+![Stories](https://img.shields.io/badge/stories-139-blue)
+![Bundle](https://img.shields.io/badge/bundle-gated-green)
+![A11y](https://img.shields.io/badge/a11y-axe--core-purple)
+![Tokens](https://img.shields.io/badge/tokens-DTCG-orange)
+![License](https://img.shields.io/badge/license-UNLICENSED-red)
+![Node](https://img.shields.io/badge/node-20%20%7C%2022-green)
+![React](https://img.shields.io/badge/react-18.2%20%7C%2018.3-blue)
 ```
 
 ## Usage Notes
