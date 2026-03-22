@@ -18,10 +18,10 @@ import type { RemoteHealth } from '../../../../lib/mf-resilience';
 const KNOWN_REMOTES: Record<string, string> = {
   suggestions: 'http://localhost:3001/remoteEntry.js',
   ethic: 'http://localhost:3002/remoteEntry.js',
-  users: 'http://localhost:3003/remoteEntry.js',
-  access: 'http://localhost:3004/remoteEntry.js',
-  audit: 'http://localhost:3005/remoteEntry.js',
-  reporting: 'http://localhost:3006/remoteEntry.js',
+  users: 'http://localhost:3004/remoteEntry.js',
+  access: 'http://localhost:3005/remoteEntry.js',
+  audit: 'http://localhost:3006/remoteEntry.js',
+  reporting: 'http://localhost:3007/remoteEntry.js',
 };
 
 const STATUS_CONFIG: Record<RemoteHealth['status'], { label: string; color: string; dot: string }> = {
