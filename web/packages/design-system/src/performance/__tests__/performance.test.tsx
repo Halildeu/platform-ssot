@@ -447,12 +447,16 @@ describe('useIntersectionObserver', () => {
     observeMock = vi.fn();
     disconnectMock = vi.fn();
 
-    (globalThis as any).IntersectionObserver = vi.fn(
-      (cb: IntersectionObserverCallback) => {
+    // Use a real class so `new IntersectionObserver(...)` works with Vite 8 Rolldown
+    (globalThis as any).IntersectionObserver = class MockIntersectionObserver {
+      constructor(cb: IntersectionObserverCallback) {
         observerCallback = cb;
-        return { observe: observeMock, disconnect: disconnectMock };
-      },
-    );
+      }
+      observe = observeMock;
+      disconnect = disconnectMock;
+      unobserve = vi.fn();
+      takeRecords = vi.fn().mockReturnValue([]);
+    };
   });
 
   afterEach(() => {
@@ -536,12 +540,15 @@ describe('RenderWhenVisible', () => {
   let observerCallback: IntersectionObserverCallback;
 
   beforeEach(() => {
-    (globalThis as any).IntersectionObserver = vi.fn(
-      (cb: IntersectionObserverCallback) => {
+    (globalThis as any).IntersectionObserver = class MockIntersectionObserver {
+      constructor(cb: IntersectionObserverCallback) {
         observerCallback = cb;
-        return { observe: vi.fn(), disconnect: vi.fn() };
-      },
-    );
+      }
+      observe = vi.fn();
+      disconnect = vi.fn();
+      unobserve = vi.fn();
+      takeRecords = vi.fn().mockReturnValue([]);
+    };
   });
 
   afterEach(() => {

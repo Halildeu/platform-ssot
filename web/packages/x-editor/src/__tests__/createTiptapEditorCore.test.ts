@@ -84,16 +84,18 @@ function makeMockExtension(name: string) {
   };
 }
 
+// Use a real class so `new Editor(...)` works with Vite 8 Rolldown
+class MockEditor {
+  _inner: ReturnType<typeof createMockTiptapEditor>;
+  constructor(opts: Record<string, unknown>) {
+    this._inner = createMockTiptapEditor((opts.content as string) || '');
+    // Copy all methods to this instance so callers see them
+    Object.assign(this, this._inner);
+  }
+}
+
 const mockModules = {
-  Editor: vi.fn().mockImplementation((opts: Record<string, unknown>) => {
-    const editor = createMockTiptapEditor((opts.content as string) || '');
-    // Call onUpdate if provided to simulate Tiptap behaviour
-    if (opts.onUpdate && typeof opts.content === 'string' && opts.content) {
-      // Simulate initial content set (Tiptap does not fire onUpdate on init,
-      // so we skip calling it here — matches real Tiptap behaviour)
-    }
-    return editor;
-  }),
+  Editor: MockEditor,
   StarterKit: makeMockExtension('starterKit'),
   Link: makeMockExtension('link'),
   Image: makeMockExtension('image'),
