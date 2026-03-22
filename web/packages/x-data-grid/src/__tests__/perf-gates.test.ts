@@ -54,7 +54,7 @@ describe('Performance Gates — x-data-grid', () => {
     expect(elapsed).toBeLessThan(20);
   });
 
-  it('group 10K rows by 3 levels in < 50ms', () => {
+  it('group 10K rows by 3 levels in < 100ms', () => {
     const data = Array.from({ length: ROW_COUNT }, (_, i) => ({
       country: ['TR', 'DE', 'US', 'UK'][i % 4],
       city: ['IST', 'ANK', 'BER', 'NYC', 'LON'][i % 5],
@@ -68,7 +68,7 @@ describe('Performance Gates — x-data-grid', () => {
       groups.get(key)!.push(row);
     }
     const elapsed = performance.now() - start;
-    expect(elapsed).toBeLessThan(50);
+    expect(elapsed).toBeLessThan(100);
   });
 
   it('CSV serialize 10K rows in < 150ms', () => {

@@ -137,6 +137,8 @@ export interface VariantIntegrationProps<RowData = unknown> {
   canDemoteToPersonal?: boolean;
   /** Whether the current user can delete global variants */
   canDeleteGlobal?: boolean;
+  /** Additional CSS class for custom styling */
+  className?: string;
 }
 
 /* ------------------------------------------------------------------ */

@@ -67,7 +67,7 @@ const inventory = {
                JSON.parse(fs.readFileSync(path.join(ROOT, 'packages/x-editor/package.json'), 'utf8')).dependencies?.['@tiptap/react'] != null,
   },
   dndKit: {
-    installed: JSON.parse(fs.readFileSync(path.join(ROOT, 'packages/x-kanban/package.json'), 'utf8')).dependencies?.['@dnd-kit/core'] != null,
+    installed: (() => { const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'packages/x-kanban/package.json'), 'utf8')); return (pkg.dependencies?.['@dnd-kit/core'] ?? pkg.peerDependencies?.['@dnd-kit/core'] ?? pkg.devDependencies?.['@dnd-kit/core']) != null; })(),
   },
   tokens: {
     figmaTokens: exists('design-tokens/figma.tokens.json'),

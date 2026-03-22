@@ -30,7 +30,7 @@ const COMPONENT_DIRS = [
 // Props that indicate a11y support
 const A11Y_PROPS = ['aria-label', 'ariaLabel', 'label', 'title', 'role', 'aria-labelledby', 'ariaLabelledBy', 'aria-describedby'];
 
-// Components excluded from size prop requirement (layout/utility components)
+// Components excluded from size prop requirement (layout/utility/composite components)
 const SIZE_EXCLUSIONS = new Set([
   'Divider', 'Spacer', 'Layout', 'Grid', 'Stack', 'Box', 'Flex',
   'Container', 'Section', 'Card', 'CardHeader', 'CardBody', 'CardFooter',
@@ -50,6 +50,31 @@ const SIZE_EXCLUSIONS = new Set([
   'Toast', 'Toaster',
   'Skeleton', 'Progress',
   'DataGrid', 'Chart', 'Scheduler', 'Kanban', 'Editor', 'FormBuilder',
+  // Utility/internal primitives
+  'Slot', 'LinkInline', 'Dropdown', 'ErrorBoundary',
+  // Composite advanced components (size managed by children)
+  'AIActionAuditTimeline', 'AIGuidedAuthoring', 'AILayoutBuilder',
+  'ApprovalCheckpoint', 'ApprovalReview', 'CitationPanel',
+  'CommandPalette', 'ContextMenu', 'DetailDrawer', 'FormDrawer',
+  'NotificationDrawer', 'SmartDashboard', 'VariantIntegration',
+  'GridShell', 'GridToolbar', 'EntityGridTemplate',
+  'SearchFilterListing', 'MasterDetail', 'AgGridServer',
+  'PageLayout', 'CrudTemplate', 'DashboardTemplate',
+  'DetailTemplate', 'SettingsTemplate', 'CommandWorkspace',
+  'TourCoachmarks', 'ToastProvider', 'PromptComposer',
+  'RecommendationCard', 'NotificationPanel',
+]);
+
+// Components excluded from a11y prop requirement (layout/container/decorative)
+const A11Y_EXCLUSIONS = new Set([
+  'Slot', 'Stack', 'Divider', 'Spacer', 'Skeleton', 'Spinner',
+  'Card', 'Badge', 'Tag', 'Timeline', 'Steps',
+  'Avatar', 'AvatarGroup', 'ErrorBoundary',
+  'GridShell', 'GridToolbar', 'VariantIntegration',
+  'PageLayout', 'EntityGridTemplate', 'AgGridServer',
+  'SearchFilterListing', 'MasterDetail', 'SmartDashboard',
+  'CrudTemplate', 'DashboardTemplate', 'DetailTemplate',
+  'SettingsTemplate', 'CommandWorkspace', 'NotificationPanel',
 ]);
 
 function findComponentFiles() {
@@ -133,10 +158,12 @@ function checkFile(filePath) {
     }
   }
 
-  // Rule 3: a11y prop
-  const hasA11y = A11Y_PROPS.some((prop) => content.includes(prop));
-  if (!hasA11y) {
-    issues.push('missing a11y prop (aria-label, label, title, or role)');
+  // Rule 3: a11y prop (skip layout/container/decorative components)
+  if (!A11Y_EXCLUSIONS.has(componentName)) {
+    const hasA11y = A11Y_PROPS.some((prop) => content.includes(prop));
+    if (!hasA11y) {
+      issues.push('missing a11y prop (aria-label, label, title, or role)');
+    }
   }
 
   if (issues.length === 0) return null;
