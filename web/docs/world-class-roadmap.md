@@ -11,7 +11,7 @@
 | Alan | Durum | Detay |
 |------|-------|-------|
 | Components | ✅ Güçlü | 232 exported, 211 doc entry |
-| Tests | ✅ Güçlü | 5,910 pass, verify EXIT 0 |
+| Tests | ✅ Güçlü | 5,910 pass, verify EXIT 0, Vitest 4 workspace + browser mode |
 | X-Suite | ✅ Güçlü | 6 paket, 414 test, build green |
 | Storybook | ✅ Var | .storybook/ config + ~139 story |
 | Playwright | ✅ Var | 18 spec, CI'da koşuyor |
@@ -28,6 +28,10 @@
 | Security CI | ✅ Var | CodeQL + gitleaks + Trivy + SBOM |
 | Release automation | ✅ Var | release-please + workflow |
 | Quality cockpit | ✅ Var | Command Center + SLO + security |
+| Vitest Browser Mode | ✅ DONE | Vitest 4 + Playwright browser tests, CI entegre |
+| Visual Regression (Vitest) | ✅ DONE | vitest.browser.config.ts + CI artifact upload |
+| Vitest Workspace | ✅ DONE | vitest.workspace.ts, test:workspace script, tum paketler tek komut |
+| Vite DevTools | ✅ DONE | vite --inspect + build --mode analyze |
 
 ### GERÇEK GAP'LER (capability yok değil, maturity eksik)
 
@@ -222,12 +226,12 @@
 | Story coverage | 128 | 150 | 200 | 232 | 232+ |
 | A11y gate | axe installed | hard blocker | e2e | SR evidence | certified |
 | Token platforms | 1 (TS+JSON) | 4 (CSS+SCSS+TW+TS) | + Figma sync | + drift detect | drift=0 |
-| Visual regression | workflow var | ingestion | TurboSnap | approval flow | full |
+| Visual regression | ✅ DONE (Vitest browser) | ingestion | TurboSnap | approval flow | full |
 | Bundle gate | passive | hard blocker | per-package | trend | regression=0 |
 | Figma sync | panel var | Code Connect | Variables API | auto-PR | drift=0 |
 | Evidence panels | 2 live | 5 live | 8 live | 12 live | all live |
 | Governance | docs | RBAC | audit trail | approvals | full ops |
 | AI assistant | başlangıç | grounded | source-linked | codegen | MCP |
 | First-value time | ? | 30dk | 20dk | 15dk | 10dk |
-| verify:release | EXIT 0 | +visual | +bench hard | +compat | all gates |
+| verify:release | EXIT 0, verify:full ✅ | +visual ✅ DONE | +bench hard | +compat | all gates |
 | Simüle panel | ~3 | 0 | 0 | 0 | 0 |
