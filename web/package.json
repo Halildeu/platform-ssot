@@ -279,7 +279,8 @@
       "baseline-browser-mapping": "2.10.0",
       "browserslist": "4.28.1",
       "caniuse-lite": "1.0.30001777",
-      "update-browserslist-db": "1.2.3"
+      "update-browserslist-db": "1.2.3",
+      "webpack": "5.103.0"
     }
   },
   "size-limit": [
