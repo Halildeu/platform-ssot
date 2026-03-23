@@ -1,10 +1,10 @@
+@import "tailwindcss";
+
+/* Use existing v3 config — TW4 @config reads it natively */
+@config "../../../tailwind.config.js";
+
 @import './styles/theme.css';
 @import './styles/token-bridge.css';
-@import 'tokens/build/dark-mode.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* Hafif reset: margin/padding temizliği ve tema var'larından zemin/metin */
 *,
