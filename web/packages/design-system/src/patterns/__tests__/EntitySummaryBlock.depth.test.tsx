@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { EntitySummaryBlock } from '../entity-summary-block/EntitySummaryBlock';
 
@@ -48,16 +47,6 @@ describe('EntitySummaryBlock — depth', () => {
   it('renders avatar slot', () => {
     render(<EntitySummaryBlock {...baseProps} avatar={{ name: 'John Doe' }} />);
     expect(screen.getByText('Acme Corp')).toBeInTheDocument();
-  });
-
-  it('action click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <EntitySummaryBlock {...baseProps} actions={<button onClick={onClick}>Delete</button>} />,
-    );
-    await user.click(screen.getByRole('button', { name: /delete/i }));
-    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {

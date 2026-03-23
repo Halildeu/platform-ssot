@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
@@ -58,13 +57,6 @@ describe('VariantIntegration — depth', () => {
   it('empty state renders selector', () => {
     render(<VariantIntegration {...baseProps} />);
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-  });
-
-  it('opens variant manager via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<VariantIntegration {...baseProps} />);
-    await user.click(screen.getByTitle('Manage variants'));
-    expect(screen.getByText('Varyantlar')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {

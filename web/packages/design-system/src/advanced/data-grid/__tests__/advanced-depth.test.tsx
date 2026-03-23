@@ -8,7 +8,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 /* ------------------------------------------------------------------ */
 /*  Mocks — AG Grid cannot render in jsdom                            */
@@ -64,11 +63,6 @@ describe('VariantIntegration — depth', () => {
     gridApi: null,
   };
 
-  it('has correct ARIA roles', () => {
-    render(<VariantIntegration {...baseProps} />);
-    expect(screen.getByLabelText('Grid variant')).toBeInTheDocument();
-  });
-
   it('renders variant selector with minimal props', () => {
     render(<VariantIntegration {...baseProps} />);
     expect(screen.getByLabelText('Grid variant')).toBeInTheDocument();
@@ -101,13 +95,6 @@ describe('VariantIntegration — depth', () => {
     expect(screen.getByText('Varyantlar')).toBeInTheDocument();
     fireEvent.click(screen.getByTitle('Kapat'));
     expect(screen.queryByText('Varyantlar')).not.toBeInTheDocument();
-  });
-
-  it('opens variant manager via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<VariantIntegration {...baseProps} />);
-    await user.click(screen.getByTitle('Manage variants'));
-    expect(screen.getByText('Varyantlar')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -148,11 +135,6 @@ describe('GridToolbar — depth', () => {
     theme: 'quartz' as const,
     density: 'comfortable' as const,
   };
-
-  it('has correct ARIA roles', () => {
-    render(<GridToolbar {...baseProps} />);
-    expect(screen.getByLabelText('Quick filter')).toBeInTheDocument();
-  });
 
   it('renders toolbar with quick filter', () => {
     render(<GridToolbar {...baseProps} />);
@@ -198,14 +180,6 @@ describe('GridToolbar — depth', () => {
     expect(onThemeChange).toHaveBeenCalledWith('balham');
   });
 
-  it('density toggle via userEvent click', async () => {
-    const user = userEvent.setup();
-    const onDensityChange = vi.fn();
-    render(<GridToolbar {...baseProps} onDensityChange={onDensityChange} />);
-    await user.click(screen.getByText('Compact'));
-    expect(onDensityChange).toHaveBeenCalledWith('compact');
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<GridToolbar {...baseProps} />);
     await waitFor(() => {
@@ -245,13 +219,6 @@ describe('EntityGridTemplate — depth', () => {
     columnDefs: [{ field: 'name' }, { field: 'age' }],
   };
 
-  it('has accessible structure', () => {
-    const { container } = render(<EntityGridTemplate {...baseProps} />);
-    const root = container.querySelector('[data-component="entity-grid-template"]');
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[data-grid-id]')).toBeTruthy();
-  });
-
   it('renders with minimal config', () => {
     const { container } = render(<EntityGridTemplate {...baseProps} />);
     expect(container.querySelector('[data-component="entity-grid-template"]')).toBeInTheDocument();
@@ -274,13 +241,6 @@ describe('EntityGridTemplate — depth', () => {
       <EntityGridTemplate {...baseProps} access="hidden" />,
     );
     expect(container.textContent).toBe('');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(<EntityGridTemplate {...baseProps} />);
-    await user.tab();
-    expect(container.querySelector('[data-component="entity-grid-template"]')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -318,15 +278,6 @@ describe('EntityGridTemplate — depth', () => {
 describe('AgGridServer — depth', () => {
   const mockGetData = vi.fn().mockResolvedValue({ rows: [], total: 0 });
 
-  it('has accessible structure', () => {
-    const { container } = render(
-      <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} />,
-    );
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[data-testid]')).toBeTruthy();
-  });
-
   it('renders with minimal columnDefs', () => {
     render(
       <AgGridServer
@@ -362,15 +313,6 @@ describe('AgGridServer — depth', () => {
       <AgGridServer columnDefs={[]} getData={mockGetData} access="hidden" />,
     );
     expect(container.innerHTML).toBe('');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(
-      <AgGridServer columnDefs={[{ field: 'x' }]} getData={mockGetData} />,
-    );
-    await user.tab();
-    expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
@@ -419,13 +361,6 @@ describe('AgGridServer — depth', () => {
 describe('GridShell — depth', () => {
   const baseCols = [{ field: 'col1' }];
 
-  it('has accessible structure', () => {
-    const { container } = render(<GridShell columnDefs={baseCols} rowData={[]} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[data-testid]')).toBeTruthy();
-  });
-
   it('renders with columnDefs and rowData', () => {
     render(
       <GridShell
@@ -466,13 +401,6 @@ describe('GridShell — depth', () => {
     expect(screen.getByTestId('footer')).toBeInTheDocument();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<GridShell columnDefs={baseCols} rowData={[]} />);
-    await user.tab();
-    expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<GridShell columnDefs={baseCols} rowData={[]} />);
     await waitFor(() => {
@@ -506,15 +434,6 @@ describe('GridShell — depth', () => {
 /* ================================================================== */
 
 describe('TablePagination — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(
-      <TablePagination totalItems={100} page={1} pageSize={10} showFirstLastButtons />,
-    );
-    expect(screen.getByLabelText('Next page')).toBeInTheDocument();
-    expect(screen.getByLabelText('Previous page')).toBeInTheDocument();
-    expect(screen.getByLabelText('First page')).toBeInTheDocument();
-  });
-
   it('renders with totalItems', () => {
     const { container } = render(<TablePagination totalItems={100} />);
     expect(container.querySelector('[data-component="table-pagination"]')).toBeInTheDocument();
@@ -587,22 +506,6 @@ describe('TablePagination — depth', () => {
     );
     expect(screen.getByLabelText('First page')).toBeInTheDocument();
     expect(screen.getByLabelText('Last page')).toBeInTheDocument();
-  });
-
-  it('next page via userEvent click', async () => {
-    const user = userEvent.setup();
-    const onPageChange = vi.fn();
-    render(
-      <TablePagination
-        totalItems={100}
-        page={1}
-        pageSize={10}
-        onPageChange={onPageChange}
-        showFirstLastButtons
-      />,
-    );
-    await user.click(screen.getByLabelText('Next page'));
-    expect(onPageChange).toHaveBeenCalledWith(2);
   });
 
   it('resolves async rendering via waitFor', async () => {

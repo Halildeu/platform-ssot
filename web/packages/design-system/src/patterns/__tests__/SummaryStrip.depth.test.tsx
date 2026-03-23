@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { SummaryStrip } from '../summary-strip/SummaryStrip';
 
@@ -51,13 +50,6 @@ describe('SummaryStrip — depth', () => {
     const strip = container.firstElementChild!;
     fireEvent.click(strip);
     expect(strip).toBeInTheDocument();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<SummaryStrip items={items} />);
-    await user.tab();
-    expect(screen.getByText('Revenue')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {

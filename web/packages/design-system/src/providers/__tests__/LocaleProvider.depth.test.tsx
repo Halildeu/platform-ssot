@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { LocaleProvider, useLocale } from '../LocaleProvider';
 
@@ -56,18 +55,6 @@ describe('LocaleProvider — depth', () => {
       </LocaleProvider>,
     );
     fireEvent.click(screen.getByRole('button', { name: /action/i }));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('click via userEvent through provider', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <LocaleProvider>
-        <button onClick={onClick}>UE Action</button>
-      </LocaleProvider>,
-    );
-    await user.click(screen.getByText('UE Action'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 

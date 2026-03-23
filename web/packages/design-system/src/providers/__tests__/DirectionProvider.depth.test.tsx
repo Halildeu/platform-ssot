@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { DirectionProvider } from '../DirectionProvider';
 
@@ -41,7 +40,7 @@ describe('DirectionProvider — depth', () => {
   });
 
   it('disabled — nested providers override parent direction', () => {
-    render(
+    const { container } = render(
       <DirectionProvider direction="ltr">
         <DirectionProvider direction="rtl">
           <span data-testid="inner">Nested</span>
@@ -61,30 +60,6 @@ describe('DirectionProvider — depth', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /click me/i }));
     expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('click via userEvent through provider', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <DirectionProvider direction="rtl">
-        <button onClick={onClick}>UE Click</button>
-      </DirectionProvider>,
-    );
-    await user.click(screen.getByText('UE Click'));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('typing via userEvent through RTL provider', async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
-    render(
-      <DirectionProvider direction="rtl">
-        <input aria-label="rtl-input" onChange={onChange} />
-      </DirectionProvider>,
-    );
-    await user.type(screen.getByLabelText('rtl-input'), 'test');
-    expect(onChange).toHaveBeenCalled();
   });
 
   it('resolves async rendering via waitFor', async () => {

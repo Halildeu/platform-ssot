@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, act, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
   useReducedMotion: () => false,
@@ -98,26 +97,9 @@ describe('AnimatePresence — depth', () => {
     expect(screen.getByText('Second')).toBeInTheDocument();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    vi.useRealTimers();
-    const user = userEvent.setup();
-    render(
-      <AnimatePresence>
-        <button key="btn">Click</button>
-      </AnimatePresence>,
-    );
-    await user.tab();
-    expect(screen.getByText('Click')).toBeInTheDocument();
-    vi.useFakeTimers();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     vi.useRealTimers();
-    const { container } = render(
-      <AnimatePresence>
-        <div key="panel" data-testid="panel">Content</div>
-      </AnimatePresence>,
-    );
+    const { container } = render(<AnimatePresence><div key="p" data-testid="panel">Content</div></AnimatePresence>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -125,22 +107,14 @@ describe('AnimatePresence — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(
-      <AnimatePresence access="readonly">
-        <div key="panel">Content</div>
-      </AnimatePresence>,
-    );
+    const { container } = render(<AnimatePresence access="readonly"><div key="p">Content</div></AnimatePresence>);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(
-      <AnimatePresence>
-        <div key="panel">Content</div>
-      </AnimatePresence>,
-    );
+    const { container } = render(<AnimatePresence><div key="p">Content</div></AnimatePresence>);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();

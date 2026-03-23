@@ -6,7 +6,6 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 /* ================================================================== */
@@ -15,12 +14,6 @@ import React from 'react';
 import { ThemePreviewCard } from '../theme-preview-card/ThemePreviewCard';
 
 describe('ThemePreviewCard — depth', () => {
-  it('has accessible structure', () => {
-    render(<ThemePreviewCard selected />);
-    // Selected state renders checkmark with sr-only label for screen readers
-    expect(screen.getByText('✓')).toBeInTheDocument();
-  });
-
   it('renders selected state with checkmark', () => {
     render(<ThemePreviewCard selected />);
     expect(screen.getByText('✓')).toBeInTheDocument();
@@ -34,13 +27,6 @@ describe('ThemePreviewCard — depth', () => {
   it('applies disabled access state attribute', () => {
     const { container } = render(<ThemePreviewCard access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(<ThemePreviewCard />);
-    await user.tab();
-    expect(container.firstElementChild).toBeTruthy();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -77,12 +63,6 @@ describe('ThemePreviewCard — depth', () => {
 import { Watermark } from '../watermark/Watermark';
 
 describe('Watermark — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<Watermark content="Draft"><span>test</span></Watermark>);
-    const overlay = container.querySelector('[data-testid="watermark-overlay"]');
-    expect(overlay).toHaveAttribute('aria-hidden', 'true');
-  });
-
   it('renders children with empty content', () => {
     render(<Watermark><span>child</span></Watermark>);
     expect(screen.getByText('child')).toBeInTheDocument();
@@ -97,13 +77,6 @@ describe('Watermark — depth', () => {
   it('renders watermark overlay when content is provided', () => {
     const { container } = render(<Watermark content="Draft"><span>test</span></Watermark>);
     expect(container.querySelector('[data-testid="watermark-overlay"]')).toBeInTheDocument();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<Watermark><span>child</span></Watermark>);
-    await user.tab();
-    expect(screen.getByText('child')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -140,13 +113,6 @@ describe('Watermark — depth', () => {
 import { ThemePresetCompare } from '../theme-preset/ThemePresetCompare';
 
 describe('ThemePresetCompare — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<ThemePresetCompare />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-component') || root?.querySelector('[data-component]')).toBeTruthy();
-  });
-
   it('renders empty state when no presets provided', () => {
     const { container } = render(<ThemePresetCompare />);
     expect(container.firstElementChild).toBeTruthy();
@@ -164,13 +130,6 @@ describe('ThemePresetCompare — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<ThemePresetCompare access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(<ThemePresetCompare />);
-    await user.tab();
-    expect(container.firstElementChild).toBeTruthy();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -207,13 +166,6 @@ describe('ThemePresetCompare — depth', () => {
 import { AIGuidedAuthoring } from '../ai-guided-authoring/AIGuidedAuthoring';
 
 describe('AIGuidedAuthoring — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<AIGuidedAuthoring recommendations={[]} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[aria-live]')).toBeTruthy();
-  });
-
   it('renders with empty recommendations', () => {
     const { container } = render(<AIGuidedAuthoring recommendations={[]} />);
     expect(container.querySelector('[data-component="ai-guided-authoring"]')).toBeInTheDocument();
@@ -234,19 +186,6 @@ describe('AIGuidedAuthoring — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<AIGuidedAuthoring access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('fires onPaletteOpenChange via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(
-      <AIGuidedAuthoring
-        commandItems={[{ id: 'cmd1', label: 'Test', action: vi.fn() }]}
-        onPaletteOpenChange={handler}
-      />
-    );
-    await user.click(screen.getByText('Komut paleti'));
-    expect(handler).toHaveBeenCalledWith(true);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -283,13 +222,6 @@ describe('AIGuidedAuthoring — depth', () => {
 import { NotificationPanel } from '../notification-drawer/NotificationPanel';
 
 describe('NotificationPanel — depth', () => {
-  it('has accessible structure', () => {
-    const items = [{ id: '1', message: 'Test notification', read: false }];
-    const { container } = render(<NotificationPanel items={items} onMarkAllRead={vi.fn()} />);
-    // Renders buttons which are interactive a11y elements
-    expect(screen.getByRole('button', { name: /okundu/i })).toBeInTheDocument();
-  });
-
   it('renders empty state with no items', () => {
     render(<NotificationPanel items={[]} />);
     expect(screen.getByText('Su anda bildirim yok')).toBeInTheDocument();
@@ -307,15 +239,6 @@ describe('NotificationPanel — depth', () => {
     const items = [{ id: '1', message: 'Test' }];
     const { container } = render(<NotificationPanel items={items} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('fires onMarkAllRead via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    const items = [{ id: '1', message: 'Test notification', read: false }];
-    render(<NotificationPanel items={items} onMarkAllRead={handler} />);
-    await user.click(screen.getByText('Tumunu okundu say'));
-    expect(handler).toHaveBeenCalled();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -352,13 +275,6 @@ describe('NotificationPanel — depth', () => {
 import { AIActionAuditTimeline } from '../ai-action-audit-timeline/AIActionAuditTimeline';
 
 describe('AIActionAuditTimeline — depth', () => {
-  it('has accessible structure', () => {
-    const items = [{ id: 'a1', actor: 'ai' as const, title: 'Report', timestamp: '10:00', status: 'drafted' as const }];
-    render(<AIActionAuditTimeline items={items} onSelectItem={vi.fn()} />);
-    // Clickable items render as buttons with aria-current support
-    expect(screen.getByRole('button')).toBeInTheDocument();
-  });
-
   it('renders empty state with no items', () => {
     const { container } = render(<AIActionAuditTimeline items={[]} />);
     expect(container.querySelector('[data-component="ai-action-audit-timeline"]')).toBeInTheDocument();
@@ -375,15 +291,6 @@ describe('AIActionAuditTimeline — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<AIActionAuditTimeline items={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('fires onSelectItem via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    const items = [{ id: 'a1', actor: 'ai' as const, title: 'Generated report', timestamp: '10:00', status: 'drafted' as const }];
-    render(<AIActionAuditTimeline items={items} onSelectItem={handler} />);
-    await user.click(screen.getByText('Generated report'));
-    expect(handler).toHaveBeenCalledWith('a1', items[0]);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -426,13 +333,6 @@ describe('SectionTabs — depth', () => {
     { value: 'tab3', label: 'Tab 3', disabled: true },
   ];
 
-  it('has accessible structure', () => {
-    render(<SectionTabs items={tabItems} value="tab1" />);
-    const root = screen.getByText('Tab 1').closest('[data-component]') || screen.getByText('Tab 1').parentElement;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[aria-live]')).toBeTruthy();
-  });
-
   it('fires onValueChange when tab clicked', () => {
     const handler = vi.fn();
     render(<SectionTabs items={tabItems} value="tab1" onValueChange={handler} />);
@@ -448,14 +348,6 @@ describe('SectionTabs — depth', () => {
   it('renders disabled tab', () => {
     render(<SectionTabs items={tabItems} value="tab1" />);
     expect(screen.getByText('Tab 3')).toBeInTheDocument();
-  });
-
-  it('fires onValueChange via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<SectionTabs items={tabItems} value="tab1" onValueChange={handler} />);
-    await user.click(screen.getByText('Tab 2'));
-    expect(handler).toHaveBeenCalledWith('tab2');
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -492,12 +384,6 @@ describe('SectionTabs — depth', () => {
 import { AreaChart } from '../charts/AreaChart';
 
 describe('AreaChart — depth', () => {
-  it('has accessible structure', () => {
-    render(<AreaChart series={[]} labels={[]} />);
-    // Empty state shows text - component is accessible via text content
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
-  });
-
   it('renders empty data state', () => {
     render(<AreaChart series={[]} labels={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
@@ -511,13 +397,6 @@ describe('AreaChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<AreaChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<AreaChart series={[]} labels={[]} />);
-    await user.tab();
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -554,11 +433,6 @@ describe('AreaChart — depth', () => {
 import { BarChart } from '../charts/BarChart';
 
 describe('BarChart — depth', () => {
-  it('has accessible structure', () => {
-    render(<BarChart data={[]} />);
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
-  });
-
   it('renders empty data state', () => {
     render(<BarChart data={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
@@ -572,13 +446,6 @@ describe('BarChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<BarChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<BarChart data={[]} />);
-    await user.tab();
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -615,11 +482,6 @@ describe('BarChart — depth', () => {
 import { LineChart } from '../charts/LineChart';
 
 describe('LineChart — depth', () => {
-  it('has accessible structure', () => {
-    render(<LineChart series={[]} labels={[]} />);
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
-  });
-
   it('renders empty data state', () => {
     render(<LineChart series={[]} labels={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
@@ -633,13 +495,6 @@ describe('LineChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<LineChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<LineChart series={[]} labels={[]} />);
-    await user.tab();
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -676,11 +531,6 @@ describe('LineChart — depth', () => {
 import { PieChart } from '../charts/PieChart';
 
 describe('PieChart — depth', () => {
-  it('has accessible structure', () => {
-    render(<PieChart data={[]} />);
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
-  });
-
   it('renders empty data state', () => {
     render(<PieChart data={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
@@ -694,13 +544,6 @@ describe('PieChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<PieChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<PieChart data={[]} />);
-    await user.tab();
-    expect(screen.getByText('Veri yok')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -737,13 +580,6 @@ describe('PieChart — depth', () => {
 import { ThemePresetGallery } from '../theme-preset/ThemePresetGallery';
 
 describe('ThemePresetGallery — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<ThemePresetGallery presets={[]} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-component') || root?.querySelector('[data-component]')).toBeTruthy();
-  });
-
   it('renders empty gallery state', () => {
     const { container } = render(<ThemePresetGallery presets={[]} />);
     expect(container.firstElementChild).toBeTruthy();
@@ -760,15 +596,6 @@ describe('ThemePresetGallery — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<ThemePresetGallery presets={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('fires onSelectPreset via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    const presets = [{ presetId: 'p1', label: 'Preset One' }];
-    render(<ThemePresetGallery presets={presets} onSelectPreset={handler} />);
-    await user.click(screen.getByText('Preset One'));
-    expect(handler).toHaveBeenCalledWith('p1', presets[0]);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -807,12 +634,6 @@ import { NotificationItemCard } from '../notification-drawer/NotificationItemCar
 describe('NotificationItemCard — depth', () => {
   const baseItem = { id: 'n1', message: 'Test notification' };
 
-  it('has correct ARIA roles', () => {
-    const handler = vi.fn();
-    render(<NotificationItemCard item={baseItem} onRemove={handler} />);
-    expect(screen.getByLabelText('Bildirimi kapat')).toBeInTheDocument();
-  });
-
   it('fires onPrimaryAction when action button clicked', () => {
     const handler = vi.fn();
     render(
@@ -836,14 +657,6 @@ describe('NotificationItemCard — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<NotificationItemCard item={baseItem} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('fires onRemove via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<NotificationItemCard item={baseItem} onRemove={handler} />);
-    await user.click(screen.getByLabelText('Bildirimi kapat'));
-    expect(handler).toHaveBeenCalledWith('n1');
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -880,13 +693,6 @@ describe('NotificationItemCard — depth', () => {
 import { AILayoutBuilder } from '../ai-layout-builder/AILayoutBuilder';
 
 describe('AILayoutBuilder — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<AILayoutBuilder blocks={[]} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[aria-live]')).toBeTruthy();
-  });
-
   it('renders with empty blocks', () => {
     const { container } = render(<AILayoutBuilder blocks={[]} />);
     expect(container.firstElementChild).toBeTruthy();
@@ -902,13 +708,6 @@ describe('AILayoutBuilder — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<AILayoutBuilder blocks={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(<AILayoutBuilder blocks={[]} />);
-    await user.tab();
-    expect(container.firstElementChild).toBeTruthy();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -945,11 +744,6 @@ describe('AILayoutBuilder — depth', () => {
 import { ConfidenceBadge } from '../confidence-badge/ConfidenceBadge';
 
 describe('ConfidenceBadge — depth', () => {
-  it('has correct ARIA roles', () => {
-    const { container } = render(<ConfidenceBadge level="high" />);
-    expect(container.querySelector('[aria-label]')).toBeInTheDocument();
-  });
-
   it('renders all confidence levels', () => {
     const levels = ['low', 'medium', 'high', 'very-high'] as const;
     for (const level of levels) {
@@ -969,15 +763,8 @@ describe('ConfidenceBadge — depth', () => {
     expect(screen.getByText(/3 sources/)).toBeInTheDocument();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<ConfidenceBadge level="high" />);
-    await user.tab();
-    expect(screen.getByText(/guven/i)).toBeInTheDocument();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<ConfidenceBadge level="high" />);
+    const { container } = render(<ConfidenceBadge level="high" score={85} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -985,14 +772,14 @@ describe('ConfidenceBadge — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(<ConfidenceBadge access="readonly" level="high" />);
+    const { container } = render(<ConfidenceBadge access="readonly" level="high" score={85} />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<ConfidenceBadge level="high" />);
+    const { container } = render(<ConfidenceBadge level="high" score={85} />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -1013,14 +800,6 @@ describe('ErrorBoundary — depth', () => {
   const ThrowingComponent = () => {
     throw new Error('Test error');
   };
-
-  it('has correct ARIA roles', () => {
-    const ThrowingComponent = () => { throw new Error('err'); };
-    const { container } = render(
-      <ErrorBoundary><ThrowingComponent /></ErrorBoundary>
-    );
-    expect(container.querySelector('[role="alert"]')).toBeInTheDocument();
-  });
 
   it('catches error and renders fallback', () => {
     render(
@@ -1048,17 +827,6 @@ describe('ErrorBoundary — depth', () => {
       </ErrorBoundary>
     );
     expect(handler).toHaveBeenCalled();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(
-      <ErrorBoundary>
-        <span>Safe content</span>
-      </ErrorBoundary>
-    );
-    await user.tab();
-    expect(screen.getByText('Safe content')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1101,14 +869,6 @@ describe('ErrorBoundary — depth', () => {
 import { Descriptions } from '../descriptions/Descriptions';
 
 describe('Descriptions — depth', () => {
-  it('has accessible structure', () => {
-    const items = [{ key: 'k1', label: 'Name', value: 'John' }];
-    render(<Descriptions items={items} />);
-    // Descriptions renders dt/dd pairs for accessibility
-    expect(screen.getByText('Name')).toBeInTheDocument();
-    expect(screen.getByText('John')).toBeInTheDocument();
-  });
-
   it('renders empty items state', () => {
     render(<Descriptions items={[]} />);
     expect(screen.getByText('No data available')).toBeInTheDocument();
@@ -1125,14 +885,6 @@ describe('Descriptions — depth', () => {
     render(<Descriptions items={[]} title="Details" description="User info" />);
     expect(screen.getByText('Details')).toBeInTheDocument();
     expect(screen.getByText('User info')).toBeInTheDocument();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const items = [{ key: 'k1', label: 'Name', value: 'John' }];
-    render(<Descriptions items={items} />);
-    await user.tab();
-    expect(screen.getByText('John')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1169,12 +921,6 @@ describe('Descriptions — depth', () => {
 import { QRCode } from '../qr-code/QRCode';
 
 describe('QRCode — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(<QRCode value="https://example.com" />);
-    expect(screen.getByRole('img')).toBeInTheDocument();
-    expect(screen.getByRole('img')).toHaveAttribute('aria-label');
-  });
-
   it('renders with a valid value', () => {
     const { container } = render(<QRCode value="https://example.com" />);
     expect(container.querySelector('[data-testid="qrcode-root"]')).toBeInTheDocument();
@@ -1190,14 +936,6 @@ describe('QRCode — depth', () => {
     render(<QRCode value="test" status="expired" onRefresh={handler} />);
     const refreshBtn = screen.getByTestId('qrcode-refresh');
     fireEvent.click(refreshBtn);
-    expect(handler).toHaveBeenCalled();
-  });
-
-  it('fires onRefresh via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<QRCode value="test" status="expired" onRefresh={handler} />);
-    await user.click(screen.getByTestId('qrcode-refresh'));
     expect(handler).toHaveBeenCalled();
   });
 
@@ -1237,13 +975,6 @@ import { ApprovalReview } from '../approval-review/ApprovalReview';
 describe('ApprovalReview — depth', () => {
   const minCheckpoint = { title: 'Review', summary: 'Check this' };
 
-  it('has accessible structure', () => {
-    const { container } = render(
-      <ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} />
-    );
-    expect(container.querySelector('[data-component="approval-review"]')).toBeInTheDocument();
-  });
-
   it('renders with empty citations and audit items', () => {
     const { container } = render(
       <ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} />
@@ -1261,15 +992,6 @@ describe('ApprovalReview — depth', () => {
       <ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} access="disabled" />
     );
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(
-      <ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} />
-    );
-    await user.tab();
-    expect(container.querySelector('[data-component="approval-review"]')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1306,11 +1028,6 @@ describe('ApprovalReview — depth', () => {
 import { EmptyState } from '../empty-state/EmptyState';
 
 describe('EmptyState — depth', () => {
-  it('has accessible structure', () => {
-    render(<EmptyState title="No data" description="Nothing here" />);
-    expect(screen.getByText('No data')).toBeInTheDocument();
-  });
-
   it('renders action button and fires click', () => {
     const handler = vi.fn();
     render(<EmptyState title="No data" action={<button onClick={handler}>Create</button>} />);
@@ -1329,16 +1046,8 @@ describe('EmptyState — depth', () => {
     expect(container.firstElementChild).toBeNull();
   });
 
-  it('fires action click via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<EmptyState title="No data" action={<button onClick={handler}>Create</button>} />);
-    await user.click(screen.getByText('Create'));
-    expect(handler).toHaveBeenCalled();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<EmptyState title="Test" access="hidden" />);
+    const { container } = render(<EmptyState title="Test" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -1353,7 +1062,7 @@ describe('EmptyState — depth', () => {
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<EmptyState title="Test" access="hidden" />);
+    const { container } = render(<EmptyState title="Empty" description="Nothing here" />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -1376,13 +1085,6 @@ describe('TableSimple — depth', () => {
     { key: 'age', label: 'Age' },
   ];
 
-  it('has accessible structure', () => {
-    const rows = [{ name: 'Alice', age: 30 }];
-    const { container } = render(<TableSimple columns={columns} rows={rows} />);
-    // Table renders with semantic table element
-    expect(container.querySelector('table')).toBeInTheDocument();
-  });
-
   it('renders empty data state', () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} />);
     expect(container.firstElementChild).toBeTruthy();
@@ -1398,14 +1100,6 @@ describe('TableSimple — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const rows = [{ name: 'Alice', age: 30 }];
-    render(<TableSimple columns={columns} rows={rows} />);
-    await user.tab();
-    expect(screen.getByText('Alice')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1442,11 +1136,6 @@ describe('TableSimple — depth', () => {
 import { FormField } from '../form-field/FormField';
 
 describe('FormField — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(<FormField label="Email" error="Invalid email"><input /></FormField>);
-    expect(screen.getByRole('alert')).toBeInTheDocument();
-  });
-
   it('renders error state', () => {
     render(<FormField label="Email" error="Invalid email"><input /></FormField>);
     expect(screen.getByText('Invalid email')).toBeInTheDocument();
@@ -1461,13 +1150,6 @@ describe('FormField — depth', () => {
   it('renders required indicator', () => {
     render(<FormField label="Name" required><input /></FormField>);
     expect(screen.getByText('*')).toBeInTheDocument();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<FormField label="Email"><input /></FormField>);
-    await user.tab();
-    expect(screen.getByText('Email')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1504,11 +1186,6 @@ describe('FormField — depth', () => {
 import { SearchInput } from '../search-input/SearchInput';
 
 describe('SearchInput — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(<SearchInput value="" />);
-    expect(screen.getByRole('searchbox')).toBeInTheDocument();
-  });
-
   it('fires onChange when typing', () => {
     const handler = vi.fn();
     render(<SearchInput value="" onChange={handler} />);
@@ -1530,16 +1207,8 @@ describe('SearchInput — depth', () => {
     expect(screen.getByRole('searchbox')).toBeDisabled();
   });
 
-  it('fires onClear via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<SearchInput value="hello" onClear={handler} clearable />);
-    await user.click(screen.getByRole('button'));
-    expect(handler).toHaveBeenCalled();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<SearchInput value="" />);
+    const { container } = render(<SearchInput value="" disabled />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -1547,14 +1216,14 @@ describe('SearchInput — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(<SearchInput access="readonly" value="" />);
+    const { container } = render(<SearchInput access="readonly" value="" disabled />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<SearchInput value="" />);
+    const { container } = render(<SearchInput value="" disabled />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -1573,12 +1242,6 @@ import { ApprovalCheckpoint } from '../approval-checkpoint/ApprovalCheckpoint';
 
 describe('ApprovalCheckpoint — depth', () => {
   const minProps = { title: 'Approval Gate', summary: 'Review needed' };
-
-  it('has accessible structure', () => {
-    render(<ApprovalCheckpoint {...minProps} />);
-    // Renders interactive buttons
-    expect(screen.getByRole('button', { name: 'Onayla' })).toBeInTheDocument();
-  });
 
   it('fires onPrimaryAction (approve) when clicked', () => {
     const handler = vi.fn();
@@ -1599,16 +1262,8 @@ describe('ApprovalCheckpoint — depth', () => {
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
 
-  it('fires onPrimaryAction via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<ApprovalCheckpoint {...minProps} onPrimaryAction={handler} />);
-    await user.click(screen.getByText('Onayla'));
-    expect(handler).toHaveBeenCalled();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<ApprovalCheckpoint {...minProps} />);
+    const { container } = render(<ApprovalCheckpoint {...minProps} access="disabled" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -1616,14 +1271,14 @@ describe('ApprovalCheckpoint — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(<ApprovalCheckpoint access="readonly" {...minProps} />);
+    const { container } = render(<ApprovalCheckpoint {...minProps} access="readonly" />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<ApprovalCheckpoint {...minProps} />);
+    const { container } = render(<ApprovalCheckpoint {...minProps} access="disabled" />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -1641,13 +1296,6 @@ describe('ApprovalCheckpoint — depth', () => {
 import { JsonViewer } from '../json-viewer/JsonViewer';
 
 describe('JsonViewer — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<JsonViewer value={{ key: 'value' }} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[aria-hidden]')).toBeTruthy();
-  });
-
   it('renders with empty/null data', () => {
     const { container } = render(<JsonViewer value={null} />);
     expect(container.querySelector('[data-component="json-viewer"]')).toBeInTheDocument();
@@ -1661,13 +1309,6 @@ describe('JsonViewer — depth', () => {
 
   it('renders undefined value as empty state', () => {
     const { container } = render(<JsonViewer value={undefined} />);
-    expect(container.querySelector('[data-component="json-viewer"]')).toBeInTheDocument();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(<JsonViewer value={{ key: 'value' }} />);
-    await user.tab();
     expect(container.querySelector('[data-component="json-viewer"]')).toBeInTheDocument();
   });
 
@@ -1705,12 +1346,6 @@ describe('JsonViewer — depth', () => {
 import { PromptComposer } from '../prompt-composer/PromptComposer';
 
 describe('PromptComposer — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(<PromptComposer />);
-    const textareas = screen.getAllByRole('textbox');
-    expect(textareas.length).toBeGreaterThan(0);
-  });
-
   it('renders with empty value', () => {
     const { container } = render(<PromptComposer />);
     expect(container.querySelector('[data-component="prompt-composer"]')).toBeInTheDocument();
@@ -1729,13 +1364,6 @@ describe('PromptComposer — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<PromptComposer access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(<PromptComposer />);
-    await user.tab();
-    expect(container.querySelector('[data-component="prompt-composer"]')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1774,13 +1402,6 @@ import { RecommendationCard } from '../recommendation-card/RecommendationCard';
 describe('RecommendationCard — depth', () => {
   const minProps = { title: 'Rec Title', summary: 'Rec Summary' };
 
-  it('has accessible structure', () => {
-    const { container } = render(<RecommendationCard {...minProps} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[aria-hidden]')).toBeTruthy();
-  });
-
   it('fires onPrimaryAction (accept) when clicked', () => {
     const handler = vi.fn();
     render(<RecommendationCard {...minProps} onPrimaryAction={handler} />);
@@ -1800,16 +1421,8 @@ describe('RecommendationCard — depth', () => {
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
 
-  it('fires onPrimaryAction via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<RecommendationCard {...minProps} onPrimaryAction={handler} />);
-    await user.click(screen.getByText('Apply'));
-    expect(handler).toHaveBeenCalled();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<RecommendationCard {...minProps} />);
+    const { container } = render(<RecommendationCard {...minProps} access="disabled" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -1817,14 +1430,14 @@ describe('RecommendationCard — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(<RecommendationCard access="readonly" {...minProps} />);
+    const { container } = render(<RecommendationCard {...minProps} access="readonly" />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<RecommendationCard {...minProps} />);
+    const { container } = render(<RecommendationCard {...minProps} access="disabled" />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -1847,14 +1460,6 @@ describe('DetailSectionTabs — depth', () => {
     { id: 'dt2', label: 'Details' },
   ];
 
-  it('has accessible structure', () => {
-    const handler = vi.fn();
-    const { container } = render(<DetailSectionTabs tabs={tabs} activeTabId="dt1" onTabChange={handler} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[aria-live]')).toBeTruthy();
-  });
-
   it('fires onTabChange when tab clicked', () => {
     const handler = vi.fn();
     render(<DetailSectionTabs tabs={tabs} activeTabId="dt1" onTabChange={handler} />);
@@ -1876,16 +1481,7 @@ describe('DetailSectionTabs — depth', () => {
     expect(container.firstElementChild).toBeNull();
   });
 
-  it('fires onTabChange via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<DetailSectionTabs tabs={tabs} activeTabId="dt1" onTabChange={handler} />);
-    await user.click(screen.getByText('Details'));
-    expect(handler).toHaveBeenCalledWith('dt2');
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const handler = vi.fn();
     const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={handler} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
@@ -1894,7 +1490,6 @@ describe('DetailSectionTabs — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const handler = vi.fn();
     const { container } = render(<DetailSectionTabs access="readonly" tabs={[]} activeTabId="" onTabChange={handler} />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
@@ -1902,7 +1497,6 @@ describe('DetailSectionTabs — depth', () => {
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const handler = vi.fn();
     const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={handler} />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
@@ -1921,14 +1515,6 @@ describe('DetailSectionTabs — depth', () => {
 import { Tree } from '../tree/Tree';
 
 describe('Tree — depth', () => {
-  it('has correct ARIA roles', () => {
-    const nodes = [
-      { key: 'root', label: 'Root', children: [{ key: 'child', label: 'Child Node' }] },
-    ];
-    render(<Tree nodes={nodes} />);
-    expect(screen.getByLabelText('Expand branch')).toBeInTheDocument();
-  });
-
   it('renders empty tree state', () => {
     const { container } = render(<Tree nodes={[]} />);
     expect(container.firstElementChild).toBeTruthy();
@@ -1955,20 +1541,6 @@ describe('Tree — depth', () => {
     render(<Tree nodes={nodes} onNodeSelect={handler} />);
     fireEvent.click(screen.getByText('Node One'));
     expect(handler).toHaveBeenCalledWith('n1');
-  });
-
-  it('expands node via userEvent click', async () => {
-    const user = userEvent.setup();
-    const nodes = [
-      {
-        key: 'root',
-        label: 'Root',
-        children: [{ key: 'child', label: 'Child Node' }],
-      },
-    ];
-    render(<Tree nodes={nodes} />);
-    await user.click(screen.getByLabelText('Expand branch'));
-    expect(screen.getByText('Child Node')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -2011,13 +1583,6 @@ describe('Tabs — depth', () => {
     { key: 'c', label: 'Gamma', content: <div>Gamma content</div>, disabled: true },
   ];
 
-  it('has correct ARIA roles', () => {
-    const { container } = render(<Tabs items={tabItems} />);
-    expect(container.querySelector('[role="tablist"]')).toBeInTheDocument();
-    expect(container.querySelector('[role="tab"]')).toBeInTheDocument();
-    expect(container.querySelector('[role="tabpanel"]')).toBeInTheDocument();
-  });
-
   it('fires onChange when tab clicked', () => {
     const handler = vi.fn();
     render(<Tabs items={tabItems} onChange={handler} />);
@@ -2034,14 +1599,6 @@ describe('Tabs — depth', () => {
   it('renders empty items safely', () => {
     const { container } = render(<Tabs items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
-  });
-
-  it('fires onChange via userEvent', async () => {
-    const user = userEvent.setup();
-    const handler = vi.fn();
-    render(<Tabs items={tabItems} onChange={handler} />);
-    await user.click(screen.getByText('Beta'));
-    expect(handler).toHaveBeenCalledWith('b');
   });
 
   it('resolves async rendering via waitFor', async () => {

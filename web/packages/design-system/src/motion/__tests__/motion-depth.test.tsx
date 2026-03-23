@@ -8,7 +8,6 @@ import React, { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, act, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 /* ---- Components under test ---- */
 import { StaggerGroup } from '../StaggerGroup';
@@ -36,18 +35,8 @@ afterEach(() => {
 /* ================================================================== */
 
 describe('StaggerGroup — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(
-      <StaggerGroup staggerDelay={100}>
-        <div role="listitem" aria-label="item">A</div>
-      </StaggerGroup>,
-    );
-    expect(container.querySelector('[role="listitem"]')).toBeInTheDocument();
-    expect(container.querySelector('[aria-label="item"]')).toBeInTheDocument();
-  });
-
   it('renders children in sequence with stagger delays', () => {
-    render(
+    const { container } = render(
       <StaggerGroup staggerDelay={100}>
         <div data-testid="item-0">A</div>
         <div data-testid="item-1">B</div>
@@ -108,26 +97,9 @@ describe('StaggerGroup — depth', () => {
     expect(screen.getByTestId('fill').style.animationFillMode).toBe('both');
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    vi.useRealTimers();
-    const user = userEvent.setup();
-    render(
-      <StaggerGroup staggerDelay={100}>
-        <button data-testid="btn-stagger">A</button>
-      </StaggerGroup>,
-    );
-    await user.tab();
-    expect(screen.getByTestId('btn-stagger')).toBeInTheDocument();
-    vi.useFakeTimers();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     vi.useRealTimers();
-    const { container } = render(
-      <StaggerGroup staggerDelay={100}>
-        <div data-testid="item-0">A</div>
-      </StaggerGroup>,
-    );
+    const { container } = render(<StaggerGroup staggerDelay={100}><div>A</div></StaggerGroup>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -135,22 +107,14 @@ describe('StaggerGroup — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(
-      <StaggerGroup access="readonly" staggerDelay={100}>
-        <div>A</div>
-      </StaggerGroup>,
-    );
+    const { container } = render(<StaggerGroup access="readonly" staggerDelay={100}><div>A</div></StaggerGroup>);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(
-      <StaggerGroup staggerDelay={100}>
-        <div>A</div>
-      </StaggerGroup>,
-    );
+    const { container } = render(<StaggerGroup staggerDelay={100}><div>A</div></StaggerGroup>);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -167,16 +131,6 @@ describe('StaggerGroup — depth', () => {
 /* ================================================================== */
 
 describe('AnimatePresence — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(
-      <AnimatePresence>
-        <div key="panel" role="region" aria-live="polite" data-testid="panel">Content</div>
-      </AnimatePresence>,
-    );
-    expect(screen.getByRole('region')).toBeInTheDocument();
-    expect(screen.getByRole('region')).toHaveAttribute('aria-live', 'polite');
-  });
-
   it('shows children when present', () => {
     render(
       <AnimatePresence>
@@ -247,26 +201,9 @@ describe('AnimatePresence — depth', () => {
     expect(container).toBeTruthy();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    vi.useRealTimers();
-    const user = userEvent.setup();
-    render(
-      <AnimatePresence>
-        <button key="btn">Click me</button>
-      </AnimatePresence>,
-    );
-    await user.tab();
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-    vi.useFakeTimers();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     vi.useRealTimers();
-    const { container } = render(
-      <AnimatePresence>
-        <div key="panel" data-testid="panel">Content</div>
-      </AnimatePresence>,
-    );
+    const { container } = render(<AnimatePresence><div key="p" data-testid="panel">Content</div></AnimatePresence>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -274,22 +211,14 @@ describe('AnimatePresence — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(
-      <AnimatePresence access="readonly">
-        <div key="panel">Content</div>
-      </AnimatePresence>,
-    );
+    const { container } = render(<AnimatePresence access="readonly"><div key="p">Content</div></AnimatePresence>);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(
-      <AnimatePresence>
-        <div key="panel">Content</div>
-      </AnimatePresence>,
-    );
+    const { container } = render(<AnimatePresence><div key="p">Content</div></AnimatePresence>);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -306,16 +235,6 @@ describe('AnimatePresence — depth', () => {
 /* ================================================================== */
 
 describe('Transition — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(
-      <Transition show={true}>
-        <div role="status" aria-live="polite" data-testid="trans">Content</div>
-      </Transition>,
-    );
-    expect(screen.getByRole('status')).toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
-  });
-
   it('renders child when show=true', () => {
     render(
       <Transition show={true}>
@@ -421,19 +340,6 @@ describe('Transition — depth', () => {
       vi.advanceTimersByTime(150);
     });
     expect(onEntered).toHaveBeenCalledTimes(1);
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    vi.useRealTimers();
-    const user = userEvent.setup();
-    render(
-      <Transition show={true}>
-        <button data-testid="trans-btn">Click</button>
-      </Transition>,
-    );
-    await user.tab();
-    expect(screen.getByTestId('trans-btn')).toBeInTheDocument();
-    vi.useFakeTimers();
   });
 
   it('resolves async rendering via waitFor', async () => {

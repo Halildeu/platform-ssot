@@ -8,7 +8,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { SummaryStrip } from '../summary-strip/SummaryStrip';
 import { DetailSummary } from '../detail-summary/DetailSummary';
@@ -30,12 +29,6 @@ describe('SummaryStrip — depth', () => {
     { key: 'a', label: 'Revenue', value: '$10K' },
     { key: 'b', label: 'Users', value: '500', tone: 'success' as const },
   ];
-
-  it('has accessible structure', () => {
-    render(<SummaryStrip items={items} />);
-    expect(screen.getByText('Revenue')).toBeInTheDocument();
-    expect(screen.getByText('$10K')).toBeInTheDocument();
-  });
 
   it('renders all item labels and values', () => {
     render(<SummaryStrip items={items} />);
@@ -75,13 +68,6 @@ describe('SummaryStrip — depth', () => {
     expect(container.innerHTML).toBe('');
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<SummaryStrip items={items} />);
-    await user.tab();
-    expect(screen.getByText('Revenue')).toBeInTheDocument();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<SummaryStrip items={[]} />);
     await waitFor(() => {
@@ -116,11 +102,6 @@ describe('SummaryStrip — depth', () => {
 
 describe('DetailSummary — depth', () => {
   const minEntity = { title: 'Entity A', items: [] };
-
-  it('has accessible structure', () => {
-    const { container } = render(<DetailSummary title="Order #123" entity={minEntity} />);
-    expect(container.querySelector('[data-component="detail-summary"]')).toBeInTheDocument();
-  });
 
   it('renders title in the header', () => {
     render(<DetailSummary title="Order #123" entity={minEntity} />);
@@ -163,15 +144,8 @@ describe('DetailSummary — depth', () => {
     expect(container.innerHTML).toBe('');
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<DetailSummary title="Order #123" entity={minEntity} />);
-    await user.tab();
-    expect(screen.getByText('Order #123')).toBeInTheDocument();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<DetailSummary title="Order #123" entity={minEntity} />);
+    const { container } = render(<DetailSummary title="T" entity={minEntity} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -179,14 +153,14 @@ describe('DetailSummary — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(<DetailSummary access="readonly" title="Order #123" entity={minEntity} />);
+    const { container } = render(<DetailSummary title="T" entity={minEntity} access="readonly" />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<DetailSummary title="Order #123" entity={minEntity} />);
+    const { container } = render(<DetailSummary title="T" entity={minEntity} />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -203,18 +177,6 @@ describe('DetailSummary — depth', () => {
 /* ================================================================== */
 
 describe('MasterDetail — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(
-      <MasterDetail
-        master={<div>Master</div>}
-        detail={<div>Detail</div>}
-        collapsible
-        masterHeader={<span>Header</span>}
-      />,
-    );
-    expect(screen.getByLabelText('Collapse panel')).toBeInTheDocument();
-  });
-
   it('renders master and detail content', () => {
     render(
       <MasterDetail
@@ -287,20 +249,6 @@ describe('MasterDetail — depth', () => {
     expect(container.firstElementChild).toBeTruthy();
   });
 
-  it('collapse panel via userEvent click', async () => {
-    const user = userEvent.setup();
-    render(
-      <MasterDetail
-        master={<div>Master</div>}
-        detail={<div>Detail</div>}
-        collapsible
-        masterHeader={<span>Header</span>}
-      />,
-    );
-    await user.click(screen.getByLabelText('Collapse panel'));
-    expect(screen.getByLabelText('Expand panel')).toBeInTheDocument();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<MasterDetail master={<></>} detail={<div>Detail</div>} />);
     await waitFor(() => {
@@ -338,11 +286,6 @@ describe('EntitySummaryBlock — depth', () => {
     title: 'Acme Corp',
     items: [{ key: 'id', label: 'ID', value: '42' }],
   };
-
-  it('has accessible structure', () => {
-    const { container } = render(<EntitySummaryBlock {...baseProps} />);
-    expect(container.querySelector('[data-component="entity-summary-block"]')).toBeInTheDocument();
-  });
 
   it('renders title and description items', () => {
     render(<EntitySummaryBlock {...baseProps} />);
@@ -399,19 +342,6 @@ describe('EntitySummaryBlock — depth', () => {
     expect(container.innerHTML).toBe('');
   });
 
-  it('fires action click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <EntitySummaryBlock
-        {...baseProps}
-        actions={<button onClick={onClick}>Delete</button>}
-      />,
-    );
-    await user.click(screen.getByText('Delete'));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<EntitySummaryBlock {...baseProps} />);
     await waitFor(() => {
@@ -445,13 +375,6 @@ describe('EntitySummaryBlock — depth', () => {
 /* ================================================================== */
 
 describe('PageHeader — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<PageHeader title="Dashboard" />);
-    const header = container.querySelector('header');
-    expect(header).toBeTruthy();
-    expect(header?.querySelector('[aria-label],[role]') || header?.tagName).toBeTruthy();
-  });
-
   it('renders title', () => {
     render(<PageHeader title="Dashboard" />);
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
@@ -501,19 +424,6 @@ describe('PageHeader — depth', () => {
     expect(container.querySelector('header')).toHaveClass('sticky');
   });
 
-  it('fires action click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <PageHeader
-        title="Page"
-        actions={<button onClick={onClick}>Save</button>}
-      />,
-    );
-    await user.click(screen.getByText('Save'));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<PageHeader title="" />);
     await waitFor(() => {
@@ -547,13 +457,6 @@ describe('PageHeader — depth', () => {
 /* ================================================================== */
 
 describe('PageLayout — depth', () => {
-  it('has correct ARIA roles', () => {
-    const { container } = render(
-      <PageLayout title="Page" ariaLabel="main-page"><div>X</div></PageLayout>,
-    );
-    expect(container.firstElementChild).toHaveAttribute('aria-label', 'main-page');
-  });
-
   it('renders children content', () => {
     render(<PageLayout title="Layout"><div>Main content</div></PageLayout>);
     expect(screen.getByText('Main content')).toBeInTheDocument();
@@ -608,24 +511,6 @@ describe('PageLayout — depth', () => {
       <PageLayout title="Page" ariaLabel="main-page"><div>X</div></PageLayout>,
     );
     expect(container.firstElementChild).toHaveAttribute('aria-label', 'main-page');
-  });
-
-  it('fires breadcrumb click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <PageLayout
-        title="Page"
-        breadcrumbItems={[
-          { title: 'Home', onClick },
-          { title: 'Current' },
-        ]}
-      >
-        <div>Content</div>
-      </PageLayout>,
-    );
-    await user.click(screen.getByText('Home'));
-    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {

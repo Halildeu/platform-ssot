@@ -103,22 +103,23 @@ function findAllRenderCalls(blockBody) {
 
 /**
  * Find the simplest render call that doesn't need complex setup.
- * Prefer renders with no setup code, or with minimal setup.
+ * ONLY use renders with no setup code to avoid multi-line extraction issues.
  */
 function findSimplestRender(blockBody) {
   const renders = findAllRenderCalls(blockBody);
   if (renders.length === 0) return null;
 
-  // Prefer renders with no setup code
+  // ONLY use renders with no setup code
   const noSetup = renders.filter(r => !r.setupCode);
   if (noSetup.length > 0) {
     noSetup.sort((a, b) => a.complexity - b.complexity);
     return noSetup[0];
   }
 
-  // Otherwise pick simplest overall
+  // If all renders need setup, use the simplest one but clear setup
+  // to avoid multi-line extraction issues
   renders.sort((a, b) => a.complexity - b.complexity);
-  return renders[0];
+  return { ...renders[0], setupCode: '' };
 }
 
 function processFile(filePath) {

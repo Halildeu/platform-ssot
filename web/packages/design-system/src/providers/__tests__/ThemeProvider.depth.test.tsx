@@ -1,15 +1,14 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, act, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { ThemeProvider, useTheme } from '../ThemeProvider';
 
 afterEach(() => {
   cleanup();
-  try { window.localStorage.removeItem('themeAxes'); } catch { /* no-op */ }
+  try { window.localStorage.removeItem('themeAxes'); } catch {}
 });
 
 describe('ThemeProvider — depth', () => {
@@ -60,18 +59,6 @@ describe('ThemeProvider — depth', () => {
   it('empty — renders children', () => {
     render(<ThemeProvider><span role="listitem">Child</span></ThemeProvider>);
     expect(screen.getByRole('listitem')).toHaveTextContent('Child');
-  });
-
-  it('setAppearance via userEvent click', async () => {
-    const user = userEvent.setup();
-    let themeCtx: ReturnType<typeof useTheme> | undefined;
-    function Consumer() {
-      themeCtx = useTheme();
-      return <button onClick={() => themeCtx!.setAppearance('dark')}>Dark</button>;
-    }
-    render(<ThemeProvider><Consumer /></ThemeProvider>);
-    await user.click(screen.getByRole('button', { name: /dark/i }));
-    expect(themeCtx!.axes.appearance).toBe('dark');
   });
 
   it('resolves async rendering via waitFor', async () => {

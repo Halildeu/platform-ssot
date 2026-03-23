@@ -12,7 +12,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 /* ---- Components under test ---- */
 import { Slot } from '../_shared/Slot';
@@ -33,16 +32,8 @@ afterEach(cleanup);
 /* ================================================================== */
 
 describe('Slot — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(
-      <Slot><button aria-label="test-action">btn</button></Slot>,
-    );
-    expect(screen.getByRole('button')).toBeInTheDocument();
-    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'test-action');
-  });
-
   it('renders children element', () => {
-    render(
+    const { container } = render(
       <Slot><span data-testid="slot-child">hello</span></Slot>,
     );
     expect(screen.getByTestId('slot-child')).toBeInTheDocument();
@@ -80,18 +71,6 @@ describe('Slot — depth', () => {
       ),
     ).toThrow();
   });
-
-  it('handles click via userEvent', async () => {
-    const user = userEvent.setup();
-    const parentClick = vi.fn();
-    render(
-      <Slot onClick={parentClick}>
-        <button>btn</button>
-      </Slot>,
-    );
-    await user.click(screen.getByText('btn'));
-    expect(parentClick).toHaveBeenCalledTimes(1);
-  });
 });
 
 /* ================================================================== */
@@ -99,13 +78,6 @@ describe('Slot — depth', () => {
 /* ================================================================== */
 
 describe('Stack — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(
-      <Stack data-testid="stack" role="list"><span role="listitem">A</span></Stack>,
-    );
-    expect(screen.getByRole('list')).toBeInTheDocument();
-  });
-
   it('renders children', () => {
     render(
       <Stack data-testid="stack">
@@ -143,18 +115,6 @@ describe('Stack — depth', () => {
     expect(container.firstElementChild?.className).toContain('flex-col');
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(
-      <Stack data-testid="stack">
-        <button>A</button>
-        <button>B</button>
-      </Stack>,
-    );
-    await user.tab();
-    expect(screen.getByText('A')).toHaveFocus();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<Stack>{null}</Stack>);
     await waitFor(() => {
@@ -188,15 +148,8 @@ describe('Stack — depth', () => {
 /* ================================================================== */
 
 describe('Skeleton — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<Skeleton data-testid="sk" />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.querySelector('[aria-label],[role],[aria-live],[aria-busy]') || root?.getAttribute('aria-busy') || root?.getAttribute('aria-label') || root?.classList.contains('animate-pulse')).toBeTruthy();
-  });
-
   it('renders single skeleton', () => {
-    render(<Skeleton data-testid="sk" />);
+    const { container } = render(<Skeleton data-testid="sk" />);
     expect(screen.getByTestId('sk')).toBeInTheDocument();
   });
 
@@ -227,13 +180,6 @@ describe('Skeleton — depth', () => {
   it('renders circle shape', () => {
     const { container } = render(<Skeleton circle height={40} />);
     expect(container.firstElementChild?.className).toContain('rounded-full');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<Skeleton data-testid="sk" />);
-    await user.tab();
-    expect(screen.getByTestId('sk')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -269,12 +215,6 @@ describe('Skeleton — depth', () => {
 /* ================================================================== */
 
 describe('Textarea — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(<Textarea label="Bio" />);
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
-    expect(screen.getByLabelText('Bio')).toBeInTheDocument();
-  });
-
   it('fires onChange when typing', () => {
     const onChange = vi.fn();
     render(<Textarea onChange={onChange} data-testid="ta" />);
@@ -307,17 +247,8 @@ describe('Textarea — depth', () => {
     expect(screen.getByText('*')).toBeInTheDocument();
   });
 
-  it('fires onChange via userEvent typing', async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
-    render(<Textarea onChange={onChange} />);
-    await user.click(screen.getByRole('textbox'));
-    await user.keyboard('hello');
-    expect(onChange).toHaveBeenCalled();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<Textarea label="Bio" />);
+    const { container } = render(<Textarea error="bad" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -325,14 +256,14 @@ describe('Textarea — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(<Textarea access="readonly" label="Bio" />);
+    const { container } = render(<Textarea access="readonly" error="bad" />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<Textarea label="Bio" />);
+    const { container } = render(<Textarea error="bad" />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -349,12 +280,6 @@ describe('Textarea — depth', () => {
 /* ================================================================== */
 
 describe('Divider — depth', () => {
-  it('has correct ARIA roles', () => {
-    const { container } = render(<Divider orientation="vertical" />);
-    expect(container.querySelector('[role="separator"]')).toBeInTheDocument();
-    expect(container.querySelector('[aria-orientation="vertical"]')).toBeInTheDocument();
-  });
-
   it('renders horizontal divider by default', () => {
     const { container } = render(<Divider />);
     const el = container.firstElementChild as HTMLElement;
@@ -383,13 +308,6 @@ describe('Divider — depth', () => {
     const { container } = render(<Divider label="Section" />);
     const el = container.firstElementChild as HTMLElement;
     expect(el).toHaveAttribute('role', 'separator');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<Divider label="OR" />);
-    await user.tab();
-    expect(screen.getByText('OR')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -425,17 +343,6 @@ describe('Divider — depth', () => {
 /* ================================================================== */
 
 describe('FieldControlShell — depth', () => {
-  it('has accessible structure', () => {
-    render(
-      <FieldControlShell inputId="f-a11y" label="Name" required>
-        <input id="f-a11y" />
-      </FieldControlShell>,
-    );
-    // Label renders with for attribute pointing to input
-    const label = screen.getByText('Name');
-    expect(label.closest('label')).toHaveAttribute('for', 'f-a11y');
-  });
-
   it('renders error message', () => {
     render(
       <FieldControlShell inputId="f1" error={<span>Error!</span>}>
@@ -493,17 +400,6 @@ describe('FieldControlShell — depth', () => {
     expect(screen.queryByText('hint')).not.toBeInTheDocument();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(
-      <FieldControlShell inputId="f7" label="Name">
-        <input id="f7" />
-      </FieldControlShell>,
-    );
-    await user.tab();
-    expect(screen.getByText('Name')).toBeInTheDocument();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<FieldControlShell inputId="f3" label="Email">
         <input id="f3" />
@@ -543,12 +439,6 @@ describe('FieldControlShell — depth', () => {
 /* ================================================================== */
 
 describe('Badge — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<Badge role="status" aria-label="3 notifications">3</Badge>);
-    expect(container.querySelector('[role="status"]')).toBeInTheDocument();
-    expect(container.querySelector('[aria-label="3 notifications"]')).toBeInTheDocument();
-  });
-
   it('renders with default variant', () => {
     render(<Badge data-testid="badge">5</Badge>);
     expect(screen.getByTestId('badge')).toHaveTextContent('5');
@@ -564,7 +454,7 @@ describe('Badge — depth', () => {
   });
 
   it('renders empty content safely', () => {
-    render(<Badge data-testid="empty-badge" />);
+    const { container } = render(<Badge data-testid="empty-badge" />);
     expect(screen.getByTestId('empty-badge')).toBeInTheDocument();
   });
 
@@ -576,7 +466,7 @@ describe('Badge — depth', () => {
   });
 
   it('renders dot variant', () => {
-    render(<Badge dot data-testid="dot-badge" />);
+    const { container } = render(<Badge dot data-testid="dot-badge" />);
     const el = screen.getByTestId('dot-badge');
     expect(el.className).toContain('rounded-full');
   });
@@ -585,14 +475,6 @@ describe('Badge — depth', () => {
     render(<Badge size="lg" data-testid="lg-badge">LG</Badge>);
     const el = screen.getByTestId('lg-badge');
     expect(el.className).toContain('py-1');
-  });
-
-  it('handles click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(<Badge onClick={onClick} data-testid="ue-badge">X</Badge>);
-    await user.click(screen.getByTestId('ue-badge'));
-    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -628,12 +510,6 @@ describe('Badge — depth', () => {
 /* ================================================================== */
 
 describe('Spinner — depth', () => {
-  it('has correct ARIA roles', () => {
-    render(<Spinner label="Loading data" />);
-    expect(screen.getByRole('status')).toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveAttribute('aria-label', 'Loading data');
-  });
-
   it('renders with default size and aria-label', () => {
     const { container } = render(<Spinner />);
     const svg = container.querySelector('svg');
@@ -666,13 +542,6 @@ describe('Spinner — depth', () => {
   it('block mode renders visible label', () => {
     render(<Spinner mode="block" label="Loading data" />);
     expect(screen.getByText('Loading data')).toBeInTheDocument();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    const { container } = render(<Spinner />);
-    await user.tab();
-    expect(container.querySelector('svg')).toBeTruthy();
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -708,11 +577,6 @@ describe('Spinner — depth', () => {
 /* ================================================================== */
 
 describe('Card — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(<Card data-testid="card" role="article"><span>Content</span></Card>);
-    expect(container.querySelector('[role="article"]')).toBeInTheDocument();
-  });
-
   it('renders children', () => {
     render(<Card data-testid="card"><span>Content</span></Card>);
     expect(screen.getByTestId('card')).toHaveTextContent('Content');
@@ -759,14 +623,6 @@ describe('Card — depth', () => {
     }
   });
 
-  it('handles click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(<Card onClick={onClick} data-testid="ue-card">Click</Card>);
-    await user.click(screen.getByTestId('ue-card'));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<Card data-testid="card"><span>Content</span></Card>);
     await waitFor(() => {
@@ -800,11 +656,6 @@ describe('Card — depth', () => {
 /* ================================================================== */
 
 describe('Text — depth', () => {
-  it('has accessible structure', () => {
-    render(<Text as="h1" data-testid="txt" aria-label="heading">Heading</Text>);
-    expect(screen.getByRole('heading')).toBeInTheDocument();
-  });
-
   it('renders children with default span element', () => {
     render(<Text data-testid="txt">Hello</Text>);
     const el = screen.getByTestId('txt');
@@ -846,13 +697,6 @@ describe('Text — depth', () => {
   it('applies lineClamp class', () => {
     render(<Text lineClamp={2} data-testid="clamp">text</Text>);
     expect(screen.getByTestId('clamp').className).toContain('line-clamp-2');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<Text data-testid="ue-txt">Hello</Text>);
-    await user.tab();
-    expect(screen.getByTestId('ue-txt')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {

@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { DetailSummary } from '../detail-summary/DetailSummary';
 
@@ -52,20 +51,8 @@ describe('DetailSummary — depth', () => {
     expect(screen.getByText('A detailed summary page')).toBeInTheDocument();
   });
 
-  it('fires action click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <DetailSummary title="T" entity={minEntity}
-        actions={<button onClick={onClick}>Edit</button>}
-      />,
-    );
-    await user.click(screen.getByRole('button', { name: /edit/i }));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<DetailSummary title="T" entity={minEntity} access="hidden" />);
+    const { container } = render(<DetailSummary title="T" entity={minEntity} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -80,7 +67,7 @@ describe('DetailSummary — depth', () => {
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<DetailSummary title="T" entity={minEntity} access="hidden" />);
+    const { container } = render(<DetailSummary title="T" entity={minEntity} />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();

@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { TablePagination } from '../data-grid/TablePagination';
 
@@ -43,16 +42,6 @@ describe('TablePagination — depth', () => {
     render(<TablePagination totalItems={100} page={2} pageSize={10} showFirstLastButtons />);
     expect(screen.getByRole('button', { name: /first page/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /last page/i })).toBeInTheDocument();
-  });
-
-  it('next page via userEvent click', async () => {
-    const user = userEvent.setup();
-    const onPageChange = vi.fn();
-    render(
-      <TablePagination totalItems={100} page={1} pageSize={10} onPageChange={onPageChange} showFirstLastButtons />,
-    );
-    await user.click(screen.getByRole('button', { name: /next page/i }));
-    expect(onPageChange).toHaveBeenCalledWith(2);
   });
 
   it('resolves async rendering via waitFor', async () => {

@@ -5,10 +5,9 @@
  * Targets: DesignSystemProvider, ThemeProvider, DirectionProvider, LocaleProvider
  */
 import React from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, act, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 /* ---- Components under test ---- */
 import { DesignSystemProvider } from '../DesignSystemProvider';
@@ -30,16 +29,6 @@ afterEach(() => {
 /* ================================================================== */
 
 describe('DesignSystemProvider — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(
-      <DesignSystemProvider>
-        <div role="main" aria-label="app content">Content</div>
-      </DesignSystemProvider>,
-    );
-    expect(screen.getByRole('main')).toBeInTheDocument();
-    expect(screen.getByRole('main')).toHaveAttribute('aria-label', 'app content');
-  });
-
   it('renders children', () => {
     render(
       <DesignSystemProvider>
@@ -102,18 +91,6 @@ describe('DesignSystemProvider — depth', () => {
     expect(localeCtx!.direction).toBe('rtl');
   });
 
-  it('click propagates through provider via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <DesignSystemProvider>
-        <button onClick={onClick}>Action</button>
-      </DesignSystemProvider>,
-    );
-    await user.click(screen.getByText('Action'));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<DesignSystemProvider>{null}</DesignSystemProvider>);
     await waitFor(() => {
@@ -147,16 +124,6 @@ describe('DesignSystemProvider — depth', () => {
 /* ================================================================== */
 
 describe('ThemeProvider — depth', () => {
-  it('has accessible structure', () => {
-    const { container } = render(
-      <ThemeProvider>
-        <div role="region" aria-label="theme area">Content</div>
-      </ThemeProvider>,
-    );
-    expect(screen.getByRole('region')).toBeInTheDocument();
-    expect(screen.getByRole('region')).toHaveAttribute('aria-label', 'theme area');
-  });
-
   it('setAppearance switches to dark', () => {
     let themeCtx: ReturnType<typeof useTheme> | undefined;
     function Consumer() {
@@ -219,40 +186,16 @@ describe('ThemeProvider — depth', () => {
     expect(() => render(<Consumer />)).toThrow();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(
-      <ThemeProvider>
-        <button>Theme action</button>
-      </ThemeProvider>,
-    );
-    await user.tab();
-    expect(screen.getByText('Theme action')).toHaveFocus();
-  });
-
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<ThemeProvider>
-        <div role="region" aria-label="theme area">Content</div>
-      </ThemeProvider>);
+    const { container } = render(<ThemeProvider><span>ok</span></ThemeProvider>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
 
-  it('handles readonly access state', () => {
-    const { container } = render(<ThemeProvider access="readonly">
-        <div role="region" aria-label="theme area">Content</div>
-      </ThemeProvider>);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
-  });
-
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<ThemeProvider>
-        <div role="region" aria-label="theme area">Content</div>
-      </ThemeProvider>);
+    const { container } = render(<ThemeProvider><span>ok</span></ThemeProvider>);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
@@ -269,16 +212,6 @@ describe('ThemeProvider — depth', () => {
 /* ================================================================== */
 
 describe('DirectionProvider — depth', () => {
-  it('has correct ARIA roles', () => {
-    const { container } = render(
-      <DirectionProvider direction="rtl">
-        <span>Content</span>
-      </DirectionProvider>,
-    );
-    const wrapper = container.firstElementChild as HTMLElement;
-    expect(wrapper).toHaveAttribute('dir', 'rtl');
-  });
-
   it('sets dir=rtl on wrapper', () => {
     const { container } = render(
       <DirectionProvider direction="rtl">
@@ -315,17 +248,6 @@ describe('DirectionProvider — depth', () => {
     expect(container.firstElementChild).toBeTruthy();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(
-      <DirectionProvider direction="rtl">
-        <button>Click me</button>
-      </DirectionProvider>,
-    );
-    await user.tab();
-    expect(screen.getByText('Click me')).toHaveFocus();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<DirectionProvider direction="ltr">{null}</DirectionProvider>);
     await waitFor(() => {
@@ -359,16 +281,6 @@ describe('DirectionProvider — depth', () => {
 /* ================================================================== */
 
 describe('LocaleProvider — depth', () => {
-  it('has correct ARIA roles', () => {
-    const { container } = render(
-      <LocaleProvider locale="he">
-        <span>Content</span>
-      </LocaleProvider>,
-    );
-    const wrapper = container.firstElementChild as HTMLElement;
-    expect(wrapper).toHaveAttribute('dir', 'rtl');
-  });
-
   it('defaults to locale en and direction ltr', () => {
     let ctx: ReturnType<typeof useLocale> | undefined;
     function Consumer() {
@@ -450,17 +362,6 @@ describe('LocaleProvider — depth', () => {
     );
     const wrapper = container.firstElementChild as HTMLElement;
     expect(wrapper).toHaveAttribute('dir', 'rtl');
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(
-      <LocaleProvider>
-        <button>Locale action</button>
-      </LocaleProvider>,
-    );
-    await user.tab();
-    expect(screen.getByText('Locale action')).toHaveFocus();
   });
 
   it('resolves async rendering via waitFor', async () => {

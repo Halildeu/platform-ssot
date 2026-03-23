@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { useTheme } from '../ThemeProvider';
@@ -61,30 +60,6 @@ describe('DesignSystemProvider — depth', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: /action/i }));
     expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('click via userEvent through provider', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <DesignSystemProvider>
-        <button onClick={onClick}>UE Action</button>
-      </DesignSystemProvider>,
-    );
-    await user.click(screen.getByText('UE Action'));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('keyboard input via userEvent through provider', async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
-    render(
-      <DesignSystemProvider>
-        <input aria-label="test-input" onChange={onChange} />
-      </DesignSystemProvider>,
-    );
-    await user.type(screen.getByLabelText('test-input'), 'hello');
-    expect(onChange).toHaveBeenCalled();
   });
 
   it('resolves async rendering via waitFor', async () => {

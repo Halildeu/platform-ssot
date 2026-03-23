@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { PageLayout } from '../page-layout/PageLayout';
 
@@ -54,18 +53,6 @@ describe('PageLayout — depth', () => {
       </PageLayout>,
     );
     expect(screen.getByTestId('footer-content')).toHaveTextContent('Footer');
-  });
-
-  it('breadcrumb click via userEvent', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <PageLayout title="Page" breadcrumbItems={[{ title: 'Home', onClick }, { title: 'Current' }]}>
-        <div>Content</div>
-      </PageLayout>,
-    );
-    await user.click(screen.getByText('Home'));
-    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {

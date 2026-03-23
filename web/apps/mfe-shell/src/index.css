@@ -185,13 +185,16 @@
 /*  Theme overrides — runtime CSS vars override @theme static values   */
 /*  theme.css sets :root { --color-surface-default: <actual value> }   */
 /* ------------------------------------------------------------------ */
-@import './styles/theme.css' layer(theme);
-@import './styles/token-bridge.css' layer(theme);
+@import './styles/theme.css';
+@import './styles/token-bridge.css';
 
-/* Map theme.css tokens → TW4 @theme variable names */
-@layer theme {
-  :root,
-  :root[data-theme] {
+/* ------------------------------------------------------------------ */
+/*  Map design tokens → TW4 @theme variable names                     */
+/*  NOT in @layer — must override @theme's :root static values         */
+/*  CSS cascade: @theme writes :root first, then this block overrides  */
+/* ------------------------------------------------------------------ */
+:root,
+:root[data-theme] {
     --color-surface-default: var(--surface-default-bg);
     --color-surface-page: var(--surface-page-bg);
     --color-surface-raised: var(--surface-raised-bg);
@@ -250,7 +253,6 @@
     --color-menu-surface-trigger: var(--surface-muted-bg);
     --color-t-action-primary: var(--action-primary-text);
     --ring-color: var(--focus-outline);
-  }
 }
 
 /* Hafif reset */

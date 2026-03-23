@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, act, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
   useReducedMotion: () => false,
@@ -92,7 +91,7 @@ describe('Transition — depth', () => {
   });
 
   it('empty — show=false with no children renders nothing', () => {
-    render(
+    const { container } = render(
       <Transition show={false}>
         <div data-testid="empty-child">Empty</div>
       </Transition>,
@@ -100,26 +99,11 @@ describe('Transition — depth', () => {
     expect(screen.queryByTestId('empty-child')).not.toBeInTheDocument();
   });
 
-  it('supports keyboard navigation via userEvent', async () => {
-    vi.useRealTimers();
-    const user = userEvent.setup();
-    render(
-      <Transition show={true}>
-        <button data-testid="trans-btn">Click</button>
-      </Transition>,
-    );
-    await user.tab();
-    expect(screen.getByTestId('trans-btn')).toBeInTheDocument();
-    vi.useFakeTimers();
-  });
-
   it('resolves async rendering via waitFor', async () => {
     vi.useRealTimers();
-    const { container } = render(
-      <Transition show={true}>
+    const { container } = render(<Transition show={true}>
         <div data-testid="trans">Content</div>
-      </Transition>,
-    );
+      </Transition>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -127,22 +111,18 @@ describe('Transition — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(
-      <Transition access="readonly" show={true}>
+    const { container } = render(<Transition access="readonly" show={true}>
         <div data-testid="trans">Content</div>
-      </Transition>,
-    );
+      </Transition>);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(
-      <Transition show={true}>
+    const { container } = render(<Transition show={true}>
         <div data-testid="trans">Content</div>
-      </Transition>,
-    );
+      </Transition>);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();

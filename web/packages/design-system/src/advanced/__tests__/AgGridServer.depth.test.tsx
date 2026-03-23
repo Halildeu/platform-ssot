@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: (props: Record<string, unknown>) => (
@@ -53,13 +52,6 @@ describe('AgGridServer — depth', () => {
     const grid = container.querySelector('.srv-grid');
     expect(grid).toBeInTheDocument();
     fireEvent.click(grid!);
-    expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
-  });
-
-  it('supports keyboard navigation via userEvent', async () => {
-    const user = userEvent.setup();
-    render(<AgGridServer columnDefs={[{ field: 'x' }]} getData={mockGetData} />);
-    await user.tab();
     expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
   });
 

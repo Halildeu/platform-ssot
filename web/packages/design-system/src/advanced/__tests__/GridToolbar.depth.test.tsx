@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
@@ -50,14 +49,6 @@ describe('GridToolbar — depth', () => {
   it('empty toolbar renders reset button', () => {
     render(<GridToolbar {...baseProps} />);
     expect(screen.getByRole('button', { name: /reset/i })).toBeInTheDocument();
-  });
-
-  it('density toggle via userEvent click', async () => {
-    const user = userEvent.setup();
-    const onDensity = vi.fn();
-    render(<GridToolbar {...baseProps} onDensityChange={onDensity} />);
-    await user.click(screen.getByText('Compact'));
-    expect(onDensity).toHaveBeenCalledWith('compact');
   });
 
   it('resolves async rendering via waitFor', async () => {

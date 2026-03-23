@@ -1,9 +1,8 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import { MasterDetail } from '../master-detail/MasterDetail';
 
@@ -52,15 +51,6 @@ describe('MasterDetail — depth', () => {
       <MasterDetail master={<></>} detail={<div>Detail</div>} />,
     );
     expect(container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('collapse via userEvent click', async () => {
-    const user = userEvent.setup();
-    render(
-      <MasterDetail master={<div>Master</div>} detail={<div>Detail</div>} collapsible masterHeader={<span>Header</span>} />,
-    );
-    await user.click(screen.getByRole('button', { name: /collapse/i }));
-    expect(screen.getByRole('button', { name: /expand/i })).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {

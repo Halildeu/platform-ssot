@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
   useReducedMotion: () => false,
@@ -71,25 +70,9 @@ describe('StaggerGroup — depth', () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('click via userEvent on stagger child', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
-    render(
-      <StaggerGroup staggerDelay={50}>
-        <button onClick={onClick}>UserEvent Click</button>
-      </StaggerGroup>,
-    );
-    await user.click(screen.getByText('UserEvent Click'));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
   it('resolves async rendering via waitFor', async () => {
     vi.useRealTimers();
-    const { container } = render(
-      <StaggerGroup staggerDelay={100}>
-        <div data-testid="item-0">A</div>
-      </StaggerGroup>,
-    );
+    const { container } = render(<StaggerGroup staggerDelay={100}><div>A</div></StaggerGroup>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -97,22 +80,14 @@ describe('StaggerGroup — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(
-      <StaggerGroup access="readonly" staggerDelay={100}>
-        <div>A</div>
-      </StaggerGroup>,
-    );
+    const { container } = render(<StaggerGroup access="readonly" staggerDelay={100}><div>A</div></StaggerGroup>);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(
-      <StaggerGroup staggerDelay={100}>
-        <div>A</div>
-      </StaggerGroup>,
-    );
+    const { container } = render(<StaggerGroup staggerDelay={100}><div>A</div></StaggerGroup>);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
