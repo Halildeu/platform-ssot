@@ -42,7 +42,7 @@ export default function RecipeDetail() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-text-secondary">
         <button type="button" onClick={() => navigate("/admin/design-lab")} className="hover:text-text-primary">
@@ -243,7 +243,7 @@ function RecipeWorkflow({ recipe }: { recipe: RecipeFamily }) {
     }
 
     return (
-      <div className="space-y-6">
+      <div className="flex flex-col gap-6">
         <div className="flex items-center gap-2">
           <Workflow className="h-5 w-5 text-text-secondary" />
           <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -271,7 +271,7 @@ function RecipeWorkflow({ recipe }: { recipe: RecipeFamily }) {
   const { transitions } = workflowCatalog.workflowStates;
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* ── Pattern header ── */}
       <div className="flex items-center gap-3">
         <Workflow className="h-5 w-5 text-action-primary" />

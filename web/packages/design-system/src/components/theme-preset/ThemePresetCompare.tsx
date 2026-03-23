@@ -127,7 +127,7 @@ export const ThemePresetCompare = React.forwardRef<HTMLElement, ThemePresetCompa
               {rightPreset.label}
             </Text>
           </div>
-          <div className="mt-3 space-y-3">
+          <div className="flex flex-col mt-3 gap-3">
             {axes.map((axis) => (
               <div key={axis} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 rounded-2xl border border-border-subtle bg-surface-muted px-3 py-3">
                 <Text as="div" className="text-sm font-semibold capitalize text-text-primary">

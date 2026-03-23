@@ -102,7 +102,7 @@ export const RecommendationCard = React.forwardRef<HTMLElement, RecommendationCa
       data-tone={tone}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant={tone} className={toneClasses[tone]}>
               {recommendationType}
@@ -134,7 +134,7 @@ export const RecommendationCard = React.forwardRef<HTMLElement, RecommendationCa
       {rationale.length > 0 ? (
         <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-muted p-4">
           <Text variant="secondary" size="xs" weight="medium">Why this recommendation</Text>
-          <ul className="mt-3 space-y-2 text-sm text-text-secondary">
+          <ul className="flex flex-col mt-3 gap-2 text-sm text-text-secondary">
             {rationale.map((item) => (
               <li key={item} className="flex gap-2">
                 <span aria-hidden="true">&bull;</span>

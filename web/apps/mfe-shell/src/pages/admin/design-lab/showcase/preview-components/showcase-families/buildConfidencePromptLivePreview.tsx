@@ -78,7 +78,7 @@ export const buildConfidencePromptLivePreview = (
               </div>
             </PreviewPanel>
             <PreviewPanel title={t('designlab.showcase.component.confidenceBadge.live.compact.panel')}>
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 <div className="flex flex-wrap gap-3">
                   <ConfidenceBadge level="high" score={87} compact />
                   <ConfidenceBadge

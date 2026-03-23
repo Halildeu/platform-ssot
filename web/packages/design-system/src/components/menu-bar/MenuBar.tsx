@@ -1372,7 +1372,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         title={openItem?.menuSurfaceTitle}
         headerContent={
           openItem?.menuSurfaceDescription || openItem?.menuSurfaceMeta ? (
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               {openItem.menuSurfaceDescription ? (
                 <div className="text-xs leading-6 text-text-secondary">{openItem.menuSurfaceDescription}</div>
               ) : null}

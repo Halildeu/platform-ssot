@@ -134,7 +134,7 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function S
       required={required}
       fullWidth={fullWidth}
     >
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         <div className={getFieldFrameClass(size, tone, fullWidth, className)}>
           <input
             {...props}

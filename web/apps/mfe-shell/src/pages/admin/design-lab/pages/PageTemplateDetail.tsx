@@ -41,7 +41,7 @@ export default function PageTemplateDetail() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-text-secondary">
         <button type="button" onClick={() => navigate("/admin/design-lab")} className="hover:text-text-primary">
@@ -275,7 +275,7 @@ function PageRegions({
   const hasMainAndSidebar = zones.has("main") && zones.has("sidebar");
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Section title */}
       <div className="flex items-center gap-2">
         <LayoutGrid className="h-5 w-5 text-text-secondary" />
@@ -285,7 +285,7 @@ function PageRegions({
       </div>
 
       {/* Wireframe grid */}
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         {orderedZones.map((zone) => {
           // main + sidebar rendered side by side
           if (zone === "sidebar" && hasMainAndSidebar) return null;

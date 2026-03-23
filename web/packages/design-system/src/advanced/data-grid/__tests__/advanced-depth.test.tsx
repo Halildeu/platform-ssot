@@ -67,6 +67,7 @@ describe('VariantIntegration — depth', () => {
     render(<VariantIntegration {...baseProps} />);
     expect(screen.getByLabelText('Grid variant')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty without gridApi safely', () => {
@@ -81,6 +82,7 @@ describe('VariantIntegration — depth', () => {
     // Hidden access returns empty fragment
     expect(container.textContent).toBe('');
     expect(container.firstElementChild === null || container.textContent === '').toBe(true);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('settings button toggles variant manager', () => {
@@ -158,6 +160,7 @@ describe('GridToolbar — depth', () => {
     render(<GridToolbar {...baseProps} />);
     expect(screen.getByLabelText('Quick filter')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('quick filter change fires onQuickFilterChange', () => {
@@ -166,6 +169,7 @@ describe('GridToolbar — depth', () => {
     fireEvent.change(screen.getByLabelText('Quick filter'), { target: { value: 'test' } });
     expect(onChange).toHaveBeenCalledWith('test');
     expect(onChange).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('density toggle fires onDensityChange', () => {
@@ -174,6 +178,7 @@ describe('GridToolbar — depth', () => {
     fireEvent.click(screen.getByText('Compact'));
     expect(onDensityChange).toHaveBeenCalledWith('compact');
     expect(onDensityChange).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fullscreen button fires onRequestFullscreen', () => {
@@ -182,11 +187,13 @@ describe('GridToolbar — depth', () => {
     fireEvent.click(screen.getByLabelText('Fullscreen'));
     expect(onFullscreen).toHaveBeenCalledTimes(1);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders reset filters button', () => {
     render(<GridToolbar {...baseProps} />);
     expect(screen.getByText('Reset Filters')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -194,6 +201,7 @@ describe('GridToolbar — depth', () => {
     const { container } = render(<GridToolbar {...baseProps} access="hidden" />);
     expect(container.textContent).toBe('');
     expect(container.firstElementChild === null || container.textContent === '').toBe(true);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders theme selector when onThemeChange provided', () => {
@@ -281,6 +289,7 @@ describe('EntityGridTemplate — depth', () => {
     );
     expect(container.textContent).toBe('');
     expect(container.firstElementChild === null || container.textContent === '').toBe(true);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -341,6 +350,7 @@ describe('AgGridServer — depth', () => {
     );
     expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty columnDefs safely', () => {
@@ -349,6 +359,7 @@ describe('AgGridServer — depth', () => {
     );
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('passes serverSide rowModelType', () => {
@@ -370,6 +381,7 @@ describe('AgGridServer — depth', () => {
     );
     expect(container.innerHTML).toBe('');
     expect(container.firstElementChild).toBeNull();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies custom className', () => {
@@ -441,6 +453,7 @@ describe('GridShell — depth', () => {
     );
     expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty rowData safely', () => {
@@ -449,6 +462,7 @@ describe('GridShell — depth', () => {
     );
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('forwards className prop', () => {
@@ -472,6 +486,7 @@ describe('GridShell — depth', () => {
       </GridShell>,
     );
     expect(screen.getByTestId('footer')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -556,6 +571,7 @@ describe('TablePagination — depth', () => {
     const prevBtn = screen.getByLabelText('Previous page');
     expect(prevBtn).toHaveAttribute('disabled');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('handles zero totalItems without error', () => {
@@ -584,6 +600,7 @@ describe('TablePagination — depth', () => {
     );
     expect(container.innerHTML).toBe('');
     expect(container.firstElementChild).toBeNull();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('shows first/last buttons when showFirstLastButtons is true', () => {

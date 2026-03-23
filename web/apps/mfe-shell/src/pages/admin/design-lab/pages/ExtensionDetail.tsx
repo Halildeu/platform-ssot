@@ -45,7 +45,7 @@ export default function ExtensionDetail() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-text-secondary">
         <button type="button" onClick={() => navigate("/admin/design-lab")} className="hover:text-text-primary">
@@ -247,7 +247,7 @@ function ExtSurfaces({ extension }: { extension: ExtFamily }) {
 
   if (matchedSurfaces.length === 0) {
     return (
-      <div className="space-y-6">
+      <div className="flex flex-col gap-6">
         {/* Show ownerBlocks as simple component cards */}
         {extension.ownerBlocks.length > 0 && (
           <div>
@@ -280,7 +280,7 @@ function ExtSurfaces({ extension }: { extension: ExtFamily }) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* Section A — Surface Cards */}
       <div>
         <div className="mb-4 flex items-center gap-2">
@@ -330,7 +330,7 @@ function ExtSurfaces({ extension }: { extension: ExtFamily }) {
             {t("designlab.extension.surfaces.apiContract")}
           </Text>
         </div>
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {matchedSurfaces.map((surface) => (
             <div
               key={surface.surfaceId}
@@ -339,7 +339,7 @@ function ExtSurfaces({ extension }: { extension: ExtFamily }) {
               <Text as="div" className="mb-2 text-xs font-semibold text-text-primary">
                 {surface.title}
               </Text>
-              <div className="space-y-1.5">
+              <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2">
                   <span className="w-20 shrink-0 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                     Import

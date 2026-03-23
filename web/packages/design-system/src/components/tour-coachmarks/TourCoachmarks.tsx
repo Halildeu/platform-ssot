@@ -160,7 +160,7 @@ export const TourCoachmarks = React.forwardRef<HTMLDivElement, TourCoachmarksPro
         >
           <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-[var(--action-primary)] via-[var(--action-primary-hover)] to-[var(--action-primary)]" />
           <div
-            className="space-y-6 p-6 pt-7"
+            className="flex flex-col gap-6 p-6 pt-7"
             role="dialog"
             aria-modal="false"
             aria-labelledby={titleId}
@@ -168,7 +168,7 @@ export const TourCoachmarks = React.forwardRef<HTMLDivElement, TourCoachmarksPro
             title={accessReason}
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <div className="text-xs font-semibold uppercase tracking-[0.24em] text-text-secondary">
                   {resolvedTitle}
                 </div>
@@ -185,7 +185,7 @@ export const TourCoachmarks = React.forwardRef<HTMLDivElement, TourCoachmarksPro
                 </div>
               ) : null}
             </div>
-            <div id={panelId} className="space-y-4">
+            <div id={panelId} className="flex flex-col gap-4">
               <div className="text-sm leading-7 text-text-secondary">
                 {step.description}
               </div>

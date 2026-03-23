@@ -183,7 +183,7 @@ export default function ComposePage() {
             />
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
+        <div className="flex flex-col flex-1 overflow-y-auto p-2 gap-0.5">
           {filteredPalette.map((comp) => (
             <button
               key={comp.name}
@@ -196,7 +196,7 @@ export default function ComposePage() {
             </button>
           ))}
         </div>
-        <div className="border-t border-border-subtle p-2 space-y-1">
+        <div className="flex flex-col border-t border-border-subtle p-2 gap-1">
           <button
             type="button"
             onClick={handleSave}
@@ -353,7 +353,7 @@ export default function ComposePage() {
         </div>
 
         {selectedNode ? (
-          <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          <div className="flex flex-col flex-1 overflow-y-auto p-3 gap-2">
             {/* Reorder buttons */}
             <div className="flex items-center gap-1 mb-2">
               <button
@@ -418,7 +418,7 @@ export default function ComposePage() {
               Layers ({nodes.length})
             </Text>
           </div>
-          <div className="max-h-36 overflow-y-auto px-2 pb-2 space-y-0.5">
+          <div className="flex flex-col max-h-36 overflow-y-auto px-2 pb-2 gap-0.5">
             {nodes.map((node, i) => (
               <button
                 key={node.id}
@@ -447,7 +447,7 @@ export default function ComposePage() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="max-h-80 overflow-y-auto p-4 space-y-2">
+            <div className="flex flex-col max-h-80 overflow-y-auto p-4 gap-2">
               {compositions.length === 0 ? (
                 <Text variant="secondary" className="text-xs text-center py-8">No saved compositions yet</Text>
               ) : (

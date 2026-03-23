@@ -52,7 +52,7 @@ function ConsumerGroup({
       <Text variant="secondary" className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider">
         {title} ({consumers.length})
       </Text>
-      <div className="space-y-1">
+      <div className="flex flex-col gap-1">
         {consumers.map((c) => (
           <div
             key={`${c.type}-${c.name}`}
@@ -194,7 +194,7 @@ export default function BlastRadiusPanel() {
           </div>
 
           {/* Consumer lists */}
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             <ConsumerGroup title="Apps" consumers={grouped.apps} />
             <ConsumerGroup title="Recipes" consumers={grouped.recipes} />
             <ConsumerGroup title="Patterns" consumers={grouped.patterns} />

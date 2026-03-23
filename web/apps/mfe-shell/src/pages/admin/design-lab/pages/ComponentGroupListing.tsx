@@ -29,7 +29,7 @@ export default function ComponentGroupListing() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div>
         <Text
           variant="secondary"

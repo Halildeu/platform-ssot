@@ -120,7 +120,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
   }, {});
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Header summary */}
       <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <div className="flex items-start justify-between gap-4">
@@ -162,7 +162,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
       {/* Dimension detail cards */}
       <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>Governance dimensions</DetailLabel>
-        <div className="mt-4 space-y-3">
+        <div className="flex flex-col mt-4 gap-3">
           {applicableDimensions.map((dimension) => {
             const currentLevel = layerStatus[dimension.dimensionId] ?? 1;
             const currentMaturity = dimension.maturityLevels.find((m) => m.level === currentLevel);
@@ -226,7 +226,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Bu katmana ait aktif ve planli migration lane&apos;leri.
           </Text>
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             {layerLanes.map((lane) => (
               <div
                 key={lane.laneId}
@@ -262,7 +262,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
         <Text variant="secondary" className="mt-1 block text-xs leading-5">
           Tum katmanlarin governance olgunlugu bir bakista.
         </Text>
-        <div className="mt-4 space-y-2">
+        <div className="flex flex-col mt-4 gap-2">
           {Object.entries(catalog.layerGovernanceStatus).map(([layerId, dims]) => {
             const layerDimensions = catalog.governanceDimensions.filter((d) =>
               d.appliesTo.includes(layerId),

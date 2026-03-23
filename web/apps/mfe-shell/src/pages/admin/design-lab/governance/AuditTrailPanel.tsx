@@ -85,7 +85,7 @@ export function AuditTrailPanel({
   const actionOptions = Object.keys(ACTION_LABELS) as AuditAction[];
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ export function AuditTrailPanel({
           </Text>
         </div>
       ) : (
-        <div className="space-y-1">
+        <div className="flex flex-col gap-1">
           {filteredEntries.map((entry) => (
             <AuditEntryRow key={entry.id} entry={entry} />
           ))}

@@ -114,7 +114,7 @@ export const buildSearchFilterShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <PreviewPanel title={t('designlab.showcase.component.commandPalette.sections.launcher.panelOpenState')}>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <Button onClick={() => setCommandPaletteOpen(true)}>
                     {t('designlab.showcase.component.commandPalette.sections.launcher.openButton')}
                   </Button>
@@ -155,7 +155,7 @@ export const buildSearchFilterShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.commandPalette.sections.readonly.panelContract')}>
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap gap-2">
                     <SectionBadge label={t('designlab.showcase.component.commandPalette.sections.readonly.chipReadonly')} />
                     <SectionBadge label={t('designlab.showcase.component.commandPalette.sections.readonly.chipDiscoverability')} />
@@ -221,7 +221,7 @@ export const buildSearchFilterShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.commandPalette.sections.scope.panelCommands')}>
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap gap-2">
                     <SectionBadge label={t('designlab.showcase.component.commandPalette.sections.scope.chipAiAssist')} />
                     <SectionBadge label={t('designlab.showcase.component.commandPalette.sections.scope.chipGovernance')} />
@@ -259,7 +259,7 @@ export const buildSearchFilterShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
               <PreviewPanel title="Komut merkezi">
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex flex-wrap gap-2">
                     <SectionBadge label="release ops" />
                     <SectionBadge label="approval queue" />

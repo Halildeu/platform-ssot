@@ -173,7 +173,7 @@ export const AIGuidedAuthoring = React.forwardRef<HTMLElement, AIGuidedAuthoring
           {...promptComposerProps}
         />
 
-        <div className="min-w-0 space-y-4">
+        <div className="flex flex-col min-w-0 gap-4">
           {recommendations.length ? (
             recommendations.map((recommendation) => (
               <RecommendationCard

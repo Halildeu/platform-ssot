@@ -421,7 +421,7 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
         </div>
       ) : null}
       {headerContent ? <div className="px-3 pb-3">{headerContent}</div> : null}
-      <div className="space-y-1">
+      <div className="flex flex-col gap-1">
         {items.map((item, index) => {
           const shouldRenderGroupLabel = Boolean(
             item.groupLabel
@@ -481,7 +481,7 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                     {item.icon}
                   </span>
                 ) : null}
-                <span className="min-w-0 space-y-1">
+                <span className="flex flex-col min-w-0 gap-1">
                   <span className={`block text-sm font-semibold tracking-[-0.01em] ${item.danger ? 'text-state-danger-text' : 'text-text-primary'}`}>
                     {item.label}
                   </span>

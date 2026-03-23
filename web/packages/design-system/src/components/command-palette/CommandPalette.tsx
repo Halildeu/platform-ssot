@@ -207,7 +207,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
         {/* Header */}
         <div className="border-b border-border-subtle px-6 py-5">
           <div className="flex items-start justify-between gap-4">
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2">
               <div
                 id={titleId}
                 className="text-lg font-semibold text-text-primary"
@@ -256,7 +256,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
               <Empty description={emptyStateLabel} />
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               {Object.entries(groupedItems).map(([group, groupItems]) => (
                 <section
                   key={group}
@@ -265,7 +265,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
                   <div className="px-2 pb-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-text-secondary">
                     {group}
                   </div>
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     {groupItems.map((item) => {
                       const index = orderedItems.findIndex(
                         (candidate) => candidate.id === item.id,

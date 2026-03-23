@@ -83,7 +83,7 @@ export default function ROICalculator() {
     new Intl.NumberFormat("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 }).format(n);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10">
@@ -189,7 +189,7 @@ export default function ROICalculator() {
       {/* Breakdown */}
       <div className="rounded-xl border border-border-subtle bg-surface-default p-5">
         <Text className="mb-4 text-sm font-semibold text-text-primary">Detaylı Dağılım</Text>
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           <BreakdownRow
             label="Bileşen yeniden kullanım tasarrufu"
             hours={calculations.componentReuseSavings}

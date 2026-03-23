@@ -803,7 +803,7 @@ const PreviewWorkspace: React.FC<{
     const panelSections = visibleSections.filter((section) => (section.kind ?? 'live') === panelId);
 
     return (
-      <div className="space-y-5">
+      <div className="flex flex-col gap-5">
         <div className="relative overflow-hidden rounded-[26px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,244,252,0.92)))] p-4 shadow-[0_22px_48px_-30px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[var(--border-subtle)]/20">
           <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-0 h-12 rounded-b-[28px] bg-linear-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] to-transparent" />
           <div className="relative z-[1] flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
@@ -821,7 +821,7 @@ const PreviewWorkspace: React.FC<{
           </div>
         </div>
 
-        <div className="space-y-5">
+        <div className="flex flex-col gap-5">
           {panelSections.length ? (
             panelSections.map((section, index) => (
               <div key={`${section.id}-section-${index}`} data-testid={`${testIdPrefix}-${section.id}`} data-demo-section-kind={section.kind}>
@@ -1543,7 +1543,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
           <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <PreviewPanel title={t('designlab.showcase.component.commandPalette.live.launcher.panel')}>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex flex-wrap items-center gap-3">
                     <Button onClick={() => setCommandPaletteOpen(true)}>
                       {t('designlab.showcase.component.commandPalette.live.launcher.open')}
@@ -2215,7 +2215,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
               </div>
             </PreviewPanel>
             <PreviewPanel title={t('designlab.showcase.recipe.workspace.quality.uxAndSections')} kind="reference">
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 <div className="flex flex-wrap gap-2">
                   {familyThemes.length
                     ? familyThemes.map((theme) => <SectionBadge key={theme} label={theme} />)

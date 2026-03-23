@@ -369,7 +369,7 @@ const RecipeStateMachineVisualizer: React.FC<{
   const primaryPattern = matchedPatterns[0] ?? null;
 
   return (
-    <div className="space-y-5">
+    <div className="flex flex-col gap-5">
       {/* Lifecycle state machine */}
       <div>
         <div className="flex items-center justify-between">
@@ -530,7 +530,7 @@ const RecipeDependencyGraph: React.FC<{
   };
 
   return (
-    <div className="space-y-5">
+    <div className="flex flex-col gap-5">
       {/* Cluster overview */}
       <div>
         <div className="flex items-center justify-between">
@@ -579,7 +579,7 @@ const RecipeDependencyGraph: React.FC<{
           <DetailLabel>Dependency edges</DetailLabel>
           <SectionBadge label={`${edges.length} total, ${relevantEdges.length} relevant`} />
         </div>
-        <div className="mt-3 space-y-1.5">
+        <div className="flex flex-col mt-3 gap-1.5">
           {edges.map((edge) => {
             const isRelevant = matchedIds.has(edge.from) || matchedIds.has(edge.to);
             return (
@@ -730,7 +730,7 @@ const RecipeOverviewTab: React.FC<{
             label: 'Summary',
             badge: <Badge variant="info">{recipe.ownerBlocks.length}</Badge>,
             content: (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
                   <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>{t('designlab.recipe.overview.summary')}</DetailLabel>
@@ -1011,7 +1011,7 @@ const RecipeUxTab: React.FC<{
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.recipe.overview.themeCoverage')}</DetailLabel>
@@ -1044,7 +1044,7 @@ const RecipeUxTab: React.FC<{
         </div>
 
         {primaryPattern ? (
-          <div className="mt-4 space-y-4">
+          <div className="flex flex-col mt-4 gap-4">
             {/* Step flow visualization */}
             <div className="rounded-[20px] border border-border-subtle bg-surface-panel p-4">
               <Text variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">Workflow steps</Text>
@@ -1149,7 +1149,7 @@ const RecipeQualityGatesContent: React.FC<{
   const requiredCount = requiredGatesPerComplexity[primaryComplexity] ?? 3;
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>{t('designlab.component.quality.gates')}</DetailLabel>
         {/* Complexity-based requirement */}
@@ -1159,7 +1159,7 @@ const RecipeQualityGatesContent: React.FC<{
           <MetricCard label="Current gates" value={String(allGates.length)} />
         </div>
         {/* Gate list */}
-        <div className="mt-4 space-y-1.5">
+        <div className="flex flex-col mt-4 gap-1.5">
           {allGates.map((gate) => {
             const isCatalog = catalogGates.includes(gate);
             const isCrossCutting = crossCuttingGates.includes(gate);

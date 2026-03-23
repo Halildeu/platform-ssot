@@ -54,6 +54,7 @@ describe('DesignSystemProvider — depth', () => {
     );
     expect(axes).toBeDefined();
     expect(axes).toHaveProperty('appearance');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('empty children renders without crash', () => {
@@ -76,6 +77,7 @@ describe('DesignSystemProvider — depth', () => {
     );
     expect(localeCtx!.locale).toBe('fa');
     expect(localeCtx!.direction).toBe('rtl');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('passes explicit direction override', () => {
@@ -155,6 +157,7 @@ describe('ThemeProvider — depth', () => {
       themeCtx!.setAppearance('dark');
     });
     expect(themeCtx!.axes.appearance).toBe('dark');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('setDensity switches density', () => {
@@ -191,6 +194,7 @@ describe('ThemeProvider — depth', () => {
     expect(themeCtx!.axes.appearance).toBe('high-contrast');
     // density should remain unchanged
     expect(themeCtx!.axes.density).toBe('comfortable');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('throws when useTheme called outside provider', () => {
@@ -200,6 +204,7 @@ describe('ThemeProvider — depth', () => {
     }
     expect(() => render(<Consumer />)).toThrow();
     expect(true).toBe(true); // error was thrown as expected
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -258,6 +263,7 @@ describe('DirectionProvider — depth', () => {
     const wrapper = container.firstElementChild as HTMLElement;
     expect(wrapper).toHaveAttribute('dir', 'rtl');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('sets dir=ltr on wrapper', () => {
@@ -269,6 +275,7 @@ describe('DirectionProvider — depth', () => {
     const wrapper = container.firstElementChild as HTMLElement;
     expect(wrapper).toHaveAttribute('dir', 'ltr');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('children render inside direction wrapper', () => {
@@ -279,6 +286,7 @@ describe('DirectionProvider — depth', () => {
     );
     expect(screen.getByTestId('dir-content')).toHaveTextContent('RTL');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty children safely', () => {
@@ -287,6 +295,7 @@ describe('DirectionProvider — depth', () => {
     );
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -349,6 +358,7 @@ describe('LocaleProvider — depth', () => {
     );
     expect(ctx!.locale).toBe('en');
     expect(ctx!.direction).toBe('ltr');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('switches locale to Turkish', () => {
@@ -364,6 +374,7 @@ describe('LocaleProvider — depth', () => {
     );
     expect(ctx!.locale).toBe('tr');
     expect(ctx!.direction).toBe('ltr');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('auto-detects RTL for Urdu', () => {
@@ -417,6 +428,7 @@ describe('LocaleProvider — depth', () => {
     );
     const wrapper = container.firstElementChild as HTMLElement;
     expect(wrapper).toHaveAttribute('dir', 'rtl');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 

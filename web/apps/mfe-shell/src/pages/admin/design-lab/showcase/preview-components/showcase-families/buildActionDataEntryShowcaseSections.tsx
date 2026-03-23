@@ -88,7 +88,7 @@ export const buildActionDataEntryShowcaseSections = (
                 </div>
               </PreviewPanel>
               <PreviewPanel title="Tam genişlikli görev">
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <Button fullWidth rightIcon={<span aria-hidden="true">→</span>}>
                     İnceleme akışını başlat
                   </Button>
@@ -132,7 +132,7 @@ export const buildActionDataEntryShowcaseSections = (
                 </FilterBar>
               </PreviewPanel>
               <PreviewPanel title="Aksiyon ayrımı">
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap gap-2">
                     <Button size="sm" variant="secondary">Dışa aktar</Button>
                     <Button size="sm" variant="secondary">Kopya al</Button>
@@ -724,7 +724,7 @@ export const buildActionDataEntryShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
               <PreviewPanel title="Kompakt komut satiri">
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <TextInput
                     label="Komut ara"
                     description="Bilesen, recipe veya owner bazli hizli arama."

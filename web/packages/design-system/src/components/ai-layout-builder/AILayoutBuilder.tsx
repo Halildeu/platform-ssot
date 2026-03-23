@@ -323,7 +323,7 @@ export const AILayoutBuilder: React.FC<AILayoutBuilderProps> = ({
 
   return (
     <section
-      className={cn("space-y-4", className)}
+      className={cn("flex flex-col gap-4", className)}
       data-access-state={accessState.state}
       data-component="ai-layout-builder"
       data-intent={intent}
@@ -331,7 +331,7 @@ export const AILayoutBuilder: React.FC<AILayoutBuilderProps> = ({
     >
       {/* Header */}
       {(title || description) && (
-        <div className="space-y-1">
+        <div className="flex flex-col gap-1">
           {title && (
             <h2 className="text-lg font-semibold tracking-[-0.02em] text-text-primary">
               {title}

@@ -117,7 +117,7 @@ export const BenchmarkParityPanel: React.FC<BenchmarkParityPanelProps> = ({
   }, [filteredItems]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Summary header */}
       <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <div className="flex items-start justify-between gap-4">
@@ -160,7 +160,7 @@ export const BenchmarkParityPanel: React.FC<BenchmarkParityPanelProps> = ({
       {/* Capability cards */}
       <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>Capability breakdown</DetailLabel>
-        <div className="mt-4 space-y-3">
+        <div className="flex flex-col mt-4 gap-3">
           {filteredItems.map((item) => (
             <div
               key={item.capabilityId}

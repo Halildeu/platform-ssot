@@ -38,7 +38,7 @@ export const AuditDetailDrawer: React.FC<AuditDetailDrawerProps> = ({ event, ope
           {
             key: 'summary',
             content: (
-              <div data-testid="audit-detail-summary" className="space-y-4 text-sm">
+              <div data-testid="audit-detail-summary" className="flex flex-col gap-4 text-sm">
                 <dl className="grid gap-3">
                   <div>
                     <dt className="text-xs uppercase text-text-subtle">Timestamp</dt>
@@ -86,7 +86,7 @@ export const AuditDetailDrawer: React.FC<AuditDetailDrawerProps> = ({ event, ope
           {
             key: 'diff',
             content: (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div>
                   <h4 className="text-sm font-semibold text-text-primary">Before</h4>
                   <JsonPreview data={diffPayload.before} />

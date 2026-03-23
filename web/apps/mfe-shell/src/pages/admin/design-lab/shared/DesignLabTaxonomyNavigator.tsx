@@ -146,7 +146,7 @@ export const DesignLabTaxonomyNavigator: React.FC<DesignLabTaxonomyNavigatorProp
     );
 
     return (
-      <div className={clsx('space-y-2', className)} data-testid="design-lab-taxonomy-sidebar">
+      <div className={clsx('flex flex-col gap-2', className)} data-testid="design-lab-taxonomy-sidebar">
         <NavigationRail
           items={railItems}
           value={activeId}

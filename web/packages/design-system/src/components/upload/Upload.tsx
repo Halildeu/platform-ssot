@@ -141,7 +141,7 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
       required={required}
       fullWidth={fullWidth}
     >
-      <div className={cn("space-y-3", fullWidth && "w-full")}>
+      <div className={cn("flex flex-col gap-3", fullWidth && "w-full")}>
         <label
           htmlFor={inputId}
           className={cn(
@@ -161,7 +161,7 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
           title={accessReason}
         >
           <div className="flex items-start justify-between gap-4">
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <Text as="div" weight="semibold">
                 {emptyStateLabel}
               </Text>

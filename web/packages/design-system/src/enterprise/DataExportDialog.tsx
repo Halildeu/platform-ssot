@@ -245,7 +245,7 @@ export function DataExportDialog({
         </div>
 
         {/* Body */}
-        <div className="space-y-5 px-5 py-4">
+        <div className="flex flex-col gap-5 px-5 py-4">
           {/* Format selection */}
           <fieldset>
             <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-secondary">

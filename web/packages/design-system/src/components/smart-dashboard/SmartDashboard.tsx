@@ -341,7 +341,7 @@ export const SmartDashboard = React.forwardRef<HTMLElement, SmartDashboardProps>
   return (
     <section
       ref={ref}
-      className={cn("space-y-4", className)}
+      className={cn("flex flex-col gap-4", className)}
       data-access-state={accessState.state}
       data-component="smart-dashboard"
       title={accessReason}

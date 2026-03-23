@@ -323,7 +323,7 @@ const PageOverviewTab: React.FC<{
             label: 'Summary',
             badge: <Badge variant="info">{template.ownerBlocks.length}</Badge>,
             content: (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
                   <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>Template summary</DetailLabel>
@@ -420,7 +420,7 @@ const PageOverviewTab: React.FC<{
             label: 'Gallery',
             badge: <Badge variant="warning">{TEMPLATE_GALLERY_ITEMS.length}</Badge>,
             content: (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Template preview gallery</DetailLabel>
                   <Text variant="secondary" className="mt-1 block text-sm leading-6">
@@ -657,7 +657,7 @@ const PageUxTab: React.FC<{
   const compositionRegions = matchedTemplate?.regions ?? template.ownerBlocks;
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>Theme and expression</DetailLabel>
@@ -715,7 +715,7 @@ const PageUxTab: React.FC<{
           </div>
 
           {/* Region detail list */}
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Text variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">Region details</Text>
             {compositionRegions.map((region, idx) => {
               const color = resolveRegionColor(region);

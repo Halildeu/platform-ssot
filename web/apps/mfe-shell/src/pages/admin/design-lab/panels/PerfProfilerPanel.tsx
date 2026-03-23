@@ -176,7 +176,7 @@ export const PerfProfilerPanel: React.FC<PerfProfilerPanelProps> = ({ expanded, 
       </button>
 
       {expanded && (
-        <div className="border-t border-border-subtle px-4 py-3 space-y-3">
+        <div className="flex flex-col border-t border-border-subtle px-4 py-3 gap-3">
           {!stats ? (
             <div className="flex items-center gap-2 rounded-xl bg-surface-canvas p-3">
               <Timer className="h-4 w-4 text-text-tertiary" />
@@ -230,7 +230,7 @@ export const PerfProfilerPanel: React.FC<PerfProfilerPanelProps> = ({ expanded, 
               )}
 
               {/* Recent renders */}
-              <div className="max-h-32 overflow-y-auto space-y-1">
+              <div className="flex flex-col max-h-32 overflow-y-auto gap-1">
                 {metrics.slice(-10).reverse().map((m) => (
                   <div key={m.id} className="flex items-center gap-2 rounded-lg px-2 py-1 text-[11px] hover:bg-surface-muted/50">
                     <span className={`h-1.5 w-1.5 rounded-full ${m.actualDuration > 16 ? "bg-red-500" : "bg-emerald-500"}`} />

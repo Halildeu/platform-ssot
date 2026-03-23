@@ -64,7 +64,7 @@ export default function InsightsDashboardPage() {
   }, [data, searchQuery]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-6">
+    <div className="flex flex-col mx-auto max-w-6xl gap-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500/20 to-indigo-500/20">
@@ -198,7 +198,7 @@ export default function InsightsDashboardPage() {
             <TrendingUp className="h-4 w-4 text-emerald-500" />
             <Text as="h3" className="text-sm font-semibold text-text-primary">En Cok Kullanilan</Text>
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {mostUsed.map((entry) => (
               <div key={entry.component} className="flex items-center justify-between rounded-lg bg-surface-canvas px-3 py-2">
                 <Text className="text-xs font-medium text-text-primary">{entry.component}</Text>
@@ -217,7 +217,7 @@ export default function InsightsDashboardPage() {
             <TrendingDown className="h-4 w-4 text-red-500" />
             <Text as="h3" className="text-sm font-semibold text-text-primary">Kullanilmayan</Text>
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {leastUsed.map((entry) => (
               <div key={entry.component} className="flex items-center justify-between rounded-lg bg-surface-canvas px-3 py-2">
                 <Text className="text-xs font-medium text-text-primary">{entry.component}</Text>
@@ -239,7 +239,7 @@ export default function InsightsDashboardPage() {
               {backlog.length}
             </span>
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {backlog.slice(0, 6).map((entry) => (
               <div key={entry.component} className="flex items-center justify-between rounded-lg bg-surface-canvas px-3 py-2">
                 <div>

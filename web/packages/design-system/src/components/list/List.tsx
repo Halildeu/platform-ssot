@@ -149,7 +149,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
             <Empty description={resolvedEmptyFallbackDescription} />
           </div>
         ) : (
-          <ul className="space-y-3 p-3">
+          <ul className="flex flex-col gap-3 p-3">
             {loading
               ? Array.from({ length: 3 }).map((_, index) => (
                   <li
@@ -159,7 +159,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
                     <div className={densityClass[density]}>
                       <div className="flex items-start gap-3">
                         <Skeleton circle height={40} className="shrink-0" />
-                        <div className="min-w-0 flex-1 space-y-2">
+                        <div className="flex flex-col min-w-0 flex-1 gap-2">
                           <Skeleton lines={1} />
                           <Skeleton lines={1} animated={false} />
                         </div>
@@ -191,7 +191,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
                       {item.prefix ? <div className="flex shrink-0 pt-0.5">{item.prefix}</div> : null}
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-start justify-between gap-3">
-                          <div className="min-w-0 space-y-1">
+                          <div className="flex flex-col min-w-0 gap-1">
                             <div className="flex flex-wrap items-center gap-2">
                               <Text as="div" className="min-w-0 text-sm font-semibold text-text-primary">
                                 {item.title}

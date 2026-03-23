@@ -301,7 +301,7 @@ export const buildFormControlShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <PreviewPanel title="Checklist">
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <Checkbox
                     label="SEO metadata tamam"
                     description="Title, description ve canonical URL kaniti hazir."
@@ -343,7 +343,7 @@ export const buildFormControlShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.radio.sections.choice.panelControlled')}>
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <Radio
                     name="wave-3-radio-demo"
                     value="design"
@@ -436,7 +436,7 @@ export const buildFormControlShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
               <PreviewPanel title="Lane secimi">
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <Radio
                     name="lane-choice"
                     value="standard"

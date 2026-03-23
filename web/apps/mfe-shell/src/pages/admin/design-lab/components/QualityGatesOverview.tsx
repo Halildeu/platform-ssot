@@ -54,7 +54,7 @@ export function QualityGatesOverview({ items }: QualityGatesOverviewProps) {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         {gateStats.map((gate) => (
           <div key={gate.key}>
             <div className="mb-1 flex items-center justify-between">

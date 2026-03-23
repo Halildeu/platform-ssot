@@ -60,7 +60,7 @@ if (isEnabled('x-form-builder')) {
 
 export default function XSuiteDashboardPage() {
   return (
-    <div className="space-y-8 p-6">
+    <div className="flex flex-col gap-8 p-6">
       <div>
         <Text as="h1" className="text-2xl font-bold text-text-primary">
           Enterprise X Suite Dashboard

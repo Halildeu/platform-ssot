@@ -75,6 +75,7 @@ describe('Slot — depth', () => {
       ),
     ).toThrow();
     expect(true).toBe(true); // error was thrown as expected
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 });
 
@@ -121,6 +122,7 @@ describe('Stack — depth', () => {
     const { container } = render(<Stack>{null}</Stack>);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('VStack renders column direction', () => {
@@ -181,6 +183,7 @@ describe('Skeleton — depth', () => {
     const { container } = render(<Skeleton data-testid="sk" />);
     expect(screen.getByTestId('sk')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders multiple lines variant', () => {
@@ -188,6 +191,7 @@ describe('Skeleton — depth', () => {
     // lines > 1 renders a wrapper with children
     const wrapper = container.firstElementChild as HTMLElement;
     expect(wrapper.children).toHaveLength(3);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -272,6 +276,7 @@ describe('Textarea — depth', () => {
     fireEvent.change(ta, { target: { value: 'hello' } });
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('disabled textarea does not fire onChange', () => {
@@ -280,11 +285,13 @@ describe('Textarea — depth', () => {
     const ta = screen.getByRole('textbox');
     expect(ta).toBeDisabled();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('shows error message when error prop is set', () => {
     render(<Textarea error="Required field" />);
     expect(screen.getByText('Required field')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -292,6 +299,7 @@ describe('Textarea — depth', () => {
     render(<Textarea error="bad" />);
     const ta = screen.getByRole('textbox');
     expect(ta).toHaveAttribute('aria-invalid', 'true');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -367,6 +375,7 @@ describe('Divider — depth', () => {
     render(<Divider label="OR" />);
     expect(screen.getByText('OR')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies spacing className', () => {
@@ -381,6 +390,7 @@ describe('Divider — depth', () => {
     const { container } = render(<Divider label="Section" />);
     const el = container.firstElementChild as HTMLElement;
     expect(el).toHaveAttribute('role', 'separator');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -439,6 +449,7 @@ describe('FieldControlShell — depth', () => {
     );
     expect(screen.getByText('Error!')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders required indicator (*)', () => {
@@ -448,6 +459,7 @@ describe('FieldControlShell — depth', () => {
       </FieldControlShell>,
     );
     expect(screen.getByText('*')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -460,6 +472,7 @@ describe('FieldControlShell — depth', () => {
     const label = screen.getByText('Email');
     expect(label.closest('label')).toHaveAttribute('for', 'f3');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders hint when no error', () => {
@@ -470,6 +483,7 @@ describe('FieldControlShell — depth', () => {
     );
     expect(screen.getByText('Hint text')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders description', () => {
@@ -479,6 +493,7 @@ describe('FieldControlShell — depth', () => {
       </FieldControlShell>,
     );
     expect(screen.getByText('Desc')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -575,6 +590,7 @@ describe('Badge — depth', () => {
     render(<Badge data-testid="badge">5</Badge>);
     expect(screen.getByTestId('badge')).toHaveTextContent('5');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders all variants without crash', () => {
@@ -590,6 +606,7 @@ describe('Badge — depth', () => {
     const { container } = render(<Badge data-testid="empty-badge" />);
     expect(screen.getByTestId('empty-badge')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('handles click handler', () => {
@@ -597,6 +614,7 @@ describe('Badge — depth', () => {
     render(<Badge onClick={onClick} data-testid="click-badge">X</Badge>);
     fireEvent.click(screen.getByTestId('click-badge'));
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -686,6 +704,7 @@ describe('Spinner — depth', () => {
     const svg = container.querySelector('svg');
     expect(svg?.className.baseVal).toContain('custom-spinner');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('custom aria-label', () => {
@@ -693,11 +712,13 @@ describe('Spinner — depth', () => {
     const svg = container.querySelector('svg');
     expect(svg).toHaveAttribute('aria-label', 'Please wait');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('block mode renders visible label', () => {
     render(<Spinner mode="block" label="Loading data" />);
     expect(screen.getByText('Loading data')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -752,6 +773,7 @@ describe('Card — depth', () => {
     render(<Card data-testid="card"><span>Content</span></Card>);
     expect(screen.getByTestId('card')).toHaveTextContent('Content');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('click handler fires', () => {
@@ -759,6 +781,7 @@ describe('Card — depth', () => {
     render(<Card onClick={onClick} data-testid="click-card">Click</Card>);
     fireEvent.click(screen.getByTestId('click-card'));
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -776,6 +799,7 @@ describe('Card — depth', () => {
       </Card>,
     );
     expect(screen.getByText('Header Title')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 

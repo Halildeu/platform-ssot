@@ -178,7 +178,7 @@ function TimelineBar({
   const waitPct = total > 0 ? (totalWait / total) * 100 : 50;
 
   return (
-    <div className="mt-4 space-y-2 border-t border-border-default pt-3">
+    <div className="flex flex-col mt-4 gap-2 border-t border-border-default pt-3">
       {/* Bar */}
       <div className="flex h-5 w-full overflow-hidden rounded-full">
         <div

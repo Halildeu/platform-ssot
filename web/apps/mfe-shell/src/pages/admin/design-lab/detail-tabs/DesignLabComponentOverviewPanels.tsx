@@ -235,7 +235,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
             <div className="grid grid-cols-1 gap-4">
               <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Distribution Targets</DetailLabel>
-                <div className="mt-3 space-y-3">
+                <div className="flex flex-col mt-3 gap-3">
                   {releaseSummary.distributionTargets.map((target: any) => {
                     const fullyReady = target.artifactCount === 0 || target.artifactPresentCount === target.artifactCount;
                     return (
@@ -299,7 +299,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
           ]}
         >
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <LibraryMetricCard
                   label="Public surface"
@@ -325,7 +325,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
 
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Consumer rules</DetailLabel>
-                <div className="mt-3 space-y-2">
+                <div className="flex flex-col mt-3 gap-2">
                   {adoptionSummary.consumerRules.map((rule: string) => (
                     <Text key={rule} variant="secondary" className="block text-sm leading-6">
                       {rule}
@@ -375,7 +375,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Package import</DetailLabel>
                 <LibraryCodeBlock code={adoptionSummary.packageImport} className="mt-3" />
@@ -422,7 +422,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
           ]}
         >
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <LibraryMetricCard
                   label="Adopted outside lab"
@@ -566,7 +566,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
 
                 <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-panel p-3">
                   <DetailLabel>Policy</DetailLabel>
-                  <div className="mt-3 space-y-2">
+                  <div className="flex flex-col mt-3 gap-2">
                     {legacyReplacementMatrix.policy.map((rule) => (
                       <Text key={rule} variant="secondary" className="block text-sm leading-6">
                         {rule}
@@ -679,7 +679,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                     <SectionBadge label={`cross-app ${migrationSummary.changeClasses.summary.majorCrossAppReview}`} />
                     <SectionBadge label={`manual ${migrationSummary.changeClasses.summary.manualReviewRequired}`} />
                   </div>
-                  <div className="mt-4 space-y-2">
+                  <div className="flex flex-col mt-4 gap-2">
                     {migrationSummary.changeClasses.components.slice(0, 6).map((entry: any) => (
                       <div key={`${entry.name}-${entry.classId}`} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -758,7 +758,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
               ) : null}
             </div>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               {migrationSummary.upgradePlaybook ? (
                 <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                   <DetailLabel>Upgrade playbook</DetailLabel>
@@ -806,7 +806,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                     <SectionBadge label={`cross-app ${migrationSummary.upgradeChecklist.summary.crossAppItems}`} />
                     <SectionBadge label={`owners ${migrationSummary.upgradeChecklist.summary.ownerMappedAppsCount}`} />
                   </div>
-                  <div className="mt-4 space-y-3">
+                  <div className="flex flex-col mt-4 gap-3">
                     {migrationSummary.upgradeChecklist.items.slice(0, 4).map((entry: any) => (
                       <div key={entry.checklistId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -827,7 +827,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             <Badge variant="warning">Owner eksik</Badge>
                           )}
                         </div>
-                        <div className="mt-3 space-y-2">
+                        <div className="flex flex-col mt-3 gap-2">
                           {entry.tasks.map((task: string) => (
                             <Text key={`${entry.checklistId}-${task}`} variant="secondary" className="block text-sm leading-6">
                               {task}
@@ -858,7 +858,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                     <SectionBadge label={`dry-run ${migrationSummary.upgradeRecipes.summary.dryRunReadyCandidates}`} />
                     <SectionBadge label={migrationSummary.upgradeRecipes.candidateMode} />
                   </div>
-                  <div className="mt-4 space-y-3">
+                  <div className="flex flex-col mt-4 gap-3">
                     {migrationSummary.upgradeRecipes.items.slice(0, 4).map((entry: any) => (
                       <div key={entry.recipeId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -879,7 +879,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             <SectionBadge key={`${entry.recipeId}-${prop}`} label={prop} />
                           ))}
                         </div>
-                        <div className="mt-3 space-y-2">
+                        <div className="flex flex-col mt-3 gap-2">
                           {entry.steps.slice(0, 2).map((step: string) => (
                             <Text key={`${entry.recipeId}-${step}`} variant="secondary" className="block text-sm leading-6">
                               {step}
@@ -965,7 +965,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                       </>
                     ) : null}
                   </div>
-                  <div className="mt-4 space-y-3">
+                  <div className="flex flex-col mt-4 gap-3">
                     {migrationSummary.codemodCandidates.items.slice(0, 4).map((entry: any) => (
                       <div key={entry.candidateId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -994,7 +994,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                             <SectionBadge key={`${entry.candidateId}-${signal}`} label={signal} />
                           ))}
                         </div>
-                        <div className="mt-3 space-y-2">
+                        <div className="flex flex-col mt-3 gap-2">
                           {entry.rewriteRule ? (
                             <Text variant="secondary" className="block text-sm leading-6">
                               rule: {entry.rewriteRule}
@@ -1114,7 +1114,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
 
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Consumer apps</DetailLabel>
-                <div className="mt-3 space-y-3">
+                <div className="flex flex-col mt-3 gap-3">
                   {migrationSummary.consumerApps.map((consumer: any) => (
                     <div key={consumer.appId} className="rounded-2xl border border-border-subtle bg-surface-panel p-3">
                       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -1156,7 +1156,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
 
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Migration rules</DetailLabel>
-                <div className="mt-3 space-y-2">
+                <div className="flex flex-col mt-3 gap-2">
                   {migrationSummary.rules.map((rule: string) => (
                     <Text key={rule} variant="secondary" className="block text-sm leading-6">
                       {rule}
@@ -1194,7 +1194,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
           ]}
         >
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <LibraryMetricCard
                   label="Story files"
@@ -1287,7 +1287,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
 
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Visual rules</DetailLabel>
-                <div className="mt-3 space-y-2">
+                <div className="flex flex-col mt-3 gap-2">
                   {visualRegressionSummary.rules.map((rule: string) => (
                     <Text key={rule} variant="secondary" className="block text-sm leading-6">
                       {rule}
@@ -1297,7 +1297,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
                 <DetailLabel>Storybook contract</DetailLabel>
                 <LibraryCodeBlock
@@ -1351,7 +1351,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                 <SectionBadge key={axis} label={axis} />
               ))}
             </div>
-            <div className="mt-4 space-y-2">
+            <div className="flex flex-col mt-4 gap-2">
               {themePresetSummary.rules.map((rule: string) => (
                 <Text key={rule} variant="secondary" className="block text-sm leading-6">
                   {rule}

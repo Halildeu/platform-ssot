@@ -34,7 +34,7 @@ export function AlertPanel({ alerts }: AlertPanelProps) {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       {alerts.map((alert, i) => {
         const config = severityConfig[alert.severity];
         return (

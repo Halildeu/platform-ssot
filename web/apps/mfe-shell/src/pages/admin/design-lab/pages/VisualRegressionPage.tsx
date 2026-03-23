@@ -246,7 +246,7 @@ export const VisualRegressionPage: React.FC = () => {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 pb-16">
+    <div className="flex flex-col mx-auto max-w-5xl gap-6 pb-16">
       {/* Page Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">

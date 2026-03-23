@@ -66,7 +66,7 @@ export const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({
   // No curated examples — show fallback (auto-generated)
   if (allExamples.length === 0) {
     return (
-      <div className="space-y-6">
+      <div className="flex flex-col gap-6">
         {/* Info banner */}
         <div className="flex items-center gap-3 rounded-2xl border border-border-subtle bg-surface-canvas p-4">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
@@ -88,7 +88,7 @@ export const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Search + Category filters */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 max-w-xs">
@@ -152,7 +152,7 @@ export const ExamplesGallery: React.FC<ExamplesGalleryProps> = ({
       </div>
 
       {/* Example cards */}
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         {filteredExamples.map((example) => (
           <ExampleCard
             key={example.id}

@@ -241,7 +241,7 @@ export default function DesignLabLanding() {
   const totalExported = index.summary?.exported ?? index.items.length;
 
   return (
-    <div className="space-y-10 pb-12">
+    <div className="flex flex-col gap-10 pb-12">
       {/* ── Hero Section with gradient background ── */}
       <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-action-primary/5 via-surface-default to-surface-canvas px-6 py-12 sm:px-10 sm:py-16">
         {/* Decorative grid dots */}

@@ -364,7 +364,7 @@ export default function QualityDashboardPage() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 p-6">
+    <div className="flex flex-col mx-auto max-w-7xl gap-8 p-6">
       {/* ─── Header ─── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -437,7 +437,7 @@ export default function QualityDashboardPage() {
             Benchmark workflow bulunamadi (.github/workflows/benchmark-gate.yml).
           </Text>
         ) : (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <div className="flex items-center gap-4">
               <Text variant="secondary" className="text-xs">
                 Threshold enforced: {evidence.benchmarks.threshold_enforced ? 'Evet' : 'Hayir'}

@@ -169,7 +169,7 @@ export const buildOverlayLivePreview = (
             title={t('designlab.showcase.component.popover.live.title')}
             trigger={<Button variant="secondary">{t('designlab.showcase.component.popover.live.open')}</Button>}
             content={(
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 <Text variant="secondary" className="block leading-6">
                   {t('designlab.showcase.component.popover.live.description')}
                 </Text>
@@ -233,7 +233,7 @@ export const buildOverlayLivePreview = (
                   },
                 ]}
               >
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   <Text preset="title">{t('designlab.showcase.component.contextMenu.live.surface.triggerTitle')}</Text>
                   <Text variant="secondary" className="block leading-7">
                     {t('designlab.showcase.component.contextMenu.live.surface.description')}

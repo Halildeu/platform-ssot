@@ -251,7 +251,7 @@ export const buildAiGovernanceShowcaseSections = (
                 />
               </PreviewPanel>
               <PreviewPanel title="Signal context">
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   <LibraryMetricCard
                     label="Decision"
                     value={recommendationDecisionLabels[recommendationDecision]}

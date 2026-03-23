@@ -60,7 +60,7 @@ export function ApprovalQueue({ pendingOnly = true }: ApprovalQueueProps) {
   const pendingCount = requests.filter((r) => r.status === "pending").length;
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export function ApprovalQueue({ pendingOnly = true }: ApprovalQueueProps) {
           </Text>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {displayed.map((request) => (
             <ApprovalRequestCard
               key={request.id}

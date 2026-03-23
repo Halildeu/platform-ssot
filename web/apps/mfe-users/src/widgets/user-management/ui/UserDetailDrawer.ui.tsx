@@ -253,7 +253,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
           <h3 className="text-base font-semibold text-text-primary">
             {t('users.detail.section.profile')}
           </h3>
-          <dl className="mt-3 space-y-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
+          <dl className="flex flex-col mt-3 gap-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
             <div className="flex items-start justify-between gap-4">
               <dt className="text-xs font-semibold uppercase tracking-wide text-text-subtle">
                 {t('users.grid.columns.fullName')}
@@ -412,7 +412,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                   key={`${permission.moduleKey}-${permission.assignmentId ?? permission.level}`}
                   className="grid gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 shadow-xs md:grid-cols-[1fr_auto]"
                 >
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <div className="text-base font-semibold text-text-primary">
                       {permission.moduleLabel ?? permission.moduleKey}
                     </div>

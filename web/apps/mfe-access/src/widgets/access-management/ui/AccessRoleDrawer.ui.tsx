@@ -94,7 +94,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
       <div data-testid="access-role-drawer-content" className="flex flex-col gap-6">
         <p className="text-sm text-text-subtle">{role.description || t('access.drawer.noDescription')}</p>
 
-        <dl className="space-y-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
+        <dl className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-muted p-4 text-sm">
           <div className="flex items-center justify-between">
             <dt className="text-text-subtle">{t('access.drawer.members')}</dt>
             <dd className="font-semibold text-text-primary">{formattedMemberCount}</dd>

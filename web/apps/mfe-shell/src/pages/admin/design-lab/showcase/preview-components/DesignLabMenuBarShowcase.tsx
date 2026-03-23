@@ -168,7 +168,7 @@ export const DesignLabMenuBarShowcase: React.FC<DesignLabMenuBarShowcaseProps> =
       </div>
       <div className="grid grid-cols-1 gap-5 2xl:grid-cols-2">
         {sections.map((section) => (
-          <div key={section.id} data-testid={`design-lab-menubar-panel-${section.id}`} className="space-y-3">
+          <div key={section.id} data-testid={`design-lab-menubar-panel-${section.id}`} className="flex flex-col gap-3">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
                 {section.eyebrow ? (

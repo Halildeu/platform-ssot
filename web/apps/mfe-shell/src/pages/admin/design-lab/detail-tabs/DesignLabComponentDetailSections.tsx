@@ -292,7 +292,7 @@ const ComponentUxTab: React.FC<{
   const matchedFamilies = React.useMemo(() => matchNavigationFamilies(item), [item]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.component.ux.alignment')}</DetailLabel>
@@ -316,7 +316,7 @@ const ComponentUxTab: React.FC<{
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Bu component icin eslesen navigation family, recipe baglantilari ve page shell bindingleri.
           </Text>
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             {matchedFamilies.map((family) => (
               <div key={family.familyId} className="rounded-[20px] border border-border-subtle bg-surface-panel p-4">
                 <div className="flex items-center gap-2">
@@ -383,7 +383,7 @@ const ComponentUxTab: React.FC<{
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Birden fazla navigation family&apos;yi kesen ortak interaction pattern&apos;leri.
           </Text>
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             {navigationMatrix.crossFamilyPatterns.map((pattern) => {
               const involvedFamilies = navigationMatrix.navigationFamilies.filter((f) =>
                 pattern.families.includes(f.familyId),
@@ -506,7 +506,7 @@ const ComponentQualityTab: React.FC<{
             label: t('designlab.component.quality.usage'),
             badge: <Badge variant="success">{item.whereUsed.length}</Badge>,
             content: (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {/* Adoption metrics summary */}
                 {MetricCardComponent ? (
                   <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
@@ -542,7 +542,7 @@ const ComponentQualityTab: React.FC<{
                 {/* Usage file list */}
                 <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>{t('designlab.component.quality.usage')}</DetailLabel>
-                  <div className="mt-4 space-y-2">
+                  <div className="flex flex-col mt-4 gap-2">
                     {item.whereUsed.length > 0 ? item.whereUsed.map((filePath) => (
                       <div key={filePath} className="rounded-2xl border border-border-subtle bg-surface-default px-3 py-3">
                         <div className="break-all text-xs text-text-secondary">{filePath}</div>

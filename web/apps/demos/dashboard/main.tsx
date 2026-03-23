@@ -10,13 +10,13 @@ import React from "react";
 // import { BarChart, LineChart, PieChart, ChartContainer } from "@mfe/x-charts";
 
 const DashboardDemo = () => (
-  <div className="p-6 space-y-6">
+  <div className="flex flex-col p-6 gap-6">
     <h1 className="text-2xl font-bold">Dashboard Reference App</h1>
     <p>Bu demo @mfe/design-system + @mfe/x-charts kullanarak bir KPI dashboard gösterir.</p>
 
     <section>
       <h2 className="text-xl font-semibold mb-3">Kullanılan Bileşenler</h2>
-      <ul className="list-disc pl-6 space-y-1">
+      <ul className="flex flex-col list-disc pl-6 gap-1">
         <li>Card, Text, Badge — layout</li>
         <li>BarChart, LineChart, PieChart — veri görselleştirme</li>
         <li>ChartContainer — loading/error/empty states</li>

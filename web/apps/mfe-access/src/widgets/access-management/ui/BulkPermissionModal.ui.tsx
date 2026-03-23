@@ -114,7 +114,7 @@ const BulkPermissionModal: React.FC<BulkPermissionModalProps> = ({
         </div>
       )}
     >
-      <div className="space-y-5">
+      <div className="flex flex-col gap-5">
         <div className="mb-5 rounded-2xl border border-state-info-border bg-state-info px-4 py-3 text-sm text-state-info-text">
           {t('access.bulk.info', { count: formattedCount })}
         </div>

@@ -17,7 +17,7 @@ export default function RecipesListing() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div>
         <Text as="div" className="text-2xl font-bold text-text-primary">
           {t("designlab.sidebar.title.recipes")}

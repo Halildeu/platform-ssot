@@ -53,7 +53,7 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -103,7 +103,7 @@ export const SuggestedPatterns: React.FC<SuggestedPatternsProps> = ({
       </div>
 
       {/* Pattern list */}
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-1.5">
         {filtered.map((template) => {
           const isExpanded = expandedId === template.id;
           const isCopied = copiedId === template.id;

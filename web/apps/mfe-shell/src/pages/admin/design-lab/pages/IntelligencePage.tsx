@@ -149,7 +149,7 @@ function CodegenSandboxSection() {
       )}
 
       {result && (
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {/* Validity */}
           <div className="flex items-center gap-2">
             <span
@@ -359,7 +359,7 @@ function MigrationImpactCalculator() {
       </div>
 
       {impact && (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {/* Risk badge */}
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-text-secondary" />
@@ -612,7 +612,7 @@ function UsageAnalyticsQuickView() {
           <Text variant="secondary" className="mb-1.5 text-xs font-medium">
             En az kullanilan (exported)
           </Text>
-          <div className="space-y-1">
+          <div className="flex flex-col gap-1">
             {analytics.leastUsed.map((item) => (
               <div
                 key={item.name}
@@ -690,7 +690,7 @@ export default function IntelligencePage() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 space-y-4 p-6">
+      <div className="flex flex-col flex-1 gap-4 p-6">
         {/* Dependency Graph Summary */}
         <Section
           title="Dependency Graph Summary"

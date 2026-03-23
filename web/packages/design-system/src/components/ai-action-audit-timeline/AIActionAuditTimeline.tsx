@@ -117,7 +117,7 @@ export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
           />
         </div>
       ) : (
-        <ol className="mt-4 space-y-3">
+        <ol className="flex flex-col mt-4 gap-3">
           {items.map((item, index) => {
             const selected = item.id === selectedId;
             const content = (

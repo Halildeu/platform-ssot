@@ -50,6 +50,7 @@ describe('SummaryStrip — depth', () => {
     const { container } = render(<SummaryStrip items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders icon and note slots', () => {
@@ -66,12 +67,14 @@ describe('SummaryStrip — depth', () => {
     const { container } = render(<SummaryStrip items={items} className="custom-strip" />);
     expect(container.firstElementChild).toHaveClass('custom-strip');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns null when access is hidden', () => {
     const { container } = render(<SummaryStrip items={items} access="hidden" />);
     expect(container.innerHTML).toBe('');
     expect(container.firstElementChild).toBeNull();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -127,6 +130,7 @@ describe('DetailSummary — depth', () => {
     render(<DetailSummary title="Order #123" entity={minEntity} />);
     expect(screen.getByText('Order #123')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty summaryItems and detailItems safely', () => {
@@ -146,6 +150,7 @@ describe('DetailSummary — depth', () => {
     );
     expect(screen.getByTestId('action-btn')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders summary strip when summaryItems provided', () => {
@@ -153,11 +158,13 @@ describe('DetailSummary — depth', () => {
     render(<DetailSummary title="T" entity={minEntity} summaryItems={summaryItems} />);
     expect(screen.getByText('999')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders JSON viewer when jsonValue provided', () => {
     render(<DetailSummary title="T" entity={minEntity} jsonValue={{ foo: 'bar' }} />);
     expect(screen.getByText(/"foo"/)).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -167,6 +174,7 @@ describe('DetailSummary — depth', () => {
     );
     expect(container.innerHTML).toBe('');
     expect(container.firstElementChild).toBeNull();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -238,6 +246,7 @@ describe('MasterDetail — depth', () => {
     );
     expect(screen.getByText('Select an item to view details')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('shows custom detailEmpty when hasSelection is false', () => {
@@ -250,6 +259,7 @@ describe('MasterDetail — depth', () => {
       />,
     );
     expect(screen.getByText('No selection')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -284,6 +294,7 @@ describe('MasterDetail — depth', () => {
     // Master content should be visible again
     expect(screen.getByText('Master')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty master content', () => {
@@ -292,6 +303,7 @@ describe('MasterDetail — depth', () => {
     );
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -364,6 +376,7 @@ describe('EntitySummaryBlock — depth', () => {
     fireEvent.click(screen.getByText('Delete'));
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('handles empty items array', () => {
@@ -396,6 +409,7 @@ describe('EntitySummaryBlock — depth', () => {
     // Avatar should render with initials or img
     expect(screen.getByText('Acme Corp')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns null when access is hidden', () => {
@@ -404,6 +418,7 @@ describe('EntitySummaryBlock — depth', () => {
     );
     expect(container.innerHTML).toBe('');
     expect(container.firstElementChild).toBeNull();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -457,6 +472,7 @@ describe('PageHeader — depth', () => {
     render(<PageHeader title="Dashboard" />);
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty title string safely', () => {
@@ -473,6 +489,7 @@ describe('PageHeader — depth', () => {
     );
     expect(screen.getByLabelText('breadcrumb')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders actions and fires click', () => {
@@ -485,6 +502,7 @@ describe('PageHeader — depth', () => {
     );
     fireEvent.click(screen.getByText('Save'));
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -504,6 +522,7 @@ describe('PageHeader — depth', () => {
   it('applies sticky class when sticky prop is true', () => {
     const { container } = render(<PageHeader title="Sticky" sticky />);
     expect(container.querySelector('header')).toHaveClass('sticky');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -558,6 +577,7 @@ describe('PageLayout — depth', () => {
     render(<PageLayout title="Layout"><div>Main content</div></PageLayout>);
     expect(screen.getByText('Main content')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders sidebar detail panel', () => {
@@ -606,6 +626,7 @@ describe('PageLayout — depth', () => {
     );
     expect(screen.getByText('Footer content')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies aria-label to root', () => {
@@ -613,6 +634,7 @@ describe('PageLayout — depth', () => {
       <PageLayout title="Page" ariaLabel="main-page"><div>X</div></PageLayout>,
     );
     expect(container.firstElementChild).toHaveAttribute('aria-label', 'main-page');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 

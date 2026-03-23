@@ -175,7 +175,7 @@ export const DesignLabMenuBarScenarioFrame: React.FC<DesignLabMenuBarScenarioFra
   const variant = getMenuBarVariantDescriptor(variantId);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         {children}
       </div>
@@ -828,7 +828,7 @@ const buildInteractiveVariantConfig = (
               <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
                 {t('Overflow delegasyonu', 'Overflow delegation')}
               </Text>
-              <div className="mt-3 space-y-2">
+              <div className="flex flex-col mt-3 gap-2">
                 {['analytics', 'exports', 'tokens'].map((entry) => (
                   <div key={entry} className="flex items-center justify-between rounded-2xl border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.84))] px-3 py-2">
                     <Text as="div" preset="body-sm" className="text-sm font-semibold text-text-primary">
@@ -1190,11 +1190,11 @@ const InteractiveMenuBarSurface: React.FC<{
   );
 
   return (
-    <div className={config.frameClassName ?? 'space-y-4'}>
+    <div className={config.frameClassName ?? 'gap-4'}>
       {config.contextTitle || config.contextDescription || config.contextMetrics?.length ? (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {config.contextTitle || config.contextDescription ? (
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               {config.contextTitle ? (
                 <Text as="div" preset="body-sm" className="text-base font-semibold text-text-primary">
                   {config.contextTitle as string}
@@ -1255,7 +1255,7 @@ const InteractiveMenuBarSurface: React.FC<{
           utilityCollapse={config.utilityCollapse}
         />
         <div className="mt-3 flex items-center justify-between gap-3">
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Text variant="secondary" className="text-xs leading-6">
               {lastAction
                 ? `${isTurkish ? 'Son seçim' : 'Last selection'}: ${lastAction}`

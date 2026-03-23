@@ -161,7 +161,7 @@ function ErrorSummaryPanel() {
               hata (24s)
             </Text>
           </div>
-          <div className="mt-3 space-y-2">
+          <div className="flex flex-col mt-3 gap-2">
             {data.topErrors.map((err, i) => (
               <div
                 key={i}
@@ -576,7 +576,7 @@ function LogStreamPanel() {
 
 export default function ObservabilityPage() {
   return (
-    <div className="space-y-8 pb-12">
+    <div className="flex flex-col gap-8 pb-12">
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">

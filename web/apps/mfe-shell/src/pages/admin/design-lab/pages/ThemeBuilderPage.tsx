@@ -101,7 +101,7 @@ export default function ThemeBuilderPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* Header */}
       <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-linear-to-br from-surface-default to-surface-canvas px-6 py-8">
         <div className="pointer-events-none absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
@@ -132,7 +132,7 @@ export default function ThemeBuilderPage() {
       {/* Main layout: Controls + Preview */}
       <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         {/* Left: Axis controls */}
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           <Text as="div" className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
             Axis Controls
           </Text>
@@ -183,14 +183,14 @@ export default function ThemeBuilderPage() {
         </div>
 
         {/* Right: Live preview + Config */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           {/* Live component preview */}
           <div>
             <Text as="div" className="mb-3 text-xs font-semibold uppercase tracking-widest text-text-secondary">
               Live Preview
             </Text>
             <div className="rounded-2xl border border-border-subtle bg-surface-default p-6">
-              <div className="space-y-6">
+              <div className="flex flex-col gap-6">
                 {/* Buttons row */}
                 <div>
                   <Text variant="secondary" className="mb-2 text-[11px] font-semibold uppercase tracking-wider">Buttons</Text>

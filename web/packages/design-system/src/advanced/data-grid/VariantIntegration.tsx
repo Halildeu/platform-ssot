@@ -878,7 +878,7 @@ export const VariantIntegration = <RowData = unknown,>({
                   {m.personalVariantsEmptyLabel ?? "Kisisel varyant yok"}
                 </p>
               ) : (
-                <div className="space-y-0.5">
+                <div className="flex flex-col gap-0.5">
                   {personalVariants.map((v, i) => renderVariantRow(v, i))}
                 </div>
               )}
@@ -897,7 +897,7 @@ export const VariantIntegration = <RowData = unknown,>({
                   {m.globalVariantsEmptyLabel ?? "Paylasilan varyant yok"}
                 </p>
               ) : (
-                <div className="space-y-0.5">
+                <div className="flex flex-col gap-0.5">
                   {globalVariants.map((v, i) => renderVariantRow(v, personalVariants.length + i))}
                 </div>
               )}

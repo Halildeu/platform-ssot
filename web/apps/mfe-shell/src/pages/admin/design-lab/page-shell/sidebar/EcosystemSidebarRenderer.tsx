@@ -132,7 +132,7 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
   }, [familyItems]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Enterprise context card */}
       <section
         className="rounded-[22px] border border-border-subtle bg-surface-panel px-3.5 py-3.5"
@@ -176,7 +176,7 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
         >
           Extension Tiers
         </Text>
-        <div className="mt-2.5 space-y-1.5">
+        <div className="flex flex-col mt-2.5 gap-1.5">
           <div
             className="flex items-center justify-between gap-2 rounded-xl bg-surface-default px-3 py-2"
             data-testid="design-lab-ecosystem-tier-pro"
@@ -231,12 +231,12 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
           </Text>
           <SectionBadge label={extensionCountLabel} />
         </div>
-        <div className="space-y-4" data-testid="design-lab-ecosystem-list">
+        <div className="flex flex-col gap-4" data-testid="design-lab-ecosystem-list">
           {familyItems.length ? (
             groupedExtensions.map((cluster) => (
               <section
                 key={cluster.title}
-                className="space-y-2"
+                className="flex flex-col gap-2"
                 data-testid={`design-lab-ecosystem-cluster-${toSidebarTestIdSuffix(cluster.title)}`}
               >
                 <div className="px-2">
@@ -259,7 +259,7 @@ export const EcosystemSidebarRenderer: React.FC<DesignLabSidebarRendererProps> =
                     </Text>
                   ) : null}
                 </div>
-                <div className="space-y-1.5">
+                <div className="flex flex-col gap-1.5">
                   {cluster.items.map((family) => {
                     const active = selectedFamilyId === family.familyId;
                     const { tier, tone } = getExtensionTier(family);

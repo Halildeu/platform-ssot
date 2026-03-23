@@ -222,7 +222,7 @@ export const PropsDepsGraph: React.FC<PropsDepsGraphProps> = ({ componentName })
   }
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <GitBranch className="h-3.5 w-3.5 text-text-tertiary" />

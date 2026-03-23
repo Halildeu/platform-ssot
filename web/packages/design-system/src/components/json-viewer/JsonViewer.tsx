@@ -207,7 +207,7 @@ export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
         </button>
 
         {expanded ? (
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             {entries.length === 0 ? (
               <Empty description={resolvedEmptyNodeDescription} className="border-dashed" />
             ) : (
@@ -243,7 +243,7 @@ export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
         className={`mt-4 ${jsonViewerSurfaceClassName}`}
         style={{ maxHeight: typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight }}
       >
-        <div className="space-y-3">{renderNode(rootLabel, normalizedValue, rootLabel, 0)}</div>
+        <div className="flex flex-col gap-3">{renderNode(rootLabel, normalizedValue, rootLabel, 0)}</div>
       </div>
     </section>
   );

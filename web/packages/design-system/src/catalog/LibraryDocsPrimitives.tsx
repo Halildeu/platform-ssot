@@ -283,7 +283,7 @@ export const LibraryUsageRecipesPanel: React.FC<LibraryUsageRecipesPanelProps> =
     <div className="relative z-[1]">
       <LibraryDetailLabel>{title}</LibraryDetailLabel>
       {recipes.length ? (
-        <div className="mt-4 space-y-4">
+        <div className="flex flex-col mt-4 gap-4">
         {recipes.map((recipe) => (
           <div key={recipe.title} className={clsx(libraryPanelSurfaceClass, 'rounded-[24px] p-4')}>
             <LibrarySurfaceAccent compact />
@@ -457,7 +457,7 @@ export const LibraryMetadataPanel: React.FC<LibraryMetadataPanelProps> = ({
     <LibrarySurfaceAccent compact />
     <div className="relative z-[1]">
       <LibraryDetailLabel>{title}</LibraryDetailLabel>
-      <div className="mt-3 space-y-3">
+      <div className="flex flex-col mt-3 gap-3">
       {items.map((item) => (
         <div key={item.label} className={clsx(libraryPanelSurfaceClass, 'rounded-[20px] p-3')}>
           <LibrarySurfaceAccent compact />

@@ -209,7 +209,7 @@ function DiffViewer({ changes }: { changes: TokenChange[] }) {
                 </Text>
               </div>
               {isExpanded && (
-                <div className="mt-2 space-y-1 rounded-lg bg-surface-canvas p-3">
+                <div className="flex flex-col mt-2 gap-1 rounded-lg bg-surface-canvas p-3">
                   {change.before && (
                     <div className="flex items-center gap-2">
                       <span className="w-12 text-[10px] font-medium text-red-600">Before</span>
@@ -248,7 +248,7 @@ export const FigmaSyncPage: React.FC = () => {
   const statusCfg = STATUS_CONFIG[data.syncStatus];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 pb-16">
+    <div className="flex flex-col mx-auto max-w-5xl gap-6 pb-16">
       {/* Page Header */}
       <div>
         <div className="flex items-center gap-3">
@@ -320,7 +320,7 @@ export const FigmaSyncPage: React.FC = () => {
           <Text as="div" className="mb-4 text-sm font-semibold text-text-primary">
             Token Categories
           </Text>
-          <div className="space-y-1">
+          <div className="flex flex-col gap-1">
             {data.tokenGroups.map((group) => (
               <TokenCategoryRow
                 key={group}

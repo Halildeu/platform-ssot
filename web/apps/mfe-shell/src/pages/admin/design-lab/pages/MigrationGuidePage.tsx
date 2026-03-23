@@ -253,7 +253,7 @@ export default function MigrationGuidePage() {
   const deprecationCount = MIGRATION_ENTRIES.filter((e) => e.type === "deprecation").length;
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 p-6">
+    <div className="flex flex-col mx-auto max-w-4xl gap-6 p-6">
       {/* Header */}
       <div>
         <div className="flex items-center gap-3">
@@ -334,7 +334,7 @@ export default function MigrationGuidePage() {
       </Text>
 
       {/* Migration entries */}
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         {filteredEntries.map((entry) => {
           const meta = CHANGE_TYPE_META[entry.type];
           const isOpen = expandedEntries.has(entry.id);
@@ -370,7 +370,7 @@ export default function MigrationGuidePage() {
               </button>
 
               {isOpen && (
-                <div className="border-t border-border-subtle px-5 py-4 space-y-4">
+                <div className="flex flex-col border-t border-border-subtle px-5 py-4 gap-4">
                   {/* Diff view */}
                   {entry.before && entry.after && (
                     <MigrationDiffView before={entry.before} after={entry.after} />
@@ -382,7 +382,7 @@ export default function MigrationGuidePage() {
                       <Text as="div" className="mb-2 text-xs font-semibold text-text-primary flex items-center gap-1.5">
                         <BookOpen className="h-3.5 w-3.5" /> Migration Steps
                       </Text>
-                      <ol className="ml-5 space-y-1.5">
+                      <ol className="flex flex-col ml-5 gap-1.5">
                         {entry.steps.map((step, idx) => (
                           <li key={idx} className="text-xs text-text-secondary leading-relaxed list-decimal">
                             {step}

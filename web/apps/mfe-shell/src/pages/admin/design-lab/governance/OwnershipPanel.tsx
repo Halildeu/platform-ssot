@@ -58,7 +58,7 @@ export function OwnershipPanel() {
   }, [owners]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export function OwnershipPanel() {
       </div>
 
       {/* Component list */}
-      <div className="max-h-[400px] space-y-1 overflow-auto">
+      <div className="flex flex-col max-h-[400px] gap-1 overflow-auto">
         {displayed.map((item) => (
           <OwnershipRow key={item.component} item={item} />
         ))}

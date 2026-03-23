@@ -195,7 +195,7 @@ export default function APIDetail() {
   const { style: kindStyle, label: kindLabel } = getKindBadge(indexItem.kind);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* ── Breadcrumb ── */}
       <nav className="flex items-center gap-1.5 text-xs text-text-secondary">
         <button
@@ -385,7 +385,7 @@ function OverviewTab({
   const stateModel = apiItem?.stateModel ?? [];
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Description card */}
       <div className="rounded-2xl border border-border-subtle bg-surface-default p-6">
         <Text as="div" className="text-sm font-semibold text-text-primary mb-3">
@@ -412,7 +412,7 @@ function OverviewTab({
                 {props.length}
               </span>
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               {props.slice(0, 6).map((prop) => (
                 <div
                   key={prop.name}
@@ -506,7 +506,7 @@ function UsageTab({
   const code = generateUsageCode(indexItem.name, indexItem.kind, props, stateModel);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div className="rounded-2xl border border-border-subtle bg-surface-default p-6">
         <Text as="div" className="text-sm font-semibold text-text-primary mb-4">
           Temel Kullanim
@@ -583,7 +583,7 @@ function ApiParamsTab({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Parameters / Arguments table */}
       {props.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
@@ -730,7 +730,7 @@ function RelatedTab({
   }, [indexItemMap, indexItem]);
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Components that use this API */}
       {whereUsed.length > 0 && (
         <div className="rounded-2xl border border-border-subtle bg-surface-default p-6">
@@ -866,7 +866,7 @@ function QualityTab({
   const pct = total > 0 ? Math.round((passCount / total) * 100) : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
         {/* Header with score */}
         <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">

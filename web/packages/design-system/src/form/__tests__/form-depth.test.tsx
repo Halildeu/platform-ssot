@@ -85,9 +85,9 @@ describe('FormContext — depth', () => {
       return <span>ok</span>;
     }
     expect(() => render(<Consumer />)).toThrow(
-    expect(true).toBe(true); // error was thrown as expected
       'useFormContext must be used within a <FormProvider>',
     );
+    expect(true).toBe(true); // error was thrown as expected
   });
 
   it('provides isSubmitting state', () => {

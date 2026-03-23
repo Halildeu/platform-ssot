@@ -83,7 +83,7 @@ const LoginPopover: React.FC<LoginPopoverProps> = ({ onClose, onNavigate }) => {
           {t('auth.popover.fullscreen')}
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="space-y-3 px-4 py-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 px-4 py-4">
         <div className="flex flex-col gap-1 text-xs font-medium text-text-secondary">
           <label htmlFor="login-popover-email">
             {t('auth.login.emailLabel')}

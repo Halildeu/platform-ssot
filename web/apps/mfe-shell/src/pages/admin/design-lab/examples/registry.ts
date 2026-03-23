@@ -224,7 +224,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col gap-1">
       <label htmlFor="email" className="text-sm font-medium">
         Email Address
       </label>
@@ -290,7 +290,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <Alert severity="info">This is an informational message.</Alert>
       <Alert severity="success">Operation completed successfully!</Alert>
       <Alert severity="warning">Please review before continuing.</Alert>
@@ -354,7 +354,7 @@ export function Example() {
     );
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       {['Email', 'SMS', 'Push'].map((opt) => (
         <Checkbox
           key={opt}
@@ -1254,7 +1254,7 @@ export function Example() {
   const [analytics, setAnalytics] = useState(true);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <Switch
         label="Karanlik Mod"
         description="Arayuz renklerini koyu temaya cevirir."
@@ -1281,7 +1281,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <Switch label="Kucuk" switchSize="sm" checked />
       <Switch label="Orta" switchSize="md" checked />
       <Switch label="Buyuk" switchSize="lg" checked />
@@ -1303,7 +1303,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <p>Birinci bolum icerigi</p>
       <Divider />
       <p>Ikinci bolum icerigi</p>
@@ -1321,7 +1321,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <p>Kayit formu</p>
       <Divider label="veya" />
       <button>Google ile devam et</button>
@@ -1428,7 +1428,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       <Text as="h2" size="2xl" weight="bold">Baslik Metni</Text>
       <Text variant="secondary">Ikincil aciklama metni burada yer alir.</Text>
       <Text variant="muted" size="sm">Soluk yardimci metin.</Text>
@@ -1446,7 +1446,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col gap-1">
       <Text variant="default">Varsayilan metin</Text>
       <Text variant="secondary">Ikincil metin</Text>
       <Text variant="success">Basarili islem mesaji</Text>
@@ -1471,7 +1471,7 @@ export function Example() {
   const longText = "Bu cok uzun bir metin ornegi olup tasma durumunda nasil kisaltildigini gosterir.";
 
   return (
-    <div className="space-y-3 max-w-xs">
+    <div className="flex flex-col gap-3 max-w-xs">
       <Text truncate>{longText}</Text>
       <Text lineClamp={2} as="p">
         {longText} {longText}
@@ -1490,7 +1490,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       <Text as="h1" size="3xl" weight="bold">Ana Baslik</Text>
       <Text as="p" size="base">Paragraf icerigi</Text>
       <Text as="code" mono size="sm" variant="secondary">
@@ -1734,7 +1734,7 @@ export function Example() {
         trigger={<Button variant="secondary">Filtre</Button>}
         title="Filtre Secenekleri"
         content={
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" /> Aktif
             </label>
@@ -1763,7 +1763,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <Skeleton width="60%" height={20} />
       <Skeleton width="100%" height={14} />
       <Skeleton width="80%" height={14} />
@@ -1796,7 +1796,7 @@ export function Example() {
     <Card padding="md" variant="elevated">
       <div className="flex items-center gap-3">
         <Skeleton circle height={40} />
-        <div className="flex-1 space-y-2">
+        <div className="flex flex-col flex-1 gap-2">
           <Skeleton width="50%" height={16} />
           <Skeleton width="30%" height={12} />
         </div>
@@ -1854,7 +1854,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <p className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
         <Spinner size="sm" /> Kayit aliniyor...
       </p>
@@ -1958,7 +1958,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <Card padding="none" variant="outlined">padding=none</Card>
       <Card padding="sm" variant="outlined">padding=sm</Card>
       <Card padding="md" variant="outlined">padding=md</Card>
@@ -2951,7 +2951,7 @@ export function Example() {
       title="Musteri Detayi"
       actions={<Button variant="secondary">Duzenle</Button>}
       detail={
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <div className="rounded-lg border p-4">
             <h3 className="font-medium mb-2">Iletisim Bilgileri</h3>
             <p className="text-sm text-gray-500">email@ornek.com</p>
@@ -3174,7 +3174,7 @@ export function Example() {
             key: 'musteri',
             title: 'Musteri Bilgileri',
             content: (
-              <div className="space-y-2 text-sm">
+              <div className="flex flex-col gap-2 text-sm">
                 <p><strong>Ad:</strong> Ahmet Yilmaz</p>
                 <p><strong>Email:</strong> ahmet@ornek.com</p>
                 <p><strong>Telefon:</strong> +90 555 123 4567</p>
@@ -3185,7 +3185,7 @@ export function Example() {
             key: 'urunler',
             title: 'Siparis Kalemleri',
             content: (
-              <div className="space-y-1 text-sm">
+              <div className="flex flex-col gap-1 text-sm">
                 <p>MacBook Pro 14" x1 — ₺84.999</p>
                 <p>USB-C Hub x2 — ₺1.598</p>
               </div>
@@ -3240,7 +3240,7 @@ export function Example() {
         }
         size="xl"
       >
-        <div className="p-6 space-y-4">
+        <div className="flex flex-col p-6 gap-4">
           <p className="text-sm text-gray-600">
             Musteri hesap detaylari ve gecmis islem ozeti burada goruntulenir.
           </p>
@@ -3281,7 +3281,7 @@ export function Example() {
           </div>
         }
       >
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <Input label="Ad Soyad" placeholder="Ahmet Yilmaz" />
           <Input label="E-posta" placeholder="ahmet@ornek.com" type="email" />
           <Input label="Telefon" placeholder="+90 555 000 0000" />
@@ -3342,7 +3342,7 @@ export function Example() {
           </div>
         }
       >
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <Input label="Konu" placeholder="Sorunuzu kisaca tanimlayiniz" />
           <Textarea label="Aciklama" placeholder="Detayli bilgi giriniz..." rows={5} />
         </div>
@@ -4273,7 +4273,7 @@ const items = [
 
 export function Example() {
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <MenuBar items={items} defaultValue="home" appearance="default" />
       <MenuBar items={items} defaultValue="home" appearance="outline" />
       <MenuBar items={items} defaultValue="home" appearance="ghost" />
@@ -4838,7 +4838,7 @@ export function Example() {
 
 export function Example() {
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <NotificationItemCard
         item={{
           id: '1',

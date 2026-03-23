@@ -92,7 +92,7 @@ export const DesignLabPaginationScenarioFrame: React.FC<DesignLabPaginationScena
       <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         {children}
       </div>
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         <DesignLabPaginationMetaBlock label="Pattern badges">
           <div className="flex flex-wrap gap-2">
             {variant.badges.map((badge) => (

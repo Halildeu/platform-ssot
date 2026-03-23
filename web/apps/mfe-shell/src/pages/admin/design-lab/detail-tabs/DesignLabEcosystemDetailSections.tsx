@@ -277,7 +277,7 @@ const EcosystemSurfaceCatalogPanel: React.FC<{
   const matchedSurfaces = React.useMemo(() => matchSurfacesForExtension(extension), [extension]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <DetailLabel>Enterprise data surfaces</DetailLabel>
         <SectionBadge label={`${matchedSurfaces.length} surfaces`} />
@@ -365,7 +365,7 @@ const EcosystemSurfaceCatalogPanel: React.FC<{
       {enterpriseSurfaceCatalog.crossSurfaceContracts.sharedPatterns.length > 0 ? (
         <div className="mt-2">
           <DetailLabel>Cross-surface patterns</DetailLabel>
-          <div className="mt-2 space-y-1.5">
+          <div className="flex flex-col mt-2 gap-1.5">
             {enterpriseSurfaceCatalog.crossSurfaceContracts.sharedPatterns.map((pattern) => (
               <div
                 key={pattern.patternId}
@@ -420,7 +420,7 @@ const EcosystemTierBreakdownPanel: React.FC<{
   };
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <DetailLabel>Extension tier breakdown</DetailLabel>
       <div className="flex flex-wrap gap-2">
         {selectedExtensionTiers.length > 0 ? (
@@ -437,9 +437,9 @@ const EcosystemTierBreakdownPanel: React.FC<{
           <MetricCard key={tier} label={`${tier} tier`} value={String(surfaces.length)} />
         ))}
       </div>
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         {Object.entries(tierGroups).map(([tier, surfaces]) => (
-          <div key={tier} className="space-y-1.5">
+          <div key={tier} className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2 px-1">
               <span className={`inline-block h-2 w-2 rounded-full ${tierColors[tier] ?? 'bg-zinc-400'}`} />
               <Text className="text-xs font-semibold uppercase tracking-[0.06em] text-text-secondary">
@@ -538,7 +538,7 @@ const EcosystemOverviewTab: React.FC<{
         ]}
       />
 
-      <div className="mt-5 space-y-4">
+      <div className="flex flex-col mt-5 gap-4">
         {activeOverviewPanel === 'summary' ? (
           <>
             <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
@@ -599,8 +599,8 @@ const EcosystemApiContent: React.FC<{
 
   if (activeApiPanel === 'contract') {
     return (
-      <div className="mt-5 space-y-4">
-        <div className="space-y-3">
+      <div className="flex flex-col mt-5 gap-4">
+        <div className="flex flex-col gap-3">
           <DetailLabel>Extension contract</DetailLabel>
           <div className="flex flex-wrap gap-2">
             <SectionBadge label={extensionContractId ?? 'No contract'} />
@@ -631,9 +631,9 @@ const EcosystemApiContent: React.FC<{
         )}
         {/* All matched surface contracts */}
         {matchedSurfaces.length > 1 ? (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <DetailLabel>Related surface contracts</DetailLabel>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               {matchedSurfaces.slice(1).map((surface) => (
                 <div
                   key={surface.surfaceId}
@@ -657,7 +657,7 @@ const EcosystemApiContent: React.FC<{
 
   if (activeApiPanel === 'integration') {
     return (
-      <div className="mt-5 space-y-4">
+      <div className="flex flex-col mt-5 gap-4">
         <DetailLabel>Integration patterns</DetailLabel>
         <div className="flex flex-wrap gap-2">
           {matchedSurfaces.map((surface) => (
@@ -699,7 +699,7 @@ const EcosystemApiContent: React.FC<{
 
   // Usage panel
   return (
-    <div className="mt-5 space-y-4">
+    <div className="flex flex-col mt-5 gap-4">
       <EcosystemGuidancePanel title="API guidance" guidance={guidance} />
       <DetailLabel>Consumer patterns</DetailLabel>
       {primarySurface ? (
@@ -845,7 +845,7 @@ const EcosystemQualityContent: React.FC<{
 
   if (activeQualityPanel === 'gates') {
     return (
-      <div className="mt-5 space-y-4">
+      <div className="flex flex-col mt-5 gap-4">
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
           <MetricCard label="Quality gates" value={String(allGates.length)} />
           <MetricCard label="Stable" value={String(stableCount)} />
@@ -853,7 +853,7 @@ const EcosystemQualityContent: React.FC<{
           <MetricCard label="Total" value={String(selectedExtensionItems.length)} />
         </div>
         <DetailLabel>Quality gate checklist</DetailLabel>
-        <div className="space-y-1.5">
+        <div className="flex flex-col gap-1.5">
           {allGates.length > 0 ? (
             allGates.map((gate) => {
               const isCatalogGate = catalogQualityGates.includes(gate);
@@ -905,19 +905,19 @@ const EcosystemQualityContent: React.FC<{
 
   // Readiness panel — real data from catalog
   return (
-    <div className="mt-5 space-y-4">
+    <div className="flex flex-col mt-5 gap-4">
       <EcosystemGuidancePanel title="Enterprise readiness guidance" guidance={guidance} />
       {catalogReadiness.length > 0 ? (
         catalogReadiness.map((surface) => {
           const readyCount = Object.values(surface.checks).filter(Boolean).length;
           const totalChecks = Object.keys(surface.checks).length;
           return (
-            <div key={surface.surfaceId} className="space-y-2">
+            <div key={surface.surfaceId} className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <DetailLabel>{surface.title}</DetailLabel>
                 <SectionBadge label={`${readyCount}/${totalChecks} ready`} />
               </div>
-              <div className="space-y-1.5">
+              <div className="flex flex-col gap-1.5">
                 {(Object.entries(surface.checks) as [keyof EnterpriseSurfaceReadinessChecks, boolean][]).map(
                   ([checkId, status]) => (
                     <div
@@ -943,7 +943,7 @@ const EcosystemQualityContent: React.FC<{
       ) : (
         <>
           <DetailLabel>Readiness checklist</DetailLabel>
-          <div className="space-y-1.5">
+          <div className="flex flex-col gap-1.5">
             {(Object.entries(READINESS_LABELS) as [keyof EnterpriseSurfaceReadinessChecks, string][]).map(
               ([checkId, label]) => (
                 <div

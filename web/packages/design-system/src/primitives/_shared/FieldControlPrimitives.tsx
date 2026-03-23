@@ -150,9 +150,9 @@ export const FieldControlShell: React.FC<FieldControlShellProps> = ({
   fullWidth = true,
   children,
 }) => (
-  <div className={cn("space-y-2.5", fullWidth && "w-full")}>
+  <div className={cn("flex flex-col gap-2.5", fullWidth && "w-full")}>
     {label || description ? (
-      <div className="space-y-1">
+      <div className="flex flex-col gap-1">
         {label ? (
           <label
             htmlFor={inputId}

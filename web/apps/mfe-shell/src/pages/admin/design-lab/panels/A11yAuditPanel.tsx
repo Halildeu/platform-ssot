@@ -273,7 +273,7 @@ export const A11yAuditPanel: React.FC<A11yAuditPanelProps> = ({
 
       {/* Expanded content */}
       {expanded && (
-        <div className="border-t border-border-subtle px-4 py-3 space-y-3">
+        <div className="flex flex-col border-t border-border-subtle px-4 py-3 gap-3">
           {/* Score summary */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -349,7 +349,7 @@ export const A11yAuditPanel: React.FC<A11yAuditPanelProps> = ({
                 </button>
 
                 {isOpen && (
-                  <div className="border-t border-border-subtle bg-surface-canvas px-3 py-2.5 space-y-2">
+                  <div className="flex flex-col border-t border-border-subtle bg-surface-canvas px-3 py-2.5 gap-2">
                     <Text variant="secondary" className="text-xs leading-relaxed">
                       {violation.help}
                     </Text>

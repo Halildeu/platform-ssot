@@ -833,11 +833,11 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         ) : filteredOptions.length === 0 ? (
           <div className="rounded-xl px-3 py-2 text-sm text-text-secondary">{noOptionsText}</div>
         ) : (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {filteredGroups.map((group) => (
               <section
                 key={group.key}
-                className="space-y-1"
+                className="flex flex-col gap-1"
                 role={group.label ? 'group' : undefined}
                 aria-label={group.label}
               >
@@ -846,7 +846,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
                     {group.label}
                   </div>
                 ) : null}
-                <div className="space-y-1">
+                <div className="flex flex-col gap-1">
                   {group.options.map((option) => {
                     const optionIndex = filteredOptions.findIndex((candidate) => candidate.value === option.value);
                     const isHighlighted = optionIndex === highlightedIndex;

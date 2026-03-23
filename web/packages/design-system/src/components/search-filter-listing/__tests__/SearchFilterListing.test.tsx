@@ -197,16 +197,16 @@ describe('SearchFilterListing — loading state', () => {
 });
 
 describe('SearchFilterListing — size prop', () => {
-  it('size="compact" durumunda space-y-2 class kullanir', () => {
+  it('size="compact" durumunda gap-2 class kullanir', () => {
     const { container } = render(<SearchFilterListing title="Test" size="compact" />);
     const section = container.querySelector('section');
-    expect(section?.className).toContain('space-y-2');
+    expect(section?.className).toContain('gap-2');
   });
 
-  it('size="default" durumunda space-y-4 class kullanir', () => {
+  it('size="default" durumunda gap-4 class kullanir', () => {
     const { container } = render(<SearchFilterListing title="Test" size="default" />);
     const section = container.querySelector('section');
-    expect(section?.className).toContain('space-y-4');
+    expect(section?.className).toContain('gap-4');
   });
 });
 

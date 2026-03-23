@@ -102,7 +102,7 @@ export default function InteractionPlayground() {
   }, [selectedScenario]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-4 p-6">
+    <div className="flex flex-col mx-auto max-w-6xl gap-4 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500/20 to-red-500/20">
@@ -118,7 +118,7 @@ export default function InteractionPlayground() {
 
       <div className="flex gap-4">
         {/* Scenario selector */}
-        <div className="w-64 shrink-0 space-y-2">
+        <div className="flex flex-col w-64 shrink-0 gap-2">
           <Text as="div" className="text-xs font-semibold text-text-primary mb-2">Scenarios</Text>
           {SCENARIOS.map((scenario) => (
             <button
@@ -147,7 +147,7 @@ export default function InteractionPlayground() {
         </div>
 
         {/* Main area */}
-        <div className="flex-1 space-y-3">
+        <div className="flex flex-col flex-1 gap-3">
           {/* Toolbar */}
           <div className="flex items-center gap-2">
             <button
@@ -208,7 +208,7 @@ export default function InteractionPlayground() {
               </svg>
 
               {/* Nodes */}
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 {selectedScenario.nodes.map((node) => {
                   const currentProps = nodeStates[node.id] ?? node.props;
                   const isHidden = currentProps.visible === false;

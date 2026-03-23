@@ -176,7 +176,7 @@ function ReleaseCard({ release }: { release: ReleaseEntry }) {
         </button>
 
         {expanded && (
-          <div className="mt-3 space-y-2 rounded-xl border border-border-subtle bg-surface-canvas p-4">
+          <div className="flex flex-col mt-3 gap-2 rounded-xl border border-border-subtle bg-surface-canvas p-4">
             <Text className="text-sm text-text-primary">{release.summary}</Text>
             {release.knownIssues && release.knownIssues.length > 0 && (
               <div className="mt-2">
@@ -243,7 +243,7 @@ export default function ReleaseTimelinePanel() {
   const [activeTab, setActiveTab] = useState<"releases" | "incidents">("releases");
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-500/10">
@@ -289,13 +289,13 @@ export default function ReleaseTimelinePanel() {
 
       {/* Content */}
       {activeTab === "releases" ? (
-        <div className="space-y-0">
+        <div className="">
           {RELEASES.map((release) => (
             <ReleaseCard key={release.version} release={release} />
           ))}
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {INCIDENTS.map((incident) => (
             <IncidentCard key={incident.id} incident={incident} />
           ))}

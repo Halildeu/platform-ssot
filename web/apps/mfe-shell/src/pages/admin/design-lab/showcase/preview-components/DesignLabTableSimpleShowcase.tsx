@@ -64,7 +64,7 @@ export const DesignLabTableSimpleShowcase: React.FC<DesignLabTableSimpleShowcase
           />
         </DesignLabTableSimplePanel>
         <DesignLabTableSimplePanel title={t('designlab.showcase.component.tableSimple.live.loadingEmpty.panel')}>
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             <TableSimple
               caption={t('designlab.showcase.component.tableSimple.live.loadingEmpty.loadingCaption')}
               localeText={tableSimpleLocaleText}

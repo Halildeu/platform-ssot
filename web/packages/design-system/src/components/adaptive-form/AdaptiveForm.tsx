@@ -410,14 +410,14 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
   if (loading) {
     return (
       <div
-        className={cn("space-y-4", className)}
+        className={cn("flex flex-col gap-4", className)}
         data-component="adaptive-form"
         data-access-state={accessState.state}
         aria-busy="true"
         title={accessReason}
       >
         {[1, 2, 3].map((i) => (
-          <div key={i} className="space-y-2">
+          <div key={i} className="flex flex-col gap-2">
             <div className={cn(SKELETON_PULSE, "h-4 w-24")} />
             <div className={cn(SKELETON_PULSE, "h-10 w-full")} />
           </div>
@@ -439,7 +439,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
       ref={formRef}
       onSubmit={handleSubmit}
       className={cn(
-        isInline ? "flex flex-wrap items-end gap-4" : "space-y-4",
+        isInline ? "flex flex-wrap items-end gap-4" : "flex flex-col gap-4",
         className,
       )}
       data-component="adaptive-form"

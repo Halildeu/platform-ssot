@@ -19,7 +19,7 @@ export const DesignLabPaginationDisabledShowcase: React.FC<DesignLabPaginationPr
       <Text variant="secondary" className="mt-1 block leading-7">
         Ust satir aktif, alt satir kilitli. Boyut secici ve quick jumper artik primitive icindeki built-in alanlar olarak ayni state kontratini paylasir.
       </Text>
-      <div className="mt-5 space-y-5">
+      <div className="flex flex-col mt-5 gap-5">
         <div className="flex flex-wrap items-center gap-4">
           <Pagination
             totalItems={500}
@@ -60,7 +60,7 @@ export const DesignLabPaginationDisabledShowcase: React.FC<DesignLabPaginationPr
           <Text variant="secondary" className="block leading-7">
             Navigation kilitli; sorgu tamamlanmadan yeni sayfa istekleri alinmaz.
           </Text>
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             <Skeleton variant="table-row" />
             <Skeleton variant="table-row" />
           </div>

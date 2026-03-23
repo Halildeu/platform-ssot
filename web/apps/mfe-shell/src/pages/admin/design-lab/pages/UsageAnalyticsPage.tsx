@@ -172,7 +172,7 @@ function HighlightCard({
           {title}
         </Text>
       </div>
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-1.5">
         {items.slice(0, 5).map((item) => (
           <div key={item.name} className="flex items-center justify-between">
             <Text className={`text-xs font-medium ${textColor}`}>{item.name}</Text>
@@ -340,7 +340,7 @@ export default function UsageAnalyticsPage() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 space-y-6 p-6">
+      <div className="flex flex-col flex-1 gap-6 p-6">
         {/* Stats row — always visible */}
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatCard
@@ -412,7 +412,7 @@ export default function UsageAnalyticsPage() {
             </div>
 
             {/* Anomaly highlights */}
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <HighlightCard
                 title="Stable but Unused"
                 items={analytics.stableUnused}

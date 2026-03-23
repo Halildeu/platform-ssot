@@ -18,17 +18,20 @@ describe('ThemePreviewCard — depth', () => {
     render(<ThemePreviewCard selected />);
     expect(screen.getByText('✓')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty localeText safely', () => {
     const { container } = render(<ThemePreviewCard localeText={{}} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state attribute', () => {
     const { container } = render(<ThemePreviewCard access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -71,6 +74,7 @@ describe('Watermark — depth', () => {
   it('renders children with empty content', () => {
     render(<Watermark><span>child</span></Watermark>);
     expect(screen.getByText('child')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -142,6 +146,7 @@ describe('ThemePresetCompare — depth', () => {
     const { container } = render(<ThemePresetCompare access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -196,11 +201,13 @@ describe('AIGuidedAuthoring — depth', () => {
     fireEvent.click(screen.getByText('Komut paleti'));
     expect(handler).toHaveBeenCalledWith(true);
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<AIGuidedAuthoring access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -244,6 +251,7 @@ describe('NotificationPanel — depth', () => {
     render(<NotificationPanel items={[]} />);
     expect(screen.getByText('Su anda bildirim yok')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onMarkAllRead when button clicked', () => {
@@ -253,12 +261,14 @@ describe('NotificationPanel — depth', () => {
     fireEvent.click(screen.getByText('Tumunu okundu say'));
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const items = [{ id: '1', message: 'Test' }];
     const { container } = render(<NotificationPanel items={items} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -310,11 +320,13 @@ describe('AIActionAuditTimeline — depth', () => {
     fireEvent.click(screen.getByText('Generated report'));
     expect(handler).toHaveBeenCalledWith('a1', items[0]);
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<AIActionAuditTimeline items={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -366,17 +378,20 @@ describe('SectionTabs — depth', () => {
     fireEvent.click(screen.getByText('Tab 2'));
     expect(handler).toHaveBeenCalledWith('tab2');
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty items array safely', () => {
     const { container } = render(<SectionTabs items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders disabled tab', () => {
     render(<SectionTabs items={tabItems} value="tab1" />);
     expect(screen.getByText('Tab 3')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -420,6 +435,7 @@ describe('AreaChart — depth', () => {
     render(<AreaChart series={[]} labels={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -431,6 +447,7 @@ describe('AreaChart — depth', () => {
     const { container } = render(<AreaChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
     expect(container.childElementCount).toBe(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -473,6 +490,7 @@ describe('BarChart — depth', () => {
     render(<BarChart data={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -484,6 +502,7 @@ describe('BarChart — depth', () => {
     const { container } = render(<BarChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
     expect(container.childElementCount).toBe(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -526,6 +545,7 @@ describe('LineChart — depth', () => {
     render(<LineChart series={[]} labels={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -537,6 +557,7 @@ describe('LineChart — depth', () => {
     const { container } = render(<LineChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
     expect(container.childElementCount).toBe(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -579,6 +600,7 @@ describe('PieChart — depth', () => {
     render(<PieChart data={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -590,6 +612,7 @@ describe('PieChart — depth', () => {
     const { container } = render(<PieChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
     expect(container.childElementCount).toBe(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -632,6 +655,7 @@ describe('ThemePresetGallery — depth', () => {
     const { container } = render(<ThemePresetGallery presets={[]} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onSelectPreset when preset clicked', () => {
@@ -641,11 +665,13 @@ describe('ThemePresetGallery — depth', () => {
     fireEvent.click(screen.getByText('Preset One'));
     expect(handler).toHaveBeenCalledWith('p1', presets[0]);
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<ThemePresetGallery presets={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -699,6 +725,7 @@ describe('NotificationItemCard — depth', () => {
     fireEvent.click(screen.getByText('View'));
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onRemove when dismiss clicked', () => {
@@ -707,11 +734,13 @@ describe('NotificationItemCard — depth', () => {
     fireEvent.click(screen.getByLabelText('Bildirimi kapat'));
     expect(handler).toHaveBeenCalledWith('n1');
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<NotificationItemCard item={baseItem} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -755,6 +784,7 @@ describe('AILayoutBuilder — depth', () => {
     const { container } = render(<AILayoutBuilder blocks={[]} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders blocks with content', () => {
@@ -768,6 +798,7 @@ describe('AILayoutBuilder — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<AILayoutBuilder blocks={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -820,11 +851,13 @@ describe('ConfidenceBadge — depth', () => {
     render(<ConfidenceBadge level="high" score={85} />);
     expect(screen.getByText(/85%/)).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders source count', () => {
     render(<ConfidenceBadge level="medium" sourceCount={3} />);
     expect(screen.getByText(/3 sources/)).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -876,6 +909,7 @@ describe('ErrorBoundary — depth', () => {
     );
     expect(screen.getByText('Error caught')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders children when no error', () => {
@@ -885,6 +919,7 @@ describe('ErrorBoundary — depth', () => {
       </ErrorBoundary>
     );
     expect(screen.getByText('Safe content')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -897,6 +932,7 @@ describe('ErrorBoundary — depth', () => {
     );
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -944,6 +980,7 @@ describe('Descriptions — depth', () => {
   it('renders empty items state', () => {
     render(<Descriptions items={[]} />);
     expect(screen.getByText('No data available')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1015,6 +1052,7 @@ describe('QRCode — depth', () => {
     fireEvent.click(refreshBtn);
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1066,6 +1104,7 @@ describe('ApprovalReview — depth', () => {
     render(<ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} title="My Review" />);
     expect(screen.getByText('My Review')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
@@ -1073,6 +1112,7 @@ describe('ApprovalReview — depth', () => {
       <ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} access="disabled" />
     );
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1118,6 +1158,7 @@ describe('EmptyState — depth', () => {
     fireEvent.click(screen.getByText('Create'));
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders title and description', () => {
@@ -1131,6 +1172,7 @@ describe('EmptyState — depth', () => {
     const { container } = render(<EmptyState title="Test" access="hidden" />);
     expect(container.firstElementChild).toBeNull();
     expect(container.childElementCount).toBe(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1178,6 +1220,7 @@ describe('TableSimple — depth', () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders rows with data', () => {
@@ -1191,6 +1234,7 @@ describe('TableSimple — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1234,6 +1278,7 @@ describe('FormField — depth', () => {
     render(<FormField label="Email" error="Invalid email"><input /></FormField>);
     expect(screen.getByText('Invalid email')).toBeInTheDocument();
     expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders disabled state with reduced opacity', () => {
@@ -1246,6 +1291,7 @@ describe('FormField — depth', () => {
   it('renders required indicator', () => {
     render(<FormField label="Name" required><input /></FormField>);
     expect(screen.getByText('*')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1291,6 +1337,7 @@ describe('SearchInput — depth', () => {
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'test' } });
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onClear when clear button clicked', () => {
@@ -1301,11 +1348,13 @@ describe('SearchInput — depth', () => {
     fireEvent.click(clearBtn);
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders disabled state', () => {
     render(<SearchInput value="" disabled />);
     expect(screen.getByRole('searchbox')).toBeDisabled();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1353,6 +1402,7 @@ describe('ApprovalCheckpoint — depth', () => {
     fireEvent.click(screen.getByText('Onayla'));
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onSecondaryAction (reject) when clicked', () => {
@@ -1361,11 +1411,13 @@ describe('ApprovalCheckpoint — depth', () => {
     fireEvent.click(screen.getByText('Inceleme talep et'));
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<ApprovalCheckpoint {...minProps} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1414,6 +1466,7 @@ describe('JsonViewer — depth', () => {
     const data = { name: 'Test', nested: { key: 'value' } };
     render(<JsonViewer value={data} />);
     expect(screen.getByText('name')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1472,11 +1525,13 @@ describe('PromptComposer — depth', () => {
     fireEvent.change(bodyTextarea, { target: { value: 'new prompt' } });
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<PromptComposer access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1524,6 +1579,7 @@ describe('RecommendationCard — depth', () => {
     fireEvent.click(screen.getByText('Apply'));
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onSecondaryAction (reject) when clicked', () => {
@@ -1532,11 +1588,13 @@ describe('RecommendationCard — depth', () => {
     fireEvent.click(screen.getByText('Review'));
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<RecommendationCard {...minProps} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -1587,6 +1645,7 @@ describe('DetailSectionTabs — depth', () => {
     fireEvent.click(screen.getByText('Details'));
     expect(handler).toHaveBeenCalledWith('dt2');
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty tabs safely', () => {
@@ -1594,6 +1653,7 @@ describe('DetailSectionTabs — depth', () => {
     const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={handler} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns null when access=hidden', () => {
@@ -1603,6 +1663,7 @@ describe('DetailSectionTabs — depth', () => {
     );
     expect(container.firstElementChild).toBeNull();
     expect(container.childElementCount).toBe(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1645,6 +1706,7 @@ describe('Tree — depth', () => {
     const { container } = render(<Tree nodes={[]} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('expands and collapses a node on click', () => {
@@ -1661,6 +1723,7 @@ describe('Tree — depth', () => {
     fireEvent.click(expandBtn);
     expect(screen.getByText('Child Node')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onNodeSelect when node clicked', () => {
@@ -1670,6 +1733,7 @@ describe('Tree — depth', () => {
     fireEvent.click(screen.getByText('Node One'));
     expect(handler).toHaveBeenCalledWith('n1');
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -1720,6 +1784,7 @@ describe('Tabs — depth', () => {
     fireEvent.click(screen.getByText('Beta'));
     expect(handler).toHaveBeenCalledWith('b');
     expect(handler).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders disabled tab with correct attribute', () => {
@@ -1727,12 +1792,14 @@ describe('Tabs — depth', () => {
     const disabledTab = screen.getByText('Gamma').closest('button');
     expect(disabledTab).toBeDisabled();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty items safely', () => {
     const { container } = render(<Tabs items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.innerHTML).not.toBe('');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {

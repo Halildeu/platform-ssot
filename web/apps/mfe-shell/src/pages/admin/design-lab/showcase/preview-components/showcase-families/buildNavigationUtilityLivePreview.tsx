@@ -75,9 +75,9 @@ export const buildNavigationUtilityLivePreview = (
                 { id: 'release', label: t('designlab.showcase.component.anchorToc.items.release'), level: 3, meta: 'P4' },
               ]}
             />
-            <div className="space-y-4 rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
+            <div className="flex flex-col gap-4 rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
               <PreviewPanel title={t('designlab.showcase.component.anchorToc.deepLink.title')}>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <section id="overview" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
                     <Text preset="title">{t('designlab.showcase.component.anchorToc.items.overview')}</Text>
                     <Text variant="secondary" className="mt-2 block">

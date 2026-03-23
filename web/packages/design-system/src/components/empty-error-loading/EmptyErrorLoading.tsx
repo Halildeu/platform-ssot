@@ -80,7 +80,7 @@ export const EmptyErrorLoading = React.forwardRef<HTMLElement, EmptyErrorLoading
 
       <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
         {mode === "loading" ? (
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             <Spinner mode="block" label={loadingLabel} />
             {showSkeleton ? (
               <div className="grid grid-cols-1 gap-3">
@@ -91,7 +91,7 @@ export const EmptyErrorLoading = React.forwardRef<HTMLElement, EmptyErrorLoading
             ) : null}
           </div>
         ) : mode === "error" ? (
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             <Empty
               description={
                 typeof errorLabel === "string"

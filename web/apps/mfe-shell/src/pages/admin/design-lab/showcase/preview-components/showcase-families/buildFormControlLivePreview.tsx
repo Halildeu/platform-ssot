@@ -47,7 +47,7 @@ export const buildFormControlLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.textArea.live.authoring.title')}>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <TextArea
                   label={t('designlab.showcase.component.textArea.live.authoring.label')}
                   description={t('designlab.showcase.component.textArea.live.authoring.description')}
@@ -92,7 +92,7 @@ export const buildFormControlLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.checkbox.live.controlled.title')}>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <Checkbox
                   label={t('designlab.showcase.component.checkbox.live.controlled.label')}
                   description={t('designlab.showcase.component.checkbox.live.controlled.description')}
@@ -132,7 +132,7 @@ export const buildFormControlLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.radio.live.controlled.title')}>
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 <Radio
                   name="wave-3-radio-demo"
                   value="design"
@@ -195,7 +195,7 @@ export const buildFormControlLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.switch.live.controlled.title')}>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <Switch
                   label={t('designlab.showcase.component.switch.live.controlled.label')}
                   description={t('designlab.showcase.component.switch.live.controlled.description')}

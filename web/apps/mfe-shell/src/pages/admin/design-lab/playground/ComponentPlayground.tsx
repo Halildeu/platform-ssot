@@ -75,7 +75,7 @@ export const ComponentPlayground: React.FC<ComponentPlaygroundProps> = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Preview + Controls grid */}
       <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
         {/* Live preview */}

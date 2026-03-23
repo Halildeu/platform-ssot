@@ -222,7 +222,7 @@ const FoundationOverviewTab: React.FC<{
             label: 'Summary',
             badge: <Badge variant="info">{foundation.governanceBadges.length}</Badge>,
             content: (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
                   <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>{t('designlab.foundation.overview.summary')}</DetailLabel>
@@ -657,7 +657,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
         >
           <div data-detail-section-id="ux">
             {foundation ? (
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
                   <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
                     <DetailLabel>Token visual identity</DetailLabel>
@@ -709,7 +709,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                     {/* Spacing tokens preview */}
                     <div className="rounded-[20px] border border-border-subtle bg-surface-panel p-4">
                       <Text variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">Spacing tokens</Text>
-                      <div className="mt-3 space-y-2">
+                      <div className="flex flex-col mt-3 gap-2">
                         {[
                           { label: 'xs', width: '8px' },
                           { label: 'sm', width: '12px' },
@@ -733,7 +733,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                     {/* Typography tokens */}
                     <div className="rounded-[20px] border border-border-subtle bg-surface-panel p-4">
                       <Text variant="secondary" className="text-[10px] font-semibold tracking-[0.06em]">Typography scale</Text>
-                      <div className="mt-3 space-y-2">
+                      <div className="flex flex-col mt-3 gap-2">
                         {[
                           { label: 'Display', size: '2rem', weight: '700' },
                           { label: 'Heading', size: '1.5rem', weight: '600' },

@@ -220,7 +220,7 @@ export const buildTabsFeedbackShowcaseSections = (
           description: 'Sayfa ustu duyuru, CTA ve kapatilabilir bilgi yuzeylerini birlikte gosterir.',
           badges: ['banner', 'action', 'announcement'],
           content: (
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <Alert
                 severity="info"
                 banner
@@ -244,7 +244,7 @@ export const buildTabsFeedbackShowcaseSections = (
           description: 'Rich action, custom icon ve stacked alert kullanimi ile daha modern review yuzeyi uretir.',
           badges: ['audit', 'stack', 'rich-actions'],
           content: (
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
               <Alert
                 severity="info"
                 title="Adoption raporu hazir"

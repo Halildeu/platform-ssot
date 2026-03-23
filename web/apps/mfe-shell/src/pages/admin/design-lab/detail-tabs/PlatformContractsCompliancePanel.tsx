@@ -96,7 +96,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
   }, [layerFilter, filteredContracts]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Summary header */}
       <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <div className="flex items-start justify-between gap-4">
@@ -140,7 +140,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
       {/* Contract cards */}
       <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>Contract details</DetailLabel>
-        <div className="mt-4 space-y-3">
+        <div className="flex flex-col mt-4 gap-3">
           {filteredContracts.map((contract) => {
             const layerCompliance = layerFilter !== 'all' ? catalog.complianceMatrix[layerFilter] : null;
             const isEnforcer = layerCompliance?.mustEnforce.includes(contract.id) ?? false;
@@ -167,7 +167,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
                 </div>
 
                 {/* Rules */}
-                <div className="mt-3 space-y-1.5">
+                <div className="flex flex-col mt-3 gap-1.5">
                   {contract.rules.map((rule, idx) => (
                     <div key={idx} className="flex items-start gap-2">
                       <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
@@ -206,7 +206,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Her katmanin hangi contract&apos;lara uyum saglamasi ve hangilerini enforce etmesi gerektigi.
           </Text>
-          <div className="mt-4 space-y-2">
+          <div className="flex flex-col mt-4 gap-2">
             {Object.entries(catalog.complianceMatrix).map(([layerId, entry]) => (
               <div
                 key={layerId}

@@ -137,7 +137,7 @@ export const DetailSummary = React.forwardRef<HTMLElement, DetailSummaryProps>((
   return (
     <section
       ref={ref}
-      className={cn("space-y-4", className)}
+      className={cn("flex flex-col gap-4", className)}
       data-access-state={accessState.state}
       data-component="detail-summary"
       data-surface-appearance="premium"
@@ -175,7 +175,7 @@ export const DetailSummary = React.forwardRef<HTMLElement, DetailSummaryProps>((
           accessReason={accessReason}
         />
 
-        <div className="min-w-0 space-y-4">
+        <div className="flex flex-col min-w-0 gap-4">
           {detailItems.length ? (
             <div className={detailSummaryPanelClassName}>
               <Descriptions

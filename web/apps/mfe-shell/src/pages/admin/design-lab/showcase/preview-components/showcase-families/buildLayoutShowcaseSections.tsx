@@ -157,7 +157,7 @@ export const buildLayoutShowcaseSections = (
       case 'dashboard':
         return (
           <div className="grid grid-cols-[1.2fr_0.8fr] gap-1.5" aria-hidden>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.9))]" />
               <div className="grid grid-cols-3 gap-1.5">
                 <div className="h-8 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
@@ -166,7 +166,7 @@ export const buildLayoutShowcaseSections = (
               </div>
               <div className="h-14 rounded-2xl bg-[var(--surface-card,rgba(255,255,255,0.74))]" />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
               <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.74))]" />
               <div className="h-9 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.68))]" />
@@ -175,13 +175,13 @@ export const buildLayoutShowcaseSections = (
         );
       case 'list':
         return (
-          <div className="space-y-1.5" aria-hidden>
+          <div className="flex flex-col gap-1.5" aria-hidden>
             <div className="grid grid-cols-3 gap-1.5">
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
               <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.75))]" />
               <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.7))]" />
@@ -192,12 +192,12 @@ export const buildLayoutShowcaseSections = (
       case 'detail':
         return (
           <div className="grid grid-cols-[1fr_0.55fr] gap-1.5" aria-hidden>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
               <div className="h-12 rounded-2xl bg-[var(--surface-card,rgba(255,255,255,0.78))]" />
               <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
               <div className="h-10 rounded-2xl bg-[var(--surface-card,rgba(255,255,255,0.68))]" />
             </div>
@@ -205,14 +205,14 @@ export const buildLayoutShowcaseSections = (
         );
       case 'workspace':
         return (
-          <div className="space-y-1.5" aria-hidden>
+          <div className="flex flex-col gap-1.5" aria-hidden>
             <div className="h-4 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
             <div className="grid grid-cols-[0.7fr_1.3fr] gap-1.5">
-              <div className="space-y-1.5">
+              <div className="flex flex-col gap-1.5">
                 <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.78))]" />
                 <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.7))]" />
               </div>
-              <div className="space-y-1.5">
+              <div className="flex flex-col gap-1.5">
                 <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.76))]" />
                 <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.68))]" />
                 <div className="h-5 rounded-lg bg-[var(--surface-card,rgba(255,255,255,0.64))]" />
@@ -223,12 +223,12 @@ export const buildLayoutShowcaseSections = (
       case 'settings':
         return (
           <div className="grid grid-cols-[0.6fr_1fr] gap-1.5" aria-hidden>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.88))]" />
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
               <div className="h-3 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.8))]" />
               <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.72))]" />
               <div className="h-6 rounded-xl bg-[var(--surface-card,rgba(255,255,255,0.66))]" />
@@ -348,7 +348,7 @@ export const buildLayoutShowcaseSections = (
                       />
                     )}
                   >
-                    <div className="space-y-4 p-1">
+                    <div className="flex flex-col gap-4 p-1">
                       <SummaryStrip
                         title="Release cadence"
                         description="Executive takibin ilk satiri: build, adoption, incidents ve open actions."
@@ -452,7 +452,7 @@ export const buildLayoutShowcaseSections = (
                       />
                     )}
                   >
-                    <div className="space-y-4 p-1">
+                    <div className="flex flex-col gap-4 p-1">
                       <SummaryStrip
                         title="Directory metrics"
                         description="Sayfaya girmeden once liste sagligi, secim ve action signal gorunur."
@@ -520,7 +520,7 @@ export const buildLayoutShowcaseSections = (
                     )}
                     footer={<Text variant="secondary">Footer contract strip burada policy ve rollout notlarini tasir.</Text>}
                   >
-                    <div className="space-y-4 p-1">
+                    <div className="flex flex-col gap-4 p-1">
                       <EntitySummaryBlock
                         title="Decision package"
                         subtitle="Wave 5 access review"
@@ -616,7 +616,7 @@ export const buildLayoutShowcaseSections = (
                       />
                     )}
                   >
-                    <div className="space-y-4 p-1">
+                    <div className="flex flex-col gap-4 p-1">
                       <SummaryStrip
                         title="Recent queue"
                         description="Kullanicinin en son dondugu alanlar ve action-ready command seti."
@@ -680,7 +680,7 @@ export const buildLayoutShowcaseSections = (
                       />
                     )}
                   >
-                    <div className="space-y-4 p-1">
+                    <div className="flex flex-col gap-4 p-1">
                       <Tabs
                         variant="pill"
                         activeKey="security"
@@ -772,7 +772,7 @@ export const buildLayoutShowcaseSections = (
                       </FilterBar>
                     )}
                     detail={(
-                      <div className="space-y-3 rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
+                      <div className="flex flex-col gap-3 rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                         <Text as="div" className="font-semibold">
                           {t('designlab.showcase.component.pageLayout.sections.directory.detail.title')}
                         </Text>
@@ -787,7 +787,7 @@ export const buildLayoutShowcaseSections = (
                       </div>
                     )}
                   >
-                    <div className="space-y-4">
+                    <div className="flex flex-col gap-4">
                       <SummaryStrip
                         title={t('designlab.showcase.component.pageLayout.sections.directory.summary.title')}
                         description={t('designlab.showcase.component.pageLayout.sections.directory.summary.description')}

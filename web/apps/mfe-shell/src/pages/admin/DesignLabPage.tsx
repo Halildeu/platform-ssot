@@ -3784,7 +3784,7 @@ const DesignLabPage: React.FC = () => {
             {item.uxPrimaryThemeId ? <SectionBadge label={item.uxPrimaryThemeId} /> : null}
           </div>
 
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
               <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
                 {t('designlab.metadata.primaryLens')}
@@ -3869,7 +3869,7 @@ const DesignLabPage: React.FC = () => {
 
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.general.recipe.identity')}</DetailLabel>
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
               <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
                 Contract
@@ -3957,7 +3957,7 @@ const DesignLabPage: React.FC = () => {
 
         <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.tabs.general.label')}</DetailLabel>
-          <div className="mt-4 space-y-3">
+          <div className="flex flex-col mt-4 gap-3">
             <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
               <Text as="div" variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.18em]">
                 Template ID
@@ -4502,7 +4502,7 @@ const DesignLabPage: React.FC = () => {
     </div>
   );
   const heroSupportingContent = showCatalogLandingContext ? (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <div className="grid grid-cols-1 gap-3 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-[22px] border border-border-subtle bg-surface-panel px-4 py-3">
           <Text as="div" variant="secondary" className="text-[11px] font-semibold tracking-[0.08em]">
@@ -4730,7 +4730,7 @@ const DesignLabPage: React.FC = () => {
       case 'dashboard':
         return (
           <div className="grid grid-cols-[1.3fr_0.7fr] gap-1" aria-hidden>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-3 rounded-full bg-white/90" />
               <div className="grid grid-cols-3 gap-1">
                 <div className="h-7 rounded-lg bg-white/80" />
@@ -4739,7 +4739,7 @@ const DesignLabPage: React.FC = () => {
               </div>
               <div className="h-12 rounded-xl bg-white/75" />
             </div>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-5 rounded-lg bg-white/80" />
               <div className="h-5 rounded-lg bg-white/70" />
               <div className="h-7 rounded-lg bg-white/65" />
@@ -4748,13 +4748,13 @@ const DesignLabPage: React.FC = () => {
         );
       case 'list':
         return (
-          <div className="space-y-1" aria-hidden>
+          <div className="flex flex-col gap-1" aria-hidden>
             <div className="grid grid-cols-3 gap-1">
               <div className="h-3 rounded-full bg-white/90" />
               <div className="h-3 rounded-full bg-white/80" />
               <div className="h-3 rounded-full bg-white/70" />
             </div>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-4 rounded-lg bg-white/80" />
               <div className="h-4 rounded-lg bg-white/75" />
               <div className="h-4 rounded-lg bg-white/70" />
@@ -4764,12 +4764,12 @@ const DesignLabPage: React.FC = () => {
       case 'settings':
         return (
           <div className="grid grid-cols-[0.55fr_1fr] gap-1" aria-hidden>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-3 rounded-full bg-white/90" />
               <div className="h-3 rounded-full bg-white/80" />
               <div className="h-3 rounded-full bg-white/75" />
             </div>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-5 rounded-lg bg-white/80" />
               <div className="h-5 rounded-lg bg-white/72" />
               <div className="h-5 rounded-lg bg-white/68" />
@@ -4779,12 +4779,12 @@ const DesignLabPage: React.FC = () => {
       case 'detail':
         return (
           <div className="grid grid-cols-[1fr_0.5fr] gap-1" aria-hidden>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-3 rounded-full bg-white/90" />
               <div className="h-9 rounded-xl bg-white/78" />
               <div className="h-4 rounded-lg bg-white/72" />
             </div>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-4 rounded-lg bg-white/80" />
               <div className="h-8 rounded-xl bg-white/68" />
             </div>
@@ -4792,14 +4792,14 @@ const DesignLabPage: React.FC = () => {
         );
       case 'workspace':
         return (
-          <div className="space-y-1" aria-hidden>
+          <div className="flex flex-col gap-1" aria-hidden>
             <div className="h-3 rounded-full bg-white/90" />
             <div className="grid grid-cols-[0.7fr_1.3fr] gap-1">
-              <div className="space-y-1">
+              <div className="flex flex-col gap-1">
                 <div className="h-6 rounded-xl bg-white/78" />
                 <div className="h-6 rounded-xl bg-white/70" />
               </div>
-              <div className="space-y-1">
+              <div className="flex flex-col gap-1">
                 <div className="h-4 rounded-lg bg-white/76" />
                 <div className="h-4 rounded-lg bg-white/68" />
                 <div className="h-4 rounded-lg bg-white/64" />
@@ -4810,11 +4810,11 @@ const DesignLabPage: React.FC = () => {
       default:
         return (
           <div className="grid grid-cols-2 gap-1" aria-hidden>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-3 rounded-full bg-white/90" />
               <div className="h-6 rounded-lg bg-white/78" />
             </div>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
               <div className="h-3 rounded-full bg-white/82" />
               <div className="h-6 rounded-lg bg-white/70" />
             </div>
@@ -5124,7 +5124,7 @@ const DesignLabPage: React.FC = () => {
         </div>
         <SectionBadge label={`${pageTemplateLandingCards.length} templates`} />
       </div>
-      <div className="mt-4 space-y-4">
+      <div className="flex flex-col mt-4 gap-4">
         {pageTemplateLandingClusters.map((cluster) => (
           <section
             key={cluster.title}
@@ -5753,7 +5753,7 @@ const DesignLabPage: React.FC = () => {
     </>
   );
   const effectiveHeroSupportingContent = legacyAdapterNotice && heroSupportingContent
-    ? <div className="space-y-4">{legacyAdapterNotice}{heroSupportingContent}</div>
+    ? <div className="flex flex-col gap-4">{legacyAdapterNotice}{heroSupportingContent}</div>
     : legacyAdapterNotice ?? heroSupportingContent;
   const heroAction = activeSectionWorkspaceMode === 'components' && selectedItem?.importStatement ? (
     <Button variant="secondary" className="ml-auto" onClick={() => handleCopy(selectedItem.importStatement)}>
@@ -6008,7 +6008,7 @@ const DesignLabPage: React.FC = () => {
             SectionBadgeComponent={SectionBadge}
           />
 
-          <main className="min-w-0 space-y-5">
+          <main className="flex flex-col min-w-0 gap-5">
             <DesignLabHero
               breadcrumbs={breadcrumbs}
               topBadges={heroTopBadges}

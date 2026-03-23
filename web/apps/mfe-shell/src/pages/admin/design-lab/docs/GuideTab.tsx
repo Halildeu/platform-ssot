@@ -47,7 +47,7 @@ function renderMarkdownContent(content: string): React.ReactNode {
   const flushList = () => {
     if (listBuffer.length > 0) {
       elements.push(
-        <ul key={`list-${elements.length}`} className="ml-4 space-y-1">
+        <ul key={`list-${elements.length}`} className="flex flex-col ml-4 gap-1">
           {listBuffer.map((item, idx) => (
             <li key={idx} className="flex gap-2 text-sm text-text-secondary leading-relaxed">
               <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-text-tertiary" />
@@ -131,7 +131,7 @@ function renderMarkdownContent(content: string): React.ReactNode {
   }
 
   flushList();
-  return <div className="space-y-2">{elements}</div>;
+  return <div className="flex flex-col gap-2">{elements}</div>;
 }
 
 /** Inline markdown: **bold**, `code`, → arrows */
@@ -190,7 +190,7 @@ function MiniToc({
   onSectionClick: (id: string) => void;
 }) {
   return (
-    <nav className="sticky top-4 space-y-0.5">
+    <nav className="flex flex-col sticky top-4 gap-0.5">
       <Text as="div" className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
         On this page
       </Text>
@@ -289,7 +289,7 @@ export const GuideTab: React.FC<GuideTabProps> = ({ componentName }) => {
       </div>
 
       {/* Main content */}
-      <div className="min-w-0 flex-1 space-y-6">
+      <div className="flex flex-col min-w-0 flex-1 gap-6">
         {/* Summary card */}
         <div className="rounded-2xl border border-border-subtle bg-linear-to-r from-blue-500/5 to-transparent p-5">
           <Text as="div" className="text-sm leading-relaxed text-text-primary">

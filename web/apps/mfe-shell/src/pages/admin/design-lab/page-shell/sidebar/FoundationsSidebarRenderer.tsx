@@ -53,7 +53,7 @@ export const FoundationsSidebarRenderer: React.FC<DesignLabSidebarRendererProps>
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <section
         className="rounded-[22px] border border-border-subtle bg-surface-panel px-3.5 py-3.5"
         data-testid="design-lab-foundation-family-card"
@@ -109,7 +109,7 @@ export const FoundationsSidebarRenderer: React.FC<DesignLabSidebarRendererProps>
         <Text variant="secondary" className="mt-1 block text-[10px] leading-4">
           {t("designlab.sidebar.platformContracts.description")}
         </Text>
-        <div className="mt-2.5 space-y-1.5">
+        <div className="flex flex-col mt-2.5 gap-1.5">
           {PLATFORM_CONTRACT_SIGNALS.map((contract) => (
             <div
               key={contract.id}

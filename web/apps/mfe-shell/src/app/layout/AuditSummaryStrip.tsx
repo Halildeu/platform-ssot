@@ -242,7 +242,7 @@ export const AuditSummaryStrip: React.FC = () => {
     <section className="border-b border-border-subtle bg-surface-panel/70 px-8 py-4" data-testid="audit-summary-strip">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-          <div className="space-y-1">
+          <div className="flex flex-col gap-1">
             <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary">Audit özeti</p>
             <p className="text-sm text-text-primary">
               Shared capability catalog, oturum ve replay görünürlüğünü audit ekranına girmeden özetliyor.
@@ -287,7 +287,7 @@ export const AuditSummaryStrip: React.FC = () => {
               className="rounded-2xl border border-border-subtle bg-surface-default px-4 py-3 shadow-xs"
             >
               <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1">
+                <div className="flex flex-col gap-1">
                   <h3 className="text-sm font-semibold text-text-primary">{group.title}</h3>
                   <p className="text-xs leading-5 text-text-secondary">{group.description}</p>
                 </div>

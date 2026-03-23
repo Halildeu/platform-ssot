@@ -12,13 +12,13 @@ import React from "react";
 // import { usePermission, useAuth } from "@mfe/platform-capabilities";
 
 const AdminDemo = () => (
-  <div className="p-6 space-y-6">
+  <div className="flex flex-col p-6 gap-6">
     <h1 className="text-2xl font-bold">Admin Reference App</h1>
     <p>Bu demo @mfe/design-system kullanarak bir admin paneli ve kullanıcı yönetimi gösterir.</p>
 
     <section>
       <h2 className="text-xl font-semibold mb-3">Kullanılan Bileşenler</h2>
-      <ul className="list-disc pl-6 space-y-1">
+      <ul className="flex flex-col list-disc pl-6 gap-1">
         <li>Tabs — settings kategorileri (Genel, Güvenlik, Bildirimler, Entegrasyonlar)</li>
         <li>Switch, FormBuilder — ayar formları</li>
         <li>DataGrid — kullanıcı listesi</li>

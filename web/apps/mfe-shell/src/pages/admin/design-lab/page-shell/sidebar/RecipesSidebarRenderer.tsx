@@ -102,7 +102,7 @@ export const RecipesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = (
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <section className="rounded-[22px] border border-border-subtle bg-surface-panel px-3.5 py-3.5">
         <Text
           as="div"
@@ -133,12 +133,12 @@ export const RecipesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = (
           </Text>
           <SectionBadge label={familyCountLabel} />
         </div>
-        <div className="space-y-4" data-testid="design-lab-recipe-list">
+        <div className="flex flex-col gap-4" data-testid="design-lab-recipe-list">
           {familyItems.length ? (
             groupedFamilyItems.map((cluster) => (
               <section
                 key={cluster.title}
-                className="space-y-2"
+                className="flex flex-col gap-2"
                 data-testid={`design-lab-recipe-cluster-${toSidebarTestIdSuffix(cluster.title)}`}
               >
                 <div className="px-2">
@@ -162,7 +162,7 @@ export const RecipesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = (
                     </Text>
                   ) : null}
                 </div>
-                <div className="space-y-1.5">
+                <div className="flex flex-col gap-1.5">
                   {cluster.items.map((family) => {
                     const active = selectedFamilyId === family.familyId;
                     const familySignal =

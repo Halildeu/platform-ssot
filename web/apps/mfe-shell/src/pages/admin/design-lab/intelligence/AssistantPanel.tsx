@@ -89,7 +89,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
 
         {/* Response metadata */}
         {message.response && (
-          <div className="mt-2 space-y-2">
+          <div className="flex flex-col mt-2 gap-2">
             {/* Confidence */}
             <ConfidenceBadge confidence={message.response.confidence} />
 
@@ -250,7 +250,7 @@ export default function AssistantPanel() {
       </div>
 
       {/* Chat area */}
-      <div className="min-h-[200px] max-h-[400px] space-y-3 overflow-y-auto rounded-xl border border-border-subtle bg-surface-default p-3">
+      <div className="flex flex-col min-h-[200px] max-h-[400px] gap-3 overflow-y-auto rounded-xl border border-border-subtle bg-surface-default p-3">
         {messages.length === 0 && (
           <div className="flex items-center justify-center py-8">
             <Text variant="secondary" className="text-sm">

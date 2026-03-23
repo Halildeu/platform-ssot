@@ -157,7 +157,7 @@ export const PATTERN_TEMPLATES: PatternTemplate[] = [
   };
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       {items.map((item) => (
         <div key={item.id} className="flex items-center gap-2">
           <${name}>${name === "Badge" || name === "Alert" ? "{item.label}" : ""}</${name}>
@@ -281,7 +281,7 @@ export const PATTERN_TEMPLATES: PatternTemplate[] = [
   const [isFormValid, setIsFormValid] = useState(false);
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       <Checkbox
         checked={isFormValid}
         onChange={() => setIsFormValid(!isFormValid)}

@@ -106,12 +106,12 @@ export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>((
           />
         </div>
       ) : (
-        <div className="mt-4 space-y-3">
+        <div className="flex flex-col mt-4 gap-3">
           {items.map((item) => {
             const selected = item.id === activeCitationId;
             const blocked = accessState.isDisabled || accessState.isReadonly;
             const body = (
-              <div className="min-w-0 space-y-3">
+              <div className="flex flex-col min-w-0 gap-3">
                 <div className="flex flex-wrap items-center gap-2">
                   {item.kind ? (
                     <Badge variant={kindTone[item.kind]}>{item.kind}</Badge>

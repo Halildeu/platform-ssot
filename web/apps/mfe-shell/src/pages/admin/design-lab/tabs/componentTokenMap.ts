@@ -144,7 +144,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Spacing
     { name: "sfl-panel-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel ic boslugu (default mod, p-5)" },
     { name: "sfl-panel-padding-compact", cssVar: "--spacing-3", resolvedValue: "12px", tier: "component", category: "spacing", description: "Panel ic boslugu (compact mod, p-3)" },
-    { name: "sfl-section-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Bolumler arasi dikey bosluk (space-y-4 / space-y-2 compact)" },
+    { name: "sfl-section-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Bolumler arasi dikey bosluk (gap-4 / gap-2 compact)" },
     { name: "sfl-chip-padding", cssVar: "--spacing-2.5", resolvedValue: "10px / 4px", tier: "component", category: "spacing", description: "Filtre chip ic boslugu (px-2.5 py-1)" },
     // Typography
     { name: "sfl-title-font", cssVar: "--font-size-base", resolvedValue: "16px / 600 / -0.02em", tier: "global", category: "typography", description: "Liste basligi font boyutu, kalinligi ve harf araligi" },
@@ -622,7 +622,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Spacing
     { name: "list-padding-comfortable", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Rahat yoğunluk iç boşluk (px-4 py-4)" },
     { name: "list-padding-compact", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Sıkı yoğunluk iç boşluk (px-4 py-3)" },
-    { name: "list-items-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Öğeler arası boşluk (space-y-3)" },
+    { name: "list-items-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Öğeler arası boşluk (gap-3)" },
     // Typography
     { name: "list-title-font-size", cssVar: "--font-size-sm", resolvedValue: "14px", tier: "global", category: "typography", description: "Öğe başlık font boyutu (text-sm)" },
     { name: "list-title-font-weight", cssVar: "--font-weight-semibold", resolvedValue: "600", tier: "global", category: "typography", description: "Öğe başlık font kalınlığı (font-semibold)" },
@@ -734,7 +734,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "slider-badge-border", cssVar: "--border-default", resolvedValue: "var(--border-default)", tier: "alias", category: "color", description: "Değer rozet kenarlık rengi" },
     // Spacing
     { name: "slider-badge-padding-x", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Rozet yatay iç boşluk (px-3)" },
-    { name: "slider-content-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "İçerik dikey boşluk (space-y-3)" },
+    { name: "slider-content-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "İçerik dikey boşluk (gap-3)" },
     // Typography
     { name: "slider-badge-font-size", cssVar: "--font-size-xs", resolvedValue: "12px", tier: "global", category: "typography", description: "Değer rozet font boyutu (text-xs)" },
     { name: "slider-badge-font-weight", cssVar: "--font-weight-semibold", resolvedValue: "600", tier: "global", category: "typography", description: "Değer rozet font kalınlığı (font-semibold)" },
@@ -879,7 +879,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "detail-summary-title-text", cssVar: "--text-primary", resolvedValue: "var(--text-primary)", tier: "alias", category: "color", description: "Başlık metin rengi" },
     { name: "detail-summary-json-bg", cssVar: "--surface-muted", resolvedValue: "var(--surface-muted)", tier: "alias", category: "color", description: "JSON görüntüleyici arka plan rengi" },
     // Spacing
-    { name: "detail-summary-section-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Bölümler arası dikey boşluk (space-y-4)" },
+    { name: "detail-summary-section-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Bölümler arası dikey boşluk (gap-4)" },
     { name: "detail-summary-panel-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel iç boşluğu (p-5)" },
     { name: "detail-summary-json-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "JSON görüntüleyici iç boşluk (p-4)" },
     // Typography
@@ -1154,7 +1154,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Spacing
     { name: "eel-section-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Dış bölüm iç boşluğu (p-5)" },
     { name: "eel-inner-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "İç içerik alanı boşluğu (p-4)" },
-    { name: "eel-content-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "İçerik elemanları arası boşluk (space-y-4)" },
+    { name: "eel-content-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "İçerik elemanları arası boşluk (gap-4)" },
     // Typography
     { name: "eel-title-size", cssVar: "--font-size-base", resolvedValue: "16px", tier: "global", category: "typography", description: "Başlık font boyutu (text-base)" },
     { name: "eel-title-weight", cssVar: "--font-weight-semibold", resolvedValue: "600", tier: "global", category: "typography", description: "Başlık font kalınlığı (font-semibold)" },
@@ -1425,7 +1425,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "tourcoachmarks-progress-text", cssVar: "--text-secondary", resolvedValue: "var(--text-secondary)", tier: "alias", category: "color", description: "İlerleme sayacı metin rengi" },
     // Spacing
     { name: "tourcoachmarks-padding", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Panel iç boşluk (p-6)" },
-    { name: "tourcoachmarks-section-gap", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Bölümler arası boşluk (space-y-6)" },
+    { name: "tourcoachmarks-section-gap", cssVar: "--spacing-6", resolvedValue: "24px", tier: "global", category: "spacing", description: "Bölümler arası boşluk (gap-6)" },
     { name: "tourcoachmarks-step-gap", cssVar: "--spacing-2", resolvedValue: "8px", tier: "global", category: "spacing", description: "Adım kartları arası boşluk (gap-2)" },
     // Typography
     { name: "tourcoachmarks-title-size", cssVar: "--font-size-xs", resolvedValue: "12px", tier: "global", category: "typography", description: "Tur başlığı font boyutu (text-xs, uppercase)" },
@@ -1774,7 +1774,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "audit-timeline-actor-human", cssVar: "--color-state-success", resolvedValue: "var(--color-state-success)", tier: "alias", category: "color", description: "İnsan aktörü rozet rengi" },
     // Spacing
     { name: "audit-timeline-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel iç boşluk (p-5)" },
-    { name: "audit-timeline-item-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Zaman öğeleri arası boşluk (space-y-3)" },
+    { name: "audit-timeline-item-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Zaman öğeleri arası boşluk (gap-3)" },
     { name: "audit-timeline-content-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Nokta-içerik arası boşluk (gap-4)" },
     // Typography
     { name: "audit-timeline-title-size", cssVar: "--font-size-sm", resolvedValue: "14px", tier: "global", category: "typography", description: "Öğe başlığı font boyutu (text-sm)" },
@@ -1795,7 +1795,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Spacing
     { name: "prompt-composer-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel iç boşluk (p-5)" },
     { name: "prompt-composer-grid-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Grid öğeleri arası boşluk (gap-4)" },
-    { name: "prompt-composer-field-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Form alanları arası boşluk (space-y-4)" },
+    { name: "prompt-composer-field-gap", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Form alanları arası boşluk (gap-4)" },
     { name: "prompt-composer-contract-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Sözleşme kartı iç boşluk (p-4)" },
     // Typography
     { name: "prompt-composer-title-size", cssVar: "--font-size-base", resolvedValue: "16px", tier: "global", category: "typography", description: "Başlık font boyutu (text-base)" },
@@ -1852,7 +1852,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "citation-panel-ring", cssVar: "--color-white-75", resolvedValue: "rgba(255,255,255,0.75)", tier: "component", category: "color", description: "Dış halka rengi (ring)" },
     // Spacing
     { name: "citation-panel-padding", cssVar: "--spacing-5", resolvedValue: "20px", tier: "global", category: "spacing", description: "Panel iç boşluk (p-5)" },
-    { name: "citation-panel-item-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Atıf öğeleri arası boşluk (space-y-3)" },
+    { name: "citation-panel-item-gap", cssVar: "--spacing-3", resolvedValue: "12px", tier: "global", category: "spacing", description: "Atıf öğeleri arası boşluk (gap-3)" },
     { name: "citation-panel-item-padding", cssVar: "--spacing-4", resolvedValue: "16px", tier: "global", category: "spacing", description: "Atıf öğesi iç boşluk (px-4 py-4)" },
     // Typography
     { name: "citation-panel-title-size", cssVar: "--font-size-base", resolvedValue: "16px", tier: "global", category: "typography", description: "Panel başlık font boyutu (text-base)" },

@@ -46,7 +46,7 @@ describe('SmartDashboard contract — basic rendering', () => {
     const section = container.querySelector('section');
     expect(section).toHaveClass('my-custom-class');
     // Ensure base classes are also present (not overwritten)
-    expect(section).toHaveClass('space-y-4');
+    expect(section).toHaveClass('gap-4');
   });
 
   it('has data-component="smart-dashboard"', () => {

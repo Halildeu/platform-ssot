@@ -110,7 +110,7 @@ const RegisterPage = () => {
     <div className="mx-auto max-w-md px-6 py-8">
       <div className="rounded-2xl border border-border-subtle bg-surface-default p-6 shadow-xs">
         <h1 className="mb-4 text-xl font-semibold text-text-primary">{t('auth.register.title')}</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1 text-xs font-medium text-text-secondary">
             <label htmlFor="register-name">{t('auth.register.nameLabel')}</label>
             <input

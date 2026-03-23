@@ -37,7 +37,7 @@ export const ComponentsSidebarRenderer: React.FC<DesignLabSidebarRendererProps> 
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <section
         className="rounded-[22px] border border-border-subtle bg-surface-panel px-3.5 py-3.5"
         data-testid="design-lab-component-family-card"

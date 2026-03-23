@@ -53,7 +53,7 @@ export const buildAdvancedInputLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.slider.live.controlled.title')}>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <Slider
                   label={t('designlab.showcase.component.slider.live.controlled.label')}
                   description={t('designlab.showcase.component.slider.live.controlled.description')}
@@ -93,7 +93,7 @@ export const buildAdvancedInputLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.datePicker.live.controlled.title')}>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <DatePicker
                   label={t('designlab.showcase.component.datePicker.live.controlled.label')}
                   description={t('designlab.showcase.component.datePicker.live.controlled.description')}
@@ -131,7 +131,7 @@ export const buildAdvancedInputLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.timePicker.live.controlled.title')}>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <TimePicker
                   label={t('designlab.showcase.component.timePicker.live.controlled.label')}
                   description={t('designlab.showcase.component.timePicker.live.controlled.description')}
@@ -170,7 +170,7 @@ export const buildAdvancedInputLivePreview = (
         <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title="Controlled file list">
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <Upload
                   label="Kanit paketi"
                   description="Release ve approval kanitlarini ayni yerden topla."

@@ -92,7 +92,7 @@ export const PagesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = ({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <section
         className="rounded-[22px] border border-border-subtle bg-surface-panel px-3.5 py-3.5"
         data-testid="design-lab-page-context-card"
@@ -137,12 +137,12 @@ export const PagesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = ({
           </Text>
           <SectionBadge label={pageCountLabel} />
         </div>
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {groupedPageFamilies.length ? (
             groupedPageFamilies.map((cluster) => (
               <section
                 key={cluster.title}
-                className="space-y-2"
+                className="flex flex-col gap-2"
                 data-testid={`design-lab-page-family-${toSidebarTestIdSuffix(cluster.title)}`}
               >
                 <div className="px-2">
@@ -165,7 +165,7 @@ export const PagesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = ({
                     </Text>
                   ) : null}
                 </div>
-                <div className="space-y-1.5">
+                <div className="flex flex-col gap-1.5">
                   {cluster.items.map((family) => {
                     const active = selectedFamilyId === family.familyId;
                     const templateSignal = getPageTemplateSignal(family);

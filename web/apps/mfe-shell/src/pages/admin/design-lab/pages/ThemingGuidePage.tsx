@@ -202,7 +202,7 @@ export default function ThemingGuidePage() {
   const examples = CODE_EXAMPLES[activeSection] ?? [];
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 p-6">
+    <div className="flex flex-col mx-auto max-w-4xl gap-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500/20 to-fuchsia-500/20">
@@ -253,7 +253,7 @@ export default function ThemingGuidePage() {
             <Text as="div" className="mb-2 text-xs font-semibold text-text-primary">Preview</Text>
             <div className="rounded-2xl border border-border-subtle bg-surface-default p-6 min-h-[256px]">
               <style>{sandboxCSS}</style>
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div className="flex gap-2">
                   <button className="rounded-lg bg-[var(--color-action-primary,#2563eb)] px-4 py-2 text-sm font-medium text-white">Primary Button</button>
                   <button className="rounded-lg border border-[var(--color-border-default,#cbd5e1)] px-4 py-2 text-sm font-medium">Secondary</button>
@@ -270,7 +270,7 @@ export default function ThemingGuidePage() {
           </div>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {examples.map((example, idx) => (
             <div key={idx} className="overflow-hidden rounded-2xl border border-border-subtle">
               <div className="flex items-center justify-between border-b border-border-subtle px-5 py-3">

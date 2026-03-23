@@ -129,7 +129,7 @@ export const buildCollectionGridShowcaseSections = (
                 />
               </PreviewPanel>
               <PreviewPanel title={t('designlab.showcase.component.list.sections.priorityReview.panelLoadingEmpty')}>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <List title={t('designlab.showcase.component.list.sections.priorityReview.loadingTitle')} loading items={[]} localeText={listLocaleText} />
                   <List
                     title={t('designlab.showcase.component.list.sections.priorityReview.emptyTitle')}
@@ -252,7 +252,7 @@ export const buildCollectionGridShowcaseSections = (
                 />
               </PreviewPanel>
               <PreviewPanel title={t('designlab.showcase.component.jsonViewer.sections.policyConfig.panelEmpty')}>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <JsonViewer
                     title={t('designlab.showcase.component.jsonViewer.sections.policyConfig.undefinedTitle')}
                     value={undefined}
@@ -325,7 +325,7 @@ export const buildCollectionGridShowcaseSections = (
                 />
               </PreviewPanel>
               <PreviewPanel title={t('designlab.showcase.component.tree.sections.readonlyAudit.panelLoadingEmpty')}>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <Tree
                     title={t('designlab.showcase.component.tree.sections.readonlyAudit.loadingTitle')}
                     loading

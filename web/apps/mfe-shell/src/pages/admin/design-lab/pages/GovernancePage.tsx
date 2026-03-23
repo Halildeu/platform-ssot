@@ -94,7 +94,7 @@ function DeprecationTimeline() {
             </Text>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {deprecated.map((item) => (
               <div
                 key={item.name}
@@ -159,7 +159,7 @@ function QualityExceptionRegistry() {
             </Text>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {exceptions.map((item) => (
               <div
                 key={item.name}
@@ -244,7 +244,7 @@ function PolicyComplianceSummary() {
         <DataProvenanceBadge level="derived" />
       </div>
 
-      <div className="mt-4 space-y-3">
+      <div className="flex flex-col mt-4 gap-3">
         {/* Overall compliance bar */}
         <div>
           <div className="flex items-center justify-between">
@@ -368,7 +368,7 @@ export default function GovernancePage() {
   const { role, permissions } = useDesignLabRBAC();
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-4 py-6 sm:px-6">
+    <div className="flex flex-col mx-auto max-w-5xl gap-6 px-4 py-6 sm:px-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>

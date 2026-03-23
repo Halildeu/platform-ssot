@@ -334,7 +334,7 @@ const AccessPage: React.FC = () => {
           actions={actionButtons ? <div className="flex flex-wrap gap-2">{actionButtons}</div> : undefined}
           filterBar={filterBar}
         >
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6">
             <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
               <p className="text-sm text-text-subtle">
                 {t('access.metrics.activeRoleCount', { count: formatNumber(total) })}

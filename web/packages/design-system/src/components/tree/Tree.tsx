@@ -150,7 +150,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
     const blocked = shouldBlockInteraction(accessState.state, node.disabled);
 
     return (
-      <li key={node.key} className="space-y-2">
+      <li key={node.key} className="flex flex-col gap-2">
         <div
           className={[
             "rounded-[24px] border shadow-xs transition-colors",
@@ -206,7 +206,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
                   aria-current={selected ? "true" : undefined}
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0 space-y-1">
+                    <div className="flex flex-col min-w-0 gap-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <Text as="div" className="min-w-0 text-sm font-semibold text-text-primary" style={{ textWrap: "pretty" } as React.CSSProperties}>
                           {node.label}
@@ -240,7 +240,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
         </div>
 
         {hasChildren && expanded ? (
-          <ul className="space-y-2 border-s border-border-subtle/70 ps-4">
+          <ul className="flex flex-col gap-2 border-s border-border-subtle/70 ps-4">
             {node.children?.map((child) => renderNode(child, depth + 1))}
           </ul>
         ) : null}
@@ -270,12 +270,12 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
 
       <div className="mt-4 rounded-[26px] border border-border-subtle bg-surface-muted p-4 shadow-xs">
         {loading ? (
-          <div className="space-y-3" data-testid="tree-loading-state">
+          <div className="flex flex-col gap-3" data-testid="tree-loading-state">
             {Array.from({ length: 3 }).map((_, index) => (
               <div key={`tree-loading-${index}`} className="rounded-[22px] border border-border-subtle bg-surface-default px-4 py-3.5">
                 <div className="flex items-center gap-3">
                   <Skeleton circle height={32} className="shrink-0" />
-                  <div className="min-w-0 flex-1 space-y-2">
+                  <div className="flex flex-col min-w-0 flex-1 gap-2">
                     <Skeleton lines={1} />
                     <Skeleton lines={1} animated={false} />
                   </div>
@@ -286,7 +286,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
         ) : nodes.length === 0 ? (
           <Empty description={resolvedEmptyFallbackDescription} />
         ) : (
-          <ul className="space-y-3">{nodes.map((node) => renderNode(node, 0))}</ul>
+          <ul className="flex flex-col gap-3">{nodes.map((node) => renderNode(node, 0))}</ul>
         )}
       </div>
     </section>

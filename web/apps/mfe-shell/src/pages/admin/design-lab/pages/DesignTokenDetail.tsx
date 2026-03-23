@@ -147,7 +147,7 @@ export default function DesignTokenDetail() {
   const description = t(`designlab.tokenGroup.${tokenGroup}.description`);
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* Back nav */}
       <button
         type="button"
@@ -208,12 +208,12 @@ function ColorsContent() {
   }, []);
 
   return (
-    <div className="space-y-10">
+    <div className="flex flex-col gap-10">
       {/* Palette */}
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">Raw palette</Text>
         <Text as="div" className="mb-6 text-lg font-bold text-text-primary">Color Palette</Text>
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           {Object.entries(paletteGroups).map(([group, colors]) => (
             <div key={group}>
               <Text variant="secondary" className="mb-2 text-xs font-semibold uppercase tracking-wider">{group}</Text>
@@ -243,7 +243,7 @@ function ColorsContent() {
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">Design intent</Text>
         <Text as="div" className="mb-6 text-lg font-bold text-text-primary">Semantic Color Tokens</Text>
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           {Object.entries(semanticGroups).map(([category, tokens]) => (
             <div key={category}>
               <Text variant="secondary" className="mb-3 text-xs font-semibold uppercase tracking-wider">{category}</Text>
@@ -276,7 +276,7 @@ function ColorsContent() {
 
 function TypographyContent() {
   return (
-    <div className="space-y-10">
+    <div className="flex flex-col gap-10">
       {/* Font Families */}
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">Typefaces</Text>
@@ -301,7 +301,7 @@ function TypographyContent() {
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">Scale</Text>
         <Text as="div" className="mb-6 text-lg font-bold text-text-primary">Font Sizes</Text>
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {Object.entries(FONT_SIZE).map(([name, { value, px }]) => (
             <div key={name} className="flex items-center gap-4 rounded-xl border border-border-subtle bg-surface-default px-4 py-3 transition hover:border-border-default">
               <div className="w-12 shrink-0">
@@ -395,11 +395,11 @@ function TypographyContent() {
 
 function SpacingContent() {
   return (
-    <div className="space-y-10">
+    <div className="flex flex-col gap-10">
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">4px grid</Text>
         <Text as="div" className="mb-6 text-lg font-bold text-text-primary">Spacing Scale</Text>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {Object.entries(SPACING).map(([key, value]) => {
             const px = parseInt(value);
             return (
@@ -432,7 +432,7 @@ function SpacingContent() {
 
 function RadiusContent() {
   return (
-    <div className="space-y-10">
+    <div className="flex flex-col gap-10">
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">Corners</Text>
         <Text as="div" className="mb-6 text-lg font-bold text-text-primary">Border Radius Scale</Text>
@@ -468,12 +468,12 @@ function MotionContent() {
   const [playing, setPlaying] = useState<string | null>(null);
 
   return (
-    <div className="space-y-10">
+    <div className="flex flex-col gap-10">
       {/* Durations */}
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">Timing</Text>
         <Text as="div" className="mb-6 text-lg font-bold text-text-primary">Duration Scale</Text>
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {Object.entries(DURATION).map(([name, value]) => {
             const ms = parseInt(value);
             return (
@@ -544,13 +544,13 @@ function ZIndexContent() {
   const maxZ = Math.max(...Object.values(ZINDEX));
 
   return (
-    <div className="space-y-10">
+    <div className="flex flex-col gap-10">
       <section>
         <Text as="div" className="mb-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">Layering</Text>
         <Text as="div" className="mb-6 text-lg font-bold text-text-primary">Z-Index Stack</Text>
 
         {/* Visual stack */}
-        <div className="relative mx-auto max-w-lg space-y-2">
+        <div className="flex flex-col relative mx-auto max-w-lg gap-2">
           {[...entries].reverse().map(([name, value], i) => {
             const width = 40 + ((value / maxZ) * 55);
             return (

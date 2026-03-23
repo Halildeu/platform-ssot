@@ -306,7 +306,7 @@ const KpiFallbackCard: React.FC<{ kpi: KpiResult; onClick: () => void }> = ({ kp
 };
 
 const FallbackChart: React.FC<{ data: Array<{ label: string; value: number }> }> = ({ data }) => (
-  <div className="space-y-1">
+  <div className="flex flex-col gap-1">
     {data.slice(0, 10).map((d, i) => (
       <div key={i} className="flex items-center gap-2 text-sm">
         <span className="w-24 truncate text-text-subtle">{d.label}</span>

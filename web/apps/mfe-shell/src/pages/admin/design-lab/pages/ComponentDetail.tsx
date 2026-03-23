@@ -231,7 +231,7 @@ export default function ComponentDetail() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* ── Breadcrumb ── */}
       <nav className="flex items-center gap-1.5 text-xs text-text-secondary">
         <button
@@ -426,7 +426,7 @@ export default function ComponentDetail() {
         )}
         {activeTab === "api" && <ApiTab apiItem={apiItem} componentName={indexItem.name} />}
         {activeTab === "examples" && (
-          <div className="space-y-8">
+          <div className="flex flex-col gap-8">
             <ExamplesGallery
               componentName={indexItem.name}
               fallbackContent={
@@ -506,7 +506,7 @@ function OverviewTab({
   const variantAxes = parsedAxes.filter((a) => a.axis !== "size");
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* 1. Component Hero Preview */}
       <HeroPreview componentName={indexItem.name} />
 
@@ -549,7 +549,7 @@ function OverviewTab({
                 {(apiItem.props ?? []).length}
               </span>
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               {(apiItem.props ?? []).slice(0, 8).map((prop) => (
                 <div
                   key={prop.name}
@@ -767,7 +767,7 @@ function VariantGallerySection({
       }
     >
       {showCode ? (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-3">
           {axis.values.map((val) => (
             <LibraryCodeBlock
               key={val}
@@ -1007,7 +1007,7 @@ function ApiTab({ apiItem, componentName }: { apiItem: ApiItem; componentName?: 
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Prop count header */}
       <div className="flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
@@ -1058,7 +1058,7 @@ function ComponentExamplesTab({
   const previewFocus = apiItem?.previewFocus ?? [];
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* Basic Usage */}
       <ExampleCard
         title="Basic Usage"
@@ -1411,7 +1411,7 @@ function QualityTab({
   const a11yTotal = applicableChecks.length;
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* ── A11y Scorecard — Modern card with categories ── */}
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
         <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">
@@ -1752,7 +1752,7 @@ function ChangelogTab({ componentName }: { componentName: string }) {
   const entries = useMemo(() => generateComponentChangelog(componentName), [componentName]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <Text as="div" variant="secondary" className="text-[10px] font-semibold uppercase tracking-[0.18em]">
           Version History
@@ -1778,7 +1778,7 @@ function ChangelogTab({ componentName }: { componentName: string }) {
           {/* Vertical line */}
           <div className="absolute left-[15px] top-2 bottom-2 w-px bg-border-subtle" />
 
-          <div className="space-y-0">
+          <div className="">
             {entries.map((entry, i) => {
               const cfg = CHANGELOG_TYPE_CONFIG[entry.type];
               const isFirst = i === 0;

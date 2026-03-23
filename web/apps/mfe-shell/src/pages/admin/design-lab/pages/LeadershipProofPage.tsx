@@ -112,7 +112,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="space-y-4">
+    <section id={id} className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
         <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconBg}`}>
           {icon}
@@ -140,7 +140,7 @@ export default function LeadershipProofPage() {
   const engagement = analytics.getEngagement();
 
   return (
-    <div className="space-y-10 pb-12">
+    <div className="flex flex-col gap-10 pb-12">
       {/* ── Hero ── */}
       <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-500/5 via-surface-default to-violet-500/5 px-6 py-10 sm:px-10 sm:py-14">
         <div className="pointer-events-none absolute inset-0 opacity-[0.02]"

@@ -148,7 +148,7 @@ export const ApprovalCheckpoint = React.forwardRef<HTMLElement, ApprovalCheckpoi
       data-status={status}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 space-y-2">
+        <div className="flex flex-col min-w-0 gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="info">{checkpointLabel}</Badge>
             <Badge variant={statusTone[status]}>{statusLabel[status]}</Badge>

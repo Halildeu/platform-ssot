@@ -242,7 +242,7 @@ function PropRow({
       {isExpanded && (
         <tr className="border-b border-border-subtle bg-surface-canvas/20">
           <td colSpan={4} className="px-6 py-4">
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               {/* Full type display for complex types */}
               {complex && (
                 <div>
@@ -332,7 +332,7 @@ export const PropsTableV2: React.FC<PropsTableV2Props> = ({
   const optionalCount = props.length - requiredCount;
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       {/* Search + Filter bar */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-xs">

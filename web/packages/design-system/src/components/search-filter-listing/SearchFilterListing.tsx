@@ -300,8 +300,8 @@ export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterLis
 
   const isCompact = size === "compact";
   const panelClass = cn(panelBase, isCompact ? "p-3" : "p-5");
-  const sectionGap = isCompact ? "space-y-2" : "space-y-4";
-  const itemsGap = isCompact ? "space-y-2" : "space-y-3";
+  const sectionGap = isCompact ? "flex flex-col gap-2" : "flex flex-col gap-4";
+  const itemsGap = isCompact ? "flex flex-col gap-2" : "flex flex-col gap-3";
   const hasActiveFilters = activeFilters.length > 0;
   const hasSelection = selectable && selectedKeys.length > 0;
 
@@ -318,7 +318,7 @@ export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterLis
         aria-busy="true"
         title={accessReason}
       >
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           <div className={cn(SKELETON_PULSE, "h-4 w-24")} />
           <div className={cn(SKELETON_PULSE, "h-7 w-64")} />
           <div className={cn(SKELETON_PULSE, "h-4 w-96")} />
@@ -332,7 +332,7 @@ export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterLis
         <div className={panelClass}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="space-y-2">
+              <div key={i} className="flex flex-col gap-2">
                 <div className={cn(SKELETON_PULSE, "h-3 w-16")} />
                 <div className={cn(SKELETON_PULSE, "h-6 w-12")} />
                 <div className={cn(SKELETON_PULSE, "h-3 w-24")} />
@@ -341,7 +341,7 @@ export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterLis
           </div>
         </div>
         <div className={panelClass}>
-          <div className="space-y-3">
+          <div className="flex flex-col gap-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className={cn(SKELETON_PULSE, "h-14 w-full")} />
             ))}

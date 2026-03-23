@@ -414,7 +414,7 @@ function DesignTokensSidebarContent({
   }, [searchValue, t]);
 
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-1.5">
       {groups.map((group) => (
         <SidebarItemButton
           key={group.id}
@@ -458,7 +458,7 @@ function ThemeSidebarContent({
   }, [searchValue, t]);
 
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-1.5">
       {axes.map((axis) => (
         <SidebarItemButton
           key={axis.id}
@@ -502,7 +502,7 @@ function PrimitivesSidebarContent({
   }, [index, searchValue]);
 
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col gap-1">
       {items.map((item) => (
         <SidebarItemButton
           key={item.name}
@@ -548,7 +548,7 @@ function AdvancedSidebarContent({
   }, [index, searchValue]);
 
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col gap-1">
       {items.map((item) => (
         <SidebarItemButton
           key={item.name}
@@ -594,7 +594,7 @@ function ApisSidebarContent({
   }, [index, searchValue]);
 
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col gap-1">
       {items.map((item) => (
         <SidebarItemButton
           key={item.name}
@@ -649,7 +649,7 @@ function ComponentsSidebarContent({
   }, [taxonomy, searchValue]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {groups.map((group) => (
         <div key={group.id}>
           <Text
@@ -659,7 +659,7 @@ function ComponentsSidebarContent({
           >
             {group.label}
           </Text>
-          <div className="space-y-1">
+          <div className="flex flex-col gap-1">
             {group.subgroups.flatMap((sg) =>
               sg.items.map((itemName) => {
                 const indexItem = index.items.find((i) => i.name === itemName);
@@ -752,7 +752,7 @@ function FamilySidebarContent({
   const basePath = `/admin/design-lab/${routeSegment}`;
 
   return (
-    <div className="space-y-1.5">
+    <div className="flex flex-col gap-1.5">
       {families.map((family) => (
         <SidebarItemButton
           key={family.id}

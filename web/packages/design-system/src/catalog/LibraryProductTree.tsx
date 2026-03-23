@@ -285,10 +285,10 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
 
   return (
     <div
-      className={clsx('space-y-3', className)}
+      className={clsx('gap-3', className)}
       data-testid={testIdPrefix ? `${testIdPrefix}-tree-section` : undefined}
     >
-      <div data-testid={testIdPrefix ? `${testIdPrefix}-track-section` : undefined} className="space-y-3">
+      <div data-testid={testIdPrefix ? `${testIdPrefix}-track-section` : undefined} className="gap-3">
       {tracks.map((track) => {
         const isTrackExpanded = expandedTracks.includes(track.id);
         const isTrackSelected = selection.trackId === track.id;
@@ -343,7 +343,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                   </Text>
                 ) : (
                   <div
-                    className="space-y-2"
+                    className="flex flex-col gap-2"
                     data-testid={
                       testIdPrefix && isTrackSelected ? `${testIdPrefix}-group-section` : undefined
                     }
@@ -372,7 +372,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                           </button>
 
                           {isGroupExpanded ? (
-                            <div className="mt-2 space-y-2 rounded-[18px] border border-border-subtle bg-surface-default p-2">
+                            <div className="flex flex-col mt-2 gap-2 rounded-[18px] border border-border-subtle bg-surface-default p-2">
                               {group.subgroups.map((subgroup) => {
                                 const subgroupKey = makeSubgroupKey(track.id, group.id, subgroup.id);
                                 const isSubgroupExpanded = expandedSubgroups.includes(subgroupKey);
@@ -408,7 +408,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                     </button>
 
                                     {isSubgroupExpanded ? (
-                                      <div className="mt-2 space-y-1 rounded-[16px] bg-surface-canvas p-2">
+                                      <div className="flex flex-col mt-2 gap-1 rounded-[16px] bg-surface-canvas p-2">
                                         {subgroup.items.map((item) => {
                                           const isItemActive =
                                             selection.trackId === track.id &&

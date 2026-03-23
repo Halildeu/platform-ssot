@@ -72,7 +72,7 @@ export const DesignLabRightRail: React.FC<DesignLabRightRailProps> = ({
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="flex flex-col gap-4">
             <div className="flex justify-end">
               <button
                 type="button"
@@ -87,7 +87,7 @@ export const DesignLabRightRail: React.FC<DesignLabRightRailProps> = ({
               </button>
             </div>
 
-            <div data-testid="design-lab-right-rail-content" className="space-y-4">
+            <div data-testid="design-lab-right-rail-content" className="flex flex-col gap-4">
               <OutlinePanel
                 items={detailTabs}
                 activeItemId={activeDetailTabId}

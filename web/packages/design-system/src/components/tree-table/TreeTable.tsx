@@ -250,7 +250,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                         <td className={["border-b border-border-subtle", densityClass[density]].join(" ")}>
                           <div className="flex items-center gap-3">
                             <Skeleton circle height={32} className="shrink-0" />
-                            <div className="min-w-0 flex-1 space-y-2">
+                            <div className="flex flex-col min-w-0 flex-1 gap-2">
                               <Skeleton lines={1} />
                               <Skeleton lines={1} animated={false} />
                             </div>
@@ -313,7 +313,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                                 aria-current={selected ? "true" : undefined}
                               >
                                 <div className="flex flex-wrap items-start justify-between gap-3">
-                                  <div className="min-w-0 space-y-1">
+                                  <div className="flex flex-col min-w-0 gap-1">
                                     <div className="flex flex-wrap items-center gap-2">
                                       <Text as="div" className="text-sm font-semibold text-text-primary" style={{ textWrap: "pretty" } as React.CSSProperties}>
                                         {node.label}

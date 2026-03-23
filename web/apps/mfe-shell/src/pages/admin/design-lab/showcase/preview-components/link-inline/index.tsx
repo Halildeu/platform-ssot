@@ -11,7 +11,7 @@ const linkLocaleText = {
 };
 
 const LinkInlineNavigationStates = () => (
-  <div className="space-y-4">
+  <div className="flex flex-col gap-4">
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
       <Text as="div" className="font-semibold text-text-primary">
         Internal / current
@@ -38,7 +38,7 @@ const LinkInlineNavigationStates = () => (
 );
 
 const LinkInlineInformationScent = () => (
-  <div className="space-y-4">
+  <div className="flex flex-col gap-4">
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
       <Text as="div" className="font-semibold text-text-primary">
         Underline / external affordance
@@ -64,7 +64,7 @@ const LinkInlineInformationScent = () => (
 );
 
 const LinkInlineAccessSafety = () => (
-  <div className="space-y-4">
+  <div className="flex flex-col gap-4">
     <div className="rounded-2xl border border-border-subtle bg-surface-default p-4">
       <Text as="div" className="font-semibold text-text-primary">
         Access fallback

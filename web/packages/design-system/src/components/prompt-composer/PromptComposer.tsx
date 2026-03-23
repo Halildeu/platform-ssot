@@ -137,7 +137,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
       data-component="prompt-composer"
       title={accessReason}
     >
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         <Text
           as="div"
           className="text-base font-semibold text-text-primary"
@@ -150,7 +150,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
       </div>
 
       <div className="mt-4 grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(380px, 100%), 1fr))" }}>
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <TextInput
             label="Prompt title"
             description="Prompt amacini tek satirda netlestir."
@@ -169,7 +169,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
             access={accessState.isReadonly ? "readonly" : access}
           />
           <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))" }}>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               <Text variant="secondary" size="xs" weight="medium">Scope</Text>
               <div className="flex flex-wrap gap-2">
                 {scopeOptions.map((option) => (
@@ -188,7 +188,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
                 ))}
               </div>
             </div>
-            <div className="space-y-3">
+            <div className="flex flex-col gap-3">
               <Text variant="secondary" size="xs" weight="medium">Tone</Text>
               <div className="flex flex-wrap gap-2">
                 {toneOptions.map((option) => (
@@ -210,7 +210,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <div className="rounded-[24px] border border-border-subtle bg-surface-muted p-4">
             <Text variant="secondary" size="xs" weight="medium">Current contract</Text>
             <div className="mt-3 flex flex-wrap gap-2">

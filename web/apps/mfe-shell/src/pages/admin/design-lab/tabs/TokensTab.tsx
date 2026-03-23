@@ -102,7 +102,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 max-w-xs">
@@ -156,7 +156,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
       </Text>
 
       {/* Token categories */}
-      <div className="space-y-3">
+      <div className="flex flex-col gap-3">
         {categories.map((cat) => {
           const tokens = tokensByCategory.get(cat);
           if (!tokens || tokens.length === 0) return null;

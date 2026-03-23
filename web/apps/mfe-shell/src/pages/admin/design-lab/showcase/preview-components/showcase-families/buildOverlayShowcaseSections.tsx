@@ -422,7 +422,7 @@ export const buildOverlayShowcaseSections = (
                     align="start"
                     showArrow
                     content={(
-                      <div className="space-y-2">
+                      <div className="flex flex-col gap-2">
                         <Text preset="title">Import contract</Text>
                         <Text variant="secondary" className="block leading-6">
                           Public surface ise canonical import ve package alias aynı anda belgelenmeli.
@@ -664,7 +664,7 @@ export const buildOverlayShowcaseSections = (
                     title={t('designlab.showcase.component.popover.sections.rich.popoverTitle')}
                     trigger={<Button variant="secondary">{t('designlab.showcase.component.popover.sections.rich.open')}</Button>}
                     content={(
-                      <div className="space-y-3">
+                      <div className="flex flex-col gap-3">
                         <Text variant="secondary" className="block leading-6">
                           {t('designlab.showcase.component.popover.sections.rich.body')}
                         </Text>
@@ -730,7 +730,7 @@ export const buildOverlayShowcaseSections = (
                   title="Component owner"
                   trigger={<Button variant="secondary">Owner kartını aç</Button>}
                   content={(
-                    <div className="space-y-3">
+                    <div className="flex flex-col gap-3">
                       <div>
                         <Text preset="title">Platform UI</Text>
                         <Text variant="secondary" className="mt-1 block leading-6">
@@ -836,7 +836,7 @@ export const buildOverlayShowcaseSections = (
                     },
                   ]}
                 >
-                  <div className="space-y-2">
+                  <div className="flex flex-col gap-2">
                     <Text preset="title">{t('designlab.showcase.component.contextMenu.sections.surface.triggerTitle')}</Text>
                     <Text variant="secondary" className="block leading-7">
                       {t('designlab.showcase.component.contextMenu.sections.surface.body')}

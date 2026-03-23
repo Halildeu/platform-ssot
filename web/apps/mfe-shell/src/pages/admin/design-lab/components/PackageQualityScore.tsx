@@ -77,7 +77,7 @@ export function PackageQualityScore({
       </div>
 
       {/* Score breakdown bars */}
-      <div className="space-y-3 px-5 py-4">
+      <div className="flex flex-col gap-3 px-5 py-4">
         <ScoreBar label="Accessibility" score={metrics.avgA11y} weight="40%" />
         <ScoreBar
           label="Quality Checklist"

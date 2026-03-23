@@ -73,7 +73,7 @@ export const ResponsiveMode: React.FC<ResponsiveModeProps> = ({
   const currentBreakpoint = singleWidth < 640 ? "Mobile" : singleWidth < 1024 ? "Tablet" : "Desktop";
 
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-3">
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

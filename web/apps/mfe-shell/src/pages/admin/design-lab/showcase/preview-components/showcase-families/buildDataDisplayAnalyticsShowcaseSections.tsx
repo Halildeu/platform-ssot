@@ -280,7 +280,7 @@ export const buildDataDisplayAnalyticsShowcaseSections = (
                 />
               </PreviewPanel>
               <PreviewPanel title={t('designlab.showcase.component.treeTable.sections.compactReview.panelLoadingEmpty')}>
-                <div className="space-y-4">
+                <div className="flex flex-col gap-4">
                   <TreeTable
                     title={t('designlab.showcase.component.treeTable.sections.compactReview.loadingTitle')}
                     loading

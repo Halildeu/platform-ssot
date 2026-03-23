@@ -12,13 +12,13 @@ import React from "react";
 // import { useHttp } from "@mfe/shared-http";
 
 const CrudDemo = () => (
-  <div className="p-6 space-y-6">
+  <div className="flex flex-col p-6 gap-6">
     <h1 className="text-2xl font-bold">CRUD Reference App</h1>
     <p>Bu demo @mfe/x-data-grid + @mfe/x-form-builder kullanarak tam bir CRUD akışı gösterir.</p>
 
     <section>
       <h2 className="text-xl font-semibold mb-3">Kullanılan Bileşenler</h2>
-      <ul className="list-disc pl-6 space-y-1">
+      <ul className="flex flex-col list-disc pl-6 gap-1">
         <li>DataGrid — server-side row model ile liste görünümü</li>
         <li>FormBuilder — JSON schema tabanlı form oluşturma</li>
         <li>Dialog — create/edit modal</li>
@@ -47,7 +47,7 @@ const CrudDemo = () => (
 
     <section>
       <h2 className="text-xl font-semibold mb-3">CRUD Akışı</h2>
-      <ol className="list-decimal pl-6 space-y-1 text-sm">
+      <ol className="flex flex-col list-decimal pl-6 gap-1 text-sm">
         <li>Liste sayfası yüklenir — DataGrid server-side modda API çağrısı yapar</li>
         <li>Kullanıcı satıra tıklar — detail panel açılır</li>
         <li>"Yeni Ekle" butonu — FormBuilder ile boş form</li>
