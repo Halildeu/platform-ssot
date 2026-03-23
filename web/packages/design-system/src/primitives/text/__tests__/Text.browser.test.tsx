@@ -32,7 +32,7 @@ describe('Text (Browser)', () => {
   });
 
   it('renders as custom element', async () => {
-    const screen = await render(<Text as="label">Label text</Text>);
+    await render(<Text as="label">Label text</Text>);
     const label = document.querySelector('label');
     expect(label).not.toBeNull();
   });

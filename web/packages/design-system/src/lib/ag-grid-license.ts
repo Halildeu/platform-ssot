@@ -1,3 +1,4 @@
+/* eslint-disable no-console -- intentionally wrapping/filtering console for license noise */
 import { LicenseManager } from 'ag-grid-enterprise';
 
 type EnvRecord = Record<string, string | undefined>;

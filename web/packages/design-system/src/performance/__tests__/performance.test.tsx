@@ -16,7 +16,7 @@ import {
 /* ------------------------------------------------------------------ */
 
 import { createLazyComponent } from '../LazyComponent';
-import { VirtualList, VirtualListProps } from '../VirtualList';
+import { VirtualList } from '../VirtualList';
 import { useDeferredRender } from '../useDeferredRender';
 import {
   useIntersectionObserver,
@@ -25,9 +25,10 @@ import {
 import {
   getComponentSizes,
   getBundleReport,
-  ComponentSizeInfo,
-  BundleReport,
+  _ComponentSizeInfo,
+  _BundleReport,
 } from '../BundleAnalyzer';
+import { expectNoA11yViolations } from '../../__tests__/a11y-utils';
 
 afterEach(() => {
   cleanup();
@@ -197,7 +198,7 @@ describe('VirtualList', () => {
 
   it('handles keyboard ArrowDown navigation', () => {
     const items = makeItems(10);
-    const { container } = render(
+    render(
       <VirtualList
         items={items}
         itemHeight={40}
@@ -271,6 +272,19 @@ describe('VirtualList', () => {
       '[data-component="virtual-list"]',
     ) as HTMLElement;
     expect(el.style.height).toBe('300px');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(
+      <VirtualList
+        items={makeItems(5)}
+        itemHeight={40}
+        containerHeight={200}
+        renderItem={defaultRender}
+        aria-label="Test list"
+      />,
+    );
+    await expectNoA11yViolations(container);
   });
 });
 

@@ -15,6 +15,7 @@
  * - getAdvancedFilterModel() / setAdvancedFilterModel()
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
 import type { GridApi, ColumnState, AdvancedFilterModel } from "ag-grid-community";
 import {
   fetchGridVariants,
@@ -118,7 +119,8 @@ export interface VariantIntegrationMessages {
   variantNameUpdateFailedLabel?: string;
 }
 
-export interface VariantIntegrationProps<RowData = unknown> {
+/** Props for the VariantIntegration component. */
+export interface VariantIntegrationProps<RowData = unknown> extends AccessControlledProps {
   /** Grid ID for variant isolation */
   gridId: string;
   /** Grid schema version for compatibility check */
@@ -205,6 +207,7 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
+/** Grid variant manager for saving, loading, and switching named column/filter configurations. */
 export const VariantIntegration = <RowData = unknown,>({
   gridId,
   gridSchemaVersion,
@@ -215,7 +218,11 @@ export const VariantIntegration = <RowData = unknown,>({
   canPromoteToGlobal = false,
   canDemoteToPersonal = false,
   canDeleteGlobal = false,
+  access,
+  accessReason,
 }: VariantIntegrationProps<RowData>): React.ReactElement => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return <></> as unknown as React.ReactElement;
   // ── Core state ─────────────────────────────────────────────────────
   const [variants, setVariants] = useState<GridVariant[]>([]);
   const [internalActiveId, setInternalActiveId] = useState<string | null>(controlledVariantId ?? null);
@@ -507,21 +514,21 @@ export const VariantIntegration = <RowData = unknown,>({
     }
     if (v.isUserDefault) {
       badges.push(
-        <span key="ud" className="rounded bg-amber-100 px-1 py-0.5 text-[10px] font-medium text-amber-700">
+        <span key="ud" className="rounded bg-[var(--state-warning-bg,#fef3c7)] px-1 py-0.5 text-[10px] font-medium text-[var(--state-warning-text,#b45309)]">
           {m.personalDefaultTagLabel ?? "Varsayilan"}
         </span>,
       );
     }
     if (v.isGlobal && v.isGlobalDefault) {
       badges.push(
-        <span key="gd" className="rounded bg-emerald-100 px-1 py-0.5 text-[10px] font-medium text-emerald-700">
+        <span key="gd" className="rounded bg-[var(--state-success-bg,#d1fae5)] px-1 py-0.5 text-[10px] font-medium text-[var(--state-success-text)]">
           {m.globalPublicDefaultTagLabel ?? "G. Varsayilan"}
         </span>,
       );
     }
     if (v.isCompatible === false) {
       badges.push(
-        <span key="ic" className="rounded bg-red-100 px-1 py-0.5 text-[10px] font-medium text-red-600">
+        <span key="ic" className="rounded bg-[var(--state-error-bg,#fee2e2)] px-1 py-0.5 text-[10px] font-medium text-[var(--state-error-text)]">
           {m.incompatibleTagLabel ?? "Uyumsuz"}
         </span>,
       );
@@ -602,7 +609,7 @@ export const VariantIntegration = <RowData = unknown,>({
               </span>
               <button
                 type="button"
-                className="rounded bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-white hover:brightness-110 disabled:opacity-50"
+                className="rounded bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-[var(--text-inverse)] hover:brightness-110 disabled:opacity-50"
                 onClick={() => handleDelete(v.id)}
                 disabled={isBusy}
               >
@@ -758,7 +765,7 @@ export const VariantIntegration = <RowData = unknown,>({
   return (
     <>
       {/* Variant selector dropdown (inline in toolbar) */}
-      <div className="flex items-center gap-2" data-component="variant-selector">
+      <div className={`flex items-center gap-2 ${accessStyles(accessState.state)}`} data-component="variant-selector" title={accessReason}>
         <select
           value={activeId ?? ""}
           onChange={(e) => {
@@ -851,7 +858,7 @@ export const VariantIntegration = <RowData = unknown,>({
             />
             <button
               type="button"
-              className="h-7 rounded bg-action-primary px-3 text-xs font-medium text-white hover:brightness-110 disabled:opacity-50"
+              className="h-7 rounded bg-action-primary px-3 text-xs font-medium text-[var(--text-inverse)] hover:brightness-110 disabled:opacity-50"
               onClick={handleCreate}
               disabled={pendingAction === "create"}
             >
@@ -925,9 +932,9 @@ function ActionBtn({
       className={cn(
         "rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors disabled:opacity-50",
         variant === "danger"
-          ? "text-state-error-text hover:bg-red-50"
+          ? "text-state-error-text hover:bg-[var(--state-error-bg,#fef2f2)]"
           : variant === "active"
-            ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
+            ? "bg-[var(--state-warning-bg,#fef3c7)] text-[var(--state-warning-text,#b45309)] hover:bg-[var(--state-warning-bg-hover,#fde68a)]"
             : "text-text-secondary hover:bg-surface-muted",
       )}
       onClick={onClick}

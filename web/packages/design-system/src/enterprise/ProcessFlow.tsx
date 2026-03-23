@@ -31,12 +31,19 @@ export interface ProcessEdge {
   label?: string;
 }
 
+/** SVG-based process flow diagram with auto-layout, status badges, and path highlighting. */
 export interface ProcessFlowProps extends AccessControlledProps {
+  /** Process nodes (tasks, decisions, gateways, etc.) to render */
   nodes: ProcessNode[];
+  /** Directed edges connecting nodes */
   edges: ProcessEdge[];
+  /** Layout direction for the auto-arranged diagram */
   orientation?: 'horizontal' | 'vertical';
+  /** Node IDs to highlight as the active execution path */
   highlightPath?: string[];
+  /** Called when a node shape is clicked */
   onNodeClick?: (nodeId: string) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -55,19 +62,19 @@ const CIRCLE_R = 22;
 // ---------------------------------------------------------------------------
 
 const STATUS_FILL: Record<ProcessNodeStatus, string> = {
-  idle: '#d1d5db',
-  active: '#3b82f6',
-  completed: '#22c55e',
-  error: '#ef4444',
-  skipped: '#9ca3af',
+  idle: 'var(--text-disabled, #d1d5db)',
+  active: 'var(--action-primary, #3b82f6)',
+  completed: 'var(--state-success-text, #22c55e)',
+  error: 'var(--state-error-text, #ef4444)',
+  skipped: 'var(--border-strong, #9ca3af)',
 };
 
 const STATUS_STROKE: Record<ProcessNodeStatus, string> = {
-  idle: '#9ca3af',
-  active: '#2563eb',
-  completed: '#16a34a',
-  error: '#dc2626',
-  skipped: '#6b7280',
+  idle: 'var(--border-strong, #9ca3af)',
+  active: 'var(--action-primary, #2563eb)',
+  completed: 'var(--state-success-text, #16a34a)',
+  error: 'var(--state-error-text, #dc2626)',
+  skipped: 'var(--text-secondary, #6b7280)',
 };
 
 // ---------------------------------------------------------------------------
@@ -174,21 +181,21 @@ function renderNodeShape(
   y: number,
   highlight: boolean,
 ): React.ReactNode {
-  const fill = STATUS_FILL[status] + '33'; // translucent
-  const stroke = highlight ? '#6366f1' : STATUS_STROKE[status];
+  const fill = STATUS_FILL[status];
+  const stroke = highlight ? 'var(--state-info-text, #6366f1)' : STATUS_STROKE[status];
   const sw = highlight ? 3 : 2;
   const dashArray = status === 'skipped' ? '6 3' : undefined;
 
   switch (type) {
     case 'start':
       return (
-        <circle cx={x} cy={y} r={CIRCLE_R} fill="#22c55e33" stroke="#16a34a" strokeWidth={sw} strokeDasharray={dashArray} />
+        <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-success-text, #22c55e)" fillOpacity={0.2} stroke="var(--state-success-text, #16a34a)" strokeWidth={sw} strokeDasharray={dashArray} />
       );
     case 'end':
       return (
         <g>
-          <circle cx={x} cy={y} r={CIRCLE_R} fill="#ef444433" stroke="#dc2626" strokeWidth={4} strokeDasharray={dashArray} />
-          <circle cx={x} cy={y} r={CIRCLE_R - 6} fill="#ef444466" stroke="none" />
+          <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-error-text, #ef4444)" fillOpacity={0.2} stroke="var(--state-error-text, #dc2626)" strokeWidth={4} strokeDasharray={dashArray} />
+          <circle cx={x} cy={y} r={CIRCLE_R - 6} fill="var(--state-error-text, #ef4444)" fillOpacity={0.4} stroke="none" />
         </g>
       );
     case 'task':
@@ -200,6 +207,7 @@ function renderNodeShape(
           height={NODE_H}
           rx={8}
           fill={fill}
+          fillOpacity={0.2}
           stroke={stroke}
           strokeWidth={sw}
           strokeDasharray={dashArray}
@@ -208,19 +216,19 @@ function renderNodeShape(
     case 'decision': {
       const half = 30;
       const pts = `${x},${y - half} ${x + half},${y} ${x},${y + half} ${x - half},${y}`;
-      return <polygon points={pts} fill="#eab30833" stroke="#ca8a04" strokeWidth={sw} strokeDasharray={dashArray} />;
+      return <polygon points={pts} fill="var(--state-warning-text, #eab308)" fillOpacity={0.2} stroke="var(--state-warning-text, #ca8a04)" strokeWidth={sw} strokeDasharray={dashArray} />;
     }
     case 'subprocess':
       return (
         <g>
-          <rect x={x - NODE_W / 2} y={y - NODE_H / 2} width={NODE_W} height={NODE_H} rx={4} fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray={dashArray} />
+          <rect x={x - NODE_W / 2} y={y - NODE_H / 2} width={NODE_W} height={NODE_H} rx={4} fill={fill} fillOpacity={0.2} stroke={stroke} strokeWidth={sw} strokeDasharray={dashArray} />
           <rect x={x - NODE_W / 2 + 4} y={y - NODE_H / 2 + 4} width={NODE_W - 8} height={NODE_H - 8} rx={2} fill="none" stroke={stroke} strokeWidth={1} />
         </g>
       );
     case 'timer':
       return (
         <g>
-          <circle cx={x} cy={y} r={CIRCLE_R} fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray="4 2" />
+          <circle cx={x} cy={y} r={CIRCLE_R} fill={fill} fillOpacity={0.2} stroke={stroke} strokeWidth={sw} strokeDasharray="4 2" />
           {/* Clock icon */}
           <line x1={x} y1={y - 8} x2={x} y2={y} stroke={stroke} strokeWidth={1.5} />
           <line x1={x} y1={y} x2={x + 6} y2={y + 4} stroke={stroke} strokeWidth={1.5} />
@@ -231,7 +239,7 @@ function renderNodeShape(
       const h = NODE_H * 0.55;
       return (
         <g>
-          <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={2} fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray={dashArray} />
+          <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={2} fill={fill} fillOpacity={0.2} stroke={stroke} strokeWidth={sw} strokeDasharray={dashArray} />
           {/* Envelope flap */}
           <polyline points={`${x - w / 2},${y - h / 2} ${x},${y + 2} ${x + w / 2},${y - h / 2}`} fill="none" stroke={stroke} strokeWidth={1.5} />
         </g>
@@ -242,7 +250,7 @@ function renderNodeShape(
       const pts = `${x},${y - half} ${x + half},${y} ${x},${y + half} ${x - half},${y}`;
       return (
         <g>
-          <polygon points={pts} fill={fill} stroke={stroke} strokeWidth={sw} strokeDasharray={dashArray} />
+          <polygon points={pts} fill={fill} fillOpacity={0.2} stroke={stroke} strokeWidth={sw} strokeDasharray={dashArray} />
           {/* Plus sign */}
           <line x1={x - 10} y1={y} x2={x + 10} y2={y} stroke={stroke} strokeWidth={2} />
           <line x1={x} y1={y - 10} x2={x} y2={y + 10} stroke={stroke} strokeWidth={2} />
@@ -251,7 +259,7 @@ function renderNodeShape(
     }
     default:
       return (
-        <rect x={x - NODE_W / 2} y={y - NODE_H / 2} width={NODE_W} height={NODE_H} rx={4} fill={fill} stroke={stroke} strokeWidth={sw} />
+        <rect x={x - NODE_W / 2} y={y - NODE_H / 2} width={NODE_W} height={NODE_H} rx={4} fill={fill} fillOpacity={0.2} stroke={stroke} strokeWidth={sw} />
       );
   }
 }
@@ -272,8 +280,8 @@ function StatusBadge({ status, x, y }: { status: ProcessNodeStatus; x: number; y
   };
   return (
     <g>
-      <circle cx={x + NODE_W / 2 - 8} cy={y - NODE_H / 2 + 4} r={9} fill={color} stroke="#fff" strokeWidth={1.5} />
-      <text x={x + NODE_W / 2 - 8} y={y - NODE_H / 2 + 8} textAnchor="middle" fontSize={10} fill="#fff" fontWeight="bold">
+      <circle cx={x + NODE_W / 2 - 8} cy={y - NODE_H / 2 + 4} r={9} fill={color} stroke="var(--surface-default, #fff)" strokeWidth={1.5} />
+      <text x={x + NODE_W / 2 - 8} y={y - NODE_H / 2 + 8} textAnchor="middle" fontSize={10} fill="var(--text-inverse, #fff)" fontWeight="bold">
         {labels[status]}
       </text>
     </g>
@@ -286,7 +294,7 @@ function StatusBadge({ status, x, y }: { status: ProcessNodeStatus; x: number; y
 
 function ActivePulse({ x, y }: { x: number; y: number }) {
   return (
-    <circle cx={x} cy={y} r={CIRCLE_R + 6} fill="none" stroke="#3b82f6" strokeWidth={1.5} opacity={0.5}>
+    <circle cx={x} cy={y} r={CIRCLE_R + 6} fill="none" stroke="var(--action-primary, #3b82f6)" strokeWidth={1.5} opacity={0.5}>
       <animate attributeName="r" from={String(CIRCLE_R + 2)} to={String(CIRCLE_R + 16)} dur="1.5s" repeatCount="indefinite" />
       <animate attributeName="opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite" />
     </circle>
@@ -303,7 +311,7 @@ function renderEdge(
   label?: string,
   highlight?: boolean,
 ) {
-  const stroke = highlight ? '#6366f1' : '#94a3b8';
+  const stroke = highlight ? 'var(--state-info-text, #6366f1)' : 'var(--border-strong, #94a3b8)';
   const sw = highlight ? 2.5 : 1.5;
   const mx = (fromNode.x + toNode.x) / 2;
   const my = (fromNode.y + toNode.y) / 2;
@@ -329,7 +337,7 @@ function renderEdge(
         markerEnd={`url(#arrow-${fromNode.id}-${toNode.id})`}
       />
       {label && (
-        <text x={mx} y={my - 6} textAnchor="middle" fontSize={10} fill="#64748b" className="pointer-events-none">
+        <text x={mx} y={my - 6} textAnchor="middle" fontSize={10} fill="var(--text-secondary, #64748b)" className="pointer-events-none">
           {label}
         </text>
       )}
@@ -341,6 +349,7 @@ function renderEdge(
 // ProcessFlow component
 // ---------------------------------------------------------------------------
 
+/** SVG-based process flow diagram with auto-layout, status badges, and path highlighting. */
 export function ProcessFlow({
   nodes,
   edges,
@@ -389,7 +398,7 @@ export function ProcessFlow({
     <div
       ref={containerRef}
       className={cn('relative overflow-auto rounded-lg border border-[var(--border-default)] bg-[var(--surface-primary)]', accessStyles(state), className)}
-      role="img"
+      role="figure"
       aria-label="Process flow diagram"
       title={accessReason}
     >

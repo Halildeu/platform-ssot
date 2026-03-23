@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, afterEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, afterEach } from "vitest";
+import { renderHook } from "@testing-library/react";
 import { useFocusRestore } from "../useFocusRestore";
 
 afterEach(() => {

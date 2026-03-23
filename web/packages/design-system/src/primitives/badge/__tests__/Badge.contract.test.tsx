@@ -62,7 +62,7 @@ describe('Badge contract', () => {
   });
 
   it('renders JSX children (e.g. icon + text)', () => {
-    const { container } = render(
+    render(
       <Badge>
         <svg data-testid="icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" /></svg>
         Status

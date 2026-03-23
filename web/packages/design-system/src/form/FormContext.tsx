@@ -8,22 +8,39 @@ import type { AccessLevel } from '../internal/access-controller';
 import type { SchemaValidator } from './validation/types';
 
 export interface FormContextValue {
+  /** Current field values keyed by field name. */
   values: Record<string, unknown>;
+  /** Validation error messages keyed by field name. */
   errors: Record<string, string>;
+  /** Whether each field has been interacted with. */
   touched: Record<string, boolean>;
+  /** Whether each field has been modified from its initial value. */
   dirtyFields: Record<string, boolean>;
+  /** Global access level applied to all form fields. */
   access: AccessLevel;
+  /** Validation trigger strategy. */
   mode: 'onBlur' | 'onChange' | 'onSubmit';
+  /** Set a single field's value. */
   setFieldValue: (name: string, value: unknown) => void;
+  /** Mark a field as touched or untouched. */
   setFieldTouched: (name: string, isTouched?: boolean) => void;
+  /** Set a validation error for a field. */
   setFieldError: (name: string, error: string) => void;
+  /** Clear the validation error for a field. */
   clearFieldError: (name: string) => void;
+  /** Validate a single field and return its error or null. */
   validateField: (name: string) => string | null;
+  /** Validate all fields and return the errors map. */
   validateForm: () => Record<string, string>;
+  /** Reset the form to initial or provided values. */
   reset: (nextValues?: Record<string, unknown>) => void;
+  /** Whether all fields pass validation. */
   isValid: boolean;
+  /** Whether any field has been modified. */
   isDirty: boolean;
+  /** Whether the form is currently submitting. */
   isSubmitting: boolean;
+  /** Optional schema validator instance. */
   validator: SchemaValidator | null;
 }
 

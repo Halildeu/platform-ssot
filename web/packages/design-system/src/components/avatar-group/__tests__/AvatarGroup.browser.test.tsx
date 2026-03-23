@@ -42,7 +42,7 @@ describe('AvatarGroup (Browser)', () => {
   });
 
   it('renders all items when max exceeds count', async () => {
-    const screen = await render(<AvatarGroup items={items} max={10} />);
+    await render(<AvatarGroup items={items} max={10} />);
     const avatarItems = document.querySelectorAll('[data-testid="avatar-group-item"]');
     expect(avatarItems).toHaveLength(5);
   });

@@ -32,13 +32,13 @@ describe('ApprovalReview (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<ApprovalReview {...baseProps} />);
+    await render(<ApprovalReview {...baseProps} />);
     const el = document.querySelector('[data-component="approval-review"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<ApprovalReview {...baseProps} access="hidden" />);
+    await render(<ApprovalReview {...baseProps} access="hidden" />);
     expect(document.querySelector('[data-component="approval-review"]')).toBeNull();
   });
 

@@ -13,6 +13,7 @@ import {
 
 export type CheckboxSize = "sm" | "md" | "lg";
 
+/** Props for the Checkbox component. */
 export interface CheckboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type">,
     AccessControlledProps {
@@ -55,6 +56,7 @@ const iconSizes: Record<CheckboxSize, string> = {
   lg: "h-3.5 w-3.5",
 };
 
+/** Boolean toggle with label, description, indeterminate state, and card variant. */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {
@@ -213,7 +215,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               </svg>
             ) : isActive ? (
               <svg
-                className={cn("text-white", iconSizes[checkboxSize])}
+                className={cn("text-[var(--text-inverse)]", iconSizes[checkboxSize])}
                 viewBox="0 0 12 12"
                 fill="none"
               >

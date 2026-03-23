@@ -31,7 +31,7 @@ describe('FormDrawer (Browser)', () => {
   });
 
   it('renders dialog with role', async () => {
-    const screen = await render(
+    await render(
       <FormDrawer open onClose={() => {}} title="Dialog">
         <div>Content</div>
       </FormDrawer>,

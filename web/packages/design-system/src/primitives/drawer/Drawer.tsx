@@ -21,6 +21,7 @@ import { cn } from "../../utils/cn";
 export type DrawerPlacement = "left" | "right" | "top" | "bottom";
 export type DrawerSize = "sm" | "md" | "lg" | "full";
 
+/** Props for the Drawer component. */
 export interface DrawerProps {
   /** Controlled open state */
   open: boolean;
@@ -87,7 +88,8 @@ const placementAnimationStyles: Record<DrawerPlacement, string> = {
   bottom: "animate-in slide-in-from-bottom",
 };
 
-export const Drawer: React.FC<DrawerProps> = ({
+/** Slide-in side panel from any edge with overlay backdrop, scroll lock, and focus management. */
+export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
   open,
   onClose,
   placement = "right",
@@ -100,7 +102,7 @@ export const Drawer: React.FC<DrawerProps> = ({
   closeOnEscape = true,
   showOverlay = true,
   className,
-}) => {
+}, forwardedRef) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const layerId = useId();
   const titleId = useId();
@@ -160,7 +162,11 @@ export const Drawer: React.FC<DrawerProps> = ({
 
       {/* Panel */}
       <div
-        ref={panelRef}
+        ref={(node) => {
+          (panelRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          if (typeof forwardedRef === 'function') forwardedRef(node);
+          else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        }}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
@@ -175,43 +181,41 @@ export const Drawer: React.FC<DrawerProps> = ({
         )}
       >
         {/* Header */}
-        {(title || true) && (
-          <div className="flex items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-6 py-4">
-            <div className="min-w-0 flex-1">
-              {title && (
-                <h2
-                  id={titleId}
-                  className="text-lg font-semibold text-[var(--text-primary)] truncate"
-                >
-                  {title}
-                </h2>
-              )}
-              {description && (
-                <p
-                  id={descriptionId}
-                  className="mt-1 text-sm text-[var(--text-secondary)]"
-                >
-                  {description}
-                </p>
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="shrink-0 rounded-lg p-1.5 text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]"
-              aria-label="Close"
-            >
-              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M15 5L5 15M5 5l10 10"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
+        <div className="flex items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-6 py-4">
+          <div className="min-w-0 flex-1">
+            {title && (
+              <h2
+                id={titleId}
+                className="text-lg font-semibold text-[var(--text-primary)] truncate"
+              >
+                {title}
+              </h2>
+            )}
+            {description && (
+              <p
+                id={descriptionId}
+                className="mt-1 text-sm text-[var(--text-secondary)]"
+              >
+                {description}
+              </p>
+            )}
           </div>
-        )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="shrink-0 rounded-lg p-1.5 text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]"
+            aria-label="Close"
+          >
+            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M15 5L5 15M5 5l10 10"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        </div>
 
         {/* Body */}
         <div className="flex-1 overflow-auto px-6 py-4">{children}</div>
@@ -229,6 +233,6 @@ export const Drawer: React.FC<DrawerProps> = ({
   const target = typeof document !== "undefined" ? document.body : null;
   if (!target) return content;
   return ReactDOM.createPortal(content, target);
-};
+});
 
 Drawer.displayName = "Drawer";

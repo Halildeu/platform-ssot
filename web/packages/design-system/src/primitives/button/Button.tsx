@@ -70,7 +70,7 @@ const densityStyles: Record<ButtonDensity, string> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: [
-    "bg-[var(--action-primary)] text-white",
+    "bg-[var(--action-primary)] text-[var(--text-inverse)]",
     "hover:bg-[var(--action-primary-hover)]",
     "active:bg-[var(--action-primary-active)]",
     "shadow-sm",
@@ -95,7 +95,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   ].join(" "),
 
   danger: [
-    "bg-[var(--state-error-text)] text-white",
+    "bg-[var(--state-error-text)] text-[var(--text-inverse)]",
     "hover:brightness-110",
     "active:brightness-90",
     "shadow-sm",
@@ -125,6 +125,7 @@ const iconOnlySizes: Record<ButtonSize, string> = {
   xl: "h-12 w-12 rounded-xl",
 };
 
+/** Primary action trigger with solid, outline, ghost, and link variants in multiple sizes. */
 export const Button = forwardRef<HTMLElement, ButtonProps>(
   (
     {

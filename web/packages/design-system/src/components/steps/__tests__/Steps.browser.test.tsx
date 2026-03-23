@@ -36,7 +36,7 @@ describe('Steps (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Steps items={stepItems} current={0} />);
+    await render(<Steps items={stepItems} current={0} />);
     const el = document.querySelector('[data-component="steps"]');
     expect(el).not.toBeNull();
   });

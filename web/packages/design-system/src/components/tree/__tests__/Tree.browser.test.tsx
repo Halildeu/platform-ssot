@@ -53,7 +53,7 @@ describe('Tree (Browser)', () => {
   });
 
   it('shows loading skeleton when loading', async () => {
-    const screen = await render(<Tree nodes={[]} loading />);
+    await render(<Tree nodes={[]} loading />);
     const skeletons = document.querySelectorAll('[data-component="skeleton"]');
     expect(skeletons.length).toBeGreaterThan(0);
   });

@@ -34,7 +34,7 @@ describe('Badge (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Badge>Test</Badge>);
+    await render(<Badge>Test</Badge>);
     const el = document.querySelector('[data-component="badge"]');
     expect(el).not.toBeNull();
   });

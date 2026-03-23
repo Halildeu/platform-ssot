@@ -26,26 +26,39 @@ import {
 
 export type TextAreaResize = "vertical" | "none" | "auto";
 
+/** Props for the Textarea component. */
 export interface TextareaProps
   extends Omit<
       React.TextareaHTMLAttributes<HTMLTextAreaElement>,
       "onChange" | "children"
     >,
     AccessControlledProps {
+  /** Field label displayed above the textarea. */
   label?: React.ReactNode;
+  /** Descriptive text below the label. */
   description?: React.ReactNode;
+  /** Help text displayed below the textarea. */
   hint?: React.ReactNode;
+  /** Error message that activates the invalid state. */
   error?: React.ReactNode;
+  /** Size variant of the field control. */
   size?: FieldSize;
+  /** Visual element rendered before the text area. */
   leadingVisual?: React.ReactNode;
+  /** Visual element rendered after the text area. */
   trailingVisual?: React.ReactNode;
+  /** Native change event handler. */
   onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
+  /** Callback fired with the new string value on change. */
   onValueChange?: (
     value: string,
     event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => void;
+  /** Whether to display a character count indicator. */
   showCount?: boolean;
+  /** Whether the textarea spans the full container width. */
   fullWidth?: boolean;
+  /** Resize behavior of the textarea. */
   resize?: TextAreaResize;
   /** Show a loading indicator and disable editing */
   loading?: boolean;
@@ -61,6 +74,7 @@ const getInitialValue = (
   return "";
 };
 
+/** Multi-line text input with field shell, auto-resize, character count, and access control. */
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   function Textarea(
     {

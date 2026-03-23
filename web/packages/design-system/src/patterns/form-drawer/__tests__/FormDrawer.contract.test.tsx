@@ -111,7 +111,7 @@ describe('FormDrawer contract — slot rendering', () => {
   });
 
   it('does not render footer when omitted', () => {
-    const { container } = render(<FormDrawer {...defaultProps} />);
+    render(<FormDrawer {...defaultProps} />);
     const dialog = screen.getByRole('dialog');
     const footerBorder = dialog.querySelector('.border-t');
     expect(footerBorder).toBeNull();

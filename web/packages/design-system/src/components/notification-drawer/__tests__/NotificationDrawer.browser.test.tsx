@@ -31,7 +31,7 @@ describe('NotificationDrawer (Browser)', () => {
   });
 
   it('renders close button when open', async () => {
-    const screen = await render(
+    await render(
       <NotificationDrawer open items={[]} disablePortal />,
     );
     const closeBtn = document.querySelector('[aria-label]');
@@ -49,7 +49,7 @@ describe('NotificationDrawer (Browser)', () => {
   });
 
   it('renders with custom dialog label', async () => {
-    const screen = await render(
+    await render(
       <NotificationDrawer open items={[]} disablePortal dialogLabel="Notifications Panel" />,
     );
     const dialog = document.querySelector('[aria-label="Notifications Panel"]');

@@ -78,7 +78,10 @@ describe('Spinner — label prop', () => {
 describe('Spinner — mode prop', () => {
   it('mode="inline" (varsayilan) durumunda sadece svg render eder', () => {
     const { container } = render(<Spinner mode="inline" />);
-    expect(container.firstElementChild?.tagName).toBe('svg');
+    // forwardRef wrapper uses a <span>; the svg lives inside it
+    const root = container.firstElementChild;
+    expect(root?.tagName).toBe('SPAN');
+    expect(root?.querySelector('svg')).toBeTruthy();
   });
 
   it('mode="block" durumunda wrapper div render eder', () => {

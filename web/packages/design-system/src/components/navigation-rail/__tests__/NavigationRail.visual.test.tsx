@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -11,7 +12,7 @@ const items = [
 
 describe('NavigationRail Visual Regression', () => {
   it('default navigation rail matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <NavigationRail items={items} defaultValue="dashboard" />
       </div>,
@@ -20,7 +21,7 @@ describe('NavigationRail Visual Regression', () => {
   });
 
   it('compact navigation rail matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <NavigationRail items={items} defaultValue="orders" compact />
       </div>,

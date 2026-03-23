@@ -8,6 +8,7 @@ import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 
 export type MasterDetailRatio = "1:2" | "1:3" | "2:3" | "1:1";
 
+/** Props for the MasterDetail component. */
 export interface MasterDetailProps {
   /** Master (list) panel content */
   master: React.ReactNode;
@@ -39,6 +40,7 @@ const ratioMap: Record<MasterDetailRatio, { master: string; detail: string }> = 
   "1:1": { master: "w-1/2", detail: "w-1/2" },
 };
 
+/** Split-pane layout with a list panel on the left and a detail panel on the right. */
 export const MasterDetail: React.FC<MasterDetailProps> = ({
   master,
   detail,

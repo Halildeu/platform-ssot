@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -12,7 +13,7 @@ const items = [
 describe('Dropdown Visual Regression', () => {
   /* ---- 1. Closed state ---- */
   it('closed state matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Dropdown items={items}>
           <button>Actions</button>
@@ -76,7 +77,7 @@ describe('Dropdown Visual Regression', () => {
 
   /* ---- 5. Disabled dropdown ---- */
   it('disabled dropdown matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Dropdown items={items} disabled>
           <button>Disabled</button>

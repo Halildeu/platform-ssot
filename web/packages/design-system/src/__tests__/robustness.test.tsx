@@ -30,7 +30,7 @@ const CAROUSEL_ITEMS = [
   { key: "s3", content: <div>Slide 3</div> },
 ];
 
-const DASHBOARD_WIDGETS = [
+const _DASHBOARD_WIDGETS = [
   {
     key: "w1",
     title: "Revenue",

@@ -5,12 +5,12 @@ import { SearchInput } from '../SearchInput';
 
 describe('SearchInput (Browser)', () => {
   it('renders with placeholder', async () => {
-    const screen = await render(<SearchInput placeholder="Search..." />);
+    await render(<SearchInput placeholder="Search..." />);
     await expect.element(page.getByPlaceholder('Search...')).toBeVisible();
   });
 
   it('renders search input type', async () => {
-    const screen = await render(<SearchInput placeholder="Search..." />);
+    await render(<SearchInput placeholder="Search..." />);
     const input = document.querySelector('input[type="search"]');
     expect(input).not.toBeNull();
   });
@@ -27,18 +27,18 @@ describe('SearchInput (Browser)', () => {
   });
 
   it('hides clear button when value is empty', async () => {
-    const screen = await render(<SearchInput value="" onChange={() => {}} />);
+    await render(<SearchInput value="" onChange={() => {}} />);
     expect(document.querySelector('[aria-label="Clear search"]')).toBeNull();
   });
 
   it('is disabled when disabled prop is set', async () => {
-    const screen = await render(<SearchInput placeholder="Disabled" disabled />);
+    await render(<SearchInput placeholder="Disabled" disabled />);
     await expect.element(page.getByPlaceholder('Disabled')).toBeDisabled();
   });
 
   it('fires onChange on typing', async () => {
     const onChange = vi.fn();
-    const screen = await render(<SearchInput placeholder="Type here" onChange={onChange} />);
+    await render(<SearchInput placeholder="Type here" onChange={onChange} />);
     const input = page.getByPlaceholder('Type here');
     await userEvent.type(input.element(), 'hello');
     expect(onChange).toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe('SearchInput (Browser)', () => {
   });
 
   it('shows loading spinner instead of clear button', async () => {
-    const screen = await render(
+    await render(
       <SearchInput value="loading" onChange={() => {}} loading />,
     );
     // Loading state should show spinner, not clear button

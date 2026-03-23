@@ -14,11 +14,13 @@ export interface BreadcrumbItem {
 }
 
 export interface BreadcrumbProps {
+  /** Ordered list of breadcrumb navigation items. */
   items: BreadcrumbItem[];
   /** Separator character */
   separator?: React.ReactNode;
   /** Max items before collapsing */
   maxItems?: number;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -28,12 +30,12 @@ const DefaultSeparator = () => (
   </svg>
 );
 
-export const Breadcrumb: React.FC<BreadcrumbProps> = ({
+export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(({
   items,
   separator,
   maxItems,
   className,
-}) => {
+}, ref) => {
   let visibleItems = items;
   let collapsed = false;
 
@@ -45,7 +47,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
   }
 
   return (
-    <nav aria-label="Breadcrumb" className={className} {...stateAttrs({ component: "breadcrumb" })}>
+    <nav ref={ref as React.Ref<HTMLElement>} aria-label="Breadcrumb" className={className} {...stateAttrs({ component: "breadcrumb" })}>
       <ol className="flex items-center gap-1.5">
         {visibleItems.map((item, i) => {
           const isLast = i === visibleItems.length - 1;
@@ -89,6 +91,6 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({
       </ol>
     </nav>
   );
-};
+});
 
 Breadcrumb.displayName = "Breadcrumb";

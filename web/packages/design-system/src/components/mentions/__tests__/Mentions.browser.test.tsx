@@ -11,7 +11,7 @@ const options = [
 
 describe('Mentions (Browser)', () => {
   it('renders textarea with placeholder', async () => {
-    const screen = await render(<Mentions options={options} placeholder="Type something..." />);
+    await render(<Mentions options={options} placeholder="Type something..." />);
     await expect.element(page.getByPlaceholder('Type something...')).toBeVisible();
   });
 
@@ -53,14 +53,14 @@ describe('Mentions (Browser)', () => {
   });
 
   it('renders default placeholder', async () => {
-    const screen = await render(<Mentions options={options} />);
+    await render(<Mentions options={options} />);
     const textarea = document.querySelector('textarea');
     expect(textarea?.getAttribute('placeholder')).toBe('Bir sey yazin...');
   });
 
   it('fires onValueChange when typing', async () => {
     const onValueChange = vi.fn();
-    const screen = await render(<Mentions options={options} onValueChange={onValueChange} />);
+    await render(<Mentions options={options} onValueChange={onValueChange} />);
     const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
     await textarea.focus();
     await userEvent.type(textarea, 'Hello');

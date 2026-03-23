@@ -42,13 +42,13 @@ describe('EntitySummaryBlock (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<EntitySummaryBlock title="Test" items={items} />);
+    await render(<EntitySummaryBlock title="Test" items={items} />);
     const el = document.querySelector('[data-component="entity-summary-block"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<EntitySummaryBlock title="Hidden" items={items} access="hidden" />);
+    await render(<EntitySummaryBlock title="Hidden" items={items} access="hidden" />);
     expect(document.querySelector('[data-component="entity-summary-block"]')).toBeNull();
   });
 });

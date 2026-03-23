@@ -13,11 +13,17 @@ export type StackAlign = "start" | "center" | "end" | "stretch" | "baseline";
 export type StackJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
 export type StackGap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12;
 
+/** Props for the Stack component. */
 export interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Flex direction of the stack. */
   direction?: StackDirection;
+  /** Cross-axis alignment of items. */
   align?: StackAlign;
+  /** Main-axis justification of items. */
   justify?: StackJustify;
+  /** Spacing gap between items. */
   gap?: StackGap;
+  /** Whether items wrap to multiple lines. */
   wrap?: boolean;
   /** Render as another element */
   as?: "div" | "section" | "article" | "nav" | "main" | "aside" | "ul" | "ol";
@@ -60,6 +66,7 @@ const gapMap: Record<StackGap, string> = {
   12: "gap-12",
 };
 
+/** Flexbox layout primitive with configurable direction, alignment, gap, and polymorphic element. */
 export const Stack = forwardRef<HTMLDivElement, StackProps>(
   (
     {
@@ -68,7 +75,7 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
       justify,
       gap = 3,
       wrap = false,
-      as: Tag = "div",
+      as: _Tag = "div",
       className,
       children,
       ...rest

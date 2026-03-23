@@ -386,7 +386,9 @@
         "lifecycle": "stable",
         "kind": "component",
         "importStatement": "import { Dialog } from '@mfe/design-system';",
-        "whereUsed": []
+        "whereUsed": [
+          "web/apps/demos/crud/main.tsx"
+        ]
       },
       "apiItem": {
         "name": "Dialog",

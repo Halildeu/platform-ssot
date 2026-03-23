@@ -1,4 +1,8 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import {
+  resolveAccessState,
+  type AccessControlledProps,
+} from '../../internal/access-controller';
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -8,7 +12,7 @@ export type ErrorBoundaryFallback =
   | ReactNode
   | ((error: Error, reset: () => void) => ReactNode);
 
-export interface ErrorBoundaryProps {
+export interface ErrorBoundaryProps extends AccessControlledProps {
   /** Child components to wrap */
   children: ReactNode;
   /** Static fallback element, or render function receiving (error, reset) */
@@ -95,8 +99,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       fallback,
       className,
       'data-component': dataComponent = 'error-boundary',
+      access = 'full',
+      accessReason,
     } = this.props;
     const { error } = this.state;
+    const accessState = resolveAccessState(access);
+    if (accessState.isHidden) return null;
 
     if (error) {
       const fallbackContent =
@@ -105,14 +113,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           : fallback ?? <DefaultFallback error={error} onReset={this.reset} />;
 
       return (
-        <div className={className} data-component={dataComponent}>
+        <div className={className} data-component={dataComponent} data-access-state={accessState.state} title={accessReason}>
           {fallbackContent}
         </div>
       );
     }
 
     return (
-      <div className={className} data-component={dataComponent}>
+      <div className={className} data-component={dataComponent} data-access-state={accessState.state} title={accessReason}>
         {children}
       </div>
     );

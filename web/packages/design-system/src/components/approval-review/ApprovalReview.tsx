@@ -17,26 +17,42 @@ import {
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
+/**
+ * ApprovalReview combines a human checkpoint, citation evidence, and audit trail
+ * into a single review surface for AI-generated actions.
+ */
 export interface ApprovalReviewProps extends AccessControlledProps {
+  /** Section heading. @default "Approval review" */
   title?: React.ReactNode;
+  /** Explanatory text below the title. */
   description?: React.ReactNode;
+  /** Props forwarded to the ApprovalCheckpoint sub-component. */
   checkpoint: ApprovalCheckpointProps;
+  /** Citation items displayed in the evidence panel. */
   citations: CitationPanelItem[];
+  /** Audit trail entries for the AI action timeline. */
   auditItems: AIActionAuditTimelineItem[];
+  /** Controlled active citation ID. */
   selectedCitationId?: string | null;
+  /** Initial citation ID for uncontrolled mode. */
   defaultSelectedCitationId?: string | null;
+  /** Callback when a citation is selected. */
   onCitationSelect?: (citationId: string, item: CitationPanelItem) => void;
+  /** Controlled active audit item ID. */
   selectedAuditId?: string | null;
+  /** Initial audit item ID for uncontrolled mode. */
   defaultSelectedAuditId?: string | null;
+  /** Callback when an audit item is selected. */
   onAuditSelect?: (
     auditId: string,
     item: AIActionAuditTimelineItem,
   ) => void;
+  /** Additional CSS class name. */
   className?: string;
 }
 
 const approvalReviewSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card,rgba(255,255,255,0.98))] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
 
 export const ApprovalReview: React.FC<ApprovalReviewProps> = ({
   title = "Approval review",

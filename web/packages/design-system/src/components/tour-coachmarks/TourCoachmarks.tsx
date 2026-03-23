@@ -17,19 +17,33 @@ export type TourCoachmarkStep = {
   tone?: "info" | "success" | "warning";
 };
 
+/** Props for the TourCoachmarks component. */
 export interface TourCoachmarksProps extends AccessControlledProps {
+  /** Ordered list of tour steps. */
   steps: TourCoachmarkStep[];
+  /** Heading text for the tour overlay. */
   title?: React.ReactNode;
+  /** Controlled open state of the tour. */
   open?: boolean;
+  /** Initial open state for uncontrolled mode. */
   defaultOpen?: boolean;
+  /** Controlled current step index. */
   currentStep?: number;
+  /** Initial step index for uncontrolled mode. */
   defaultStep?: number;
+  /** Callback fired when the active step changes. */
   onStepChange?: (index: number) => void;
+  /** Callback fired when the tour is dismissed. */
   onClose?: () => void;
+  /** Callback fired when the final step is completed. */
   onFinish?: () => void;
+  /** Whether the user can skip the tour. */
   allowSkip?: boolean;
+  /** Whether to show the step progress indicator. */
   showProgress?: boolean;
+  /** Interaction mode: guided allows navigation, readonly disables it. */
   mode?: "guided" | "readonly";
+  /** Locale-specific label overrides. */
   localeText?: {
     title?: React.ReactNode;
     skipLabel?: React.ReactNode;
@@ -48,6 +62,7 @@ const clampIndex = (value: number, max: number) => {
   return Math.min(Math.max(value, 0), max);
 };
 
+/** Step-by-step guided tour overlay for onboarding walkthroughs with progress and skip support. */
 export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
   steps,
   title,

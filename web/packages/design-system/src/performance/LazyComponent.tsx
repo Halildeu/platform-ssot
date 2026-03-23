@@ -44,7 +44,6 @@ class LazyErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
-    // eslint-disable-next-line no-console
     console.error('[LazyComponent] Failed to load:', error, info);
   }
 

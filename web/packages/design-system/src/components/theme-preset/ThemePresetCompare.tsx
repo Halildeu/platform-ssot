@@ -6,11 +6,17 @@ import { type ThemePresetGalleryItem } from "./ThemePresetGallery";
 import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 export interface ThemePresetCompareProps extends AccessControlledProps {
+  /** Left-side preset to compare. */
   leftPreset?: ThemePresetGalleryItem | null;
+  /** Right-side preset to compare. */
   rightPreset?: ThemePresetGalleryItem | null;
+  /** Heading displayed above the comparison. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** Theme axes to include in the comparison matrix. */
   axes?: string[];
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -32,6 +38,10 @@ const normalizeAxisValue = (preset: ThemePresetGalleryItem, axis: string) => {
   }
 };
 
+/**
+ * Side-by-side comparison view for two theme presets, displaying a matrix
+ * of appearance, density, contrast and intent axes with preview cards.
+ */
 export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
   leftPreset,
   rightPreset,

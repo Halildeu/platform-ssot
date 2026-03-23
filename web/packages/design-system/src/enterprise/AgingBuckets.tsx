@@ -17,12 +17,19 @@ export interface AgingBucket {
   tone?: EnterpriseTone;
 }
 
+/** Displays aging analysis with bucket cards, optional stacked bar, and totals. */
 export interface AgingBucketsProps extends AccessControlledProps {
+  /** Aging bucket data items to display */
   buckets: AgingBucket[];
+  /** Layout direction of the bucket cards */
   orientation?: 'horizontal' | 'vertical';
+  /** Show a stacked percentage bar above the bucket cards */
   showStackedBar?: boolean;
+  /** Number formatting options (currency, decimal places, etc.) */
   formatOptions?: FormatOptions;
+  /** Called when a bucket card or bar segment is clicked */
   onBucketClick?: (bucket: AgingBucket) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -39,6 +46,7 @@ function defaultTone(index: number, total: number): EnterpriseTone {
 
 // ── Component ──
 
+/** Displays aging analysis with bucket cards, optional stacked bar, and totals. */
 export const AgingBuckets: React.FC<AgingBucketsProps> = ({
   buckets,
   orientation = 'horizontal',
@@ -97,7 +105,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
                 title={`${bucket.label}: ${pct}%`}
               >
                 {pct > 8 && (
-                  <span className="flex h-full items-center justify-center text-[10px] font-bold text-white">
+                  <span className="flex h-full items-center justify-center text-[10px] font-bold text-[var(--text-inverse)]">
                     {pct}%
                   </span>
                 )}

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { act, cleanup, render, screen, within, waitFor } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { SearchFilterListing, type ActiveFilter } from '../components/search-filter-listing/SearchFilterListing';
@@ -13,9 +13,6 @@ import { Tabs, type TabItem } from '../components/tabs/Tabs';
 import { Accordion, type AccordionItem } from '../components/accordion/Accordion';
 import { Drawer } from '../primitives/drawer/Drawer';
 import { ToastProvider, useToast } from '../components/toast/Toast';
-import { Input } from '../primitives/input/Input';
-import { Select } from '../primitives/select/Select';
-import { Checkbox } from '../primitives/checkbox/Checkbox';
 import { Button } from '../primitives/button/Button';
 
 /* ------------------------------------------------------------------ */

@@ -5,7 +5,6 @@
 /*  MCP protokolune uygun sunucu sinifi.                              */
 /* ------------------------------------------------------------------ */
 
-import { designLabComponentDocEntries } from '../catalog/component-docs';
 import type {
   MCPComponentInfo,
   MCPToolDefinition,

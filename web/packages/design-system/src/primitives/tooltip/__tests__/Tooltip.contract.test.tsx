@@ -103,7 +103,7 @@ describe('Tooltip contract', () => {
 
   /* ---- Renders nothing extra when no content ---- */
   it('renders only children when content is undefined', () => {
-    const { container } = render(
+    render(
       <Tooltip>
         <button>Plain</button>
       </Tooltip>,

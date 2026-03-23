@@ -20,7 +20,7 @@ describe('ThemePreviewCard (Browser)', () => {
   });
 
   it('renders unselected state without checkmark', async () => {
-    const screen = await render(<ThemePreviewCard selected={false} />);
+    await render(<ThemePreviewCard selected={false} />);
     expect(document.querySelector('.sr-only')).toBeNull();
   });
 
@@ -40,7 +40,7 @@ describe('ThemePreviewCard (Browser)', () => {
   });
 
   it('applies custom className', async () => {
-    const screen = await render(<ThemePreviewCard className="my-preview" />);
+    await render(<ThemePreviewCard className="my-preview" />);
     const el = document.querySelector('.my-preview');
     expect(el).not.toBeNull();
   });

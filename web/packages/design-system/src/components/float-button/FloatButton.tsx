@@ -135,7 +135,7 @@ const Badge: React.FC<{ badge?: number | boolean; size: FloatButtonSize }> = ({
     <span
       className={cn(
         "absolute -top-1 -right-1 flex items-center justify-center rounded-full",
-        "bg-[var(--float-button-badge)] text-white font-medium leading-none",
+        "bg-[var(--float-button-badge)] text-[var(--text-inverse)] font-medium leading-none",
         size === "sm" ? "min-w-[16px] h-4 px-1 text-[10px]" : "min-w-[18px] h-[18px] px-1 text-[11px]",
       )}
       data-testid="float-button-badge-count"
@@ -154,6 +154,7 @@ export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
     {
       icon,
       label,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       tooltip,
       shape = "circle",
       size = "md",

@@ -15,7 +15,7 @@ import { render, cleanup } from "@testing-library/react";
 /*  Mocks — AG Grid cannot render in jsdom                             */
 /* ------------------------------------------------------------------ */
 vi.mock("ag-grid-react", () => ({
-  AgGridReact: (props: Record<string, unknown>) => (
+  AgGridReact: (_props: Record<string, unknown>) => (
     <div data-testid="ag-grid-mock">AG Grid Mock</div>
   ),
 }));

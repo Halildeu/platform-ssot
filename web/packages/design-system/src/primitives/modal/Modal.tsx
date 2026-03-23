@@ -27,6 +27,7 @@ export interface ModalClasses {
 
 export type ModalSlot = "root" | "overlay" | "content" | "header" | "body" | "footer";
 
+/** Props for the Modal component. */
 export interface ModalProps {
   open: boolean;
   children: React.ReactNode;
@@ -70,7 +71,8 @@ const surfaceHeaderStyles: Record<
     "bg-[var(--surface-muted)] border-[var(--border-subtle)]",
 };
 
-export const Modal: React.FC<ModalProps> = ({
+/** Rich modal overlay with surface variants, portal support, scroll lock, and focus management. */
+export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
   open,
   children,
   title,
@@ -90,7 +92,7 @@ export const Modal: React.FC<ModalProps> = ({
   disablePortal = false,
   classes,
   slotProps,
-}) => {
+}, forwardedRef) => {
   const surface = variant ?? surfaceProp ?? "base";
 
   if (process.env.NODE_ENV !== "production" && surfaceProp !== undefined) {
@@ -167,7 +169,11 @@ export const Modal: React.FC<ModalProps> = ({
 
   const dialog = (
     <dialog
-      ref={dialogRef}
+      ref={(node) => {
+        (dialogRef as React.MutableRefObject<HTMLDialogElement | null>).current = node;
+        if (typeof forwardedRef === 'function') forwardedRef(node);
+        else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDialogElement | null>).current = node;
+      }}
       onCancel={handleCancel}
       onClick={handleBackdropClick}
       style={maxWidthStyle}
@@ -271,6 +277,6 @@ export const Modal: React.FC<ModalProps> = ({
   const target = portalTarget ?? (typeof document !== "undefined" ? document.body : null);
   if (!target) return dialog;
   return ReactDOM.createPortal(dialog, target);
-};
+});
 
 Modal.displayName = "Modal";

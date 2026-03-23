@@ -5,7 +5,6 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TablePagination } from '../TablePagination';
-import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
 afterEach(() => {
   cleanup();

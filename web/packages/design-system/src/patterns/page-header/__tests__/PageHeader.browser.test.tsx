@@ -22,7 +22,7 @@ describe('PageHeader (Browser)', () => {
   });
 
   it('renders header element', async () => {
-    const screen = await render(<PageHeader title="Test" />);
+    await render(<PageHeader title="Test" />);
     const header = document.querySelector('header');
     expect(header).not.toBeNull();
   });

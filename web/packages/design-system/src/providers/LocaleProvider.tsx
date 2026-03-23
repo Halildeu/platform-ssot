@@ -20,14 +20,19 @@ export function useLocale(): LocaleContextValue {
   return useContext(LocaleContext);
 }
 
+/** Props for the LocaleProvider component. */
 export interface LocaleProviderProps {
+  /** BCP 47 locale tag (e.g. "en", "tr", "ar"). */
   locale?: string;
+  /** Explicit text direction override; auto-detected from locale when omitted. */
   direction?: Direction;
+  /** Content to render within the locale context. */
   children: React.ReactNode;
 }
 
 const RTL_LOCALES = new Set(["ar", "he", "fa", "ur"]);
 
+/** Provides locale and text-direction context to the component subtree, auto-detecting RTL for Arabic, Hebrew, Farsi, and Urdu locales. */
 export function LocaleProvider({
   locale = "en",
   direction,

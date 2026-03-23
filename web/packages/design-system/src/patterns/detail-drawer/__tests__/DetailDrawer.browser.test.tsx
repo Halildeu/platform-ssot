@@ -14,7 +14,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('does not render dialog when closed', async () => {
-    const screen = await render(
+    await render(
       <DetailDrawer open={false} onClose={() => {}} title="Hidden">
         <p>Hidden content</p>
       </DetailDrawer>,
@@ -76,7 +76,7 @@ describe('DetailDrawer (Browser)', () => {
   });
 
   it('renders dialog with role attribute', async () => {
-    const screen = await render(
+    await render(
       <DetailDrawer open onClose={() => {}} title="Dialog">
         <p>Content</p>
       </DetailDrawer>,

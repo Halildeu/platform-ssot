@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, test, expect, afterEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { usePortal } from "../usePortal";
 
 describe("usePortal", () => {

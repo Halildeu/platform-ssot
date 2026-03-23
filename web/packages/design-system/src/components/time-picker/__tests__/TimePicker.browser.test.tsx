@@ -4,7 +4,7 @@ import { TimePicker } from '../TimePicker';
 
 describe('TimePicker (Browser)', () => {
   it('renders time input', async () => {
-    const screen = await render(<TimePicker />);
+    await render(<TimePicker />);
     const input = document.querySelector('input[type="time"]');
     expect(input).not.toBeNull();
   });
@@ -26,7 +26,7 @@ describe('TimePicker (Browser)', () => {
 
   it('fires onValueChange when time changes', async () => {
     const onValueChange = vi.fn();
-    const screen = await render(<TimePicker onValueChange={onValueChange} />);
+    await render(<TimePicker onValueChange={onValueChange} />);
     const input = document.querySelector('input[type="time"]') as HTMLInputElement;
     const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
     nativeSetter?.call(input, '10:30');
@@ -35,7 +35,7 @@ describe('TimePicker (Browser)', () => {
   });
 
   it('is disabled when disabled prop is set', async () => {
-    const screen = await render(<TimePicker label="Time" disabled />);
+    await render(<TimePicker label="Time" disabled />);
     const input = document.querySelector('input[type="time"]') as HTMLInputElement;
     expect(input.disabled).toBe(true);
   });
@@ -46,7 +46,7 @@ describe('TimePicker (Browser)', () => {
   });
 
   it('renders as readonly when access is readonly', async () => {
-    const screen = await render(<TimePicker access="readonly" />);
+    await render(<TimePicker access="readonly" />);
     const input = document.querySelector('input[type="time"]') as HTMLInputElement;
     expect(input.getAttribute('aria-readonly')).toBe('true');
   });

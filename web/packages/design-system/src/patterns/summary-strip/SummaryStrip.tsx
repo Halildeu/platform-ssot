@@ -1,5 +1,9 @@
 import React from "react";
 import { cn } from "../../utils/cn";
+import {
+  resolveAccessState,
+  type AccessControlledProps,
+} from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  SummaryStrip — Horizontal KPI / metric strip                      */
@@ -15,11 +19,17 @@ export interface SummaryStripItem {
   tone?: "default" | "info" | "success" | "warning";
 }
 
-export interface SummaryStripProps {
+/** Props for the SummaryStrip component. */
+export interface SummaryStripProps extends AccessControlledProps {
+  /** KPI / metric items to display in the strip. */
   items: SummaryStripItem[];
+  /** Heading text above the strip. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** Number of grid columns for the metric cards. */
   columns?: 2 | 3 | 4;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -29,14 +39,24 @@ const TONE_BORDER: Record<string, string> = {
   warning: "border-s-[var(--state-warning-border)]",
 };
 
+/**
+ * Horizontal KPI / metric strip that displays key summary values in a
+ * responsive grid with optional icons, trend indicators and tone accents.
+ */
 export const SummaryStrip: React.FC<SummaryStripProps> = ({
   items,
   title,
   description,
   columns = 4,
   className,
-}) => (
-  <div className={cn("w-full", className)}>
+  access = "full",
+  accessReason,
+}) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
+
+  return (
+  <div className={cn("w-full", className)} data-access-state={accessState.state} title={accessReason}>
     {(title || description) && (
       <div className="mb-4">
         {title && (
@@ -104,6 +124,7 @@ export const SummaryStrip: React.FC<SummaryStripProps> = ({
       })}
     </div>
   </div>
-);
+  );
+};
 
 SummaryStrip.displayName = "SummaryStrip";

@@ -18,14 +18,14 @@ describe('Rating (Browser)', () => {
   });
 
   it('renders custom max stars', async () => {
-    const screen = await render(<Rating max={10} />);
+    await render(<Rating max={10} />);
     const stars = document.querySelectorAll('[role="radio"]');
     expect(stars).toHaveLength(10);
   });
 
   it('fires onValueChange when clicking a star', async () => {
     const onValueChange = vi.fn();
-    const screen = await render(<Rating onValueChange={onValueChange} />);
+    await render(<Rating onValueChange={onValueChange} />);
     const stars = document.querySelectorAll('[role="radio"]');
     (stars[2] as HTMLElement).click();
     expect(onValueChange).toHaveBeenCalledWith(3);
@@ -33,7 +33,7 @@ describe('Rating (Browser)', () => {
 
   it('clears value when clicking same star (allowClear)', async () => {
     const onValueChange = vi.fn();
-    const screen = await render(<Rating defaultValue={3} onValueChange={onValueChange} />);
+    await render(<Rating defaultValue={3} onValueChange={onValueChange} />);
     const stars = document.querySelectorAll('[role="radio"]');
     (stars[2] as HTMLElement).click();
     expect(onValueChange).toHaveBeenCalledWith(0);

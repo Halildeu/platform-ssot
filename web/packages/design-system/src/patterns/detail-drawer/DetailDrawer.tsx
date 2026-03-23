@@ -14,6 +14,7 @@ export interface DetailDrawerSection {
   content: React.ReactNode;
 }
 
+/** Props for the DetailDrawer component. */
 export interface DetailDrawerProps {
   /** Controlled open state */
   open: boolean;
@@ -47,6 +48,7 @@ const sizeMap: Record<DetailDrawerSize, string> = {
   full: "max-w-full",
 };
 
+/** Read-only slide-in detail panel with section layout, header actions, and tags. */
 export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   open,
   onClose,

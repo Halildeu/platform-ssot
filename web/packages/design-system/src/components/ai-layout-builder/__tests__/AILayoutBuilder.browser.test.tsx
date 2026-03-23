@@ -33,7 +33,7 @@ describe('AILayoutBuilder (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<AILayoutBuilder blocks={sampleBlocks} />);
+    await render(<AILayoutBuilder blocks={sampleBlocks} />);
     const el = document.querySelector('[data-component="ai-layout-builder"]');
     expect(el).not.toBeNull();
   });
@@ -44,7 +44,7 @@ describe('AILayoutBuilder (Browser)', () => {
   });
 
   it('renders disabled state', async () => {
-    const screen = await render(<AILayoutBuilder blocks={sampleBlocks} access="disabled" />);
+    await render(<AILayoutBuilder blocks={sampleBlocks} access="disabled" />);
     const el = document.querySelector('[data-access-state="disabled"]');
     expect(el).not.toBeNull();
   });

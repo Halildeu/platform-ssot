@@ -1,0 +1,57 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { ThemePresetCompare } from './ThemePresetCompare';
+import type { ThemePresetGalleryItem } from './ThemePresetGallery';
+
+const leftPreset: ThemePresetGalleryItem = {
+  presetId: 'corporate-light',
+  label: 'Corporate Light',
+  appearance: 'flat',
+  density: 'comfortable',
+  intent: 'neutral',
+  isHighContrast: false,
+  themeMode: 'light',
+};
+
+const rightPreset: ThemePresetGalleryItem = {
+  presetId: 'executive-dark',
+  label: 'Executive Dark',
+  appearance: 'elevated',
+  density: 'compact',
+  intent: 'brand',
+  isHighContrast: true,
+  themeMode: 'dark',
+};
+
+const meta: Meta<typeof ThemePresetCompare> = {
+  title: 'Components/ThemePresetCompare',
+  component: ThemePresetCompare,
+  tags: ['autodocs'],
+};
+export default meta;
+type Story = StoryObj<typeof ThemePresetCompare>;
+
+export const Default: Story = {
+  args: {
+    leftPreset,
+    rightPreset,
+  },
+};
+
+export const CustomAxes: Story = {
+  args: {
+    leftPreset,
+    rightPreset,
+    axes: ['appearance', 'density', 'intent', 'contrast', 'mode'],
+    title: 'Theme Comparison',
+    description: 'Side-by-side analysis of two theme presets.',
+  },
+};
+
+export const SinglePreset: Story = {
+  args: {
+    leftPreset,
+    rightPreset: null,
+    title: 'Incomplete Comparison',
+    description: 'Select a second preset to begin comparison.',
+  },
+};

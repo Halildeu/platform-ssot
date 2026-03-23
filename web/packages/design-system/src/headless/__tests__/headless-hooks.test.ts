@@ -32,10 +32,6 @@ function keyEvent(key: string, extra: Partial<KeyboardEvent> = {}): React.Keyboa
   } as unknown as React.KeyboardEvent;
 }
 
-/** Simulate a React.ChangeEvent<HTMLInputElement> */
-function changeEvent(value: string): React.ChangeEvent<HTMLInputElement> {
-  return { target: { value } } as React.ChangeEvent<HTMLInputElement>;
-}
 
 /* ================================================================== */
 /*  useAccordion                                                       */

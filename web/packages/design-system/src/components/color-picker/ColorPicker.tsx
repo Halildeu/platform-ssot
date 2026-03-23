@@ -209,6 +209,11 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
     // Popover open state
     const [isOpen, setIsOpen] = React.useState(false);
 
+    // Ref for the trigger button (focus management)
+    const triggerRef = React.useRef<HTMLButtonElement>(null);
+    // Ref for the popup panel
+    const popoverRef = React.useRef<HTMLDivElement>(null);
+
     // Text input state
     const [inputValue, setInputValue] = React.useState(
       formatColor(currentValue, format),
@@ -230,6 +235,16 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
       [isControlled, onValueChange],
     );
 
+    // Focus the first interactive element when popup opens
+    React.useEffect(() => {
+      if (isOpen && popoverRef.current) {
+        const firstFocusable = popoverRef.current.querySelector<HTMLElement>(
+          'input, button, [tabindex="0"]',
+        );
+        firstFocusable?.focus();
+      }
+    }, [isOpen]);
+
     const handleSwatchClick = () => {
       if (!isInteractive) return;
       setIsOpen((prev) => !prev);
@@ -240,6 +255,32 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         setIsOpen((prev) => !prev);
+      }
+    };
+
+    /** Close popup on Escape; trap focus inside the dialog. */
+    const handlePopoverKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+        return;
+      }
+
+      // Basic focus trap on Tab
+      if (e.key === "Tab" && popoverRef.current) {
+        const focusable = popoverRef.current.querySelectorAll<HTMLElement>(
+          'input, button, [tabindex="0"]',
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
 
@@ -330,6 +371,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
 
         {/* Swatch trigger */}
         <button
+          ref={triggerRef}
           type="button"
           className={cn(
             "rounded-md border-2 border-[var(--border-subtle,#d1d5db)] transition-all duration-150",
@@ -356,6 +398,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
         {/* Popover panel */}
         {isOpen && (
           <div
+            ref={popoverRef}
             className={cn(
               "mt-1 rounded-lg border border-[var(--border-subtle,#d1d5db)]",
               "bg-[var(--surface-primary,#ffffff)] p-3 shadow-lg",
@@ -363,7 +406,9 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
               "w-full max-w-[232px]",
             )}
             role="dialog"
+            aria-modal="true"
             aria-label="Renk secimi"
+            onKeyDown={handlePopoverKeyDown}
             data-testid="color-picker-popover"
           >
             {/* Saturation-Value gradient */}

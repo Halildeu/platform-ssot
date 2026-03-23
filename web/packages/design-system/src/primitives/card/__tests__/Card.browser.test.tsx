@@ -43,7 +43,7 @@ describe('Card (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Card>Content</Card>);
+    await render(<Card>Content</Card>);
     const el = document.querySelector('[data-component="card"]');
     expect(el).not.toBeNull();
   });

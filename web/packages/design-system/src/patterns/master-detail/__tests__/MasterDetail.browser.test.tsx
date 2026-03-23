@@ -23,7 +23,7 @@ describe('MasterDetail (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(
+    await render(
       <div style={{ height: 300 }}>
         <MasterDetail master={<div>M</div>} detail={<div>D</div>} />
       </div>,

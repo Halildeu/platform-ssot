@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, act } from '@testing-library/react';
 import React from 'react';
 import { AnimatePresence } from '../AnimatePresence';
+import { expectNoA11yViolations } from '../../__tests__/a11y-utils';
 
 describe('AnimatePresence', () => {
   it('renders children normally', () => {
@@ -79,5 +80,14 @@ describe('AnimatePresence', () => {
 
     expect(getByText('A')).toBeTruthy();
     expect(getByText('B')).toBeTruthy();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(
+      <AnimatePresence>
+        <div key="a">Hello</div>
+      </AnimatePresence>,
+    );
+    await expectNoA11yViolations(container);
   });
 });

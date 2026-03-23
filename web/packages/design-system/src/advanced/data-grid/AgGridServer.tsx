@@ -8,6 +8,7 @@
  * AG Grid v34.3.1 compatible.
  */
 import React, { useCallback, useMemo } from "react";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
 import type {
   ColDef as AgColDef,
   ColGroupDef as AgColGroupDef,
@@ -51,7 +52,8 @@ export interface AgGridServerMessages {
   noRowsLabel?: string;
 }
 
-export interface AgGridServerProps {
+/** Props for the AgGridServer component. */
+export interface AgGridServerProps extends AccessControlledProps {
   /** Column definitions */
   columnDefs: (ColDef | ColGroupDef)[];
   /** Default column definition */
@@ -80,6 +82,7 @@ export interface AgGridServerProps {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
+/** AG Grid wrapper with server-side row model, infinite scrolling, and block caching. */
 export const AgGridServer: React.FC<AgGridServerProps> = ({
   columnDefs,
   defaultColDef,
@@ -92,7 +95,11 @@ export const AgGridServer: React.FC<AgGridServerProps> = ({
   density = "comfortable",
   cacheBlockSize = 100,
   maxBlocksInCache = 10,
+  access,
+  accessReason,
 }) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   // Create SSRM datasource from getData callback
   const handleGridReady = useCallback(
     (event: { api: GridApi }) => {
@@ -118,6 +125,7 @@ export const AgGridServer: React.FC<AgGridServerProps> = ({
       // v34: use setGridOption for datasource attachment
       event.api.setGridOption?.("serverSideDatasource", datasource);
       event.api.setGridOption?.("cacheBlockSize", cacheBlockSize);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- AG Grid v34 typing gap
       (event.api.setGridOption as any)?.("maxBlocksInCache", maxBlocksInCache);
     },
     [getData, cacheBlockSize, maxBlocksInCache],
@@ -131,20 +139,22 @@ export const AgGridServer: React.FC<AgGridServerProps> = ({
   );
 
   return (
-    <GridShell
-      columnDefs={columnDefs}
-      defaultColDef={defaultColDef}
-      gridOptions={mergedGridOptions}
-      rowModelType="serverSide"
-      theme={theme}
-      density={density}
-      height={height}
-      className={className}
-      onGridReady={handleGridReady}
-      overlayLoadingTemplate={messages?.loadingLabel}
-      overlayNoRowsTemplate={messages?.noRowsLabel}
-      data-component="ag-grid-server"
-    />
+    <div className={accessStyles(accessState.state)} title={accessReason}>
+      <GridShell
+        columnDefs={columnDefs}
+        defaultColDef={defaultColDef}
+        gridOptions={mergedGridOptions}
+        rowModelType="serverSide"
+        theme={theme}
+        density={density}
+        height={height}
+        className={className}
+        onGridReady={handleGridReady}
+        overlayLoadingTemplate={messages?.loadingLabel}
+        overlayNoRowsTemplate={messages?.noRowsLabel}
+        data-component="ag-grid-server"
+      />
+    </div>
   );
 };
 

@@ -4,13 +4,17 @@ import React, { forwardRef } from 'react';
 import { useFormField } from '../useFormField';
 import type { AccessLevel } from '../../internal/access-controller';
 
+/** Props for the ConnectedTextarea component. */
 export interface ConnectedTextareaProps
   extends Omit<
     React.TextareaHTMLAttributes<HTMLTextAreaElement>,
     'value' | 'onChange' | 'onBlur'
   > {
+  /** Field name used to bind to form context. */
   name: string;
+  /** Access level controlling the field's interactivity. */
   access?: AccessLevel;
+  /** Accessible label for the textarea. */
   label?: string;
 }
 

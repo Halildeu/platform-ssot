@@ -368,7 +368,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                   className={cn(
                     "inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border",
                     checked
-                      ? "border-[var(--action-primary)] bg-[var(--action-primary)] text-white"
+                      ? "border-[var(--action-primary)] bg-[var(--action-primary)] text-[var(--text-inverse)]"
                       : "border-[var(--border-subtle)] bg-[var(--surface-canvas)]",
                     itemBlocked && "opacity-50",
                   )}
@@ -586,7 +586,7 @@ export const Transfer: React.FC<TransferProps> = ({
           className={cn(
             "flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-150",
             leftSelectedCount > 0 && !blocked
-              ? "border-[var(--action-primary)]/40 bg-[var(--action-primary)] text-white shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
+              ? "border-[var(--action-primary)]/40 bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
               : "border-[var(--border-subtle)]/60 bg-[var(--surface-default)] text-[var(--text-disabled)] cursor-not-allowed",
           )}
           aria-label="Move selected items to right"
@@ -604,7 +604,7 @@ export const Transfer: React.FC<TransferProps> = ({
           className={cn(
             "flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-150",
             rightSelectedCount > 0 && !blocked
-              ? "border-[var(--action-primary)]/40 bg-[var(--action-primary)] text-white shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
+              ? "border-[var(--action-primary)]/40 bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
               : "border-[var(--border-subtle)]/60 bg-[var(--surface-default)] text-[var(--text-disabled)] cursor-not-allowed",
           )}
           aria-label="Move selected items to left"

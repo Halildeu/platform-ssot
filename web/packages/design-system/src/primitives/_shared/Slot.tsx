@@ -62,6 +62,7 @@ function isEventHandler(key: string): boolean {
 }
 
 export interface SlotProps extends React.HTMLAttributes<HTMLElement> {
+  /** Single child element to merge parent props onto. */
   children: React.ReactNode;
 }
 

@@ -6,6 +6,7 @@ import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 /*  FilterBar — Horizontal filter strip with collapsible "More" area   */
 /* ------------------------------------------------------------------ */
 
+/** Props for the FilterBar component. */
 export interface FilterBarProps {
   /** Primary filter controls (always visible) */
   children: React.ReactNode;
@@ -24,6 +25,7 @@ export interface FilterBarProps {
   className?: string;
 }
 
+/** Horizontal filter strip with primary controls, collapsible advanced filters, and action buttons. */
 export const FilterBar: React.FC<FilterBarProps> = ({
   children,
   moreFilters,
@@ -73,7 +75,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           >
             {moreLabel}
             {activeCount != null && activeCount > 0 && (
-              <span className="ms-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--action-primary)] px-1.5 text-xs font-medium text-white">
+              <span className="ms-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--action-primary)] px-1.5 text-xs font-medium text-[var(--text-inverse)]">
                 {activeCount}
               </span>
             )}

@@ -88,7 +88,7 @@ export function AnimatePresence({
     }, effectiveDuration);
 
     return cleanup;
-  }, [children]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [children]);
 
   return <>{presentChildren}</>;
 }

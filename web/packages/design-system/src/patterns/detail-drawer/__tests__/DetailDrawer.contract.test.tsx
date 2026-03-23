@@ -58,7 +58,7 @@ describe('DetailDrawer contract — key props', () => {
   });
 
   it('does not render subtitle when omitted', () => {
-    const { container } = render(<DetailDrawer {...defaultProps} />);
+    render(<DetailDrawer {...defaultProps} />);
     const dialog = screen.getByRole('dialog');
     expect(dialog.querySelectorAll('p')).toHaveLength(0);
   });

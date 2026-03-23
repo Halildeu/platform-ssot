@@ -22,13 +22,21 @@ export interface GanttTask {
 
 export type GanttViewMode = 'day' | 'week' | 'month' | 'quarter';
 
+/** Props for the GanttTimeline component. */
 export interface GanttTimelineProps extends AccessControlledProps {
+  /** Task data to render in the timeline. */
   tasks: GanttTask[];
+  /** Time-axis granularity for the timeline header. */
   viewMode?: GanttViewMode;
+  /** Group tasks by the specified field. */
   groupBy?: 'group';
+  /** Whether to render dependency arrows between tasks. */
   showDependencies?: boolean;
+  /** Callback fired when a task bar is clicked. */
   onTaskClick?: (task: GanttTask) => void;
+  /** Callback fired when a task bar is dragged to new dates. */
   onTaskDrag?: (task: GanttTask, newStart: Date, newEnd: Date) => void;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -141,6 +149,7 @@ const TASK_LABEL_WIDTH = 200;
 
 // ── Component ──
 
+/** Horizontal Gantt timeline displaying tasks, milestones, dependencies, and progress across time. */
 export const GanttTimeline: React.FC<GanttTimelineProps> = ({
   tasks,
   viewMode = 'week',

@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { PageHeader } from '../PageHeader';
 
 describe('PageHeader Visual Regression', () => {
   it('page header with title and actions matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ background: '#fff', width: 800 }}>
         <PageHeader
           title="Order Management"
@@ -18,7 +19,7 @@ describe('PageHeader Visual Regression', () => {
   });
 
   it('page header with breadcrumb matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ background: '#fff', width: 800 }}>
         <PageHeader
           title="Product Detail"

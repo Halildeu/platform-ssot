@@ -35,17 +35,29 @@ export interface SectionTabsClasses extends SegmentedClasses {
 }
 
 export interface SectionTabsProps extends AccessControlledProps {
+  /** Tab items to render. */
   items: SectionTabsItem[];
+  /** Controlled active tab value. */
   value?: string;
+  /** Initial active tab value for uncontrolled mode. */
   defaultValue?: string;
+  /** Callback fired when the active tab changes. */
   onValueChange?: (nextValue: string) => void;
+  /** Accessible label for the tab group. */
   ariaLabel?: string;
+  /** Spacing density variant. */
   density?: SectionTabsDensity;
+  /** Layout strategy for tab overflow. */
   layout?: SectionTabsLayout;
+  /** Breakpoint at which auto layout switches from scroll to wrap. */
   autoWrapBreakpoint?: SectionTabsBreakpoint;
+  /** Controls when tab descriptions become visible. */
   descriptionVisibility?: SectionTabsDescriptionVisibility;
+  /** How descriptions are rendered (inline text or tooltip). */
   descriptionDisplay?: SectionTabsDescriptionDisplay;
+  /** Additional CSS class name. */
   className?: string;
+  /** Custom class name overrides for sub-elements. */
   classes?: SectionTabsClasses;
 }
 
@@ -132,6 +144,10 @@ function getDescriptionVisibilityClassName(
   }
 }
 
+/**
+ * Segmented tab strip for switching between detail page sections with support
+ * for responsive scroll/wrap layouts, density variants and description tooltips.
+ */
 export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(function SectionTabs(
   {
     items,
@@ -147,6 +163,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
     className,
     classes,
     access = 'full',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     accessReason,
   },
   ref,

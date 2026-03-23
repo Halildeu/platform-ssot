@@ -15,7 +15,6 @@
       "kind": "utility",
       "importStatement": "import { useAgGridTablePagination } from '@mfe/design-system';",
       "whereUsed": [
-        "web/apps/mfe-access/src/widgets/access-management/ui/AccessGrid.ui.tsx",
         "web/apps/mfe-audit/src/app/components/AuditEventFeed.tsx"
       ]
     },

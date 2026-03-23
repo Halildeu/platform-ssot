@@ -25,7 +25,7 @@ export interface EmptyStateProps {
   accessReason?: string;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
+export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(({
   icon,
   title,
   description,
@@ -35,12 +35,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   access = "full",
   accessReason: _accessReason,
   className,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
   return (
   <div
+    ref={ref}
     className={cn(
       "flex flex-col items-center text-center",
       compact ? "py-6 px-4" : "py-12 px-6",
@@ -78,6 +79,6 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     )}
   </div>
   );
-};
+});
 
 EmptyState.displayName = "EmptyState";

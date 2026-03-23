@@ -4,7 +4,7 @@ import { Slider } from '../Slider';
 
 describe('Slider (Browser)', () => {
   it('renders range input', async () => {
-    const screen = await render(<Slider defaultValue={50} />);
+    await render(<Slider defaultValue={50} />);
     const input = document.querySelector('input[type="range"]');
     expect(input).not.toBeNull();
   });
@@ -22,7 +22,7 @@ describe('Slider (Browser)', () => {
 
   it('fires onValueChange when slider changes', async () => {
     const onValueChange = vi.fn();
-    const screen = await render(<Slider defaultValue={50} onValueChange={onValueChange} />);
+    await render(<Slider defaultValue={50} onValueChange={onValueChange} />);
     const input = document.querySelector('input[type="range"]') as HTMLInputElement;
     const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
     nativeSetter?.call(input, '75');
@@ -31,7 +31,7 @@ describe('Slider (Browser)', () => {
   });
 
   it('is disabled when disabled prop is set', async () => {
-    const screen = await render(<Slider defaultValue={50} disabled />);
+    await render(<Slider defaultValue={50} disabled />);
     const input = document.querySelector('input[type="range"]') as HTMLInputElement;
     expect(input.disabled).toBe(true);
   });
@@ -53,7 +53,7 @@ describe('Slider (Browser)', () => {
   });
 
   it('renders as readonly when access is readonly', async () => {
-    const screen = await render(<Slider defaultValue={50} access="readonly" />);
+    await render(<Slider defaultValue={50} access="readonly" />);
     const input = document.querySelector('input[type="range"]') as HTMLInputElement;
     expect(input.getAttribute('aria-readonly')).toBe('true');
   });

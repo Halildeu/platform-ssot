@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Calendar } from '../Calendar';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
@@ -342,7 +342,7 @@ describe('Calendar — firstDayOfWeek', () => {
 
 describe('Calendar — events', () => {
   it('renders event dots for dates with events', () => {
-    const { container } = render(
+    render(
       <Calendar
         defaultMonth={new Date(2024, 0, 1)}
         events={[
@@ -357,7 +357,7 @@ describe('Calendar — events', () => {
   });
 
   it('limits event dots to 3', () => {
-    const { container } = render(
+    render(
       <Calendar
         defaultMonth={new Date(2024, 0, 1)}
         events={[
@@ -464,7 +464,7 @@ describe('Calendar — access control', () => {
   });
 
   it('access="disabled" disables all interactions', () => {
-    const { container } = render(
+    render(
       <Calendar access="disabled" defaultMonth={new Date(2024, 0, 1)} />,
     );
     const day = screen.getByLabelText('15 Ocak 2024');

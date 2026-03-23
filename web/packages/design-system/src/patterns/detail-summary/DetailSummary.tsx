@@ -23,22 +23,39 @@ import {
 /*  entity block, descriptions and optional JSON viewer               */
 /* ------------------------------------------------------------------ */
 
+/** Props for the DetailSummary component. */
 export interface DetailSummaryProps extends AccessControlledProps {
+  /** Breadcrumb or eyebrow text above the title */
   eyebrow?: React.ReactNode;
+  /** Primary heading for the detail page */
   title: React.ReactNode;
+  /** Subtitle or description below the title */
   description?: React.ReactNode;
+  /** Secondary metadata (version, date, etc.) */
   meta?: React.ReactNode;
+  /** Status badge or indicator */
   status?: React.ReactNode;
+  /** Action buttons (edit, delete, etc.) */
   actions?: React.ReactNode;
+  /** Aside slot rendered next to the header */
   aside?: React.ReactNode;
+  /** KPI items for the summary strip */
   summaryItems?: SummaryStripItem[];
+  /** Entity summary block configuration */
   entity: EntitySummaryBlockProps;
+  /** Key-value description list items */
   detailItems?: DescriptionsItem[];
+  /** Heading for the detail descriptions panel */
   detailTitle?: React.ReactNode;
+  /** Description for the detail descriptions panel */
   detailDescription?: React.ReactNode;
+  /** Raw JSON value for the debug viewer panel */
   jsonValue?: unknown;
+  /** Heading for the JSON viewer panel */
   jsonTitle?: React.ReactNode;
+  /** Description for the JSON viewer panel */
   jsonDescription?: React.ReactNode;
+  /** Additional CSS class for the root section */
   className?: string;
 }
 
@@ -79,6 +96,10 @@ const InlineJsonViewer: React.FC<InlineJsonViewerProps> = ({
   </div>
 );
 
+/**
+ * Full detail page layout combining page header, summary strip, entity block,
+ * description list and optional JSON viewer into a single composable pattern.
+ */
 export const DetailSummary: React.FC<DetailSummaryProps> = ({
   eyebrow,
   title,

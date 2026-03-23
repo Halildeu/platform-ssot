@@ -50,7 +50,9 @@ export function usePortal(target?: HTMLElement): HTMLElement | null {
 
 /* ---- Portal Component ---- */
 
+/** Props for the Portal component. */
 export interface PortalProps {
+  /** Content to render inside the portal container. */
   children: React.ReactNode;
   /** Target container element. Defaults to document.body. */
   container?: HTMLElement;

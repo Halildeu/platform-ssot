@@ -1,6 +1,6 @@
 {
-  "_comment": "Per-module max size in KB. Budgets set ~20% above current measured values to catch regressions. Updated 2026-03-20 after F1 deep import entry points added.",
-  "total_max_kb": 13000,
+  "_comment": "Per-module max size in KB. Budgets set ~20% above current measured values to catch regressions. Updated 2026-03-23 after F4D enterprise suite (24 components) added.",
+  "total_max_kb": 15000,
   "modules": {
     "primitives": 425,
     "components": 2140,
@@ -18,6 +18,6 @@
     "performance": 810,
     "catalog": 200,
     "legacy": 200,
-    "_root": 8600
+    "_root": 11000
   }
 }

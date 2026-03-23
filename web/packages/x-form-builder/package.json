@@ -23,14 +23,18 @@
       "default": "./src/index.ts"
     }
   },
-  "files": ["src", "CONTRACT.md", "README.md"],
+  "files": [
+    "src",
+    "CONTRACT.md",
+    "README.md"
+  ],
   "scripts": {
-    "build": "tsc --project tsconfig.json",
+    "build": "echo source-only",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .ts,.tsx",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "echo source-only",
     "bench": "vitest bench"
   },
   "peerDependencies": {

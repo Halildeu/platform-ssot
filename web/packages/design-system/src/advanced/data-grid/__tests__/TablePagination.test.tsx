@@ -4,7 +4,6 @@ import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import { TablePagination } from '../TablePagination';
-import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
 afterEach(() => {
   cleanup();

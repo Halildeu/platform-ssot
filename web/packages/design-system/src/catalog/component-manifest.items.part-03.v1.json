@@ -25,6 +25,7 @@
         "kind": "component",
         "importStatement": "import { Divider } from '@mfe/design-system';",
         "whereUsed": [
+          "web/apps/demos/dashboard/main.tsx",
           "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
           "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
           "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
@@ -277,6 +278,7 @@
           "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
           "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
           "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
+          "web/apps/mfe-shell/src/pages/admin/design-lab/pages/APIDetail.tsx",
           "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
           "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
           "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDenseShowcase.tsx"

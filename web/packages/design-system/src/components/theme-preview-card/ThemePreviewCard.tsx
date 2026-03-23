@@ -1,26 +1,45 @@
 import React from "react";
 import { cn } from "../../utils/cn";
+import {
+  resolveAccessState,
+  type AccessControlledProps,
+} from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  ThemePreviewCard — Miniature theme swatch for theme selection       */
 /* ------------------------------------------------------------------ */
 
-export interface ThemePreviewCardProps {
+export interface ThemePreviewCardProps extends AccessControlledProps {
+  /** Whether this theme card is currently selected. */
   selected?: boolean;
+  /** Additional CSS class name. */
   className?: string;
+  /** Locale-specific label overrides for the preview card. */
   localeText?: {
+    /** Title text shown in the swatch. */
     titleText?: React.ReactNode;
+    /** Secondary descriptive text. */
     secondaryText?: React.ReactNode;
+    /** Label for the save action button. */
     saveLabel?: React.ReactNode;
+    /** Accessible label for the selected indicator. */
     selectedLabel?: React.ReactNode;
   };
 }
 
+/**
+ * Miniature theme swatch card that renders a compact preview of a theme's
+ * visual style, used in theme selection galleries and comparison views.
+ */
 export const ThemePreviewCard: React.FC<ThemePreviewCardProps> = ({
   selected = false,
   className,
   localeText,
+  access = "full",
+  accessReason,
 }) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const resolvedTitleText = localeText?.titleText ?? "Baslik metni";
   const resolvedSecondaryText = localeText?.secondaryText ?? "Ikincil metin";
   const resolvedSaveLabel = localeText?.saveLabel ?? "Kaydet";
@@ -37,9 +56,11 @@ export const ThemePreviewCard: React.FC<ThemePreviewCardProps> = ({
           : "border-[var(--border-subtle)] hover:border-[var(--text-secondary)]",
         className,
       )}
+      data-access-state={accessState.state}
+      title={accessReason}
     >
       {selected ? (
-        <div className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--action-primary)] text-[9px] font-bold text-white">
+        <div className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--action-primary)] text-[9px] font-bold text-[var(--text-inverse)]">
           <span aria-hidden="true">✓</span>
           <span className="sr-only">{resolvedSelectedLabel}</span>
         </div>
@@ -53,7 +74,7 @@ export const ThemePreviewCard: React.FC<ThemePreviewCardProps> = ({
           {resolvedSecondaryText}
         </div>
         <div className="mt-2 flex items-center justify-end">
-          <div className="inline-flex items-center rounded-full bg-[var(--action-primary)] px-2 py-[2px] text-[9px] font-semibold text-white">
+          <div className="inline-flex items-center rounded-full bg-[var(--action-primary)] px-2 py-[2px] text-[9px] font-semibold text-[var(--text-inverse)]">
             {resolvedSaveLabel}
           </div>
         </div>

@@ -5,6 +5,7 @@ import { Input, type InputProps } from '../../primitives/input/Input';
 import { useFormField } from '../useFormField';
 import type { AccessLevel } from '../../internal/access-controller';
 
+/** Props for the ConnectedInput component. */
 export interface ConnectedInputProps
   extends Omit<InputProps, 'value' | 'onChange' | 'onValueChange' | 'onBlur' | 'error'> {
   /** Field name matching the form schema key. */

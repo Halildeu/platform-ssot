@@ -69,7 +69,7 @@ describe('FormField (Browser)', () => {
   });
 
   it('connects label to input via htmlFor', async () => {
-    const screen = await render(
+    await render(
       <FormField label="Custom" htmlFor="my-input">
         <input type="text" id="my-input" />
       </FormField>,

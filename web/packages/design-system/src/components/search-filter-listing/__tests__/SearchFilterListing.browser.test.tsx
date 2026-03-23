@@ -34,13 +34,13 @@ describe('SearchFilterListing (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<SearchFilterListing title="Test" />);
+    await render(<SearchFilterListing title="Test" />);
     const el = document.querySelector('[data-component="search-filter-listing"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<SearchFilterListing title="Hidden" access="hidden" />);
+    await render(<SearchFilterListing title="Hidden" access="hidden" />);
     expect(document.querySelector('[data-component="search-filter-listing"]')).toBeNull();
   });
 

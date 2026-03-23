@@ -9,13 +9,19 @@ import { stateAttrs } from "../../internal/interaction-core";
 export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 export type AvatarShape = "circle" | "square";
 
+/**
+ * Avatar displays a user or entity representation as an image, initials, or icon fallback.
+ */
 export interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** Image URL */
   src?: string;
+  /** Alt text for the avatar image. */
   alt?: string;
   /** Fallback initials (1-2 chars) */
   initials?: string;
+  /** Avatar dimensions. @default "md" */
   size?: AvatarSize;
+  /** Border radius shape. @default "circle" */
   shape?: AvatarShape;
   /** Fallback icon (when no src or initials) */
   icon?: React.ReactNode;
@@ -35,31 +41,34 @@ const shapeStyles: Record<AvatarShape, string> = {
   square: "rounded-lg",
 };
 
-export const Avatar: React.FC<AvatarProps> = ({
-  src,
-  alt,
-  initials,
-  size = "md",
-  shape = "circle",
-  icon,
-  className,
-  ...rest
-}) => {
-  const [imgError, setImgError] = React.useState(false);
-  const showImage = src && !imgError;
+/** Circular or square avatar displaying an image, initials fallback, or icon with configurable size. */
+export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
+  ({
+    src,
+    alt,
+    initials,
+    size = "md",
+    shape = "circle",
+    icon,
+    className,
+    ...rest
+  }, ref) => {
+    const [imgError, setImgError] = React.useState(false);
+    const showImage = src && !imgError;
 
-  return (
-    <span
-      className={cn(
-        "relative inline-flex shrink-0 items-center justify-center overflow-hidden",
-        "bg-[var(--surface-muted)] text-[var(--text-secondary)] font-medium",
-        sizeStyles[size],
-        shapeStyles[shape],
-        className,
-      )}
-      {...stateAttrs({ component: "avatar" })}
-      {...rest}
-    >
+    return (
+      <span
+        ref={ref}
+        className={cn(
+          "relative inline-flex shrink-0 items-center justify-center overflow-hidden",
+          "bg-[var(--surface-muted)] text-[var(--text-secondary)] font-medium",
+          sizeStyles[size],
+          shapeStyles[shape],
+          className,
+        )}
+        {...stateAttrs({ component: "avatar" })}
+        {...rest}
+      >
       {showImage ? (
         <img
           src={src}
@@ -83,8 +92,9 @@ export const Avatar: React.FC<AvatarProps> = ({
           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
         </svg>
       )}
-    </span>
-  );
-};
+      </span>
+    );
+  }
+);
 
 Avatar.displayName = "Avatar";

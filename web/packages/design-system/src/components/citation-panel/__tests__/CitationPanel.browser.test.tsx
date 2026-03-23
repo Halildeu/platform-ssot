@@ -39,13 +39,13 @@ describe('CitationPanel (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<CitationPanel items={sampleItems} />);
+    await render(<CitationPanel items={sampleItems} />);
     const el = document.querySelector('[data-component="citation-panel"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<CitationPanel items={sampleItems} access="hidden" />);
+    await render(<CitationPanel items={sampleItems} access="hidden" />);
     expect(document.querySelector('[data-component="citation-panel"]')).toBeNull();
   });
 

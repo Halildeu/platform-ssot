@@ -52,7 +52,7 @@ describe('FilterBar (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(
+    await render(
       <FilterBar><span>F</span></FilterBar>,
     );
     const el = document.querySelector('[data-component="filter-bar"]');

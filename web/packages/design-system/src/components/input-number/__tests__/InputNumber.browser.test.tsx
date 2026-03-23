@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
 import { InputNumber } from '../InputNumber';
 
 describe('InputNumber (Browser)', () => {

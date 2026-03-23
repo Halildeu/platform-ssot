@@ -176,6 +176,7 @@ const DefaultTablePaginationActions: React.FC<TablePaginationActionsProps> = ({
 /*  TablePagination component                                          */
 /* ------------------------------------------------------------------ */
 
+/** Pagination controls with page navigation, page-size selector, and item range display. */
 export const TablePagination: React.FC<TablePaginationProps> = ({
   totalItems,
   page,
@@ -304,7 +305,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   return (
     <div
       className={[
-        "relative flex flex-wrap items-center justify-end gap-4 overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,246,255,0.94)))] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card,rgba(255,255,255,0.9))] before:to-transparent",
+        "relative flex flex-wrap items-center justify-end gap-4 overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card)] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent",
         className ?? "",
       ]
         .join(" ")
@@ -325,7 +326,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
         />
       </div>
 
-      <Text className="min-w-[160px] rounded-full border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.72))] px-3 py-2 text-center text-text-primary shadow-[0_12px_24px_-22px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+      <Text className="min-w-[160px] rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-3 py-2 text-center text-text-primary shadow-[0_12px_24px_-22px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
         {totalItemsKnown
           ? rangeLabel(pagination.pageRange.start, pagination.pageRange.end, totalItems, {
               page: pagination.page,
@@ -368,7 +369,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 /* ------------------------------------------------------------------ */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AgGridTablePaginationApi<RowData = any> = {
+export type AgGridTablePaginationApi<_RowData = any> = {
   paginationGetCurrentPage?: () => number;
   paginationGetTotalPages?: () => number;
   paginationGetRowCount?: () => number;

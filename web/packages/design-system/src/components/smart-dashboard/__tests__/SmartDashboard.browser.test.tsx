@@ -28,13 +28,13 @@ describe('SmartDashboard (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<SmartDashboard widgets={widgets} />);
+    await render(<SmartDashboard widgets={widgets} />);
     const el = document.querySelector('[data-component="smart-dashboard"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<SmartDashboard widgets={widgets} access="hidden" />);
+    await render(<SmartDashboard widgets={widgets} access="hidden" />);
     expect(document.querySelector('[data-component="smart-dashboard"]')).toBeNull();
   });
 

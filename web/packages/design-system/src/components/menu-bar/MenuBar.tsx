@@ -110,19 +110,33 @@ export interface MenuBarPreset {
   labelVisibility: MenuBarLabelVisibility;
 }
 
+/** Props for the MenuBar component. */
 export interface MenuBarProps extends AccessControlledProps {
+  /** Navigation items to render in the bar. */
   items: MenuBarItem[];
+  /** Controlled active item value. */
   value?: string;
+  /** Initial active item value for uncontrolled mode. */
   defaultValue?: string;
+  /** Callback fired when the active item changes. */
   onValueChange?: (value: string) => void;
+  /** Callback fired when a bar item is clicked. */
   onItemClick?: (value: string, event: React.MouseEvent<HTMLElement>) => void;
+  /** Callback fired when a submenu item is selected. */
   onMenuItemSelect?: (rootValue: string, item: MenuBarMenuItem) => void;
+  /** Controlled open submenu value. */
   openValue?: string | null;
+  /** Initial open submenu value for uncontrolled mode. */
   defaultOpenValue?: string | null;
+  /** Callback fired when the open submenu changes. */
   onOpenValueChange?: (value: string | null) => void;
+  /** Accessible label for the navigation bar. */
   ariaLabel?: string;
+  /** Accessible label for submenu surfaces. */
   menuAriaLabel?: string;
+  /** Size variant of the menu bar. */
   size?: MenuBarSize;
+  /** Visual appearance variant. */
   appearance?: MenuBarAppearance;
   labelVisibility?: MenuBarLabelVisibility;
   overflowBehavior?: MenuBarOverflowBehavior;
@@ -517,6 +531,7 @@ export function createMenuBarPreset(kind: MenuBarPresetKind): MenuBarPreset {
   }
 }
 
+/** Horizontal menu bar with dropdown sub-menus, overflow handling, and route-aware active states. */
 export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function MenuBar(
   {
     items,
@@ -1237,7 +1252,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
               data-favorite-active={isFavorite ? 'true' : undefined}
               className={cn(
                 'absolute right-2 top-1/2 z-[1] inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card)] text-[10px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm transition hover:border-border-default hover:text-text-primary',
-                isFavorite && 'border-amber-300/80 bg-amber-50 text-amber-700',
+                isFavorite && 'border-[var(--state-warning-text)]/30 bg-[var(--state-warning-bg)] text-[var(--state-warning-text)]',
               )}
               onClick={(event) => {
                 event.preventDefault();

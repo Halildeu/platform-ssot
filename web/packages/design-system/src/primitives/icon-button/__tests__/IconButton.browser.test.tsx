@@ -31,7 +31,7 @@ describe('IconButton (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<IconButton icon={<TestIcon />} label="Test" />);
+    await render(<IconButton icon={<TestIcon />} label="Test" />);
     const el = document.querySelector('[data-component="icon-button"]');
     expect(el).not.toBeNull();
   });
@@ -61,7 +61,7 @@ describe('IconButton (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<IconButton icon={<TestIcon />} label="Hidden" access="hidden" />);
+    await render(<IconButton icon={<TestIcon />} label="Hidden" access="hidden" />);
     expect(document.querySelector('button')).toBeNull();
   });
 });

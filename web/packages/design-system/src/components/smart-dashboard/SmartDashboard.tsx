@@ -57,18 +57,31 @@ export type DashboardWidget = {
 
 export type DashboardDensity = "comfortable" | "compact";
 
+/** Props for the SmartDashboard component. */
 export interface SmartDashboardProps extends AccessControlledProps {
+  /** Widget definitions to display in the dashboard grid. */
   widgets: DashboardWidget[];
+  /** Heading text for the dashboard. */
   title?: string;
+  /** Descriptive text below the heading. */
   description?: string;
+  /** Personalized greeting message shown in a banner. */
   greeting?: string;
+  /** Callback fired when widget order changes. */
   onWidgetReorder?: (keys: string[]) => void;
+  /** Callback fired when a widget is pinned or unpinned. */
   onWidgetPin?: (key: string, pinned: boolean) => void;
+  /** Callback to refresh all widgets at once. */
   refreshAll?: () => void;
+  /** Currently selected time range value. */
   timeRange?: string;
+  /** Callback fired when the time range selector changes. */
   onTimeRangeChange?: (range: string) => void;
+  /** Number of grid columns for the widget layout. */
   columns?: 2 | 3 | 4;
+  /** Spacing density variant. */
   density?: DashboardDensity;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -106,7 +119,7 @@ const TREND_COLORS: Record<TrendDirection, string> = {
   stable: "text-[var(--text-secondary)]",
 };
 
-const SKELETON_PULSE =
+const _SKELETON_PULSE =
   "animate-pulse rounded-lg bg-[var(--surface-muted)]";
 
 const TIME_RANGE_OPTIONS = [
@@ -279,11 +292,13 @@ const WidgetCard: React.FC<{
 
 /* ---- Main Component ---- */
 
+/** Auto-organizing dashboard with KPI cards, trend indicators, pin/tone priority sorting, and responsive grid layout. */
 export const SmartDashboard: React.FC<SmartDashboardProps> = ({
   widgets,
   title,
   description,
   greeting,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onWidgetReorder,
   onWidgetPin,
   refreshAll,

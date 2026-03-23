@@ -22,6 +22,7 @@ import type {
   IServerSideDatasource as AgIServerSideDatasource,
 } from "ag-grid-community";
 
+import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
 import { GridShell, type GridShellApi, type GridTheme, type GridDensity } from "./GridShell";
 import { GridToolbar, type GridToolbarMessages } from "./GridToolbar";
 import { VariantIntegration, type VariantIntegrationMessages } from "./VariantIntegration";
@@ -32,22 +33,16 @@ import { TablePagination, useAgGridTablePagination } from "./TablePagination";
 /*  Re-exported AG Grid types (convenience for consumers)              */
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/no-explicit-any -- AG Grid generic defaults */
 export type ColDef<RowData = any> = AgColDef<RowData>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GridOptions<RowData = any> = AgGridOptions<RowData>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GridReadyEvent<RowData = any> = AgGridReadyEvent<RowData>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SideBarDef = AgSideBarDef;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ExcelStyle = AgExcelStyle;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ProcessCellForExportParams<RowData = any> = AgProcessCellForExportParams<RowData>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GridApi<RowData = any> = AgGridApi<RowData>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type IServerSideDatasource = AgIServerSideDatasource;
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /* ------------------------------------------------------------------ */
 /*  Component types                                                    */
@@ -175,9 +170,10 @@ export interface EntityGridTemplateMessages {
 
 type ThemeValue = "quartz" | "balham" | "material" | "alpine";
 
+/** Props for the EntityGridTemplate component. */
 export interface EntityGridTemplateProps<
   RowData extends Record<string, unknown> = Record<string, unknown>,
-> {
+> extends AccessControlledProps {
   gridId: string;
   gridSchemaVersion: number;
   rowData?: RowData[];
@@ -243,6 +239,7 @@ export interface EntityGridTemplateProps<
 /*  EntityGridTemplate orchestrator                                    */
 /* ------------------------------------------------------------------ */
 
+/** Full-featured entity grid orchestrator combining GridShell, toolbar, pagination, and variant management. */
 export function EntityGridTemplate<
   RowData extends Record<string, unknown> = Record<string, unknown>,
 >(props: EntityGridTemplateProps<RowData>): React.ReactElement {
@@ -251,6 +248,7 @@ export function EntityGridTemplate<
     gridSchemaVersion,
     rowData,
     total,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     page,
     pageSize: pageSizeProp,
     onPageChange,
@@ -283,7 +281,12 @@ export function EntityGridTemplate<
     dataSourceMode = "server",
     createServerSideDatasource,
     onEffectiveModeChange,
+    access,
+    accessReason,
   } = props;
+
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return <></> as unknown as React.ReactElement;
 
   // ── State ──────────────────────────────────────────────────────
   const [gridApi, setGridApi] = useState<GridApi<RowData> | null>(null);
@@ -313,6 +316,7 @@ export function EntityGridTemplate<
       setGridApi(event.api);
 
       // Register grid API for pagination sync
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- pagination API typing gap
       pagination.registerGridApi(event.api as any);
 
       // Attach SSRM datasource if server mode
@@ -328,6 +332,7 @@ export function EntityGridTemplate<
   // ── Pagination changed → refresh snapshot ──────────────────────
   const handlePaginationChanged = useCallback(
     (event: { api: GridApi<RowData> }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- pagination API typing gap
       pagination.refreshPaginationSnapshot(event.api as any);
     },
     [pagination],
@@ -429,9 +434,10 @@ export function EntityGridTemplate<
 
   return (
     <div
-      className="relative flex flex-col"
+      className={`relative flex flex-col ${accessStyles(accessState.state)}`}
       data-component="entity-grid-template"
       data-grid-id={gridId}
+      title={accessReason}
     >
       {/* Toolbar */}
       <GridToolbar<RowData>

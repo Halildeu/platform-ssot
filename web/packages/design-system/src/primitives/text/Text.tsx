@@ -49,6 +49,7 @@ export type TextSize =
 
 export type TextWeight = "normal" | "medium" | "semibold" | "bold";
 
+/** Props for the Text component. */
 export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   /** HTML element to render */
   as?: TextElement | (string & {});
@@ -105,6 +106,7 @@ const lineClampStyles: Record<number, string> = {
   5: "line-clamp-5",
 };
 
+/** Typography primitive with variant, size, weight, truncation, and polymorphic element support. */
 export const Text = forwardRef<HTMLElement, TextProps>(
   (
     {

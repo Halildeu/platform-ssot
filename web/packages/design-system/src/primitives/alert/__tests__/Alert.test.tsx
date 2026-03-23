@@ -173,7 +173,7 @@ describe('Alert — Faz 3 Dalga 5 deepening', () => {
 
   /* --- Alert with icon --- */
   it('custom icon replaces default icon', () => {
-    const { container } = render(
+    render(
       <Alert icon={<span data-testid="my-icon">!</span>}>Test</Alert>,
     );
     expect(screen.getByTestId('my-icon')).toBeInTheDocument();

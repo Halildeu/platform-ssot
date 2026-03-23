@@ -34,7 +34,7 @@ describe('List (Browser)', () => {
   });
 
   it('shows loading skeleton when loading', async () => {
-    const screen = await render(<List items={[]} loading />);
+    await render(<List items={[]} loading />);
     const skeletons = document.querySelectorAll('[data-component="skeleton"]');
     expect(skeletons.length).toBeGreaterThan(0);
   });

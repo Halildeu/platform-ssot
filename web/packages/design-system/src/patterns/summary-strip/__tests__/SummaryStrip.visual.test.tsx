@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -12,7 +13,7 @@ const items = [
 
 describe('SummaryStrip Visual Regression', () => {
   it('4-column strip matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <SummaryStrip items={items} columns={4} />
       </div>,
@@ -21,7 +22,7 @@ describe('SummaryStrip Visual Regression', () => {
   });
 
   it('strip with title matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <SummaryStrip items={items} title="Monthly Overview" description="Last 30 days" />
       </div>,

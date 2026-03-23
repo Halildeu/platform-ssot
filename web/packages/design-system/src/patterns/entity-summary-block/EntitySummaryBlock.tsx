@@ -15,24 +15,37 @@ import { Text } from "../../primitives/text/Text";
 /*  EntitySummaryBlock — Summary card with avatar, title & key-values  */
 /* ------------------------------------------------------------------ */
 
+/** Props for {@link EntitySummaryBlock}. */
 export interface EntitySummaryBlockProps extends AccessControlledProps {
+  /** Primary heading for the entity. */
   title: React.ReactNode;
+  /** Secondary text displayed below the title. */
   subtitle?: React.ReactNode;
+  /** Badge rendered inline next to the title. */
   badge?: React.ReactNode;
+  /** Avatar configuration displayed beside the title area. */
   avatar?: {
+    /** Image source URL for the avatar. */
     src?: string;
+    /** Alt text for the avatar image. */
     alt?: string;
+    /** Name used to derive initials when no image is available. */
     name?: string;
+    /** Icon rendered as a fallback when no image or initials are available. */
     fallbackIcon?: React.ReactNode;
   };
+  /** Action buttons rendered in the top-right corner. */
   actions?: React.ReactNode;
+  /** Key-value description items displayed in a two-column grid. */
   items: DescriptionsItem[];
+  /** Additional CSS class for the outer section element. */
   className?: string;
 }
 
 const entitySummarySurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,246,255,0.94)))] p-6 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card,rgba(255,255,255,0.9))] before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-6 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
+/** Summary card displaying an entity with avatar, title, badges, actions, and key-value items. */
 export const EntitySummaryBlock: React.FC<EntitySummaryBlockProps> = ({
   title,
   subtitle,

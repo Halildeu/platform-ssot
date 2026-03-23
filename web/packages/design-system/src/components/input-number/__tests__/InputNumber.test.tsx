@@ -115,7 +115,7 @@ describe("InputNumber - step buttons", () => {
   });
 
   it("respects max on increment", async () => {
-    const user = userEvent.setup();
+    const _user = userEvent.setup();
     const handleChange = vi.fn();
     render(<InputNumber aria-label="qty" value={10} max={10} onChange={handleChange} />);
     const btn = screen.getByLabelText("Increment");

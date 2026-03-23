@@ -80,7 +80,7 @@ const tabStyles: Record<InternalVariant, { active: string; inactive: string }> =
     inactive: "text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg",
   },
   pill: {
-    active: "bg-[var(--action-primary)] text-white rounded-full shadow-sm",
+    active: "bg-[var(--action-primary)] text-[var(--text-inverse)] rounded-full shadow-sm",
     inactive: "text-[var(--text-secondary)] hover:bg-[var(--surface-muted)] rounded-full",
   },
 };
@@ -93,7 +93,7 @@ const sizeStyles: Record<TabsSize, string> = {
 
 const resolveKey = (item: TabItem): string => item.key;
 
-export const Tabs: React.FC<TabsProps> = ({
+export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
   items,
   variant: variantProp = "line",
   size = "md",
@@ -105,7 +105,7 @@ export const Tabs: React.FC<TabsProps> = ({
   className,
   density = "comfortable",
   slotProps,
-}) => {
+}, ref) => {
   const variant = normalizeVariant(variantProp);
   const fullWidth = fullWidthProp || variantProp === "fullWidth";
   const controlledKey = activeKeyProp;
@@ -149,7 +149,7 @@ export const Tabs: React.FC<TabsProps> = ({
   const activeItem = items.find((i) => resolveKey(i) === currentKey);
 
   return (
-    <div {...slotProps?.root} className={cn(className, slotProps?.root?.className)}>
+    <div ref={ref} {...slotProps?.root} className={cn(className, slotProps?.root?.className)}>
       {/* Tab list */}
       <div
         role="tablist"
@@ -252,6 +252,6 @@ export const Tabs: React.FC<TabsProps> = ({
       )}
     </div>
   );
-};
+});
 
 Tabs.displayName = "Tabs";

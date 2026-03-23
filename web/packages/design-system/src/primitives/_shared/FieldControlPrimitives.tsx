@@ -118,17 +118,27 @@ export const getFieldSlotClass = (
   );
 
 type FieldControlShellProps = {
+  /** ID of the associated input element for label association. */
   inputId: string;
+  /** Field label displayed above the input. */
   label?: React.ReactNode;
+  /** Descriptive text below the label. */
   description?: React.ReactNode;
+  /** Help text displayed below the input. */
   hint?: React.ReactNode;
+  /** Error message displayed below the input. */
   error?: React.ReactNode;
+  /** Character count label displayed beside the input. */
   countLabel?: string;
+  /** Whether to show the required indicator. */
   required?: boolean;
+  /** Whether the shell spans the full container width. */
   fullWidth?: boolean;
+  /** Field input element(s) to wrap. */
   children: React.ReactNode;
 };
 
+/** Field control shell providing label, hint text, error message, and required indicator layout for form fields. */
 export const FieldControlShell: React.FC<FieldControlShellProps> = ({
   inputId,
   label,

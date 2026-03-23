@@ -334,7 +334,7 @@ export const Segmented = React.forwardRef<HTMLDivElement, SegmentedProps>(
             classes?.list,
           )}
         >
-          {items.map((item, index) => {
+          {items.map((item, _index) => {
             const active = isSelected(currentValue, item.value);
             const isFirstEnabled =
               enabledItems[0]?.value === item.value;

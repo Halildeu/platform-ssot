@@ -13,16 +13,27 @@ import { Text } from "../../primitives/text/Text";
 
 type JsonExpandable = Record<string, unknown> | unknown[];
 
+/** Props for the JsonViewer component. */
 export interface JsonViewerProps extends AccessControlledProps {
+  /** JSON data to display in the tree. */
   value: unknown;
+  /** Heading text above the viewer. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** Label for the root tree node. */
   rootLabel?: string;
+  /** Number of tree levels expanded by default. */
   defaultExpandedDepth?: number;
+  /** Maximum height of the scrollable viewer area. */
   maxHeight?: number | string;
+  /** Whether the viewer spans full container width. */
   fullWidth?: boolean;
+  /** Whether to show type badges on each node. */
   showTypes?: boolean;
+  /** Label shown when no data is available. */
   emptyStateLabel?: React.ReactNode;
+  /** Locale-specific label overrides. */
   localeText?: {
     emptyStateLabel?: React.ReactNode;
     emptyFallbackDescription?: React.ReactNode;
@@ -77,8 +88,9 @@ const formatPrimitive = (value: unknown) => {
 };
 
 const jsonViewerSurfaceClassName =
-  "relative overflow-auto rounded-[28px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,246,255,0.94)))] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card,rgba(255,255,255,0.9))] before:to-transparent";
+  "relative overflow-auto rounded-[28px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
+/** Interactive collapsible JSON tree viewer with type badges and configurable expand depth. */
 export const JsonViewer: React.FC<JsonViewerProps> = ({
   value,
   title,
@@ -155,7 +167,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
             </div>
             {showTypes ? <Badge variant={typeInfo.tone}>{typeInfo.label}</Badge> : null}
           </div>
-          <code className={`mt-2 block overflow-x-auto rounded-xl border border-[var(--border-subtle)]/65 bg-[var(--surface-card,rgba(255,255,255,0.72))] px-3 py-2 text-xs shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.12))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${primitiveClassName(nodeValue)}`}>
+          <code className={`mt-2 block overflow-x-auto rounded-xl border border-[var(--border-subtle)]/65 bg-[var(--surface-card)] px-3 py-2 text-xs shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.12))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${primitiveClassName(nodeValue)}`}>
             {formatPrimitive(nodeValue)}
           </code>
         </div>
@@ -167,7 +179,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
       : Object.entries(nodeValue);
 
     return (
-      <div key={path} className={`rounded-[24px] border border-[var(--border-subtle)]/75 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(255,255,255,0.92),rgba(247,247,255,0.84)))] p-4 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${indentClass}`}>
+      <div key={path} className={`rounded-[24px] border border-[var(--border-subtle)]/75 bg-[var(--surface-card-alt)] p-4 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${indentClass}`}>
         <button
           type="button"
           className="flex w-full items-center justify-between gap-3 text-left transition duration-200 hover:-translate-y-px"

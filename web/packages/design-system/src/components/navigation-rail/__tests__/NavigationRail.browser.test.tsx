@@ -26,7 +26,7 @@ describe('NavigationRail (Browser)', () => {
   });
 
   it('marks default value as active with aria-current', async () => {
-    const screen = await render(<NavigationRail items={items} defaultValue="orders" />);
+    await render(<NavigationRail items={items} defaultValue="orders" />);
     const activeItem = document.querySelector('[aria-current="page"]');
     expect(activeItem).not.toBeNull();
     expect(activeItem!.textContent).toContain('Orders');
@@ -42,7 +42,7 @@ describe('NavigationRail (Browser)', () => {
   });
 
   it('navigates with ArrowDown/ArrowUp keyboard', async () => {
-    const screen = await render(<NavigationRail items={items} defaultValue="dashboard" />);
+    await render(<NavigationRail items={items} defaultValue="dashboard" />);
     const firstItem = document.querySelector('[data-slot="item"][tabindex="0"]') as HTMLElement;
     firstItem.focus();
     await userEvent.keyboard('{ArrowDown}');

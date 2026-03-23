@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -12,7 +13,7 @@ const nodes = [
 
 describe('TreeTable Visual Regression', () => {
   it('expanded state matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />
       </div>,

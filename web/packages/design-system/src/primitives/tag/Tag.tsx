@@ -12,6 +12,7 @@ import { stateAttrs } from "../../internal/interaction-core";
 export type TagVariant = "default" | "primary" | "success" | "warning" | "error" | "info" | "danger";
 export type TagSize = "sm" | "md" | "lg";
 
+/** Props for the Tag component. */
 export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: TagVariant;
   /** @deprecated Use `variant` instead. Will be removed in v3.0.0. */
@@ -50,6 +51,7 @@ const sizeStyles: Record<TagSize, string> = {
   lg: "h-7 px-2.5 text-xs gap-1.5",
 };
 
+/** Removable label chip with semantic color variants, optional icon, and close button. */
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(
   (
     {

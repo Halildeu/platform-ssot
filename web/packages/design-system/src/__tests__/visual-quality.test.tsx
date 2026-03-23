@@ -35,8 +35,6 @@ import { Text } from "../primitives/text";
 import { Input } from "../primitives/input";
 import { Card } from "../primitives/card";
 import { Modal } from "../primitives/modal";
-import { Tooltip } from "../primitives/tooltip";
-import { Popover } from "../primitives/popover";
 import { LinkInline } from "../primitives/link-inline";
 
 afterEach(() => {

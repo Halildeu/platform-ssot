@@ -16,15 +16,41 @@ export interface RecordCounts {
   filtered: number;
 }
 
+export interface DataExportDialogLocaleText {
+  title?: string;
+  exportButton?: string;
+  cancelButton?: string;
+  ariaLabel?: string;
+  scopeHeading?: string;
+  includeCharts?: string;
+  recordSuffix?: string;
+  scopeVisible?: string;
+  scopeAll?: string;
+  scopeSelected?: string;
+  scopeFiltered?: string;
+}
+
+/** Modal dialog for configuring and triggering data exports in various formats. */
 export interface DataExportDialogProps extends AccessControlledProps {
+  /** Whether the dialog is currently visible */
   open: boolean;
+  /** Called when the dialog should be closed */
   onClose: () => void;
+  /** Called with the selected export options when the user confirms */
   onExport: (options: { format: ExportFormat; scope: ExportScope; includeCharts: boolean }) => void | Promise<void>;
+  /** Record counts per scope, displayed alongside scope options */
   recordCounts?: RecordCounts;
+  /** Available export format options to present */
   formats?: ExportFormat[];
+  /** Available scope options to present */
   scopes?: ExportScope[];
+  /** Pre-selected export format */
   defaultFormat?: ExportFormat;
+  /** Pre-selected export scope */
   defaultScope?: ExportScope;
+  /** Localized labels — Turkish defaults are used when omitted */
+  localeText?: DataExportDialogLocaleText;
+  /** Additional CSS class names for the dialog container */
   className?: string;
 }
 
@@ -39,7 +65,7 @@ const FORMAT_LABELS: Record<ExportFormat, { label: string; icon: string }> = {
   png: { label: 'PNG', icon: 'M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z' },
 };
 
-const SCOPE_LABELS: Record<ExportScope, string> = {
+const DEFAULT_SCOPE_LABELS: Record<ExportScope, string> = {
   visible: 'G\u00f6r\u00fcn\u00fcr kay\u0131tlar',
   all: 'T\u00fcm kay\u0131tlar',
   selected: 'Se\u00e7ili kay\u0131tlar',
@@ -51,10 +77,10 @@ const SCOPE_LABELS: Record<ExportScope, string> = {
 // ---------------------------------------------------------------------------
 
 const FORMAT_COLORS: Record<ExportFormat, string> = {
-  pdf: '#ef4444',
-  excel: '#22c55e',
-  csv: '#3b82f6',
-  png: '#a855f7',
+  pdf: 'var(--state-error-text, #ef4444)',
+  excel: 'var(--state-success-text, #22c55e)',
+  csv: 'var(--action-primary, #3b82f6)',
+  png: 'var(--chart-purple, #a855f7)',
 };
 
 // ---------------------------------------------------------------------------
@@ -85,7 +111,7 @@ function RadioOption({
       className={cn(
         'flex items-center gap-2 rounded-md border px-3 py-2 text-sm cursor-pointer transition-colors',
         checked
-          ? 'border-blue-500 bg-blue-50'
+          ? 'border-[var(--action-primary)] bg-[var(--state-info-bg)]'
           : 'border-[var(--border-default)] hover:bg-[var(--surface-muted)]',
         disabled && 'opacity-50 cursor-not-allowed',
       )}
@@ -97,7 +123,7 @@ function RadioOption({
         checked={checked}
         disabled={disabled}
         onChange={() => onChange(value)}
-        className="accent-blue-600"
+        className="accent-[var(--action-primary)]"
       />
       {color && (
         <span
@@ -125,6 +151,7 @@ function Backdrop({ onClick }: { onClick: () => void }) {
 // DataExportDialog component
 // ---------------------------------------------------------------------------
 
+/** Modal dialog for configuring and triggering data exports in various formats. */
 export function DataExportDialog({
   open,
   onClose,
@@ -134,6 +161,7 @@ export function DataExportDialog({
   scopes = ['visible', 'all', 'selected', 'filtered'],
   defaultFormat = 'excel',
   defaultScope = 'visible',
+  localeText,
   access,
   accessReason,
   className,
@@ -160,12 +188,30 @@ export function DataExportDialog({
 
   if (isHidden || !open) return null;
 
+  // Resolve locale labels with Turkish defaults
+  const t = {
+    title: localeText?.title ?? 'D\u0131\u015fa Aktar',
+    exportButton: localeText?.exportButton ?? 'D\u0131\u015fa Aktar',
+    cancelButton: localeText?.cancelButton ?? 'Vazge\u00e7',
+    ariaLabel: localeText?.ariaLabel ?? 'Veri d\u0131\u015fa aktar',
+    scopeHeading: localeText?.scopeHeading ?? 'Kapsam',
+    includeCharts: localeText?.includeCharts ?? 'Grafikleri dahil et',
+    recordSuffix: localeText?.recordSuffix ?? 'kay\u0131t',
+  };
+
+  const scopeLabels: Record<ExportScope, string> = {
+    visible: localeText?.scopeVisible ?? DEFAULT_SCOPE_LABELS.visible,
+    all: localeText?.scopeAll ?? DEFAULT_SCOPE_LABELS.all,
+    selected: localeText?.scopeSelected ?? DEFAULT_SCOPE_LABELS.selected,
+    filtered: localeText?.scopeFiltered ?? DEFAULT_SCOPE_LABELS.filtered,
+  };
+
   // Determine record count summary
   const scopeCount = recordCounts?.[scope];
   const totalCount = recordCounts?.all;
   const countSummary =
     scopeCount !== undefined && totalCount !== undefined
-      ? `${scopeCount.toLocaleString('tr-TR')} / ${totalCount.toLocaleString('tr-TR')} kay\u0131t`
+      ? `${scopeCount.toLocaleString('tr-TR')} / ${totalCount.toLocaleString('tr-TR')} ${t.recordSuffix}`
       : null;
 
   return (
@@ -179,12 +225,12 @@ export function DataExportDialog({
         )}
         role="dialog"
         aria-modal="true"
-        aria-label="Veri d\u0131\u015fa aktar"
+        aria-label={t.ariaLabel}
         title={accessReason}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[var(--border-default)] px-5 py-4">
-          <h2 className="text-base font-semibold text-[var(--text-primary)]">D\u0131\u015fa Aktar</h2>
+          <h2 className="text-base font-semibold text-[var(--text-primary)]">{t.title}</h2>
           <button
             type="button"
             className="rounded p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-muted)] transition-colors"
@@ -224,7 +270,7 @@ export function DataExportDialog({
           {/* Scope selection */}
           <fieldset>
             <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
-              Kapsam
+              {t.scopeHeading}
             </legend>
             <div className="grid grid-cols-2 gap-2">
               {scopes.map((s) => (
@@ -232,7 +278,7 @@ export function DataExportDialog({
                   key={s}
                   name="export-scope"
                   value={s}
-                  label={SCOPE_LABELS[s]}
+                  label={scopeLabels[s]}
                   checked={scope === s}
                   disabled={isDisabled}
                   onChange={(v) => setScope(v as ExportScope)}
@@ -254,9 +300,9 @@ export function DataExportDialog({
               checked={includeCharts}
               onChange={(e) => setIncludeCharts(e.target.checked)}
               disabled={isDisabled}
-              className="accent-blue-600 h-4 w-4"
+              className="accent-[var(--action-primary)] h-4 w-4"
             />
-            <span className="text-sm text-[var(--text-primary)]">Grafikleri dahil et</span>
+            <span className="text-sm text-[var(--text-primary)]">{t.includeCharts}</span>
           </label>
 
           {/* Record count summary */}
@@ -274,11 +320,11 @@ export function DataExportDialog({
             className="rounded-md border border-[var(--border-default)] bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--surface-muted)] transition-colors"
             onClick={onClose}
           >
-            Vazge\u00e7
+            {t.cancelButton}
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-md bg-[var(--action-primary)] px-4 py-2 text-sm font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isDisabled || exporting}
             onClick={handleExport}
           >
@@ -287,7 +333,7 @@ export function DataExportDialog({
                 <circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="12" />
               </svg>
             )}
-            D\u0131\u015fa Aktar
+            {t.exportButton}
           </button>
         </div>
       </div>

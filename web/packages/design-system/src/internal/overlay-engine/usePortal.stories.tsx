@@ -1,0 +1,26 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import React from 'react';
+
+const meta: Meta = {
+  title: 'Internal/usePortal',
+};
+export default meta;
+
+type Story = StoryObj;
+
+export const Default: Story = {
+  render: () => (
+    <div>
+      usePortal is a hook — import it from overlay-engine to create and manage a portal container
+      div.
+    </div>
+  ),
+};
+
+export const WithCustomId: Story = {
+  render: () => <div>usePortal — creates portal container with custom ID attribute</div>,
+};
+
+export const Cleanup: Story = {
+  render: () => <div>usePortal — portal container removed on unmount</div>,
+};

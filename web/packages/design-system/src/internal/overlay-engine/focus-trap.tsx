@@ -169,6 +169,7 @@ export function useFocusTrap({
 
 /* ---- Component wrapper ---- */
 
+/** Props for the FocusTrap component. */
 export interface FocusTrapProps {
   /** Whether the trap is active */
   active: boolean;

@@ -24,13 +24,13 @@ describe('ConfidenceBadge (Browser)', () => {
   });
 
   it('renders aria-label with confidence level', async () => {
-    const screen = await render(<ConfidenceBadge level="high" />);
+    await render(<ConfidenceBadge level="high" />);
     const el = document.querySelector('[aria-label="Yuksek guven"]');
     expect(el).not.toBeNull();
   });
 
   it('renders data-confidence-level attribute', async () => {
-    const screen = await render(<ConfidenceBadge level="low" />);
+    await render(<ConfidenceBadge level="low" />);
     const el = document.querySelector('[data-confidence-level="low"]');
     expect(el).not.toBeNull();
   });

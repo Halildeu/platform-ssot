@@ -68,7 +68,7 @@ describe('Segmented (Browser)', () => {
   });
 
   it('supports vertical orientation', async () => {
-    const screen = await render(<Segmented items={items} orientation="vertical" />);
+    await render(<Segmented items={items} orientation="vertical" />);
     const root = document.querySelector('[data-orientation="vertical"]');
     expect(root).not.toBeNull();
   });

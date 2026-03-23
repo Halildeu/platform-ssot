@@ -32,13 +32,21 @@ export interface ComparisonColumnLabels {
   variancePercent?: string;
 }
 
+/** Table comparing actual vs target values with variance and trend indicators. */
 export interface ComparisonTableProps extends AccessControlledProps {
+  /** Data rows to display, supports nested children for hierarchical grouping */
   rows: ComparisonRow[];
+  /** Custom column header labels */
   columns?: ComparisonColumnLabels;
+  /** Default number formatting applied when a row does not specify its own */
   defaultFormat?: FormatOptions;
+  /** Row IDs that should be expanded on initial render */
   defaultExpandedIds?: string[];
+  /** When true, negative variance is shown as positive (e.g., cost reduction) */
   invertVarianceColors?: boolean;
+  /** Called when a data row is clicked */
   onRowClick?: (row: ComparisonRow) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -175,6 +183,7 @@ const RowRenderer: React.FC<RowRendererProps> = ({
 
 // ── Component ──
 
+/** Table comparing actual vs target values with variance and trend indicators. */
 export const ComparisonTable: React.FC<ComparisonTableProps> = ({
   rows,
   columns = {},

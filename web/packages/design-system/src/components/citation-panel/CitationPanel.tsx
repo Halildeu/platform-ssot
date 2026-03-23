@@ -21,14 +21,23 @@ export interface CitationPanelItem {
   badges?: React.ReactNode[];
 }
 
+/** Props for the CitationPanel component. */
 export interface CitationPanelProps extends AccessControlledProps {
+  /** Citation items to display in the panel. */
   items: CitationPanelItem[];
+  /** Heading text above the citation list. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** Whether to use a compact layout. */
   compact?: boolean;
+  /** ID of the currently selected citation. */
   activeCitationId?: string | null;
+  /** Label shown when there are no citations. */
   emptyStateLabel?: React.ReactNode;
+  /** Callback fired when a citation is clicked. */
   onOpenCitation?: (id: string, item: CitationPanelItem) => void;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -41,8 +50,9 @@ const kindTone: Record<CitationKind, BadgeVariant> = {
 };
 
 const citationPanelSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card,rgba(255,255,255,0.98))] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
 
+/** Panel displaying a list of source citations with excerpt, kind badge, and selection support. */
 export const CitationPanel: React.FC<CitationPanelProps> = ({
   items,
   title = "Alintilar",
@@ -85,7 +95,7 @@ export const CitationPanel: React.FC<CitationPanelProps> = ({
       </Text>
 
       {items.length === 0 ? (
-        <div className="mt-4 rounded-[24px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card,rgba(255,255,255,0.62))] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+        <div className="mt-4 rounded-[24px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card)] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
           <Empty
             description={
               typeof emptyStateLabel === "string"
@@ -129,7 +139,7 @@ export const CitationPanel: React.FC<CitationPanelProps> = ({
                   </Text>
                 </div>
                 <div
-                  className={`rounded-[20px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card,rgba(255,255,255,0.72))] px-4 py-3 shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.14))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${compact ? "text-sm" : "text-sm leading-7"} text-[var(--text-primary)]`}
+                  className={`rounded-[20px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card)] px-4 py-3 shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.14))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${compact ? "text-sm" : "text-sm leading-7"} text-[var(--text-primary)]`}
                 >
                   {item.excerpt}
                 </div>
@@ -140,7 +150,7 @@ export const CitationPanel: React.FC<CitationPanelProps> = ({
               <button
                 key={item.id}
                 type="button"
-                className={`w-full rounded-[26px] border px-4 py-4 text-left transition duration-200 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt,rgba(238,242,255,0.98))] shadow-[0_20px_36px_-28px_var(--shadow-color,rgba(79,70,229,0.32))] ring-1 ring-[var(--border-subtle)]/20" : "border-[var(--border-subtle)]/75 bg-[var(--surface-card,rgba(255,255,255,0.9))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] hover:-translate-y-px hover:bg-[var(--surface-hover,rgba(255,255,255,0.96))] hover:shadow-[0_20px_34px_-28px_var(--shadow-color,rgba(15,23,42,0.18))]"} ${blocked ? "cursor-not-allowed opacity-70" : ""}`}
+                className={`w-full rounded-[26px] border px-4 py-4 text-left transition duration-200 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt)] shadow-[0_20px_36px_-28px_var(--shadow-color,rgba(79,70,229,0.32))] ring-1 ring-[var(--border-subtle)]/20" : "border-[var(--border-subtle)]/75 bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] hover:-translate-y-px hover:bg-[var(--surface-hover)] hover:shadow-[0_20px_34px_-28px_var(--shadow-color,rgba(15,23,42,0.18))]"} ${blocked ? "cursor-not-allowed opacity-70" : ""}`}
                 onClick={withAccessGuard<React.MouseEvent<HTMLButtonElement>>(
                   interactionState,
                   () => onOpenCitation(item.id, item),
@@ -154,7 +164,7 @@ export const CitationPanel: React.FC<CitationPanelProps> = ({
             ) : (
               <div
                 key={item.id}
-                className={`rounded-[26px] border px-4 py-4 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt,rgba(238,242,255,0.98))] shadow-[0_20px_36px_-28px_var(--shadow-color,rgba(79,70,229,0.32))] ring-1 ring-[var(--border-subtle)]/20" : "border-[var(--border-subtle)]/75 bg-[var(--surface-card,rgba(255,255,255,0.9))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))]"}`}
+                className={`rounded-[26px] border px-4 py-4 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt)] shadow-[0_20px_36px_-28px_var(--shadow-color,rgba(79,70,229,0.32))] ring-1 ring-[var(--border-subtle)]/20" : "border-[var(--border-subtle)]/75 bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))]"}`}
               >
                 {body}
               </div>

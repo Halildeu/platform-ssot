@@ -10,17 +10,23 @@ import { resolveAccessState, type AccessControlledProps } from "../../internal/a
 export type PaginationSize = "sm" | "md";
 
 export interface PaginationProps extends AccessControlledProps {
+  /** Total number of items across all pages. */
   total?: number;
+  /** Controlled current page number. */
   current?: number;
   /** Initial page for uncontrolled mode. Ignored when `current` is provided. */
   defaultCurrent?: number;
+  /** Number of items per page. */
   pageSize?: number;
+  /** Callback fired when the page changes. */
   onChange?: (page: number) => void;
   /** Max page buttons visible (excluding prev/next) */
   siblingCount?: number;
+  /** Size variant for the pagination buttons. */
   size?: PaginationSize;
   /** Show total count */
   showTotal?: boolean;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -71,7 +77,7 @@ const sizeMap: Record<PaginationSize, string> = {
   md: "h-8 min-w-8 px-2.5 text-sm",
 };
 
-export const Pagination: React.FC<PaginationProps> = ({
+export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
   total: totalProp,
   current: currentProp,
   defaultCurrent,
@@ -83,7 +89,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   access = "full",
   accessReason,
   className,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
 
   if (accessState.isHidden) return null;
@@ -115,7 +121,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   );
 
   return (
-    <nav aria-label="Pagination" title={accessReason} className={cn("flex items-center gap-1.5", isAccessDisabled && "opacity-50 pointer-events-none", className)} {...stateAttrs({ component: "pagination", disabled: isAccessDisabled, access })}>
+    <nav ref={ref as React.Ref<HTMLElement>} aria-label="Pagination" title={accessReason} className={cn("flex items-center gap-1.5", isAccessDisabled && "opacity-50 pointer-events-none", className)} {...stateAttrs({ component: "pagination", disabled: isAccessDisabled, access })}>
       {showTotal && (
         <span className="me-2 text-xs text-[var(--text-secondary)]">
           {total} items
@@ -154,7 +160,7 @@ export const Pagination: React.FC<PaginationProps> = ({
             className={cn(
               btnBase,
               isActive
-                ? "bg-[var(--action-primary)] text-white shadow-sm"
+                ? "bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-sm"
                 : "text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]",
             )}
           >
@@ -177,6 +183,6 @@ export const Pagination: React.FC<PaginationProps> = ({
       </button>
     </nav>
   );
-};
+});
 
 Pagination.displayName = "Pagination";

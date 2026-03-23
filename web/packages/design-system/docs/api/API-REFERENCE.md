@@ -1,6 +1,6 @@
 # API Reference
 
-> Auto-generated on 2026-03-20 by `generate-api-reference.mjs`
+> Auto-generated on 2026-03-23 by `generate-api-reference.mjs`
 > 94 component interfaces documented.
 
 ## Table of Contents
@@ -996,6 +996,7 @@ _No props defined._
 | `description` | `string` | No | - | Accessible description. |
 | `localeText` | `ChartLocaleText` | No | - | Locale overrides. |
 | `className` | `string` | No | - | Additional class name. |
+| `series` | `{ field: string; name: string; color?: string }[]` | No | - | Multi-series: second value field for grouped bars. |
 
 ---
 

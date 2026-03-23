@@ -30,6 +30,7 @@ export interface SelectOption {
 
 export type SelectSlot = "root" | "trigger" | "listbox" | "option";
 
+/** Props for the Select component. */
 export interface SelectProps
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "size">,
     AccessControlledProps {
@@ -60,6 +61,7 @@ const sizeStyles: Record<SelectSize, string> = {
   lg: "h-11 text-base px-3.5 pe-10",
 };
 
+/** Native select dropdown with consistent styling, placeholder, loading state, and access control. */
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
     {

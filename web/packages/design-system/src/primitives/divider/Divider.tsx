@@ -5,12 +5,15 @@ import { cn } from "../../utils/cn";
 /*  Divider — Visual separator                                         */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Divider renders a horizontal or vertical visual separator with optional center label.
+ */
 export interface DividerProps extends React.HTMLAttributes<HTMLHRElement> {
-  /** Orientation */
+  /** Orientation of the divider line. @default "horizontal" */
   orientation?: "horizontal" | "vertical";
-  /** Label in the center */
+  /** Label text displayed centered within the divider line. */
   label?: string;
-  /** Margin spacing */
+  /** Margin spacing around the divider. @default "md" */
   spacing?: "none" | "sm" | "md" | "lg";
 }
 
@@ -28,58 +31,64 @@ const spacingVerticalMap: Record<string, string> = {
   lg: "mx-6",
 };
 
-export const Divider: React.FC<DividerProps> = ({
-  orientation = "horizontal",
-  label,
-  spacing = "md",
-  className,
-  ...rest
-}) => {
-  if (orientation === "vertical") {
+/** Horizontal or vertical line separator with optional center label for content sectioning. */
+export const Divider = React.forwardRef<HTMLElement, DividerProps>(
+  ({
+    orientation = "horizontal",
+    label,
+    spacing = "md",
+    className,
+    ...rest
+  }, ref) => {
+    if (orientation === "vertical") {
+      return (
+        <div
+          ref={ref as React.Ref<HTMLDivElement>}
+          role="separator"
+          aria-orientation="vertical"
+          className={cn(
+            "inline-block h-full w-px bg-[var(--border-subtle)]",
+            spacingVerticalMap[spacing],
+            className,
+          )}
+          {...(rest as React.HTMLAttributes<HTMLDivElement>)}
+        />
+      );
+    }
+
+    if (label) {
+      return (
+        <div
+          ref={ref as React.Ref<HTMLDivElement>}
+          role="separator"
+          className={cn(
+            "flex items-center gap-3",
+            spacingMap[spacing],
+            className,
+          )}
+          {...(rest as React.HTMLAttributes<HTMLDivElement>)}
+        >
+          <div className="h-px flex-1 bg-[var(--border-subtle)]" />
+          <span className="text-xs font-medium text-[var(--text-secondary)]">
+            {label}
+          </span>
+          <div className="h-px flex-1 bg-[var(--border-subtle)]" />
+        </div>
+      );
+    }
+
     return (
-      <div
-        role="separator"
-        aria-orientation="vertical"
+      <hr
+        ref={ref as React.Ref<HTMLHRElement>}
         className={cn(
-          "inline-block h-full w-px bg-[var(--border-subtle)]",
-          spacingVerticalMap[spacing],
+          "border-none h-px bg-[var(--border-subtle)]",
+          spacingMap[spacing],
           className,
         )}
         {...rest}
       />
     );
   }
-
-  if (label) {
-    return (
-      <div
-        role="separator"
-        className={cn(
-          "flex items-center gap-3",
-          spacingMap[spacing],
-          className,
-        )}
-        {...rest}
-      >
-        <div className="h-px flex-1 bg-[var(--border-subtle)]" />
-        <span className="text-xs font-medium text-[var(--text-secondary)]">
-          {label}
-        </span>
-        <div className="h-px flex-1 bg-[var(--border-subtle)]" />
-      </div>
-    );
-  }
-
-  return (
-    <hr
-      className={cn(
-        "border-none h-px bg-[var(--border-subtle)]",
-        spacingMap[spacing],
-        className,
-      )}
-      {...rest}
-    />
-  );
-};
+);
 
 Divider.displayName = "Divider";

@@ -26,13 +26,13 @@ describe('Spinner (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Spinner />);
+    await render(<Spinner />);
     const el = document.querySelector('[data-component="spinner"]');
     expect(el).not.toBeNull();
   });
 
   it('renders different sizes', async () => {
-    const screen = await render(
+    await render(
       <div>
         <Spinner size="xs" label="XS" />
         <Spinner size="lg" label="LG" />

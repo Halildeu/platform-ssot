@@ -41,7 +41,7 @@ describe('ApprovalCheckpoint (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(
+    await render(
       <ApprovalCheckpoint title="Gate" summary="Summary" />,
     );
     const el = document.querySelector('[data-component="approval-checkpoint"]');
@@ -49,7 +49,7 @@ describe('ApprovalCheckpoint (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(
+    await render(
       <ApprovalCheckpoint title="Gate" summary="Summary" access="hidden" />,
     );
     expect(document.querySelector('[data-component="approval-checkpoint"]')).toBeNull();

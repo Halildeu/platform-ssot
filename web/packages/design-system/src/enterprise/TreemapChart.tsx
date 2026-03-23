@@ -29,6 +29,7 @@ interface RenderedCell extends LayoutRect {
   color: string;
 }
 
+/** Props for the TreemapChart component. */
 export interface TreemapChartProps extends AccessControlledProps {
   items: TreemapItem[];
   /** Chart width (default responsive via viewBox) */
@@ -50,16 +51,16 @@ export interface TreemapChartProps extends AccessControlledProps {
 // ── Default palette ──
 
 const DEFAULT_PALETTE = [
-  'var(--interactive-primary)',
-  'var(--state-info-text)',
-  'var(--state-success-text)',
-  'var(--state-warning-text)',
-  'var(--state-error-text)',
-  '#8b5cf6',
-  '#ec4899',
-  '#06b6d4',
-  '#f59e0b',
-  '#10b981',
+  'var(--action-primary, #3b82f6)',
+  'var(--state-info-text, #2563eb)',
+  'var(--state-success-text, #22c55e)',
+  'var(--state-warning-text, #f59e0b)',
+  'var(--state-error-text, #ef4444)',
+  'var(--chart-purple, #8b5cf6)',
+  'var(--chart-pink, #ec4899)',
+  'var(--chart-cyan, #06b6d4)',
+  'var(--chart-amber, #f59e0b)',
+  'var(--chart-emerald, #10b981)',
 ];
 
 // ── Squarify algorithm ──
@@ -190,6 +191,7 @@ function squarify(
 
 // ── Component ──
 
+/** Space-filling treemap chart displaying hierarchical data as nested, proportionally-sized rectangles. */
 export const TreemapChart: React.FC<TreemapChartProps> = ({
   items,
   width = 600,
@@ -309,7 +311,7 @@ export const TreemapChart: React.FC<TreemapChartProps> = ({
                   dominantBaseline="central"
                   fontSize={Math.min(13, cell.w / 8)}
                   fontWeight={600}
-                  fill="white"
+                  fill="var(--text-inverse, #fff)"
                   style={{ pointerEvents: 'none' }}
                 >
                   {cell.item.label}
@@ -323,7 +325,8 @@ export const TreemapChart: React.FC<TreemapChartProps> = ({
                   textAnchor="middle"
                   dominantBaseline="central"
                   fontSize={Math.min(11, cell.w / 10)}
-                  fill="rgba(255,255,255,0.85)"
+                  fill="var(--text-inverse, #fff)"
+                  opacity={0.85}
                   style={{ pointerEvents: 'none' }}
                 >
                   {formatValue(cell.item.value, formatOptions)}

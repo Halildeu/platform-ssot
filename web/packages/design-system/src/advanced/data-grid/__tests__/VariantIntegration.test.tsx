@@ -2,9 +2,9 @@
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor, within, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import type { GridVariant, GridVariantState, VariantIntegrationProps } from '../VariantIntegration';
+import { cleanup, render, waitFor } from '@testing-library/react';
+import type { GridVariant, _GridVariantState, VariantIntegrationProps } from '../VariantIntegration';
+import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
 /* ------------------------------------------------------------------ */
 /*  Mock data                                                          */
@@ -180,7 +180,6 @@ const MESSAGES: VariantIntegrationProps['messages'] = {
 /*  Import component after mocks                                       */
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { VariantIntegration } = await import('../VariantIntegration');
 
 /* ------------------------------------------------------------------ */
@@ -247,6 +246,14 @@ describe('VariantIntegration', () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalled();
       });
+    });
+
+    it('has no accessibility violations', async () => {
+      const { container } = renderVariant();
+      await waitFor(() => {
+        expect(mockFetch).toHaveBeenCalled();
+      });
+      await expectNoA11yViolations(container);
     });
   });
 

@@ -21,11 +21,17 @@ export interface TrainingItem {
   mandatory?: boolean;
 }
 
+/** Training compliance tracker with progress bars, status filters, and collapsible groups. */
 export interface TrainingTrackerProps extends AccessControlledProps {
+  /** Training items to display */
   items: TrainingItem[];
+  /** Grouping strategy for organizing the items */
   groupBy?: 'category' | 'status' | 'assignee';
+  /** Initially active status filters; defaults to all statuses */
   filterStatuses?: TrainingStatus[];
+  /** Called when a training item row is clicked */
   onItemClick?: (item: TrainingItem) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -77,6 +83,7 @@ function groupItems(items: TrainingItem[], groupBy: 'category' | 'status' | 'ass
 
 // ── Component ──
 
+/** Training compliance tracker with progress bars, status filters, and collapsible groups. */
 export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
   items,
   groupBy = 'category',

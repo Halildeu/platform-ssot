@@ -1,10 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { Upload } from '../Upload';
 
 describe('Upload (Browser)', () => {
   it('renders file input element', async () => {
-    const screen = await render(<Upload />);
+    await render(<Upload />);
     const input = document.querySelector('input[type="file"]');
     expect(input).not.toBeNull();
   });
@@ -15,7 +15,7 @@ describe('Upload (Browser)', () => {
   });
 
   it('renders dropzone area', async () => {
-    const screen = await render(<Upload />);
+    await render(<Upload />);
     // The upload component should have a visual drop area
     const dropzone = document.querySelector('[data-field-type="upload"], [data-component="upload"]') ?? document.querySelector('input[type="file"]')?.parentElement;
     expect(dropzone).not.toBeNull();
@@ -32,7 +32,7 @@ describe('Upload (Browser)', () => {
   });
 
   it('is disabled when disabled prop is set', async () => {
-    const screen = await render(<Upload disabled />);
+    await render(<Upload disabled />);
     const input = document.querySelector('input[type="file"]') as HTMLInputElement;
     expect(input.disabled).toBe(true);
   });
@@ -48,7 +48,7 @@ describe('Upload (Browser)', () => {
   });
 
   it('renders empty state label when no files', async () => {
-    const screen = await render(<Upload emptyStateLabel="No files uploaded" defaultFiles={[]} />);
+    await render(<Upload emptyStateLabel="No files uploaded" defaultFiles={[]} />);
     // The component should show empty state or dropzone text
     const el = document.querySelector('input[type="file"]');
     expect(el).not.toBeNull();

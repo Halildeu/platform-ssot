@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { userEvent } from 'vitest/browser';
 import { Transfer } from '../Transfer';
 
 const data = [
@@ -47,7 +46,7 @@ describe('Transfer (Browser)', () => {
   });
 
   it('supports search in panels', async () => {
-    const screen = await render(<Transfer dataSource={data} searchable />);
+    await render(<Transfer dataSource={data} searchable />);
     const searchInputs = document.querySelectorAll('input[type="search"], input[placeholder]');
     expect(searchInputs.length).toBeGreaterThan(0);
   });

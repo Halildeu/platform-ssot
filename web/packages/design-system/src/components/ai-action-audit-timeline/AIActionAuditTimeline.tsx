@@ -27,14 +27,23 @@ export interface AIActionAuditTimelineItem {
   badges?: React.ReactNode[];
 }
 
+/** Props for the AIActionAuditTimeline component. */
 export interface AIActionAuditTimelineProps extends AccessControlledProps {
+  /** Timeline entries to render. */
   items: AIActionAuditTimelineItem[];
+  /** Heading text above the timeline. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** ID of the currently selected timeline entry. */
   selectedId?: string | null;
+  /** Callback fired when a timeline entry is selected. */
   onSelectItem?: (id: string, item: AIActionAuditTimelineItem) => void;
+  /** Whether to use a compact layout. */
   compact?: boolean;
+  /** Label shown when the timeline is empty. */
   emptyStateLabel?: React.ReactNode;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -55,6 +64,7 @@ const statusTone: Record<AIActionAuditStatus, BadgeVariant> = {
 const auditTimelineSurfaceClassName =
   "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
+/** Chronological timeline of AI-initiated actions with actor, status, and audit trail details. */
 export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
   items,
   title = "Denetim zaman cizelgesi",

@@ -24,10 +24,15 @@ export interface GovernanceItem {
 
 export type GovernanceGroupBy = 'domain' | 'status' | 'severity';
 
+/** Compliance governance board with summary strip, severity indicators, and collapsible groups. */
 export interface GovernanceBoardProps extends AccessControlledProps {
+  /** Governance control items to display */
   items: GovernanceItem[];
+  /** Grouping strategy for organizing items */
   groupBy?: GovernanceGroupBy;
+  /** Called when a governance item row is clicked */
   onItemClick?: (item: GovernanceItem) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -106,6 +111,7 @@ const SummaryStrip: React.FC<SummaryStripProps> = ({ items }) => {
 
 // ── Component ──
 
+/** Compliance governance board with summary strip, severity indicators, and collapsible groups. */
 export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
   items,
   groupBy = 'domain',

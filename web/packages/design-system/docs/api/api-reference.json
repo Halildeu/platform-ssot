@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-20T20:50:30.566Z",
+  "generatedAt": "2026-03-23T10:51:42.800Z",
   "componentCount": 94,
   "components": [
     {
@@ -3753,6 +3753,14 @@
           "type": "string",
           "required": false,
           "description": "Additional class name.",
+          "deprecated": false,
+          "experimental": false
+        },
+        {
+          "name": "series",
+          "type": "{ field: string; name: string; color?: string }[]",
+          "required": false,
+          "description": "Multi-series: second value field for grouped bars.",
           "deprecated": false,
           "experimental": false
         }

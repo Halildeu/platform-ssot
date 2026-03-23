@@ -19,10 +19,15 @@ export type BadgeVariant =
 
 export type BadgeSize = "sm" | "md" | "lg";
 
+/**
+ * Badge renders a small status or count indicator with semantic color variants.
+ */
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+  /** Visual color variant. @default "default" */
   variant?: BadgeVariant;
   /** @deprecated Use `variant` instead. Will be removed in v3.0.0. */
   tone?: BadgeVariant;
+  /** Badge size controlling padding and font size. @default "md" */
   size?: BadgeSize;
   /** Render as a dot (no children) */
   dot?: boolean;
@@ -58,6 +63,7 @@ const sizeStyles: Record<BadgeSize, string> = {
   lg: "px-2.5 py-1 text-xs",
 };
 
+/** Small status or count indicator with semantic color variants and optional dot mode. */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   (
     {

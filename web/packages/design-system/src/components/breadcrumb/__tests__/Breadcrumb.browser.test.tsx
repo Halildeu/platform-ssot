@@ -17,7 +17,7 @@ describe('Breadcrumb (Browser)', () => {
   });
 
   it('marks last item as current page with aria-current', async () => {
-    const screen = await render(<Breadcrumb items={items} />);
+    await render(<Breadcrumb items={items} />);
     const current = document.querySelector('[aria-current="page"]');
     expect(current).not.toBeNull();
     expect(current!.textContent).toBe('Detail');
@@ -41,14 +41,14 @@ describe('Breadcrumb (Browser)', () => {
   });
 
   it('renders separators between items', async () => {
-    const screen = await render(<Breadcrumb items={items} />);
+    await render(<Breadcrumb items={items} />);
     const separators = document.querySelectorAll('[aria-hidden]');
     // Should have n-1 separators for n items
     expect(separators.length).toBe(items.length - 1);
   });
 
   it('renders custom separator', async () => {
-    const screen = await render(<Breadcrumb items={items} separator={<span>/</span>} />);
+    await render(<Breadcrumb items={items} separator={<span>/</span>} />);
     const slashes = document.querySelectorAll('[aria-hidden]');
     expect(slashes.length).toBeGreaterThan(0);
   });
@@ -68,7 +68,7 @@ describe('Breadcrumb (Browser)', () => {
   });
 
   it('renders ordered list element', async () => {
-    const screen = await render(<Breadcrumb items={items} />);
+    await render(<Breadcrumb items={items} />);
     const ol = document.querySelector('ol');
     expect(ol).not.toBeNull();
   });

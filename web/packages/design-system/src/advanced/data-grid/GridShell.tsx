@@ -8,7 +8,8 @@
  * - License guard via setup.ts side-effect import
  * - onGridReady event forwarding
  */
-import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from "react";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
 import { AgGridReact } from "ag-grid-react";
 import type {
   ColDef,
@@ -33,7 +34,8 @@ export interface GridShellApi<RowData = unknown> {
   getGridApi: () => GridApi<RowData> | null;
 }
 
-export interface GridShellProps<RowData = unknown> {
+/** Props for the GridShell component. */
+export interface GridShellProps<RowData = unknown> extends AccessControlledProps {
   /** AG Grid column definitions */
   columnDefs: ColDef<RowData>[];
   /** Default column definition applied to all columns */
@@ -136,7 +138,12 @@ function GridShellInner<RowData = unknown>(
     className,
     gridKey,
     children,
+    access,
+    accessReason,
   } = props;
+
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return <div style={{ display: 'none' }} /> as React.ReactElement;
 
   const gridApiRef = useRef<GridApi<RowData> | null>(null);
 
@@ -180,9 +187,10 @@ function GridShellInner<RowData = unknown>(
 
   return (
     <div
-      className={[className ?? ""].join(" ").trim() || undefined}
+      className={[className ?? "", accessStyles(accessState.state)].join(" ").trim() || undefined}
       data-component="grid-shell"
       data-density={density}
+      title={accessReason}
     >
       <div
         className={themeClassName}
@@ -193,6 +201,7 @@ function GridShellInner<RowData = unknown>(
           key={gridKey}
           rowData={rowModelType === "clientSide" ? rowData : undefined}
           columnDefs={columnDefs}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- AG Grid ColDef typing gap
           defaultColDef={mergedDefaultColDef as any}
           rowModelType={rowModelType}
           sideBar={sideBar}
@@ -219,6 +228,7 @@ function GridShellInner<RowData = unknown>(
   );
 }
 
+/** Core AG Grid shell with theme, density, selection, empty state, and imperative API access. */
 export const GridShell = forwardRef(GridShellInner) as <RowData = unknown>(
   props: GridShellProps<RowData> & { ref?: React.Ref<GridShellApi<RowData>> },
 ) => React.ReactElement;

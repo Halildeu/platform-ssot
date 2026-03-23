@@ -47,22 +47,38 @@ export interface TreeTableLocaleText {
   collapseNodeAriaLabel?: string;
 }
 
+/** Props for the TreeTable component. */
 export interface TreeTableProps<RowData extends Record<string, unknown> = Record<string, unknown>>
   extends AccessControlledProps {
+  /** Hierarchical node data to display. */
   nodes: TreeTableNode<RowData>[];
+  /** Column definitions for the tabular section. */
   columns: TreeTableColumn<RowData>[];
+  /** Header label for the tree column. */
   treeColumnLabel?: React.ReactNode;
+  /** Heading text above the table. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** Row spacing density variant. */
   density?: TreeTableDensity;
+  /** Label shown when there are no nodes. */
   emptyStateLabel?: React.ReactNode;
+  /** Whether to show loading skeleton rows. */
   loading?: boolean;
+  /** Key of the currently selected node. */
   selectedKey?: React.Key | null;
+  /** Callback fired when a node row is selected. */
   onNodeSelect?: (key: React.Key) => void;
+  /** Initially expanded node keys for uncontrolled mode. */
   defaultExpandedKeys?: React.Key[];
+  /** Controlled set of expanded node keys. */
   expandedKeys?: React.Key[];
+  /** Callback fired when expanded keys change. */
   onExpandedKeysChange?: (keys: React.Key[]) => void;
+  /** Whether the table spans the full container width. */
   fullWidth?: boolean;
+  /** Locale-specific label overrides. */
   localeText?: TreeTableLocaleText;
 }
 
@@ -125,6 +141,7 @@ const resolveCellValue = <RowData extends Record<string, unknown>>(
   return node.data?.[column.key] as React.ReactNode;
 };
 
+/** Hierarchical tree with tabular data columns, expand/collapse, sorting, and row selection. */
 export function TreeTable<RowData extends Record<string, unknown> = Record<string, unknown>>({
   nodes,
   columns,

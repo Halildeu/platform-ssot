@@ -9,7 +9,7 @@
  *  - Style tag / scroll-lock accumulation
  */
 import React from "react";
-import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { render, cleanup } from "@testing-library/react";
 
 /* ------------------------------------------------------------------ */

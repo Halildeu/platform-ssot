@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, fireEvent } from '@testing-library/react';
 import { expectNoA11yViolations } from './a11y-utils';
@@ -174,7 +174,7 @@ describe('A11y Depth — Open overlay states', () => {
   });
 
   it('Drawer open has no a11y violations', async () => {
-    const { container } = render(
+    render(
       <Drawer open title="Settings" onClose={vi.fn()}>
         <p>Drawer content here</p>
       </Drawer>,

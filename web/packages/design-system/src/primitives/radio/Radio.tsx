@@ -13,6 +13,7 @@ import {
 
 export type RadioSize = "sm" | "md" | "lg";
 
+/** Props for the Radio component. */
 export interface RadioProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type">,
     AccessControlledProps {
@@ -43,6 +44,7 @@ const dotSizes: Record<RadioSize, { outer: string; inner: string }> = {
   lg: { outer: "h-5 w-5", inner: "h-2.5 w-2.5" },
 };
 
+/** Single-select radio option with label, description, density control, and loading state. */
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
   (
     {

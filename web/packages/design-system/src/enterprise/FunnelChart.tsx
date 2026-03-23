@@ -16,12 +16,19 @@ export interface FunnelStage {
   color?: string;
 }
 
+/** Funnel visualization with conversion rates between stages. */
 export interface FunnelChartProps extends AccessControlledProps {
+  /** Ordered funnel stages from widest to narrowest */
   stages: FunnelStage[];
+  /** Render direction: vertical uses trapezoid shapes, horizontal uses bars */
   orientation?: 'vertical' | 'horizontal';
+  /** Enable entrance animation when the chart mounts */
   animated?: boolean;
+  /** Number formatting options for stage values */
   formatOptions?: FormatOptions;
+  /** Called when a funnel stage is clicked */
   onStageClick?: (stage: FunnelStage) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -33,18 +40,19 @@ function computeConversionRate(current: number, previous: number): number {
 }
 
 const DEFAULT_COLORS = [
-  'var(--interactive-primary)',
-  'var(--state-info-text)',
-  'var(--state-success-text)',
-  'var(--state-warning-text)',
-  'var(--state-error-text)',
-  '#8b5cf6',
-  '#ec4899',
-  '#06b6d4',
+  'var(--action-primary, #3b82f6)',
+  'var(--state-info-text, #2563eb)',
+  'var(--state-success-text, #22c55e)',
+  'var(--state-warning-text, #f59e0b)',
+  'var(--state-error-text, #ef4444)',
+  'var(--chart-purple, #8b5cf6)',
+  'var(--chart-pink, #ec4899)',
+  'var(--chart-cyan, #06b6d4)',
 ];
 
 // ── Component ──
 
+/** Funnel visualization with conversion rates between stages. */
 export const FunnelChart: React.FC<FunnelChartProps> = ({
   stages,
   orientation = 'vertical',
@@ -263,7 +271,7 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
                   textAnchor="middle"
                   fontSize={11}
                   fontWeight={600}
-                  fill="white"
+                  fill="var(--text-inverse, #fff)"
                 >
                   {formatValue(stage.value, formatOptions)}
                 </text>

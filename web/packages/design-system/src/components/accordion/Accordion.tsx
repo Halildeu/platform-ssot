@@ -67,24 +67,43 @@ export interface AccordionItem {
 
 export type AccordionSlot = "root" | "item" | "trigger" | "content";
 
+/** Props for the Accordion component. */
 export interface AccordionProps extends AccessControlledProps {
+  /** Accordion section items to render. */
   items: AccordionItem[];
+  /** Controlled expanded section value(s). */
   value?: string | string[];
+  /** Initially expanded section(s) for uncontrolled mode. */
   defaultValue?: string | string[];
+  /** Callback fired when the expanded sections change. */
   onValueChange?: (nextValue: string[]) => void;
+  /** Callback fired when a single item is toggled. */
   onItemToggle?: (itemValue: string, expanded: boolean) => void;
+  /** Whether one or multiple sections can be open simultaneously. */
   selectionMode?: AccordionSelectionMode;
+  /** Accessible label for the accordion. */
   ariaLabel?: string;
+  /** Size variant for header and content spacing. */
   size?: AccordionSize;
+  /** Whether to show borders between sections. */
   bordered?: boolean;
+  /** Whether to use the ghost (transparent) appearance. */
   ghost?: boolean;
+  /** Whether to show the expand/collapse arrow indicator. */
   showArrow?: boolean;
+  /** Custom expand icon element. */
   expandIcon?: React.ReactNode;
+  /** Position of the expand icon relative to the header. */
   expandIconPosition?: AccordionExpandIconPosition;
+  /** Whether to remove horizontal padding from sections. */
   disableGutters?: boolean;
+  /** Whether to unmount collapsed section content from the DOM. */
   destroyOnHidden?: boolean;
+  /** Controls which part of the header triggers collapse. */
   collapsible?: AccordionCollapsible;
+  /** Custom class name overrides for sub-elements. */
   classes?: AccordionClasses;
+  /** Additional CSS class name. */
   className?: string;
   /** Override props (className, style, etc.) on internal slot elements */
   slotProps?: SlotProps<AccordionSlot>;
@@ -167,7 +186,8 @@ const gutterlessSizeClassNames: Record<AccordionSize, string> = {
 const accordionPremiumSurfaceClassName =
   "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_28px_60px_-34px_var(--shadow-color)] backdrop-blur-sm";
 
-export const Accordion: React.FC<AccordionProps> = ({
+/** Collapsible content panels with single or multiple expand modes, keyboard navigation, and preset support. */
+export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
   items,
   value,
   defaultValue,
@@ -189,7 +209,7 @@ export const Accordion: React.FC<AccordionProps> = ({
   slotProps,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const isControlled = value !== undefined;
   const [internalExpanded, setInternalExpanded] = React.useState<string[]>(
@@ -218,6 +238,7 @@ export const Accordion: React.FC<AccordionProps> = ({
 
   return (
     <div
+      ref={ref}
       {...slotProps?.root}
       className={cn(
         "accordion-root flex flex-col rounded-[24px]",
@@ -460,7 +481,7 @@ export const Accordion: React.FC<AccordionProps> = ({
       })}
     </div>
   );
-};
+});
 
 Accordion.displayName = "Accordion";
 

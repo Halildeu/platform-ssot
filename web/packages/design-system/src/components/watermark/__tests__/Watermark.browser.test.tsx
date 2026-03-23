@@ -47,7 +47,7 @@ describe('Watermark (Browser)', () => {
   });
 
   it('applies custom className', async () => {
-    const screen = await render(
+    await render(
       <Watermark content="Test" className="my-watermark"><div>Content</div></Watermark>,
     );
     const el = document.querySelector('.my-watermark');

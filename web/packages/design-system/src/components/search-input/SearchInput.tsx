@@ -17,6 +17,7 @@ export interface SearchInputProps
   loading?: boolean;
   /** Show clear button when value is non-empty */
   clearable?: boolean;
+  /** Callback fired when the clear button is clicked. */
   onClear?: () => void;
   /** Keyboard shortcut hint (e.g. "⌘K") */
   shortcutHint?: string;

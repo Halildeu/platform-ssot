@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, fireEvent, within } from '@testing-library/react';
+import { cleanup, render, fireEvent } from '@testing-library/react';
 import { Select } from '../Select';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 

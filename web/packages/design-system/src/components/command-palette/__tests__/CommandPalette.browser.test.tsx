@@ -16,7 +16,7 @@ describe('CommandPalette (Browser)', () => {
   });
 
   it('renders nothing when closed', async () => {
-    const screen = await render(<CommandPalette open={false} items={items} />);
+    await render(<CommandPalette open={false} items={items} />);
     expect(document.querySelector('[role="dialog"]')).toBeNull();
   });
 
@@ -43,7 +43,7 @@ describe('CommandPalette (Browser)', () => {
 
   it('fires onClose when Escape is pressed', async () => {
     const onClose = vi.fn();
-    const screen = await render(<CommandPalette open items={items} onClose={onClose} />);
+    await render(<CommandPalette open items={items} onClose={onClose} />);
     await userEvent.keyboard('{Escape}');
     expect(onClose).toHaveBeenCalled();
   });
@@ -56,7 +56,7 @@ describe('CommandPalette (Browser)', () => {
   });
 
   it('renders search placeholder', async () => {
-    const screen = await render(<CommandPalette open items={items} placeholder="Search commands..." />);
+    await render(<CommandPalette open items={items} placeholder="Search commands..." />);
     const input = document.querySelector('input');
     expect(input?.getAttribute('placeholder')).toBe('Search commands...');
   });

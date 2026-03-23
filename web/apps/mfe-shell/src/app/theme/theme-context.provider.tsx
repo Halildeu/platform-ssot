@@ -710,6 +710,13 @@ export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) =
 
   const isDarkMode = axes.appearance === 'dark' || axes.appearance === 'high-contrast';
 
+  // Sync data-mode attribute for design-system dark-mode.css compatibility
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-mode', isDarkMode ? 'dark' : 'light');
+    }
+  }, [isDarkMode]);
+
   const cycleTheme = () => {
     const idx = BASE_THEMES.findIndex((theme) => theme.key === themeKey);
     const next = BASE_THEMES[(idx + 1) % BASE_THEMES.length];

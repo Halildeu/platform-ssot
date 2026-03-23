@@ -63,8 +63,7 @@ describe("Token build consistency", () => {
   // Load all token exports dynamically
   let barrel: Record<string, unknown>;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const getBarrel = async (): Promise<Record<string, any>> => {
+  const getBarrel = async (): Promise<Record<string, unknown>> => {
     if (!barrel) {
       barrel = await import("../index");
     }

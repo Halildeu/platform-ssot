@@ -191,7 +191,7 @@ describe('Tag — Faz 3 Dalga 5 deepening', () => {
 
   /* --- Tag with icon --- */
   it('icon renders before text content', () => {
-    const { container } = render(
+    render(
       <Tag icon={<svg data-testid="tag-svg" />}>With icon</Tag>,
     );
     const iconEl = screen.getByTestId('tag-svg');

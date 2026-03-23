@@ -5,17 +5,31 @@ import { cn } from "../../utils/cn";
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Watermark renders a repeating text or image watermark overlay on top of its children.
+ */
 export interface WatermarkProps {
+  /** Text content for the watermark; pass an array for multi-line. */
   content?: string | string[];
+  /** Image URL to use as watermark instead of text. */
   image?: string;
+  /** Rotation angle in degrees. @default -22 */
   rotate?: number;
+  /** Horizontal and vertical gap between watermark tiles in pixels. @default [100,100] */
   gap?: [number, number];
+  /** X/Y offset of the watermark within each tile. */
   offset?: [number, number];
+  /** Font size in pixels for text watermarks. @default 14 */
   fontSize?: number;
+  /** CSS color value for text watermarks. */
   fontColor?: string;
+  /** Opacity of the watermark layer (0-1). @default 0.15 */
   opacity?: number;
+  /** CSS z-index of the watermark overlay. @default 9 */
   zIndex?: number;
+  /** Content to render beneath the watermark. */
   children?: React.ReactNode;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -84,7 +98,11 @@ function generateWatermarkDataUrl(props: {
     // Text watermark
     const lines = Array.isArray(content) ? content : [content ?? ""];
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      resolve("");
+      return;
+    }
 
     ctx.font = `${fontSize}px sans-serif`;
     const maxWidth = Math.max(...lines.map((l) => ctx.measureText(l).width));

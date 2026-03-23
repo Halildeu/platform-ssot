@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { resolveAccessState } from '../internal/access-controller';
 import type { AccessLevel } from '../internal/access-controller';
 import { formatValue, getTrendColor, getTrendIcon } from './types';
@@ -27,6 +27,7 @@ export interface KPIMetric {
   access?: AccessLevel;
 }
 
+/** Props for the ExecutiveKPIStrip component. */
 export interface ExecutiveKPIStripProps {
   metrics: KPIMetric[];
   /** Number of visible columns on desktop (2-6). Mobile=1, tablet=2. Default 4. */
@@ -143,6 +144,7 @@ function KPISkeleton({ size, count }: { size: KPIStripSize; count: number }) {
 // Main component
 // ---------------------------------------------------------------------------
 
+/** Responsive grid of KPI metric cards with sparklines, trend indicators, and target gauges. */
 export function ExecutiveKPIStrip({
   metrics,
   columns = 4,

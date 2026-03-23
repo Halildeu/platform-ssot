@@ -25,11 +25,17 @@ export interface ValueStreamWait {
   inventory?: number;
 }
 
+/** Lean value stream map showing process steps, wait times, and PCE metrics. */
 export interface ValueStreamProps extends AccessControlledProps {
+  /** Process steps in the value stream */
   steps: ValueStreamStep[];
+  /** Wait/queue times between consecutive steps */
   waits?: ValueStreamWait[];
+  /** Unit of measurement for all time values */
   timeUnit?: TimeUnit;
+  /** Called when a process step box is clicked */
   onStepClick?: (stepId: string) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -38,9 +44,9 @@ export interface ValueStreamProps extends AccessControlledProps {
 // ---------------------------------------------------------------------------
 
 const CATEGORY_STYLES: Record<StepCategory, { border: string; bg: string }> = {
-  'value-add': { border: 'border-green-500', bg: 'bg-green-50' },
-  'necessary-waste': { border: 'border-yellow-500', bg: 'bg-yellow-50' },
-  waste: { border: 'border-red-500', bg: 'bg-red-50' },
+  'value-add': { border: 'border-[var(--state-success-text)]', bg: 'bg-[var(--state-success-bg)]' },
+  'necessary-waste': { border: 'border-[var(--state-warning-text)]', bg: 'bg-[var(--state-warning-bg)]' },
+  waste: { border: 'border-[var(--state-error-text)]', bg: 'bg-[var(--state-error-bg)]' },
 };
 
 function formatTime(value: number, unit: TimeUnit): string {
@@ -127,7 +133,7 @@ function StepBox({
         )}
       </div>
       {step.inventory !== undefined && (
-        <span className="mt-1 inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700">
+        <span className="mt-1 inline-flex items-center rounded-full bg-[var(--state-info-bg)] px-2 py-0.5 text-[10px] font-medium text-[var(--action-primary)]">
           inv: {step.inventory}
         </span>
       )}
@@ -144,7 +150,7 @@ function WaitArrow({ wait, unit }: { wait: ValueStreamWait; unit: TimeUnit }) {
           <path d="M2 6h8M7 3l3 3-3 3" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-      <span className="text-xs font-medium text-red-600">{formatTime(wait.duration, unit)}</span>
+      <span className="text-xs font-medium text-[var(--state-error-text)]">{formatTime(wait.duration, unit)}</span>
       {wait.inventory !== undefined && (
         <span className="text-[10px] text-[var(--text-secondary)]">inv: {wait.inventory}</span>
       )}
@@ -176,13 +182,13 @@ function TimelineBar({
       {/* Bar */}
       <div className="flex h-5 w-full overflow-hidden rounded-full">
         <div
-          className="flex items-center justify-center bg-green-500 text-[10px] font-bold text-white transition-all"
+          className="flex items-center justify-center bg-[var(--state-success-text)] text-[10px] font-bold text-[var(--text-inverse)] transition-all"
           style={{ width: `${processPct}%`, minWidth: '30px' }}
         >
           {processFormatted}
         </div>
         <div
-          className="flex items-center justify-center bg-red-400 text-[10px] font-bold text-white transition-all"
+          className="flex items-center justify-center bg-[var(--state-error-text)] text-[10px] font-bold text-[var(--text-inverse)] transition-all"
           style={{ width: `${waitPct}%`, minWidth: '30px' }}
         >
           {waitFormatted}
@@ -192,11 +198,11 @@ function TimelineBar({
       {/* Summary stats */}
       <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text-secondary)]">
         <span>
-          Process: <strong className="text-green-600">{processFormatted}</strong>
+          Process: <strong className="text-[var(--state-success-text)]">{processFormatted}</strong>
         </span>
         <span className="text-[var(--border-default)]">|</span>
         <span>
-          Wait: <strong className="text-red-500">{waitFormatted}</strong>
+          Wait: <strong className="text-[var(--state-error-text)]">{waitFormatted}</strong>
         </span>
         <span className="text-[var(--border-default)]">|</span>
         <span>
@@ -204,7 +210,7 @@ function TimelineBar({
         </span>
         <span className="text-[var(--border-default)]">|</span>
         <span>
-          PCE: <strong className="text-blue-600">{pceFormatted}</strong>
+          PCE: <strong className="text-[var(--action-primary)]">{pceFormatted}</strong>
         </span>
       </div>
     </div>
@@ -215,6 +221,7 @@ function TimelineBar({
 // ValueStream component
 // ---------------------------------------------------------------------------
 
+/** Lean value stream map showing process steps, wait times, and PCE metrics. */
 export function ValueStream({
   steps,
   waits = [],

@@ -5,7 +5,7 @@
  * to ensure consistent API surface across the library.
  */
 
-import type { SlotPropsMap, SlotComponentMap } from './slot-utils';
+import type { SlotPropsMap } from './slot-utils';
 
 /** Standard size scale used across all sizable components */
 export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

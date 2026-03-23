@@ -1,10 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { EntityGridTemplate } from '../EntityGridTemplate';
 
 describe('EntityGridTemplate (Browser)', () => {
   it('renders grid wrapper container', async () => {
-    const screen = await render(
+    await render(
       <EntityGridTemplate
         gridId="test-grid"
         gridSchemaVersion={1}
@@ -18,7 +18,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders with data-grid-id attribute', async () => {
-    const screen = await render(
+    await render(
       <EntityGridTemplate
         gridId="orders-grid"
         gridSchemaVersion={1}
@@ -32,7 +32,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders toolbar with quick filter', async () => {
-    const screen = await render(
+    await render(
       <EntityGridTemplate
         gridId="toolbar-grid"
         gridSchemaVersion={1}
@@ -46,7 +46,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders GridShell with ag-theme class', async () => {
-    const screen = await render(
+    await render(
       <EntityGridTemplate
         gridId="theme-grid"
         gridSchemaVersion={1}
@@ -61,7 +61,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders pagination footer in client mode', async () => {
-    const screen = await render(
+    await render(
       <EntityGridTemplate
         gridId="page-grid"
         gridSchemaVersion={1}
@@ -90,7 +90,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('renders with multiple column definitions', async () => {
-    const screen = await render(
+    await render(
       <EntityGridTemplate
         gridId="multi-col-grid"
         gridSchemaVersion={1}
@@ -104,7 +104,7 @@ describe('EntityGridTemplate (Browser)', () => {
   });
 
   it('accepts custom messages prop', async () => {
-    const screen = await render(
+    await render(
       <EntityGridTemplate
         gridId="msg-grid"
         gridSchemaVersion={1}

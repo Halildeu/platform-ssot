@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -6,7 +7,7 @@ import { Popover } from '../Popover';
 describe('Popover Visual Regression', () => {
   /* ---- 1. Default open with title ---- */
   it('open popover with title matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 80, background: '#fff' }}>
         <Popover
           trigger={<button>Trigger</button>}
@@ -22,7 +23,7 @@ describe('Popover Visual Regression', () => {
 
   /* ---- 2. Without title ---- */
   it('popover without title matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 80, background: '#fff' }}>
         <Popover
           trigger={<button>More</button>}
@@ -37,7 +38,7 @@ describe('Popover Visual Regression', () => {
 
   /* ---- 3. Without arrow ---- */
   it('popover without arrow matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 80, background: '#fff' }}>
         <Popover
           trigger={<button>No Arrow</button>}
@@ -53,7 +54,7 @@ describe('Popover Visual Regression', () => {
 
   /* ---- 4. Closed state ---- */
   it('closed state (trigger only) matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Popover
           trigger={<button>Click me</button>}
@@ -68,7 +69,7 @@ describe('Popover Visual Regression', () => {
 
   /* ---- 5. Dark mode ---- */
   it('dark theme matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div data-theme="dark" style={{ padding: 80, background: '#1a1a2e' }}>
         <Popover
           trigger={<button>Dark</button>}

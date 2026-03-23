@@ -18,6 +18,7 @@ export interface BulletChartRange {
   color?: string;
 }
 
+/** Props for the BulletChart component. */
 export interface BulletChartProps extends AccessControlledProps {
   /** Actual value to display as the primary bar */
   value: number;
@@ -74,6 +75,7 @@ function scaleValue(value: number, min: number, max: number): number {
 
 // ── Component ──
 
+/** Horizontal bullet chart comparing an actual value against a target within qualitative ranges. */
 export const BulletChart: React.FC<BulletChartProps> = ({
   value,
   target,

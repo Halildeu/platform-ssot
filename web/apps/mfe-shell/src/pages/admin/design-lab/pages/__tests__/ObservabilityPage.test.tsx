@@ -48,15 +48,13 @@ describe('ObservabilityPage', () => {
     expect(screen.getByText('npm run monitor:synthetic')).toBeInTheDocument();
   });
 
-  it('renders the Sentry Dashboard external link', () => {
+  it('renders the Sentry external link section', () => {
     renderPage();
-    expect(screen.getByText('Sentry Dashboard')).toBeInTheDocument();
-    expect(screen.getByText(/Hata izleme, performans metrikleri/)).toBeInTheDocument();
+    expect(screen.getByText('Sentry')).toBeInTheDocument();
   });
 
-  it('renders the OpenTelemetry Traces external link', () => {
+  it('renders the Tempo tracing section', () => {
     renderPage();
-    expect(screen.getByText('OpenTelemetry Traces')).toBeInTheDocument();
-    expect(screen.getByText(/Dagitik izleme, trace propagation/)).toBeInTheDocument();
+    expect(screen.getByText('Tempo')).toBeInTheDocument();
   });
 });

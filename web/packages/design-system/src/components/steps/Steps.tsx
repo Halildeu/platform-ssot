@@ -69,13 +69,13 @@ const statusColors: Record<StepStatus, { bg: string; border: string; text: strin
   finish: {
     bg: "bg-[var(--action-primary)]",
     border: "border-[var(--action-primary)]",
-    text: "text-white",
+    text: "text-[var(--text-inverse)]",
     titleText: "text-[var(--text-primary)]",
   },
   process: {
     bg: "bg-[var(--action-primary)]",
     border: "border-[var(--action-primary)]",
-    text: "text-white",
+    text: "text-[var(--text-inverse)]",
     titleText: "text-[var(--text-primary)]",
   },
   wait: {
@@ -104,7 +104,7 @@ function CheckIcon({ className }: { className?: string }) {
 
 /* ---- Main component ---- */
 
-export const Steps: React.FC<StepsProps> = ({
+export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
   items,
   current: currentProp,
   defaultCurrent,
@@ -114,7 +114,7 @@ export const Steps: React.FC<StepsProps> = ({
   status,
   dot = false,
   className,
-}) => {
+}, ref) => {
   // Uncontrolled mode: track internal step index when `current` prop is not provided
   const [internalCurrent, setInternalCurrent] = useState(defaultCurrent ?? 0);
   const isControlled = currentProp !== undefined;
@@ -133,6 +133,7 @@ export const Steps: React.FC<StepsProps> = ({
 
   return (
     <div
+      ref={ref}
       className={cn(
         "flex",
         isVertical ? "flex-col gap-0" : "flex-row items-start",
@@ -256,6 +257,6 @@ export const Steps: React.FC<StepsProps> = ({
       })}
     </div>
   );
-};
+});
 
 Steps.displayName = "Steps";

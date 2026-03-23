@@ -29,13 +29,13 @@ describe('ThemePresetGallery (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<ThemePresetGallery presets={presets} />);
+    await render(<ThemePresetGallery presets={presets} />);
     const el = document.querySelector('[data-component="theme-preset-gallery"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<ThemePresetGallery presets={presets} access="hidden" />);
+    await render(<ThemePresetGallery presets={presets} access="hidden" />);
     expect(document.querySelector('[data-component="theme-preset-gallery"]')).toBeNull();
   });
 

@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { Avatar } from '../Avatar';
 
 describe('Avatar Visual Regression', () => {
   it('initials avatar matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Avatar initials="JD" size="lg" />
       </div>,
@@ -14,7 +15,7 @@ describe('Avatar Visual Regression', () => {
   });
 
   it('fallback icon avatar matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Avatar size="lg" />
       </div>,
@@ -23,7 +24,7 @@ describe('Avatar Visual Regression', () => {
   });
 
   it('different sizes match screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', gap: 8, alignItems: 'center' }}>
         <Avatar initials="XS" size="xs" />
         <Avatar initials="SM" size="sm" />

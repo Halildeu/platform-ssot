@@ -66,7 +66,7 @@ describe('ErrorBoundary (Browser)', () => {
 
   it('calls onError callback when error occurs', async () => {
     const onError = vi.fn();
-    const screen = await render(
+    await render(
       <ErrorBoundary onError={onError}>
         <BadChild />
       </ErrorBoundary>,
@@ -78,7 +78,7 @@ describe('ErrorBoundary (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(
+    await render(
       <ErrorBoundary>
         <GoodChild />
       </ErrorBoundary>,

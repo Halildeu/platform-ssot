@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { Card, CardHeader, CardBody } from '../Card';
 
 describe('Card Visual Regression', () => {
   it('elevated variant matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#f5f5f5' }}>
         <Card variant="elevated">
           <CardHeader title="Elevated Card" subtitle="With shadow" />
@@ -17,7 +18,7 @@ describe('Card Visual Regression', () => {
   });
 
   it('outlined variant matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Card variant="outlined">
           <CardHeader title="Outlined Card" />
@@ -29,7 +30,7 @@ describe('Card Visual Regression', () => {
   });
 
   it('filled variant matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Card variant="filled">
           <CardHeader title="Filled Card" />

@@ -1,0 +1,122 @@
+/* ------------------------------------------------------------------ */
+/*  Dark mode token overrides                                          */
+/*  Applied when ThemeProvider sets data-mode="dark"                   */
+/* ------------------------------------------------------------------ */
+
+/* Light mode defaults (semantic aliases) */
+:root,
+[data-mode="light"] {
+  --surface-default: #ffffff;
+  --surface-canvas: #f9fafb;
+  --surface-muted: #f3f4f6;
+  --surface-raised: #ffffff;
+  --surface-card: #ffffff;
+
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-disabled: #d1d5db;
+  --text-inverse: #ffffff;
+
+  --border-default: #d1d5db;
+  --border-subtle: #e5e7eb;
+  --border-strong: #9ca3af;
+
+  --action-primary: #2563eb;
+  --action-primary-hover: #1d4ed8;
+  --action-primary-active: #1e40af;
+  --action-secondary: #f3f4f6;
+
+  --state-success-bg: #f0fdf4;
+  --state-success-text: #15803d;
+  --state-warning-bg: #fffbeb;
+  --state-warning-text: #b45309;
+  --state-error-bg: #fef2f2;
+  --state-error-text: #b91c1c;
+  --state-info-bg: #eff6ff;
+  --state-info-text: #1d4ed8;
+
+  --focus-ring: #3b82f6;
+  --focus-outline: #3b82f6;
+}
+
+[data-mode="dark"] {
+  --surface-default: #1f2937;
+  --surface-canvas: #111827;
+  --surface-muted: #374151;
+  --surface-raised: #374151;
+  --surface-card: #1f2937;
+
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-disabled: #4b5563;
+  --text-inverse: #111827;
+
+  --border-default: #4b5563;
+  --border-subtle: #374151;
+  --border-strong: #6b7280;
+
+  --action-primary: #3b82f6;
+  --action-primary-hover: #60a5fa;
+  --action-primary-active: #93c5fd;
+  --action-secondary: #374151;
+
+  --state-success-bg: #052e16;
+  --state-success-text: #22c55e;
+  --state-warning-bg: #451a03;
+  --state-warning-text: #f59e0b;
+  --state-error-bg: #450a0a;
+  --state-error-text: #ef4444;
+  --state-info-bg: #172554;
+  --state-info-text: #3b82f6;
+
+  --focus-ring: #60a5fa;
+  --focus-outline: #60a5fa;
+
+  /* Elevation in dark mode uses lighter shadows */
+  --elevation-xs: 0 1px 2px rgba(0,0,0,0.3);
+  --elevation-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --elevation-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+  --elevation-lg: 0 10px 15px -3px rgba(0,0,0,0.4), 0 4px 6px -4px rgba(0,0,0,0.3);
+  --elevation-xl: 0 20px 25px -5px rgba(0,0,0,0.4), 0 8px 10px -6px rgba(0,0,0,0.3);
+
+  color-scheme: dark;
+}
+
+/* System preference support */
+@media (prefers-color-scheme: dark) {
+  [data-mode="system"] {
+    --surface-default: #1f2937;
+    --surface-canvas: #111827;
+    --surface-muted: #374151;
+    --surface-raised: #374151;
+    --surface-card: #1f2937;
+
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
+    --text-disabled: #4b5563;
+    --text-inverse: #111827;
+
+    --border-default: #4b5563;
+    --border-subtle: #374151;
+    --border-strong: #6b7280;
+
+    --action-primary: #3b82f6;
+    --action-primary-hover: #60a5fa;
+    --action-primary-active: #93c5fd;
+    --action-secondary: #374151;
+
+    --state-success-bg: #052e16;
+    --state-success-text: #22c55e;
+    --state-warning-bg: #451a03;
+    --state-warning-text: #f59e0b;
+    --state-error-bg: #450a0a;
+    --state-error-text: #ef4444;
+    --state-info-bg: #172554;
+    --state-info-text: #3b82f6;
+
+    --focus-ring: #60a5fa;
+    --focus-outline: #60a5fa;
+
+    color-scheme: dark;
+  }
+}

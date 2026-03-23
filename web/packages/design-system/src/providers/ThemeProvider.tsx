@@ -57,10 +57,15 @@ function applyAxesToDom(axes: ThemeAxes) {
 
 /* ---------- Context ---------- */
 
+/** Value exposed by the theme context to consumers. */
 export interface ThemeContextValue {
+  /** Current resolved theme axes. */
   axes: ThemeAxes;
+  /** Merge a partial patch into the current theme axes. */
   update: (patch: Partial<ThemeAxes>) => void;
+  /** Switch the appearance mode (e.g. light, dark, high-contrast). */
   setAppearance: (v: ThemeAppearance) => void;
+  /** Switch the density level (e.g. compact, comfortable). */
   setDensity: (v: ThemeDensity) => void;
 }
 
@@ -74,12 +79,15 @@ export function useTheme(): ThemeContextValue {
 
 /* ---------- Provider ---------- */
 
+/** Props for {@link ThemeProvider}. */
 export interface ThemeProviderProps {
-  /** Override default axes */
+  /** Override default axes (merged with stored and default values). */
   defaultAxes?: Partial<ThemeAxes>;
+  /** Application content to wrap with the theme context. */
   children: React.ReactNode;
 }
 
+/** Theme context provider with persistent axis storage and CSS variable injection. */
 export function ThemeProvider({ defaultAxes, children }: ThemeProviderProps) {
   const [axes, setAxes] = useState<ThemeAxes>(() => ({
     ...DEFAULT_THEME_AXES,

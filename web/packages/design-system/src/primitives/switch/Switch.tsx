@@ -21,6 +21,7 @@ export type SwitchVariant = "default" | "destructive";
 
 export type SwitchDensity = "compact" | "comfortable" | "spacious";
 
+/** Props for the Switch component. */
 export interface SwitchProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type">,
     AccessControlledProps {
@@ -65,6 +66,7 @@ const thumbSizes: Record<SwitchSize, { base: string; translate: string }> = {
   lg: { base: "h-5 w-5", translate: "translate-x-5" },
 };
 
+/** Toggle switch control with label, description, destructive variant, and loading state. */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   (
     {

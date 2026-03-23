@@ -8,6 +8,7 @@ import { FormField } from '../components/form-field/FormField';
 import { useFormField } from './useFormField';
 import type { AccessLevel } from '../internal/access-controller';
 
+/** Props for the ConnectedFormField component. */
 export interface ConnectedFormFieldProps {
   /** Field name matching the form schema key. */
   name: string;

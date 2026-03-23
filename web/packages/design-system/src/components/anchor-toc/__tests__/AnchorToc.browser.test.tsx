@@ -31,7 +31,7 @@ describe('AnchorToc (Browser)', () => {
   });
 
   it('renders with navigation aria-label', async () => {
-    const screen = await render(<AnchorToc items={tocItems} syncWithHash={false} />);
+    await render(<AnchorToc items={tocItems} syncWithHash={false} />);
     const nav = document.querySelector('nav');
     expect(nav).not.toBeNull();
   });
@@ -56,7 +56,7 @@ describe('AnchorToc (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<AnchorToc items={tocItems} syncWithHash={false} access="hidden" />);
+    await render(<AnchorToc items={tocItems} syncWithHash={false} access="hidden" />);
     expect(document.querySelector('nav')).toBeNull();
   });
 

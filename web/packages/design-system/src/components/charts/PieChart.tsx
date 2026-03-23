@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- AG Charts API uses any extensively */
 import React, { useMemo } from "react";
 import { AgCharts as AgChartsBase } from "ag-charts-react";
 import type { AgChartOptions } from "ag-charts-community";
@@ -65,6 +66,7 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       showLegend = false,
       showPercentage = false,
       valueFormatter,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       innerLabel,
       animate = true,
       title,

@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { Calendar } from '../Calendar';
 
 describe('Calendar Visual Regression', () => {
   it('month view matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Calendar defaultMonth={new Date(2025, 0, 1)} />
       </div>,
@@ -14,7 +15,7 @@ describe('Calendar Visual Regression', () => {
   });
 
   it('with selected date matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Calendar defaultMonth={new Date(2025, 0, 1)} defaultValue={new Date(2025, 0, 15)} />
       </div>,

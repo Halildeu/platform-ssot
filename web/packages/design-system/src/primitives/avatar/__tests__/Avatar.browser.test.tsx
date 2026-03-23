@@ -19,7 +19,7 @@ describe('Avatar (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Avatar initials="X" />);
+    await render(<Avatar initials="X" />);
     const el = document.querySelector('[data-component="avatar"]');
     expect(el).not.toBeNull();
   });

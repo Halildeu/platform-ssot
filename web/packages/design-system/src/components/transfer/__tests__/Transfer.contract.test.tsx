@@ -1,9 +1,8 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { Transfer, type TransferItem } from '../Transfer';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 

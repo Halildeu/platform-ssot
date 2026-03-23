@@ -5,7 +5,7 @@ import { FormDrawer } from '../FormDrawer';
 
 describe('FormDrawer Visual Regression', () => {
   it('open drawer matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ width: 600, height: 400, position: 'relative' }}>
         <FormDrawer open onClose={() => {}} title="New Record" subtitle="Fill the form">
           <div>Form fields here</div>

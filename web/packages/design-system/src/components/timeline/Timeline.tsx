@@ -210,7 +210,7 @@ function TimelineDot({
 
 /* ---- Main component ---- */
 
-export const Timeline: React.FC<TimelineProps> = ({
+export const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(({
   items,
   mode = "left",
   reverse = false,
@@ -221,7 +221,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   className,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
 
   if (accessState.isHidden) {
@@ -254,6 +254,7 @@ export const Timeline: React.FC<TimelineProps> = ({
 
   return (
     <div
+      ref={ref}
       role="list"
       aria-label="Timeline"
       className={cn("relative", className)}
@@ -424,6 +425,6 @@ export const Timeline: React.FC<TimelineProps> = ({
       })}
     </div>
   );
-};
+});
 
 Timeline.displayName = "Timeline";

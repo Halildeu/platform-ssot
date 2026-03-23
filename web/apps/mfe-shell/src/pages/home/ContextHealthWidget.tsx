@@ -1,4 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { Card, CardHeader, CardBody, CardFooter } from "@mfe/design-system";
+import { Badge } from "@mfe/design-system";
+import { VStack } from "@mfe/design-system";
+
+const COCKPIT_URL = "/cockpit-api";
+const POLL_INTERVAL = 15_000;
 
 interface HealthComponent {
   score: number;
@@ -15,9 +21,6 @@ interface ContextHealth {
   ts: number;
 }
 
-const COCKPIT_URL = "/cockpit-api";
-const POLL_INTERVAL = 15_000;
-
 const COMPONENT_LABELS: Record<string, string> = {
   session_freshness: "Session Freshness",
   decision_coverage: "Decision Coverage",
@@ -27,20 +30,24 @@ const COMPONENT_LABELS: Record<string, string> = {
   extension_health: "Extension Health",
 };
 
-const gradeColor = (grade: string): string => {
-  switch (grade) {
-    case "A": return "#22c55e";
-    case "B": return "#3b82f6";
-    case "C": return "#f59e0b";
-    case "D": return "#f97316";
-    default: return "#ef4444";
-  }
+const gradeVariant = (grade: string) => {
+  if (grade === "A") return "success" as const;
+  if (grade === "B") return "info" as const;
+  if (grade === "C") return "warning" as const;
+  return "error" as const;
 };
 
-export const ContextHealthWidget: React.FC = () => {
+const barColor = (score: number, max: number) => {
+  const pct = score / max;
+  if (pct >= 1) return "#22c55e";
+  if (pct >= 0.5) return "#f59e0b";
+  return "#ef4444";
+};
+
+export const ContextHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ onRefresh }) => {
   const [health, setHealth] = useState<ContextHealth | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [lastUpdate, setLastUpdate] = useState<string>("");
+  const [lastUpdate, setLastUpdate] = useState("");
 
   const fetchHealth = useCallback(async () => {
     try {
@@ -61,217 +68,111 @@ export const ContextHealthWidget: React.FC = () => {
     return () => clearInterval(interval);
   }, [fetchHealth]);
 
+  useEffect(() => {
+    if (onRefresh) fetchHealth();
+  }, [onRefresh, fetchHealth]);
+
   if (error) {
     return (
-      <div style={styles.card}>
-        <div style={styles.header}>
-          <span style={styles.title}>Context Health</span>
-          <span style={{ ...styles.badge, backgroundColor: "#ef4444" }}>Offline</span>
-        </div>
-        <p style={styles.errorText}>Cockpit server unreachable: {error}</p>
-        <p style={styles.hint}>Start with: python -m src.ops.manage cockpit-serve</p>
-      </div>
+      <Card variant="outlined">
+        <CardHeader title="Context Health" action={<Badge variant="error">Offline</Badge>} />
+        <CardBody>
+          <span style={{ color: "var(--text-secondary)", fontSize: 13 }}>
+            Cockpit unreachable: {error}
+          </span>
+          <br />
+          <code style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
+            python -m src.ops.manage cockpit-serve
+          </code>
+        </CardBody>
+      </Card>
     );
   }
 
   if (!health) {
     return (
-      <div style={styles.card}>
-        <div style={styles.header}>
-          <span style={styles.title}>Context Health</span>
-          <span style={styles.loadingDot} />
-        </div>
-        <p style={styles.loadingText}>Loading...</p>
-      </div>
+      <Card variant="outlined">
+        <CardHeader title="Context Health" />
+        <CardBody>
+          <span style={{ color: "var(--text-secondary)" }}>Loading...</span>
+        </CardBody>
+      </Card>
     );
   }
 
   const components = Object.entries(health.components);
 
   return (
-    <div style={styles.card}>
-      <div style={styles.header}>
-        <span style={styles.title}>Context Health</span>
-        <span style={{ ...styles.badge, backgroundColor: gradeColor(health.grade) }}>
-          {health.grade}
-        </span>
-      </div>
-
-      <div style={styles.scoreRow}>
-        <span style={{ ...styles.scoreNumber, color: gradeColor(health.grade) }}>
-          {health.score}
-        </span>
-        <span style={styles.scoreMax}>/100</span>
-      </div>
-
-      <div style={styles.components}>
-        {components.map(([key, comp]) => (
-          <div key={key} style={styles.componentRow}>
-            <span style={styles.componentLabel}>
-              {COMPONENT_LABELS[key] || key}
+    <Card variant="outlined">
+      <CardHeader
+        title="Context Health"
+        action={<Badge variant={gradeVariant(health.grade)} size="lg">{health.grade}</Badge>}
+      />
+      <CardBody>
+        <VStack gap={4}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+            <span style={{
+              fontSize: 48,
+              fontWeight: 800,
+              lineHeight: 1,
+              color: barColor(health.score, 100),
+            }}>
+              {health.score}
             </span>
-            <div style={styles.barContainer}>
-              <div
-                style={{
-                  ...styles.barFill,
-                  width: `${(comp.score / comp.max) * 100}%`,
-                  backgroundColor: comp.score === comp.max ? "#22c55e" : comp.score >= comp.max * 0.5 ? "#f59e0b" : "#ef4444",
-                }}
-              />
-            </div>
-            <span style={styles.componentScore}>
-              {comp.score}/{comp.max}
-            </span>
+            <span style={{ fontSize: 20, color: "var(--text-secondary)" }}>/100</span>
           </div>
-        ))}
-      </div>
 
-      {health.reasons.length > 0 && (
-        <div style={styles.reasons}>
-          {health.reasons.map((r, i) => (
-            <span key={i} style={styles.reasonChip}>{r}</span>
-          ))}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {components.map(([key, comp]) => (
+              <div key={key} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 13, color: "var(--text-secondary)", minWidth: 150 }}>
+                  {COMPONENT_LABELS[key] || key}
+                </span>
+                <div style={{
+                  flex: 1, height: 8,
+                  backgroundColor: "var(--surface-secondary, #f3f4f6)",
+                  borderRadius: 4, overflow: "hidden",
+                }}>
+                  <div style={{
+                    height: "100%", borderRadius: 4,
+                    width: `${(comp.score / comp.max) * 100}%`,
+                    backgroundColor: barColor(comp.score, comp.max),
+                    transition: "width 0.5s ease",
+                  }} />
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 600, minWidth: 36, textAlign: "right" }}>
+                  {comp.score}/{comp.max}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {health.reasons.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+              {health.reasons.map((r, i) => (
+                <Badge key={i} variant="warning" size="sm">{r}</Badge>
+              ))}
+            </div>
+          )}
+        </VStack>
+      </CardBody>
+      <CardFooter>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+          <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
+            Last: {lastUpdate}
+          </span>
+          <button
+            onClick={fetchHealth}
+            style={{
+              background: "none", border: "1px solid var(--border-primary)",
+              borderRadius: 6, padding: "4px 8px", cursor: "pointer",
+              fontSize: 14, color: "var(--text-secondary)",
+            }}
+          >
+            &#x21bb;
+          </button>
         </div>
-      )}
-
-      <div style={styles.footer}>
-        <span style={styles.footerText}>Last update: {lastUpdate}</span>
-        <button onClick={fetchHealth} style={styles.refreshBtn} title="Refresh">
-          &#x21bb;
-        </button>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
-};
-
-const styles: Record<string, React.CSSProperties> = {
-  card: {
-    background: "var(--surface-primary, #ffffff)",
-    border: "1px solid var(--border-primary, #e5e7eb)",
-    borderRadius: 12,
-    padding: 24,
-    maxWidth: 420,
-    boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 600,
-    color: "var(--text-primary, #111827)",
-  },
-  badge: {
-    color: "#fff",
-    fontSize: 13,
-    fontWeight: 700,
-    padding: "2px 10px",
-    borderRadius: 6,
-  },
-  scoreRow: {
-    display: "flex",
-    alignItems: "baseline",
-    marginBottom: 20,
-  },
-  scoreNumber: {
-    fontSize: 48,
-    fontWeight: 800,
-    lineHeight: 1,
-  },
-  scoreMax: {
-    fontSize: 20,
-    fontWeight: 400,
-    color: "var(--text-secondary, #6b7280)",
-    marginLeft: 4,
-  },
-  components: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 10,
-  },
-  componentRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-  },
-  componentLabel: {
-    fontSize: 13,
-    color: "var(--text-secondary, #6b7280)",
-    minWidth: 150,
-  },
-  barContainer: {
-    flex: 1,
-    height: 8,
-    backgroundColor: "var(--surface-secondary, #f3f4f6)",
-    borderRadius: 4,
-    overflow: "hidden",
-  },
-  barFill: {
-    height: "100%",
-    borderRadius: 4,
-    transition: "width 0.5s ease",
-  },
-  componentScore: {
-    fontSize: 12,
-    fontWeight: 600,
-    color: "var(--text-primary, #111827)",
-    minWidth: 36,
-    textAlign: "right" as const,
-  },
-  reasons: {
-    marginTop: 12,
-    display: "flex",
-    flexWrap: "wrap" as const,
-    gap: 6,
-  },
-  reasonChip: {
-    fontSize: 11,
-    padding: "2px 8px",
-    borderRadius: 4,
-    backgroundColor: "#fef3c7",
-    color: "#92400e",
-  },
-  footer: {
-    marginTop: 16,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  footerText: {
-    fontSize: 11,
-    color: "var(--text-tertiary, #9ca3af)",
-  },
-  refreshBtn: {
-    background: "none",
-    border: "1px solid var(--border-primary, #e5e7eb)",
-    borderRadius: 6,
-    padding: "4px 8px",
-    cursor: "pointer",
-    fontSize: 16,
-    color: "var(--text-secondary, #6b7280)",
-  },
-  errorText: {
-    color: "#ef4444",
-    fontSize: 13,
-    margin: "8px 0",
-  },
-  hint: {
-    fontSize: 11,
-    color: "var(--text-tertiary, #9ca3af)",
-    fontFamily: "monospace",
-  },
-  loadingText: {
-    color: "var(--text-secondary, #6b7280)",
-    fontSize: 14,
-  },
-  loadingDot: {
-    width: 8,
-    height: 8,
-    borderRadius: "50%",
-    backgroundColor: "#f59e0b",
-    animation: "pulse 1.5s infinite",
-  },
 };

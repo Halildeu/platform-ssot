@@ -25,14 +25,14 @@ const LibrarySurfaceAccent: React.FC<{
     <div
       aria-hidden="true"
       className={clsx(
-        'pointer-events-none absolute inset-x-5 top-0 rounded-b-[32px] bg-gradient-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] via-[var(--surface-card,rgba(255,255,255,0.45))] to-transparent',
+        'pointer-events-none absolute inset-x-5 top-0 rounded-b-[32px] bg-gradient-to-b from-[var(--surface-card)] via-[var(--surface-card)] to-transparent',
         compact ? 'h-12 opacity-80' : 'h-16 opacity-90',
       )}
     />
     <div
       aria-hidden="true"
       className={clsx(
-        'pointer-events-none absolute -right-8 top-4 rounded-full bg-[var(--surface-card,rgba(255,255,255,0.45))] blur-3xl',
+        'pointer-events-none absolute -right-8 top-4 rounded-full bg-[var(--surface-card)] blur-3xl',
         compact ? 'h-16 w-16' : 'h-24 w-24',
       )}
     />
@@ -49,7 +49,7 @@ export type LibrarySectionBadgeProps = {
 export const LibrarySectionBadge: React.FC<LibrarySectionBadgeProps> = ({ label, className }) => (
   <span
     className={clsx(
-      'inline-flex min-h-[28px] items-center rounded-full border border-[var(--border-subtle)]/20 bg-[var(--surface-card,rgba(255,255,255,0.8))] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-text-secondary shadow-[0_12px_24px_-20px_var(--shadow-color,rgba(24,18,68,0.34))] backdrop-blur-sm',
+      'inline-flex min-h-[28px] items-center rounded-full border border-[var(--border-subtle)]/20 bg-[var(--surface-card)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-text-secondary shadow-[0_12px_24px_-20px_var(--shadow-color,rgba(24,18,68,0.34))] backdrop-blur-sm',
       className,
     )}
   >
@@ -393,7 +393,7 @@ export const LibraryOutlinePanel: React.FC<LibraryOutlinePanelProps> = ({
           root: 'border-transparent bg-transparent p-0 shadow-none',
           list: 'gap-1.5',
           item: 'rounded-2xl px-3 py-2',
-          activeItem: 'bg-[var(--surface-card,rgba(255,255,255,0.9))] shadow-[0_14px_28px_-20px_var(--shadow-color,rgba(24,18,68,0.32))] ring-1 ring-[var(--border-subtle)]/20',
+          activeItem: 'bg-[var(--surface-card)] shadow-[0_14px_28px_-20px_var(--shadow-color,rgba(24,18,68,0.32))] ring-1 ring-[var(--border-subtle)]/20',
           label: 'text-sm',
         }}
         />

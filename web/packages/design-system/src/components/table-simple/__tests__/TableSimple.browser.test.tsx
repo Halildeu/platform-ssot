@@ -26,13 +26,13 @@ describe('TableSimple (Browser)', () => {
   });
 
   it('renders table element with role', async () => {
-    const screen = await render(<TableSimple columns={columns} rows={rows} />);
+    await render(<TableSimple columns={columns} rows={rows} />);
     const table = document.querySelector('table');
     expect(table).not.toBeNull();
   });
 
   it('renders empty state when no rows', async () => {
-    const screen = await render(<TableSimple columns={columns} rows={[]} />);
+    await render(<TableSimple columns={columns} rows={[]} />);
     const el = document.querySelector('[data-component="table-simple"]');
     expect(el).not.toBeNull();
   });
@@ -43,13 +43,13 @@ describe('TableSimple (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<TableSimple columns={columns} rows={rows} />);
+    await render(<TableSimple columns={columns} rows={rows} />);
     const el = document.querySelector('[data-component="table-simple"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<TableSimple columns={columns} rows={rows} access="hidden" />);
+    await render(<TableSimple columns={columns} rows={rows} access="hidden" />);
     expect(document.querySelector('table')).toBeNull();
   });
 

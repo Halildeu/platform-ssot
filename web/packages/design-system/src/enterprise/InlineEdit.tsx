@@ -13,14 +13,23 @@ export interface SelectOption {
   label: string;
 }
 
+/** Click-to-edit field supporting text, number, and select input types. */
 export interface InlineEditProps extends AccessControlledProps {
+  /** Current display value */
   value: string;
+  /** Input type rendered in edit mode */
   type?: InlineEditType;
-  options?: SelectOption[]; // for select type
+  /** Options list for select type */
+  options?: SelectOption[];
+  /** Placeholder text shown when value is empty */
   placeholder?: string;
-  validate?: (value: string) => string | null; // returns error message or null
+  /** Validation function returning an error message or null if valid */
+  validate?: (value: string) => string | null;
+  /** Called with the new value when the user confirms the edit */
   onSave: (value: string) => void | Promise<void>;
+  /** Formats the value for display mode (e.g., adding currency symbols) */
   formatDisplay?: (value: string) => string;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -71,6 +80,7 @@ function CloseIcon() {
 // InlineEdit component
 // ---------------------------------------------------------------------------
 
+/** Click-to-edit field supporting text, number, and select input types. */
 export function InlineEdit({
   value,
   type = 'text',
@@ -237,7 +247,7 @@ export function InlineEdit({
         {/* Save button */}
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded p-1 text-green-600 hover:bg-green-50 transition-colors disabled:opacity-50"
+          className="inline-flex items-center justify-center rounded p-1 text-[var(--state-success-text)] hover:bg-[var(--state-success-bg)] transition-colors disabled:opacity-50"
           onClick={saveEdit}
           disabled={saving}
           aria-label="Save"
@@ -254,7 +264,7 @@ export function InlineEdit({
         {/* Cancel button */}
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded p-1 text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+          className="inline-flex items-center justify-center rounded p-1 text-[var(--state-error-text)] hover:bg-[var(--state-error-bg)] transition-colors disabled:opacity-50"
           onClick={cancelEdit}
           disabled={saving}
           aria-label="Cancel"
@@ -265,7 +275,7 @@ export function InlineEdit({
 
       {/* Error message */}
       {error && (
-        <span className="text-xs text-red-500 px-1">{error}</span>
+        <span className="text-xs text-[var(--state-error-text)] px-1">{error}</span>
       )}
     </div>
   );

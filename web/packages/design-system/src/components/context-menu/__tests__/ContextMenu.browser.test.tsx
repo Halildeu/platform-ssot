@@ -20,7 +20,7 @@ describe('ContextMenu (Browser)', () => {
   });
 
   it('menu is hidden by default', async () => {
-    const screen = await render(
+    await render(
       <ContextMenu items={items}>
         <button>Right click me</button>
       </ContextMenu>,

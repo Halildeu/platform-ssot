@@ -30,22 +30,39 @@ export interface ApprovalCheckpointItem {
   status?: ApprovalCheckpointItemStatus;
 }
 
+/** Props for the ApprovalCheckpoint component. */
 export interface ApprovalCheckpointProps extends AccessControlledProps {
+  /** Heading text for the checkpoint card. */
   title: React.ReactNode;
+  /** Summary description of the approval context. */
   summary: React.ReactNode;
+  /** Current approval status. */
   status?: ApprovalCheckpointStatus;
+  /** Label displayed on the checkpoint badge. */
   checkpointLabel?: React.ReactNode;
+  /** Label identifying the approver or review board. */
   approverLabel?: React.ReactNode;
+  /** Due-date or deadline label. */
   dueLabel?: React.ReactNode;
+  /** List of evidence item descriptions. */
   evidenceItems?: string[];
+  /** Checklist steps within the checkpoint. */
   steps?: ApprovalCheckpointItem[];
+  /** Citation labels rendered as badges. */
   citations?: string[];
+  /** Label for the primary action button. */
   primaryActionLabel?: string;
+  /** Label for the secondary action button. */
   secondaryActionLabel?: string;
+  /** Callback fired when the primary action is triggered. */
   onPrimaryAction?: () => void;
+  /** Callback fired when the secondary action is triggered. */
   onSecondaryAction?: () => void;
+  /** Footer note displayed below actions. */
   footerNote?: React.ReactNode;
+  /** Additional badges rendered in the header. */
   badges?: React.ReactNode[];
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -78,8 +95,9 @@ const stepBadgeLabel: Record<ApprovalCheckpointItemStatus, string> = {
 };
 
 const approvalCheckpointSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card,rgba(255,255,255,0.98))] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
 
+/** Approval gate card displaying status, checklist steps, evidence, and approve/reject actions. */
 export const ApprovalCheckpoint: React.FC<ApprovalCheckpointProps> = ({
   title,
   summary,
@@ -195,7 +213,7 @@ export const ApprovalCheckpoint: React.FC<ApprovalCheckpointProps> = ({
       ) : null}
 
       {citations.length > 0 ? (
-        <div className="mt-4 flex flex-wrap gap-2 rounded-[24px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card,rgba(255,255,255,0.6))] p-3 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.14))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+        <div className="mt-4 flex flex-wrap gap-2 rounded-[24px] border border-[var(--border-subtle)]/70 bg-[var(--surface-card)] p-3 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.14))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
           {citations.map((citation) => (
             <Badge key={citation} variant="muted">
               {citation}

@@ -29,8 +29,6 @@ afterAll(() => {
   vi.restoreAllMocks();
 });
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 describe("Grid Parity — Module Registration", () => {
   it("setup.ts exports AG_GRID_SETUP_COMPLETE as true", async () => {
     const setup = await import("../setup");

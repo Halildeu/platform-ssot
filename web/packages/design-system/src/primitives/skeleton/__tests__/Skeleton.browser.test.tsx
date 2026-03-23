@@ -18,7 +18,7 @@ describe('Skeleton (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Skeleton />);
+    await render(<Skeleton />);
     const el = document.querySelector('[data-component="skeleton"]');
     expect(el).not.toBeNull();
   });

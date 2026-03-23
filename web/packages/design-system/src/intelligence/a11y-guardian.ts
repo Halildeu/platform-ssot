@@ -128,7 +128,8 @@ export function suggestContrastFix(fg: string, bg: string, level: 'AA' | 'AAA' =
 
   // Convert to HSL, adjust lightness
   const [r, g, b] = hexToRgb(fg);
-  let [h, s, l] = rgbToHsl(r, g, b);
+  const [h, s, initialL] = rgbToHsl(r, g, b);
+  let l = initialL;
 
   for (let i = 0; i < 50; i++) {
     l = needsDarker ? Math.max(0, l - 0.02) : Math.min(1, l + 0.02);

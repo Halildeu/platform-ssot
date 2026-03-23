@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-03-20T23:52:27+03:00",
-  "generatedAtUtc": "2026-03-20T20:52:27+00:00",
+  "generatedAt": "2026-03-23T13:48:34+03:00",
+  "generatedAtUtc": "2026-03-23T10:48:34+00:00",
   "summary": {
     "total": 232,
     "exported": 232,
@@ -25,7 +25,7 @@
       "stableExports": 232,
       "betaExports": 0,
       "liveDemoExports": 0,
-      "consumedByAppsExports": 102
+      "consumedByAppsExports": 104
     },
     "apiCoverage": {
       "documentedExports": 132,
@@ -89,18 +89,18 @@
     "upgradeContractPath": "docs/02-architecture/context/ui-library-consumer-upgrade.contract.v1.json",
     "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json",
     "summary": {
-      "adoptedOutsideLabComponents": 82,
-      "stableAdoptedComponents": 82,
+      "adoptedOutsideLabComponents": 84,
+      "stableAdoptedComponents": 84,
       "betaAdoptedComponents": 0,
-      "consumerAppsCount": 6,
+      "consumerAppsCount": 7,
       "adoptedStoryCoveredComponents": 74,
-      "adoptedStoryCoveragePercent": 90,
-      "stableOnlyInDesignLab": 50,
-      "singleAppBlastRadiusCount": 70,
-      "crossAppReviewComponents": 12,
-      "manualReviewRequiredComponents": 82,
-      "codemodReadyComponents": 72,
-      "ownerMappedAppsCount": 6
+      "adoptedStoryCoveragePercent": 88,
+      "stableOnlyInDesignLab": 48,
+      "singleAppBlastRadiusCount": 67,
+      "crossAppReviewComponents": 17,
+      "manualReviewRequiredComponents": 84,
+      "codemodReadyComponents": 70,
+      "ownerMappedAppsCount": 7
     },
     "ownerResolution": {
       "contractId": "ui-library-consumer-owner-registry-v1",
@@ -109,7 +109,7 @@
       "defaultOwnerHandles": [
         "@halilkocoglu"
       ],
-      "ownerMappedAppsCount": 6,
+      "ownerMappedAppsCount": 7,
       "unownedAppsCount": 0,
       "source": "owner-registry-default",
       "rules": [
@@ -150,22 +150,53 @@
       ],
       "summary": {
         "trackCount": 4,
-        "singleAppBlastRadiusCount": 70,
-        "crossAppReviewComponents": 12,
-        "manualChecklistComponents": 82,
-        "codemodReadyComponents": 72
+        "singleAppBlastRadiusCount": 67,
+        "crossAppReviewComponents": 17,
+        "manualChecklistComponents": 84,
+        "codemodReadyComponents": 70
       }
     },
     "upgradeChecklist": {
       "artifactPath": "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
       "generatedStrategy": "manual-checklist",
       "summary": {
-        "totalItems": 82,
-        "singleAppItems": 70,
-        "crossAppItems": 12,
-        "ownerMappedAppsCount": 6
+        "totalItems": 84,
+        "singleAppItems": 67,
+        "crossAppItems": 17,
+        "ownerMappedAppsCount": 7
       },
       "items": [
+        {
+          "checklistId": "avatar-major-cross-app-review",
+          "component": "Avatar",
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "consumerApps": [
+            {
+              "appId": "demos",
+              "ownerHandles": [
+                "@halilkocoglu"
+              ],
+              "ownerSource": "owner-registry-default"
+            }
+          ],
+          "tasks": [
+            "`Avatar` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
+            "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
+            "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
+            "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit."
+          ],
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
+          ],
+          "codemodReady": false
+        },
         {
           "checklistId": "badge-major-cross-app-review",
           "component": "Badge",
@@ -176,6 +207,13 @@
             "@halilkocoglu"
           ],
           "consumerApps": [
+            {
+              "appId": "demos",
+              "ownerHandles": [
+                "@halilkocoglu"
+              ],
+              "ownerSource": "owner-registry-default"
+            },
             {
               "appId": "mfe-access",
               "ownerHandles": [
@@ -215,6 +253,13 @@
           ],
           "consumerApps": [
             {
+              "appId": "demos",
+              "ownerHandles": [
+                "@halilkocoglu"
+              ],
+              "ownerSource": "owner-registry-default"
+            },
+            {
               "appId": "mfe-access",
               "ownerHandles": [
                 "@halilkocoglu"
@@ -238,6 +283,37 @@
           ],
           "tasks": [
             "`Button` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
+            "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
+            "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
+            "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit."
+          ],
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
+          ],
+          "codemodReady": false
+        },
+        {
+          "checklistId": "card-major-cross-app-review",
+          "component": "Card",
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "consumerApps": [
+            {
+              "appId": "demos",
+              "ownerHandles": [
+                "@halilkocoglu"
+              ],
+              "ownerSource": "owner-registry-default"
+            }
+          ],
+          "tasks": [
+            "`Card` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
             "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
             "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
             "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit."
@@ -314,6 +390,37 @@
           ],
           "tasks": [
             "`DetailDrawer` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
+            "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
+            "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
+            "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit."
+          ],
+          "evidenceRefs": [
+            "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
+          ],
+          "codemodReady": false
+        },
+        {
+          "checklistId": "divider-major-cross-app-review",
+          "component": "Divider",
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "consumerApps": [
+            {
+              "appId": "demos",
+              "ownerHandles": [
+                "@halilkocoglu"
+              ],
+              "ownerSource": "owner-registry-default"
+            }
+          ],
+          "tasks": [
+            "`Divider` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
             "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
             "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
             "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit."
@@ -500,8 +607,18 @@
           "classId": "major-cross-app-review",
           "semver": "major",
           "migrationTrack": "consumer-rollout-review",
-          "ownerHandles": [],
-          "consumerApps": [],
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "consumerApps": [
+            {
+              "appId": "demos",
+              "ownerHandles": [
+                "@halilkocoglu"
+              ],
+              "ownerSource": "owner-registry-default"
+            }
+          ],
           "tasks": [
             "`Switch` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
             "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
@@ -547,15 +664,15 @@
           "codemodReady": false
         },
         {
-          "checklistId": "textinput-major-cross-app-review",
-          "component": "TextInput",
+          "checklistId": "tabs-major-cross-app-review",
+          "component": "Tabs",
           "classId": "major-cross-app-review",
           "semver": "major",
           "migrationTrack": "consumer-rollout-review",
           "ownerHandles": [],
           "consumerApps": [],
           "tasks": [
-            "`TextInput` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
+            "`Tabs` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
             "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
             "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
             "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit."
@@ -568,128 +685,25 @@
           "codemodReady": false
         },
         {
-          "checklistId": "aiactionaudittimeline-minor-single-app-review",
-          "component": "AIActionAuditTimeline",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ],
-          "consumerApps": [
-            {
-              "appId": "mfe-shell",
-              "ownerHandles": [
-                "@halilkocoglu"
-              ],
-              "ownerSource": "owner-registry-default"
-            }
-          ],
+          "checklistId": "text-major-cross-app-review",
+          "component": "Text",
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [],
+          "consumerApps": [],
           "tasks": [
-            "`AIActionAuditTimeline` icin `package-import-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
+            "`Text` icin `consumer-rollout-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
             "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
-            "`mfe-shell` icin smoke/regression onayini checklist'e ekle.",
-            "Semver minor guidance'i release notes ve rollout ozeti ile birlikte yayimla."
+            "Tum etkilenen consumer app sahiplerini release review turuna dahil et.",
+            "Semver major guidance ve rollout notunu release notes/changelog artefact'ina yansit."
           ],
           "evidenceRefs": [
             "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
           ],
-          "codemodReady": true
-        },
-        {
-          "checklistId": "aiguidedauthoring-minor-single-app-review",
-          "component": "AIGuidedAuthoring",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ],
-          "consumerApps": [
-            {
-              "appId": "mfe-shell",
-              "ownerHandles": [
-                "@halilkocoglu"
-              ],
-              "ownerSource": "owner-registry-default"
-            }
-          ],
-          "tasks": [
-            "`AIGuidedAuthoring` icin `package-import-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
-            "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
-            "`mfe-shell` icin smoke/regression onayini checklist'e ekle.",
-            "Semver minor guidance'i release notes ve rollout ozeti ile birlikte yayimla."
-          ],
-          "evidenceRefs": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
-          ],
-          "codemodReady": true
-        },
-        {
-          "checklistId": "accordion-minor-single-app-review",
-          "component": "Accordion",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ],
-          "consumerApps": [
-            {
-              "appId": "mfe-shell",
-              "ownerHandles": [
-                "@halilkocoglu"
-              ],
-              "ownerSource": "owner-registry-default"
-            }
-          ],
-          "tasks": [
-            "`Accordion` icin `package-import-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
-            "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
-            "`mfe-shell` icin smoke/regression onayini checklist'e ekle.",
-            "Semver minor guidance'i release notes ve rollout ozeti ile birlikte yayimla."
-          ],
-          "evidenceRefs": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
-          ],
-          "codemodReady": true
-        },
-        {
-          "checklistId": "aggridserver-minor-single-app-review",
-          "component": "AgGridServer",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ],
-          "consumerApps": [
-            {
-              "appId": "mfe-shell",
-              "ownerHandles": [
-                "@halilkocoglu"
-              ],
-              "ownerSource": "owner-registry-default"
-            }
-          ],
-          "tasks": [
-            "`AgGridServer` icin `package-import-review` track'i altinda package veya remote surface degisikliklerini dogrula.",
-            "Design Lab preview, Storybook harness ve latest release manifest sinyallerini birlikte kontrol et.",
-            "`mfe-shell` icin smoke/regression onayini checklist'e ekle.",
-            "Semver minor guidance'i release notes ve rollout ozeti ile birlikte yayimla."
-          ],
-          "evidenceRefs": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab.index.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-consumer-impact.v1.json"
-          ],
-          "codemodReady": true
+          "codemodReady": false
         }
       ]
     },
@@ -701,10 +715,10 @@
       "candidateMode": "dry-run-audit",
       "auditScript": "audit:ui-library-upgrade-recipes",
       "summary": {
-        "totalRecipes": 70,
-        "singleAppRecipes": 70,
-        "codemodCandidateCount": 72,
-        "dryRunReadyCandidates": 70,
+        "totalRecipes": 67,
+        "singleAppRecipes": 67,
+        "codemodCandidateCount": 70,
+        "dryRunReadyCandidates": 67,
         "manualOnlyRecipes": 0
       },
       "items": [
@@ -1051,47 +1065,6 @@
           ]
         },
         {
-          "recipeId": "avatar-consumer-app-upgrade",
-          "component": "Avatar",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "ownerHandles": [],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
-          ],
-          "importStatement": "import { Avatar } from '@mfe/design-system';",
-          "apiFocusProps": [],
-          "previewFocus": [],
-          "regressionFocus": [],
-          "automation": {
-            "mode": "dry-run-audit",
-            "status": "candidate",
-            "strategyId": "component-prop-audit",
-            "auditScript": "audit:ui-library-upgrade-recipes",
-            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
-            "targetFileCount": 3,
-            "autoApplyReady": false,
-            "confidence": "medium"
-          },
-          "steps": [
-            "`consumer-app` icinde once `web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts` dosyasindaki `Avatar` import ve JSX kullanimini incele.",
-            "`Avatar` icin ozellikle `public props` alanlarinda backward-compat review yap.",
-            "Preview/regression turunda `UI regression cues` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
-            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
-          ],
-          "manualChecklistRef": "avatar-minor-single-app-review",
-          "evidenceRefs": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
-          ]
-        },
-        {
           "recipeId": "breadcrumb-consumer-app-upgrade",
           "component": "Breadcrumb",
           "consumerApp": "consumer-app",
@@ -1128,43 +1101,6 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabBreadcrumbShowcase.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
-          ]
-        },
-        {
-          "recipeId": "card-consumer-app-upgrade",
-          "component": "Card",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "ownerHandles": [],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
-          ],
-          "importStatement": "import { Card } from '@mfe/design-system';",
-          "apiFocusProps": [],
-          "previewFocus": [],
-          "regressionFocus": [],
-          "automation": {
-            "mode": "dry-run-audit",
-            "status": "candidate",
-            "strategyId": "component-prop-audit",
-            "auditScript": "audit:ui-library-upgrade-recipes",
-            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
-            "targetFileCount": 1,
-            "autoApplyReady": false,
-            "confidence": "medium"
-          },
-          "steps": [
-            "`consumer-app` icinde once `web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts` dosyasindaki `Card` import ve JSX kullanimini incele.",
-            "`Card` icin ozellikle `public props` alanlarinda backward-compat review yap.",
-            "Preview/regression turunda `UI regression cues` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
-            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
-          ],
-          "manualChecklistRef": "card-minor-single-app-review",
-          "evidenceRefs": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ]
@@ -1662,17 +1598,18 @@
           ]
         },
         {
-          "recipeId": "divider-consumer-app-upgrade",
-          "component": "Divider",
-          "consumerApp": "consumer-app",
+          "recipeId": "dialog-demos-upgrade",
+          "component": "Dialog",
+          "consumerApp": "demos",
           "classId": "minor-single-app-review",
           "semver": "minor",
-          "ownerHandles": [],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
+          "ownerHandles": [
+            "@halilkocoglu"
           ],
-          "importStatement": "import { Divider } from '@mfe/design-system';",
+          "targetFiles": [
+            "web/apps/demos/crud/main.tsx"
+          ],
+          "importStatement": "import { Dialog } from '@mfe/design-system';",
           "apiFocusProps": [],
           "previewFocus": [],
           "regressionFocus": [],
@@ -1682,20 +1619,19 @@
             "strategyId": "component-prop-audit",
             "auditScript": "audit:ui-library-upgrade-recipes",
             "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
-            "targetFileCount": 2,
+            "targetFileCount": 1,
             "autoApplyReady": false,
             "confidence": "medium"
           },
           "steps": [
-            "`consumer-app` icinde once `web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts` dosyasindaki `Divider` import ve JSX kullanimini incele.",
-            "`Divider` icin ozellikle `public props` alanlarinda backward-compat review yap.",
+            "`demos` icinde once `web/apps/demos/crud/main.tsx` dosyasindaki `Dialog` import ve JSX kullanimini incele.",
+            "`Dialog` icin ozellikle `public props` alanlarinda backward-compat review yap.",
             "Preview/regression turunda `UI regression cues` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
             "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
           ],
-          "manualChecklistRef": "divider-minor-single-app-review",
+          "manualChecklistRef": "dialog-minor-single-app-review",
           "evidenceRefs": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+            "web/apps/demos/crud/main.tsx",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ]
@@ -1969,6 +1905,7 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/APIDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDenseShowcase.tsx"
@@ -1983,7 +1920,7 @@
             "strategyId": "component-prop-audit",
             "auditScript": "audit:ui-library-upgrade-recipes",
             "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
-            "targetFileCount": 6,
+            "targetFileCount": 7,
             "autoApplyReady": false,
             "confidence": "medium"
           },
@@ -1998,7 +1935,7 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/APIDetail.tsx",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ]
@@ -2838,6 +2775,49 @@
           ]
         },
         {
+          "recipeId": "stack-demos-upgrade",
+          "component": "Stack",
+          "consumerApp": "demos",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "targetFiles": [
+            "web/apps/demos/admin/main.tsx",
+            "web/apps/demos/crud/main.tsx",
+            "web/apps/demos/dashboard/main.tsx"
+          ],
+          "importStatement": "import { Stack } from '@mfe/design-system';",
+          "apiFocusProps": [],
+          "previewFocus": [],
+          "regressionFocus": [],
+          "automation": {
+            "mode": "dry-run-audit",
+            "status": "candidate",
+            "strategyId": "component-prop-audit",
+            "auditScript": "audit:ui-library-upgrade-recipes",
+            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
+            "targetFileCount": 3,
+            "autoApplyReady": false,
+            "confidence": "medium"
+          },
+          "steps": [
+            "`demos` icinde once `web/apps/demos/admin/main.tsx` dosyasindaki `Stack` import ve JSX kullanimini incele.",
+            "`Stack` icin ozellikle `public props` alanlarinda backward-compat review yap.",
+            "Preview/regression turunda `UI regression cues` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
+            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
+          ],
+          "manualChecklistRef": "stack-minor-single-app-review",
+          "evidenceRefs": [
+            "web/apps/demos/admin/main.tsx",
+            "web/apps/demos/crud/main.tsx",
+            "web/apps/demos/dashboard/main.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
           "recipeId": "steps-consumer-app-upgrade",
           "component": "Steps",
           "consumerApp": "consumer-app",
@@ -2968,54 +2948,6 @@
           ]
         },
         {
-          "recipeId": "tabs-consumer-app-upgrade",
-          "component": "Tabs",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "ownerHandles": [],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabRecipeDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx"
-          ],
-          "importStatement": "import { Tabs } from '@mfe/design-system';",
-          "apiFocusProps": [],
-          "previewFocus": [],
-          "regressionFocus": [],
-          "automation": {
-            "mode": "dry-run-audit",
-            "status": "candidate",
-            "strategyId": "component-prop-audit",
-            "auditScript": "audit:ui-library-upgrade-recipes",
-            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
-            "targetFileCount": 9,
-            "autoApplyReady": false,
-            "confidence": "medium"
-          },
-          "steps": [
-            "`consumer-app` icinde once `web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx` dosyasindaki `Tabs` import ve JSX kullanimini incele.",
-            "`Tabs` icin ozellikle `public props` alanlarinda backward-compat review yap.",
-            "Preview/regression turunda `UI regression cues` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
-            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
-          ],
-          "manualChecklistRef": "tabs-minor-single-app-review",
-          "evidenceRefs": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
-          ]
-        },
-        {
           "recipeId": "tag-consumer-app-upgrade",
           "component": "Tag",
           "consumerApp": "consumer-app",
@@ -3056,159 +2988,6 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx",
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
-          ]
-        },
-        {
-          "recipeId": "text-consumer-app-upgrade",
-          "component": "Text",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "ownerHandles": [],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx",
-            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSearchModal.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/ai/SuggestedPatterns.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/api/PropsDepsGraph.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/api/PropsTableV2.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/components/EnterpriseReadyChecklist.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/compose/ComposePage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/composition/CompositionMode.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/BenchmarkParityPanel.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentOverviewPanels.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabRecipeDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/MigrationGovernancePanel.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/PlatformContractsCompliancePanel.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/docs/GuideTab.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/ExampleCard.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/ExamplesGallery.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/insights/AdoptionHeatmap.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/interaction/InteractionPlayground.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/migration/MigrationDiffView.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabHero.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/ComponentsSidebarRenderer.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/EcosystemSidebarRenderer.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/FoundationsSidebarRenderer.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/PagesSidebarRenderer.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/RecipesSidebarRenderer.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/AdvancedListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/BundleSizePage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentGroupListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentsListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DependencyGraphPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DesignLabLanding.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DesignTokenDetail.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/DesignTokensListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/EcosystemListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ExtensionDetail.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FigmaSyncPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FoundationDetail.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FoundationsListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/IconGalleryPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/InsightsDashboardPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/MigrationGuidePage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PageTemplateDetail.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PagesListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ParityDashboardPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PrimitivesListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/QualityAuditPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/RecipeDetail.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/RecipesListing.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemingGuidePage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/UsageAnalyticsPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/VisualRegressionPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/panels/A11yAuditPanel.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/panels/MeasureOverlay.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/panels/PerfProfilerPanel.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/playground/ActionsPanel.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/playground/ComponentPlayground.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/playground/PlaygroundControls.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/playground/PlaygroundPreview.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/playground/ResponsiveMode.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/shared/DesignLabTaxonomyNavigator.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabBreadcrumbShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabMenuBarShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabStepsShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabTableSimpleShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/link-inline/index.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/menu-bar/menuBarShared.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/navigation-rail/index.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationCenteredFirstLastShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationClientCompactShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationClientDefaultShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationCompactNoInfoShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationDisabledShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationEllipsisTightShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationEllipsisWideShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationGhostMobileShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationReadonlyShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationRoundedOutlinedShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDefaultShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDenseShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerNoInfoShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationSimplePillShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationUnknownTotalStreamShowcase.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/paginationShared.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildActionDataEntryShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildAiGovernanceShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridLivePreview.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildCollectionGridShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptLivePreview.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildConfidencePromptShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildDataDisplayAnalyticsShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlLivePreview.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildFormControlShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildNavigationUtilityLivePreview.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayLivePreview.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildOverlayShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildSearchFilterShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/source/ViewSourceModal.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/tabs/StyleTab.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/tabs/TokensTab.tsx",
-            "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
-          ],
-          "importStatement": "import { Text } from '@mfe/design-system';",
-          "apiFocusProps": [],
-          "previewFocus": [],
-          "regressionFocus": [],
-          "automation": {
-            "mode": "dry-run-audit",
-            "status": "candidate",
-            "strategyId": "typography-prop-audit",
-            "auditScript": "audit:ui-library-upgrade-recipes",
-            "candidateScriptPath": "web/scripts/ops/audit-ui-library-upgrade-recipes.mjs",
-            "targetFileCount": 114,
-            "autoApplyReady": false,
-            "confidence": "medium"
-          },
-          "steps": [
-            "`consumer-app` icinde once `web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx` dosyasindaki `Text` import ve JSX kullanimini incele.",
-            "`Text` icin ozellikle `public props` alanlarinda backward-compat review yap.",
-            "Preview/regression turunda `UI regression cues` sinyallerini Storybook ve Design Lab ile capraz kontrol et.",
-            "Dry-run audit sonucunu checklist ve release notes evidence alanina bagla; otomatik write uygulama oncesi ayri onay ister."
-          ],
-          "manualChecklistRef": "text-minor-single-app-review",
-          "evidenceRefs": [
-            "web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx",
-            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSearchModal.tsx",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-checklist.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ]
@@ -3774,13 +3553,13 @@
       "transformEngine": "ts-morph-candidate",
       "applyPolicy": "manual-approval-required",
       "summary": {
-        "totalCandidates": 72,
-        "dryRunReadyCandidates": 72,
+        "totalCandidates": 70,
+        "dryRunReadyCandidates": 70,
         "applyExecutorReadyCandidates": 2,
         "manualReviewFirstCandidates": 3,
         "autoApplyReadyCandidates": 0,
         "lowRiskCount": 2,
-        "mediumRiskCount": 69,
+        "mediumRiskCount": 67,
         "highRiskCount": 1
       },
       "dryRun": {
@@ -5067,93 +4846,6 @@
           ]
         },
         {
-          "candidateId": "avatar-consumer-app-codemod",
-          "component": "Avatar",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "ownerHandles": [],
-          "transformEngine": "ts-morph-candidate",
-          "transformKind": "jsx-prop-normalization",
-          "strategyId": "component-codemod-candidate",
-          "riskLevel": "medium",
-          "riskReasons": [
-            "Component icin generic codemod candidate profili kullanildi."
-          ],
-          "blockers": [
-            "Component'e ozel rewrite strategy tanimlanmadi."
-          ],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
-          ],
-          "estimatedTouchPoints": 3,
-          "dryRunCommand": "audit:ui-library-codemod-candidates",
-          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
-          "dryRunIncluded": false,
-          "applyExecutorIncluded": false,
-          "applyExecutorCommand": "",
-          "manualReviewIncluded": false,
-          "manualReviewCommand": "",
-          "dryRunScope": {
-            "targetFileCount": 3,
-            "requiredAnySignals": [],
-            "optionalSignals": [],
-            "minRequiredMatches": 0,
-            "ownerMapped": false
-          },
-          "matchSelectors": [
-            "import { Avatar } from '@mfe/design-system'",
-            "<Avatar"
-          ],
-          "apiFocusProps": [],
-          "previewFocus": [],
-          "regressionFocus": [],
-          "steps": [
-            "`Avatar` icin `consumer-app` hedefinde `jsx-prop-normalization` candidate'i dry-run olarak planlandi.",
-            "Ilk eslesme turunda `web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts` dosyasinda `component sinyalleri` sinyallerini ve import/JSX kullanimini dogrula.",
-            "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
-            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
-          ],
-          "manualChecklistRef": "avatar-minor-single-app-review",
-          "upgradeRecipeRef": "avatar-consumer-app-upgrade",
-          "applyReady": false,
-          "confidence": "low",
-          "prototypePath": "web/scripts/codemods/ui-library/prototypes/avatar.prototype.v1.json",
-          "prototypeSourcePath": "web/scripts/codemods/ui-library/prototypes/avatar.prototype.ts",
-          "prototypeStatus": "missing",
-          "prototypeReviewMode": "missing",
-          "rewriteRule": "",
-          "rewritePreview": {
-            "kind": "illustrative",
-            "before": "",
-            "after": ""
-          },
-          "matchStrategy": {
-            "requiredSelectors": [],
-            "dryRunSignals": [],
-            "astTargets": [],
-            "stopConditions": []
-          },
-          "manualValidation": {
-            "storybook": [],
-            "designLab": [],
-            "smoke": []
-          },
-          "rollbackPlan": [],
-          "prototypeNotes": [],
-          "evidenceRefs": [
-            "web/scripts/codemods/ui-library/prototypes/avatar.prototype.v1.json",
-            "web/scripts/codemods/ui-library/prototypes/avatar.prototype.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
-          ]
-        },
-        {
           "candidateId": "breadcrumb-consumer-app-codemod",
           "component": "Breadcrumb",
           "consumerApp": "consumer-app",
@@ -5236,89 +4928,6 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabBreadcrumbShowcase.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
-          ]
-        },
-        {
-          "candidateId": "card-consumer-app-codemod",
-          "component": "Card",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "ownerHandles": [],
-          "transformEngine": "ts-morph-candidate",
-          "transformKind": "jsx-prop-normalization",
-          "strategyId": "component-codemod-candidate",
-          "riskLevel": "medium",
-          "riskReasons": [
-            "Component icin generic codemod candidate profili kullanildi."
-          ],
-          "blockers": [
-            "Component'e ozel rewrite strategy tanimlanmadi."
-          ],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts"
-          ],
-          "estimatedTouchPoints": 1,
-          "dryRunCommand": "audit:ui-library-codemod-candidates",
-          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
-          "dryRunIncluded": false,
-          "applyExecutorIncluded": false,
-          "applyExecutorCommand": "",
-          "manualReviewIncluded": false,
-          "manualReviewCommand": "",
-          "dryRunScope": {
-            "targetFileCount": 1,
-            "requiredAnySignals": [],
-            "optionalSignals": [],
-            "minRequiredMatches": 0,
-            "ownerMapped": false
-          },
-          "matchSelectors": [
-            "import { Card } from '@mfe/design-system'",
-            "<Card"
-          ],
-          "apiFocusProps": [],
-          "previewFocus": [],
-          "regressionFocus": [],
-          "steps": [
-            "`Card` icin `consumer-app` hedefinde `jsx-prop-normalization` candidate'i dry-run olarak planlandi.",
-            "Ilk eslesme turunda `web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts` dosyasinda `component sinyalleri` sinyallerini ve import/JSX kullanimini dogrula.",
-            "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
-            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
-          ],
-          "manualChecklistRef": "card-minor-single-app-review",
-          "upgradeRecipeRef": "card-consumer-app-upgrade",
-          "applyReady": false,
-          "confidence": "low",
-          "prototypePath": "web/scripts/codemods/ui-library/prototypes/card.prototype.v1.json",
-          "prototypeSourcePath": "web/scripts/codemods/ui-library/prototypes/card.prototype.ts",
-          "prototypeStatus": "missing",
-          "prototypeReviewMode": "missing",
-          "rewriteRule": "",
-          "rewritePreview": {
-            "kind": "illustrative",
-            "before": "",
-            "after": ""
-          },
-          "matchStrategy": {
-            "requiredSelectors": [],
-            "dryRunSignals": [],
-            "astTargets": [],
-            "stopConditions": []
-          },
-          "manualValidation": {
-            "storybook": [],
-            "designLab": [],
-            "smoke": []
-          },
-          "rollbackPlan": [],
-          "prototypeNotes": [],
-          "evidenceRefs": [
-            "web/scripts/codemods/ui-library/prototypes/card.prototype.v1.json",
-            "web/scripts/codemods/ui-library/prototypes/card.prototype.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ]
@@ -6368,12 +5977,14 @@
           ]
         },
         {
-          "candidateId": "divider-consumer-app-codemod",
-          "component": "Divider",
-          "consumerApp": "consumer-app",
+          "candidateId": "dialog-demos-codemod",
+          "component": "Dialog",
+          "consumerApp": "demos",
           "classId": "minor-single-app-review",
           "semver": "minor",
-          "ownerHandles": [],
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
           "transformEngine": "ts-morph-candidate",
           "transformKind": "jsx-prop-normalization",
           "strategyId": "component-codemod-candidate",
@@ -6385,10 +5996,9 @@
             "Component'e ozel rewrite strategy tanimlanmadi."
           ],
           "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
+            "web/apps/demos/crud/main.tsx"
           ],
-          "estimatedTouchPoints": 2,
+          "estimatedTouchPoints": 1,
           "dryRunCommand": "audit:ui-library-codemod-candidates",
           "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
           "dryRunIncluded": false,
@@ -6397,31 +6007,31 @@
           "manualReviewIncluded": false,
           "manualReviewCommand": "",
           "dryRunScope": {
-            "targetFileCount": 2,
+            "targetFileCount": 1,
             "requiredAnySignals": [],
             "optionalSignals": [],
             "minRequiredMatches": 0,
-            "ownerMapped": false
+            "ownerMapped": true
           },
           "matchSelectors": [
-            "import { Divider } from '@mfe/design-system'",
-            "<Divider"
+            "import { Dialog } from '@mfe/design-system'",
+            "<Dialog"
           ],
           "apiFocusProps": [],
           "previewFocus": [],
           "regressionFocus": [],
           "steps": [
-            "`Divider` icin `consumer-app` hedefinde `jsx-prop-normalization` candidate'i dry-run olarak planlandi.",
-            "Ilk eslesme turunda `web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts` dosyasinda `component sinyalleri` sinyallerini ve import/JSX kullanimini dogrula.",
+            "`Dialog` icin `demos` hedefinde `jsx-prop-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/demos/crud/main.tsx` dosyasinda `component sinyalleri` sinyallerini ve import/JSX kullanimini dogrula.",
             "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
             "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
           ],
-          "manualChecklistRef": "divider-minor-single-app-review",
-          "upgradeRecipeRef": "divider-consumer-app-upgrade",
+          "manualChecklistRef": "dialog-minor-single-app-review",
+          "upgradeRecipeRef": "dialog-demos-upgrade",
           "applyReady": false,
           "confidence": "low",
-          "prototypePath": "web/scripts/codemods/ui-library/prototypes/divider.prototype.v1.json",
-          "prototypeSourcePath": "web/scripts/codemods/ui-library/prototypes/divider.prototype.ts",
+          "prototypePath": "web/scripts/codemods/ui-library/prototypes/dialog.prototype.v1.json",
+          "prototypeSourcePath": "web/scripts/codemods/ui-library/prototypes/dialog.prototype.ts",
           "prototypeStatus": "missing",
           "prototypeReviewMode": "missing",
           "rewriteRule": "",
@@ -6444,10 +6054,9 @@
           "rollbackPlan": [],
           "prototypeNotes": [],
           "evidenceRefs": [
-            "web/scripts/codemods/ui-library/prototypes/divider.prototype.v1.json",
-            "web/scripts/codemods/ui-library/prototypes/divider.prototype.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
+            "web/scripts/codemods/ui-library/prototypes/dialog.prototype.v1.json",
+            "web/scripts/codemods/ui-library/prototypes/dialog.prototype.ts",
+            "web/apps/demos/crud/main.tsx",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ]
@@ -7007,11 +6616,12 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/APIDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDenseShowcase.tsx"
           ],
-          "estimatedTouchPoints": 6,
+          "estimatedTouchPoints": 7,
           "dryRunCommand": "audit:ui-library-codemod-candidates",
           "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
           "dryRunIncluded": false,
@@ -7020,7 +6630,7 @@
           "manualReviewIncluded": false,
           "manualReviewCommand": "",
           "dryRunScope": {
-            "targetFileCount": 6,
+            "targetFileCount": 7,
             "requiredAnySignals": [],
             "optionalSignals": [],
             "minRequiredMatches": 0,
@@ -7072,7 +6682,7 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/APIDetail.tsx",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ]
@@ -8970,6 +8580,95 @@
           ]
         },
         {
+          "candidateId": "stack-demos-codemod",
+          "component": "Stack",
+          "consumerApp": "demos",
+          "classId": "minor-single-app-review",
+          "semver": "minor",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ],
+          "transformEngine": "ts-morph-candidate",
+          "transformKind": "jsx-prop-normalization",
+          "strategyId": "component-codemod-candidate",
+          "riskLevel": "medium",
+          "riskReasons": [
+            "Component icin generic codemod candidate profili kullanildi."
+          ],
+          "blockers": [
+            "Component'e ozel rewrite strategy tanimlanmadi."
+          ],
+          "targetFiles": [
+            "web/apps/demos/admin/main.tsx",
+            "web/apps/demos/crud/main.tsx",
+            "web/apps/demos/dashboard/main.tsx"
+          ],
+          "estimatedTouchPoints": 3,
+          "dryRunCommand": "audit:ui-library-codemod-candidates",
+          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
+          "dryRunIncluded": false,
+          "applyExecutorIncluded": false,
+          "applyExecutorCommand": "",
+          "manualReviewIncluded": false,
+          "manualReviewCommand": "",
+          "dryRunScope": {
+            "targetFileCount": 3,
+            "requiredAnySignals": [],
+            "optionalSignals": [],
+            "minRequiredMatches": 0,
+            "ownerMapped": true
+          },
+          "matchSelectors": [
+            "import { Stack } from '@mfe/design-system'",
+            "<Stack"
+          ],
+          "apiFocusProps": [],
+          "previewFocus": [],
+          "regressionFocus": [],
+          "steps": [
+            "`Stack` icin `demos` hedefinde `jsx-prop-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/demos/admin/main.tsx` dosyasinda `component sinyalleri` sinyallerini ve import/JSX kullanimini dogrula.",
+            "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
+            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
+          ],
+          "manualChecklistRef": "stack-minor-single-app-review",
+          "upgradeRecipeRef": "stack-demos-upgrade",
+          "applyReady": false,
+          "confidence": "low",
+          "prototypePath": "web/scripts/codemods/ui-library/prototypes/stack.prototype.v1.json",
+          "prototypeSourcePath": "web/scripts/codemods/ui-library/prototypes/stack.prototype.ts",
+          "prototypeStatus": "missing",
+          "prototypeReviewMode": "missing",
+          "rewriteRule": "",
+          "rewritePreview": {
+            "kind": "illustrative",
+            "before": "",
+            "after": ""
+          },
+          "matchStrategy": {
+            "requiredSelectors": [],
+            "dryRunSignals": [],
+            "astTargets": [],
+            "stopConditions": []
+          },
+          "manualValidation": {
+            "storybook": [],
+            "designLab": [],
+            "smoke": []
+          },
+          "rollbackPlan": [],
+          "prototypeNotes": [],
+          "evidenceRefs": [
+            "web/scripts/codemods/ui-library/prototypes/stack.prototype.v1.json",
+            "web/scripts/codemods/ui-library/prototypes/stack.prototype.ts",
+            "web/apps/demos/admin/main.tsx",
+            "web/apps/demos/crud/main.tsx",
+            "web/apps/demos/dashboard/main.tsx",
+            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
+            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
+          ]
+        },
+        {
           "candidateId": "steps-consumer-app-codemod",
           "component": "Steps",
           "consumerApp": "consumer-app",
@@ -9238,105 +8937,11 @@
           ]
         },
         {
-          "candidateId": "tabs-consumer-app-codemod",
-          "component": "Tabs",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "ownerHandles": [],
-          "transformEngine": "ts-morph-candidate",
-          "transformKind": "jsx-prop-normalization",
-          "strategyId": "component-codemod-candidate",
-          "riskLevel": "medium",
-          "riskReasons": [
-            "Component icin generic codemod candidate profili kullanildi."
-          ],
-          "blockers": [
-            "Component'e ozel rewrite strategy tanimlanmadi."
-          ],
-          "targetFiles": [
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabRecipeDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildLayoutShowcaseSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/showcase-families/buildTabsFeedbackShowcaseSections.tsx"
-          ],
-          "estimatedTouchPoints": 9,
-          "dryRunCommand": "audit:ui-library-codemod-candidates",
-          "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
-          "dryRunIncluded": false,
-          "applyExecutorIncluded": false,
-          "applyExecutorCommand": "",
-          "manualReviewIncluded": false,
-          "manualReviewCommand": "",
-          "dryRunScope": {
-            "targetFileCount": 9,
-            "requiredAnySignals": [],
-            "optionalSignals": [],
-            "minRequiredMatches": 0,
-            "ownerMapped": false
-          },
-          "matchSelectors": [
-            "import { Tabs } from '@mfe/design-system'",
-            "<Tabs"
-          ],
-          "apiFocusProps": [],
-          "previewFocus": [],
-          "regressionFocus": [],
-          "steps": [
-            "`Tabs` icin `consumer-app` hedefinde `jsx-prop-normalization` candidate'i dry-run olarak planlandi.",
-            "Ilk eslesme turunda `web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx` dosyasinda `component sinyalleri` sinyallerini ve import/JSX kullanimini dogrula.",
-            "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
-            "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
-          ],
-          "manualChecklistRef": "tabs-minor-single-app-review",
-          "upgradeRecipeRef": "tabs-consumer-app-upgrade",
-          "applyReady": false,
-          "confidence": "low",
-          "prototypePath": "web/scripts/codemods/ui-library/prototypes/tabs.prototype.v1.json",
-          "prototypeSourcePath": "web/scripts/codemods/ui-library/prototypes/tabs.prototype.ts",
-          "prototypeStatus": "missing",
-          "prototypeReviewMode": "missing",
-          "rewriteRule": "",
-          "rewritePreview": {
-            "kind": "illustrative",
-            "before": "",
-            "after": ""
-          },
-          "matchStrategy": {
-            "requiredSelectors": [],
-            "dryRunSignals": [],
-            "astTargets": [],
-            "stopConditions": []
-          },
-          "manualValidation": {
-            "storybook": [],
-            "designLab": [],
-            "smoke": []
-          },
-          "rollbackPlan": [],
-          "prototypeNotes": [],
-          "evidenceRefs": [
-            "web/scripts/codemods/ui-library/prototypes/tabs.prototype.v1.json",
-            "web/scripts/codemods/ui-library/prototypes/tabs.prototype.ts",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabEcosystemDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabFoundationDetailSections.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabPageDetailSections.tsx",
-            "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
-            "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
-          ]
-        },
-        {
           "candidateId": "text-mfe-shell-codemod",
           "component": "Text",
-          "consumerApp": "consumer-app",
-          "classId": "minor-single-app-review",
-          "semver": "minor",
+          "consumerApp": "demos",
+          "classId": "major-cross-app-review",
+          "semver": "major",
           "ownerHandles": [],
           "transformEngine": "ts-morph-candidate",
           "transformKind": "typography-prop-normalization",
@@ -9350,15 +8955,27 @@
             "Typography rewrite'i icin visual diff olmadan auto-apply acilmamali."
           ],
           "targetFiles": [
+            "web/apps/demos/admin/main.tsx",
+            "web/apps/demos/crud/main.tsx",
+            "web/apps/demos/dashboard/main.tsx",
             "web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx",
             "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
             "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
+            "web/apps/mfe-shell/src/pages/admin/XSuiteDashboardPage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSearchModal.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSidebarRouter.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/XSuiteRuntimePreview.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/ai/SuggestedPatterns.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/api/PropsDepsGraph.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/api/PropsTableV2.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/components/AlertPanel.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/components/CoverageMatrix.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/components/EnterpriseReadyChecklist.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/components/PackageQualityScore.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/components/QualityBadge.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/components/QualityGatesOverview.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/components/SLOTracker.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/components/SecurityPosture.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/compose/ComposePage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/composition/CompositionMode.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/BenchmarkParityPanel.tsx",
@@ -9374,7 +8991,16 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/ExampleCard.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/ExamplesGallery.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/examples/registry.ts",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/governance/ApprovalQueue.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/governance/AuditTrailPanel.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/governance/OwnershipPanel.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/governance/ReleaseHealthCard.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/insights/AdoptionHeatmap.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/intelligence/AssistantPanel.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/intelligence/BlastRadiusPanel.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/intelligence/ConsumerHeatmap.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/intelligence/ROICalculator.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/intelligence/ReleaseTimelinePanel.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/interaction/InteractionPlayground.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/migration/MigrationDiffView.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabHero.tsx",
@@ -9384,6 +9010,7 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/FoundationsSidebarRenderer.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/PagesSidebarRenderer.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/sidebar/RecipesSidebarRenderer.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/APIDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/AdvancedListing.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/BundleSizePage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ComponentDetail.tsx",
@@ -9398,14 +9025,19 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FigmaSyncPage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FoundationDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/FoundationsListing.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/GovernancePage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/IconGalleryPage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/InsightsDashboardPage.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/IntelligencePage.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/LeadershipProofPage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/MigrationGuidePage.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ObservabilityPage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PageTemplateDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PagesListing.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ParityDashboardPage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/PrimitivesListing.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/QualityAuditPage.tsx",
+            "web/apps/mfe-shell/src/pages/admin/design-lab/pages/QualityDashboardPage.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/RecipeDetail.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/RecipesListing.tsx",
             "web/apps/mfe-shell/src/pages/admin/design-lab/pages/ThemeBuilderPage.tsx",
@@ -9465,7 +9097,7 @@
             "web/apps/mfe-shell/src/pages/admin/design-lab/tabs/TokensTab.tsx",
             "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
           ],
-          "estimatedTouchPoints": 114,
+          "estimatedTouchPoints": 141,
           "dryRunCommand": "audit:ui-library-codemod-candidates",
           "candidateScriptPath": "web/scripts/ops/audit-ui-library-codemod-candidates.mjs",
           "dryRunIncluded": false,
@@ -9474,7 +9106,7 @@
           "manualReviewIncluded": true,
           "manualReviewCommand": "run:ui-library-codemod-manual-review",
           "dryRunScope": {
-            "targetFileCount": 114,
+            "targetFileCount": 141,
             "requiredAnySignals": [
               "variant",
               "preset"
@@ -9497,13 +9129,13 @@
           "previewFocus": [],
           "regressionFocus": [],
           "steps": [
-            "`Text` icin `consumer-app` hedefinde `typography-prop-normalization` candidate'i dry-run olarak planlandi.",
-            "Ilk eslesme turunda `web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx` dosyasinda `variant, preset` sinyallerini ve import/JSX kullanimini dogrula.",
+            "`Text` icin `demos` hedefinde `typography-prop-normalization` candidate'i dry-run olarak planlandi.",
+            "Ilk eslesme turunda `web/apps/demos/admin/main.tsx` dosyasinda `variant, preset` sinyallerini ve import/JSX kullanimini dogrula.",
             "Risk seviyesi `medium` oldugu icin rewrite karari release owner review'u ile birlikte alinmali.",
             "Auto-apply kapali kalir; candidate artefact yalniz dry-run ve rollout hazirlik kaniti uretir."
           ],
-          "manualChecklistRef": "text-minor-single-app-review",
-          "upgradeRecipeRef": "text-consumer-app-upgrade",
+          "manualChecklistRef": "text-major-cross-app-review",
+          "upgradeRecipeRef": "text-demos-upgrade",
           "applyReady": false,
           "confidence": "medium",
           "prototypePath": "web/scripts/codemods/ui-library/prototypes/text.prototype.v1.json",
@@ -9560,10 +9192,10 @@
           "evidenceRefs": [
             "web/scripts/codemods/ui-library/prototypes/text.prototype.v1.json",
             "web/scripts/codemods/ui-library/prototypes/text.prototype.ts",
+            "web/apps/demos/admin/main.tsx",
+            "web/apps/demos/crud/main.tsx",
+            "web/apps/demos/dashboard/main.tsx",
             "web/apps/mfe-shell/src/app/layout/DesignLabHeaderMenu.tsx",
-            "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
-            "web/apps/mfe-shell/src/pages/admin/ThemeAdminPage.tsx",
-            "web/apps/mfe-shell/src/pages/admin/design-lab/DesignLabSearchModal.tsx",
             "web/test-results/releases/ui-library/latest/ui-library-upgrade-recipes.v1.json",
             "web/test-results/releases/ui-library/latest/ui-library-release-manifest.v1.json"
           ],
@@ -10703,7 +10335,7 @@
           {
             "candidateId": "text-mfe-shell-codemod",
             "component": "Text",
-            "consumerApp": "consumer-app",
+            "consumerApp": "demos",
             "transformKind": "typography-prop-normalization",
             "riskLevel": "medium",
             "prototypeStatus": "ready",
@@ -10737,20 +10369,20 @@
       "reason": "Cross-app review gerektiren stable surface mevcut.",
       "releaseNotesLabel": "major-review",
       "summary": {
-        "patchSafeLabOnly": 50,
-        "minorSingleAppReview": 70,
+        "patchSafeLabOnly": 48,
+        "minorSingleAppReview": 67,
         "minorBetaExternalReview": 0,
-        "majorCrossAppReview": 12
+        "majorCrossAppReview": 17
       },
       "majorComponents": [
+        "Avatar",
         "Badge",
         "Button",
+        "Card",
         "Checkbox",
         "DetailDrawer",
-        "Modal",
-        "PageLayout",
-        "ReportFilterPanel",
-        "Segmented"
+        "Divider",
+        "Modal"
       ],
       "minorComponents": [
         "AIActionAuditTimeline",
@@ -10775,22 +10407,38 @@
     },
     "changeClasses": {
       "summary": {
-        "patchSafeLabOnly": 50,
-        "minorSingleAppReview": 70,
+        "patchSafeLabOnly": 48,
+        "minorSingleAppReview": 67,
         "minorBetaExternalReview": 0,
-        "majorCrossAppReview": 12,
-        "manualReviewRequired": 82
+        "majorCrossAppReview": 17,
+        "manualReviewRequired": 84
       },
       "components": [
+        {
+          "name": "Avatar",
+          "lifecycle": "stable",
+          "consumerApps": [
+            "demos",
+            "mfe-shell"
+          ],
+          "consumerAppCount": 2,
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ]
+        },
         {
           "name": "Badge",
           "lifecycle": "stable",
           "consumerApps": [
+            "demos",
             "mfe-access",
             "mfe-shell",
             "mfe-users"
           ],
-          "consumerAppCount": 3,
+          "consumerAppCount": 4,
           "classId": "major-cross-app-review",
           "semver": "major",
           "migrationTrack": "consumer-rollout-review",
@@ -10802,12 +10450,28 @@
           "name": "Button",
           "lifecycle": "stable",
           "consumerApps": [
+            "demos",
             "mfe-access",
             "mfe-shell",
             "mfe-suggestions",
             "mfe-users"
           ],
-          "consumerAppCount": 4,
+          "consumerAppCount": 5,
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ]
+        },
+        {
+          "name": "Card",
+          "lifecycle": "stable",
+          "consumerApps": [
+            "demos",
+            "mfe-shell"
+          ],
+          "consumerAppCount": 2,
           "classId": "major-cross-app-review",
           "semver": "major",
           "migrationTrack": "consumer-rollout-review",
@@ -10840,6 +10504,21 @@
             "mfe-users"
           ],
           "consumerAppCount": 4,
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ]
+        },
+        {
+          "name": "Divider",
+          "lifecycle": "stable",
+          "consumerApps": [
+            "demos",
+            "mfe-shell"
+          ],
+          "consumerAppCount": 2,
           "classId": "major-cross-app-review",
           "semver": "major",
           "migrationTrack": "consumer-rollout-review",
@@ -10928,21 +10607,8 @@
           "name": "Switch",
           "lifecycle": "stable",
           "consumerApps": [
+            "demos",
             "mfe-access",
-            "mfe-shell"
-          ],
-          "consumerAppCount": 2,
-          "classId": "major-cross-app-review",
-          "semver": "major",
-          "migrationTrack": "consumer-rollout-review",
-          "ownerHandles": []
-        },
-        {
-          "name": "TablePagination",
-          "lifecycle": "stable",
-          "consumerApps": [
-            "mfe-access",
-            "mfe-audit",
             "mfe-shell"
           ],
           "consumerAppCount": 3,
@@ -10954,10 +10620,25 @@
           ]
         },
         {
-          "name": "TextInput",
+          "name": "TablePagination",
           "lifecycle": "stable",
           "consumerApps": [
-            "mfe-access",
+            "mfe-audit",
+            "mfe-shell"
+          ],
+          "consumerAppCount": 2,
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": [
+            "@halilkocoglu"
+          ]
+        },
+        {
+          "name": "Tabs",
+          "lifecycle": "stable",
+          "consumerApps": [
+            "demos",
             "mfe-shell"
           ],
           "consumerAppCount": 2,
@@ -10967,60 +10648,17 @@
           "ownerHandles": []
         },
         {
-          "name": "AIActionAuditTimeline",
+          "name": "Text",
           "lifecycle": "stable",
           "consumerApps": [
+            "demos",
             "mfe-shell"
           ],
-          "consumerAppCount": 1,
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ]
-        },
-        {
-          "name": "AIGuidedAuthoring",
-          "lifecycle": "stable",
-          "consumerApps": [
-            "mfe-shell"
-          ],
-          "consumerAppCount": 1,
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ]
-        },
-        {
-          "name": "Accordion",
-          "lifecycle": "stable",
-          "consumerApps": [
-            "mfe-shell"
-          ],
-          "consumerAppCount": 1,
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ]
-        },
-        {
-          "name": "AgGridServer",
-          "lifecycle": "stable",
-          "consumerApps": [
-            "mfe-shell"
-          ],
-          "consumerAppCount": 1,
-          "classId": "minor-single-app-review",
-          "semver": "minor",
-          "migrationTrack": "package-import-review",
-          "ownerHandles": [
-            "@halilkocoglu"
-          ]
+          "consumerAppCount": 2,
+          "classId": "major-cross-app-review",
+          "semver": "major",
+          "migrationTrack": "consumer-rollout-review",
+          "ownerHandles": []
         }
       ]
     },
@@ -11049,14 +10687,47 @@
           "ApprovalReview"
         ],
         "sharedComponents": [
+          "Avatar",
           "Badge",
           "Button",
+          "Card",
           "Checkbox",
           "DetailDrawer",
-          "Modal",
-          "PageLayout",
-          "ReportFilterPanel",
-          "Segmented"
+          "Divider",
+          "Modal"
+        ],
+        "highestChangeClass": "major-cross-app-review",
+        "ownerHandles": [
+          "@halilkocoglu"
+        ],
+        "ownerSource": "owner-registry-default"
+      },
+      {
+        "appId": "demos",
+        "componentCount": 10,
+        "components": [
+          "Avatar",
+          "Badge",
+          "Button",
+          "Card",
+          "Dialog",
+          "Divider",
+          "Stack",
+          "Switch"
+        ],
+        "singleAppComponents": [
+          "Dialog",
+          "Stack"
+        ],
+        "sharedComponents": [
+          "Avatar",
+          "Badge",
+          "Button",
+          "Card",
+          "Divider",
+          "Switch",
+          "Tabs",
+          "Text"
         ],
         "highestChangeClass": "major-cross-app-review",
         "ownerHandles": [
@@ -11066,7 +10737,7 @@
       },
       {
         "appId": "mfe-access",
-        "componentCount": 11,
+        "componentCount": 10,
         "components": [
           "Badge",
           "Button",
@@ -11176,10 +10847,10 @@
         "CardBody",
         "CardFooter",
         "CardHeader",
+        "Dialog",
         "NotificationPanel",
         "RadioGroup",
-        "Textarea",
-        "ThemeProvider"
+        "Stack"
       ],
       "stableOnlyInDesignLab": [
         "AILayoutBuilder",
@@ -11260,9 +10931,9 @@
       "releaseReadyComponents": 132,
       "releaseReadyStoryCoveredComponents": 74,
       "releaseReadyCoveragePercent": 56,
-      "adoptedOutsideLabComponents": 82,
+      "adoptedOutsideLabComponents": 84,
       "adoptedStoryCoveredComponents": 74,
-      "adoptedCoveragePercent": 90
+      "adoptedCoveragePercent": 88
     },
     "requiredHarnesses": [
       {
@@ -11338,10 +11009,10 @@
         "CardBody",
         "CardFooter",
         "CardHeader",
+        "Dialog",
         "NotificationPanel",
         "RadioGroup",
-        "Textarea",
-        "ThemeProvider"
+        "Stack"
       ],
       "liveDemoWithoutStory": []
     },

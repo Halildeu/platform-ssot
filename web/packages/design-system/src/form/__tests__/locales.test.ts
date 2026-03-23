@@ -10,7 +10,7 @@ describe('i18n locales', () => {
 
   it('each locale has all 8 message functions', () => {
     const keys = ['required', 'minLength', 'maxLength', 'min', 'max', 'pattern', 'email', 'invalid'];
-    for (const [code, messages] of Object.entries(allLocales)) {
+    for (const [_code, messages] of Object.entries(allLocales)) {
       for (const key of keys) {
         expect(typeof (messages as any)[key]).toBe('function');
       }
@@ -33,7 +33,7 @@ describe('i18n locales', () => {
   });
 
   it('messages produce non-empty strings', () => {
-    for (const [code, messages] of Object.entries(allLocales)) {
+    for (const [_code, messages] of Object.entries(allLocales)) {
       expect(messages.required('Field').length).toBeGreaterThan(0);
       expect(messages.email('Email').length).toBeGreaterThan(0);
     }

@@ -11,6 +11,7 @@
  * - Extensible extras slot
  */
 import React, { useCallback, useState } from "react";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
 import type { GridApi } from "ag-grid-community";
 import type { GridTheme, GridDensity } from "./GridShell";
 import type { GridExportConfig } from "./EntityGridTemplate";
@@ -34,7 +35,8 @@ export interface GridToolbarMessages {
   csvAllLabel?: string;
 }
 
-export interface GridToolbarProps<RowData = unknown> {
+/** Props for the GridToolbar component. */
+export interface GridToolbarProps<RowData = unknown> extends AccessControlledProps {
   /** Reference to current GridApi */
   gridApi: GridApi<RowData> | null;
   /** Current theme */
@@ -84,6 +86,7 @@ const DEFAULT_THEME_OPTIONS: readonly { label: string; value: GridTheme }[] = [
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
+/** Toolbar strip for data grids with search, density toggle, theme switcher, and CSV export. */
 export const GridToolbar = <RowData = unknown>({
   gridApi,
   theme,
@@ -101,7 +104,11 @@ export const GridToolbar = <RowData = unknown>({
   extras,
   variantSlot,
   className,
+  access,
+  accessReason,
 }: GridToolbarProps<RowData>): React.ReactElement => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return <></> as unknown as React.ReactElement;
   const [quickFilter, setQuickFilter] = useState(quickFilterInitialValue);
 
   const handleQuickFilterChange = useCallback(
@@ -169,10 +176,12 @@ export const GridToolbar = <RowData = unknown>({
       className={[
         "flex flex-wrap items-center gap-3 rounded-t-lg border border-b-0 border-border-subtle bg-surface-default px-4 py-2",
         className ?? "",
+        accessStyles(accessState.state),
       ]
         .join(" ")
         .trim()}
       data-component="grid-toolbar"
+      title={accessReason}
     >
       {/* Quick filter */}
       <input

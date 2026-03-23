@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -11,7 +12,7 @@ const items = [
 
 describe('Segmented Visual Regression', () => {
   it('default segmented matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Segmented items={items} defaultValue="week" />
       </div>,
@@ -20,7 +21,7 @@ describe('Segmented Visual Regression', () => {
   });
 
   it('outline variant matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Segmented items={items} defaultValue="day" variant="outline" />
       </div>,

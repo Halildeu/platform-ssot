@@ -10,6 +10,7 @@ import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRe
 export type FormDrawerSize = "sm" | "md" | "lg" | "xl";
 export type FormDrawerPlacement = "right" | "left";
 
+/** Props for the FormDrawer component. */
 export interface FormDrawerProps {
   /** Controlled open state */
   open: boolean;
@@ -43,6 +44,7 @@ const sizeMap: Record<FormDrawerSize, string> = {
   xl: "max-w-xl",
 };
 
+/** Slide-in panel for create/edit forms with submit/cancel footer, loading overlay, and escape handling. */
 export const FormDrawer: React.FC<FormDrawerProps> = ({
   open,
   onClose,

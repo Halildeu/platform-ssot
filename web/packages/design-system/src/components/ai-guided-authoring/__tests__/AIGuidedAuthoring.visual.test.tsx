@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { AIGuidedAuthoring } from '../AIGuidedAuthoring';
 
 describe('AIGuidedAuthoring Visual Regression', () => {
   it('default state matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 800 }}>
         <AIGuidedAuthoring />
       </div>,

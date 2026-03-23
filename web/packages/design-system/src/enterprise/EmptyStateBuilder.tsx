@@ -22,13 +22,32 @@ export interface EmptyStateAction {
   variant?: 'primary' | 'secondary';
 }
 
+export interface EmptyStateBuilderLocaleText {
+  'no-data'?: { title?: string; description?: string };
+  'no-results'?: { title?: string; description?: string };
+  'no-permission'?: { title?: string; description?: string };
+  error?: { title?: string; description?: string };
+  'first-time'?: { title?: string; description?: string };
+  'filtered-empty'?: { title?: string; description?: string };
+}
+
+/** Contextual empty state with reason-based icon, messaging, and optional action buttons. */
 export interface EmptyStateBuilderProps extends AccessControlledProps {
+  /** The reason for the empty state, determines the default icon and messaging */
   reason: EmptyStateReason;
+  /** Override the default title for the given reason */
   title?: string;
+  /** Override the default description for the given reason */
   description?: string;
+  /** Primary call-to-action button displayed below the description */
   primaryAction?: EmptyStateAction;
+  /** Secondary action button displayed next to the primary action */
   secondaryAction?: EmptyStateAction;
+  /** Controls icon dimensions, font sizes, and vertical padding */
   size?: EmptyStateSize;
+  /** Localized labels per reason — Turkish defaults are used when omitted */
+  localeText?: EmptyStateBuilderLocaleText;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -147,6 +166,7 @@ const REASON_ICONS: Record<EmptyStateReason, React.FC<{ size: number }>> = {
 // EmptyStateBuilder component
 // ---------------------------------------------------------------------------
 
+/** Contextual empty state with reason-based icon, messaging, and optional action buttons. */
 export function EmptyStateBuilder({
   reason,
   title,
@@ -154,6 +174,7 @@ export function EmptyStateBuilder({
   primaryAction,
   secondaryAction,
   size = 'md',
+  localeText,
   access,
   accessReason,
   className,
@@ -165,8 +186,8 @@ export function EmptyStateBuilder({
 
   if (isHidden) return null;
 
-  const resolvedTitle = title ?? defaults.title;
-  const resolvedDesc = description ?? defaults.description;
+  const resolvedTitle = title ?? localeText?.[reason]?.title ?? defaults.title;
+  const resolvedDesc = description ?? localeText?.[reason]?.description ?? defaults.description;
 
   return (
     <div
@@ -196,7 +217,7 @@ export function EmptyStateBuilder({
           {primaryAction && (
             <button
               type="button"
-              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-md bg-[var(--action-primary)] px-4 py-2 text-sm font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isDisabled}
               onClick={primaryAction.onClick}
             >

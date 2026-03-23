@@ -57,18 +57,31 @@ export type FormField = {
 export type FormLayout = "vertical" | "horizontal" | "inline";
 export type FormSize = "sm" | "md" | "lg";
 
+/** Props for the AdaptiveForm component. */
 export interface AdaptiveFormProps extends AccessControlledProps {
+  /** Field definitions describing the form schema. */
   fields: FormField[];
+  /** Controlled form values keyed by field key. */
   values?: Record<string, unknown>;
+  /** Callback fired when any field value changes. */
   onValuesChange?: (values: Record<string, unknown>) => void;
+  /** Callback fired on form submission with validated values. */
   onSubmit?: (values: Record<string, unknown>) => void;
+  /** Layout direction for form fields. */
   layout?: FormLayout;
+  /** Number of grid columns for the form layout. */
   columns?: 1 | 2;
+  /** Size variant for input controls. */
   size?: FormSize;
+  /** Label for the submit button. */
   submitLabel?: string;
+  /** Label for the reset button. */
   resetLabel?: string;
+  /** Whether to show the reset button. */
   showReset?: boolean;
+  /** Whether to show loading skeleton placeholders. */
   loading?: boolean;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -278,7 +291,7 @@ const FieldRenderer: React.FC<{
           disabled={disabled}
           className={cn(
             sc.input,
-            "w-full cursor-pointer rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-default-bg,var(--surface-default))] text-[var(--text-secondary)] file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg,var(--action-primary))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-white",
+            "w-full cursor-pointer rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-default-bg,var(--surface-default))] text-[var(--text-secondary)] file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg,var(--action-primary))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-[var(--text-inverse)]",
           )}
           aria-invalid={hasError}
           aria-describedby={hasError ? `${id}-error` : undefined}
@@ -292,6 +305,7 @@ const FieldRenderer: React.FC<{
 
 /* ---- Main Component ---- */
 
+/** Intelligent adaptive form that adjusts layout, field visibility, and validation based on user input and context. */
 export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
   fields,
   values: controlledValues,
@@ -520,7 +534,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
           type="submit"
           disabled={isDisabled}
           className={cn(
-            "rounded-lg bg-[var(--action-primary-bg,var(--action-primary))] font-medium text-white transition-colors hover:bg-[var(--action-primary-hover)] disabled:opacity-50",
+            "rounded-lg bg-[var(--action-primary-bg,var(--action-primary))] font-medium text-[var(--text-inverse)] transition-colors hover:bg-[var(--action-primary-hover)] disabled:opacity-50",
             sc.input,
           )}
         >

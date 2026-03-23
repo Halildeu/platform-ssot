@@ -62,15 +62,19 @@ export { StatusTimeline } from './StatusTimeline';
 
 // Notifications
 export { NotificationCenter } from './NotificationCenter';
+export type { NotificationCenterLocaleText } from './NotificationCenter';
 
 // Editing
 export { InlineEdit } from './InlineEdit';
 
 // Empty States
 export { EmptyStateBuilder } from './EmptyStateBuilder';
+export type { EmptyStateBuilderLocaleText } from './EmptyStateBuilder';
 
 // Filters
 export { FilterPresets } from './FilterPresets';
+export type { FilterPresetsLocaleText } from './FilterPresets';
 
 // Export
 export { DataExportDialog } from './DataExportDialog';
+export type { DataExportDialogLocaleText } from './DataExportDialog';

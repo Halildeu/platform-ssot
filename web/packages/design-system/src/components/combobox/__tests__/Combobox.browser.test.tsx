@@ -41,7 +41,7 @@ describe('Combobox (Browser)', () => {
 
   it('navigates options with keyboard and selects with Enter', async () => {
     const onValueChange = vi.fn();
-    const screen = await render(
+    await render(
       <Combobox label="Fruit" options={options} onValueChange={onValueChange} placeholder="Pick" />,
     );
     const input = page.getByPlaceholder('Pick');

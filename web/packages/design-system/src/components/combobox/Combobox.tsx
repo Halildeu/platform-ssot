@@ -1,7 +1,7 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { resolveAccessState, type AccessControlledProps } from '../../internal/access-controller';
-import { focusRingClass, stateAttrs } from '../../internal/interaction-core';
+import { stateAttrs } from '../../internal/interaction-core';
 import { useOutsideClick } from '../../internal/overlay-engine';
 import {
   FieldControlShell,
@@ -196,23 +196,39 @@ const getInitialInputValue = ({
   return '';
 };
 
+/** Props for the Combobox component. */
 export interface ComboboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'children' | 'onSelect'>,
     AccessControlledProps {
+  /** Field label displayed above the input. */
   label?: React.ReactNode;
+  /** Descriptive text below the label. */
   description?: React.ReactNode;
+  /** Help text displayed below the input. */
   hint?: React.ReactNode;
+  /** Error message that activates the invalid state. */
   error?: React.ReactNode;
+  /** Whether the input is in an invalid state. */
   invalid?: boolean;
+  /** Size variant of the field control. */
   size?: FieldSize;
+  /** Selection behavior: single value, multiple values, or free-form tags. */
   selectionMode?: ComboboxSelectionMode;
+  /** Controlled selected value for single mode. */
   value?: string | null;
+  /** Initial selected value for uncontrolled single mode. */
   defaultValue?: string | null;
+  /** Controlled selected values for multiple/tag mode. */
   values?: string[];
+  /** Initial selected values for uncontrolled multiple/tag mode. */
   defaultValues?: string[];
+  /** Controlled text in the search input. */
   inputValue?: string;
+  /** Initial search text for uncontrolled mode. */
   defaultInputValue?: string;
+  /** Available options or option groups. */
   options: Array<ComboboxOption | ComboboxOptionGroup>;
+  /** Whether freeform text can be committed as a value. */
   freeSolo?: boolean;
   onInputChange?: (inputValue: string, event?: React.ChangeEvent<HTMLInputElement>) => void;
   onQueryRequest?: (query: string) => void;
@@ -248,6 +264,7 @@ export interface ComboboxProps
   tagRemoveLabel?: string;
 }
 
+/** Searchable selection input supporting single, multiple, and tag modes with grouped options. */
 export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(function Combobox(
   {
     id,

@@ -14,12 +14,19 @@ export interface StatusTimelineEvent {
   description?: string;
 }
 
+/** Chronological timeline of status change events with duration indicators. */
 export interface StatusTimelineProps extends AccessControlledProps {
+  /** Ordered list of status events to display */
   events: StatusTimelineEvent[];
+  /** Layout direction of the timeline */
   orientation?: 'horizontal' | 'vertical';
+  /** Hide actor names, descriptions, and duration labels */
   compact?: boolean;
+  /** Custom color mapping from status string to hex color */
   statusColors?: Record<string, string>;
+  /** Called when a timeline event card is clicked */
   onEventClick?: (eventId: string) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -28,21 +35,21 @@ export interface StatusTimelineProps extends AccessControlledProps {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_COLORS: Record<string, string> = {
-  created: '#3b82f6',
-  pending: '#f59e0b',
-  'in-progress': '#6366f1',
-  'in-review': '#8b5cf6',
-  approved: '#22c55e',
-  rejected: '#ef4444',
-  completed: '#10b981',
-  cancelled: '#6b7280',
-  error: '#dc2626',
+  created: 'var(--action-primary, #3b82f6)',
+  pending: 'var(--state-warning-text, #f59e0b)',
+  'in-progress': 'var(--state-info-text, #6366f1)',
+  'in-review': 'var(--chart-purple, #8b5cf6)',
+  approved: 'var(--state-success-text, #22c55e)',
+  rejected: 'var(--state-error-text, #ef4444)',
+  completed: 'var(--state-success-text, #10b981)',
+  cancelled: 'var(--text-secondary, #6b7280)',
+  error: 'var(--state-error-text, #dc2626)',
 };
 
 function resolveColor(status: string, custom?: Record<string, string>): string {
   if (custom?.[status]) return custom[status];
   const lower = status.toLowerCase();
-  return DEFAULT_COLORS[lower] ?? '#94a3b8';
+  return DEFAULT_COLORS[lower] ?? 'var(--border-strong, #94a3b8)';
 }
 
 // ---------------------------------------------------------------------------
@@ -94,7 +101,7 @@ function EventDot({
   return (
     <span
       className={cn(
-        'inline-block shrink-0 rounded-full border-2 border-white shadow-sm',
+        'inline-block shrink-0 rounded-full border-2 border-[var(--surface-default)] shadow-sm',
         active && 'ring-2 ring-offset-1',
       )}
       style={{
@@ -175,7 +182,7 @@ function EventCard({
       <div className={cn('flex flex-col', isH && 'items-center')}>
         {/* Status badge */}
         <span
-          className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold text-white"
+          className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold text-[var(--text-inverse)]"
           style={{ backgroundColor: color }}
         >
           {event.status}
@@ -212,6 +219,7 @@ function EventCard({
 // StatusTimeline component
 // ---------------------------------------------------------------------------
 
+/** Chronological timeline of status change events with duration indicators. */
 export function StatusTimeline({
   events,
   orientation = 'vertical',
@@ -249,7 +257,7 @@ export function StatusTimeline({
         accessStyles(state),
         className,
       )}
-      role="list"
+      role="group"
       aria-label="Status timeline"
       title={accessReason}
     >

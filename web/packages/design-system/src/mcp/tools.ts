@@ -11,7 +11,7 @@ import type { DesignLabComponentDocEntry } from '../catalog/component-docs/types
 import { semanticColorTokens, palette } from '../tokens/color';
 import { spacing } from '../tokens/spacing';
 import { radius } from '../tokens/radius';
-import { fontSize, fontFamily, fontWeight, lineHeight, letterSpacing } from '../tokens/typography';
+import { fontSize, fontWeight } from '../tokens/typography';
 import { duration, easing } from '../tokens/motion';
 import type {
   MCPComponentInfo,
@@ -770,7 +770,7 @@ const INTENT_KEYWORDS: Record<string, MCPLayoutProposal['intent']> = {
 /** 10. proposeLayout — Natural language → layout config */
 export function proposeLayout(
   description: string,
-  catalog: Map<string, MCPComponentInfo>,
+  _catalog: Map<string, MCPComponentInfo>,
 ): MCPLayoutProposal {
   const lower = description.toLowerCase();
   let intent: MCPLayoutProposal['intent'] = 'overview';
@@ -1018,7 +1018,7 @@ const PATTERN_MAP: Record<string, { pattern: string; description: string }> = {
 /** 17. suggestPattern — component combo → pattern suggestion */
 export function suggestPattern(
   components: string[],
-  catalog: Map<string, MCPComponentInfo>,
+  _catalog: Map<string, MCPComponentInfo>,
 ): MCPPatternSuggestion[] {
   const suggestions: MCPPatternSuggestion[] = [];
   for (const [key, val] of Object.entries(PATTERN_MAP)) {

@@ -14,14 +14,34 @@ export interface FilterPreset {
   isShared?: boolean;
 }
 
+export interface FilterPresetsLocaleText {
+  savePlaceholder?: string;
+  saveButton?: string;
+  cancelButton?: string;
+  deleteConfirm?: (name: string) => React.ReactNode;
+  deleteButton?: string;
+  addPresetButton?: string;
+}
+
+/** Toolbar for managing saved filter presets with save, delete, and default actions. */
 export interface FilterPresetsProps extends AccessControlledProps {
+  /** Available filter presets to display */
   presets: FilterPreset[];
+  /** ID of the currently active preset, or null if none */
   activePresetId?: string | null;
+  /** Called when a preset chip is clicked */
   onSelect: (preset: FilterPreset) => void;
+  /** Called to save the current filters as a new preset */
   onSave?: (name: string, filters: Record<string, unknown>) => void;
+  /** Called to delete a preset by its ID */
   onDelete?: (presetId: string) => void;
+  /** Called to mark a preset as the default */
   onSetDefault?: (presetId: string) => void;
+  /** Current active filter values used when saving a new preset */
   currentFilters?: Record<string, unknown>;
+  /** Localized labels — Turkish defaults are used when omitted */
+  localeText?: FilterPresetsLocaleText;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -35,8 +55,8 @@ function StarIcon({ filled }: { filled: boolean }) {
       width="12"
       height="12"
       viewBox="0 0 24 24"
-      fill={filled ? '#f59e0b' : 'none'}
-      stroke={filled ? '#f59e0b' : 'currentColor'}
+      fill={filled ? 'var(--state-warning-text, #f59e0b)' : 'none'}
+      stroke={filled ? 'var(--state-warning-text, #f59e0b)' : 'currentColor'}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -80,9 +100,11 @@ function PlusIcon() {
 function SavePopover({
   onSave,
   onCancel,
+  localeText,
 }: {
   onSave: (name: string) => void;
   onCancel: () => void;
+  localeText?: FilterPresetsLocaleText;
 }) {
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -107,22 +129,22 @@ function SavePopover({
           if (e.key === 'Enter') handleSubmit();
           if (e.key === 'Escape') onCancel();
         }}
-        placeholder="Preset ad\u0131..."
-        className="rounded border border-[var(--border-default)] bg-[var(--surface-primary)] px-2 py-1 text-xs text-[var(--text-primary)] outline-none focus:border-blue-400 w-36"
+        placeholder={localeText?.savePlaceholder ?? "Preset ad\u0131..."}
+        className="rounded border border-[var(--border-default)] bg-[var(--surface-primary)] px-2 py-1 text-xs text-[var(--text-primary)] outline-none focus:border-[var(--action-primary)] w-36"
       />
       <button
         type="button"
-        className="rounded bg-blue-600 px-2 py-1 text-xs font-medium text-white hover:bg-blue-700 transition-colors"
+        className="rounded bg-[var(--action-primary)] px-2 py-1 text-xs font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors"
         onClick={handleSubmit}
       >
-        Kaydet
+        {localeText?.saveButton ?? 'Kaydet'}
       </button>
       <button
         type="button"
         className="rounded px-2 py-1 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
         onClick={onCancel}
       >
-        \u0130ptal
+        {localeText?.cancelButton ?? '\u0130ptal'}
       </button>
     </div>
   );
@@ -136,30 +158,32 @@ function DeleteConfirmation({
   presetName,
   onConfirm,
   onCancel,
+  localeText,
 }: {
   presetName: string;
   onConfirm: () => void;
   onCancel: () => void;
+  localeText?: FilterPresetsLocaleText;
 }) {
   return (
     <div className="absolute top-full right-0 z-20 mt-1 rounded-lg border border-[var(--border-default)] bg-[var(--surface-primary)] p-3 shadow-lg min-w-[200px]">
       <p className="text-xs text-[var(--text-primary)] mb-2">
-        <strong>&quot;{presetName}&quot;</strong> silinsin mi?
+        {localeText?.deleteConfirm?.(presetName) ?? <><strong>&quot;{presetName}&quot;</strong> silinsin mi?</>}
       </p>
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="rounded bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700 transition-colors"
+          className="rounded bg-[var(--state-error-text)] px-2 py-1 text-xs font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors"
           onClick={onConfirm}
         >
-          Sil
+          {localeText?.deleteButton ?? 'Sil'}
         </button>
         <button
           type="button"
           className="rounded px-2 py-1 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           onClick={onCancel}
         >
-          Vazge\u00e7
+          {localeText?.cancelButton ?? 'Vazge\u00e7'}
         </button>
       </div>
     </div>
@@ -170,6 +194,7 @@ function DeleteConfirmation({
 // FilterPresets component
 // ---------------------------------------------------------------------------
 
+/** Toolbar for managing saved filter presets with save, delete, and default actions. */
 export function FilterPresets({
   presets,
   activePresetId,
@@ -178,6 +203,7 @@ export function FilterPresets({
   onDelete,
   onSetDefault,
   currentFilters = {},
+  localeText,
   access,
   accessReason,
   className,
@@ -226,7 +252,7 @@ export function FilterPresets({
               className={cn(
                 'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                 isActive
-                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  ? 'border-[var(--action-primary)] bg-[var(--state-info-bg)] text-[var(--action-primary)]'
                   : 'border-[var(--border-default)] bg-[var(--surface-primary)] text-[var(--text-primary)] hover:bg-[var(--surface-muted)]',
               )}
               disabled={isDisabled}
@@ -241,7 +267,7 @@ export function FilterPresets({
             {onDelete && !preset.isShared && (
               <button
                 type="button"
-                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-[var(--text-secondary)] hover:text-red-500 hover:bg-red-50 transition-colors"
+                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-[var(--text-secondary)] hover:text-[var(--state-error-text)] hover:bg-[var(--state-error-bg)] transition-colors"
                 disabled={isDisabled}
                 aria-label={`Delete preset ${preset.name}`}
                 onClick={(e) => {
@@ -257,7 +283,7 @@ export function FilterPresets({
             {onSetDefault && !preset.isDefault && (
               <button
                 type="button"
-                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-[var(--text-secondary)] hover:text-yellow-500 transition-colors"
+                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-[var(--text-secondary)] hover:text-[var(--state-warning-text)] transition-colors"
                 disabled={isDisabled}
                 aria-label={`Set ${preset.name} as default`}
                 onClick={(e) => {
@@ -275,6 +301,7 @@ export function FilterPresets({
                 presetName={preset.name}
                 onConfirm={() => handleDelete(preset.id)}
                 onCancel={() => setDeletingId(null)}
+                localeText={localeText}
               />
             )}
           </div>
@@ -291,10 +318,10 @@ export function FilterPresets({
             onClick={() => setShowSave(true)}
           >
             <PlusIcon />
-            Kaydet
+            {localeText?.addPresetButton ?? 'Kaydet'}
           </button>
           {showSave && (
-            <SavePopover onSave={handleSave} onCancel={() => setShowSave(false)} />
+            <SavePopover onSave={handleSave} onCancel={() => setShowSave(false)} localeText={localeText} />
           )}
         </div>
       )}

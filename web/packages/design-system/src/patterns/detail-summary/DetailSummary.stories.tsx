@@ -35,3 +35,44 @@ export const Default: Story = {
     ],
   },
 };
+
+export const Minimal: Story = {
+  args: {
+    title: 'Minimal Detail',
+    entity: {
+      title: 'Simple Entity',
+      items: [
+        { key: 'status', label: 'Status', value: 'Draft' },
+      ],
+    },
+    summaryItems: [
+      { key: 'count', label: 'Items', value: '5' },
+    ],
+  },
+};
+
+export const WithManyItems: Story = {
+  args: {
+    title: 'Full Detail',
+    description: 'Entity with many data points',
+    entity: {
+      title: 'Complex Entity',
+      subtitle: 'Sub-category',
+      items: [
+        { key: 'a', label: 'Field A', value: 'Value A' },
+        { key: 'b', label: 'Field B', value: 'Value B' },
+        { key: 'c', label: 'Field C', value: 'Value C' },
+        { key: 'd', label: 'Field D', value: 'Value D' },
+      ],
+    },
+    summaryItems: [
+      { key: 's1', label: 'Metric 1', value: '100' },
+      { key: 's2', label: 'Metric 2', value: '200' },
+      { key: 's3', label: 'Metric 3', value: '300' },
+    ],
+    detailItems: [
+      { key: 'd1', label: 'Detail 1', value: 'Info' },
+      { key: 'd2', label: 'Detail 2', value: 'Data' },
+    ],
+  },
+};

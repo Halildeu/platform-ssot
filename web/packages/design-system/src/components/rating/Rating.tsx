@@ -141,10 +141,6 @@ function clamp(val: number, min: number, max: number) {
   return Math.min(Math.max(val, min), max);
 }
 
-function roundToStep(val: number, allowHalf: boolean) {
-  if (allowHalf) return Math.round(val * 2) / 2;
-  return Math.round(val);
-}
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */

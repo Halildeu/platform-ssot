@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- AG Charts API uses any extensively */
 import React, { useMemo } from "react";
 import { AgCharts as AgChartsBase } from "ag-charts-react";
 import type { AgChartOptions } from "ag-charts-community";
@@ -91,7 +92,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
 
       const palette = colors ?? getChartColorPalette();
       const themeOverrides = getChartThemeOverrides();
-      const isHorizontal = orientation === "horizontal";
+      const _isHorizontal = orientation === "horizontal";
 
       // Multi-series support (value, value2, etc.)
       const hasMultiSeries = seriesDef && seriesDef.length > 0;

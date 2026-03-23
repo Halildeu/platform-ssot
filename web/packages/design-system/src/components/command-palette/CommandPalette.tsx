@@ -24,18 +24,31 @@ export interface CommandPaletteItem {
   badge?: React.ReactNode;
 }
 
+/** Props for the CommandPalette component. */
 export interface CommandPaletteProps extends AccessControlledProps {
+  /** Whether the command palette overlay is visible. */
   open: boolean;
+  /** Available command items to search and select. */
   items: CommandPaletteItem[];
+  /** Heading text for the palette dialog. */
   title?: React.ReactNode;
+  /** Subtitle text displayed below the heading. */
   subtitle?: React.ReactNode;
+  /** Controlled search query value. */
   query?: string;
+  /** Initial search query for uncontrolled mode. */
   defaultQuery?: string;
+  /** Callback fired when the search query changes. */
   onQueryChange?: (query: string) => void;
+  /** Callback fired when a command item is selected. */
   onSelect?: (id: string, item: CommandPaletteItem) => void;
+  /** Callback fired when the palette is dismissed. */
   onClose?: () => void;
+  /** Placeholder text for the search input. */
   placeholder?: string;
+  /** Label shown when no commands match the query. */
   emptyStateLabel?: string;
+  /** Custom content rendered in the palette footer. */
   footer?: React.ReactNode;
 }
 
@@ -46,6 +59,7 @@ const stringify = (value: React.ReactNode) => {
   return "";
 };
 
+/** Keyboard-driven search overlay for quickly finding and executing commands or navigating routes. */
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
   open,
   items,

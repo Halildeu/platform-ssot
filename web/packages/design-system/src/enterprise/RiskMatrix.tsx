@@ -15,7 +15,9 @@ export interface RiskItem {
 
 export type RiskMatrixSize = 'sm' | 'md' | 'lg';
 
+/** Props for the RiskMatrix component. */
 export interface RiskMatrixProps {
+  /** Risk items to plot on the 5x5 matrix grid */
   risks: RiskItem[];
   /** Labels for the likelihood axis (columns), index 0 = level 1. Default: Rare..Almost Certain */
   likelihoodLabels?: [string, string, string, string, string];
@@ -23,10 +25,15 @@ export interface RiskMatrixProps {
   impactLabels?: [string, string, string, string, string];
   /** Show color legend below matrix */
   showLegend?: boolean;
+  /** Controls the cell dimensions and font sizes */
   size?: RiskMatrixSize;
+  /** Access level controlling visibility and interactivity */
   access?: AccessLevel;
+  /** Tooltip text explaining the current access restriction */
   accessReason?: string;
+  /** Called when a matrix cell is clicked, receives the risks in that cell */
   onCellClick?: (risks: RiskItem[], likelihood: number, impact: number) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -48,10 +55,10 @@ function getRiskLevel(likelihood: number, impact: number): RiskLevel {
 }
 
 const RISK_COLORS: Record<RiskLevel, { bg: string; text: string; label: string }> = {
-  low:     { bg: '#22c55e20', text: '#16a34a', label: 'Low (1-4)' },
-  medium:  { bg: '#eab30830', text: '#a16207', label: 'Medium (5-9)' },
-  high:    { bg: '#f9731630', text: '#c2410c', label: 'High (10-14)' },
-  extreme: { bg: '#ef444430', text: '#dc2626', label: 'Extreme (15-25)' },
+  low:     { bg: 'var(--state-success-bg, #22c55e20)', text: 'var(--state-success-text, #16a34a)', label: 'Low (1-4)' },
+  medium:  { bg: 'var(--state-warning-bg, #eab30830)', text: 'var(--state-warning-text, #a16207)', label: 'Medium (5-9)' },
+  high:    { bg: 'var(--state-error-bg, #f9731630)', text: 'var(--state-error-text, #c2410c)', label: 'High (10-14)' },
+  extreme: { bg: 'var(--state-error-bg, #ef444430)', text: 'var(--state-error-text, #dc2626)', label: 'Extreme (15-25)' },
 };
 
 const SIZE_CONFIG: Record<RiskMatrixSize, { cell: number; fontSize: string; labelSize: string; badgeSize: string }> = {
@@ -76,6 +83,7 @@ interface TooltipState {
 // Main component
 // ---------------------------------------------------------------------------
 
+/** 5x5 risk assessment matrix plotting likelihood vs impact with color-coded severity levels. */
 export function RiskMatrix({
   risks,
   likelihoodLabels = DEFAULT_LIKELIHOOD,
@@ -128,10 +136,8 @@ export function RiskMatrix({
   return (
     <div
       className={`inline-block ${isDisabled ? 'opacity-50 pointer-events-none' : ''} ${className}`}
-      role="grid"
+      role="group"
       aria-label="Risk assessment matrix"
-      aria-rowcount={5}
-      aria-colcount={5}
       {...(isDisabled ? { 'aria-disabled': true } : {})}
       {...(accessReason ? { title: accessReason } : {})}
     >
@@ -163,7 +169,7 @@ export function RiskMatrix({
 
           {/* Grid rows */}
           {impactLevels.map((impact) => (
-            <div key={`row-${impact}`} className="flex items-center" role="row">
+            <div key={`row-${impact}`} className="flex items-center">
               {/* Row label */}
               <div
                 className={`${s.labelSize} text-right text-[var(--text-secondary)] pr-1.5 truncate`}
@@ -185,9 +191,9 @@ export function RiskMatrix({
                 return (
                   <div
                     key={key}
-                    role="gridcell"
+                    role={isClickable ? 'button' : 'img'}
                     aria-label={`Likelihood ${likelihood}, Impact ${impact}: ${count} risk${count !== 1 ? 's' : ''}, ${level} level`}
-                    tabIndex={isClickable ? 0 : -1}
+                    tabIndex={isClickable ? 0 : undefined}
                     onClick={() => handleCellClick(cellRisks, likelihood, impact)}
                     onMouseEnter={(e) => handleCellEnter(e, cellRisks, likelihood, impact)}
                     onMouseLeave={handleCellLeave}
@@ -211,7 +217,7 @@ export function RiskMatrix({
                     {count > 0 && (
                       <span
                         className={`${s.badgeSize} inline-flex items-center justify-center rounded-full font-semibold`}
-                        style={{ backgroundColor: color.text, color: '#fff' }}
+                          style={{ backgroundColor: color.text, color: 'var(--text-inverse, #fff)' }}
                       >
                         {count}
                       </span>

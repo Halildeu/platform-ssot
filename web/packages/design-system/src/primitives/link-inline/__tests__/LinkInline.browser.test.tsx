@@ -24,7 +24,7 @@ describe('LinkInline (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<LinkInline href="/test">Link</LinkInline>);
+    await render(<LinkInline href="/test">Link</LinkInline>);
     const el = document.querySelector('[data-component="link-inline"]');
     expect(el).not.toBeNull();
   });
@@ -40,7 +40,7 @@ describe('LinkInline (Browser)', () => {
   });
 
   it('renders with current aria attribute', async () => {
-    const screen = await render(<LinkInline href="/current" current>Current Page</LinkInline>);
+    await render(<LinkInline href="/current" current>Current Page</LinkInline>);
     const link = document.querySelector('[aria-current="page"]');
     expect(link).not.toBeNull();
   });

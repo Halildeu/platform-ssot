@@ -19,15 +19,46 @@ export interface NotificationItem {
   actionPayload?: unknown;
 }
 
-export interface NotificationCenterProps extends AccessControlledProps {
-  notifications: NotificationItem[];
+export interface NotificationCenterLocaleText {
   title?: string;
+  markAllRead?: string;
+  noNotifications?: string;
+  showMore?: (count: number) => string;
+  showLess?: string;
+  groupInfo?: string;
+  groupSuccess?: string;
+  groupWarning?: string;
+  groupError?: string;
+  groupAction?: string;
+  justNow?: string;
+  minutesAgo?: (n: number) => string;
+  hoursAgo?: (n: number) => string;
+  daysAgo?: (n: number) => string;
+  weeksAgo?: (n: number) => string;
+  monthsAgo?: (n: number) => string;
+}
+
+/** Notification feed with unread badges, grouping, dismissal, and action support. */
+export interface NotificationCenterProps extends AccessControlledProps {
+  /** List of notification items to display */
+  notifications: NotificationItem[];
+  /** Header title for the notification panel */
+  title?: string;
+  /** Group notifications by their type (action, error, warning, etc.) */
   groupByType?: boolean;
+  /** Maximum number of notifications shown before "show more" appears */
   maxVisible?: number;
+  /** Called when the "mark all read" button is clicked */
   onMarkAllRead?: () => void;
+  /** Called when an individual notification is dismissed */
   onDismiss?: (id: string) => void;
+  /** Called when an action-type notification's action button is clicked */
   onAction?: (id: string, payload: unknown) => void;
+  /** Called when a notification row is clicked */
   onNotificationClick?: (id: string) => void;
+  /** Localized labels — Turkish defaults are used when omitted */
+  localeText?: NotificationCenterLocaleText;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -38,23 +69,23 @@ export interface NotificationCenterProps extends AccessControlledProps {
 const TYPE_ICONS: Record<NotificationType, { path: string; color: string }> = {
   info: {
     path: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z',
-    color: '#3b82f6',
+    color: 'var(--state-info-text, #3b82f6)',
   },
   success: {
     path: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.5 14.5L6 12l1.4-1.4 3.1 3.1 6.1-6.1L18 9l-7.5 7.5z',
-    color: '#22c55e',
+    color: 'var(--state-success-text, #22c55e)',
   },
   warning: {
     path: 'M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z',
-    color: '#f59e0b',
+    color: 'var(--state-warning-text, #f59e0b)',
   },
   error: {
     path: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z',
-    color: '#ef4444',
+    color: 'var(--state-error-text, #ef4444)',
   },
   action: {
     path: 'M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z',
-    color: '#6366f1',
+    color: 'var(--action-primary, #6366f1)',
   },
 };
 
@@ -71,23 +102,23 @@ function TypeIcon({ type }: { type: NotificationType }) {
 // Relative time
 // ---------------------------------------------------------------------------
 
-function relativeTime(iso: string): string {
+function relativeTime(iso: string, lt?: NotificationCenterLocaleText): string {
   try {
     const now = Date.now();
     const then = new Date(iso).getTime();
     const diffSec = Math.floor((now - then) / 1000);
 
-    if (diffSec < 60) return 'az önce';
+    if (diffSec < 60) return lt?.justNow ?? 'az \u00f6nce';
     const minutes = Math.floor(diffSec / 60);
-    if (minutes < 60) return `${minutes} dakika önce`;
+    if (minutes < 60) return lt?.minutesAgo?.(minutes) ?? `${minutes} dakika \u00f6nce`;
     const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours} saat önce`;
+    if (hours < 24) return lt?.hoursAgo?.(hours) ?? `${hours} saat \u00f6nce`;
     const days = Math.floor(hours / 24);
-    if (days < 7) return `${days} gün önce`;
+    if (days < 7) return lt?.daysAgo?.(days) ?? `${days} g\u00fcn \u00f6nce`;
     const weeks = Math.floor(days / 7);
-    if (weeks < 4) return `${weeks} hafta önce`;
+    if (weeks < 4) return lt?.weeksAgo?.(weeks) ?? `${weeks} hafta \u00f6nce`;
     const months = Math.floor(days / 30);
-    return `${months} ay önce`;
+    return lt?.monthsAgo?.(months) ?? `${months} ay \u00f6nce`;
   } catch {
     return iso;
   }
@@ -97,7 +128,7 @@ function relativeTime(iso: string): string {
 // Group labels
 // ---------------------------------------------------------------------------
 
-const GROUP_LABELS: Record<NotificationType, string> = {
+const DEFAULT_GROUP_LABELS: Record<NotificationType, string> = {
   info: 'Bilgilendirme',
   success: 'Başarılı',
   warning: 'Uyarı',
@@ -117,12 +148,14 @@ function NotificationRow({
   onDismiss,
   onAction,
   onClick,
+  localeText,
 }: {
   item: NotificationItem;
   disabled: boolean;
   onDismiss?: (id: string) => void;
   onAction?: (id: string, payload: unknown) => void;
   onClick?: (id: string) => void;
+  localeText?: NotificationCenterLocaleText;
 }) {
   const isUnread = !item.read;
 
@@ -152,7 +185,7 @@ function NotificationRow({
           <p className="mt-0.5 text-xs text-[var(--text-secondary)] line-clamp-2">{item.message}</p>
         )}
         <span className="mt-1 block text-[10px] text-[var(--text-secondary)]">
-          {relativeTime(item.timestamp)}
+          {relativeTime(item.timestamp, localeText)}
         </span>
 
         {item.type === 'action' && item.actionLabel && onAction && (
@@ -196,21 +229,33 @@ function NotificationRow({
 // NotificationCenter component
 // ---------------------------------------------------------------------------
 
+/** Notification feed with unread badges, grouping, dismissal, and action support. */
 export function NotificationCenter({
   notifications,
-  title = 'Bildirimler',
+  title,
   groupByType = false,
   maxVisible = 10,
   onMarkAllRead,
   onDismiss,
   onAction,
   onNotificationClick,
+  localeText,
   access,
   accessReason,
   className,
 }: NotificationCenterProps) {
   const { state, isHidden, isDisabled } = resolveAccessState(access);
   const [expanded, setExpanded] = useState(false);
+
+  // Resolve locale labels with Turkish defaults
+  const resolvedTitle = title ?? localeText?.title ?? 'Bildirimler';
+  const groupLabels: Record<NotificationType, string> = {
+    info: localeText?.groupInfo ?? DEFAULT_GROUP_LABELS.info,
+    success: localeText?.groupSuccess ?? DEFAULT_GROUP_LABELS.success,
+    warning: localeText?.groupWarning ?? DEFAULT_GROUP_LABELS.warning,
+    error: localeText?.groupError ?? DEFAULT_GROUP_LABELS.error,
+    action: localeText?.groupAction ?? DEFAULT_GROUP_LABELS.action,
+  };
 
   const unreadCount = useMemo(
     () => notifications.filter((n) => !n.read).length,
@@ -242,15 +287,15 @@ export function NotificationCenter({
         className,
       )}
       role="region"
-      aria-label={title}
+      aria-label={resolvedTitle}
       title={accessReason}
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--border-default)] px-4 py-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h3>
+          <h3 className="text-sm font-semibold text-[var(--text-primary)]">{resolvedTitle}</h3>
           {unreadCount > 0 && (
-            <span className="inline-flex items-center justify-center rounded-full bg-red-500 px-1.5 py-0.5 text-[10px] font-bold text-white min-w-[20px]">
+            <span className="inline-flex items-center justify-center rounded-full bg-[var(--state-error-text)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--text-inverse)] min-w-[20px]">
               {unreadCount}
             </span>
           )}
@@ -262,7 +307,7 @@ export function NotificationCenter({
             disabled={isDisabled}
             onClick={onMarkAllRead}
           >
-            Tümünü okundu işaretle
+            {localeText?.markAllRead ?? 'Tümünü okundu işaretle'}
           </button>
         )}
       </div>
@@ -275,14 +320,14 @@ export function NotificationCenter({
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" strokeLinecap="round" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
-            <span className="text-sm">Bildirim yok</span>
+            <span className="text-sm">{localeText?.noNotifications ?? 'Bildirim yok'}</span>
           </div>
         ) : grouped ? (
           /* Grouped view */
           GROUP_ORDER.filter((t) => grouped.has(t)).map((type) => (
             <div key={type}>
               <div className="sticky top-0 bg-[var(--surface-primary)] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
-                {GROUP_LABELS[type]}
+                {groupLabels[type]}
               </div>
               {grouped.get(type)!.map((item) => (
                 <NotificationRow
@@ -292,6 +337,7 @@ export function NotificationCenter({
                   onDismiss={onDismiss}
                   onAction={onAction}
                   onClick={onNotificationClick}
+                  localeText={localeText}
                 />
               ))}
             </div>
@@ -306,6 +352,7 @@ export function NotificationCenter({
               onDismiss={onDismiss}
               onAction={onAction}
               onClick={onNotificationClick}
+              localeText={localeText}
             />
           ))
         )}
@@ -319,7 +366,7 @@ export function NotificationCenter({
             className="text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             onClick={handleToggleExpand}
           >
-            +{hiddenCount} daha göster
+            {localeText?.showMore?.(hiddenCount) ?? `+${hiddenCount} daha göster`}
           </button>
         </div>
       )}
@@ -330,7 +377,7 @@ export function NotificationCenter({
             className="text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
             onClick={handleToggleExpand}
           >
-            Daha az göster
+            {localeText?.showLess ?? 'Daha az göster'}
           </button>
         </div>
       )}

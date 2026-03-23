@@ -55,7 +55,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(
+    await render(
       <ReportFilterPanel access="hidden">
         <input placeholder="Filter" />
       </ReportFilterPanel>,
@@ -64,7 +64,7 @@ describe('ReportFilterPanel (Browser)', () => {
   });
 
   it('renders form element', async () => {
-    const screen = await render(
+    await render(
       <ReportFilterPanel><input placeholder="X" /></ReportFilterPanel>,
     );
     const form = document.querySelector('form');

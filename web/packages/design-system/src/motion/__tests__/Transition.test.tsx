@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, act } from '@testing-library/react';
 import React from 'react';
 import { Transition } from '../Transition';
+import { expectNoA11yViolations } from '../../__tests__/a11y-utils';
 
 describe('Transition', () => {
   it('renders children when show=true', () => {
@@ -106,5 +107,14 @@ describe('Transition', () => {
       </Transition>,
     );
     expect(getByText('Content').className).toContain('custom-enter');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(
+      <Transition show={true} preset="fadeIn">
+        <div>Content</div>
+      </Transition>,
+    );
+    await expectNoA11yViolations(container);
   });
 });

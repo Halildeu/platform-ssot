@@ -152,7 +152,7 @@ const FilterChips: React.FC<{
           <button
             type="button"
             onClick={f.onRemove}
-            className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--action-primary-bg,var(--action-primary))] hover:text-white"
+            className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--action-primary-bg,var(--action-primary))] hover:text-[var(--text-inverse)]"
             aria-label={`${f.label} filtresini kaldir`}
           >
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
@@ -191,7 +191,7 @@ const SelectionBar: React.FC<{
       aria-live="polite"
     >
       <div className="flex items-center gap-3">
-        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--action-primary-bg,var(--action-primary))] text-[10px] font-bold text-white">
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--action-primary-bg,var(--action-primary))] text-[10px] font-bold text-[var(--text-inverse)]">
           {count}
         </span>
         <span className="text-sm font-medium text-[var(--text-primary)]">

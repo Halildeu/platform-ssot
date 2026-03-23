@@ -71,24 +71,40 @@ export interface NavigationRailClasses {
   footer?: string;
 }
 
+/** Props for the NavigationRail component. */
 export interface NavigationRailProps extends AccessControlledProps {
+  /** Navigation items to render in the rail. */
   items: NavigationRailItem[];
+  /** Controlled active item value. */
   value?: string;
+  /** Initial active item value for uncontrolled mode. */
   defaultValue?: string;
+  /** Callback fired when the active item changes. */
   onValueChange?: (value: string) => void;
+  /** Callback fired when a navigation item is clicked. */
   onItemClick?: (
     value: string,
     event: React.MouseEvent<HTMLElement>,
   ) => void;
+  /** Accessible label for the navigation rail. */
   ariaLabel?: string;
+  /** Vertical alignment of items within the rail. */
   align?: NavigationRailAlignment;
+  /** Whether to use the narrow compact layout. */
   compact?: boolean;
+  /** Size variant for item spacing. */
   size?: NavigationRailSize;
+  /** Visual appearance variant. */
   appearance?: NavigationRailAppearance;
+  /** Controls when item labels are visible. */
   labelVisibility?: NavigationRailLabelVisibility;
+  /** Current URL path used for automatic active detection. */
   currentPath?: string;
+  /** Content rendered at the bottom of the rail. */
   footer?: React.ReactNode;
+  /** Additional CSS class name. */
   className?: string;
+  /** Custom class name overrides for sub-elements. */
   classes?: NavigationRailClasses;
 }
 
@@ -113,11 +129,11 @@ const sizeClassNames: Record<NavigationRailSize, string> = {
 
 const rootClassByAppearance: Record<NavigationRailAppearance, string> = {
   default:
-    "border border-border-subtle/80 bg-[var(--surface-card,rgba(255,255,255,0.98))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_48px_-32px_var(--shadow-color,rgba(15,23,42,0.28))] backdrop-blur-sm",
+    "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_22px_48px_-32px_var(--shadow-color,rgba(15,23,42,0.28))] backdrop-blur-sm",
   outline:
-    "border border-border-default/80 bg-[var(--surface-card,rgba(255,255,255,0.88))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_18px_40px_-34px_var(--shadow-color,rgba(15,23,42,0.24))] backdrop-blur-sm",
+    "border border-border-default/80 bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_18px_40px_-34px_var(--shadow-color,rgba(15,23,42,0.24))] backdrop-blur-sm",
   ghost:
-    "border border-transparent bg-[var(--surface-card,rgba(255,255,255,0.42))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_14px_34px_-32px_var(--shadow-color,rgba(15,23,42,0.18))] backdrop-blur-sm",
+    "border border-transparent bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_14px_34px_-32px_var(--shadow-color,rgba(15,23,42,0.18))] backdrop-blur-sm",
 };
 
 function getEnabledValues(items: NavigationRailItem[]): string[] {
@@ -235,6 +251,7 @@ export function createNavigationRailPreset(
   }
 }
 
+/** Vertical navigation rail with icon-and-label destinations, badge support, and responsive sizing. */
 export const NavigationRail = React.forwardRef<
   HTMLElement,
   NavigationRailProps
@@ -524,8 +541,8 @@ export const NavigationRail = React.forwardRef<
                 sizeClassNames[size],
                 compact ? "justify-center" : "justify-start",
                 selected
-                  ? "border-border-default/70 bg-[var(--surface-card,rgba(255,255,255,0.98))] text-text-primary shadow-[0_18px_36px_-28px_var(--shadow-color,rgba(15,23,42,0.3))] ring-1 ring-[var(--border-subtle)]/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent"
-                  : "text-text-secondary hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-hover,rgba(255,255,255,0.78))] hover:text-text-primary hover:shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.22))]",
+                  ? "border-border-default/70 bg-[var(--surface-card)] text-text-primary shadow-[0_18px_36px_-28px_var(--shadow-color,rgba(15,23,42,0.3))] ring-1 ring-[var(--border-subtle)]/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent"
+                  : "text-text-secondary hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-hover)] hover:text-text-primary hover:shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.22))]",
                 blocked && "cursor-not-allowed opacity-50",
                 isReadonly &&
                   !item.disabled &&
@@ -600,7 +617,7 @@ export const NavigationRail = React.forwardRef<
           <div
             className={cn(
               "navigation-rail-footer mt-2 border-t border-border-subtle pt-2",
-              "bg-[var(--surface-card,rgba(255,255,255,0.18))]",
+              "bg-[var(--surface-card)]",
               classes?.footer,
             )}
             data-slot="footer"

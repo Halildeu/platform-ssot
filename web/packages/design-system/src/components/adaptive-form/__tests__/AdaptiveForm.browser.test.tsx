@@ -49,7 +49,7 @@ describe('AdaptiveForm (Browser)', () => {
   });
 
   it('disables form when access is disabled', async () => {
-    const screen = await render(<AdaptiveForm fields={basicFields} access="disabled" />);
+    await render(<AdaptiveForm fields={basicFields} access="disabled" />);
     const el = document.querySelector('[data-access-state="disabled"]');
     expect(el).not.toBeNull();
   });

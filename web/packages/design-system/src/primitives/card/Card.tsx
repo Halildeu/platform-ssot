@@ -13,6 +13,7 @@ export type CardPadding = "none" | "sm" | "md" | "lg";
 
 export type CardSlot = "root" | "header" | "body" | "footer";
 
+/** Props for the Card component. */
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: CardVariant;
   padding?: CardPadding;
@@ -50,6 +51,7 @@ const paddingStyles: Record<CardPadding, string> = {
   lg: "p-6",
 };
 
+/** Elevated content container with variant styles, optional hover effect, and polymorphic element support. */
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   (
     {

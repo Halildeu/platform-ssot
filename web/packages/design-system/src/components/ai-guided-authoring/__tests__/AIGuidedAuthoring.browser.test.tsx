@@ -40,13 +40,13 @@ describe('AIGuidedAuthoring (Browser)', () => {
   });
 
   it('renders disabled state', async () => {
-    const screen = await render(<AIGuidedAuthoring access="disabled" />);
+    await render(<AIGuidedAuthoring access="disabled" />);
     const el = document.querySelector('[data-access-state="disabled"]');
     expect(el).not.toBeNull();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<AIGuidedAuthoring />);
+    await render(<AIGuidedAuthoring />);
     const el = document.querySelector('[data-component="ai-guided-authoring"]');
     expect(el).not.toBeNull();
   });

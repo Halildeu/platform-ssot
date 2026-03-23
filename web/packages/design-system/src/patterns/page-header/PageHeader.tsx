@@ -5,6 +5,7 @@ import { cn } from "../../utils/cn";
 /*  PageHeader — Standard page-level header with title, actions, tabs  */
 /* ------------------------------------------------------------------ */
 
+/** Props for the PageHeader component. */
 export interface PageHeaderProps {
   /** Page title */
   title: React.ReactNode;
@@ -29,6 +30,7 @@ export interface PageHeaderProps {
   className?: string;
 }
 
+/** Standard page-level header with title, breadcrumb, avatar, actions, tags, and footer slot. */
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   subtitle,

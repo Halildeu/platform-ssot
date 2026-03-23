@@ -17,7 +17,7 @@ describe('Timeline (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Timeline items={timelineItems} />);
+    await render(<Timeline items={timelineItems} />);
     const el = document.querySelector('[data-component="timeline"]');
     expect(el).not.toBeNull();
   });
@@ -42,7 +42,7 @@ describe('Timeline (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<Timeline items={timelineItems} access="hidden" />);
+    await render(<Timeline items={timelineItems} access="hidden" />);
     expect(document.querySelector('[data-component="timeline"]')).toBeNull();
   });
 

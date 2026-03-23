@@ -41,26 +41,26 @@ describe('Carousel (Browser)', () => {
 
   it('navigates via dot click', async () => {
     const onSlideChange = vi.fn();
-    const screen = await render(<Carousel items={slides} onSlideChange={onSlideChange} />);
+    await render(<Carousel items={slides} onSlideChange={onSlideChange} />);
     const dots = document.querySelectorAll('[role="tab"]');
     (dots[2] as HTMLElement).click();
     expect(onSlideChange).toHaveBeenCalledWith(2);
   });
 
   it('marks active dot with aria-selected', async () => {
-    const screen = await render(<Carousel items={slides} />);
+    await render(<Carousel items={slides} />);
     const dots = document.querySelectorAll('[role="tab"]');
     expect(dots[0]?.getAttribute('aria-selected')).toBe('true');
   });
 
   it('hides arrows when showArrows is false', async () => {
-    const screen = await render(<Carousel items={slides} showArrows={false} />);
+    await render(<Carousel items={slides} showArrows={false} />);
     expect(document.querySelector('[aria-label="Sonraki slayt"]')).toBeNull();
     expect(document.querySelector('[aria-label="Onceki slayt"]')).toBeNull();
   });
 
   it('hides dots when showDots is false', async () => {
-    const screen = await render(<Carousel items={slides} showDots={false} />);
+    await render(<Carousel items={slides} showDots={false} />);
     const dots = document.querySelectorAll('[role="tab"]');
     expect(dots).toHaveLength(0);
   });

@@ -17,11 +17,17 @@ import { InlineEdit } from '../InlineEdit';
 import { EmptyStateBuilder } from '../EmptyStateBuilder';
 import { FilterPresets } from '../FilterPresets';
 import { DataExportDialog } from '../DataExportDialog';
+import { expectNoA11yViolations } from '../../__tests__/a11y-utils';
 
 describe('BulletChart', () => {
   it('renders SVG', () => {
     const { container } = render(<BulletChart actual={75} target={90} />);
     expect(container.querySelector('svg')).toBeTruthy();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<BulletChart actual={75} target={90} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -42,12 +48,22 @@ describe('MicroChart', () => {
     const { container } = render(<MicroChart type="progress" data={[80]} />);
     expect(container.querySelector('svg') || container.firstElementChild).toBeTruthy();
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<MicroChart type="sparkline" data={[10, 20, 15, 30]} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('DateRangePicker', () => {
   it('renders with default presets', () => {
     const { container } = render(<DateRangePicker defaultPresets />);
     expect(container.firstElementChild).toBeTruthy();
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<DateRangePicker defaultPresets />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -61,6 +77,15 @@ describe('TreemapChart', () => {
     const { container } = render(<TreemapChart items={items} />);
     expect(container.querySelector('svg')).toBeTruthy();
   });
+
+  it('has no accessibility violations', async () => {
+    const items = [
+      { id: '1', label: 'A', value: 100 },
+      { id: '2', label: 'B', value: 60 },
+    ];
+    const { container } = render(<TreemapChart items={items} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('SankeyDiagram', () => {
@@ -70,6 +95,13 @@ describe('SankeyDiagram', () => {
     const { container } = render(<SankeyDiagram nodes={nodes} links={links} />);
     expect(container.querySelector('svg')).toBeTruthy();
   });
+
+  it('has no accessibility violations', async () => {
+    const nodes = [{ id: 'a', label: 'Source' }, { id: 'b', label: 'Target' }];
+    const links = [{ source: 'a', target: 'b', value: 100 }];
+    const { container } = render(<SankeyDiagram nodes={nodes} links={links} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('RadarChart', () => {
@@ -78,6 +110,13 @@ describe('RadarChart', () => {
     const series = [{ label: 'Player 1', values: { a: 80, b: 60, c: 90 } }];
     const { container } = render(<RadarChart axes={axes} series={series} />);
     expect(container.querySelector('svg')).toBeTruthy();
+  });
+
+  it('has no accessibility violations', async () => {
+    const axes = [{ key: 'a', label: 'Speed' }, { key: 'b', label: 'Power' }, { key: 'c', label: 'Skill' }];
+    const series = [{ label: 'Player 1', values: { a: 80, b: 60, c: 90 } }];
+    const { container } = render(<RadarChart axes={axes} series={series} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -92,6 +131,16 @@ describe('ProcessFlow', () => {
     const { container } = render(<ProcessFlow nodes={nodes} edges={edges} />);
     expect(container.textContent).toContain('Begin');
   });
+
+  it('has no accessibility violations', async () => {
+    const nodes = [
+      { id: '1', type: 'start' as const, label: 'Begin' },
+      { id: '2', type: 'end' as const, label: 'Done' },
+    ];
+    const edges = [{ from: '1', to: '2' }];
+    const { container } = render(<ProcessFlow nodes={nodes} edges={edges} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('ValueStream', () => {
@@ -102,6 +151,14 @@ describe('ValueStream', () => {
     ];
     const { container } = render(<ValueStream steps={steps} />);
     expect(container.textContent).toContain('Cut');
+  });
+
+  it('has no accessibility violations', async () => {
+    const steps = [
+      { id: '1', label: 'Cut', processTime: 10, waitTime: 30 },
+    ];
+    const { container } = render(<ValueStream steps={steps} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -114,6 +171,14 @@ describe('StatusTimeline', () => {
     const { container } = render(<StatusTimeline events={events} />);
     expect(container.textContent).toContain('Created');
   });
+
+  it('has no accessibility violations', async () => {
+    const events = [
+      { id: '1', status: 'Created', timestamp: '2026-01-01T10:00:00Z' },
+    ];
+    const { container } = render(<StatusTimeline events={events} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('NotificationCenter', () => {
@@ -124,12 +189,25 @@ describe('NotificationCenter', () => {
     const { container } = render(<NotificationCenter notifications={items} />);
     expect(container.textContent).toContain('Build complete');
   });
+
+  it('has no accessibility violations', async () => {
+    const items = [
+      { id: '1', title: 'Build complete', type: 'success' as const, timestamp: '2026-03-23T10:00:00Z' },
+    ];
+    const { container } = render(<NotificationCenter notifications={items} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('InlineEdit', () => {
   it('renders display value', () => {
     const { container } = render(<InlineEdit value="Hello" onSave={vi.fn()} />);
     expect(container.textContent).toContain('Hello');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<InlineEdit value="Hello" onSave={vi.fn()} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -142,6 +220,11 @@ describe('EmptyStateBuilder', () => {
     const { container } = render(<EmptyStateBuilder reason="error" />);
     expect(container.firstElementChild).toBeTruthy();
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<EmptyStateBuilder reason="no-data" />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('FilterPresets', () => {
@@ -152,6 +235,14 @@ describe('FilterPresets', () => {
     ];
     const { container } = render(<FilterPresets presets={presets} onSelect={vi.fn()} />);
     expect(container.textContent).toContain('Active Only');
+  });
+
+  it('has no accessibility violations', async () => {
+    const presets = [
+      { id: '1', name: 'Active Only', filters: { status: 'active' } },
+    ];
+    const { container } = render(<FilterPresets presets={presets} onSelect={vi.fn()} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -167,5 +258,12 @@ describe('DataExportDialog', () => {
       <DataExportDialog open={false} onClose={vi.fn()} onExport={vi.fn()} />,
     );
     expect(container.innerHTML).toBe('');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(
+      <DataExportDialog open onClose={vi.fn()} onExport={vi.fn()} />,
+    );
+    await expectNoA11yViolations(container);
   });
 });

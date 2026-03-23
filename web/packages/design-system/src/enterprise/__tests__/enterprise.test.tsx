@@ -14,6 +14,7 @@ import { ComparisonTable } from '../ComparisonTable';
 import { TrainingTracker } from '../TrainingTracker';
 import { GovernanceBoard } from '../GovernanceBoard';
 import { ThemeLayout } from '../ThemeLayout';
+import { expectNoA11yViolations } from '../../__tests__/a11y-utils';
 
 // --- Utility Tests ---
 describe('Enterprise utilities', () => {
@@ -78,6 +79,11 @@ describe('ExecutiveKPIStrip', () => {
     const { container } = render(<ExecutiveKPIStrip metrics={metrics} access="hidden" />);
     expect(container.innerHTML).toBe('');
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<ExecutiveKPIStrip metrics={metrics} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('ApprovalWorkflow', () => {
@@ -97,6 +103,11 @@ describe('ApprovalWorkflow', () => {
     const { container } = render(<ApprovalWorkflow steps={steps} access="hidden" />);
     expect(container.innerHTML).toBe('');
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<ApprovalWorkflow steps={steps} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('RiskMatrix', () => {
@@ -114,6 +125,11 @@ describe('RiskMatrix', () => {
     const { container } = render(<RiskMatrix risks={risks} access="hidden" />);
     expect(container.innerHTML).toBe('');
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<RiskMatrix risks={risks} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('GanttTimeline', () => {
@@ -125,6 +141,11 @@ describe('GanttTimeline', () => {
   it('renders timeline', () => {
     const { container } = render(<GanttTimeline tasks={tasks} />);
     expect(container.textContent).toContain('Design');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<GanttTimeline tasks={tasks} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -139,6 +160,11 @@ describe('AgingBuckets', () => {
     const { container } = render(<AgingBuckets buckets={buckets} />);
     expect(container.textContent).toContain('0-30');
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<AgingBuckets buckets={buckets} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('FunnelChart', () => {
@@ -152,6 +178,11 @@ describe('FunnelChart', () => {
     const { container } = render(<FunnelChart stages={stages} />);
     expect(container.textContent).toContain('Leads');
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<FunnelChart stages={stages} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('ComparisonTable', () => {
@@ -163,6 +194,11 @@ describe('ComparisonTable', () => {
   it('renders table', () => {
     const { container } = render(<ComparisonTable rows={rows} />);
     expect(container.textContent).toContain('Revenue');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<ComparisonTable rows={rows} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -176,6 +212,11 @@ describe('TrainingTracker', () => {
     const { container } = render(<TrainingTracker items={items} />);
     expect(container.textContent).toContain('Safety Training');
   });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<TrainingTracker items={items} />);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe('GovernanceBoard', () => {
@@ -187,6 +228,11 @@ describe('GovernanceBoard', () => {
   it('renders board', () => {
     const { container } = render(<GovernanceBoard items={items} />);
     expect(container.textContent).toContain('GDPR');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(<GovernanceBoard items={items} />);
+    await expectNoA11yViolations(container);
   });
 });
 
@@ -204,5 +250,12 @@ describe('ThemeLayout', () => {
       <ThemeLayout theme="compact" slots={{ header: <div>KPI</div> }} />,
     );
     expect(container.innerHTML).toContain('KPI');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(
+      <ThemeLayout theme="executive" slots={{ header: <div>KPI</div>, grid: <div>Grid</div> }} />,
+    );
+    await expectNoA11yViolations(container);
   });
 });

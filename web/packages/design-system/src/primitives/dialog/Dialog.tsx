@@ -15,6 +15,7 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 
 export type DialogSlot = "root" | "backdrop" | "panel" | "title" | "description";
 
+/** Props for the Dialog component. */
 export interface DialogProps {
   open: boolean;
   onClose: () => void;
@@ -45,7 +46,8 @@ const sizeStyles: Record<DialogSize, string> = {
   full: "max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]",
 };
 
-export const Dialog: React.FC<DialogProps> = ({
+/** Accessible modal overlay built on native dialog with configurable size, title, and footer. */
+export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
   open,
   onClose,
   size = "md",
@@ -58,7 +60,7 @@ export const Dialog: React.FC<DialogProps> = ({
   className,
   children,
   slotProps,
-}) => {
+}, forwardedRef) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const layerId = useId();
 
@@ -106,7 +108,11 @@ export const Dialog: React.FC<DialogProps> = ({
 
   return (
     <dialog
-      ref={dialogRef}
+      ref={(node) => {
+        (dialogRef as React.MutableRefObject<HTMLDialogElement | null>).current = node;
+        if (typeof forwardedRef === 'function') forwardedRef(node);
+        else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDialogElement | null>).current = node;
+      }}
       onCancel={handleCancel}
       onClick={handleBackdropClick}
       {...stateAttrs({ state: open ? "open" : "closed", component: "dialog" })}
@@ -170,6 +176,6 @@ export const Dialog: React.FC<DialogProps> = ({
       </div>
     </dialog>
   );
-};
+});
 
 Dialog.displayName = "Dialog";

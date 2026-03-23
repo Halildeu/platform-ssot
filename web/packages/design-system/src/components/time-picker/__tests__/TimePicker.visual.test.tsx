@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { TimePicker } from '../TimePicker';
 
 describe('TimePicker Visual Regression', () => {
   it('empty state matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <TimePicker label="Meeting Time" />
       </div>,

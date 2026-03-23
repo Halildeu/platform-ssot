@@ -10,6 +10,7 @@ import {
 
 export type MicroChartType = 'sparkline' | 'bar' | 'bullet' | 'progress' | 'waffle' | 'donut-ring';
 
+/** Props for the MicroChart component. */
 export interface MicroChartProps extends AccessControlledProps {
   /** Visualization type */
   type: MicroChartType;
@@ -304,6 +305,7 @@ function renderDonutRing(
 
 // ── Component ──
 
+/** Compact inline chart supporting sparkline, bar, bullet, progress, waffle, and donut-ring types. */
 export const MicroChart: React.FC<MicroChartProps> = ({
   type,
   data,

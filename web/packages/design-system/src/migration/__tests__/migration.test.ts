@@ -51,7 +51,7 @@ describe('Migration Engine', () => {
 
   it('is idempotent (2x apply = same result)', () => {
     const source = `import { Button } from 'mfe-ui-kit';`;
-    const first = applyMigration(source, v1ToV2Transforms);
+    const _first = applyMigration(source, v1ToV2Transforms);
     // Apply on already-migrated code
     const second = applyMigration(
       source.replace(/from 'mfe-ui-kit'/, "from '@mfe/design-system'"),

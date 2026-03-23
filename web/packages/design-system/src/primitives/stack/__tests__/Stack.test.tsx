@@ -4,6 +4,7 @@ import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { Stack, HStack, VStack } from "../Stack";
+import { expectNoA11yViolations } from "../../../__tests__/a11y-utils";
 
 describe("Stack", () => {
   it("renders children", () => {
@@ -87,6 +88,16 @@ describe("Stack", () => {
   it("has displayName", () => {
     expect(Stack.displayName).toBe("Stack");
   });
+
+  it("has no accessibility violations", async () => {
+    const { container } = render(
+      <Stack>
+        <span>A</span>
+        <span>B</span>
+      </Stack>,
+    );
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe("HStack", () => {
@@ -114,6 +125,11 @@ describe("HStack", () => {
   it("has displayName", () => {
     expect(HStack.displayName).toBe("HStack");
   });
+
+  it("has no accessibility violations", async () => {
+    const { container } = render(<HStack><span>A</span></HStack>);
+    await expectNoA11yViolations(container);
+  });
 });
 
 describe("VStack", () => {
@@ -130,5 +146,10 @@ describe("VStack", () => {
 
   it("has displayName", () => {
     expect(VStack.displayName).toBe("VStack");
+  });
+
+  it("has no accessibility violations", async () => {
+    const { container } = render(<VStack><span>A</span></VStack>);
+    await expectNoA11yViolations(container);
   });
 });

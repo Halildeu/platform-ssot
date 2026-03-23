@@ -84,6 +84,7 @@ export const useDatasourceModeAdapter = <RowData = unknown>(
       // v34: use setGridOption for datasource attachment
       api.setGridOption?.("serverSideDatasource", ds);
       api.setGridOption?.("cacheBlockSize", cacheBlockSize);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- AG Grid v34 typing gap
       (api.setGridOption as any)?.("maxBlocksInCache", maxBlocksInCache);
     },
     [isServerMode, createServerSideDatasource, cacheBlockSize, maxBlocksInCache],

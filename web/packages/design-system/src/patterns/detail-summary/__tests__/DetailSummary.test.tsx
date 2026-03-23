@@ -4,7 +4,6 @@ import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import { DetailSummary, type DetailSummaryProps } from '../DetailSummary';
-import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
 afterEach(() => {
   cleanup();
@@ -223,17 +222,31 @@ describe('DetailSummary — edge cases', () => {
 
 describe('DetailSummary — accessibility', () => {
   it('has no accessibility violations', async () => {
-    // TODO: DetailSummary uses h3 internally — heading-order depends on page context.
-    // Disable heading-order rule as it's a page-level concern, not component-level.
-    const axeCore = await import('axe-core');
-    const { container } = render(<DetailSummary {...baseProps} />);
-    const results = await axeCore.default.run(container, {
-      rules: {
-        'color-contrast': { enabled: false },
-        'region': { enabled: false },
-        'heading-order': { enabled: false }, // h3 heading order depends on page context
-      },
+    const axe = await import('axe-core');
+    const { container } = render(
+      <div>
+        <h1>Page Title</h1>
+        <h2>Section</h2>
+        <DetailSummary {...baseProps} />
+      </div>,
+    );
+    const results = await axe.default.run(container, {
+      rules: { 'heading-order': { enabled: false } }, // Component doesn't control page heading hierarchy
     });
     expect(results.violations).toHaveLength(0);
+  });
+
+  it('renders a semantic section landmark', () => {
+    render(<DetailSummary {...baseProps} />);
+    // section is a generic region landmark
+    const section = document.querySelector('section[data-component="detail-summary"]');
+    expect(section).toBeInTheDocument();
+  });
+
+  it('renders heading for the title via role query', () => {
+    render(<DetailSummary {...baseProps} />);
+    // PageHeader renders title as a heading
+    const heading = screen.getByRole('heading', { name: /Order #1234/i });
+    expect(heading).toBeInTheDocument();
   });
 });

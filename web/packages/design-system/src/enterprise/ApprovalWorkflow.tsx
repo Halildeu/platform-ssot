@@ -24,18 +24,27 @@ export interface ApprovalStep {
   comment?: string;
 }
 
+/** Multi-step approval workflow with approve, reject, and delegate actions. */
 export interface ApprovalWorkflowProps {
+  /** Ordered list of approval steps to render */
   steps: ApprovalStep[];
   /** Index of the step currently active (0-based). Defaults to first non-completed step. */
   currentStepIndex?: number;
+  /** Layout direction of the workflow steps */
   orientation?: 'horizontal' | 'vertical';
   /** Compact hides timestamps and comments inline */
   compact?: boolean;
+  /** Access level controlling visibility and interactivity */
   access?: AccessLevel;
+  /** Tooltip text explaining the current access restriction */
   accessReason?: string;
+  /** Called when the current step is approved */
   onApprove?: (stepId: string) => void;
+  /** Called when the current step is rejected with a comment */
   onReject?: (stepId: string, comment: string) => void;
+  /** Called when the current step is delegated to a new assignee */
   onDelegate?: (stepId: string, newAssignee: string) => void;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -207,7 +216,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
     }
   }, [delegateValue, onDelegate]);
 
-  const isCompleted = step.status === 'approved' || step.status === 'rejected' || step.status === 'skipped';
+  const _isCompleted = step.status === 'approved' || step.status === 'rejected' || step.status === 'skipped';
   const widthClass = orientation === 'horizontal' ? 'min-w-[160px] max-w-[220px] flex-1' : 'w-full';
 
   return (
@@ -260,7 +269,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
               <button
                 type="button"
                 onClick={onApprove}
-                className="px-3 py-1 text-xs font-medium rounded bg-[var(--brand-primary)] text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                className="px-3 py-1 text-xs font-medium rounded bg-[var(--brand-primary)] text-[var(--text-inverse)] hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
               >
                 Approve
               </button>
@@ -302,7 +311,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                   type="button"
                   onClick={handleRejectSubmit}
                   disabled={!rejectComment.trim()}
-                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-[var(--state-error-text)] text-white disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-[var(--state-error-text)] text-[var(--text-inverse)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Confirm Reject
                 </button>
@@ -335,7 +344,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                   type="button"
                   onClick={handleDelegateSubmit}
                   disabled={!delegateValue.trim()}
-                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-[var(--brand-primary)] text-white disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-[var(--brand-primary)] text-[var(--text-inverse)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Confirm Delegate
                 </button>
@@ -359,6 +368,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
 // Main component
 // ---------------------------------------------------------------------------
 
+/** Multi-step approval workflow with approve, reject, and delegate actions. */
 export function ApprovalWorkflow({
   steps,
   currentStepIndex,
@@ -388,7 +398,7 @@ export function ApprovalWorkflow({
     <div
       role="list"
       aria-label="Approval workflow"
-      aria-orientation={orientation}
+      data-orientation={orientation}
       {...(isDisabled ? { 'aria-disabled': true } : {})}
       {...(accessReason ? { title: accessReason } : {})}
       className={`${containerClass} gap-0 ${isDisabled ? 'opacity-50 pointer-events-none' : ''} ${className}`}

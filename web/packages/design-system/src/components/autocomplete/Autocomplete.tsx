@@ -27,22 +27,37 @@ export interface AutocompleteProps
     React.InputHTMLAttributes<HTMLInputElement>,
     "size" | "onChange" | "value" | "defaultValue" | "children"
   > {
+  /** Controlled input value. */
   value?: string;
+  /** Initial value for uncontrolled mode. */
   defaultValue?: string;
+  /** Callback fired when the value changes. */
   onChange?: (value: string) => void;
+  /** Available suggestion options. */
   options: AutocompleteOption[];
   /** Async search handler — called on input change with debounce */
   onSearch?: (query: string) => void;
+  /** Whether a loading spinner is shown in the dropdown. */
   loading?: boolean;
+  /** Size variant of the field control. */
   size?: FieldSize;
+  /** Whether the input is disabled. */
   disabled?: boolean;
+  /** Whether the input is in an invalid state. */
   invalid?: boolean;
+  /** Error message that activates the invalid state. */
   error?: React.ReactNode;
+  /** Field label displayed above the input. */
   label?: React.ReactNode;
+  /** Descriptive text below the label. */
   description?: React.ReactNode;
+  /** Help text displayed below the input. */
   hint?: React.ReactNode;
+  /** Placeholder text shown when empty. */
   placeholder?: string;
+  /** Additional CSS class name. */
   className?: string;
+  /** Whether the input spans the full container width. */
   fullWidth?: boolean;
   /** If true, allows freeform text; if false, only options can be selected */
   allowCustomValue?: boolean;

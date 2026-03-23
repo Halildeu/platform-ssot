@@ -255,7 +255,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
     /* ---- Locale ---- */
     const months = localeText?.months ?? DEFAULT_MONTHS;
     const weekdaysShort = localeText?.weekdaysShort ?? DEFAULT_WEEKDAYS_SHORT;
-    const todayLabel = localeText?.today ?? "Bugun";
+    const _todayLabel = localeText?.today ?? "Bugun";
     const prevMonthLabel = localeText?.previousMonth ?? "Onceki ay";
     const nextMonthLabel = localeText?.nextMonth ?? "Sonraki ay";
 
@@ -520,7 +520,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
         {...stateAttrs({ component: "calendar", disabled: accessState.isDisabled })}
         data-testid="calendar"
       >
-        {monthPanels.map(({ year, monthIdx, grid, panelMonth }, panelIndex) => (
+        {monthPanels.map(({ year, monthIdx, grid, panelMonth: _panelMonth }, panelIndex) => (
           <div
             key={`${year}-${monthIdx}`}
             className={cn(

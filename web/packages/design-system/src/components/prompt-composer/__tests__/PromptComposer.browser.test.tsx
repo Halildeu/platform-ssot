@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { PromptComposer } from '../PromptComposer';
 
@@ -24,18 +24,18 @@ describe('PromptComposer (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<PromptComposer />);
+    await render(<PromptComposer />);
     const el = document.querySelector('[data-component="prompt-composer"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<PromptComposer access="hidden" />);
+    await render(<PromptComposer access="hidden" />);
     expect(document.querySelector('[data-component="prompt-composer"]')).toBeNull();
   });
 
   it('renders disabled state', async () => {
-    const screen = await render(<PromptComposer access="disabled" />);
+    await render(<PromptComposer access="disabled" />);
     const el = document.querySelector('[data-access-state="disabled"]');
     expect(el).not.toBeNull();
   });

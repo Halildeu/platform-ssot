@@ -9,11 +9,11 @@ import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 /*  Mocks — AG Grid cannot render in jsdom                            */
 /* ------------------------------------------------------------------ */
 
-let capturedProps: Record<string, unknown> = {};
+let _capturedProps: Record<string, unknown> = {};
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: (props: Record<string, unknown>) => {
-    capturedProps = props;
+    _capturedProps = props;
     return (
       <div
         data-testid="ag-grid-mock"
@@ -37,7 +37,7 @@ const mockGetData = vi.fn(async () => ({ rows: [], total: 0 }));
 
 afterEach(() => {
   cleanup();
-  capturedProps = {};
+  _capturedProps = {};
   vi.clearAllMocks();
 });
 

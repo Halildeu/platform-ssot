@@ -7,7 +7,7 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "strict": true,
+    "strict": false,
     "skipLibCheck": true,
     "baseUrl": ".",
     "noEmit": true

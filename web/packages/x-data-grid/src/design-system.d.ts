@@ -74,3 +74,13 @@ declare module '@mfe/design-system/advanced' {
   export function getChartThemeOverrides(): Record<string, any>;
   export function getChartColorPalette(): string[];
 }
+
+declare module '@mfe/shared-types' {
+  const x: any;
+  export = x;
+}
+
+declare module '@mfe/shared-http' {
+  const x: any;
+  export = x;
+}

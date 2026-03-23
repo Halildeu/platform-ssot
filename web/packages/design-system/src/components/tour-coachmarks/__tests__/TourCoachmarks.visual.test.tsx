@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -10,7 +11,7 @@ const steps = [
 
 describe('TourCoachmarks Visual Regression', () => {
   it('open tour matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 500 }}>
         <TourCoachmarks steps={steps} defaultOpen />
       </div>,

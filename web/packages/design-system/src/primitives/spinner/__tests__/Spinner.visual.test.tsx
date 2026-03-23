@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { Spinner } from '../Spinner';
 
 describe('Spinner Visual Regression', () => {
   it('default spinner matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Spinner />
       </div>,
@@ -14,7 +15,7 @@ describe('Spinner Visual Regression', () => {
   });
 
   it('different sizes match screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', display: 'flex', gap: 12, alignItems: 'center' }}>
         <Spinner size="xs" />
         <Spinner size="sm" />
@@ -27,7 +28,7 @@ describe('Spinner Visual Regression', () => {
   });
 
   it('block mode matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff' }}>
         <Spinner mode="block" label="Loading data" />
       </div>,

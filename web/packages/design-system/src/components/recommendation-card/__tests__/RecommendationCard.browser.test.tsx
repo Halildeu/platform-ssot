@@ -46,7 +46,7 @@ describe('RecommendationCard (Browser)', () => {
   });
 
   it('renders data-tone attribute', async () => {
-    const screen = await render(
+    await render(
       <RecommendationCard title="T" summary="S" tone="warning" />,
     );
     const el = document.querySelector('[data-tone="warning"]');

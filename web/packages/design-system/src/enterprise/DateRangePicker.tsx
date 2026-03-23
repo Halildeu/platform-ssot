@@ -21,6 +21,7 @@ export interface DateRangePreset {
   getRange: () => DateRange;
 }
 
+/** Props for the DateRangePicker component. */
 export interface DateRangePickerProps extends AccessControlledProps {
   /** Controlled value */
   value?: DateRange;
@@ -143,6 +144,7 @@ function clampDate(d: Date, min?: Date, max?: Date): Date {
 
 // ── Component ──
 
+/** Dual-input date range selector with preset shortcuts, comparison toggle, and calendar panel. */
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   value,
   onChange,
@@ -163,6 +165,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   const [customStart, setCustomStart] = React.useState('');
   const [customEnd, setCustomEnd] = React.useState('');
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   const presets = React.useMemo(() => buildPresets(), []);
   const isInteractive = accessState.state === 'full';
@@ -187,11 +190,14 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
-  // Close on Escape
+  // Close on Escape and return focus to trigger
   React.useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
@@ -236,6 +242,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     >
       {/* Trigger button */}
       <button
+        ref={triggerRef}
         type="button"
         className={cn(
           'flex items-center gap-2 rounded-md border px-3 py-2 text-sm',
@@ -279,7 +286,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
             'animate-in fade-in slide-in-from-top-1',
           )}
           role="dialog"
-          aria-label="Date range picker"
+          aria-modal="true"
+          aria-label="Tarih aralığı seçici"
         >
           {/* Preset buttons */}
           <div className="flex flex-wrap gap-1.5 border-b border-[var(--border-default)] p-3">
@@ -293,7 +301,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                   className={cn(
                     'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                     isActive
-                      ? 'bg-[var(--interactive-primary)] text-white'
+                      ? 'bg-[var(--interactive-primary)] text-[var(--text-inverse)]'
                       : 'bg-[var(--surface-muted)] text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]/80',
                     isDisabled && 'opacity-40 cursor-not-allowed',
                   )}
@@ -350,7 +358,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
               type="button"
               className={cn(
                 'mt-2 w-full rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-                'bg-[var(--interactive-primary)] text-white',
+                'bg-[var(--interactive-primary)] text-[var(--text-inverse)]',
                 'hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
                 'disabled:opacity-40 disabled:cursor-not-allowed',
               )}

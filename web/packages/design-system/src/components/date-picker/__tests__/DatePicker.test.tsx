@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { DatePicker } from '../DatePicker';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -175,7 +174,7 @@ describe('DatePicker — edge cases', () => {
   });
 
   it('ek HTML attributes aktarilir', () => {
-    const { container } = render(<DatePicker aria-label="test" data-testid="custom-datepicker" />);
+    render(<DatePicker aria-label="test" data-testid="custom-datepicker" />);
     expect(screen.getByTestId('custom-datepicker')).toBeInTheDocument();
   });
 

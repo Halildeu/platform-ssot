@@ -11,6 +11,7 @@ import {
   type SlotPropsMap,
   type SlotComponentMap,
 } from '../slot-utils';
+import { expectNoA11yViolations } from '../../__tests__/a11y-utils';
 
 /* ------------------------------------------------------------------ */
 /*  mergeClassNames                                                    */
@@ -134,6 +135,11 @@ describe('renderSlot', () => {
     const el = screen.getByTestId('icon');
     expect(el).toHaveClass('icon');
     expect(el).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('has no accessibility violations', async () => {
+    const { container } = render(renderSlot('button', undefined, {}, 'Click'));
+    await expectNoA11yViolations(container);
   });
 });
 

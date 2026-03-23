@@ -28,19 +28,31 @@ export type ListItem = {
   disabled?: boolean;
 };
 
+/** Props for the List component. */
 export interface ListProps extends AccessControlledProps {
+  /** Data items to render in the list. */
   items: ListItem[];
+  /** Heading text above the list. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** Row spacing density variant. */
   density?: ListDensity;
+  /** Whether to show a border around the list container. */
   bordered?: boolean;
+  /** Label shown when the list is empty. */
   emptyStateLabel?: React.ReactNode;
+  /** Locale-specific label overrides. */
   localeText?: {
     emptyFallbackDescription?: React.ReactNode;
   };
+  /** Whether to show loading skeleton rows. */
   loading?: boolean;
+  /** Key of the currently selected item. */
   selectedKey?: React.Key | null;
+  /** Callback fired when a list item is selected. */
   onItemSelect?: (key: React.Key) => void;
+  /** Whether the list spans the full container width. */
   fullWidth?: boolean;
 }
 
@@ -50,11 +62,11 @@ const densityClass: Record<ListDensity, string> = {
 };
 
 const listSurfaceClassName =
-  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,246,255,0.94)))] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card,rgba(255,255,255,0.9))] before:to-transparent";
+  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 const toneClass: Record<ListTone, string> = {
   default:
-    "border border-[var(--border-subtle)]/75 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(255,255,255,0.9),rgba(247,247,255,0.82)))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.18))]",
+    "border border-[var(--border-subtle)]/75 bg-[var(--surface-card-alt)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.18))]",
   info:
     "border border-[var(--state-info-border)]/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(239,246,255,0.98),rgba(246,247,255,0.88)))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(37,99,235,0.18))]",
   success:
@@ -73,6 +85,7 @@ const badgeToneMap: Record<ListTone, BadgeVariant> = {
   danger: "danger",
 };
 
+/** Vertical list of interactive or static items with optional selection, badges, and tone indicators. */
 export const List: React.FC<ListProps> = ({
   items,
   title,
@@ -167,7 +180,7 @@ export const List: React.FC<ListProps> = ({
                     blocked
                       ? "cursor-not-allowed opacity-70"
                       : interactive
-                        ? "hover:-translate-y-px hover:bg-[var(--surface-card,rgba(255,255,255,0.88))] hover:shadow-[0_18px_30px_-26px_var(--shadow-color,rgba(15,23,42,0.18))] active:translate-y-0"
+                        ? "hover:-translate-y-px hover:bg-[var(--surface-card)] hover:shadow-[0_18px_30px_-26px_var(--shadow-color,rgba(15,23,42,0.18))] active:translate-y-0"
                         : "",
                   ]
                     .filter(Boolean)
@@ -201,7 +214,7 @@ export const List: React.FC<ListProps> = ({
                           {(item.meta || item.suffix) ? (
                             <div className="flex shrink-0 flex-col items-end gap-2">
                               {item.meta ? (
-                                <Text variant="secondary" className="rounded-full border border-[var(--border-subtle)]/70 bg-[var(--surface-card,rgba(255,255,255,0.72))] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+                                <Text variant="secondary" className="rounded-full border border-[var(--border-subtle)]/70 bg-[var(--surface-card)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
                                   {item.meta}
                                 </Text>
                               ) : null}

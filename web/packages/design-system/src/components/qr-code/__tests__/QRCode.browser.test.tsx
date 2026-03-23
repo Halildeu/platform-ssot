@@ -24,7 +24,7 @@ describe('QRCode (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<QRCode value="test" access="hidden" />);
+    await render(<QRCode value="test" access="hidden" />);
     expect(document.querySelector('[data-component="qr-code"]')).toBeNull();
   });
 

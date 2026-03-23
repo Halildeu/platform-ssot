@@ -44,13 +44,13 @@ describe('AIActionAuditTimeline (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<AIActionAuditTimeline items={sampleItems} />);
+    await render(<AIActionAuditTimeline items={sampleItems} />);
     const el = document.querySelector('[data-component="ai-action-audit-timeline"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<AIActionAuditTimeline items={sampleItems} access="hidden" />);
+    await render(<AIActionAuditTimeline items={sampleItems} access="hidden" />);
     expect(document.querySelector('[data-component="ai-action-audit-timeline"]')).toBeNull();
   });
 

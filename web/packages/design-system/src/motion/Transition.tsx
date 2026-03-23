@@ -94,7 +94,7 @@ export function Transition({
     }
 
     return cleanup;
-  }, [show]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [show]);
 
   // Don't render if fully exited
   if (state === 'exited' && !show) return null;

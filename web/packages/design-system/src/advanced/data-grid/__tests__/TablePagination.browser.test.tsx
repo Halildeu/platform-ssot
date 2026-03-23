@@ -41,7 +41,7 @@ describe('TablePagination (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(
+    await render(
       <TablePagination totalItems={50} page={1} pageSize={10} />,
     );
     const el = document.querySelector('[data-component="table-pagination"]');
@@ -49,7 +49,7 @@ describe('TablePagination (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(
+    await render(
       <TablePagination totalItems={50} page={1} pageSize={10} access="hidden" />,
     );
     const el = document.querySelector('[data-component="table-pagination"]');

@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { PageLayout } from '../PageLayout';
 
 describe('PageLayout Visual Regression', () => {
   it('basic page layout matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ background: '#fff', width: 800, minHeight: 400 }}>
         <PageLayout
           title="Dashboard"
@@ -20,7 +21,7 @@ describe('PageLayout Visual Regression', () => {
   });
 
   it('page layout with footer matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ background: '#fff', width: 800, minHeight: 400 }}>
         <PageLayout
           title="Settings"

@@ -37,7 +37,7 @@ describe('Tag (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<Tag>Test</Tag>);
+    await render(<Tag>Test</Tag>);
     const el = document.querySelector('[data-component="tag"]');
     expect(el).not.toBeNull();
   });

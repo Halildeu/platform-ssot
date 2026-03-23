@@ -3,7 +3,6 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { Avatar } from '../Avatar';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -236,7 +235,7 @@ describe('Avatar — Faz 3 Dalga 5 deepening', () => {
 
   /* --- Status indicator via className/child composition --- */
   it('supports status indicator via additional className', () => {
-    const { container } = render(
+    render(
       <span className="relative inline-block">
         <Avatar data-testid="status-avatar" />
         <span

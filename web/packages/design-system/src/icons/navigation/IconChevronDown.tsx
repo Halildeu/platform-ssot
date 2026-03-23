@@ -1,6 +1,5 @@
 import React from "react";
 import { createIcon } from "../Icon";
-import type { IconProps } from "../Icon";
 
 export const IconChevronDown = createIcon(
   "IconChevronDown",

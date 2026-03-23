@@ -28,6 +28,7 @@ import { Spinner } from "../spinner/Spinner";
 
 export type InputSize = FieldSize;
 
+/** Props for the Input component. */
 export interface InputProps
   extends Omit<
       React.InputHTMLAttributes<HTMLInputElement>,
@@ -69,6 +70,7 @@ const getInitialValue = (
   return "";
 };
 
+/** Full-featured text input with field shell, label, visuals, character count, and access control. */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   function Input(
     {

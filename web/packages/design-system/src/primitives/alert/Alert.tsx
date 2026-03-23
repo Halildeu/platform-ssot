@@ -9,18 +9,24 @@ import { stateAttrs } from "../../internal/interaction-core";
 
 export type AlertVariant = "info" | "success" | "warning" | "error";
 
+/**
+ * Alert renders a feedback message banner with semantic variants, an optional
+ * title, icon, action slot, and close button.
+ */
 export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+  /** Semantic color variant. @default "info" */
   variant?: AlertVariant;
   /** @deprecated Use `variant` instead. Will be removed in v3.0.0. */
   severity?: AlertVariant;
-  /** Title (optional) */
+  /** Optional bold heading above the message body. */
   title?: React.ReactNode;
-  /** Leading icon */
+  /** Custom leading icon; defaults to the variant's built-in icon. */
   icon?: React.ReactNode;
-  /** Closable */
+  /** Show a close/dismiss button. @default false */
   closable?: boolean;
+  /** Callback fired when the close button is clicked. */
   onClose?: () => void;
-  /** Action node (e.g. button) */
+  /** Action element (e.g. button) rendered below the message body. */
   action?: React.ReactNode;
   /**
    * Render via Slot — merges Alert root styling onto the child element.
@@ -61,6 +67,7 @@ const defaultIcons: Record<AlertVariant, React.ReactNode> = {
   ),
 };
 
+/** Contextual feedback banner with semantic variants, optional title, icon, action slot, and close button. */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(
   (
     {

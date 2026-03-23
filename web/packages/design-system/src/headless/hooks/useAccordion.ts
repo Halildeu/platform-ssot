@@ -131,7 +131,7 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
 
       return {
         isExpanded,
-        getTriggerProps: (index: number) => ({
+        getTriggerProps: (_index: number) => ({
           id: triggerId,
           role: "button" as const,
           "aria-expanded": isExpanded,

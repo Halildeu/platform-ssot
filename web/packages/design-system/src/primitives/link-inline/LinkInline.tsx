@@ -29,21 +29,34 @@ const underlineClasses: Record<LinkInlineUnderline, string> = {
   none: "no-underline",
 };
 
+/**
+ * LinkInline renders an accessible inline anchor with tone, underline control,
+ * access gating, and optional leading/trailing visuals.
+ */
 export interface LinkInlineProps
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children">,
     AccessControlledProps {
+  /** Link content. */
   children: React.ReactNode;
-  /** Visual tone. Use `variant` as a modern alias. */
+  /** @deprecated Visual tone. Use `variant` as a modern alias. */
   tone?: LinkInlineTone;
-  /** Alias for `tone` — aligns with the standard component API. */
+  /** Color variant for the link text. @default "primary" */
   variant?: LinkInlineTone;
+  /** Underline behavior. @default "hover" */
   underline?: LinkInlineUnderline;
+  /** Whether this link represents the current page (sets aria-current). */
   current?: boolean;
+  /** Disable interaction and render as an inert span. */
   disabled?: boolean;
+  /** Force external link behavior (target="_blank", rel="noopener"). Auto-detected from href. */
   external?: boolean;
+  /** Icon or element rendered before the link text. */
   leadingVisual?: React.ReactNode;
+  /** Icon or element rendered after the link text. */
   trailingVisual?: React.ReactNode;
+  /** Locale text overrides. */
   localeText?: {
+    /** Screen reader label for external link indicator. @default "External link" */
     externalScreenReaderLabel?: React.ReactNode;
   };
   /**
@@ -57,6 +70,7 @@ export interface LinkInlineProps
   asChild?: boolean;
 }
 
+/** Inline text link with tone control, underline behavior, external indicator, and access gating. */
 export const LinkInline = React.forwardRef<HTMLElement, LinkInlineProps>(
   function LinkInline(
     {

@@ -6,7 +6,7 @@ const mockGetData = async () => ({ rows: [], total: 0 });
 
 describe('AgGridServer (Browser)', () => {
   it('renders grid shell container', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} />,
     );
     const el = document.querySelector('[data-component="grid-shell"]');
@@ -14,7 +14,7 @@ describe('AgGridServer (Browser)', () => {
   });
 
   it('renders with custom height', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer columnDefs={[{ field: 'name' }]} getData={mockGetData} height={300} />,
     );
     const el = document.querySelector('[data-component="grid-shell"]');
@@ -22,7 +22,7 @@ describe('AgGridServer (Browser)', () => {
   });
 
   it('renders with quartz theme by default', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} />,
     );
     const themeEl = document.querySelector('.ag-theme-quartz');
@@ -30,7 +30,7 @@ describe('AgGridServer (Browser)', () => {
   });
 
   it('renders with balham theme', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} theme="balham" />,
     );
     const themeEl = document.querySelector('.ag-theme-balham');
@@ -38,7 +38,7 @@ describe('AgGridServer (Browser)', () => {
   });
 
   it('renders with comfortable density by default', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} />,
     );
     const el = document.querySelector('[data-density="comfortable"]');
@@ -46,7 +46,7 @@ describe('AgGridServer (Browser)', () => {
   });
 
   it('renders with compact density', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} density="compact" />,
     );
     const el = document.querySelector('[data-density="compact"]');
@@ -54,7 +54,7 @@ describe('AgGridServer (Browser)', () => {
   });
 
   it('applies custom className', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} className="custom-grid" />,
     );
     const el = document.querySelector('.custom-grid');
@@ -62,7 +62,7 @@ describe('AgGridServer (Browser)', () => {
   });
 
   it('renders with multiple column definitions', async () => {
-    const screen = await render(
+    await render(
       <AgGridServer
         columnDefs={[{ field: 'name' }, { field: 'age' }, { field: 'email' }]}
         getData={mockGetData}

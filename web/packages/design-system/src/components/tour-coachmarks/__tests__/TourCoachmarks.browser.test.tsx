@@ -21,7 +21,7 @@ describe('TourCoachmarks (Browser)', () => {
   });
 
   it('renders nothing when not open', async () => {
-    const screen = await render(<TourCoachmarks steps={steps} open={false} />);
+    await render(<TourCoachmarks steps={steps} open={false} />);
     expect(document.querySelector('[role="dialog"]')).toBeNull();
   });
 
@@ -43,7 +43,7 @@ describe('TourCoachmarks (Browser)', () => {
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<TourCoachmarks steps={steps} defaultOpen access="hidden" />);
+    await render(<TourCoachmarks steps={steps} defaultOpen access="hidden" />);
     expect(document.querySelector('[role="dialog"]')).toBeNull();
   });
 

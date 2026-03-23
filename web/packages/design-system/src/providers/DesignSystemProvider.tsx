@@ -10,16 +10,19 @@ import { LocaleProvider } from "./LocaleProvider";
 import type { ThemeAxes } from "../theme/core/semantic-theme";
 import type { Direction } from "./LocaleProvider";
 
+/** Props for {@link DesignSystemProvider}. */
 export interface DesignSystemProviderProps {
-  /** Override default theme axes */
+  /** Override default theme axes. */
   defaultTheme?: Partial<ThemeAxes>;
-  /** Locale code (e.g. "en", "tr", "ar") */
+  /** Locale code (e.g. "en", "tr", "ar"). */
   locale?: string;
-  /** Override auto-detected direction */
+  /** Override auto-detected text direction. */
   direction?: Direction;
+  /** Application content to wrap with design system providers. */
   children: React.ReactNode;
 }
 
+/** Root provider composing theme, locale, and direction for the entire design system. */
 export function DesignSystemProvider({
   defaultTheme,
   locale = "en",

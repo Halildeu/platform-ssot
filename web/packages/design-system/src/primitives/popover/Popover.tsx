@@ -30,25 +30,48 @@ export type PopoverSide = OverlaySide;
 export type PopoverAlign = OverlayAlign;
 type PopoverPosition = OverlayPosition;
 
+/**
+ * Popover renders a positioned overlay panel triggered by click, hover, or focus
+ * with portal support, collision flipping, and arrow indicator.
+ */
 export interface PopoverProps extends AccessControlledProps {
+  /** The element that anchors and triggers the popover. */
   trigger: React.ReactNode;
+  /** Optional title rendered at the top of the panel. */
   title?: React.ReactNode;
+  /** Body content rendered inside the popover panel. */
   content: React.ReactNode;
+  /** Horizontal alignment relative to the trigger. @default "center" */
   align?: PopoverAlign;
+  /** Preferred side the popover appears on. @default "bottom" */
   side?: PopoverSide;
+  /** Interaction mode that opens the popover. @default "click" */
   triggerMode?: PopoverTriggerMode;
+  /** Controlled open state. */
   open?: boolean;
+  /** Initial open state for uncontrolled mode. @default false */
   defaultOpen?: boolean;
+  /** Callback fired when the open state changes. */
   onOpenChange?: (open: boolean) => void;
+  /** Additional CSS class name on the root wrapper. */
   className?: string;
+  /** DOM element to portal the panel into. @default document.body */
   portalTarget?: HTMLElement | null;
+  /** Disable portaling and render the panel inline. @default false */
   disablePortal?: boolean;
+  /** Accessible label for the popover dialog. @default "Popover" */
   ariaLabel?: string;
+  /** Flip to the opposite side when clipped by viewport edges. @default true */
   flipOnCollision?: boolean;
+  /** Delay in ms before showing on hover/focus triggers. */
   openDelay?: number;
+  /** Delay in ms before hiding on hover/focus leave. */
   closeDelay?: number;
+  /** Show a directional arrow pointing to the trigger. @default true */
   showArrow?: boolean;
+  /** Additional CSS class name for the arrow element. */
   arrowClassName?: string;
+  /** Additional CSS class name for the panel element. */
   panelClassName?: string;
 }
 
@@ -83,7 +106,8 @@ const resolveInlinePlacementClassName = (side: PopoverSide, align: PopoverAlign)
   return `${verticalClassName} ${horizontalClassName}`;
 };
 
-export const Popover: React.FC<PopoverProps> = ({
+/** Floating content panel anchored to a trigger with configurable placement, arrow, and access control. */
+export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(({
   trigger,
   title,
   content,
@@ -105,7 +129,7 @@ export const Popover: React.FC<PopoverProps> = ({
   panelClassName = '',
   access = 'full',
   accessReason,
-}) => {
+}, forwardedRef) => {
   const accessState = resolveAccessState(access);
   const interactionState: AccessLevel =
     accessState.isDisabled || accessState.isReadonly ? accessState.state : 'full';
@@ -477,7 +501,7 @@ export const Popover: React.FC<PopoverProps> = ({
         <span
           data-testid="popover-arrow"
           aria-hidden="true"
-          className={`absolute h-3 w-3 rotate-45 border border-border-subtle/80 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(245,246,255,0.94)))] shadow-sm ${resolveOverlayArrowPositionClassName(resolvedSide, align)} ${arrowClassName}`.trim()}
+          className={`absolute h-3 w-3 rotate-45 border border-border-subtle/80 bg-[var(--surface-card)] shadow-sm ${resolveOverlayArrowPositionClassName(resolvedSide, align)} ${arrowClassName}`.trim()}
         />
       ) : null}
       {title ? (
@@ -490,7 +514,11 @@ export const Popover: React.FC<PopoverProps> = ({
   return (
     <div
       className={`relative inline-flex ${className}`.trim()}
-      ref={rootRef}
+      ref={(node) => {
+        (rootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        if (typeof forwardedRef === 'function') forwardedRef(node);
+        else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
       data-access-state={accessState.state}
     >
       <span ref={triggerAnchorRef} className="inline-flex max-w-full">
@@ -503,7 +531,7 @@ export const Popover: React.FC<PopoverProps> = ({
         : null}
     </div>
   );
-};
+});
 
 Popover.displayName = 'Popover';
 

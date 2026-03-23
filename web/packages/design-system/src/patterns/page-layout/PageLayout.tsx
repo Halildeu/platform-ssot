@@ -49,30 +49,55 @@ export interface PageLayoutClasses {
   secondaryNav?: string;
 }
 
+/** Props for the PageLayout component. */
 export interface PageLayoutProps {
+  /** Page heading text. */
   title?: React.ReactNode;
+  /** Descriptive text below the heading. */
   description?: React.ReactNode;
+  /** Breadcrumb navigation items. */
   breadcrumbItems?: PageBreadcrumbItem[];
+  /** How the current breadcrumb item is rendered. */
   currentBreadcrumbMode?: "text" | "link";
+  /** Accessible label for the breadcrumb navigation. */
   breadcrumbAriaLabel?: string;
+  /** Extra content displayed beside the title. */
   headerExtra?: React.ReactNode;
+  /** Action buttons rendered in the header. */
   actions?: React.ReactNode;
+  /** Secondary navigation rendered below the header. */
   secondaryNav?: React.ReactNode;
+  /** Filter bar rendered above the main content. */
   filterBar?: React.ReactNode;
+  /** Header content rendered inside the content area. */
   contentHeader?: React.ReactNode;
+  /** Toolbar rendered between the content header and body. */
   contentToolbar?: React.ReactNode;
+  /** Main page content. */
   children?: React.ReactNode;
+  /** Side detail panel content. */
   detail?: React.ReactNode;
+  /** Footer content at the bottom of the page. */
   footer?: React.ReactNode;
+  /** Whether the header sticks to the top on scroll. */
   stickyHeader?: boolean;
+  /** Maximum width constraint for the page content. */
   pageWidth?: "default" | "wide" | "full";
+  /** Whether the detail panel collapses on smaller screens. */
   responsiveDetailCollapse?: boolean;
+  /** Breakpoint at which the detail panel collapses. */
   responsiveDetailBreakpoint?: "base" | "sm" | "md" | "lg" | "xl";
+  /** Accessible label for the page landmark. */
   ariaLabel?: string;
+  /** Custom class name overrides for sub-elements. */
   classes?: PageLayoutClasses;
+  /** Additional CSS class name. */
   className?: string;
+  /** CSS class for the content area. */
   contentClassName?: string;
+  /** CSS class for the detail panel. */
   detailClassName?: string;
+  /** Inline styles for the root element. */
   style?: React.CSSProperties;
 }
 
@@ -175,6 +200,7 @@ const BreadcrumbNav: React.FC<BreadcrumbNavProps> = ({
 
 // --------------- Component ---------------
 
+/** Full-page scaffold with breadcrumb, header, filter bar, content area, sidebar, and footer slots. */
 export const PageLayout: React.FC<PageLayoutProps> = ({
   title,
   description,

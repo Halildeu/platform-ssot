@@ -1,3 +1,4 @@
+/* eslint-disable semantic-theme/no-inline-color-literals */
 import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
@@ -5,7 +6,7 @@ import { SearchInput } from '../SearchInput';
 
 describe('SearchInput Visual Regression', () => {
   it('empty search input matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <SearchInput placeholder="Search..." />
       </div>,
@@ -14,7 +15,7 @@ describe('SearchInput Visual Regression', () => {
   });
 
   it('search input with value matches screenshot', async () => {
-    const screen = await render(
+    await render(
       <div style={{ padding: 20, background: '#fff', width: 300 }}>
         <SearchInput value="hello" onChange={() => {}} onClear={() => {}} />
       </div>,

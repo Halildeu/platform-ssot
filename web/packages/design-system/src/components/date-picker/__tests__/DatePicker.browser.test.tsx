@@ -9,7 +9,7 @@ describe('DatePicker (Browser)', () => {
   });
 
   it('renders date input with type="date"', async () => {
-    const screen = await render(<DatePicker label="Date" />);
+    await render(<DatePicker label="Date" />);
     const input = document.querySelector('input[type="date"]');
     expect(input).not.toBeNull();
   });
@@ -23,7 +23,7 @@ describe('DatePicker (Browser)', () => {
 
   it('fires onValueChange when date changes', async () => {
     const onValueChange = vi.fn();
-    const screen = await render(<DatePicker label="Date" onValueChange={onValueChange} />);
+    await render(<DatePicker label="Date" onValueChange={onValueChange} />);
     const input = document.querySelector('input[type="date"]') as HTMLInputElement;
     // Simulate native change
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
@@ -50,7 +50,7 @@ describe('DatePicker (Browser)', () => {
   });
 
   it('renders as readonly when access is readonly', async () => {
-    const screen = await render(<DatePicker label="Date" access="readonly" />);
+    await render(<DatePicker label="Date" access="readonly" />);
     const input = document.querySelector('input') as HTMLInputElement;
     expect(input.getAttribute('aria-readonly')).toBe('true');
   });

@@ -131,7 +131,7 @@ describe('Select — disabled state', () => {
   });
 
   it('disabled select does not fire onChange on interaction', async () => {
-    const user = userEvent.setup();
+    const _user = userEvent.setup();
     const handleChange = vi.fn();
     render(<Select options={defaultOptions} disabled onChange={handleChange} />);
     // Attempt to interact with disabled select

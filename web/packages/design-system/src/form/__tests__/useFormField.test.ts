@@ -22,16 +22,6 @@ const mockValidator: SchemaValidator = {
  * Renders both useForm and useFormField in the same component tree
  * so context changes propagate correctly.
  */
-function useFormAndField(
-  formOpts: Parameters<typeof useForm>[0],
-  fieldName: string,
-  fieldAccess?: Parameters<typeof useFormField>[1],
-) {
-  const form = useForm(formOpts);
-  // We need to use FormProvider wrapper pattern — but hooks must be inside provider.
-  // So we return form for the wrapper and field will be tested via a child hook.
-  return form;
-}
 
 function renderFieldInForm(
   formOpts: Parameters<typeof useForm>[0],

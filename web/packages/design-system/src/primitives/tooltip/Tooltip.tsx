@@ -10,22 +10,27 @@ import { cn } from "../../utils/cn";
 export type TooltipPlacement = "top" | "bottom" | "left" | "right";
 export type TooltipAlign = "start" | "center" | "end";
 
+/**
+ * Tooltip renders a hover/focus information overlay positioned relative to its trigger element.
+ */
 export interface TooltipProps {
-  /** Tooltip content — primary prop */
+  /** Tooltip content displayed in the overlay. */
   content?: React.ReactNode;
+  /** Side on which the tooltip appears. @default "top" */
   placement?: TooltipPlacement;
+  /** Horizontal alignment relative to the trigger. @default "center" */
   align?: TooltipAlign;
-  /** Delay before showing (ms) */
+  /** @deprecated Use `openDelay` instead. Delay before showing (ms). */
   delay?: number;
-  /** Alias for delay — delay before showing (ms) */
+  /** Delay in ms before the tooltip appears. @default 200 */
   openDelay?: number;
-  /** Delay before hiding (ms) */
+  /** Delay in ms before the tooltip hides. @default 0 */
   closeDelay?: number;
-  /** Disable tooltip */
+  /** Prevent the tooltip from appearing. @default false */
   disabled?: boolean;
-  /** Show arrow indicator */
+  /** Show a directional arrow pointing to the trigger. @default false */
   showArrow?: boolean;
-  /** Additional class for the wrapper */
+  /** Additional CSS class name for the wrapper span. */
   className?: string;
   /**
    * Render the trigger via Slot — merges tooltip event handlers
@@ -38,6 +43,7 @@ export interface TooltipProps {
    * </Tooltip>
    */
   asChild?: boolean;
+  /** Trigger element that the tooltip wraps. */
   children: React.ReactNode;
 }
 
@@ -55,7 +61,8 @@ const arrowStyles: Record<TooltipPlacement, string> = {
   right: "end-full top-1/2 -translate-y-1/2 border-e-[var(--text-primary)] border-y-transparent border-s-transparent",
 };
 
-export const Tooltip: React.FC<TooltipProps> = ({
+/** Hover/focus information overlay positioned relative to its trigger element. */
+export const Tooltip = React.forwardRef<HTMLSpanElement, TooltipProps>(({
   content,
   placement = "top",
   align: _align,
@@ -67,7 +74,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   className,
   asChild = false,
   children,
-}) => {
+}, ref) => {
   const [visible, setVisible] = useState(false);
   const showTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const hideTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -181,6 +188,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   return (
     <span
+      ref={ref}
       className={cn("relative inline-flex", className)}
       {...triggerProps}
     >
@@ -188,6 +196,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
       {tooltipPopup}
     </span>
   );
-};
+});
 
 Tooltip.displayName = "Tooltip";

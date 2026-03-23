@@ -26,19 +26,19 @@ describe('EmptyErrorLoading (Browser)', () => {
   });
 
   it('renders data-mode attribute', async () => {
-    const screen = await render(<EmptyErrorLoading mode="loading" />);
+    await render(<EmptyErrorLoading mode="loading" />);
     const el = document.querySelector('[data-mode="loading"]');
     expect(el).not.toBeNull();
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(<EmptyErrorLoading mode="empty" />);
+    await render(<EmptyErrorLoading mode="empty" />);
     const el = document.querySelector('[data-component="empty-error-loading"]');
     expect(el).not.toBeNull();
   });
 
   it('renders nothing when access is hidden', async () => {
-    const screen = await render(<EmptyErrorLoading mode="empty" access="hidden" />);
+    await render(<EmptyErrorLoading mode="empty" access="hidden" />);
     expect(document.querySelector('[data-component="empty-error-loading"]')).toBeNull();
   });
 

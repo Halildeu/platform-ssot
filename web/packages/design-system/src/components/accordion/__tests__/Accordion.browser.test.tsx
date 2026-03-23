@@ -84,7 +84,7 @@ describe('Accordion (Browser)', () => {
   /*  5. ARIA attributes                                                  */
   /* ------------------------------------------------------------------ */
   it('sets aria-expanded on trigger', async () => {
-    const screen = await render(<Accordion items={items} />);
+    await render(<Accordion items={items} />);
     const trigger = document.querySelector('[aria-expanded]') as HTMLElement;
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     await trigger.click();
@@ -92,7 +92,7 @@ describe('Accordion (Browser)', () => {
   });
 
   it('trigger has aria-controls pointing to panel', async () => {
-    const screen = await render(<Accordion items={items} defaultValue="item-1" />);
+    await render(<Accordion items={items} defaultValue="item-1" />);
     const trigger = document.querySelector('[aria-expanded="true"]') as HTMLElement;
     const controls = trigger.getAttribute('aria-controls');
     expect(controls).toBeTruthy();
@@ -101,7 +101,7 @@ describe('Accordion (Browser)', () => {
   });
 
   it('panel has role="region"', async () => {
-    const screen = await render(<Accordion items={items} defaultValue="item-1" />);
+    await render(<Accordion items={items} defaultValue="item-1" />);
     const regions = document.querySelectorAll('[role="region"]');
     expect(regions.length).toBeGreaterThan(0);
   });
@@ -124,7 +124,7 @@ describe('Accordion (Browser)', () => {
       { value: 'item-1', title: 'Disabled Section', content: 'Hidden', disabled: true },
       { value: 'item-2', title: 'Normal', content: 'Visible' },
     ];
-    const screen = await render(<Accordion items={disabledItems} />);
+    await render(<Accordion items={disabledItems} />);
     const trigger = document.querySelector('[aria-disabled="true"]');
     expect(trigger).not.toBeNull();
   });

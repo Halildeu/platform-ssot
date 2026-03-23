@@ -24,7 +24,7 @@ describe('Divider (Browser)', () => {
   });
 
   it('renders with separator role for vertical', async () => {
-    const screen = await render(
+    await render(
       <div style={{ height: 40, display: 'flex' }}>
         <Divider orientation="vertical" />
       </div>,

@@ -18,9 +18,13 @@ export interface ThemeLayoutSlots {
   footer?: React.ReactNode;
 }
 
+/** Slot-based dashboard layout that adapts its grid arrangement to the selected theme. */
 export interface ThemeLayoutProps extends AccessControlledProps {
+  /** Layout theme controlling grid arrangement and density */
   theme: LayoutTheme;
+  /** Named content slots (header, charts, grid, sidebar, footer) */
   slots: ThemeLayoutSlots;
+  /** Additional CSS class names for the root element */
   className?: string;
 }
 
@@ -202,6 +206,7 @@ const RENDERERS: Record<LayoutTheme, (slots: ThemeLayoutSlots) => React.ReactNod
 
 // ── Component ──
 
+/** Slot-based dashboard layout that adapts its grid arrangement to the selected theme. */
 export const ThemeLayout: React.FC<ThemeLayoutProps> = ({
   theme,
   slots,

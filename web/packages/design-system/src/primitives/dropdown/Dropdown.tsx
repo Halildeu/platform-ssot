@@ -22,6 +22,7 @@ export type DropdownEntry = DropdownItem | DropdownSeparator | DropdownLabel;
 
 export type DropdownPlacement = "bottom-start" | "bottom-end" | "top-start" | "top-end";
 
+/** Props for the Dropdown component. */
 export interface DropdownProps {
   /** Trigger element */
   children: React.ReactElement;
@@ -49,14 +50,15 @@ function isLabel(entry: DropdownEntry): entry is DropdownLabel {
   return "type" in entry && entry.type === "label";
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
+/** Trigger-activated dropdown menu with items, separators, group labels, and keyboard navigation. */
+export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
   children,
   items,
   placement = "bottom-start",
   minWidth = 180,
   className,
   disabled = false,
-}) => {
+}, forwardedRef) => {
   const [open, setOpen] = useState(false);
   const [focusIndex, setFocusIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -119,7 +121,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div
-      ref={containerRef}
+      ref={(node) => {
+        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        if (typeof forwardedRef === 'function') forwardedRef(node);
+        else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
       className={cn("relative inline-flex", disabled && "opacity-50 cursor-not-allowed")}
       onKeyDown={handleKeyDown}
       {...stateAttrs({ component: "dropdown", state: open ? "open" : "closed" })}
@@ -207,6 +213,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
       )}
     </div>
   );
-};
+});
 
 Dropdown.displayName = "Dropdown";

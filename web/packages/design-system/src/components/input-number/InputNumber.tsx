@@ -17,32 +17,53 @@ import {
 /*  min/max clamping, step, precision, keyboard arrows, forwardRef.   */
 /* ------------------------------------------------------------------ */
 
+/** Props for the InputNumber component. */
 export interface InputNumberProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "size" | "onChange" | "value" | "defaultValue" | "type" | "prefix"
   > {
+  /** Controlled numeric value. */
   value?: number | null;
+  /** Initial value for uncontrolled mode. */
   defaultValue?: number | null;
+  /** Callback fired when the numeric value changes. */
   onChange?: (value: number | null) => void;
+  /** Minimum allowed value. */
   min?: number;
+  /** Maximum allowed value. */
   max?: number;
+  /** Increment/decrement step amount. */
   step?: number;
   /** Number of decimal places to display */
   precision?: number;
+  /** Content rendered before the input. */
   prefix?: React.ReactNode;
+  /** Content rendered after the input. */
   suffix?: React.ReactNode;
+  /** Size variant of the field control. */
   size?: FieldSize;
+  /** Whether the input is disabled. */
   disabled?: boolean;
+  /** Whether the input is read-only. */
   readOnly?: boolean;
+  /** Whether the input is in an invalid state. */
   invalid?: boolean;
+  /** Error message that activates the invalid state. */
   error?: React.ReactNode;
+  /** Field label displayed above the input. */
   label?: React.ReactNode;
+  /** Descriptive text below the label. */
   description?: React.ReactNode;
+  /** Help text displayed below the input. */
   hint?: React.ReactNode;
+  /** Whether the field is required. */
   required?: boolean;
+  /** Whether the input spans the full container width. */
   fullWidth?: boolean;
+  /** Placeholder text shown when empty. */
   placeholder?: string;
+  /** Additional CSS class name. */
   className?: string;
 }
 
@@ -71,6 +92,7 @@ const formatValue = (val: number | null, precision?: number): string => {
   return String(val);
 };
 
+/** Numeric input with increment/decrement buttons, min/max clamping, step, and decimal precision. */
 export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
   function InputNumber(
     {

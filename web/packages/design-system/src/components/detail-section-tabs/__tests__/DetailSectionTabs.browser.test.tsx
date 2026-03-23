@@ -39,7 +39,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders data-component attribute', async () => {
-    const screen = await render(
+    await render(
       <DetailSectionTabs tabs={tabs} activeTabId="overview" onTabChange={() => {}} />,
     );
     const el = document.querySelector('[data-component="detail-section-tabs"]');
@@ -61,7 +61,7 @@ describe('DetailSectionTabs (Browser)', () => {
   });
 
   it('renders with custom ariaLabel', async () => {
-    const screen = await render(
+    await render(
       <DetailSectionTabs
         tabs={tabs}
         activeTabId="overview"

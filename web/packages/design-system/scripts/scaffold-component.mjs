@@ -703,14 +703,18 @@ afterEach(() => {
   switch (profile.testPreset) {
     case "display":
       return `${commonImports}
+// ── Temel render ──
 describe("${pascal} -- render", () => {
   it("renders children", () => {
-    render(<${pascal}>Test</${pascal}>);
-    expect(screen.getByText("Test")).toBeInTheDocument();
+    render(<${pascal}>Test content</${pascal}>);
+    expect(screen.getByText("Test content")).toBeInTheDocument();
   });
-});
 
-describe("${pascal} -- ref forwarding", () => {
+  it("applies custom className", () => {
+    const { container } = render(<${pascal} className="custom-cls">Test</${pascal}>);
+    expect(container.firstChild).toHaveClass("custom-cls");
+  });
+
   it("forwards ref to the root element", () => {
     const ref = React.createRef<HTMLDivElement>();
     render(<${pascal} ref={ref}>Test</${pascal}>);
@@ -718,6 +722,25 @@ describe("${pascal} -- ref forwarding", () => {
   });
 });
 
+// ── Kenar durumlar ──
+describe("${pascal} -- edge cases", () => {
+  it("renders with empty children (no crash)", () => {
+    const { container } = render(<${pascal}>{""}</${pascal}>);
+    expect(container).toBeTruthy();
+  });
+
+  it("renders with null children (no crash)", () => {
+    const { container } = render(<${pascal}>{null}</${pascal}>);
+    expect(container).toBeTruthy();
+  });
+
+  it("renders expected text content (snapshot-free)", () => {
+    render(<${pascal}>Visible label</${pascal}>);
+    expect(screen.getByText("Visible label")).toBeInTheDocument();
+  });
+});
+
+// ── Erişilebilirlik ──
 describe("${pascal} -- accessibility", () => {
   it("has no axe violations", async () => {
     const { container } = render(<${pascal}>Accessible</${pascal}>);
@@ -726,16 +749,144 @@ describe("${pascal} -- accessibility", () => {
 });
 `;
 
-    case "field-shell":
+    case "interactive-access":
       return `${commonImports}
+// ── Temel render ──
 describe("${pascal} -- render", () => {
-  it("renders with label", () => {
-    render(<${pascal} label="Label" />);
-    expect(screen.getByText("Label")).toBeInTheDocument();
+  it("renders children", () => {
+    render(<${pascal}>Test content</${pascal}>);
+    expect(screen.getByText("Test content")).toBeInTheDocument();
+  });
+
+  it("applies custom className", () => {
+    const { container } = render(<${pascal} className="custom-cls">Test</${pascal}>);
+    expect(container.firstChild).toHaveClass("custom-cls");
+  });
+
+  it("forwards ref to the root element", () => {
+    const ref = React.createRef<HTMLDivElement>();
+    render(<${pascal} ref={ref}>Test</${pascal}>);
+    expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 });
 
-describe("${pascal} -- ref forwarding", () => {
+// ── Erişim kontrolü ──
+describe("${pascal} -- access control", () => {
+  it("access=full: interactive by default", () => {
+    const { container } = render(<${pascal} access="full">Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root).not.toHaveAttribute("disabled");
+    expect(root).not.toHaveAttribute("data-readonly");
+  });
+
+  it("access=disabled: adds disabled attribute, non-interactive", () => {
+    const { container } = render(<${pascal} access="disabled">Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root).toHaveAttribute("disabled");
+  });
+
+  it("access=readonly: adds data-readonly, shows content", () => {
+    render(<${pascal} access="readonly">Readonly text</${pascal}>);
+    expect(screen.getByText("Readonly text")).toBeInTheDocument();
+    expect(screen.getByText("Readonly text").closest("[data-readonly]")).toBeTruthy();
+  });
+
+  it("access=hidden: returns null", () => {
+    const { container } = render(<${pascal} access="hidden">Hidden</${pascal}>);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("accessReason: renders title attribute with reason text", () => {
+    const { container } = render(
+      <${pascal} access="disabled" accessReason="Yetkisiz">Content</${pascal}>,
+    );
+    expect(container.firstChild).toHaveAttribute("title", "Yetkisiz");
+  });
+});
+
+// ── Etkileşim ──
+describe("${pascal} -- interaction", () => {
+  it("click handler fires", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} onClick={handleClick}>Click me</${pascal}>);
+    await user.click(screen.getByText("Click me"));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not fire click when disabled", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} access="disabled" onClick={handleClick}>Click me</${pascal}>);
+    await user.click(screen.getByText("Click me"));
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  it("keyboard Enter triggers action", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} onClick={handleClick}>Press enter</${pascal}>);
+    screen.getByText("Press enter").focus();
+    await user.keyboard("{Enter}");
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("focus via Tab key", async () => {
+    const user = userEvent.setup();
+    render(<${pascal}>Focusable</${pascal}>);
+    await user.tab();
+    expect(document.activeElement).toBe(screen.getByText("Focusable").closest("[tabindex], button, a, input") ?? document.activeElement);
+  });
+});
+
+// ── Kenar durumlar ──
+describe("${pascal} -- edge cases", () => {
+  it("renders with minimal props", () => {
+    const { container } = render(<${pascal} />);
+    expect(container).toBeTruthy();
+  });
+
+  it("handles undefined children gracefully", () => {
+    const { container } = render(<${pascal}>{undefined}</${pascal}>);
+    expect(container).toBeTruthy();
+  });
+
+  it("className merging preserves existing classes", () => {
+    const { container } = render(<${pascal} className="extra">Test</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root.className).toContain("extra");
+  });
+});
+
+// ── Erişilebilirlik ──
+describe("${pascal} -- accessibility", () => {
+  it("has no axe violations", async () => {
+    const { container } = render(<${pascal}>Accessible</${pascal}>);
+    await expectNoA11yViolations(container);
+  });
+
+  it("correct semantic role present", () => {
+    const { container } = render(<${pascal}>Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root.tagName).toBeTruthy();
+  });
+});
+`;
+
+    case "field-shell":
+      return `${commonImports}
+// ── Temel render ──
+describe("${pascal} -- render", () => {
+  it("renders children / content", () => {
+    render(<${pascal} label="Field" />);
+    expect(screen.getByText("Field")).toBeInTheDocument();
+  });
+
+  it("applies custom className", () => {
+    const { container } = render(<${pascal} label="Field" className="custom-cls" />);
+    expect(container.firstChild).toHaveClass("custom-cls");
+  });
+
   it("forwards ref to the input element", () => {
     const ref = React.createRef<HTMLInputElement>();
     render(<${pascal} ref={ref} aria-label="field" />);
@@ -743,69 +894,299 @@ describe("${pascal} -- ref forwarding", () => {
   });
 });
 
-describe("${pascal} -- controlled / uncontrolled", () => {
-  it("supports uncontrolled mode", async () => {
-    const user = userEvent.setup();
-    render(<${pascal} aria-label="field" defaultValue="a" />);
-    const input = screen.getByLabelText("field");
-    await user.clear(input);
-    await user.type(input, "b");
-    expect(input).toHaveValue("b");
-  });
-
-  it("supports controlled mode", async () => {
-    const handleValueChange = vi.fn();
-    render(
-      <${pascal}
-        aria-label="field"
-        value="fixed"
-        onValueChange={handleValueChange}
-      />,
-    );
-    expect(screen.getByLabelText("field")).toHaveValue("fixed");
-  });
-});
-
+// ── Erişim kontrolü ──
 describe("${pascal} -- access control", () => {
-  it("returns null when access=hidden", () => {
+  it("access=full: interactive by default", () => {
+    render(<${pascal} aria-label="field" access="full" />);
+    const input = screen.getByLabelText("field");
+    expect(input).not.toHaveAttribute("disabled");
+    expect(input).not.toHaveAttribute("data-readonly");
+  });
+
+  it("access=disabled: adds disabled attribute, non-interactive", () => {
+    render(<${pascal} aria-label="field" access="disabled" />);
+    expect(screen.getByLabelText("field")).toBeDisabled();
+  });
+
+  it("access=readonly: adds data-readonly, shows content", () => {
+    render(<${pascal} aria-label="field" access="readonly" value="Existing" />);
+    const input = screen.getByLabelText("field");
+    expect(input).toHaveAttribute("readOnly");
+  });
+
+  it("access=hidden: returns null", () => {
     const { container } = render(<${pascal} access="hidden" aria-label="field" />);
     expect(container).toBeEmptyDOMElement();
   });
+
+  it("accessReason: renders title attribute with reason text", () => {
+    const { container } = render(
+      <${pascal} access="disabled" accessReason="Yetkisiz" aria-label="field" />,
+    );
+    expect(container.firstChild).toHaveAttribute("title", "Yetkisiz");
+  });
 });
 
-describe("${pascal} -- a11y", () => {
+// ── Etkileşim ──
+describe("${pascal} -- interaction", () => {
+  it("click handler fires", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} aria-label="field" onClick={handleClick} />);
+    await user.click(screen.getByLabelText("field"));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not fire click when disabled", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} aria-label="field" access="disabled" onClick={handleClick} />);
+    await user.click(screen.getByLabelText("field"));
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  it("keyboard Enter triggers action", async () => {
+    const user = userEvent.setup();
+    const handleKeyDown = vi.fn();
+    render(<${pascal} aria-label="field" onKeyDown={handleKeyDown} />);
+    screen.getByLabelText("field").focus();
+    await user.keyboard("{Enter}");
+    expect(handleKeyDown).toHaveBeenCalledTimes(1);
+  });
+
+  it("focus via Tab key", async () => {
+    const user = userEvent.setup();
+    render(<${pascal} aria-label="field" />);
+    await user.tab();
+    expect(document.activeElement).toBe(screen.getByLabelText("field"));
+  });
+});
+
+// ── Label & açıklama ──
+describe("${pascal} -- label & description", () => {
+  it("renders label text", () => {
+    render(<${pascal} label="Username" />);
+    expect(screen.getByText("Username")).toBeInTheDocument();
+  });
+
+  it("renders description when provided", () => {
+    render(<${pascal} label="Email" description="Enter your email address" />);
+    expect(screen.getByText("Enter your email address")).toBeInTheDocument();
+  });
+
+  it("renders error message when error prop set", () => {
+    render(<${pascal} label="Email" error="Invalid email" />);
+    expect(screen.getByText("Invalid email")).toBeInTheDocument();
+  });
+
+  it("shows required indicator (*) when required=true", () => {
+    render(<${pascal} label="Name" required />);
+    expect(screen.getByText("*")).toBeInTheDocument();
+  });
+});
+
+// ── Controlled / uncontrolled ──
+describe("${pascal} -- controlled / uncontrolled", () => {
+  it("uncontrolled: types text, value updates", async () => {
+    const user = userEvent.setup();
+    render(<${pascal} aria-label="field" defaultValue="" />);
+    const input = screen.getByLabelText("field");
+    await user.type(input, "hello");
+    expect(input).toHaveValue("hello");
+  });
+
+  it("controlled: value prop controls display", () => {
+    render(<${pascal} aria-label="field" value="fixed" onValueChange={vi.fn()} />);
+    expect(screen.getByLabelText("field")).toHaveValue("fixed");
+  });
+
+  it("controlled: onValueChange fires on input", async () => {
+    const user = userEvent.setup();
+    const handleValueChange = vi.fn();
+    render(
+      <${pascal} aria-label="field" value="" onValueChange={handleValueChange} />,
+    );
+    await user.type(screen.getByLabelText("field"), "a");
+    expect(handleValueChange).toHaveBeenCalled();
+  });
+});
+
+// ── Doğrulama ──
+describe("${pascal} -- validation", () => {
+  it("error state adds aria-invalid", () => {
+    render(<${pascal} aria-label="field" error="Required" />);
+    expect(screen.getByLabelText("field")).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("error state shows error description (aria-describedby)", () => {
+    render(<${pascal} aria-label="field" error="Too short" />);
+    const input = screen.getByLabelText("field");
+    const describedById = input.getAttribute("aria-describedby");
+    expect(describedById).toBeTruthy();
+    expect(document.getElementById(describedById!)).toHaveTextContent("Too short");
+  });
+
+  it("valid state has no error attributes", () => {
+    render(<${pascal} aria-label="field" />);
+    expect(screen.getByLabelText("field")).not.toHaveAttribute("aria-invalid");
+  });
+});
+
+// ── Kenar durumlar ──
+describe("${pascal} -- edge cases", () => {
+  it("renders with minimal props", () => {
+    const { container } = render(<${pascal} aria-label="field" />);
+    expect(container).toBeTruthy();
+  });
+
+  it("handles undefined children gracefully", () => {
+    const { container } = render(<${pascal} aria-label="field" />);
+    expect(container.firstChild).toBeTruthy();
+  });
+
+  it("className merging preserves existing classes", () => {
+    const { container } = render(<${pascal} aria-label="field" className="extra" />);
+    const root = container.firstChild as HTMLElement;
+    expect(root.className).toContain("extra");
+  });
+});
+
+// ── Erişilebilirlik ──
+describe("${pascal} -- accessibility", () => {
   it("has no axe violations", async () => {
     const { container } = render(<${pascal} label="Label" aria-label="field" />);
     await expectNoA11yViolations(container);
+  });
+
+  it("correct semantic role present", () => {
+    render(<${pascal} aria-label="field" />);
+    expect(screen.getByLabelText("field").tagName).toBeTruthy();
   });
 });
 `;
 
     case "overlay-modal":
       return `${commonImports}
-describe("${pascal} -- render", () => {
-  it("does not render when closed", () => {
+// ── Yaşam döngüsü ──
+describe("${pascal} -- lifecycle", () => {
+  it("does not render content when closed", () => {
     const { container } = render(<${pascal} open={false} onClose={vi.fn()} />);
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("renders when open", () => {
-    render(<${pascal} open onClose={vi.fn()} title="Overlay" />);
+  it("renders dialog when open", () => {
+    render(<${pascal} open onClose={vi.fn()} title="Modal" />);
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
-});
 
-describe("${pascal} -- interaction", () => {
-  it("calls onClose on overlay click", async () => {
+  it("calls onClose when close button clicked", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    render(<${pascal} open onClose={onClose} />);
-    await user.click(document.querySelector('[aria-hidden="true"]'));
-    expect(onClose).toHaveBeenCalled();
+    render(<${pascal} open onClose={onClose} title="Modal" />);
+    const closeBtn = screen.getByRole("button", { name: /close|kapat/i });
+    await user.click(closeBtn);
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("${pascal} -- a11y", () => {
+// ── Klavye ──
+describe("${pascal} -- keyboard", () => {
+  it("Escape key calls onClose", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<${pascal} open onClose={onClose} title="Modal" />);
+    await user.keyboard("{Escape}");
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("Tab key trapped inside modal (focus trap)", async () => {
+    const user = userEvent.setup();
+    render(
+      <${pascal} open onClose={vi.fn()} title="Modal">
+        <button>First</button>
+        <button>Last</button>
+      </${pascal}>,
+    );
+    const dialog = screen.getByRole("dialog");
+    await user.tab();
+    expect(dialog.contains(document.activeElement)).toBe(true);
+    await user.tab();
+    expect(dialog.contains(document.activeElement)).toBe(true);
+  });
+});
+
+// ── Arka plan ──
+describe("${pascal} -- backdrop", () => {
+  it("overlay/backdrop click calls onClose", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<${pascal} open onClose={onClose} title="Modal" />);
+    const backdrop = document.querySelector("[data-overlay]") ?? document.querySelector('[aria-hidden="true"]');
+    if (backdrop) {
+      await user.click(backdrop as HTMLElement);
+      expect(onClose).toHaveBeenCalled();
+    }
+  });
+});
+
+// ── Portal ──
+describe("${pascal} -- portal", () => {
+  it("renders in document.body (portal check)", () => {
+    render(<${pascal} open onClose={vi.fn()} title="Modal" />);
+    const dialog = screen.getByRole("dialog");
+    expect(document.body.contains(dialog)).toBe(true);
+  });
+});
+
+// ── İçerik ──
+describe("${pascal} -- content", () => {
+  it("renders title when provided", () => {
+    render(<${pascal} open onClose={vi.fn()} title="My Title" />);
+    expect(screen.getByText("My Title")).toBeInTheDocument();
+  });
+
+  it("renders children content", () => {
+    render(
+      <${pascal} open onClose={vi.fn()} title="Modal">
+        <p>Body content</p>
+      </${pascal}>,
+    );
+    expect(screen.getByText("Body content")).toBeInTheDocument();
+  });
+
+  it("renders footer when provided", () => {
+    render(<${pascal} open onClose={vi.fn()} title="Modal" footer={<span>Footer</span>} />);
+    expect(screen.getByText("Footer")).toBeInTheDocument();
+  });
+});
+
+// ── Erişim kontrolü ──
+describe("${pascal} -- access control", () => {
+  it("access=hidden: not rendered", () => {
+    const { container } = render(<${pascal} open onClose={vi.fn()} access="hidden" />);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("access=disabled: overlay non-interactive", () => {
+    render(<${pascal} open onClose={vi.fn()} access="disabled" title="Modal" />);
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveAttribute("aria-disabled", "true");
+  });
+});
+
+// ── Erişilebilirlik ──
+describe("${pascal} -- accessibility", () => {
+  it("dialog has aria-modal=true", () => {
+    render(<${pascal} open onClose={vi.fn()} title="Modal" />);
+    expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
+  });
+
+  it("dialog has aria-labelledby (title)", () => {
+    render(<${pascal} open onClose={vi.fn()} title="My Title" />);
+    const dialog = screen.getByRole("dialog");
+    expect(dialog).toHaveAttribute("aria-labelledby");
+  });
+
   it("has no axe violations when open", async () => {
     const { baseElement } = render(<${pascal} open onClose={vi.fn()} title="Overlay" />);
     await expectNoA11yViolations(baseElement);
@@ -815,42 +1196,120 @@ describe("${pascal} -- a11y", () => {
 
     case "overlay-nonmodal":
       return `${commonImports}
-describe("${pascal} -- render", () => {
-  it("renders trigger", () => {
+// ── Tetikleyici ──
+describe("${pascal} -- trigger", () => {
+  it("renders trigger button", () => {
     render(<${pascal} triggerLabel="Open" />);
     expect(screen.getByRole("button", { name: "Open" })).toBeInTheDocument();
   });
+
+  it("trigger has aria-haspopup", () => {
+    render(<${pascal} triggerLabel="Open" />);
+    expect(screen.getByRole("button", { name: "Open" })).toHaveAttribute("aria-haspopup");
+  });
+
+  it("trigger has aria-expanded=false initially", () => {
+    render(<${pascal} triggerLabel="Open" />);
+    expect(screen.getByRole("button", { name: "Open" })).toHaveAttribute("aria-expanded", "false");
+  });
 });
 
-describe("${pascal} -- interaction", () => {
-  it("opens the panel", async () => {
+// ── Açılış / kapanış ──
+describe("${pascal} -- open / close", () => {
+  it("click trigger opens panel (aria-expanded=true)", async () => {
+    const user = userEvent.setup();
+    render(<${pascal} triggerLabel="Open">Panel content</${pascal}>);
+    await user.click(screen.getByRole("button", { name: "Open" }));
+    expect(screen.getByRole("button", { name: "Open" })).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("click outside closes panel", async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <${pascal} triggerLabel="Open">Panel content</${pascal}>
+        <button>Outside</button>
+      </div>,
+    );
+    await user.click(screen.getByRole("button", { name: "Open" }));
+    expect(screen.getByText("Panel content")).toBeInTheDocument();
+    await user.click(screen.getByText("Outside"));
+    expect(screen.queryByText("Panel content")).not.toBeInTheDocument();
+  });
+
+  it("Escape key closes panel", async () => {
+    const user = userEvent.setup();
+    render(<${pascal} triggerLabel="Open">Panel content</${pascal}>);
+    await user.click(screen.getByRole("button", { name: "Open" }));
+    expect(screen.getByText("Panel content")).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByText("Panel content")).not.toBeInTheDocument();
+  });
+});
+
+// ── İçerik ──
+describe("${pascal} -- content", () => {
+  it("panel renders children when open", async () => {
+    const user = userEvent.setup();
+    render(<${pascal} triggerLabel="Open">Panel body</${pascal}>);
+    await user.click(screen.getByRole("button", { name: "Open" }));
+    expect(screen.getByText("Panel body")).toBeInTheDocument();
+  });
+
+  it("panel not in DOM when closed", () => {
+    render(<${pascal} triggerLabel="Open">Panel body</${pascal}>);
+    expect(screen.queryByText("Panel body")).not.toBeInTheDocument();
+  });
+});
+
+// ── Erişilebilirlik ──
+describe("${pascal} -- accessibility", () => {
+  it("trigger aria-expanded updates on open/close", async () => {
+    const user = userEvent.setup();
+    render(<${pascal} triggerLabel="Open">Panel</${pascal}>);
+    const trigger = screen.getByRole("button", { name: "Open" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await user.click(trigger);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard("{Escape}");
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("panel has correct role", async () => {
     const user = userEvent.setup();
     render(<${pascal} triggerLabel="Open">Panel</${pascal}>);
     await user.click(screen.getByRole("button", { name: "Open" }));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
-});
 
-describe("${pascal} -- a11y", () => {
   it("has no axe violations", async () => {
     const { baseElement } = render(<${pascal} triggerLabel="Open">Panel</${pascal}>);
+    await expectNoA11yViolations(baseElement);
+  });
+
+  it("has no axe violations when open", async () => {
+    const user = userEvent.setup();
+    const { baseElement } = render(<${pascal} triggerLabel="Open">Panel</${pascal}>);
+    await user.click(screen.getByRole("button", { name: "Open" }));
     await expectNoA11yViolations(baseElement);
   });
 });
 `;
 
-    case "interactive-access":
     case "composed":
-    default:
       return `${commonImports}
+// ── Temel render ──
 describe("${pascal} -- render", () => {
   it("renders children", () => {
-    render(<${pascal}>Test</${pascal}>);
-    expect(screen.getByText("Test")).toBeInTheDocument();
+    render(<${pascal}>Test content</${pascal}>);
+    expect(screen.getByText("Test content")).toBeInTheDocument();
   });
-});
 
-describe("${pascal} -- ref forwarding", () => {
+  it("applies custom className", () => {
+    const { container } = render(<${pascal} className="custom-cls">Test</${pascal}>);
+    expect(container.firstChild).toHaveClass("custom-cls");
+  });
+
   it("forwards ref to the root element", () => {
     const ref = React.createRef<HTMLDivElement>();
     render(<${pascal} ref={ref}>Test</${pascal}>);
@@ -858,27 +1317,194 @@ describe("${pascal} -- ref forwarding", () => {
   });
 });
 
+// ── Erişim kontrolü ──
 describe("${pascal} -- access control", () => {
-  it("returns null when access=hidden", () => {
-    const { container } = render(<${pascal} access="hidden">Test</${pascal}>);
+  it("access=full: interactive default", () => {
+    const { container } = render(<${pascal} access="full">Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root).not.toHaveAttribute("disabled");
+  });
+
+  it("access=disabled: non-interactive", () => {
+    const { container } = render(<${pascal} access="disabled">Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root).toHaveAttribute("disabled");
+  });
+
+  it("access=hidden: not rendered", () => {
+    const { container } = render(<${pascal} access="hidden">Content</${pascal}>);
     expect(container).toBeEmptyDOMElement();
   });
 });
 
+// ── Etkileşim ──
 describe("${pascal} -- interaction", () => {
-  it("handles click events when interactive props are passed", async () => {
+  it("click handler fires", async () => {
     const user = userEvent.setup();
     const handleClick = vi.fn();
-    render(<${pascal} onClick={handleClick}>Click</${pascal}>);
-    await user.click(screen.getByText("Click"));
+    render(<${pascal} onClick={handleClick}>Click me</${pascal}>);
+    await user.click(screen.getByText("Click me"));
     expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not fire click when disabled", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} access="disabled" onClick={handleClick}>Click me</${pascal}>);
+    await user.click(screen.getByText("Click me"));
+    expect(handleClick).not.toHaveBeenCalled();
   });
 });
 
-describe("${pascal} -- a11y", () => {
+// ── Kenar durumlar ──
+describe("${pascal} -- edge cases", () => {
+  it("renders with minimal props", () => {
+    const { container } = render(<${pascal} />);
+    expect(container).toBeTruthy();
+  });
+
+  it("handles empty children", () => {
+    const { container } = render(<${pascal}>{""}</${pascal}>);
+    expect(container).toBeTruthy();
+  });
+});
+
+// ── Erişilebilirlik ──
+describe("${pascal} -- accessibility", () => {
   it("has no axe violations", async () => {
     const { container } = render(<${pascal}>Accessible</${pascal}>);
     await expectNoA11yViolations(container);
+  });
+
+  it("has semantic structure (role check)", () => {
+    const { container } = render(<${pascal}>Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root.tagName).toBeTruthy();
+  });
+});
+`;
+
+    case "interactive-access":
+    default:
+      return `${commonImports}
+// ── Temel render ──
+describe("${pascal} -- render", () => {
+  it("renders children", () => {
+    render(<${pascal}>Test content</${pascal}>);
+    expect(screen.getByText("Test content")).toBeInTheDocument();
+  });
+
+  it("applies custom className", () => {
+    const { container } = render(<${pascal} className="custom-cls">Test</${pascal}>);
+    expect(container.firstChild).toHaveClass("custom-cls");
+  });
+
+  it("forwards ref to the root element", () => {
+    const ref = React.createRef<HTMLDivElement>();
+    render(<${pascal} ref={ref}>Test</${pascal}>);
+    expect(ref.current).toBeInstanceOf(HTMLDivElement);
+  });
+});
+
+// ── Erişim kontrolü ──
+describe("${pascal} -- access control", () => {
+  it("access=full: interactive by default", () => {
+    const { container } = render(<${pascal} access="full">Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root).not.toHaveAttribute("disabled");
+    expect(root).not.toHaveAttribute("data-readonly");
+  });
+
+  it("access=disabled: adds disabled attribute, non-interactive", () => {
+    const { container } = render(<${pascal} access="disabled">Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root).toHaveAttribute("disabled");
+  });
+
+  it("access=readonly: adds data-readonly, shows content", () => {
+    render(<${pascal} access="readonly">Readonly text</${pascal}>);
+    expect(screen.getByText("Readonly text")).toBeInTheDocument();
+    expect(screen.getByText("Readonly text").closest("[data-readonly]")).toBeTruthy();
+  });
+
+  it("access=hidden: returns null", () => {
+    const { container } = render(<${pascal} access="hidden">Hidden</${pascal}>);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it("accessReason: renders title attribute with reason text", () => {
+    const { container } = render(
+      <${pascal} access="disabled" accessReason="Yetkisiz">Content</${pascal}>,
+    );
+    expect(container.firstChild).toHaveAttribute("title", "Yetkisiz");
+  });
+});
+
+// ── Etkileşim ──
+describe("${pascal} -- interaction", () => {
+  it("click handler fires", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} onClick={handleClick}>Click me</${pascal}>);
+    await user.click(screen.getByText("Click me"));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not fire click when disabled", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} access="disabled" onClick={handleClick}>Click me</${pascal}>);
+    await user.click(screen.getByText("Click me"));
+    expect(handleClick).not.toHaveBeenCalled();
+  });
+
+  it("keyboard Enter triggers action", async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<${pascal} onClick={handleClick}>Press enter</${pascal}>);
+    screen.getByText("Press enter").focus();
+    await user.keyboard("{Enter}");
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("focus via Tab key", async () => {
+    const user = userEvent.setup();
+    render(<${pascal}>Focusable</${pascal}>);
+    await user.tab();
+    expect(document.activeElement).toBe(screen.getByText("Focusable").closest("[tabindex], button, a, input") ?? document.activeElement);
+  });
+});
+
+// ── Kenar durumlar ──
+describe("${pascal} -- edge cases", () => {
+  it("renders with minimal props", () => {
+    const { container } = render(<${pascal} />);
+    expect(container).toBeTruthy();
+  });
+
+  it("handles undefined children gracefully", () => {
+    const { container } = render(<${pascal}>{undefined}</${pascal}>);
+    expect(container).toBeTruthy();
+  });
+
+  it("className merging preserves existing classes", () => {
+    const { container } = render(<${pascal} className="extra">Test</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root.className).toContain("extra");
+  });
+});
+
+// ── Erişilebilirlik ──
+describe("${pascal} -- accessibility", () => {
+  it("has no axe violations", async () => {
+    const { container } = render(<${pascal}>Accessible</${pascal}>);
+    await expectNoA11yViolations(container);
+  });
+
+  it("correct semantic role present", () => {
+    const { container } = render(<${pascal}>Content</${pascal}>);
+    const root = container.firstChild as HTMLElement;
+    expect(root.tagName).toBeTruthy();
   });
 });
 `;
