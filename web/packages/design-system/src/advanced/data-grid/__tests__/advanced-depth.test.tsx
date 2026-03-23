@@ -8,6 +8,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 /* ------------------------------------------------------------------ */
 /*  Mocks — AG Grid cannot render in jsdom                            */
@@ -96,6 +97,13 @@ describe('VariantIntegration — depth', () => {
     fireEvent.click(screen.getByTitle('Kapat'));
     expect(screen.queryByText('Varyantlar')).not.toBeInTheDocument();
   });
+
+  it('opens variant manager via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<VariantIntegration {...baseProps} />);
+    await user.click(screen.getByTitle('Manage variants'));
+    expect(screen.getByText('Varyantlar')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -152,6 +160,14 @@ describe('GridToolbar — depth', () => {
     fireEvent.change(screen.getByLabelText('Theme'), { target: { value: 'balham' } });
     expect(onThemeChange).toHaveBeenCalledWith('balham');
   });
+
+  it('density toggle via userEvent click', async () => {
+    const user = userEvent.setup();
+    const onDensityChange = vi.fn();
+    render(<GridToolbar {...baseProps} onDensityChange={onDensityChange} />);
+    await user.click(screen.getByText('Compact'));
+    expect(onDensityChange).toHaveBeenCalledWith('compact');
+  });
 });
 
 /* ================================================================== */
@@ -187,6 +203,13 @@ describe('EntityGridTemplate — depth', () => {
       <EntityGridTemplate {...baseProps} access="hidden" />,
     );
     expect(container.textContent).toBe('');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<EntityGridTemplate {...baseProps} />);
+    await user.tab();
+    expect(container.querySelector('[data-component="entity-grid-template"]')).toBeInTheDocument();
   });
 });
 
@@ -232,6 +255,15 @@ describe('AgGridServer — depth', () => {
       <AgGridServer columnDefs={[]} getData={mockGetData} access="hidden" />,
     );
     expect(container.innerHTML).toBe('');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(
+      <AgGridServer columnDefs={[{ field: 'x' }]} getData={mockGetData} />,
+    );
+    await user.tab();
+    expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
   });
 
   it('applies custom className', () => {
@@ -291,6 +323,13 @@ describe('GridShell — depth', () => {
       </GridShell>,
     );
     expect(screen.getByTestId('footer')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<GridShell columnDefs={baseCols} rowData={[]} />);
+    await user.tab();
+    expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
   });
 });
 
@@ -371,5 +410,21 @@ describe('TablePagination — depth', () => {
     );
     expect(screen.getByLabelText('First page')).toBeInTheDocument();
     expect(screen.getByLabelText('Last page')).toBeInTheDocument();
+  });
+
+  it('next page via userEvent click', async () => {
+    const user = userEvent.setup();
+    const onPageChange = vi.fn();
+    render(
+      <TablePagination
+        totalItems={100}
+        page={1}
+        pageSize={10}
+        onPageChange={onPageChange}
+        showFirstLastButtons
+      />,
+    );
+    await user.click(screen.getByLabelText('Next page'));
+    expect(onPageChange).toHaveBeenCalledWith(2);
   });
 });

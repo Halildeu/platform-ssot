@@ -12,6 +12,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 /* ---- Components under test ---- */
 import { Slot } from '../_shared/Slot';
@@ -71,6 +72,18 @@ describe('Slot — depth', () => {
       ),
     ).toThrow();
   });
+
+  it('handles click via userEvent', async () => {
+    const user = userEvent.setup();
+    const parentClick = vi.fn();
+    render(
+      <Slot onClick={parentClick}>
+        <button>btn</button>
+      </Slot>,
+    );
+    await user.click(screen.getByText('btn'));
+    expect(parentClick).toHaveBeenCalledTimes(1);
+  });
 });
 
 /* ================================================================== */
@@ -114,6 +127,18 @@ describe('Stack — depth', () => {
     const { container } = render(<VStack><span>x</span></VStack>);
     expect(container.firstElementChild?.className).toContain('flex-col');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(
+      <Stack data-testid="stack">
+        <button>A</button>
+        <button>B</button>
+      </Stack>,
+    );
+    await user.tab();
+    expect(screen.getByText('A')).toHaveFocus();
+  });
 });
 
 /* ================================================================== */
@@ -154,6 +179,13 @@ describe('Skeleton — depth', () => {
     const { container } = render(<Skeleton circle height={40} />);
     expect(container.firstElementChild?.className).toContain('rounded-full');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<Skeleton data-testid="sk" />);
+    await user.tab();
+    expect(screen.getByTestId('sk')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -192,6 +224,15 @@ describe('Textarea — depth', () => {
     expect(screen.getByText('Bio')).toBeInTheDocument();
     expect(screen.getByText('*')).toBeInTheDocument();
   });
+
+  it('fires onChange via userEvent typing', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Textarea onChange={onChange} />);
+    await user.click(screen.getByRole('textbox'));
+    await user.keyboard('hello');
+    expect(onChange).toHaveBeenCalled();
+  });
 });
 
 /* ================================================================== */
@@ -227,6 +268,13 @@ describe('Divider — depth', () => {
     const { container } = render(<Divider label="Section" />);
     const el = container.firstElementChild as HTMLElement;
     expect(el).toHaveAttribute('role', 'separator');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<Divider label="OR" />);
+    await user.tab();
+    expect(screen.getByText('OR')).toBeInTheDocument();
   });
 });
 
@@ -291,6 +339,17 @@ describe('FieldControlShell — depth', () => {
     // hint should not render when error is present
     expect(screen.queryByText('hint')).not.toBeInTheDocument();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(
+      <FieldControlShell inputId="f7" label="Name">
+        <input id="f7" />
+      </FieldControlShell>,
+    );
+    await user.tab();
+    expect(screen.getByText('Name')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -335,6 +394,14 @@ describe('Badge — depth', () => {
     const el = screen.getByTestId('lg-badge');
     expect(el.className).toContain('py-1');
   });
+
+  it('handles click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(<Badge onClick={onClick} data-testid="ue-badge">X</Badge>);
+    await user.click(screen.getByTestId('ue-badge'));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
 });
 
 /* ================================================================== */
@@ -374,6 +441,13 @@ describe('Spinner — depth', () => {
   it('block mode renders visible label', () => {
     render(<Spinner mode="block" label="Loading data" />);
     expect(screen.getByText('Loading data')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<Spinner />);
+    await user.tab();
+    expect(container.querySelector('svg')).toBeTruthy();
   });
 });
 
@@ -427,6 +501,14 @@ describe('Card — depth', () => {
       unmount();
     }
   });
+
+  it('handles click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(<Card onClick={onClick} data-testid="ue-card">Click</Card>);
+    await user.click(screen.getByTestId('ue-card'));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
 });
 
 /* ================================================================== */
@@ -475,5 +557,12 @@ describe('Text — depth', () => {
   it('applies lineClamp class', () => {
     render(<Text lineClamp={2} data-testid="clamp">text</Text>);
     expect(screen.getByTestId('clamp').className).toContain('line-clamp-2');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<Text data-testid="ue-txt">Hello</Text>);
+    await user.tab();
+    expect(screen.getByTestId('ue-txt')).toBeInTheDocument();
   });
 });

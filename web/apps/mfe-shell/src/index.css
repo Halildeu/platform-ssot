@@ -133,6 +133,19 @@
   --color-data-table-row-hover: var(--data-table-row-hover, #f9fafb);
   --color-data-table-row-selected: var(--data-table-row-selected, #eff6ff);
   --color-data-table-row-border: var(--data-table-row-border, #f3f4f6);
+
+  /* Missing colors found via usage scan */
+  --color-action-primary-soft: var(--action-primary-soft, rgba(37,99,235,0.08));
+  --color-border-strong: var(--border-bold, #d1d5db);
+  --color-menu-action-trigger: var(--action-primary-bg, #2563eb);
+  --color-menu-surface-trigger: var(--surface-muted-bg, #f3f4f6);
+  --color-state-error-bg: var(--state-danger-bg, #fef2f2);
+  --color-state-error-text: var(--state-danger-text, #991b1b);
+  --color-state-info-surface: var(--state-info-bg, #eff6ff);
+  --color-state-success-surface: var(--state-success-bg, #f0fdf4);
+  --color-state-warning-surface: var(--state-warning-bg, #fffbeb);
+  --color-t-action-primary: var(--action-primary-text, #ffffff);
+  --color-text-disabled: var(--text-subtle, #9ca3af);
 }
 
 /* ------------------------------------------------------------------ */

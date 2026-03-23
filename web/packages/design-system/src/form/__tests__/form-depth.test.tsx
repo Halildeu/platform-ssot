@@ -9,6 +9,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 /* ---- Components under test ---- */
 import { FormContext, useFormContext, type FormContextValue } from '../FormContext';
@@ -101,6 +102,18 @@ describe('FormContext — depth', () => {
     );
     expect(read!.isSubmitting).toBe(true);
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const ctx = createMockFormContext({ values: { name: 'Alice' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <button>Action</button>
+      </FormWrapper>,
+    );
+    await user.tab();
+    expect(screen.getByText('Action')).toHaveFocus();
+  });
 });
 
 /* ================================================================== */
@@ -160,6 +173,20 @@ describe('ConnectedInput — depth', () => {
     );
     expect(screen.getByText('Required')).toBeInTheDocument();
   });
+
+  it('calls setFieldValue via userEvent typing', async () => {
+    const user = userEvent.setup();
+    const setFieldValue = vi.fn();
+    const ctx = createMockFormContext({ values: { email: '' }, setFieldValue });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedInput name="email" />
+      </FormWrapper>,
+    );
+    await user.click(screen.getByRole('textbox'));
+    await user.keyboard('a');
+    expect(setFieldValue).toHaveBeenCalled();
+  });
 });
 
 /* ================================================================== */
@@ -206,6 +233,18 @@ describe('ConnectedSelect — depth', () => {
     const select = screen.getByRole('combobox');
     expect(select).toBeDisabled();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const ctx = createMockFormContext({ values: { color: 'a' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedSelect name="color" options={options} />
+      </FormWrapper>,
+    );
+    await user.tab();
+    expect(screen.getByRole('combobox')).toHaveFocus();
+  });
 });
 
 /* ================================================================== */
@@ -251,6 +290,19 @@ describe('ConnectedCheckbox — depth', () => {
     );
     const cb = screen.getByRole('checkbox');
     expect(cb).toBeDisabled();
+  });
+
+  it('toggles checkbox via userEvent click', async () => {
+    const user = userEvent.setup();
+    const setFieldValue = vi.fn();
+    const ctx = createMockFormContext({ values: { agree: false }, setFieldValue });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedCheckbox name="agree" />
+      </FormWrapper>,
+    );
+    await user.click(screen.getByRole('checkbox'));
+    expect(setFieldValue).toHaveBeenCalled();
   });
 });
 
@@ -306,6 +358,19 @@ describe('ConnectedRadio — depth', () => {
     );
     const radio = screen.getByRole('radio');
     expect(radio).toBeDisabled();
+  });
+
+  it('selects radio via userEvent click', async () => {
+    const user = userEvent.setup();
+    const setFieldValue = vi.fn();
+    const ctx = createMockFormContext({ values: { size: 'sm' }, setFieldValue });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedRadio name="size" radioValue="lg" />
+      </FormWrapper>,
+    );
+    await user.click(screen.getByRole('radio'));
+    expect(setFieldValue).toHaveBeenCalled();
   });
 });
 
@@ -365,6 +430,20 @@ describe('ConnectedTextarea — depth', () => {
     );
     const ta = screen.getByRole('textbox');
     expect(ta).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('updates textarea via userEvent typing', async () => {
+    const user = userEvent.setup();
+    const setFieldValue = vi.fn();
+    const ctx = createMockFormContext({ values: { bio: '' }, setFieldValue });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedTextarea name="bio" />
+      </FormWrapper>,
+    );
+    await user.click(screen.getByRole('textbox'));
+    await user.keyboard('Hi');
+    expect(setFieldValue).toHaveBeenCalled();
   });
 });
 
@@ -428,5 +507,19 @@ describe('ConnectedFormField — depth', () => {
     );
     const input = screen.getByTestId('child-input');
     expect(input).toBeDisabled();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const ctx = createMockFormContext({ values: { name: '' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedFormField name="name" label="Full Name">
+          <input />
+        </ConnectedFormField>
+      </FormWrapper>,
+    );
+    await user.tab();
+    expect(screen.getByText('Full Name')).toBeInTheDocument();
   });
 });

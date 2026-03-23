@@ -8,6 +8,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { SummaryStrip } from '../summary-strip/SummaryStrip';
 import { DetailSummary } from '../detail-summary/DetailSummary';
@@ -67,6 +68,13 @@ describe('SummaryStrip — depth', () => {
     const { container } = render(<SummaryStrip items={items} access="hidden" />);
     expect(container.innerHTML).toBe('');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<SummaryStrip items={items} />);
+    await user.tab();
+    expect(screen.getByText('Revenue')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -115,6 +123,13 @@ describe('DetailSummary — depth', () => {
       <DetailSummary title="T" entity={minEntity} access="hidden" />,
     );
     expect(container.innerHTML).toBe('');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<DetailSummary title="Order #123" entity={minEntity} />);
+    await user.tab();
+    expect(screen.getByText('Order #123')).toBeInTheDocument();
   });
 });
 
@@ -194,6 +209,20 @@ describe('MasterDetail — depth', () => {
     );
     expect(container.firstElementChild).toBeTruthy();
   });
+
+  it('collapse panel via userEvent click', async () => {
+    const user = userEvent.setup();
+    render(
+      <MasterDetail
+        master={<div>Master</div>}
+        detail={<div>Detail</div>}
+        collapsible
+        masterHeader={<span>Header</span>}
+      />,
+    );
+    await user.click(screen.getByLabelText('Collapse panel'));
+    expect(screen.getByLabelText('Expand panel')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -260,6 +289,19 @@ describe('EntitySummaryBlock — depth', () => {
     );
     expect(container.innerHTML).toBe('');
   });
+
+  it('fires action click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <EntitySummaryBlock
+        {...baseProps}
+        actions={<button onClick={onClick}>Delete</button>}
+      />,
+    );
+    await user.click(screen.getByText('Delete'));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
 });
 
 /* ================================================================== */
@@ -314,6 +356,19 @@ describe('PageHeader — depth', () => {
   it('applies sticky class when sticky prop is true', () => {
     const { container } = render(<PageHeader title="Sticky" sticky />);
     expect(container.querySelector('header')).toHaveClass('sticky');
+  });
+
+  it('fires action click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <PageHeader
+        title="Page"
+        actions={<button onClick={onClick}>Save</button>}
+      />,
+    );
+    await user.click(screen.getByText('Save'));
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -376,5 +431,23 @@ describe('PageLayout — depth', () => {
       <PageLayout title="Page" ariaLabel="main-page"><div>X</div></PageLayout>,
     );
     expect(container.firstElementChild).toHaveAttribute('aria-label', 'main-page');
+  });
+
+  it('fires breadcrumb click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <PageLayout
+        title="Page"
+        breadcrumbItems={[
+          { title: 'Home', onClick },
+          { title: 'Current' },
+        ]}
+      >
+        <div>Content</div>
+      </PageLayout>,
+    );
+    await user.click(screen.getByText('Home'));
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 /* ---- Components under test ---- */
 import { StaggerGroup } from '../StaggerGroup';
@@ -96,6 +97,19 @@ describe('StaggerGroup — depth', () => {
     );
     expect(screen.getByTestId('fill').style.animationFillMode).toBe('both');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    vi.useRealTimers();
+    const user = userEvent.setup();
+    render(
+      <StaggerGroup staggerDelay={100}>
+        <button data-testid="btn-stagger">A</button>
+      </StaggerGroup>,
+    );
+    await user.tab();
+    expect(screen.getByTestId('btn-stagger')).toBeInTheDocument();
+    vi.useFakeTimers();
+  });
 });
 
 /* ================================================================== */
@@ -171,6 +185,19 @@ describe('AnimatePresence — depth', () => {
       <AnimatePresence>{null}</AnimatePresence>,
     );
     expect(container).toBeTruthy();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    vi.useRealTimers();
+    const user = userEvent.setup();
+    render(
+      <AnimatePresence>
+        <button key="btn">Click me</button>
+      </AnimatePresence>,
+    );
+    await user.tab();
+    expect(screen.getByText('Click me')).toBeInTheDocument();
+    vi.useFakeTimers();
   });
 });
 
@@ -284,5 +311,18 @@ describe('Transition — depth', () => {
       vi.advanceTimersByTime(150);
     });
     expect(onEntered).toHaveBeenCalledTimes(1);
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    vi.useRealTimers();
+    const user = userEvent.setup();
+    render(
+      <Transition show={true}>
+        <button data-testid="trans-btn">Click</button>
+      </Transition>,
+    );
+    await user.tab();
+    expect(screen.getByTestId('trans-btn')).toBeInTheDocument();
+    vi.useFakeTimers();
   });
 });

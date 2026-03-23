@@ -1050,4 +1050,12 @@ describe('Tabs — depth', () => {
     const { container } = render(<Tabs items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
   });
+
+  it('fires onChange via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<Tabs items={tabItems} onChange={handler} />);
+    await user.click(screen.getByText('Beta'));
+    expect(handler).toHaveBeenCalledWith('b');
+  });
 });

@@ -5,9 +5,10 @@
  * Targets: DesignSystemProvider, ThemeProvider, DirectionProvider, LocaleProvider
  */
 import React from 'react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 /* ---- Components under test ---- */
 import { DesignSystemProvider } from '../DesignSystemProvider';
@@ -90,6 +91,18 @@ describe('DesignSystemProvider — depth', () => {
     );
     expect(localeCtx!.direction).toBe('rtl');
   });
+
+  it('click propagates through provider via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <DesignSystemProvider>
+        <button onClick={onClick}>Action</button>
+      </DesignSystemProvider>,
+    );
+    await user.click(screen.getByText('Action'));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
 });
 
 /* ================================================================== */
@@ -158,6 +171,17 @@ describe('ThemeProvider — depth', () => {
     }
     expect(() => render(<Consumer />)).toThrow();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(
+      <ThemeProvider>
+        <button>Theme action</button>
+      </ThemeProvider>,
+    );
+    await user.tab();
+    expect(screen.getByText('Theme action')).toHaveFocus();
+  });
 });
 
 /* ================================================================== */
@@ -199,6 +223,17 @@ describe('DirectionProvider — depth', () => {
       <DirectionProvider direction="ltr">{null}</DirectionProvider>,
     );
     expect(container.firstElementChild).toBeTruthy();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(
+      <DirectionProvider direction="rtl">
+        <button>Click me</button>
+      </DirectionProvider>,
+    );
+    await user.tab();
+    expect(screen.getByText('Click me')).toHaveFocus();
   });
 });
 
@@ -288,5 +323,16 @@ describe('LocaleProvider — depth', () => {
     );
     const wrapper = container.firstElementChild as HTMLElement;
     expect(wrapper).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(
+      <LocaleProvider>
+        <button>Locale action</button>
+      </LocaleProvider>,
+    );
+    await user.tab();
+    expect(screen.getByText('Locale action')).toHaveFocus();
   });
 });
