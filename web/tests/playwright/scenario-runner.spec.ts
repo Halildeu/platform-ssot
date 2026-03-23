@@ -666,7 +666,7 @@ test.describe('Playwright YAML scenario runner', () => {
   const readonlyAllowlistEnv = parseReadonlyAllowlistFromEnv(softMode);
 
   if (!softMode) {
-    test.describe.configure({ mode: 'serial' });
+    test.describe.configure({ mode: 'parallel' });
   }
 
   const stamp = nowStamp();
