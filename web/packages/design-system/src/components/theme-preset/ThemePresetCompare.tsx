@@ -42,7 +42,7 @@ const normalizeAxisValue = (preset: ThemePresetGalleryItem, axis: string) => {
  * Side-by-side comparison view for two theme presets, displaying a matrix
  * of appearance, density, contrast and intent axes with preview cards.
  */
-export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
+export const ThemePresetCompare = React.forwardRef<HTMLElement, ThemePresetCompareProps>(({
   leftPreset,
   rightPreset,
   title = "Theme preset compare",
@@ -51,7 +51,7 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -60,6 +60,7 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
   if (!leftPreset || !rightPreset) {
     return (
       <section
+        ref={ref}
         className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
         data-access-state={accessState.state}
         data-component="theme-preset-compare"
@@ -80,6 +81,7 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
 
   return (
     <section
+      ref={ref}
       className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="theme-preset-compare"
@@ -144,7 +146,7 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
       </div>
     </section>
   );
-};
+});
 
 ThemePresetCompare.displayName = 'ThemePresetCompare';
 

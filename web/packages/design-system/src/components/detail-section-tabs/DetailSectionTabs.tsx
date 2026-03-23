@@ -44,7 +44,7 @@ export type DetailSectionTabsProps = AccessControlledProps & {
 };
 
 /** Horizontal tab strip for detail views, with sticky positioning, badge support, and responsive auto-wrap. */
-export const DetailSectionTabs: React.FC<DetailSectionTabsProps> = ({
+export const DetailSectionTabs = React.forwardRef<HTMLDivElement, DetailSectionTabsProps>(({
   tabs,
   activeTabId,
   onTabChange,
@@ -57,7 +57,7 @@ export const DetailSectionTabs: React.FC<DetailSectionTabsProps> = ({
   classes,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const items = React.useMemo(
@@ -78,6 +78,7 @@ export const DetailSectionTabs: React.FC<DetailSectionTabsProps> = ({
 
   return (
     <div
+      ref={ref}
       data-component="detail-section-tabs"
       className={cn(sticky && 'sticky top-4 z-10', className, accessStyles(accessState.state))}
       title={accessReason}
@@ -99,6 +100,6 @@ export const DetailSectionTabs: React.FC<DetailSectionTabsProps> = ({
       />
     </div>
   );
-};
+});
 
 DetailSectionTabs.displayName = 'DetailSectionTabs';

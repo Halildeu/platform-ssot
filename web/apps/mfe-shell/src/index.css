@@ -14,145 +14,258 @@
 
 /* ------------------------------------------------------------------ */
 /*  @theme — migrated from tailwind.config.js theme.extend             */
+/*  NOTE: TW4 @theme variables become :root CSS vars.                  */
+/*  Names MUST NOT collide with design token names to avoid circular   */
+/*  references. Use TW4 namespace: --color-*, --radius-*, etc.         */
 /* ------------------------------------------------------------------ */
 @theme {
-  /* Border Radius */
-  --radius-control: var(--radius-control);
-  --radius-surface: var(--radius-surface);
+  /* Border Radius — maps to design tokens via initial-value reference */
+  --radius-control: initial;
+  --radius-surface: initial;
 
   /* Shadows */
-  --shadow-surface: var(--elevation-surface);
-  --shadow-overlay: var(--elevation-overlay);
+  --shadow-surface: initial;
+  --shadow-overlay: initial;
 
   /* Spacing */
-  --spacing-density: var(--density-space);
+  --spacing-density: initial;
 
   /* Min Height */
-  --min-height-row-density: var(--density-row-height);
+  --min-height-row-density: initial;
 
   /* Motion Duration */
-  --transition-duration-fast: var(--motion-duration-fast);
-  --transition-duration-medium: var(--motion-duration-medium);
-  --transition-duration-slow: var(--motion-duration-slow);
+  --transition-duration-fast: initial;
+  --transition-duration-medium: initial;
+  --transition-duration-slow: initial;
 
   /* Motion Easing */
-  --transition-timing-function-standard: var(--motion-easing-standard);
-  --transition-timing-function-enter: var(--motion-easing-enter);
-  --transition-timing-function-exit: var(--motion-easing-exit);
+  --transition-timing-function-standard: initial;
+  --transition-timing-function-enter: initial;
+  --transition-timing-function-exit: initial;
 
   /* Ring */
-  --ring-color: var(--focus-outline);
+  --ring-color: initial;
 
   /* ── Colors ── */
 
   /* Surface */
-  --color-surface: var(--surface-default-bg);
-  --color-surface-default: var(--surface-default-bg);
-  --color-surface-page: var(--surface-page-bg);
-  --color-surface-raised: var(--surface-raised-bg);
-  --color-surface-muted: var(--surface-muted-bg);
-  --color-surface-panel: var(--surface-panel-bg);
-  --color-surface-header: var(--surface-header-bg);
-  --color-surface-overlay: var(--surface-overlay-bg);
+  --color-surface: initial;
+  --color-surface-default: initial;
+  --color-surface-page: initial;
+  --color-surface-raised: initial;
+  --color-surface-muted: initial;
+  --color-surface-panel: initial;
+  --color-surface-header: initial;
+  --color-surface-overlay: initial;
+  --color-surface-canvas: initial;
 
   /* Text */
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-subtle: var(--text-subtle);
-  --color-text-inverse: var(--text-inverse);
+  --color-text-primary: initial;
+  --color-text-secondary: initial;
+  --color-text-subtle: initial;
+  --color-text-inverse: initial;
+  --color-text-tertiary: initial;
 
   /* Border */
-  --color-border: var(--border-default);
-  --color-border-subtle: var(--border-subtle);
-  --color-border-default: var(--border-default);
-  --color-border-bold: var(--border-bold);
+  --color-border: initial;
+  --color-border-subtle: initial;
+  --color-border-default: initial;
+  --color-border-bold: initial;
 
   /* Selection */
-  --color-selection: var(--selection-bg);
-  --color-selection-outline: var(--selection-outline);
+  --color-selection: initial;
+  --color-selection-outline: initial;
 
   /* Action Primary */
-  --color-action-primary: var(--action-primary-bg);
-  --color-action-primary-text: var(--action-primary-text);
-  --color-action-primary-border: var(--action-primary-border);
+  --color-action-primary: initial;
+  --color-action-primary-text: initial;
+  --color-action-primary-border: initial;
 
   /* Action Secondary */
-  --color-action-secondary: var(--action-secondary-bg);
-  --color-action-secondary-text: var(--action-secondary-text);
-  --color-action-secondary-border: var(--action-secondary-border);
+  --color-action-secondary: initial;
+  --color-action-secondary-text: initial;
+  --color-action-secondary-border: initial;
 
   /* Action Ghost */
-  --color-action-ghost: var(--action-ghost-bg);
-  --color-action-ghost-text: var(--action-ghost-text);
-  --color-action-ghost-border: var(--action-ghost-border);
+  --color-action-ghost: initial;
+  --color-action-ghost-text: initial;
+  --color-action-ghost-border: initial;
 
   /* Accent */
-  --color-accent-primary: var(--accent-primary);
-  --color-accent-primary-hover: var(--accent-primary-hover);
-  --color-accent-focus: var(--accent-focus);
-  --color-accent-soft: var(--accent-soft);
+  --color-accent-primary: initial;
+  --color-accent-primary-hover: initial;
+  --color-accent-focus: initial;
+  --color-accent-soft: initial;
 
   /* State Info */
-  --color-state-info: var(--state-info-bg);
-  --color-state-info-bg: var(--state-info-bg);
-  --color-state-info-text: var(--state-info-text);
-  --color-state-info-border: var(--state-info-border);
+  --color-state-info: initial;
+  --color-state-info-bg: initial;
+  --color-state-info-text: initial;
+  --color-state-info-border: initial;
 
   /* State Success */
-  --color-state-success: var(--state-success-bg);
-  --color-state-success-bg: var(--state-success-bg);
-  --color-state-success-text: var(--state-success-text);
-  --color-state-success-border: var(--state-success-border);
+  --color-state-success: initial;
+  --color-state-success-bg: initial;
+  --color-state-success-text: initial;
+  --color-state-success-border: initial;
 
   /* State Warning */
-  --color-state-warning: var(--state-warning-bg);
-  --color-state-warning-bg: var(--state-warning-bg);
-  --color-state-warning-text: var(--state-warning-text);
-  --color-state-warning-border: var(--state-warning-border);
+  --color-state-warning: initial;
+  --color-state-warning-bg: initial;
+  --color-state-warning-text: initial;
+  --color-state-warning-border: initial;
 
   /* State Danger */
-  --color-state-danger: var(--state-danger-bg);
-  --color-state-danger-bg: var(--state-danger-bg);
-  --color-state-danger-text: var(--state-danger-text);
-  --color-state-danger-border: var(--state-danger-border);
+  --color-state-danger: initial;
+  --color-state-danger-bg: initial;
+  --color-state-danger-text: initial;
+  --color-state-danger-border: initial;
 
   /* Status (alias for state) */
-  --color-status-info: var(--state-info-bg);
-  --color-status-info-bg: var(--state-info-bg);
-  --color-status-info-text: var(--state-info-text);
-  --color-status-info-border: var(--state-info-border);
+  --color-status-info: initial;
+  --color-status-info-bg: initial;
+  --color-status-info-text: initial;
+  --color-status-info-border: initial;
 
-  --color-status-success: var(--state-success-bg);
-  --color-status-success-bg: var(--state-success-bg);
-  --color-status-success-text: var(--state-success-text);
-  --color-status-success-border: var(--state-success-border);
+  --color-status-success: initial;
+  --color-status-success-bg: initial;
+  --color-status-success-text: initial;
+  --color-status-success-border: initial;
 
-  --color-status-warning: var(--state-warning-bg);
-  --color-status-warning-bg: var(--state-warning-bg);
-  --color-status-warning-text: var(--state-warning-text);
-  --color-status-warning-border: var(--state-warning-border);
+  --color-status-warning: initial;
+  --color-status-warning-bg: initial;
+  --color-status-warning-text: initial;
+  --color-status-warning-border: initial;
 
-  --color-status-danger: var(--state-danger-bg);
-  --color-status-danger-bg: var(--state-danger-bg);
-  --color-status-danger-text: var(--state-danger-text);
-  --color-status-danger-border: var(--state-danger-border);
+  --color-status-danger: initial;
+  --color-status-danger-bg: initial;
+  --color-status-danger-text: initial;
+  --color-status-danger-border: initial;
 
   /* Data Table */
-  --color-data-table-header: var(--data-table-header-bg);
-  --color-data-table-header-text: var(--data-table-header-text);
-  --color-data-table-header-divider: var(--data-table-header-divider);
-  --color-data-table-row-hover: var(--data-table-row-hover);
-  --color-data-table-row-selected: var(--data-table-row-selected);
-  --color-data-table-row-border: var(--data-table-row-border);
+  --color-data-table-header: initial;
+  --color-data-table-header-text: initial;
+  --color-data-table-header-divider: initial;
+  --color-data-table-row-hover: initial;
+  --color-data-table-row-selected: initial;
+  --color-data-table-row-border: initial;
 }
 
-/* Dark mode token overrides — inline to avoid cross-package resolve issues */
+/* ------------------------------------------------------------------ */
+/*  Connect TW4 @theme tokens to design system runtime values          */
+/*  These run AFTER theme.css sets the actual token values             */
+/* ------------------------------------------------------------------ */
+:root {
+  --radius-control: var(--ds-radius-control, 0.375rem);
+  --radius-surface: var(--ds-radius-surface, 0.75rem);
+  --shadow-surface: var(--elevation-surface, 0 1px 3px rgba(0,0,0,.1));
+  --shadow-overlay: var(--elevation-overlay, 0 4px 16px rgba(0,0,0,.15));
+  --spacing-density: var(--density-space, 0.5rem);
+  --min-height-row-density: var(--density-row-height, 3rem);
+  --transition-duration-fast: var(--motion-duration-fast, 100ms);
+  --transition-duration-medium: var(--motion-duration-medium, 200ms);
+  --transition-duration-slow: var(--motion-duration-slow, 400ms);
+  --transition-timing-function-standard: var(--motion-easing-standard, ease);
+  --transition-timing-function-enter: var(--motion-easing-enter, ease-out);
+  --transition-timing-function-exit: var(--motion-easing-exit, ease-in);
+  --ring-color: var(--focus-outline, #3b82f6);
+
+  /* Colors — map to design token values */
+  --color-surface: var(--surface-default-bg, #fff);
+  --color-surface-default: var(--surface-default-bg, #fff);
+  --color-surface-page: var(--surface-page-bg, #f9fafb);
+  --color-surface-raised: var(--surface-raised-bg, #fff);
+  --color-surface-muted: var(--surface-muted-bg, #f3f4f6);
+  --color-surface-panel: var(--surface-panel-bg, #fff);
+  --color-surface-header: var(--surface-header-bg, #fff);
+  --color-surface-overlay: var(--surface-overlay-bg, rgba(0,0,0,0.5));
+  --color-surface-canvas: var(--surface-canvas-bg, #f1f5f9);
+
+  --color-text-primary: var(--text-primary, #111827);
+  --color-text-secondary: var(--text-secondary, #6b7280);
+  --color-text-subtle: var(--text-subtle, #9ca3af);
+  --color-text-inverse: var(--text-inverse, #fff);
+  --color-text-tertiary: var(--text-tertiary, #9ca3af);
+
+  --color-border: var(--border-default, #e5e7eb);
+  --color-border-subtle: var(--border-subtle, #f3f4f6);
+  --color-border-default: var(--border-default, #e5e7eb);
+  --color-border-bold: var(--border-bold, #d1d5db);
+
+  --color-selection: var(--selection-bg, rgba(59,130,246,0.1));
+  --color-selection-outline: var(--selection-outline, #3b82f6);
+
+  --color-action-primary: var(--action-primary-bg, #2563eb);
+  --color-action-primary-text: var(--action-primary-text, #fff);
+  --color-action-primary-border: var(--action-primary-border, #2563eb);
+
+  --color-action-secondary: var(--action-secondary-bg, #f3f4f6);
+  --color-action-secondary-text: var(--action-secondary-text, #374151);
+  --color-action-secondary-border: var(--action-secondary-border, #e5e7eb);
+
+  --color-action-ghost: var(--action-ghost-bg, transparent);
+  --color-action-ghost-text: var(--action-ghost-text, #374151);
+  --color-action-ghost-border: var(--action-ghost-border, transparent);
+
+  --color-accent-primary: var(--accent-primary, #2563eb);
+  --color-accent-primary-hover: var(--accent-primary-hover, #1d4ed8);
+  --color-accent-focus: var(--accent-focus, #3b82f6);
+  --color-accent-soft: var(--accent-soft, #eff6ff);
+
+  --color-state-info: var(--state-info-bg, #eff6ff);
+  --color-state-info-bg: var(--state-info-bg, #eff6ff);
+  --color-state-info-text: var(--state-info-text, #1e40af);
+  --color-state-info-border: var(--state-info-border, #93c5fd);
+
+  --color-state-success: var(--state-success-bg, #f0fdf4);
+  --color-state-success-bg: var(--state-success-bg, #f0fdf4);
+  --color-state-success-text: var(--state-success-text, #166534);
+  --color-state-success-border: var(--state-success-border, #86efac);
+
+  --color-state-warning: var(--state-warning-bg, #fffbeb);
+  --color-state-warning-bg: var(--state-warning-bg, #fffbeb);
+  --color-state-warning-text: var(--state-warning-text, #92400e);
+  --color-state-warning-border: var(--state-warning-border, #fcd34d);
+
+  --color-state-danger: var(--state-danger-bg, #fef2f2);
+  --color-state-danger-bg: var(--state-danger-bg, #fef2f2);
+  --color-state-danger-text: var(--state-danger-text, #991b1b);
+  --color-state-danger-border: var(--state-danger-border, #fca5a5);
+
+  /* Status aliases */
+  --color-status-info: var(--state-info-bg, #eff6ff);
+  --color-status-info-bg: var(--state-info-bg, #eff6ff);
+  --color-status-info-text: var(--state-info-text, #1e40af);
+  --color-status-info-border: var(--state-info-border, #93c5fd);
+
+  --color-status-success: var(--state-success-bg, #f0fdf4);
+  --color-status-success-bg: var(--state-success-bg, #f0fdf4);
+  --color-status-success-text: var(--state-success-text, #166534);
+  --color-status-success-border: var(--state-success-border, #86efac);
+
+  --color-status-warning: var(--state-warning-bg, #fffbeb);
+  --color-status-warning-bg: var(--state-warning-bg, #fffbeb);
+  --color-status-warning-text: var(--state-warning-text, #92400e);
+  --color-status-warning-border: var(--state-warning-border, #fcd34d);
+
+  --color-status-danger: var(--state-danger-bg, #fef2f2);
+  --color-status-danger-bg: var(--state-danger-bg, #fef2f2);
+  --color-status-danger-text: var(--state-danger-text, #991b1b);
+  --color-status-danger-border: var(--state-danger-border, #fca5a5);
+
+  /* Data Table */
+  --color-data-table-header: var(--data-table-header-bg, #f9fafb);
+  --color-data-table-header-text: var(--data-table-header-text, #374151);
+  --color-data-table-header-divider: var(--data-table-header-divider, #e5e7eb);
+  --color-data-table-row-hover: var(--data-table-row-hover, #f9fafb);
+  --color-data-table-row-selected: var(--data-table-row-selected, #eff6ff);
+  --color-data-table-row-border: var(--data-table-row-border, #f3f4f6);
+}
 
 /* ------------------------------------------------------------------ */
 /*  Custom base styles                                                 */
 /* ------------------------------------------------------------------ */
 
-/* Hafif reset: margin/padding temizliği ve tema var'larından zemin/metin */
 *,
 *::before,
 *::after {
@@ -176,21 +289,21 @@ body {
   min-height: 100vh;
 }
 
-/* Radius aksı görünür olsun diye temel rounded sınıflarını tema var'larına bağla */
+/* Radius aksı */
 [data-radius] .rounded,
 [data-radius] .rounded-sm,
 [data-radius] .rounded-md {
-  border-radius: var(--radius-control);
+  border-radius: var(--ds-radius-control, 0.375rem);
 }
 
 [data-radius] .rounded-lg,
 [data-radius] .rounded-xl,
 [data-radius] .rounded-2xl,
 [data-radius] .rounded-3xl {
-  border-radius: var(--radius-surface);
+  border-radius: var(--ds-radius-surface, 0.75rem);
 }
 
-/* Elevation aksı: tailwind shadow sınıflarını tema gölgelerine bağla */
+/* Elevation aksı */
 [data-elevation="raised"] .shadow,
 [data-elevation="raised"] .shadow-sm,
 [data-elevation="raised"] .shadow-md,

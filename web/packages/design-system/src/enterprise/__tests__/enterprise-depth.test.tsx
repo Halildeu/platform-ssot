@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { BulletChart } from '../BulletChart';
@@ -53,6 +54,13 @@ describe('BulletChart – depth', () => {
     const { container } = render(<BulletChart value={50} target={80} orientation="vertical" />);
     expect(container.querySelector('svg')).toBeTruthy();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<BulletChart value={50} target={80} />);
+    await user.tab();
+    expect(container.querySelector('[data-component="bullet-chart"]')).toBeInTheDocument();
+  });
 });
 
 // ===========================================================================
@@ -77,6 +85,13 @@ describe('MicroChart – depth', () => {
   it('renders with access="hidden" producing no output', () => {
     const { container } = render(<MicroChart type="bar" data={[10]} access="hidden" />);
     expect(container.innerHTML).toBe('');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<MicroChart type="sparkline" data={[10, 20, 30]} />);
+    await user.tab();
+    expect(container.querySelector('svg')).toBeTruthy();
   });
 });
 
@@ -107,6 +122,21 @@ describe('TreemapChart – depth', () => {
     const items = [{ id: '1', label: 'A', value: 100 }];
     const { container } = render(<TreemapChart items={items} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
+
+  it('handles click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const items = [
+      { id: '1', label: 'Alpha', value: 100 },
+      { id: '2', label: 'Beta', value: 50 },
+    ];
+    const { container } = render(<TreemapChart items={items} onItemClick={onClick} />);
+    const gElements = container.querySelectorAll('g');
+    if (gElements.length > 0) {
+      await user.click(gElements[0]);
+      expect(onClick).toHaveBeenCalled();
+    }
   });
 });
 

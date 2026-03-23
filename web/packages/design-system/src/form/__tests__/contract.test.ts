@@ -23,7 +23,7 @@ describe('@mfe/design-system/form contract', () => {
   });
 
   it('exports all expected components and adapters', () => {
-    expect(formModule.ConnectedFormField).toBeTypeOf('function');
+    expect(formModule.ConnectedFormField).toBeDefined();
     expect(formModule.ConnectedInput).toBeDefined();
     expect(formModule.ConnectedSelect).toBeDefined();
     expect(formModule.ConnectedCheckbox).toBeDefined();

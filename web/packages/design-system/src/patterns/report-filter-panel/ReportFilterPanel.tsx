@@ -33,7 +33,7 @@ export interface ReportFilterPanelProps extends AccessControlledProps {
 }
 
 /** Horizontal filter form panel with submit/reset buttons and loading state for report screens. */
-export function ReportFilterPanel({
+export const ReportFilterPanel = React.forwardRef<HTMLFormElement, ReportFilterPanelProps>(({
   loading,
   submitLabel = "Filtrele",
   resetLabel = "Sifirla",
@@ -45,7 +45,7 @@ export function ReportFilterPanel({
   children,
   access = "full",
   accessReason,
-}: ReportFilterPanelProps) {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -75,6 +75,7 @@ export function ReportFilterPanel({
 
   return (
     <form
+      ref={ref}
       onSubmit={handleSubmit}
       className="w-full"
       data-access-state={accessState.state}
@@ -126,6 +127,6 @@ export function ReportFilterPanel({
       </div>
     </form>
   );
-}
+});
 
 ReportFilterPanel.displayName = "ReportFilterPanel";

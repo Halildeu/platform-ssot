@@ -164,11 +164,11 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
   const [activePreset, setActivePreset] = React.useState<PresetKey | null>(null);
   const [customStart, setCustomStart] = React.useState('');
   const [customEnd, setCustomEnd] = React.useState('');
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
   const mergedRef = (node: HTMLDivElement | null) => {
-    containerRef.current = node;
+    (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
     if (typeof forwardedRef === 'function') forwardedRef(node);
-    else if (forwardedRef) forwardedRef.current = node;
+    else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
   };
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 

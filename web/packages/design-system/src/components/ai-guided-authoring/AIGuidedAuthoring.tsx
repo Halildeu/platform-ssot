@@ -79,7 +79,7 @@ export interface AIGuidedAuthoringProps extends AccessControlledProps {
  * AI-guided authoring wizard that provides step-by-step content creation
  * with intelligent suggestions, recommendation cards and command palette integration.
  */
-export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
+export const AIGuidedAuthoring = React.forwardRef<HTMLElement, AIGuidedAuthoringProps>(({
   title = "AI guided authoring",
   description = "Prompt yazimi, recommendation stack ve command palette ayni authoring recipe altinda birlikte calisir.",
   promptComposerProps,
@@ -97,7 +97,7 @@ export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const [internalPaletteOpen, setInternalPaletteOpen] =
     React.useState(defaultPaletteOpen);
@@ -117,6 +117,7 @@ export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
 
   return (
     <section
+      ref={ref}
       className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="ai-guided-authoring"
@@ -213,7 +214,7 @@ export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
       ) : null}
     </section>
   );
-};
+});
 
 AIGuidedAuthoring.displayName = 'AIGuidedAuthoring';
 
