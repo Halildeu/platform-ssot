@@ -52,7 +52,7 @@ const runtimeEnv = buildRuntimeEnv();
 module.exports = {
   entry: './src/index.tsx',
 
-  // Geliştirmede hızlı kaynak haritası; prod’da kapalı
+  // Geliştirmede hızlı kaynak haritası; prod'da kapalı
   devtool: process.env.NODE_ENV === 'development' ? 'eval-source-map' : false,
 
   module: {
@@ -74,9 +74,9 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          'style-loader',             // dev: HMR; prod’da MiniCssExtract kullanabilirsiniz
+          'style-loader',
           'css-loader',
-          'postcss-loader',           // kökteki postcss.config.js otomatik bulunur
+          'postcss-loader',
         ],
       },
       {
