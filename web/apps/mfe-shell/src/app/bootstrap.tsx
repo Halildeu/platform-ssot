@@ -27,11 +27,6 @@ initSentry();
 import { initRUM } from '../lib/rum';
 initRUM();
 
-// OpenTelemetry bridge
-if (typeof window !== 'undefined' && window.performance) {
-  import('../lib/otel-bridge').then(({ initOTEL }) => initOTEL()).catch(() => {});
-}
-
 // OpenTelemetry: distributed trace context propagation
 import { initOtel } from '../lib/otel';
 initOtel();
