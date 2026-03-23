@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback, useId } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRestore } from "../../internal/overlay-engine";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FormDrawer — Slide-in panel for create/edit forms                  */
@@ -11,7 +12,7 @@ export type FormDrawerSize = "sm" | "md" | "lg" | "xl";
 export type FormDrawerPlacement = "right" | "left";
 
 /** Props for the FormDrawer component. */
-export interface FormDrawerProps {
+export interface FormDrawerProps extends AccessControlledProps {
   /** Controlled open state */
   open: boolean;
   /** Close callback */
@@ -58,7 +59,10 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
   closeOnEscape = true,
   loading = false,
   className,
+  access,
+  accessReason,
 }) => {
+  const accessState = resolveAccessState(access);
   const panelRef = useRef<HTMLDivElement>(null);
   const layerId = useId();
 
@@ -92,6 +96,7 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
     if (closeOnBackdrop) onClose();
   }, [closeOnBackdrop, onClose]);
 
+  if (accessState.isHidden) return null;
   if (!open) return null;
 
   const isRight = placement === "right";
@@ -113,22 +118,24 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
         aria-label={typeof title === "string" ? title : undefined}
         tabIndex={-1}
         {...stateAttrs({ component: "form-drawer", state: "open", loading })}
+        title={accessReason}
         className={cn(
-          "relative flex flex-col w-full bg-[var(--surface-default)] shadow-2xl",
+          "relative flex flex-col w-full bg-surface-default shadow-2xl",
           "animate-in",
           isRight ? "ml-auto slide-in-from-right" : "mr-auto slide-in-from-left",
+          accessState.isDisabled && "pointer-events-none opacity-50",
           sizeMap[size],
           className,
         )}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 border-b border-[var(--border-subtle)] px-6 py-4">
+        <div className="flex items-start justify-between gap-3 border-b border-border-subtle px-6 py-4">
           <div className="min-w-0 flex-1">
-            <h2 className="text-lg font-semibold text-[var(--text-primary)] truncate">
+            <h2 className="text-lg font-semibold text-text-primary truncate">
               {title}
             </h2>
             {subtitle && (
-              <p className="mt-0.5 text-sm text-[var(--text-secondary)]">{subtitle}</p>
+              <p className="mt-0.5 text-sm text-text-secondary">{subtitle}</p>
             )}
           </div>
           <button
@@ -136,7 +143,7 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
             onClick={onClose}
             className={cn(
               "flex-shrink-0 rounded-lg p-1.5 text-[var(--text-tertiary)]",
-              "hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]",
+              "hover:bg-[var(--surface-hover)] hover:text-text-primary",
               focusRingClass("ring"),
               "transition-colors",
             )}
@@ -155,8 +162,8 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
         {/* Body */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {loading && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-[var(--surface-default)]/60">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--border-default)] border-t-[var(--action-primary)]" />
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-surface-default/60">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-border-default border-t-[var(--action-primary)]" />
             </div>
           )}
           {children}
@@ -164,7 +171,7 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-2 border-t border-[var(--border-subtle)] px-6 py-3">
+          <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-6 py-3">
             {footer}
           </div>
         )}

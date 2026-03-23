@@ -116,11 +116,11 @@ const SIZE_SPAN: Record<WidgetSize, string> = {
 const TREND_COLORS: Record<TrendDirection, string> = {
   up: "text-[var(--success-color)]",
   down: "text-[var(--danger-color)]",
-  stable: "text-[var(--text-secondary)]",
+  stable: "text-text-secondary",
 };
 
 const _SKELETON_PULSE =
-  "animate-pulse rounded-lg bg-[var(--surface-muted)]";
+  "animate-pulse rounded-lg bg-surface-muted";
 
 const TIME_RANGE_OPTIONS = [
   { label: "Son 24 saat", value: "24h" },
@@ -188,7 +188,7 @@ const WidgetCard: React.FC<{
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-[var(--border-subtle)]/80 bg-[var(--surface-card,var(--surface-default-bg))] shadow-sm transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default-bg))] shadow-sm transition-all duration-200",
         TONE_BORDER[tone],
         isCompact ? "p-3" : "p-5",
       )}
@@ -203,7 +203,7 @@ const WidgetCard: React.FC<{
         <div className="min-w-0 flex-1">
           <h3
             className={cn(
-              "font-medium text-[var(--text-secondary)]",
+              "font-medium text-text-secondary",
               isCompact ? "text-xs" : "text-sm",
             )}
           >
@@ -217,10 +217,10 @@ const WidgetCard: React.FC<{
               type="button"
               onClick={() => onPin(widget.key, !widget.pinned)}
               className={cn(
-                "inline-flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-[var(--surface-muted)]",
+                "inline-flex h-6 w-6 items-center justify-center rounded-md transition-colors hover:bg-surface-muted",
                 widget.pinned
                   ? "text-[var(--action-primary-bg)]"
-                  : "text-[var(--text-secondary)]",
+                  : "text-text-secondary",
               )}
               aria-label={widget.pinned ? `${widget.title} sabitlemeyi kaldir` : `${widget.title} sabitle`}
             >
@@ -241,7 +241,7 @@ const WidgetCard: React.FC<{
               type="button"
               onClick={() => onRefreshClick(widget.key)}
               disabled={isRefreshing}
-              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)] disabled:opacity-50"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted disabled:opacity-50"
               aria-label={`${widget.title} yenile`}
             >
               <svg
@@ -268,7 +268,7 @@ const WidgetCard: React.FC<{
       {/* KPI value + trend */}
       {widget.type === "kpi" && widget.value !== undefined && (
         <div className="mb-2 flex items-end gap-2">
-          <span className={cn("font-bold tabular-nums text-[var(--text-primary)]", isCompact ? "text-xl" : "text-2xl")}>
+          <span className={cn("font-bold tabular-nums text-text-primary", isCompact ? "text-xl" : "text-2xl")}>
             {widget.value}
           </span>
           {widget.trend && <TrendIndicator trend={widget.trend} />}
@@ -282,7 +282,7 @@ const WidgetCard: React.FC<{
 
       {/* Last updated */}
       {widget.lastUpdated && (
-        <div className="mt-2 text-[10px] text-[var(--text-secondary)]">
+        <div className="mt-2 text-[10px] text-text-secondary">
           Son guncelleme: {widget.lastUpdated}
         </div>
       )}
@@ -293,7 +293,7 @@ const WidgetCard: React.FC<{
 /* ---- Main Component ---- */
 
 /** Auto-organizing dashboard with KPI cards, trend indicators, pin/tone priority sorting, and responsive grid layout. */
-export const SmartDashboard: React.FC<SmartDashboardProps> = ({
+export const SmartDashboard = React.forwardRef<HTMLElement, SmartDashboardProps>(({
   widgets,
   title,
   description,
@@ -309,7 +309,7 @@ export const SmartDashboard: React.FC<SmartDashboardProps> = ({
   className,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
@@ -340,6 +340,7 @@ export const SmartDashboard: React.FC<SmartDashboardProps> = ({
 
   return (
     <section
+      ref={ref}
       className={cn("space-y-4", className)}
       data-access-state={accessState.state}
       data-component="smart-dashboard"
@@ -351,7 +352,7 @@ export const SmartDashboard: React.FC<SmartDashboardProps> = ({
           className="rounded-2xl bg-gradient-to-r from-[var(--action-primary-bg)]/10 to-transparent px-5 py-4"
           data-testid="greeting-banner"
         >
-          <p className="text-lg font-semibold text-[var(--text-primary)]">
+          <p className="text-lg font-semibold text-text-primary">
             {greeting}
           </p>
         </div>
@@ -362,12 +363,12 @@ export const SmartDashboard: React.FC<SmartDashboardProps> = ({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
             {title && (
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+              <h2 className="text-lg font-semibold tracking-[-0.02em] text-text-primary">
                 {title}
               </h2>
             )}
             {description && (
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">
+              <p className="mt-1 text-sm text-text-secondary">
                 {description}
               </p>
             )}
@@ -378,7 +379,7 @@ export const SmartDashboard: React.FC<SmartDashboardProps> = ({
               <select
                 value={timeRange ?? ""}
                 onChange={(e) => onTimeRangeChange(e.target.value)}
-                className="rounded-lg border border-[var(--border-subtle)] bg-transparent px-2 py-1.5 text-xs text-[var(--text-secondary)] outline-none focus:border-[var(--selection-outline)]"
+                className="rounded-lg border border-border-subtle bg-transparent px-2 py-1.5 text-xs text-text-secondary outline-none focus:border-selection-outline"
                 aria-label="Zaman araligi"
               >
                 {TIME_RANGE_OPTIONS.map((opt) => (
@@ -393,7 +394,7 @@ export const SmartDashboard: React.FC<SmartDashboardProps> = ({
               <button
                 type="button"
                 onClick={refreshAll}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
                 aria-label="Tumunu yenile"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -439,7 +440,7 @@ export const SmartDashboard: React.FC<SmartDashboardProps> = ({
       </div>
     </section>
   );
-};
+});
 
 SmartDashboard.displayName = "SmartDashboard";
 

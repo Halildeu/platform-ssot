@@ -604,7 +604,7 @@ describe('Keyboard integration — ColorPicker', () => {
   });
 
   it('Tab moves focus to hue slider and text input when popover is open', async () => {
-    const user = userEvent.setup();
+    const _user = userEvent.setup();
 
     render(<ColorPicker label="Pick color" showInput />);
 

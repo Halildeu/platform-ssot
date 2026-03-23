@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, act } from '@testing-library/react';
 
@@ -8,7 +8,7 @@ import { ThemeProvider, useTheme } from '../ThemeProvider';
 
 afterEach(() => {
   cleanup();
-  try { window.localStorage.removeItem('themeAxes'); } catch {}
+  try { window.localStorage.removeItem('themeAxes'); } catch { /* no-op */ }
 });
 
 describe('ThemeProvider — depth', () => {

@@ -41,7 +41,7 @@ describe('Card — variant proplari', () => {
   it.each([
     ['elevated', 'shadow-sm'],
     ['outlined', 'bg-transparent'],
-    ['filled', 'bg-[var(--surface-muted)]'],
+    ['filled', 'bg-surface-muted'],
     ['ghost', 'bg-transparent'],
   ] as const)('variant="%s" dogru class uygular', (variant, expectedClass) => {
     const { container } = render(<Card variant={variant}>Test</Card>);

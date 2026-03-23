@@ -153,19 +153,19 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function S
             aria-describedby={describedBy}
             title={accessReason}
             className={cn(
-              "min-w-0 flex-1 accent-[var(--accent-primary)] bg-transparent",
+              "min-w-0 flex-1 accent-accent-primary bg-transparent",
               isReadonly ? "cursor-default" : isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer",
             )}
             onChange={handleChange}
           />
           <Text
             as="span"
-            className="shrink-0 rounded-full border border-[var(--border-default)] bg-[var(--surface-canvas)] px-3 py-1 text-xs font-semibold tabular-nums text-[var(--text-primary)]"
+            className="shrink-0 rounded-full border border-border-default bg-[var(--surface-canvas)] px-3 py-1 text-xs font-semibold tabular-nums text-text-primary"
           >
             {formattedValue}
           </Text>
         </div>
-        <div className="flex items-center justify-between gap-3 text-xs text-[var(--text-secondary)]">
+        <div className="flex items-center justify-between gap-3 text-xs text-text-secondary">
           <span>{minLabel ?? resolvedMin}</span>
           <span>{maxLabel ?? resolvedMax}</span>
         </div>

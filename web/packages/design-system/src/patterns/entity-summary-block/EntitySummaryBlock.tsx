@@ -43,10 +43,10 @@ export interface EntitySummaryBlockProps extends AccessControlledProps {
 }
 
 const entitySummarySurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-6 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-6 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 /** Summary card displaying an entity with avatar, title, badges, actions, and key-value items. */
-export const EntitySummaryBlock: React.FC<EntitySummaryBlockProps> = ({
+export const EntitySummaryBlock = React.forwardRef<HTMLElement, EntitySummaryBlockProps>(({
   title,
   subtitle,
   badge,
@@ -56,7 +56,7 @@ export const EntitySummaryBlock: React.FC<EntitySummaryBlockProps> = ({
   className,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -64,13 +64,14 @@ export const EntitySummaryBlock: React.FC<EntitySummaryBlockProps> = ({
 
   return (
     <section
+      ref={ref}
       className={cn(entitySummarySurfaceClassName, className)}
       data-access-state={accessState.state}
       data-component="entity-summary-block"
       data-surface-appearance="premium"
       title={accessReason}
     >
-      <div className="flex flex-wrap gap-4 border-b border-[var(--border-subtle)]/70 pb-5" style={{ alignItems: "flex-start", justifyContent: "space-between" }}>
+      <div className="flex flex-wrap gap-4 border-b border-border-subtle/70 pb-5" style={{ alignItems: "flex-start", justifyContent: "space-between" }}>
         <div className="flex min-w-0 items-start gap-4">
           {avatar ? (
             <Avatar
@@ -85,7 +86,7 @@ export const EntitySummaryBlock: React.FC<EntitySummaryBlockProps> = ({
             <div className="flex flex-wrap items-center gap-2">
               <Text
                 as="h3"
-                className="text-xl font-semibold tracking-[-0.03em] text-[var(--text-primary)] break-words"
+                className="text-xl font-semibold tracking-[-0.03em] text-text-primary break-words"
               >
                 {title}
               </Text>
@@ -103,7 +104,7 @@ export const EntitySummaryBlock: React.FC<EntitySummaryBlockProps> = ({
       <Descriptions items={items} columns={2} className="mt-0" />
     </section>
   );
-};
+});
 
 EntitySummaryBlock.displayName = "EntitySummaryBlock";
 

@@ -50,22 +50,22 @@ export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(({
   >
     {icon && (
       <div className={cn(
-        "flex items-center justify-center rounded-2xl bg-[var(--surface-muted)]",
+        "flex items-center justify-center rounded-2xl bg-surface-muted",
         compact ? "mb-3 h-10 w-10" : "mb-4 h-14 w-14",
-        "[&>svg]:h-6 [&>svg]:w-6 text-[var(--text-secondary)]",
+        "[&>svg]:h-6 [&>svg]:w-6 text-text-secondary",
       )}>
         {icon}
       </div>
     )}
     <div className={cn(
-      "font-semibold text-[var(--text-primary)]",
+      "font-semibold text-text-primary",
       compact ? "text-sm" : "text-base",
     )}>
       {title}
     </div>
     {description && (
       <div className={cn(
-        "mt-1 max-w-sm text-[var(--text-secondary)]",
+        "mt-1 max-w-sm text-text-secondary",
         compact ? "text-xs" : "text-sm",
       )}>
         {description}

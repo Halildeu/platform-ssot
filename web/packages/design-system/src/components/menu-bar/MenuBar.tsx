@@ -173,11 +173,11 @@ const sizeClassNames: Record<MenuBarSize, string> = {
 
 const rootClassByAppearance: Record<MenuBarAppearance, string> = {
   default:
-    'border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_20px_46px_-34px_var(--shadow-color)] backdrop-blur-sm',
+    'border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_20px_46px_-34px_var(--shadow-color)] backdrop-blur-sm',
   outline:
-    'border border-border-default/80 bg-[var(--surface-card-alt)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_36px_-30px_var(--shadow-color)] backdrop-blur-sm',
+    'border border-border-default/80 bg-[var(--surface-card-alt)] ring-1 ring-border-subtle/20 shadow-[0_16px_36px_-30px_var(--shadow-color)] backdrop-blur-sm',
   ghost:
-    'border border-transparent bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_12px_32px_-30px_var(--shadow-color)] backdrop-blur-sm',
+    'border border-transparent bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_12px_32px_-30px_var(--shadow-color)] backdrop-blur-sm',
 };
 
 const defaultAverageItemWidth = 112;
@@ -1160,7 +1160,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
                 placeholder={searchPlaceholder}
                 onFocus={() => setSearchOpen(true)}
                 onChange={(event) => setSearchQuery(event.target.value)}
-                className="w-[200px] rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-3 py-2 text-xs text-text-primary shadow-[0_12px_28px_-24px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm outline-none transition focus:border-border-default"
+                className="w-[200px] rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-3 py-2 text-xs text-text-primary shadow-[0_12px_28px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm outline-none transition focus:border-border-default"
               />
             </label>
           </div>
@@ -1193,7 +1193,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
             `group relative inline-flex min-h-10 items-center gap-2 rounded-2xl border border-transparent font-medium transition duration-200 ${focusRingClass("ring")}`,
             sizeClassNames[size],
             isActive
-              ? 'border-border-default/70 bg-[var(--surface-card)] text-[var(--accent-primary)] shadow-[0_16px_34px_-26px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent'
+              ? 'border-border-default/70 bg-[var(--surface-card)] text-accent-primary shadow-[0_16px_34px_-26px_var(--shadow-color)] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent'
               : itemEmphasis === 'promoted'
                 ? 'border-sky-200/70 bg-[var(--surface-card-alt)] text-text-primary shadow-[0_14px_30px_-24px_var(--shadow-color)] hover:-translate-y-px hover:border-sky-300/80 hover:bg-[var(--surface-card)] hover:shadow-[0_18px_34px_-24px_var(--shadow-color)]'
                 : itemEmphasis === 'subtle'
@@ -1251,8 +1251,8 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
               data-slot="favorite-toggle"
               data-favorite-active={isFavorite ? 'true' : undefined}
               className={cn(
-                'absolute right-2 top-1/2 z-[1] inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card)] text-[10px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm transition hover:border-border-default hover:text-text-primary',
-                isFavorite && 'border-[var(--state-warning-text)]/30 bg-[var(--state-warning-bg)] text-[var(--state-warning-text)]',
+                'absolute right-2 top-1/2 z-[1] inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-border-subtle/70 bg-[var(--surface-card)] text-[10px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm transition hover:border-border-default hover:text-text-primary',
+                isFavorite && 'border-state-warning-text/30 bg-state-warning-bg text-state-warning-text',
               )}
               onClick={(event) => {
                 event.preventDefault();
@@ -1289,7 +1289,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
                   >
                     {isPinned ? (
                       <span
-                        className="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent-primary)] shadow-[0_0_0_3px_var(--accent-primary-muted)]"
+                        className="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-accent-primary shadow-[0_0_0_3px_var(--accent-primary-muted)]"
                         data-slot="pinned-indicator"
                         aria-hidden="true"
                       />
@@ -1300,7 +1300,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
                     ) : (
                       <span data-slot="label-fallback" className="sr-only">{item.label}</span>
                     )}
-                    {item.badge ? <span className={cn('inline-flex rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-0.5 text-[11px] shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm', classes?.badge)}>{item.badge}</span> : null}
+                    {item.badge ? <span className={cn('inline-flex rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-0.5 text-[11px] shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm', classes?.badge)}>{item.badge}</span> : null}
                   </a>
                 ) : (
                   <button
@@ -1313,7 +1313,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
                   >
                     {isPinned ? (
                       <span
-                        className="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent-primary)] shadow-[0_0_0_3px_var(--accent-primary-muted)]"
+                        className="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-accent-primary shadow-[0_0_0_3px_var(--accent-primary-muted)]"
                         data-slot="pinned-indicator"
                         aria-hidden="true"
                       />
@@ -1324,7 +1324,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
                     ) : (
                       <span data-slot="label-fallback" className="sr-only">{item.label}</span>
                     )}
-                    {item.badge ? <span className={cn('inline-flex rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-0.5 text-[11px] shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm', classes?.badge)}>{item.badge}</span> : null}
+                    {item.badge ? <span className={cn('inline-flex rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-0.5 text-[11px] shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm', classes?.badge)}>{item.badge}</span> : null}
                   </button>
                 )}
                 {favoriteToggle}
@@ -1338,7 +1338,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
             ref={overflowTriggerRef}
             type="button"
             className={cn(
-              'shrink-0 rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-3 py-1.5 text-xs font-semibold text-text-secondary shadow-[0_12px_28px_-24px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm transition hover:border-border-default hover:bg-surface-panel hover:text-text-primary',
+              'shrink-0 rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-3 py-1.5 text-xs font-semibold text-text-secondary shadow-[0_12px_28px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm transition hover:border-border-default hover:bg-surface-panel hover:text-text-primary',
               (overflowOpen || overflowHasActive) && 'border-border-default/80 bg-surface-panel text-text-primary',
             )}
             aria-haspopup="menu"
@@ -1354,7 +1354,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         {renderedEndSlot ? (
           <div
             ref={endSlotRef}
-            className="shrink-0 rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 shadow-[0_12px_28px_-24px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm"
+            className="shrink-0 rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 shadow-[0_12px_28px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm"
             data-slot="utility"
           >
             {renderedEndSlot}
@@ -1397,7 +1397,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         align="start"
         flipOnCollision
         className={cn(
-          'fixed z-50 min-w-[14rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md',
+          'fixed z-50 min-w-[14rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md',
           openItem?.menuSurfaceClassName,
         )}
         style={{
@@ -1417,7 +1417,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         side="bottom"
         align="end"
         flipOnCollision
-        className="fixed z-50 min-w-[14rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
+        className="fixed z-50 min-w-[14rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
         style={{
           color: 'var(--text-primary)',
           boxShadow: 'var(--elevation-overlay)',
@@ -1442,7 +1442,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
         side="bottom"
         align="start"
         flipOnCollision
-        className="fixed z-50 min-w-[18rem] max-w-[24rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
+        className="fixed z-50 min-w-[18rem] max-w-[24rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
         style={{
           color: 'var(--text-primary)',
           boxShadow: 'var(--elevation-overlay)',

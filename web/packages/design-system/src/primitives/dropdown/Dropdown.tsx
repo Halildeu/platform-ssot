@@ -142,8 +142,8 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
           ref={menuRef}
           role="menu"
           className={cn(
-            "absolute z-[1500] overflow-hidden rounded-xl border border-[var(--border-subtle)]",
-            "bg-[var(--surface-default)] py-1 shadow-xl",
+            "absolute z-[1500] overflow-hidden rounded-xl border border-border-subtle",
+            "bg-surface-default py-1 shadow-xl",
             "animate-in fade-in-0 zoom-in-95",
             placementMap[placement],
             className,
@@ -155,7 +155,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
               return (
                 <div
                   key={`sep-${i}`}
-                  className="my-1 h-px bg-[var(--border-subtle)]"
+                  className="my-1 h-px bg-border-subtle"
                 />
               );
             }
@@ -163,7 +163,7 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
               return (
                 <div
                   key={`label-${i}`}
-                  className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]"
+                  className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-text-secondary"
                 >
                   {entry.label}
                 </div>
@@ -188,20 +188,20 @@ export const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(({
                   "flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm transition",
                   "disabled:pointer-events-none disabled:opacity-40",
                   item.danger
-                    ? "text-[var(--state-error-text)] hover:bg-[var(--state-error-bg)]"
-                    : "text-[var(--text-primary)] hover:bg-[var(--surface-muted)]",
-                  isFocused && "bg-[var(--surface-muted)]",
+                    ? "text-state-danger-text hover:bg-state-danger-bg"
+                    : "text-text-primary hover:bg-surface-muted",
+                  isFocused && "bg-surface-muted",
                 )}
               >
                 {item.icon && (
-                  <span className="shrink-0 [&>svg]:h-4 [&>svg]:w-4 text-[var(--text-secondary)]">
+                  <span className="shrink-0 [&>svg]:h-4 [&>svg]:w-4 text-text-secondary">
                     {item.icon}
                   </span>
                 )}
                 <span className="flex min-w-0 flex-col">
                   <span className="truncate font-medium">{item.label}</span>
                   {item.description && (
-                    <span className="truncate text-xs text-[var(--text-secondary)]">
+                    <span className="truncate text-xs text-text-secondary">
                       {item.description}
                     </span>
                   )}

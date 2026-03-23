@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FilterBar — Horizontal filter strip with collapsible "More" area   */
 /* ------------------------------------------------------------------ */
 
 /** Props for the FilterBar component. */
-export interface FilterBarProps {
+export interface FilterBarProps extends AccessControlledProps {
   /** Primary filter controls (always visible) */
   children: React.ReactNode;
   /** Secondary/advanced filters (collapsible) */
@@ -26,7 +27,7 @@ export interface FilterBarProps {
 }
 
 /** Horizontal filter strip with primary controls, collapsible advanced filters, and action buttons. */
-export const FilterBar: React.FC<FilterBarProps> = ({
+export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
   children,
   moreFilters,
   actions,
@@ -35,15 +36,22 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   moreLabel = "More filters",
   compact = false,
   className,
-}) => {
+  access,
+  accessReason,
+}, ref) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const [showMore, setShowMore] = useState(false);
 
   return (
     <div
+      ref={ref}
       className={cn(
-        "border-b border-[var(--border-subtle)] bg-[var(--surface-default)]",
+        "border-b border-border-subtle bg-surface-default",
+        accessState.isDisabled && "pointer-events-none opacity-50",
         className,
       )}
+      title={accessReason}
       {...stateAttrs({ component: "filter-bar" })}
     >
       {/* Primary row */}
@@ -68,14 +76,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             onClick={() => setShowMore((v) => !v)}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium",
-              "text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+              "text-text-secondary hover:text-text-primary",
               "hover:bg-[var(--surface-hover)] transition-colors",
               focusRingClass("ring"),
             )}
           >
             {moreLabel}
             {activeCount != null && activeCount > 0 && (
-              <span className="ms-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[var(--action-primary)] px-1.5 text-xs font-medium text-[var(--text-inverse)]">
+              <span className="ms-1 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-action-primary px-1.5 text-xs font-medium text-text-inverse">
                 {activeCount}
               </span>
             )}
@@ -108,7 +116,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       {moreFilters && showMore && (
         <div
           className={cn(
-            "border-t border-[var(--border-subtle)]",
+            "border-t border-border-subtle",
             compact ? "px-4 py-2" : "px-6 py-3",
             "animate-in slide-in-from-top-1 fade-in-0",
           )}
@@ -120,6 +128,6 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       )}
     </div>
   );
-};
+});
 
 FilterBar.displayName = "FilterBar";

@@ -71,13 +71,13 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const variantStyles: Record<TextVariant, string> = {
-  default: "text-[var(--text-primary)]",
-  secondary: "text-[var(--text-secondary)]",
+  default: "text-text-primary",
+  secondary: "text-text-secondary",
   muted: "text-[var(--text-disabled)]",
-  success: "text-[var(--state-success-text)]",
-  warning: "text-[var(--state-warning-text)]",
-  error: "text-[var(--state-error-text)]",
-  info: "text-[var(--state-info-text)]",
+  success: "text-state-success-text",
+  warning: "text-state-warning-text",
+  error: "text-state-danger-text",
+  info: "text-state-info-text",
 };
 
 const sizeStyles: Record<TextSize, string> = {

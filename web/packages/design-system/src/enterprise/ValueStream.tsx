@@ -44,9 +44,9 @@ export interface ValueStreamProps extends AccessControlledProps {
 // ---------------------------------------------------------------------------
 
 const CATEGORY_STYLES: Record<StepCategory, { border: string; bg: string }> = {
-  'value-add': { border: 'border-[var(--state-success-text)]', bg: 'bg-[var(--state-success-bg)]' },
-  'necessary-waste': { border: 'border-[var(--state-warning-text)]', bg: 'bg-[var(--state-warning-bg)]' },
-  waste: { border: 'border-[var(--state-error-text)]', bg: 'bg-[var(--state-error-bg)]' },
+  'value-add': { border: 'border-state-success-text', bg: 'bg-state-success-bg' },
+  'necessary-waste': { border: 'border-state-warning-text', bg: 'bg-state-warning-bg' },
+  waste: { border: 'border-state-danger-text', bg: 'bg-state-danger-bg' },
 };
 
 function formatTime(value: number, unit: TimeUnit): string {
@@ -114,26 +114,26 @@ function StepBox({
         if ((e.key === 'Enter' || e.key === ' ') && onClick && !disabled) onClick();
       }}
     >
-      <span className="text-sm font-semibold text-[var(--text-primary)] text-center leading-tight">
+      <span className="text-sm font-semibold text-text-primary text-center leading-tight">
         {step.label}
       </span>
-      <div className="mt-1 flex flex-col items-center gap-0.5 text-xs text-[var(--text-secondary)]">
+      <div className="mt-1 flex flex-col items-center gap-0.5 text-xs text-text-secondary">
         <span>
-          PT: <strong className="text-[var(--text-primary)]">{formatTime(step.processTime, unit)}</strong>
+          PT: <strong className="text-text-primary">{formatTime(step.processTime, unit)}</strong>
         </span>
         {step.resources !== undefined && (
           <span>
-            Res: <strong className="text-[var(--text-primary)]">{step.resources}</strong>
+            Res: <strong className="text-text-primary">{step.resources}</strong>
           </span>
         )}
         {step.fpy !== undefined && (
           <span>
-            FPY: <strong className="text-[var(--text-primary)]">{step.fpy}%</strong>
+            FPY: <strong className="text-text-primary">{step.fpy}%</strong>
           </span>
         )}
       </div>
       {step.inventory !== undefined && (
-        <span className="mt-1 inline-flex items-center rounded-full bg-[var(--state-info-bg)] px-2 py-0.5 text-[10px] font-medium text-[var(--action-primary)]">
+        <span className="mt-1 inline-flex items-center rounded-full bg-state-info-bg px-2 py-0.5 text-[10px] font-medium text-action-primary">
           inv: {step.inventory}
         </span>
       )}
@@ -145,14 +145,14 @@ function WaitArrow({ wait, unit }: { wait: ValueStreamWait; unit: TimeUnit }) {
   return (
     <div className="flex flex-col items-center gap-1 px-2">
       <div className="flex items-center gap-1">
-        <div className="h-0.5 w-6 bg-[var(--border-default)]" />
+        <div className="h-0.5 w-6 bg-border-default" />
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
           <path d="M2 6h8M7 3l3 3-3 3" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-      <span className="text-xs font-medium text-[var(--state-error-text)]">{formatTime(wait.duration, unit)}</span>
+      <span className="text-xs font-medium text-state-danger-text">{formatTime(wait.duration, unit)}</span>
       {wait.inventory !== undefined && (
-        <span className="text-[10px] text-[var(--text-secondary)]">inv: {wait.inventory}</span>
+        <span className="text-[10px] text-text-secondary">inv: {wait.inventory}</span>
       )}
     </div>
   );
@@ -178,17 +178,17 @@ function TimelineBar({
   const waitPct = total > 0 ? (totalWait / total) * 100 : 50;
 
   return (
-    <div className="mt-4 space-y-2 border-t border-[var(--border-default)] pt-3">
+    <div className="mt-4 space-y-2 border-t border-border-default pt-3">
       {/* Bar */}
       <div className="flex h-5 w-full overflow-hidden rounded-full">
         <div
-          className="flex items-center justify-center bg-[var(--state-success-text)] text-[10px] font-bold text-[var(--text-inverse)] transition-all"
+          className="flex items-center justify-center bg-state-success-text text-[10px] font-bold text-text-inverse transition-all"
           style={{ width: `${processPct}%`, minWidth: '30px' }}
         >
           {processFormatted}
         </div>
         <div
-          className="flex items-center justify-center bg-[var(--state-error-text)] text-[10px] font-bold text-[var(--text-inverse)] transition-all"
+          className="flex items-center justify-center bg-state-danger-text text-[10px] font-bold text-text-inverse transition-all"
           style={{ width: `${waitPct}%`, minWidth: '30px' }}
         >
           {waitFormatted}
@@ -196,21 +196,21 @@ function TimelineBar({
       </div>
 
       {/* Summary stats */}
-      <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text-secondary)]">
+      <div className="flex flex-wrap items-center gap-4 text-xs text-text-secondary">
         <span>
-          Process: <strong className="text-[var(--state-success-text)]">{processFormatted}</strong>
+          Process: <strong className="text-state-success-text">{processFormatted}</strong>
         </span>
-        <span className="text-[var(--border-default)]">|</span>
+        <span className="text-border-default">|</span>
         <span>
-          Wait: <strong className="text-[var(--state-error-text)]">{waitFormatted}</strong>
+          Wait: <strong className="text-state-danger-text">{waitFormatted}</strong>
         </span>
-        <span className="text-[var(--border-default)]">|</span>
+        <span className="text-border-default">|</span>
         <span>
-          Lead: <strong className="text-[var(--text-primary)]">{leadFormatted}</strong>
+          Lead: <strong className="text-text-primary">{leadFormatted}</strong>
         </span>
-        <span className="text-[var(--border-default)]">|</span>
+        <span className="text-border-default">|</span>
         <span>
-          PCE: <strong className="text-[var(--action-primary)]">{pceFormatted}</strong>
+          PCE: <strong className="text-action-primary">{pceFormatted}</strong>
         </span>
       </div>
     </div>
@@ -243,7 +243,7 @@ export function ValueStream({
   return (
     <div
       className={cn(
-        'rounded-lg border border-[var(--border-default)] bg-[var(--surface-primary)] p-4',
+        'rounded-lg border border-border-default bg-[var(--surface-primary)] p-4',
         accessStyles(state),
         className,
       )}

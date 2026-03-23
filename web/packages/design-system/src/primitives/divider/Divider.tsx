@@ -47,7 +47,7 @@ export const Divider = React.forwardRef<HTMLElement, DividerProps>(
           role="separator"
           aria-orientation="vertical"
           className={cn(
-            "inline-block h-full w-px bg-[var(--border-subtle)]",
+            "inline-block h-full w-px bg-border-subtle",
             spacingVerticalMap[spacing],
             className,
           )}
@@ -68,11 +68,11 @@ export const Divider = React.forwardRef<HTMLElement, DividerProps>(
           )}
           {...(rest as React.HTMLAttributes<HTMLDivElement>)}
         >
-          <div className="h-px flex-1 bg-[var(--border-subtle)]" />
-          <span className="text-xs font-medium text-[var(--text-secondary)]">
+          <div className="h-px flex-1 bg-border-subtle" />
+          <span className="text-xs font-medium text-text-secondary">
             {label}
           </span>
-          <div className="h-px flex-1 bg-[var(--border-subtle)]" />
+          <div className="h-px flex-1 bg-border-subtle" />
         </div>
       );
     }
@@ -81,7 +81,7 @@ export const Divider = React.forwardRef<HTMLElement, DividerProps>(
       <hr
         ref={ref as React.Ref<HTMLHRElement>}
         className={cn(
-          "border-none h-px bg-[var(--border-subtle)]",
+          "border-none h-px bg-border-subtle",
           spacingMap[spacing],
           className,
         )}

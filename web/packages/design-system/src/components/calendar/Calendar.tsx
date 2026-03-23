@@ -509,7 +509,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       <div
         ref={forwardedRef}
         className={cn(
-          "inline-flex flex-wrap rounded-lg border border-[var(--border-default)] bg-[var(--surface-card)]",
+          "inline-flex flex-wrap rounded-lg border border-border-default bg-[var(--surface-card)]",
           accessState.isDisabled && "pointer-events-none opacity-50",
           accessState.isReadonly && "pointer-events-none",
           className,
@@ -526,7 +526,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
             className={cn(
               "flex flex-col",
               sizeConfig.wrapper,
-              panelIndex > 0 && "border-t border-[var(--border-default)]",
+              panelIndex > 0 && "border-t border-border-default",
             )}
           >
             {/* ---- Header ---- */}
@@ -550,7 +550,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
               )}
 
               <span
-                className={cn("font-semibold text-[var(--text-primary)] select-none", sizeConfig.text)}
+                className={cn("font-semibold text-text-primary select-none", sizeConfig.text)}
                 aria-live="polite"
                 data-testid="calendar-title"
               >
@@ -595,7 +595,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                       key={i}
                       scope="col"
                       className={cn(
-                        "text-center font-medium text-[var(--text-secondary)] select-none",
+                        "text-center font-medium text-text-secondary select-none",
                         sizeConfig.cell,
                       )}
                       aria-label={
@@ -689,18 +689,18 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                                 !isSelected &&
                                   !isOutside &&
                                   !isDisabled &&
-                                  "text-[var(--text-primary)] hover:bg-[var(--surface-hover)]",
+                                  "text-text-primary hover:bg-[var(--surface-hover)]",
                                 // Today ring
                                 isToday_ &&
                                   !isSelected &&
                                   "ring-1 ring-inset ring-[var(--action-primary-bg)] font-semibold",
                                 // Selected
                                 isSelected &&
-                                  "bg-[var(--action-primary-bg)] text-[var(--action-primary-text)] font-semibold",
+                                  "bg-[var(--action-primary-bg)] text-action-primary-text font-semibold",
                                 // Highlighted
                                 isHighlighted &&
                                   !isSelected &&
-                                  "bg-[var(--surface-accent)] text-[var(--text-primary)]",
+                                  "bg-[var(--surface-accent)] text-text-primary",
                                 // Range
                                 inRange &&
                                   !isSelected &&

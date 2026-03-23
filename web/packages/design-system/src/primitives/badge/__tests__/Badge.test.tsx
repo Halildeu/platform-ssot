@@ -28,7 +28,7 @@ describe('Badge — temel render', () => {
   it('varsayilan variant "default" dir', () => {
     const { container } = render(<Badge>Test</Badge>);
     const span = container.querySelector('span');
-    expect(span?.className).toContain('bg-[var(--surface-muted)]');
+    expect(span?.className).toContain('bg-surface-muted');
   });
 
   it('varsayilan size "md" dir', () => {
@@ -44,13 +44,13 @@ describe('Badge — temel render', () => {
 
 describe('Badge — variant proplari', () => {
   it.each([
-    ['default', 'bg-[var(--surface-muted)]'],
-    ['primary', 'text-[var(--action-primary)]'],
-    ['success', 'text-[var(--state-success-text)]'],
-    ['warning', 'text-[var(--state-warning-text)]'],
-    ['error', 'text-[var(--state-error-text)]'],
-    ['danger', 'text-[var(--state-error-text)]'],
-    ['info', 'text-[var(--state-info-text)]'],
+    ['default', 'bg-surface-muted'],
+    ['primary', 'text-action-primary'],
+    ['success', 'text-state-success-text'],
+    ['warning', 'text-state-warning-text'],
+    ['error', 'text-state-danger-text'],
+    ['danger', 'text-state-danger-text'],
+    ['info', 'text-state-info-text'],
     ['muted', 'text-[var(--text-tertiary)]'],
   ] as const)('variant="%s" dogru class uygular', (variant, expectedClass) => {
     const { container } = render(<Badge variant={variant}>Test</Badge>);
@@ -177,7 +177,7 @@ describe('Badge — size variants (deepening)', () => {
   it('size does not affect variant styling', () => {
     const { container } = render(<Badge variant="success" size="lg">OK</Badge>);
     const span = container.querySelector('span');
-    expect(span?.className).toContain('text-[var(--state-success-text)]');
+    expect(span?.className).toContain('text-state-success-text');
     expect(span?.className).toContain('px-2.5');
   });
 });
@@ -196,13 +196,13 @@ describe('Badge — dot mode (deepening)', () => {
     const { container } = render(<Badge dot variant="success" />);
     const span = container.querySelector('span');
     // The dot extracts bg- from the variant's text- color
-    expect(span?.className).toContain('bg-[var(--state-success-text)]');
+    expect(span?.className).toContain('bg-state-success-text');
   });
 
   it('dot with variant="default" applies secondary background', () => {
     const { container } = render(<Badge dot variant="default" />);
     const span = container.querySelector('span');
-    expect(span?.className).toContain('bg-[var(--text-secondary)]');
+    expect(span?.className).toContain('bg-text-secondary');
   });
 
   it('dot ignores size prop (always renders as small dot)', () => {

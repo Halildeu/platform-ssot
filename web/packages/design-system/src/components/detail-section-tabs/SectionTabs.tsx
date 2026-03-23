@@ -76,14 +76,14 @@ const densityClassMap: Record<
     content: 'gap-1 justify-start text-left',
     label: 'text-sm font-semibold leading-5',
     badge: 'min-w-6 px-2 py-0.5 text-[11px] font-semibold',
-    description: 'max-w-36 overflow-hidden text-ellipsis whitespace-nowrap text-[11px] leading-4 text-[var(--text-secondary)] sm:max-w-40',
+    description: 'max-w-36 overflow-hidden text-ellipsis whitespace-nowrap text-[11px] leading-4 text-text-secondary sm:max-w-40',
   },
   comfortable: {
     item: 'min-h-10 px-3.5 py-2 sm:min-h-11 sm:px-4 sm:py-2.5',
     content: 'gap-1.5 justify-start text-left',
     label: 'text-sm font-semibold leading-5',
     badge: 'min-w-6 px-2 py-0.5 text-[11px] font-semibold',
-    description: 'max-w-40 overflow-hidden text-ellipsis whitespace-nowrap text-xs leading-4 text-[var(--text-secondary)] sm:max-w-44',
+    description: 'max-w-40 overflow-hidden text-ellipsis whitespace-nowrap text-xs leading-4 text-text-secondary sm:max-w-44',
   },
 };
 
@@ -212,7 +212,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
               {item.badge ? (
                 <span
                   className={cn(
-                    'inline-flex min-w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-[var(--text-primary)]',
+                    'inline-flex min-w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-text-primary',
                     densityClasses.badge,
                     item.badgeClassName,
                   )}
@@ -237,7 +237,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
                   title={hintLabel}
                   data-testid={item.dataTestId ? `${item.dataTestId}-hint` : undefined}
                   className={cn(
-                    'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-default)]/90 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--text-secondary)] shadow-sm transition hover:border-[var(--border-default)] hover:text-[var(--text-primary)]',
+                    'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-default/90 text-[10px] font-bold uppercase tracking-[0.12em] text-text-secondary shadow-sm transition hover:border-border-default hover:text-text-primary',
                     classes?.hintTrigger,
                   )}
                 >
@@ -296,7 +296,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
           ariaLabel={ariaLabel}
           classes={{
             root: cn(
-              'border border-[var(--border-subtle)] bg-[var(--surface-default)]/95 p-1 shadow-sm backdrop-blur sm:p-1.5',
+              'border border-border-subtle bg-surface-default/95 p-1 shadow-sm backdrop-blur sm:p-1.5',
               resolvedLayout === 'scroll' ? 'inline-flex min-w-max rounded-[20px]' : 'w-full rounded-[20px]',
               classes?.root,
             ),
@@ -313,7 +313,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
               classes?.item,
             ),
             activeItem: cn(
-              'bg-[var(--surface-default)] shadow-[0_14px_28px_-18px_rgba(38,28,89,0.55)] ring-1 ring-[var(--border-default)]/80',
+              'bg-surface-default shadow-[0_14px_28px_-18px_rgba(38,28,89,0.55)] ring-1 ring-border-default/80',
               'before:absolute before:inset-0 before:rounded-[inherit] before:ring-1 before:ring-accent-soft/70 before:content-[\'\']',
               classes?.activeItem,
             ),

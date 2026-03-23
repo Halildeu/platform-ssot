@@ -70,11 +70,11 @@ const densityClass: Record<TreeDensity, string> = {
 };
 
 const toneClass: Record<TreeTone, string> = {
-  default: "border-[var(--border-subtle)] bg-[var(--surface-default)]",
-  info: "border-[var(--state-info-border)] bg-[var(--surface-muted)]",
-  success: "border-[var(--state-success-border)] bg-[var(--surface-muted)]",
-  warning: "border-[var(--state-warning-border)] bg-[var(--surface-muted)]",
-  danger: "border-[var(--state-danger-border)] bg-[var(--surface-muted)]",
+  default: "border-border-subtle bg-surface-default",
+  info: "border-state-info-border bg-surface-muted",
+  success: "border-state-success-border bg-surface-muted",
+  warning: "border-state-warning-border bg-surface-muted",
+  danger: "border-state-danger-border bg-surface-muted",
 };
 
 const badgeToneMap: Record<TreeTone, BadgeVariant> = {
@@ -89,7 +89,7 @@ const flattenKeys = (nodes: TreeNode[]): React.Key[] =>
   nodes.flatMap((node) => [node.key, ...(node.children ? flattenKeys(node.children) : [])]);
 
 /** Hierarchical tree view with expand/collapse, selection, badges, and tone-based node styling. */
-export const Tree: React.FC<TreeProps> = ({
+export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
   nodes,
   title,
   description,
@@ -105,7 +105,7 @@ export const Tree: React.FC<TreeProps> = ({
   localeText,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const [internalExpandedKeys, setInternalExpandedKeys] = useState<React.Key[]>(defaultExpandedKeys);
   const resolvedEmptyStateLabel = emptyStateLabel ?? localeText?.emptyStateLabel ?? "No records found for this tree.";
@@ -156,17 +156,17 @@ export const Tree: React.FC<TreeProps> = ({
             "rounded-[24px] border shadow-sm transition-colors",
             toneClass[tone],
             depth > 0 ? "ms-0" : "",
-            selected ? "ring-2 ring-[var(--state-info-border)]/60" : "",
+            selected ? "ring-2 ring-state-info-border/60" : "",
           ].join(" ")}
           data-selected={selected ? "true" : "false"}
         >
-          <div className={[densityClass[density], depth > 0 ? "bg-[var(--surface-muted)]/70" : ""].filter(Boolean).join(" ")}>
+          <div className={[densityClass[density], depth > 0 ? "bg-surface-muted/70" : ""].filter(Boolean).join(" ")}>
             <div className="flex items-start gap-3">
               <div className="flex items-center gap-2 pt-1">
                 {hasChildren ? (
                   <button
                     type="button"
-                    className="inline-flex size-7 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-default)] text-sm text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)]"
+                    className="inline-flex size-7 items-center justify-center rounded-full border border-border-subtle bg-surface-default text-sm text-text-secondary transition hover:bg-surface-muted"
                     aria-label={expanded ? collapseNodeAriaLabel : expandNodeAriaLabel}
                     aria-expanded={expanded}
                     onClick={(event) => {
@@ -178,7 +178,7 @@ export const Tree: React.FC<TreeProps> = ({
                     {expanded ? "\u25BE" : "\u25B8"}
                   </button>
                 ) : (
-                  <span className="inline-flex size-7 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-default)] text-[10px] font-semibold uppercase text-[var(--text-subtle)]">
+                  <span className="inline-flex size-7 items-center justify-center rounded-full border border-border-subtle bg-surface-default text-[10px] font-semibold uppercase text-text-subtle">
                     {"\u2022"}
                   </span>
                 )}
@@ -188,7 +188,7 @@ export const Tree: React.FC<TreeProps> = ({
                   type="button"
                   className={[
                     "w-full rounded-2xl px-1 text-left transition-colors",
-                    blocked ? "cursor-not-allowed opacity-70" : onNodeSelect ? "hover:bg-[var(--surface-default)]/80 active:bg-[var(--surface-default)]" : "",
+                    blocked ? "cursor-not-allowed opacity-70" : onNodeSelect ? "hover:bg-surface-default/80 active:bg-surface-default" : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
@@ -208,7 +208,7 @@ export const Tree: React.FC<TreeProps> = ({
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0 space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <Text as="div" className="min-w-0 text-sm font-semibold text-[var(--text-primary)]" style={{ textWrap: "pretty" } as React.CSSProperties}>
+                        <Text as="div" className="min-w-0 text-sm font-semibold text-text-primary" style={{ textWrap: "pretty" } as React.CSSProperties}>
                           {node.label}
                         </Text>
                         {node.badges?.map((badge, badgeIndex) =>
@@ -240,7 +240,7 @@ export const Tree: React.FC<TreeProps> = ({
         </div>
 
         {hasChildren && expanded ? (
-          <ul className="space-y-2 border-s border-[var(--border-subtle)]/70 ps-4">
+          <ul className="space-y-2 border-s border-border-subtle/70 ps-4">
             {node.children?.map((child) => renderNode(child, depth + 1))}
           </ul>
         ) : null}
@@ -250,6 +250,7 @@ export const Tree: React.FC<TreeProps> = ({
 
   return (
     <section
+      ref={ref}
       className={fullWidth ? "w-full" : undefined}
       data-access-state={accessState.state}
       data-component="tree"
@@ -257,7 +258,7 @@ export const Tree: React.FC<TreeProps> = ({
       title={accessReason}
     >
       {title ? (
-        <Text as="div" className="text-base font-semibold text-[var(--text-primary)]">
+        <Text as="div" className="text-base font-semibold text-text-primary">
           {title}
         </Text>
       ) : null}
@@ -267,11 +268,11 @@ export const Tree: React.FC<TreeProps> = ({
         </Text>
       ) : null}
 
-      <div className="mt-4 rounded-[26px] border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-4 shadow-sm">
+      <div className="mt-4 rounded-[26px] border border-border-subtle bg-surface-muted p-4 shadow-sm">
         {loading ? (
           <div className="space-y-3" data-testid="tree-loading-state">
             {Array.from({ length: 3 }).map((_, index) => (
-              <div key={`tree-loading-${index}`} className="rounded-[22px] border border-[var(--border-subtle)] bg-[var(--surface-default)] px-4 py-3.5">
+              <div key={`tree-loading-${index}`} className="rounded-[22px] border border-border-subtle bg-surface-default px-4 py-3.5">
                 <div className="flex items-center gap-3">
                   <Skeleton circle height={32} className="shrink-0" />
                   <div className="min-w-0 flex-1 space-y-2">
@@ -290,7 +291,7 @@ export const Tree: React.FC<TreeProps> = ({
       </div>
     </section>
   );
-};
+});
 
 Tree.displayName = "Tree";
 

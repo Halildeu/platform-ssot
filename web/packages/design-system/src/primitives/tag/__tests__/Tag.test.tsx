@@ -24,7 +24,7 @@ describe('Tag — temel render', () => {
   it('varsayilan variant "default" dir', () => {
     const { container } = render(<Tag>Test</Tag>);
     const span = container.firstElementChild;
-    expect(span?.className).toContain('bg-[var(--surface-muted)]');
+    expect(span?.className).toContain('bg-surface-muted');
   });
 
   it('varsayilan size "md" dir', () => {
@@ -40,13 +40,13 @@ describe('Tag — temel render', () => {
 
 describe('Tag — variant proplari', () => {
   it.each([
-    ['default', 'bg-[var(--surface-muted)]'],
-    ['primary', 'text-[var(--action-primary)]'],
-    ['success', 'text-[var(--state-success-text)]'],
-    ['warning', 'text-[var(--state-warning-text)]'],
-    ['error', 'text-[var(--state-error-text)]'],
-    ['danger', 'text-[var(--state-error-text)]'],
-    ['info', 'text-[var(--state-info-text)]'],
+    ['default', 'bg-surface-muted'],
+    ['primary', 'text-action-primary'],
+    ['success', 'text-state-success-text'],
+    ['warning', 'text-state-warning-text'],
+    ['error', 'text-state-danger-text'],
+    ['danger', 'text-state-danger-text'],
+    ['info', 'text-state-info-text'],
   ] as const)('variant="%s" dogru class uygular', (variant, expectedClass) => {
     const { container } = render(<Tag variant={variant}>Test</Tag>);
     const span = container.firstElementChild;

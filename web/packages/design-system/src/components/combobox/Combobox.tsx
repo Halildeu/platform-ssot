@@ -805,8 +805,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
       ref={popupRef}
       className={[
         popupStrategy === 'portal'
-          ? 'overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-xl'
-          : 'absolute z-30 w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-xl',
+          ? 'overflow-hidden rounded-2xl border border-border-subtle bg-surface-muted shadow-xl'
+          : 'absolute z-30 w-full overflow-hidden rounded-2xl border border-border-subtle bg-surface-muted shadow-xl',
         popupClassName ?? '',
         popupStrategy === 'inline' && popupAlign === 'end' ? 'end-0' : '',
         popupStrategy === 'inline' && popupAlign === 'start' ? 'start-0' : '',
@@ -829,9 +829,9 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
         className={['max-h-72 overflow-y-auto p-2', listboxClassName ?? ''].join(' ').trim()}
       >
         {loading ? (
-          <div className="rounded-xl px-3 py-2 text-sm text-[var(--text-secondary)]">{loadingText}</div>
+          <div className="rounded-xl px-3 py-2 text-sm text-text-secondary">{loadingText}</div>
         ) : filteredOptions.length === 0 ? (
-          <div className="rounded-xl px-3 py-2 text-sm text-[var(--text-secondary)]">{noOptionsText}</div>
+          <div className="rounded-xl px-3 py-2 text-sm text-text-secondary">{noOptionsText}</div>
         ) : (
           <div className="space-y-2">
             {filteredGroups.map((group) => (
@@ -842,7 +842,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
                 aria-label={group.label}
               >
                 {group.label ? (
-                  <div className="px-2 pt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+                  <div className="px-2 pt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
                     {group.label}
                   </div>
                 ) : null}
@@ -875,8 +875,8 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
                         className={`rounded-2xl border px-3 py-2 transition ${
                           isHighlighted
                             ? 'border-action-primary-border bg-action-primary-soft'
-                            : 'border-transparent bg-[var(--surface-muted)]'
-                        } ${option.effectiveDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-[var(--surface-muted)]'}`}
+                            : 'border-transparent bg-surface-muted'
+                        } ${option.effectiveDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-surface-muted'}`}
                         title={option.effectiveDisabled ? option.disabledReason : undefined}
                       >
                         {renderOption ? (
@@ -884,15 +884,15 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
                         ) : (
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                              <div className="text-sm font-medium text-[var(--text-primary)]">{option.label}</div>
+                              <div className="text-sm font-medium text-text-primary">{option.label}</div>
                               {option.description ? (
-                                <div className="mt-1 text-sm leading-6 text-[var(--text-secondary)]">{option.description}</div>
+                                <div className="mt-1 text-sm leading-6 text-text-secondary">{option.description}</div>
                               ) : option.effectiveDisabled && option.disabledReason ? (
-                                <div className="mt-1 text-sm leading-6 text-[var(--text-secondary)]">{option.disabledReason}</div>
+                                <div className="mt-1 text-sm leading-6 text-text-secondary">{option.disabledReason}</div>
                               ) : null}
                             </div>
                             {isSelected ? (
-                              <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text-secondary)]">
+                              <span className="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-text-secondary">
                                 Secili
                               </span>
                             ) : null}
@@ -966,14 +966,14 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
               ? selectedOptions.map((option) => (
                   <span
                     key={`tag-${option.value}`}
-                    className="inline-flex max-w-full items-center gap-1 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-2.5 py-1 text-xs font-semibold text-[var(--text-secondary)]"
+                    className="inline-flex max-w-full items-center gap-1 rounded-full border border-border-subtle bg-surface-muted px-2.5 py-1 text-xs font-semibold text-text-secondary"
                     data-created-tag={option.created ? 'true' : 'false'}
                   >
                     <span className="truncate">{option.label}</span>
                     {!resolvedDisabled && !isReadonly ? (
                       <button
                         type="button"
-                        className="inline-flex h-4 w-4 items-center justify-center rounded-full text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]"
+                        className="inline-flex h-4 w-4 items-center justify-center rounded-full text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
                         aria-label={`${tagRemoveLabel}: ${option.label}`}
                         title={`${tagRemoveLabel}: ${option.label}`}
                         onClick={() => removeTag(option.value)}
@@ -1015,7 +1015,7 @@ export const Combobox = React.forwardRef<HTMLInputElement, ComboboxProps>(functi
             <button
               type="button"
               onClick={handleClear}
-              className={`${getFieldSlotClass(size)} transition hover:text-[var(--text-primary)]`}
+              className={`${getFieldSlotClass(size)} transition hover:text-text-primary`}
               aria-label={clearLabel}
               title={clearLabel}
             >

@@ -258,28 +258,28 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
 
   return (
     <div
-      className={cn('border border-[var(--border-default)] rounded-lg overflow-hidden bg-[var(--surface-default)]', accessStyles(accessState.state), className)}
+      className={cn('border border-border-default rounded-lg overflow-hidden bg-surface-default', accessStyles(accessState.state), className)}
       data-component="gantt-timeline"
       data-access-state={accessState.state}
       title={accessReason}
     >
       <div className="flex overflow-x-auto" ref={containerRef}>
         {/* Left: Task labels */}
-        <div className="flex-shrink-0 border-r border-[var(--border-default)]" style={{ width: TASK_LABEL_WIDTH }}>
+        <div className="flex-shrink-0 border-r border-border-default" style={{ width: TASK_LABEL_WIDTH }}>
           {/* Header */}
-          <div className="h-10 border-b border-[var(--border-default)] bg-[var(--surface-muted)] px-3 flex items-center">
-            <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Tasks</span>
+          <div className="h-10 border-b border-border-default bg-surface-muted px-3 flex items-center">
+            <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Tasks</span>
           </div>
           {/* Rows */}
           {visibleRows.map((row, i) => (
             <div
               key={i}
-              className="flex items-center border-b border-[var(--border-subtle)] px-3"
+              className="flex items-center border-b border-border-subtle px-3"
               style={{ height: ROW_HEIGHT }}
             >
               {row.type === 'group' ? (
                 <button
-                  className="flex items-center gap-1 text-xs font-semibold text-[var(--text-primary)] w-full text-left"
+                  className="flex items-center gap-1 text-xs font-semibold text-text-primary w-full text-left"
                   onClick={() => toggleGroup(row.key)}
                 >
                   <span className="text-[10px]">{collapsedGroups.has(row.key) ? '\u25B6' : '\u25BC'}</span>
@@ -288,11 +288,11 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
                 </button>
               ) : (
                 <span
-                  className={cn('text-sm text-[var(--text-primary)] truncate', onTaskClick && 'cursor-pointer hover:underline')}
+                  className={cn('text-sm text-text-primary truncate', onTaskClick && 'cursor-pointer hover:underline')}
                   onClick={() => onTaskClick?.(row.task)}
                   title={row.task.title}
                 >
-                  {row.task.type === 'milestone' && <span className="mr-1 text-[var(--state-warning-text)]">{'\u25C6'}</span>}
+                  {row.task.type === 'milestone' && <span className="mr-1 text-state-warning-text">{'\u25C6'}</span>}
                   {row.task.title}
                 </span>
               )}
@@ -303,13 +303,13 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
         {/* Right: Timeline area */}
         <div className="flex-1 overflow-x-auto">
           {/* Time header */}
-          <div className="flex h-10 border-b border-[var(--border-default)] bg-[var(--surface-muted)]" style={{ width: timelineWidth }}>
+          <div className="flex h-10 border-b border-border-default bg-surface-muted" style={{ width: timelineWidth }}>
             {timeSlots.map((slot, i) => {
               const slotDays = viewMode === 'day' ? 1 : viewMode === 'week' ? 7 : viewMode === 'month' ? 30 : 90;
               return (
                 <div
                   key={i}
-                  className="flex-shrink-0 border-r border-[var(--border-subtle)] flex items-center justify-center"
+                  className="flex-shrink-0 border-r border-border-subtle flex items-center justify-center"
                   style={{ width: slotDays * colWidth }}
                 >
                   <span className="text-[10px] text-[var(--text-tertiary)] font-medium whitespace-nowrap">
@@ -328,7 +328,7 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
               return (
                 <div
                   key={i}
-                  className="absolute top-0 bottom-0 border-r border-[var(--border-subtle)] opacity-30"
+                  className="absolute top-0 bottom-0 border-r border-border-subtle opacity-30"
                   style={{ left: i * slotDays * colWidth }}
                 />
               );
@@ -338,7 +338,7 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
             {visibleRows.map((_, i) => (
               <div
                 key={i}
-                className={cn('absolute left-0 right-0 border-b border-[var(--border-subtle)]', i % 2 === 0 && 'bg-[var(--surface-muted)]/30')}
+                className={cn('absolute left-0 right-0 border-b border-border-subtle', i % 2 === 0 && 'bg-surface-muted/30')}
                 style={{ top: i * ROW_HEIGHT, height: ROW_HEIGHT }}
               />
             ))}
@@ -386,7 +386,7 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
                   />
                   {/* Label */}
                   {width > 60 && (
-                    <span className="absolute inset-0 flex items-center px-1.5 text-[10px] font-medium text-[var(--text-primary)] truncate pointer-events-none">
+                    <span className="absolute inset-0 flex items-center px-1.5 text-[10px] font-medium text-text-primary truncate pointer-events-none">
                       {t.title}
                     </span>
                   )}
@@ -397,10 +397,10 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
             {/* Today marker */}
             {showTodayMarker && (
               <div
-                className="absolute top-0 bottom-0 w-0.5 bg-[var(--state-error-text)] z-10 pointer-events-none"
+                className="absolute top-0 bottom-0 w-0.5 bg-state-danger-text z-10 pointer-events-none"
                 style={{ left: todayOffset }}
               >
-                <div className="absolute -top-1 -left-1.5 w-3 h-3 rounded-full bg-[var(--state-error-text)]" />
+                <div className="absolute -top-1 -left-1.5 w-3 h-3 rounded-full bg-state-danger-text" />
               </div>
             )}
 

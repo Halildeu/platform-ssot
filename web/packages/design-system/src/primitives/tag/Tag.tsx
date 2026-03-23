@@ -36,13 +36,13 @@ export interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles: Record<TagVariant, string> = {
-  default: "bg-[var(--surface-muted)] text-[var(--text-primary)] border-[var(--border-subtle)]",
-  primary: "bg-[var(--action-primary)]/10 text-[var(--action-primary)] border-[var(--action-primary)]/20",
-  success: "bg-[var(--state-success-bg)] text-[var(--state-success-text)] border-[var(--state-success-text)]/20",
-  warning: "bg-[var(--state-warning-bg)] text-[var(--state-warning-text)] border-[var(--state-warning-text)]/20",
-  error: "bg-[var(--state-error-bg)] text-[var(--state-error-text)] border-[var(--state-error-text)]/20",
-  danger: "bg-[var(--state-error-bg)] text-[var(--state-error-text)] border-[var(--state-error-text)]/20",
-  info: "bg-[var(--state-info-bg)] text-[var(--state-info-text)] border-[var(--state-info-text)]/20",
+  default: "bg-surface-muted text-text-primary border-border-subtle",
+  primary: "bg-action-primary/10 text-action-primary border-action-primary/20",
+  success: "bg-state-success-bg text-state-success-text border-state-success-text/20",
+  warning: "bg-state-warning-bg text-state-warning-text border-state-warning-text/20",
+  error: "bg-state-danger-bg text-state-danger-text border-state-danger-text/20",
+  danger: "bg-state-danger-bg text-state-danger-text border-state-danger-text/20",
+  info: "bg-state-info-bg text-state-info-text border-state-info-text/20",
 };
 
 const sizeStyles: Record<TagSize, string> = {

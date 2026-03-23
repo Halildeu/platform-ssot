@@ -18,9 +18,9 @@ export type LinkInlineUnderline = "always" | "hover" | "none";
 
 const toneClasses: Record<LinkInlineTone, string> = {
   primary:
-    "text-[var(--action-primary)] visited:text-[var(--text-secondary)] hover:text-[var(--action-primary-hover)]",
+    "text-action-primary visited:text-text-secondary hover:text-accent-primary-hover",
   secondary:
-    "text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+    "text-text-secondary hover:text-text-primary",
 };
 
 const underlineClasses: Record<LinkInlineUnderline, string> = {
@@ -133,9 +133,9 @@ export const LinkInline = React.forwardRef<HTMLElement, LinkInlineProps>(
       toneClasses[tone],
       underlineClasses[underline],
       current &&
-        "font-semibold text-[var(--text-primary)] decoration-[var(--action-primary)] underline underline-offset-4",
+        "font-semibold text-text-primary decoration-[var(--action-primary)] underline underline-offset-4",
       blocked &&
-        "cursor-not-allowed border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-2 py-1 text-[var(--text-disabled)] no-underline opacity-100",
+        "cursor-not-allowed border border-border-subtle bg-surface-muted px-2 py-1 text-[var(--text-disabled)] no-underline opacity-100",
       className,
     );
 

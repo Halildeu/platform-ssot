@@ -179,7 +179,7 @@ export function InlineEdit({
       <span
         className={cn(
           'group inline-flex items-center gap-1.5 rounded px-1.5 py-0.5 transition-colors',
-          canEdit && 'cursor-pointer hover:bg-[var(--surface-muted)]',
+          canEdit && 'cursor-pointer hover:bg-surface-muted',
           accessStyles(state),
           className,
         )}
@@ -192,7 +192,7 @@ export function InlineEdit({
           if (e.key === 'Enter' && canEdit) enterEdit();
         }}
       >
-        <span className={cn('text-sm', !value && 'text-[var(--text-secondary)] italic')}>
+        <span className={cn('text-sm', !value && 'text-text-secondary italic')}>
           {displayText || placeholder}
         </span>
         {canEdit && <PencilIcon />}
@@ -215,8 +215,8 @@ export function InlineEdit({
             onKeyDown={handleKeyDown}
             disabled={saving}
             className={cn(
-              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-[var(--text-primary)] outline-none transition-colors',
-              error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-[var(--border-default)] focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
+              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-none transition-colors',
+              error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-border-default focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
             )}
           >
             {options.map((opt) => (
@@ -238,8 +238,8 @@ export function InlineEdit({
             disabled={saving}
             placeholder={placeholder}
             className={cn(
-              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-[var(--text-primary)] outline-none transition-colors',
-              error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-[var(--border-default)] focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
+              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-none transition-colors',
+              error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-border-default focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
             )}
           />
         )}
@@ -247,7 +247,7 @@ export function InlineEdit({
         {/* Save button */}
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded p-1 text-[var(--state-success-text)] hover:bg-[var(--state-success-bg)] transition-colors disabled:opacity-50"
+          className="inline-flex items-center justify-center rounded p-1 text-state-success-text hover:bg-state-success-bg transition-colors disabled:opacity-50"
           onClick={saveEdit}
           disabled={saving}
           aria-label="Save"
@@ -264,7 +264,7 @@ export function InlineEdit({
         {/* Cancel button */}
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded p-1 text-[var(--state-error-text)] hover:bg-[var(--state-error-bg)] transition-colors disabled:opacity-50"
+          className="inline-flex items-center justify-center rounded p-1 text-state-danger-text hover:bg-state-danger-bg transition-colors disabled:opacity-50"
           onClick={cancelEdit}
           disabled={saving}
           aria-label="Cancel"
@@ -275,7 +275,7 @@ export function InlineEdit({
 
       {/* Error message */}
       {error && (
-        <span className="text-xs text-[var(--state-error-text)] px-1">{error}</span>
+        <span className="text-xs text-state-danger-text px-1">{error}</span>
       )}
     </div>
   );

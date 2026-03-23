@@ -60,7 +60,7 @@ export interface DetailSummaryProps extends AccessControlledProps {
 }
 
 const detailSummaryPanelClassName =
-  "relative overflow-hidden rounded-[28px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card,var(--surface-default))] p-5 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card,var(--surface-default))] before:to-transparent";
+  "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default))] p-5 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card,var(--surface-default))] before:to-transparent";
 
 /* ---- Inline JSON viewer (no external dependency) ---- */
 
@@ -79,18 +79,18 @@ const InlineJsonViewer: React.FC<InlineJsonViewerProps> = ({
     {(title || description) && (
       <div className="mb-3">
         {title && (
-          <h4 className="text-sm font-semibold text-[var(--text-primary)]">
+          <h4 className="text-sm font-semibold text-text-primary">
             {title}
           </h4>
         )}
         {description && (
-          <p className="mt-0.5 text-xs text-[var(--text-secondary)]">
+          <p className="mt-0.5 text-xs text-text-secondary">
             {description}
           </p>
         )}
       </div>
     )}
-    <pre className="overflow-auto rounded-lg bg-[var(--surface-muted)] p-4 text-xs leading-relaxed text-[var(--text-primary)]">
+    <pre className="overflow-auto rounded-lg bg-surface-muted p-4 text-xs leading-relaxed text-text-primary">
       {JSON.stringify(value, null, 2)}
     </pre>
   </div>
@@ -100,7 +100,7 @@ const InlineJsonViewer: React.FC<InlineJsonViewerProps> = ({
  * Full detail page layout combining page header, summary strip, entity block,
  * description list and optional JSON viewer into a single composable pattern.
  */
-export const DetailSummary: React.FC<DetailSummaryProps> = ({
+export const DetailSummary = React.forwardRef<HTMLElement, DetailSummaryProps>(({
   eyebrow,
   title,
   description,
@@ -119,7 +119,7 @@ export const DetailSummary: React.FC<DetailSummaryProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -136,6 +136,7 @@ export const DetailSummary: React.FC<DetailSummaryProps> = ({
 
   return (
     <section
+      ref={ref}
       className={cn("space-y-4", className)}
       data-access-state={accessState.state}
       data-component="detail-summary"
@@ -199,7 +200,7 @@ export const DetailSummary: React.FC<DetailSummaryProps> = ({
       </div>
     </section>
   );
-};
+});
 
 DetailSummary.displayName = 'DetailSummary';
 

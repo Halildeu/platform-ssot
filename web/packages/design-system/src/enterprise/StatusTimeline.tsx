@@ -101,7 +101,7 @@ function EventDot({
   return (
     <span
       className={cn(
-        'inline-block shrink-0 rounded-full border-2 border-[var(--surface-default)] shadow-sm',
+        'inline-block shrink-0 rounded-full border-2 border-surface-default shadow-sm',
         active && 'ring-2 ring-offset-1',
       )}
       style={{
@@ -135,7 +135,7 @@ function ConnectorLine({
       {duration !== null && !compact && (
         <span
           className={cn(
-            'absolute whitespace-nowrap rounded bg-[var(--surface-muted)] px-1 py-0.5 text-[10px] text-[var(--text-secondary)]',
+            'absolute whitespace-nowrap rounded bg-surface-muted px-1 py-0.5 text-[10px] text-text-secondary',
             isH ? '-top-4' : '-left-12',
           )}
         >
@@ -182,14 +182,14 @@ function EventCard({
       <div className={cn('flex flex-col', isH && 'items-center')}>
         {/* Status badge */}
         <span
-          className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold text-[var(--text-inverse)]"
+          className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold text-text-inverse"
           style={{ backgroundColor: color }}
         >
           {event.status}
         </span>
 
         {/* Timestamp */}
-        <span className="mt-0.5 text-[10px] text-[var(--text-secondary)]">
+        <span className="mt-0.5 text-[10px] text-text-secondary">
           {formatTimestamp(event.timestamp)}
         </span>
 
@@ -197,14 +197,14 @@ function EventCard({
           <>
             {/* Actor */}
             {event.actor && (
-              <span className="mt-0.5 text-xs font-medium text-[var(--text-primary)]">
+              <span className="mt-0.5 text-xs font-medium text-text-primary">
                 {event.actor}
               </span>
             )}
 
             {/* Description */}
             {event.description && (
-              <span className="mt-0.5 max-w-[160px] text-[11px] leading-snug text-[var(--text-secondary)]">
+              <span className="mt-0.5 max-w-[160px] text-[11px] leading-snug text-text-secondary">
                 {event.description}
               </span>
             )}
@@ -253,7 +253,7 @@ export function StatusTimeline({
   return (
     <div
       className={cn(
-        'rounded-lg border border-[var(--border-default)] bg-[var(--surface-primary)] p-4',
+        'rounded-lg border border-border-default bg-[var(--surface-primary)] p-4',
         accessStyles(state),
         className,
       )}

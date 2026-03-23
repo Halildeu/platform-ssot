@@ -302,7 +302,7 @@ export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4 overflow-hidden',
+        'border border-border-default rounded-lg bg-surface-default p-4 overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}

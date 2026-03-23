@@ -61,7 +61,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         ref={ref}
         className={cn(
           "relative inline-flex shrink-0 items-center justify-center overflow-hidden",
-          "bg-[var(--surface-muted)] text-[var(--text-secondary)] font-medium",
+          "bg-surface-muted text-text-secondary font-medium",
           sizeStyles[size],
           shapeStyles[shape],
           className,

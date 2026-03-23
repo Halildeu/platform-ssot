@@ -123,7 +123,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
   return (
     <nav ref={ref as React.Ref<HTMLElement>} aria-label="Pagination" title={accessReason} className={cn("flex items-center gap-1.5", isAccessDisabled && "opacity-50 pointer-events-none", className)} {...stateAttrs({ component: "pagination", disabled: isAccessDisabled, access })}>
       {showTotal && (
-        <span className="me-2 text-xs text-[var(--text-secondary)]">
+        <span className="me-2 text-xs text-text-secondary">
           {total} items
         </span>
       )}
@@ -133,7 +133,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
         type="button"
         disabled={current <= 1 || isAccessDisabled}
         onClick={() => onChange?.(current - 1)}
-        className={cn(btnBase, "text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]")}
+        className={cn(btnBase, "text-text-secondary hover:bg-surface-muted")}
         aria-label="Previous page"
       >
         <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">
@@ -160,8 +160,8 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
             className={cn(
               btnBase,
               isActive
-                ? "bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-sm"
-                : "text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]",
+                ? "bg-action-primary text-text-inverse shadow-sm"
+                : "text-text-secondary hover:bg-surface-muted",
             )}
           >
             {page}
@@ -174,7 +174,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
         type="button"
         disabled={current >= totalPages || isAccessDisabled}
         onClick={() => onChange?.(current + 1)}
-        className={cn(btnBase, "text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]")}
+        className={cn(btnBase, "text-text-secondary hover:bg-surface-muted")}
         aria-label="Next page"
       >
         <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">

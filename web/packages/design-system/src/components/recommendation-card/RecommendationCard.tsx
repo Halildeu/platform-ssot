@@ -62,7 +62,7 @@ const toneClasses: Record<RecommendationCardTone, string> = {
   warning: "border-state-warning-border bg-state-warning",
 };
 
-export const RecommendationCard: React.FC<RecommendationCardProps> = ({
+export const RecommendationCard = React.forwardRef<HTMLElement, RecommendationCardProps>(({
   title,
   summary,
   recommendationType = "Recommendation",
@@ -82,7 +82,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -96,7 +96,8 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
 
   return (
     <article
-      className={`rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-5 shadow-sm ${className}`.trim()}
+      ref={ref}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-tone={tone}
     >
@@ -131,9 +132,9 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       </div>
 
       {rationale.length > 0 ? (
-        <div className="mt-4 rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-4">
+        <div className="mt-4 rounded-2xl border border-border-subtle bg-surface-muted p-4">
           <Text variant="secondary" size="xs" weight="medium">Why this recommendation</Text>
-          <ul className="mt-3 space-y-2 text-sm text-[var(--text-secondary)]">
+          <ul className="mt-3 space-y-2 text-sm text-text-secondary">
             {rationale.map((item) => (
               <li key={item} className="flex gap-2">
                 <span aria-hidden="true">&bull;</span>
@@ -188,7 +189,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
       </div>
     </article>
   );
-};
+});
 
 RecommendationCard.displayName = 'RecommendationCard';
 

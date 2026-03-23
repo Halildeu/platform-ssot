@@ -188,7 +188,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
         >
           <span
             className={cn(
-              "pointer-events-none inline-flex items-center justify-center rounded-full bg-[var(--surface-default)] shadow-sm transition-transform duration-200",
+              "pointer-events-none inline-flex items-center justify-center rounded-full bg-surface-default shadow-sm transition-transform duration-200",
               thumbSizes[resolvedSize].base,
               "translate-y-0.5 translate-x-0.5",
               checked && thumbSizes[resolvedSize].translate,
@@ -196,7 +196,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
           >
             {loading && (
               <svg
-                className="animate-spin text-[var(--text-secondary)]"
+                className="animate-spin text-text-secondary"
                 style={{ width: "60%", height: "60%" }}
                 viewBox="0 0 16 16"
                 fill="none"
@@ -223,12 +223,12 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
         {(label || description) && (
           <span className="flex flex-col">
             {label && (
-              <span className="text-sm font-medium text-[var(--text-primary)]">
+              <span className="text-sm font-medium text-text-primary">
                 {label}
               </span>
             )}
             {description && (
-              <span className="text-xs text-[var(--text-secondary)]">
+              <span className="text-xs text-text-secondary">
                 {description}
               </span>
             )}

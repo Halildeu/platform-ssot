@@ -64,11 +64,11 @@ const surfaceHeaderStyles: Record<
 > = {
   base: "",
   confirm:
-    "bg-[var(--state-info-bg)] border-[var(--state-info-text)]/20",
+    "bg-state-info-bg border-state-info-text/20",
   destructive:
-    "bg-[var(--state-error-bg)] border-[var(--state-error-text)]/20",
+    "bg-state-danger-bg border-state-danger-text/20",
   audit:
-    "bg-[var(--surface-muted)] border-[var(--border-subtle)]",
+    "bg-surface-muted border-border-subtle",
 };
 
 /** Rich modal overlay with surface variants, portal support, scroll lock, and focus management. */
@@ -181,8 +181,8 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
       {...slotProps?.root}
       className={cn(
         /* positioning & base */
-        "fixed inset-0 z-[1400] m-auto rounded-2xl border border-[var(--border-subtle)]",
-        "bg-[var(--surface-default)] p-0 shadow-xl",
+        "fixed inset-0 z-[1400] m-auto rounded-2xl border border-border-subtle",
+        "bg-surface-default p-0 shadow-xl",
 
         /* backdrop */
         "backdrop:bg-[var(--surface-overlay,rgba(0,0,0,0.5))] backdrop:backdrop-blur-sm",
@@ -208,7 +208,7 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
           <div
             {...slotProps?.header}
             className={cn(
-              "flex items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-6 py-4",
+              "flex items-start justify-between gap-4 border-b border-border-subtle px-6 py-4",
               surfaceHeaderStyles[surface],
               classes?.header,
               slotProps?.header?.className,
@@ -218,7 +218,7 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
               {title && (
                 <div
                   className={cn(
-                    "text-lg font-semibold text-[var(--text-primary)]",
+                    "text-lg font-semibold text-text-primary",
                     classes?.title,
                   )}
                 >
@@ -231,7 +231,7 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
                 type="button"
                 onClick={handleCloseButton}
                 className={cn(
-                  "shrink-0 rounded-lg p-1.5 text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]",
+                  "shrink-0 rounded-lg p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary",
                   classes?.closeButton,
                 )}
                 aria-label="Close"
@@ -259,7 +259,7 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
           <div
             {...slotProps?.footer}
             className={cn(
-              "flex items-center justify-end gap-2 border-t border-[var(--border-subtle)] px-6 py-3",
+              "flex items-center justify-end gap-2 border-t border-border-subtle px-6 py-3",
               classes?.footer,
               slotProps?.footer?.className,
             )}

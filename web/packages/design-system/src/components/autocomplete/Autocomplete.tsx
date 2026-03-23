@@ -9,6 +9,7 @@ import {
   getFieldTone,
   type FieldSize,
 } from "../../primitives/_shared/FieldControlPrimitives";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Autocomplete — Input with dropdown suggestions                     */
@@ -26,7 +27,8 @@ export interface AutocompleteProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "size" | "onChange" | "value" | "defaultValue" | "children"
-  > {
+  >,
+    AccessControlledProps {
   /** Controlled input value. */
   value?: string;
   /** Initial value for uncontrolled mode. */
@@ -95,10 +97,14 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
       onFocus,
       onBlur,
       onKeyDown,
+      access,
+      accessReason,
       ...props
     },
     forwardedRef,
   ) {
+    const accessState = resolveAccessState(access);
+    if (accessState.isHidden) return null;
     const generatedId = React.useId();
     const inputId = id ?? `autocomplete-${generatedId}`;
     const listboxId = `${inputId}-listbox`;
@@ -275,6 +281,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
     const showDropdown = isOpen && (filteredOptions.length > 0 || loading);
 
     return (
+      <div className={cn(accessState.isDisabled && "pointer-events-none opacity-50")} title={accessReason}>
       <FieldControlShell
         inputId={inputId}
         label={label}
@@ -329,7 +336,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
           {showDropdown ? (
             <div
               ref={listboxRef}
-              className="absolute start-0 z-30 mt-2 w-full overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-xl"
+              className="absolute start-0 z-30 mt-2 w-full overflow-hidden rounded-2xl border border-border-subtle bg-surface-muted shadow-xl"
               role="presentation"
             >
               <div
@@ -338,7 +345,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
                 className="max-h-72 overflow-y-auto p-2"
               >
                 {loading ? (
-                  <div className="rounded-xl px-3 py-2 text-sm text-[var(--text-secondary)]">
+                  <div className="rounded-xl px-3 py-2 text-sm text-text-secondary">
                     Loading...
                   </div>
                 ) : (
@@ -355,10 +362,10 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
                         onClick={() => selectOption(option)}
                         className={cn(
                           "cursor-pointer rounded-2xl border px-3 py-2 text-sm font-medium transition",
-                          "text-[var(--text-primary)]",
+                          "text-text-primary",
                           isHighlighted
                             ? "border-action-primary-border bg-action-primary-soft"
-                            : "border-transparent hover:bg-[var(--surface-muted)]",
+                            : "border-transparent hover:bg-surface-muted",
                         )}
                       >
                         {option.label}
@@ -371,6 +378,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
           ) : null}
         </div>
       </FieldControlShell>
+      </div>
     );
   },
 );

@@ -94,12 +94,12 @@ const SIZE_CLASSES: Record<FormSize, { input: string; label: string; text: strin
 };
 
 const INPUT_BASE =
-  "w-full rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-default-bg,var(--surface-default))] text-[var(--text-primary)] outline-none transition-colors placeholder:text-[var(--text-secondary)]/60 focus:border-[var(--selection-outline,var(--action-primary))] focus:ring-1 focus:ring-[var(--selection-outline,var(--action-primary))]";
+  "w-full rounded-lg border border-border-subtle bg-[var(--surface-default-bg,var(--surface-default))] text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:border-[var(--selection-outline,var(--action-primary))] focus:ring-1 focus:ring-[var(--selection-outline,var(--action-primary))]";
 
 const ERROR_CLASS = "border-[var(--danger-color,var(--state-error-text))] focus:border-[var(--danger-color,var(--state-error-text))] focus:ring-[var(--danger-color,var(--state-error-text))]";
 
 const SKELETON_PULSE =
-  "animate-pulse rounded-lg bg-[var(--surface-muted)]";
+  "animate-pulse rounded-lg bg-surface-muted";
 
 /* ---- Helpers ---- */
 
@@ -250,11 +250,11 @@ const FieldRenderer: React.FC<{
             checked={Boolean(value)}
             onChange={(e) => handleChange(e.target.checked)}
             disabled={disabled}
-            className="h-4 w-4 rounded border-[var(--border-subtle)] text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
+            className="h-4 w-4 rounded border-border-subtle text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
             aria-invalid={hasError}
             aria-describedby={hasError ? `${id}-error` : undefined}
           />
-          <span className={cn(sc.text, "text-[var(--text-primary)]")}>
+          <span className={cn(sc.text, "text-text-primary")}>
             {field.label}
           </span>
         </label>
@@ -272,9 +272,9 @@ const FieldRenderer: React.FC<{
                 checked={value === opt.value}
                 onChange={() => handleChange(opt.value)}
                 disabled={disabled}
-                className="h-4 w-4 border-[var(--border-subtle)] text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
+                className="h-4 w-4 border-border-subtle text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
               />
-              <span className={cn(sc.text, "text-[var(--text-primary)]")}>
+              <span className={cn(sc.text, "text-text-primary")}>
                 {opt.label}
               </span>
             </label>
@@ -291,7 +291,7 @@ const FieldRenderer: React.FC<{
           disabled={disabled}
           className={cn(
             sc.input,
-            "w-full cursor-pointer rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-default-bg,var(--surface-default))] text-[var(--text-secondary)] file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg,var(--action-primary))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-[var(--text-inverse)]",
+            "w-full cursor-pointer rounded-lg border border-border-subtle bg-[var(--surface-default-bg,var(--surface-default))] text-text-secondary file:me-3 file:rounded-md file:border-0 file:bg-[var(--action-primary-bg,var(--action-primary))] file:px-3 file:py-1 file:text-xs file:font-medium file:text-text-inverse",
           )}
           aria-invalid={hasError}
           aria-describedby={hasError ? `${id}-error` : undefined}
@@ -479,7 +479,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
                   id={`${id}-label`}
                   className={cn(
                     sc.label,
-                    "mb-1 block font-medium text-[var(--text-primary)]",
+                    "mb-1 block font-medium text-text-primary",
                   )}
                 >
                   {field.label}
@@ -496,7 +496,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
                 <p
                   className={cn(
                     sc.text,
-                    "mb-1 text-[var(--text-secondary)]",
+                    "mb-1 text-text-secondary",
                   )}
                 >
                   {field.description}
@@ -534,7 +534,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
           type="submit"
           disabled={isDisabled}
           className={cn(
-            "rounded-lg bg-[var(--action-primary-bg,var(--action-primary))] font-medium text-[var(--text-inverse)] transition-colors hover:bg-[var(--action-primary-hover)] disabled:opacity-50",
+            "rounded-lg bg-[var(--action-primary-bg,var(--action-primary))] font-medium text-text-inverse transition-colors hover:bg-accent-primary-hover disabled:opacity-50",
             sc.input,
           )}
         >
@@ -546,7 +546,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
             onClick={handleReset}
             disabled={isDisabled}
             className={cn(
-              "rounded-lg border border-[var(--border-subtle)] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--surface-muted)] disabled:opacity-50",
+              "rounded-lg border border-border-subtle font-medium text-text-primary transition-colors hover:bg-surface-muted disabled:opacity-50",
               sc.input,
             )}
           >

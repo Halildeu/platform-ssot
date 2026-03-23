@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -8,7 +9,7 @@ import { cn } from "../../utils/cn";
 /**
  * Watermark renders a repeating text or image watermark overlay on top of its children.
  */
-export interface WatermarkProps {
+export interface WatermarkProps extends AccessControlledProps {
   /** Text content for the watermark; pass an array for multi-line. */
   content?: string | string[];
   /** Image URL to use as watermark instead of text. */
@@ -150,9 +151,13 @@ export const Watermark = React.forwardRef<HTMLDivElement, WatermarkProps>(functi
     zIndex = DEFAULT_Z_INDEX,
     children,
     className,
+    access,
+    accessReason,
   },
   forwardedRef,
 ) {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const [bgUrl, setBgUrl] = React.useState<string>("");
   const watermarkRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -224,7 +229,7 @@ export const Watermark = React.forwardRef<HTMLDivElement, WatermarkProps>(functi
 
   if (!content && !image) {
     return (
-      <div ref={mergedRef} className={className} data-testid="watermark-root">
+      <div ref={mergedRef} className={cn(accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason} data-testid="watermark-root">
         {children}
       </div>
     );
@@ -233,7 +238,8 @@ export const Watermark = React.forwardRef<HTMLDivElement, WatermarkProps>(functi
   return (
     <div
       ref={mergedRef}
-      className={cn("relative", className)}
+      className={cn("relative", accessState.isDisabled && "pointer-events-none opacity-50", className)}
+      title={accessReason}
       data-testid="watermark-root"
     >
       {children}

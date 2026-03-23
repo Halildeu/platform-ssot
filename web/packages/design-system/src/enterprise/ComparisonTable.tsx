@@ -60,9 +60,9 @@ function computeVariance(actual: number, target: number): { absolute: number; pe
 }
 
 function getVarianceClass(direction: TrendDirection, invert: boolean): string {
-  if (direction === 'flat') return 'text-[var(--text-secondary)]';
+  if (direction === 'flat') return 'text-text-secondary';
   const isPositive = invert ? direction === 'down' : direction === 'up';
-  return isPositive ? 'text-[var(--state-success-text)]' : 'text-[var(--state-error-text)]';
+  return isPositive ? 'text-state-success-text' : 'text-state-danger-text';
 }
 
 function flattenRows(rows: ComparisonRow[]): { totals: { actual: number; target: number } } {
@@ -114,18 +114,18 @@ const RowRenderer: React.FC<RowRendererProps> = ({
     <>
       <tr
         className={cn(
-          'border-b border-[var(--border-subtle)] transition-colors',
-          onRowClick && 'cursor-pointer hover:bg-[var(--surface-muted)]',
+          'border-b border-border-subtle transition-colors',
+          onRowClick && 'cursor-pointer hover:bg-surface-muted',
           hasChildren && 'font-medium',
         )}
         onClick={() => onRowClick?.(row)}
       >
         {/* Label */}
-        <td className="py-2.5 px-3 text-sm text-[var(--text-primary)]">
+        <td className="py-2.5 px-3 text-sm text-text-primary">
           <div className="flex items-center" style={{ paddingLeft: indent }}>
             {hasChildren && (
               <button
-                className="mr-1.5 text-[10px] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] w-4 flex-shrink-0"
+                className="mr-1.5 text-[10px] text-[var(--text-tertiary)] hover:text-text-primary w-4 flex-shrink-0"
                 onClick={(e) => { e.stopPropagation(); onToggle(row.id); }}
               >
                 {isExpanded ? '\u25BC' : '\u25B6'}
@@ -137,12 +137,12 @@ const RowRenderer: React.FC<RowRendererProps> = ({
         </td>
 
         {/* Actual */}
-        <td className="py-2.5 px-3 text-sm text-right font-mono text-[var(--text-primary)]">
+        <td className="py-2.5 px-3 text-sm text-right font-mono text-text-primary">
           {formatValue(row.actual, fmt)}
         </td>
 
         {/* Target */}
-        <td className="py-2.5 px-3 text-sm text-right font-mono text-[var(--text-secondary)]">
+        <td className="py-2.5 px-3 text-sm text-right font-mono text-text-secondary">
           {formatValue(row.target, fmt)}
         </td>
 
@@ -226,7 +226,7 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] overflow-hidden',
+        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}
@@ -237,20 +237,20 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-[var(--surface-muted)] border-b border-[var(--border-default)]">
-              <th className="py-2.5 px-3 text-left text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide">
+            <tr className="bg-surface-muted border-b border-border-default">
+              <th className="py-2.5 px-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wide">
                 {colLabels.label}
               </th>
-              <th className="py-2.5 px-3 text-right text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide w-28">
+              <th className="py-2.5 px-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wide w-28">
                 {colLabels.actual}
               </th>
-              <th className="py-2.5 px-3 text-right text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide w-28">
+              <th className="py-2.5 px-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wide w-28">
                 {colLabels.target}
               </th>
-              <th className="py-2.5 px-3 text-right text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide w-28">
+              <th className="py-2.5 px-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wide w-28">
                 {colLabels.variance}
               </th>
-              <th className="py-2.5 px-3 text-right text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wide w-20">
+              <th className="py-2.5 px-3 text-right text-xs font-semibold text-text-secondary uppercase tracking-wide w-20">
                 {colLabels.variancePercent}
               </th>
             </tr>
@@ -273,12 +273,12 @@ export const ComparisonTable: React.FC<ComparisonTableProps> = ({
 
           {/* Footer totals */}
           <tfoot>
-            <tr className="bg-[var(--surface-muted)] border-t-2 border-[var(--border-default)]">
-              <td className="py-3 px-3 text-sm font-bold text-[var(--text-primary)]">Total</td>
-              <td className="py-3 px-3 text-sm text-right font-mono font-bold text-[var(--text-primary)]">
+            <tr className="bg-surface-muted border-t-2 border-border-default">
+              <td className="py-3 px-3 text-sm font-bold text-text-primary">Total</td>
+              <td className="py-3 px-3 text-sm text-right font-mono font-bold text-text-primary">
                 {formatValue(totals.actual, defaultFormat)}
               </td>
-              <td className="py-3 px-3 text-sm text-right font-mono font-bold text-[var(--text-secondary)]">
+              <td className="py-3 px-3 text-sm text-right font-mono font-bold text-text-secondary">
                 {formatValue(totals.target, defaultFormat)}
               </td>
               <td className={cn('py-3 px-3 text-sm text-right font-mono font-bold', totalVarClass)}>

@@ -60,18 +60,18 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
   if (!leftPreset || !rightPreset) {
     return (
       <section
-        className={`rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-5 shadow-sm ${className}`.trim()}
+        className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
         data-access-state={accessState.state}
         data-component="theme-preset-compare"
         title={accessReason}
       >
-        <Text as="div" className="text-base font-semibold text-[var(--text-primary)]">
+        <Text as="div" className="text-base font-semibold text-text-primary">
           {title}
         </Text>
         <Text variant="secondary" className="mt-1 block text-sm leading-6">
           {description}
         </Text>
-        <div className="mt-4 rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4">
+        <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
           <Empty description="Karsilastirma icin iki preset gerekli." />
         </div>
       </section>
@@ -80,12 +80,12 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
 
   return (
     <section
-      className={`rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-5 shadow-sm ${className}`.trim()}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="theme-preset-compare"
       title={accessReason}
     >
-      <Text as="div" className="text-base font-semibold text-[var(--text-primary)]">
+      <Text as="div" className="text-base font-semibold text-text-primary">
         {title}
       </Text>
       <Text variant="secondary" className="mt-1 block text-sm leading-6">
@@ -95,13 +95,13 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
       <div className="mt-4 grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(380px, 100%), 1fr))" }}>
         <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))" }}>
           {[leftPreset, rightPreset].map((preset, index) => (
-            <div key={preset.presetId} className="rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4">
+            <div key={preset.presetId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
               <div className="grid grid-cols-[140px_minmax(0,1fr)] gap-4">
-                <div className="rounded-[20px] border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-3">
+                <div className="rounded-[20px] border border-border-subtle bg-surface-muted p-3">
                   <ThemePreviewCard selected={index === 0 ? leftPreset.isDefaultMode : rightPreset.isDefaultMode} />
                 </div>
                 <div>
-                  <Text as="div" className="text-sm font-semibold text-[var(--text-primary)]">
+                  <Text as="div" className="text-sm font-semibold text-text-primary">
                     {preset.label}
                   </Text>
                   <Text variant="secondary" className="mt-1 block text-sm leading-6">
@@ -113,8 +113,8 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
           ))}
         </div>
 
-        <div className="rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4">
-          <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 border-b border-[var(--border-subtle)] pb-3">
+        <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
+          <div className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 border-b border-border-subtle pb-3">
             <Text variant="secondary" className="text-[11px] font-semibold uppercase tracking-[0.16em]">
               Axis
             </Text>
@@ -127,8 +127,8 @@ export const ThemePresetCompare: React.FC<ThemePresetCompareProps> = ({
           </div>
           <div className="mt-3 space-y-3">
             {axes.map((axis) => (
-              <div key={axis} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-3 py-3">
-                <Text as="div" className="text-sm font-semibold capitalize text-[var(--text-primary)]">
+              <div key={axis} className="grid grid-cols-[minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1fr)] gap-3 rounded-2xl border border-border-subtle bg-surface-muted px-3 py-3">
+                <Text as="div" className="text-sm font-semibold capitalize text-text-primary">
                   {axis}
                 </Text>
                 <Text variant="secondary" className="text-sm leading-6">

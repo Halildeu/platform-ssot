@@ -497,12 +497,12 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                   </span>
                 ) : null}
                 {item.badge ? (
-                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-sm">
                     {item.badge}
                   </span>
                 ) : null}
                 {item.shortcut ? (
-                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-sm">
                     {item.shortcut}
                   </span>
                 ) : null}
@@ -531,7 +531,7 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                   collisionFlipped: submenuPosition?.flipped ?? false,
                   positioningMode: 'anchor',
                 }}
-                className="fixed z-50 min-w-[18rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-[var(--border-subtle)]/20 shadow-[0_30px_70px_-40px_var(--shadow-color,rgba(15,23,42,0.4))] backdrop-blur-md"
+                className="fixed z-50 min-w-[18rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color,rgba(15,23,42,0.4))] backdrop-blur-md"
                 style={{
                   boxShadow: 'var(--elevation-overlay)',
                   left: submenuPosition?.left ?? 0,

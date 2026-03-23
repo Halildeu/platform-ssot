@@ -186,7 +186,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function
       tabIndex={isInteractive ? 0 : undefined}
       className={cn(
         "relative w-full overflow-hidden",
-        "bg-[var(--surface-default)] text-[var(--text-primary)]",
+        "bg-surface-default text-text-primary",
         SIZE_HEIGHT[size],
         accessState.isDisabled && "opacity-50 cursor-not-allowed",
         className,
@@ -235,7 +235,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function
             onClick={goPrev}
             className={cn(
               "absolute z-10 flex items-center justify-center rounded-full",
-              "bg-[var(--surface-overlay)] text-[var(--text-primary)]",
+              "bg-surface-overlay text-text-primary",
               "shadow-sm hover:bg-[var(--surface-hover)]",
               "h-8 w-8 transition-opacity",
               isHorizontal ? "top-1/2 start-2 -translate-y-1/2" : "top-2 left-1/2 -translate-x-1/2 rotate-90",
@@ -251,7 +251,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function
             onClick={goNext}
             className={cn(
               "absolute z-10 flex items-center justify-center rounded-full",
-              "bg-[var(--surface-overlay)] text-[var(--text-primary)]",
+              "bg-surface-overlay text-text-primary",
               "shadow-sm hover:bg-[var(--surface-hover)]",
               "h-8 w-8 transition-opacity",
               isHorizontal ? "top-1/2 end-2 -translate-y-1/2" : "bottom-2 left-1/2 -translate-x-1/2 rotate-90",

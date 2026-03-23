@@ -142,7 +142,7 @@ describe('Timeline — dots', () => {
     ];
     const { container } = render(<Timeline items={items} />);
     const dot = container.querySelector('[data-testid="timeline-dot"]');
-    expect(dot?.className).toContain('bg-[var(--action-primary)]');
+    expect(dot?.className).toContain('bg-action-primary');
   });
 
   it('applies danger color', () => {
@@ -177,7 +177,7 @@ describe('Timeline — dots', () => {
       <Timeline items={[{ key: 'a', children: 'Default' }]} />,
     );
     const dot = container.querySelector('[data-testid="timeline-dot"]');
-    expect(dot?.className).toContain('bg-[var(--border-default)]');
+    expect(dot?.className).toContain('bg-border-default');
   });
 });
 
@@ -497,7 +497,7 @@ describe('Timeline — edge cases', () => {
     const dots = container.querySelectorAll('[data-testid="timeline-dot"]');
     expect(dots[0]?.className).toContain('bg-[var(--feedback-success)]');
     expect(dots[1]?.className).toContain('bg-[var(--feedback-error)]');
-    expect(dots[2]?.className).toContain('bg-[var(--action-primary)]');
+    expect(dots[2]?.className).toContain('bg-action-primary');
   });
 });
 

@@ -40,21 +40,21 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 const variantStyles: Record<BadgeVariant, string> = {
   default:
-    "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
+    "bg-surface-muted text-text-secondary",
   primary:
-    "bg-[var(--action-primary)]/10 text-[var(--action-primary)]",
+    "bg-action-primary/10 text-action-primary",
   success:
-    "bg-[var(--state-success-bg)] text-[var(--state-success-text)]",
+    "bg-state-success-bg text-state-success-text",
   warning:
-    "bg-[var(--state-warning-bg)] text-[var(--state-warning-text)]",
+    "bg-state-warning-bg text-state-warning-text",
   error:
-    "bg-[var(--state-error-bg)] text-[var(--state-error-text)]",
+    "bg-state-danger-bg text-state-danger-text",
   danger:
-    "bg-[var(--state-error-bg)] text-[var(--state-error-text)]",
+    "bg-state-danger-bg text-state-danger-text",
   info:
-    "bg-[var(--state-info-bg)] text-[var(--state-info-text)]",
+    "bg-state-info-bg text-state-info-text",
   muted:
-    "bg-[var(--surface-muted)] text-[var(--text-tertiary)]",
+    "bg-surface-muted text-[var(--text-tertiary)]",
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
@@ -93,9 +93,9 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
           className={cn(
             "inline-block h-2 w-2 rounded-full",
             variant === "default"
-              ? "bg-[var(--text-secondary)]"
+              ? "bg-text-secondary"
               : variantStyles[variant].split(" ").find((c) => c.startsWith("text-"))?.replace("text-", "bg-") ??
-                "bg-[var(--text-secondary)]",
+                "bg-text-secondary",
             className,
           )}
           {...rest}

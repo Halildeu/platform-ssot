@@ -90,13 +90,13 @@ describe('Checkbox — error state', () => {
   it('error durumunda error border class uygular', () => {
     const { container } = render(<Checkbox error />);
     const box = container.querySelector('[aria-hidden]');
-    expect(box?.className).toContain('border-[var(--state-error-text)]');
+    expect(box?.className).toContain('border-state-danger-text');
   });
 
   it('error olmadan default border class uygular', () => {
     const { container } = render(<Checkbox />);
     const box = container.querySelector('[aria-hidden]');
-    expect(box?.className).toContain('border-[var(--border-default)]');
+    expect(box?.className).toContain('border-border-default');
   });
 });
 

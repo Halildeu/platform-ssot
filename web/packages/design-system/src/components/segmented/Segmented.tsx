@@ -142,7 +142,7 @@ const appearanceStyles: Record<
     ),
     inactive: cn(
       "text-[var(--segmented-text,var(--text-secondary))]",
-      "hover:text-[var(--text-primary)]",
+      "hover:text-text-primary",
     ),
   },
   outline: {
@@ -155,7 +155,7 @@ const appearanceStyles: Record<
     inactive: cn(
       "text-[var(--segmented-text,var(--text-secondary))]",
       "border border-transparent",
-      "hover:text-[var(--text-primary)]",
+      "hover:text-text-primary",
     ),
   },
   ghost: {
@@ -166,8 +166,8 @@ const appearanceStyles: Record<
     ),
     inactive: cn(
       "text-[var(--segmented-text,var(--text-secondary))]",
-      "hover:bg-[var(--surface-muted)]/50",
-      "hover:text-[var(--text-primary)]",
+      "hover:bg-surface-muted/50",
+      "hover:text-text-primary",
     ),
   },
 };

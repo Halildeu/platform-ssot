@@ -8,7 +8,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, act } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 
 /* ---- Components under test ---- */
 import { FormContext, useFormContext, type FormContextValue } from '../FormContext';

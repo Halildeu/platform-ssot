@@ -81,7 +81,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
+        'border border-border-default rounded-lg bg-surface-default p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -105,7 +105,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
                 title={`${bucket.label}: ${pct}%`}
               >
                 {pct > 8 && (
-                  <span className="flex h-full items-center justify-center text-[10px] font-bold text-[var(--text-inverse)]">
+                  <span className="flex h-full items-center justify-center text-[10px] font-bold text-text-inverse">
                     {pct}%
                   </span>
                 )}
@@ -134,7 +134,7 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
               onClick={() => onBucketClick?.(bucket)}
             >
               {/* Label */}
-              <div className="text-xs font-medium text-[var(--text-secondary)] mb-1">
+              <div className="text-xs font-medium text-text-secondary mb-1">
                 {bucket.label}
               </div>
 
@@ -146,12 +146,12 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
               {/* Count & Percentage */}
               <div className="mt-1 flex items-center gap-2 text-xs text-[var(--text-tertiary)]">
                 <span>{bucket.count} items</span>
-                <span className="text-[var(--border-default)]">{'\u00B7'}</span>
+                <span className="text-border-default">{'\u00B7'}</span>
                 <span>{pct}%</span>
               </div>
 
               {/* Mini bar */}
-              <div className="mt-2 h-1 w-full rounded-full bg-[var(--surface-muted)] overflow-hidden">
+              <div className="mt-2 h-1 w-full rounded-full bg-surface-muted overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${pct}%`, backgroundColor: toneColorMap[tone] }}
@@ -163,11 +163,11 @@ export const AgingBuckets: React.FC<AgingBucketsProps> = ({
       </div>
 
       {/* Total row */}
-      <div className="mt-3 flex items-center justify-between border-t border-[var(--border-subtle)] pt-3">
-        <span className="text-sm font-semibold text-[var(--text-primary)]">Total</span>
+      <div className="mt-3 flex items-center justify-between border-t border-border-subtle pt-3">
+        <span className="text-sm font-semibold text-text-primary">Total</span>
         <div className="flex items-center gap-4">
           <span className="text-xs text-[var(--text-tertiary)]">{totalCount} items</span>
-          <span className="text-sm font-bold text-[var(--text-primary)]">
+          <span className="text-sm font-bold text-text-primary">
             {formatValue(totalValue, formatOptions)}
           </span>
         </div>

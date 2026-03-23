@@ -32,9 +32,9 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  elevated: "bg-[var(--surface-default)] border border-[var(--border-subtle)] shadow-sm",
-  outlined: "bg-transparent border border-[var(--border-default)]",
-  filled: "bg-[var(--surface-muted)] border border-transparent",
+  elevated: "bg-surface-default border border-border-subtle shadow-sm",
+  outlined: "bg-transparent border border-border-default",
+  filled: "bg-surface-muted border border-transparent",
   ghost: "bg-transparent border border-transparent",
 };
 
@@ -73,7 +73,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       paddingStyles[padding],
       hoverable && [
         "cursor-pointer",
-        "hover:border-[var(--action-primary)]/30 hover:shadow-md",
+        "hover:border-action-primary/30 hover:shadow-md",
         "active:scale-[0.99]",
       ],
       !asChild && Tag === "button" && "w-full text-start",
@@ -134,10 +134,10 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
     <div {...cardSlotProps?.header} className={cn("flex items-start justify-between gap-4", className, cardSlotProps?.header?.className)} {...rest}>
       <div className="min-w-0 flex-1">
         {title && (
-          <div className="text-sm font-semibold text-[var(--text-primary)]">{title}</div>
+          <div className="text-sm font-semibold text-text-primary">{title}</div>
         )}
         {subtitle && (
-          <div className="mt-0.5 text-xs text-[var(--text-secondary)]">{subtitle}</div>
+          <div className="mt-0.5 text-xs text-text-secondary">{subtitle}</div>
         )}
         {children}
       </div>
@@ -173,7 +173,7 @@ export const CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
     <div
       {...cardSlotProps?.footer}
       className={cn(
-        "mt-4 flex items-center gap-2 border-t border-[var(--border-subtle)] pt-3",
+        "mt-4 flex items-center gap-2 border-t border-border-subtle pt-3",
         className,
         cardSlotProps?.footer?.className,
       )}

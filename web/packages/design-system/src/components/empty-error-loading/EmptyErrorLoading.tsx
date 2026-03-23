@@ -41,7 +41,7 @@ export interface EmptyErrorLoadingProps extends AccessControlledProps {
 }
 
 /** Tri-state feedback component that renders empty, error, or loading state with consistent styling. */
-export const EmptyErrorLoading: React.FC<EmptyErrorLoadingProps> = ({
+export const EmptyErrorLoading = React.forwardRef<HTMLElement, EmptyErrorLoadingProps>(({
   mode,
   title = "Durum tarifi",
   description = "Bos, hata ve yukleme durumlari ayni geri bildirim dilini kullanir.",
@@ -53,7 +53,7 @@ export const EmptyErrorLoading: React.FC<EmptyErrorLoadingProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -61,7 +61,8 @@ export const EmptyErrorLoading: React.FC<EmptyErrorLoadingProps> = ({
 
   return (
     <section
-      className={`rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-5 shadow-sm ${className}`.trim()}
+      ref={ref}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="empty-error-loading"
       data-mode={mode}
@@ -69,7 +70,7 @@ export const EmptyErrorLoading: React.FC<EmptyErrorLoadingProps> = ({
     >
       <Text
         as="div"
-        className="text-base font-semibold text-[var(--text-primary)]"
+        className="text-base font-semibold text-text-primary"
       >
         {title}
       </Text>
@@ -77,7 +78,7 @@ export const EmptyErrorLoading: React.FC<EmptyErrorLoadingProps> = ({
         {description}
       </Text>
 
-      <div className="mt-4 rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4">
+      <div className="mt-4 rounded-[24px] border border-border-subtle bg-surface-default p-4">
         {mode === "loading" ? (
           <div className="space-y-4">
             <Spinner mode="block" label={loadingLabel} />
@@ -117,7 +118,7 @@ export const EmptyErrorLoading: React.FC<EmptyErrorLoadingProps> = ({
       </div>
     </section>
   );
-};
+});
 
 EmptyErrorLoading.displayName = "EmptyErrorLoading";
 

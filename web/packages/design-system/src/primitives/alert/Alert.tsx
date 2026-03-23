@@ -38,10 +38,10 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "
 }
 
 const variantStyles: Record<AlertVariant, string> = {
-  info: "bg-[var(--state-info-bg)] border-[var(--state-info-text)]/20 text-[var(--state-info-text)]",
-  success: "bg-[var(--state-success-bg)] border-[var(--state-success-text)]/20 text-[var(--state-success-text)]",
-  warning: "bg-[var(--state-warning-bg)] border-[var(--state-warning-text)]/20 text-[var(--state-warning-text)]",
-  error: "bg-[var(--state-error-bg)] border-[var(--state-error-text)]/20 text-[var(--state-error-text)]",
+  info: "bg-state-info-bg border-state-info-text/20 text-state-info-text",
+  success: "bg-state-success-bg border-state-success-text/20 text-state-success-text",
+  warning: "bg-state-warning-bg border-state-warning-text/20 text-state-warning-text",
+  error: "bg-state-danger-bg border-state-danger-text/20 text-state-danger-text",
 };
 
 const defaultIcons: Record<AlertVariant, React.ReactNode> = {

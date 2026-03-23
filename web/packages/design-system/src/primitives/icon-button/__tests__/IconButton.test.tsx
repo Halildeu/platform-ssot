@@ -55,11 +55,11 @@ describe('IconButton — temel render', () => {
 
 describe('IconButton — variant proplari', () => {
   it.each([
-    ['primary', 'bg-[var(--action-primary)]'],
-    ['secondary', 'bg-[var(--surface-muted)]'],
+    ['primary', 'bg-action-primary'],
+    ['secondary', 'bg-surface-muted'],
     ['outline', 'border'],
     ['ghost', 'bg-transparent'],
-    ['danger', 'bg-[var(--state-error-text)]'],
+    ['danger', 'bg-state-danger-text'],
   ] as const)('variant="%s" dogru class uygular', (variant, expectedClass) => {
     const { container } = render(<IconButton icon={TestIcon} label="Test" variant={variant} />);
     const button = container.querySelector('button');

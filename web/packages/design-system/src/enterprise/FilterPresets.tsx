@@ -119,7 +119,7 @@ function SavePopover({
   }, [name, onSave]);
 
   return (
-    <div className="absolute top-full left-0 z-20 mt-1 flex items-center gap-1.5 rounded-lg border border-[var(--border-default)] bg-[var(--surface-primary)] p-2 shadow-lg">
+    <div className="absolute top-full left-0 z-20 mt-1 flex items-center gap-1.5 rounded-lg border border-border-default bg-[var(--surface-primary)] p-2 shadow-lg">
       <input
         ref={inputRef}
         type="text"
@@ -130,18 +130,18 @@ function SavePopover({
           if (e.key === 'Escape') onCancel();
         }}
         placeholder={localeText?.savePlaceholder ?? "Preset ad\u0131..."}
-        className="rounded border border-[var(--border-default)] bg-[var(--surface-primary)] px-2 py-1 text-xs text-[var(--text-primary)] outline-none focus:border-[var(--action-primary)] w-36"
+        className="rounded border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-text-primary outline-none focus:border-action-primary w-36"
       />
       <button
         type="button"
-        className="rounded bg-[var(--action-primary)] px-2 py-1 text-xs font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors"
+        className="rounded bg-action-primary px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
         onClick={handleSubmit}
       >
         {localeText?.saveButton ?? 'Kaydet'}
       </button>
       <button
         type="button"
-        className="rounded px-2 py-1 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+        className="rounded px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
         onClick={onCancel}
       >
         {localeText?.cancelButton ?? '\u0130ptal'}
@@ -166,21 +166,21 @@ function DeleteConfirmation({
   localeText?: FilterPresetsLocaleText;
 }) {
   return (
-    <div className="absolute top-full right-0 z-20 mt-1 rounded-lg border border-[var(--border-default)] bg-[var(--surface-primary)] p-3 shadow-lg min-w-[200px]">
-      <p className="text-xs text-[var(--text-primary)] mb-2">
+    <div className="absolute top-full right-0 z-20 mt-1 rounded-lg border border-border-default bg-[var(--surface-primary)] p-3 shadow-lg min-w-[200px]">
+      <p className="text-xs text-text-primary mb-2">
         {localeText?.deleteConfirm?.(presetName) ?? <><strong>&quot;{presetName}&quot;</strong> silinsin mi?</>}
       </p>
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="rounded bg-[var(--state-error-text)] px-2 py-1 text-xs font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors"
+          className="rounded bg-state-danger-text px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
           onClick={onConfirm}
         >
           {localeText?.deleteButton ?? 'Sil'}
         </button>
         <button
           type="button"
-          className="rounded px-2 py-1 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          className="rounded px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
           onClick={onCancel}
         >
           {localeText?.cancelButton ?? 'Vazge\u00e7'}
@@ -252,8 +252,8 @@ export function FilterPresets({
               className={cn(
                 'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                 isActive
-                  ? 'border-[var(--action-primary)] bg-[var(--state-info-bg)] text-[var(--action-primary)]'
-                  : 'border-[var(--border-default)] bg-[var(--surface-primary)] text-[var(--text-primary)] hover:bg-[var(--surface-muted)]',
+                  ? 'border-action-primary bg-state-info-bg text-action-primary'
+                  : 'border-border-default bg-[var(--surface-primary)] text-text-primary hover:bg-surface-muted',
               )}
               disabled={isDisabled}
               onClick={() => onSelect(preset)}
@@ -267,7 +267,7 @@ export function FilterPresets({
             {onDelete && !preset.isShared && (
               <button
                 type="button"
-                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-[var(--text-secondary)] hover:text-[var(--state-error-text)] hover:bg-[var(--state-error-bg)] transition-colors"
+                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-text-secondary hover:text-state-danger-text hover:bg-state-danger-bg transition-colors"
                 disabled={isDisabled}
                 aria-label={`Delete preset ${preset.name}`}
                 onClick={(e) => {
@@ -283,7 +283,7 @@ export function FilterPresets({
             {onSetDefault && !preset.isDefault && (
               <button
                 type="button"
-                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-[var(--text-secondary)] hover:text-[var(--state-warning-text)] transition-colors"
+                className="invisible group-hover:visible ml-0.5 inline-flex items-center justify-center rounded-full p-0.5 text-text-secondary hover:text-state-warning-text transition-colors"
                 disabled={isDisabled}
                 aria-label={`Set ${preset.name} as default`}
                 onClick={(e) => {
@@ -313,7 +313,7 @@ export function FilterPresets({
         <div className="relative">
           <button
             type="button"
-            className="inline-flex items-center gap-1 rounded-full border border-dashed border-[var(--border-default)] px-3 py-1 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-muted)] transition-colors"
+            className="inline-flex items-center gap-1 rounded-full border border-dashed border-border-default px-3 py-1 text-xs text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
             disabled={isDisabled}
             onClick={() => setShowSave(true)}
           >

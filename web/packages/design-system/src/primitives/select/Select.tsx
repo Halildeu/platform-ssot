@@ -142,13 +142,13 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           {...guardAria({ access, disabled: isDisabled })}
           className={cn(
             "appearance-none rounded-lg border transition-colors duration-150",
-            "bg-[var(--surface-default)] text-[var(--text-primary)]",
+            "bg-surface-default text-text-primary",
             "disabled:cursor-not-allowed disabled:opacity-50",
             isReadonly && "cursor-default opacity-70",
             "outline-none",
             error
-              ? "border-[var(--state-error-text)] focus:ring-2 focus:ring-[var(--state-error-text)]/20"
-              : "border-[var(--border-default)] focus:border-[var(--action-primary)] focus:ring-2 focus:ring-[var(--action-primary)]/20",
+              ? "border-state-danger-text focus:ring-2 focus:ring-state-danger-text/20"
+              : "border-border-default focus:border-action-primary focus:ring-2 focus:ring-action-primary/20",
             sizeStyles[resolvedSize],
             density !== "comfortable" && selectDensityStyles[density],
             fullWidth && "w-full",
@@ -171,7 +171,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {/* Chevron icon or loading spinner */}
         {loading ? (
           <svg
-            className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-[var(--text-secondary)]"
+            className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-text-secondary"
             viewBox="0 0 24 24"
             fill="none"
             role="status"
@@ -193,7 +193,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </svg>
         ) : (
           <svg
-            className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-secondary)]"
+            className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-secondary"
             viewBox="0 0 16 16"
             fill="none"
           >

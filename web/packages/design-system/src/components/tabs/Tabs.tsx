@@ -3,6 +3,7 @@ import { stateAttrs, focusRingClass } from "../../internal/interaction-core";
 import { useRovingTabindex } from "../../internal/overlay-engine";
 import { cn } from "../../utils/cn";
 import type { SlotProps } from "../../primitives/_shared/slot-types";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Tabs — Segmented content switcher                                  */
@@ -36,7 +37,7 @@ export interface TabItem {
 
 export type TabsSlot = "root" | "list" | "trigger" | "content";
 
-export interface TabsProps {
+export interface TabsProps extends AccessControlledProps {
   items: TabItem[];
   variant?: TabsVariant;
   size?: TabsSize;
@@ -65,23 +66,23 @@ const normalizeVariant = (v: TabsVariant): "line" | "enclosed" | "pill" => {
 type InternalVariant = "line" | "enclosed" | "pill";
 
 const variantBaseStyles: Record<InternalVariant, string> = {
-  line: "border-b border-[var(--border-subtle)]",
-  enclosed: "bg-[var(--surface-muted)] rounded-xl p-1",
+  line: "border-b border-border-subtle",
+  enclosed: "bg-surface-muted rounded-xl p-1",
   pill: "gap-1",
 };
 
 const tabStyles: Record<InternalVariant, { active: string; inactive: string }> = {
   line: {
-    active: "border-b-2 border-[var(--action-primary)] text-[var(--text-primary)]",
-    inactive: "text-[var(--text-secondary)] hover:text-[var(--text-primary)] border-b-2 border-transparent",
+    active: "border-b-2 border-action-primary text-text-primary",
+    inactive: "text-text-secondary hover:text-text-primary border-b-2 border-transparent",
   },
   enclosed: {
-    active: "bg-[var(--surface-default)] text-[var(--text-primary)] shadow-sm rounded-lg",
-    inactive: "text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg",
+    active: "bg-surface-default text-text-primary shadow-sm rounded-lg",
+    inactive: "text-text-secondary hover:text-text-primary rounded-lg",
   },
   pill: {
-    active: "bg-[var(--action-primary)] text-[var(--text-inverse)] rounded-full shadow-sm",
-    inactive: "text-[var(--text-secondary)] hover:bg-[var(--surface-muted)] rounded-full",
+    active: "bg-action-primary text-text-inverse rounded-full shadow-sm",
+    inactive: "text-text-secondary hover:bg-surface-muted rounded-full",
   },
 };
 
@@ -105,7 +106,11 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
   className,
   density = "comfortable",
   slotProps,
+  access,
+  accessReason,
 }, ref) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const variant = normalizeVariant(variantProp);
   const fullWidth = fullWidthProp || variantProp === "fullWidth";
   const controlledKey = activeKeyProp;
@@ -149,7 +154,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
   const activeItem = items.find((i) => resolveKey(i) === currentKey);
 
   return (
-    <div ref={ref} {...slotProps?.root} className={cn(className, slotProps?.root?.className)}>
+    <div ref={ref} {...slotProps?.root} className={cn(accessState.isDisabled && "pointer-events-none opacity-50", className, slotProps?.root?.className)} title={accessReason}>
       {/* Tab list */}
       <div
         role="tablist"
@@ -243,7 +248,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
           className={cn("mt-4", slotProps?.content?.className)}
         >
           {activeItem.description && (
-            <div className="mb-3 rounded-[20px] border border-[var(--border-subtle)]/70 bg-[var(--surface-default)] px-4 py-3 text-sm text-[var(--text-secondary)] shadow-sm">
+            <div className="mb-3 rounded-[20px] border border-border-subtle/70 bg-surface-default px-4 py-3 text-sm text-text-secondary shadow-sm">
               {activeItem.description}
             </div>
           )}

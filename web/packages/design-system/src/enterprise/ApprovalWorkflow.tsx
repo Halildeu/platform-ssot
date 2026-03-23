@@ -119,7 +119,7 @@ function Avatar({ assignee, size = 28 }: { assignee: ApprovalAssignee; size?: nu
 
   return (
     <span
-      className="inline-flex items-center justify-center rounded-full bg-[var(--surface-muted)] text-[var(--text-secondary)] text-xs font-medium shrink-0"
+      className="inline-flex items-center justify-center rounded-full bg-surface-muted text-text-secondary text-xs font-medium shrink-0"
       style={{ width: size, height: size }}
       aria-hidden="true"
     >
@@ -139,7 +139,7 @@ function Connector({ completed, orientation }: { completed: boolean; orientation
 
   return (
     <div
-      className={`${base} ${completed ? 'bg-[var(--state-success-text)]' : 'border-[var(--border-default)]'}`}
+      className={`${base} ${completed ? 'bg-state-success-text' : 'border-border-default'}`}
       style={completed ? undefined : {
         backgroundImage: orientation === 'horizontal'
           ? 'repeating-linear-gradient(to right, var(--border-default), var(--border-default) 4px, transparent 4px, transparent 8px)'
@@ -229,34 +229,34 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
         'rounded-lg border p-3 transition-colors duration-150',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]',
         isCurrent
-          ? 'border-[var(--brand-primary)] bg-[var(--surface-default)] shadow-sm'
-          : 'border-[var(--border-default)] bg-[var(--surface-default)]',
+          ? 'border-[var(--brand-primary)] bg-surface-default shadow-sm'
+          : 'border-border-default bg-surface-default',
       ].join(' ')}
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
         <StatusIcon status={step.status} size={20} />
-        <span className="text-sm font-medium text-[var(--text-primary)] truncate">{step.label}</span>
+        <span className="text-sm font-medium text-text-primary truncate">{step.label}</span>
       </div>
 
       {/* Assignee */}
       {step.assignee && (
         <div className="flex items-center gap-1.5 mb-1">
           <Avatar assignee={step.assignee} size={22} />
-          <span className="text-xs text-[var(--text-secondary)] truncate">{step.assignee.name}</span>
+          <span className="text-xs text-text-secondary truncate">{step.assignee.name}</span>
         </div>
       )}
 
       {/* Timestamp */}
       {!compact && step.timestamp && (
-        <time className="block text-[10px] text-[var(--text-secondary)] mb-1" dateTime={step.timestamp}>
+        <time className="block text-[10px] text-text-secondary mb-1" dateTime={step.timestamp}>
           {formatTimestamp(step.timestamp)}
         </time>
       )}
 
       {/* Comment */}
       {!compact && step.comment && (
-        <p className="text-xs text-[var(--text-secondary)] italic border-l-2 border-[var(--border-default)] pl-2 mt-1 mb-1 line-clamp-2">
+        <p className="text-xs text-text-secondary italic border-l-2 border-border-default pl-2 mt-1 mb-1 line-clamp-2">
           {step.comment}
         </p>
       )}
@@ -269,7 +269,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
               <button
                 type="button"
                 onClick={onApprove}
-                className="px-3 py-1 text-xs font-medium rounded bg-[var(--brand-primary)] text-[var(--text-inverse)] hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                className="px-3 py-1 text-xs font-medium rounded bg-[var(--brand-primary)] text-text-inverse hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
               >
                 Approve
               </button>
@@ -278,7 +278,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
               <button
                 type="button"
                 onClick={() => setShowRejectBox(true)}
-                className="px-3 py-1 text-xs font-medium rounded bg-[var(--state-error-bg)] text-[var(--state-error-text)] hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                className="px-3 py-1 text-xs font-medium rounded bg-state-danger-bg text-state-danger-text hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
               >
                 Reject
               </button>
@@ -287,7 +287,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
               <button
                 type="button"
                 onClick={() => setShowDelegateBox(true)}
-                className="px-3 py-1 text-xs font-medium rounded border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--surface-muted)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                className="px-3 py-1 text-xs font-medium rounded border border-border-default text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
               >
                 Delegate
               </button>
@@ -303,7 +303,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                 onChange={(e) => setRejectComment(e.target.value)}
                 placeholder="Reason for rejection (required)"
                 rows={2}
-                className="text-xs rounded border border-[var(--border-default)] bg-[var(--surface-default)] text-[var(--text-primary)] p-1.5 resize-none focus:outline-none focus:ring-1 focus:ring-[var(--focus-ring)]"
+                className="text-xs rounded border border-border-default bg-surface-default text-text-primary p-1.5 resize-none focus:outline-none focus:ring-1 focus:ring-[var(--focus-ring)]"
                 aria-label="Rejection reason"
               />
               <div className="flex gap-1">
@@ -311,14 +311,14 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                   type="button"
                   onClick={handleRejectSubmit}
                   disabled={!rejectComment.trim()}
-                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-[var(--state-error-text)] text-[var(--text-inverse)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-state-danger-text text-text-inverse disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Confirm Reject
                 </button>
                 <button
                   type="button"
                   onClick={() => { setShowRejectBox(false); setRejectComment(''); }}
-                  className="px-2 py-0.5 text-[10px] rounded border border-[var(--border-default)] text-[var(--text-secondary)] focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] rounded border border-border-default text-text-secondary focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Cancel
                 </button>
@@ -335,7 +335,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                 value={delegateValue}
                 onChange={(e) => setDelegateValue(e.target.value)}
                 placeholder="New assignee name or email"
-                className="text-xs rounded border border-[var(--border-default)] bg-[var(--surface-default)] text-[var(--text-primary)] p-1.5 focus:outline-none focus:ring-1 focus:ring-[var(--focus-ring)]"
+                className="text-xs rounded border border-border-default bg-surface-default text-text-primary p-1.5 focus:outline-none focus:ring-1 focus:ring-[var(--focus-ring)]"
                 aria-label="New assignee"
                 onKeyDown={(e) => { if (e.key === 'Enter') handleDelegateSubmit(); }}
               />
@@ -344,14 +344,14 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                   type="button"
                   onClick={handleDelegateSubmit}
                   disabled={!delegateValue.trim()}
-                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-[var(--brand-primary)] text-[var(--text-inverse)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] font-medium rounded bg-[var(--brand-primary)] text-text-inverse disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Confirm Delegate
                 </button>
                 <button
                   type="button"
                   onClick={() => { setShowDelegateBox(false); setDelegateValue(''); }}
-                  className="px-2 py-0.5 text-[10px] rounded border border-[var(--border-default)] text-[var(--text-secondary)] focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] rounded border border-border-default text-text-secondary focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Cancel
                 </button>

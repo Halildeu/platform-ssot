@@ -241,7 +241,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
       {label && (
         <label
           id={labelId}
-          className="mb-1 block text-sm font-medium text-[var(--text-primary)]"
+          className="mb-1 block text-sm font-medium text-text-primary"
         >
           {label}
         </label>
@@ -276,15 +276,15 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
           aria-autocomplete="list"
           className={cn(
             "w-full resize-y rounded-md border transition-colors duration-150",
-            "bg-[var(--surface-default)] text-[var(--text-primary)]",
+            "bg-surface-default text-text-primary",
             "placeholder:text-[var(--text-disabled)]",
             "focus:outline-none focus:ring-2",
             SIZE_CLASSES[size],
             error
               ? "border-[var(--border-error)] focus:ring-[var(--ring-error)]"
-              : "border-[var(--border-default)] focus:ring-[var(--ring-primary)]",
-            accessState.isDisabled && "opacity-50 cursor-not-allowed bg-[var(--surface-muted)]",
-            accessState.isReadonly && "cursor-default bg-[var(--surface-muted)]",
+              : "border-border-default focus:ring-[var(--ring-primary)]",
+            accessState.isDisabled && "opacity-50 cursor-not-allowed bg-surface-muted",
+            accessState.isReadonly && "cursor-default bg-surface-muted",
           )}
         />
 
@@ -297,7 +297,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
             aria-label="Bahsetme onerileri"
             className={cn(
               "absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border",
-              "bg-[var(--surface-default)] border-[var(--border-default)]",
+              "bg-surface-default border-border-default",
               "shadow-lg",
             )}
           >
@@ -310,7 +310,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
                 data-testid="mention-option"
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 cursor-pointer transition-colors",
-                  "text-[var(--text-primary)]",
+                  "text-text-primary",
                   idx === activeIndex && "bg-[var(--surface-hover)]",
                   option.disabled && "opacity-50 cursor-not-allowed",
                 )}
@@ -330,7 +330,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
                 <div className="flex-1 min-w-0">
                   <div className="truncate font-medium text-sm">{option.label}</div>
                   {option.description && (
-                    <div className="truncate text-xs text-[var(--text-secondary)]">
+                    <div className="truncate text-xs text-text-secondary">
                       {option.description}
                     </div>
                   )}
@@ -345,7 +345,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
       {description && (
         <p
           id={descriptionId}
-          className="mt-1 text-sm text-[var(--text-secondary)]"
+          className="mt-1 text-sm text-text-secondary"
         >
           {description}
         </p>

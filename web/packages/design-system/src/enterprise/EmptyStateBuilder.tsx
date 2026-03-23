@@ -98,7 +98,7 @@ const SIZE_CONFIG: Record<EmptyStateSize, { icon: number; titleCls: string; desc
 
 function IconDatabase({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--text-secondary)] opacity-50">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
       <ellipse cx="12" cy="5" rx="9" ry="3" />
       <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
       <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
@@ -108,7 +108,7 @@ function IconDatabase({ size }: { size: number }) {
 
 function IconSearch({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--text-secondary)] opacity-50">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
       <circle cx="11" cy="11" r="8" />
       <line x1="21" y1="21" x2="16.65" y2="16.65" />
     </svg>
@@ -117,7 +117,7 @@ function IconSearch({ size }: { size: number }) {
 
 function IconLock({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--text-secondary)] opacity-50">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
       <path d="M7 11V7a5 5 0 0 1 10 0v4" />
     </svg>
@@ -126,7 +126,7 @@ function IconLock({ size }: { size: number }) {
 
 function IconWarning({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--text-secondary)] opacity-50">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
       <line x1="12" y1="9" x2="12" y2="13" />
       <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -136,7 +136,7 @@ function IconWarning({ size }: { size: number }) {
 
 function IconRocket({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--text-secondary)] opacity-50">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
       <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
       <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
       <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
@@ -147,7 +147,7 @@ function IconRocket({ size }: { size: number }) {
 
 function IconFilter({ size }: { size: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--text-secondary)] opacity-50">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
       <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
   );
@@ -167,7 +167,7 @@ const REASON_ICONS: Record<EmptyStateReason, React.FC<{ size: number }>> = {
 // ---------------------------------------------------------------------------
 
 /** Contextual empty state with reason-based icon, messaging, and optional action buttons. */
-export function EmptyStateBuilder({
+export const EmptyStateBuilder = React.forwardRef<HTMLDivElement, EmptyStateBuilderProps>(({
   reason,
   title,
   description,
@@ -178,7 +178,7 @@ export function EmptyStateBuilder({
   access,
   accessReason,
   className,
-}: EmptyStateBuilderProps) {
+}, ref) => {
   const { state, isHidden, isDisabled } = resolveAccessState(access);
   const defaults = DEFAULTS[reason];
   const config = SIZE_CONFIG[size];
@@ -191,6 +191,7 @@ export function EmptyStateBuilder({
 
   return (
     <div
+      ref={ref}
       className={cn(
         'flex flex-col items-center justify-center text-center',
         config.py,
@@ -204,11 +205,11 @@ export function EmptyStateBuilder({
     >
       <IconComponent size={config.icon} />
 
-      <h4 className={cn('font-semibold text-[var(--text-primary)]', config.titleCls)}>
+      <h4 className={cn('font-semibold text-text-primary', config.titleCls)}>
         {resolvedTitle}
       </h4>
 
-      <p className={cn('max-w-sm text-[var(--text-secondary)]', config.descCls)}>
+      <p className={cn('max-w-sm text-text-secondary', config.descCls)}>
         {resolvedDesc}
       </p>
 
@@ -217,7 +218,7 @@ export function EmptyStateBuilder({
           {primaryAction && (
             <button
               type="button"
-              className="rounded-md bg-[var(--action-primary)] px-4 py-2 text-sm font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isDisabled}
               onClick={primaryAction.onClick}
             >
@@ -227,7 +228,7 @@ export function EmptyStateBuilder({
           {secondaryAction && (
             <button
               type="button"
-              className="rounded-md border border-[var(--border-default)] bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--surface-muted)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-md border border-border-default bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isDisabled}
               onClick={secondaryAction.onClick}
             >
@@ -238,4 +239,6 @@ export function EmptyStateBuilder({
       )}
     </div>
   );
-}
+});
+
+EmptyStateBuilder.displayName = 'EmptyStateBuilder';

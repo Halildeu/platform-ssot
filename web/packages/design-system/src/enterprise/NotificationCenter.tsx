@@ -163,9 +163,9 @@ function NotificationRow({
     <div
       className={cn(
         'group relative flex items-start gap-3 rounded-md px-3 py-2.5 transition-colors',
-        isUnread && 'border-l-[3px] bg-[var(--surface-muted)]',
+        isUnread && 'border-l-[3px] bg-surface-muted',
         !isUnread && 'border-l-[3px] border-l-transparent',
-        !disabled && onClick && 'cursor-pointer hover:bg-[var(--surface-muted)]',
+        !disabled && onClick && 'cursor-pointer hover:bg-surface-muted',
       )}
       style={isUnread ? { borderLeftColor: TYPE_ICONS[item.type].color } : undefined}
       onClick={disabled ? undefined : () => onClick?.(item.id)}
@@ -178,20 +178,20 @@ function NotificationRow({
       <TypeIcon type={item.type} />
 
       <div className="flex-1 min-w-0">
-        <p className={cn('text-sm leading-snug', isUnread ? 'font-semibold text-[var(--text-primary)]' : 'text-[var(--text-primary)]')}>
+        <p className={cn('text-sm leading-snug', isUnread ? 'font-semibold text-text-primary' : 'text-text-primary')}>
           {item.title}
         </p>
         {item.message && (
-          <p className="mt-0.5 text-xs text-[var(--text-secondary)] line-clamp-2">{item.message}</p>
+          <p className="mt-0.5 text-xs text-text-secondary line-clamp-2">{item.message}</p>
         )}
-        <span className="mt-1 block text-[10px] text-[var(--text-secondary)]">
+        <span className="mt-1 block text-[10px] text-text-secondary">
           {relativeTime(item.timestamp, localeText)}
         </span>
 
         {item.type === 'action' && item.actionLabel && onAction && (
           <button
             type="button"
-            className="mt-1.5 inline-flex items-center rounded bg-[var(--surface-muted)] px-2 py-1 text-xs font-medium text-[var(--text-primary)] hover:bg-[var(--border-default)] transition-colors disabled:opacity-50"
+            className="mt-1.5 inline-flex items-center rounded bg-surface-muted px-2 py-1 text-xs font-medium text-text-primary hover:bg-border-default transition-colors disabled:opacity-50"
             disabled={disabled}
             onClick={(e) => {
               e.stopPropagation();
@@ -207,7 +207,7 @@ function NotificationRow({
       {onDismiss && (
         <button
           type="button"
-          className="invisible group-hover:visible absolute top-2 right-2 rounded p-0.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-muted)] transition-colors disabled:opacity-50"
+          className="invisible group-hover:visible absolute top-2 right-2 rounded p-0.5 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50"
           disabled={disabled}
           aria-label="Dismiss notification"
           onClick={(e) => {
@@ -282,7 +282,7 @@ export function NotificationCenter({
   return (
     <div
       className={cn(
-        'flex flex-col rounded-lg border border-[var(--border-default)] bg-[var(--surface-primary)] shadow-sm',
+        'flex flex-col rounded-lg border border-border-default bg-[var(--surface-primary)] shadow-sm',
         accessStyles(state),
         className,
       )}
@@ -291,11 +291,11 @@ export function NotificationCenter({
       title={accessReason}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[var(--border-default)] px-4 py-3">
+      <div className="flex items-center justify-between border-b border-border-default px-4 py-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-[var(--text-primary)]">{resolvedTitle}</h3>
+          <h3 className="text-sm font-semibold text-text-primary">{resolvedTitle}</h3>
           {unreadCount > 0 && (
-            <span className="inline-flex items-center justify-center rounded-full bg-[var(--state-error-text)] px-1.5 py-0.5 text-[10px] font-bold text-[var(--text-inverse)] min-w-[20px]">
+            <span className="inline-flex items-center justify-center rounded-full bg-state-danger-text px-1.5 py-0.5 text-[10px] font-bold text-text-inverse min-w-[20px]">
               {unreadCount}
             </span>
           )}
@@ -303,7 +303,7 @@ export function NotificationCenter({
         {onMarkAllRead && unreadCount > 0 && (
           <button
             type="button"
-            className="text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors disabled:opacity-50"
+            className="text-xs text-text-secondary hover:text-text-primary transition-colors disabled:opacity-50"
             disabled={isDisabled}
             onClick={onMarkAllRead}
           >
@@ -315,7 +315,7 @@ export function NotificationCenter({
       {/* Body */}
       <div className="flex-1 overflow-y-auto">
         {notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 text-[var(--text-secondary)]">
+          <div className="flex flex-col items-center justify-center py-10 text-text-secondary">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mb-2 opacity-40">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" strokeLinecap="round" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
@@ -326,7 +326,7 @@ export function NotificationCenter({
           /* Grouped view */
           GROUP_ORDER.filter((t) => grouped.has(t)).map((type) => (
             <div key={type}>
-              <div className="sticky top-0 bg-[var(--surface-primary)] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+              <div className="sticky top-0 bg-[var(--surface-primary)] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-text-secondary">
                 {groupLabels[type]}
               </div>
               {grouped.get(type)!.map((item) => (
@@ -360,10 +360,10 @@ export function NotificationCenter({
 
       {/* Show more */}
       {!expanded && hiddenCount > 0 && (
-        <div className="border-t border-[var(--border-default)] px-4 py-2 text-center">
+        <div className="border-t border-border-default px-4 py-2 text-center">
           <button
             type="button"
-            className="text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            className="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
             onClick={handleToggleExpand}
           >
             {localeText?.showMore?.(hiddenCount) ?? `+${hiddenCount} daha göster`}
@@ -371,10 +371,10 @@ export function NotificationCenter({
         </div>
       )}
       {expanded && hiddenCount > 0 && (
-        <div className="border-t border-[var(--border-default)] px-4 py-2 text-center">
+        <div className="border-t border-border-default px-4 py-2 text-center">
           <button
             type="button"
-            className="text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            className="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
             onClick={handleToggleExpand}
           >
             {localeText?.showLess ?? 'Daha az göster'}

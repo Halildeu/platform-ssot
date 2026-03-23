@@ -40,15 +40,15 @@ export interface IconButtonProps
 
 const variantStyles: Record<IconButtonVariant, string> = {
   primary:
-    "bg-[var(--action-primary)] text-[var(--text-inverse)] hover:bg-[var(--action-primary-hover)] shadow-sm",
+    "bg-action-primary text-text-inverse hover:bg-accent-primary-hover shadow-sm",
   secondary:
-    "bg-[var(--surface-muted)] text-[var(--text-primary)] hover:bg-[var(--border-subtle)]",
+    "bg-surface-muted text-text-primary hover:bg-border-subtle",
   outline:
-    "border border-[var(--border-default)] bg-transparent text-[var(--text-primary)] hover:bg-[var(--surface-muted)]",
+    "border border-border-default bg-transparent text-text-primary hover:bg-surface-muted",
   ghost:
-    "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]",
+    "bg-transparent text-text-secondary hover:bg-surface-muted hover:text-text-primary",
   danger:
-    "bg-[var(--state-error-text)] text-[var(--text-inverse)] hover:brightness-110 shadow-sm",
+    "bg-state-danger-text text-text-inverse hover:brightness-110 shadow-sm",
 };
 
 const sizeStyles: Record<IconButtonSize, string> = {

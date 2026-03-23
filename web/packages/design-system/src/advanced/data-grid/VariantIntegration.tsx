@@ -514,21 +514,21 @@ export const VariantIntegration = <RowData = unknown,>({
     }
     if (v.isUserDefault) {
       badges.push(
-        <span key="ud" className="rounded bg-[var(--state-warning-bg,#fef3c7)] px-1 py-0.5 text-[10px] font-medium text-[var(--state-warning-text,#b45309)]">
+        <span key="ud" className="rounded bg-state-warning-bg px-1 py-0.5 text-[10px] font-medium text-state-warning-text">
           {m.personalDefaultTagLabel ?? "Varsayilan"}
         </span>,
       );
     }
     if (v.isGlobal && v.isGlobalDefault) {
       badges.push(
-        <span key="gd" className="rounded bg-[var(--state-success-bg,#d1fae5)] px-1 py-0.5 text-[10px] font-medium text-[var(--state-success-text)]">
+        <span key="gd" className="rounded bg-state-success-bg px-1 py-0.5 text-[10px] font-medium text-state-success-text">
           {m.globalPublicDefaultTagLabel ?? "G. Varsayilan"}
         </span>,
       );
     }
     if (v.isCompatible === false) {
       badges.push(
-        <span key="ic" className="rounded bg-[var(--state-error-bg,#fee2e2)] px-1 py-0.5 text-[10px] font-medium text-[var(--state-error-text)]">
+        <span key="ic" className="rounded bg-state-danger-bg px-1 py-0.5 text-[10px] font-medium text-state-danger-text">
           {m.incompatibleTagLabel ?? "Uyumsuz"}
         </span>,
       );
@@ -609,7 +609,7 @@ export const VariantIntegration = <RowData = unknown,>({
               </span>
               <button
                 type="button"
-                className="rounded bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-[var(--text-inverse)] hover:brightness-110 disabled:opacity-50"
+                className="rounded bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
                 onClick={() => handleDelete(v.id)}
                 disabled={isBusy}
               >
@@ -858,7 +858,7 @@ export const VariantIntegration = <RowData = unknown,>({
             />
             <button
               type="button"
-              className="h-7 rounded bg-action-primary px-3 text-xs font-medium text-[var(--text-inverse)] hover:brightness-110 disabled:opacity-50"
+              className="h-7 rounded bg-action-primary px-3 text-xs font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
               onClick={handleCreate}
               disabled={pendingAction === "create"}
             >
@@ -932,9 +932,9 @@ function ActionBtn({
       className={cn(
         "rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors disabled:opacity-50",
         variant === "danger"
-          ? "text-state-error-text hover:bg-[var(--state-error-bg,#fef2f2)]"
+          ? "text-state-error-text hover:bg-state-danger-bg"
           : variant === "active"
-            ? "bg-[var(--state-warning-bg,#fef3c7)] text-[var(--state-warning-text,#b45309)] hover:bg-[var(--state-warning-bg-hover,#fde68a)]"
+            ? "bg-state-warning-bg text-state-warning-text hover:bg-[var(--state-warning-bg-hover,#fde68a)]"
             : "text-text-secondary hover:bg-surface-muted",
       )}
       onClick={onClick}

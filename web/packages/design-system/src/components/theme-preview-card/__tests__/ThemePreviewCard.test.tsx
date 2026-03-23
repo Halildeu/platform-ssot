@@ -52,13 +52,13 @@ describe('ThemePreviewCard — selected state', () => {
   it('selected durumunda farkli border class uygular', () => {
     const { container } = render(<ThemePreviewCard selected />);
     const card = container.firstChild as HTMLElement;
-    expect(card.className).toContain('border-[var(--action-primary)]');
+    expect(card.className).toContain('border-action-primary');
   });
 
   it('selected olmayan durumda subtle border class uygular', () => {
     const { container } = render(<ThemePreviewCard selected={false} />);
     const card = container.firstChild as HTMLElement;
-    expect(card.className).toContain('border-[var(--border-subtle)]');
+    expect(card.className).toContain('border-border-subtle');
   });
 });
 

@@ -1,12 +1,13 @@
 import React from "react";
 import { cn } from "../../utils/cn";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  PageHeader — Standard page-level header with title, actions, tabs  */
 /* ------------------------------------------------------------------ */
 
 /** Props for the PageHeader component. */
-export interface PageHeaderProps {
+export interface PageHeaderProps extends AccessControlledProps {
   /** Page title */
   title: React.ReactNode;
   /** Optional subtitle / description */
@@ -43,15 +44,21 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   sticky = false,
   noBorder = false,
   className,
+  access,
+  accessReason,
 }) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   return (
     <header
       className={cn(
-        "bg-[var(--surface-default)] px-6 pt-4 pb-0",
-        !noBorder && "border-b border-[var(--border-subtle)]",
+        "bg-surface-default px-6 pt-4 pb-0",
+        !noBorder && "border-b border-border-subtle",
         sticky && "sticky top-0 z-[100]",
+        accessState.isDisabled && "pointer-events-none opacity-50",
         className,
       )}
+      title={accessReason}
     >
       {/* Breadcrumb row */}
       {breadcrumb && <div className="mb-2">{breadcrumb}</div>}
@@ -63,14 +70,14 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-xl font-semibold text-[var(--text-primary)] truncate">
+              <h1 className="text-xl font-semibold text-text-primary truncate">
                 {title}
               </h1>
               {tags && <div className="flex items-center gap-1.5">{tags}</div>}
             </div>
 
             {subtitle && (
-              <p className="mt-0.5 text-sm text-[var(--text-secondary)] line-clamp-2">
+              <p className="mt-0.5 text-sm text-text-secondary line-clamp-2">
                 {subtitle}
               </p>
             )}

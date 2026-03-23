@@ -1,5 +1,6 @@
 import React, { useId } from "react";
 import { cn } from "../../utils/cn";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FormField — Composed form control wrapper                          */
@@ -8,7 +9,7 @@ import { cn } from "../../utils/cn";
 /*  required/optional indicators.                                      */
 /* ------------------------------------------------------------------ */
 
-export interface FormFieldProps {
+export interface FormFieldProps extends AccessControlledProps {
   /** Field label */
   label?: React.ReactNode;
   /** Help text below the input */
@@ -29,7 +30,7 @@ export interface FormFieldProps {
   children: React.ReactNode;
 }
 
-export const FormField: React.FC<FormFieldProps> = ({
+export const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(({
   label,
   help,
   error,
@@ -40,7 +41,11 @@ export const FormField: React.FC<FormFieldProps> = ({
   htmlFor: externalId,
   className,
   children,
-}) => {
+  access,
+  accessReason,
+}, ref) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const autoId = useId();
   const id = externalId ?? autoId;
   const helpId = `${id}-help`;
@@ -48,23 +53,26 @@ export const FormField: React.FC<FormFieldProps> = ({
 
   return (
     <div
+      ref={ref}
       className={cn(
         horizontal ? "flex items-start gap-4" : "flex flex-col gap-1.5",
         disabled && "opacity-60",
+        accessState.isDisabled && "pointer-events-none opacity-50",
         className,
       )}
+      title={accessReason}
     >
       {label && (
         <label
           htmlFor={id}
           className={cn(
-            "text-sm font-medium text-[var(--text-primary)]",
+            "text-sm font-medium text-text-primary",
             horizontal && "mt-2 w-32 shrink-0",
           )}
         >
           {label}
           {required && (
-            <span className="ms-0.5 text-[var(--state-error-text)]" aria-hidden>
+            <span className="ms-0.5 text-state-danger-text" aria-hidden>
               *
             </span>
           )}
@@ -97,7 +105,7 @@ export const FormField: React.FC<FormFieldProps> = ({
 
         {/* Error message */}
         {error && (
-          <p id={errorId} className="mt-1.5 flex items-center gap-1 text-xs text-[var(--state-error-text)]" role="alert">
+          <p id={errorId} className="mt-1.5 flex items-center gap-1 text-xs text-state-danger-text" role="alert">
             <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
               <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm-.75 3.75a.75.75 0 011.5 0v3.5a.75.75 0 01-1.5 0v-3.5zM8 11a1 1 0 100 2 1 1 0 000-2z" />
             </svg>
@@ -107,13 +115,13 @@ export const FormField: React.FC<FormFieldProps> = ({
 
         {/* Help text */}
         {!error && help && (
-          <p id={helpId} className="mt-1.5 text-xs text-[var(--text-secondary)]">
+          <p id={helpId} className="mt-1.5 text-xs text-text-secondary">
             {help}
           </p>
         )}
       </div>
     </div>
   );
-};
+});
 
 FormField.displayName = "FormField";

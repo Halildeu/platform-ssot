@@ -52,9 +52,9 @@ export interface ApprovalReviewProps extends AccessControlledProps {
 }
 
 const approvalReviewSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
 
-export const ApprovalReview: React.FC<ApprovalReviewProps> = ({
+export const ApprovalReview = React.forwardRef<HTMLElement, ApprovalReviewProps>(({
   title = "Approval review",
   description = "Human checkpoint, source evidence ve audit izleri ayni review recipe altinda gorunur.",
   checkpoint,
@@ -69,7 +69,7 @@ export const ApprovalReview: React.FC<ApprovalReviewProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const [internalCitationId, setInternalCitationId] = React.useState<
     string | null
@@ -87,6 +87,7 @@ export const ApprovalReview: React.FC<ApprovalReviewProps> = ({
 
   return (
     <section
+      ref={ref}
       className={`${approvalReviewSurfaceClassName} ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="approval-review"
@@ -95,7 +96,7 @@ export const ApprovalReview: React.FC<ApprovalReviewProps> = ({
     >
       <Text
         as="div"
-        className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]"
+        className="text-base font-semibold tracking-[-0.02em] text-text-primary"
       >
         {title}
       </Text>
@@ -140,7 +141,7 @@ export const ApprovalReview: React.FC<ApprovalReviewProps> = ({
       </div>
     </section>
   );
-};
+});
 
 ApprovalReview.displayName = 'ApprovalReview';
 

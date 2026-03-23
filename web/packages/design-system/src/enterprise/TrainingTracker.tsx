@@ -38,11 +38,11 @@ export interface TrainingTrackerProps extends AccessControlledProps {
 // ── Status config ──
 
 const STATUS_CONFIG: Record<TrainingStatus, { label: string; bg: string; text: string }> = {
-  'not-started': { label: 'Not Started', bg: 'bg-[var(--surface-muted)]', text: 'text-[var(--text-tertiary)]' },
-  'in-progress': { label: 'In Progress', bg: 'bg-[var(--state-info-bg)]', text: 'text-[var(--state-info-text)]' },
-  'completed': { label: 'Completed', bg: 'bg-[var(--state-success-bg)]', text: 'text-[var(--state-success-text)]' },
-  'expired': { label: 'Expired', bg: 'bg-[var(--state-warning-bg)]', text: 'text-[var(--state-warning-text)]' },
-  'overdue': { label: 'Overdue', bg: 'bg-[var(--state-error-bg)]', text: 'text-[var(--state-error-text)]' },
+  'not-started': { label: 'Not Started', bg: 'bg-surface-muted', text: 'text-[var(--text-tertiary)]' },
+  'in-progress': { label: 'In Progress', bg: 'bg-state-info-bg', text: 'text-state-info-text' },
+  'completed': { label: 'Completed', bg: 'bg-state-success-bg', text: 'text-state-success-text' },
+  'expired': { label: 'Expired', bg: 'bg-state-warning-bg', text: 'text-state-warning-text' },
+  'overdue': { label: 'Overdue', bg: 'bg-state-danger-bg', text: 'text-state-danger-text' },
 };
 
 const STATUS_BAR_COLOR: Record<TrainingStatus, string> = {
@@ -129,7 +129,7 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] overflow-hidden',
+        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}
@@ -138,8 +138,8 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
       title={accessReason}
     >
       {/* Filter bar */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border-default)] bg-[var(--surface-muted)] px-4 py-3">
-        <span className="text-xs font-medium text-[var(--text-secondary)] mr-1">Filter:</span>
+      <div className="flex flex-wrap items-center gap-2 border-b border-border-default bg-surface-muted px-4 py-3">
+        <span className="text-xs font-medium text-text-secondary mr-1">Filter:</span>
         {ALL_STATUSES.map(status => {
           const config = STATUS_CONFIG[status];
           const isActive = activeFilters.has(status);
@@ -149,7 +149,7 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
               key={status}
               className={cn(
                 'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-all',
-                isActive ? `${config.bg} ${config.text} ring-1 ring-current/20` : 'bg-transparent text-[var(--text-tertiary)] hover:bg-[var(--surface-default)]',
+                isActive ? `${config.bg} ${config.text} ring-1 ring-current/20` : 'bg-transparent text-[var(--text-tertiary)] hover:bg-surface-default',
               )}
               onClick={() => toggleFilter(status)}
             >
@@ -161,26 +161,26 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
       </div>
 
       {/* Grouped items */}
-      <div className="divide-y divide-[var(--border-subtle)]">
+      <div className="divide-y divide-border-subtle">
         {Array.from(grouped.entries()).map(([groupKey, groupItems]) => {
           const isCollapsed = collapsedGroups.has(groupKey);
           return (
             <div key={groupKey}>
               {/* Group header */}
               <button
-                className="flex w-full items-center gap-2 bg-[var(--surface-muted)]/50 px-4 py-2 text-left hover:bg-[var(--surface-muted)]"
+                className="flex w-full items-center gap-2 bg-surface-muted/50 px-4 py-2 text-left hover:bg-surface-muted"
                 onClick={() => toggleGroup(groupKey)}
               >
                 <span className="text-[10px] text-[var(--text-tertiary)]">
                   {isCollapsed ? '\u25B6' : '\u25BC'}
                 </span>
-                <span className="text-sm font-semibold text-[var(--text-primary)]">{groupKey}</span>
+                <span className="text-sm font-semibold text-text-primary">{groupKey}</span>
                 <span className="text-xs text-[var(--text-tertiary)]">({groupItems.length})</span>
               </button>
 
               {/* Items */}
               {!isCollapsed && (
-                <div className="divide-y divide-[var(--border-subtle)]">
+                <div className="divide-y divide-border-subtle">
                   {groupItems.map(item => {
                     const overdue = isOverdue(item);
                     const statusCfg = STATUS_CONFIG[overdue && item.status !== 'completed' ? 'overdue' : item.status];
@@ -191,7 +191,7 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
                         key={item.id}
                         className={cn(
                           'flex items-center gap-3 px-4 py-3 transition-colors',
-                          onItemClick && 'cursor-pointer hover:bg-[var(--surface-muted)]/40',
+                          onItemClick && 'cursor-pointer hover:bg-surface-muted/40',
                           overdue && item.status !== 'completed' && 'border-l-2 border-l-[var(--state-error-text)]',
                         )}
                         onClick={() => onItemClick?.(item)}
@@ -199,24 +199,24 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
                         {/* Mandatory star */}
                         <div className="w-4 flex-shrink-0 text-center">
                           {item.mandatory && (
-                            <span className="text-[var(--state-warning-text)] text-sm" title="Mandatory">{'\u2605'}</span>
+                            <span className="text-state-warning-text text-sm" title="Mandatory">{'\u2605'}</span>
                           )}
                         </div>
 
                         {/* Title + category */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-[var(--text-primary)] truncate">
+                            <span className="text-sm font-medium text-text-primary truncate">
                               {item.title}
                             </span>
-                            <span className="inline-flex items-center rounded-full bg-[var(--surface-muted)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)] flex-shrink-0">
+                            <span className="inline-flex items-center rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary flex-shrink-0">
                               {item.category}
                             </span>
                           </div>
 
                           {/* Progress bar */}
                           <div className="mt-1.5 flex items-center gap-2">
-                            <div className="h-1.5 flex-1 rounded-full bg-[var(--surface-muted)] overflow-hidden max-w-[200px]">
+                            <div className="h-1.5 flex-1 rounded-full bg-surface-muted overflow-hidden max-w-[200px]">
                               <div
                                 className="h-full rounded-full transition-all duration-500"
                                 style={{ width: `${item.progress}%`, backgroundColor: barColor }}
@@ -235,7 +235,7 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
 
                         {/* Due date */}
                         {item.dueDate && (
-                          <span className={cn('text-xs flex-shrink-0', overdue && item.status !== 'completed' ? 'text-[var(--state-error-text)] font-medium' : 'text-[var(--text-tertiary)]')}>
+                          <span className={cn('text-xs flex-shrink-0', overdue && item.status !== 'completed' ? 'text-state-danger-text font-medium' : 'text-[var(--text-tertiary)]')}>
                             {formatDate(item.dueDate)}
                           </span>
                         )}

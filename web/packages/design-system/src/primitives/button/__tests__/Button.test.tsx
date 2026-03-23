@@ -31,7 +31,7 @@ describe('Button — temel render', () => {
   it('varsayilan variant "primary" dir', () => {
     const { container } = render(<Button>Test</Button>);
     const button = container.querySelector('button');
-    expect(button?.className).toContain('bg-[var(--action-primary)]');
+    expect(button?.className).toContain('bg-action-primary');
   });
 
   it('varsayilan size "md" dir', () => {
@@ -47,11 +47,11 @@ describe('Button — temel render', () => {
 
 describe('Button — variant proplari', () => {
   it.each([
-    ['primary', 'bg-[var(--action-primary)]'],
-    ['secondary', 'bg-[var(--surface-muted)]'],
+    ['primary', 'bg-action-primary'],
+    ['secondary', 'bg-surface-muted'],
     ['outline', 'border'],
     ['ghost', 'bg-transparent'],
-    ['danger', 'bg-[var(--state-error-text)]'],
+    ['danger', 'bg-state-danger-text'],
     ['link', 'underline-offset-4'],
   ] as const)('variant="%s" dogru class uygular', (variant, expectedClass) => {
     const { container } = render(<Button variant={variant}>Test</Button>);

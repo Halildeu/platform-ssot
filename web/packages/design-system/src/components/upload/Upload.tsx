@@ -148,12 +148,12 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
             "block border border-dashed shadow-sm transition",
             sizeClass[size],
             tone === "invalid"
-              ? "border-[var(--state-error-text)] bg-[var(--surface-muted)]"
+              ? "border-state-danger-text bg-surface-muted"
               : tone === "readonly"
-                ? "border-[var(--border-subtle)] bg-[var(--surface-muted)]"
+                ? "border-border-subtle bg-surface-muted"
                 : tone === "disabled"
-                  ? "border-[var(--border-subtle)] bg-[var(--surface-muted)] opacity-80"
-                  : "border-[var(--border-default)] bg-[var(--surface-muted)] hover:border-[var(--accent-primary)]",
+                  ? "border-border-subtle bg-surface-muted opacity-80"
+                  : "border-border-default bg-surface-muted hover:border-accent-primary",
             isReadonly || isDisabled ? "cursor-default" : "cursor-pointer",
             fullWidth && "w-full",
             className,
@@ -172,7 +172,7 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
             <Text
               as="span"
               variant="muted"
-              className="shrink-0 rounded-full border border-[var(--border-default)] bg-[var(--surface-canvas)] px-3 py-1 text-xs font-semibold tabular-nums"
+              className="shrink-0 rounded-full border border-border-default bg-[var(--surface-canvas)] px-3 py-1 text-xs font-semibold tabular-nums"
             >
               {currentFiles.length}{maxFiles ? ` / ${maxFiles}` : ""}
             </Text>
@@ -200,10 +200,10 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
             {currentFiles.map((file) => (
               <span
                 key={`${file.name}-${file.lastModified ?? "static"}`}
-                className="inline-flex items-center gap-2 rounded-full border border-[var(--border-default)] bg-[var(--surface-canvas)] px-3 py-1 text-xs font-medium text-[var(--text-primary)]"
+                className="inline-flex items-center gap-2 rounded-full border border-border-default bg-[var(--surface-canvas)] px-3 py-1 text-xs font-medium text-text-primary"
               >
                 <span className="truncate">{file.name}</span>
-                <span className="text-[var(--text-secondary)] tabular-nums">{formatFileSize(file.size)}</span>
+                <span className="text-text-secondary tabular-nums">{formatFileSize(file.size)}</span>
               </span>
             ))}
           </div>

@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback } from "react";
 import { cn } from "../../utils/cn";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  SearchInput — Input with search icon, clear button, loading        */
@@ -8,7 +9,8 @@ import { cn } from "../../utils/cn";
 export type SearchInputSize = "sm" | "md" | "lg";
 
 export interface SearchInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type">,
+    AccessControlledProps {
   /** Component size */
   size?: SearchInputSize;
   /** @deprecated Use `size` instead. Will be removed in v3.0.0. */
@@ -49,10 +51,14 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       disabled = false,
       value,
       className,
+      access,
+      accessReason,
       ...rest
     },
     ref,
   ) => {
+    const accessState = resolveAccessState(access);
+    if (accessState.isHidden) return null;
     const size = sizeProp ?? searchSize ?? "md";
 
     if (process.env.NODE_ENV !== "production" && searchSize !== undefined) {
@@ -69,11 +75,11 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     }, [onClear]);
 
     return (
-      <div className={cn("relative w-full", disabled && "opacity-50 cursor-not-allowed")}>
+      <div className={cn("relative w-full", disabled && "opacity-50 cursor-not-allowed", accessState.isDisabled && "pointer-events-none opacity-50")} title={accessReason}>
         {/* Search icon */}
         <svg
           className={cn(
-            "pointer-events-none absolute top-1/2 -translate-y-1/2 text-[var(--text-secondary)]",
+            "pointer-events-none absolute top-1/2 -translate-y-1/2 text-text-secondary",
             iconSizes[resolvedSize],
           )}
           viewBox="0 0 16 16"
@@ -94,10 +100,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           disabled={disabled}
           className={cn(
             "w-full rounded-xl border transition-colors duration-150",
-            "bg-[var(--surface-canvas)] text-[var(--text-primary)]",
-            "border-[var(--border-subtle)]",
+            "bg-[var(--surface-canvas)] text-text-primary",
+            "border-border-subtle",
             "placeholder:text-[var(--text-disabled)]",
-            "focus:border-[var(--action-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--action-primary)]/20",
+            "focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-action-primary/20",
             "[&::-webkit-search-cancel-button]:hidden",
             sizeStyles[resolvedSize],
             (hasValue && clearable) || shortcutHint ? "pe-14" : "",
@@ -109,7 +115,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         {/* Right side: loading / clear / shortcut hint */}
         <div className="absolute end-2.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
           {loading && (
-            <svg className="h-4 w-4 animate-spin text-[var(--text-secondary)]" viewBox="0 0 24 24" fill="none">
+            <svg className="h-4 w-4 animate-spin text-text-secondary" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
@@ -118,7 +124,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             <button
               type="button"
               onClick={handleClear}
-              className="rounded p-0.5 text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              className="rounded p-0.5 text-text-secondary transition hover:text-text-primary"
               aria-label="Clear search"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none">
@@ -127,7 +133,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             </button>
           )}
           {!loading && !hasValue && shortcutHint && (
-            <kbd className="rounded-md border border-[var(--border-subtle)] bg-[var(--surface-default)] px-1.5 py-0.5 text-[10px] font-medium text-[var(--text-secondary)]">
+            <kbd className="rounded-md border border-border-subtle bg-surface-default px-1.5 py-0.5 text-[10px] font-medium text-text-secondary">
               {shortcutHint}
             </kbd>
           )}

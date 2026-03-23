@@ -40,7 +40,7 @@ describe('DirectionProvider — depth', () => {
   });
 
   it('disabled — nested providers override parent direction', () => {
-    const { container } = render(
+    render(
       <DirectionProvider direction="ltr">
         <DirectionProvider direction="rtl">
           <span data-testid="inner">Nested</span>

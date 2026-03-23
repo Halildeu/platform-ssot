@@ -69,7 +69,7 @@ export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
         <div
           ref={ref}
           className={cn(
-            "flex flex-col items-center justify-center gap-3 py-6 text-[var(--text-secondary)]",
+            "flex flex-col items-center justify-center gap-3 py-6 text-text-secondary",
             className,
           )}
         >

@@ -39,17 +39,17 @@ export interface GovernanceBoardProps extends AccessControlledProps {
 // ── Status & Severity config ──
 
 const STATUS_CONFIG: Record<ComplianceStatus, { label: string; bg: string; text: string; dot: string }> = {
-  'compliant': { label: 'Compliant', bg: 'bg-[var(--state-success-bg)]', text: 'text-[var(--state-success-text)]', dot: 'bg-[var(--state-success-text)]' },
-  'non-compliant': { label: 'Non-Compliant', bg: 'bg-[var(--state-error-bg)]', text: 'text-[var(--state-error-text)]', dot: 'bg-[var(--state-error-text)]' },
-  'partially-compliant': { label: 'Partial', bg: 'bg-[var(--state-warning-bg)]', text: 'text-[var(--state-warning-text)]', dot: 'bg-[var(--state-warning-text)]' },
-  'not-assessed': { label: 'Not Assessed', bg: 'bg-[var(--surface-muted)]', text: 'text-[var(--text-tertiary)]', dot: 'bg-[var(--text-tertiary)]' },
+  'compliant': { label: 'Compliant', bg: 'bg-state-success-bg', text: 'text-state-success-text', dot: 'bg-state-success-text' },
+  'non-compliant': { label: 'Non-Compliant', bg: 'bg-state-danger-bg', text: 'text-state-danger-text', dot: 'bg-state-danger-text' },
+  'partially-compliant': { label: 'Partial', bg: 'bg-state-warning-bg', text: 'text-state-warning-text', dot: 'bg-state-warning-text' },
+  'not-assessed': { label: 'Not Assessed', bg: 'bg-surface-muted', text: 'text-[var(--text-tertiary)]', dot: 'bg-[var(--text-tertiary)]' },
 };
 
 const SEVERITY_CONFIG: Record<SeverityLevel, { label: string; borderColor: string; textColor: string }> = {
-  critical: { label: 'Critical', borderColor: 'border-l-[var(--state-error-text)]', textColor: 'text-[var(--state-error-text)]' },
+  critical: { label: 'Critical', borderColor: 'border-l-[var(--state-error-text)]', textColor: 'text-state-danger-text' },
   high: { label: 'High', borderColor: 'border-l-orange-500', textColor: 'text-orange-600' },
-  medium: { label: 'Medium', borderColor: 'border-l-[var(--state-warning-text)]', textColor: 'text-[var(--state-warning-text)]' },
-  low: { label: 'Low', borderColor: 'border-l-[var(--state-success-text)]', textColor: 'text-[var(--state-success-text)]' },
+  medium: { label: 'Medium', borderColor: 'border-l-[var(--state-warning-text)]', textColor: 'text-state-warning-text' },
+  low: { label: 'Low', borderColor: 'border-l-[var(--state-success-text)]', textColor: 'text-state-success-text' },
 };
 
 function formatDate(date: Date): string {
@@ -89,13 +89,13 @@ const SummaryStrip: React.FC<SummaryStripProps> = ({ items }) => {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 border-b border-[var(--border-default)] bg-[var(--surface-muted)] px-4 py-3">
+    <div className="flex flex-wrap items-center gap-3 border-b border-border-default bg-surface-muted px-4 py-3">
       {(Object.entries(counts) as [ComplianceStatus, number][]).map(([status, count]) => {
         const cfg = STATUS_CONFIG[status];
         return (
           <div key={status} className="flex items-center gap-2">
             <div className={cn('h-2.5 w-2.5 rounded-full', cfg.dot)} />
-            <span className="text-xs font-medium text-[var(--text-secondary)]">{cfg.label}</span>
+            <span className="text-xs font-medium text-text-secondary">{cfg.label}</span>
             <span className={cn('inline-flex min-w-[20px] items-center justify-center rounded-full px-1.5 py-0.5 text-[10px] font-bold', cfg.bg, cfg.text)}>
               {count}
             </span>
@@ -139,7 +139,7 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] overflow-hidden',
+        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}
@@ -151,7 +151,7 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
       <SummaryStrip items={items} />
 
       {/* Grouped items */}
-      <div className="divide-y divide-[var(--border-subtle)]">
+      <div className="divide-y divide-border-subtle">
         {Array.from(grouped.entries()).map(([groupKey, groupItems]) => {
           const isCollapsed = collapsedGroups.has(groupKey);
 
@@ -163,21 +163,21 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
             <div key={groupKey}>
               {/* Group header */}
               <button
-                className="flex w-full items-center gap-2 bg-[var(--surface-muted)]/40 px-4 py-2.5 text-left hover:bg-[var(--surface-muted)]"
+                className="flex w-full items-center gap-2 bg-surface-muted/40 px-4 py-2.5 text-left hover:bg-surface-muted"
                 onClick={() => toggleGroup(groupKey)}
               >
                 <span className="text-[10px] text-[var(--text-tertiary)]">
                   {isCollapsed ? '\u25B6' : '\u25BC'}
                 </span>
-                <span className="text-sm font-semibold text-[var(--text-primary)]">{groupKey}</span>
+                <span className="text-sm font-semibold text-text-primary">{groupKey}</span>
                 <span className="text-xs text-[var(--text-tertiary)]">({groupItems.length})</span>
                 {nonCompliantCount > 0 && (
-                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-[var(--state-error-bg)] px-2 py-0.5 text-[10px] font-semibold text-[var(--state-error-text)]">
+                  <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-state-danger-bg px-2 py-0.5 text-[10px] font-semibold text-state-danger-text">
                     {nonCompliantCount} non-compliant
                   </span>
                 )}
                 {criticalCount > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--state-error-bg)] px-2 py-0.5 text-[10px] font-semibold text-[var(--state-error-text)]">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-state-danger-bg px-2 py-0.5 text-[10px] font-semibold text-state-danger-text">
                     {criticalCount} critical
                   </span>
                 )}
@@ -185,7 +185,7 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
 
               {/* Items */}
               {!isCollapsed && (
-                <div className="divide-y divide-[var(--border-subtle)]">
+                <div className="divide-y divide-border-subtle">
                   {groupItems.map(item => {
                     const statusCfg = STATUS_CONFIG[item.status];
                     const severityCfg = SEVERITY_CONFIG[item.severity];
@@ -197,17 +197,17 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
                         className={cn(
                           'flex items-center gap-3 border-l-3 px-4 py-3 transition-colors',
                           severityCfg.borderColor,
-                          onItemClick && 'cursor-pointer hover:bg-[var(--surface-muted)]/40',
+                          onItemClick && 'cursor-pointer hover:bg-surface-muted/40',
                         )}
                         onClick={() => onItemClick?.(item)}
                       >
                         {/* Title + Domain badge */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-[var(--text-primary)] truncate">
+                            <span className="text-sm font-medium text-text-primary truncate">
                               {item.title}
                             </span>
-                            <span className="inline-flex items-center rounded-full bg-[var(--surface-muted)] px-2 py-0.5 text-[10px] font-medium text-[var(--text-secondary)] flex-shrink-0">
+                            <span className="inline-flex items-center rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary flex-shrink-0">
                               {item.domain}
                             </span>
                           </div>
@@ -221,12 +221,12 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
                               </span>
                             )}
                             {item.findingsCount > 0 && (
-                              <span className={cn('flex items-center gap-1', item.findingsCount > 3 ? 'text-[var(--state-error-text)]' : '')}>
+                              <span className={cn('flex items-center gap-1', item.findingsCount > 3 ? 'text-state-danger-text' : '')}>
                                 {item.findingsCount} finding{item.findingsCount !== 1 ? 's' : ''}
                               </span>
                             )}
                             {item.nextReviewDate && (
-                              <span className={cn('flex items-center gap-1', isReviewOverdue ? 'text-[var(--state-error-text)] font-medium' : '')}>
+                              <span className={cn('flex items-center gap-1', isReviewOverdue ? 'text-state-danger-text font-medium' : '')}>
                                 Review: {formatDate(item.nextReviewDate)}
                                 {isReviewOverdue && ' (overdue)'}
                               </span>

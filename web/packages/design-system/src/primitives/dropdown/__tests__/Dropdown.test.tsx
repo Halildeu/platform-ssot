@@ -170,7 +170,7 @@ describe('Dropdown — danger items', () => {
     renderDropdown(items);
     await userEvent.click(screen.getByText('Open menu'));
     const btn = screen.getByText('Delete').closest('button');
-    expect(btn?.className).toContain('text-[var(--state-error-text)]');
+    expect(btn?.className).toContain('text-state-danger-text');
   });
 });
 

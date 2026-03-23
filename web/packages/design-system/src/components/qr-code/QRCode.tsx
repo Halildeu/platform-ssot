@@ -576,7 +576,7 @@ export const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(function QRC
       ref={forwardedRef}
       className={cn(
         "relative inline-flex items-center justify-center",
-        bordered && "rounded-lg border border-[var(--border-default)] p-3",
+        bordered && "rounded-lg border border-border-default p-3",
         accessState.isDisabled && "cursor-not-allowed opacity-50",
         className,
       )}
@@ -592,7 +592,7 @@ export const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(function QRC
           data-testid="qrcode-loading"
         >
           <svg
-            className="animate-spin text-[var(--text-secondary)]"
+            className="animate-spin text-text-secondary"
             width={size * 0.3}
             height={size * 0.3}
             viewBox="0 0 24 24"
@@ -654,14 +654,14 @@ export const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(function QRC
           className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-[var(--surface-canvas)]/90"
           data-testid="qrcode-expired"
         >
-          <span className="mb-2 text-sm text-[var(--text-secondary)]">
+          <span className="mb-2 text-sm text-text-secondary">
             QR Code expired
           </span>
           {onRefresh && (
             <button
               type="button"
               onClick={onRefresh}
-              className="rounded-md bg-[var(--accent-primary)] px-3 py-1.5 text-sm text-[var(--text-inverse)] transition-colors hover:opacity-90"
+              className="rounded-md bg-accent-primary px-3 py-1.5 text-sm text-text-inverse transition-colors hover:opacity-90"
               data-testid="qrcode-refresh"
               disabled={accessState.isDisabled}
             >

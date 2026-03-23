@@ -37,7 +37,7 @@ export interface ConnectedFormFieldProps {
  * </ConnectedFormField>
  * ```
  */
-export function ConnectedFormField({
+export const ConnectedFormField = React.forwardRef<HTMLDivElement, ConnectedFormFieldProps>(({
   name,
   label,
   help,
@@ -48,7 +48,7 @@ export function ConnectedFormField({
   className,
   access,
   children,
-}: ConnectedFormFieldProps) {
+}, ref) => {
   const { fieldProps } = useFormField(name, access);
 
   // Clone child to inject field props
@@ -62,6 +62,7 @@ export function ConnectedFormField({
 
   return (
     <FormField
+      ref={ref}
       label={label}
       error={fieldProps.error}
       help={help}
@@ -75,6 +76,6 @@ export function ConnectedFormField({
       {enhancedChild}
     </FormField>
   );
-}
+});
 
 ConnectedFormField.displayName = 'ConnectedFormField';

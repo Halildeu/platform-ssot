@@ -62,19 +62,19 @@ const densityClass: Record<ListDensity, string> = {
 };
 
 const listSurfaceClassName =
-  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 const toneClass: Record<ListTone, string> = {
   default:
-    "border border-[var(--border-subtle)]/75 bg-[var(--surface-card-alt)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.18))]",
+    "border border-border-subtle/75 bg-[var(--surface-card-alt)] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.18))]",
   info:
-    "border border-[var(--state-info-border)]/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(239,246,255,0.98),rgba(246,247,255,0.88)))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(37,99,235,0.18))]",
+    "border border-state-info-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(239,246,255,0.98),rgba(246,247,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(37,99,235,0.18))]",
   success:
-    "border border-[var(--state-success-border)]/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(240,253,244,0.98),rgba(247,250,255,0.88)))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(22,163,74,0.18))]",
+    "border border-state-success-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(240,253,244,0.98),rgba(247,250,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(22,163,74,0.18))]",
   warning:
-    "border border-[var(--state-warning-border)]/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(255,251,235,0.98),rgba(255,247,237,0.88)))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(217,119,6,0.18))]",
+    "border border-state-warning-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(255,251,235,0.98),rgba(255,247,237,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(217,119,6,0.18))]",
   danger:
-    "border border-[var(--state-danger-border)]/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(254,242,242,0.98),rgba(255,247,247,0.88)))] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(220,38,38,0.18))]",
+    "border border-state-danger-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(254,242,242,0.98),rgba(255,247,247,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(220,38,38,0.18))]",
 };
 
 const badgeToneMap: Record<ListTone, BadgeVariant> = {
@@ -86,7 +86,7 @@ const badgeToneMap: Record<ListTone, BadgeVariant> = {
 };
 
 /** Vertical list of interactive or static items with optional selection, badges, and tone indicators. */
-export const List: React.FC<ListProps> = ({
+export const List = React.forwardRef<HTMLElement, ListProps>(({
   items,
   title,
   description,
@@ -100,7 +100,7 @@ export const List: React.FC<ListProps> = ({
   fullWidth = true,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const resolvedEmptyFallbackDescription =
     localeText?.emptyFallbackDescription ??
@@ -114,6 +114,7 @@ export const List: React.FC<ListProps> = ({
 
   return (
     <section
+      ref={ref}
       className={fullWidth ? "w-full" : undefined}
       data-access-state={accessState.state}
       data-component="list"
@@ -124,7 +125,7 @@ export const List: React.FC<ListProps> = ({
       title={accessReason}
     >
       {title ? (
-        <Text as="div" className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+        <Text as="div" className="text-base font-semibold tracking-[-0.02em] text-text-primary">
           {title}
         </Text>
       ) : null}
@@ -138,7 +139,7 @@ export const List: React.FC<ListProps> = ({
         className={[
           "mt-4",
           listSurfaceClassName,
-          bordered ? "border border-[var(--border-subtle)]/80" : "border border-transparent",
+          bordered ? "border border-border-subtle/80" : "border border-transparent",
         ]
           .filter(Boolean)
           .join(" ")}
@@ -192,7 +193,7 @@ export const List: React.FC<ListProps> = ({
                         <div className="flex flex-wrap items-start justify-between gap-3">
                           <div className="min-w-0 space-y-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <Text as="div" className="min-w-0 text-sm font-semibold text-[var(--text-primary)]">
+                              <Text as="div" className="min-w-0 text-sm font-semibold text-text-primary">
                                 {item.title}
                               </Text>
                               {item.badges?.map((badge, badgeIndex) =>
@@ -214,7 +215,7 @@ export const List: React.FC<ListProps> = ({
                           {(item.meta || item.suffix) ? (
                             <div className="flex shrink-0 flex-col items-end gap-2">
                               {item.meta ? (
-                                <Text variant="secondary" className="rounded-full border border-[var(--border-subtle)]/70 bg-[var(--surface-card)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+                                <Text variant="secondary" className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-border-subtle/20 backdrop-blur-sm">
                                   {item.meta}
                                 </Text>
                               ) : null}
@@ -259,7 +260,7 @@ export const List: React.FC<ListProps> = ({
       </div>
     </section>
   );
-};
+});
 
 List.displayName = "List";
 

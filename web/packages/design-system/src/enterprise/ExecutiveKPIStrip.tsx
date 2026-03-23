@@ -130,10 +130,10 @@ function KPISkeleton({ size, count }: { size: KPIStripSize; count: number }) {
   return (
     <>
       {Array.from({ length: count }, (_, i) => (
-        <div key={i} className={`${s.card} rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] animate-pulse`}>
-          <div className="h-3 w-20 rounded bg-[var(--surface-muted)] mb-2" />
-          <div className="h-6 w-28 rounded bg-[var(--surface-muted)] mb-1" />
-          <div className="h-2 w-16 rounded bg-[var(--surface-muted)]" />
+        <div key={i} className={`${s.card} rounded-lg border border-border-default bg-surface-default animate-pulse`}>
+          <div className="h-3 w-20 rounded bg-surface-muted mb-2" />
+          <div className="h-6 w-28 rounded bg-surface-muted mb-1" />
+          <div className="h-2 w-16 rounded bg-surface-muted" />
         </div>
       ))}
     </>
@@ -208,20 +208,20 @@ export function ExecutiveKPIStrip({
               } : undefined}
               className={[
                 s.card,
-                'rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)]',
+                'rounded-lg border border-border-default bg-surface-default',
                 'transition-shadow duration-150',
                 isInteractive ? 'cursor-pointer hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]' : '',
                 metricAccess.isDisabled ? 'opacity-50 pointer-events-none' : '',
               ].join(' ')}
             >
               {/* Label */}
-              <span className={`${s.label} text-[var(--text-secondary)] block mb-1 truncate`}>
+              <span className={`${s.label} text-text-secondary block mb-1 truncate`}>
                 {metric.label}
               </span>
 
               {/* Value row */}
               <div className="flex items-end gap-2 flex-wrap">
-                <span className={`${s.value} text-[var(--text-primary)] leading-none`}>
+                <span className={`${s.value} text-text-primary leading-none`}>
                   {formatted}
                 </span>
 
@@ -235,7 +235,7 @@ export function ExecutiveKPIStrip({
                     <span aria-hidden="true">{getTrendIcon(metric.trend.direction)}</span>
                     {formatValue(metric.trend.value, { format: 'number', decimals: 1 })}%
                     {metric.trend.label && (
-                      <span className="text-[var(--text-secondary)] ml-0.5">{metric.trend.label}</span>
+                      <span className="text-text-secondary ml-0.5">{metric.trend.label}</span>
                     )}
                   </span>
                 )}

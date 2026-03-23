@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Breadcrumb — Navigation hierarchy                                  */
@@ -13,7 +14,7 @@ export interface BreadcrumbItem {
   icon?: React.ReactNode;
 }
 
-export interface BreadcrumbProps {
+export interface BreadcrumbProps extends AccessControlledProps {
   /** Ordered list of breadcrumb navigation items. */
   items: BreadcrumbItem[];
   /** Separator character */
@@ -35,7 +36,11 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(({
   separator,
   maxItems,
   className,
+  access,
+  accessReason,
 }, ref) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   let visibleItems = items;
   let collapsed = false;
 
@@ -47,7 +52,7 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(({
   }
 
   return (
-    <nav ref={ref as React.Ref<HTMLElement>} aria-label="Breadcrumb" className={className} {...stateAttrs({ component: "breadcrumb" })}>
+    <nav ref={ref as React.Ref<HTMLElement>} aria-label="Breadcrumb" className={cn(accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason} {...stateAttrs({ component: "breadcrumb" })}>
       <ol className="flex items-center gap-1.5">
         {visibleItems.map((item, i) => {
           const isLast = i === visibleItems.length - 1;
@@ -64,7 +69,7 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(({
                 <span className="text-xs text-[var(--text-disabled)]">...</span>
               ) : isLast ? (
                 <span
-                  className="flex items-center gap-1 text-xs font-medium text-[var(--text-primary)]"
+                  className="flex items-center gap-1 text-xs font-medium text-text-primary"
                   aria-current="page"
                 >
                   {item.icon && <span className="[&>svg]:h-3.5 [&>svg]:w-3.5">{item.icon}</span>}
@@ -75,8 +80,8 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(({
                   type="button"
                   onClick={item.onClick}
                   className={cn(
-                    "flex items-center gap-1 text-xs text-[var(--text-secondary)]",
-                    "transition hover:text-[var(--text-primary)]",
+                    "flex items-center gap-1 text-xs text-text-secondary",
+                    "transition hover:text-text-primary",
                     focusRingClass("outline"),
                     "focus-visible:rounded",
                   )}

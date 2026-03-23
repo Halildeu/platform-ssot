@@ -117,7 +117,7 @@ export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
 
   return (
     <section
-      className={`rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-5 shadow-sm ${className}`.trim()}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="ai-guided-authoring"
       title={accessReason}
@@ -126,7 +126,7 @@ export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
         <div>
           <Text
             as="div"
-            className="text-base font-semibold text-[var(--text-primary)]"
+            className="text-base font-semibold text-text-primary"
           >
             {title}
           </Text>
@@ -135,7 +135,7 @@ export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
           </Text>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-default)] px-4 py-3">
+          <div className="rounded-2xl border border-border-subtle bg-surface-default px-4 py-3">
             <Text
               variant="secondary"
               className="text-[11px] font-semibold uppercase tracking-[0.16em]"
@@ -189,7 +189,7 @@ export const AIGuidedAuthoring: React.FC<AIGuidedAuthoringProps> = ({
               />
             ))
           ) : (
-            <div className="rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4">
+            <div className="rounded-[24px] border border-border-subtle bg-surface-default p-4">
               <Text
                 variant="secondary"
                 className="block text-sm leading-6"

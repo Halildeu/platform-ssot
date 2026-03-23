@@ -145,7 +145,7 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         <div
           ref={forwardedRef}
           className={cn(
-            "inline-flex items-center justify-center text-sm text-[var(--text-secondary)]",
+            "inline-flex items-center justify-center text-sm text-text-secondary",
             accessState.isDisabled && "opacity-50",
             className,
           )}

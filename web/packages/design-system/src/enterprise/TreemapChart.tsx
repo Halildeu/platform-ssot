@@ -250,7 +250,7 @@ export const TreemapChart: React.FC<TreemapChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-2 overflow-hidden',
+        'border border-border-default rounded-lg bg-surface-default p-2 overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}

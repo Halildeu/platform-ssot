@@ -149,7 +149,7 @@ export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
         <div
           ref={forwardedRef}
           className={cn(
-            "inline-flex items-center justify-center text-sm text-[var(--text-secondary)]",
+            "inline-flex items-center justify-center text-sm text-text-secondary",
             accessState.isDisabled && "opacity-50",
             className,
           )}

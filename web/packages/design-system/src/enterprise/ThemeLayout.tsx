@@ -207,13 +207,13 @@ const RENDERERS: Record<LayoutTheme, (slots: ThemeLayoutSlots) => React.ReactNod
 // ── Component ──
 
 /** Slot-based dashboard layout that adapts its grid arrangement to the selected theme. */
-export const ThemeLayout: React.FC<ThemeLayoutProps> = ({
+export const ThemeLayout = React.forwardRef<HTMLDivElement, ThemeLayoutProps>(({
   theme,
   slots,
   className,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
@@ -222,8 +222,9 @@ export const ThemeLayout: React.FC<ThemeLayoutProps> = ({
 
   return (
     <div
+      ref={ref}
       className={cn(
-        'bg-[var(--surface-default)] rounded-lg',
+        'bg-surface-default rounded-lg',
         themeStyle,
         accessStyles(accessState.state),
         className,
@@ -236,7 +237,7 @@ export const ThemeLayout: React.FC<ThemeLayoutProps> = ({
       {render(slots)}
     </div>
   );
-};
+});
 
 ThemeLayout.displayName = 'ThemeLayout';
 export default ThemeLayout;

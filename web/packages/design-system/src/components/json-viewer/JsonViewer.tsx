@@ -74,11 +74,11 @@ const typeInfoFor = (
 };
 
 const primitiveClassName = (value: unknown) => {
-  if (typeof value === "string") return "text-[var(--state-info-text)]";
-  if (typeof value === "number") return "text-[var(--state-success-text)]";
-  if (typeof value === "boolean") return "text-[var(--state-warning-text)]";
-  if (value === null) return "text-[var(--text-subtle)]";
-  return "text-[var(--text-primary)]";
+  if (typeof value === "string") return "text-state-info-text";
+  if (typeof value === "number") return "text-state-success-text";
+  if (typeof value === "boolean") return "text-state-warning-text";
+  if (value === null) return "text-text-subtle";
+  return "text-text-primary";
 };
 
 const formatPrimitive = (value: unknown) => {
@@ -88,10 +88,10 @@ const formatPrimitive = (value: unknown) => {
 };
 
 const jsonViewerSurfaceClassName =
-  "relative overflow-auto rounded-[28px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card)] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-auto rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card)] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 /** Interactive collapsible JSON tree viewer with type badges and configurable expand depth. */
-export const JsonViewer: React.FC<JsonViewerProps> = ({
+export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
   value,
   title,
   description,
@@ -104,7 +104,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
   localeText,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const [toggleState, setToggleState] = useState<Record<string, boolean>>({});
 
@@ -131,7 +131,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
         title={accessReason}
       >
         {title ? (
-          <Text as="div" className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+          <Text as="div" className="text-base font-semibold tracking-[-0.02em] text-text-primary">
             {title}
           </Text>
         ) : null}
@@ -154,20 +154,20 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
     const typeInfo = typeInfoFor(nodeValue, localeText);
     const expandable = isExpandable(nodeValue);
     const expanded = expandable ? isExpanded(path, depth) : false;
-    const indentClass = depth === 0 ? "" : "ms-4 border-s border-[var(--border-subtle)] ps-4";
+    const indentClass = depth === 0 ? "" : "ms-4 border-s border-border-subtle ps-4";
 
     if (!expandable) {
       return (
-        <div key={path} className={`rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-muted)]/60 px-4 py-3 ${indentClass}`}>
+        <div key={path} className={`rounded-2xl border border-border-subtle bg-surface-muted/60 px-4 py-3 ${indentClass}`}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
-              <Text as="div" className="text-sm font-semibold text-[var(--text-primary)]">
+              <Text as="div" className="text-sm font-semibold text-text-primary">
                 {nodeLabel}
               </Text>
             </div>
             {showTypes ? <Badge variant={typeInfo.tone}>{typeInfo.label}</Badge> : null}
           </div>
-          <code className={`mt-2 block overflow-x-auto rounded-xl border border-[var(--border-subtle)]/65 bg-[var(--surface-card)] px-3 py-2 text-xs shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.12))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${primitiveClassName(nodeValue)}`}>
+          <code className={`mt-2 block overflow-x-auto rounded-xl border border-border-subtle/65 bg-[var(--surface-card)] px-3 py-2 text-xs shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.12))] ring-1 ring-border-subtle/20 backdrop-blur-sm ${primitiveClassName(nodeValue)}`}>
             {formatPrimitive(nodeValue)}
           </code>
         </div>
@@ -179,7 +179,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
       : Object.entries(nodeValue);
 
     return (
-      <div key={path} className={`rounded-[24px] border border-[var(--border-subtle)]/75 bg-[var(--surface-card-alt)] p-4 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm ${indentClass}`}>
+      <div key={path} className={`rounded-[24px] border border-border-subtle/75 bg-[var(--surface-card-alt)] p-4 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-border-subtle/20 backdrop-blur-sm ${indentClass}`}>
         <button
           type="button"
           className="flex w-full items-center justify-between gap-3 text-left transition duration-200 hover:-translate-y-px"
@@ -191,11 +191,11 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
           }
         >
           <div className="flex min-w-0 items-center gap-3">
-            <span aria-hidden="true" className="text-sm text-[var(--text-secondary)]">
+            <span aria-hidden="true" className="text-sm text-text-secondary">
               {expanded ? "\u25BE" : "\u25B8"}
             </span>
             <div className="min-w-0">
-              <Text as="div" className="text-sm font-semibold text-[var(--text-primary)]">
+              <Text as="div" className="text-sm font-semibold text-text-primary">
                 {nodeLabel}
               </Text>
               <Text variant="secondary" className="text-xs uppercase tracking-[0.16em]">
@@ -221,6 +221,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
 
   return (
     <section
+      ref={ref}
       className={fullWidth ? "w-full" : undefined}
       data-access-state={accessState.state}
       data-component="json-viewer"
@@ -228,7 +229,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
       title={accessReason}
     >
       {title ? (
-        <Text as="div" className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+        <Text as="div" className="text-base font-semibold tracking-[-0.02em] text-text-primary">
           {title}
         </Text>
       ) : null}
@@ -246,7 +247,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
       </div>
     </section>
   );
-};
+});
 
 JsonViewer.displayName = "JsonViewer";
 

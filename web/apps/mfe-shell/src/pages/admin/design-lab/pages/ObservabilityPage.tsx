@@ -389,14 +389,14 @@ type ServiceStatus = {
 };
 
 const BACKEND_SERVICES = [
-  { name: 'auth', url: '/api/auth/actuator/health' },
-  { name: 'user', url: '/api/user/actuator/health' },
-  { name: 'permission', url: '/api/permission/actuator/health' },
-  { name: 'variant', url: '/api/variant/actuator/health' },
-  { name: 'core-data', url: '/api/core-data/actuator/health' },
-  { name: 'report', url: '/api/report/actuator/health' },
-  { name: 'gateway', url: '/api/gateway/actuator/health' },
-  { name: 'keycloak', url: '/auth/realms/master' },
+  { name: 'auth', url: 'http://localhost:8088/actuator/health' },
+  { name: 'user', url: 'http://localhost:8089/actuator/health' },
+  { name: 'permission', url: 'http://localhost:8090/actuator/health' },
+  { name: 'variant', url: 'http://localhost:8091/actuator/health' },
+  { name: 'core-data', url: 'http://localhost:8092/actuator/health' },
+  { name: 'report', url: 'http://localhost:8095/actuator/health' },
+  { name: 'gateway', url: 'http://localhost:8080/actuator/health' },
+  { name: 'keycloak', url: 'http://localhost:8081/' },
 ];
 
 function useInfraStatus(): ServiceStatus[] {

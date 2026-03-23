@@ -347,7 +347,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
         {label && (
           <span
             className={cn(
-              "font-medium text-[var(--text-primary,#111827)]",
+              "font-medium text-text-primary",
               sizeConfig.font,
             )}
             data-testid="color-picker-label"
@@ -360,7 +360,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
         {description && (
           <span
             className={cn(
-              "text-[var(--text-secondary,#6b7280)]",
+              "text-text-secondary",
               size === "sm" ? "text-[11px]" : "text-xs",
             )}
             data-testid="color-picker-description"
@@ -374,7 +374,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           ref={triggerRef}
           type="button"
           className={cn(
-            "rounded-md border-2 border-[var(--border-subtle,#d1d5db)] transition-all duration-150",
+            "rounded-md border-2 border-border-subtle transition-all duration-150",
             focusRingClass("ring"),
             isInteractive && "cursor-pointer hover:border-[var(--border-hover,#9ca3af)]",
             accessState.isDisabled && "opacity-50 cursor-not-allowed",
@@ -400,7 +400,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           <div
             ref={popoverRef}
             className={cn(
-              "mt-1 rounded-lg border border-[var(--border-subtle,#d1d5db)]",
+              "mt-1 rounded-lg border border-border-subtle",
               "bg-[var(--surface-primary,#ffffff)] p-3 shadow-lg",
               "flex flex-col gap-3",
               "w-full max-w-[232px]",
@@ -462,7 +462,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
             {showInput && (
               <div className="flex items-center gap-2">
                 <div
-                  className="w-6 h-6 rounded border border-[var(--border-subtle,#d1d5db)]"
+                  className="w-6 h-6 rounded border border-border-subtle"
                   style={{ backgroundColor: currentValue }}
                   data-testid="color-picker-preview"
                 />
@@ -472,8 +472,8 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                   onChange={handleInputChange}
                   onBlur={handleInputBlur}
                   className={cn(
-                    "flex-1 rounded border border-[var(--border-subtle,#d1d5db)] px-2 py-1",
-                    "bg-[var(--surface-primary,#ffffff)] text-[var(--text-primary,#111827)]",
+                    "flex-1 rounded border border-border-subtle px-2 py-1",
+                    "bg-[var(--surface-primary,#ffffff)] text-text-primary",
                     "focus:outline-none focus:ring-1 focus:ring-[var(--ring-color,#3b82f6)]",
                     sizeConfig.font,
                     "font-mono",
@@ -491,7 +491,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                   <div key={preset.label}>
                     <span
                       className={cn(
-                        "block mb-1 text-[var(--text-secondary,#6b7280)]",
+                        "block mb-1 text-text-secondary",
                         size === "sm" ? "text-[11px]" : "text-xs",
                       )}
                       data-testid={`color-picker-preset-label-${preset.label}`}
@@ -508,7 +508,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                             `hover:scale-110 ${focusRingClass("ring")}`,
                             color.toLowerCase() === currentValue.toLowerCase()
                               ? "border-[var(--border-active,#3b82f6)] ring-1 ring-[var(--ring-color,#3b82f6)]"
-                              : "border-[var(--border-subtle,#d1d5db)]",
+                              : "border-border-subtle",
                           )}
                           style={{
                             width: sizeConfig.presetSwatch,

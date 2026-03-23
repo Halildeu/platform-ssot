@@ -70,39 +70,39 @@ const densityStyles: Record<ButtonDensity, string> = {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary: [
-    "bg-[var(--action-primary)] text-[var(--text-inverse)]",
-    "hover:bg-[var(--action-primary-hover)]",
+    "bg-action-primary text-text-inverse",
+    "hover:bg-accent-primary-hover",
     "active:bg-[var(--action-primary-active)]",
     "shadow-sm",
   ].join(" "),
 
   secondary: [
-    "bg-[var(--surface-muted)] text-[var(--text-primary)]",
-    "hover:bg-[var(--border-subtle)]",
-    "active:bg-[var(--border-default)]",
+    "bg-surface-muted text-text-primary",
+    "hover:bg-border-subtle",
+    "active:bg-border-default",
   ].join(" "),
 
   outline: [
-    "border border-[var(--border-default)] bg-transparent text-[var(--text-primary)]",
-    "hover:bg-[var(--surface-muted)]",
-    "active:bg-[var(--border-subtle)]",
+    "border border-border-default bg-transparent text-text-primary",
+    "hover:bg-surface-muted",
+    "active:bg-border-subtle",
   ].join(" "),
 
   ghost: [
-    "bg-transparent text-[var(--text-primary)]",
-    "hover:bg-[var(--surface-muted)]",
-    "active:bg-[var(--border-subtle)]",
+    "bg-transparent text-text-primary",
+    "hover:bg-surface-muted",
+    "active:bg-border-subtle",
   ].join(" "),
 
   danger: [
-    "bg-[var(--state-error-text)] text-[var(--text-inverse)]",
+    "bg-state-danger-text text-text-inverse",
     "hover:brightness-110",
     "active:brightness-90",
     "shadow-sm",
   ].join(" "),
 
   link: [
-    "bg-transparent text-[var(--action-primary)] underline-offset-4",
+    "bg-transparent text-action-primary underline-offset-4",
     "hover:underline",
     "active:text-[var(--action-primary-active)]",
     "p-0 h-auto",

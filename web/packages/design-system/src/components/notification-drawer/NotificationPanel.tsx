@@ -155,10 +155,10 @@ const defaultDateSectionLabels: Record<
 };
 
 const notificationPanelSurfaceClassName =
-  "relative overflow-hidden rounded-[30px] border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-[var(--border-subtle)]/20 shadow-[0_34px_70px_-38px_var(--shadow-color)] backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-8 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-hidden rounded-[30px] border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_34px_70px_-38px_var(--shadow-color)] backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-8 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 const notificationPanelEmptySurfaceClassName =
-  "rounded-[24px] border border-border-subtle/75 bg-[var(--surface-card-alt)] shadow-[0_22px_46px_-34px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20";
+  "rounded-[24px] border border-border-subtle/75 bg-[var(--surface-card-alt)] shadow-[0_22px_46px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20";
 
 const notificationPanelSectionLabelClassName =
   "inline-flex items-center rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-text-secondary shadow-[0_14px_30px_-24px_var(--shadow-color)] backdrop-blur-sm";

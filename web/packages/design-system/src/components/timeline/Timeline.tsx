@@ -69,14 +69,14 @@ const dotColorMap: Record<
   { bg: string; border: string; ring: string }
 > = {
   default: {
-    bg: "bg-[var(--border-default)]",
-    border: "border-[var(--border-default)]",
-    ring: "ring-[var(--border-default)]/20",
+    bg: "bg-border-default",
+    border: "border-border-default",
+    ring: "ring-border-default/20",
   },
   primary: {
-    bg: "bg-[var(--action-primary)]",
-    border: "border-[var(--action-primary)]",
-    ring: "ring-[var(--action-primary)]/20",
+    bg: "bg-action-primary",
+    border: "border-action-primary",
+    ring: "ring-action-primary/20",
   },
   success: {
     bg: "bg-[var(--feedback-success)]",
@@ -146,7 +146,7 @@ function PendingDot({ size, className }: { size: TimelineSize; className?: strin
       className={cn(
         "relative inline-flex rounded-full",
         s.dot,
-        "bg-[var(--action-primary)]",
+        "bg-action-primary",
         className,
       )}
       data-testid="timeline-pending-dot"
@@ -154,7 +154,7 @@ function PendingDot({ size, className }: { size: TimelineSize; className?: strin
       <span
         className={cn(
           "absolute inset-0 rounded-full",
-          "bg-[var(--action-primary)]",
+          "bg-action-primary",
           "animate-ping opacity-75",
         )}
       />
@@ -190,7 +190,7 @@ function TimelineDot({
           "border-2",
           s.customDot,
           colors.border,
-          "bg-[var(--surface-page)]",
+          "bg-surface-page",
           "text-current",
         )}
         data-testid="timeline-custom-dot"
@@ -338,7 +338,7 @@ export const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(({
                   className={cn(
                     s.connector,
                     "flex-1 min-h-[16px] mt-1",
-                    "bg-[var(--border-default)]",
+                    "bg-border-default",
                   )}
                   data-testid="timeline-connector"
                 />

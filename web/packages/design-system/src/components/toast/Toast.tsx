@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import { stateAttrs } from "../../internal/interaction-core";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Toast — Notification system with provider + hook                   */
@@ -48,7 +49,7 @@ export function useToast(): ToastContextValue {
 
 let toastCounter = 0;
 
-export interface ToastProviderProps {
+export interface ToastProviderProps extends AccessControlledProps {
   position?: ToastPosition;
   /** Default auto-dismiss duration in ms */
   duration?: number;
@@ -65,17 +66,17 @@ const positionStyles: Record<ToastPosition, string> = {
 };
 
 const variantStyles: Record<ToastVariant, string> = {
-  info: "border-[var(--state-info-text)]/20 bg-[var(--surface-default)]",
-  success: "border-[var(--state-success-text)]/20 bg-[var(--surface-default)]",
-  warning: "border-[var(--state-warning-text)]/20 bg-[var(--surface-default)]",
-  error: "border-[var(--state-error-text)]/20 bg-[var(--surface-default)]",
+  info: "border-state-info-text/20 bg-surface-default",
+  success: "border-state-success-text/20 bg-surface-default",
+  warning: "border-state-warning-text/20 bg-surface-default",
+  error: "border-state-danger-text/20 bg-surface-default",
 };
 
 const indicatorColors: Record<ToastVariant, string> = {
-  info: "bg-[var(--state-info-text)]",
-  success: "bg-[var(--state-success-text)]",
-  warning: "bg-[var(--state-warning-text)]",
-  error: "bg-[var(--state-error-text)]",
+  info: "bg-state-info-text",
+  success: "bg-state-success-text",
+  warning: "bg-state-warning-text",
+  error: "bg-state-danger-text",
 };
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({
@@ -83,7 +84,11 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   duration = 4000,
   maxVisible = 5,
   children,
+  access,
+  accessReason,
 }) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const [toasts, setToasts] = useState<ToastData[]>([]);
 
   const dismiss = useCallback((id: string) => {
@@ -120,8 +125,10 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
       <div
         className={cn(
           "fixed z-[1700] flex flex-col gap-2 pointer-events-none",
+          accessState.isDisabled && "pointer-events-none opacity-50",
           positionStyles[position],
         )}
+        title={accessReason}
         aria-live="polite"
       >
         {toasts.map((toast) => (
@@ -175,18 +182,18 @@ function ToastItem({
       />
       <div className="min-w-0 flex-1">
         {toast.title && (
-          <div className="text-sm font-semibold text-[var(--text-primary)]">
+          <div className="text-sm font-semibold text-text-primary">
             {toast.title}
           </div>
         )}
-        <div className="text-sm text-[var(--text-secondary)]">
+        <div className="text-sm text-text-secondary">
           {toast.message}
         </div>
       </div>
       <button
         type="button"
         onClick={onDismiss}
-        className="shrink-0 rounded-md p-1 text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)]"
+        className="shrink-0 rounded-md p-1 text-text-secondary transition hover:bg-surface-muted"
         aria-label="Dismiss"
       >
         <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none">

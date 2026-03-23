@@ -43,7 +43,7 @@ const labelByLevel: Record<ConfidenceLevel, string> = {
 };
 
 /** Badge displaying AI confidence level with optional numeric score and source count. */
-export const ConfidenceBadge: React.FC<ConfidenceBadgeProps> = ({
+export const ConfidenceBadge = React.forwardRef<HTMLSpanElement, ConfidenceBadgeProps>(({
   level = "medium",
   score,
   sourceCount,
@@ -52,7 +52,7 @@ export const ConfidenceBadge: React.FC<ConfidenceBadgeProps> = ({
   label,
   className,
   access = "full",
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -72,6 +72,7 @@ export const ConfidenceBadge: React.FC<ConfidenceBadgeProps> = ({
 
   return (
     <Badge
+      ref={ref}
       variant={toneByLevel[level]}
       className={className}
       aria-label={labelByLevel[level]}
@@ -80,7 +81,7 @@ export const ConfidenceBadge: React.FC<ConfidenceBadgeProps> = ({
       {compact ? parts.slice(0, 2).join(" · ") : parts.join(" · ")}
     </Badge>
   );
-};
+});
 
 ConfidenceBadge.displayName = 'ConfidenceBadge';
 

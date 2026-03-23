@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Steps — Progress indicator for multi-step workflows                */
@@ -23,7 +24,7 @@ export interface StepItem {
   disabled?: boolean;
 }
 
-export interface StepsProps {
+export interface StepsProps extends AccessControlledProps {
   /** Step definitions */
   items: StepItem[];
   /** Currently active step index (0-based) */
@@ -67,20 +68,20 @@ function getStepStatus(index: number, current: number, status?: StepStatus): Ste
 
 const statusColors: Record<StepStatus, { bg: string; border: string; text: string; titleText: string }> = {
   finish: {
-    bg: "bg-[var(--action-primary)]",
-    border: "border-[var(--action-primary)]",
-    text: "text-[var(--text-inverse)]",
-    titleText: "text-[var(--text-primary)]",
+    bg: "bg-action-primary",
+    border: "border-action-primary",
+    text: "text-text-inverse",
+    titleText: "text-text-primary",
   },
   process: {
-    bg: "bg-[var(--action-primary)]",
-    border: "border-[var(--action-primary)]",
-    text: "text-[var(--text-inverse)]",
-    titleText: "text-[var(--text-primary)]",
+    bg: "bg-action-primary",
+    border: "border-action-primary",
+    text: "text-text-inverse",
+    titleText: "text-text-primary",
   },
   wait: {
     bg: "bg-transparent",
-    border: "border-[var(--border-default)]",
+    border: "border-border-default",
     text: "text-[var(--text-tertiary)]",
     titleText: "text-[var(--text-tertiary)]",
   },
@@ -114,7 +115,11 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
   status,
   dot = false,
   className,
+  access,
+  accessReason,
 }, ref) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   // Uncontrolled mode: track internal step index when `current` prop is not provided
   const [internalCurrent, setInternalCurrent] = useState(defaultCurrent ?? 0);
   const isControlled = currentProp !== undefined;
@@ -137,8 +142,10 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
       className={cn(
         "flex",
         isVertical ? "flex-col gap-0" : "flex-row items-start",
+        accessState.isDisabled && "pointer-events-none opacity-50",
         className,
       )}
+      title={accessReason}
       role="list"
       aria-label="Progress steps"
       {...stateAttrs({ component: "steps" })}
@@ -175,8 +182,8 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
                   className={cn(
                     "flex-1 h-px",
                     index <= current
-                      ? "bg-[var(--action-primary)]"
-                      : "bg-[var(--border-default)]",
+                      ? "bg-action-primary"
+                      : "bg-border-default",
                   )}
                 />
               )}
@@ -192,7 +199,7 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
                   clickable && "cursor-pointer",
                   !clickable && "cursor-default",
                   dot
-                    ? cn(dotSizeMap[size], stepStatus === "wait" ? "bg-[var(--border-default)]" : colors.bg)
+                    ? cn(dotSizeMap[size], stepStatus === "wait" ? "bg-border-default" : colors.bg)
                     : cn(sizes.indicator, "border-2", colors.border, colors.bg, colors.text),
                 )}
                 aria-label={`Step ${index + 1}: ${typeof item.title === "string" ? item.title : ""}`}
@@ -218,8 +225,8 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
                   className={cn(
                     "flex-1 h-px",
                     index < current
-                      ? "bg-[var(--action-primary)]"
-                      : "bg-[var(--border-default)]",
+                      ? "bg-action-primary"
+                      : "bg-border-default",
                   )}
                 />
               )}
@@ -230,8 +237,8 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
                   className={cn(
                     "w-px flex-1 min-h-[24px] my-1",
                     index < current
-                      ? "bg-[var(--action-primary)]"
-                      : "bg-[var(--border-default)]",
+                      ? "bg-action-primary"
+                      : "bg-border-default",
                   )}
                 />
               )}

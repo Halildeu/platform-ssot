@@ -140,16 +140,16 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
               "flex items-center justify-center rounded-full border-2 transition-colors duration-150",
               dotSizes[resolvedSize].outer,
               checked
-                ? "border-[var(--action-primary)]"
+                ? "border-action-primary"
                 : error
-                  ? "border-[var(--state-error-text)]"
-                  : "border-[var(--border-default)]",
+                  ? "border-state-danger-text"
+                  : "border-border-default",
             )}
             aria-hidden
           >
             {loading ? (
               <svg
-                className={cn("animate-spin text-[var(--text-secondary)]", dotSizes[resolvedSize].inner)}
+                className={cn("animate-spin text-text-secondary", dotSizes[resolvedSize].inner)}
                 viewBox="0 0 16 16"
                 fill="none"
                 aria-hidden
@@ -172,7 +172,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
             ) : checked ? (
               <span
                 className={cn(
-                  "rounded-full bg-[var(--action-primary)]",
+                  "rounded-full bg-action-primary",
                   dotSizes[resolvedSize].inner,
                 )}
               />
@@ -182,12 +182,12 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(
         {(label || description) && (
           <span className="flex flex-col">
             {label && (
-              <span className={cn(densityStyles[density].text, "font-medium text-[var(--text-primary)]")}>
+              <span className={cn(densityStyles[density].text, "font-medium text-text-primary")}>
                 {label}
               </span>
             )}
             {description && (
-              <span className="text-xs text-[var(--text-secondary)]">
+              <span className="text-xs text-text-secondary">
                 {description}
               </span>
             )}

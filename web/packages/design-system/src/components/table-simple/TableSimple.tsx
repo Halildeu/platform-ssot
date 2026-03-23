@@ -150,7 +150,7 @@ function TableSimpleInner<
       {caption ? (
         <Text
           as="div"
-          className="text-base font-semibold text-[var(--text-primary)]"
+          className="text-base font-semibold text-text-primary"
         >
           {caption}
         </Text>
@@ -161,19 +161,19 @@ function TableSimpleInner<
         </Text>
       ) : null}
 
-      <div className="mt-4 overflow-hidden rounded-[26px] border border-[var(--border-subtle)] bg-[var(--surface-default)] shadow-sm">
+      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-sm">
         {showEmpty ? (
           <div className="p-5">
             <Empty description={resolvedEmptyFallbackDescription} />
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse text-sm text-[var(--text-primary)]">
+            <table className="min-w-full border-collapse text-sm text-text-primary">
               <thead
                 className={
                   stickyHeader
-                    ? "sticky top-0 z-[1] bg-[var(--surface-muted)]/95 backdrop-blur"
-                    : "bg-[var(--surface-muted)]"
+                    ? "sticky top-0 z-[1] bg-surface-muted/95 backdrop-blur"
+                    : "bg-surface-muted"
                 }
               >
                 <tr>
@@ -182,7 +182,7 @@ function TableSimpleInner<
                       key={column.key}
                       scope="col"
                       className={[
-                        "border-b border-[var(--border-subtle)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]",
+                        "border-b border-border-subtle px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary",
                         alignClass[column.align ?? "left"],
                         column.headerClassName,
                       ]
@@ -202,13 +202,13 @@ function TableSimpleInner<
                   ? Array.from({ length: 3 }).map((_, rowIndex) => (
                       <tr
                         key={`loading-${rowIndex}`}
-                        className="bg-[var(--surface-default)]"
+                        className="bg-surface-default"
                       >
                         {columns.map((column) => (
                           <td
                             key={`${column.key}-${rowIndex}`}
                             className={[
-                              "border-b border-[var(--border-subtle)] align-top",
+                              "border-b border-border-subtle align-top",
                               densityRowClass[density],
                               alignClass[column.align ?? "left"],
                             ].join(" ")}
@@ -228,8 +228,8 @@ function TableSimpleInner<
                         }
                         className={[
                           striped && rowIndex % 2 === 1
-                            ? "bg-[var(--surface-muted)]/60"
-                            : "bg-[var(--surface-default)]",
+                            ? "bg-surface-muted/60"
+                            : "bg-surface-default",
                           accessState.isReadonly ? "opacity-95" : "",
                         ]
                           .filter(Boolean)
@@ -245,7 +245,7 @@ function TableSimpleInner<
                             <td
                               key={column.key}
                               className={[
-                                "border-b border-[var(--border-subtle)] align-top text-sm leading-6 text-[var(--text-primary)]",
+                                "border-b border-border-subtle align-top text-sm leading-6 text-text-primary",
                                 densityRowClass[density],
                                 alignClass[column.align ?? "left"],
                                 column.cellClassName,
@@ -257,8 +257,8 @@ function TableSimpleInner<
                                 className={[
                                   column.truncate ? "truncate" : "",
                                   column.emphasis
-                                    ? "font-semibold text-[var(--text-primary)]"
-                                    : "text-[var(--text-secondary)]",
+                                    ? "font-semibold text-text-primary"
+                                    : "text-text-secondary",
                                 ]
                                   .filter(Boolean)
                                   .join(" ")}

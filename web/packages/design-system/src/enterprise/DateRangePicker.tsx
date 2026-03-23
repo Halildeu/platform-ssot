@@ -145,7 +145,7 @@ function clampDate(d: Date, min?: Date, max?: Date): Date {
 // ── Component ──
 
 /** Dual-input date range selector with preset shortcuts, comparison toggle, and calendar panel. */
-export const DateRangePicker: React.FC<DateRangePickerProps> = ({
+export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerProps>(({
   value,
   onChange,
   locale = 'en-US',
@@ -156,7 +156,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   className,
   access,
   accessReason,
-}) => {
+}, forwardedRef) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
@@ -165,6 +165,11 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   const [customStart, setCustomStart] = React.useState('');
   const [customEnd, setCustomEnd] = React.useState('');
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const mergedRef = (node: HTMLDivElement | null) => {
+    containerRef.current = node;
+    if (typeof forwardedRef === 'function') forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+  };
   const triggerRef = React.useRef<HTMLButtonElement>(null);
 
   const presets = React.useMemo(() => buildPresets(), []);
@@ -234,7 +239,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   return (
     <div
-      ref={containerRef}
+      ref={mergedRef}
       className={cn('relative inline-block', accessStyles(accessState.state), className)}
       data-component="date-range-picker"
       data-access-state={accessState.state}
@@ -246,7 +251,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
         type="button"
         className={cn(
           'flex items-center gap-2 rounded-md border px-3 py-2 text-sm',
-          'border-[var(--border-default)] bg-[var(--surface-default)]',
+          'border-border-default bg-surface-default',
           'hover:border-[var(--interactive-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
           'transition-colors',
           !isInteractive && 'pointer-events-none',
@@ -282,7 +287,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
         <div
           className={cn(
             'absolute left-0 top-full z-50 mt-1 w-[340px] rounded-lg border shadow-lg',
-            'border-[var(--border-default)] bg-[var(--surface-default)]',
+            'border-border-default bg-surface-default',
             'animate-in fade-in slide-in-from-top-1',
           )}
           role="dialog"
@@ -290,7 +295,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
           aria-label="Tarih aralığı seçici"
         >
           {/* Preset buttons */}
-          <div className="flex flex-wrap gap-1.5 border-b border-[var(--border-default)] p-3">
+          <div className="flex flex-wrap gap-1.5 border-b border-border-default p-3">
             {presets.map((preset) => {
               const isDisabled = disabledPresets.includes(preset.key);
               const isActive = activePreset === preset.key;
@@ -301,8 +306,8 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                   className={cn(
                     'rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
                     isActive
-                      ? 'bg-[var(--interactive-primary)] text-[var(--text-inverse)]'
-                      : 'bg-[var(--surface-muted)] text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]/80',
+                      ? 'bg-[var(--interactive-primary)] text-text-inverse'
+                      : 'bg-surface-muted text-text-secondary hover:bg-surface-muted/80',
                     isDisabled && 'opacity-40 cursor-not-allowed',
                   )}
                   onClick={() => !isDisabled && handlePresetClick(preset)}
@@ -330,7 +335,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                   max={customEnd || (maxDate ? toInputValue(maxDate) : undefined)}
                   className={cn(
                     'w-full rounded-md border px-2 py-1.5 text-sm',
-                    'border-[var(--border-default)] bg-[var(--surface-default)]',
+                    'border-border-default bg-surface-default',
                     'focus:outline-none focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
                   )}
                   aria-label="Start date"
@@ -347,7 +352,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
                   max={maxDate ? toInputValue(maxDate) : undefined}
                   className={cn(
                     'w-full rounded-md border px-2 py-1.5 text-sm',
-                    'border-[var(--border-default)] bg-[var(--surface-default)]',
+                    'border-border-default bg-surface-default',
                     'focus:outline-none focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
                   )}
                   aria-label="End date"
@@ -358,7 +363,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
               type="button"
               className={cn(
                 'mt-2 w-full rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
-                'bg-[var(--interactive-primary)] text-[var(--text-inverse)]',
+                'bg-[var(--interactive-primary)] text-text-inverse',
                 'hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
                 'disabled:opacity-40 disabled:cursor-not-allowed',
               )}
@@ -372,7 +377,7 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       )}
     </div>
   );
-};
+});
 
 DateRangePicker.displayName = 'DateRangePicker';
 export default DateRangePicker;

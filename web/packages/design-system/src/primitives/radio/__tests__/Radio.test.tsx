@@ -81,7 +81,7 @@ describe('Radio — checked state', () => {
   it('checked durumunda primary border uygular', () => {
     const { container } = render(<Radio checked onChange={() => {}} />);
     const outer = container.querySelector('[aria-hidden]');
-    expect(outer?.className).toContain('border-[var(--action-primary)]');
+    expect(outer?.className).toContain('border-action-primary');
   });
 });
 
@@ -93,7 +93,7 @@ describe('Radio — error state', () => {
   it('error durumunda error border uygular', () => {
     const { container } = render(<Radio error />);
     const outer = container.querySelector('[aria-hidden]');
-    expect(outer?.className).toContain('border-[var(--state-error-text)]');
+    expect(outer?.className).toContain('border-state-danger-text');
   });
 });
 

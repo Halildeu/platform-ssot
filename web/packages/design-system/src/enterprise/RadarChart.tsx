@@ -333,7 +333,7 @@ export const RadarChart: React.FC<RadarChartProps> = ({
                 className="inline-block h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: sd.color }}
               />
-              <span className="text-[var(--text-secondary)]">{sd.series.label}</span>
+              <span className="text-text-secondary">{sd.series.label}</span>
             </div>
           ))}
         </div>

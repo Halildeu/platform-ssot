@@ -31,13 +31,13 @@ export interface ThemePreviewCardProps extends AccessControlledProps {
  * Miniature theme swatch card that renders a compact preview of a theme's
  * visual style, used in theme selection galleries and comparison views.
  */
-export const ThemePreviewCard: React.FC<ThemePreviewCardProps> = ({
+export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCardProps>(({
   selected = false,
   className,
   localeText,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const resolvedTitleText = localeText?.titleText ?? "Baslik metni";
@@ -48,41 +48,42 @@ export const ThemePreviewCard: React.FC<ThemePreviewCardProps> = ({
 
   return (
     <div
+      ref={ref}
       className={cn(
         "relative flex flex-col gap-1 rounded-xl border p-2 text-[10px] transition",
-        "bg-[var(--surface-default)]",
+        "bg-surface-default",
         selected
-          ? "border-[var(--action-primary)] shadow-sm"
-          : "border-[var(--border-subtle)] hover:border-[var(--text-secondary)]",
+          ? "border-action-primary shadow-sm"
+          : "border-border-subtle hover:border-text-secondary",
         className,
       )}
       data-access-state={accessState.state}
       title={accessReason}
     >
       {selected ? (
-        <div className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--action-primary)] text-[9px] font-bold text-[var(--text-inverse)]">
+        <div className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-action-primary text-[9px] font-bold text-text-inverse">
           <span aria-hidden="true">✓</span>
           <span className="sr-only">{resolvedSelectedLabel}</span>
         </div>
       ) : null}
-      <div className="flex flex-col gap-1 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-2 py-2">
-        <div className="h-2 w-10 rounded bg-[var(--surface-default)]" />
-        <div className="mt-1 h-[6px] rounded-sm bg-transparent text-[9px] font-medium text-[var(--text-primary)]">
+      <div className="flex flex-col gap-1 rounded-lg border border-border-subtle bg-surface-muted px-2 py-2">
+        <div className="h-2 w-10 rounded bg-surface-default" />
+        <div className="mt-1 h-[6px] rounded-sm bg-transparent text-[9px] font-medium text-text-primary">
           {resolvedTitleText}
         </div>
-        <div className="h-[6px] rounded-sm text-[9px] text-[var(--text-secondary)]">
+        <div className="h-[6px] rounded-sm text-[9px] text-text-secondary">
           {resolvedSecondaryText}
         </div>
         <div className="mt-2 flex items-center justify-end">
-          <div className="inline-flex items-center rounded-full bg-[var(--action-primary)] px-2 py-[2px] text-[9px] font-semibold text-[var(--text-inverse)]">
+          <div className="inline-flex items-center rounded-full bg-action-primary px-2 py-[2px] text-[9px] font-semibold text-text-inverse">
             {resolvedSaveLabel}
           </div>
         </div>
       </div>
-      <div className="mt-1 h-1.5 w-full rounded-full bg-[var(--surface-muted)]" />
+      <div className="mt-1 h-1.5 w-full rounded-full bg-surface-muted" />
     </div>
   );
-};
+});
 
 ThemePreviewCard.displayName = "ThemePreviewCard";
 

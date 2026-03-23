@@ -132,7 +132,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
 
   return (
     <section
-      className={`rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-5 shadow-sm ${className}`.trim()}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="prompt-composer"
       title={accessReason}
@@ -140,7 +140,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
       <div className="space-y-2">
         <Text
           as="div"
-          className="text-base font-semibold text-[var(--text-primary)]"
+          className="text-base font-semibold text-text-primary"
         >
           {title}
         </Text>
@@ -211,7 +211,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-4">
+          <div className="rounded-[24px] border border-border-subtle bg-surface-muted p-4">
             <Text variant="secondary" size="xs" weight="medium">Current contract</Text>
             <div className="mt-3 flex flex-wrap gap-2">
               <Badge variant="info">scope: {currentScope}</Badge>
@@ -221,7 +221,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
           </div>
 
           {guardrails.length > 0 ? (
-            <div className="rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-4">
+            <div className="rounded-[24px] border border-border-subtle bg-surface-muted p-4">
               <Text variant="secondary" size="xs" weight="medium">Guardrails</Text>
               <div className="mt-3 flex flex-wrap gap-2">
                 {guardrails.map((item) => (
@@ -234,7 +234,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
           ) : null}
 
           {citations.length > 0 ? (
-            <div className="rounded-[24px] border border-[var(--border-subtle)] bg-[var(--surface-muted)] p-4">
+            <div className="rounded-[24px] border border-border-subtle bg-surface-muted p-4">
               <Text variant="secondary" size="xs" weight="medium">Source anchors</Text>
               <div className="mt-3 flex flex-wrap gap-2">
                 {citations.map((item) => (

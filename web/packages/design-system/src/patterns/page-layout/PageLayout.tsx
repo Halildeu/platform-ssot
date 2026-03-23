@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  PageLayout — Full-page scaffold with header, content, detail,     */
@@ -50,7 +51,7 @@ export interface PageLayoutClasses {
 }
 
 /** Props for the PageLayout component. */
-export interface PageLayoutProps {
+export interface PageLayoutProps extends AccessControlledProps {
   /** Page heading text. */
   title?: React.ReactNode;
   /** Descriptive text below the heading. */
@@ -140,7 +141,7 @@ const BreadcrumbNav: React.FC<BreadcrumbNavProps> = ({
   className,
 }) => (
   <nav aria-label={ariaLabel} className={className}>
-    <ol className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)]">
+    <ol className="flex items-center gap-1.5 text-sm text-text-secondary">
       {items.map((item, idx) => {
         const isLast = idx === items.length - 1;
         const isCurrent = item.current ?? isLast;
@@ -153,7 +154,7 @@ const BreadcrumbNav: React.FC<BreadcrumbNavProps> = ({
           <li key={idx} className="flex items-center gap-1.5">
             {idx > 0 && (
               <svg
-                className="h-3.5 w-3.5 flex-shrink-0 text-[var(--text-secondary)] opacity-50"
+                className="h-3.5 w-3.5 flex-shrink-0 text-text-secondary opacity-50"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -178,14 +179,14 @@ const BreadcrumbNav: React.FC<BreadcrumbNavProps> = ({
                       }
                     : undefined
                 }
-                className="hover:text-[var(--text-primary)] transition-colors"
+                className="hover:text-text-primary transition-colors"
                 aria-current={isCurrent ? "page" : undefined}
               >
                 {item.title}
               </a>
             ) : (
               <span
-                className={cn(isCurrent && "text-[var(--text-primary)] font-medium")}
+                className={cn(isCurrent && "text-text-primary font-medium")}
                 aria-current={isCurrent ? "page" : undefined}
               >
                 {item.title}
@@ -226,21 +227,26 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   contentClassName,
   detailClassName,
   style,
+  access,
+  accessReason,
 }) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const widthCls = PAGE_WIDTH_CLASSES[pageWidth];
   const hasHeader = !!(title || breadcrumbItems?.length || actions || headerExtra);
 
   return (
     <div
-      className={cn("flex min-h-0 flex-col", classes?.root, className)}
+      className={cn("flex min-h-0 flex-col", accessState.isDisabled && "pointer-events-none opacity-50", classes?.root, className)}
       style={style}
+      title={accessReason}
       aria-label={ariaLabel}
     >
       {/* ---- Header ---- */}
       {hasHeader && (
         <header
           className={cn(
-            "border-b border-[var(--border-subtle)] bg-[var(--surface-default)] px-6 pt-4 pb-4",
+            "border-b border-border-subtle bg-surface-default px-6 pt-4 pb-4",
             stickyHeader && "sticky top-0 z-10",
             classes?.header,
           )}
@@ -266,14 +272,14 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
               >
                 <div className={cn("min-w-0 flex-1", classes?.titleBlock)}>
                   {title && (
-                    <h1 className="text-xl font-semibold text-[var(--text-primary)] truncate">
+                    <h1 className="text-xl font-semibold text-text-primary truncate">
                       {title}
                     </h1>
                   )}
                   {description && (
                     <p
                       className={cn(
-                        "mt-1 text-sm text-[var(--text-secondary)] line-clamp-2",
+                        "mt-1 text-sm text-text-secondary line-clamp-2",
                         classes?.description,
                       )}
                     >
@@ -309,7 +315,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       {secondaryNav && (
         <div
           className={cn(
-            "border-b border-[var(--border-subtle)] bg-[var(--surface-default)] px-6",
+            "border-b border-border-subtle bg-surface-default px-6",
             classes?.secondaryNav,
           )}
         >
@@ -398,7 +404,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       {footer && (
         <footer
           className={cn(
-            "border-t border-[var(--border-subtle)] bg-[var(--surface-default)] px-6 py-3",
+            "border-t border-border-subtle bg-surface-default px-6 py-3",
             classes?.footer,
           )}
         >

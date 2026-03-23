@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import './styles/theme.css';
 @import './styles/token-bridge.css';
+@import './styles/dark-mode.css';
 
 /* Content scanning for monorepo */
 @source "../../packages/design-system/src/**/*.{ts,tsx}";

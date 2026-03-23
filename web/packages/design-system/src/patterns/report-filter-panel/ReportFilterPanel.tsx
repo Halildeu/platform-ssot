@@ -94,7 +94,7 @@ export function ReportFilterPanel({
             data-testid={submitTestId}
             className={cn(
               buttonBase,
-              "border-transparent bg-[var(--action-primary)] text-[var(--action-primary-text)] hover:opacity-90",
+              "border-transparent bg-action-primary text-action-primary-text hover:opacity-90",
             )}
             disabled={loading || !canSubmit}
             title={accessReason}
@@ -107,7 +107,7 @@ export function ReportFilterPanel({
               data-testid={resetTestId}
               className={cn(
                 buttonBase,
-                "border border-[var(--border-subtle)] bg-[var(--surface-default)] text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]",
+                "border border-border-subtle bg-surface-default text-text-secondary hover:bg-surface-muted",
               )}
               onClick={handleReset}
               disabled={

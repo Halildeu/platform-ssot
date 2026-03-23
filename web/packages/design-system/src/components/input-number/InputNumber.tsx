@@ -9,6 +9,7 @@ import {
   getFieldTone,
   type FieldSize,
 } from "../../primitives/_shared/FieldControlPrimitives";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  InputNumber — Numeric input with increment/decrement buttons       */
@@ -22,7 +23,8 @@ export interface InputNumberProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "size" | "onChange" | "value" | "defaultValue" | "type" | "prefix"
-  > {
+  >,
+    AccessControlledProps {
   /** Controlled numeric value. */
   value?: number | null;
   /** Initial value for uncontrolled mode. */
@@ -118,10 +120,14 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
       fullWidth = true,
       placeholder,
       className,
+      access,
+      accessReason,
       ...props
     },
     forwardedRef,
   ) {
+    const accessState = resolveAccessState(access);
+    if (accessState.isHidden) return null;
     const generatedId = React.useId();
     const inputId = id ?? `input-number-${generatedId}`;
     const descriptionId = description ? `${inputId}-description` : undefined;
@@ -250,12 +256,13 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
     const stepBtnClass = (isDisabled: boolean) =>
       cn(
         "inline-flex h-5 w-5 items-center justify-center rounded-md text-xs font-bold transition select-none",
-        "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-muted)]",
-        "active:bg-[var(--border-subtle)]",
+        "text-text-secondary hover:text-text-primary hover:bg-surface-muted",
+        "active:bg-border-subtle",
         isDisabled && "pointer-events-none opacity-40",
       );
 
     return (
+      <div className={cn(accessState.isDisabled && "pointer-events-none opacity-50")} title={accessReason}>
       <FieldControlShell
         inputId={inputId}
         label={label}
@@ -340,6 +347,7 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
           </span>
         </div>
       </FieldControlShell>
+      </div>
     );
   },
 );

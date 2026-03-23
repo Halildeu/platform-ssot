@@ -44,13 +44,13 @@ describe('LinkInline — tone', () => {
   it('varsayilan tone "primary" dir', () => {
     const { container } = render(<LinkInline href="/page">Link</LinkInline>);
     const link = container.querySelector('a');
-    expect(link?.className).toContain('text-[var(--action-primary)]');
+    expect(link?.className).toContain('text-action-primary');
   });
 
   it('tone="secondary" secondary class uygular', () => {
     const { container } = render(<LinkInline href="/page" tone="secondary">Link</LinkInline>);
     const link = container.querySelector('a');
-    expect(link?.className).toContain('text-[var(--text-secondary)]');
+    expect(link?.className).toContain('text-text-secondary');
   });
 });
 

@@ -99,11 +99,11 @@ const alignClass: Record<TreeTableAlign, string> = {
 };
 
 const toneClass: Record<TreeTableTone, string> = {
-  default: "bg-[var(--surface-default)]",
-  info: "bg-[var(--state-info)]/20",
-  success: "bg-[var(--state-success)]/20",
-  warning: "bg-[var(--state-warning)]/20",
-  danger: "bg-[var(--state-danger)]/20",
+  default: "bg-surface-default",
+  info: "bg-state-info/20",
+  success: "bg-state-success/20",
+  warning: "bg-state-warning/20",
+  danger: "bg-state-danger/20",
 };
 
 const badgeToneMap: Record<TreeTableTone, BadgeVariant> = {
@@ -206,7 +206,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
       title={accessReason}
     >
       {title ? (
-        <Text as="div" className="text-base font-semibold text-[var(--text-primary)]">
+        <Text as="div" className="text-base font-semibold text-text-primary">
           {title}
         </Text>
       ) : null}
@@ -216,24 +216,24 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
         </Text>
       ) : null}
 
-      <div className="mt-4 overflow-hidden rounded-[26px] border border-[var(--border-subtle)] bg-[var(--surface-default)] shadow-sm">
+      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-sm">
         {!loading && visibleNodes.length === 0 ? (
           <div className="p-5">
             <Empty description={resolvedEmptyFallbackDescription} />
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full border-collapse text-sm text-[var(--text-primary)]">
-              <thead className="bg-[var(--surface-muted)]">
+            <table className="min-w-full border-collapse text-sm text-text-primary">
+              <thead className="bg-surface-muted">
                 <tr>
-                  <th className="border-b border-[var(--border-subtle)] px-4 py-3 text-start text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+                  <th className="border-b border-border-subtle px-4 py-3 text-start text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
                     {resolvedTreeColumnLabel}
                   </th>
                   {columns.map((column) => (
                     <th
                       key={column.key}
                       className={[
-                        "border-b border-[var(--border-subtle)] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]",
+                        "border-b border-border-subtle px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary",
                         alignClass[column.align ?? "left"],
                       ].join(" ")}
                       style={column.width ? { width: column.width } : undefined}
@@ -247,7 +247,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                 {loading
                   ? Array.from({ length: 3 }).map((_, rowIndex) => (
                       <tr key={`loading-${rowIndex}`}>
-                        <td className={["border-b border-[var(--border-subtle)]", densityClass[density]].join(" ")}>
+                        <td className={["border-b border-border-subtle", densityClass[density]].join(" ")}>
                           <div className="flex items-center gap-3">
                             <Skeleton circle height={32} className="shrink-0" />
                             <div className="min-w-0 flex-1 space-y-2">
@@ -257,7 +257,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                           </div>
                         </td>
                         {columns.map((column) => (
-                          <td key={`${column.key}-${rowIndex}`} className={["border-b border-[var(--border-subtle)]", densityClass[density]].join(" ")}>
+                          <td key={`${column.key}-${rowIndex}`} className={["border-b border-border-subtle", densityClass[density]].join(" ")}>
                             <Skeleton lines={1} animated={rowIndex % 2 === 0} />
                           </td>
                         ))}
@@ -270,14 +270,14 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                       const selected = selectedKey === node.key;
                       const blocked = shouldBlockInteraction(accessState.state, node.disabled);
                       return (
-                        <tr key={node.key} className={[toneClass[tone], selected ? "ring-1 ring-inset ring-[var(--state-info-border)]/60" : ""].filter(Boolean).join(" ")}>
-                          <td className={["border-b border-[var(--border-subtle)] align-top", densityClass[density]].join(" ")}>
+                        <tr key={node.key} className={[toneClass[tone], selected ? "ring-1 ring-inset ring-state-info-border/60" : ""].filter(Boolean).join(" ")}>
+                          <td className={["border-b border-border-subtle align-top", densityClass[density]].join(" ")}>
                             <div className="flex items-start gap-3">
                               <div className="flex items-center gap-2 pt-0.5" style={{ paddingInlineStart: `${depth * 18}px` }}>
                                 {hasChildren ? (
                                   <button
                                     type="button"
-                                    className="inline-flex size-7 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-muted)] text-sm text-[var(--text-secondary)]"
+                                    className="inline-flex size-7 items-center justify-center rounded-full border border-border-subtle bg-surface-muted text-sm text-text-secondary"
                                     aria-expanded={expanded}
                                     aria-label={expanded ? collapseNodeAriaLabel : expandNodeAriaLabel}
                                     onClick={(event) => {
@@ -289,7 +289,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                                     {expanded ? "\u25BE" : "\u25B8"}
                                   </button>
                                 ) : (
-                                  <span className="inline-flex size-7 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-muted)] text-[10px] font-semibold text-[var(--text-subtle)]">
+                                  <span className="inline-flex size-7 items-center justify-center rounded-full border border-border-subtle bg-surface-muted text-[10px] font-semibold text-text-subtle">
                                     {"\u2022"}
                                   </span>
                                 )}
@@ -298,7 +298,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                                 type="button"
                                 className={[
                                   "min-w-0 flex-1 rounded-2xl px-1 text-start transition-colors",
-                                  blocked ? "cursor-not-allowed opacity-70" : onNodeSelect ? "hover:bg-[var(--surface-muted)] active:bg-[var(--surface-muted)]/80" : "",
+                                  blocked ? "cursor-not-allowed opacity-70" : onNodeSelect ? "hover:bg-surface-muted active:bg-surface-muted/80" : "",
                                 ]
                                   .filter(Boolean)
                                   .join(" ")}
@@ -315,7 +315,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                   <div className="min-w-0 space-y-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                      <Text as="div" className="text-sm font-semibold text-[var(--text-primary)]" style={{ textWrap: "pretty" } as React.CSSProperties}>
+                                      <Text as="div" className="text-sm font-semibold text-text-primary" style={{ textWrap: "pretty" } as React.CSSProperties}>
                                         {node.label}
                                       </Text>
                                       {node.badges?.map((badge, badgeIndex) =>
@@ -349,12 +349,12 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
                               <td
                                 key={column.key}
                                 className={[
-                                  "border-b border-[var(--border-subtle)] align-top text-sm leading-6 text-[var(--text-secondary)]",
+                                  "border-b border-border-subtle align-top text-sm leading-6 text-text-secondary",
                                   densityClass[density],
                                   alignClass[column.align ?? "left"],
                                 ].join(" ")}
                               >
-                                <div className={column.emphasis ? "font-semibold text-[var(--text-primary)]" : undefined}>{value}</div>
+                                <div className={column.emphasis ? "font-semibold text-text-primary" : undefined}>{value}</div>
                               </td>
                             );
                           })}

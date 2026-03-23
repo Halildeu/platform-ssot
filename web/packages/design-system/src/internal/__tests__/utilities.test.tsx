@@ -1,16 +1,16 @@
 // @vitest-environment jsdom
-import React, { useRef } from 'react';
+import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, act, renderHook, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { expectNoA11yViolations } from '../../__tests__/a11y-utils';
 
 /* ---- Imports under test ---- */
 import { PortalProvider, usePortalConfig } from '../overlay-engine/PortalProvider';
-import { Portal, usePortal as usePortalBasic } from '../overlay-engine/portal';
+import { Portal } from '../overlay-engine/portal';
 import { usePortal } from '../overlay-engine/usePortal';
 import { AriaLiveRegion, announce, useAnnounce } from '../overlay-engine/aria-live';
-import { FocusTrap, useFocusTrap } from '../overlay-engine/focus-trap';
+import { FocusTrap } from '../overlay-engine/focus-trap';
 import { useRovingTabindex } from '../overlay-engine/roving-tabindex';
 import { MenuSurface, type MenuSurfaceItemBase } from '../MenuSurface';
 import { OverlaySurface } from '../OverlaySurface';
@@ -185,7 +185,7 @@ describe('usePortal (standardized)', () => {
       );
     }
 
-    const { container } = render(<TestComponent />);
+    render(<TestComponent />);
     const parent = screen.getByTestId('parent');
     expect(parent.querySelector('[data-testid="inline-child"]')).toBeInTheDocument();
   });

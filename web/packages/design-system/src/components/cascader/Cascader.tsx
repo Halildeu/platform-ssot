@@ -369,14 +369,14 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
         <label
           id={`${rootId}-label`}
           htmlFor={rootId}
-          className="mb-1 block text-sm font-medium text-[var(--text-primary)]"
+          className="mb-1 block text-sm font-medium text-text-primary"
         >
           {label}
         </label>
       )}
 
       {description && (
-        <p className="mb-1 text-xs text-[var(--text-secondary)]">{description}</p>
+        <p className="mb-1 text-xs text-text-secondary">{description}</p>
       )}
 
       <button
@@ -396,8 +396,8 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
           SIZE_CLASS[size],
           error
             ? "border-[var(--border-danger)]"
-            : "border-[var(--border-default)]",
-          isOpen && "ring-2 ring-[var(--accent-primary)]",
+            : "border-border-default",
+          isOpen && "ring-2 ring-accent-primary",
           accessState.isDisabled && "cursor-not-allowed opacity-50",
           accessState.isReadonly && "cursor-default",
         )}
@@ -416,7 +416,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
         </span>
         <svg
           className={cn(
-            "ms-2 h-4 w-4 shrink-0 text-[var(--text-secondary)] transition-transform",
+            "ms-2 h-4 w-4 shrink-0 text-text-secondary transition-transform",
             isOpen && "rotate-180",
           )}
           fill="none"
@@ -439,13 +439,13 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
           ref={dropdownRef}
           role="listbox"
           className={cn(
-            "absolute z-50 mt-1 flex max-w-[calc(100vw-2rem)] rounded-md border border-[var(--border-default)] bg-[var(--surface-canvas)] shadow-lg",
+            "absolute z-50 mt-1 flex max-w-[calc(100vw-2rem)] rounded-md border border-border-default bg-[var(--surface-canvas)] shadow-lg",
             searchable && searchQuery ? "flex-col" : "flex-row overflow-x-auto",
           )}
           data-testid="cascader-dropdown"
         >
           {searchable && (
-            <div className="border-b border-[var(--border-default)] p-2">
+            <div className="border-b border-border-default p-2">
               <input
                 ref={searchInputRef}
                 type="text"
@@ -453,7 +453,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full rounded border border-[var(--border-default)] bg-transparent px-2 py-1 text-sm text-[var(--text-primary)] outline-none"
+                className="w-full rounded border border-border-default bg-transparent px-2 py-1 text-sm text-text-primary outline-none"
                 data-testid="cascader-search"
               />
             </div>
@@ -462,7 +462,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
           {searchable && searchQuery ? (
             <ul className="max-h-60 overflow-auto py-1" data-testid="cascader-search-results">
               {searchResults.length === 0 ? (
-                <li className="px-3 py-2 text-sm text-[var(--text-secondary)]">
+                <li className="px-3 py-2 text-sm text-text-secondary">
                   No results found
                 </li>
               ) : (
@@ -471,7 +471,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
                     key={item.values.join("/")}
                     role="option"
                     aria-selected={false}
-                    className="cursor-pointer px-3 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+                    className="cursor-pointer px-3 py-2 text-sm text-text-primary hover:bg-[var(--surface-hover)]"
                     onClick={() => handleSearchSelect(item.values)}
                   >
                     {item.labels.join(" / ")}
@@ -483,7 +483,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
             activeColumns.map((column, colIdx) => (
               <ul
                 key={colIdx}
-                className="min-w-[150px] max-h-60 overflow-auto border-r border-[var(--border-default)] py-1 last:border-r-0"
+                className="min-w-[150px] max-h-60 overflow-auto border-r border-border-default py-1 last:border-r-0"
                 role="group"
                 data-testid={`cascader-column-${colIdx}`}
               >
@@ -499,11 +499,11 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
                       aria-disabled={option.disabled || undefined}
                       className={cn(
                         "flex cursor-pointer items-center justify-between px-3 py-2 text-sm transition-colors",
-                        isSelected && "bg-[var(--surface-active)] text-[var(--accent-primary)]",
+                        isSelected && "bg-[var(--surface-active)] text-accent-primary",
                         isFocused && !isSelected && "bg-[var(--surface-hover)]",
                         option.disabled
                           ? "cursor-not-allowed text-[var(--text-disabled)] opacity-50"
-                          : "text-[var(--text-primary)] hover:bg-[var(--surface-hover)]",
+                          : "text-text-primary hover:bg-[var(--surface-hover)]",
                       )}
                       onClick={() => handleOptionSelect(option, colIdx)}
                       onMouseEnter={() => handleOptionHover(option, colIdx)}
@@ -512,7 +512,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
                       <span>{option.label}</span>
                       {option.children && option.children.length > 0 && (
                         <svg
-                          className="ms-2 h-3 w-3 text-[var(--text-secondary)]"
+                          className="ms-2 h-3 w-3 text-text-secondary"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

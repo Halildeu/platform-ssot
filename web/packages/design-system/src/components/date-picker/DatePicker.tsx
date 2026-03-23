@@ -143,7 +143,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
         <Text
           as="span"
           variant={currentValue ? "muted" : "secondary"}
-          className="shrink-0 rounded-full border border-[var(--border-default)] bg-[var(--surface-canvas)] px-3 py-1 text-xs font-medium tabular-nums"
+          className="shrink-0 rounded-full border border-border-default bg-[var(--surface-canvas)] px-3 py-1 text-xs font-medium tabular-nums"
           title={accessReason}
         >
           {currentValue || emptyValueLabel}

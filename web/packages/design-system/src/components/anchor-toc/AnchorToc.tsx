@@ -143,16 +143,16 @@ export const AnchorToc = React.forwardRef<HTMLElement, AnchorTocProps>(
         data-access-state={accessState.state}
         data-density={density}
         className={cn(
-          "rounded-[28px] border border-[var(--border-subtle)] bg-[var(--surface-default)] p-4 shadow-sm",
+          "rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm",
           sticky && "lg:sticky lg:top-6",
           className,
         )}
       >
         <div className="flex items-center justify-between gap-3">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-secondary)]">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
             {resolvedTitle}
           </span>
-          <span className="rounded-full border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-2.5 py-1 text-[11px] font-semibold text-[var(--text-secondary)]">
+          <span className="rounded-full border border-border-subtle bg-surface-muted px-2.5 py-1 text-[11px] font-semibold text-text-secondary">
             {items.length}
           </span>
         </div>
@@ -178,8 +178,8 @@ export const AnchorToc = React.forwardRef<HTMLElement, AnchorTocProps>(
                     focusRingClass("ring"),
                     densityClass[density],
                     active
-                      ? "border-[var(--accent-primary,var(--action-primary))] bg-[var(--accent-soft,rgba(79,70,229,0.06))] text-[var(--text-primary)] shadow-sm"
-                      : "border-transparent bg-transparent text-[var(--text-secondary)] hover:border-[var(--border-subtle)] hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]",
+                      ? "border-[var(--accent-primary,var(--action-primary))] bg-[var(--accent-soft,rgba(79,70,229,0.06))] text-text-primary shadow-sm"
+                      : "border-transparent bg-transparent text-text-secondary hover:border-border-subtle hover:bg-surface-muted hover:text-text-primary",
                     disabled && "pointer-events-none opacity-55",
                   )}
                   onClick={withAccessGuard<
@@ -199,7 +199,7 @@ export const AnchorToc = React.forwardRef<HTMLElement, AnchorTocProps>(
                     </span>
                   </span>
                   {item.meta ? (
-                    <span className="ms-3 shrink-0 text-[11px] font-medium text-[var(--text-secondary)]">
+                    <span className="ms-3 shrink-0 text-[11px] font-medium text-text-secondary">
                       {item.meta}
                     </span>
                   ) : null}

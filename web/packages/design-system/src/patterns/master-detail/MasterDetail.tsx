@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  MasterDetail — Split-pane layout: list on left, detail on right    */
@@ -9,7 +10,7 @@ import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 export type MasterDetailRatio = "1:2" | "1:3" | "2:3" | "1:1";
 
 /** Props for the MasterDetail component. */
-export interface MasterDetailProps {
+export interface MasterDetailProps extends AccessControlledProps {
   /** Master (list) panel content */
   master: React.ReactNode;
   /** Detail panel content */
@@ -41,7 +42,7 @@ const ratioMap: Record<MasterDetailRatio, { master: string; detail: string }> = 
 };
 
 /** Split-pane layout with a list panel on the left and a detail panel on the right. */
-export const MasterDetail: React.FC<MasterDetailProps> = ({
+export const MasterDetail = React.forwardRef<HTMLDivElement, MasterDetailProps>(({
   master,
   detail,
   detailEmpty,
@@ -53,12 +54,16 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
   divider = true,
   masterMinWidth = 240,
   className,
-}) => {
+  access,
+  accessReason,
+}, ref) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const [collapsed, setCollapsed] = useState(false);
   const sizes = ratioMap[ratio];
 
   return (
-    <div className={cn("flex h-full overflow-hidden", className)} {...stateAttrs({ component: "master-detail" })}>
+    <div ref={ref} className={cn("flex h-full overflow-hidden", accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason} {...stateAttrs({ component: "master-detail" })}>
       {/* Master panel */}
       <div
         className={cn(
@@ -68,7 +73,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
         style={{ minWidth: collapsed ? 0 : masterMinWidth }}
       >
         {masterHeader && (
-          <div className="flex items-center justify-between border-b border-[var(--border-subtle)] px-4 py-3">
+          <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
             <div className="min-w-0 flex-1">{masterHeader}</div>
             {collapsible && (
               <button
@@ -76,7 +81,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
                 onClick={() => setCollapsed(true)}
                 className={cn(
                   "ms-2 rounded-lg p-1 text-[var(--text-tertiary)]",
-                  "hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]",
+                  "hover:bg-[var(--surface-hover)] hover:text-text-primary",
                   focusRingClass("ring"),
                 )}
                 aria-label="Collapse panel"
@@ -97,7 +102,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
 
       {/* Divider */}
       {divider && !collapsed && (
-        <div className="w-px flex-shrink-0 bg-[var(--border-subtle)]" />
+        <div className="w-px flex-shrink-0 bg-border-subtle" />
       )}
 
       {/* Expand button when collapsed */}
@@ -107,8 +112,8 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
           onClick={() => setCollapsed(false)}
           className={cn(
             "flex-shrink-0 flex items-center justify-center w-6",
-            "bg-[var(--surface-default)] border-e border-[var(--border-subtle)]",
-            "text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]",
+            "bg-surface-default border-e border-border-subtle",
+            "text-[var(--text-tertiary)] hover:text-text-primary hover:bg-[var(--surface-hover)]",
             focusRingClass("ring"),
             "transition-colors",
           )}
@@ -127,7 +132,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
       {/* Detail panel */}
       <div className={cn("flex flex-col overflow-hidden", collapsed ? "flex-1" : sizes.detail)}>
         {detailHeader && (
-          <div className="border-b border-[var(--border-subtle)] px-4 py-3">
+          <div className="border-b border-border-subtle px-4 py-3">
             {detailHeader}
           </div>
         )}
@@ -141,6 +146,6 @@ export const MasterDetail: React.FC<MasterDetailProps> = ({
       </div>
     </div>
   );
-};
+});
 
 MasterDetail.displayName = "MasterDetail";

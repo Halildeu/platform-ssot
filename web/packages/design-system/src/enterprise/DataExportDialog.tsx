@@ -111,8 +111,8 @@ function RadioOption({
       className={cn(
         'flex items-center gap-2 rounded-md border px-3 py-2 text-sm cursor-pointer transition-colors',
         checked
-          ? 'border-[var(--action-primary)] bg-[var(--state-info-bg)]'
-          : 'border-[var(--border-default)] hover:bg-[var(--surface-muted)]',
+          ? 'border-action-primary bg-state-info-bg'
+          : 'border-border-default hover:bg-surface-muted',
         disabled && 'opacity-50 cursor-not-allowed',
       )}
     >
@@ -123,7 +123,7 @@ function RadioOption({
         checked={checked}
         disabled={disabled}
         onChange={() => onChange(value)}
-        className="accent-[var(--action-primary)]"
+        className="accent-action-primary"
       />
       {color && (
         <span
@@ -131,7 +131,7 @@ function RadioOption({
           style={{ backgroundColor: color }}
         />
       )}
-      <span className="font-medium text-[var(--text-primary)]">{label}</span>
+      <span className="font-medium text-text-primary">{label}</span>
       {children}
     </label>
   );
@@ -219,7 +219,7 @@ export function DataExportDialog({
       <Backdrop onClick={onClose} />
       <div
         className={cn(
-          'fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[var(--border-default)] bg-[var(--surface-primary)] shadow-2xl',
+          'fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-border-default bg-[var(--surface-primary)] shadow-2xl',
           accessStyles(state),
           className,
         )}
@@ -229,11 +229,11 @@ export function DataExportDialog({
         title={accessReason}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border-default)] px-5 py-4">
-          <h2 className="text-base font-semibold text-[var(--text-primary)]">{t.title}</h2>
+        <div className="flex items-center justify-between border-b border-border-default px-5 py-4">
+          <h2 className="text-base font-semibold text-text-primary">{t.title}</h2>
           <button
             type="button"
-            className="rounded p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-muted)] transition-colors"
+            className="rounded p-1 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
             onClick={onClose}
             aria-label="Close"
           >
@@ -248,7 +248,7 @@ export function DataExportDialog({
         <div className="space-y-5 px-5 py-4">
           {/* Format selection */}
           <fieldset>
-            <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
+            <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-secondary">
               Format
             </legend>
             <div className="grid grid-cols-2 gap-2">
@@ -269,7 +269,7 @@ export function DataExportDialog({
 
           {/* Scope selection */}
           <fieldset>
-            <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
+            <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-secondary">
               {t.scopeHeading}
             </legend>
             <div className="grid grid-cols-2 gap-2">
@@ -284,7 +284,7 @@ export function DataExportDialog({
                   onChange={(v) => setScope(v as ExportScope)}
                 >
                   {recordCounts?.[s] !== undefined && (
-                    <span className="ml-auto text-[10px] text-[var(--text-secondary)]">
+                    <span className="ml-auto text-[10px] text-text-secondary">
                       ({recordCounts[s].toLocaleString('tr-TR')})
                     </span>
                   )}
@@ -300,31 +300,31 @@ export function DataExportDialog({
               checked={includeCharts}
               onChange={(e) => setIncludeCharts(e.target.checked)}
               disabled={isDisabled}
-              className="accent-[var(--action-primary)] h-4 w-4"
+              className="accent-action-primary h-4 w-4"
             />
-            <span className="text-sm text-[var(--text-primary)]">{t.includeCharts}</span>
+            <span className="text-sm text-text-primary">{t.includeCharts}</span>
           </label>
 
           {/* Record count summary */}
           {countSummary && (
-            <div className="rounded-md bg-[var(--surface-muted)] px-3 py-2 text-center text-sm text-[var(--text-secondary)]">
+            <div className="rounded-md bg-surface-muted px-3 py-2 text-center text-sm text-text-secondary">
               {countSummary}
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 border-t border-[var(--border-default)] px-5 py-3">
+        <div className="flex items-center justify-end gap-3 border-t border-border-default px-5 py-3">
           <button
             type="button"
-            className="rounded-md border border-[var(--border-default)] bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] hover:bg-[var(--surface-muted)] transition-colors"
+            className="rounded-md border border-border-default bg-[var(--surface-primary)] px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted transition-colors"
             onClick={onClose}
           >
             {t.cancelButton}
           </button>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md bg-[var(--action-primary)] px-4 py-2 text-sm font-medium text-[var(--text-inverse)] hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-text-inverse hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={isDisabled || exporting}
             onClick={handleExport}
           >

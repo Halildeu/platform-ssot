@@ -123,7 +123,7 @@ const densityPadding: Record<LayoutDensity, string> = {
 };
 
 const _SKELETON_PULSE =
-  "animate-pulse rounded-lg bg-[var(--surface-muted)]";
+  "animate-pulse rounded-lg bg-surface-muted";
 
 /* ---- Helpers ---- */
 
@@ -168,7 +168,7 @@ const BlockCard: React.FC<{
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-[var(--border-subtle)]/80 bg-[var(--surface-card,var(--surface-default-bg))] shadow-sm transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default-bg))] shadow-sm transition-all duration-200",
         densityPadding[density],
         isDraggable && "cursor-grab active:cursor-grabbing",
       )}
@@ -185,7 +185,7 @@ const BlockCard: React.FC<{
       {(block.title || canCollapse) && (
         <div className="mb-3 flex items-center justify-between">
           {block.title && (
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
+            <h3 className="text-sm font-semibold text-text-primary">
               {block.title}
             </h3>
           )}
@@ -193,7 +193,7 @@ const BlockCard: React.FC<{
             <button
               type="button"
               onClick={() => onToggle?.(block.key, !collapsed)}
-              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)]"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted"
               aria-expanded={!collapsed}
               aria-label={
                 collapsed
@@ -333,12 +333,12 @@ export const AILayoutBuilder: React.FC<AILayoutBuilderProps> = ({
       {(title || description) && (
         <div className="space-y-1">
           {title && (
-            <h2 className="text-lg font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+            <h2 className="text-lg font-semibold tracking-[-0.02em] text-text-primary">
               {title}
             </h2>
           )}
           {description && (
-            <p className="text-sm text-[var(--text-secondary)]">
+            <p className="text-sm text-text-secondary">
               {description}
             </p>
           )}

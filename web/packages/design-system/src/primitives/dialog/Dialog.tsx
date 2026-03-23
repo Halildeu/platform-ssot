@@ -118,8 +118,8 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
       {...stateAttrs({ state: open ? "open" : "closed", component: "dialog" })}
       {...slotProps?.root}
       className={cn(
-        "fixed inset-0 z-[1400] m-auto rounded-2xl border border-[var(--border-subtle)]",
-        "bg-[var(--surface-default)] p-0 shadow-xl",
+        "fixed inset-0 z-[1400] m-auto rounded-2xl border border-border-subtle",
+        "bg-surface-default p-0 shadow-xl",
         "backdrop:bg-black/50 backdrop:backdrop-blur-sm",
         "open:animate-in open:fade-in-0 open:zoom-in-95",
         sizeStyles[size],
@@ -131,15 +131,15 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
       <div {...slotProps?.panel} className={cn("flex max-h-[85vh] flex-col", slotProps?.panel?.className)}>
         {/* Header */}
         {(title || closable) && (
-          <div className="flex items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-6 py-4">
+          <div className="flex items-start justify-between gap-4 border-b border-border-subtle px-6 py-4">
             <div>
               {title && (
-                <div {...slotProps?.title} className={cn("text-lg font-semibold text-[var(--text-primary)]", slotProps?.title?.className)}>
+                <div {...slotProps?.title} className={cn("text-lg font-semibold text-text-primary", slotProps?.title?.className)}>
                   {title}
                 </div>
               )}
               {description && (
-                <div {...slotProps?.description} className={cn("mt-1 text-sm text-[var(--text-secondary)]", slotProps?.description?.className)}>
+                <div {...slotProps?.description} className={cn("mt-1 text-sm text-text-secondary", slotProps?.description?.className)}>
                   {description}
                 </div>
               )}
@@ -148,7 +148,7 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
               <button
                 type="button"
                 onClick={onClose}
-                className="shrink-0 rounded-lg p-1.5 text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]"
+                className="shrink-0 rounded-lg p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
                 aria-label="Close"
               >
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none">
@@ -169,7 +169,7 @@ export const Dialog = React.forwardRef<HTMLDialogElement, DialogProps>(({
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-2 border-t border-[var(--border-subtle)] px-6 py-3">
+          <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-6 py-3">
             {footer}
           </div>
         )}

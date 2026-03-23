@@ -63,7 +63,7 @@ const clampIndex = (value: number, max: number) => {
 };
 
 /** Step-by-step guided tour overlay for onboarding walkthroughs with progress and skip support. */
-export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
+export const TourCoachmarks = React.forwardRef<HTMLDivElement, TourCoachmarksProps>(({
   steps,
   title,
   open,
@@ -81,7 +81,7 @@ export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
   access = "full",
   accessReason,
   testIdPrefix,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
   const [uncontrolledStep, setUncontrolledStep] = useState(defaultStep);
@@ -135,9 +135,9 @@ export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
 
   const toneClasses = useMemo(
     () => ({
-      info: "bg-[var(--action-primary)]/10 text-[var(--text-primary)]",
-      success: "bg-[var(--state-success-bg)]/15 text-[var(--text-primary)]",
-      warning: "bg-[var(--state-warning-bg)]/15 text-[var(--text-primary)]",
+      info: "bg-action-primary/10 text-text-primary",
+      success: "bg-state-success-bg/15 text-text-primary",
+      warning: "bg-state-warning-bg/15 text-text-primary",
     }),
     [],
   );
@@ -148,13 +148,14 @@ export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
 
   return (
     <div
+      ref={ref}
       className={`relative ${className}`.trim()}
       data-access-state={accessState.state}
       data-testid={testIdPrefix ? `${testIdPrefix}-root` : undefined}
     >
       {resolvedOpen ? (
         <div
-          className="relative overflow-hidden rounded-[2rem] border border-[var(--border-subtle)] bg-[var(--surface-muted)] shadow-2xl"
+          className="relative overflow-hidden rounded-[2rem] border border-border-subtle bg-surface-muted shadow-2xl"
           data-testid={testIdPrefix ? `${testIdPrefix}-panel` : undefined}
         >
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--action-primary)] via-[var(--action-primary-hover)] to-[var(--action-primary)]" />
@@ -168,24 +169,24 @@ export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="space-y-2">
-                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">
+                <div className="text-xs font-semibold uppercase tracking-[0.24em] text-text-secondary">
                   {resolvedTitle}
                 </div>
                 <div
                   id={titleId}
-                  className="text-xl font-semibold text-[var(--text-primary)]"
+                  className="text-xl font-semibold text-text-primary"
                 >
                   {step.title}
                 </div>
               </div>
               {showProgress ? (
-                <div className="rounded-full border border-[var(--border-subtle)] px-3 py-1 text-xs font-semibold text-[var(--text-secondary)]">
+                <div className="rounded-full border border-border-subtle px-3 py-1 text-xs font-semibold text-text-secondary">
                   {resolvedStep + 1} / {steps.length}
                 </div>
               ) : null}
             </div>
             <div id={panelId} className="space-y-4">
-              <div className="text-sm leading-7 text-[var(--text-secondary)]">
+              <div className="text-sm leading-7 text-text-secondary">
                 {step.description}
               </div>
               {step.meta ? (
@@ -210,8 +211,8 @@ export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
                       }
                       className={`rounded-2xl border px-3 py-2 text-left text-xs font-semibold transition ${
                         active
-                          ? "border-[var(--action-primary)] bg-[var(--action-primary)]/10 text-[var(--text-primary)]"
-                          : "border-[var(--border-subtle)] bg-[var(--surface-muted)] text-[var(--text-secondary)] hover:bg-[var(--surface-default)]"
+                          ? "border-action-primary bg-action-primary/10 text-text-primary"
+                          : "border-border-subtle bg-surface-muted text-text-secondary hover:bg-surface-default"
                       } ${isReadonly ? "pointer-events-none" : ""}`}
                       aria-current={active ? "step" : undefined}
                     >
@@ -286,7 +287,7 @@ export const TourCoachmarks: React.FC<TourCoachmarksProps> = ({
       ) : null}
     </div>
   );
-};
+});
 
 TourCoachmarks.displayName = "TourCoachmarks";
 

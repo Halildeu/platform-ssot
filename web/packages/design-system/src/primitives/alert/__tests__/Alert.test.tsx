@@ -30,7 +30,7 @@ describe('Alert — temel render', () => {
   it('varsayilan variant "info" dur', () => {
     const { container } = render(<Alert>Test</Alert>);
     const alert = container.querySelector('[role="alert"]');
-    expect(alert?.className).toContain('bg-[var(--state-info-bg)]');
+    expect(alert?.className).toContain('bg-state-info-bg');
   });
 
   it('title render eder', () => {
@@ -46,10 +46,10 @@ describe('Alert — temel render', () => {
 
 describe('Alert — variant proplari', () => {
   it.each([
-    ['info', 'bg-[var(--state-info-bg)]'],
-    ['success', 'bg-[var(--state-success-bg)]'],
-    ['warning', 'bg-[var(--state-warning-bg)]'],
-    ['error', 'bg-[var(--state-error-bg)]'],
+    ['info', 'bg-state-info-bg'],
+    ['success', 'bg-state-success-bg'],
+    ['warning', 'bg-state-warning-bg'],
+    ['error', 'bg-state-danger-bg'],
   ] as const)('variant="%s" dogru class uygular', (variant, expectedClass) => {
     const { container } = render(<Alert variant={variant}>Test</Alert>);
     const alert = container.querySelector('[role="alert"]');

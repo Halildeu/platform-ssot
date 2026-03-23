@@ -112,7 +112,7 @@ const searchSizeClass: Record<TransferSize, string> = {
 /* ---- Styling constants ---- */
 
 const panelSurface =
-  "flex flex-col overflow-hidden rounded-2xl bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-[var(--border-subtle)]/20 border border-[var(--border-subtle)]/80 backdrop-blur-sm";
+  "flex flex-col overflow-hidden rounded-2xl bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 border border-border-subtle/80 backdrop-blur-sm";
 
 /* ---- Icons ---- */
 
@@ -251,8 +251,8 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
       {/* Header */}
       <div
         className={cn(
-          "flex items-center justify-between border-b border-[var(--border-subtle)]/60",
-          "bg-[var(--surface-default)]",
+          "flex items-center justify-between border-b border-border-subtle/60",
+          "bg-surface-default",
           headerSizeClass[size],
         )}
       >
@@ -268,20 +268,20 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                 onChange={handleSelectAll}
                 disabled={blocked || enabledItems.length === 0}
                 className={cn(
-                  "h-3.5 w-3.5 rounded border-[var(--border-subtle)] text-[var(--action-primary)]",
-                  "focus:ring-2 focus:ring-[var(--action-primary)]/20 focus:ring-offset-0",
-                  "accent-[var(--action-primary)]",
+                  "h-3.5 w-3.5 rounded border-border-subtle text-action-primary",
+                  "focus:ring-2 focus:ring-action-primary/20 focus:ring-offset-0",
+                  "accent-action-primary",
                 )}
                 aria-label={allChecked ? locale.deselectAll : locale.selectAll}
               />
             </label>
           )}
-          <span className="font-semibold text-[var(--text-primary)] tracking-[-0.01em]">
+          <span className="font-semibold text-text-primary tracking-[-0.01em]">
             {title}
           </span>
         </div>
         <span
-          className="rounded-full border border-[var(--border-subtle)]/60 bg-[var(--surface-card)] px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--text-secondary)] shadow-[0_4px_8px_-6px_var(--shadow-color)]"
+          className="rounded-full border border-border-subtle/60 bg-[var(--surface-card)] px-2 py-0.5 text-[11px] font-medium tabular-nums text-text-secondary shadow-[0_4px_8px_-6px_var(--shadow-color)]"
           data-testid={`transfer-count-${direction}`}
         >
           {checkedCount > 0
@@ -292,9 +292,9 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
 
       {/* Search */}
       {searchable && (
-        <div className="border-b border-[var(--border-subtle)]/40 px-2 py-1.5">
+        <div className="border-b border-border-subtle/40 px-2 py-1.5">
           <div className="relative">
-            <SearchIcon className="pointer-events-none absolute start-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--text-secondary)]" />
+            <SearchIcon className="pointer-events-none absolute start-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-secondary" />
             <input
               type="search"
               value={searchValue}
@@ -302,10 +302,10 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
               placeholder={locale.searchPlaceholder}
               disabled={blocked}
               className={cn(
-                "w-full rounded-lg border border-[var(--border-subtle)]/60 ps-7",
-                "bg-[var(--surface-canvas)] text-[var(--text-primary)]",
+                "w-full rounded-lg border border-border-subtle/60 ps-7",
+                "bg-[var(--surface-canvas)] text-text-primary",
                 "placeholder:text-[var(--text-disabled)]",
-                "focus:border-[var(--action-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--action-primary)]/20",
+                "focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-action-primary/20",
                 "[&::-webkit-search-cancel-button]:hidden",
                 searchSizeClass[size],
               )}
@@ -325,7 +325,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
         data-testid={`transfer-list-${direction}`}
       >
         {filteredItems.length === 0 ? (
-          <li role="option" aria-selected={false} aria-disabled="true" className="flex items-center justify-center py-8 text-[var(--text-secondary)]">
+          <li role="option" aria-selected={false} aria-disabled="true" className="flex items-center justify-center py-8 text-text-secondary">
             <span className={size === "sm" ? "text-xs" : "text-sm"}>
               {locale.notFound}
             </span>
@@ -343,7 +343,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                 aria-disabled={itemBlocked || undefined}
                 data-testid={`transfer-item-${item.key}`}
                 className={cn(
-                  "group flex cursor-pointer items-center gap-2 border-b border-[var(--border-subtle)]/20 transition-colors duration-100 last:border-b-0",
+                  "group flex cursor-pointer items-center gap-2 border-b border-border-subtle/20 transition-colors duration-100 last:border-b-0",
                   itemSizeClass[size],
                   itemBlocked
                     ? "cursor-not-allowed opacity-50"
@@ -368,8 +368,8 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                   className={cn(
                     "inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border",
                     checked
-                      ? "border-[var(--action-primary)] bg-[var(--action-primary)] text-[var(--text-inverse)]"
-                      : "border-[var(--border-subtle)] bg-[var(--surface-canvas)]",
+                      ? "border-action-primary bg-action-primary text-text-inverse"
+                      : "border-border-subtle bg-[var(--surface-canvas)]",
                     itemBlocked && "opacity-50",
                   )}
                 >
@@ -384,11 +384,11 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                     renderItem(item)
                   ) : (
                     <>
-                      <div className="truncate font-medium text-[var(--text-primary)]">
+                      <div className="truncate font-medium text-text-primary">
                         {item.label}
                       </div>
                       {item.description && (
-                        <div className="truncate text-[var(--text-secondary)] text-[0.8em] leading-snug">
+                        <div className="truncate text-text-secondary text-[0.8em] leading-snug">
                           {item.description}
                         </div>
                       )}
@@ -408,7 +408,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
 /*  Transfer                                                           */
 /* ------------------------------------------------------------------ */
 
-export const Transfer: React.FC<TransferProps> = ({
+export const Transfer = React.forwardRef<HTMLDivElement, TransferProps>(({
   dataSource,
   targetKeys: controlledTargetKeys,
   defaultTargetKeys,
@@ -424,7 +424,7 @@ export const Transfer: React.FC<TransferProps> = ({
   className,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const blocked = shouldBlockInteraction(accessState.state);
 
@@ -547,6 +547,7 @@ export const Transfer: React.FC<TransferProps> = ({
 
   return (
     <div
+      ref={ref}
       className={cn("flex flex-wrap items-center justify-center gap-3", className)}
       data-component="transfer"
       data-access-state={accessState.state}
@@ -586,8 +587,8 @@ export const Transfer: React.FC<TransferProps> = ({
           className={cn(
             "flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-150",
             leftSelectedCount > 0 && !blocked
-              ? "border-[var(--action-primary)]/40 bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
-              : "border-[var(--border-subtle)]/60 bg-[var(--surface-default)] text-[var(--text-disabled)] cursor-not-allowed",
+              ? "border-action-primary/40 bg-action-primary text-text-inverse shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
+              : "border-border-subtle/60 bg-surface-default text-[var(--text-disabled)] cursor-not-allowed",
           )}
           aria-label="Move selected items to right"
           data-testid="transfer-move-right"
@@ -604,8 +605,8 @@ export const Transfer: React.FC<TransferProps> = ({
           className={cn(
             "flex h-8 w-8 items-center justify-center rounded-xl border transition-all duration-150",
             rightSelectedCount > 0 && !blocked
-              ? "border-[var(--action-primary)]/40 bg-[var(--action-primary)] text-[var(--text-inverse)] shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
-              : "border-[var(--border-subtle)]/60 bg-[var(--surface-default)] text-[var(--text-disabled)] cursor-not-allowed",
+              ? "border-action-primary/40 bg-action-primary text-text-inverse shadow-[0_8px_16px_-8px_var(--action-primary)] hover:shadow-[0_12px_20px_-8px_var(--action-primary)] active:translate-y-px"
+              : "border-border-subtle/60 bg-surface-default text-[var(--text-disabled)] cursor-not-allowed",
           )}
           aria-label="Move selected items to left"
           data-testid="transfer-move-left"
@@ -633,7 +634,7 @@ export const Transfer: React.FC<TransferProps> = ({
       />
     </div>
   );
-};
+});
 
 Transfer.displayName = "Transfer";
 

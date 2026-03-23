@@ -358,7 +358,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
 
       {showValue && (
         <span
-          className="ms-2 text-sm tabular-nums text-[var(--text-secondary)]"
+          className="ms-2 text-sm tabular-nums text-text-secondary"
           aria-live="polite"
         >
           {formattedValue}
@@ -367,7 +367,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
 
       {resolvedLabel && (
         <span
-          className="ms-2 text-sm text-[var(--text-secondary)]"
+          className="ms-2 text-sm text-text-secondary"
           data-testid="rating-label"
           aria-live="polite"
         >

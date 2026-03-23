@@ -30,7 +30,7 @@ describe('Text — temel render', () => {
   it('varsayilan variant "default" dir', () => {
     const { container } = render(<Text>Test</Text>);
     const el = container.querySelector('span');
-    expect(el?.className).toContain('text-[var(--text-primary)]');
+    expect(el?.className).toContain('text-text-primary');
   });
 });
 
@@ -58,13 +58,13 @@ describe('Text — as prop', () => {
 
 describe('Text — variant proplari', () => {
   it.each([
-    ['default', 'text-[var(--text-primary)]'],
-    ['secondary', 'text-[var(--text-secondary)]'],
+    ['default', 'text-text-primary'],
+    ['secondary', 'text-text-secondary'],
     ['muted', 'text-[var(--text-disabled)]'],
-    ['success', 'text-[var(--state-success-text)]'],
-    ['warning', 'text-[var(--state-warning-text)]'],
-    ['error', 'text-[var(--state-error-text)]'],
-    ['info', 'text-[var(--state-info-text)]'],
+    ['success', 'text-state-success-text'],
+    ['warning', 'text-state-warning-text'],
+    ['error', 'text-state-danger-text'],
+    ['info', 'text-state-info-text'],
   ] as const)('variant="%s" dogru class uygular', (variant, expectedClass) => {
     const { container } = render(<Text variant={variant}>Test</Text>);
     const el = container.querySelector('span');

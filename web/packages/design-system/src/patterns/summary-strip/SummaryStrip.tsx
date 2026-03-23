@@ -43,7 +43,7 @@ const TONE_BORDER: Record<string, string> = {
  * Horizontal KPI / metric strip that displays key summary values in a
  * responsive grid with optional icons, trend indicators and tone accents.
  */
-export const SummaryStrip: React.FC<SummaryStripProps> = ({
+export const SummaryStrip = React.forwardRef<HTMLDivElement, SummaryStripProps>(({
   items,
   title,
   description,
@@ -51,21 +51,21 @@ export const SummaryStrip: React.FC<SummaryStripProps> = ({
   className,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
   return (
-  <div className={cn("w-full", className)} data-access-state={accessState.state} title={accessReason}>
+  <div ref={ref} className={cn("w-full", className)} data-access-state={accessState.state} title={accessReason}>
     {(title || description) && (
       <div className="mb-4">
         {title && (
-          <h3 className="text-base font-semibold text-[var(--text-primary)]">
+          <h3 className="text-base font-semibold text-text-primary">
             {title}
           </h3>
         )}
         {description && (
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          <p className="mt-1 text-sm text-text-secondary">
             {description}
           </p>
         )}
@@ -84,7 +84,7 @@ export const SummaryStrip: React.FC<SummaryStripProps> = ({
           <article
             key={item.key}
             className={cn(
-              "relative rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-card,var(--surface-default))] px-4 py-4",
+              "relative rounded-lg border border-border-subtle bg-[var(--surface-card,var(--surface-default))] px-4 py-4",
               hasToneBorder && "border-s-2",
               hasToneBorder && TONE_BORDER[tone],
             )}
@@ -98,24 +98,24 @@ export const SummaryStrip: React.FC<SummaryStripProps> = ({
 
             {/* Icon */}
             {item.icon && (
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-md bg-[var(--surface-muted)] text-[var(--text-secondary)] [&>svg]:h-4 [&>svg]:w-4">
+              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-md bg-surface-muted text-text-secondary [&>svg]:h-4 [&>svg]:w-4">
                 {item.icon}
               </div>
             )}
 
             {/* Label */}
-            <div className="text-xs font-medium text-[var(--text-secondary)]">
+            <div className="text-xs font-medium text-text-secondary">
               {item.label}
             </div>
 
             {/* Value */}
-            <div className="mt-1 text-2xl font-bold text-[var(--text-primary)]">
+            <div className="mt-1 text-2xl font-bold text-text-primary">
               {item.value}
             </div>
 
             {/* Note */}
             {item.note && (
-              <div className="mt-1 text-xs text-[var(--text-secondary)]">
+              <div className="mt-1 text-xs text-text-secondary">
                 {item.note}
               </div>
             )}
@@ -125,6 +125,6 @@ export const SummaryStrip: React.FC<SummaryStripProps> = ({
     </div>
   </div>
   );
-};
+});
 
 SummaryStrip.displayName = "SummaryStrip";

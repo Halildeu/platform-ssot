@@ -100,7 +100,7 @@ describe('Modal — surface proplari', () => {
       </Modal>,
     );
     const header = container.querySelector('.flex.items-start');
-    expect(header?.className).toContain('bg-[var(--state-error-bg)]');
+    expect(header?.className).toContain('bg-state-danger-bg');
   });
 
   it('surface="confirm" header class uygular', () => {
@@ -110,7 +110,7 @@ describe('Modal — surface proplari', () => {
       </Modal>,
     );
     const header = container.querySelector('.flex.items-start');
-    expect(header?.className).toContain('bg-[var(--state-info-bg)]');
+    expect(header?.className).toContain('bg-state-info-bg');
   });
 });
 

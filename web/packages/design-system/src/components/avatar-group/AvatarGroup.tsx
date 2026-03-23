@@ -108,7 +108,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
           <span
             key={item.key}
             className={cn(
-              "relative inline-block ring-2 ring-[var(--surface-default)]",
+              "relative inline-block ring-2 ring-surface-default",
               shape === "circle" ? "rounded-full" : "rounded-lg",
               idx > 0 && SPACING_ML[spacing],
             )}
@@ -139,8 +139,8 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
           <span
             className={cn(
               "relative inline-flex items-center justify-center",
-              "ring-2 ring-[var(--surface-default)]",
-              "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
+              "ring-2 ring-surface-default",
+              "bg-surface-muted text-text-secondary",
               "font-medium select-none",
               shape === "circle" ? "rounded-full" : "rounded-lg",
               idx0SpacingClass(spacing),

@@ -173,7 +173,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
         className={cn(
-          "relative flex flex-col bg-[var(--surface-default)] shadow-2xl",
+          "relative flex flex-col bg-surface-default shadow-2xl",
           placementPanelStyles[placement],
           placementAnimationStyles[placement],
           sizeStyles[size],
@@ -181,12 +181,12 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
         )}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-6 py-4">
+        <div className="flex items-start justify-between gap-4 border-b border-border-subtle px-6 py-4">
           <div className="min-w-0 flex-1">
             {title && (
               <h2
                 id={titleId}
-                className="text-lg font-semibold text-[var(--text-primary)] truncate"
+                className="text-lg font-semibold text-text-primary truncate"
               >
                 {title}
               </h2>
@@ -194,7 +194,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
             {description && (
               <p
                 id={descriptionId}
-                className="mt-1 text-sm text-[var(--text-secondary)]"
+                className="mt-1 text-sm text-text-secondary"
               >
                 {description}
               </p>
@@ -203,7 +203,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 rounded-lg p-1.5 text-[var(--text-secondary)] transition hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]"
+            className="shrink-0 rounded-lg p-1.5 text-text-secondary transition hover:bg-surface-muted hover:text-text-primary"
             aria-label="Close"
           >
             <svg className="h-5 w-5" viewBox="0 0 20 20" fill="none">
@@ -222,7 +222,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(({
 
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-2 border-t border-[var(--border-subtle)] px-6 py-3">
+          <div className="flex items-center justify-end gap-2 border-t border-border-subtle px-6 py-3">
             {footer}
           </div>
         )}

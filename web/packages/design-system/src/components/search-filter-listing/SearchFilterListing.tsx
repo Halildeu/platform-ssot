@@ -121,9 +121,9 @@ export interface SearchFilterListingProps extends AccessControlledProps {
 /* ---- Style constants ---- */
 
 const panelBase =
-  "relative overflow-hidden rounded-[28px] border border-[var(--border-subtle)]/80 bg-[var(--surface-card,var(--surface-default))] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm transition-all duration-200";
+  "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default))] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm transition-all duration-200";
 
-const SKELETON_PULSE = "animate-pulse rounded-lg bg-[var(--surface-muted)]";
+const SKELETON_PULSE = "animate-pulse rounded-lg bg-surface-muted";
 
 /* ---- Sub-components ---- */
 
@@ -145,14 +145,14 @@ const FilterChips: React.FC<{
       {filters.map((f) => (
         <span
           key={f.key}
-          className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-muted)] px-2.5 py-1 text-xs text-[var(--text-primary)] transition-colors hover:bg-[var(--surface-hover)]"
+          className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-muted px-2.5 py-1 text-xs text-text-primary transition-colors hover:bg-[var(--surface-hover)]"
         >
-          <span className="font-medium text-[var(--text-secondary)]">{f.label}:</span>
+          <span className="font-medium text-text-secondary">{f.label}:</span>
           <span>{f.value}</span>
           <button
             type="button"
             onClick={f.onRemove}
-            className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:bg-[var(--action-primary-bg,var(--action-primary))] hover:text-[var(--text-inverse)]"
+            className="ms-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-[var(--action-primary-bg,var(--action-primary))] hover:text-text-inverse"
             aria-label={`${f.label} filtresini kaldir`}
           >
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
@@ -191,10 +191,10 @@ const SelectionBar: React.FC<{
       aria-live="polite"
     >
       <div className="flex items-center gap-3">
-        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--action-primary-bg,var(--action-primary))] text-[10px] font-bold text-[var(--text-inverse)]">
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[var(--action-primary-bg,var(--action-primary))] text-[10px] font-bold text-text-inverse">
           {count}
         </span>
-        <span className="text-sm font-medium text-[var(--text-primary)]">
+        <span className="text-sm font-medium text-text-primary">
           {count} oge secildi
         </span>
       </div>
@@ -203,7 +203,7 @@ const SelectionBar: React.FC<{
         <button
           type="button"
           onClick={onClear}
-          className="text-xs font-medium text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+          className="text-xs font-medium text-text-secondary transition-colors hover:text-text-primary"
         >
           Secimi temizle
         </button>
@@ -226,7 +226,7 @@ const SortDropdown: React.FC<{
           const key = e.target.value;
           if (key && onChange) onChange(key, active?.direction ?? "asc");
         }}
-        className="rounded-lg border border-[var(--border-subtle)] bg-transparent px-2 py-1 text-xs text-[var(--text-secondary)] outline-none focus:border-[var(--selection-outline,var(--action-primary))]"
+        className="rounded-lg border border-border-subtle bg-transparent px-2 py-1 text-xs text-text-secondary outline-none focus:border-[var(--selection-outline,var(--action-primary))]"
         aria-label="Siralama"
       >
         <option value="">Siralama</option>
@@ -238,7 +238,7 @@ const SortDropdown: React.FC<{
         <button
           type="button"
           onClick={() => onChange(active.key, active.direction === "asc" ? "desc" : "asc")}
-          className="inline-flex h-6 w-6 items-center justify-center rounded-md text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)]"
+          className="inline-flex h-6 w-6 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted"
           aria-label={active.direction === "asc" ? "Azalan sirala" : "Artan sirala"}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -256,7 +256,7 @@ const SortDropdown: React.FC<{
 
 /* ---- Main Component ---- */
 
-export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
+export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterListingProps>(({
   eyebrow,
   title,
   description,
@@ -292,7 +292,7 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
   size = "default",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -309,6 +309,7 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
   if (loading) {
     return (
       <section
+        ref={ref}
         className={cn(sectionGap, className)}
         data-access-state={accessState.state}
         data-component="search-filter-listing"
@@ -355,22 +356,22 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
     if (hasActiveFilters) {
       return (
         <div className="flex flex-col items-center gap-3 py-8 text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--surface-muted)]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M10 17L6 21M14 17L18 21M12 17V21M3 7L5 3H19L21 7M4 7H20V13C20 15.2091 18.2091 17 16 17H8C5.79086 17 4 15.2091 4 13V7Z" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <div className="text-sm font-medium text-[var(--text-primary)]">
+          <div className="text-sm font-medium text-text-primary">
             Bu filtre kombinasyonu icin sonuc bulunamadi
           </div>
-          <div className="text-xs text-[var(--text-secondary)]">
+          <div className="text-xs text-text-secondary">
             Filtreleri degistirmeyi veya temizlemeyi deneyin.
           </div>
           {onClearAllFilters && (
             <button
               type="button"
               onClick={onClearAllFilters}
-              className="mt-1 rounded-lg border border-[var(--border-subtle)] px-3 py-1.5 text-xs font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--surface-muted)]"
+              className="mt-1 rounded-lg border border-border-subtle px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-surface-muted"
             >
               Filtreleri temizle
             </button>
@@ -394,7 +395,7 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
         <button
           type="button"
           onClick={onReload}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)]"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
           aria-label="Yeniden yukle"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
@@ -411,12 +412,12 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
     <div className="flex flex-wrap items-start justify-between gap-4">
       <div className="min-w-0 flex-1">
         {listTitle && (
-          <div className="text-base font-semibold tracking-[-0.02em] text-[var(--text-primary)]">
+          <div className="text-base font-semibold tracking-[-0.02em] text-text-primary">
             {listTitle}
           </div>
         )}
         {listDescription && (
-          <div className="mt-1 text-sm leading-6 text-[var(--text-secondary)]">
+          <div className="mt-1 text-sm leading-6 text-text-secondary">
             {listDescription}
           </div>
         )}
@@ -426,7 +427,7 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
           <SortDropdown options={sortOptions} active={activeSort} onChange={onSortChange} />
         )}
         {totalCount !== undefined && (
-          <span className="whitespace-nowrap rounded-full bg-[var(--surface-muted)] px-2.5 py-1 text-xs font-medium tabular-nums text-[var(--text-secondary)]">
+          <span className="whitespace-nowrap rounded-full bg-surface-muted px-2.5 py-1 text-xs font-medium tabular-nums text-text-secondary">
             {totalCount} sonuc
           </span>
         )}
@@ -436,6 +437,7 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
 
   return (
     <section
+      ref={ref}
       className={cn(sectionGap, className)}
       data-access-state={accessState.state}
       data-component="search-filter-listing"
@@ -448,7 +450,7 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
         title={
           <>
             {eyebrow && (
-              <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-[var(--text-secondary)]">
+              <span className="mb-1 block text-xs font-medium uppercase tracking-wider text-text-secondary">
                 {eyebrow}
               </span>
             )}
@@ -531,7 +533,7 @@ export const SearchFilterListing: React.FC<SearchFilterListingProps> = ({
       </div>
     </section>
   );
-};
+});
 
 SearchFilterListing.displayName = "SearchFilterListing";
 

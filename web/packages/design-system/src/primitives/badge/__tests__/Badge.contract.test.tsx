@@ -100,7 +100,7 @@ describe('Badge contract', () => {
   it('dot mode applies variant-derived background color', () => {
     const { container } = render(<Badge dot variant="success" />);
     const dot = container.querySelector('span');
-    expect(dot?.className).toContain('bg-[var(--state-success-text)]');
+    expect(dot?.className).toContain('bg-state-success-text');
   });
 
   /* ---- Dot mode passthrough ---- */

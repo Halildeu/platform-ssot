@@ -145,7 +145,7 @@ export function RiskMatrix({
       <div className="flex">
         <div className="flex flex-col items-center justify-center mr-1" style={{ width: s.cell * 0.8 }}>
           <span
-            className={`${s.labelSize} font-medium text-[var(--text-secondary)] writing-mode-vertical`}
+            className={`${s.labelSize} font-medium text-text-secondary writing-mode-vertical`}
             style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
           >
             Impact
@@ -158,7 +158,7 @@ export function RiskMatrix({
             {likelihoodLevels.map((l) => (
               <div
                 key={`lh-${l}`}
-                className={`${s.labelSize} text-center text-[var(--text-secondary)] truncate px-0.5`}
+                className={`${s.labelSize} text-center text-text-secondary truncate px-0.5`}
                 style={{ width: s.cell }}
                 title={likelihoodLabels[l - 1]}
               >
@@ -172,7 +172,7 @@ export function RiskMatrix({
             <div key={`row-${impact}`} className="flex items-center">
               {/* Row label */}
               <div
-                className={`${s.labelSize} text-right text-[var(--text-secondary)] pr-1.5 truncate`}
+                className={`${s.labelSize} text-right text-text-secondary pr-1.5 truncate`}
                 style={{ width: s.cell * 0.7 }}
                 title={impactLabels[impact - 1]}
               >
@@ -204,7 +204,7 @@ export function RiskMatrix({
                       }
                     } : undefined}
                     className={[
-                      'flex items-center justify-center border border-[var(--surface-default)]',
+                      'flex items-center justify-center border border-surface-default',
                       'transition-transform duration-100',
                       isClickable ? 'cursor-pointer hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]' : '',
                     ].join(' ')}
@@ -230,7 +230,7 @@ export function RiskMatrix({
 
           {/* Axis label: Likelihood (horizontal) */}
           <div
-            className={`${s.labelSize} text-center text-[var(--text-secondary)] mt-1 font-medium`}
+            className={`${s.labelSize} text-center text-text-secondary mt-1 font-medium`}
             style={{ marginLeft: s.cell * 0.7 }}
           >
             Likelihood
@@ -257,7 +257,7 @@ export function RiskMatrix({
               <li key={r.id} className="truncate">{r.title}</li>
             ))}
             {tooltip.risks.length > 5 && (
-              <li className="text-[var(--text-secondary)]">+{tooltip.risks.length - 5} more</li>
+              <li className="text-text-secondary">+{tooltip.risks.length - 5} more</li>
             )}
           </ul>
         </div>
@@ -275,7 +275,7 @@ export function RiskMatrix({
                   style={{ backgroundColor: c.bg, borderColor: c.text }}
                   aria-hidden="true"
                 />
-                <span className={`${s.labelSize} text-[var(--text-secondary)]`}>{c.label}</span>
+                <span className={`${s.labelSize} text-text-secondary`}>{c.label}</span>
               </div>
             );
           })}

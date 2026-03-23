@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Descriptions — Key-value grid for displaying structured metadata  */
@@ -24,7 +25,7 @@ export interface DescriptionsItem {
 /**
  * Descriptions displays structured key-value metadata in a responsive grid layout.
  */
-export interface DescriptionsProps {
+export interface DescriptionsProps extends AccessControlledProps {
   /** Array of key-value items to render. */
   items: DescriptionsItem[];
   /** Optional heading above the grid. */
@@ -54,7 +55,7 @@ const TONE_BORDER: Record<string, string> = {
   danger: "border-s-[var(--state-danger-border)]",
 };
 
-export const Descriptions: React.FC<DescriptionsProps> = ({
+export const Descriptions = React.forwardRef<HTMLDivElement, DescriptionsProps>(({
   items,
   title,
   description,
@@ -65,7 +66,11 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
   localeText,
   fullWidth = false,
   className,
-}) => {
+  access,
+  accessReason,
+}, ref) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const isCompact = density === "compact";
   const cellPadding = isCompact ? "py-2 px-3" : "py-4 px-4";
 
@@ -76,22 +81,22 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
       "No data available";
 
     return (
-      <div className={cn("w-full", className)}>
+      <div ref={ref} className={cn("w-full", accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason}>
         {(title || description) && (
           <div className="mb-4">
             {title && (
-              <h3 className="text-base font-semibold text-[var(--text-primary)]">
+              <h3 className="text-base font-semibold text-text-primary">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">
+              <p className="mt-1 text-sm text-text-secondary">
                 {description}
               </p>
             )}
           </div>
         )}
-        <div className="flex items-center justify-center py-12 text-sm text-[var(--text-secondary)]">
+        <div className="flex items-center justify-center py-12 text-sm text-text-secondary">
           {emptyMsg}
         </div>
       </div>
@@ -99,16 +104,16 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
   }
 
   return (
-    <div className={cn(fullWidth ? "w-full" : "max-w-4xl", className)}>
+    <div ref={ref} className={cn(fullWidth ? "w-full" : "max-w-4xl", accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason}>
       {(title || description) && (
         <div className="mb-4">
           {title && (
-            <h3 className="text-base font-semibold text-[var(--text-primary)]">
+            <h3 className="text-base font-semibold text-text-primary">
               {title}
             </h3>
           )}
           {description && (
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            <p className="mt-1 text-sm text-text-secondary">
               {description}
             </p>
           )}
@@ -119,7 +124,7 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
         className={cn(
           "grid",
           bordered &&
-            "border border-[var(--border-subtle)] rounded-lg overflow-hidden",
+            "border border-border-subtle rounded-lg overflow-hidden",
         )}
         style={{
           gridTemplateColumns: `repeat(${columns}, 1fr)`,
@@ -135,7 +140,7 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
               className={cn(
                 cellPadding,
                 bordered &&
-                  "border-b border-r border-[var(--border-subtle)] last:border-b-0 [&:nth-last-child(-n+1)]:border-b-0",
+                  "border-b border-r border-border-subtle last:border-b-0 [&:nth-last-child(-n+1)]:border-b-0",
                 hasToneBorder && "border-s-2",
                 hasToneBorder && TONE_BORDER[tone],
               )}
@@ -145,14 +150,14 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
                   : undefined
               }
             >
-              <dt className="text-xs font-medium text-[var(--text-secondary)] mb-1">
+              <dt className="text-xs font-medium text-text-secondary mb-1">
                 {item.label}
               </dt>
-              <dd className="text-sm text-[var(--text-primary)]">
+              <dd className="text-sm text-text-primary">
                 {item.value ?? "\u2014"}
               </dd>
               {item.helper && (
-                <dd className="mt-0.5 text-xs text-[var(--text-secondary)]">
+                <dd className="mt-0.5 text-xs text-text-secondary">
                   {item.helper}
                 </dd>
               )}
@@ -162,6 +167,6 @@ export const Descriptions: React.FC<DescriptionsProps> = ({
       </dl>
     </div>
   );
-};
+});
 
 Descriptions.displayName = "Descriptions";

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { cn } from "../../utils/cn";
+import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  ContextMenu — Right-click or long-press activated menu             */
@@ -29,7 +30,7 @@ export interface ContextMenuLabel {
 
 export type ContextMenuEntry = ContextMenuItem | ContextMenuSeparator | ContextMenuLabel;
 
-export interface ContextMenuProps {
+export interface ContextMenuProps extends AccessControlledProps {
   /** Menu entries */
   items: ContextMenuEntry[];
   /** Trigger element */
@@ -48,7 +49,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   children,
   disabled = false,
   className,
+  access,
+  accessReason,
 }) => {
+  const accessState = resolveAccessState(access);
+  if (accessState.isHidden) return null;
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
@@ -148,7 +153,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   return (
     <>
-      <div ref={triggerRef} onContextMenu={handleContextMenu} className="inline-flex">
+      <div ref={triggerRef} onContextMenu={handleContextMenu} className={cn("inline-flex", accessState.isDisabled && "pointer-events-none opacity-50")} title={accessReason}>
         {children}
       </div>
 
@@ -159,7 +164,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
           tabIndex={-1}
           onKeyDown={handleKeyDown}
           className={cn(
-            "fixed z-[1500] min-w-[160px] rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] py-1",
+            "fixed z-[1500] min-w-[160px] rounded-lg border border-border-default bg-surface-default py-1",
             "shadow-lg animate-in fade-in-0 zoom-in-95",
             className,
           )}
@@ -171,7 +176,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
                 <div
                   key={entry.key}
                   role="separator"
-                  className="my-1 h-px bg-[var(--border-default)]"
+                  className="my-1 h-px bg-border-default"
                 />
               );
             }
@@ -211,10 +216,10 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
                   item.danger
                     ? cn(
                         "text-[var(--feedback-error)]",
-                        isFocused && "bg-[var(--state-error-bg)]",
+                        isFocused && "bg-state-danger-bg",
                       )
                     : cn(
-                        "text-[var(--text-primary)]",
+                        "text-text-primary",
                         isFocused && "bg-[var(--surface-hover)]",
                       ),
                 )}

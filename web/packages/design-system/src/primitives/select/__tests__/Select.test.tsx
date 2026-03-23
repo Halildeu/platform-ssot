@@ -110,13 +110,13 @@ describe('Select — error state', () => {
   it('error durumunda error border uygular', () => {
     render(<Select options={defaultOptions} error />);
     const select = screen.getByRole('combobox');
-    expect(select.className).toContain('border-[var(--state-error-text)]');
+    expect(select.className).toContain('border-state-danger-text');
   });
 
   it('error yoksa default border uygular', () => {
     render(<Select options={defaultOptions} />);
     const select = screen.getByRole('combobox');
-    expect(select.className).toContain('border-[var(--border-default)]');
+    expect(select.className).toContain('border-border-default');
   });
 });
 
@@ -156,20 +156,20 @@ describe('Select — error state detailed', () => {
   it('error=true applies error border class', () => {
     render(<Select options={defaultOptions} error={true} />);
     const select = screen.getByRole('combobox');
-    expect(select.className).toContain('border-[var(--state-error-text)]');
+    expect(select.className).toContain('border-state-danger-text');
   });
 
   it('error=false applies default border class', () => {
     render(<Select options={defaultOptions} error={false} />);
     const select = screen.getByRole('combobox');
-    expect(select.className).toContain('border-[var(--border-default)]');
-    expect(select.className).not.toContain('border-[var(--state-error-text)]');
+    expect(select.className).toContain('border-border-default');
+    expect(select.className).not.toContain('border-state-danger-text');
   });
 
   it('error state includes error focus ring', () => {
     render(<Select options={defaultOptions} error />);
     const select = screen.getByRole('combobox');
-    expect(select.className).toContain('focus:ring-[var(--state-error-text)]');
+    expect(select.className).toContain('focus:ring-state-danger-text');
   });
 });
 
@@ -318,14 +318,14 @@ describe('Select — keyboard navigation', () => {
     const select = screen.getByRole('combobox');
     // The component has focus:ring-2 and focus:border classes defined
     expect(select.className).toContain('focus:ring-2');
-    expect(select.className).toContain('focus:border-[var(--action-primary)]');
+    expect(select.className).toContain('focus:border-action-primary');
   });
 
   it('error durumunda focus ring error rengi icerir', () => {
     render(<Select options={defaultOptions} error />);
     const select = screen.getByRole('combobox');
     expect(select.className).toContain('focus:ring-2');
-    expect(select.className).toContain('focus:ring-[var(--state-error-text)]');
+    expect(select.className).toContain('focus:ring-state-danger-text');
   });
 
   it('disabled durumunda keyboard etkilesim engellenir', async () => {

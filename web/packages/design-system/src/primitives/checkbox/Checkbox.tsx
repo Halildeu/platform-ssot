@@ -149,8 +149,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           isCard && "rounded-lg border px-3 py-2.5 transition-colors duration-150",
           isCard &&
             (checked
-              ? "border-[var(--action-primary)] bg-[var(--action-primary-soft,rgba(43,108,176,0.05))]"
-              : "border-[var(--border-default)] bg-transparent"),
+              ? "border-action-primary bg-[var(--action-primary-soft,rgba(43,108,176,0.05))]"
+              : "border-border-default bg-transparent"),
           className,
         )}
         title={accessReason}
@@ -184,16 +184,16 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               "flex items-center justify-center rounded border-2 transition-colors duration-150",
               boxSizes[checkboxSize],
               isActive
-                ? "border-[var(--action-primary)] bg-[var(--action-primary)]"
+                ? "border-action-primary bg-action-primary"
                 : error
-                  ? "border-[var(--state-error-text)] bg-transparent"
-                  : "border-[var(--border-default)] bg-transparent",
+                  ? "border-state-danger-text bg-transparent"
+                  : "border-border-default bg-transparent",
             )}
             aria-hidden
           >
             {loading ? (
               <svg
-                className={cn("animate-spin text-[var(--text-secondary)]", iconSizes[checkboxSize])}
+                className={cn("animate-spin text-text-secondary", iconSizes[checkboxSize])}
                 viewBox="0 0 16 16"
                 fill="none"
                 aria-hidden
@@ -215,7 +215,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               </svg>
             ) : isActive ? (
               <svg
-                className={cn("text-[var(--text-inverse)]", iconSizes[checkboxSize])}
+                className={cn("text-text-inverse", iconSizes[checkboxSize])}
                 viewBox="0 0 12 12"
                 fill="none"
               >
@@ -242,12 +242,12 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         {(label || description) && (
           <span className="flex flex-col">
             {label && (
-              <span className={cn(densityStyles[density].text, "font-medium text-[var(--text-primary)]")}>
+              <span className={cn(densityStyles[density].text, "font-medium text-text-primary")}>
                 {label}
               </span>
             )}
             {description && (
-              <span className="text-xs text-[var(--text-secondary)]">
+              <span className="text-xs text-text-secondary">
                 {description}
               </span>
             )}
