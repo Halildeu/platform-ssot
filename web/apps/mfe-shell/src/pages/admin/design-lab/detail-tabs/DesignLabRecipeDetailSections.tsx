@@ -213,7 +213,7 @@ const getRecipeGuidance = (
     if (context === 'ux') {
       return {
         useWhen: 'Inspector, karar ve onay aksiyonlari ayni etkileşim diline baglanacaksa.',
-        avoidWhen: 'Sadece pasif detay gosteren ekranlarda karar affordance’i gerekmiyorsa.',
+        avoidWhen: 'Sadece pasif detay gosteren ekranlarda karar affordance'i gerekmiyorsa.',
         outcome: 'Inceleme ve karar akisi daha net UX sinyalleriyle calisir.',
       };
     }
@@ -221,14 +221,14 @@ const getRecipeGuidance = (
       return {
         useWhen: 'Onay akisi icin gate, lifecycle ve release sinyali birlikte okunacaksa.',
         avoidWhen: 'Karar almayan, kalite kapisi baglanmayan hafif akislarda.',
-        outcome: 'Inceleme recipe’leri icin kalite beklentisi daha kolay denetlenir.',
+        outcome: 'Inceleme recipe'leri icin kalite beklentisi daha kolay denetlenir.',
       };
     }
     return {
       useWhen: 'Karar, onay ve inspector ritmi ayni akista tekrar ediyorsa.',
       avoidWhen: 'Yalniz bilgi gosteren, karar almayan pasif detay sayfalarinda.',
       outcome: 'Inceleme ve onay dili ekipler arasinda tek ritme oturur.',
-      implementationCaution: 'Onay akislarinda mutlak surec state machine endpoint’leri tekil idempotent olmalidir; retry davranisi tutarsiz ise kalite kapanislari gecikir.',
+      implementationCaution: 'Onay akislarinda mutlak surec state machine endpoint'leri tekil idempotent olmalidir; retry davranisi tutarsiz ise kalite kapanislari gecikir.',
     };
   }
   if (normalized.includes('state') || normalized.includes('feedback')) {
@@ -236,21 +236,21 @@ const getRecipeGuidance = (
       return {
         useWhen: 'Bos, hata ve loading durumlari ayni etkileşim ve ton kararlarini tasiyacaksa.',
         avoidWhen: 'Tek bir lokal state icin merkezi UX rehberi gerekmiyorsa.',
-        outcome: 'State ve feedback affordance’lari daha sakin ve daha tutarli olur.',
+        outcome: 'State ve feedback affordance'lari daha sakin ve daha tutarli olur.',
       };
     }
     if (context === 'quality') {
       return {
-        useWhen: 'State recipe’leri icin quality gate ve lifecycle etkisi birlikte gozden gecirilecekse.',
+        useWhen: 'State recipe'leri icin quality gate ve lifecycle etkisi birlikte gozden gecirilecekse.',
         avoidWhen: 'Anlik local state denemelerinde ayrik kalite kabugu gerekmiyorsa.',
-        outcome: 'Feedback recipe’leri icin kalite sinyalleri daha gorunur hale gelir.',
+        outcome: 'Feedback recipe'leri icin kalite sinyalleri daha gorunur hale gelir.',
       };
     }
     return {
       useWhen: 'Bos, hata ve loading halleri urun genelinde standardize edilecekse.',
       avoidWhen: 'Tek bir lokal state icin agir bir feedback shell gerekmiyorsa.',
       outcome: 'Durum dili daha sakin, daha tutarli ve daha tekrar kullanilabilir olur.',
-      implementationCaution: 'State/feedback recipe’lerinde API contractlarında kodlanmis hata taxonomy si ekli degilse, UX fallback’leri bozulur.',
+      implementationCaution: 'State/feedback recipe'lerinde API contractlarında kodlanmis hata taxonomy si ekli degilse, UX fallback'leri bozulur.',
     };
   }
   if (normalized.includes('ai')) {
@@ -258,21 +258,21 @@ const getRecipeGuidance = (
       return {
         useWhen: 'Prompt, sonuc ve guven sinyali tek bir interaction ritminde akacaksa.',
         avoidWhen: 'AI yardimi olmayan standart form veya tablo ekranlarinda.',
-        outcome: 'AI handoff dili ve guven affordance’i daha netlesir.',
+        outcome: 'AI handoff dili ve guven affordance'i daha netlesir.',
       };
     }
     if (context === 'quality') {
       return {
         useWhen: 'AI akisi icin kalite gate, human review ve lifecycle etkisi birlikte ele alinacaksa.',
         avoidWhen: 'Prototype seviyesinde, kalite sinyali gerektirmeyen hafif denemelerde.',
-        outcome: 'AI recipe’leri icin guven ve kalite cizgisi daha izlenebilir olur.',
+        outcome: 'AI recipe'leri icin guven ve kalite cizgisi daha izlenebilir olur.',
       };
     }
     return {
       useWhen: 'Prompt, sonuc ve guven sinyali ayni akis icinde birlikte akacaksa.',
       avoidWhen: 'AI yardimi olmayan basit form veya tablo ekranlarinda.',
       outcome: 'AI handoff ve guven sinyalleri daha net bir yapida kalir.',
-      implementationCaution: 'AI tabanli akislarda API response timeout’ları ve trace id alanlarini her istekte expose edin; gizli context’i client tarafina actirmayin.',
+      implementationCaution: 'AI tabanli akislarda API response timeout'ları ve trace id alanlarini her istekte expose edin; gizli context'i client tarafina actirmayin.',
     };
   }
   if (context === 'ux') {
@@ -287,15 +287,15 @@ const getRecipeGuidance = (
       useWhen: 'Recipe kalite sinyalleri ve lifecycle durumu ayni yerde gorulecekse.',
       avoidWhen: 'Kalite kapisi olmayan kucuk ve gecici recipe denemelerinde.',
       outcome: 'Recipe ailesi icin kalite beklentileri daha net takip edilir.',
-      implementationCaution: 'Kalite gate\'larda mutabik lifecycle basamaklari ile API versiyonlarinin hizli degistigi akislarda warning’ler stale kalmamalidir.',
+      implementationCaution: 'Kalite gate\'larda mutabik lifecycle basamaklari ile API versiyonlarinin hizli degistigi akislarda warning'ler stale kalmamalidir.',
     };
   }
   if (context === 'api') {
     return {
       useWhen: 'API contract, owner blokları ve track baglantisi birlikte planlanacaksa.',
       avoidWhen: 'Sadece tek seferlik demo veya lokal denemelerde ve stabil contract olmadan.',
-      outcome: 'Recipe konsumasyonu ile API lifecycle’i hizli hizlica izlenebilir hale gelir.',
-      implementationCaution: 'Consumer tarafinda package import’lari birden fazla yerden import etmeden tek source-of-truth noktadan cekilmeli.',
+      outcome: 'Recipe konsumasyonu ile API lifecycle'i hizli hizlica izlenebilir hale gelir.',
+      implementationCaution: 'Consumer tarafinda package import'lari birden fazla yerden import etmeden tek source-of-truth noktadan cekilmeli.',
     };
   }
   return {

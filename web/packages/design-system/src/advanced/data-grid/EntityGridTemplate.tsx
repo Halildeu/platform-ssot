@@ -174,14 +174,23 @@ type ThemeValue = "quartz" | "balham" | "material" | "alpine";
 export interface EntityGridTemplateProps<
   RowData extends Record<string, unknown> = Record<string, unknown>,
 > extends AccessControlledProps {
+  /** Unique identifier for grid state persistence and variant storage. */
   gridId: string;
+  /** Schema version used to detect incompatible saved column states. */
   gridSchemaVersion: number;
+  /** Row data array for client-side mode. */
   rowData?: RowData[];
+  /** Total number of rows across all pages. */
   total?: number;
+  /** Current page number (1-indexed). */
   page?: number;
+  /** Number of rows per page. */
   pageSize?: number;
+  /** Callback fired when page or page size changes. */
   onPageChange?: (page: number, pageSize: number) => void;
+  /** Column definitions for the AG Grid instance. */
   columnDefs: ColDef<RowData>[];
+  /** Default column definition applied to all columns. */
   defaultColDef?: ColDef<RowData>;
   gridOptions?: GridOptions<RowData>;
   sideBar?: SideBarDef;

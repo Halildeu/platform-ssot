@@ -90,7 +90,7 @@ const pseudo = {
   "auth.login.passwordPlaceholder": "Pásswórd",
   "auth.login.submit": "Sígñ Íñ",
   "auth.login.failed": "Sígñ íñ fáíléd",
-  "auth.login.noAccount": "Dóñ’t hávé áñ áççóúñt?",
+  "auth.login.noAccount": "Dóñ't hávé áñ áççóúñt?",
   "auth.login.registerCta": "Sígñ Úp",
   "auth.register.title": "Sígñ Úp",
   "auth.register.nameLabel": "Fúll Ñámé",

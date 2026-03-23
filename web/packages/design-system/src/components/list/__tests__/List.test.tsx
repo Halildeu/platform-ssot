@@ -225,4 +225,29 @@ describe('List — interaction & role', () => {
     render(<List items={defaultItems} />);
     expect(screen.getByRole('list')).toBeInTheDocument();
   });
+
+  it('disabled item — userEvent click does not trigger onItemSelect and shows disabled state', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    const items: ListItem[] = [
+      { key: '1', title: 'Active Item' },
+      { key: '2', title: 'Disabled Entry', disabled: true },
+    ];
+    render(<List items={items} onItemSelect={handler} />);
+    await user.click(screen.getByText('Disabled Entry'));
+    expect(handler).not.toHaveBeenCalled();
+    expect(screen.getByText('Active Item')).toBeInTheDocument();
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
+
+  it('empty items — renders empty state, click is safe', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    const { container } = render(<List items={[]} onItemSelect={handler} />);
+    const emptyState = screen.getByTestId('list-loading-state');
+    expect(emptyState).toBeInTheDocument();
+    await user.click(emptyState);
+    expect(handler).not.toHaveBeenCalled();
+    expect(container.querySelectorAll('li')).toHaveLength(0);
+  });
 });

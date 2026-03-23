@@ -89,6 +89,55 @@ describe('DesignSystemProvider', () => {
     expect(localeCtx!.direction).toBe('rtl');
   });
 
+  it('provides default theme axes with density', () => {
+    let themeCtx: ReturnType<typeof useTheme> | undefined;
+
+    function Consumer() {
+      themeCtx = useTheme();
+      return <span>ok</span>;
+    }
+
+    render(
+      <DesignSystemProvider>
+        <Consumer />
+      </DesignSystemProvider>,
+    );
+
+    expect(themeCtx).toBeDefined();
+    expect(themeCtx!.axes.appearance).toBe('light');
+    expect(themeCtx!.axes.density).toBe('comfortable');
+    expect(typeof themeCtx!.setAppearance).toBe('function');
+  });
+
+  it('renders empty children without error', () => {
+    const { container } = render(
+      <DesignSystemProvider>{null}</DesignSystemProvider>,
+    );
+    expect(container).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
+    expect(container.firstElementChild).toBeTruthy();
+  });
+
+  it('forwards defaultTheme to ThemeProvider', () => {
+    let themeCtx: ReturnType<typeof useTheme> | undefined;
+
+    function Consumer() {
+      themeCtx = useTheme();
+      return <span>ok</span>;
+    }
+
+    render(
+      <DesignSystemProvider defaultTheme={{ appearance: 'dark' }}>
+        <Consumer />
+      </DesignSystemProvider>,
+    );
+
+    expect(themeCtx).toBeDefined();
+    expect(themeCtx!.axes.appearance).toBe('dark');
+    expect(themeCtx!.axes.density).toBe('comfortable');
+    expect(typeof themeCtx!.update).toBe('function');
+  });
+
   it('has no a11y violations', async () => {
     const { container } = render(
       <DesignSystemProvider>

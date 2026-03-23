@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { BulletChart } from '../BulletChart';
@@ -29,6 +29,13 @@ describe('BulletChart', () => {
     const { container } = render(<BulletChart actual={75} target={90} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    render(<BulletChart actual={75} target={90} />);
+    const img = screen.getByRole('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('aria-label');
+  });
 });
 
 describe('MicroChart', () => {
@@ -53,6 +60,13 @@ describe('MicroChart', () => {
     const { container } = render(<MicroChart type="sparkline" data={[10, 20, 15, 30]} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    render(<MicroChart type="sparkline" data={[10, 20, 15, 30]} />);
+    const img = screen.getByRole('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('aria-label');
+  });
 });
 
 describe('DateRangePicker', () => {
@@ -64,6 +78,14 @@ describe('DateRangePicker', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<DateRangePicker defaultPresets />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    render(<DateRangePicker defaultPresets />);
+    const button = screen.getByRole('button');
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('aria-expanded');
+    expect(button).toHaveAttribute('aria-haspopup', 'dialog');
   });
 });
 
@@ -86,6 +108,17 @@ describe('TreemapChart', () => {
     const { container } = render(<TreemapChart items={items} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const items = [
+      { id: '1', label: 'A', value: 100 },
+      { id: '2', label: 'B', value: 60 },
+    ];
+    render(<TreemapChart items={items} />);
+    const img = screen.getByRole('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('aria-label', 'Treemap chart');
+  });
 });
 
 describe('SankeyDiagram', () => {
@@ -102,6 +135,15 @@ describe('SankeyDiagram', () => {
     const { container } = render(<SankeyDiagram nodes={nodes} links={links} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const nodes = [{ id: 'a', label: 'Source' }, { id: 'b', label: 'Target' }];
+    const links = [{ source: 'a', target: 'b', value: 100 }];
+    render(<SankeyDiagram nodes={nodes} links={links} />);
+    const img = screen.getByRole('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('aria-label', 'Sankey diagram');
+  });
 });
 
 describe('RadarChart', () => {
@@ -117,6 +159,15 @@ describe('RadarChart', () => {
     const series = [{ label: 'Player 1', values: { a: 80, b: 60, c: 90 } }];
     const { container } = render(<RadarChart axes={axes} series={series} />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    const axes = [{ key: 'a', label: 'Speed' }, { key: 'b', label: 'Power' }, { key: 'c', label: 'Skill' }];
+    const series = [{ label: 'Player 1', values: { a: 80, b: 60, c: 90 } }];
+    render(<RadarChart axes={axes} series={series} />);
+    const img = screen.getByRole('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('aria-label', 'Radar chart');
   });
 });
 
@@ -141,6 +192,18 @@ describe('ProcessFlow', () => {
     const { container } = render(<ProcessFlow nodes={nodes} edges={edges} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const nodes = [
+      { id: '1', type: 'start' as const, label: 'Begin' },
+      { id: '2', type: 'end' as const, label: 'Done' },
+    ];
+    const edges = [{ from: '1', to: '2' }];
+    render(<ProcessFlow nodes={nodes} edges={edges} />);
+    const figure = screen.getByRole('figure');
+    expect(figure).toBeInTheDocument();
+    expect(figure).toHaveAttribute('aria-label', 'Process flow diagram');
+  });
 });
 
 describe('ValueStream', () => {
@@ -159,6 +222,16 @@ describe('ValueStream', () => {
     ];
     const { container } = render(<ValueStream steps={steps} />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    const steps = [
+      { id: '1', label: 'Cut', processTime: 10, waitTime: 30 },
+    ];
+    render(<ValueStream steps={steps} />);
+    const figure = screen.getByRole('figure');
+    expect(figure).toBeInTheDocument();
+    expect(figure).toHaveAttribute('aria-label', 'Value stream map');
   });
 });
 
@@ -179,6 +252,16 @@ describe('StatusTimeline', () => {
     const { container } = render(<StatusTimeline events={events} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const events = [
+      { id: '1', status: 'Created', timestamp: '2026-01-01T10:00:00Z' },
+    ];
+    render(<StatusTimeline events={events} />);
+    const group = screen.getByRole('group');
+    expect(group).toBeInTheDocument();
+    expect(group).toHaveAttribute('aria-label', 'Status timeline');
+  });
 });
 
 describe('NotificationCenter', () => {
@@ -197,6 +280,16 @@ describe('NotificationCenter', () => {
     const { container } = render(<NotificationCenter notifications={items} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const items = [
+      { id: '1', title: 'Build complete', type: 'success' as const, timestamp: '2026-03-23T10:00:00Z' },
+    ];
+    render(<NotificationCenter notifications={items} />);
+    const region = screen.getByRole('region');
+    expect(region).toBeInTheDocument();
+    expect(region).toHaveAttribute('aria-label');
+  });
 });
 
 describe('InlineEdit', () => {
@@ -208,6 +301,13 @@ describe('InlineEdit', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<InlineEdit value="Hello" onSave={vi.fn()} />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    render(<InlineEdit value="Hello" onSave={vi.fn()} />);
+    const button = screen.getByRole('button');
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('aria-label');
   });
 });
 
@@ -224,6 +324,13 @@ describe('EmptyStateBuilder', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<EmptyStateBuilder reason="no-data" />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    render(<EmptyStateBuilder reason="no-data" />);
+    const status = screen.getByRole('status');
+    expect(status).toBeInTheDocument();
+    expect(status).toHaveAttribute('aria-label');
   });
 });
 
@@ -243,6 +350,16 @@ describe('FilterPresets', () => {
     ];
     const { container } = render(<FilterPresets presets={presets} onSelect={vi.fn()} />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    const presets = [
+      { id: '1', name: 'Active Only', filters: { status: 'active' } },
+    ];
+    render(<FilterPresets presets={presets} onSelect={vi.fn()} />);
+    const toolbar = screen.getByRole('toolbar');
+    expect(toolbar).toBeInTheDocument();
+    expect(toolbar.querySelector('[aria-label]') || toolbar).toBeTruthy();
   });
 });
 
@@ -265,5 +382,13 @@ describe('DataExportDialog', () => {
       <DataExportDialog open onClose={vi.fn()} onExport={vi.fn()} />,
     );
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    render(<DataExportDialog open onClose={vi.fn()} onExport={vi.fn()} />);
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toBeInTheDocument();
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(dialog).toHaveAttribute('aria-label');
   });
 });

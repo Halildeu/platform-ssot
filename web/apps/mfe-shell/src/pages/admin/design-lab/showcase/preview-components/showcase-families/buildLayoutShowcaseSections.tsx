@@ -494,7 +494,7 @@ export const buildLayoutShowcaseSections = (
               <PreviewPanel title="Detail shell">
                 {renderTemplateLead(
                   'Detail review',
-                  'Inspector rail, karar badge’i ve summary-first detay akisini ayri bir page ritmine tasir.',
+                  'Inspector rail, karar badge'i ve summary-first detay akisini ayri bir page ritmine tasir.',
                   ['Inspector', 'Review', 'Decision detail'],
                   templateProfiles['Detail Template'],
                 )}
@@ -1056,7 +1056,7 @@ export const buildLayoutShowcaseSections = (
               </PreviewPanel>
               <PreviewPanel title="Kural">
                 <Text variant="secondary" className="block leading-7">
-                  Tag ve stat helper’lari, sayfa ustundeki karar yogunlugunu arttirmadan metrik gorunurlugunu one cikarir; ikinci nav ise detail sekmeleri icin dogal bir ara katman olur.
+                  Tag ve stat helper'lari, sayfa ustundeki karar yogunlugunu arttirmadan metrik gorunurlugunu one cikarir; ikinci nav ise detail sekmeleri icin dogal bir ara katman olur.
                 </Text>
               </PreviewPanel>
             </div>

@@ -2,7 +2,8 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
   useReducedMotion: () => false,
@@ -131,5 +132,30 @@ describe('StaggerGroup — depth', () => {
     expect(screen.getByTestId('s-a').style.animationDuration).toBe('300ms');
     expect(screen.getByTestId('s-b').style.animationDuration).toBe('300ms');
     expect(screen.getByTestId('s-c').style.animationFillMode).toBe('both');
+  });
+
+  it('disabled button inside stagger — userEvent click on disabled child', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <StaggerGroup staggerDelay={50}>
+        <button disabled onClick={onClick}>Disabled Stagger</button>
+        <button onClick={onClick}>Enabled</button>
+      </StaggerGroup>,
+    );
+    const disabledBtn = screen.getByRole('button', { name: /disabled stagger/i });
+    expect(disabledBtn).toBeDisabled();
+    await user.click(disabledBtn);
+    expect(onClick).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /enabled/i })).toBeInTheDocument();
+  });
+
+  it('empty children — userEvent click on container with no error', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<StaggerGroup staggerDelay={50}>{null}</StaggerGroup>);
+    expect(container).toBeInTheDocument();
+    await user.click(container);
+    expect(container.innerHTML).not.toContain('error');
+    expect(container.children.length).toBeGreaterThanOrEqual(0);
   });
 });

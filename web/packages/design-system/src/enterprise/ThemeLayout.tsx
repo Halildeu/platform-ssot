@@ -20,12 +20,18 @@ export interface ThemeLayoutSlots {
 
 /** Slot-based dashboard layout that adapts its grid arrangement to the selected theme. */
 export interface ThemeLayoutProps extends AccessControlledProps {
-  /** Layout theme controlling grid arrangement and density */
+  /** Layout theme controlling grid arrangement and density. */
   theme: LayoutTheme;
-  /** Named content slots (header, charts, grid, sidebar, footer) */
+  /** Named content slots (header, charts, grid, sidebar, footer). */
   slots: ThemeLayoutSlots;
-  /** Additional CSS class names for the root element */
+  /** Additional CSS class names for the root element. */
   className?: string;
+  /** Access level controlling visibility and interactivity. */
+  access?: import('../internal/access-controller').AccessLevel;
+  /** Tooltip text explaining access restrictions. */
+  accessReason?: string;
+  /** Data attribute for test automation. */
+  "data-testid"?: string;
 }
 
 // ── Layout renderers ──

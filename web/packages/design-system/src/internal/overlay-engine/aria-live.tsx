@@ -10,7 +10,24 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
+/** Politeness level for screen reader announcements. */
 export type AriaLivePoliteness = "polite" | "assertive" | "off";
+
+/** Props for the AriaLiveRegion component. */
+export interface AriaLiveRegionProps {
+  /** Default politeness level for announcements. @default "polite" */
+  defaultPoliteness?: AriaLivePoliteness;
+  /** Auto-clear delay in milliseconds after announcement. @default 5000 */
+  clearDelay?: number;
+  /** Additional CSS class name for the container. */
+  className?: string;
+  /** Unique identifier for the live region. */
+  id?: string;
+  /** Whether the region is active and listening for announcements. @default true */
+  enabled?: boolean;
+  /** Callback fired when an announcement is made. */
+  onAnnounce?: (message: string, politeness: AriaLivePoliteness) => void;
+}
 
 /* ---- Imperative announce function ---- */
 
@@ -53,7 +70,7 @@ export function announce(
  * }
  * ```
  */
-export const AriaLiveRegion: React.FC = () => {
+export const AriaLiveRegion: React.FC<AriaLiveRegionProps> = () => {
   const [politeMessage, setPoliteMessage] = useState("");
   const [assertiveMessage, setAssertiveMessage] = useState("");
   const clearTimeoutRef = useRef<ReturnType<typeof setTimeout>>();

@@ -117,7 +117,7 @@ export const getFieldSlotClass = (
     density === "compact" ? "translate-y-px" : undefined,
   );
 
-type FieldControlShellProps = {
+export type FieldControlShellProps = {
   /** ID of the associated input element for label association. */
   inputId: string;
   /** Field label displayed above the input. */

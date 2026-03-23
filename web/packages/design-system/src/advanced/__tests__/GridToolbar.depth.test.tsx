@@ -2,7 +2,8 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
@@ -88,5 +89,17 @@ describe('GridToolbar — depth', () => {
     expect(container.innerHTML).not.toBe('');
     expect(root?.tagName).toBeDefined();
     expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  });
+
+  it('disabled empty filter — userEvent type in quick filter and verify reset button', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<GridToolbar {...baseProps} onQuickFilterChange={onChange} />);
+    const input = screen.getByRole('textbox', { name: /quick filter/i });
+    expect(input).toBeInTheDocument();
+    await user.type(input, 'disabled');
+    expect(onChange).toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /reset/i })).toBeInTheDocument();
+    expect(input).toHaveValue('disabled');
   });
 });

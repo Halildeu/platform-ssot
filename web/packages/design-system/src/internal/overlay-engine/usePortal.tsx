@@ -12,12 +12,18 @@ import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 export interface UsePortalOptions {
-  /** Whether to use a portal. Default: true */
+  /** Whether to use a portal. @default true */
   enabled?: boolean;
-  /** Custom container element. Default: document.body */
+  /** Custom container element. @default document.body */
   container?: HTMLElement | null;
-  /** ID for the portal container div */
+  /** HTML id attribute for the portal container div. */
   id?: string;
+  /** CSS class name applied to the portal container div. */
+  className?: string;
+  /** Callback fired when the portal container is attached to the DOM. */
+  onReady?: (container: HTMLDivElement) => void;
+  /** Whether to remove the container from the DOM on cleanup. @default true */
+  autoCleanup?: boolean;
 }
 
 /**

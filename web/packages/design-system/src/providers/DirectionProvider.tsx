@@ -14,9 +14,17 @@ export interface DirectionProviderProps {
   direction: Direction;
   /** Content to render within the directional context. */
   children: React.ReactNode;
+  /** Additional CSS class name for the wrapper element. */
+  className?: string;
+  /** HTML id for the wrapper element. */
+  id?: string;
+  /** Inline styles for the wrapper element. */
+  style?: React.CSSProperties;
+  /** Data attribute for test automation. */
+  "data-testid"?: string;
 }
 
 /** Provides an explicit LTR/RTL direction override for a subtree, wrapping children in a directional container. */
-export function DirectionProvider({ direction, children }: DirectionProviderProps) {
-  return <div dir={direction}>{children}</div>;
+export function DirectionProvider({ direction, children, className, id, style, ...rest }: DirectionProviderProps) {
+  return <div dir={direction} className={className} id={id} style={style} {...rest}>{children}</div>;
 }

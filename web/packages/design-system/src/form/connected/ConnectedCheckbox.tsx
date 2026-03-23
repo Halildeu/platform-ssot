@@ -12,6 +12,14 @@ export interface ConnectedCheckboxProps
   name: string;
   /** Access level that controls disabled/readonly/hidden state. */
   access?: AccessLevel;
+  /** Label text displayed next to the checkbox. */
+  label?: React.ReactNode;
+  /** Whether the checkbox is disabled. */
+  disabled?: boolean;
+  /** Additional CSS class name. */
+  className?: string;
+  /** Size variant for the checkbox control. */
+  size?: 'sm' | 'md';
 }
 
 /** Form-connected checkbox that auto-binds checked state, onChange, and onBlur to form context. */

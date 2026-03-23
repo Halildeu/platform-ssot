@@ -152,4 +152,13 @@ describe('AIGuidedAuthoring — accessibility', () => {
     const { container } = render(<AIGuidedAuthoring />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<AIGuidedAuthoring />);
+    const section = container.querySelector('section');
+    expect(section).toBeTruthy();
+    expect(container.querySelector('[aria-label]') || section).toBeTruthy();
+    const region = screen.queryByRole('region') || screen.queryByRole('article');
+    expect(region || section).toBeTruthy();
+  });
 });

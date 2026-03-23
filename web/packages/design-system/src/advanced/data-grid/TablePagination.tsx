@@ -79,14 +79,23 @@ export type TablePaginationSlotProps = {
 
 export type TablePaginationProps = AccessControlledProps &
   UsePaginationStateOptions & {
+    /** Available page size options shown in the size selector. */
     pageSizeOptions?: PaginationSizeOption[];
+    /** Additional CSS class name for the root element. */
     className?: string;
+    /** Whether to show first/last page navigation buttons. */
     showFirstLastButtons?: boolean;
+    /** Whether the total item count is known; when false, uses cursor pagination. */
     totalItemsKnown?: boolean;
+    /** Whether there is a next page available (cursor pagination mode). */
     hasNextPage?: boolean;
+    /** Locale-specific labels for range display and button aria-labels. */
     localeText?: TablePaginationLocaleText;
+    /** @deprecated Use `slots.actions` instead. Custom actions component override. */
     ActionsComponent?: React.ComponentType<TablePaginationActionsProps>;
+    /** Named slot overrides for sub-components. */
     slots?: TablePaginationSlots;
+    /** Props forwarded to slot sub-components. */
     slotProps?: TablePaginationSlotProps;
   };
 

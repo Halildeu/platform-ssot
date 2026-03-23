@@ -2,7 +2,8 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
@@ -106,5 +107,18 @@ describe('EntityGridTemplate — depth', () => {
     expect(container.innerHTML).not.toBe('');
     expect(root?.tagName).toBeDefined();
     expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  });
+
+  it('disabled empty grid — userEvent click on template container is stable', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <EntityGridTemplate gridId="empty-test" gridSchemaVersion={1} columnDefs={[]} rowData={[]} dataSourceMode="client" />,
+    );
+    const root = container.querySelector('[data-component="entity-grid-template"]')!;
+    expect(root).toBeInTheDocument();
+    await user.click(root);
+    expect(container.querySelector('[data-grid-id="empty-test"]')).toBeInTheDocument();
+    expect(root.getAttribute('data-component')).toBe('entity-grid-template');
+    expect(container.innerHTML).not.toBe('');
   });
 });

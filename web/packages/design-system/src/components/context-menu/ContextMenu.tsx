@@ -31,13 +31,18 @@ export interface ContextMenuLabel {
 export type ContextMenuEntry = ContextMenuItem | ContextMenuSeparator | ContextMenuLabel;
 
 export interface ContextMenuProps extends AccessControlledProps {
-  /** Menu entries */
+  /** Menu entries (items, separators, and labels). */
   items: ContextMenuEntry[];
-  /** Trigger element */
+  /** Trigger element that activates the context menu on right-click. */
   children: React.ReactElement;
-  /** Disable the context menu */
+  /** Whether the context menu is disabled. */
   disabled?: boolean;
+  /** Additional CSS class name for the menu panel. */
   className?: string;
+  /** Access level controlling visibility and interactivity. */
+  access?: import('../../internal/access-controller').AccessLevel;
+  /** Tooltip text explaining access restrictions. */
+  accessReason?: string;
 }
 
 function isItem(entry: ContextMenuEntry): entry is ContextMenuItem {

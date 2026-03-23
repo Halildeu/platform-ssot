@@ -229,12 +229,12 @@ export const buildAiGovernanceShowcaseSections = (
               <PreviewPanel title="Signal brief">
                 <RecommendationCard
                   title="Runtime signal cleanup"
-                  summary="Feedback ve notification surface’leri tek adoption sprint altinda hizalansin."
+                  summary="Feedback ve notification surface'leri tek adoption sprint altinda hizalansin."
                   recommendationType="Ops signal"
                   rationale={[
-                    'Daginik feedback surface’leri bakim maliyetini buyutuyor.',
+                    'Daginik feedback surface'leri bakim maliyetini buyutuyor.',
                     'Access ve shell tarafinda ayni dil kullanildiginda karar hizi artiyor.',
-                    'SEO/GEO evidence yuzeyleri daha tutarli bir feedback shell’i istiyor.',
+                    'SEO/GEO evidence yuzeyleri daha tutarli bir feedback shell'i istiyor.',
                   ]}
                   citations={['feedback:alert', 'toast:provider', 'adoption:cleanup']}
                   confidenceLevel="medium"
@@ -312,12 +312,12 @@ export const buildAiGovernanceShowcaseSections = (
               <PreviewPanel title="Diff recommendation">
                 <RecommendationCard
                   title="Source mismatch cleanup"
-                  summary="Citation ve audit surface’leri arasindaki farklar tek review sprint altinda kapatilsin."
+                  summary="Citation ve audit surface'leri arasindaki farklar tek review sprint altinda kapatilsin."
                   recommendationType="Source diff"
                   rationale={[
-                    'Evidence dili iki farkli shell’de farkli tonlarla gorunuyor.',
+                    'Evidence dili iki farkli shell'de farkli tonlarla gorunuyor.',
                     'Audit ve citation handoff ayni karar metnini kullanmali.',
-                    'Support ve governance lane’lerinde ayni signal seti gorulmeli.',
+                    'Support ve governance lane'lerinde ayni signal seti gorulmeli.',
                   ]}
                   citations={['citation:diff', 'audit:handoff', 'support:lane']}
                   confidenceLevel="medium"
@@ -474,7 +474,7 @@ export const buildAiGovernanceShowcaseSections = (
           id: 'approval-checkpoint-readiness-gate',
           eyebrow: 'Readiness gate',
           title: 'Readiness approval gate',
-          description: 'Go/no-go, docs readiness ve quality gate bilgisini tek approval shell’inde birleştirir.',
+          description: 'Go/no-go, docs readiness ve quality gate bilgisini tek approval shell'inde birleştirir.',
           badges: ['readiness', 'go-no-go', 'quality'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
@@ -550,7 +550,7 @@ export const buildAiGovernanceShowcaseSections = (
           id: 'approval-checkpoint-rollforward-rollback',
           eyebrow: 'Release decision',
           title: 'Rollforward / rollback checkpoint',
-          description: 'Release akisi icin rollforward ve rollback kararini ayni gate shell’inde gosterir.',
+          description: 'Release akisi icin rollforward ve rollback kararini ayni gate shell'inde gosterir.',
           badges: ['release', 'rollback', 'gate'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
@@ -1002,7 +1002,7 @@ export const buildAiGovernanceShowcaseSections = (
           id: 'audit-timeline-owner-shift',
           eyebrow: 'Owner shift',
           title: 'Owner shift timeline',
-          description: 'Bir olay farkli ekipler arasinda el degistirirken action timeline’i owner odakli okumayi saglar.',
+          description: 'Bir olay farkli ekipler arasinda el degistirirken action timeline'i owner odakli okumayi saglar.',
           badges: ['owner', 'shift', 'handoff'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">

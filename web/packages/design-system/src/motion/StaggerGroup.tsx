@@ -7,13 +7,18 @@ import React from 'react';
 import { useReducedMotion } from '../internal/overlay-engine/reduced-motion';
 
 export interface StaggerGroupProps {
-  /** Delay between each child in ms. */
+  /** Delay between each child in ms. @default 50 */
   staggerDelay?: number;
-  /** Base animation duration in ms. */
+  /** Base animation duration in ms. @default 200 */
   duration?: number;
-  /** CSS animation classes to apply. */
+  /** CSS animation classes to apply to each child. */
   className?: string;
+  /** Child elements to stagger animate. */
   children: React.ReactNode;
+  /** Whether to reverse the stagger order (last child animates first). */
+  reverse?: boolean;
+  /** Whether to disable stagger animation entirely. */
+  disabled?: boolean;
 }
 
 /**

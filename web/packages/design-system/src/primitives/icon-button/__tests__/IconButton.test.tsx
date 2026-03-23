@@ -172,3 +172,28 @@ describe('IconButton — a11y', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('IconButton — disabled userEvent interaction', () => {
+  it('disabled button — userEvent click does not fire, button shows disabled state', async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<IconButton icon={TestIcon} label="Delete" disabled onClick={handleClick} />);
+    const btn = screen.getByRole('button', { name: 'Delete' });
+    expect(btn).toBeDisabled();
+    await user.click(btn);
+    expect(handleClick).not.toHaveBeenCalled();
+    expect(btn).toHaveAttribute('type', 'button');
+    expect(screen.getByLabelText('Delete')).toBeInTheDocument();
+  });
+
+  it('empty error state — loading disabled button shows no icon', async () => {
+    const user = userEvent.setup();
+    const handleClick = vi.fn();
+    render(<IconButton icon={TestIcon} label="Loading" loading disabled onClick={handleClick} />);
+    const btn = screen.getByRole('button');
+    expect(btn).toBeDisabled();
+    await user.click(btn);
+    expect(handleClick).not.toHaveBeenCalled();
+    expect(screen.queryByTestId('test-icon')).not.toBeInTheDocument();
+  });
+});

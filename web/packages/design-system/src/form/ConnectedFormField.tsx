@@ -12,15 +12,23 @@ import type { AccessLevel } from '../internal/access-controller';
 export interface ConnectedFormFieldProps {
   /** Field name matching the form schema key. */
   name: string;
+  /** Label text displayed above the input. */
   label?: React.ReactNode;
+  /** Help text shown below the input. */
   help?: React.ReactNode;
+  /** Whether the field is required. */
   required?: boolean;
+  /** Whether the field is marked as optional. */
   optional?: boolean;
+  /** Whether to use horizontal layout. */
   horizontal?: boolean;
+  /** Custom HTML `for` attribute for the label. */
   htmlFor?: string;
+  /** Additional CSS class name for the wrapper. */
   className?: string;
   /** Per-field access override (merged with form-level). */
   access?: AccessLevel;
+  /** Child input element to auto-bind with form field props. */
   children: React.ReactElement;
 }
 

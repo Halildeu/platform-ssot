@@ -703,7 +703,7 @@ const designlab = {
     "Repoda zaten tüketilen önceki export yüzeyi.",
   "designlab.track.roadmap.label": "Yol Haritası",
   "designlab.track.roadmap.note":
-    "Henüz export edilmemiş planlı component backlog’u.",
+    "Henüz export edilmemiş planlı component backlog'u.",
   "designlab.usageRecipes.basic.title": "Temel kullanım",
   "designlab.usageRecipes.basic.description":
     "Paket importu ve minimum API ile güvenli başlangıç reçetesi.",
@@ -971,7 +971,7 @@ const designlab = {
   "designlab.showcase.recipe.workspace.handoff.contractHealth":
     "Sözleşme sağlığı",
   "designlab.showcase.recipe.workspace.handoff.contractHealth.description":
-    "Tüm owner block’lar registry ile eşleşiyor. Bu recipe artık tüketici ekranları için güvenli başlangıç noktası olarak kullanılabilir.",
+    "Tüm owner block'lar registry ile eşleşiyor. Bu recipe artık tüketici ekranları için güvenli başlangıç noktası olarak kullanılabilir.",
   "designlab.showcase.recipe.workspace.buildingBlocks.title":
     "Birincil yapı blokları",
   "designlab.showcase.recipe.workspace.buildingBlocks.description":
@@ -1244,7 +1244,7 @@ const designlab = {
   "designlab.showcase.component.radio.live.controlled.delivery.label":
     "Delivery odaklı",
   "designlab.showcase.component.radio.live.controlled.delivery.description":
-    "Feature sonrası teslim artefact’larını önceliklendir.",
+    "Feature sonrası teslim artefact'larını önceliklendir.",
   "designlab.showcase.component.radio.live.stateMatrix.title": "State matrix",
   "designlab.showcase.component.radio.live.stateMatrix.defaultLabel":
     "Varsayılan seçenek",
@@ -1894,7 +1894,7 @@ const designlab = {
   "designlab.showcase.component.commandPalette.sections.launcher.selected.empty":
     "Henüz seçim yok",
   "designlab.showcase.component.commandPalette.sections.launcher.selected.note":
-    "Palette selection route veya aksiyon state’ini besliyor.",
+    "Palette selection route veya aksiyon state'ini besliyor.",
   "designlab.showcase.component.commandPalette.sections.readonly.eyebrow":
     "Alternatif 02",
   "designlab.showcase.component.commandPalette.sections.readonly.title":
@@ -1938,7 +1938,7 @@ const designlab = {
   "designlab.showcase.component.commandPalette.sections.scope.title":
     "Onay kapsami komut seti",
   "designlab.showcase.component.commandPalette.sections.scope.description":
-    "AI ve approval akışları aynı palette scope badge’leriyle gruplanır.",
+    "AI ve approval akışları aynı palette scope badge'leriyle gruplanır.",
   "designlab.showcase.component.commandPalette.sections.scope.badge.onay":
     "onay",
   "designlab.showcase.component.commandPalette.sections.scope.badge.aiAssist":
@@ -2224,7 +2224,7 @@ const designlab = {
   "designlab.showcase.component.popover.sections.readonly.panelRule":
     "Temel kural",
   "designlab.showcase.component.popover.sections.readonly.rule":
-    "Eğer kullanıcı bir şey yapamayacaksa popover’ın kendisi de policy guard ile davranmalı; tooltip ya da inline mesaj alternatifi düşünülmelidir.",
+    "Eğer kullanıcı bir şey yapamayacaksa popover'ın kendisi de policy guard ile davranmalı; tooltip ya da inline mesaj alternatifi düşünülmelidir.",
   "designlab.showcase.component.contextMenu.sections.trigger.eyebrow":
     "Alternatif 01",
   "designlab.showcase.component.contextMenu.sections.trigger.title":
@@ -2556,7 +2556,7 @@ const designlab = {
   "designlab.showcase.component.pageLayout.sections.detail.panelUsage":
     "Kullanım notu",
   "designlab.showcase.component.pageLayout.sections.detail.usageNote":
-    "Aynı layout hem directory hem detail/review ekranlarında çalışır; değişen yalnız içerik ve callback’tir.",
+    "Aynı layout hem directory hem detail/review ekranlarında çalışır; değişen yalnız içerik ve callback'tir.",
   "designlab.showcase.component.filterBar.sections.toolbar.eyebrow":
     "Alternatif 01",
   "designlab.showcase.component.filterBar.sections.toolbar.title":
@@ -2614,7 +2614,7 @@ const designlab = {
   "designlab.showcase.component.filterBar.sections.readonly.panelYonerge":
     "Yönerge",
   "designlab.showcase.component.filterBar.sections.readonly.guideline":
-    "Filter shell, sayfa bazlı toolbar kopyalamaz; yalnız alanlar ve callback’ler beslenir.",
+    "Filter shell, sayfa bazlı toolbar kopyalamaz; yalnız alanlar ve callback'ler beslenir.",
   "designlab.showcase.component.reportFilterPanel.sections.submit.eyebrow":
     "Alternatif 01",
   "designlab.showcase.component.reportFilterPanel.sections.submit.title":
@@ -2882,7 +2882,7 @@ const designlab = {
   "designlab.showcase.component.approvalCheckpoint.live.interactive.panel":
     "Etkileşimli approval checkpoint",
   "designlab.showcase.component.approvalCheckpoint.live.interactive.card.title":
-    "Forms dalgası yayın checkpoint’i",
+    "Forms dalgası yayın checkpoint'i",
   "designlab.showcase.component.approvalCheckpoint.live.interactive.card.ozet":
     "AI helper dalgası publish edilmeden önce doctor, citation ve insan onayı aynı yüzeyde görünür.",
   "designlab.showcase.component.approvalCheckpoint.live.interactive.card.approverLabel":
@@ -3013,7 +3013,7 @@ const designlab = {
   "designlab.showcase.component.promptComposer.sections.readonly.panelContract":
     "Kontrat notu",
   "designlab.showcase.component.promptComposer.sections.readonly.contractNote":
-    "Prompt composer, free-form textarea yerine scope ve tone guardrail’lerini görünür kılar.",
+    "Prompt composer, free-form textarea yerine scope ve tone guardrail'lerini görünür kılar.",
   "designlab.seed.dropdownAction.empty": "Henüz seçim yok",
   "designlab.seed.reportStatus.idle": "Filtre bekleniyor",
   "designlab.seed.reportStatus.applied": "Filtre uygulandı",
@@ -3027,7 +3027,7 @@ const designlab = {
   "designlab.seed.summaryStrip.published.trend": "+4 bu hafta",
   "designlab.seed.summaryStrip.planned.label": "Planlanan",
   "designlab.seed.summaryStrip.planned.note":
-    "Roadmap üzerinde kalan ürünleşme backlog’u.",
+    "Roadmap üzerinde kalan ürünleşme backlog'u.",
   "designlab.seed.summaryStrip.planned.trend": "Wave 7",
   "designlab.seed.summaryStrip.doctor.label": "Doctor",
   "designlab.seed.summaryStrip.doctor.note":
@@ -3743,7 +3743,7 @@ const designlab = {
   "designlab.showcase.component.list.live.queue.items.doctor.title":
     "Frontend doctor özeti",
   "designlab.showcase.component.list.live.queue.items.doctor.description":
-    "UI Library, shell-public ve auth route preset’leri tek raporda toplandı.",
+    "UI Library, shell-public ve auth route preset'leri tek raporda toplandı.",
   "designlab.showcase.component.list.live.queue.items.doctor.badge": "Doctor",
   "designlab.showcase.component.list.live.queue.items.residual.title":
     "Residual risk inceleme",
@@ -3835,7 +3835,7 @@ const designlab = {
   "designlab.showcase.component.jsonViewer.sections.releasePayload.panelUsage":
     "Kullanım notu",
   "designlab.showcase.component.jsonViewer.sections.releasePayload.usage":
-    "`JsonViewer`, debug paneli gibi görünmeden kontrat, config ve kanıt payload’larını son kullanıcıya okunur hale getirir.",
+    "`JsonViewer`, debug paneli gibi görünmeden kontrat, config ve kanıt payload'larını son kullanıcıya okunur hale getirir.",
   "designlab.showcase.component.jsonViewer.sections.policyConfig.eyebrow":
     "Alternatif 02",
   "designlab.showcase.component.jsonViewer.sections.policyConfig.title":

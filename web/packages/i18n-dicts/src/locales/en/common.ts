@@ -105,7 +105,7 @@ const common = {
   'auth.login.passwordPlaceholder': 'Password',
   'auth.login.submit': 'Sign In',
   'auth.login.failed': 'Sign in failed',
-  'auth.login.noAccount': 'Don’t have an account?',
+  'auth.login.noAccount': 'Don't have an account?',
   'auth.login.registerCta': 'Sign Up',
 
   'auth.register.title': 'Sign Up',

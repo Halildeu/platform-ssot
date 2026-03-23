@@ -22,12 +22,18 @@ export function useLocale(): LocaleContextValue {
 
 /** Props for the LocaleProvider component. */
 export interface LocaleProviderProps {
-  /** BCP 47 locale tag (e.g. "en", "tr", "ar"). */
+  /** BCP 47 locale tag (e.g. "en", "tr", "ar"). @default "en" */
   locale?: string;
   /** Explicit text direction override; auto-detected from locale when omitted. */
   direction?: Direction;
   /** Content to render within the locale context. */
   children: React.ReactNode;
+  /** Additional CSS class name for the wrapper element. */
+  className?: string;
+  /** HTML id for the wrapper element. */
+  id?: string;
+  /** Inline styles for the wrapper element. */
+  style?: React.CSSProperties;
 }
 
 const RTL_LOCALES = new Set(["ar", "he", "fa", "ur"]);

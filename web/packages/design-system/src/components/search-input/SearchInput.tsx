@@ -39,6 +39,7 @@ const iconSizes: Record<SearchInputSize, string> = {
   lg: "start-3.5 h-4.5 w-4.5",
 };
 
+/** Search input field with built-in search icon, clear button, loading state, and keyboard shortcut hint. */
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   (
     {

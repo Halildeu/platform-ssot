@@ -11,11 +11,18 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useReducedMotion } from '../internal/overlay-engine/reduced-motion';
 
 export interface AnimatePresenceProps {
-  /** Exit animation duration in ms. */
+  /** Exit animation duration in ms. @default 150 */
   exitDuration?: number;
-  /** Called when all exiting children have finished. */
+  /** Called when all exiting children have finished unmounting. */
   onExitComplete?: () => void;
+  /** Dynamic children to track for mount/unmount animations. */
   children: React.ReactNode;
+  /** Whether to skip animations entirely. When true, children unmount immediately. */
+  disabled?: boolean;
+  /** Whether to animate on initial mount. @default false */
+  initial?: boolean;
+  /** Mode controlling how enter/exit animations overlap. @default "sync" */
+  mode?: "sync" | "wait" | "popLayout";
 }
 
 /**

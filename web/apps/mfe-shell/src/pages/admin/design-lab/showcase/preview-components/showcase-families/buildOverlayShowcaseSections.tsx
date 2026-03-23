@@ -717,7 +717,7 @@ export const buildOverlayShowcaseSections = (
           id: 'popover-hover-card',
           eyebrow: 'Hover card surfaces',
           title: 'Hover card alternatifi',
-          description: 'Popover’u küçük bilgi kartı gibi kullanıp, daha zengin bağlamı modal açmadan vermek için bir örnek sunar.',
+          description: 'Popover'u küçük bilgi kartı gibi kullanıp, daha zengin bağlamı modal açmadan vermek için bir örnek sunar.',
           badges: ['hover-card', 'rich-context', 'profile'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1fr]">
@@ -742,7 +742,7 @@ export const buildOverlayShowcaseSections = (
                         <Badge variant="info">12 component</Badge>
                       </div>
                       <Text variant="secondary" className="block leading-6">
-                        Hover-card yaklaşımı, kısa profil veya ownership bağlamı için modal ya da drawer’dan daha hafif kalır.
+                        Hover-card yaklaşımı, kısa profil veya ownership bağlamı için modal ya da drawer'dan daha hafif kalır.
                       </Text>
                     </div>
                   )}
@@ -750,7 +750,7 @@ export const buildOverlayShowcaseSections = (
               </PreviewPanel>
               <PreviewPanel title="Kural">
                 <Text variant="secondary" className="block leading-7">
-                  Popover, kullanıcıdan karar beklemeyen ama tooltip’ten fazla bağlam gerektiren ara yüzeyler için en güçlü katmanlardan biri.
+                  Popover, kullanıcıdan karar beklemeyen ama tooltip'ten fazla bağlam gerektiren ara yüzeyler için en güçlü katmanlardan biri.
                 </Text>
               </PreviewPanel>
             </div>

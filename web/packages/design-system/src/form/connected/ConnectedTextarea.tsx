@@ -16,6 +16,14 @@ export interface ConnectedTextareaProps
   access?: AccessLevel;
   /** Accessible label for the textarea. */
   label?: string;
+  /** Placeholder text shown when the textarea is empty. */
+  placeholder?: string;
+  /** Whether the textarea is disabled. */
+  disabled?: boolean;
+  /** Additional CSS class name. */
+  className?: string;
+  /** Number of visible text rows. */
+  rows?: number;
 }
 
 /**

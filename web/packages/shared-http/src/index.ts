@@ -142,7 +142,7 @@ const handleUnauthorized = (reason = 'unauthorized') => {
     }
     return;
   }
-  // Önceki davranış redirect+logout idi; artık yalnızca isteği düşürüp handler’a bildiriyoruz.
+  // Önceki davranış redirect+logout idi; artık yalnızca isteği düşürüp handler'a bildiriyoruz.
   if (process.env.NODE_ENV !== 'production') {
     console.debug('[401 HANDLE]', { reason, path: locationSafe?.pathname ?? 'n/a' });
   }

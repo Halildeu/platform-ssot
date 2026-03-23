@@ -247,3 +247,29 @@ describe('AnchorToc — accessibility', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+describe('AnchorToc — disabled item userEvent interaction', () => {
+  it('disabled item click does not trigger onValueChange', async () => {
+    const user = userEvent.setup();
+    const handleChange = vi.fn();
+    const items: AnchorTocItem[] = [
+      { id: 'enabled', label: 'Enabled' },
+      { id: 'off', label: 'Disabled Item', disabled: true },
+    ];
+    render(<AnchorToc items={items} onValueChange={handleChange} syncWithHash={false} />);
+    const disabledLink = screen.getByText('Disabled Item').closest('a')!;
+    expect(disabledLink).toHaveAttribute('aria-disabled', 'true');
+    await user.click(disabledLink);
+    expect(handleChange).not.toHaveBeenCalledWith('off');
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+  });
+
+  it('empty items array renders nothing and click is safe', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AnchorToc items={[]} />);
+    expect(container.querySelector('nav')).not.toBeInTheDocument();
+    await user.click(container);
+    expect(container.innerHTML).not.toContain('error');
+    expect(container.querySelectorAll('a')).toHaveLength(0);
+  });
+});

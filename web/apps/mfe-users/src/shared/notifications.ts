@@ -38,7 +38,7 @@ export const pushToast = (
     services.notify.push(entry);
     return;
   } catch {
-    // Shell servisleri henüz enjekte edilmediyse window event fallback’ini kullan.
+    // Shell servisleri henüz enjekte edilmediyse window event fallback'ini kullan.
   }
   dispatchWindowToast(type, message);
 };

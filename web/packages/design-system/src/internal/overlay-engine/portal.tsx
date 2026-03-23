@@ -56,6 +56,14 @@ export interface PortalProps {
   children: React.ReactNode;
   /** Target container element. Defaults to document.body. */
   container?: HTMLElement;
+  /** Unique key for the portal instance. */
+  key?: string;
+  /** Whether the portal is enabled. When false, renders children inline. */
+  disabled?: boolean;
+  /** Callback fired when the portal container is mounted. */
+  onMount?: () => void;
+  /** Callback fired when the portal container is unmounted. */
+  onUnmount?: () => void;
 }
 
 /**

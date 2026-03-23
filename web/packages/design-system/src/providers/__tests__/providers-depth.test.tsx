@@ -41,10 +41,9 @@ describe('DesignSystemProvider — depth', () => {
   });
 
   it('provides theme context to descendants', () => {
-    let axes: Record<string, unknown> | undefined;
+    let themeCtx: ReturnType<typeof useTheme> | undefined;
     function Consumer() {
-      const t = useTheme();
-      axes = t.axes as unknown as Record<string, unknown>;
+      themeCtx = useTheme();
       return <span>ok</span>;
     }
     render(
@@ -52,9 +51,12 @@ describe('DesignSystemProvider — depth', () => {
         <Consumer />
       </DesignSystemProvider>,
     );
-    expect(axes).toBeDefined();
-    expect(axes).toHaveProperty('appearance');
-    expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(themeCtx).toBeDefined();
+    expect(themeCtx!.axes).toHaveProperty('appearance');
+    expect(themeCtx!.axes.appearance).toBe('light');
+    expect(themeCtx!.axes.density).toBe('comfortable');
+    expect(typeof themeCtx!.setAppearance).toBe('function');
+    expect(typeof themeCtx!.update).toBe('function');
   });
 
   it('empty children renders without crash', () => {
@@ -64,10 +66,24 @@ describe('DesignSystemProvider — depth', () => {
     expect(container).toBeTruthy();
   });
 
+  it('a11y: provides direction attribute on root', () => {
+    const { container } = render(
+      <DesignSystemProvider locale="ar">
+        <button aria-label="test action">Click</button>
+      </DesignSystemProvider>,
+    );
+    const btn = screen.getByRole('button', { name: 'test action' });
+    expect(btn).toBeInTheDocument();
+    expect(screen.getByLabelText('test action')).toBeInTheDocument();
+    expect(btn).toHaveAttribute('aria-label', 'test action');
+  });
+
   it('passes custom locale', () => {
     let localeCtx: ReturnType<typeof useLocale> | undefined;
+    let themeCtx: ReturnType<typeof useTheme> | undefined;
     function Consumer() {
       localeCtx = useLocale();
+      themeCtx = useTheme();
       return <span>ok</span>;
     }
     render(
@@ -77,6 +93,8 @@ describe('DesignSystemProvider — depth', () => {
     );
     expect(localeCtx!.locale).toBe('fa');
     expect(localeCtx!.direction).toBe('rtl');
+    expect(themeCtx).toBeDefined();
+    expect(themeCtx!.axes.appearance).toBe('light');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
@@ -92,6 +110,24 @@ describe('DesignSystemProvider — depth', () => {
       </DesignSystemProvider>,
     );
     expect(localeCtx!.direction).toBe('rtl');
+    expect(localeCtx!.locale).toBe('en');
+  });
+
+  it('defaultTheme merges into axes correctly', () => {
+    let themeCtx: ReturnType<typeof useTheme> | undefined;
+    function Consumer() {
+      themeCtx = useTheme();
+      return <span>ok</span>;
+    }
+    render(
+      <DesignSystemProvider defaultTheme={{ appearance: 'dark', density: 'compact' }}>
+        <Consumer />
+      </DesignSystemProvider>,
+    );
+    expect(themeCtx!.axes.appearance).toBe('dark');
+    expect(themeCtx!.axes.density).toBe('compact');
+    expect(typeof themeCtx!.setAppearance).toBe('function');
+    expect(typeof themeCtx!.setDensity).toBe('function');
   });
 
   it('resolves async rendering via waitFor', async () => {

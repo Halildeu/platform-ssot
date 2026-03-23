@@ -93,7 +93,7 @@ export const sendTelemetry = async (event: TelemetryEvent): Promise<void> => {
       },
     });
   } catch (error) {
-    // Telemetry başarısız olsa bile UI’yi bloklamayalım; yalnızca debug log bırak.
+    // Telemetry başarısız olsa bile UI'yi bloklamayalım; yalnızca debug log bırak.
     if (isDevEnv) {
       // eslint-disable-next-line no-console
       console.debug('[telemetry] gönderilemedi', error);

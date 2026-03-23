@@ -39,26 +39,42 @@ export interface SegmentedClasses {
 }
 
 export interface SegmentedProps extends AccessControlledProps {
+  /** Array of segment items to render. */
   items: SegmentedItem[];
+  /** Controlled selected value(s). */
   value?: string | string[];
+  /** Default selected value(s) for uncontrolled mode. */
   defaultValue?: string | string[];
+  /** Callback fired when the selection changes. */
   onValueChange?: (nextValue: string | string[]) => void;
+  /** Callback fired when a segment item is clicked. */
   onItemClick?: (
     value: string,
     event: React.MouseEvent<HTMLButtonElement>,
   ) => void;
+  /** Whether single or multiple segments can be selected. @default "single" */
   selectionMode?: "single" | "multiple";
+  /** Size variant for the segment buttons. @default "md" */
   size?: "sm" | "md" | "lg";
+  /** Layout orientation of the segment group. @default "horizontal" */
   orientation?: "horizontal" | "vertical";
+  /** @deprecated Use `variant` instead. Visual appearance style. */
   appearance?: "default" | "outline" | "ghost";
-  /** Alias for `appearance` — aligns with the standard component API. */
+  /** Visual style variant for the segmented control. */
   variant?: "default" | "outline" | "ghost";
+  /** Border radius shape of the container and items. @default "rounded" */
   shape?: "rounded" | "pill";
+  /** Position of item icons relative to the label. @default "start" */
   iconPosition?: "start" | "end" | "top";
+  /** Whether deselecting all items is allowed. @default false */
   allowEmptySelection?: boolean;
+  /** Whether the control spans the full container width. */
   fullWidth?: boolean;
+  /** Accessible label for the segment group. */
   ariaLabel?: string;
+  /** Custom CSS class overrides for internal elements. */
   classes?: SegmentedClasses;
+  /** Additional CSS class name for the root element. */
   className?: string;
 }
 

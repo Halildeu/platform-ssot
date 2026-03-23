@@ -8,9 +8,13 @@ import { resolveAccessState, type AccessControlledProps } from "../../internal/a
 /* ------------------------------------------------------------------ */
 
 export interface BreadcrumbItem {
+  /** Display text or node for the breadcrumb step. */
   label: React.ReactNode;
+  /** URL for the breadcrumb link. */
   href?: string;
+  /** Click handler for the breadcrumb step. */
   onClick?: () => void;
+  /** Icon displayed before the label. */
   icon?: React.ReactNode;
 }
 

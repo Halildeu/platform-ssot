@@ -8,7 +8,7 @@ const MAX_ASSET_SIZE = 8 * 1024 * 1024; // 8 MB
 module.exports = {
   entry: './src/index.tsx',
 
-  // Geliştirmede hızlı kaynak haritası, prod’da kapalı
+  // Geliştirmede hızlı kaynak haritası, prod'da kapalı
   devtool: process.env.NODE_ENV === 'development' ? 'eval-source-map' : false,
 
   module: {
@@ -33,13 +33,13 @@ module.exports = {
         // Tailwind + PostCSS zinciri
         test: /\.css$/,
         use: [
-          'style-loader',                           // dev: HMR; prod’da MiniCssExtract tercih edilir
+          'style-loader',                           // dev: HMR; prod'da MiniCssExtract tercih edilir
           'css-loader',
           'postcss-loader',                        // kökteki postcss.config.js otomatik algılanır
         ],
       },
       {
-        // İhtiyacınıza göre: svg/png/font import’ları
+        // İhtiyacınıza göre: svg/png/font import'ları
         test: /\.(png|jpe?g|gif|svg|woff2?)$/,
         type: 'asset',
       },

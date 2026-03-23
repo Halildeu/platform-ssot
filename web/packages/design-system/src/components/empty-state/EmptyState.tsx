@@ -8,16 +8,19 @@ import { resolveAccessState, accessStyles } from "../../internal/access-controll
 /* ------------------------------------------------------------------ */
 
 export interface EmptyStateProps {
-  /** Illustration or icon */
+  /** Illustration or icon displayed above the title. */
   icon?: React.ReactNode;
+  /** Heading text for the empty state. */
   title?: React.ReactNode;
+  /** Descriptive text shown below the title. */
   description?: React.ReactNode;
-  /** Primary action (e.g. Button) */
+  /** Primary action element (e.g. Button). */
   action?: React.ReactNode;
-  /** Secondary action */
+  /** Secondary action element displayed beside the primary action. */
   secondaryAction?: React.ReactNode;
-  /** Compact variant for inline use */
+  /** Compact variant with reduced padding for inline use. */
   compact?: boolean;
+  /** Additional CSS class name for the root element. */
   className?: string;
   /** Access level — controls visibility */
   access?: AccessLevel;

@@ -90,7 +90,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
     const getOption = extendedApi.getGridOption?.bind(api);
     const rowModelType = typeof getOption === 'function' ? getOption('rowModelType') : undefined;
 
-    // ServerSide ise SSRM store’u yenile
+    // ServerSide ise SSRM store'u yenile
     if (rowModelType === 'serverSide') {
       if (typeof api.refreshServerSideStore === 'function') {
         api.refreshServerSideStore({ purge: true });
@@ -100,7 +100,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
       return;
     }
 
-    // ClientSide ise client row model’i tazele
+    // ClientSide ise client row model'i tazele
     extendedApi.refreshClientSideRowModel?.('filter');
   }, []);
 

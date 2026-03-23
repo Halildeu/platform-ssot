@@ -13,7 +13,7 @@ const entry: DesignLabComponentDocEntry = {
   "taxonomyGroupId": "utilities",
   "taxonomySubgroup": "Server-side pagination helpers",
   "demoMode": "inspector",
-  "description": "Grid state bilgisini backend query param’lerine ceviren helper.",
+  "description": "Grid state bilgisini backend query param'lerine ceviren helper.",
   "sectionIds": [
     "table_data_display",
     "utility_components",

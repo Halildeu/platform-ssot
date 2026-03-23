@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardHeader, CardBody } from "@mfe/design-system";
 import { Badge } from "@mfe/design-system";
-import { Descriptions } from "@mfe/design-system";
+import { VStack } from "@mfe/design-system";
 
 const COCKPIT_URL = "/cockpit-api";
 
@@ -30,7 +30,6 @@ export const MultiRepoHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ on
       const res = await fetch(`${COCKPIT_URL}/multi-repo-status`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json = await res.json();
-      // API uses "entries" not "repos"
       setRepos(json.entries || json.repos || []);
       setError(null);
     } catch (err) {
@@ -65,22 +64,6 @@ export const MultiRepoHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ on
 
   const criticalCount = repos.filter((r) => r.critical).length;
 
-  const items = repos.map((repo) => ({
-    key: repo.repo_name,
-    label: repo.repo_name,
-    value: (
-      <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-        <Badge variant={riskVariant(repo.risk_level)} size="sm">
-          {repo.risk_level}
-        </Badge>
-        <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>
-          Score: {repo.risk_score}/18
-        </span>
-      </div>
-    ),
-    tone: repo.critical ? ("danger" as const) : ("default" as const),
-  }));
-
   return (
     <Card variant="outlined">
       <CardHeader
@@ -92,7 +75,34 @@ export const MultiRepoHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ on
         }
       />
       <CardBody>
-        <Descriptions items={items} columns={1} density="compact" bordered />
+        <VStack gap={2}>
+          {repos.map((repo, idx) => (
+            <div
+              key={repo.repo_name || `repo-${idx}`}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px 12px",
+                borderRadius: 8,
+                border: "1px solid var(--border-primary, #e5e7eb)",
+                background: repo.critical ? "var(--state-danger-bg, #fef2f2)" : "transparent",
+              }}
+            >
+              <span style={{ fontSize: 13, fontWeight: 500, color: "var(--text-primary)" }}>
+                {repo.repo_name || `Repository ${idx + 1}`}
+              </span>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <Badge variant={riskVariant(repo.risk_level)} size="sm">
+                  {repo.risk_level}
+                </Badge>
+                <span style={{ fontSize: 11, color: "var(--text-tertiary)", fontWeight: 600 }}>
+                  {repo.risk_score}/18
+                </span>
+              </div>
+            </div>
+          ))}
+        </VStack>
       </CardBody>
     </Card>
   );

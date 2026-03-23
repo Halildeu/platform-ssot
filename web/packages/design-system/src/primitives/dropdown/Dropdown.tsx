@@ -24,14 +24,17 @@ export type DropdownPlacement = "bottom-start" | "bottom-end" | "top-start" | "t
 
 /** Props for the Dropdown component. */
 export interface DropdownProps {
-  /** Trigger element */
+  /** Trigger element that toggles the dropdown on click. */
   children: React.ReactElement;
+  /** Menu entries including items, separators, and group labels. */
   items: DropdownEntry[];
+  /** Position of the dropdown menu relative to the trigger. @default "bottom-start" */
   placement?: DropdownPlacement;
-  /** Min width in px */
+  /** Minimum width of the dropdown menu in pixels. @default 180 */
   minWidth?: number;
+  /** Additional CSS class name for the dropdown menu panel. */
   className?: string;
-  /** Disable the dropdown — prevents opening */
+  /** Whether the dropdown is disabled and cannot be opened. */
   disabled?: boolean;
 }
 

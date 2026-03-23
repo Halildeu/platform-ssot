@@ -172,7 +172,7 @@ function TableSimpleInner<
               <thead
                 className={
                   stickyHeader
-                    ? "sticky top-0 z-[1] bg-surface-muted/95 backdrop-blur-sm"
+                    ? "sticky top-0 z-[1] bg-surface-muted/95 backdrop-blur-xs"
                     : "bg-surface-muted"
                 }
               >

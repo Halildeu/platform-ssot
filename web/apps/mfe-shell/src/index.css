@@ -16,10 +16,10 @@
 /* Dark mode: use data-mode="dark" attribute (not prefers-color-scheme) */
 @custom-variant dark (&:where([data-mode=dark], [data-mode=dark] *));
 
-/* Restore v3 ring defaults (3px width, blue-500 color) */
+/* Restore v3 ring defaults (3px width, focus-outline color) */
 @theme {
   --default-ring-width: 3px;
-  --default-ring-color: var(--color-blue-500);
+  --default-ring-color: var(--focus-outline, var(--color-blue-500));
 }
 
 /* Restore v3 base defaults changed in TW4 */
@@ -285,8 +285,9 @@ body {
   min-height: 100vh;
 }
 
-/* Radius aksı */
+/* Radius aksı — v4 renames: rounded-sm→rounded-xs */
 [data-radius] .rounded,
+[data-radius] .rounded-xs,
 [data-radius] .rounded-sm,
 [data-radius] .rounded-md {
   border-radius: var(--radius-control);
@@ -300,10 +301,11 @@ body {
 }
 
 /* Elevation aksı */
-[data-elevation="raised"] :is(.shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
+/* v4 renames: shadow-sm→shadow-xs, shadow→shadow-sm — both old and new covered */
+[data-elevation="raised"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
   box-shadow: var(--elevation-surface) !important;
 }
 
-[data-elevation="flat"] :is(.shadow, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
+[data-elevation="flat"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
   box-shadow: var(--elevation-surface) !important;
 }

@@ -901,15 +901,15 @@ describe('ErrorBoundary — depth', () => {
     throw new Error('Test error');
   };
 
-  it('catches error and renders fallback', () => {
+  it('catches error and renders fallback with alert role', () => {
     render(
       <ErrorBoundary fallback={<div>Error caught</div>}>
         <ThrowingComponent />
       </ErrorBoundary>
     );
     expect(screen.getByText('Error caught')).toBeInTheDocument();
-    expect(document.body.innerHTML.length).toBeGreaterThan(0);
-    expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveAttribute('data-component');
   });
 
   it('renders children when no error', () => {
@@ -926,13 +926,14 @@ describe('ErrorBoundary — depth', () => {
   it('fires onError callback when error caught', () => {
     const handler = vi.fn();
     render(
-      <ErrorBoundary onError={handler}>
+      <ErrorBoundary onError={handler} fallback={<div role="alert" aria-label="Error occurred">Oops</div>}>
         <ThrowingComponent />
       </ErrorBoundary>
     );
     expect(handler).toHaveBeenCalled();
     expect(handler).toHaveBeenCalledTimes(1);
-    expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(screen.getByLabelText('Error occurred')).toBeInTheDocument();
   });
 
   it('resolves async rendering via waitFor', async () => {

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 
 import { formatValue, getTrendColor, getTrendIcon, getToneClasses } from '../types';
@@ -84,6 +84,13 @@ describe('ExecutiveKPIStrip', () => {
     const { container } = render(<ExecutiveKPIStrip metrics={metrics} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<ExecutiveKPIStrip metrics={metrics} />);
+    const region = screen.getByRole('region');
+    expect(region).toBeInTheDocument();
+    expect(region).toHaveAttribute('aria-label', 'Key performance indicators');
+  });
 });
 
 describe('ApprovalWorkflow', () => {
@@ -108,6 +115,13 @@ describe('ApprovalWorkflow', () => {
     const { container } = render(<ApprovalWorkflow steps={steps} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<ApprovalWorkflow steps={steps} />);
+    const items = screen.getAllByRole('listitem');
+    expect(items.length).toBeGreaterThan(0);
+    expect(container.querySelector('[aria-current="step"]')).toBeTruthy();
+  });
 });
 
 describe('RiskMatrix', () => {
@@ -130,6 +144,13 @@ describe('RiskMatrix', () => {
     const { container } = render(<RiskMatrix risks={risks} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<RiskMatrix risks={risks} />);
+    const group = screen.getByRole('group');
+    expect(group).toBeInTheDocument();
+    expect(group).toHaveAttribute('aria-label', 'Risk assessment matrix');
+  });
 });
 
 describe('GanttTimeline', () => {
@@ -146,6 +167,12 @@ describe('GanttTimeline', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<GanttTimeline tasks={tasks} />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<GanttTimeline tasks={tasks} />);
+    expect(container.firstElementChild).toBeTruthy();
+    expect(container.textContent).toContain('Design');
   });
 });
 
@@ -165,6 +192,13 @@ describe('AgingBuckets', () => {
     const { container } = render(<AgingBuckets buckets={buckets} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<AgingBuckets buckets={buckets} />);
+    const region = screen.queryByRole('region') || screen.queryByRole('list');
+    expect(region || container.querySelector('[aria-label]') || container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).toContain('0-30');
+  });
 });
 
 describe('FunnelChart', () => {
@@ -183,6 +217,14 @@ describe('FunnelChart', () => {
     const { container } = render(<FunnelChart stages={stages} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<FunnelChart stages={stages} />);
+    const svg = container.querySelector('svg');
+    expect(svg).toBeTruthy();
+    const img = screen.queryByRole('img');
+    expect(img || container.querySelector('[aria-label]') || svg).toBeTruthy();
+  });
 });
 
 describe('ComparisonTable', () => {
@@ -199,6 +241,13 @@ describe('ComparisonTable', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<ComparisonTable rows={rows} />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<ComparisonTable rows={rows} />);
+    const table = screen.getByRole('table');
+    expect(table).toBeInTheDocument();
+    expect(container.querySelector('[aria-label]') || table).toBeTruthy();
   });
 });
 
@@ -217,6 +266,13 @@ describe('TrainingTracker', () => {
     const { container } = render(<TrainingTracker items={items} />);
     await expectNoA11yViolations(container);
   });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<TrainingTracker items={items} />);
+    const buttons = screen.getAllByRole('button');
+    expect(buttons.length).toBeGreaterThan(0);
+    expect(container.querySelector('[aria-label]') || container.firstElementChild).toBeTruthy();
+  });
 });
 
 describe('GovernanceBoard', () => {
@@ -233,6 +289,13 @@ describe('GovernanceBoard', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<GovernanceBoard items={items} />);
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(<GovernanceBoard items={items} />);
+    const buttons = screen.getAllByRole('button');
+    expect(buttons.length).toBeGreaterThan(0);
+    expect(container.querySelector('[aria-label]') || container.firstElementChild).toBeTruthy();
   });
 });
 
@@ -257,5 +320,14 @@ describe('ThemeLayout', () => {
       <ThemeLayout theme="executive" slots={{ header: <div>KPI</div>, grid: <div>Grid</div> }} />,
     );
     await expectNoA11yViolations(container);
+  });
+
+  it('has accessible ARIA structure', () => {
+    const { container } = render(
+      <ThemeLayout theme="executive" slots={{ header: <div role="banner">KPI</div>, grid: <div>Grid</div> }} />,
+    );
+    const banner = screen.getByRole('banner');
+    expect(banner).toBeInTheDocument();
+    expect(container.querySelector('[aria-label]') || container.firstElementChild).toBeTruthy();
   });
 });

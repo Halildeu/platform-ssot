@@ -64,6 +64,18 @@ function isEventHandler(key: string): boolean {
 export interface SlotProps extends React.HTMLAttributes<HTMLElement> {
   /** Single child element to merge parent props onto. */
   children: React.ReactNode;
+  /** CSS class name merged with the child's existing className via `cn()`. */
+  className?: string;
+  /** Inline styles shallow-merged with the child's style (child wins on conflict). */
+  style?: React.CSSProperties;
+  /** ARIA role forwarded to the child element. */
+  role?: React.AriaRole;
+  /** HTML id forwarded to the child element. */
+  id?: string;
+  /** Tab index forwarded to the child element. */
+  tabIndex?: number;
+  /** Data-testid attribute forwarded to the child element. */
+  "data-testid"?: string;
 }
 
 /**

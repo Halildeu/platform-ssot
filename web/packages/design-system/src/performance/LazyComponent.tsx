@@ -12,12 +12,18 @@ import React, {
 /* ------------------------------------------------------------------ */
 
 export type LazyComponentProps = {
-  /** Fallback shown while the component is loading */
+  /** Fallback UI shown while the component is loading. */
   fallback?: React.ReactNode;
-  /** Fallback shown when the dynamic import fails */
+  /** Fallback UI shown when the dynamic import fails. */
   errorFallback?: React.ReactNode;
-  /** Optional class applied to the wrapper */
+  /** Optional CSS class applied to the loading skeleton wrapper. */
   className?: string;
+  /** Minimum loading delay in ms to prevent layout flash. */
+  minLoadTime?: number;
+  /** Whether to retry the import on failure. @default false */
+  retryOnError?: boolean;
+  /** Callback fired when the lazy component finishes loading. */
+  onLoad?: () => void;
 };
 
 /* ------------------------------------------------------------------ */

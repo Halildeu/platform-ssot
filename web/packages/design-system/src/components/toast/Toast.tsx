@@ -50,12 +50,18 @@ export function useToast(): ToastContextValue {
 let toastCounter = 0;
 
 export interface ToastProviderProps extends AccessControlledProps {
+  /** Position of the toast container on screen. @default "top-right" */
   position?: ToastPosition;
-  /** Default auto-dismiss duration in ms */
+  /** Default auto-dismiss duration in milliseconds. @default 4000 */
   duration?: number;
-  /** Max visible toasts */
+  /** Maximum number of toasts visible at once. @default 5 */
   maxVisible?: number;
+  /** Application content rendered within the toast context. */
   children: React.ReactNode;
+  /** Additional CSS class name for the toast container. */
+  className?: string;
+  /** Whether toast animations are enabled. @default true */
+  animated?: boolean;
 }
 
 const positionStyles: Record<ToastPosition, string> = {

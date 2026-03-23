@@ -12,6 +12,14 @@ export interface ConnectedInputProps
   name: string;
   /** Per-field access override. */
   access?: AccessLevel;
+  /** Placeholder text shown when the input is empty. */
+  placeholder?: string;
+  /** Whether the input is disabled. */
+  disabled?: boolean;
+  /** Size variant for the input control. */
+  size?: 'sm' | 'md' | 'lg';
+  /** Additional CSS class name. */
+  className?: string;
 }
 
 /**

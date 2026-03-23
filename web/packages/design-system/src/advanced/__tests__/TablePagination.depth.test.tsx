@@ -2,7 +2,8 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { TablePagination } from '../data-grid/TablePagination';
 
@@ -81,5 +82,27 @@ describe('TablePagination — depth', () => {
     expect(container.innerHTML).not.toBe('');
     expect(root?.tagName).toBeDefined();
     expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  });
+
+  it('disabled previous button on first page — userEvent click does not fire callback', async () => {
+    const user = userEvent.setup();
+    const onPageChange = vi.fn();
+    render(<TablePagination totalItems={50} page={1} pageSize={10} onPageChange={onPageChange} />);
+    const prevBtn = screen.getByRole('button', { name: /previous page/i });
+    expect(prevBtn).toBeDisabled();
+    await user.click(prevBtn);
+    expect(onPageChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /next page/i })).not.toBeDisabled();
+  });
+
+  it('empty totalItems — next button disabled with zero pages', async () => {
+    const user = userEvent.setup();
+    const onPageChange = vi.fn();
+    render(<TablePagination totalItems={0} page={1} pageSize={10} onPageChange={onPageChange} />);
+    const nextBtn = screen.getByRole('button', { name: /next page/i });
+    expect(nextBtn).toBeDisabled();
+    await user.click(nextBtn);
+    expect(onPageChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /previous page/i })).toBeDisabled();
   });
 });

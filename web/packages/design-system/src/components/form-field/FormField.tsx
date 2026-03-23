@@ -30,6 +30,7 @@ export interface FormFieldProps extends AccessControlledProps {
   children: React.ReactNode;
 }
 
+/** Composed form control wrapper with label, help text, error message, and required/optional indicators. */
 export const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(({
   label,
   help,

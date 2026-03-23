@@ -12,6 +12,14 @@ export interface ConnectedSelectProps
   name: string;
   /** Access level that controls disabled/readonly/hidden state. */
   access?: AccessLevel;
+  /** Whether the select is disabled. */
+  disabled?: boolean;
+  /** Placeholder text shown when no option is selected. */
+  placeholder?: string;
+  /** Additional CSS class name. */
+  className?: string;
+  /** Size variant for the select control. */
+  size?: 'sm' | 'md' | 'lg';
 }
 
 /** Form-connected select that auto-binds value, onChange, and error state to form context. */

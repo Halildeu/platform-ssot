@@ -15,6 +15,12 @@ export interface DividerProps extends React.HTMLAttributes<HTMLHRElement> {
   label?: string;
   /** Margin spacing around the divider. @default "md" */
   spacing?: "none" | "sm" | "md" | "lg";
+  /** Additional CSS class name for the divider element. */
+  className?: string;
+  /** ARIA role override for the separator element. */
+  role?: React.AriaRole;
+  /** Data attribute for test automation. */
+  "data-testid"?: string;
 }
 
 const spacingMap: Record<string, string> = {

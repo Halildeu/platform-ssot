@@ -8,7 +8,7 @@ const access = {
   'access.actions.create': 'New Role',
   'access.actions.create.tooltip': 'This action will be enabled after the MVP release.',
   'access.actions.clone': 'Clone Role',
-  'access.actions.clone.tooltip': 'Create a new role by copying the selected role’s policies.',
+  'access.actions.clone.tooltip': 'Create a new role by copying the selected role's policies.',
   'access.actions.bulk': 'Bulk Permission',
   'access.actions.bulk.tooltip': 'Update the same module permission across multiple roles.',
 

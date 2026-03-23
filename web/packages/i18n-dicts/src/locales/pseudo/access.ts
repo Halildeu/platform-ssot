@@ -8,7 +8,7 @@ const pseudo = {
   "access.actions.create": "Ñéw Rólé",
   "access.actions.create.tooltip": "Thís áçtíóñ wíll bé éñábléd áftér thé MVP réléásé.",
   "access.actions.clone": "Çlóñé Rólé",
-  "access.actions.clone.tooltip": "Çréáté á ñéw rólé by çópyíñg thé séléçtéd rólé’s pólíçíés.",
+  "access.actions.clone.tooltip": "Çréáté á ñéw rólé by çópyíñg thé séléçtéd rólé's pólíçíés.",
   "access.actions.bulk": "Búlk Pérmíssíóñ",
   "access.actions.bulk.tooltip": "Úpdáté thé sámé módúlé pérmíssíóñ áçróss múltíplé rólés.",
   "access.metrics.activeRoleCount": "Áçtívé rólé çóúñt: {çóúñt}",

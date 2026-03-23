@@ -2,7 +2,8 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: (props: Record<string, unknown>) => (
@@ -92,5 +93,19 @@ describe('AgGridServer — depth', () => {
     expect(container.innerHTML).not.toBe('');
     expect(root?.tagName).toBeDefined();
     expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  });
+
+  it('disabled empty grid — userEvent click on container has no side effects', async () => {
+    const user = userEvent.setup();
+    const errorGetData = vi.fn().mockRejectedValue(new Error('empty error'));
+    const { container } = render(
+      <AgGridServer columnDefs={[{ field: 'id' }]} getData={errorGetData} className="ags-test" />,
+    );
+    const grid = container.querySelector('.ags-test')!;
+    expect(grid).toBeInTheDocument();
+    await user.click(grid);
+    expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
+    expect(container.querySelector('[data-row-model-type="serverSide"]')).toBeInTheDocument();
+    expect(errorGetData).toHaveBeenCalled();
   });
 });

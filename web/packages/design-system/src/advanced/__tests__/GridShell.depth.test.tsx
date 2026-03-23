@@ -2,7 +2,8 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
@@ -90,5 +91,20 @@ describe('GridShell — depth', () => {
     expect(container.innerHTML).not.toBe('');
     expect(root?.tagName).toBeDefined();
     expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  });
+
+  it('disabled empty shell — userEvent click on child button works', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const { container } = render(
+      <GridShell columnDefs={baseCols} rowData={[]}>
+        <button disabled onClick={onClick}>Disabled Action</button>
+      </GridShell>,
+    );
+    const btn = screen.getByRole('button', { name: /disabled action/i });
+    expect(btn).toBeDisabled();
+    await user.click(btn);
+    expect(onClick).not.toHaveBeenCalled();
+    expect(container.firstElementChild).toBeInTheDocument();
   });
 });

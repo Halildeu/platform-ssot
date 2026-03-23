@@ -10,11 +10,19 @@
 
 import React, { createContext, useContext } from "react";
 
-interface PortalConfig {
-  /** Default container for all portals */
+export interface PortalConfig {
+  /** Default container element for all portals in the subtree. */
   container?: HTMLElement | null;
-  /** Whether portals are enabled globally */
+  /** Whether portals are enabled globally. When false, overlays render inline. */
   enabled?: boolean;
+  /** Default z-index base for portal content. */
+  zIndex?: number;
+  /** Unique identifier prefix for portal container elements. */
+  idPrefix?: string;
+  /** Whether to lock body scroll when a portal is active. */
+  lockScroll?: boolean;
+  /** Callback fired when a portal is mounted into the container. */
+  onPortalMount?: (portalId: string) => void;
 }
 
 const PortalContext = createContext<PortalConfig>({});

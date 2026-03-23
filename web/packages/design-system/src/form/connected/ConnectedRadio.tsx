@@ -14,6 +14,12 @@ export interface ConnectedRadioProps
   radioValue: string;
   /** Access level that controls disabled/readonly/hidden state. */
   access?: AccessLevel;
+  /** Label text displayed next to the radio button. */
+  label?: string;
+  /** Whether the radio button is disabled. */
+  disabled?: boolean;
+  /** Additional CSS class name. */
+  className?: string;
 }
 
 /** Form-connected radio button that auto-binds checked state and onChange to form context. */

@@ -72,6 +72,7 @@ const matchesQuery = (option: AutocompleteOption, query: string): boolean => {
   return option.label.toLowerCase().includes(query.trim().toLowerCase());
 };
 
+/** Input with dropdown suggestions supporting type-ahead filtering, async search, and keyboard navigation. */
 export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps>(
   function Autocomplete(
     {
