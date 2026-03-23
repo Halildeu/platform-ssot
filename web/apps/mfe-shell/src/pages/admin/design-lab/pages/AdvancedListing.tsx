@@ -38,7 +38,7 @@ export default function AdvancedListing() {
           }}
         />
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-sm">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-xs">
             <Database className="h-3 w-3" />
             {advancedItems.length} advanced components
           </div>

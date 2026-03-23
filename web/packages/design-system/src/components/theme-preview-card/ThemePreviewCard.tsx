@@ -53,7 +53,7 @@ export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCar
         "relative flex flex-col gap-1 rounded-xl border p-2 text-[10px] transition",
         "bg-surface-default",
         selected
-          ? "border-action-primary shadow-sm"
+          ? "border-action-primary shadow-xs"
           : "border-border-subtle hover:border-text-secondary",
         className,
       )}
@@ -68,10 +68,10 @@ export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCar
       ) : null}
       <div className="flex flex-col gap-1 rounded-lg border border-border-subtle bg-surface-muted px-2 py-2">
         <div className="h-2 w-10 rounded bg-surface-default" />
-        <div className="mt-1 h-[6px] rounded-sm bg-transparent text-[9px] font-medium text-text-primary">
+        <div className="mt-1 h-[6px] rounded-xs bg-transparent text-[9px] font-medium text-text-primary">
           {resolvedTitleText}
         </div>
-        <div className="h-[6px] rounded-sm text-[9px] text-text-secondary">
+        <div className="h-[6px] rounded-xs text-[9px] text-text-secondary">
           {resolvedSecondaryText}
         </div>
         <div className="mt-2 flex items-center justify-end">

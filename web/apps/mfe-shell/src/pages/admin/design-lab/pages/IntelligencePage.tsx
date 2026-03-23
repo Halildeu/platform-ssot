@@ -119,7 +119,7 @@ function CodegenSandboxSection() {
             value={componentName}
             onChange={(e) => setComponentName(e.target.value)}
             placeholder="Button"
-            className="w-full rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary outline-none focus:border-action-primary"
+            className="w-full rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary outline-hidden focus:border-action-primary"
           />
         </div>
         <div>
@@ -130,7 +130,7 @@ function CodegenSandboxSection() {
             value={propsJson}
             onChange={(e) => setPropsJson(e.target.value)}
             placeholder='{"variant": "primary"}'
-            className="w-full rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm font-mono text-text-primary outline-none focus:border-action-primary"
+            className="w-full rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm font-mono text-text-primary outline-hidden focus:border-action-primary"
           />
         </div>
       </div>
@@ -347,7 +347,7 @@ function MigrationImpactCalculator() {
         <select
           value={selectedComponent}
           onChange={(e) => setSelectedComponent(e.target.value)}
-          className="w-full rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary outline-none focus:border-action-primary"
+          className="w-full rounded-lg border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary outline-hidden focus:border-action-primary"
         >
           <option value="">-- Bir bilesen secin --</option>
           {componentNames.map((name) => (

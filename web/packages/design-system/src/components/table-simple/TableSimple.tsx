@@ -161,7 +161,7 @@ function TableSimpleInner<
         </Text>
       ) : null}
 
-      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-sm">
+      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-xs">
         {showEmpty ? (
           <div className="p-5">
             <Empty description={resolvedEmptyFallbackDescription} />

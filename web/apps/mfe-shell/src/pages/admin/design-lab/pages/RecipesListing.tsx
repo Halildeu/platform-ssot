@@ -38,7 +38,7 @@ export default function RecipesListing() {
             onClick={() =>
               navigate(`/admin/design-lab/recipes/${family.recipeId}`)
             }
-            className="group rounded-2xl border border-border-subtle bg-surface-default p-5 text-left shadow-sm transition hover:border-action-primary/30 hover:shadow-md"
+            className="group rounded-2xl border border-border-subtle bg-surface-default p-5 text-left shadow-xs transition hover:border-action-primary/30 hover:shadow-md"
           >
             <Text as="div" className="text-base font-semibold text-text-primary">
               {family.title}

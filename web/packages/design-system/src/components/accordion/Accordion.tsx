@@ -184,7 +184,7 @@ const gutterlessSizeClassNames: Record<AccordionSize, string> = {
 };
 
 const accordionPremiumSurfaceClassName =
-  "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_28px_60px_-34px_var(--shadow-color)] backdrop-blur-sm";
+  "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_28px_60px_-34px_var(--shadow-color)] backdrop-blur-xs";
 
 /** Collapsible content panels with single or multiple expand modes, keyboard navigation, and preset support. */
 export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({

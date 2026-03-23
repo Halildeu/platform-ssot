@@ -79,7 +79,7 @@ export const buildCollectionGridLivePreview = (
       );
     case 'List':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.list.live.inbox.panel')}>
               <List
@@ -105,7 +105,7 @@ export const buildCollectionGridLivePreview = (
       );
     case 'JsonViewer':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.jsonViewer.live.releasePayload.panel')}>
               <JsonViewer
@@ -133,7 +133,7 @@ export const buildCollectionGridLivePreview = (
       );
     case 'Tree':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.tree.live.hierarchy.panel')}>
               <Tree
@@ -161,7 +161,7 @@ export const buildCollectionGridLivePreview = (
       );
     case 'TreeTable':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.treeTable.live.ownershipMatrix.panel')}>
               <TreeTable
@@ -196,7 +196,7 @@ export const buildCollectionGridLivePreview = (
       );
     case 'EntityGridTemplate':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-xs">
           <div className="h-[420px]">
             <LibraryQueryProvider>
               <EntityGridTemplate<GridRow>
@@ -220,7 +220,7 @@ export const buildCollectionGridLivePreview = (
       );
     case 'AgGridServer':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-4 shadow-xs">
           <div className="h-[360px]">
             <AgGridServer
               height={320}

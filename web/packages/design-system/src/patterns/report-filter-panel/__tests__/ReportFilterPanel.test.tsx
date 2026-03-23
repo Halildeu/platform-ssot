@@ -207,4 +207,28 @@ describe('ReportFilterPanel — accessibility', () => {
     const { container } = render(<ReportFilterPanel {...defaultProps} />);
     await expectNoA11yViolations(container);
   });
+
+  it('renders a form element', () => {
+    const { container } = render(<ReportFilterPanel {...defaultProps} />);
+    const form = container.querySelector('form');
+    expect(form).toBeInTheDocument();
+    expect(form?.tagName).toBe('FORM');
+  });
+
+  it('submit button is accessible via role', () => {
+    render(<ReportFilterPanel {...defaultProps} />);
+    expect(screen.getByRole('button', { name: 'Filtrele' })).toBeInTheDocument();
+  });
+
+  it('reset button is accessible via role', () => {
+    render(<ReportFilterPanel {...defaultProps} onReset={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Sifirla' })).toBeInTheDocument();
+  });
+
+  it('disabled access sets aria-disabled on form', () => {
+    const { container } = render(
+      <ReportFilterPanel {...defaultProps} access="disabled" />,
+    );
+    expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
 });

@@ -364,7 +364,7 @@ export default function ComponentDetail() {
 
         {/* Import statement — modern code bar */}
         {indexItem.importStatement && (
-          <div className="relative mt-5 flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-canvas/80 px-4 py-2.5 backdrop-blur-sm">
+          <div className="relative mt-5 flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-canvas/80 px-4 py-2.5 backdrop-blur-xs">
             <div className="mr-2 rounded-md bg-surface-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-text-secondary">
               import
             </div>
@@ -399,7 +399,7 @@ export default function ComponentDetail() {
               className={[
                 "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 activeTab === id
-                  ? "bg-action-primary text-white shadow-sm"
+                  ? "bg-action-primary text-white shadow-xs"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
               ].join(" ")}
             >
@@ -537,7 +537,7 @@ function OverviewTab({
       {/* 5. Metadata Cards — Modern grid */}
       <div className="grid gap-4 lg:grid-cols-2">
         {apiItem && (apiItem.props ?? []).length > 0 && (
-          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10">
                 <FileCode2 className="h-3.5 w-3.5 text-blue-600" />
@@ -573,7 +573,7 @@ function OverviewTab({
         )}
 
         {apiItem && (apiItem.variantAxes ?? []).length > 0 && (
-          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10">
                 <Layers className="h-3.5 w-3.5 text-violet-600" />
@@ -596,7 +596,7 @@ function OverviewTab({
         )}
 
         {apiItem && (getEffectivePreviewStates(apiItem).length > 0 || getEffectiveBehaviorModel(apiItem).length > 0) && (
-          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10">
                 <Gamepad2 className="h-3.5 w-3.5 text-amber-600" />
@@ -645,7 +645,7 @@ function OverviewTab({
         )}
 
         {(indexItem?.whereUsed ?? []).length > 0 && (
-          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
                 <Globe className="h-3.5 w-3.5 text-emerald-600" />
@@ -695,7 +695,7 @@ function HeroPreview({ componentName }: { componentName: string }) {
           <button
             type="button"
             onClick={() => setShowCode(!showCode)}
-            className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-default/80 px-2.5 py-1.5 text-xs font-medium text-text-secondary backdrop-blur-sm transition hover:bg-surface-default hover:text-text-primary"
+            className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-default/80 px-2.5 py-1.5 text-xs font-medium text-text-secondary backdrop-blur-xs transition hover:bg-surface-default hover:text-text-primary"
           >
             {showCode ? (
               <>
@@ -752,7 +752,7 @@ function VariantGallerySection({
         <button
           type="button"
           onClick={() => setShowCode(!showCode)}
-          className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-default/80 px-2.5 py-1.5 text-xs font-medium text-text-secondary backdrop-blur-sm transition hover:bg-surface-default hover:text-text-primary"
+          className="flex items-center gap-1.5 rounded-lg border border-border-subtle bg-surface-default/80 px-2.5 py-1.5 text-xs font-medium text-text-secondary backdrop-blur-xs transition hover:bg-surface-default hover:text-text-primary"
         >
           {showCode ? (
             <>
@@ -791,7 +791,7 @@ function VariantGallerySection({
             return (
               <div
                 key={val}
-                className="flex flex-col items-center gap-3 rounded-2xl border border-border-subtle bg-surface-canvas p-4 transition hover:border-action-primary/30 hover:shadow-sm"
+                className="flex flex-col items-center gap-3 rounded-2xl border border-border-subtle bg-surface-canvas p-4 transition hover:border-action-primary/30 hover:shadow-xs"
                 style={isComplex ? { minHeight: 180 } : undefined}
               >
                 <div
@@ -1563,7 +1563,7 @@ function QualityTab({
 
       {/* ── KPI Metric Cards ── */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-sm">
+        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Lifecycle
           </Text>
@@ -1575,7 +1575,7 @@ function QualityTab({
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
-        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-sm">
+        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Maturity
           </Text>
@@ -1587,7 +1587,7 @@ function QualityTab({
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
-        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-sm">
+        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Props Count
           </Text>
@@ -1596,7 +1596,7 @@ function QualityTab({
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
-        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-sm">
+        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Where Used
           </Text>
@@ -1605,7 +1605,7 @@ function QualityTab({
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
-        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-sm">
+        <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Bundle Impact
           </Text>

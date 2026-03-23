@@ -63,7 +63,7 @@ export default function ComponentGroupListing() {
                       `/admin/design-lab/components/${groupId}/${encodeURIComponent(itemName.replace(/\//g, '~'))}`,
                     )
                   }
-                  className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left shadow-sm transition hover:border-action-primary/30 hover:shadow-md"
+                  className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left shadow-xs transition hover:border-action-primary/30 hover:shadow-md"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <Text

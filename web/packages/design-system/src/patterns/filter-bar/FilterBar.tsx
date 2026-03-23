@@ -73,6 +73,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
         {moreFilters && (
           <button
             type="button"
+            aria-expanded={showMore}
             onClick={() => setShowMore((v) => !v)}
             className={cn(
               "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium",

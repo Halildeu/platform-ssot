@@ -10,7 +10,7 @@ type ChartCardProps = {
 export const ChartCard: React.FC<ChartCardProps> = ({ chart, onDrillDown, children }) => {
   return (
     <div
-      className="rounded-lg border border-border-subtle bg-surface-primary p-4 shadow-sm"
+      className="rounded-lg border border-border-subtle bg-surface-primary p-4 shadow-xs"
       role="region"
       aria-label={chart.title}
     >

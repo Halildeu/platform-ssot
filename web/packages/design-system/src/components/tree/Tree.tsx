@@ -153,7 +153,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
       <li key={node.key} className="space-y-2">
         <div
           className={[
-            "rounded-[24px] border shadow-sm transition-colors",
+            "rounded-[24px] border shadow-xs transition-colors",
             toneClass[tone],
             depth > 0 ? "ms-0" : "",
             selected ? "ring-2 ring-state-info-border/60" : "",
@@ -268,7 +268,7 @@ export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
         </Text>
       ) : null}
 
-      <div className="mt-4 rounded-[26px] border border-border-subtle bg-surface-muted p-4 shadow-sm">
+      <div className="mt-4 rounded-[26px] border border-border-subtle bg-surface-muted p-4 shadow-xs">
         {loading ? (
           <div className="space-y-3" data-testid="tree-loading-state">
             {Array.from({ length: 3 }).map((_, index) => (

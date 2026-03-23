@@ -213,7 +213,7 @@ const GuidancePanel: React.FC<{
   guidance: ReturnType<typeof getPageGuidance>;
   className?: string;
 }> = ({ title, guidance, className }) => (
-  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm ${className ?? ''}`.trim()}>
+  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs ${className ?? ''}`.trim()}>
     <Text as="div" className="text-sm font-semibold text-text-primary">
       {title}
     </Text>
@@ -290,14 +290,14 @@ const PageOverviewTab: React.FC<{
 
   if (!template) {
     return (
-      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text variant="secondary">No page template selected yet.</Text>
       </div>
     );
   }
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Pages workspace</DetailLabel>
@@ -325,7 +325,7 @@ const PageOverviewTab: React.FC<{
             content: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>Template summary</DetailLabel>
                     <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
                       {template.title ?? template.recipeId}
@@ -345,7 +345,7 @@ const PageOverviewTab: React.FC<{
                     </div>
                   </div>
 
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>Quick status</DetailLabel>
                     <div className="mt-4 grid grid-cols-1 gap-3">
                       <MetricCard label="Building blocks" value={template.ownerBlocks.length} note="Shell icine baglanan canonical blocks" />
@@ -366,25 +366,25 @@ const PageOverviewTab: React.FC<{
             badge: <Badge variant="warning">{selectedTemplateSections.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Layout building blocks</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {template.ownerBlocks.length ? template.ownerBlocks.map((owner) => <SectionBadge key={owner} label={owner} />) : <Text variant="secondary">No building blocks attached.</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Regions and navigation coverage</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedTemplateSections.length ? selectedTemplateSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">No layout regions declared.</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Theme coverage</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedTemplateThemes.length ? selectedTemplateThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">No theme binding declared.</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Quality coverage</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedTemplateQualityGates.length ? selectedTemplateQualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">No template quality gates declared.</Text>}
@@ -421,7 +421,7 @@ const PageOverviewTab: React.FC<{
             badge: <Badge variant="warning">{TEMPLATE_GALLERY_ITEMS.length}</Badge>,
             content: (
               <div className="space-y-4">
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Template preview gallery</DetailLabel>
                   <Text variant="secondary" className="mt-1 block text-sm leading-6">
                     Farkli sayfa sablonlarinin layout yapisi, region haritasi ve kullanim amaci bir arada.
@@ -434,7 +434,7 @@ const PageOverviewTab: React.FC<{
                     return (
                       <div
                         key={item.templateId}
-                        className={`rounded-[24px] border p-4 shadow-sm transition-colors ${
+                        className={`rounded-[24px] border p-4 shadow-xs transition-colors ${
                           isActive
                             ? 'border-blue-300 bg-blue-50/50 dark:border-blue-700 dark:bg-blue-900/20'
                             : 'border-border-subtle bg-surface-default'
@@ -538,7 +538,7 @@ const PageApiTab: React.FC<{
   ];
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Page contract workspace</DetailLabel>
@@ -566,7 +566,7 @@ const PageApiTab: React.FC<{
             label: 'Contract',
             badge: <Badge variant="info">{template.ownerBlocks.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Template contract</DetailLabel>
                 <CodeBlock code={composeCode} className="mt-3" />
               </div>
@@ -577,7 +577,7 @@ const PageApiTab: React.FC<{
             label: 'Regions',
             badge: <Badge variant="warning">{selectedTemplateTracks.length || '—'}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Template region model</DetailLabel>
                 <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-1">
                   <MetricCard label="Template ID" value={template.recipeId} note="Canonical page template key" />
@@ -659,13 +659,13 @@ const PageUxTab: React.FC<{
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>Theme and expression</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
             {selectedTemplateThemes.length ? selectedTemplateThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">No theme binding declared.</Text>}
           </div>
         </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>Regions and navigation clarity</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
             {selectedTemplateSections.length ? selectedTemplateSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">No regions declared.</Text>}
@@ -674,7 +674,7 @@ const PageUxTab: React.FC<{
       </div>
 
       {/* Composition builder */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
         <div className="flex items-start justify-between gap-4">
           <div>
             <DetailLabel>Page composition builder</DetailLabel>
@@ -788,7 +788,7 @@ const PageQualityTab: React.FC<{
   }
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Page quality workspace</DetailLabel>
@@ -816,7 +816,7 @@ const PageQualityTab: React.FC<{
             label: 'Gates',
             badge: <Badge variant="info">{selectedTemplateQualityGates.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Template quality gates</DetailLabel>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {selectedTemplateQualityGates.length ? selectedTemplateQualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">No template quality gates declared.</Text>}
@@ -829,7 +829,7 @@ const PageQualityTab: React.FC<{
             label: 'Readiness',
             badge: <Badge variant="success">{selectedTemplateItems.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Template readiness</DetailLabel>
                 <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
                   <MetricCard label="Stable" value={selectedTemplateItems.filter((item) => item.lifecycle === 'stable').length} note="Stable blocks bound to the template" />

@@ -44,7 +44,7 @@ export const buildFormControlLivePreview = (
   switch (componentName) {
     case 'TextArea':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.textArea.live.authoring.title')}>
               <div className="space-y-4">
@@ -89,7 +89,7 @@ export const buildFormControlLivePreview = (
       );
     case 'Checkbox':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.checkbox.live.controlled.title')}>
               <div className="space-y-4">
@@ -129,7 +129,7 @@ export const buildFormControlLivePreview = (
       );
     case 'Radio':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.radio.live.controlled.title')}>
               <div className="space-y-3">
@@ -192,7 +192,7 @@ export const buildFormControlLivePreview = (
       );
     case 'Switch':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.switch.live.controlled.title')}>
               <div className="space-y-4">

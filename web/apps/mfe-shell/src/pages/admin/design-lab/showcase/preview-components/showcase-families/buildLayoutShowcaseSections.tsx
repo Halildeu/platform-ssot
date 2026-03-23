@@ -243,7 +243,7 @@ export const buildLayoutShowcaseSections = (
     badges: string[],
     profile: TemplateProfile,
   ) => (
-    <div className={`relative mb-3 overflow-hidden rounded-[22px] border px-4 py-4 shadow-sm ${profile.toneClassName}`}>
+    <div className={`relative mb-3 overflow-hidden rounded-[22px] border px-4 py-4 shadow-xs ${profile.toneClassName}`}>
       <div className={`absolute inset-x-0 top-0 h-1 ${profile.accentClassName}`} aria-hidden />
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
@@ -262,7 +262,7 @@ export const buildLayoutShowcaseSections = (
           <SectionBadge label={profile.experienceLabel} />
         </div>
       </div>
-      <div className="mt-3 rounded-[18px] border border-[var(--border-subtle)]/20 bg-[var(--surface-card,rgba(255,255,255,0.35))] px-3 py-3 backdrop-blur-sm">
+      <div className="mt-3 rounded-[18px] border border-[var(--border-subtle)]/20 bg-[var(--surface-card,rgba(255,255,255,0.35))] px-3 py-3 backdrop-blur-xs">
         {renderTemplateSilhouette(profile.silhouette)}
       </div>
       <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
@@ -322,7 +322,7 @@ export const buildLayoutShowcaseSections = (
                   ['Executive', 'KPI-first', 'MUI dashboard'],
                   templateProfiles['Dashboard Template'],
                 )}
-                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'ops-workspace', stickyHeader: false })}
                     title="Executive operations dashboard"
@@ -405,7 +405,7 @@ export const buildLayoutShowcaseSections = (
                   ['CRUD', 'Filters', 'Admin table'],
                   templateProfiles['CRUD Template'],
                 )}
-                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'ops-workspace', stickyHeader: false })}
                     title="User administration"
@@ -498,7 +498,7 @@ export const buildLayoutShowcaseSections = (
                   ['Inspector', 'Review', 'Decision detail'],
                   templateProfiles['Detail Template'],
                 )}
-                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'detail-sidebar', stickyHeader: false })}
                     title="Access decision detail"
@@ -563,7 +563,7 @@ export const buildLayoutShowcaseSections = (
                   ['Search-first', 'Command', 'Workspace'],
                   templateProfiles['Command Workspace'],
                 )}
-                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'ops-workspace', stickyHeader: false })}
                     title="Command workspace"
@@ -661,7 +661,7 @@ export const buildLayoutShowcaseSections = (
                   ['Settings', 'Tabs', 'Guardrails'],
                   templateProfiles['Settings Template'],
                 )}
-                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'detail-sidebar', stickyHeader: false })}
                     title="Workspace settings"
@@ -730,7 +730,7 @@ export const buildLayoutShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4">
               <PreviewPanel title={t('designlab.showcase.component.pageLayout.sections.directory.panelDirectory')}>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'ops-workspace', stickyHeader: false })}
                     title={t('designlab.showcase.component.pageLayout.sections.directory.shell.title')}
@@ -772,7 +772,7 @@ export const buildLayoutShowcaseSections = (
                       </FilterBar>
                     )}
                     detail={(
-                      <div className="space-y-3 rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                      <div className="space-y-3 rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                         <Text as="div" className="font-semibold">
                           {t('designlab.showcase.component.pageLayout.sections.directory.detail.title')}
                         </Text>
@@ -826,7 +826,7 @@ export const buildLayoutShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.pageLayout.sections.detail.panelCompact')}>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-4 shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'detail-sidebar', stickyHeader: false })}
                     title={t('designlab.showcase.component.pageLayout.sections.detail.shell.title')}
@@ -891,7 +891,7 @@ export const buildLayoutShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
               <PreviewPanel title="Ops shell">
-                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+                <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-xs">
                   <PageLayout
                     {...createPageLayoutPreset({ preset: 'ops-workspace', stickyHeader: false })}
                     title="Release cockpit"

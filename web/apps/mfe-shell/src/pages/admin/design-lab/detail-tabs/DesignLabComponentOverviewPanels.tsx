@@ -1382,7 +1382,7 @@ export const DesignLabComponentOverviewPanels: React.FC<DesignLabComponentOvervi
                 || recipe.recipeId === item.name.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
 
               return (
-                <div key={recipe.recipeId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <div key={recipe.recipeId} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-xs">
                   <div className="grid grid-cols-1 gap-4">
                     {renderRecipeComponentPreview(recipe.recipeId)}
                     <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4">

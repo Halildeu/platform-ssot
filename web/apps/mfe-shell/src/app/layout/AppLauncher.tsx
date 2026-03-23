@@ -107,7 +107,7 @@ const AppLauncher: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               key={item.key}
               to={item.to}
               onClick={onClose}
-              className="group block rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm shadow-sm hover:border-action-primary-border hover:bg-surface-muted"
+              className="group block rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm shadow-xs hover:border-action-primary-border hover:bg-surface-muted"
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-muted text-lg">

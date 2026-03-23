@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import type { AccessLevel } from "../../internal/access-controller";
-import { resolveAccessState } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  EmptyState — Placeholder for empty data views                      */
@@ -42,9 +42,11 @@ export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(({
   return (
   <div
     ref={ref}
+    data-access-state={accessState.state}
     className={cn(
       "flex flex-col items-center text-center",
       compact ? "py-6 px-4" : "py-12 px-6",
+      accessStyles(accessState.state),
       className,
     )}
   >

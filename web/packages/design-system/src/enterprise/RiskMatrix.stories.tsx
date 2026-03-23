@@ -44,3 +44,19 @@ export const SmallCompact: Story = {
     showLegend: false,
   },
 };
+
+export const Interactive: Story = {
+  args: {
+    risks: sampleRisks,
+    showLegend: true,
+    onCellClick: (risks: RiskItem[], l: number, i: number) =>
+      console.log(`Cell L${l}/I${i}:`, risks),
+  },
+};
+
+export const EmptyMatrix: Story = {
+  args: {
+    risks: [],
+    showLegend: true,
+  },
+};

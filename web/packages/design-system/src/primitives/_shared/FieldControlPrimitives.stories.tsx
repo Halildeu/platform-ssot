@@ -66,3 +66,42 @@ export const Optional: Story = {
     </FieldControlShell>
   ),
 };
+
+export const Disabled: Story = {
+  args: {
+    inputId: 'disabled-input',
+    label: 'Disabled field',
+    hint: 'This field is disabled',
+    required: false,
+  },
+  render: (args) => (
+    <FieldControlShell {...args}>
+      <input
+        id={args.inputId}
+        type="text"
+        placeholder="Cannot edit"
+        disabled
+        className="w-full rounded border px-3 py-2 opacity-50"
+      />
+    </FieldControlShell>
+  ),
+};
+
+export const WithLongLabel: Story = {
+  args: {
+    inputId: 'long-label-input',
+    label: 'A very long field label that might wrap to the next line in narrow containers',
+    hint: 'Hint text for the long label field',
+    required: true,
+  },
+  render: (args) => (
+    <FieldControlShell {...args}>
+      <input
+        id={args.inputId}
+        type="text"
+        placeholder="Enter value"
+        className="w-full rounded border px-3 py-2"
+      />
+    </FieldControlShell>
+  ),
+};

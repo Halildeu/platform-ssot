@@ -111,7 +111,7 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(
               e.stopPropagation();
               onClose?.();
             }}
-            className="shrink-0 rounded-sm p-0.5 opacity-60 transition hover:opacity-100"
+            className="shrink-0 rounded-xs p-0.5 opacity-60 transition hover:opacity-100"
             aria-label="Remove"
           >
             <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none">

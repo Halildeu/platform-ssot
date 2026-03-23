@@ -180,7 +180,7 @@ export const RecipesSidebarRenderer: React.FC<DesignLabSidebarRendererProps> = (
                         data-testid={`design-lab-recipe-${toSidebarTestIdSuffix(family.familyId)}`}
                         className={`w-full scroll-mt-4 rounded-2xl border px-3.5 py-3 text-left transition ${
                           active
-                            ? "border-action-primary/30 bg-surface-default shadow-sm ring-1 ring-action-primary/10"
+                            ? "border-action-primary/30 bg-surface-default shadow-xs ring-1 ring-action-primary/10"
                             : "border-border-subtle bg-surface-default hover:bg-surface-muted"
                         }`}
                       >

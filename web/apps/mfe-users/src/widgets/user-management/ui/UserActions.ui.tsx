@@ -101,7 +101,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
     <div className="relative inline-block" ref={containerRef}>
       <button
         type="button"
-        className="rounded-md border border-border-subtle bg-surface-default px-3 py-1 text-xs font-semibold text-text-secondary shadow-sm hover:bg-surface-muted"
+        className="rounded-md border border-border-subtle bg-surface-default px-3 py-1 text-xs font-semibold text-text-secondary shadow-xs hover:bg-surface-muted"
         onClick={(event) => {
           event.stopPropagation();
           setOpen((prev) => {

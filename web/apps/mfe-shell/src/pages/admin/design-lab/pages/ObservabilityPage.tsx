@@ -534,7 +534,7 @@ function LogStreamPanel() {
           href="http://localhost:3010/explore"
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-sm"
+          className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-xs"
         >
           <BarChart3 className="h-5 w-5 text-amber-600" />
           <div className="min-w-0 flex-1">
@@ -552,7 +552,7 @@ function LogStreamPanel() {
           href="http://localhost:3010/explore"
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-sm"
+          className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-xs"
         >
           <Activity className="h-5 w-5 text-indigo-600" />
           <div className="min-w-0 flex-1">

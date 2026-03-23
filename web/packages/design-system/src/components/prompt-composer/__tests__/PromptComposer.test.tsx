@@ -192,4 +192,29 @@ describe('PromptComposer — accessibility', () => {
     const { container } = render(<PromptComposer />);
     await expectNoA11yViolations(container);
   });
+
+  it('renders section element accessible via querySelector', () => {
+    const { container } = render(<PromptComposer />);
+    const section = container.querySelector('section');
+    expect(section).toBeInTheDocument();
+    expect(section?.tagName).toBe('SECTION');
+  });
+
+  it('scope buttons are accessible via role', () => {
+    render(<PromptComposer />);
+    expect(screen.getByRole('button', { name: 'general' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'approval' })).toBeInTheDocument();
+  });
+
+  it('tone buttons are accessible via role', () => {
+    render(<PromptComposer />);
+    expect(screen.getByRole('button', { name: 'neutral' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'strict' })).toBeInTheDocument();
+  });
+
+  it('text inputs are accessible via role', () => {
+    render(<PromptComposer />);
+    const textboxes = screen.getAllByRole('textbox');
+    expect(textboxes.length).toBeGreaterThanOrEqual(1);
+  });
 });

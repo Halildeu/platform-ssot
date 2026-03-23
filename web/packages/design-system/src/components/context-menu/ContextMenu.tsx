@@ -211,7 +211,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
                   if (!item.disabled) setFocusIndex(actionIdx);
                 }}
                 className={cn(
-                  "flex w-full items-center gap-2 px-3 py-1.5 text-sm outline-none transition-colors",
+                  "flex w-full items-center gap-2 px-3 py-1.5 text-sm outline-hidden transition-colors",
                   "disabled:opacity-50 disabled:cursor-not-allowed",
                   item.danger
                     ? cn(

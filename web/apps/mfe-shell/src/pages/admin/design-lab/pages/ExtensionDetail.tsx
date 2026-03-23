@@ -404,7 +404,7 @@ function SurfaceCard({ surface }: { surface: Surface }) {
   const overflowCount = Math.max(0, surface.capabilities.length - MAX_CAPS);
 
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface-default p-5 transition hover:shadow-sm">
+    <div className="rounded-2xl border border-border-subtle bg-surface-default p-5 transition hover:shadow-xs">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -504,7 +504,7 @@ function ExtComponents({
           onClick={() =>
             navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${encodeURIComponent(comp.name.replace(/\//g, '~'))}`)
           }
-          className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary/30 hover:shadow-sm"
+          className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary/30 hover:shadow-xs"
         >
           <div className="flex items-center justify-between gap-2">
             <Text className="text-sm font-semibold text-text-primary group-hover:text-action-primary">

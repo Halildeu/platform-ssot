@@ -61,7 +61,7 @@ export const buildNavigationUtilityLivePreview = (
       );
     case 'AnchorToc':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[320px_1fr]">
             <AnchorToc
               value={anchorValue}
@@ -75,7 +75,7 @@ export const buildNavigationUtilityLivePreview = (
                 { id: 'release', label: t('designlab.showcase.component.anchorToc.items.release'), level: 3, meta: 'P4' },
               ]}
             />
-            <div className="space-y-4 rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+            <div className="space-y-4 rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
               <PreviewPanel title={t('designlab.showcase.component.anchorToc.deepLink.title')}>
                 <div className="space-y-4">
                   <section id="overview" className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
@@ -110,7 +110,7 @@ export const buildNavigationUtilityLivePreview = (
       );
     case 'Empty':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <Empty description={t('designlab.showcase.component.empty.catalogGroup')} />
         </div>
       );

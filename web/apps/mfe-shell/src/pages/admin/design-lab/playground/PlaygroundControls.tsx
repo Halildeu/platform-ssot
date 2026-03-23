@@ -187,7 +187,7 @@ function SelectControl({
             className={[
               "rounded-lg px-2.5 py-1 text-xs font-medium transition",
               value === opt
-                ? "bg-action-primary text-white shadow-sm"
+                ? "bg-action-primary text-white shadow-xs"
                 : "bg-surface-muted text-text-secondary hover:bg-surface-canvas",
             ].join(" ")}
           >
@@ -222,7 +222,7 @@ function BooleanControl({
       >
         <span
           className={[
-            "pointer-events-none inline-block h-4 w-4 translate-y-0.5 rounded-full bg-[var(--surface-default,#fff)] shadow-sm transition-transform",
+            "pointer-events-none inline-block h-4 w-4 translate-y-0.5 rounded-full bg-[var(--surface-default,#fff)] shadow-xs transition-transform",
             value ? "translate-x-4" : "translate-x-0.5",
           ].join(" ")}
         />
@@ -250,7 +250,7 @@ function NumberControl({
         type="number"
         value={value}
         onChange={(e) => onChange(Number(e.target.value) || 0)}
-        className="h-8 w-full rounded-lg border border-border-subtle bg-surface-canvas px-2.5 text-xs text-text-primary focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary/20"
+        className="h-8 w-full rounded-lg border border-border-subtle bg-surface-canvas px-2.5 text-xs text-text-primary focus:border-action-primary focus:outline-hidden focus:ring-1 focus:ring-action-primary/20"
       />
     </div>
   );
@@ -274,7 +274,7 @@ function TextControl({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-8 w-full rounded-lg border border-border-subtle bg-surface-canvas px-2.5 text-xs text-text-primary focus:border-action-primary focus:outline-none focus:ring-1 focus:ring-action-primary/20"
+        className="h-8 w-full rounded-lg border border-border-subtle bg-surface-canvas px-2.5 text-xs text-text-primary focus:border-action-primary focus:outline-hidden focus:ring-1 focus:ring-action-primary/20"
       />
     </div>
   );

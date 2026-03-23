@@ -265,7 +265,7 @@ export const AuditSummaryStrip: React.FC = () => {
             </button>
             <button
               type="button"
-              className="inline-flex items-center rounded-full border border-action-primary-border bg-action-primary px-3 py-1.5 text-xs font-semibold text-action-primary-text shadow-sm transition hover:opacity-90 disabled:opacity-60"
+              className="inline-flex items-center rounded-full border border-action-primary-border bg-action-primary px-3 py-1.5 text-xs font-semibold text-action-primary-text shadow-xs transition hover:opacity-90 disabled:opacity-60"
               onClick={() => navigate('/audit/events')}
               disabled={!canReadAudit}
             >
@@ -284,7 +284,7 @@ export const AuditSummaryStrip: React.FC = () => {
           {state.groups.map((group) => (
             <article
               key={group.groupId}
-              className="rounded-2xl border border-border-subtle bg-surface-default px-4 py-3 shadow-sm"
+              className="rounded-2xl border border-border-subtle bg-surface-default px-4 py-3 shadow-xs"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">

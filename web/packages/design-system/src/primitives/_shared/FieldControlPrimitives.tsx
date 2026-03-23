@@ -26,9 +26,9 @@ const fieldShellClass: Record<FieldTone, string> = {
 
 const fieldSurfaceClass: Record<FieldTone, string> = {
   default:
-    "bg-surface-default shadow-sm ring-1 ring-border-subtle/20 backdrop-blur-sm",
+    "bg-surface-default shadow-xs ring-1 ring-border-subtle/20 backdrop-blur-xs",
   invalid:
-    "bg-surface-default shadow-sm ring-1 ring-border-subtle/20 backdrop-blur-sm",
+    "bg-surface-default shadow-xs ring-1 ring-border-subtle/20 backdrop-blur-xs",
   readonly:
     "bg-surface-muted ring-1 ring-border-subtle/15",
   disabled:
@@ -101,7 +101,7 @@ export const getFieldInputClass = (
   density: FieldDensity = "comfortable",
 ) =>
   cn(
-    "min-w-0 flex-1 border-0 bg-transparent p-0 text-text-primary placeholder:text-[var(--text-disabled)]/90 focus:outline-none focus:ring-0 disabled:cursor-not-allowed disabled:text-[var(--text-disabled)]",
+    "min-w-0 flex-1 border-0 bg-transparent p-0 text-text-primary placeholder:text-[var(--text-disabled)]/90 focus:outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:text-[var(--text-disabled)]",
     fieldInputTextClass[size],
     density === "compact" ? "leading-5" : undefined,
     className,

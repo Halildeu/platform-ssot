@@ -103,7 +103,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             "bg-[var(--surface-canvas)] text-text-primary",
             "border-border-subtle",
             "placeholder:text-[var(--text-disabled)]",
-            "focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-action-primary/20",
+            "focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-action-primary/20",
             "[&::-webkit-search-cancel-button]:hidden",
             sizeStyles[resolvedSize],
             (hasValue && clearable) || shortcutHint ? "pe-14" : "",

@@ -148,11 +148,11 @@ export const ShellHeader: React.FC = () => {
       style={{ backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)" }}
       className="sticky top-0 z-50 bg-surface-header px-6 py-2"
     >
-      <div className="flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-panel px-3 py-2 shadow-sm">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-border-subtle bg-surface-panel px-3 py-2 shadow-xs">
         <div className="flex flex-1 items-center gap-2 min-w-0">
           <button
             type="button"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-action-secondary-border bg-action-secondary text-action-secondary-text shadow-sm transition hover:opacity-90"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-action-secondary-border bg-action-secondary text-action-secondary-text shadow-xs transition hover:opacity-90"
             onClick={() => setLauncherOpen((prev) => !prev)}
             aria-label={t("shell.launcher.title")}
             title={t("shell.launcher.title")}
@@ -179,7 +179,7 @@ export const ShellHeader: React.FC = () => {
               {t("shell.header.language")}:
             </span>
             <select
-              className="h-8 rounded-md border border-action-secondary-border bg-action-secondary px-2 text-xs font-semibold text-action-secondary-text focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+              className="h-8 rounded-md border border-action-secondary-border bg-action-secondary px-2 text-xs font-semibold text-action-secondary-text focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
               value={i18nManager.getLocale()}
               aria-label={t("shell.header.languageSelectAria")}
               onChange={(event) => {
@@ -247,7 +247,7 @@ export const ShellHeader: React.FC = () => {
           ) : (
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded-full border border-action-primary-border bg-action-primary px-4 py-2 text-xs font-semibold text-action-primary-text shadow-sm hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full border border-action-primary-border bg-action-primary px-4 py-2 text-xs font-semibold text-action-primary-text shadow-xs hover:opacity-90"
               onClick={() => {
                 setLoginOpen(false);
                 keycloak

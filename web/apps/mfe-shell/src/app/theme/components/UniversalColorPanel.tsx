@@ -132,12 +132,12 @@ const UniversalColorPanel: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-panel p-3 shadow-sm">
+    <div className="flex flex-col gap-3 rounded-2xl border border-border-subtle bg-surface-panel p-3 shadow-xs">
       <div className="grid grid-cols-1 gap-2 text-xs font-semibold text-text-secondary sm:grid-cols-3">
         <label className="flex flex-col gap-1">
           <span>{resolvedLocaleText.hexLabel}</span>
           <input
-            className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             defaultValue={rgbaToHex(local)}
             value={rgbaToHex(local)}
             onChange={(e) => handleHexChange(e.target.value)}
@@ -147,7 +147,7 @@ const UniversalColorPanel: React.FC<Props> = ({
         <label className="flex flex-col gap-1">
           <span>{resolvedLocaleText.rgbaLabel}</span>
           <input
-            className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={`rgba(${Math.round(local.r)}, ${Math.round(local.g)}, ${Math.round(local.b)}, ${local.a.toFixed(2)})`}
             onChange={(e) => handleRgbaChange(e.target.value)}
             aria-label={resolvedLocaleText.rgbaAriaLabel}
@@ -156,7 +156,7 @@ const UniversalColorPanel: React.FC<Props> = ({
         <label className="flex flex-col gap-1">
           <span>{resolvedLocaleText.hslLabel}</span>
           <input
-            className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            className="h-9 rounded-md border border-border-subtle bg-surface-panel px-2 text-sm font-mono text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={formatHsl(local)}
             onChange={(e) => handleHslChange(e.target.value)}
             aria-label={resolvedLocaleText.hslAriaLabel}
@@ -205,7 +205,7 @@ const UniversalColorPanel: React.FC<Props> = ({
               aria-label={resolvedLocaleText.hueAriaLabel}
             />
             <div
-              className="pointer-events-none absolute top-1/2 h-6 w-6 -translate-y-1/2 -translate-x-1/2 rounded-full border border-border-subtle shadow-sm"
+              className="pointer-events-none absolute top-1/2 h-6 w-6 -translate-y-1/2 -translate-x-1/2 rounded-full border border-border-subtle shadow-xs"
               style={{
                 left: `${(hsl.h / 360) * 100}%`,
                 background: `hsl(${hsl.h}, 100%, 50%)`,
@@ -239,8 +239,8 @@ const UniversalColorPanel: React.FC<Props> = ({
                 <button
                   key={option.id}
                   type="button"
-                  className={`flex h-10 w-full items-center justify-center rounded-lg border text-[11px] font-medium transition focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 ${
-                    active ? 'border-action-primary-border shadow-sm' : 'border-border-subtle hover:border-text-secondary'
+                  className={`flex h-10 w-full items-center justify-center rounded-lg border text-[11px] font-medium transition focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 ${
+                    active ? 'border-action-primary-border shadow-xs' : 'border-border-subtle hover:border-text-secondary'
                   }`}
                   style={{ background: option.color || 'var(--surface-panel-bg)' }}
                   aria-pressed={active}

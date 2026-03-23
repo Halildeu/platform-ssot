@@ -183,7 +183,7 @@ export const DynamicReportPage: React.FC<DynamicReportPageProps> = ({ module, re
 
   if (metaLoading) {
     return (
-      <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
         <div className="h-4 w-36 animate-pulse rounded-full bg-surface-muted" />
       </div>
     );
@@ -206,7 +206,7 @@ export const DynamicReportPage: React.FC<DynamicReportPageProps> = ({ module, re
           </button>
         }
       >
-        <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
           <ReportFilterPanel
             loading={loading}
             onSubmit={handleSubmit}

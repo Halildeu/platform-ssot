@@ -176,7 +176,7 @@ export const buildOverlayShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
               <PreviewPanel title="Confirm yüzeyi">
-                <div className="rounded-3xl border border-border-subtle bg-surface-default p-4 shadow-sm">
+                <div className="rounded-3xl border border-border-subtle bg-surface-default p-4 shadow-xs">
                   <Text preset="title">Onay modalı</Text>
                   <Text variant="secondary" className="mt-2 block leading-7">
                     Hafif vurgu, sakin aksiyon seti ve düşük riskli akışlar için uygun bir dil üretir.
@@ -188,7 +188,7 @@ export const buildOverlayShowcaseSections = (
                 </div>
               </PreviewPanel>
               <PreviewPanel title="Destructive yüzeyi">
-                <div className="rounded-3xl border border-state-danger-border bg-state-danger-bg/60 p-4 shadow-sm">
+                <div className="rounded-3xl border border-state-danger-border bg-state-danger-bg/60 p-4 shadow-xs">
                   <Text preset="title" className="text-state-danger-text">Yıkıcı modal</Text>
                   <Text className="mt-2 block leading-7 text-state-danger-text/90">
                     Silme, reset veya erişim kaldırma gibi geri alınamaz işlemler için daha sert bir sınır kullanır.
@@ -200,7 +200,7 @@ export const buildOverlayShowcaseSections = (
                 </div>
               </PreviewPanel>
               <PreviewPanel title="Audit yüzeyi">
-                <div className="rounded-3xl border border-border-subtle bg-surface-canvas p-4 shadow-sm">
+                <div className="rounded-3xl border border-border-subtle bg-surface-canvas p-4 shadow-xs">
                   <Text preset="title">Audit modalı</Text>
                   <Text variant="secondary" className="mt-2 block leading-7">
                     Kanıt, kaynak ve karar bağlamını daha sakin ama yoğun bir yüzeyde toplar.

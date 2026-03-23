@@ -349,7 +349,7 @@ export const buildSearchFilterShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <PreviewPanel title={t('designlab.showcase.component.reportFilterPanel.sections.submit.panelInteractive')}>
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <ReportFilterPanel
                     onSubmit={() => setReportStatus(t('designlab.seed.reportStatus.applied'))}
                     onReset={() => setReportStatus(t('designlab.seed.reportStatus.reset'))}
@@ -402,7 +402,7 @@ export const buildSearchFilterShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.reportFilterPanel.sections.readonly.panelReadonly')}>
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <ReportFilterPanel access="readonly" onSubmit={() => undefined} onReset={() => undefined}>
                     <TextInput
                       label={t('designlab.showcase.component.reportFilterPanel.sections.readonly.fields.search')}
@@ -458,7 +458,7 @@ export const buildSearchFilterShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
               <PreviewPanel title="Analytics panel">
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <ReportFilterPanel
                     onSubmit={() => setReportStatus('Analytics filter applied')}
                     onReset={() => setReportStatus('Analytics filter reset')}

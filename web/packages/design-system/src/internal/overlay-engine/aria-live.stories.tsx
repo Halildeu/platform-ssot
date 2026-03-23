@@ -21,3 +21,7 @@ export const Polite: Story = {
 export const Assertive: Story = {
   render: () => <div>AriaLiveRegion — assertive announcements for urgent updates</div>,
 };
+
+export const AutoClear: Story = {
+  render: () => <div>AriaLiveRegion — messages auto-clear after 5 seconds</div>,
+};

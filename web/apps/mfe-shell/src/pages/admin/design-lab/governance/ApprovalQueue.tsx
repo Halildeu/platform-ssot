@@ -79,7 +79,7 @@ export function ApprovalQueue({ pendingOnly = true }: ApprovalQueueProps) {
           onChange={(e) =>
             setTypeFilter(e.target.value as ApprovalType | "all")
           }
-          className="h-7 rounded-lg border border-border-subtle bg-surface-canvas px-2 text-xs text-text-primary focus:outline-none"
+          className="h-7 rounded-lg border border-border-subtle bg-surface-canvas px-2 text-xs text-text-primary focus:outline-hidden"
         >
           <option value="all">All types</option>
           {(Object.keys(TYPE_LABELS) as ApprovalType[]).map((t) => (
@@ -123,7 +123,7 @@ function ApprovalRequestCard({
   onReject: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-border-subtle bg-surface-default px-4 py-3 transition hover:shadow-sm">
+    <div className="rounded-xl border border-border-subtle bg-surface-default px-4 py-3 transition hover:shadow-xs">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">

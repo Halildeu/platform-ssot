@@ -35,7 +35,7 @@ const TOKEN_GROUPS = [
     preview: (
       <div className="mt-3 flex gap-1">
         {MINI_PALETTE.map((c) => (
-          <div key={c} className="h-5 w-5 rounded-md shadow-sm" style={{ backgroundColor: c }} />
+          <div key={c} className="h-5 w-5 rounded-md shadow-xs" style={{ backgroundColor: c }} />
         ))}
       </div>
     ),
@@ -63,7 +63,7 @@ const TOKEN_GROUPS = [
     preview: (
       <div className="mt-3 flex items-end gap-1">
         {MINI_SPACINGS.map((s) => (
-          <div key={s} className="w-2 rounded-sm bg-emerald-500/25" style={{ height: `${Math.min(s, 32)}px` }} />
+          <div key={s} className="w-2 rounded-xs bg-emerald-500/25" style={{ height: `${Math.min(s, 32)}px` }} />
         ))}
       </div>
     ),
@@ -108,7 +108,7 @@ const TOKEN_GROUPS = [
     preview: (
       <div className="mt-3 flex items-end gap-0.5">
         {[0, 1000, 1200, 1400, 1600, 1800].map((z, i) => (
-          <div key={z} className="w-4 rounded-sm bg-indigo-500/20" style={{ height: `${8 + i * 4}px` }} />
+          <div key={z} className="w-4 rounded-xs bg-indigo-500/20" style={{ height: `${8 + i * 4}px` }} />
         ))}
       </div>
     ),
@@ -136,7 +136,7 @@ const TOKEN_GROUPS = [
     preview: (
       <div className="mt-3 flex items-end gap-1">
         {[8, 12, 16, 22, 28, 32].map((w, i) => (
-          <div key={i} className="rounded-sm bg-cyan-500/25" style={{ width: `${w}px`, height: "18px" }} />
+          <div key={i} className="rounded-xs bg-cyan-500/25" style={{ width: `${w}px`, height: "18px" }} />
         ))}
       </div>
     ),
@@ -164,10 +164,10 @@ const TOKEN_GROUPS = [
     preview: (
       <div className="mt-3 flex items-center gap-1.5">
         {[1, 2, 4].map((w) => (
-          <div key={w} className="h-5 w-5 rounded-sm bg-transparent" style={{ border: `${w}px solid rgba(20,184,166,0.4)` }} />
+          <div key={w} className="h-5 w-5 rounded-xs bg-transparent" style={{ border: `${w}px solid rgba(20,184,166,0.4)` }} />
         ))}
-        <div className="h-5 w-5 rounded-sm bg-transparent" style={{ border: "2px dashed rgba(20,184,166,0.4)" }} />
-        <div className="h-5 w-5 rounded-sm bg-transparent" style={{ outline: "2px solid rgba(20,184,166,0.4)", outlineOffset: "2px" }} />
+        <div className="h-5 w-5 rounded-xs bg-transparent" style={{ border: "2px dashed rgba(20,184,166,0.4)" }} />
+        <div className="h-5 w-5 rounded-xs bg-transparent" style={{ outline: "2px solid rgba(20,184,166,0.4)", outlineOffset: "2px" }} />
       </div>
     ),
   },
@@ -190,7 +190,7 @@ export default function DesignTokensListing() {
           }}
         />
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-sm">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-xs">
             <Palette className="h-3 w-3" />
             10 token groups
           </div>

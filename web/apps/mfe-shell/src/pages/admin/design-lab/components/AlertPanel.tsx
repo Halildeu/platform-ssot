@@ -50,7 +50,7 @@ export function AlertPanel({ alerts }: AlertPanelProps) {
               </div>
             </div>
             {alert.action && (
-              <a href={alert.action.href} className="flex items-center gap-1 rounded-lg bg-white/80 px-3 py-1.5 text-xs font-medium text-text-primary shadow-sm transition hover:bg-white">
+              <a href={alert.action.href} className="flex items-center gap-1 rounded-lg bg-white/80 px-3 py-1.5 text-xs font-medium text-text-primary shadow-xs transition hover:bg-white">
                 {alert.action.label}
                 <ExternalLink className="h-3 w-3" />
               </a>

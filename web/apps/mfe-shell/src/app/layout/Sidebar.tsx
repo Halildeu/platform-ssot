@@ -216,7 +216,7 @@ export const Sidebar: React.FC = () => {
   const linkBaseClass = (active: boolean) => (
     `group flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition ` +
     (active
-      ? 'border-border-default bg-surface-muted text-text-primary shadow-sm'
+      ? 'border-border-default bg-surface-muted text-text-primary shadow-xs'
       : 'border-transparent bg-transparent text-text-secondary hover:bg-surface-muted hover:text-text-primary')
   );
 
@@ -234,13 +234,13 @@ export const Sidebar: React.FC = () => {
   return (
     <aside
       data-testid="sidebar-root"
-      className={`flex min-h-0 flex-col border-r border-border-subtle bg-surface-panel shadow-sm ${
+      className={`flex min-h-0 flex-col border-r border-border-subtle bg-surface-panel shadow-xs ${
         isCollapsed ? 'w-[76px]' : 'w-[280px]'
       }`}
     >
       <div className="flex items-center justify-between gap-2 px-3 py-3">
         <div className={`flex items-center gap-2 ${isCollapsed ? 'justify-center w-full' : ''}`}>
-          <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-border-subtle bg-surface-default text-text-primary shadow-sm">
+          <div className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-border-subtle bg-surface-default text-text-primary shadow-xs">
             <span aria-hidden>⬛</span>
           </div>
           {!isCollapsed ? (
@@ -277,7 +277,7 @@ export const Sidebar: React.FC = () => {
           type="button"
           data-testid="sidebar-search"
           onClick={openCommandPalette}
-          className={`flex w-full items-center gap-2 rounded-2xl border border-border-subtle bg-surface-default px-3 py-2 text-left text-sm text-text-secondary shadow-sm hover:bg-surface-muted hover:text-text-primary ${
+          className={`flex w-full items-center gap-2 rounded-2xl border border-border-subtle bg-surface-default px-3 py-2 text-left text-sm text-text-secondary shadow-xs hover:bg-surface-muted hover:text-text-primary ${
             isCollapsed ? 'justify-center px-0' : ''
           }`}
           title="Search (Ctrl+K)"
@@ -315,7 +315,7 @@ export const Sidebar: React.FC = () => {
               type="button"
               data-testid="nav-folders"
               onClick={handleToggleFolders}
-              className={`flex w-full items-center gap-2 rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-left text-sm font-semibold text-text-primary shadow-sm hover:bg-surface-muted ${
+              className={`flex w-full items-center gap-2 rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-left text-sm font-semibold text-text-primary shadow-xs hover:bg-surface-muted ${
                 isCollapsed ? 'justify-center px-0' : ''
               }`}
               title="Folders"

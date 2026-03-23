@@ -168,7 +168,7 @@ export const SessionAuditShortcut: React.FC<SessionAuditShortcutProps> = ({ emai
     <button
       type="button"
       data-testid={testId}
-      className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-panel px-3 py-1.5 text-xs font-semibold text-text-primary shadow-sm transition hover:bg-surface-muted"
+      className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-panel px-3 py-1.5 text-xs font-semibold text-text-primary shadow-xs transition hover:bg-surface-muted"
       onClick={() => {
         navigate(target);
       }}

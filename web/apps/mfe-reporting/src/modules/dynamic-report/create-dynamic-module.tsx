@@ -25,7 +25,7 @@ export const createDynamicReportModule = (
     }),
     renderFilters: ({ values, setFieldValue }) => {
       const inputClass =
-        'w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
+        'w-full rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
       const labelClass =
         'flex flex-col gap-1 text-xs font-medium text-text-secondary min-w-[200px]';
 

@@ -66,7 +66,7 @@ export const DesignLabRightRail: React.FC<DesignLabRightRailProps> = ({
               aria-label={openLabel}
               title={openLabel}
               onClick={onToggle}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle bg-surface-panel text-text-secondary shadow-sm transition hover:bg-surface-muted hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle bg-surface-panel text-text-secondary shadow-xs transition hover:bg-surface-muted hover:text-text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2"
             >
               <PanelRightOpen className="h-4 w-4" aria-hidden />
             </button>
@@ -81,7 +81,7 @@ export const DesignLabRightRail: React.FC<DesignLabRightRailProps> = ({
                 aria-label={closeLabel}
                 title={closeLabel}
                 onClick={onToggle}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle bg-surface-panel text-text-secondary shadow-sm transition hover:bg-surface-muted hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle bg-surface-panel text-text-secondary shadow-xs transition hover:bg-surface-muted hover:text-text-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2"
               >
                 <PanelRightClose className="h-4 w-4" aria-hidden />
               </button>

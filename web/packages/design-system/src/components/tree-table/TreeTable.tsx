@@ -216,7 +216,7 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
         </Text>
       ) : null}
 
-      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-sm">
+      <div className="mt-4 overflow-hidden rounded-[26px] border border-border-subtle bg-surface-default shadow-xs">
         {!loading && visibleNodes.length === 0 ? (
           <div className="p-5">
             <Empty description={resolvedEmptyFallbackDescription} />

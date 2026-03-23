@@ -117,7 +117,7 @@ export const OverlaySurface: React.FC<OverlaySurfaceProps> = ({
       aria-label={ariaLabel}
       aria-modal="true"
       className={cn(
-        "fixed inset-0 z-50 bg-black/30 backdrop-blur-sm transition-opacity duration-300",
+        "fixed inset-0 z-50 bg-black/30 backdrop-blur-xs transition-opacity duration-300",
         open ? "opacity-100" : "pointer-events-none opacity-0",
         viewportClassName,
       )}

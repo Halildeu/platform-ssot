@@ -3641,7 +3641,7 @@ const DesignLabPage: React.FC = () => {
   const renderOverviewTab = (item: DesignLabIndexItem | null) => {
     if (!item) {
       return (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text variant="secondary">{t('designlab.overview.empty')}</Text>
         </div>
       );
@@ -3674,7 +3674,7 @@ const DesignLabPage: React.FC = () => {
 
     return (
       <div className="grid grid-cols-1 gap-4">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
               <DetailLabel>{t('designlab.overview.workspace.title')}</DetailLabel>
@@ -3717,7 +3717,7 @@ const DesignLabPage: React.FC = () => {
   const renderComponentGeneralTab = (item: DesignLabIndexItem | null) => {
     if (!item) {
       return (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text variant="secondary">{t('designlab.general.component.empty')}</Text>
         </div>
       );
@@ -3725,7 +3725,7 @@ const DesignLabPage: React.FC = () => {
 
     return (
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
               <DetailLabel>{t('designlab.general.component.title')}</DetailLabel>
@@ -3770,7 +3770,7 @@ const DesignLabPage: React.FC = () => {
           ) : null}
         </div>
 
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.general.component.releaseIdentity')}</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
             <Badge variant={item.availability === 'exported' ? 'success' : 'info'}>{availabilityLabel[item.availability]}</Badge>
@@ -3830,7 +3830,7 @@ const DesignLabPage: React.FC = () => {
   const renderRecipeGeneralTab = () => {
     if (!selectedFamily) {
       return (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text variant="secondary">{t('designlab.general.recipe.empty')}</Text>
         </div>
       );
@@ -3838,7 +3838,7 @@ const DesignLabPage: React.FC = () => {
 
     return (
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
               <DetailLabel>{t('designlab.general.recipe.title')}</DetailLabel>
@@ -3867,7 +3867,7 @@ const DesignLabPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.general.recipe.identity')}</DetailLabel>
           <div className="mt-4 space-y-3">
             <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
@@ -3918,7 +3918,7 @@ const DesignLabPage: React.FC = () => {
   const renderPageGeneralTab = () => {
     if (!selectedPageTemplate) {
       return (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
           <Text variant="secondary">{t('designlab.hero.placeholder.page')}</Text>
         </div>
       );
@@ -3926,7 +3926,7 @@ const DesignLabPage: React.FC = () => {
 
     return (
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
             <div>
               <DetailLabel>{t('designlab.lens.pages.title')}</DetailLabel>
@@ -3955,7 +3955,7 @@ const DesignLabPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.tabs.general.label')}</DetailLabel>
           <div className="mt-4 space-y-3">
             <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
@@ -4892,7 +4892,7 @@ const DesignLabPage: React.FC = () => {
   const lensOverviewPanel = lensOverviewCards.length ? (
     <section
       data-testid="design-lab-lens-overview"
-      className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm"
+      className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
@@ -4958,7 +4958,7 @@ const DesignLabPage: React.FC = () => {
                       data-testid={`design-lab-all-family-${toTestIdSuffix(card.key)}`}
                       className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-semibold transition ${
                         card.groupId && selectedGroup?.id === card.groupId
-                          ? 'border-action-primary/40 bg-surface-default text-text-primary shadow-sm'
+                          ? 'border-action-primary/40 bg-surface-default text-text-primary shadow-xs'
                           : 'border-border-subtle bg-surface-canvas text-text-secondary hover:bg-surface-muted'
                       }`}
                     >
@@ -5029,7 +5029,7 @@ const DesignLabPage: React.FC = () => {
               </div>
               <SectionBadge label={card.primaryMetric} />
             </div>
-            <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-sm">
+            <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-xs">
               {renderOverviewSilhouette(card.silhouette)}
             </div>
             <Text variant="secondary" className="mt-2 block text-xs leading-5">
@@ -5108,7 +5108,7 @@ const DesignLabPage: React.FC = () => {
   const pageTemplateLandingPanel = pageTemplateLandingCards.length ? (
     <section
       data-testid="design-lab-page-template-overview"
-      className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm"
+      className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
@@ -5253,7 +5253,7 @@ const DesignLabPage: React.FC = () => {
                       </div>
                       <SectionBadge label={active ? 'Active template' : 'Open template'} />
                     </div>
-                    <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-sm">
+                    <div className="mt-3 rounded-[18px] border border-white/70 bg-white/35 px-3 py-3 backdrop-blur-xs">
                       {renderOverviewSilhouette(card.silhouette)}
                     </div>
                     <Text variant="secondary" className="mt-2 block text-xs leading-5">

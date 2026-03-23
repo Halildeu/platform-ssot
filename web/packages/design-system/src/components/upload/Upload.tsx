@@ -145,7 +145,7 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
         <label
           htmlFor={inputId}
           className={cn(
-            "block border border-dashed shadow-sm transition",
+            "block border border-dashed shadow-xs transition",
             sizeClass[size],
             tone === "invalid"
               ? "border-state-danger-text bg-surface-muted"

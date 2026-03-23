@@ -254,7 +254,7 @@ export default function DesignLabLanding() {
         />
 
         <div className="relative text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-4 py-1.5 text-xs font-medium text-text-secondary backdrop-blur-sm">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-4 py-1.5 text-xs font-medium text-text-secondary backdrop-blur-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-state-success-bg" />
             {t("designlab.sidebar.itemCount", { count: totalExported })}
           </div>
@@ -290,7 +290,7 @@ export default function DesignLabLanding() {
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
                 placeholder={t("designlab.landing.search.placeholder")}
-                className="h-14 w-full rounded-2xl bg-transparent pl-12 pr-16 text-base text-text-primary outline-none placeholder:text-text-secondary/60"
+                className="h-14 w-full rounded-2xl bg-transparent pl-12 pr-16 text-base text-text-primary outline-hidden placeholder:text-text-secondary/60"
               />
               <kbd className="pointer-events-none absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-lg border border-border-subtle bg-surface-canvas px-2 py-1 text-[10px] font-medium text-text-secondary sm:inline-block">
                 ⌘K

@@ -129,11 +129,11 @@ const sizeClassNames: Record<NavigationRailSize, string> = {
 
 const rootClassByAppearance: Record<NavigationRailAppearance, string> = {
   default:
-    "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_22px_48px_-32px_var(--shadow-color,rgba(15,23,42,0.28))] backdrop-blur-sm",
+    "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_22px_48px_-32px_var(--shadow-color,rgba(15,23,42,0.28))] backdrop-blur-xs",
   outline:
-    "border border-border-default/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_18px_40px_-34px_var(--shadow-color,rgba(15,23,42,0.24))] backdrop-blur-sm",
+    "border border-border-default/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_18px_40px_-34px_var(--shadow-color,rgba(15,23,42,0.24))] backdrop-blur-xs",
   ghost:
-    "border border-transparent bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_14px_34px_-32px_var(--shadow-color,rgba(15,23,42,0.18))] backdrop-blur-sm",
+    "border border-transparent bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_14px_34px_-32px_var(--shadow-color,rgba(15,23,42,0.18))] backdrop-blur-xs",
 };
 
 function getEnabledValues(items: NavigationRailItem[]): string[] {
@@ -433,7 +433,7 @@ export const NavigationRail = React.forwardRef<
         <span
           className={cn(
             "navigation-rail-badge inline-flex min-w-6 items-center justify-center rounded-full border border-border-subtle bg-surface-panel px-2 py-0.5 text-[11px] font-medium text-text-primary",
-            "shadow-[0_10px_22px_-18px_var(--shadow-color,rgba(15,23,42,0.24))] ring-1 ring-border-subtle/20 backdrop-blur-sm",
+            "shadow-[0_10px_22px_-18px_var(--shadow-color,rgba(15,23,42,0.24))] ring-1 ring-border-subtle/20 backdrop-blur-xs",
             compact && "absolute right-1 top-1",
             classes?.badge,
           )}

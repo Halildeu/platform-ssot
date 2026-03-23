@@ -431,7 +431,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
             >
               {/* Indicator dot */}
               <div
-                className="absolute w-3 h-3 rounded-full border-2 border-white shadow-sm pointer-events-none -translate-x-1/2 -translate-y-1/2"
+                className="absolute w-3 h-3 rounded-full border-2 border-white shadow-xs pointer-events-none -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `${hsv.s}%`,
                   top: `${100 - hsv.v}%`,
@@ -474,7 +474,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                   className={cn(
                     "flex-1 rounded border border-border-subtle px-2 py-1",
                     "bg-[var(--surface-primary,#ffffff)] text-text-primary",
-                    "focus:outline-none focus:ring-1 focus:ring-[var(--ring-color,#3b82f6)]",
+                    "focus:outline-hidden focus:ring-1 focus:ring-[var(--ring-color,#3b82f6)]",
                     sizeConfig.font,
                     "font-mono",
                   )}
@@ -504,7 +504,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                           key={color}
                           type="button"
                           className={cn(
-                            "rounded-sm border transition-transform duration-100",
+                            "rounded-xs border transition-transform duration-100",
                             `hover:scale-110 ${focusRingClass("ring")}`,
                             color.toLowerCase() === currentValue.toLowerCase()
                               ? "border-[var(--border-active,#3b82f6)] ring-1 ring-[var(--ring-color,#3b82f6)]"

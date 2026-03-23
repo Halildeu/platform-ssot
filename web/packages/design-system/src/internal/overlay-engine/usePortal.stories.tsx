@@ -24,3 +24,7 @@ export const WithCustomId: Story = {
 export const Cleanup: Story = {
   render: () => <div>usePortal — portal container removed on unmount</div>,
 };
+
+export const Disabled: Story = {
+  render: () => <div>usePortal — renders inline when enabled=false (no portal container created)</div>,
+};

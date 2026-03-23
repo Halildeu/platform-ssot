@@ -45,3 +45,22 @@ export const Empty: Story = {
     emptyDescription: 'No new notifications at this time.',
   },
 };
+
+export const WithFilters: Story = {
+  args: {
+    items: sampleItems,
+    title: 'Notifications',
+    showFilters: true,
+    onFilterChange: (filter: string) => console.log('Filter:', filter),
+    onMarkAllRead: () => console.log('Mark all read'),
+  },
+};
+
+export const Selectable: Story = {
+  args: {
+    items: sampleItems,
+    title: 'Notifications',
+    selectable: true,
+    onSelectedIdsChange: (ids: string[]) => console.log('Selected:', ids),
+  },
+};

@@ -106,12 +106,12 @@ export function OwnershipPanel() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search components..."
-          className="h-8 flex-1 rounded-lg border border-border-subtle bg-surface-canvas px-3 text-xs text-text-primary placeholder:text-text-secondary focus:border-border-default focus:outline-none focus:ring-1 focus:ring-[var(--accent-focus)]"
+          className="h-8 flex-1 rounded-lg border border-border-subtle bg-surface-canvas px-3 text-xs text-text-primary placeholder:text-text-secondary focus:border-border-default focus:outline-hidden focus:ring-1 focus:ring-[var(--accent-focus)]"
         />
         <select
           value={tierFilter}
           onChange={(e) => setTierFilter(e.target.value)}
-          className="h-8 rounded-lg border border-border-subtle bg-surface-canvas px-2 text-xs text-text-primary focus:outline-none"
+          className="h-8 rounded-lg border border-border-subtle bg-surface-canvas px-2 text-xs text-text-primary focus:outline-hidden"
         >
           <option value="all">All tiers</option>
           <option value="tier1">Tier 1</option>

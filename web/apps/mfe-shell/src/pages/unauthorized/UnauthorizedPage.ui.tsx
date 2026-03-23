@@ -10,7 +10,7 @@ const UnauthorizedPage: React.FC = () => {
 
   return (
     <div className="mt-16 flex justify-center px-4">
-      <div className="w-full max-w-xl rounded-2xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="w-full max-w-xl rounded-2xl border border-border-subtle bg-surface-default p-6 shadow-xs">
         <h1 className="mb-3 text-xl font-semibold text-text-primary">
           {t('auth.unauthorized.title')}
         </h1>

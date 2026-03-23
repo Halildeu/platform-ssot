@@ -49,7 +49,7 @@ export type LibrarySectionBadgeProps = {
 export const LibrarySectionBadge: React.FC<LibrarySectionBadgeProps> = ({ label, className }) => (
   <span
     className={clsx(
-      'inline-flex min-h-[28px] items-center rounded-full border border-border-subtle/20 bg-[var(--surface-card)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-text-secondary shadow-[0_12px_24px_-20px_var(--shadow-color,rgba(24,18,68,0.34))] backdrop-blur-sm',
+      'inline-flex min-h-[28px] items-center rounded-full border border-border-subtle/20 bg-[var(--surface-card)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-text-secondary shadow-[0_12px_24px_-20px_var(--shadow-color,rgba(24,18,68,0.34))] backdrop-blur-xs',
       className,
     )}
   >

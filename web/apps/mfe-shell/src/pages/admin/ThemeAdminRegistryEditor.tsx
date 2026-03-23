@@ -123,7 +123,7 @@ const ThemeAdminRegistryEditor: React.FC<ThemeAdminRegistryEditorProps> = ({
         <div className="flex items-center gap-2">
           <input
             type="text"
-            className="h-7 flex-1 rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            className="h-7 flex-1 rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={row.value ?? ''}
             onChange={(event) => onValueChange(row.key, event.target.value)}
             placeholder={row.controlType === 'COLOR' ? effectiveResolvedDisplay || t('themeadmin.registry.colorInputPlaceholder') : ''}
@@ -131,7 +131,7 @@ const ThemeAdminRegistryEditor: React.FC<ThemeAdminRegistryEditorProps> = ({
           {row.controlType === 'COLOR' ? (
             <button
               type="button"
-              className="h-6 w-6 rounded-md border border-border-subtle shadow-sm"
+              className="h-6 w-6 rounded-md border border-border-subtle shadow-xs"
               style={{ backgroundColor: swatchColor }}
               aria-label={t('themeadmin.registry.colorSelectAria', { label: row.label })}
               onClick={() => onOpenColorPicker(row)}

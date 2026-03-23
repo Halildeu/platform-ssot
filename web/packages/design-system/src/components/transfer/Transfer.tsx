@@ -112,7 +112,7 @@ const searchSizeClass: Record<TransferSize, string> = {
 /* ---- Styling constants ---- */
 
 const panelSurface =
-  "flex flex-col overflow-hidden rounded-2xl bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 border border-border-subtle/80 backdrop-blur-sm";
+  "flex flex-col overflow-hidden rounded-2xl bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 border border-border-subtle/80 backdrop-blur-xs";
 
 /* ---- Icons ---- */
 
@@ -305,7 +305,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                 "w-full rounded-lg border border-border-subtle/60 ps-7",
                 "bg-[var(--surface-canvas)] text-text-primary",
                 "placeholder:text-[var(--text-disabled)]",
-                "focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-action-primary/20",
+                "focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-action-primary/20",
                 "[&::-webkit-search-cancel-button]:hidden",
                 searchSizeClass[size],
               )}

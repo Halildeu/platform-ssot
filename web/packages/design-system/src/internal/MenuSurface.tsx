@@ -497,12 +497,12 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                   </span>
                 ) : null}
                 {item.badge ? (
-                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-sm">
+                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
                     {item.badge}
                   </span>
                 ) : null}
                 {item.shortcut ? (
-                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-sm">
+                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
                     {item.shortcut}
                   </span>
                 ) : null}

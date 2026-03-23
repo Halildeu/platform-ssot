@@ -50,7 +50,7 @@ const kindTone: Record<CitationKind, BadgeVariant> = {
 };
 
 const citationPanelSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
 
 /** Panel displaying a list of source citations with excerpt, kind badge, and selection support. */
 export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>(({
@@ -96,7 +96,7 @@ export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>((
       </Text>
 
       {items.length === 0 ? (
-        <div className="mt-4 rounded-[24px] border border-border-subtle/70 bg-[var(--surface-card)] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-border-subtle/20 backdrop-blur-sm">
+        <div className="mt-4 rounded-[24px] border border-border-subtle/70 bg-[var(--surface-card)] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
           <Empty
             description={
               typeof emptyStateLabel === "string"
@@ -140,7 +140,7 @@ export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>((
                   </Text>
                 </div>
                 <div
-                  className={`rounded-[20px] border border-border-subtle/70 bg-[var(--surface-card)] px-4 py-3 shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.14))] ring-1 ring-border-subtle/20 backdrop-blur-sm ${compact ? "text-sm" : "text-sm leading-7"} text-text-primary`}
+                  className={`rounded-[20px] border border-border-subtle/70 bg-[var(--surface-card)] px-4 py-3 shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.14))] ring-1 ring-border-subtle/20 backdrop-blur-xs ${compact ? "text-sm" : "text-sm leading-7"} text-text-primary`}
                 >
                   {item.excerpt}
                 </div>

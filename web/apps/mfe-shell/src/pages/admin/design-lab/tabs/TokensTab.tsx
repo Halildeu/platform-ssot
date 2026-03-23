@@ -112,7 +112,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
             placeholder="Token ara..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-border-subtle bg-surface-default pl-9 pr-3 py-2 text-xs text-text-primary outline-none placeholder:text-text-tertiary focus:border-action-primary"
+            className="w-full rounded-xl border border-border-subtle bg-surface-default pl-9 pr-3 py-2 text-xs text-text-primary outline-hidden placeholder:text-text-tertiary focus:border-action-primary"
           />
         </div>
         <div className="flex gap-1">
@@ -246,7 +246,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
                                 className={
                                   cat === "color"
                                     ? "h-7 w-10 cursor-pointer rounded border border-border-subtle"
-                                    : "w-24 rounded-lg border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-mono outline-none focus:border-action-primary"
+                                    : "w-24 rounded-lg border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-mono outline-hidden focus:border-action-primary"
                                 }
                               />
                             </td>

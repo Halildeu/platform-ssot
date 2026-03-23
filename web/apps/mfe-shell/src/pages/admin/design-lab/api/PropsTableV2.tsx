@@ -342,7 +342,7 @@ export const PropsTableV2: React.FC<PropsTableV2Props> = ({
             placeholder="Search props…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-border-subtle bg-surface-default pl-9 pr-3 py-2 text-xs text-text-primary outline-none placeholder:text-text-tertiary focus:border-action-primary"
+            className="w-full rounded-xl border border-border-subtle bg-surface-default pl-9 pr-3 py-2 text-xs text-text-primary outline-hidden placeholder:text-text-tertiary focus:border-action-primary"
           />
         </div>
         <div className="flex gap-1">

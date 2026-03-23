@@ -73,7 +73,7 @@ export const buildOverlayLivePreview = (
   switch (componentName) {
     case 'Dropdown':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_auto] xl:items-center">
             <Dropdown
               items={[
@@ -92,7 +92,7 @@ export const buildOverlayLivePreview = (
       );
     case 'Tooltip':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <Tooltip text={t('designlab.showcase.component.tooltip.live.tooltipText')}>
             <Button variant="secondary">{t('designlab.showcase.component.tooltip.live.button')}</Button>
           </Tooltip>
@@ -100,7 +100,7 @@ export const buildOverlayLivePreview = (
       );
     case 'Modal':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <Button onClick={() => setModalOpen(true)}>{t('designlab.showcase.component.modal.live.open')}</Button>
           <Modal
             open={modalOpen}
@@ -121,7 +121,7 @@ export const buildOverlayLivePreview = (
       );
     case 'FormDrawer':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <Button onClick={() => setFormDrawerOpen(true)}>{t('designlab.showcase.component.formDrawer.live.open')}</Button>
           <FormDrawer
             open={formDrawerOpen}
@@ -141,7 +141,7 @@ export const buildOverlayLivePreview = (
       );
     case 'DetailDrawer':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <Button onClick={() => setDetailDrawerOpen(true)}>{t('designlab.showcase.component.detailDrawer.live.open')}</Button>
           <DetailDrawer
             open={detailDrawerOpen}
@@ -164,7 +164,7 @@ export const buildOverlayLivePreview = (
       );
     case 'Popover':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <Popover
             title={t('designlab.showcase.component.popover.live.title')}
             trigger={<Button variant="secondary">{t('designlab.showcase.component.popover.live.open')}</Button>}
@@ -184,7 +184,7 @@ export const buildOverlayLivePreview = (
       );
     case 'ContextMenu':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
             <PreviewPanel title={t('designlab.showcase.component.contextMenu.live.trigger.panel')}>
               <div className="flex flex-wrap items-start gap-3">
@@ -246,7 +246,7 @@ export const buildOverlayLivePreview = (
       );
     case 'TourCoachmarks':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
             <PreviewPanel title={t('designlab.showcase.component.tourCoachmarks.live.guided.panel')}>
               <div className="flex flex-wrap items-start gap-3">

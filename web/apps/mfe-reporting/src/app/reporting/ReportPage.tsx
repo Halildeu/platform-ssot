@@ -299,7 +299,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
 
   if (!ready) {
     return (
-      <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
         <div className="h-4 w-36 animate-pulse rounded-full bg-surface-muted" />
       </div>
     );
@@ -324,7 +324,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
         fullHeight
         descriptionRevealOnHover
       >
-        <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
           <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-border-subtle bg-surface-muted px-4 py-3 text-sm text-text-secondary">
             <span className="font-semibold text-text-primary">{sharedReport.title}</span>
             <span>izin: {sharedReport.permissionCode}</span>

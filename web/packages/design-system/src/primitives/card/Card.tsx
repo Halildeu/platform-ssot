@@ -32,7 +32,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  elevated: "bg-surface-default border border-border-subtle shadow-sm",
+  elevated: "bg-surface-default border border-border-subtle shadow-xs",
   outlined: "bg-transparent border border-border-default",
   filled: "bg-surface-muted border border-transparent",
   ghost: "bg-transparent border border-transparent",

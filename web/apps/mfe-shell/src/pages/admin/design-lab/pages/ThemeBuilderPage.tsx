@@ -107,7 +107,7 @@ export default function ThemeBuilderPage() {
         <div className="pointer-events-none absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
         <div className="relative flex items-start justify-between">
           <div>
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-sm">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-xs">
               <SlidersHorizontal className="h-3 w-3" />
               10 theme axes
             </div>
@@ -159,7 +159,7 @@ export default function ThemeBuilderPage() {
                       className={[
                         "rounded-lg px-2.5 py-1 text-[11px] font-medium transition-all duration-200",
                         axes[config.id] === opt
-                          ? "bg-action-primary text-white shadow-sm"
+                          ? "bg-action-primary text-white shadow-xs"
                           : "bg-surface-muted text-text-secondary hover:bg-surface-canvas hover:text-text-primary",
                       ].join(" ")}
                     >
@@ -236,7 +236,7 @@ export default function ThemeBuilderPage() {
                 <div>
                   <Text variant="secondary" className="mb-2 text-[11px] font-semibold uppercase tracking-wider">Surface Cards</Text>
                   <div className="grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-xl border border-border-subtle bg-surface-default p-4 shadow-sm">
+                    <div className="rounded-xl border border-border-subtle bg-surface-default p-4 shadow-xs">
                       <Text className="text-sm font-semibold text-text-primary">Default</Text>
                       <Text variant="secondary" className="mt-1 text-xs">Surface default card</Text>
                     </div>

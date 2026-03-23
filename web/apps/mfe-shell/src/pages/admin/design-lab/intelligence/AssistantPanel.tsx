@@ -269,7 +269,7 @@ export default function AssistantPanel() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Bir soru sorun... (ornegin: 'Button variant'lari neler?')"
-          className="flex-1 rounded-xl border border-border-subtle bg-surface-default px-4 py-2.5 text-sm text-text-primary outline-none placeholder:text-text-secondary/60 focus:border-action-primary"
+          className="flex-1 rounded-xl border border-border-subtle bg-surface-default px-4 py-2.5 text-sm text-text-primary outline-hidden placeholder:text-text-secondary/60 focus:border-action-primary"
         />
         <button
           type="submit"

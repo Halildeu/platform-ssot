@@ -236,7 +236,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function
             className={cn(
               "absolute z-10 flex items-center justify-center rounded-full",
               "bg-surface-overlay text-text-primary",
-              "shadow-sm hover:bg-[var(--surface-hover)]",
+              "shadow-xs hover:bg-[var(--surface-hover)]",
               "h-8 w-8 transition-opacity",
               isHorizontal ? "top-1/2 start-2 -translate-y-1/2" : "top-2 left-1/2 -translate-x-1/2 rotate-90",
               !canGoPrev && "opacity-30 cursor-not-allowed",
@@ -252,7 +252,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function
             className={cn(
               "absolute z-10 flex items-center justify-center rounded-full",
               "bg-surface-overlay text-text-primary",
-              "shadow-sm hover:bg-[var(--surface-hover)]",
+              "shadow-xs hover:bg-[var(--surface-hover)]",
               "h-8 w-8 transition-opacity",
               isHorizontal ? "top-1/2 end-2 -translate-y-1/2" : "bottom-2 left-1/2 -translate-x-1/2 rotate-90",
               !canGoNext && "opacity-30 cursor-not-allowed",

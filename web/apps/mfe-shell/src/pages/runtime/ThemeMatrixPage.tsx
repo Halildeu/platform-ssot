@@ -17,7 +17,7 @@ export const ThemeMatrixPage: React.FC = () => (
       { title: 'Runtime Theme Matrix', path: '/runtime/theme-matrix' },
     ])}
   >
-    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
       <Text variant="secondary">
         Bu sayfa, Playwright ve Chromatic/axe testleri için resmi tema modları × yoğunluk
         (comfortable/compact) kombinasyonlarını ve Button/Select/Tag gibi bileşenlerin

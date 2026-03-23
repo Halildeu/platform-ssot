@@ -243,4 +243,30 @@ describe('NotificationPanel — accessibility', () => {
     const { container } = render(<NotificationPanel items={sampleItems} />);
     await expectNoA11yViolations(container);
   });
+
+  it('panel section is accessible via role', () => {
+    const { container } = render(<NotificationPanel items={sampleItems} />);
+    const section = container.querySelector('section');
+    expect(section).toBeInTheDocument();
+  });
+
+  it('action buttons are accessible via role', () => {
+    render(
+      <NotificationPanel items={sampleItems} onMarkAllRead={() => {}} onClear={() => {}} />,
+    );
+    expect(screen.getByRole('button', { name: /okundu/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /temizle/i })).toBeInTheDocument();
+  });
+
+  it('filter buttons are accessible via role when showFilters', () => {
+    render(<NotificationPanel items={sampleItems} showFilters />);
+    const buttons = screen.getAllByRole('button');
+    expect(buttons.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('selectable checkboxes have accessible roles', () => {
+    render(<NotificationPanel items={sampleItems} selectable />);
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes.length).toBeGreaterThanOrEqual(1);
+  });
 });

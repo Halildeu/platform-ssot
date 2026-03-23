@@ -245,7 +245,7 @@ export default function ThemingGuidePage() {
             <textarea
               value={sandboxCSS}
               onChange={(e) => setSandboxCSS(e.target.value)}
-              className="h-64 w-full rounded-2xl border border-border-subtle bg-gray-900 p-4 font-mono text-xs text-gray-200 outline-none focus:border-action-primary"
+              className="h-64 w-full rounded-2xl border border-border-subtle bg-gray-900 p-4 font-mono text-xs text-gray-200 outline-hidden focus:border-action-primary"
               spellCheck={false}
             />
           </div>
@@ -259,7 +259,7 @@ export default function ThemingGuidePage() {
                   <button className="rounded-lg border border-[var(--color-border-default,#cbd5e1)] px-4 py-2 text-sm font-medium">Secondary</button>
                 </div>
                 <input
-                  className="w-full rounded-[var(--radius-lg,8px)] border border-[var(--color-border-default,#cbd5e1)] px-3 py-2 text-sm outline-none"
+                  className="w-full rounded-[var(--radius-lg,8px)] border border-[var(--color-border-default,#cbd5e1)] px-3 py-2 text-sm outline-hidden"
                   placeholder="Sample input"
                 />
                 <div className="rounded-[var(--radius-lg,8px)] border border-blue-200 bg-blue-50 p-3 text-sm text-blue-700">

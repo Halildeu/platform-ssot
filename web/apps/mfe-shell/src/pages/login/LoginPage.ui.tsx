@@ -49,10 +49,10 @@ const LoginPage = () => {
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-6 py-10">
       <div className="w-full max-w-md">
-        <div className="rounded-2xl border border-border-subtle bg-surface-default p-8 shadow-sm">
+        <div className="rounded-2xl border border-border-subtle bg-surface-default p-8 shadow-xs">
           {/* Header */}
           <div className="mb-8 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-action-primary text-sm font-bold text-action-primary-text shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-action-primary text-sm font-bold text-action-primary-text shadow-xs">
               S
             </div>
             <div>

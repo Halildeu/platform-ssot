@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { resolveAccessState } from '../internal/access-controller';
+import { resolveAccessState, accessStyles } from '../internal/access-controller';
 import type { AccessLevel } from '../internal/access-controller';
 import { formatValue, getTrendColor, getTrendIcon } from './types';
 import type { FormatOptions, TrendInfo } from './types';
@@ -175,9 +175,10 @@ export function ExecutiveKPIStrip({
 
   return (
     <div
-      className={`${gridClass} ${className}`}
+      className={`${gridClass} ${accessStyles(globalAccess.state)} ${className}`}
       role="region"
       aria-label="Key performance indicators"
+      data-access-state={globalAccess.state}
       {...(globalAccess.isDisabled ? { 'aria-disabled': true } : {})}
       {...(accessReason ? { title: accessReason } : {})}
     >

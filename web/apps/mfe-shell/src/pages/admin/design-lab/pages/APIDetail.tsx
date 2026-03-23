@@ -302,7 +302,7 @@ export default function APIDetail() {
 
         {/* Import statement */}
         {indexItem.importStatement && (
-          <div className="relative mt-5 flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-canvas/80 px-4 py-2.5 backdrop-blur-sm">
+          <div className="relative mt-5 flex items-center gap-2 rounded-xl border border-border-subtle bg-surface-canvas/80 px-4 py-2.5 backdrop-blur-xs">
             <div className="mr-2 rounded-md bg-surface-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-text-secondary">
               import
             </div>
@@ -337,7 +337,7 @@ export default function APIDetail() {
               className={[
                 "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                 activeTab === id
-                  ? "bg-action-primary text-white shadow-sm"
+                  ? "bg-action-primary text-white shadow-xs"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
               ].join(" ")}
             >
@@ -400,7 +400,7 @@ function OverviewTab({
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/* Parameters / Props summary */}
         {props.length > 0 && (
-          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10">
                 <FileCode2 className="h-3.5 w-3.5 text-blue-600" />
@@ -437,7 +437,7 @@ function OverviewTab({
 
         {/* State Model (for hooks) */}
         {stateModel.length > 0 && (
-          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/10">
                 <Layers className="h-3.5 w-3.5 text-violet-600" />
@@ -461,7 +461,7 @@ function OverviewTab({
 
         {/* Where Used */}
         {(indexItem?.whereUsed ?? []).length > 0 && (
-          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-sm">
+          <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
                 <Globe className="h-3.5 w-3.5 text-emerald-600" />
@@ -760,7 +760,7 @@ function RelatedTab({
                     navigate(path);
                   }
                 }}
-                className="flex items-center justify-between gap-2 rounded-xl border border-border-subtle bg-surface-canvas px-4 py-3 text-left transition-all hover:border-border-default hover:shadow-sm"
+                className="flex items-center justify-between gap-2 rounded-xl border border-border-subtle bg-surface-canvas px-4 py-3 text-left transition-all hover:border-border-default hover:shadow-xs"
               >
                 <span className="text-xs font-medium text-text-primary">
                   {name}
@@ -793,7 +793,7 @@ function RelatedTab({
                   onClick={() =>
                     navigate(`/admin/design-lab/apis/${encodeURIComponent(item.name)}`)
                   }
-                  className="flex items-center justify-between gap-2 rounded-xl border border-border-subtle bg-surface-canvas px-4 py-3 text-left transition-all hover:border-border-default hover:shadow-sm"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-border-subtle bg-surface-canvas px-4 py-3 text-left transition-all hover:border-border-default hover:shadow-xs"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className={["shrink-0 h-1.5 w-1.5 rounded-full", style.dot].join(" ")} />

@@ -136,7 +136,7 @@ export default function InsightsDashboardPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Bilesen filtrele..."
-          className="rounded-lg border border-border-subtle bg-surface-default px-3 py-1.5 text-xs outline-none focus:border-action-primary"
+          className="rounded-lg border border-border-subtle bg-surface-default px-3 py-1.5 text-xs outline-hidden focus:border-action-primary"
         />
       </div>
 

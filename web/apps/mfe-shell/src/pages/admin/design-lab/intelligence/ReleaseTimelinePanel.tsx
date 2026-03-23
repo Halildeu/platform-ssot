@@ -204,7 +204,7 @@ function IncidentCard({ incident }: { incident: IncidentEntry }) {
     <button
       type="button"
       onClick={() => setExpanded(!expanded)}
-      className="w-full rounded-xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-border-default hover:shadow-sm"
+      className="w-full rounded-xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-border-default hover:shadow-xs"
     >
       <div className="flex items-start gap-3">
         <AlertTriangle className={`mt-0.5 h-4 w-4 shrink-0 ${SEVERITY_COLORS[incident.severity].split(" ")[1]}`} />
@@ -265,7 +265,7 @@ export default function ReleaseTimelinePanel() {
           className={[
             "flex-1 rounded-lg px-4 py-2 text-sm font-medium transition",
             activeTab === "releases"
-              ? "bg-surface-default text-text-primary shadow-sm"
+              ? "bg-surface-default text-text-primary shadow-xs"
               : "text-text-secondary hover:text-text-primary",
           ].join(" ")}
         >
@@ -278,7 +278,7 @@ export default function ReleaseTimelinePanel() {
           className={[
             "flex-1 rounded-lg px-4 py-2 text-sm font-medium transition",
             activeTab === "incidents"
-              ? "bg-surface-default text-text-primary shadow-sm"
+              ? "bg-surface-default text-text-primary shadow-xs"
               : "text-text-secondary hover:text-text-primary",
           ].join(" ")}
         >

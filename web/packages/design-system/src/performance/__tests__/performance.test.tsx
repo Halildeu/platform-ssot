@@ -274,6 +274,52 @@ describe('VirtualList', () => {
     expect(el.style.height).toBe('300px');
   });
 
+  it('does not exceed last index on ArrowDown', () => {
+    render(
+      <VirtualList
+        items={makeItems(3)}
+        itemHeight={40}
+        containerHeight={200}
+        renderItem={defaultRender}
+        overscan={0}
+      />,
+    );
+    const listbox = screen.getByRole('listbox');
+    fireEvent.keyDown(listbox, { key: 'ArrowDown' });
+    fireEvent.keyDown(listbox, { key: 'ArrowDown' });
+    fireEvent.keyDown(listbox, { key: 'ArrowDown' });
+    fireEvent.keyDown(listbox, { key: 'ArrowDown' }); // beyond last
+    const options = screen.getAllByRole('option');
+    expect(options[2]).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('forwards className to container', () => {
+    const { container } = render(
+      <VirtualList
+        items={makeItems(3)}
+        itemHeight={40}
+        containerHeight={200}
+        renderItem={defaultRender}
+        className="custom-vl"
+      />,
+    );
+    const el = container.querySelector('[data-component="virtual-list"]');
+    expect(el?.className).toContain('custom-vl');
+  });
+
+  it('single item renders correctly', () => {
+    render(
+      <VirtualList
+        items={makeItems(1)}
+        itemHeight={40}
+        containerHeight={200}
+        renderItem={defaultRender}
+        overscan={0}
+      />,
+    );
+    expect(screen.getAllByRole('option')).toHaveLength(1);
+  });
+
   it('has no accessibility violations', async () => {
     const { container } = render(
       <VirtualList
@@ -385,6 +431,28 @@ describe('createLazyComponent', () => {
       'MyLazy',
     );
     expect(Lazy.displayName).toBe('MyLazy');
+  });
+
+  it('uses default displayName when none provided', () => {
+    const Comp: React.FC = () => <div />;
+    const Lazy = createLazyComponent(
+      () => Promise.resolve({ default: Comp as any }),
+    );
+    expect(Lazy.displayName).toBeTruthy();
+  });
+
+  it('passes props through to the lazy-loaded component', async () => {
+    const Greeting: React.FC<{ name: string; greeting: string }> = ({ name, greeting }) => (
+      <div>{greeting} {name}</div>
+    );
+    const LazyGreeting = createLazyComponent<{ name: string; greeting: string }>(
+      () => Promise.resolve({ default: Greeting }),
+      'LazyGreeting',
+    );
+    render(<LazyGreeting name="Test" greeting="Hi" />);
+    await waitFor(() => {
+      expect(screen.getByText('Hi Test')).toBeInTheDocument();
+    });
   });
 });
 

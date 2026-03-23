@@ -120,7 +120,7 @@ const AccessRoleDrawer: React.FC<AccessRoleDrawerProps> = ({
           ) : (
             <div className="flex flex-col gap-3">
               {role.policies.map((policy) => (
-                <div key={`${role.id}-${policy.moduleKey}`} className="rounded-2xl border border-border-subtle p-4 shadow-sm">
+                <div key={`${role.id}-${policy.moduleKey}`} className="rounded-2xl border border-border-subtle p-4 shadow-xs">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-sm font-semibold text-text-primary">

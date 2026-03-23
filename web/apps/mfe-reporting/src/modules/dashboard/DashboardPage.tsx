@@ -286,7 +286,7 @@ const KpiFallbackCard: React.FC<{ kpi: KpiResult; onClick: () => void }> = ({ kp
     <button
       type="button"
       onClick={onClick}
-      className={`rounded-lg border border-border-subtle border-l-4 ${toneColors[kpi.tone] ?? toneColors.default} bg-surface-primary p-3 text-left shadow-sm transition-shadow hover:shadow-md`}
+      className={`rounded-lg border border-border-subtle border-l-4 ${toneColors[kpi.tone] ?? toneColors.default} bg-surface-primary p-3 text-left shadow-xs transition-shadow hover:shadow-md`}
     >
       <div className="text-xs text-text-subtle">{kpi.title}</div>
       <div className="mt-1 text-xl font-bold text-text-primary">{kpi.formattedValue}</div>

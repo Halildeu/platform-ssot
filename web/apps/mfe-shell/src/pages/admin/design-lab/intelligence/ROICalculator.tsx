@@ -108,7 +108,7 @@ export default function ROICalculator() {
             type="number"
             value={teamSize}
             onChange={(e) => setTeamSize(Math.max(1, parseInt(e.target.value) || 1))}
-            className="mt-2 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 py-2 text-lg font-semibold text-text-primary outline-none focus:border-action-primary"
+            className="mt-2 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 py-2 text-lg font-semibold text-text-primary outline-hidden focus:border-action-primary"
             min={1}
           />
         </div>
@@ -121,7 +121,7 @@ export default function ROICalculator() {
             type="number"
             value={hourlyRate}
             onChange={(e) => setHourlyRate(Math.max(1, parseInt(e.target.value) || 1))}
-            className="mt-2 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 py-2 text-lg font-semibold text-text-primary outline-none focus:border-action-primary"
+            className="mt-2 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 py-2 text-lg font-semibold text-text-primary outline-hidden focus:border-action-primary"
             min={1}
           />
         </div>
@@ -134,7 +134,7 @@ export default function ROICalculator() {
             type="number"
             value={appsCount}
             onChange={(e) => setAppsCount(Math.max(1, parseInt(e.target.value) || 1))}
-            className="mt-2 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 py-2 text-lg font-semibold text-text-primary outline-none focus:border-action-primary"
+            className="mt-2 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 py-2 text-lg font-semibold text-text-primary outline-hidden focus:border-action-primary"
             min={1}
           />
         </div>

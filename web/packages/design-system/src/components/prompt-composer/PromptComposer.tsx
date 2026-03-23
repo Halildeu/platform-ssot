@@ -132,7 +132,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
 
   return (
     <section
-      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="prompt-composer"
       title={accessReason}

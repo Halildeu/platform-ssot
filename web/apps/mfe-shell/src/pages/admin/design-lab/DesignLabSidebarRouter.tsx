@@ -196,7 +196,7 @@ export const DesignLabSidebarRouter: React.FC = () => {
   return (
     <aside
       data-testid="design-lab-sidebar"
-      className="flex h-full flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
+      className="flex h-full flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-xs"
     >
       {/* Mobile menu toggle */}
       <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2 sm:hidden">
@@ -222,7 +222,7 @@ export const DesignLabSidebarRouter: React.FC = () => {
               className={[
                 "flex flex-1 items-center justify-center rounded-lg py-2 transition-all duration-200",
                 activeLayer === id
-                  ? "bg-action-primary text-white shadow-sm"
+                  ? "bg-action-primary text-white shadow-xs"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
               ].join(" ")}
               title={t(`designlab.sidebar.title.${id}`)}
@@ -268,7 +268,7 @@ export const DesignLabSidebarRouter: React.FC = () => {
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder={searchPlaceholder}
-              className="h-11 w-full rounded-2xl border border-border-subtle bg-surface-canvas pl-10 pr-14 text-sm text-text-primary shadow-none transition focus:border-border-default focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
+              className="h-11 w-full rounded-2xl border border-border-subtle bg-surface-canvas pl-10 pr-14 text-sm text-text-primary shadow-none transition focus:border-border-default focus:outline-hidden focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
               aria-label={t("designlab.sidebar.search.aria")}
             />
             <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded-md border border-border-subtle bg-surface-default px-1.5 py-0.5 text-[10px] font-medium text-text-secondary sm:inline-block">
@@ -807,7 +807,7 @@ function SidebarItemButton({
       className={[
         "w-full scroll-mt-4 rounded-2xl border px-3.5 py-3 text-left transition",
         active
-          ? "border-action-primary/30 bg-surface-default shadow-sm ring-1 ring-action-primary/10"
+          ? "border-action-primary/30 bg-surface-default shadow-xs ring-1 ring-action-primary/10"
           : "border-transparent bg-transparent hover:bg-surface-muted",
       ].join(" ")}
     >

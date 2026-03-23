@@ -118,7 +118,7 @@ export const AIGuidedAuthoring = React.forwardRef<HTMLElement, AIGuidedAuthoring
   return (
     <section
       ref={ref}
-      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="ai-guided-authoring"
       title={accessReason}

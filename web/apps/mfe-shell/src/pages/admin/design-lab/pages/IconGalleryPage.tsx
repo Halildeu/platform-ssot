@@ -170,7 +170,7 @@ export default function IconGalleryPage() {
           }}
         />
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-sm">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-xs">
             <Sparkles className="h-3 w-3" />
             {allIcons.length} icons
           </div>
@@ -194,7 +194,7 @@ export default function IconGalleryPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t("designlab.iconGallery.searchPlaceholder")}
-            className="h-10 w-full rounded-xl border border-border-subtle bg-surface-default pl-10 pr-10 text-sm text-text-primary placeholder:text-text-secondary/50 transition focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-action-primary/20"
+            className="h-10 w-full rounded-xl border border-border-subtle bg-surface-default pl-10 pr-10 text-sm text-text-primary placeholder:text-text-secondary/50 transition focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-action-primary/20"
           />
           {search && (
             <button
@@ -220,7 +220,7 @@ export default function IconGalleryPage() {
               className={[
                 "rounded-lg px-2.5 py-1.5 text-xs font-medium transition",
                 idx === sizeIdx
-                  ? "bg-action-primary text-white shadow-sm"
+                  ? "bg-action-primary text-white shadow-xs"
                   : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
               ].join(" ")}
             >
@@ -243,7 +243,7 @@ export default function IconGalleryPage() {
           className={[
             "rounded-full px-3 py-1.5 text-xs font-medium transition",
             activeCategory === null
-              ? "bg-action-primary text-white shadow-sm"
+              ? "bg-action-primary text-white shadow-xs"
               : "border border-border-subtle bg-surface-default text-text-secondary hover:border-border-default hover:text-text-primary",
           ].join(" ")}
         >
@@ -257,7 +257,7 @@ export default function IconGalleryPage() {
             className={[
               "rounded-full px-3 py-1.5 text-xs font-medium transition",
               activeCategory === cat.name
-                ? "bg-action-primary text-white shadow-sm"
+                ? "bg-action-primary text-white shadow-xs"
                 : "border border-border-subtle bg-surface-default text-text-secondary hover:border-border-default hover:text-text-primary",
             ].join(" ")}
           >
@@ -344,7 +344,7 @@ const IconCell = React.memo(function IconCell({
       </span>
 
       {/* Hover overlay — copy hint */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-xl bg-surface-default/80 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-xl bg-surface-default/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100">
         <div className="flex flex-col items-center gap-1">
           <Component className={`${sizeCls} text-action-primary`} />
           <span className="text-[8px] font-semibold uppercase tracking-wider text-action-primary">

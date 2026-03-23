@@ -70,7 +70,7 @@ export const DesignLabMenuBarShowcase: React.FC<DesignLabMenuBarShowcaseProps> =
   );
 
   return (
-    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
       <div className="mb-4 flex flex-wrap gap-2">
         {variantLabels.map((entry) => (
           <Badge key={entry.id} variant="info" className="rounded-full">

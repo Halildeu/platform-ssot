@@ -62,7 +62,7 @@ const densityClass: Record<ListDensity, string> = {
 };
 
 const listSurfaceClassName =
-  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 const toneClass: Record<ListTone, string> = {
   default:
@@ -215,7 +215,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
                           {(item.meta || item.suffix) ? (
                             <div className="flex shrink-0 flex-col items-end gap-2">
                               {item.meta ? (
-                                <Text variant="secondary" className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-border-subtle/20 backdrop-blur-sm">
+                                <Text variant="secondary" className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
                                   {item.meta}
                                 </Text>
                               ) : null}

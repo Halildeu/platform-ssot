@@ -211,7 +211,7 @@ const EcosystemGuidancePanel: React.FC<{
   guidance: ReturnType<typeof getEcosystemGuidance>;
   className?: string;
 }> = ({ title, guidance, className }) => (
-  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm ${className ?? ''}`.trim()}>
+  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs ${className ?? ''}`.trim()}>
     <Text as="div" className="text-sm font-semibold text-text-primary">
       {title}
     </Text>
@@ -289,7 +289,7 @@ const EcosystemSurfaceCatalogPanel: React.FC<{
           return (
             <div
               key={surface.surfaceId}
-              className="rounded-[20px] border border-border-subtle bg-surface-panel p-4 transition hover:shadow-sm"
+              className="rounded-[20px] border border-border-subtle bg-surface-panel p-4 transition hover:shadow-xs"
               data-testid={`ecosystem-surface-${surface.surfaceId}`}
             >
               <div className="flex items-start justify-between gap-3">
@@ -500,7 +500,7 @@ const EcosystemOverviewTab: React.FC<{
 
   if (!extension) {
     return (
-      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text variant="secondary">{t('designlab.ecosystem.overview.empty')}</Text>
       </div>
     );
@@ -511,7 +511,7 @@ const EcosystemOverviewTab: React.FC<{
   const stableCount = selectedExtensionItems.filter((item) => item.lifecycle === 'stable').length;
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Enterprise extension overview</DetailLabel>
@@ -751,7 +751,7 @@ const EcosystemApiTab: React.FC<{
   const extensionId = extension.extensionId;
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Extension API workspace</DetailLabel>
@@ -998,7 +998,7 @@ const EcosystemQualityTab: React.FC<{
   const liveCount = selectedExtensionItems.filter((item) => item.demoMode === 'live').length;
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Enterprise quality workspace</DetailLabel>
@@ -1133,7 +1133,7 @@ export const DesignLabEcosystemDetailSections: React.FC<DesignLabEcosystemDetail
           <div data-detail-section-id="ux">
             {extension ? (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
                   <DetailLabel>Enterprise tier UX</DetailLabel>
                   <Text variant="secondary" className="mt-2 block text-sm leading-6">
                     Extension tier&apos;ina gore UX beklentisi ve gorsel standart.
@@ -1146,7 +1146,7 @@ export const DesignLabEcosystemDetailSections: React.FC<DesignLabEcosystemDetail
                       : null}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
                   <DetailLabel>Surface coverage</DetailLabel>
                   <Text variant="secondary" className="mt-2 block text-sm leading-6">
                     Extension&apos;in sagladi enterprise surface&apos;ler ve UX kapsami.
@@ -1157,7 +1157,7 @@ export const DesignLabEcosystemDetailSections: React.FC<DesignLabEcosystemDetail
                       : <Text variant="secondary">No surface binding declared.</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm xl:col-span-2">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs xl:col-span-2">
                   <DetailLabel>Ecosystem UX guidance</DetailLabel>
                   <EcosystemGuidancePanel
                     title="Enterprise UX consistency"

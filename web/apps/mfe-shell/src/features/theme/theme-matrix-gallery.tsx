@@ -17,7 +17,7 @@ const moduleOptions = [
 ];
 
 const LoginPreview = () => (
-  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-sm">
+  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-xs">
     <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-text-secondary">
       Login
     </div>
@@ -25,14 +25,14 @@ const LoginPreview = () => (
       <label className="text-[11px] font-semibold text-text-secondary">
         E-posta
         <input
-          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           placeholder="kullanici@example.com"
         />
       </label>
       <label className="text-[11px] font-semibold text-text-secondary">
         Parola
         <input
-          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-panel px-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           placeholder="••••••"
           type="password"
         />
@@ -48,7 +48,7 @@ const LoginPreview = () => (
 );
 
 const UnauthorizedPreview = () => (
-  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-sm">
+  <div className="rounded-2xl border border-border-subtle bg-surface p-4 shadow-xs">
     <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-text-secondary">
       Unauthorized
     </div>
@@ -94,7 +94,7 @@ const AppShellPreview = () => (
 
 const DetailDrawerPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="detail-drawer-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -122,7 +122,7 @@ const DetailDrawerPreview = () => (
 
 const FormDrawerPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="form-drawer-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -154,7 +154,7 @@ const FormDrawerPreview = () => (
 
 const AccessDrawerPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="access-drawer-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -183,7 +183,7 @@ const AccessDrawerPreview = () => (
 
 const NotificationPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface shadow-xs"
     data-testid="notification-preview"
   >
     <div className="border-b border-border-subtle px-4 py-3">
@@ -206,7 +206,7 @@ const NotificationPreview = () => (
 
 const ReportingPreview = () => (
   <div
-    className="rounded-2xl border border-border-subtle bg-surface-panel p-4 shadow-sm"
+    className="rounded-2xl border border-border-subtle bg-surface-panel p-4 shadow-xs"
     data-testid="reporting-preview-item"
   >
     <div className="mb-3 flex items-center justify-between text-xs font-semibold text-text-secondary">

@@ -160,7 +160,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
             className={cn(
               btnBase,
               isActive
-                ? "bg-action-primary text-text-inverse shadow-sm"
+                ? "bg-action-primary text-text-inverse shadow-xs"
                 : "text-text-secondary hover:bg-surface-muted",
             )}
           >

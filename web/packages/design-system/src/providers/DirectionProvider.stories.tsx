@@ -35,3 +35,17 @@ export const NestedDirections: Story = {
     </DirectionProvider>
   ),
 };
+
+export const WithMixedContent: Story = {
+  render: () => (
+    <DirectionProvider direction="ltr">
+      <div>
+        English content
+        <DirectionProvider direction="rtl">
+          <div>محتوى عربي</div>
+        </DirectionProvider>
+        More English content
+      </div>
+    </DirectionProvider>
+  ),
+};

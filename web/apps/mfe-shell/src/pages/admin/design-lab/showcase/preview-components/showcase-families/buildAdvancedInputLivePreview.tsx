@@ -50,7 +50,7 @@ export const buildAdvancedInputLivePreview = (
   switch (componentName) {
     case 'Slider':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.slider.live.controlled.title')}>
               <div className="space-y-4">
@@ -90,7 +90,7 @@ export const buildAdvancedInputLivePreview = (
       );
     case 'DatePicker':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.datePicker.live.controlled.title')}>
               <div className="space-y-4">
@@ -128,7 +128,7 @@ export const buildAdvancedInputLivePreview = (
       );
     case 'TimePicker':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.timePicker.live.controlled.title')}>
               <div className="space-y-4">
@@ -167,7 +167,7 @@ export const buildAdvancedInputLivePreview = (
       );
     case 'Upload':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title="Controlled file list">
               <div className="space-y-4">

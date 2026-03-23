@@ -156,7 +156,7 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
               root: 'border-0 bg-transparent p-0',
               list: 'w-full flex-wrap gap-2',
               item: 'border-border-subtle bg-transparent text-left shadow-none',
-              activeItem: 'border-action-primary-border bg-transparent shadow-sm',
+              activeItem: 'border-action-primary-border bg-transparent shadow-xs',
               content: 'w-full',
               label: 'w-full',
             }}
@@ -259,7 +259,7 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
                   <div className="rounded-xl border border-border-subtle bg-surface-default px-3 py-2">
                     <div className="text-[10px] font-semibold text-text-secondary">{t('themeadmin.preview.formFieldLabel')}</div>
                     <input
-                      className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-default px-2 text-[11px] text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
+                      className="mt-1 h-8 w-full rounded-md border border-border-default bg-surface-default px-2 text-[11px] text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
                       placeholder={t('themeadmin.preview.inputPlaceholder')}
                     />
                   </div>
@@ -288,7 +288,7 @@ const ThemeAdminPreviewPanel: React.FC<ThemeAdminPreviewPanelProps> = ({
                 <div className="relative mt-2 h-24 overflow-hidden rounded-xl border border-border-subtle bg-surface-default">
                   <div className="absolute inset-0 bg-surface-overlay opacity-70" aria-hidden />
                   <div className="absolute inset-0 flex items-center justify-center p-2">
-                    <div className="w-full max-w-[260px] rounded-xl border border-border-subtle bg-surface-panel p-3 shadow-sm">
+                    <div className="w-full max-w-[260px] rounded-xl border border-border-subtle bg-surface-panel p-3 shadow-xs">
                       <div className="text-[11px] font-semibold text-text-primary">{t('themeadmin.preview.overlayTitle')}</div>
                       <div className="mt-1 text-[10px] text-text-secondary">{t('themeadmin.preview.overlayDescription')}</div>
                       <div className="mt-2 flex justify-end gap-2">

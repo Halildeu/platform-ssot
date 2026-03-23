@@ -48,7 +48,7 @@ export const SessionAuditShortcutsMenu: React.FC<SessionAuditShortcutsMenuProps>
       <button
         type="button"
         data-testid="session-audit-shortcuts-menu-trigger"
-        className="inline-flex h-9 items-center gap-2 rounded-full border border-border-subtle bg-surface-panel px-3 text-xs font-semibold text-text-primary shadow-sm transition hover:bg-surface-muted"
+        className="inline-flex h-9 items-center gap-2 rounded-full border border-border-subtle bg-surface-panel px-3 text-xs font-semibold text-text-primary shadow-xs transition hover:bg-surface-muted"
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}

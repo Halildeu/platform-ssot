@@ -106,7 +106,7 @@ export function AuditTrailPanel({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search entries..."
-            className="h-8 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 text-xs text-text-primary placeholder:text-text-secondary focus:border-border-default focus:outline-none focus:ring-1 focus:ring-[var(--accent-focus)]"
+            className="h-8 w-full rounded-lg border border-border-subtle bg-surface-canvas px-3 text-xs text-text-primary placeholder:text-text-secondary focus:border-border-default focus:outline-hidden focus:ring-1 focus:ring-[var(--accent-focus)]"
           />
         </div>
         <div className="flex items-center gap-1">
@@ -116,7 +116,7 @@ export function AuditTrailPanel({
             onChange={(e) =>
               setActionFilter(e.target.value as AuditAction | "all")
             }
-            className="h-8 rounded-lg border border-border-subtle bg-surface-canvas px-2 text-xs text-text-primary focus:outline-none"
+            className="h-8 rounded-lg border border-border-subtle bg-surface-canvas px-2 text-xs text-text-primary focus:outline-hidden"
           >
             <option value="all">All actions</option>
             {actionOptions.map((action) => (

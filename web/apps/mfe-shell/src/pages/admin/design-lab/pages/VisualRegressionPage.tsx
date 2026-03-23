@@ -386,7 +386,7 @@ export const VisualRegressionPage: React.FC = () => {
             placeholder="Search components…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="ml-auto max-w-[200px] rounded-lg border border-border-subtle bg-surface-canvas px-3 py-1.5 text-xs text-text-primary outline-none placeholder:text-text-tertiary focus:border-action-primary"
+            className="ml-auto max-w-[200px] rounded-lg border border-border-subtle bg-surface-canvas px-3 py-1.5 text-xs text-text-primary outline-hidden placeholder:text-text-tertiary focus:border-action-primary"
           />
         </div>
 

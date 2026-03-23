@@ -55,3 +55,12 @@ export const WithErrorFallback: Story = {
     />
   ),
 };
+
+export const MultipleInstances: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 16 }}>
+      <LazyHeavy title="Widget A" />
+      <LazyHeavy title="Widget B" />
+    </div>
+  ),
+};

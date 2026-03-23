@@ -296,9 +296,9 @@ export const DesignLabHeaderMenu: React.FC<DesignLabHeaderMenuProps> = ({
     taxonomyPresentationMap.get(activeSectionId)?.title
     ?? tDesignLab('designlab.sidebar.section.title');
   const triggerClassName = clsx(
-    'inline-flex min-h-0 items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2',
+    'inline-flex min-h-0 items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2',
     isDesignLabRoute || open
-      ? 'border-[var(--accent-primary-hover)] bg-[var(--accent-primary)] text-[var(--action-primary-text)] shadow-sm'
+      ? 'border-[var(--accent-primary-hover)] bg-[var(--accent-primary)] text-[var(--action-primary-text)] shadow-xs'
       : 'border-transparent bg-transparent text-text-primary hover:border-border-subtle hover:bg-surface-muted',
   );
 

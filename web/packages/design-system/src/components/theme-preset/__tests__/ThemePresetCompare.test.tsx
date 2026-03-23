@@ -209,4 +209,37 @@ describe('ThemePresetCompare — accessibility', () => {
     const { container } = render(<ThemePresetCompare leftPreset={leftPreset} rightPreset={rightPreset} />);
     await expectNoA11yViolations(container);
   });
+
+  it('renders section element with data-component', () => {
+    const { container } = render(
+      <ThemePresetCompare leftPreset={leftPreset} rightPreset={rightPreset} />,
+    );
+    const section = container.querySelector('section[data-component="theme-preset-compare"]');
+    expect(section).toBeInTheDocument();
+  });
+
+  it('comparison table is present and accessible', () => {
+    const { container } = render(
+      <ThemePresetCompare leftPreset={leftPreset} rightPreset={rightPreset} />,
+    );
+    const section = container.querySelector('section');
+    expect(section).toBeInTheDocument();
+  });
+
+  it('section title is rendered with heading', () => {
+    render(<ThemePresetCompare leftPreset={leftPreset} rightPreset={rightPreset} />);
+    expect(screen.getByText('Theme preset compare')).toBeInTheDocument();
+  });
+
+  it('accessReason propagates as title for screen readers', () => {
+    const { container } = render(
+      <ThemePresetCompare
+        leftPreset={leftPreset}
+        rightPreset={rightPreset}
+        accessReason="Read only"
+      />,
+    );
+    const section = container.querySelector('section');
+    expect(section).toHaveAttribute('title', 'Read only');
+  });
 });

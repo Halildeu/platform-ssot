@@ -278,7 +278,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
             "w-full resize-y rounded-md border transition-colors duration-150",
             "bg-surface-default text-text-primary",
             "placeholder:text-[var(--text-disabled)]",
-            "focus:outline-none focus:ring-2",
+            "focus:outline-hidden focus:ring-2",
             SIZE_CLASSES[size],
             error
               ? "border-[var(--border-error)] focus:ring-[var(--ring-error)]"

@@ -310,7 +310,7 @@ const RecipeGuidancePanel: React.FC<{
   guidance: ReturnType<typeof getRecipeGuidance>;
   className?: string;
 }> = ({ title, guidance, className }) => (
-  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm ${className ?? ''}`.trim()}>
+  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs ${className ?? ''}`.trim()}>
     <Text as="div" className="text-sm font-semibold text-text-primary">
       {title}
     </Text>
@@ -545,7 +545,7 @@ const RecipeDependencyGraph: React.FC<{
                 key={cluster.clusterId}
                 className={`rounded-[18px] border px-3 py-2.5 transition ${
                   isRelevant
-                    ? 'border-action-primary/30 bg-surface-default shadow-sm ring-1 ring-action-primary/10'
+                    ? 'border-action-primary/30 bg-surface-default shadow-xs ring-1 ring-action-primary/10'
                     : 'border-border-subtle bg-surface-panel'
                 }`}
               >
@@ -622,7 +622,7 @@ const RecipeDependencyGraph: React.FC<{
                 key={pattern.patternId}
                 className={`rounded-[18px] border p-3 transition ${
                   isMatch
-                    ? 'border-action-primary/30 bg-surface-default shadow-sm'
+                    ? 'border-action-primary/30 bg-surface-default shadow-xs'
                     : 'border-border-subtle bg-surface-panel'
                 }`}
               >
@@ -695,7 +695,7 @@ const RecipeOverviewTab: React.FC<{
 
   if (!recipe) {
     return (
-      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text variant="secondary">
           {subjectLabels.emptySelection ?? t('designlab.recipe.overview.empty')}
         </Text>
@@ -704,7 +704,7 @@ const RecipeOverviewTab: React.FC<{
   }
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>{t('designlab.recipe.overview.workspace.title')}</DetailLabel>
@@ -732,7 +732,7 @@ const RecipeOverviewTab: React.FC<{
             content: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>{t('designlab.recipe.overview.summary')}</DetailLabel>
                     <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
                       {recipe.title ?? recipe.recipeId}
@@ -752,7 +752,7 @@ const RecipeOverviewTab: React.FC<{
                     </div>
                   </div>
 
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>{t('designlab.recipe.overview.quickStatus')}</DetailLabel>
                     <div className="mt-4 grid grid-cols-1 gap-3">
                       <MetricCard label="Owner blocks" value={recipe.ownerBlocks.length} note={t('designlab.recipe.overview.quickStatus.ownerBlocks.note')} />
@@ -776,25 +776,25 @@ const RecipeOverviewTab: React.FC<{
             badge: <Badge variant="warning">{selectedRecipeTracks.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>{t('designlab.recipe.overview.trackCoverage')}</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedRecipeTracks.length ? selectedRecipeTracks.map((track) => <SectionBadge key={track} label={track} />) : <Text variant="secondary">{t('designlab.recipe.overview.noTrackBinding')}</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>{t('designlab.recipe.overview.northStarCoverage')}</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedRecipeSections.length ? selectedRecipeSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">{t('designlab.recipe.overview.noSectionBinding')}</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>{t('designlab.recipe.overview.themeCoverage')}</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedRecipeThemes.length ? selectedRecipeThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">{t('designlab.recipe.overview.noThemeBinding')}</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>{t('designlab.recipe.overview.qualityCoverage')}</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedRecipeQualityGates.length ? selectedRecipeQualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">{t('designlab.recipe.overview.noQualityGates')}</Text>}
@@ -892,7 +892,7 @@ const RecipeApiTab: React.FC<{
   ];
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>{t('designlab.recipe.api.workspace.title')}</DetailLabel>
@@ -926,7 +926,7 @@ const RecipeApiTab: React.FC<{
             label: t('designlab.recipe.api.contract'),
             badge: <Badge variant="info">{recipe.ownerBlocks.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>{t('designlab.recipe.api.contractTitle')}</DetailLabel>
                 <CodeBlock code={composeCode} className="mt-3" />
               </div>
@@ -940,7 +940,7 @@ const RecipeApiTab: React.FC<{
                 : t('designlab.recipe.api.binding'),
             badge: <Badge variant="warning">{selectedRecipeTracks.length || '—'}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>{t('designlab.recipe.api.bindingTitle')}</DetailLabel>
                 <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-1">
                   <MetricCard label={subjectLabels.bindingEntityId} value={recipe.recipeId} note={t('designlab.recipe.api.binding.recipeId.note')} />
@@ -1013,13 +1013,13 @@ const RecipeUxTab: React.FC<{
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.recipe.overview.themeCoverage')}</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
             {selectedRecipeThemes.length ? selectedRecipeThemes.map((theme) => <SectionBadge key={theme} label={theme} />) : <Text variant="secondary">{t('designlab.recipe.overview.noThemeBinding')}</Text>}
           </div>
         </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.recipe.overview.northStarCoverage')}</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
             {selectedRecipeSections.length ? selectedRecipeSections.map((section) => <SectionBadge key={section} label={section} />) : <Text variant="secondary">{t('designlab.recipe.overview.noSectionBinding')}</Text>}
@@ -1028,7 +1028,7 @@ const RecipeUxTab: React.FC<{
       </div>
 
       {/* Live flow preview */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
         <div className="flex items-start justify-between gap-4">
           <div>
             <DetailLabel>Live flow preview</DetailLabel>
@@ -1150,7 +1150,7 @@ const RecipeQualityGatesContent: React.FC<{
 
   return (
     <div className="space-y-4">
-      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>{t('designlab.component.quality.gates')}</DetailLabel>
         {/* Complexity-based requirement */}
         <div className="mt-3 flex items-center gap-3">
@@ -1184,7 +1184,7 @@ const RecipeQualityGatesContent: React.FC<{
         </div>
       </div>
       {/* Cross-cutting gates summary */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>Cross-cutting quality gates</DetailLabel>
         <Text variant="secondary" className="mt-1 block text-xs leading-5">
           Bu gate'ler tum recipe pattern'lerine complexity'den bagimsiz uygulanir.
@@ -1244,7 +1244,7 @@ const RecipeQualityTab: React.FC<{
   }
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>{t('designlab.recipe.quality.workspace.title')}</DetailLabel>
@@ -1290,7 +1290,7 @@ const RecipeQualityTab: React.FC<{
             label: t('designlab.recipe.quality.lifecycle'),
             badge: <Badge variant="success">{selectedRecipeItems.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>{t('designlab.recipe.quality.lifecycle.title')}</DetailLabel>
                 <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
                   <MetricCard label="Stable" value={selectedRecipeItems.filter((item) => item.lifecycle === 'stable').length} note={t('designlab.recipe.quality.lifecycle.stable.note')} />

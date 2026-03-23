@@ -144,7 +144,7 @@ const AccessGrid: React.FC<AccessGridProps> = ({
   );
 
   return (
-    <div data-testid="access-grid" className="flex flex-col rounded-[24px] border border-border-subtle bg-surface-default shadow-sm">
+    <div data-testid="access-grid" className="flex flex-col rounded-[24px] border border-border-subtle bg-surface-default shadow-xs">
       <div className="ag-theme-quartz" style={{ width: '100%', height: 520 }}>
         <ResolvedGridComponent
           ref={gridRef}

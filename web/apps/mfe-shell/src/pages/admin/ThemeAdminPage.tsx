@@ -751,7 +751,7 @@ const ThemeAdminPage: React.FC = () => {
 	                  </button>
 	                </div>
 	                <select
-	                  className="mt-2 h-9 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-xs font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+	                  className="mt-2 h-9 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-xs font-semibold text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
 	                  value={defaultThemeId ?? ''}
 	                  onChange={(event) => setDefaultThemeId(event.target.value || null)}
 	                >
@@ -835,7 +835,7 @@ const ThemeAdminPage: React.FC = () => {
 	              <div className="flex flex-wrap items-center gap-2">
 	                <span className="text-xs font-semibold text-text-secondary">{t('themeadmin.selection.title')}:</span>
 	                <select
-	                  className="h-9 rounded-md border border-border-subtle bg-surface-default px-2 text-xs font-semibold text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+	                  className="h-9 rounded-md border border-border-subtle bg-surface-default px-2 text-xs font-semibold text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
 	                  value={selectedThemeId ?? ''}
 	                  onChange={(event) => {
 	                    hasManualThemeSelectionRef.current = true;
@@ -881,7 +881,7 @@ const ThemeAdminPage: React.FC = () => {
 		                  <label className="text-[11px] font-semibold text-text-secondary">
 		                    {t('themeadmin.meta.accent')}
 		                    <select
-		                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
+		                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
 		                      value={themeMeta?.axes.accent ?? ''}
 		                      disabled={!themeMeta}
 		                      onChange={(event) => {
@@ -899,7 +899,7 @@ const ThemeAdminPage: React.FC = () => {
 		                  <label className="text-[11px] font-semibold text-text-secondary">
 		                    {t('themeadmin.meta.surfaceTone')}
 		                    <select
-		                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
+		                      className="mt-1 h-8 w-full rounded-md border border-border-subtle bg-surface-default px-2 text-[11px] text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-text-subtle"
 	                      value={themeMeta?.surfaceTone ?? ''}
 	                      disabled={!themeMeta}
 	                      onChange={(event) => {

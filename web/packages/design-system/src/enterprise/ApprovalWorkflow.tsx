@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { resolveAccessState } from '../internal/access-controller';
+import { resolveAccessState, accessStyles } from '../internal/access-controller';
 import type { AccessLevel } from '../internal/access-controller';
 
 // ---------------------------------------------------------------------------
@@ -229,7 +229,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
         'rounded-lg border p-3 transition-colors duration-150',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]',
         isCurrent
-          ? 'border-[var(--brand-primary)] bg-surface-default shadow-sm'
+          ? 'border-[var(--brand-primary)] bg-surface-default shadow-xs'
           : 'border-border-default bg-surface-default',
       ].join(' ')}
     >
@@ -303,7 +303,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                 onChange={(e) => setRejectComment(e.target.value)}
                 placeholder="Reason for rejection (required)"
                 rows={2}
-                className="text-xs rounded border border-border-default bg-surface-default text-text-primary p-1.5 resize-none focus:outline-none focus:ring-1 focus:ring-[var(--focus-ring)]"
+                className="text-xs rounded border border-border-default bg-surface-default text-text-primary p-1.5 resize-none focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-ring)]"
                 aria-label="Rejection reason"
               />
               <div className="flex gap-1">
@@ -335,7 +335,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                 value={delegateValue}
                 onChange={(e) => setDelegateValue(e.target.value)}
                 placeholder="New assignee name or email"
-                className="text-xs rounded border border-border-default bg-surface-default text-text-primary p-1.5 focus:outline-none focus:ring-1 focus:ring-[var(--focus-ring)]"
+                className="text-xs rounded border border-border-default bg-surface-default text-text-primary p-1.5 focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-ring)]"
                 aria-label="New assignee"
                 onKeyDown={(e) => { if (e.key === 'Enter') handleDelegateSubmit(); }}
               />
@@ -381,7 +381,8 @@ export function ApprovalWorkflow({
   onDelegate,
   className = '',
 }: ApprovalWorkflowProps) {
-  const { isHidden, isDisabled, isReadonly } = resolveAccessState(access);
+  const accessState = resolveAccessState(access);
+  const { isHidden, isDisabled, isReadonly } = accessState;
   if (isHidden) return null;
 
   // Derive current step if not provided: first step that is pending or in-review
@@ -401,7 +402,8 @@ export function ApprovalWorkflow({
       data-orientation={orientation}
       {...(isDisabled ? { 'aria-disabled': true } : {})}
       {...(accessReason ? { title: accessReason } : {})}
-      className={`${containerClass} gap-0 ${isDisabled ? 'opacity-50 pointer-events-none' : ''} ${className}`}
+      data-access-state={accessState.state}
+      className={`${containerClass} gap-0 ${accessStyles(accessState.state)} ${className}`}
     >
       {steps.map((step, idx) => {
         const isCurrent = idx === resolvedActiveIndex;

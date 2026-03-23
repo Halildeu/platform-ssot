@@ -58,7 +58,7 @@ const PermissionRegistryPanel: React.FC<PermissionRegistryPanelProps> = ({ t, fo
   return (
     <section
       data-testid="access-permission-registry"
-      className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm"
+      className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs"
     >
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>

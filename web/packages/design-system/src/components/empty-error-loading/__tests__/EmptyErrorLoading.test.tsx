@@ -204,4 +204,27 @@ describe('EmptyErrorLoading — accessibility', () => {
     const { container } = render(<EmptyErrorLoading mode="empty" />);
     await expectNoA11yViolations(container);
   });
+
+  it('renders section element with aria-label', () => {
+    const { container } = render(<EmptyErrorLoading mode="empty" />);
+    const section = container.querySelector('section');
+    expect(section).toBeInTheDocument();
+    expect(section?.tagName).toBe('SECTION');
+  });
+
+  it('retry button has accessible name', () => {
+    render(<EmptyErrorLoading mode="error" onRetry={vi.fn()} />);
+    const button = screen.getByRole('button', { name: /retry/i });
+    expect(button).toBeInTheDocument();
+  });
+
+  it('loading mode uses aria-live for status updates', () => {
+    const { container } = render(<EmptyErrorLoading mode="loading" />);
+    expect(container.querySelector('[data-mode="loading"]')).toBeInTheDocument();
+  });
+
+  it('error mode displays alert-like content', () => {
+    render(<EmptyErrorLoading mode="error" />);
+    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
+  });
 });

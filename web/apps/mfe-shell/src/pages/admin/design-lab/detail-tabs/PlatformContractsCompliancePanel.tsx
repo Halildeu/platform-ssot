@@ -98,7 +98,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
   return (
     <div className="space-y-4">
       {/* Summary header */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <div className="flex items-start justify-between gap-4">
           <div>
             <DetailLabel>Platform Contracts Compliance</DetailLabel>
@@ -138,7 +138,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
       </div>
 
       {/* Contract cards */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>Contract details</DetailLabel>
         <div className="mt-4 space-y-3">
           {filteredContracts.map((contract) => {
@@ -201,7 +201,7 @@ export const PlatformContractsCompliancePanel: React.FC<PlatformContractsComplia
 
       {/* Compliance matrix (only in 'all' mode) */}
       {layerFilter === 'all' ? (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <DetailLabel>Compliance matrix</DetailLabel>
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Her katmanin hangi contract&apos;lara uyum saglamasi ve hangilerini enforce etmesi gerektigi.

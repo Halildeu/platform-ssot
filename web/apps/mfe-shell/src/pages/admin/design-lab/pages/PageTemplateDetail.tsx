@@ -321,7 +321,7 @@ function PageRegions({
                 onClick={() =>
                   navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${encodeURIComponent(comp.name.replace(/\//g, '~'))}`)
                 }
-                className="group flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-default p-3 text-left transition hover:border-action-primary/30 hover:shadow-sm"
+                className="group flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-default p-3 text-left transition hover:border-action-primary/30 hover:shadow-xs"
               >
                 <div className="flex-1 min-w-0">
                   <Text className="truncate text-xs font-semibold text-text-primary group-hover:text-action-primary">
@@ -369,7 +369,7 @@ function ZoneCard({
             key={block}
             type="button"
             onClick={() => navigate(`/admin/design-lab/components/actions/${encodeURIComponent(block.replace(/\//g, '~'))}`)}
-            className="rounded-lg bg-surface-default px-3 py-1.5 text-xs font-medium text-text-primary shadow-sm transition hover:bg-action-primary/10 hover:text-action-primary"
+            className="rounded-lg bg-surface-default px-3 py-1.5 text-xs font-medium text-text-primary shadow-xs transition hover:bg-action-primary/10 hover:text-action-primary"
           >
             {block}
           </button>
@@ -407,7 +407,7 @@ function PageComponents({
           onClick={() =>
             navigate(`/admin/design-lab/components/${comp.taxonomyGroupId}/${encodeURIComponent(comp.name.replace(/\//g, '~'))}`)
           }
-          className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary/30 hover:shadow-sm"
+          className="group rounded-2xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-action-primary/30 hover:shadow-xs"
         >
           <div className="flex items-center justify-between gap-2">
             <Text className="text-sm font-semibold text-text-primary group-hover:text-action-primary">

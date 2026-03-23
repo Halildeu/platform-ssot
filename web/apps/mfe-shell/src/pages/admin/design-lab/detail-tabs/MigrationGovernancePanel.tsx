@@ -122,7 +122,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
   return (
     <div className="space-y-4">
       {/* Header summary */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <div className="flex items-start justify-between gap-4">
           <div>
             <DetailLabel>Migration Governance</DetailLabel>
@@ -160,7 +160,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
       </div>
 
       {/* Dimension detail cards */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>Governance dimensions</DetailLabel>
         <div className="mt-4 space-y-3">
           {applicableDimensions.map((dimension) => {
@@ -221,7 +221,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
 
       {/* Migration lanes for this layer */}
       {layerLanes.length > 0 ? (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <DetailLabel>Migration lanes</DetailLabel>
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Bu katmana ait aktif ve planli migration lane&apos;leri.
@@ -257,7 +257,7 @@ export const MigrationGovernancePanel: React.FC<MigrationGovernancePanelProps> =
       ) : null}
 
       {/* Cross-layer overview (compact) */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         <DetailLabel>Cross-layer maturity comparison</DetailLabel>
         <Text variant="secondary" className="mt-1 block text-xs leading-5">
           Tum katmanlarin governance olgunlugu bir bakista.

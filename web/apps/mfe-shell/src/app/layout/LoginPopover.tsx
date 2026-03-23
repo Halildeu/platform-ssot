@@ -93,7 +93,7 @@ const LoginPopover: React.FC<LoginPopoverProps> = ({ onClose, onNavigate }) => {
             type="email"
             autoComplete="username"
             placeholder={t('auth.login.emailPlaceholder')}
-            className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -108,7 +108,7 @@ const LoginPopover: React.FC<LoginPopoverProps> = ({ onClose, onNavigate }) => {
             type="password"
             autoComplete="current-password"
             placeholder={t('auth.login.passwordPlaceholder')}
-            className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+            className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />

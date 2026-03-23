@@ -179,7 +179,7 @@ export default function ComposePage() {
               value={paletteSearch}
               onChange={(e) => setPaletteSearch(e.target.value)}
               placeholder="Search..."
-              className="w-full rounded-md border border-border-subtle bg-surface-canvas pl-7 pr-2 py-1 text-[11px] outline-none focus:border-action-primary"
+              className="w-full rounded-md border border-border-subtle bg-surface-canvas pl-7 pr-2 py-1 text-[11px] outline-hidden focus:border-action-primary"
             />
           </div>
         </div>
@@ -332,7 +332,7 @@ export default function ComposePage() {
                         propValues={node.props as Record<string, string | number | boolean>}
                       />
                       {/* Node label */}
-                      <div className="absolute -top-2 left-2 rounded bg-surface-default px-1 py-0.5 text-[8px] font-mono font-bold text-text-tertiary shadow-sm border border-border-subtle">
+                      <div className="absolute -top-2 left-2 rounded bg-surface-default px-1 py-0.5 text-[8px] font-mono font-bold text-text-tertiary shadow-xs border border-border-subtle">
                         {node.componentName}
                       </div>
                     </div>
@@ -496,7 +496,7 @@ function PropEditor({ label, value, onChange }: { label: string; value: string; 
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="flex-1 rounded-md border border-border-subtle bg-surface-canvas px-2 py-1 text-[11px] outline-none focus:border-action-primary"
+        className="flex-1 rounded-md border border-border-subtle bg-surface-canvas px-2 py-1 text-[11px] outline-hidden focus:border-action-primary"
         placeholder={label}
       />
     </div>

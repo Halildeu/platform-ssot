@@ -453,7 +453,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search..."
-                className="w-full rounded border border-border-default bg-transparent px-2 py-1 text-sm text-text-primary outline-none"
+                className="w-full rounded border border-border-default bg-transparent px-2 py-1 text-sm text-text-primary outline-hidden"
                 data-testid="cascader-search"
               />
             </div>

@@ -41,7 +41,7 @@ export const ${componentName} = React.forwardRef<
 
   const baseStyles = cn(
     'inline-flex items-center justify-center font-medium transition-all',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+    'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2',
     {
       'opacity-50 pointer-events-none': disabled || loading,
     },
@@ -100,7 +100,7 @@ export const ${componentName} = React.forwardRef<
       ref={ref}
       className={cn(
         'inline-flex items-center justify-center font-medium transition-all',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+        'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2',
         variants[variant],
         sizes[size],
         (disabled || loading) && 'opacity-50 pointer-events-none',

@@ -578,7 +578,7 @@ export const VariantIntegration = <RowData = unknown,>({
                 }}
                 onBlur={() => handleRename(v.id)}
                 onClick={(e) => e.stopPropagation()}
-                className="h-5 w-full rounded border border-border-default bg-surface-default px-1 text-xs outline-none"
+                className="h-5 w-full rounded border border-border-default bg-surface-default px-1 text-xs outline-hidden"
                 autoFocus
               />
             ) : (
@@ -851,7 +851,7 @@ export const VariantIntegration = <RowData = unknown,>({
               value={newVariantName}
               onChange={(e) => setNewVariantName(e.target.value)}
               placeholder={m.variantNamePlaceholder ?? "Varyant adi"}
-              className="h-7 flex-1 rounded border border-border-default bg-surface-default px-2 text-xs outline-none focus:border-action-primary"
+              className="h-7 flex-1 rounded border border-border-default bg-surface-default px-2 text-xs outline-hidden focus:border-action-primary"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleCreate();
               }}

@@ -361,7 +361,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                             className={clsx(
                               'flex w-full items-center gap-3 rounded-[18px] border px-3 py-2.5 text-left transition-colors',
                               isGroupSelected
-                                ? 'border-action-primary/30 bg-surface-default shadow-sm'
+                                ? 'border-action-primary/30 bg-surface-default shadow-xs'
                                 : 'border-border-subtle bg-surface-canvas hover:bg-surface-muted',
                             )}
                           >
@@ -432,7 +432,7 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
                                               className={clsx(
                                                 'mb-1 grid w-full grid-cols-[auto_minmax(0,1fr)] items-start gap-3 rounded-[16px] border px-3 py-2.5 text-left transition-colors last:mb-0',
                                                 isItemActive
-                                                  ? 'border-action-primary/25 bg-surface-default shadow-sm'
+                                                  ? 'border-action-primary/25 bg-surface-default shadow-xs'
                                                   : 'border-transparent bg-transparent hover:bg-surface-muted',
                                               )}
                                             >

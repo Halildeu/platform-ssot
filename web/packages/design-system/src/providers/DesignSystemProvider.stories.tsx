@@ -29,3 +29,10 @@ export const WithRTL: Story = {
     children: 'Arabic RTL content',
   },
 };
+
+export const WithCustomTheme: Story = {
+  args: {
+    defaultTheme: { appearance: 'elevated' },
+    children: 'Custom theme content',
+  },
+};

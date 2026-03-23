@@ -100,7 +100,7 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
           {t('access.clone.nameLabel')}
           <input
             type="text"
-            className={`rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-selection-outline ${errors.name ? 'border-state-danger-border' : 'border-border-subtle'}`}
+            className={`rounded-xl border px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-selection-outline ${errors.name ? 'border-state-danger-border' : 'border-border-subtle'}`}
             value={formValues.name}
             onChange={(event) => setFormValues((prev) => ({ ...prev, name: event.target.value }))}
             placeholder={t('access.clone.namePlaceholder')}
@@ -111,7 +111,7 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
         <label className="flex flex-col gap-1 text-sm font-semibold text-text-secondary">
           {t('access.clone.descriptionLabel') ?? 'Açıklama'}
           <textarea
-            className="rounded-xl border border-border-subtle px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-selection-outline"
+            className="rounded-xl border border-border-subtle px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
             rows={3}
             value={formValues.description ?? ''}
             onChange={(event) => setFormValues((prev) => ({ ...prev, description: event.target.value }))}

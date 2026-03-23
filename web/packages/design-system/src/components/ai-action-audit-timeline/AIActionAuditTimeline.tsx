@@ -62,7 +62,7 @@ const statusTone: Record<AIActionAuditStatus, BadgeVariant> = {
 };
 
 const auditTimelineSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 /** Chronological timeline of AI-initiated actions with actor, status, and audit trail details. */
 export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
@@ -107,7 +107,7 @@ export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
       </Text>
 
       {items.length === 0 ? (
-        <div className="mt-4 rounded-[24px] border border-border-subtle/70 bg-[var(--surface-card)] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm">
+        <div className="mt-4 rounded-[24px] border border-border-subtle/70 bg-[var(--surface-card)] p-4 shadow-[0_18px_32px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs">
           <Empty
             description={
               typeof emptyStateLabel === "string"
@@ -133,7 +133,7 @@ export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
                   ) : null}
                 </div>
                 <div
-                  className={`min-w-0 flex-1 overflow-hidden rounded-[24px] border px-4 py-4 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt)] shadow-[0_20px_36px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20" : "border-border-subtle/75 bg-[var(--surface-card-alt)] shadow-[0_16px_30px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20"} backdrop-blur-sm`}
+                  className={`min-w-0 flex-1 overflow-hidden rounded-[24px] border px-4 py-4 ${selected ? "border-action-primary-border/70 bg-[var(--surface-card-alt)] shadow-[0_20px_36px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20" : "border-border-subtle/75 bg-[var(--surface-card-alt)] shadow-[0_16px_30px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20"} backdrop-blur-xs`}
                 >
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant={actorTone[item.actor]}>{item.actor}</Badge>
@@ -167,7 +167,7 @@ export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
                     </div>
                     <Text
                       variant="muted"
-                      className="max-w-full truncate rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2.5 py-1 text-xs font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-sm"
+                      className="max-w-full truncate rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2.5 py-1 text-xs font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs"
                     >
                       {item.timestamp}
                     </Text>

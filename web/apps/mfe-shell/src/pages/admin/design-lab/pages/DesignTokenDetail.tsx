@@ -221,7 +221,7 @@ function ColorsContent() {
                 {colors.map(({ name, value }) => (
                   <div key={name} className="group relative">
                     <div
-                      className="h-14 w-14 rounded-xl border border-border-subtle shadow-sm transition-transform duration-200 group-hover:scale-110"
+                      className="h-14 w-14 rounded-xl border border-border-subtle shadow-xs transition-transform duration-200 group-hover:scale-110"
                       style={{ backgroundColor: value }}
                     />
                     <div className="mt-1.5 text-center">
@@ -251,7 +251,7 @@ function ColorsContent() {
                 {tokens.map(({ token, cssVar }) => (
                   <div
                     key={token}
-                    className="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-default px-3 py-2.5 transition hover:border-border-default hover:shadow-sm"
+                    className="flex items-center gap-3 rounded-xl border border-border-subtle bg-surface-default px-3 py-2.5 transition hover:border-border-default hover:shadow-xs"
                   >
                     <div className="h-8 w-8 shrink-0 rounded-lg border border-border-subtle" style={{ backgroundColor: `var(${cssVar})` }} />
                     <div className="min-w-0 flex-1">
@@ -508,7 +508,7 @@ function MotionContent() {
               key={name}
               type="button"
               onClick={() => setPlaying(playing === name ? null : name)}
-              className="group rounded-xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-border-default hover:shadow-sm"
+              className="group rounded-xl border border-border-subtle bg-surface-default p-4 text-left transition hover:border-border-default hover:shadow-xs"
             >
               <div className="relative h-16 overflow-hidden rounded-lg bg-surface-canvas">
                 <div

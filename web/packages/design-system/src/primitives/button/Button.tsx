@@ -73,7 +73,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-action-primary text-text-inverse",
     "hover:bg-accent-primary-hover",
     "active:bg-[var(--action-primary-active)]",
-    "shadow-sm",
+    "shadow-xs",
   ].join(" "),
 
   secondary: [
@@ -98,7 +98,7 @@ const variantStyles: Record<ButtonVariant, string> = {
     "bg-state-danger-text text-text-inverse",
     "hover:brightness-110",
     "active:brightness-90",
-    "shadow-sm",
+    "shadow-xs",
   ].join(" "),
 
   link: [

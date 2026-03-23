@@ -101,7 +101,7 @@ function EventDot({
   return (
     <span
       className={cn(
-        'inline-block shrink-0 rounded-full border-2 border-surface-default shadow-sm',
+        'inline-block shrink-0 rounded-full border-2 border-surface-default shadow-xs',
         active && 'ring-2 ring-offset-1',
       )}
       style={{

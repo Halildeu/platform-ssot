@@ -68,7 +68,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "button-border-radius", cssVar: "--radius-lg", resolvedValue: "8px", tier: "global", category: "border", description: "Button border radius" },
     { name: "button-border-width", cssVar: "--border-width-default", resolvedValue: "1px", tier: "global", category: "border", description: "Button border width" },
     // Shadow
-    { name: "button-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Button shadow" },
+    { name: "button-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Button shadow" },
     // Sizing
     { name: "button-height-sm", cssVar: "--size-8", resolvedValue: "32px", tier: "component", category: "sizing", description: "Small button height" },
     { name: "button-height-md", cssVar: "--size-10", resolvedValue: "40px", tier: "component", category: "sizing", description: "Medium button height" },
@@ -155,7 +155,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "sfl-chip-radius", cssVar: "--radius-full", resolvedValue: "9999px", tier: "global", category: "border", description: "Filtre chip ve totalCount badge tam yuvarlak kenar" },
     { name: "sfl-skeleton-radius", cssVar: "--radius-lg", resolvedValue: "8px", tier: "global", category: "border", description: "Yukleme iskeleti blok kenar yuvarlama" },
     // Shadow
-    { name: "sfl-panel-shadow", cssVar: "--shadow-panel", resolvedValue: "0 22px 48px -34px rgba(15,23,42,0.28)", tier: "component", category: "shadow", description: "Panel golge efekti (backdrop-blur-sm ile)" },
+    { name: "sfl-panel-shadow", cssVar: "--shadow-panel", resolvedValue: "0 22px 48px -34px rgba(15,23,42,0.28)", tier: "component", category: "shadow", description: "Panel golge efekti (backdrop-blur-xs ile)" },
     // Motion
     { name: "sfl-transition", cssVar: "transition-all", resolvedValue: "all 200ms ease", tier: "component", category: "motion", description: "Panel, chip ve secim cubugu gecis animasyonu (duration-200)" },
     { name: "sfl-skeleton-pulse", cssVar: "animate-pulse", resolvedValue: "pulse 2s cubic-bezier(0.4,0,0.6,1) infinite", tier: "component", category: "motion", description: "Yukleme iskeleti nabiz animasyonu" },
@@ -287,7 +287,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "switch-thumb-sm", cssVar: "--size-3", resolvedValue: "12px", tier: "component", category: "sizing", description: "Küçük thumb boyutu (h-3 w-3)" },
     { name: "switch-thumb-md", cssVar: "--size-4", resolvedValue: "16px", tier: "component", category: "sizing", description: "Orta thumb boyutu (h-4 w-4)" },
     // Shadow
-    { name: "switch-thumb-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Thumb gölge efekti" },
+    { name: "switch-thumb-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Thumb gölge efekti" },
     // Motion
     { name: "switch-transition", cssVar: "--transition-normal", resolvedValue: "200ms ease", tier: "global", category: "motion", description: "Track ve thumb geçiş süresi (duration-200)" },
   ],
@@ -404,7 +404,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "iconbutton-radius-rounded", cssVar: "--radius-full", resolvedValue: "9999px", tier: "global", category: "border", description: "Yuvarlak kenar yarıçapı (rounded-full)" },
     { name: "iconbutton-focus-ring-width", cssVar: "--ring-width-2", resolvedValue: "2px", tier: "component", category: "border", description: "Odak halkası kalınlığı (ring-2)" },
     // Shadow
-    { name: "iconbutton-shadow-primary", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Primary/danger varyant gölgesi (shadow-sm)" },
+    { name: "iconbutton-shadow-primary", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Primary/danger varyant gölgesi (shadow-xs)" },
     // Sizing
     { name: "iconbutton-size-xs", cssVar: "--size-7", resolvedValue: "28px", tier: "component", category: "sizing", description: "XS buton boyutu (h-7 w-7)" },
     { name: "iconbutton-size-sm", cssVar: "--size-8", resolvedValue: "32px", tier: "component", category: "sizing", description: "SM buton boyutu (h-8 w-8)" },
@@ -440,7 +440,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "popover-arrow-size", cssVar: "--size-3", resolvedValue: "12px", tier: "component", category: "border", description: "Ok göstergesi boyutu (h-3 w-3)" },
     // Shadow
     { name: "popover-panel-shadow", cssVar: "--elevation-overlay", resolvedValue: "var(--elevation-overlay)", tier: "component", category: "shadow", description: "Panel gölge efekti (elevation-overlay)" },
-    { name: "popover-arrow-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Ok göstergesi gölge efekti" },
+    { name: "popover-arrow-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Ok göstergesi gölge efekti" },
     // Sizing
     { name: "popover-max-width", cssVar: "--size-88", resolvedValue: "22rem", tier: "component", category: "sizing", description: "Panel maksimum genişlik (w-[min(22rem,...)])" },
   ],
@@ -508,7 +508,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "card-border-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "global", category: "border", description: "Kart kenar yarıçapı (rounded-2xl)" },
     { name: "card-border-width", cssVar: "--border-width-default", resolvedValue: "1px", tier: "global", category: "border", description: "Kart kenarlık kalınlığı" },
     // Shadow
-    { name: "card-shadow-elevated", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Elevated varyant gölge efekti (shadow-sm)" },
+    { name: "card-shadow-elevated", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Elevated varyant gölge efekti (shadow-xs)" },
     { name: "card-shadow-hover", cssVar: "--shadow-md", resolvedValue: "0 4px 6px -1px rgba(0,0,0,0.1)", tier: "global", category: "shadow", description: "Hover gölge efekti (shadow-md)" },
     // Motion
     { name: "card-transition", cssVar: "--transition-fast", resolvedValue: "150ms ease", tier: "global", category: "motion", description: "Geçiş süresi (duration-150)" },
@@ -698,7 +698,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "treetable-surface-radius", cssVar: "--radius-3xl", resolvedValue: "26px", tier: "component", category: "border", description: "Tablo kenar yarıçapı (rounded-[26px])" },
     { name: "treetable-expand-btn-radius", cssVar: "--radius-full", resolvedValue: "9999px", tier: "global", category: "border", description: "Genişletme butonu kenar yarıçapı (rounded-full)" },
     // Shadow
-    { name: "treetable-surface-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Tablo gölge efekti (shadow-sm)" },
+    { name: "treetable-surface-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Tablo gölge efekti (shadow-xs)" },
     // Sizing
     { name: "treetable-expand-btn-size", cssVar: "--size-7", resolvedValue: "28px", tier: "component", category: "sizing", description: "Genişletme butonu boyutu (size-7)" },
   ],
@@ -941,7 +941,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "textinput-radius-md", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "global", category: "border", description: "Orta/büyük boyut kenar yarıçapı (rounded-2xl)" },
     { name: "textinput-focus-ring", cssVar: "--ring-width-2", resolvedValue: "2px", tier: "component", category: "border", description: "Odaklanma halkası genişliği (ring-2)" },
     // Shadow
-    { name: "textinput-shadow", cssVar: "--shadow-sm", resolvedValue: "shadow-sm", tier: "global", category: "shadow", description: "Varsayılan alan gölgesi" },
+    { name: "textinput-shadow", cssVar: "--shadow-xs", resolvedValue: "shadow-xs", tier: "global", category: "shadow", description: "Varsayılan alan gölgesi" },
     // Sizing
     { name: "textinput-height-sm", cssVar: "--size-10", resolvedValue: "40px", tier: "component", category: "sizing", description: "Küçük boyut minimum yükseklik (min-h-10)" },
     { name: "textinput-height-md", cssVar: "--size-11", resolvedValue: "44px", tier: "component", category: "sizing", description: "Orta boyut minimum yükseklik (min-h-11)" },
@@ -967,7 +967,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "textarea-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "global", category: "border", description: "Metin alanı kenar yarıçapı (rounded-2xl)" },
     { name: "textarea-focus-ring", cssVar: "--ring-width-2", resolvedValue: "2px", tier: "component", category: "border", description: "Odaklanma halkası genişliği (ring-2)" },
     // Shadow
-    { name: "textarea-shadow", cssVar: "--shadow-sm", resolvedValue: "shadow-sm", tier: "global", category: "shadow", description: "Varsayılan metin alanı gölgesi" },
+    { name: "textarea-shadow", cssVar: "--shadow-xs", resolvedValue: "shadow-xs", tier: "global", category: "shadow", description: "Varsayılan metin alanı gölgesi" },
   ],
   TimePicker: [
     // Colors
@@ -1031,7 +1031,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "segmented-radius-rounded", cssVar: "--radius-lg", resolvedValue: "8px", tier: "global", category: "border", description: "Rounded şekil kenar yarıçapı (rounded-lg)" },
     { name: "segmented-radius-pill", cssVar: "--radius-full", resolvedValue: "9999px", tier: "global", category: "border", description: "Pill şekil kenar yarıçapı (rounded-full)" },
     // Shadow
-    { name: "segmented-active-shadow", cssVar: "--shadow-sm", resolvedValue: "shadow-sm", tier: "global", category: "shadow", description: "Aktif segment gölgesi" },
+    { name: "segmented-active-shadow", cssVar: "--shadow-xs", resolvedValue: "shadow-xs", tier: "global", category: "shadow", description: "Aktif segment gölgesi" },
   ],
   MobileStepper: [
     // Colors
@@ -1117,8 +1117,8 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "tabs-pill-radius", cssVar: "--radius-full", resolvedValue: "9999px", tier: "global", category: "border", description: "Pill sekme kenar yarıçapı (rounded-full)" },
     { name: "tabs-indicator-width", cssVar: "--border-width-2", resolvedValue: "2px", tier: "component", category: "border", description: "Line varyant aktif gösterge kalınlığı (border-b-2)" },
     // Shadow
-    { name: "tabs-enclosed-active-shadow", cssVar: "--shadow-sm", resolvedValue: "shadow-sm", tier: "global", category: "shadow", description: "Enclosed aktif sekme gölgesi" },
-    { name: "tabs-pill-active-shadow", cssVar: "--shadow-sm", resolvedValue: "shadow-sm", tier: "global", category: "shadow", description: "Pill aktif sekme gölgesi" },
+    { name: "tabs-enclosed-active-shadow", cssVar: "--shadow-xs", resolvedValue: "shadow-xs", tier: "global", category: "shadow", description: "Enclosed aktif sekme gölgesi" },
+    { name: "tabs-pill-active-shadow", cssVar: "--shadow-xs", resolvedValue: "shadow-xs", tier: "global", category: "shadow", description: "Pill aktif sekme gölgesi" },
   ],
   Toast: [
     // Colors
@@ -1163,7 +1163,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "eel-section-radius", cssVar: "--radius-3xl", resolvedValue: "24px", tier: "global", category: "border", description: "Dış bölüm kenar yarıçapı (rounded-3xl)" },
     { name: "eel-inner-radius", cssVar: "--radius-3xl", resolvedValue: "24px", tier: "global", category: "border", description: "İç alan kenar yarıçapı (rounded-[24px])" },
     // Shadow
-    { name: "eel-section-shadow", cssVar: "--shadow-sm", resolvedValue: "shadow-sm", tier: "global", category: "shadow", description: "Dış bölüm gölgesi (shadow-sm)" },
+    { name: "eel-section-shadow", cssVar: "--shadow-xs", resolvedValue: "shadow-xs", tier: "global", category: "shadow", description: "Dış bölüm gölgesi (shadow-xs)" },
   ],
   LinkInline: [
     // Colors
@@ -1486,7 +1486,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "anchortoc-radius", cssVar: "--radius-3xl", resolvedValue: "28px", tier: "component", category: "border", description: "Navigasyon kenar yarıçapı (rounded-[28px])" },
     { name: "anchortoc-item-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "component", category: "border", description: "Öğe kenar yarıçapı (rounded-2xl)" },
     // Shadow
-    { name: "anchortoc-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Navigasyon gölgesi (shadow-sm)" },
+    { name: "anchortoc-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Navigasyon gölgesi (shadow-xs)" },
   ],
   Tree: [
     // Color
@@ -1513,7 +1513,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "tree-radius", cssVar: "--radius-3xl", resolvedValue: "26px", tier: "component", category: "border", description: "Kapsayıcı kenar yarıçapı (rounded-[26px])" },
     { name: "tree-node-radius", cssVar: "--radius-3xl", resolvedValue: "24px", tier: "component", category: "border", description: "Düğüm kart kenar yarıçapı (rounded-[24px])" },
     // Shadow
-    { name: "tree-node-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Düğüm kart gölgesi (shadow-sm)" },
+    { name: "tree-node-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Düğüm kart gölgesi (shadow-xs)" },
     // Sizing
     { name: "tree-toggle-size", cssVar: "--size-7", resolvedValue: "28px", tier: "component", category: "sizing", description: "Genişlet/daralt butonu boyutu (size-7)" },
   ],
@@ -1581,7 +1581,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Border
     { name: "tablesimple-radius", cssVar: "--radius-3xl", resolvedValue: "26px", tier: "component", category: "border", description: "Tablo kenar yarıçapı (rounded-[26px])" },
     // Shadow
-    { name: "tablesimple-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Tablo gölgesi (shadow-sm)" },
+    { name: "tablesimple-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Tablo gölgesi (shadow-xs)" },
   ],
   EntitySummaryBlock: [
     // Color
@@ -1645,7 +1645,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Border
     { name: "detailsectiontabs-radius", cssVar: "--radius-3xl", resolvedValue: "20px", tier: "component", category: "border", description: "Sekme çubuğu kenar yarıçapı (rounded-[20px])" },
     // Shadow
-    { name: "detailsectiontabs-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Sekme çubuğu gölgesi (shadow-sm)" },
+    { name: "detailsectiontabs-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Sekme çubuğu gölgesi (shadow-xs)" },
     { name: "detailsectiontabs-active-shadow", cssVar: "--shadow-custom", resolvedValue: "0 14px 28px -18px rgba(38,28,89,0.55)", tier: "component", category: "shadow", description: "Aktif sekme gölgesi" },
   ],
   SectionTabs: [
@@ -1672,7 +1672,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Border
     { name: "sectiontabs-root-radius", cssVar: "--radius-3xl", resolvedValue: "20px", tier: "component", category: "border", description: "Kök kenar yarıçapı (rounded-[20px])" },
     // Shadow
-    { name: "sectiontabs-root-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Kök kapsayıcı gölgesi (shadow-sm)" },
+    { name: "sectiontabs-root-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Kök kapsayıcı gölgesi (shadow-xs)" },
     { name: "sectiontabs-active-shadow", cssVar: "--shadow-custom", resolvedValue: "0 14px 28px -18px rgba(38,28,89,0.55)", tier: "component", category: "shadow", description: "Aktif sekme gölgesi" },
     // Motion
     { name: "sectiontabs-description-transition", cssVar: "--transition-fast", resolvedValue: "150ms ease-out", tier: "global", category: "motion", description: "Açıklama göster/gizle geçiş animasyonu" },
@@ -1698,7 +1698,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Border
     { name: "actionbar-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "component", category: "border", description: "Çubuk kenar yarıçapı (rounded-2xl)" },
     // Shadow
-    { name: "actionbar-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Çubuk gölgesi (shadow-sm)" },
+    { name: "actionbar-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Çubuk gölgesi (shadow-xs)" },
   ],
   ApprovalReview: [
     // Color
@@ -1761,7 +1761,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "ai-authoring-radius", cssVar: "--radius-3xl", resolvedValue: "24px", tier: "global", category: "border", description: "Panel kenar yarıçapı (rounded-3xl)" },
     { name: "ai-authoring-confidence-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "component", category: "border", description: "Güven kutusu kenar yarıçapı (rounded-2xl)" },
     // Shadow
-    { name: "ai-authoring-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Panel gölgesi (shadow-sm)" },
+    { name: "ai-authoring-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Panel gölgesi (shadow-xs)" },
   ],
   AIActionAuditTimeline: [
     // Color
@@ -1804,7 +1804,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "prompt-composer-radius", cssVar: "--radius-3xl", resolvedValue: "24px", tier: "global", category: "border", description: "Panel kenar yarıçapı (rounded-3xl)" },
     { name: "prompt-composer-contract-radius", cssVar: "--radius-2xl", resolvedValue: "24px", tier: "component", category: "border", description: "Sözleşme kartı kenar yarıçapı (rounded-[24px])" },
     // Shadow
-    { name: "prompt-composer-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Panel gölgesi (shadow-sm)" },
+    { name: "prompt-composer-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Panel gölgesi (shadow-xs)" },
   ],
   RecommendationCard: [
     // Color
@@ -1826,7 +1826,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "recommendation-radius", cssVar: "--radius-3xl", resolvedValue: "24px", tier: "global", category: "border", description: "Kart kenar yarıçapı (rounded-3xl)" },
     { name: "recommendation-rationale-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "component", category: "border", description: "Gerekçe bölümü kenar yarıçapı (rounded-2xl)" },
     // Shadow
-    { name: "recommendation-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Kart gölgesi (shadow-sm)" },
+    { name: "recommendation-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Kart gölgesi (shadow-xs)" },
   ],
   ConfidenceBadge: [
     // Color
@@ -1884,7 +1884,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Border
     { name: "command-header-radius", cssVar: "--radius-xl", resolvedValue: "12px", tier: "component", category: "border", description: "Arama alanı kenar yarıçapı" },
     // Shadow
-    { name: "command-header-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Başlık gölgesi" },
+    { name: "command-header-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Başlık gölgesi" },
   ],
   CommandWorkspace: [
     // Color
@@ -1944,7 +1944,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Border
     { name: "dashboard-template-card-radius", cssVar: "--radius-xl", resolvedValue: "12px", tier: "component", category: "border", description: "Kart kenar yarıçapı" },
     // Shadow
-    { name: "dashboard-template-card-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Kart gölgesi" },
+    { name: "dashboard-template-card-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Kart gölgesi" },
   ],
   DetailTemplate: [
     // Color
@@ -1983,7 +1983,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     // Border
     { name: "settings-template-section-radius", cssVar: "--radius-xl", resolvedValue: "12px", tier: "component", category: "border", description: "Bölüm kenar yarıçapı" },
     // Shadow
-    { name: "settings-template-section-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Bölüm gölgesi" },
+    { name: "settings-template-section-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Bölüm gölgesi" },
   ],
   ThemePresetCompare: [
     // Color
@@ -2006,7 +2006,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "preset-compare-card-radius", cssVar: "--radius-2xl", resolvedValue: "24px", tier: "component", category: "border", description: "Kart kenar yarıçapı (rounded-[24px])" },
     { name: "preset-compare-axis-radius", cssVar: "--radius-2xl", resolvedValue: "16px", tier: "component", category: "border", description: "Eksen satır kenar yarıçapı (rounded-2xl)" },
     // Shadow
-    { name: "preset-compare-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Panel gölgesi (shadow-sm)" },
+    { name: "preset-compare-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Panel gölgesi (shadow-xs)" },
   ],
   ThemePresetGallery: [
     // Color
@@ -2030,7 +2030,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "preset-gallery-radius", cssVar: "--radius-3xl", resolvedValue: "24px", tier: "component", category: "border", description: "Galeri kenar yarıçapı (rounded-3xl)" },
     { name: "preset-gallery-card-radius", cssVar: "--radius-3xl-alt", resolvedValue: "26px", tier: "component", category: "border", description: "Kart kenar yarıçapı (rounded-[26px])" },
     // Shadow
-    { name: "preset-gallery-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Galeri gölgesi (shadow-sm)" },
+    { name: "preset-gallery-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Galeri gölgesi (shadow-xs)" },
   ],
   ThemePreviewCard: [
     // Color
@@ -2052,7 +2052,7 @@ const _tokenMap: Record<string, TokenEntry[]> = {
     { name: "preview-card-radius", cssVar: "--radius-xl", resolvedValue: "12px", tier: "component", category: "border", description: "Kart kenar yarıçapı (rounded-xl)" },
     { name: "preview-card-inner-radius", cssVar: "--radius-lg", resolvedValue: "8px", tier: "component", category: "border", description: "İç bölüm kenar yarıçapı (rounded-lg)" },
     // Shadow
-    { name: "preview-card-selected-shadow", cssVar: "--shadow-sm", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Seçili kart gölgesi (shadow-sm)" },
+    { name: "preview-card-selected-shadow", cssVar: "--shadow-xs", resolvedValue: "0 1px 2px rgba(0,0,0,0.05)", tier: "global", category: "shadow", description: "Seçili kart gölgesi (shadow-xs)" },
     // Sizing
     { name: "preview-card-check-size", cssVar: "--size-4", resolvedValue: "16px", tier: "component", category: "sizing", description: "Seçim onay daire boyutu (h-4 w-4)" },
   ],

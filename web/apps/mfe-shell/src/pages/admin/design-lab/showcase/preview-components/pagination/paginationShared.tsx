@@ -89,7 +89,7 @@ export const DesignLabPaginationScenarioFrame: React.FC<DesignLabPaginationScena
 
   return (
     <div className="grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(260px,0.7fr)]">
-      <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         {children}
       </div>
       <div className="space-y-4">

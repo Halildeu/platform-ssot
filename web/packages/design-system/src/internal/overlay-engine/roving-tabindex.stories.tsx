@@ -24,3 +24,7 @@ export const HorizontalNavigation: Story = {
 export const VerticalNavigation: Story = {
   render: () => <div>useRovingTabindex — vertical arrow key navigation pattern</div>,
 };
+
+export const WithLoop: Story = {
+  render: () => <div>useRovingTabindex — loop=true wraps focus from last to first item</div>,
+};

@@ -282,7 +282,7 @@ export function NotificationCenter({
   return (
     <div
       className={cn(
-        'flex flex-col rounded-lg border border-border-default bg-[var(--surface-primary)] shadow-sm',
+        'flex flex-col rounded-lg border border-border-default bg-[var(--surface-primary)] shadow-xs',
         accessStyles(state),
         className,
       )}

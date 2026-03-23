@@ -94,7 +94,7 @@ const SIZE_CLASSES: Record<FormSize, { input: string; label: string; text: strin
 };
 
 const INPUT_BASE =
-  "w-full rounded-lg border border-border-subtle bg-[var(--surface-default-bg,var(--surface-default))] text-text-primary outline-none transition-colors placeholder:text-text-secondary/60 focus:border-[var(--selection-outline,var(--action-primary))] focus:ring-1 focus:ring-[var(--selection-outline,var(--action-primary))]";
+  "w-full rounded-lg border border-border-subtle bg-[var(--surface-default-bg,var(--surface-default))] text-text-primary outline-hidden transition-colors placeholder:text-text-secondary/60 focus:border-[var(--selection-outline,var(--action-primary))] focus:ring-1 focus:ring-[var(--selection-outline,var(--action-primary))]";
 
 const ERROR_CLASS = "border-[var(--danger-color,var(--state-error-text))] focus:border-[var(--danger-color,var(--state-error-text))] focus:ring-[var(--danger-color,var(--state-error-text))]";
 

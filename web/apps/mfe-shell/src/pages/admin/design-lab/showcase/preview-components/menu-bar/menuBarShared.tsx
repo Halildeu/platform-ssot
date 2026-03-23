@@ -142,7 +142,7 @@ const MenuBarMetricChip: React.FC<{
   value: React.ReactNode;
   tone?: React.ComponentProps<typeof Badge>['tone'];
 }> = ({ label, value, tone = 'muted' }) => (
-  <div className="rounded-2xl border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.8))] px-3 py-2 shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+  <div className="rounded-2xl border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.8))] px-3 py-2 shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-xs">
     <Text as="div" className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-secondary">
       {label as string}
     </Text>
@@ -176,7 +176,7 @@ export const DesignLabMenuBarScenarioFrame: React.FC<DesignLabMenuBarScenarioFra
 
   return (
     <div className="space-y-4">
-      <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+      <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
         {children}
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -445,7 +445,7 @@ const buildInteractiveVariantConfig = (
         searchEmptyStateLabel: t('Eşleşen rota veya komut bulunamadı.', 'No matching routes or commands.'),
         initialPath: '/console/approval',
         startSlot: (
-          <div className="flex items-center gap-2 rounded-full border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.78))] px-3 py-1.5 shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-full border border-border-subtle/70 bg-[var(--surface-card,rgba(255,255,255,0.78))] px-3 py-1.5 shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-[var(--border-subtle)]/20 backdrop-blur-xs">
             <Search className={iconClassName} />
             <Text variant="secondary" className="text-xs">{t('Ara, komut çalıştır, rota aç', 'Search, run a command, open a route')}</Text>
             <Badge variant="muted">⌘K</Badge>

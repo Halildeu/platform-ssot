@@ -65,7 +65,7 @@ export default function PagesListing() {
                 onClick={() =>
                   navigate(`/admin/design-lab/patterns/${family.pageId}`)
                 }
-                className="group rounded-2xl border border-border-subtle bg-surface-default p-5 text-left shadow-sm transition hover:border-action-primary/30 hover:shadow-md"
+                className="group rounded-2xl border border-border-subtle bg-surface-default p-5 text-left shadow-xs transition hover:border-action-primary/30 hover:shadow-md"
               >
                 <Text as="div" className="text-base font-semibold text-text-primary">
                   {family.title}
@@ -97,7 +97,7 @@ export default function PagesListing() {
                 onClick={() =>
                   navigate(`/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, '~'))}`)
                 }
-                className="group rounded-2xl border border-border-subtle bg-surface-default p-5 text-left shadow-sm transition hover:border-action-primary/30 hover:shadow-md"
+                className="group rounded-2xl border border-border-subtle bg-surface-default p-5 text-left shadow-xs transition hover:border-action-primary/30 hover:shadow-md"
               >
                 <div className="flex items-center justify-between">
                   <Text as="div" className="text-base font-semibold text-text-primary">

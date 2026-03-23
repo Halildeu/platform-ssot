@@ -167,7 +167,7 @@ export default function BundleSizePage() {
           }}
         />
         <div className="relative">
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-sm">
+          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-surface-default/80 px-3 py-1 text-xs font-medium text-text-secondary backdrop-blur-xs">
             <Package className="h-3 w-3" />
             {rows.length} components
           </div>
@@ -192,8 +192,8 @@ export default function BundleSizePage() {
               className={[
                 "group rounded-xl border p-4 text-left transition-all duration-200",
                 tierFilter === tier
-                  ? "border-action-primary bg-action-primary/5 shadow-sm"
-                  : "border-border-subtle bg-surface-default hover:border-border-default hover:shadow-sm",
+                  ? "border-action-primary bg-action-primary/5 shadow-xs"
+                  : "border-border-subtle bg-surface-default hover:border-border-default hover:shadow-xs",
               ].join(" ")}
             >
               <div className="flex items-center gap-2">
@@ -221,7 +221,7 @@ export default function BundleSizePage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search components..."
-            className="h-10 w-full rounded-xl border border-border-subtle bg-surface-default pl-10 pr-10 text-sm text-text-primary placeholder:text-text-secondary/50 transition focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-action-primary/20"
+            className="h-10 w-full rounded-xl border border-border-subtle bg-surface-default pl-10 pr-10 text-sm text-text-primary placeholder:text-text-secondary/50 transition focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-action-primary/20"
           />
           {search && (
             <button type="button" onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary">

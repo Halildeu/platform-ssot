@@ -95,7 +95,7 @@ export const buildLinkInlineLivePreview = (
   }
 
   return (
-    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+    <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         <PreviewPanel title="Navigation states">
           <LinkInlineNavigationStates />

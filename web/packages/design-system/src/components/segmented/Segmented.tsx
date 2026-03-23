@@ -138,7 +138,7 @@ const appearanceStyles: Record<
     active: cn(
       "bg-[var(--segmented-active-bg,var(--surface-default))]",
       "text-[var(--segmented-active-text,var(--text-primary))]",
-      "shadow-sm",
+      "shadow-xs",
     ),
     inactive: cn(
       "text-[var(--segmented-text,var(--text-secondary))]",

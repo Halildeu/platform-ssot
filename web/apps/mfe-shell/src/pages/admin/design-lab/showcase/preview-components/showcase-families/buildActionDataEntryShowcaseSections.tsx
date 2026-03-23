@@ -834,7 +834,7 @@ export const buildActionDataEntryShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <PreviewPanel title={t('designlab.showcase.component.filterBar.sections.toolbar.panelControlled')}>
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <FilterBar>
                     <TextInput
                       label={t('designlab.showcase.component.filterBar.sections.toolbar.fields.search')}
@@ -883,7 +883,7 @@ export const buildActionDataEntryShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.filterBar.sections.readonly.panelReadonly')}>
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <FilterBar>
                     <TextInput
                       label={t('designlab.showcase.component.filterBar.sections.readonly.fields.search')}
@@ -918,7 +918,7 @@ export const buildActionDataEntryShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <PreviewPanel title="Query toolbar">
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <FilterBar>
                     <Segmented
                       ariaLabel="Liste modu"
@@ -964,7 +964,7 @@ export const buildActionDataEntryShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
               <PreviewPanel title="Saved view toolbar">
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <FilterBar>
                     <Select
                       label="Gorunum"
@@ -1005,7 +1005,7 @@ export const buildActionDataEntryShowcaseSections = (
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title="Governance toolbar">
-                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-sm">
+                <div className="rounded-[24px] border border-border-subtle bg-surface-panel p-4 shadow-xs">
                   <FilterBar>
                     <Select
                       label="Policy state"

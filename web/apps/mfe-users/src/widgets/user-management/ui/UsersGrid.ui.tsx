@@ -755,7 +755,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       <div className="flex items-center gap-2 text-sm text-text-secondary">
         <span className="font-semibold text-text-primary">{t('users.grid.mode.label')}</span>
         <select
-          className="rounded-xl border border-border-subtle bg-surface-default px-3 py-1 text-sm font-medium text-text-secondary shadow-sm focus:outline-none focus:ring-2 focus:ring-selection-outline"
+          className="rounded-xl border border-border-subtle bg-surface-default px-3 py-1 text-sm font-medium text-text-secondary shadow-xs focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
           value={dataSourceMode}
           onChange={(event) => setDataSourceMode(event.target.value as 'server' | 'client')}
         >
@@ -778,7 +778,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="inline-flex items-center justify-center rounded-md border border-action-primary bg-action-primary px-3 py-2 text-sm font-semibold text-action-primary-text shadow-sm hover:bg-action-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selection-outline focus-visible:ring-offset-1 disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-md border border-action-primary bg-action-primary px-3 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:bg-action-primary/90 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-selection-outline focus-visible:ring-offset-1 disabled:opacity-60"
           onClick={handleStreamingCsv}
           title="Streaming CSV (Tüm Kayıt) — sunucudan limitsiz indirme"
         >
@@ -814,7 +814,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
   const blockedStateContent = useMemo(() => {
     if (!accessProbeReady && dataSourceMode === 'server') {
       return (
-        <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+        <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
           <span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary-border" />
         </div>
       );
@@ -832,7 +832,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           : 'Kullanıcı verileri alınamadı. Lütfen bağlantınızı kontrol edip yeniden deneyin.';
 
     return (
-      <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
         <div className="flex max-w-xl flex-col items-center gap-4 text-center">
           <Empty description={description} />
           {gridAccessState === 'network-error' ? (

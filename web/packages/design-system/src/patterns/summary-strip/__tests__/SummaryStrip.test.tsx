@@ -146,4 +146,27 @@ describe('SummaryStrip — accessibility', () => {
     const { container } = render(<SummaryStrip items={defaultItems} />);
     await expectNoA11yViolations(container);
   });
+
+  it('renders article elements for each metric card', () => {
+    render(<SummaryStrip items={defaultItems} />);
+    const articles = screen.getAllByRole('article');
+    expect(articles).toHaveLength(defaultItems.length);
+  });
+
+  it('each article has accessible label and value text', () => {
+    render(<SummaryStrip items={defaultItems} />);
+    expect(screen.getByText('Revenue')).toBeInTheDocument();
+    expect(screen.getByText('$10k')).toBeInTheDocument();
+  });
+
+  it('section wrapper is accessible via semantic structure', () => {
+    const { container } = render(<SummaryStrip items={defaultItems} />);
+    const wrapper = container.firstElementChild;
+    expect(wrapper).toBeInTheDocument();
+  });
+
+  it('title renders as heading when provided', () => {
+    render(<SummaryStrip items={defaultItems} title="Metrics" />);
+    expect(screen.getByText('Metrics')).toBeInTheDocument();
+  });
 });

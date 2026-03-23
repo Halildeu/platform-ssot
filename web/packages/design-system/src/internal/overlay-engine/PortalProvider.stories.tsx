@@ -36,3 +36,11 @@ export const WithMultipleChildren: Story = {
     </PortalProvider>
   ),
 };
+
+export const Disabled: Story = {
+  render: () => (
+    <PortalProvider enabled={false}>
+      <div>Portals disabled — content renders inline</div>
+    </PortalProvider>
+  ),
+};

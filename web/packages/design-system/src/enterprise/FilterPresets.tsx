@@ -130,7 +130,7 @@ function SavePopover({
           if (e.key === 'Escape') onCancel();
         }}
         placeholder={localeText?.savePlaceholder ?? "Preset ad\u0131..."}
-        className="rounded border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-text-primary outline-none focus:border-action-primary w-36"
+        className="rounded border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-text-primary outline-hidden focus:border-action-primary w-36"
       />
       <button
         type="button"

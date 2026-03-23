@@ -273,7 +273,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
               <dd>
                 {canEditRole ? (
                   <select
-                    className="min-w-[160px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+                    className="min-w-[160px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
                     value={user.role}
                     onChange={(event) => handleRoleChange(event.target.value)}
                   >
@@ -301,7 +301,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                       max={1440}
                       value={sessionTimeoutMinutes}
                       onChange={(event) => setSessionTimeoutMinutes(Number(event.target.value))}
-                      className="w-24 rounded-xl border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline"
+                      className="w-24 rounded-xl border border-border-subtle px-3 py-2 text-sm text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline"
                     />
                     <button
                       type="button"
@@ -410,7 +410,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
               return (
                 <div
                   key={`${permission.moduleKey}-${permission.assignmentId ?? permission.level}`}
-                  className="grid gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 shadow-sm md:grid-cols-[1fr_auto]"
+                  className="grid gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 shadow-xs md:grid-cols-[1fr_auto]"
                 >
                   <div className="space-y-2">
                     <div className="text-base font-semibold text-text-primary">
@@ -436,7 +436,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                   {canEditThisModule && (
                     <div className="flex flex-col gap-2">
                       <select
-                        className="h-10 min-w-[180px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline disabled:cursor-not-allowed disabled:opacity-50"
+                        className="h-10 min-w-[180px] rounded-xl border border-border-subtle bg-surface-default px-3 py-2 text-sm font-medium text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline disabled:cursor-not-allowed disabled:opacity-50"
                         value={permission.level}
                         onChange={(event) =>
                           handleModuleLevelChange(permission, event.target.value as UserModuleAccessLevel)

@@ -296,7 +296,7 @@ export default function MigrationGuidePage() {
             placeholder="Search migrations..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-border-subtle bg-surface-default pl-9 pr-3 py-2 text-xs text-text-primary outline-none placeholder:text-text-tertiary focus:border-action-primary"
+            className="w-full rounded-xl border border-border-subtle bg-surface-default pl-9 pr-3 py-2 text-xs text-text-primary outline-hidden placeholder:text-text-tertiary focus:border-action-primary"
           />
         </div>
         <div className="flex gap-1">
@@ -319,7 +319,7 @@ export default function MigrationGuidePage() {
         <select
           value={filterVersion}
           onChange={(e) => setFilterVersion(e.target.value)}
-          className="rounded-lg border border-border-subtle bg-surface-default px-2.5 py-1.5 text-xs text-text-primary outline-none"
+          className="rounded-lg border border-border-subtle bg-surface-default px-2.5 py-1.5 text-xs text-text-primary outline-hidden"
         >
           <option value="all">All versions</option>
           {versions.map((v) => (

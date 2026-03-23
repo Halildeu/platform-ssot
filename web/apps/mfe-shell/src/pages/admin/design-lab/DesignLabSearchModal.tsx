@@ -439,7 +439,7 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-xs"
         onClick={onClose}
         aria-hidden
       />
@@ -463,7 +463,7 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
             }}
             onKeyDown={handleKeyDown}
             placeholder={t("designlab.landing.search.placeholder")}
-            className="flex-1 bg-transparent text-base text-text-primary outline-none placeholder:text-text-secondary"
+            className="flex-1 bg-transparent text-base text-text-primary outline-hidden placeholder:text-text-secondary"
           />
           <div className="flex items-center gap-1.5">
             <kbd className="hidden rounded-md border border-border-subtle bg-surface-canvas px-1.5 py-0.5 text-[10px] font-medium text-text-secondary sm:inline-block">

@@ -138,7 +138,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
           type="button"
           onClick={handleRefreshUsers}
           disabled={!gridApiRef.current || isLoading}
-          className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {t('users.actions.refresh')}
         </button>
@@ -162,7 +162,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
               type="button"
               onClick={handleRefreshUsers}
               disabled={!gridApiRef.current || isLoading}
-              className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {t('users.actions.refresh')}
             </button>
@@ -189,7 +189,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
           actions={actionContent}
         >
           <div
-            className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-sm"
+            className="rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs"
             data-testid={GRID_TEST_ID}
           >
             <UsersGrid

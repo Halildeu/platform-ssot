@@ -371,17 +371,17 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
               return (
                 <div
                   key={t.id}
-                  className={cn('absolute rounded-sm overflow-hidden', onTaskClick && 'cursor-pointer', onTaskDrag && 'cursor-grab active:cursor-grabbing')}
+                  className={cn('absolute rounded-xs overflow-hidden', onTaskClick && 'cursor-pointer', onTaskDrag && 'cursor-grab active:cursor-grabbing')}
                   style={{ left, top: i * ROW_HEIGHT + 10, width, height: ROW_HEIGHT - 20 }}
                   onClick={() => onTaskClick?.(t)}
                   onMouseDown={(e) => handleMouseDown(e, t)}
                   title={`${t.title} (${progress}%)`}
                 >
                   {/* Background */}
-                  <div className="absolute inset-0 rounded-sm opacity-30" style={{ backgroundColor: barColor }} />
+                  <div className="absolute inset-0 rounded-xs opacity-30" style={{ backgroundColor: barColor }} />
                   {/* Progress fill */}
                   <div
-                    className="absolute inset-y-0 left-0 rounded-sm"
+                    className="absolute inset-y-0 left-0 rounded-xs"
                     style={{ width: `${progress}%`, backgroundColor: barColor }}
                   />
                   {/* Label */}

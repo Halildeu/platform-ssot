@@ -67,7 +67,7 @@ export const buildConfidencePromptLivePreview = (
   switch (componentName) {
     case 'ConfidenceBadge':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <PreviewPanel title={t('designlab.showcase.component.confidenceBadge.live.matrix.panel')}>
               <div className="flex flex-wrap gap-3">
@@ -99,7 +99,7 @@ export const buildConfidencePromptLivePreview = (
       );
     case 'PromptComposer':
       return (
-        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+        <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
             <PreviewPanel title={t('designlab.showcase.component.promptComposer.live.controlled.panel')}>
               <PromptComposer

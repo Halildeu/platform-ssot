@@ -595,9 +595,9 @@ export const ThemeRuntimePanelButton: React.FC = () => {
                         aria-pressed={isActive}
                         data-active={isActive ? "true" : "false"}
                         onClick={() => handleGlobalThemePaletteSelect(theme)}
-                        className={`rounded-2xl border p-2 transition focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 ${
+                        className={`rounded-2xl border p-2 transition focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 ${
                           isActive
-                            ? "border-action-primary-border shadow-sm"
+                            ? "border-action-primary-border shadow-xs"
                             : "border-border-subtle hover:border-text-secondary"
                         }`}
                         aria-label={t("shell.theme.panel.globalThemeAria", {
@@ -701,7 +701,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
                               >
                                 <button
                                   type="button"
-                                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-medium transition focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 ${
+                                  className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-[11px] font-medium transition focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1 ${
                                     selected
                                       ? "border-action-primary-border bg-action-primary text-action-primary-text"
                                       : "border-border-subtle bg-surface-muted text-text-secondary hover:border-text-secondary"
@@ -744,7 +744,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
               <button
                 type="button"
                 data-testid="user-theme-colors-button"
-                className="inline-flex items-center justify-between rounded-lg border border-border-subtle bg-surface-panel px-3 py-2 text-left text-xs font-semibold text-text-primary shadow-sm hover:border-text-secondary disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center justify-between rounded-lg border border-border-subtle bg-surface-panel px-3 py-2 text-left text-xs font-semibold text-text-primary shadow-xs hover:border-text-secondary disabled:cursor-not-allowed disabled:opacity-60"
                 onClick={openUserThemeEditor}
                 disabled={
                   !selectedUserTheme ||
@@ -795,7 +795,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
                 data-testid="user-theme-editor"
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="mb-2 flex items-center justify-between rounded-2xl border border-border-subtle bg-surface-panel px-4 py-3 shadow-sm">
+                <div className="mb-2 flex items-center justify-between rounded-2xl border border-border-subtle bg-surface-panel px-4 py-3 shadow-xs">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-xs font-semibold text-text-primary">
                       {t("shell.theme.panel.editorTitle")}
@@ -864,7 +864,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
                               <div className="flex items-center gap-2">
                                 <input
                                   type="text"
-                                  className="h-7 flex-1 rounded-md border border-border-subtle bg-surface-panel px-2 text-[11px] text-text-primary focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+                                  className="h-7 flex-1 rounded-md border border-border-subtle bg-surface-panel px-2 text-[11px] text-text-primary focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
                                   value={row.value ?? ""}
                                   onChange={(event) =>
                                     handleUserThemeOverrideChange(
@@ -878,7 +878,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
                                 />
                                 <button
                                   type="button"
-                                  className="h-6 w-6 rounded-md border border-border-subtle shadow-sm"
+                                  className="h-6 w-6 rounded-md border border-border-subtle shadow-xs"
                                   style={{
                                     backgroundColor: row.value ?? "transparent",
                                   }}
@@ -921,7 +921,7 @@ export const ThemeRuntimePanelButton: React.FC = () => {
                 className="relative w-full max-w-3xl"
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="mb-2 flex items-center justify-between rounded-2xl border border-border-subtle bg-surface-panel px-4 py-3 shadow-sm">
+                <div className="mb-2 flex items-center justify-between rounded-2xl border border-border-subtle bg-surface-panel px-4 py-3 shadow-xs">
                   <div className="flex flex-col gap-0.5">
                     <span className="text-xs font-semibold text-text-primary">
                       {activeUserThemeColorPicker.label}

@@ -72,7 +72,7 @@ const AccessFilterBar: React.FC<AccessFilterBarProps> = ({ filters, modules, onC
     <form
       onSubmit={handleSubmit}
       data-testid="access-filter-bar"
-      className="flex w-full flex-wrap items-end gap-3 rounded-2xl border border-border-subtle bg-surface-default/70 p-4 shadow-sm"
+      className="flex w-full flex-wrap items-end gap-3 rounded-2xl border border-border-subtle bg-surface-default/70 p-4 shadow-xs"
     >
       <div className="min-w-[240px] flex-1">
         <TextInput

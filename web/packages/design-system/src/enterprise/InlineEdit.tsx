@@ -215,7 +215,7 @@ export function InlineEdit({
             onKeyDown={handleKeyDown}
             disabled={saving}
             className={cn(
-              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-none transition-colors',
+              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
               error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-border-default focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
             )}
           >
@@ -238,7 +238,7 @@ export function InlineEdit({
             disabled={saving}
             placeholder={placeholder}
             className={cn(
-              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-none transition-colors',
+              'rounded border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
               error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-border-default focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
             )}
           />

@@ -176,7 +176,7 @@ export const ShellHeaderNavbar: React.FC<ShellHeaderNavbarProps> = ({
         ...item,
         itemClassName: '!min-h-0 !rounded-full !px-3 !py-1 !text-xs !font-medium',
         activeClassName:
-          '!border-[var(--accent-primary-hover)] !bg-[var(--accent-primary)] !text-[var(--action-primary-text)] !shadow-sm',
+          '!border-[var(--accent-primary-hover)] !bg-[var(--accent-primary)] !text-[var(--action-primary-text)] !shadow-xs',
       })),
     [activeKey, itemTestIdPrefix, visibleItems],
   );
@@ -222,7 +222,7 @@ export const ShellHeaderNavbar: React.FC<ShellHeaderNavbarProps> = ({
                     className={clsx(
                       'inline-flex items-center justify-center rounded-full border px-3 py-1 text-xs font-medium transition',
                       overflowOpen || overflowHasActive
-                        ? 'border-[var(--accent-primary-hover)] bg-[var(--accent-primary)] text-[var(--action-primary-text)] shadow-sm'
+                        ? 'border-[var(--accent-primary-hover)] bg-[var(--accent-primary)] text-[var(--action-primary-text)] shadow-xs'
                         : 'border-border-subtle bg-surface-muted text-text-secondary hover:border-border-default hover:bg-surface-panel hover:text-text-primary',
                     )}
                     onClick={(event) => {
@@ -255,7 +255,7 @@ export const ShellHeaderNavbar: React.FC<ShellHeaderNavbarProps> = ({
                                 className={clsx(
                                   'w-full rounded-full border px-3 py-1 text-left text-xs font-medium transition',
                                   isActive
-                                    ? 'border-[var(--accent-primary-hover)] bg-[var(--accent-primary)] text-[var(--action-primary-text)] shadow-sm'
+                                    ? 'border-[var(--accent-primary-hover)] bg-[var(--accent-primary)] text-[var(--action-primary-text)] shadow-xs'
                                     : 'border-border-subtle bg-surface-default text-text-secondary hover:border-border-default hover:bg-surface-panel hover:text-text-primary',
                                 )}
                                 onClick={() => {

@@ -165,7 +165,7 @@ export const DesignLabSidebar: React.FC<DesignLabSidebarProps> = ({
   return (
     <aside
       data-testid="design-lab-sidebar"
-      className="relative z-10 sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
+      className="relative z-10 sticky top-4 flex max-h-[calc(100vh-32px)] min-h-0 flex-col overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-xs"
     >
       <div className="border-b border-border-subtle px-4 py-4">
         <Text
@@ -206,7 +206,7 @@ export const DesignLabSidebar: React.FC<DesignLabSidebarProps> = ({
               value={sidebarSearchValue}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder={sidebarLayerSearchPlaceholder}
-              className="h-11 w-full rounded-2xl border border-border-subtle bg-surface-canvas pl-10 pr-3.5 text-sm text-text-primary shadow-none transition focus:border-border-default focus:outline-none focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
+              className="h-11 w-full rounded-2xl border border-border-subtle bg-surface-canvas pl-10 pr-3.5 text-sm text-text-primary shadow-none transition focus:border-border-default focus:outline-hidden focus:ring-2 focus:ring-[var(--accent-focus)] focus:ring-offset-1"
               aria-label={t("designlab.sidebar.search.aria")}
             />
           </div>

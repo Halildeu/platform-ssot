@@ -219,9 +219,9 @@ export const DesignLabTaxonomyNavigator: React.FC<DesignLabTaxonomyNavigatorProp
                 onChange(item.id);
               }}
               className={clsx(
-                'group min-w-[190px] flex-1 snap-start rounded-[22px] border px-4 py-4 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-55 sm:min-w-[220px]',
+                'group min-w-[190px] flex-1 snap-start rounded-[22px] border px-4 py-4 text-left transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--accent-focus)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-55 sm:min-w-[220px]',
                 isActive
-                  ? 'border-action-primary/25 bg-surface-panel shadow-sm ring-1 ring-action-primary/10'
+                  ? 'border-action-primary/25 bg-surface-panel shadow-xs ring-1 ring-action-primary/10'
                   : 'border-border-subtle bg-surface-default hover:border-border-default hover:bg-surface-panel',
               )}
             >

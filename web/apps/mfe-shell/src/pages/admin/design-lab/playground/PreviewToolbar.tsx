@@ -83,7 +83,7 @@ function SegmentedControl<T extends string>({
             className={clsx(
               "flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-[11px] font-medium transition-all duration-150",
               active
-                ? "bg-surface-default text-text-primary shadow-sm ring-1 ring-border-subtle/50"
+                ? "bg-surface-default text-text-primary shadow-xs ring-1 ring-border-subtle/50"
                 : "text-text-tertiary hover:text-text-secondary",
             )}
           >

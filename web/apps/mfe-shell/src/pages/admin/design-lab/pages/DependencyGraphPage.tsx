@@ -267,7 +267,7 @@ export default function DependencyGraphPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Filter components..."
-              className="h-8 rounded-lg border border-border-subtle bg-surface-canvas pl-8 pr-3 text-xs text-text-primary placeholder:text-text-tertiary focus:border-action-primary focus:outline-none"
+              className="h-8 rounded-lg border border-border-subtle bg-surface-canvas pl-8 pr-3 text-xs text-text-primary placeholder:text-text-tertiary focus:border-action-primary focus:outline-hidden"
             />
           </div>
 
@@ -311,7 +311,7 @@ export default function DependencyGraphPage() {
       {/* Graph canvas */}
       <div className="relative flex-1 overflow-hidden bg-surface-canvas">
         {/* Layer legend */}
-        <div className="absolute left-4 top-4 z-10 flex flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-default/90 p-3 shadow-sm backdrop-blur-sm">
+        <div className="absolute left-4 top-4 z-10 flex flex-col gap-1.5 rounded-xl border border-border-subtle bg-surface-default/90 p-3 shadow-xs backdrop-blur-xs">
           <Text className="text-[9px] font-semibold uppercase tracking-widest text-text-tertiary">
             Layers
           </Text>
@@ -422,7 +422,7 @@ export default function DependencyGraphPage() {
 
         {/* Selected node details panel */}
         {selectedNode && nodeMap.has(selectedNode) && (
-          <div className="absolute bottom-4 right-4 z-10 w-72 rounded-2xl border border-border-subtle bg-surface-default/95 p-4 shadow-lg backdrop-blur-sm">
+          <div className="absolute bottom-4 right-4 z-10 w-72 rounded-2xl border border-border-subtle bg-surface-default/95 p-4 shadow-lg backdrop-blur-xs">
             <div className="flex items-start justify-between">
               <div>
                 <Text as="div" className="font-semibold text-text-primary">

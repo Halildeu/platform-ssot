@@ -729,7 +729,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ title, children, className,
     <div
       data-demo-panel-kind={resolvedKind}
       className={[
-        'rounded-[24px] border p-4 backdrop-blur-sm',
+        'rounded-[24px] border p-4 backdrop-blur-xs',
         demoSurfaceMeta[resolvedKind].panelClassName,
         className ?? '',
       ]
@@ -1455,7 +1455,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
     switch (item.name) {
        case 'Tabs':
         return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.tabs.controlled.title')}>
                 <Tabs
@@ -1540,7 +1540,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
         );
       case 'CommandPalette':
         return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
               <PreviewPanel title={t('designlab.showcase.component.commandPalette.live.launcher.panel')}>
                 <div className="space-y-4">
@@ -1611,7 +1611,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
         );
       case 'Descriptions':
         return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <PreviewPanel title={t('designlab.showcase.component.descriptions.live.rolloutSummary.panel')}>
                 <Descriptions
@@ -1655,7 +1655,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
         );
       case 'Alert':
         return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
               <PreviewPanel title="Banner duyuru">
                 <Alert
@@ -1694,7 +1694,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
         );
       case 'PageLayout':
         return (
-          <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-sm">
+          <div className="overflow-hidden rounded-3xl border border-border-subtle bg-surface-panel shadow-xs">
             <PageLayout
               {...createPageLayoutPreset({ preset: 'detail-sidebar', stickyHeader: false })}
               title={t('designlab.showcase.component.pageLayout.live.title')}
@@ -1752,7 +1752,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
         );
       case 'ReportFilterPanel':
         return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
             <ReportFilterPanel
               onSubmit={() => setReportStatus(t('designlab.seed.reportStatus.applied'))}
               onReset={() => setReportStatus(t('designlab.seed.reportStatus.reset'))}
@@ -1790,7 +1790,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
         );
       default:
         return (
-          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-sm">
+          <div className="rounded-3xl border border-border-subtle bg-surface-panel p-5 shadow-xs">
             <Text as="div" className="font-semibold">{t('designlab.showcase.component.inspectorPreview.title')}</Text>
             <Text variant="secondary" className="mt-2 block">
               {t('designlab.showcase.component.inspectorPreview.description')}
@@ -2165,7 +2165,7 @@ export const DesignLabShowcaseContent: React.FC<DesignLabShowcaseContentProps> =
         content: (
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             {familyItems.map((item) => (
-              <div key={item.name} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-sm">
+              <div key={item.name} className="rounded-[24px] border border-border-subtle bg-surface-default p-4 shadow-xs">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <Text as="div" className="font-semibold text-text-primary">

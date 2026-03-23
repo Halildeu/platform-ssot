@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useState } from 'react';
-import { resolveAccessState } from '../internal/access-controller';
+import { resolveAccessState, accessStyles } from '../internal/access-controller';
 import type { AccessLevel } from '../internal/access-controller';
 
 // ---------------------------------------------------------------------------
@@ -95,7 +95,8 @@ export function RiskMatrix({
   onCellClick,
   className = '',
 }: RiskMatrixProps) {
-  const { isHidden, isDisabled, isReadonly } = resolveAccessState(access);
+  const accessState = resolveAccessState(access);
+  const { isHidden, isDisabled, isReadonly } = accessState;
   if (isHidden) return null;
 
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
@@ -135,9 +136,10 @@ export function RiskMatrix({
 
   return (
     <div
-      className={`inline-block ${isDisabled ? 'opacity-50 pointer-events-none' : ''} ${className}`}
+      className={`inline-block ${accessStyles(accessState.state)} ${className}`}
       role="group"
       aria-label="Risk assessment matrix"
+      data-access-state={accessState.state}
       {...(isDisabled ? { 'aria-disabled': true } : {})}
       {...(accessReason ? { title: accessReason } : {})}
     >
@@ -271,7 +273,7 @@ export function RiskMatrix({
             return (
               <div key={level} className="flex items-center gap-1" role="listitem">
                 <span
-                  className="inline-block w-3 h-3 rounded-sm border"
+                  className="inline-block w-3 h-3 rounded-xs border"
                   style={{ backgroundColor: c.bg, borderColor: c.text }}
                   aria-hidden="true"
                 />

@@ -121,7 +121,7 @@ export interface SearchFilterListingProps extends AccessControlledProps {
 /* ---- Style constants ---- */
 
 const panelBase =
-  "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default))] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-sm transition-all duration-200";
+  "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default))] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-xs transition-all duration-200";
 
 const SKELETON_PULSE = "animate-pulse rounded-lg bg-surface-muted";
 
@@ -226,7 +226,7 @@ const SortDropdown: React.FC<{
           const key = e.target.value;
           if (key && onChange) onChange(key, active?.direction ?? "asc");
         }}
-        className="rounded-lg border border-border-subtle bg-transparent px-2 py-1 text-xs text-text-secondary outline-none focus:border-[var(--selection-outline,var(--action-primary))]"
+        className="rounded-lg border border-border-subtle bg-transparent px-2 py-1 text-xs text-text-secondary outline-hidden focus:border-[var(--selection-outline,var(--action-primary))]"
         aria-label="Siralama"
       >
         <option value="">Siralama</option>

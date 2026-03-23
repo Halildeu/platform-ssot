@@ -188,7 +188,7 @@ const WidgetCard: React.FC<{
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default-bg))] shadow-sm transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default-bg))] shadow-xs transition-all duration-200",
         TONE_BORDER[tone],
         isCompact ? "p-3" : "p-5",
       )}
@@ -379,7 +379,7 @@ export const SmartDashboard = React.forwardRef<HTMLElement, SmartDashboardProps>
               <select
                 value={timeRange ?? ""}
                 onChange={(e) => onTimeRangeChange(e.target.value)}
-                className="rounded-lg border border-border-subtle bg-transparent px-2 py-1.5 text-xs text-text-secondary outline-none focus:border-selection-outline"
+                className="rounded-lg border border-border-subtle bg-transparent px-2 py-1.5 text-xs text-text-secondary outline-hidden focus:border-selection-outline"
                 aria-label="Zaman araligi"
               >
                 {TIME_RANGE_OPTIONS.map((opt) => (

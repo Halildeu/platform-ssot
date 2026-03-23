@@ -23,7 +23,7 @@ export const accessReportModule: ReportModule<AccessFilters, AccessRow> = {
   }),
   renderFilters: ({ values, setFieldValue, t }) => {
     const inputClass =
-      'w-full min-w-[200px] rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
+      'w-full min-w-[200px] rounded-md border border-border-subtle bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1';
     const labelClass = 'flex flex-col gap-1 text-xs font-medium text-text-secondary';
 
     return (

@@ -112,7 +112,7 @@ const GuidancePanel: React.FC<{
   guidance: ReturnType<typeof getFoundationGuidance>;
   className?: string;
 }> = ({ title, guidance, className }) => (
-  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm ${className ?? ''}`.trim()}>
+  <div className={`rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs ${className ?? ''}`.trim()}>
     <Text as="div" className="text-sm font-semibold text-text-primary">
       {title}
     </Text>
@@ -187,7 +187,7 @@ const FoundationOverviewTab: React.FC<{
 
   if (!foundation) {
     return (
-      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-6 shadow-xs">
         <Text variant="secondary">
           {t('designlab.foundation.overview.empty')}
         </Text>
@@ -196,7 +196,7 @@ const FoundationOverviewTab: React.FC<{
   }
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>{t('designlab.foundation.overview.workspace.title')}</DetailLabel>
@@ -224,7 +224,7 @@ const FoundationOverviewTab: React.FC<{
             content: (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>{t('designlab.foundation.overview.summary')}</DetailLabel>
                     <Text as="div" className="mt-3 text-lg font-semibold text-text-primary">
                       {foundation.title ?? foundation.foundationId}
@@ -244,7 +244,7 @@ const FoundationOverviewTab: React.FC<{
                     </div>
                   </div>
 
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>{t('designlab.foundation.overview.quickStatus')}</DetailLabel>
                     <div className="mt-4 grid grid-cols-1 gap-3">
                       <MetricCard label="Governance badges" value={foundation.governanceBadges.length} note="Cross-cutting platform signals" />
@@ -265,7 +265,7 @@ const FoundationOverviewTab: React.FC<{
             badge: <Badge variant="warning">{selectedFoundationTokens.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Design tokens</DetailLabel>
                   <Text variant="secondary" className="mt-2 block text-sm leading-6">
                     Semantic and raw tokens governed by this foundation family.
@@ -276,7 +276,7 @@ const FoundationOverviewTab: React.FC<{
                       : <Text variant="secondary">No tokens declared yet.</Text>}
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Theme coverage</DetailLabel>
                   <Text variant="secondary" className="mt-2 block text-sm leading-6">
                     Theme presets where these tokens are active.
@@ -352,7 +352,7 @@ const FoundationApiTab: React.FC<{
   const schemaCode = `// Token schema for ${foundation.foundationId}\n{\n  "tokenFamily": "${foundation.foundationId}",\n  "semanticTokens": ${JSON.stringify(selectedFoundationTokens.slice(0, 4), null, 2)},\n  "governance": ${JSON.stringify(foundation.governanceBadges.slice(0, 3), null, 2)}\n}`;
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Foundation runtime contract</DetailLabel>
@@ -380,7 +380,7 @@ const FoundationApiTab: React.FC<{
             label: 'Runtime',
             badge: <Badge variant="info">{foundation.governanceBadges.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Runtime hook contract</DetailLabel>
                 <CodeBlock code={runtimeCode} className="mt-3" />
               </div>
@@ -391,7 +391,7 @@ const FoundationApiTab: React.FC<{
             label: 'Schema',
             badge: <Badge variant="warning">{selectedFoundationTokens.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Token schema</DetailLabel>
                 <CodeBlock code={schemaCode} className="mt-3" />
                 <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -408,7 +408,7 @@ const FoundationApiTab: React.FC<{
             label: 'Consumption',
             badge: <Badge variant="success">3</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Consumer patterns</DetailLabel>
                 <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-3">
                   <MetricCard label="Hook pattern" value="useTokens()" note="Access tokens via React hook in any component" />
@@ -460,7 +460,7 @@ const FoundationQualityTab: React.FC<{
   const totalTokens = selectedFoundationItems.reduce((sum, item) => sum + item.tokenCount, 0);
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>Foundation quality workspace</DetailLabel>
@@ -488,7 +488,7 @@ const FoundationQualityTab: React.FC<{
             label: 'Gates',
             badge: <Badge variant="info">{selectedFoundationA11yGates.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Platform quality gates</DetailLabel>
                 <Text variant="secondary" className="mt-2 block text-sm leading-6">
                   Cross-cutting quality gates enforced by this foundation family.
@@ -506,7 +506,7 @@ const FoundationQualityTab: React.FC<{
             label: 'Coverage',
             badge: <Badge variant="warning">{selectedFoundationItems.length}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>Foundation coverage metrics</DetailLabel>
                 <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
                   <MetricCard label="Active contracts" value={activeContracts} note="Stable and enforced foundation contracts" />
@@ -522,7 +522,7 @@ const FoundationQualityTab: React.FC<{
             badge: <Badge variant="success">{selectedFoundationThemes.length}</Badge>,
             content: (
               <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Accessibility compliance</DetailLabel>
                   <div className="mt-4 grid grid-cols-1 gap-3">
                     <MetricCard label="Color contrast" value="WCAG AA" note="Minimum contrast ratio enforcement" />
@@ -530,7 +530,7 @@ const FoundationQualityTab: React.FC<{
                     <MetricCard label="Screen reader" value="ARIA patterns" note="Semantic ARIA roles enforced" />
                   </div>
                 </div>
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>Theme accessibility coverage</DetailLabel>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedFoundationThemes.length
@@ -659,7 +659,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
             {foundation ? (
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
                     <DetailLabel>Token visual identity</DetailLabel>
                     <Text variant="secondary" className="mt-2 block text-sm leading-6">
                       Foundation token&apos;larinin gorsel kimlik uzerine etkisi ve theme uyumu.
@@ -670,7 +670,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                         : <Text variant="secondary">No theme coverage declared.</Text>}
                     </div>
                   </div>
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
                     <DetailLabel>Cross-cutting UX signals</DetailLabel>
                     <Text variant="secondary" className="mt-2 block text-sm leading-6">
                       Accessibility, i18n ve motion standard&apos;larinin governance durumu.
@@ -684,7 +684,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                 </div>
 
                 {/* Token preview live renderer */}
-                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
                   <DetailLabel>Token preview renderer</DetailLabel>
                   <Text variant="secondary" className="mt-1 block text-xs leading-5">
                     Foundation token&apos;larinin canli gorsel on izlemesi. Her token CSS variable olarak gosterilir.
@@ -697,7 +697,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                         {['primary', 'secondary', 'success', 'warning', 'error', 'info', 'surface', 'border'].map((tokenGroup) => (
                           <div key={tokenGroup} className="text-center">
                             <div
-                              className="mx-auto h-8 w-8 rounded-lg border border-border-subtle shadow-sm"
+                              className="mx-auto h-8 w-8 rounded-lg border border-border-subtle shadow-xs"
                               style={{ backgroundColor: `var(--color-${tokenGroup}, var(--color-action-${tokenGroup}, #ddd))` }}
                             />
                             <Text variant="secondary" className="mt-1 block text-[8px]">{tokenGroup}</Text>
@@ -721,7 +721,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                           <div key={spacing.label} className="flex items-center gap-2">
                             <Text variant="secondary" className="w-8 text-[9px] text-right">{spacing.label}</Text>
                             <div
-                              className="h-3 rounded-sm bg-action-primary/20 border border-action-primary/30"
+                              className="h-3 rounded-xs bg-action-primary/20 border border-action-primary/30"
                               style={{ width: spacing.width }}
                             />
                             <Text variant="secondary" className="text-[9px]">{spacing.width}</Text>
@@ -769,7 +769,7 @@ export const DesignLabFoundationDetailSections: React.FC<DesignLabFoundationDeta
                         ].map((rad) => (
                           <div key={rad.label} className="text-center">
                             <div
-                              className="mx-auto h-10 w-10 border border-border-subtle bg-surface-panel shadow-sm"
+                              className="mx-auto h-10 w-10 border border-border-subtle bg-surface-panel shadow-xs"
                               style={{ borderRadius: rad.radius }}
                             />
                             <Text variant="secondary" className="mt-1 block text-[8px]">{rad.label} ({rad.radius})</Text>

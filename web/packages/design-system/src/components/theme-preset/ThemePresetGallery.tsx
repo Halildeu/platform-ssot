@@ -86,7 +86,7 @@ export const ThemePresetGallery = React.forwardRef<HTMLElement, ThemePresetGalle
   return (
     <section
       ref={ref}
-      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-sm ${className}`.trim()}
+      className={`rounded-3xl border border-border-subtle bg-surface-muted p-5 shadow-xs ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="theme-preset-gallery"
       title={accessReason}

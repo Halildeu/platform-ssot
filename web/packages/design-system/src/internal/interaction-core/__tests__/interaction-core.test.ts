@@ -115,7 +115,7 @@ describe("focusRingClass", () => {
   });
 
   test("returns none class", () => {
-    expect(focusRingClass("none")).toBe("focus-visible:outline-none");
+    expect(focusRingClass("none")).toBe("focus-visible:outline-hidden");
   });
 });
 
@@ -126,7 +126,7 @@ describe("focusRingClassWithColor", () => {
   });
 
   test("none strategy ignores color", () => {
-    expect(focusRingClassWithColor("none", "#ff0000")).toBe("focus-visible:outline-none");
+    expect(focusRingClassWithColor("none", "#ff0000")).toBe("focus-visible:outline-hidden");
   });
 });
 

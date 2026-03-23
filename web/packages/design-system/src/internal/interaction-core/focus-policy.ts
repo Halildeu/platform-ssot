@@ -23,27 +23,27 @@ export type FocusStrategy = "ring" | "outline" | "inset" | "none";
 
 const FOCUS_RING_CLASSES: Record<FocusStrategy, string> = {
   ring: [
-    "focus-visible:outline-none",
+    "focus-visible:outline-hidden",
     "focus-visible:ring-2",
     "focus-visible:ring-[var(--focus-ring)]/30",
     "focus-visible:ring-offset-2",
   ].join(" "),
 
   outline: [
-    "focus-visible:outline-none",
+    "focus-visible:outline-hidden",
     "focus-visible:ring-1",
     "focus-visible:ring-[var(--focus-ring)]/50",
     "focus-visible:ring-offset-1",
   ].join(" "),
 
   inset: [
-    "focus-visible:outline-none",
+    "focus-visible:outline-hidden",
     "focus-visible:ring-2",
     "focus-visible:ring-inset",
     "focus-visible:ring-[var(--focus-ring)]/40",
   ].join(" "),
 
-  none: "focus-visible:outline-none",
+  none: "focus-visible:outline-hidden",
 };
 
 /**
@@ -74,7 +74,7 @@ export function focusRingClassWithColor(
   strategy: FocusStrategy,
   color: string,
 ): string {
-  if (strategy === "none") return "focus-visible:outline-none";
+  if (strategy === "none") return "focus-visible:outline-hidden";
 
   const ringWidth = strategy === "outline" ? "1" : "2";
   const offset = strategy === "outline" ? "1" : strategy === "inset" ? "" : "2";
@@ -82,7 +82,7 @@ export function focusRingClassWithColor(
   const opacity = strategy === "outline" ? "50" : strategy === "inset" ? "40" : "30";
 
   return [
-    "focus-visible:outline-none",
+    "focus-visible:outline-hidden",
     `focus-visible:ring-${ringWidth}`,
     inset,
     `focus-visible:ring-[${color}]/${opacity}`,

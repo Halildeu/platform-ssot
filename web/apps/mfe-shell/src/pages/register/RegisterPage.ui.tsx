@@ -108,7 +108,7 @@ const RegisterPage = () => {
 
   return (
     <div className="mx-auto max-w-md px-6 py-8">
-      <div className="rounded-2xl border border-border-subtle bg-surface-default p-6 shadow-sm">
+      <div className="rounded-2xl border border-border-subtle bg-surface-default p-6 shadow-xs">
         <h1 className="mb-4 text-xl font-semibold text-text-primary">{t('auth.register.title')}</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col gap-1 text-xs font-medium text-text-secondary">
@@ -118,7 +118,7 @@ const RegisterPage = () => {
               type="text"
               autoComplete="name"
               placeholder={t('auth.register.namePlaceholder')}
-              className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+              className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
               value={formValues.name}
               onChange={handleChange('name')}
             />
@@ -131,7 +131,7 @@ const RegisterPage = () => {
               type="email"
               autoComplete="username"
               placeholder={t('auth.register.emailPlaceholder')}
-              className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+              className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
               value={formValues.email}
               onChange={handleChange('email')}
             />
@@ -144,7 +144,7 @@ const RegisterPage = () => {
               type="password"
               autoComplete="new-password"
               placeholder={t('auth.register.passwordPlaceholder')}
-              className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
+              className="h-9 rounded-md border border-border-subtle px-3 text-sm text-text-primary placeholder:text-text-subtle focus:outline-hidden focus:ring-2 focus:ring-selection-outline focus:ring-offset-1"
               value={formValues.password}
               onChange={handleChange('password')}
             />

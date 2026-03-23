@@ -189,7 +189,7 @@ export const GridToolbar = <RowData = unknown>({
         value={quickFilter}
         onChange={handleQuickFilterChange}
         placeholder={m.quickFilterPlaceholder ?? "Ara..."}
-        className="h-8 min-w-[180px] rounded-md border border-border-default bg-surface-default px-3 text-sm text-text-primary placeholder:text-text-disabled focus:border-action-primary focus:outline-none focus:ring-2 focus:ring-focus-ring-color"
+        className="h-8 min-w-[180px] rounded-md border border-border-default bg-surface-default px-3 text-sm text-text-primary placeholder:text-text-disabled focus:border-action-primary focus:outline-hidden focus:ring-2 focus:ring-focus-ring-color"
         aria-label={m.quickFilterPlaceholder ?? "Quick filter"}
       />
 

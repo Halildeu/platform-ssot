@@ -290,7 +290,7 @@ export default function QualityAuditPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Bilesen ara..."
-            className="h-10 w-full rounded-xl border border-border-subtle bg-surface-default pl-10 pr-4 text-sm text-text-primary transition focus:border-border-default focus:outline-none focus:ring-2 focus:ring-action-primary/20"
+            className="h-10 w-full rounded-xl border border-border-subtle bg-surface-default pl-10 pr-4 text-sm text-text-primary transition focus:border-border-default focus:outline-hidden focus:ring-2 focus:ring-action-primary/20"
           />
         </div>
         <div className="flex items-center gap-1.5">
@@ -303,7 +303,7 @@ export default function QualityAuditPage() {
               className={[
                 "rounded-lg px-3 py-1.5 text-xs font-medium transition",
                 filterGap === opt.key
-                  ? "bg-action-primary text-white shadow-sm"
+                  ? "bg-action-primary text-white shadow-xs"
                   : "bg-surface-muted text-text-secondary hover:bg-surface-default hover:text-text-primary",
               ].join(" ")}
             >
@@ -314,7 +314,7 @@ export default function QualityAuditPage() {
       </div>
 
       {/* Matrix Table */}
-      <div className="overflow-x-auto rounded-2xl border border-border-subtle bg-surface-default shadow-sm">
+      <div className="overflow-x-auto rounded-2xl border border-border-subtle bg-surface-default shadow-xs">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border-subtle bg-surface-muted/50">

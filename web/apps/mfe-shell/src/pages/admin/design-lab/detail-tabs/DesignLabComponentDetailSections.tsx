@@ -141,11 +141,11 @@ const ComponentApiTab: React.FC<{
       badge: <Badge variant="info">{item.kind}</Badge>,
       content: (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
             <DetailLabel>{t('designlab.component.api.import')}</DetailLabel>
             <CodeBlock code={item.importStatement || t('designlab.component.api.import.planned')} className="mt-3" />
           </div>
-          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+          <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
             <DetailLabel>{t('designlab.component.api.registryFields')}</DetailLabel>
             <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-1">
               <div className="rounded-2xl border border-border-subtle bg-surface-panel p-4">
@@ -174,7 +174,7 @@ const ComponentApiTab: React.FC<{
       label: 'Model',
       badge: <Badge variant="muted">{apiItem ? `${apiItem.variantAxes.length + apiItem.stateModel.length}` : '—'}</Badge>,
       content: (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.component.api.model.title')}</DetailLabel>
           {apiItem ? (
             <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -241,7 +241,7 @@ const ComponentApiTab: React.FC<{
   }>;
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>{t('designlab.component.api.workspace.title')}</DetailLabel>
@@ -294,14 +294,14 @@ const ComponentUxTab: React.FC<{
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.component.ux.alignment')}</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
             {item.uxPrimaryThemeId ? <SectionBadge label={item.uxPrimaryThemeId} /> : <Text variant="secondary">{t('designlab.component.ux.primaryThemeMissing')}</Text>}
             {item.uxPrimarySubthemeId ? <SectionBadge label={item.uxPrimarySubthemeId} /> : <Text variant="secondary">{t('designlab.component.ux.primarySubthemeMissing')}</Text>}
           </div>
         </div>
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>{t('designlab.component.ux.northStar')}</DetailLabel>
           <div className="mt-4 flex flex-wrap gap-2">
             {item.sectionIds?.length ? item.sectionIds.map((sectionId) => <SectionBadge key={sectionId} label={sectionId} />) : <Text variant="secondary">{t('designlab.component.ux.sectionMissing')}</Text>}
@@ -311,7 +311,7 @@ const ComponentUxTab: React.FC<{
 
       {/* Navigation family matrix */}
       {matchedFamilies.length > 0 ? (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>Navigation family match</DetailLabel>
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Bu component icin eslesen navigation family, recipe baglantilari ve page shell bindingleri.
@@ -360,7 +360,7 @@ const ComponentUxTab: React.FC<{
           </div>
         </div>
       ) : (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>Navigation family matrix</DetailLabel>
           <Text variant="secondary" className="mt-2 block text-sm leading-6">
             Bu component icin navigation family eslesmesi bulunamadi. Navigation component&apos;leri secildiginde family, recipe ve page shell baglantilari burada gorunur.
@@ -378,7 +378,7 @@ const ComponentUxTab: React.FC<{
 
       {/* Cross-family patterns */}
       {navigationMatrix.crossFamilyPatterns.length > 0 ? (
-        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+        <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
           <DetailLabel>Cross-family navigation patterns</DetailLabel>
           <Text variant="secondary" className="mt-1 block text-xs leading-5">
             Birden fazla navigation family&apos;yi kesen ortak interaction pattern&apos;leri.
@@ -395,7 +395,7 @@ const ComponentUxTab: React.FC<{
                   key={pattern.patternId}
                   className={`rounded-[20px] border p-4 transition ${
                     isRelevant
-                      ? 'border-action-primary/30 bg-surface-panel shadow-sm ring-1 ring-action-primary/10'
+                      ? 'border-action-primary/30 bg-surface-panel shadow-xs ring-1 ring-action-primary/10'
                       : 'border-border-subtle bg-surface-panel'
                   }`}
                 >
@@ -429,7 +429,7 @@ const ComponentUxTab: React.FC<{
       ) : null}
 
       {/* Wayfinding roles legend */}
-      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
         <DetailLabel>Wayfinding roles</DetailLabel>
         <Text variant="secondary" className="mt-1 block text-xs leading-5">
           Navigation family&apos;lerin kullaniciya sagladigi yonlendirme rolleri.
@@ -467,7 +467,7 @@ const ComponentQualityTab: React.FC<{
   }
 
   return (
-    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-sm">
+    <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5 shadow-xs">
       <div className="flex flex-col gap-4 border-b border-border-subtle pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>{t('designlab.component.quality.workspace.title')}</DetailLabel>
@@ -493,7 +493,7 @@ const ComponentQualityTab: React.FC<{
             label: t('designlab.component.quality.gates'),
             badge: <Badge variant="info">{item.qualityGates?.length ?? 0}</Badge>,
             content: (
-              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+              <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                 <DetailLabel>{t('designlab.component.quality.gates')}</DetailLabel>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {item.qualityGates?.length ? item.qualityGates.map((gate) => <SectionBadge key={gate} label={gate} />) : <Text variant="secondary">{t('designlab.component.quality.noGates')}</Text>}
@@ -509,7 +509,7 @@ const ComponentQualityTab: React.FC<{
               <div className="space-y-4">
                 {/* Adoption metrics summary */}
                 {MetricCardComponent ? (
-                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                  <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                     <DetailLabel>Adoption metrics</DetailLabel>
                     <Text variant="secondary" className="mt-1 block text-xs leading-5">
                       Component adoption ve stability sinyalleri.
@@ -540,7 +540,7 @@ const ComponentQualityTab: React.FC<{
                 ) : null}
 
                 {/* Usage file list */}
-                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-sm">
+                <div className="rounded-[28px] border border-border-subtle bg-surface-panel p-5 shadow-xs">
                   <DetailLabel>{t('designlab.component.quality.usage')}</DetailLabel>
                   <div className="mt-4 space-y-2">
                     {item.whereUsed.length > 0 ? item.whereUsed.map((filePath) => (

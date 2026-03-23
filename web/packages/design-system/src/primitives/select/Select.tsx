@@ -145,7 +145,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             "bg-surface-default text-text-primary",
             "disabled:cursor-not-allowed disabled:opacity-50",
             isReadonly && "cursor-default opacity-70",
-            "outline-none",
+            "outline-hidden",
             error
               ? "border-state-danger-text focus:ring-2 focus:ring-state-danger-text/20"
               : "border-border-default focus:border-action-primary focus:ring-2 focus:ring-action-primary/20",

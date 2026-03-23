@@ -93,7 +93,7 @@ const NotificationCenter: React.FC = () => {
         type="button"
         onClick={() => toggle()}
         aria-label="Bildirim merkezini aç"
-        className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-surface-default text-text-secondary shadow-sm transition hover:bg-surface-muted"
+        className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-surface-default text-text-secondary shadow-xs transition hover:bg-surface-muted"
       >
         <span aria-hidden>🔔</span>
         {state.unreadCount > 0 && (

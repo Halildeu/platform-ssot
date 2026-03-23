@@ -356,7 +356,7 @@ function ChildItem({
               type="text"
               value={(child.props.children as string) ?? ""}
               onChange={(e) => onPropChange("children", e.target.value)}
-              className="flex-1 rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] outline-none focus:border-action-primary"
+              className="flex-1 rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] outline-hidden focus:border-action-primary"
               placeholder="Text content"
             />
           </div>
@@ -366,7 +366,7 @@ function ChildItem({
               type="text"
               value={(child.props.variant as string) ?? ""}
               onChange={(e) => onPropChange("variant", e.target.value)}
-              className="flex-1 rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] outline-none focus:border-action-primary"
+              className="flex-1 rounded-md border border-border-subtle bg-surface-default px-2 py-1 text-[11px] outline-hidden focus:border-action-primary"
               placeholder="primary"
             />
           </div>

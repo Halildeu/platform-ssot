@@ -39,7 +39,7 @@ describe('Card — temel render', () => {
 
 describe('Card — variant proplari', () => {
   it.each([
-    ['elevated', 'shadow-sm'],
+    ['elevated', 'shadow-xs'],
     ['outlined', 'bg-transparent'],
     ['filled', 'bg-surface-muted'],
     ['ghost', 'bg-transparent'],
@@ -50,7 +50,7 @@ describe('Card — variant proplari', () => {
 
   it('varsayilan variant "elevated" dir', () => {
     const { container } = render(<Card>Test</Card>);
-    expect(container.firstElementChild?.className).toContain('shadow-sm');
+    expect(container.firstElementChild?.className).toContain('shadow-xs');
   });
 });
 

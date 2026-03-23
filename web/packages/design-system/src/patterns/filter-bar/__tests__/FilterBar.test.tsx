@@ -342,4 +342,35 @@ describe('FilterBar — accessibility', () => {
     const { container } = render(<FilterBar><span>Filter A</span></FilterBar>);
     await expectNoA11yViolations(container);
   });
+
+  it('more filters toggle is a button with accessible name', () => {
+    render(
+      <FilterBar moreFilters={<span>Advanced</span>}>
+        <span>F</span>
+      </FilterBar>,
+    );
+    const toggle = screen.getByRole('button', { name: /more filters/i });
+    expect(toggle).toBeInTheDocument();
+  });
+
+  it('more filters toggle has aria-expanded attribute', async () => {
+    render(
+      <FilterBar moreFilters={<span>Advanced</span>}>
+        <span>F</span>
+      </FilterBar>,
+    );
+    const toggle = screen.getByRole('button', { name: /more filters/i });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('actions slot buttons are accessible via role', () => {
+    render(
+      <FilterBar actions={<button>Reset</button>}>
+        <span>F</span>
+      </FilterBar>,
+    );
+    expect(screen.getByRole('button', { name: 'Reset' })).toBeInTheDocument();
+  });
 });

@@ -31,7 +31,7 @@ export const DesignLabHero: React.FC<DesignLabHeroProps> = ({
       {breadcrumbs}
       <section
         data-testid="design-lab-detail-hero"
-        className="overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-sm"
+        className="overflow-hidden rounded-[28px] border border-border-subtle bg-surface-default shadow-xs"
       >
         <div className="px-6 py-6">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">

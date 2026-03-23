@@ -89,7 +89,7 @@ const COMPONENT_STYLES: Record<string, StylePart[]> = {
         { className: "border", property: "border-width", value: "1px", category: "border" },
         { className: "px-3 py-2", property: "padding", value: "0.75rem / 0.5rem", category: "spacing" },
         { className: "text-sm", property: "font-size", value: "0.875rem", category: "typography" },
-        { className: "outline-none", property: "outline", value: "none", category: "interaction" },
+        { className: "outline-hidden", property: "outline", value: "none", category: "interaction" },
         { className: "focus:border-action-primary", property: "border-color", value: "var(--action-primary)", category: "interaction" },
         { className: "placeholder:text-text-tertiary", property: "color", value: "var(--text-tertiary)", category: "color" },
       ],
@@ -278,7 +278,7 @@ ${activeOverrides
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Filter classes..."
-            className="rounded-lg border border-border-subtle bg-surface-default pl-7 pr-3 py-1.5 text-xs outline-none focus:border-action-primary"
+            className="rounded-lg border border-border-subtle bg-surface-default pl-7 pr-3 py-1.5 text-xs outline-hidden focus:border-action-primary"
           />
         </div>
       </div>

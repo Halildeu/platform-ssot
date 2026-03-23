@@ -55,3 +55,19 @@ export const SinglePreset: Story = {
     description: 'Select a second preset to begin comparison.',
   },
 };
+
+export const NoPresets: Story = {
+  args: {
+    leftPreset: undefined,
+    rightPreset: undefined,
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    leftPreset,
+    rightPreset,
+    access: 'disabled',
+    accessReason: 'Insufficient permissions',
+  },
+};
