@@ -207,4 +207,27 @@ describe('DetailSectionTabs — accessibility', () => {
     const { container } = render(<DetailSectionTabs tabs={[{ id: 'overview', label: 'Overview', content: <div>Content</div> }]} activeTabId="overview" onTabChange={vi.fn()} />);
     await expectNoA11yViolations(container);
   });
+
+  it('renders a group role for the tab strip', () => {
+    render(
+      <DetailSectionTabs tabs={sampleTabs} activeTabId="overview" onTabChange={vi.fn()} />,
+    );
+    expect(screen.getByRole('group')).toBeInTheDocument();
+  });
+
+  it('renders radio elements for each tab item', () => {
+    render(
+      <DetailSectionTabs tabs={sampleTabs} activeTabId="overview" onTabChange={vi.fn()} />,
+    );
+    const radios = screen.getAllByRole('radio');
+    expect(radios.length).toBe(sampleTabs.length);
+  });
+
+  it('root element has aria-label attribute', () => {
+    const { container } = render(
+      <DetailSectionTabs tabs={sampleTabs} activeTabId="overview" onTabChange={vi.fn()} />,
+    );
+    const root = container.querySelector('[data-component="detail-section-tabs"]');
+    expect(root).toHaveAttribute('aria-label', 'Detay sekmeleri');
+  });
 });

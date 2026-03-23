@@ -44,6 +44,24 @@ export const WithBadges: Story = {
   },
 };
 
+export const ComfortableDensity: Story = {
+  args: {
+    tabs,
+    activeTabId: 'overview',
+    onTabChange: () => {},
+    density: 'comfortable',
+  },
+};
+
+export const NonSticky: Story = {
+  args: {
+    tabs,
+    activeTabId: 'details',
+    onTabChange: () => {},
+    sticky: false,
+  },
+};
+
 export const WithDisabled: Story = {
   args: {
     tabs: [

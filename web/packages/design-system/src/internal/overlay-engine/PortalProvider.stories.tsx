@@ -44,3 +44,19 @@ export const Disabled: Story = {
     </PortalProvider>
   ),
 };
+
+export const WithCustomContainer: Story = {
+  render: () => (
+    <PortalProvider container={null}>
+      <div>PortalProvider with null container — falls back to defaults</div>
+    </PortalProvider>
+  ),
+};
+
+export const ReEnabled: Story = {
+  render: () => (
+    <PortalProvider enabled>
+      <div>PortalProvider re-enabled — portals render in portal containers</div>
+    </PortalProvider>
+  ),
+};

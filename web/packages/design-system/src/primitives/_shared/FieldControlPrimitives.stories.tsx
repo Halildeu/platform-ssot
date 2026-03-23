@@ -87,6 +87,46 @@ export const Disabled: Story = {
   ),
 };
 
+export const WithDescription: Story = {
+  args: {
+    inputId: 'desc-input',
+    label: 'Full Name',
+    description: 'Please enter your legal name as shown on official documents',
+    hint: 'First and last name',
+    required: false,
+  },
+  render: (args) => (
+    <FieldControlShell {...args}>
+      <input
+        id={args.inputId}
+        type="text"
+        placeholder="John Doe"
+        className="w-full rounded border px-3 py-2"
+      />
+    </FieldControlShell>
+  ),
+};
+
+export const WithCount: Story = {
+  args: {
+    inputId: 'count-input',
+    label: 'Bio',
+    hint: 'Write a short bio',
+    countLabel: '42/200',
+    required: false,
+  },
+  render: (args) => (
+    <FieldControlShell {...args}>
+      <textarea
+        id={args.inputId}
+        placeholder="Tell us about yourself..."
+        className="w-full rounded border px-3 py-2"
+        rows={3}
+      />
+    </FieldControlShell>
+  ),
+};
+
 export const WithLongLabel: Story = {
   args: {
     inputId: 'long-label-input',

@@ -49,3 +49,25 @@ export const WithMixedContent: Story = {
     </DirectionProvider>
   ),
 };
+
+export const RTLWithFormElements: Story = {
+  render: () => (
+    <DirectionProvider direction="rtl">
+      <div style={{ padding: 16 }}>
+        <label htmlFor="name-input">الاسم</label>
+        <input id="name-input" type="text" placeholder="ادخل اسمك" style={{ display: 'block', marginTop: 4 }} />
+      </div>
+    </DirectionProvider>
+  ),
+};
+
+export const AutoInherit: Story = {
+  render: () => (
+    <DirectionProvider direction="ltr">
+      <div>
+        <p>This paragraph inherits LTR from the provider</p>
+        <p>So does this one — no explicit dir needed</p>
+      </div>
+    </DirectionProvider>
+  ),
+};

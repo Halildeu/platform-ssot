@@ -165,6 +165,11 @@ describe('SummaryStrip — accessibility', () => {
     expect(wrapper).toBeInTheDocument();
   });
 
+  it('root element has aria-label for screen readers', () => {
+    render(<SummaryStrip items={defaultItems} />);
+    expect(screen.getByLabelText('Summary metrics')).toBeInTheDocument();
+  });
+
   it('title renders as heading when provided', () => {
     render(<SummaryStrip items={defaultItems} title="Metrics" />);
     expect(screen.getByText('Metrics')).toBeInTheDocument();

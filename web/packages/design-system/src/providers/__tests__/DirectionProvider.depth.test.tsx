@@ -74,4 +74,16 @@ describe('DirectionProvider — depth', () => {
     await user.click(screen.getByText('UE Click'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
+
+  it('typing via userEvent through RTL provider', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <DirectionProvider direction="rtl">
+        <input aria-label="rtl-input" onChange={onChange} />
+      </DirectionProvider>,
+    );
+    await user.type(screen.getByLabelText('rtl-input'), 'test');
+    expect(onChange).toHaveBeenCalled();
+  });
 });

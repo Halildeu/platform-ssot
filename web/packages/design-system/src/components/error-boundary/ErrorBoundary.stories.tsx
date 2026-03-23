@@ -68,6 +68,36 @@ export const CustomFallback: Story = {
   },
 };
 
+export const WithFallback: Story = {
+  args: {
+    children: <BrokenChild />,
+    fallback: (error: Error, reset: () => void) => (
+      <div style={{ padding: 24, textAlign: 'center' }}>
+        <p style={{ fontWeight: 600, color: 'var(--text-primary, #111827)' }}>
+          Error: {error.message}
+        </p>
+        <button onClick={reset} style={{ marginTop: 8, padding: '4px 12px', borderRadius: 4, border: '1px solid #ccc' }}>
+          Retry
+        </button>
+      </div>
+    ),
+  },
+};
+
+export const NestedError: Story = {
+  render: () => (
+    <ErrorBoundary
+      fallback={<div style={{ padding: 16, textAlign: 'center', color: 'var(--text-primary, #111827)' }}>Outer boundary caught an error</div>}
+    >
+      <ErrorBoundary
+        fallback={<div style={{ padding: 16, textAlign: 'center', color: 'var(--text-primary, #111827)' }}>Inner boundary caught an error</div>}
+      >
+        <BrokenChild />
+      </ErrorBoundary>
+    </ErrorBoundary>
+  ),
+};
+
 export const WithReset: Story = {
   render: () => {
     const [key, setKey] = useState(0);

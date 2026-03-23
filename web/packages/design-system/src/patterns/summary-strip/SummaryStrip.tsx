@@ -56,7 +56,7 @@ export const SummaryStrip = React.forwardRef<HTMLDivElement, SummaryStripProps>(
   if (accessState.isHidden) return null;
 
   return (
-  <div ref={ref} className={cn("w-full", className)} data-access-state={accessState.state} title={accessReason}>
+  <div ref={ref} aria-label="Summary metrics" className={cn("w-full", className)} data-access-state={accessState.state} title={accessReason}>
     {(title || description) && (
       <div className="mb-4">
         {title && (

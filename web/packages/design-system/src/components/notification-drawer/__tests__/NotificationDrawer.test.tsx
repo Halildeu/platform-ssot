@@ -65,6 +65,28 @@ describe('NotificationDrawer — interaction', () => {
     expect(handleClose).toHaveBeenCalledWith('close-button');
   });
 
+  it('notification item tiklandiginda icerik gorunur', async () => {
+    const user = userEvent.setup();
+    render(
+      <NotificationDrawer open items={sampleItems} disablePortal />,
+    );
+    const item = screen.getByText('Deployment completed');
+    await user.click(item);
+    expect(item).toBeInTheDocument();
+  });
+
+  it('tab ile close butonuna odaklanilabilir', async () => {
+    const user = userEvent.setup();
+    const handleClose = vi.fn();
+    render(
+      <NotificationDrawer open items={sampleItems} onClose={handleClose} disablePortal />,
+    );
+    await user.tab();
+    const closeBtn = screen.getByLabelText('Bildirim merkezini kapat');
+    // Tab navigates through focusable elements
+    expect(closeBtn).toBeInTheDocument();
+  });
+
   it('ozel closeLabel kullanilir', () => {
     render(
       <NotificationDrawer

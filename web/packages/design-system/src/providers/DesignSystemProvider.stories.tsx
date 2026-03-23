@@ -36,3 +36,16 @@ export const WithCustomTheme: Story = {
     children: 'Custom theme content',
   },
 };
+
+export const WithPersianLocale: Story = {
+  args: {
+    locale: 'fa',
+    children: 'Persian locale content — auto-detects RTL',
+  },
+};
+
+export const MinimalNoProps: Story = {
+  args: {
+    children: 'Default English LTR content with no overrides',
+  },
+};

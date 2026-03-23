@@ -74,4 +74,16 @@ describe('DesignSystemProvider — depth', () => {
     await user.click(screen.getByText('UE Action'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
+
+  it('keyboard input via userEvent through provider', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(
+      <DesignSystemProvider>
+        <input aria-label="test-input" onChange={onChange} />
+      </DesignSystemProvider>,
+    );
+    await user.type(screen.getByLabelText('test-input'), 'hello');
+    expect(onChange).toHaveBeenCalled();
+  });
 });

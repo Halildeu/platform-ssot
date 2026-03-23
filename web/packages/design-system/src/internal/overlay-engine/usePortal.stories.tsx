@@ -28,3 +28,15 @@ export const Cleanup: Story = {
 export const Disabled: Story = {
   render: () => <div>usePortal — renders inline when enabled=false (no portal container created)</div>,
 };
+
+export const MultiplePortals: Story = {
+  render: () => (
+    <div>usePortal — multiple instances create independent portal containers</div>
+  ),
+};
+
+export const WithContainerRef: Story = {
+  render: () => (
+    <div>usePortal — custom container ref targets a specific DOM element</div>
+  ),
+};

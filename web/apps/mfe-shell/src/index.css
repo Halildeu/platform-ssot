@@ -1,7 +1,49 @@
 @import "tailwindcss";
 
-/* TW4 @config reads existing v3 config for content paths */
+/* TW4 @config reads existing v3 config for content paths + theme */
 @config "../../../tailwind.config.js";
+
+/* ------------------------------------------------------------------ */
+/*  TW4 Compatibility Layer — Restore v3 defaults                      */
+/* ------------------------------------------------------------------ */
+
+/* Dark mode: use data-mode="dark" attribute (not prefers-color-scheme) */
+@custom-variant dark (&:where([data-mode=dark], [data-mode=dark] *));
+
+/* Restore v3 ring defaults (3px width, blue-500 color) */
+@theme {
+  --default-ring-width: 3px;
+  --default-ring-color: var(--color-blue-500);
+}
+
+/* Restore v3 base defaults changed in TW4 */
+@layer base {
+  /* Border default: currentColor → gray-200 */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  /* Button cursor: default → pointer */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Placeholder color: currentColor/50% → gray-400 */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+
+  /* Dialog margin: reset → auto (centered) */
+  dialog {
+    margin: auto;
+  }
+}
 
 /* ------------------------------------------------------------------ */
 /*  @theme — register design tokens with static fallback values        */
