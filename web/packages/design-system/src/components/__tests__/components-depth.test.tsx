@@ -1047,7 +1047,7 @@ describe('EmptyState — depth', () => {
   });
 
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<EmptyState title="Test" />);
+    const { container } = render(<EmptyState title="Empty" description="Nothing here" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -1482,7 +1482,7 @@ describe('DetailSectionTabs — depth', () => {
   });
 
   it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={handler} />);
+    const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={vi.fn()} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
     });
@@ -1490,14 +1490,14 @@ describe('DetailSectionTabs — depth', () => {
   });
 
   it('handles readonly access state', () => {
-    const { container } = render(<DetailSectionTabs access="readonly" tabs={[]} activeTabId="" onTabChange={handler} />);
+    const { container } = render(<DetailSectionTabs access="readonly" tabs={[]} activeTabId="" onTabChange={vi.fn()} />);
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={handler} />);
+    const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={vi.fn()} />);
     const root = container.firstElementChild;
     // error: component should not render error state by default
     expect(root).toBeTruthy();
