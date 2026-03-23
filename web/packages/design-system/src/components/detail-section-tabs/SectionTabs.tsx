@@ -296,7 +296,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
           ariaLabel={ariaLabel}
           classes={{
             root: cn(
-              'border border-border-subtle bg-surface-default/95 p-1 shadow-xs backdrop-blur sm:p-1.5',
+              'border border-border-subtle bg-surface-default/95 p-1 shadow-xs backdrop-blur-sm sm:p-1.5',
               resolvedLayout === 'scroll' ? 'inline-flex min-w-max rounded-[20px]' : 'w-full rounded-[20px]',
               classes?.root,
             ),
