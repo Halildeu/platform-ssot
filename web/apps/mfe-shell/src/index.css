@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
-/* TW4 @config reads existing v3 config for content paths + theme */
-@config "../../../tailwind.config.js";
+/* Content scanning for monorepo — TW4 native @source */
+@source "../../packages/design-system/src/**/*.{ts,tsx}";
+@source "../mfe-suggestions/src/**/*.{ts,tsx}";
+@source "../mfe-ethic/src/**/*.{ts,tsx}";
+@source "../mfe-users/src/**/*.{ts,tsx}";
+@source "../mfe-access/src/**/*.{ts,tsx}";
+@source "../mfe-audit/src/**/*.{ts,tsx}";
+@source "../mfe-reporting/src/**/*.{ts,tsx}";
 
 /* ------------------------------------------------------------------ */
 /*  TW4 Compatibility Layer — Restore v3 defaults                      */
