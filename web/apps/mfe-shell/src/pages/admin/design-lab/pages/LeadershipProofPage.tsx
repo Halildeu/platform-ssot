@@ -207,7 +207,7 @@ export default function LeadershipProofPage() {
             </div>
           </div>
           <Text variant="secondary" className="mt-4 text-xs">
-            Benchmark suite: <code className="rounded bg-surface-canvas px-1.5 py-0.5 text-[11px]">pnpm --filter @mfe/benchmarks bench</code>
+            Benchmark suite: <code className="rounded-sm bg-surface-canvas px-1.5 py-0.5 text-[11px]">pnpm --filter @mfe/benchmarks bench</code>
           </Text>
         </div>
       </Section>
@@ -258,7 +258,7 @@ export default function LeadershipProofPage() {
                 {app.components.map((c) => (
                   <span
                     key={c}
-                    className="rounded bg-surface-canvas px-1.5 py-0.5 text-[10px] font-medium text-text-secondary"
+                    className="rounded-sm bg-surface-canvas px-1.5 py-0.5 text-[10px] font-medium text-text-secondary"
                   >
                     {c}
                   </span>
@@ -270,7 +270,7 @@ export default function LeadershipProofPage() {
                 </Text>
                 <ArrowRight className="h-3.5 w-3.5 text-text-secondary opacity-0 transition group-hover:opacity-100" />
               </div>
-              <code className="mt-2 block rounded bg-surface-canvas px-2 py-1 text-[10px] text-text-secondary">
+              <code className="mt-2 block rounded-sm bg-surface-canvas px-2 py-1 text-[10px] text-text-secondary">
                 npx @mfe/create-app my-app --template {app.template}
               </code>
             </div>

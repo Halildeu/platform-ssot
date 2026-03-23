@@ -120,31 +120,64 @@ describe('Transition — depth', () => {
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<Transition show={true}>
-        <div data-testid="trans">Content</div>
-      </Transition>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('preserves ARIA attributes during enter animation', () => {
+    render(
+      <Transition show={true} enter="animate-fade-in">
+        <div role="dialog" aria-label="modal" aria-modal="true">Dialog content</div>
+      </Transition>,
+    );
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('aria-label', 'modal');
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(dialog).toBeInTheDocument();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<Transition show={true}>
-        <div data-testid="trans">Content</div>
-      </Transition>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
+  it('preserves ARIA attributes during exit animation', () => {
+    function TestComp() {
+      const [show, setShow] = useState(true);
+      return (
+        <>
+          <button onClick={() => setShow(false)}>hide</button>
+          <Transition show={show} duration={200} exit="exit-cls">
+            <div role="alertdialog" aria-label="confirm" aria-describedby="desc">Content</div>
+          </Transition>
+        </>
+      );
+    }
+    render(<TestComp />);
+    const alertDialog = screen.getByRole('alertdialog');
+    expect(alertDialog).toHaveAttribute('aria-label', 'confirm');
+    expect(alertDialog).toHaveAttribute('aria-describedby', 'desc');
+    act(() => { fireEvent.click(screen.getByRole('button', { name: /hide/i })); });
+    // still in DOM during exit
+    expect(screen.getByRole('alertdialog')).toHaveAttribute('aria-label', 'confirm');
+  });
+
+  it('child with role=region and aria-label is queryable', () => {
+    render(
+      <Transition show={true}>
+        <div role="region" aria-label="test-section">Section content</div>
+      </Transition>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByLabelText('test-section')).toBeInTheDocument();
+  });
+
+  it('has correct displayName', () => {
+    expect(Transition.displayName).toBe('Transition');
+  });
+
+  it('merges className from child and Transition className prop', () => {
+    const { container } = render(
+      <Transition show={true} className="transition-extra">
+        <div className="child-cls" data-testid="merge">Content</div>
+      </Transition>,
+    );
+    const el = screen.getByTestId('merge');
+    expect(el.className).toContain('child-cls');
+    expect(el.className).toContain('transition-extra');
+    expect(el).toBeInTheDocument();
+    expect(container.firstElementChild?.tagName).toBe('DIV');
     expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
   });
 });

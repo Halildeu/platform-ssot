@@ -70,7 +70,7 @@ export function QualityGatesOverview({ items }: QualityGatesOverviewProps) {
                 <Text className="text-[10px] tabular-nums text-text-secondary">
                   {gate.passing}/{gate.total}
                 </Text>
-                <span className={`rounded px-1.5 py-0.5 text-[10px] font-semibold ${
+                <span className={`rounded-sm px-1.5 py-0.5 text-[10px] font-semibold ${
                   gate.pct >= 80
                     ? 'bg-emerald-100 text-emerald-700'
                     : gate.pct >= 50

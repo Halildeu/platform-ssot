@@ -24,7 +24,7 @@ export const Default: Story = {
         id={args.inputId}
         type="text"
         placeholder="johndoe"
-        className="w-full rounded border px-3 py-2"
+        className="w-full rounded-sm border px-3 py-2"
       />
     </FieldControlShell>
   ),
@@ -43,7 +43,7 @@ export const WithError: Story = {
         id={args.inputId}
         type="email"
         placeholder="user@example.com"
-        className="w-full rounded border border-red-500 px-3 py-2"
+        className="w-full rounded-sm border border-red-500 px-3 py-2"
       />
     </FieldControlShell>
   ),
@@ -62,7 +62,7 @@ export const Optional: Story = {
         id={args.inputId}
         type="text"
         placeholder="Optional nickname"
-        className="w-full rounded border px-3 py-2"
+        className="w-full rounded-sm border px-3 py-2"
       />
     </FieldControlShell>
   ),
@@ -82,7 +82,7 @@ export const Disabled: Story = {
         type="text"
         placeholder="Cannot edit"
         disabled
-        className="w-full rounded border px-3 py-2 opacity-50"
+        className="w-full rounded-sm border px-3 py-2 opacity-50"
       />
     </FieldControlShell>
   ),
@@ -102,7 +102,7 @@ export const WithDescription: Story = {
         id={args.inputId}
         type="text"
         placeholder="John Doe"
-        className="w-full rounded border px-3 py-2"
+        className="w-full rounded-sm border px-3 py-2"
       />
     </FieldControlShell>
   ),
@@ -121,7 +121,7 @@ export const WithCount: Story = {
       <textarea
         id={args.inputId}
         placeholder="Tell us about yourself..."
-        className="w-full rounded border px-3 py-2"
+        className="w-full rounded-sm border px-3 py-2"
         rows={3}
       />
     </FieldControlShell>
@@ -141,7 +141,7 @@ export const WithLongLabel: Story = {
         id={args.inputId}
         type="text"
         placeholder="Enter value"
-        className="w-full rounded border px-3 py-2"
+        className="w-full rounded-sm border px-3 py-2"
       />
     </FieldControlShell>
   ),

@@ -181,7 +181,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           />
           <span
             className={cn(
-              "flex items-center justify-center rounded border-2 transition-colors duration-150",
+              "flex items-center justify-center rounded-sm border-2 transition-colors duration-150",
               boxSizes[checkboxSize],
               isActive
                 ? "border-action-primary bg-action-primary"

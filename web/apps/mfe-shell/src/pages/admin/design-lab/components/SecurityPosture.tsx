@@ -132,7 +132,7 @@ export function SecurityPosture() {
 
       {!evidenceAvailable && (
         <Text variant="secondary" className="mt-3 text-[10px]">
-          Evidence registry bulunamadi — <code className="rounded bg-surface-muted px-1">npm run collect:evidence</code> calistirin.
+          Evidence registry bulunamadi — <code className="rounded-sm bg-surface-muted px-1">npm run collect:evidence</code> calistirin.
         </Text>
       )}
       <Text variant="secondary" className="mt-1 text-[10px]">

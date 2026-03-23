@@ -453,7 +453,7 @@ const PageOverviewTab: React.FC<{
                           {item.regions.map((region) => (
                             <div
                               key={region}
-                              className="flex items-center justify-center rounded bg-surface-default px-1"
+                              className="flex items-center justify-center rounded-sm bg-surface-default px-1"
                             >
                               <Text className="text-[8px] font-medium text-text-tertiary truncate">{region.replace(/_/g, ' ')}</Text>
                             </div>

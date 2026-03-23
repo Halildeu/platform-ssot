@@ -242,21 +242,21 @@ export const PropsDepsGraph: React.FC<PropsDepsGraphProps> = ({ componentName })
             <button
               type="button"
               onClick={() => setZoom((z) => Math.min(2, z + 0.2))}
-              className="rounded p-1 text-text-tertiary hover:bg-surface-muted"
+              className="rounded-sm p-1 text-text-tertiary hover:bg-surface-muted"
             >
               <ZoomIn className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
               onClick={() => setZoom((z) => Math.max(0.5, z - 0.2))}
-              className="rounded p-1 text-text-tertiary hover:bg-surface-muted"
+              className="rounded-sm p-1 text-text-tertiary hover:bg-surface-muted"
             >
               <ZoomOut className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
               onClick={() => { setZoom(1); setSelectedNode(null); }}
-              className="rounded p-1 text-text-tertiary hover:bg-surface-muted"
+              className="rounded-sm p-1 text-text-tertiary hover:bg-surface-muted"
             >
               <RotateCcw className="h-3.5 w-3.5" />
             </button>

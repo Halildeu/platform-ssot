@@ -157,19 +157,19 @@ export default function ConsumerHeatmap() {
       {/* Legend */}
       <div className="flex flex-wrap gap-3">
         <div className="flex items-center gap-1.5">
-          <div className="h-3 w-3 rounded bg-emerald-200" />
+          <div className="h-3 w-3 rounded-sm bg-emerald-200" />
           <Text className="text-[10px] text-text-secondary">Stable + kullaniliyor</Text>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="h-3 w-3 rounded bg-amber-100" />
+          <div className="h-3 w-3 rounded-sm bg-amber-100" />
           <Text className="text-[10px] text-text-secondary">Beta</Text>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="h-3 w-3 rounded bg-red-100" />
+          <div className="h-3 w-3 rounded-sm bg-red-100" />
           <Text className="text-[10px] text-text-secondary">Breaking risk</Text>
         </div>
         <div className="flex items-center gap-1.5">
-          <div className="h-3 w-3 rounded bg-surface-canvas" />
+          <div className="h-3 w-3 rounded-sm bg-surface-canvas" />
           <Text className="text-[10px] text-text-secondary">Kullanilmiyor</Text>
         </div>
       </div>
@@ -225,7 +225,7 @@ export default function ConsumerHeatmap() {
                   return (
                     <td key={app} className="px-1 py-1 text-center">
                       <span
-                        className={`inline-flex h-7 w-full items-center justify-center rounded text-[11px] font-semibold tabular-nums ${cellColor(count, row.lifecycle)}`}
+                        className={`inline-flex h-7 w-full items-center justify-center rounded-sm text-[11px] font-semibold tabular-nums ${cellColor(count, row.lifecycle)}`}
                       >
                         {count > 0 ? count : "-"}
                       </span>

@@ -282,7 +282,7 @@ export const VisualRegressionPage: React.FC = () => {
         <div className="flex items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3">
           <AlertTriangle className="h-4 w-4 text-amber-600" />
           <Text className="text-sm text-amber-800">
-            Evidence registry bulunamadi. <code className="rounded bg-amber-100 px-1 text-xs">npm run collect:evidence</code> komutunu calistirin.
+            Evidence registry bulunamadi. <code className="rounded-sm bg-amber-100 px-1 text-xs">npm run collect:evidence</code> komutunu calistirin.
           </Text>
         </div>
       )}

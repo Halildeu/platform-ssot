@@ -184,7 +184,7 @@ export const NotificationItemCard: React.FC<NotificationItemCardProps> = ({
               checked={selected}
               disabled={accessState.isReadonly || accessState.isDisabled}
               onChange={handleSelectedChange}
-              className="h-4 w-4 rounded border border-border-strong disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-4 w-4 rounded-sm border border-border-strong disabled:cursor-not-allowed disabled:opacity-50"
               style={{ accentColor: "var(--color-action-primary-bg)" }}
             />
           </div>

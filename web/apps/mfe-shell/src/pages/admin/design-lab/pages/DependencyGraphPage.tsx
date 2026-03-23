@@ -292,16 +292,16 @@ export default function DependencyGraphPage() {
 
           {/* Zoom */}
           <div className="flex items-center gap-1 rounded-lg border border-border-subtle p-0.5">
-            <button type="button" onClick={zoomOut} className="rounded p-1 text-text-secondary hover:bg-surface-canvas" title="Zoom out">
+            <button type="button" onClick={zoomOut} className="rounded-sm p-1 text-text-secondary hover:bg-surface-canvas" title="Zoom out">
               <ZoomOut className="h-3.5 w-3.5" />
             </button>
             <span className="min-w-[3ch] text-center text-[10px] font-medium text-text-tertiary">
               {Math.round(zoom * 100)}%
             </span>
-            <button type="button" onClick={zoomIn} className="rounded p-1 text-text-secondary hover:bg-surface-canvas" title="Zoom in">
+            <button type="button" onClick={zoomIn} className="rounded-sm p-1 text-text-secondary hover:bg-surface-canvas" title="Zoom in">
               <ZoomIn className="h-3.5 w-3.5" />
             </button>
-            <button type="button" onClick={resetView} className="rounded p-1 text-text-secondary hover:bg-surface-canvas" title="Reset">
+            <button type="button" onClick={resetView} className="rounded-sm p-1 text-text-secondary hover:bg-surface-canvas" title="Reset">
               <Maximize2 className="h-3.5 w-3.5" />
             </button>
           </div>

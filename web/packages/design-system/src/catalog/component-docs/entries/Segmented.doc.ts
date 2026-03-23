@@ -49,7 +49,7 @@ const entry: DesignLabComponentDocEntry = {
     "size: sm | md | lg",
     "layout: default | full-width",
     "surface: default | outline | ghost",
-    "shape: rounded | pill",
+    "shape: rounded-sm | pill",
     "content: label | label-description | icon-label | icon-badge"
   ],
   "stateModel": [

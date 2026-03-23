@@ -2330,7 +2330,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
         React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2" },
           React.createElement("span", { className: "text-[var(--text-secondary)]" }, "\u{1F50D}"),
           React.createElement("span", { className: "text-sm text-[var(--text-secondary)]" }, "Komut, varlik veya islem ara..."),
-          React.createElement("span", { className: "ml-auto rounded border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "⌘K"),
+          React.createElement("span", { className: "ml-auto rounded-sm border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "⌘K"),
         ),
       ),
       React.createElement("div", { className: "grid grid-cols-2 gap-4" },
@@ -2338,17 +2338,17 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Son Calismalar"),
           React.createElement("div", { className: "space-y-2" },
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded bg-[var(--action-primary,#2563eb)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary,#2563eb)]" }, "SIPARIS"),
+              React.createElement("span", { className: "rounded-sm bg-[var(--action-primary,#2563eb)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary,#2563eb)]" }, "SIPARIS"),
               React.createElement("span", { className: "font-medium" }, "#SIP-2024-1847"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "2 dk once"),
             ),
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded bg-[var(--status-success,#16a34a)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "KULLANICI"),
+              React.createElement("span", { className: "rounded-sm bg-[var(--status-success,#16a34a)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "KULLANICI"),
               React.createElement("span", { className: "font-medium" }, "Ayse Demir"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "15 dk once"),
             ),
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded bg-[var(--status-warning,#d97706)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-warning,#d97706)]" }, "TALEP"),
+              React.createElement("span", { className: "rounded-sm bg-[var(--status-warning,#d97706)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-warning,#d97706)]" }, "TALEP"),
               React.createElement("span", { className: "font-medium" }, "TLP-5523 CDN gecikmesi"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "1 saat once"),
             ),
@@ -2875,7 +2875,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
         React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2" },
           React.createElement("span", { className: "text-[var(--text-secondary)]" }, "\u{1F50D}"),
           React.createElement("span", { className: "text-sm text-[var(--text-secondary)]" }, "Komut, varlik veya islem ara..."),
-          React.createElement("span", { className: "ml-auto rounded border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "\u{2318}K"),
+          React.createElement("span", { className: "ml-auto rounded-sm border border-[var(--border-subtle)] bg-[var(--surface-default,#fff)] px-1.5 py-0.5 text-[10px] text-[var(--text-secondary)]" }, "\u{2318}K"),
         ),
       ),
       React.createElement("div", { className: "grid grid-cols-2 gap-4" },
@@ -2883,12 +2883,12 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
           React.createElement("div", { className: "mb-3 text-sm font-semibold text-[var(--text-primary)]" }, "Son Calismalar"),
           React.createElement("div", { className: "space-y-2" },
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded bg-[var(--action-primary,#2563eb)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary,#2563eb)]" }, "SIPARIS"),
+              React.createElement("span", { className: "rounded-sm bg-[var(--action-primary,#2563eb)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--action-primary,#2563eb)]" }, "SIPARIS"),
               React.createElement("span", { className: "font-medium" }, "#SIP-2024-1847"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "2 dk once"),
             ),
             React.createElement("div", { className: "flex items-center gap-2 rounded-lg bg-[var(--surface-muted)] px-3 py-2 text-xs cursor-pointer" },
-              React.createElement("span", { className: "rounded bg-[var(--status-success,#16a34a)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "KULLANICI"),
+              React.createElement("span", { className: "rounded-sm bg-[var(--status-success,#16a34a)]/10 px-1.5 py-0.5 text-[10px] font-medium text-[var(--status-success,#16a34a)]" }, "KULLANICI"),
               React.createElement("span", { className: "font-medium" }, "Ayse Demir"),
               React.createElement("span", { className: "ml-auto text-[var(--text-secondary)]" }, "15 dk once"),
             ),
@@ -2921,7 +2921,7 @@ DEFAULT_PROPS.RadarChart = { data: [{ label: "Hiz", value: 80 }, { label: "Guven
 
 /* ---- X-Data-Grid default props ---- */
 DEFAULT_PROPS.DataGridFilterChips = { filters: [{ id: "1", field: "status", label: "Durum", value: "Aktif" }, { id: "2", field: "role", label: "Rol", value: "Admin" }], onRemove: () => {}, onClearAll: () => {} };
-DEFAULT_PROPS.DataGridSelectionBar = { selectedCount: 3, onClearSelection: () => {}, children: React.createElement("button", { className: "rounded bg-[var(--action-primary,#3b82f6)] px-3 py-1 text-xs text-white" }, "Toplu Sil") };
+DEFAULT_PROPS.DataGridSelectionBar = { selectedCount: 3, onClearSelection: () => {}, children: React.createElement("button", { className: "rounded-sm bg-[var(--action-primary,#3b82f6)] px-3 py-1 text-xs text-white" }, "Toplu Sil") };
 
 /* ---- X-Editor default props ---- */
 DEFAULT_PROPS.RichTextEditor = { placeholder: "Icerik yazin...", minHeight: 200 };

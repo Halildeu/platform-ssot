@@ -250,7 +250,7 @@ const FieldRenderer: React.FC<{
             checked={Boolean(value)}
             onChange={(e) => handleChange(e.target.checked)}
             disabled={disabled}
-            className="h-4 w-4 rounded border-border-subtle text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
+            className="h-4 w-4 rounded-sm border-border-subtle text-[var(--action-primary-bg,var(--action-primary))] focus:ring-[var(--selection-outline,var(--action-primary))]"
             aria-invalid={hasError}
             aria-describedby={hasError ? `${id}-error` : undefined}
           />

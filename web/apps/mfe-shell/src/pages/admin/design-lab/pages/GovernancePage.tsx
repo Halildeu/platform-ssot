@@ -179,13 +179,13 @@ function QualityExceptionRegistry() {
                   {item.whereUsed.slice(0, 3).map((app) => (
                     <span
                       key={app}
-                      className="rounded bg-rose-100 px-1.5 py-0.5 text-[10px] font-medium text-rose-700"
+                      className="rounded-sm bg-rose-100 px-1.5 py-0.5 text-[10px] font-medium text-rose-700"
                     >
                       {app}
                     </span>
                   ))}
                   {item.whereUsed.length > 3 && (
-                    <span className="rounded bg-surface-muted px-1.5 py-0.5 text-[10px] text-text-secondary">
+                    <span className="rounded-sm bg-surface-muted px-1.5 py-0.5 text-[10px] text-text-secondary">
                       +{item.whereUsed.length - 3}
                     </span>
                   )}

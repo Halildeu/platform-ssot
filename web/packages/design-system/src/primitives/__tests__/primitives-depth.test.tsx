@@ -467,32 +467,52 @@ describe('FieldControlShell — depth', () => {
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<FieldControlShell inputId="f3" label="Email">
-        <input id="f3" />
-      </FieldControlShell>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('has displayName on FieldControlShell', () => {
+    expect(FieldControlShell.displayName).toBe('FieldControlShell');
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<FieldControlShell inputId="f3" label="Email">
-        <input id="f3" />
-      </FieldControlShell>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
+  it('renders countLabel text', () => {
+    render(
+      <FieldControlShell inputId="f-count" label="Message" countLabel="12/200">
+        <textarea id="f-count" />
+      </FieldControlShell>,
+    );
+    expect(screen.getByText('12/200')).toBeInTheDocument();
+    expect(screen.getByText('Message')).toBeInTheDocument();
+  });
+
+  it('label element is associated with input via htmlFor', () => {
+    render(
+      <FieldControlShell inputId="f-assoc" label="Username" required>
+        <input id="f-assoc" />
+      </FieldControlShell>,
+    );
+    const label = screen.getByText('Username').closest('label');
+    expect(label).toHaveAttribute('for', 'f-assoc');
+    expect(screen.getByText('*')).toBeInTheDocument();
+    expect(label).toBeInTheDocument();
+  });
+
+  it('renders fullWidth class by default', () => {
+    const { container } = render(
+      <FieldControlShell inputId="f-fw" label="Field">
+        <input id="f-fw" />
+      </FieldControlShell>,
+    );
+    const root = container.firstElementChild as HTMLElement;
+    expect(root.className).toContain('w-full');
     expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+    expect(root.tagName).toBe('DIV');
+  });
+
+  it('error takes priority over hint in display', () => {
+    render(
+      <FieldControlShell inputId="f-pri" error={<span>err-msg</span>} hint={<span>hint-msg</span>}>
+        <input id="f-pri" />
+      </FieldControlShell>,
+    );
+    expect(screen.getByText('err-msg')).toBeInTheDocument();
+    expect(screen.queryByText('hint-msg')).not.toBeInTheDocument();
   });
 });
 

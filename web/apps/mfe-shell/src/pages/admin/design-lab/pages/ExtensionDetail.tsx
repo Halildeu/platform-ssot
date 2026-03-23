@@ -344,7 +344,7 @@ function ExtSurfaces({ extension }: { extension: ExtFamily }) {
                   <span className="w-20 shrink-0 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                     Import
                   </span>
-                  <code className="rounded bg-surface-muted px-2 py-0.5 text-[11px] font-mono text-text-primary">
+                  <code className="rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-mono text-text-primary">
                     {surface.apiContract.importPath}
                   </code>
                 </div>
@@ -352,7 +352,7 @@ function ExtSurfaces({ extension }: { extension: ExtFamily }) {
                   <span className="w-20 shrink-0 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                     Props
                   </span>
-                  <code className="rounded bg-surface-muted px-2 py-0.5 text-[11px] font-mono text-text-primary">
+                  <code className="rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-mono text-text-primary">
                     {surface.apiContract.propsInterface}
                   </code>
                 </div>
@@ -361,7 +361,7 @@ function ExtSurfaces({ extension }: { extension: ExtFamily }) {
                     <span className="w-20 shrink-0 text-[10px] font-medium uppercase tracking-wider text-text-secondary">
                       Endpoint
                     </span>
-                    <code className="rounded bg-surface-muted px-2 py-0.5 text-[11px] font-mono text-text-primary">
+                    <code className="rounded-sm bg-surface-muted px-2 py-0.5 text-[11px] font-mono text-text-primary">
                       {surface.apiContract.serverSideModel.endpoint}
                     </code>
                   </div>
@@ -448,13 +448,13 @@ function SurfaceCard({ surface }: { surface: Surface }) {
           {surface.capabilities.slice(0, MAX_CAPS).map((cap) => (
             <span
               key={cap}
-              className="rounded bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary"
+              className="rounded-sm bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary"
             >
               {snakeToPretty(cap)}
             </span>
           ))}
           {overflowCount > 0 && (
-            <span className="rounded bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
+            <span className="rounded-sm bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
               +{overflowCount} more
             </span>
           )}

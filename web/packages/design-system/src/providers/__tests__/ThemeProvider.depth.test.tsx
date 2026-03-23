@@ -76,27 +76,38 @@ describe('ThemeProvider — depth', () => {
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<ThemeProvider><span role="listitem">Child</span></ThemeProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('preserves ARIA attributes on children', () => {
+    render(
+      <ThemeProvider>
+        <div role="region" aria-label="themed-section">Themed content</div>
+      </ThemeProvider>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByLabelText('themed-section')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveTextContent('Themed content');
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<ThemeProvider><span role="listitem">Child</span></ThemeProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('child with role=navigation inside theme provider', () => {
+    render(
+      <ThemeProvider>
+        <nav role="navigation" aria-label="sidebar">
+          <a href="#">Home</a>
+        </nav>
+      </ThemeProvider>,
+    );
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByLabelText('sidebar')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
+  });
+
+  it('child with role=alert inside theme provider', () => {
+    render(
+      <ThemeProvider>
+        <div role="alert" aria-live="polite">Notification</div>
+      </ThemeProvider>,
+    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveAttribute('aria-live', 'polite');
+    expect(alert).toHaveTextContent('Notification');
   });
 });

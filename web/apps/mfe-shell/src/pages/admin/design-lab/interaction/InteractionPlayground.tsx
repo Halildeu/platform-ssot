@@ -135,10 +135,10 @@ export default function InteractionPlayground() {
               <Text className="text-xs font-semibold text-text-primary">{scenario.name}</Text>
               <Text variant="secondary" className="text-[10px] mt-0.5">{scenario.description}</Text>
               <div className="mt-1.5 flex items-center gap-1">
-                <span className="rounded bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium text-text-tertiary">
+                <span className="rounded-sm bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium text-text-tertiary">
                   {scenario.nodes.length} nodes
                 </span>
-                <span className="rounded bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium text-text-tertiary">
+                <span className="rounded-sm bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium text-text-tertiary">
                   {scenario.wires.length} wires
                 </span>
               </div>
@@ -220,7 +220,7 @@ export default function InteractionPlayground() {
                         <code className="text-[10px] font-mono font-bold text-text-tertiary">
                           {node.id}
                         </code>
-                        <span className="rounded bg-surface-muted px-1 py-0.5 text-[9px] font-medium text-text-secondary">
+                        <span className="rounded-sm bg-surface-muted px-1 py-0.5 text-[9px] font-medium text-text-secondary">
                           {node.componentName}
                         </span>
                         {/* Show connected events */}
@@ -326,11 +326,11 @@ export default function InteractionPlayground() {
           <div className="flex items-center gap-4 rounded-xl border border-border-subtle bg-surface-canvas px-4 py-2">
             <Text variant="secondary" className="text-[10px] font-medium">Legend:</Text>
             <div className="flex items-center gap-1.5">
-              <div className="h-0.5 w-6 bg-orange-400 rounded" />
+              <div className="h-0.5 w-6 bg-orange-400 rounded-sm" />
               <Text variant="secondary" className="text-[10px]">Active wire</Text>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="h-0.5 w-6 rounded bg-[var(--text-subtle)]" style={{ backgroundImage: "repeating-linear-gradient(90deg, var(--text-subtle, #94a3b8) 0 4px, transparent 4px 8px)" }} />
+              <div className="h-0.5 w-6 rounded-sm bg-[var(--text-subtle)]" style={{ backgroundImage: "repeating-linear-gradient(90deg, var(--text-subtle, #94a3b8) 0 4px, transparent 4px 8px)" }} />
               <Text variant="secondary" className="text-[10px]">Idle wire</Text>
             </div>
             <div className="flex items-center gap-1.5">

@@ -430,7 +430,7 @@ export default function QualityDashboardPage() {
         </div>
         {!evidenceAvailable ? (
           <Text variant="secondary" className="text-xs">
-            Evidence registry bulunamadi. <code className="rounded bg-surface-muted px-1 text-[10px]">npm run collect:evidence</code> calistirin.
+            Evidence registry bulunamadi. <code className="rounded-sm bg-surface-muted px-1 text-[10px]">npm run collect:evidence</code> calistirin.
           </Text>
         ) : !evidence.benchmarks.workflow_exists ? (
           <Text variant="secondary" className="text-xs">

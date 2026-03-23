@@ -73,27 +73,40 @@ describe('LocaleProvider — depth', () => {
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<LocaleProvider locale="he"><span>Content</span></LocaleProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('preserves ARIA attributes on children', () => {
+    render(
+      <LocaleProvider locale="ar">
+        <div role="region" aria-label="content-area">RTL content</div>
+      </LocaleProvider>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByLabelText('content-area')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveTextContent('RTL content');
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<LocaleProvider locale="he"><span>Content</span></LocaleProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
+  it('wrapper has correct dir attribute for getByRole queries', () => {
+    const { container } = render(
+      <LocaleProvider locale="he">
+        <nav role="navigation" aria-label="main-nav">
+          <a href="#">Link</a>
+        </nav>
+      </LocaleProvider>,
+    );
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByLabelText('main-nav')).toBeInTheDocument();
+    expect(container.firstElementChild).toHaveAttribute('dir', 'rtl');
     expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+    expect(container.firstElementChild?.tagName).toBeDefined();
+  });
+
+  it('child with role=alert inside locale provider', () => {
+    render(
+      <LocaleProvider>
+        <div role="alert" aria-live="assertive">Important message</div>
+      </LocaleProvider>,
+    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveAttribute('aria-live', 'assertive');
+    expect(alert).toHaveTextContent('Important message');
   });
 });

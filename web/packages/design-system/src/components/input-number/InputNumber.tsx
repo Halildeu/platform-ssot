@@ -212,7 +212,7 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
 
       const parsed = parseFloat(raw);
       if (!isNaN(parsed)) {
-        const rounded = roundToPrecision(parsed, precision);
+        const rounded-sm = roundToPrecision(parsed, precision);
         emitChange(rounded);
       }
     };
@@ -221,7 +221,7 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
       setIsFocused(false);
       if (currentValue !== null) {
         const clamped = clampValue(currentValue, min, max);
-        const rounded = roundToPrecision(clamped, precision);
+        const rounded-sm = roundToPrecision(clamped, precision);
         if (rounded !== currentValue) {
           emitChange(rounded);
         }

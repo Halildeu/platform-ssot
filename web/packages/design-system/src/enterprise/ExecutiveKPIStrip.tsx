@@ -131,9 +131,9 @@ function KPISkeleton({ size, count }: { size: KPIStripSize; count: number }) {
     <>
       {Array.from({ length: count }, (_, i) => (
         <div key={i} className={`${s.card} rounded-lg border border-border-default bg-surface-default animate-pulse`}>
-          <div className="h-3 w-20 rounded bg-surface-muted mb-2" />
-          <div className="h-6 w-28 rounded bg-surface-muted mb-1" />
-          <div className="h-2 w-16 rounded bg-surface-muted" />
+          <div className="h-3 w-20 rounded-sm bg-surface-muted mb-2" />
+          <div className="h-6 w-28 rounded-sm bg-surface-muted mb-1" />
+          <div className="h-2 w-16 rounded-sm bg-surface-muted" />
         </div>
       ))}
     </>

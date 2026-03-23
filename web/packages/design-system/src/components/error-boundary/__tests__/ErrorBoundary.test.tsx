@@ -165,3 +165,81 @@ describe('ErrorBoundary — className', () => {
     expect(container.firstElementChild).toHaveClass('custom-boundary');
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  displayName                                                        */
+/* ------------------------------------------------------------------ */
+
+describe('ErrorBoundary — displayName', () => {
+  it('has correct displayName', () => {
+    expect(ErrorBoundary.displayName).toBe('ErrorBoundary');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  a11y — role="alert" in error state                                 */
+/* ------------------------------------------------------------------ */
+
+describe('ErrorBoundary — a11y', () => {
+  it('default fallback has role=alert for screen readers', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(
+      <ErrorBoundary>
+        <ThrowingChild message="a11y test" />
+      </ErrorBoundary>,
+    );
+
+    const alert = screen.getByRole('alert');
+    expect(alert).toBeInTheDocument();
+    expect(alert).toHaveTextContent('Something went wrong');
+    expect(alert).toHaveTextContent('a11y test');
+
+    spy.mockRestore();
+  });
+
+  it('error state wrapper has data-component attribute', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { container } = render(
+      <ErrorBoundary>
+        <ThrowingChild />
+      </ErrorBoundary>,
+    );
+
+    const wrapper = container.firstElementChild as HTMLElement;
+    expect(wrapper).toHaveAttribute('data-component', 'error-boundary');
+    expect(wrapper).toBeInTheDocument();
+
+    spy.mockRestore();
+  });
+
+  it('non-error state wrapper has data-component attribute', () => {
+    const { container } = render(
+      <ErrorBoundary>
+        <p>No error here</p>
+      </ErrorBoundary>,
+    );
+
+    const wrapper = container.firstElementChild as HTMLElement;
+    expect(wrapper).toHaveAttribute('data-component', 'error-boundary');
+    expect(wrapper).toBeInTheDocument();
+    expect(screen.getByText('No error here')).toBeInTheDocument();
+  });
+
+  it('Try again button is accessible', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(
+      <ErrorBoundary>
+        <ThrowingChild />
+      </ErrorBoundary>,
+    );
+
+    const tryAgainBtn = screen.getByRole('button', { name: /try again/i });
+    expect(tryAgainBtn).toBeInTheDocument();
+    expect(tryAgainBtn).toHaveAttribute('type', 'button');
+
+    spy.mockRestore();
+  });
+});

@@ -507,28 +507,28 @@ export const VariantIntegration = <RowData = unknown,>({
 
     if (v.id === activeId) {
       badges.push(
-        <span key="sel" className="rounded bg-action-primary/15 px-1 py-0.5 text-[10px] font-medium text-action-primary">
+        <span key="sel" className="rounded-sm bg-action-primary/15 px-1 py-0.5 text-[10px] font-medium text-action-primary">
           {m.selectedTagLabel ?? "Secili"}
         </span>,
       );
     }
     if (v.isUserDefault) {
       badges.push(
-        <span key="ud" className="rounded bg-state-warning-bg px-1 py-0.5 text-[10px] font-medium text-state-warning-text">
+        <span key="ud" className="rounded-sm bg-state-warning-bg px-1 py-0.5 text-[10px] font-medium text-state-warning-text">
           {m.personalDefaultTagLabel ?? "Varsayilan"}
         </span>,
       );
     }
     if (v.isGlobal && v.isGlobalDefault) {
       badges.push(
-        <span key="gd" className="rounded bg-state-success-bg px-1 py-0.5 text-[10px] font-medium text-state-success-text">
+        <span key="gd" className="rounded-sm bg-state-success-bg px-1 py-0.5 text-[10px] font-medium text-state-success-text">
           {m.globalPublicDefaultTagLabel ?? "G. Varsayilan"}
         </span>,
       );
     }
     if (v.isCompatible === false) {
       badges.push(
-        <span key="ic" className="rounded bg-state-danger-bg px-1 py-0.5 text-[10px] font-medium text-state-danger-text">
+        <span key="ic" className="rounded-sm bg-state-danger-bg px-1 py-0.5 text-[10px] font-medium text-state-danger-text">
           {m.incompatibleTagLabel ?? "Uyumsuz"}
         </span>,
       );
@@ -578,7 +578,7 @@ export const VariantIntegration = <RowData = unknown,>({
                 }}
                 onBlur={() => handleRename(v.id)}
                 onClick={(e) => e.stopPropagation()}
-                className="h-5 w-full rounded border border-border-default bg-surface-default px-1 text-xs outline-hidden"
+                className="h-5 w-full rounded-sm border border-border-default bg-surface-default px-1 text-xs outline-hidden"
                 autoFocus
               />
             ) : (
@@ -593,7 +593,7 @@ export const VariantIntegration = <RowData = unknown,>({
           <button
             type="button"
             {...triggerProps}
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-text-disabled hover:text-text-primary"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-text-disabled hover:text-text-primary"
           >
             <ChevronIcon expanded={itemState.isExpanded} />
           </button>
@@ -609,7 +609,7 @@ export const VariantIntegration = <RowData = unknown,>({
               </span>
               <button
                 type="button"
-                className="rounded bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
+                className="rounded-sm bg-state-error-text px-2 py-0.5 text-[10px] font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
                 onClick={() => handleDelete(v.id)}
                 disabled={isBusy}
               >
@@ -617,7 +617,7 @@ export const VariantIntegration = <RowData = unknown,>({
               </button>
               <button
                 type="button"
-                className="rounded bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary hover:bg-surface-raised"
+                className="rounded-sm bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary hover:bg-surface-raised"
                 onClick={() => setConfirmDeleteId(null)}
               >
                 {m.cancelLabel ?? "Iptal"}
@@ -836,7 +836,7 @@ export const VariantIntegration = <RowData = unknown,>({
             </h3>
             <button
               type="button"
-              className="flex h-5 w-5 items-center justify-center rounded text-text-disabled hover:text-text-primary"
+              className="flex h-5 w-5 items-center justify-center rounded-sm text-text-disabled hover:text-text-primary"
               onClick={() => setShowManager(false)}
               title={m.closeVariantManagerLabel ?? "Kapat"}
             >
@@ -851,14 +851,14 @@ export const VariantIntegration = <RowData = unknown,>({
               value={newVariantName}
               onChange={(e) => setNewVariantName(e.target.value)}
               placeholder={m.variantNamePlaceholder ?? "Varyant adi"}
-              className="h-7 flex-1 rounded border border-border-default bg-surface-default px-2 text-xs outline-hidden focus:border-action-primary"
+              className="h-7 flex-1 rounded-sm border border-border-default bg-surface-default px-2 text-xs outline-hidden focus:border-action-primary"
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleCreate();
               }}
             />
             <button
               type="button"
-              className="h-7 rounded bg-action-primary px-3 text-xs font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
+              className="h-7 rounded-sm bg-action-primary px-3 text-xs font-medium text-text-inverse hover:brightness-110 disabled:opacity-50"
               onClick={handleCreate}
               disabled={pendingAction === "create"}
             >
@@ -930,7 +930,7 @@ function ActionBtn({
     <button
       type="button"
       className={cn(
-        "rounded px-1.5 py-0.5 text-[10px] font-medium transition-colors disabled:opacity-50",
+        "rounded-sm px-1.5 py-0.5 text-[10px] font-medium transition-colors disabled:opacity-50",
         variant === "danger"
           ? "text-state-error-text hover:bg-state-danger-bg"
           : variant === "active"

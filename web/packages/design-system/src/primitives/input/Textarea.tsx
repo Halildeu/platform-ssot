@@ -245,7 +245,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             <span className={getFieldSlotClass(size)}>{trailingVisual}</span>
           ) : null}
           {loading && (
-            <span className="absolute inset-0 flex items-center justify-center rounded bg-surface-default/60">
+            <span className="absolute inset-0 flex items-center justify-center rounded-sm bg-surface-default/60">
               <svg
                 className="h-5 w-5 animate-spin text-text-secondary"
                 viewBox="0 0 24 24"

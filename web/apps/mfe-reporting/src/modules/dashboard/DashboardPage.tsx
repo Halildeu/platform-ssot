@@ -181,7 +181,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ dashboardKey }) =>
   if (loading && !metadata) {
     return (
       <div className="flex flex-col gap-4">
-        <div className="h-8 w-48 animate-pulse rounded bg-surface-muted" />
+        <div className="h-8 w-48 animate-pulse rounded-sm bg-surface-muted" />
         <div className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-24 animate-pulse rounded-lg bg-surface-muted" />
@@ -312,7 +312,7 @@ const FallbackChart: React.FC<{ data: Array<{ label: string; value: number }> }>
         <span className="w-24 truncate text-text-subtle">{d.label}</span>
         <div className="flex-1">
           <div
-            className="h-4 rounded bg-action-primary-bg"
+            className="h-4 rounded-sm bg-action-primary-bg"
             style={{ width: `${Math.min(100, (d.value / Math.max(...data.map((x) => x.value), 1)) * 100)}%` }}
           />
         </div>

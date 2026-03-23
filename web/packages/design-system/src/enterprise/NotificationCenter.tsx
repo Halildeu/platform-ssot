@@ -191,7 +191,7 @@ function NotificationRow({
         {item.type === 'action' && item.actionLabel && onAction && (
           <button
             type="button"
-            className="mt-1.5 inline-flex items-center rounded bg-surface-muted px-2 py-1 text-xs font-medium text-text-primary hover:bg-border-default transition-colors disabled:opacity-50"
+            className="mt-1.5 inline-flex items-center rounded-sm bg-surface-muted px-2 py-1 text-xs font-medium text-text-primary hover:bg-border-default transition-colors disabled:opacity-50"
             disabled={disabled}
             onClick={(e) => {
               e.stopPropagation();
@@ -207,7 +207,7 @@ function NotificationRow({
       {onDismiss && (
         <button
           type="button"
-          className="invisible group-hover:visible absolute top-2 right-2 rounded p-0.5 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50"
+          className="invisible group-hover:visible absolute top-2 right-2 rounded-sm p-0.5 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors disabled:opacity-50"
           disabled={disabled}
           aria-label="Dismiss notification"
           onClick={(e) => {

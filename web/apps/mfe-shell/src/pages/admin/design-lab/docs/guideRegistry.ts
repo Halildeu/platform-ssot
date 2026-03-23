@@ -1793,7 +1793,7 @@ Erisim icin \`label\` prop'u zorunludur ve otomatik olarak \`aria-label\` olarak
 \`\`\`tsx
 <IconButton icon={<EditIcon />} label="Duzenle" variant="ghost" />
 <IconButton icon={<TrashIcon />} label="Sil" variant="danger" size="sm" />
-<IconButton icon={<PlusIcon />} label="Ekle" variant="primary" rounded />
+<IconButton icon={<PlusIcon />} label="Ekle" variant="primary" rounded-sm />
 <IconButton icon={<SaveIcon />} label="Kaydediyor" loading />
 \`\`\``,
       },
@@ -7023,7 +7023,7 @@ Kontrol edilebilir (controlled) ve kontrolsuz (uncontrolled) kullanimi destekler
 └──────────────────────────────────────────┘
 \`\`\`
 
-1. **Container** — \`section\` elemani; premium yuzeyli rounded border ve backdrop-blur
+1. **Container** — \`section\` elemani; premium yuzeyli rounded-sm border ve backdrop-blur
 2. **Baslik & Aciklama** — Inceleme amacini ozetler
 3. **ApprovalCheckpoint** — Onay durumu, adimlar ve aksiyonlar
 4. **CitationPanel** — Kaynak kanit parcalari
@@ -7144,7 +7144,7 @@ Performans icin audit ogelerini sayfalama veya filtreleme ile sinirlandin.
 └──────────────────────────────────────────┘
 \`\`\`
 
-1. **Container** — \`article\` elemani; premium yuzeyli rounded border
+1. **Container** — \`article\` elemani; premium yuzeyli rounded-sm border
 2. **Badge Satirı** — Checkpoint etiketi ve durum badge'i
 3. **Baslik & Ozet** — Onay noktasinin amaci
 4. **Descriptions** — Onaylayan, son tarih ve kanit sayisi
@@ -7261,7 +7261,7 @@ Controlled ve uncontrolled palette acik/kapali durumu icin \`paletteOpen\` / \`d
 └──────────────────────────────────────────────┘
 \`\`\`
 
-1. **Container** — \`section\` elemani; rounded border ve surface-muted arkaplan
+1. **Container** — \`section\` elemani; rounded-sm border ve surface-muted arkaplan
 2. **Baslik & Aciklama** — Yazim amacini ozetler
 3. **ConfidenceBadge** — Genel guven seviyesi gostergesi
 4. **Command Palette Butonu** — Hizli komut erisimi
@@ -7379,7 +7379,7 @@ Secim destegi ile detay paneli acma veya vurgulama senaryolarina uyum saglar. Bo
 └──────────────────────────────────────────┘
 \`\`\`
 
-1. **Container** — \`section\` elemani; premium yuzeyli rounded border
+1. **Container** — \`section\` elemani; premium yuzeyli rounded-sm border
 2. **Baslik & Aciklama** — Zamancizgisi amacini aciklar
 3. **Zaman Cizgisi** — Dikey cizgi ile baglanan dugumler
 4. **Dugum Noktasi** — Dolu daire; secili ise vurgulanir
@@ -7496,7 +7496,7 @@ Yan panelde aktif sozlesme (scope, tone, karakter sayisi), guardrail'ler ve kayn
 └──────────────────────────────────────────────┘
 \`\`\`
 
-1. **Container** — \`section\` elemani; rounded border, surface-muted arkaplan
+1. **Container** — \`section\` elemani; rounded-sm border, surface-muted arkaplan
 2. **Baslik & Aciklama** — Composer amacini ozetler
 3. **Prompt Title** — Tek satirlik baslik giris alani
 4. **Prompt Body** — Cok satirlik govde alani, karakter sayaci ile
@@ -7619,7 +7619,7 @@ Uc farkli ton destekler: \`info\` (bilgilendirme), \`success\` (olumlu), \`warni
 └──────────────────────────────────────────┘
 \`\`\`
 
-1. **Container** — \`article\` elemani; rounded border, surface-muted arkaplan
+1. **Container** — \`article\` elemani; rounded-sm border, surface-muted arkaplan
 2. **Badge Satirı** — Oneri turu, guven gostergesi ve ek badge'ler
 3. **Baslik & Ozet** — Onerinin icerigini ozetler
 4. **Gerekce Paneli** — Madde isaretli gerekce listesi
@@ -7835,7 +7835,7 @@ Secim destegi ile aktif kaynagi vurgulama ve detay acma senaryolarina uyum sagla
 └──────────────────────────────────────────┘
 \`\`\`
 
-1. **Container** — \`section\` elemani; premium yuzeyli rounded border
+1. **Container** — \`section\` elemani; premium yuzeyli rounded-sm border
 2. **Baslik & Aciklama** — Panel amacini ozetler
 3. **Kaynak Karti** — Tiklanabilir veya statik kaynak ogesi
 4. **Kind Badge** — Kaynak turu (policy, doc, code, log, dataset)

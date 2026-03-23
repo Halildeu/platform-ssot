@@ -87,27 +87,49 @@ describe('StaggerGroup — depth', () => {
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<StaggerGroup staggerDelay={100}><div>A</div></StaggerGroup>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('preserves ARIA attributes on staggered children', () => {
+    render(
+      <StaggerGroup staggerDelay={80}>
+        <div role="listitem" aria-label="first-item">Item A</div>
+        <div role="listitem" aria-label="second-item">Item B</div>
+      </StaggerGroup>,
+    );
+    const items = screen.getAllByRole('listitem');
+    expect(items).toHaveLength(2);
+    expect(items[0]).toHaveAttribute('aria-label', 'first-item');
+    expect(items[1]).toHaveAttribute('aria-label', 'second-item');
+    expect(items[0]).toHaveTextContent('Item A');
+    expect(items[1]).toHaveTextContent('Item B');
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<StaggerGroup staggerDelay={100}><div>A</div></StaggerGroup>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('child with role=region preserves aria-label during stagger', () => {
+    render(
+      <StaggerGroup staggerDelay={50}>
+        <section role="region" aria-label="stagger-section">Content</section>
+      </StaggerGroup>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByLabelText('stagger-section')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveTextContent('Content');
+  });
+
+  it('has correct displayName', () => {
+    expect(StaggerGroup.displayName).toBe('StaggerGroup');
+  });
+
+  it('applies correct animation styles to multiple children', () => {
+    render(
+      <StaggerGroup staggerDelay={60} duration={300}>
+        <div data-testid="s-a">A</div>
+        <div data-testid="s-b">B</div>
+        <div data-testid="s-c">C</div>
+      </StaggerGroup>,
+    );
+    expect(screen.getByTestId('s-a').style.animationDelay).toBe('0ms');
+    expect(screen.getByTestId('s-b').style.animationDelay).toBe('60ms');
+    expect(screen.getByTestId('s-c').style.animationDelay).toBe('120ms');
+    expect(screen.getByTestId('s-a').style.animationDuration).toBe('300ms');
+    expect(screen.getByTestId('s-b').style.animationDuration).toBe('300ms');
+    expect(screen.getByTestId('s-c').style.animationFillMode).toBe('both');
   });
 });

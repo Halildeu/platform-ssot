@@ -584,13 +584,13 @@ export const DesignLabSearchModal: React.FC<DesignLabSearchModalProps> = ({
         {/* Footer hints */}
         <div className="hidden items-center gap-4 border-t border-border-subtle px-4 py-2 sm:flex">
           <span className="flex items-center gap-1 text-[11px] text-text-secondary">
-            <kbd className="rounded border border-border-subtle bg-surface-canvas px-1 text-[10px]">
+            <kbd className="rounded-sm border border-border-subtle bg-surface-canvas px-1 text-[10px]">
               ↑↓
             </kbd>
             {t("designlab.search.hint.navigate")}
           </span>
           <span className="flex items-center gap-1 text-[11px] text-text-secondary">
-            <kbd className="rounded border border-border-subtle bg-surface-canvas px-1 text-[10px]">
+            <kbd className="rounded-sm border border-border-subtle bg-surface-canvas px-1 text-[10px]">
               ↵
             </kbd>
             {t("designlab.search.hint.select")}

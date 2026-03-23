@@ -387,7 +387,7 @@ function MigrationImpactCalculator() {
                 {impact.affectedApps.map((app) => (
                   <span
                     key={app}
-                    className="rounded bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700"
+                    className="rounded-sm bg-blue-100 px-2 py-0.5 text-[10px] font-medium text-blue-700"
                   >
                     {app}
                   </span>
@@ -408,7 +408,7 @@ function MigrationImpactCalculator() {
                 {impact.affectedRecipes.map((r) => (
                   <span
                     key={r.recipeId}
-                    className="rounded bg-purple-100 px-2 py-0.5 text-[10px] font-medium text-purple-700"
+                    className="rounded-sm bg-purple-100 px-2 py-0.5 text-[10px] font-medium text-purple-700"
                   >
                     {r.title}
                   </span>
@@ -429,7 +429,7 @@ function MigrationImpactCalculator() {
                 {impact.affectedPages.map((p) => (
                   <span
                     key={p.pageId}
-                    className="rounded bg-cyan-100 px-2 py-0.5 text-[10px] font-medium text-cyan-700"
+                    className="rounded-sm bg-cyan-100 px-2 py-0.5 text-[10px] font-medium text-cyan-700"
                   >
                     {p.title}
                   </span>
@@ -533,13 +533,13 @@ function APISurfaceStats() {
             {stats.complexNames.map((name) => (
               <span
                 key={name}
-                className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700"
+                className="rounded-sm bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700"
               >
                 {name}
               </span>
             ))}
             {stats.complexCount > 5 && (
-              <span className="rounded bg-surface-muted px-2 py-0.5 text-[10px] text-text-secondary">
+              <span className="rounded-sm bg-surface-muted px-2 py-0.5 text-[10px] text-text-secondary">
                 +{stats.complexCount - 5} daha
               </span>
             )}
@@ -643,7 +643,7 @@ function UsageAnalyticsQuickView() {
             {analytics.orphans.map((item) => (
               <span
                 key={item.name}
-                className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700"
+                className="rounded-sm bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700"
               >
                 {item.name}
               </span>

@@ -77,27 +77,38 @@ describe('DesignSystemProvider — depth', () => {
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<DesignSystemProvider>{null}</DesignSystemProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('preserves ARIA attributes on children', () => {
+    render(
+      <DesignSystemProvider>
+        <div role="region" aria-label="ds-region">Design system content</div>
+      </DesignSystemProvider>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByLabelText('ds-region')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveTextContent('Design system content');
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<DesignSystemProvider>{null}</DesignSystemProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('child with role=navigation inside design system provider', () => {
+    render(
+      <DesignSystemProvider>
+        <nav role="navigation" aria-label="main-menu">
+          <a href="#">Dashboard</a>
+        </nav>
+      </DesignSystemProvider>,
+    );
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByLabelText('main-menu')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
+  });
+
+  it('child with role=alert inside design system provider', () => {
+    render(
+      <DesignSystemProvider>
+        <div role="alert" aria-live="assertive">Critical alert</div>
+      </DesignSystemProvider>,
+    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveAttribute('aria-live', 'assertive');
+    expect(alert).toHaveTextContent('Critical alert');
   });
 });

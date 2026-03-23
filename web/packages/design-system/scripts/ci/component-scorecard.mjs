@@ -152,10 +152,19 @@ function scoreTestDepth(componentName, componentDir) {
     const errorTests = /error|invalid/i.test(content) ? 1 : 0;
     const emptyTests = /empty|no.?data|null|undefined/i.test(content) ? 1 : 0;
 
-    const assertDensity = Math.min(100, (Math.min(totalAsserts / testCount, 5) / 5) * 60 + (totalAsserts > 0 ? strongAsserts / totalAsserts : 0) * 40);
-    const interaction = Math.min(100, ((userEvents + fireEvents) / testCount) * 35 + (userEvents > 0 ? 30 : 0) + (fireEvents > 0 ? 15 : 0));
+    const assertRatio = Math.min(totalAsserts / testCount, 5) / 5;
+    const strongRatio = totalAsserts > 0 ? strongAsserts / totalAsserts : 0;
+    const assertDensity = Math.min(100, assertRatio * 60 + strongRatio * 40);
+    const interactionCount = userEvents + fireEvents;
+    const interaction = Math.min(100,
+      (userEvents > 0 ? 35 : 0) +
+      (fireEvents > 0 ? 20 : 0) +
+      Math.min(interactionCount, 10) * 3 +
+      (interactionCount >= 3 ? 15 : 0)
+    );
     const edgeCases = Math.min(100, [disabledTests, errorTests, emptyTests].filter(Boolean).length * 33);
-    const a11yScore = Math.min(100, (axeChecks > 0 ? 40 : 0) + Math.min(roleQueries, 10) * 6);
+    const waitForPresent = /waitFor/.test(content) ? 1 : 0;
+    const a11yScore = Math.min(100, (axeChecks > 0 ? 40 : 0) + Math.min(roleQueries, 10) * 6 + waitForPresent * 10);
 
     totalScore = Math.max(totalScore,
       assertDensity * 0.3 + interaction * 0.3 + edgeCases * 0.2 + a11yScore * 0.2

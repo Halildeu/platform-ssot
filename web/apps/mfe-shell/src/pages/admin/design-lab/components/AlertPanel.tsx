@@ -43,7 +43,7 @@ export function AlertPanel({ alerts }: AlertPanelProps) {
               {config.icon}
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="rounded bg-black/10 px-1.5 py-0.5 text-[10px] font-bold">{config.label}</span>
+                  <span className="rounded-sm bg-black/10 px-1.5 py-0.5 text-[10px] font-bold">{config.label}</span>
                   <Text className="text-sm font-semibold text-text-primary">{alert.title}</Text>
                 </div>
                 <Text className="text-xs text-text-secondary">{alert.description}</Text>

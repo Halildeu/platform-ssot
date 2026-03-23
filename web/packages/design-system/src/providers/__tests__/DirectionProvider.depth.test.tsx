@@ -77,27 +77,40 @@ describe('DirectionProvider — depth', () => {
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<DirectionProvider direction="ltr">{null}</DirectionProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
+  it('preserves ARIA attributes on children', () => {
+    render(
+      <DirectionProvider direction="rtl">
+        <div role="region" aria-label="rtl-content">RTL content area</div>
+      </DirectionProvider>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByLabelText('rtl-content')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveTextContent('RTL content area');
   });
 
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<DirectionProvider direction="ltr">{null}</DirectionProvider>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
+  it('child with role=navigation inside direction provider', () => {
+    render(
+      <DirectionProvider direction="rtl">
+        <nav role="navigation" aria-label="rtl-nav">
+          <a href="#">Link</a>
+        </nav>
+      </DirectionProvider>,
+    );
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByLabelText('rtl-nav')).toBeInTheDocument();
+    expect(screen.getByRole('link')).toBeInTheDocument();
+  });
+
+  it('child with role=alert inside direction provider', () => {
+    const { container } = render(
+      <DirectionProvider direction="ltr">
+        <div role="alert" aria-live="polite">Important notice</div>
+      </DirectionProvider>,
+    );
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveAttribute('aria-live', 'polite');
+    expect(alert).toHaveTextContent('Important notice');
+    expect(container.firstElementChild).toHaveAttribute('dir', 'ltr');
     expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
   });
 });

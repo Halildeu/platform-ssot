@@ -95,7 +95,7 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function roundToStep(value: number, step: number, min: number): number {
-  const rounded = Math.round((value - min) / step) * step + min;
+  const rounded-sm = Math.round((value - min) / step) * step + min;
   // Fix floating point precision
   const decimals = (step.toString().split(".")[1] || "").length;
   return Number(rounded.toFixed(decimals));

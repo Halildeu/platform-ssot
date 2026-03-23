@@ -156,7 +156,7 @@ function renderInline(text: string): React.ReactNode {
       parts.push(
         <code
           key={match.index}
-          className="rounded bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-rose-600"
+          className="rounded-sm bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-rose-600"
         >
           {token.slice(1, -1)}
         </code>,

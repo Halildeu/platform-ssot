@@ -215,7 +215,7 @@ function DiffViewer({ changes }: { changes: TokenChange[] }) {
                       <span className="w-12 text-[10px] font-medium text-red-600">Before</span>
                       <code className="text-xs text-text-secondary">{change.before}</code>
                       {change.type === "changed" && change.token.includes("color") && (
-                        <span className="h-4 w-4 rounded border border-border-subtle" style={{ backgroundColor: change.before }} />
+                        <span className="h-4 w-4 rounded-sm border border-border-subtle" style={{ backgroundColor: change.before }} />
                       )}
                     </div>
                   )}
@@ -224,7 +224,7 @@ function DiffViewer({ changes }: { changes: TokenChange[] }) {
                       <span className="w-12 text-[10px] font-medium text-emerald-600">After</span>
                       <code className="text-xs text-text-secondary">{change.after}</code>
                       {change.type === "changed" && change.token.includes("color") && (
-                        <span className="h-4 w-4 rounded border border-border-subtle" style={{ backgroundColor: change.after }} />
+                        <span className="h-4 w-4 rounded-sm border border-border-subtle" style={{ backgroundColor: change.after }} />
                       )}
                     </div>
                   )}
@@ -357,7 +357,7 @@ export const FigmaSyncPage: React.FC = () => {
           Token Altyapi Ozeti
         </Text>
         <Text variant="secondary" className="text-xs">
-          <code className="rounded bg-surface-canvas px-1.5 py-0.5 text-[11px] font-mono">generate-theme-css.mjs --check</code> komutu ile token-CSS eslesmesi dogrulanabilir.
+          <code className="rounded-sm bg-surface-canvas px-1.5 py-0.5 text-[11px] font-mono">generate-theme-css.mjs --check</code> komutu ile token-CSS eslesmesi dogrulanabilir.
         </Text>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {[
