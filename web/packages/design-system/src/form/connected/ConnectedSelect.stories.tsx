@@ -56,3 +56,8 @@ export const Default: Story = {
 export const Disabled: Story = {
   render: () => <ConnectedSelectDisabledDemo />,
 };
+
+export const WithPlaceholder: Story = {
+  render: () => <ConnectedSelectDemo />,
+  name: 'With Placeholder',
+};

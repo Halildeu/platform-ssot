@@ -64,6 +64,17 @@ function FormWrapper({
 /* ================================================================== */
 
 describe('FormContext — depth', () => {
+  it('has accessible structure', () => {
+    const ctx = createMockFormContext({ values: { name: '' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <form role="form"><input aria-label="name" /></form>
+      </FormWrapper>,
+    );
+    expect(screen.getByRole('form')).toBeInTheDocument();
+    expect(screen.getByLabelText('name')).toBeInTheDocument();
+  });
+
   it('provides form state via context', () => {
     const ctx = createMockFormContext({ values: { name: 'Alice' } });
     let read: FormContextValue | null = null;
@@ -121,6 +132,16 @@ describe('FormContext — depth', () => {
 /* ================================================================== */
 
 describe('ConnectedInput — depth', () => {
+  it('has correct ARIA roles', () => {
+    const ctx = createMockFormContext({ values: { email: '' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedInput name="email" />
+      </FormWrapper>,
+    );
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+  });
+
   it('renders value from form context', () => {
     const ctx = createMockFormContext({ values: { email: 'a@b.com' } });
     render(
@@ -199,6 +220,16 @@ describe('ConnectedSelect — depth', () => {
     { value: 'b', label: 'Option B' },
   ];
 
+  it('has correct ARIA roles', () => {
+    const ctx = createMockFormContext({ values: { color: 'a' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedSelect name="color" options={options} />
+      </FormWrapper>,
+    );
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+
   it('renders with current value from context', () => {
     const ctx = createMockFormContext({ values: { color: 'a' } });
     render(
@@ -252,6 +283,16 @@ describe('ConnectedSelect — depth', () => {
 /* ================================================================== */
 
 describe('ConnectedCheckbox — depth', () => {
+  it('has correct ARIA roles', () => {
+    const ctx = createMockFormContext({ values: { agree: true } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedCheckbox name="agree" />
+      </FormWrapper>,
+    );
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  });
+
   it('renders checked state from context', () => {
     const ctx = createMockFormContext({ values: { agree: true } });
     render(
@@ -311,6 +352,16 @@ describe('ConnectedCheckbox — depth', () => {
 /* ================================================================== */
 
 describe('ConnectedRadio — depth', () => {
+  it('has correct ARIA roles', () => {
+    const ctx = createMockFormContext({ values: { size: 'lg' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedRadio name="size" radioValue="lg" />
+      </FormWrapper>,
+    );
+    expect(screen.getByRole('radio')).toBeInTheDocument();
+  });
+
   it('renders checked when value matches radioValue', () => {
     const ctx = createMockFormContext({ values: { size: 'lg' } });
     render(
@@ -379,6 +430,16 @@ describe('ConnectedRadio — depth', () => {
 /* ================================================================== */
 
 describe('ConnectedTextarea — depth', () => {
+  it('has correct ARIA roles', () => {
+    const ctx = createMockFormContext({ values: { bio: 'Hello' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedTextarea name="bio" />
+      </FormWrapper>,
+    );
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+  });
+
   it('renders value from form context', () => {
     const ctx = createMockFormContext({ values: { bio: 'Hello' } });
     render(
@@ -452,6 +513,18 @@ describe('ConnectedTextarea — depth', () => {
 /* ================================================================== */
 
 describe('ConnectedFormField — depth', () => {
+  it('has accessible structure', () => {
+    const ctx = createMockFormContext({ values: { name: '' } });
+    render(
+      <FormWrapper ctx={ctx}>
+        <ConnectedFormField name="name" label="Full Name">
+          <input />
+        </ConnectedFormField>
+      </FormWrapper>,
+    );
+    expect(screen.getByLabelText('Full Name')).toBeInTheDocument();
+  });
+
   it('renders label', () => {
     const ctx = createMockFormContext({ values: { name: '' } });
     render(

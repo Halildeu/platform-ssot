@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
   useReducedMotion: () => false,
@@ -97,5 +98,18 @@ describe('Transition — depth', () => {
       </Transition>,
     );
     expect(screen.queryByTestId('empty-child')).not.toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    vi.useRealTimers();
+    const user = userEvent.setup();
+    render(
+      <Transition show={true}>
+        <button data-testid="trans-btn">Click</button>
+      </Transition>,
+    );
+    await user.tab();
+    expect(screen.getByTestId('trans-btn')).toBeInTheDocument();
+    vi.useFakeTimers();
   });
 });

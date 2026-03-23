@@ -66,3 +66,8 @@ export const Default: Story = {
 export const SlowExit: Story = {
   render: () => <AnimatePresenceDemo exitDuration={500} />,
 };
+
+export const FastExit: Story = {
+  render: () => <AnimatePresenceDemo exitDuration={50} />,
+  name: 'Fast Exit',
+};

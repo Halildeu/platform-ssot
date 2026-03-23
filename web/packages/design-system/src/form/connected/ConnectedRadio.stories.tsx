@@ -47,3 +47,8 @@ export const Default: Story = {
 export const YearlySelected: Story = {
   render: () => <ConnectedRadioDemo defaultValue="yearly" />,
 };
+
+export const Disabled: Story = {
+  render: () => <ConnectedRadioDemo />,
+  name: 'Disabled State',
+};

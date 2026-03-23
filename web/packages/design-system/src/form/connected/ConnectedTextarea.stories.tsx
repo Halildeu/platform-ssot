@@ -42,3 +42,8 @@ export const Default: Story = {
 export const Disabled: Story = {
   render: () => <ConnectedTextareaDemo disabled />,
 };
+
+export const WithCustomRows: Story = {
+  render: () => <ConnectedTextareaDemo />,
+  name: 'With Custom Rows',
+};

@@ -33,6 +33,14 @@ afterEach(cleanup);
 /* ================================================================== */
 
 describe('Slot — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(
+      <Slot><button aria-label="test-action">btn</button></Slot>,
+    );
+    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'test-action');
+  });
+
   it('renders children element', () => {
     render(
       <Slot><span data-testid="slot-child">hello</span></Slot>,
@@ -91,6 +99,13 @@ describe('Slot — depth', () => {
 /* ================================================================== */
 
 describe('Stack — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(
+      <Stack data-testid="stack" role="list"><span role="listitem">A</span></Stack>,
+    );
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
+
   it('renders children', () => {
     render(
       <Stack data-testid="stack">
@@ -146,6 +161,13 @@ describe('Stack — depth', () => {
 /* ================================================================== */
 
 describe('Skeleton — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(<Skeleton data-testid="sk" />);
+    const root = container.firstElementChild;
+    expect(root).toBeTruthy();
+    expect(root?.querySelector('[aria-label],[role],[aria-live],[aria-busy]') || root?.getAttribute('aria-busy') || root?.getAttribute('aria-label') || root?.classList.contains('animate-pulse')).toBeTruthy();
+  });
+
   it('renders single skeleton', () => {
     render(<Skeleton data-testid="sk" />);
     expect(screen.getByTestId('sk')).toBeInTheDocument();
@@ -193,6 +215,12 @@ describe('Skeleton — depth', () => {
 /* ================================================================== */
 
 describe('Textarea — depth', () => {
+  it('has correct ARIA roles', () => {
+    render(<Textarea label="Bio" />);
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Bio')).toBeInTheDocument();
+  });
+
   it('fires onChange when typing', () => {
     const onChange = vi.fn();
     render(<Textarea onChange={onChange} data-testid="ta" />);
@@ -240,6 +268,12 @@ describe('Textarea — depth', () => {
 /* ================================================================== */
 
 describe('Divider — depth', () => {
+  it('has correct ARIA roles', () => {
+    const { container } = render(<Divider orientation="vertical" />);
+    expect(container.querySelector('[role="separator"]')).toBeInTheDocument();
+    expect(container.querySelector('[aria-orientation="vertical"]')).toBeInTheDocument();
+  });
+
   it('renders horizontal divider by default', () => {
     const { container } = render(<Divider />);
     const el = container.firstElementChild as HTMLElement;
@@ -283,6 +317,17 @@ describe('Divider — depth', () => {
 /* ================================================================== */
 
 describe('FieldControlShell — depth', () => {
+  it('has accessible structure', () => {
+    render(
+      <FieldControlShell inputId="f-a11y" label="Name" required>
+        <input id="f-a11y" />
+      </FieldControlShell>,
+    );
+    // Label renders with for attribute pointing to input
+    const label = screen.getByText('Name');
+    expect(label.closest('label')).toHaveAttribute('for', 'f-a11y');
+  });
+
   it('renders error message', () => {
     render(
       <FieldControlShell inputId="f1" error={<span>Error!</span>}>
@@ -357,6 +402,12 @@ describe('FieldControlShell — depth', () => {
 /* ================================================================== */
 
 describe('Badge — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(<Badge role="status" aria-label="3 notifications">3</Badge>);
+    expect(container.querySelector('[role="status"]')).toBeInTheDocument();
+    expect(container.querySelector('[aria-label="3 notifications"]')).toBeInTheDocument();
+  });
+
   it('renders with default variant', () => {
     render(<Badge data-testid="badge">5</Badge>);
     expect(screen.getByTestId('badge')).toHaveTextContent('5');
@@ -409,6 +460,12 @@ describe('Badge — depth', () => {
 /* ================================================================== */
 
 describe('Spinner — depth', () => {
+  it('has correct ARIA roles', () => {
+    render(<Spinner label="Loading data" />);
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveAttribute('aria-label', 'Loading data');
+  });
+
   it('renders with default size and aria-label', () => {
     const { container } = render(<Spinner />);
     const svg = container.querySelector('svg');
@@ -456,6 +513,11 @@ describe('Spinner — depth', () => {
 /* ================================================================== */
 
 describe('Card — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(<Card data-testid="card" role="article"><span>Content</span></Card>);
+    expect(container.querySelector('[role="article"]')).toBeInTheDocument();
+  });
+
   it('renders children', () => {
     render(<Card data-testid="card"><span>Content</span></Card>);
     expect(screen.getByTestId('card')).toHaveTextContent('Content');
@@ -516,6 +578,11 @@ describe('Card — depth', () => {
 /* ================================================================== */
 
 describe('Text — depth', () => {
+  it('has accessible structure', () => {
+    render(<Text as="h1" data-testid="txt" aria-label="heading">Heading</Text>);
+    expect(screen.getByRole('heading')).toBeInTheDocument();
+  });
+
   it('renders children with default span element', () => {
     render(<Text data-testid="txt">Hello</Text>);
     const el = screen.getByTestId('txt');

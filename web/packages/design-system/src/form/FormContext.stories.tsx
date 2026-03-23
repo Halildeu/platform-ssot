@@ -48,3 +48,8 @@ export const Default: Story = {};
 export const OnChangeMode: Story = {
   render: () => <FormContextDemo mode="onChange" />,
 };
+
+export const WithValidation: Story = {
+  render: () => <FormContextDemo mode="onBlur" />,
+  name: 'With Validation',
+};

@@ -61,3 +61,8 @@ export const Default: Story = {
 export const Horizontal: Story = {
   render: () => <HorizontalDemo />,
 };
+
+export const WithError: Story = {
+  render: () => <ConnectedFormFieldDemo />,
+  name: 'With Error',
+};

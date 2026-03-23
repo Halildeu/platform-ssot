@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { PageHeader } from '../page-header/PageHeader';
 
@@ -42,5 +43,13 @@ describe('PageHeader — depth', () => {
     render(<PageHeader title="Users" subtitle="Manage team" tags={<span role="status">Beta</span>} />);
     expect(screen.getByText('Manage team')).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent('Beta');
+  });
+
+  it('fires action click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(<PageHeader title="Page" actions={<button onClick={onClick}>Save</button>} />);
+    await user.click(screen.getByRole('button', { name: /save/i }));
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

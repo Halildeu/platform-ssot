@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { DetailSummary } from '../detail-summary/DetailSummary';
 
@@ -49,5 +50,17 @@ describe('DetailSummary — depth', () => {
   it('renders description text', () => {
     render(<DetailSummary title="T" entity={minEntity} description="A detailed summary page" />);
     expect(screen.getByText('A detailed summary page')).toBeInTheDocument();
+  });
+
+  it('fires action click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <DetailSummary title="T" entity={minEntity}
+        actions={<button onClick={onClick}>Edit</button>}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: /edit/i }));
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

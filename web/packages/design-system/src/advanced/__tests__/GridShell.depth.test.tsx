@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
@@ -50,6 +51,18 @@ describe('GridShell — depth', () => {
       </GridShell>,
     );
     fireEvent.click(screen.getByRole('button', { name: /pagination/i }));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('children slot click via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <GridShell columnDefs={baseCols} rowData={[]}>
+        <button onClick={onClick}>Page</button>
+      </GridShell>,
+    );
+    await user.click(screen.getByText('Page'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

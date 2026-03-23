@@ -48,3 +48,10 @@ export const Loading: Story = {
     loading: true,
   },
 };
+
+export const Collapsed: Story = {
+  args: {
+    children: <FilterFields />,
+    collapsed: true,
+  },
+};

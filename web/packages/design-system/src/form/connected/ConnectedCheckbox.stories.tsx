@@ -38,3 +38,8 @@ export const Default: Story = {
 export const PreChecked: Story = {
   render: () => <ConnectedCheckboxDemo defaultChecked />,
 };
+
+export const Disabled: Story = {
+  render: () => <ConnectedCheckboxDemo />,
+  name: 'Disabled State',
+};

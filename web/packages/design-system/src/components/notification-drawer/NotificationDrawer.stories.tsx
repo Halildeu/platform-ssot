@@ -49,3 +49,19 @@ export const Empty: Story = {
     ),
   ],
 };
+
+export const EmptyState: Story = {
+  args: {
+    open: true,
+    items: [],
+    title: 'Bildirimler',
+    disablePortal: true,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ position: 'relative', height: 400, overflow: 'hidden' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};

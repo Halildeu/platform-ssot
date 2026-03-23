@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { DesignSystemProvider } from '../DesignSystemProvider';
 import { useTheme } from '../ThemeProvider';
@@ -59,6 +60,18 @@ describe('DesignSystemProvider — depth', () => {
       </DesignSystemProvider>,
     );
     fireEvent.click(screen.getByRole('button', { name: /action/i }));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('click via userEvent through provider', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <DesignSystemProvider>
+        <button onClick={onClick}>UE Action</button>
+      </DesignSystemProvider>,
+    );
+    await user.click(screen.getByText('UE Action'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });

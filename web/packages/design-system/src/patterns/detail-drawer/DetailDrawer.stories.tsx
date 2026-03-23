@@ -58,3 +58,21 @@ export const WithFooter: Story = {
     ),
   ],
 };
+
+export const WithActions: Story = {
+  args: {
+    open: true,
+    onClose: () => {},
+    title: 'Detail with Actions',
+    sections: [
+      { key: 'info', title: 'Info', content: <p>Content</p> },
+    ],
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ position: 'relative', height: 500, overflow: 'hidden' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};

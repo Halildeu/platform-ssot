@@ -36,6 +36,16 @@ afterEach(() => {
 /* ================================================================== */
 
 describe('StaggerGroup — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(
+      <StaggerGroup staggerDelay={100}>
+        <div role="listitem" aria-label="item">A</div>
+      </StaggerGroup>,
+    );
+    expect(container.querySelector('[role="listitem"]')).toBeInTheDocument();
+    expect(container.querySelector('[aria-label="item"]')).toBeInTheDocument();
+  });
+
   it('renders children in sequence with stagger delays', () => {
     render(
       <StaggerGroup staggerDelay={100}>
@@ -117,6 +127,16 @@ describe('StaggerGroup — depth', () => {
 /* ================================================================== */
 
 describe('AnimatePresence — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(
+      <AnimatePresence>
+        <div key="panel" role="region" aria-live="polite" data-testid="panel">Content</div>
+      </AnimatePresence>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveAttribute('aria-live', 'polite');
+  });
+
   it('shows children when present', () => {
     render(
       <AnimatePresence>
@@ -206,6 +226,16 @@ describe('AnimatePresence — depth', () => {
 /* ================================================================== */
 
 describe('Transition — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(
+      <Transition show={true}>
+        <div role="status" aria-live="polite" data-testid="trans">Content</div>
+      </Transition>,
+    );
+    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
+  });
+
   it('renders child when show=true', () => {
     render(
       <Transition show={true}>

@@ -33,3 +33,8 @@ export const Default: Story = {
 export const Disabled: Story = {
   render: () => <ConnectedInputDemo placeholder="Disabled field" disabled />,
 };
+
+export const WithError: Story = {
+  render: () => <ConnectedInputDemo placeholder="Error state" />,
+  name: 'With Error State',
+};

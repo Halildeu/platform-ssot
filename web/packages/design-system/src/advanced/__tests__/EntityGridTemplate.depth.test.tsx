@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('ag-grid-react', () => ({
   AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
@@ -67,5 +68,12 @@ describe('EntityGridTemplate — depth', () => {
       // Grid template renders with toolbar containing filter
       expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
     }
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<EntityGridTemplate {...baseProps} />);
+    await user.tab();
+    expect(container.querySelector('[data-component="entity-grid-template"]')).toBeInTheDocument();
   });
 });

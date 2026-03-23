@@ -1,157 +1,12 @@
-@import "tailwindcss";
 @import './styles/theme.css';
 @import './styles/token-bridge.css';
-@import './styles/dark-mode.css';
+@import 'tokens/build/dark-mode.css';
 
-/* Content scanning for monorepo */
-@source "../../packages/design-system/src/**/*.{ts,tsx}";
-@source "../mfe-suggestions/src/**/*.{ts,tsx}";
-@source "../mfe-ethic/src/**/*.{ts,tsx}";
-@source "../mfe-users/src/**/*.{ts,tsx}";
-@source "../mfe-access/src/**/*.{ts,tsx}";
-@source "../mfe-audit/src/**/*.{ts,tsx}";
-@source "../mfe-reporting/src/**/*.{ts,tsx}";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* ------------------------------------------------------------------ */
-/*  @theme — TW4 token registration with var() references             */
-/*  NOTE: TW4 namespace (--color-*) differs from design token          */
-/*  namespace (--surface-*-bg, --text-*, etc.) to avoid circular refs  */
-/* ------------------------------------------------------------------ */
-@theme {
-  /* Border Radius */
-  --radius-control: var(--ds-radius-control, 0.375rem);
-  --radius-surface: var(--ds-radius-surface, 0.75rem);
-
-  /* Shadows */
-  --shadow-surface: var(--elevation-surface, 0 1px 3px rgba(0,0,0,.1));
-  --shadow-overlay: var(--elevation-overlay, 0 4px 16px rgba(0,0,0,.15));
-
-  /* Spacing */
-  --spacing-density: var(--density-space, 0.5rem);
-
-  /* Min Height */
-  --min-height-row-density: var(--density-row-height, 3rem);
-
-  /* Motion Duration */
-  --transition-duration-fast: var(--motion-duration-fast, 100ms);
-  --transition-duration-medium: var(--motion-duration-medium, 200ms);
-  --transition-duration-slow: var(--motion-duration-slow, 400ms);
-
-  /* Motion Easing */
-  --transition-timing-function-standard: var(--motion-easing-standard, ease);
-  --transition-timing-function-enter: var(--motion-easing-enter, ease-out);
-  --transition-timing-function-exit: var(--motion-easing-exit, ease-in);
-
-  /* Ring */
-  --ring-color: var(--focus-outline, #3b82f6);
-
-  /* ── Colors ── */
-  --color-surface: var(--surface-default-bg, #ffffff);
-  --color-surface-default: var(--surface-default-bg, #ffffff);
-  --color-surface-page: var(--surface-page-bg, #f9fafb);
-  --color-surface-raised: var(--surface-raised-bg, #ffffff);
-  --color-surface-muted: var(--surface-muted-bg, #f3f4f6);
-  --color-surface-panel: var(--surface-panel-bg, #ffffff);
-  --color-surface-header: var(--surface-header-bg, #ffffff);
-  --color-surface-overlay: var(--surface-overlay-bg, rgba(0,0,0,0.5));
-  --color-surface-canvas: var(--surface-canvas-bg, #f1f5f9);
-
-  --color-text-primary: var(--text-primary, #111827);
-  --color-text-secondary: var(--text-secondary, #6b7280);
-  --color-text-subtle: var(--text-subtle, #9ca3af);
-  --color-text-inverse: var(--text-inverse, #ffffff);
-  --color-text-tertiary: var(--text-tertiary, #9ca3af);
-
-  --color-border: var(--border-default, #e5e7eb);
-  --color-border-subtle: var(--border-subtle, #f3f4f6);
-  --color-border-default: var(--border-default, #e5e7eb);
-  --color-border-bold: var(--border-bold, #d1d5db);
-
-  --color-selection: var(--selection-bg, rgba(59,130,246,0.1));
-  --color-selection-outline: var(--selection-outline, #3b82f6);
-
-  --color-action-primary: var(--action-primary-bg, #2563eb);
-  --color-action-primary-text: var(--action-primary-text, #ffffff);
-  --color-action-primary-border: var(--action-primary-border, #2563eb);
-
-  --color-action-secondary: var(--action-secondary-bg, #f3f4f6);
-  --color-action-secondary-text: var(--action-secondary-text, #374151);
-  --color-action-secondary-border: var(--action-secondary-border, #e5e7eb);
-
-  --color-action-ghost: var(--action-ghost-bg, transparent);
-  --color-action-ghost-text: var(--action-ghost-text, #374151);
-  --color-action-ghost-border: var(--action-ghost-border, transparent);
-
-  --color-accent-primary: var(--accent-primary, #2563eb);
-  --color-accent-primary-hover: var(--accent-primary-hover, #1d4ed8);
-  --color-accent-focus: var(--accent-focus, #3b82f6);
-  --color-accent-soft: var(--accent-soft, #eff6ff);
-
-  --color-state-info: var(--state-info-bg, #eff6ff);
-  --color-state-info-bg: var(--state-info-bg, #eff6ff);
-  --color-state-info-text: var(--state-info-text, #1e40af);
-  --color-state-info-border: var(--state-info-border, #93c5fd);
-
-  --color-state-success: var(--state-success-bg, #f0fdf4);
-  --color-state-success-bg: var(--state-success-bg, #f0fdf4);
-  --color-state-success-text: var(--state-success-text, #166534);
-  --color-state-success-border: var(--state-success-border, #86efac);
-
-  --color-state-warning: var(--state-warning-bg, #fffbeb);
-  --color-state-warning-bg: var(--state-warning-bg, #fffbeb);
-  --color-state-warning-text: var(--state-warning-text, #92400e);
-  --color-state-warning-border: var(--state-warning-border, #fcd34d);
-
-  --color-state-danger: var(--state-danger-bg, #fef2f2);
-  --color-state-danger-bg: var(--state-danger-bg, #fef2f2);
-  --color-state-danger-text: var(--state-danger-text, #991b1b);
-  --color-state-danger-border: var(--state-danger-border, #fca5a5);
-
-  --color-status-info: var(--state-info-bg, #eff6ff);
-  --color-status-info-bg: var(--state-info-bg, #eff6ff);
-  --color-status-info-text: var(--state-info-text, #1e40af);
-  --color-status-info-border: var(--state-info-border, #93c5fd);
-
-  --color-status-success: var(--state-success-bg, #f0fdf4);
-  --color-status-success-bg: var(--state-success-bg, #f0fdf4);
-  --color-status-success-text: var(--state-success-text, #166534);
-  --color-status-success-border: var(--state-success-border, #86efac);
-
-  --color-status-warning: var(--state-warning-bg, #fffbeb);
-  --color-status-warning-bg: var(--state-warning-bg, #fffbeb);
-  --color-status-warning-text: var(--state-warning-text, #92400e);
-  --color-status-warning-border: var(--state-warning-border, #fcd34d);
-
-  --color-status-danger: var(--state-danger-bg, #fef2f2);
-  --color-status-danger-bg: var(--state-danger-bg, #fef2f2);
-  --color-status-danger-text: var(--state-danger-text, #991b1b);
-  --color-status-danger-border: var(--state-danger-border, #fca5a5);
-
-  --color-data-table-header: var(--data-table-header-bg, #f9fafb);
-  --color-data-table-header-text: var(--data-table-header-text, #374151);
-  --color-data-table-header-divider: var(--data-table-header-divider, #e5e7eb);
-  --color-data-table-row-hover: var(--data-table-row-hover, #f9fafb);
-  --color-data-table-row-selected: var(--data-table-row-selected, #eff6ff);
-  --color-data-table-row-border: var(--data-table-row-border, #f3f4f6);
-
-  /* Missing colors found via usage scan */
-  --color-action-primary-soft: var(--action-primary-soft, rgba(37,99,235,0.08));
-  --color-border-strong: var(--border-bold, #d1d5db);
-  --color-menu-action-trigger: var(--action-primary-bg, #2563eb);
-  --color-menu-surface-trigger: var(--surface-muted-bg, #f3f4f6);
-  --color-state-error-bg: var(--state-danger-bg, #fef2f2);
-  --color-state-error-text: var(--state-danger-text, #991b1b);
-  --color-state-info-surface: var(--state-info-bg, #eff6ff);
-  --color-state-success-surface: var(--state-success-bg, #f0fdf4);
-  --color-state-warning-surface: var(--state-warning-bg, #fffbeb);
-  --color-t-action-primary: var(--action-primary-text, #ffffff);
-  --color-text-disabled: var(--text-subtle, #9ca3af);
-}
-
-/* ------------------------------------------------------------------ */
-/*  Custom base styles                                                 */
-/* ------------------------------------------------------------------ */
-
+/* Hafif reset: margin/padding temizliği ve tema var'larından zemin/metin */
 *,
 *::before,
 *::after {
@@ -175,21 +30,21 @@ body {
   min-height: 100vh;
 }
 
-/* Radius aksı */
+/* Radius aksı görünür olsun diye temel rounded sınıflarını tema var'larına bağla */
 [data-radius] .rounded,
 [data-radius] .rounded-sm,
 [data-radius] .rounded-md {
-  border-radius: var(--ds-radius-control, 0.375rem);
+  border-radius: var(--radius-control);
 }
 
 [data-radius] .rounded-lg,
 [data-radius] .rounded-xl,
 [data-radius] .rounded-2xl,
 [data-radius] .rounded-3xl {
-  border-radius: var(--ds-radius-surface, 0.75rem);
+  border-radius: var(--radius-surface);
 }
 
-/* Elevation aksı */
+/* Elevation aksı: tailwind shadow sınıflarını tema gölgelerine bağla */
 [data-elevation="raised"] .shadow,
 [data-elevation="raised"] .shadow-sm,
 [data-elevation="raised"] .shadow-md,

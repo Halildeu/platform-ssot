@@ -64,6 +64,11 @@ describe('VariantIntegration — depth', () => {
     gridApi: null,
   };
 
+  it('has correct ARIA roles', () => {
+    render(<VariantIntegration {...baseProps} />);
+    expect(screen.getByLabelText('Grid variant')).toBeInTheDocument();
+  });
+
   it('renders variant selector with minimal props', () => {
     render(<VariantIntegration {...baseProps} />);
     expect(screen.getByLabelText('Grid variant')).toBeInTheDocument();
@@ -116,6 +121,11 @@ describe('GridToolbar — depth', () => {
     theme: 'quartz' as const,
     density: 'comfortable' as const,
   };
+
+  it('has correct ARIA roles', () => {
+    render(<GridToolbar {...baseProps} />);
+    expect(screen.getByLabelText('Quick filter')).toBeInTheDocument();
+  });
 
   it('renders toolbar with quick filter', () => {
     render(<GridToolbar {...baseProps} />);
@@ -181,6 +191,13 @@ describe('EntityGridTemplate — depth', () => {
     columnDefs: [{ field: 'name' }, { field: 'age' }],
   };
 
+  it('has accessible structure', () => {
+    const { container } = render(<EntityGridTemplate {...baseProps} />);
+    const root = container.querySelector('[data-component="entity-grid-template"]');
+    expect(root).toBeTruthy();
+    expect(root?.querySelector('[aria-label],[role],[data-grid-id]')).toBeTruthy();
+  });
+
   it('renders with minimal config', () => {
     const { container } = render(<EntityGridTemplate {...baseProps} />);
     expect(container.querySelector('[data-component="entity-grid-template"]')).toBeInTheDocument();
@@ -219,6 +236,15 @@ describe('EntityGridTemplate — depth', () => {
 
 describe('AgGridServer — depth', () => {
   const mockGetData = vi.fn().mockResolvedValue({ rows: [], total: 0 });
+
+  it('has accessible structure', () => {
+    const { container } = render(
+      <AgGridServer columnDefs={[{ field: 'id' }]} getData={mockGetData} />,
+    );
+    const root = container.firstElementChild;
+    expect(root).toBeTruthy();
+    expect(root?.querySelector('[aria-label],[role],[data-testid]')).toBeTruthy();
+  });
 
   it('renders with minimal columnDefs', () => {
     render(
@@ -285,6 +311,13 @@ describe('AgGridServer — depth', () => {
 describe('GridShell — depth', () => {
   const baseCols = [{ field: 'col1' }];
 
+  it('has accessible structure', () => {
+    const { container } = render(<GridShell columnDefs={baseCols} rowData={[]} />);
+    const root = container.firstElementChild;
+    expect(root).toBeTruthy();
+    expect(root?.querySelector('[aria-label],[role],[data-testid]')).toBeTruthy();
+  });
+
   it('renders with columnDefs and rowData', () => {
     render(
       <GridShell
@@ -338,6 +371,15 @@ describe('GridShell — depth', () => {
 /* ================================================================== */
 
 describe('TablePagination — depth', () => {
+  it('has correct ARIA roles', () => {
+    render(
+      <TablePagination totalItems={100} page={1} pageSize={10} showFirstLastButtons />,
+    );
+    expect(screen.getByLabelText('Next page')).toBeInTheDocument();
+    expect(screen.getByLabelText('Previous page')).toBeInTheDocument();
+    expect(screen.getByLabelText('First page')).toBeInTheDocument();
+  });
+
   it('renders with totalItems', () => {
     const { container } = render(<TablePagination totalItems={100} />);
     expect(container.querySelector('[data-component="table-pagination"]')).toBeInTheDocument();

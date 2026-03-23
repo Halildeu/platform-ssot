@@ -30,6 +30,16 @@ afterEach(() => {
 /* ================================================================== */
 
 describe('DesignSystemProvider — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(
+      <DesignSystemProvider>
+        <div role="main" aria-label="app content">Content</div>
+      </DesignSystemProvider>,
+    );
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(screen.getByRole('main')).toHaveAttribute('aria-label', 'app content');
+  });
+
   it('renders children', () => {
     render(
       <DesignSystemProvider>
@@ -110,6 +120,16 @@ describe('DesignSystemProvider — depth', () => {
 /* ================================================================== */
 
 describe('ThemeProvider — depth', () => {
+  it('has accessible structure', () => {
+    const { container } = render(
+      <ThemeProvider>
+        <div role="region" aria-label="theme area">Content</div>
+      </ThemeProvider>,
+    );
+    expect(screen.getByRole('region')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveAttribute('aria-label', 'theme area');
+  });
+
   it('setAppearance switches to dark', () => {
     let themeCtx: ReturnType<typeof useTheme> | undefined;
     function Consumer() {
@@ -189,6 +209,16 @@ describe('ThemeProvider — depth', () => {
 /* ================================================================== */
 
 describe('DirectionProvider — depth', () => {
+  it('has correct ARIA roles', () => {
+    const { container } = render(
+      <DirectionProvider direction="rtl">
+        <span>Content</span>
+      </DirectionProvider>,
+    );
+    const wrapper = container.firstElementChild as HTMLElement;
+    expect(wrapper).toHaveAttribute('dir', 'rtl');
+  });
+
   it('sets dir=rtl on wrapper', () => {
     const { container } = render(
       <DirectionProvider direction="rtl">
@@ -242,6 +272,16 @@ describe('DirectionProvider — depth', () => {
 /* ================================================================== */
 
 describe('LocaleProvider — depth', () => {
+  it('has correct ARIA roles', () => {
+    const { container } = render(
+      <LocaleProvider locale="he">
+        <span>Content</span>
+      </LocaleProvider>,
+    );
+    const wrapper = container.firstElementChild as HTMLElement;
+    expect(wrapper).toHaveAttribute('dir', 'rtl');
+  });
+
   it('defaults to locale en and direction ltr', () => {
     let ctx: ReturnType<typeof useLocale> | undefined;
     function Consumer() {

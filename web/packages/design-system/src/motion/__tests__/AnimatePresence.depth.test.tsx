@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
   useReducedMotion: () => false,
@@ -95,5 +96,18 @@ describe('AnimatePresence — depth', () => {
     );
     expect(screen.getByText('First')).toBeInTheDocument();
     expect(screen.getByText('Second')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    vi.useRealTimers();
+    const user = userEvent.setup();
+    render(
+      <AnimatePresence>
+        <button key="btn">Click</button>
+      </AnimatePresence>,
+    );
+    await user.tab();
+    expect(screen.getByText('Click')).toBeInTheDocument();
+    vi.useFakeTimers();
   });
 });

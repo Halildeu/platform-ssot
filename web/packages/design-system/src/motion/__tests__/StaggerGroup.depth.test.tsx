@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
   useReducedMotion: () => false,
@@ -67,6 +68,18 @@ describe('StaggerGroup — depth', () => {
       </StaggerGroup>,
     );
     fireEvent.click(screen.getByRole('button', { name: /click inside/i }));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('click via userEvent on stagger child', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <StaggerGroup staggerDelay={50}>
+        <button onClick={onClick}>UserEvent Click</button>
+      </StaggerGroup>,
+    );
+    await user.click(screen.getByText('UserEvent Click'));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
