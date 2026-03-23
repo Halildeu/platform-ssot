@@ -210,7 +210,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ isFullscreen = false }) => {
         user={mergedUserDetail}
       />
       {(isDetailLoading && selectedUserSummary) && (
-        <div className="fixed bottom-6 right-6 rounded-full border border-border-subtle bg-surface-default p-3 shadow-lg bg-opacity-90">
+        <div className="fixed bottom-6 right-6 rounded-full border border-border-subtle bg-surface-default/90 p-3 shadow-lg">
           <span className="inline-flex h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary-border" />
         </div>
       )}

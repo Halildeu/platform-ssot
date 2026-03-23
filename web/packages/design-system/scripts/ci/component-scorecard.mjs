@@ -288,11 +288,14 @@ function scoreDocumentation(content, componentName, componentDir) {
   const propsWithDoc = (content.match(/\/\*\*[\s\S]*?\*\/\s*\w+\??:/g) || []).length;
   score += Math.min(30, propsWithDoc * 5);
 
-  // API reference exists
-  const apiRefPath = path.join(SRC, 'catalog', 'component-api-catalog.v1.json');
-  if (fs.existsSync(apiRefPath)) {
-    const apiContent = fs.readFileSync(apiRefPath, 'utf-8');
-    if (apiContent.includes(`"${componentName}"`)) score += 20;
+  // API reference exists (check main + all part files)
+  const catalogDir = path.join(SRC, 'catalog');
+  if (fs.existsSync(catalogDir)) {
+    const catalogFiles = fs.readdirSync(catalogDir).filter(f => f.startsWith('component-api-catalog') && f.endsWith('.json'));
+    for (const cf of catalogFiles) {
+      const apiContent = fs.readFileSync(path.join(catalogDir, cf), 'utf-8');
+      if (apiContent.includes(`"${componentName}"`)) { score += 20; break; }
+    }
   }
 
   // Authoring metadata exists

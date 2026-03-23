@@ -1,10 +1,155 @@
+@import "tailwindcss";
 @import './styles/theme.css';
 @import './styles/token-bridge.css';
-@import 'tokens/build/dark-mode.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Content scanning for monorepo */
+@source "../../packages/design-system/src/**/*.{ts,tsx}";
+@source "../mfe-suggestions/src/**/*.{ts,tsx}";
+@source "../mfe-ethic/src/**/*.{ts,tsx}";
+@source "../mfe-users/src/**/*.{ts,tsx}";
+@source "../mfe-access/src/**/*.{ts,tsx}";
+@source "../mfe-audit/src/**/*.{ts,tsx}";
+@source "../mfe-reporting/src/**/*.{ts,tsx}";
+
+/* ------------------------------------------------------------------ */
+/*  @theme — migrated from tailwind.config.js theme.extend             */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Border Radius */
+  --radius-control: var(--radius-control);
+  --radius-surface: var(--radius-surface);
+
+  /* Shadows */
+  --shadow-surface: var(--elevation-surface);
+  --shadow-overlay: var(--elevation-overlay);
+
+  /* Spacing */
+  --spacing-density: var(--density-space);
+
+  /* Min Height */
+  --min-height-row-density: var(--density-row-height);
+
+  /* Motion Duration */
+  --transition-duration-fast: var(--motion-duration-fast);
+  --transition-duration-medium: var(--motion-duration-medium);
+  --transition-duration-slow: var(--motion-duration-slow);
+
+  /* Motion Easing */
+  --transition-timing-function-standard: var(--motion-easing-standard);
+  --transition-timing-function-enter: var(--motion-easing-enter);
+  --transition-timing-function-exit: var(--motion-easing-exit);
+
+  /* Ring */
+  --ring-color: var(--focus-outline);
+
+  /* ── Colors ── */
+
+  /* Surface */
+  --color-surface: var(--surface-default-bg);
+  --color-surface-default: var(--surface-default-bg);
+  --color-surface-page: var(--surface-page-bg);
+  --color-surface-raised: var(--surface-raised-bg);
+  --color-surface-muted: var(--surface-muted-bg);
+  --color-surface-panel: var(--surface-panel-bg);
+  --color-surface-header: var(--surface-header-bg);
+  --color-surface-overlay: var(--surface-overlay-bg);
+
+  /* Text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-subtle: var(--text-subtle);
+  --color-text-inverse: var(--text-inverse);
+
+  /* Border */
+  --color-border: var(--border-default);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-bold: var(--border-bold);
+
+  /* Selection */
+  --color-selection: var(--selection-bg);
+  --color-selection-outline: var(--selection-outline);
+
+  /* Action Primary */
+  --color-action-primary: var(--action-primary-bg);
+  --color-action-primary-text: var(--action-primary-text);
+  --color-action-primary-border: var(--action-primary-border);
+
+  /* Action Secondary */
+  --color-action-secondary: var(--action-secondary-bg);
+  --color-action-secondary-text: var(--action-secondary-text);
+  --color-action-secondary-border: var(--action-secondary-border);
+
+  /* Action Ghost */
+  --color-action-ghost: var(--action-ghost-bg);
+  --color-action-ghost-text: var(--action-ghost-text);
+  --color-action-ghost-border: var(--action-ghost-border);
+
+  /* Accent */
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-primary-hover: var(--accent-primary-hover);
+  --color-accent-focus: var(--accent-focus);
+  --color-accent-soft: var(--accent-soft);
+
+  /* State Info */
+  --color-state-info: var(--state-info-bg);
+  --color-state-info-bg: var(--state-info-bg);
+  --color-state-info-text: var(--state-info-text);
+  --color-state-info-border: var(--state-info-border);
+
+  /* State Success */
+  --color-state-success: var(--state-success-bg);
+  --color-state-success-bg: var(--state-success-bg);
+  --color-state-success-text: var(--state-success-text);
+  --color-state-success-border: var(--state-success-border);
+
+  /* State Warning */
+  --color-state-warning: var(--state-warning-bg);
+  --color-state-warning-bg: var(--state-warning-bg);
+  --color-state-warning-text: var(--state-warning-text);
+  --color-state-warning-border: var(--state-warning-border);
+
+  /* State Danger */
+  --color-state-danger: var(--state-danger-bg);
+  --color-state-danger-bg: var(--state-danger-bg);
+  --color-state-danger-text: var(--state-danger-text);
+  --color-state-danger-border: var(--state-danger-border);
+
+  /* Status (alias for state) */
+  --color-status-info: var(--state-info-bg);
+  --color-status-info-bg: var(--state-info-bg);
+  --color-status-info-text: var(--state-info-text);
+  --color-status-info-border: var(--state-info-border);
+
+  --color-status-success: var(--state-success-bg);
+  --color-status-success-bg: var(--state-success-bg);
+  --color-status-success-text: var(--state-success-text);
+  --color-status-success-border: var(--state-success-border);
+
+  --color-status-warning: var(--state-warning-bg);
+  --color-status-warning-bg: var(--state-warning-bg);
+  --color-status-warning-text: var(--state-warning-text);
+  --color-status-warning-border: var(--state-warning-border);
+
+  --color-status-danger: var(--state-danger-bg);
+  --color-status-danger-bg: var(--state-danger-bg);
+  --color-status-danger-text: var(--state-danger-text);
+  --color-status-danger-border: var(--state-danger-border);
+
+  /* Data Table */
+  --color-data-table-header: var(--data-table-header-bg);
+  --color-data-table-header-text: var(--data-table-header-text);
+  --color-data-table-header-divider: var(--data-table-header-divider);
+  --color-data-table-row-hover: var(--data-table-row-hover);
+  --color-data-table-row-selected: var(--data-table-row-selected);
+  --color-data-table-row-border: var(--data-table-row-border);
+}
+
+/* Dark mode token overrides — inline to avoid cross-package resolve issues */
+
+/* ------------------------------------------------------------------ */
+/*  Custom base styles                                                 */
+/* ------------------------------------------------------------------ */
 
 /* Hafif reset: margin/padding temizliği ve tema var'larından zemin/metin */
 *,
