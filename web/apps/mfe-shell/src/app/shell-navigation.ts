@@ -49,6 +49,8 @@ export const resolveDefaultShellPath = ({
   permitAllMode,
   permissions,
 }: DefaultShellPathOptions): string => {
+  // Dashboard as default landing page
+  return '/home';
   if (isSuggestionsRemoteEnabled()) {
     return '/suggestions';
   }

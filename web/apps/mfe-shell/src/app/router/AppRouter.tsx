@@ -24,6 +24,7 @@ import { LoginPage } from "../../pages/login";
 import { RegisterPage } from "../../pages/register";
 import { UnauthorizedPage } from "../../pages/unauthorized";
 import ThemeMatrixPage from "../../pages/runtime/ThemeMatrixPage";
+import { HomePage } from "../../pages/home/HomePage";
 import ThemeAdminPage from "../../pages/admin/ThemeAdminPage";
 import DesignLabPage from "../../pages/admin/DesignLabPage";
 import { DesignLabRoutes } from "../../pages/admin/design-lab/DesignLabRoutes";
@@ -162,6 +163,7 @@ export const AppRouter: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/runtime/theme-matrix" element={<ThemeMatrixPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

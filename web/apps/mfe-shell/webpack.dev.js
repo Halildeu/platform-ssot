@@ -38,6 +38,13 @@ const devConfig = {
         secure: false,
       },
       {
+        context: ['/cockpit-api'],
+        target: 'http://localhost:8790', // orchestrator cockpit-serve
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: { '^/cockpit-api': '/api' },
+      },
+      {
         context: ['/api'],
         target: 'http://localhost:8080', // api-gateway
         changeOrigin: true,
