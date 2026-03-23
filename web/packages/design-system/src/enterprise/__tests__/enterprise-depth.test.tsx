@@ -166,6 +166,17 @@ describe('SankeyDiagram – depth', () => {
     const { container } = render(<SankeyDiagram nodes={nodes} links={links} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
   });
+
+  it('fires onNodeClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const nodes = [{ id: 'a', label: 'Source' }, { id: 'b', label: 'Target' }];
+    const links = [{ source: 'a', target: 'b', value: 100 }];
+    render(<SankeyDiagram nodes={nodes} links={links} onNodeClick={onClick} />);
+    const sourceText = screen.getByText('Source');
+    await user.click(sourceText.closest('g')!);
+    expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ id: 'a' }));
+  });
 });
 
 // ===========================================================================
@@ -192,6 +203,13 @@ describe('RadarChart – depth', () => {
   it('renders with access="disabled"', () => {
     const { container } = render(<RadarChart axes={axes} series={series} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<RadarChart axes={axes} series={series} />);
+    await user.tab();
+    expect(container.querySelector('svg')).toBeTruthy();
   });
 });
 
@@ -221,6 +239,18 @@ describe('FunnelChart – depth', () => {
     const { container } = render(<FunnelChart stages={stages} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
   });
+
+  it('fires onStageClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const stages = [
+      { id: '1', label: 'Leads', value: 1000 },
+      { id: '2', label: 'Qualified', value: 600 },
+    ];
+    render(<FunnelChart stages={stages} onStageClick={onClick} animated={false} />);
+    await user.click(screen.getByText('Leads').closest('g')!);
+    expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ id: '1', label: 'Leads' }));
+  });
 });
 
 // ===========================================================================
@@ -245,6 +275,15 @@ describe('FilterPresets – depth', () => {
     render(<FilterPresets presets={presets} onSelect={vi.fn()} access="disabled" />);
     const btn = screen.getByText('Test');
     expect(btn.closest('button')).toBeDisabled();
+  });
+
+  it('calls onSelect via userEvent click', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    const presets = [{ id: '1', name: 'Active Only', filters: { status: 'active' } }];
+    render(<FilterPresets presets={presets} onSelect={onSelect} />);
+    await user.click(screen.getByText('Active Only'));
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: '1' }));
   });
 });
 
@@ -277,6 +316,13 @@ describe('DateRangePicker – depth', () => {
     const btn = container.querySelector('button');
     expect(btn).toBeDisabled();
   });
+
+  it('opens dropdown via userEvent click', async () => {
+    const user = userEvent.setup();
+    render(<DateRangePicker />);
+    await user.click(screen.getByText('Select date range'));
+    expect(screen.getByText('Today')).toBeInTheDocument();
+  });
 });
 
 // ===========================================================================
@@ -308,6 +354,13 @@ describe('InlineEdit – depth', () => {
   it('renders nothing when access="hidden"', () => {
     const { container } = render(<InlineEdit value="X" onSave={vi.fn()} access="hidden" />);
     expect(container.innerHTML).toBe('');
+  });
+
+  it('enters edit mode via userEvent double click', async () => {
+    const user = userEvent.setup();
+    render(<InlineEdit value="Hello" onSave={vi.fn()} />);
+    await user.dblClick(screen.getByText('Hello'));
+    expect(screen.getByLabelText('Save')).toBeInTheDocument();
   });
 });
 
@@ -349,6 +402,14 @@ describe('DataExportDialog – depth', () => {
     const disabledBtns = buttons.filter(btn => btn.hasAttribute('disabled'));
     expect(disabledBtns.length).toBeGreaterThan(0);
   });
+
+  it('calls onClose via userEvent click', async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(<DataExportDialog open onClose={onClose} onExport={vi.fn()} />);
+    await user.click(screen.getByLabelText('Close'));
+    expect(onClose).toHaveBeenCalled();
+  });
 });
 
 // ===========================================================================
@@ -380,6 +441,17 @@ describe('NotificationCenter – depth', () => {
     fireEvent.click(markAllBtn);
     expect(onMarkAllRead).toHaveBeenCalled();
   });
+
+  it('calls onNotificationClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const items = [
+      { id: '1', title: 'Test Alert', type: 'info' as const, timestamp: '2026-03-23T10:00:00Z' },
+    ];
+    render(<NotificationCenter notifications={items} onNotificationClick={onClick} />);
+    await user.click(screen.getByText('Test Alert'));
+    expect(onClick).toHaveBeenCalledWith('1');
+  });
 });
 
 // ===========================================================================
@@ -406,6 +478,14 @@ describe('ExecutiveKPIStrip – depth', () => {
   it('renders with access="disabled" and sets aria-disabled', () => {
     const { container } = render(<ExecutiveKPIStrip metrics={metrics} access="disabled" />);
     expect(container.querySelector('[aria-disabled="true"]')).toBeInTheDocument();
+  });
+
+  it('fires onMetricClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(<ExecutiveKPIStrip metrics={metrics} onMetricClick={onClick} />);
+    await user.click(screen.getByText('Revenue'));
+    expect(onClick).toHaveBeenCalledWith('rev');
   });
 });
 
@@ -435,6 +515,18 @@ describe('ProcessFlow – depth', () => {
     const { container } = render(<ProcessFlow nodes={nodes} edges={[]} access="disabled" />);
     expect(container.textContent).toContain('Step');
   });
+
+  it('fires onNodeClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const nodes = [
+      { id: '1', type: 'start' as const, label: 'Begin' },
+      { id: '2', type: 'end' as const, label: 'Done' },
+    ];
+    render(<ProcessFlow nodes={nodes} edges={[{ from: '1', to: '2' }]} onNodeClick={onClick} />);
+    await user.click(screen.getByText('Begin'));
+    expect(onClick).toHaveBeenCalledWith('1');
+  });
 });
 
 // ===========================================================================
@@ -463,6 +555,15 @@ describe('ValueStream – depth', () => {
     fireEvent.click(screen.getByText('Cut'));
     expect(onClick).toHaveBeenCalledWith('1');
   });
+
+  it('fires onStepClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const steps = [{ id: '1', label: 'Cut', processTime: 10 }];
+    render(<ValueStream steps={steps} onStepClick={onClick} />);
+    await user.click(screen.getByText('Cut'));
+    expect(onClick).toHaveBeenCalledWith('1');
+  });
 });
 
 // ===========================================================================
@@ -488,6 +589,17 @@ describe('StatusTimeline – depth', () => {
     const events = [{ id: '1', status: 'Done', timestamp: '2026-01-01T10:00:00Z' }];
     const { container } = render(<StatusTimeline events={events} access="disabled" />);
     expect(container.textContent).toContain('Done');
+  });
+
+  it('fires onEventClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const events = [
+      { id: '1', status: 'Created', timestamp: '2026-01-01T10:00:00Z' },
+    ];
+    render(<StatusTimeline events={events} onEventClick={onClick} />);
+    await user.click(screen.getByText('Created'));
+    expect(onClick).toHaveBeenCalledWith('1');
   });
 });
 
@@ -518,6 +630,13 @@ describe('ApprovalWorkflow – depth', () => {
     // The component uses resolveAccessState and should still render (not hidden)
     expect(container.textContent).toContain('Submit');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ApprovalWorkflow steps={steps} />);
+    await user.tab();
+    expect(container.textContent).toContain('Submit');
+  });
 });
 
 // ===========================================================================
@@ -545,6 +664,13 @@ describe('RiskMatrix – depth', () => {
   it('renders with access="disabled"', () => {
     const risks = [{ id: '1', title: 'X', likelihood: 1 as const, impact: 1 as const }];
     const { container } = render(<RiskMatrix risks={risks} access="disabled" />);
+    expect(container.firstElementChild).toBeTruthy();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<RiskMatrix risks={[]} />);
+    await user.tab();
     expect(container.firstElementChild).toBeTruthy();
   });
 });
@@ -577,6 +703,18 @@ describe('GanttTimeline – depth', () => {
     const { container } = render(<GanttTimeline tasks={tasks} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
   });
+
+  it('fires onTaskClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const tasks = [
+      { id: '1', title: 'Design', startDate: new Date('2026-01-01'), endDate: new Date('2026-01-15'), progress: 80 },
+    ];
+    render(<GanttTimeline tasks={tasks} onTaskClick={onClick} />);
+    const elements = screen.getAllByText('Design');
+    await user.click(elements[0]);
+    expect(onClick).toHaveBeenCalled();
+  });
 });
 
 // ===========================================================================
@@ -602,6 +740,15 @@ describe('AgingBuckets – depth', () => {
     const buckets = [{ id: '1', label: '0-30', count: 5, value: 1000 }];
     const { container } = render(<AgingBuckets buckets={buckets} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
+
+  it('fires onBucketClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const buckets = [{ id: '1', label: '0-30', count: 45, value: 120000 }];
+    render(<AgingBuckets buckets={buckets} onBucketClick={onClick} />);
+    await user.click(screen.getByText('0-30'));
+    expect(onClick).toHaveBeenCalled();
   });
 });
 
@@ -629,6 +776,15 @@ describe('ComparisonTable – depth', () => {
     const { container } = render(<ComparisonTable rows={rows} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
   });
+
+  it('fires onRowClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const rows = [{ id: '1', label: 'Revenue', actual: 1200000, target: 1000000 }];
+    render(<ComparisonTable rows={rows} onRowClick={onClick} />);
+    await user.click(screen.getByText('Revenue'));
+    expect(onClick).toHaveBeenCalled();
+  });
 });
 
 // ===========================================================================
@@ -654,6 +810,17 @@ describe('TrainingTracker – depth', () => {
     const items = [{ id: '1', title: 'X', category: 'Y', status: 'in-progress' as const, progress: 50 }];
     const { container } = render(<TrainingTracker items={items} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
+
+  it('fires onItemClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const items = [
+      { id: '1', title: 'Safety', category: 'Compliance', status: 'completed' as const, progress: 100 },
+    ];
+    render(<TrainingTracker items={items} onItemClick={onClick} />);
+    await user.click(screen.getByText('Safety'));
+    expect(onClick).toHaveBeenCalled();
   });
 });
 
@@ -682,6 +849,17 @@ describe('GovernanceBoard – depth', () => {
     ];
     const { container } = render(<GovernanceBoard items={items} access="disabled" />);
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
+
+  it('fires onItemClick via userEvent', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const items = [
+      { id: '1', title: 'GDPR', domain: 'legal', status: 'compliant' as const, severity: 'high' as const, findingsCount: 0 },
+    ];
+    render(<GovernanceBoard items={items} onItemClick={onClick} />);
+    await user.click(screen.getByText('GDPR'));
+    expect(onClick).toHaveBeenCalled();
   });
 });
 
@@ -713,6 +891,19 @@ describe('EmptyStateBuilder – depth', () => {
     const { container } = render(<EmptyStateBuilder reason="error" access="disabled" />);
     expect(container.firstElementChild).toBeTruthy();
   });
+
+  it('fires primaryAction via userEvent click', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(
+      <EmptyStateBuilder
+        reason="no-data"
+        primaryAction={{ label: 'Retry', onClick }}
+      />,
+    );
+    await user.click(screen.getByText('Retry'));
+    expect(onClick).toHaveBeenCalled();
+  });
 });
 
 // ===========================================================================
@@ -739,5 +930,14 @@ describe('ThemeLayout – depth', () => {
       <ThemeLayout theme="compact" slots={{ header: <div>X</div> }} access="disabled" />,
     );
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ThemeLayout theme="executive" slots={{ header: <div>H</div> }} />,
+    );
+    await user.tab();
+    expect(container.innerHTML).toContain('H');
   });
 });

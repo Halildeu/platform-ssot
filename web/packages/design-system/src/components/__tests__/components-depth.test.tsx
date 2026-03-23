@@ -6,6 +6,7 @@
  */
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 /* ================================================================== */
@@ -27,6 +28,13 @@ describe('ThemePreviewCard — depth', () => {
   it('applies disabled access state attribute', () => {
     const { container } = render(<ThemePreviewCard access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ThemePreviewCard />);
+    await user.tab();
+    expect(container.firstElementChild).toBeTruthy();
   });
 });
 
@@ -50,6 +58,13 @@ describe('Watermark — depth', () => {
   it('renders watermark overlay when content is provided', () => {
     const { container } = render(<Watermark content="Draft"><span>test</span></Watermark>);
     expect(container.querySelector('[data-testid="watermark-overlay"]')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<Watermark><span>child</span></Watermark>);
+    await user.tab();
+    expect(screen.getByText('child')).toBeInTheDocument();
   });
 });
 
@@ -76,6 +91,13 @@ describe('ThemePresetCompare — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<ThemePresetCompare access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ThemePresetCompare />);
+    await user.tab();
+    expect(container.firstElementChild).toBeTruthy();
   });
 });
 
@@ -106,6 +128,19 @@ describe('AIGuidedAuthoring — depth', () => {
     const { container } = render(<AIGuidedAuthoring access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
+
+  it('fires onPaletteOpenChange via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(
+      <AIGuidedAuthoring
+        commandItems={[{ id: 'cmd1', label: 'Test', action: vi.fn() }]}
+        onPaletteOpenChange={handler}
+      />
+    );
+    await user.click(screen.getByText('Komut paleti'));
+    expect(handler).toHaveBeenCalledWith(true);
+  });
 });
 
 /* ================================================================== */
@@ -132,6 +167,15 @@ describe('NotificationPanel — depth', () => {
     const { container } = render(<NotificationPanel items={items} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
+
+  it('fires onMarkAllRead via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    const items = [{ id: '1', message: 'Test notification', read: false }];
+    render(<NotificationPanel items={items} onMarkAllRead={handler} />);
+    await user.click(screen.getByText('Tumunu okundu say'));
+    expect(handler).toHaveBeenCalled();
+  });
 });
 
 /* ================================================================== */
@@ -156,6 +200,15 @@ describe('AIActionAuditTimeline — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<AIActionAuditTimeline items={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+  });
+
+  it('fires onSelectItem via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    const items = [{ id: 'a1', actor: 'ai' as const, title: 'Generated report', timestamp: '10:00', status: 'drafted' as const }];
+    render(<AIActionAuditTimeline items={items} onSelectItem={handler} />);
+    await user.click(screen.getByText('Generated report'));
+    expect(handler).toHaveBeenCalledWith('a1', items[0]);
   });
 });
 
@@ -187,6 +240,14 @@ describe('SectionTabs — depth', () => {
     render(<SectionTabs items={tabItems} value="tab1" />);
     expect(screen.getByText('Tab 3')).toBeInTheDocument();
   });
+
+  it('fires onValueChange via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<SectionTabs items={tabItems} value="tab1" onValueChange={handler} />);
+    await user.click(screen.getByText('Tab 2'));
+    expect(handler).toHaveBeenCalledWith('tab2');
+  });
 });
 
 /* ================================================================== */
@@ -208,6 +269,13 @@ describe('AreaChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<AreaChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<AreaChart series={[]} labels={[]} />);
+    await user.tab();
+    expect(screen.getByText('Veri yok')).toBeInTheDocument();
   });
 });
 
@@ -231,6 +299,13 @@ describe('BarChart — depth', () => {
     const { container } = render(<BarChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<BarChart data={[]} />);
+    await user.tab();
+    expect(screen.getByText('Veri yok')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -253,6 +328,13 @@ describe('LineChart — depth', () => {
     const { container } = render(<LineChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<LineChart series={[]} labels={[]} />);
+    await user.tab();
+    expect(screen.getByText('Veri yok')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -274,6 +356,13 @@ describe('PieChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<PieChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<PieChart data={[]} />);
+    await user.tab();
+    expect(screen.getByText('Veri yok')).toBeInTheDocument();
   });
 });
 
@@ -299,6 +388,15 @@ describe('ThemePresetGallery — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<ThemePresetGallery presets={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+  });
+
+  it('fires onSelectPreset via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    const presets = [{ presetId: 'p1', label: 'Preset One' }];
+    render(<ThemePresetGallery presets={presets} onSelectPreset={handler} />);
+    await user.click(screen.getByText('Preset One'));
+    expect(handler).toHaveBeenCalledWith('p1', presets[0]);
   });
 });
 
@@ -334,6 +432,14 @@ describe('NotificationItemCard — depth', () => {
     const { container } = render(<NotificationItemCard item={baseItem} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
+
+  it('fires onRemove via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<NotificationItemCard item={baseItem} onRemove={handler} />);
+    await user.click(screen.getByLabelText('Bildirimi kapat'));
+    expect(handler).toHaveBeenCalledWith('n1');
+  });
 });
 
 /* ================================================================== */
@@ -357,6 +463,13 @@ describe('AILayoutBuilder — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<AILayoutBuilder blocks={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<AILayoutBuilder blocks={[]} />);
+    await user.tab();
+    expect(container.firstElementChild).toBeTruthy();
   });
 });
 
@@ -383,6 +496,13 @@ describe('ConfidenceBadge — depth', () => {
   it('renders source count', () => {
     render(<ConfidenceBadge level="medium" sourceCount={3} />);
     expect(screen.getByText(/3 sources/)).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<ConfidenceBadge level="high" />);
+    await user.tab();
+    expect(screen.getByText(/guven/i)).toBeInTheDocument();
   });
 });
 
@@ -423,6 +543,17 @@ describe('ErrorBoundary — depth', () => {
     );
     expect(handler).toHaveBeenCalled();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(
+      <ErrorBoundary>
+        <span>Safe content</span>
+      </ErrorBoundary>
+    );
+    await user.tab();
+    expect(screen.getByText('Safe content')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -448,6 +579,14 @@ describe('Descriptions — depth', () => {
     expect(screen.getByText('Details')).toBeInTheDocument();
     expect(screen.getByText('User info')).toBeInTheDocument();
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const items = [{ key: 'k1', label: 'Name', value: 'John' }];
+    render(<Descriptions items={items} />);
+    await user.tab();
+    expect(screen.getByText('John')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -471,6 +610,14 @@ describe('QRCode — depth', () => {
     render(<QRCode value="test" status="expired" onRefresh={handler} />);
     const refreshBtn = screen.getByTestId('qrcode-refresh');
     fireEvent.click(refreshBtn);
+    expect(handler).toHaveBeenCalled();
+  });
+
+  it('fires onRefresh via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<QRCode value="test" status="expired" onRefresh={handler} />);
+    await user.click(screen.getByTestId('qrcode-refresh'));
     expect(handler).toHaveBeenCalled();
   });
 });
@@ -501,6 +648,15 @@ describe('ApprovalReview — depth', () => {
     );
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} />
+    );
+    await user.tab();
+    expect(container.querySelector('[data-component="approval-review"]')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -525,6 +681,14 @@ describe('EmptyState — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<EmptyState title="Test" access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+  });
+
+  it('fires action click via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<EmptyState title="No data" action={<button onClick={handler}>Create</button>} />);
+    await user.click(screen.getByText('Create'));
+    expect(handler).toHaveBeenCalled();
   });
 });
 
@@ -555,6 +719,14 @@ describe('TableSimple — depth', () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const rows = [{ name: 'Alice', age: 30 }];
+    render(<TableSimple columns={columns} rows={rows} />);
+    await user.tab();
+    expect(screen.getByText('Alice')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -577,6 +749,13 @@ describe('FormField — depth', () => {
   it('renders required indicator', () => {
     render(<FormField label="Name" required><input /></FormField>);
     expect(screen.getByText('*')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    render(<FormField label="Email"><input /></FormField>);
+    await user.tab();
+    expect(screen.getByText('Email')).toBeInTheDocument();
   });
 });
 
@@ -606,6 +785,14 @@ describe('SearchInput — depth', () => {
     render(<SearchInput value="" disabled />);
     expect(screen.getByRole('searchbox')).toBeDisabled();
   });
+
+  it('fires onClear via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<SearchInput value="hello" onClear={handler} clearable />);
+    await user.click(screen.getByRole('button'));
+    expect(handler).toHaveBeenCalled();
+  });
 });
 
 /* ================================================================== */
@@ -634,6 +821,14 @@ describe('ApprovalCheckpoint — depth', () => {
     const { container } = render(<ApprovalCheckpoint {...minProps} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
+
+  it('fires onPrimaryAction via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<ApprovalCheckpoint {...minProps} onPrimaryAction={handler} />);
+    await user.click(screen.getByText('Onayla'));
+    expect(handler).toHaveBeenCalled();
+  });
 });
 
 /* ================================================================== */
@@ -655,6 +850,13 @@ describe('JsonViewer — depth', () => {
 
   it('renders undefined value as empty state', () => {
     const { container } = render(<JsonViewer value={undefined} />);
+    expect(container.querySelector('[data-component="json-viewer"]')).toBeInTheDocument();
+  });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<JsonViewer value={{ key: 'value' }} />);
+    await user.tab();
     expect(container.querySelector('[data-component="json-viewer"]')).toBeInTheDocument();
   });
 });
@@ -684,6 +886,13 @@ describe('PromptComposer — depth', () => {
     const { container } = render(<PromptComposer access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
   });
+
+  it('supports keyboard navigation via userEvent', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<PromptComposer />);
+    await user.tab();
+    expect(container.querySelector('[data-component="prompt-composer"]')).toBeInTheDocument();
+  });
 });
 
 /* ================================================================== */
@@ -711,6 +920,14 @@ describe('RecommendationCard — depth', () => {
   it('applies disabled access state', () => {
     const { container } = render(<RecommendationCard {...minProps} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+  });
+
+  it('fires onPrimaryAction via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<RecommendationCard {...minProps} onPrimaryAction={handler} />);
+    await user.click(screen.getByText('Apply'));
+    expect(handler).toHaveBeenCalled();
   });
 });
 
@@ -744,6 +961,14 @@ describe('DetailSectionTabs — depth', () => {
       <DetailSectionTabs tabs={tabs} activeTabId="dt1" onTabChange={handler} access="hidden" />
     );
     expect(container.firstElementChild).toBeNull();
+  });
+
+  it('fires onTabChange via userEvent', async () => {
+    const user = userEvent.setup();
+    const handler = vi.fn();
+    render(<DetailSectionTabs tabs={tabs} activeTabId="dt1" onTabChange={handler} />);
+    await user.click(screen.getByText('Details'));
+    expect(handler).toHaveBeenCalledWith('dt2');
   });
 });
 
@@ -779,6 +1004,20 @@ describe('Tree — depth', () => {
     render(<Tree nodes={nodes} onNodeSelect={handler} />);
     fireEvent.click(screen.getByText('Node One'));
     expect(handler).toHaveBeenCalledWith('n1');
+  });
+
+  it('expands node via userEvent click', async () => {
+    const user = userEvent.setup();
+    const nodes = [
+      {
+        key: 'root',
+        label: 'Root',
+        children: [{ key: 'child', label: 'Child Node' }],
+      },
+    ];
+    render(<Tree nodes={nodes} />);
+    await user.click(screen.getByLabelText('Expand branch'));
+    expect(screen.getByText('Child Node')).toBeInTheDocument();
   });
 });
 

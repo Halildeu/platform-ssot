@@ -13,178 +13,53 @@
 @source "../mfe-reporting/src/**/*.{ts,tsx}";
 
 /* ------------------------------------------------------------------ */
-/*  @theme — migrated from tailwind.config.js theme.extend             */
-/*  NOTE: TW4 @theme variables become :root CSS vars.                  */
-/*  Names MUST NOT collide with design token names to avoid circular   */
-/*  references. Use TW4 namespace: --color-*, --radius-*, etc.         */
+/*  @theme — TW4 token registration with var() references             */
+/*  NOTE: TW4 namespace (--color-*) differs from design token          */
+/*  namespace (--surface-*-bg, --text-*, etc.) to avoid circular refs  */
 /* ------------------------------------------------------------------ */
 @theme {
-  /* Border Radius — maps to design tokens via initial-value reference */
-  --radius-control: initial;
-  --radius-surface: initial;
-
-  /* Shadows */
-  --shadow-surface: initial;
-  --shadow-overlay: initial;
-
-  /* Spacing */
-  --spacing-density: initial;
-
-  /* Min Height */
-  --min-height-row-density: initial;
-
-  /* Motion Duration */
-  --transition-duration-fast: initial;
-  --transition-duration-medium: initial;
-  --transition-duration-slow: initial;
-
-  /* Motion Easing */
-  --transition-timing-function-standard: initial;
-  --transition-timing-function-enter: initial;
-  --transition-timing-function-exit: initial;
-
-  /* Ring */
-  --ring-color: initial;
-
-  /* ── Colors ── */
-
-  /* Surface */
-  --color-surface: initial;
-  --color-surface-default: initial;
-  --color-surface-page: initial;
-  --color-surface-raised: initial;
-  --color-surface-muted: initial;
-  --color-surface-panel: initial;
-  --color-surface-header: initial;
-  --color-surface-overlay: initial;
-  --color-surface-canvas: initial;
-
-  /* Text */
-  --color-text-primary: initial;
-  --color-text-secondary: initial;
-  --color-text-subtle: initial;
-  --color-text-inverse: initial;
-  --color-text-tertiary: initial;
-
-  /* Border */
-  --color-border: initial;
-  --color-border-subtle: initial;
-  --color-border-default: initial;
-  --color-border-bold: initial;
-
-  /* Selection */
-  --color-selection: initial;
-  --color-selection-outline: initial;
-
-  /* Action Primary */
-  --color-action-primary: initial;
-  --color-action-primary-text: initial;
-  --color-action-primary-border: initial;
-
-  /* Action Secondary */
-  --color-action-secondary: initial;
-  --color-action-secondary-text: initial;
-  --color-action-secondary-border: initial;
-
-  /* Action Ghost */
-  --color-action-ghost: initial;
-  --color-action-ghost-text: initial;
-  --color-action-ghost-border: initial;
-
-  /* Accent */
-  --color-accent-primary: initial;
-  --color-accent-primary-hover: initial;
-  --color-accent-focus: initial;
-  --color-accent-soft: initial;
-
-  /* State Info */
-  --color-state-info: initial;
-  --color-state-info-bg: initial;
-  --color-state-info-text: initial;
-  --color-state-info-border: initial;
-
-  /* State Success */
-  --color-state-success: initial;
-  --color-state-success-bg: initial;
-  --color-state-success-text: initial;
-  --color-state-success-border: initial;
-
-  /* State Warning */
-  --color-state-warning: initial;
-  --color-state-warning-bg: initial;
-  --color-state-warning-text: initial;
-  --color-state-warning-border: initial;
-
-  /* State Danger */
-  --color-state-danger: initial;
-  --color-state-danger-bg: initial;
-  --color-state-danger-text: initial;
-  --color-state-danger-border: initial;
-
-  /* Status (alias for state) */
-  --color-status-info: initial;
-  --color-status-info-bg: initial;
-  --color-status-info-text: initial;
-  --color-status-info-border: initial;
-
-  --color-status-success: initial;
-  --color-status-success-bg: initial;
-  --color-status-success-text: initial;
-  --color-status-success-border: initial;
-
-  --color-status-warning: initial;
-  --color-status-warning-bg: initial;
-  --color-status-warning-text: initial;
-  --color-status-warning-border: initial;
-
-  --color-status-danger: initial;
-  --color-status-danger-bg: initial;
-  --color-status-danger-text: initial;
-  --color-status-danger-border: initial;
-
-  /* Data Table */
-  --color-data-table-header: initial;
-  --color-data-table-header-text: initial;
-  --color-data-table-header-divider: initial;
-  --color-data-table-row-hover: initial;
-  --color-data-table-row-selected: initial;
-  --color-data-table-row-border: initial;
-}
-
-/* ------------------------------------------------------------------ */
-/*  Connect TW4 @theme tokens to design system runtime values          */
-/*  These run AFTER theme.css sets the actual token values             */
-/* ------------------------------------------------------------------ */
-:root {
+  /* Border Radius */
   --radius-control: var(--ds-radius-control, 0.375rem);
   --radius-surface: var(--ds-radius-surface, 0.75rem);
+
+  /* Shadows */
   --shadow-surface: var(--elevation-surface, 0 1px 3px rgba(0,0,0,.1));
   --shadow-overlay: var(--elevation-overlay, 0 4px 16px rgba(0,0,0,.15));
+
+  /* Spacing */
   --spacing-density: var(--density-space, 0.5rem);
+
+  /* Min Height */
   --min-height-row-density: var(--density-row-height, 3rem);
+
+  /* Motion Duration */
   --transition-duration-fast: var(--motion-duration-fast, 100ms);
   --transition-duration-medium: var(--motion-duration-medium, 200ms);
   --transition-duration-slow: var(--motion-duration-slow, 400ms);
+
+  /* Motion Easing */
   --transition-timing-function-standard: var(--motion-easing-standard, ease);
   --transition-timing-function-enter: var(--motion-easing-enter, ease-out);
   --transition-timing-function-exit: var(--motion-easing-exit, ease-in);
+
+  /* Ring */
   --ring-color: var(--focus-outline, #3b82f6);
 
-  /* Colors — map to design token values */
-  --color-surface: var(--surface-default-bg, #fff);
-  --color-surface-default: var(--surface-default-bg, #fff);
+  /* ── Colors ── */
+  --color-surface: var(--surface-default-bg, #ffffff);
+  --color-surface-default: var(--surface-default-bg, #ffffff);
   --color-surface-page: var(--surface-page-bg, #f9fafb);
-  --color-surface-raised: var(--surface-raised-bg, #fff);
+  --color-surface-raised: var(--surface-raised-bg, #ffffff);
   --color-surface-muted: var(--surface-muted-bg, #f3f4f6);
-  --color-surface-panel: var(--surface-panel-bg, #fff);
-  --color-surface-header: var(--surface-header-bg, #fff);
+  --color-surface-panel: var(--surface-panel-bg, #ffffff);
+  --color-surface-header: var(--surface-header-bg, #ffffff);
   --color-surface-overlay: var(--surface-overlay-bg, rgba(0,0,0,0.5));
   --color-surface-canvas: var(--surface-canvas-bg, #f1f5f9);
 
   --color-text-primary: var(--text-primary, #111827);
   --color-text-secondary: var(--text-secondary, #6b7280);
   --color-text-subtle: var(--text-subtle, #9ca3af);
-  --color-text-inverse: var(--text-inverse, #fff);
+  --color-text-inverse: var(--text-inverse, #ffffff);
   --color-text-tertiary: var(--text-tertiary, #9ca3af);
 
   --color-border: var(--border-default, #e5e7eb);
@@ -196,7 +71,7 @@
   --color-selection-outline: var(--selection-outline, #3b82f6);
 
   --color-action-primary: var(--action-primary-bg, #2563eb);
-  --color-action-primary-text: var(--action-primary-text, #fff);
+  --color-action-primary-text: var(--action-primary-text, #ffffff);
   --color-action-primary-border: var(--action-primary-border, #2563eb);
 
   --color-action-secondary: var(--action-secondary-bg, #f3f4f6);
@@ -232,7 +107,6 @@
   --color-state-danger-text: var(--state-danger-text, #991b1b);
   --color-state-danger-border: var(--state-danger-border, #fca5a5);
 
-  /* Status aliases */
   --color-status-info: var(--state-info-bg, #eff6ff);
   --color-status-info-bg: var(--state-info-bg, #eff6ff);
   --color-status-info-text: var(--state-info-text, #1e40af);
@@ -253,7 +127,6 @@
   --color-status-danger-text: var(--state-danger-text, #991b1b);
   --color-status-danger-border: var(--state-danger-border, #fca5a5);
 
-  /* Data Table */
   --color-data-table-header: var(--data-table-header-bg, #f9fafb);
   --color-data-table-header-text: var(--data-table-header-text, #374151);
   --color-data-table-header-divider: var(--data-table-header-divider, #e5e7eb);
