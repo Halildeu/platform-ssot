@@ -1,5 +1,6 @@
 @import './styles/theme.css';
 @import './styles/token-bridge.css';
+@import 'tokens/build/dark-mode.css';
 
 @tailwind base;
 @tailwind components;
