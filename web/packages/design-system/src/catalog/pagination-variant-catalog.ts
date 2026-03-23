@@ -80,9 +80,9 @@ export const paginationVariantCatalog: PaginationVariantDescriptor[] = [
   {
     id: 'rounded_outlined',
     name: 'Rounded Outline Set',
-    description: 'MUI outlined + rounded-sm hissine daha yakin, sakin tonlu ve merkezi hizalanmis page button seti.',
+    description: 'MUI outlined + rounded hissine daha yakin, sakin tonlu ve merkezi hizalanmis page button seti.',
     badges: ['MUI-INSPIRED', 'OUTLINE', 'ROUNDED'],
-    variantAxes: ['appearance: outline', 'shape: rounded-sm', 'align: center'],
+    variantAxes: ['appearance: outline', 'shape: rounded', 'align: center'],
     stateModel: ['controlled page state', 'outlined active state', 'balanced page window'],
     previewFocus: ['outlined page chips', 'centered pager', 'rounded button rhythm'],
     regressionFocus: ['active outline styling', 'center alignment', 'shape persistence'],

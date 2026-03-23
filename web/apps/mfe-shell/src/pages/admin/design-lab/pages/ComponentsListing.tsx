@@ -101,7 +101,7 @@ export default function ComponentsListing() {
             <div className={`absolute inset-0 bg-linear-to-br ${group.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
 
             <div className="relative">
-              <div className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl ${group.iconBg} transition-transform duration-300 group-hover:scale-110`}>
+              <div className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl ${group.iconBg} transition-[scale] duration-300 group-hover:scale-110`}>
                 <Box className="h-4.5 w-4.5" />
               </div>
               <Text as="div" className="text-base font-semibold text-text-primary">

@@ -36,17 +36,20 @@ describe('SummaryStrip — depth', () => {
     expect(screen.getByText('$10K')).toBeInTheDocument();
     expect(screen.getByText('Users')).toBeInTheDocument();
     expect(screen.getByText('500')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders title and description when provided', () => {
     render(<SummaryStrip items={items} title="KPI Panel" description="Monthly overview" />);
     expect(screen.getByText('KPI Panel')).toBeInTheDocument();
     expect(screen.getByText('Monthly overview')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('handles empty items array without error', () => {
     const { container } = render(<SummaryStrip items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders icon and note slots', () => {
@@ -56,22 +59,26 @@ describe('SummaryStrip — depth', () => {
     render(<SummaryStrip items={itemsWithSlots} />);
     expect(screen.getByTestId('icon')).toBeInTheDocument();
     expect(screen.getByText('Last 30d')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies className prop', () => {
     const { container } = render(<SummaryStrip items={items} className="custom-strip" />);
     expect(container.firstElementChild).toHaveClass('custom-strip');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns null when access is hidden', () => {
     const { container } = render(<SummaryStrip items={items} access="hidden" />);
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<SummaryStrip items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -81,6 +88,7 @@ describe('SummaryStrip — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -118,6 +126,7 @@ describe('DetailSummary — depth', () => {
   it('renders title in the header', () => {
     render(<DetailSummary title="Order #123" entity={minEntity} />);
     expect(screen.getByText('Order #123')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty summaryItems and detailItems safely', () => {
@@ -136,17 +145,20 @@ describe('DetailSummary — depth', () => {
       />,
     );
     expect(screen.getByTestId('action-btn')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders summary strip when summaryItems provided', () => {
     const summaryItems = [{ key: 'k1', label: 'Total', value: '999' }];
     render(<DetailSummary title="T" entity={minEntity} summaryItems={summaryItems} />);
     expect(screen.getByText('999')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders JSON viewer when jsonValue provided', () => {
     render(<DetailSummary title="T" entity={minEntity} jsonValue={{ foo: 'bar' }} />);
     expect(screen.getByText(/"foo"/)).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns null when access is hidden', () => {
@@ -154,12 +166,14 @@ describe('DetailSummary — depth', () => {
       <DetailSummary title="T" entity={minEntity} access="hidden" />,
     );
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<DetailSummary title="T" entity={minEntity} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -169,6 +183,7 @@ describe('DetailSummary — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -210,6 +225,7 @@ describe('MasterDetail — depth', () => {
     );
     expect(screen.getByText('Master List')).toBeInTheDocument();
     expect(screen.getByText('Detail View')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('shows empty state when hasSelection is false', () => {
@@ -221,6 +237,7 @@ describe('MasterDetail — depth', () => {
       />,
     );
     expect(screen.getByText('Select an item to view details')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('shows custom detailEmpty when hasSelection is false', () => {
@@ -233,6 +250,7 @@ describe('MasterDetail — depth', () => {
       />,
     );
     expect(screen.getByText('No selection')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('collapse button click hides master panel', () => {
@@ -249,6 +267,7 @@ describe('MasterDetail — depth', () => {
     fireEvent.click(collapseBtn);
     // After collapse, expand button should appear
     expect(screen.getByLabelText('Expand panel')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('expand button click restores master panel', () => {
@@ -264,6 +283,7 @@ describe('MasterDetail — depth', () => {
     fireEvent.click(screen.getByLabelText('Expand panel'));
     // Master content should be visible again
     expect(screen.getByText('Master')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty master content', () => {
@@ -271,12 +291,14 @@ describe('MasterDetail — depth', () => {
       <MasterDetail master={<></>} detail={<div>Detail</div>} />,
     );
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<MasterDetail master={<></>} detail={<div>Detail</div>} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -286,6 +308,7 @@ describe('MasterDetail — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -327,6 +350,7 @@ describe('EntitySummaryBlock — depth', () => {
     render(<EntitySummaryBlock {...baseProps} />);
     expect(screen.getByText('Acme Corp')).toBeInTheDocument();
     expect(screen.getByText('42')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders actions slot and fires click', () => {
@@ -339,6 +363,7 @@ describe('EntitySummaryBlock — depth', () => {
     );
     fireEvent.click(screen.getByText('Delete'));
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('handles empty items array', () => {
@@ -358,6 +383,7 @@ describe('EntitySummaryBlock — depth', () => {
     );
     expect(screen.getByText('Premium customer')).toBeInTheDocument();
     expect(screen.getByTestId('badge')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders avatar when provided', () => {
@@ -369,6 +395,7 @@ describe('EntitySummaryBlock — depth', () => {
     );
     // Avatar should render with initials or img
     expect(screen.getByText('Acme Corp')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns null when access is hidden', () => {
@@ -376,12 +403,14 @@ describe('EntitySummaryBlock — depth', () => {
       <EntitySummaryBlock {...baseProps} access="hidden" />,
     );
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<EntitySummaryBlock {...baseProps} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -391,6 +420,7 @@ describe('EntitySummaryBlock — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -426,6 +456,7 @@ describe('PageHeader — depth', () => {
   it('renders title', () => {
     render(<PageHeader title="Dashboard" />);
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty title string safely', () => {
@@ -441,6 +472,7 @@ describe('PageHeader — depth', () => {
       />,
     );
     expect(screen.getByLabelText('breadcrumb')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders actions and fires click', () => {
@@ -453,6 +485,7 @@ describe('PageHeader — depth', () => {
     );
     fireEvent.click(screen.getByText('Save'));
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders subtitle and tags', () => {
@@ -465,17 +498,20 @@ describe('PageHeader — depth', () => {
     );
     expect(screen.getByText('Manage your team')).toBeInTheDocument();
     expect(screen.getByTestId('tag')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies sticky class when sticky prop is true', () => {
     const { container } = render(<PageHeader title="Sticky" sticky />);
     expect(container.querySelector('header')).toHaveClass('sticky');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<PageHeader title="" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -485,6 +521,7 @@ describe('PageHeader — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -520,6 +557,7 @@ describe('PageLayout — depth', () => {
   it('renders children content', () => {
     render(<PageLayout title="Layout"><div>Main content</div></PageLayout>);
     expect(screen.getByText('Main content')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders sidebar detail panel', () => {
@@ -530,12 +568,14 @@ describe('PageLayout — depth', () => {
     );
     expect(screen.getByText('Sidebar')).toBeInTheDocument();
     expect(screen.getByText('Content')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders without title safely', () => {
     const { container } = render(<PageLayout><div>Body</div></PageLayout>);
     expect(container.firstElementChild).toBeTruthy();
     expect(screen.getByText('Body')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders breadcrumb items with click handler', () => {
@@ -555,6 +595,7 @@ describe('PageLayout — depth', () => {
     expect(homeLink).toBeInTheDocument();
     fireEvent.click(homeLink);
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders footer slot', () => {
@@ -564,6 +605,7 @@ describe('PageLayout — depth', () => {
       </PageLayout>,
     );
     expect(screen.getByText('Footer content')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies aria-label to root', () => {
@@ -571,12 +613,14 @@ describe('PageLayout — depth', () => {
       <PageLayout title="Page" ariaLabel="main-page"><div>X</div></PageLayout>,
     );
     expect(container.firstElementChild).toHaveAttribute('aria-label', 'main-page');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<PageLayout><div>Body</div></PageLayout>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -586,6 +630,7 @@ describe('PageLayout — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {

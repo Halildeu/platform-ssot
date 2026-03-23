@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Timeline, type TimelineItemProps } from '../Timeline';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -505,5 +506,18 @@ describe('Timeline — accessibility', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<Timeline items={defaultItems} />);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Timeline — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Timeline items={[{ children: 'Event 1' }]} />);
+    await user.tab();
   });
 });

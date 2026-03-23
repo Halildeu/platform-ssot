@@ -247,3 +247,15 @@ describe('ApprovalCheckpoint — accessibility', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('ApprovalCheckpoint — interaction & role', () => {
+  it('has accessible article role', () => {
+    render(<ApprovalCheckpoint {...baseProps} />);
+    expect(screen.getByRole('article')).toBeInTheDocument();
+  });
+});

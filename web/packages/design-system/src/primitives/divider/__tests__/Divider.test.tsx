@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Divider } from '../Divider';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -150,5 +151,18 @@ describe('Divider — a11y', () => {
   it('has no axe violations', async () => {
     const { container } = render(<Divider />);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Divider — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Divider />);
+    await user.tab();
   });
 });

@@ -513,3 +513,15 @@ describe('Transfer — a11y', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Transfer — interaction & role', () => {
+  it('has accessible group role', () => {
+    render(<Transfer dataSource={defaultItems} />);
+    expect(screen.getAllByRole('group').length).toBeGreaterThan(0);
+  });
+});

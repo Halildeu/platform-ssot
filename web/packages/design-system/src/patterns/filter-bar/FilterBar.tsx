@@ -90,7 +90,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
             )}
             <svg
               className={cn(
-                "h-4 w-4 transition-transform",
+                "h-4 w-4 transition-[rotate]",
                 showMore && "rotate-180",
               )}
               viewBox="0 0 20 20"

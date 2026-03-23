@@ -194,7 +194,7 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
       viewBox="0 0 12 12"
       fill="none"
       className={cn(
-        "shrink-0 transition-transform duration-150",
+        "shrink-0 transition-[rotate] duration-150",
         expanded && "rotate-90",
       )}
     >

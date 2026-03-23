@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 import React from "react";
 import "@testing-library/jest-dom/vitest";
-import { render, fireEvent, within, cleanup } from "@testing-library/react";
+import { render, fireEvent, within, cleanup, screen } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { SearchInput } from "../SearchInput";
 
@@ -137,5 +138,22 @@ describe("SearchInput", () => {
     const input = container.querySelector("input")!;
     fireEvent.change(input, { target: { value: "new" } });
     expect(onChange).toHaveBeenCalledTimes(1);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('SearchInput — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<SearchInput />);
+    await user.type(screen.getByRole('searchbox'), 'hello');
+  });
+  it('has accessible searchbox role', () => {
+    render(<SearchInput />);
+    expect(screen.getByRole('searchbox')).toBeInTheDocument();
   });
 });

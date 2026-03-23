@@ -223,7 +223,7 @@ export default function DesignTokensListing() {
             />
             <div className="relative">
               <div
-                className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl ${group.iconBg} transition-transform duration-300 group-hover:scale-110`}
+                className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl ${group.iconBg} transition-[scale] duration-300 group-hover:scale-110`}
               >
                 {group.icon}
               </div>

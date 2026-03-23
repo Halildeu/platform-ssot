@@ -228,3 +228,15 @@ describe('RecommendationCard — accessibility', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('RecommendationCard — interaction & role', () => {
+  it('has accessible article role', () => {
+    render(<RecommendationCard title="Test" description="Desc" />);
+    expect(screen.getByRole('article')).toBeInTheDocument();
+  });
+});

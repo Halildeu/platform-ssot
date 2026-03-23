@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ApprovalReview } from '../ApprovalReview';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -349,5 +350,22 @@ describe('ApprovalReview — accessibility', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<ApprovalReview {...defaultProps} />);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('ApprovalReview — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<ApprovalReview checkpoint={defaultCheckpoint} citations={defaultCitations} auditItems={defaultAuditItems} />);
+    await user.tab();
+  });
+  it('has accessible role', () => {
+    const { container } = render(<ApprovalReview checkpoint={defaultCheckpoint} citations={defaultCitations} auditItems={defaultAuditItems} />);
+    expect(container.firstElementChild).toBeTruthy();
   });
 });

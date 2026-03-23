@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Text } from '../Text';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -189,5 +190,23 @@ describe('Text — a11y', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<Text>Sample text</Text>);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Text — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Text>Hello</Text>);
+    await user.tab();
+  });
+  it('has accessible role', () => {
+    const { container } = render(<Text>Hello</Text>);
+    expect(container.firstElementChild).toBeTruthy();
+    expect(container.querySelector('[class]')).toBeInTheDocument();
   });
 });

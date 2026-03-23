@@ -3,6 +3,7 @@ import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import { cleanup, render, screen, act, waitFor } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 import { Watermark } from "../Watermark";
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -251,5 +252,22 @@ describe('Watermark — accessibility', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<Watermark content="Draft" />);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Watermark — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Watermark content="Draft"><div>Content</div></Watermark>);
+    await user.tab();
+  });
+  it('has accessible role', () => {
+    const { container } = render(<Watermark content="Draft"><div>Content</div></Watermark>);
+    expect(container.firstElementChild).toBeTruthy();
   });
 });

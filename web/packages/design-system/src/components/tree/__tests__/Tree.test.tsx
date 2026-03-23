@@ -255,3 +255,15 @@ describe('Tree — a11y', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Tree — interaction & role', () => {
+  it('has accessible list role', () => {
+    render(<Tree nodes={sampleNodes} />);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
+});

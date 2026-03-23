@@ -153,3 +153,15 @@ describe('NotificationDrawer — accessibility', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('NotificationDrawer — interaction & role', () => {
+  it('has accessible button role', () => {
+    render(<NotificationDrawer open items={sampleItems} disablePortal />);
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+});

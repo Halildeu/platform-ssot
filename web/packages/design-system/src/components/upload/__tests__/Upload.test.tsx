@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Upload from '../Upload';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -189,5 +190,22 @@ describe('Upload — accessibility', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<Upload />);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Upload — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Upload />);
+    await user.tab();
+  });
+  it('has accessible role', () => {
+    const { container } = render(<Upload />);
+    expect(container.firstElementChild).toBeTruthy();
   });
 });

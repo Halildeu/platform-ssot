@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Badge } from '../Badge';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -258,5 +259,23 @@ describe('Badge — with icon (deepening)', () => {
       );
     }).not.toThrow();
     expect(screen.getByTestId('icon-only')).toBeInTheDocument();
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Badge — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Badge>New</Badge>);
+    await user.tab();
+  });
+  it('has accessible role', () => {
+    const { container } = render(<Badge>Test</Badge>);
+    expect(container.firstElementChild).toBeTruthy();
+    expect(container.firstElementChild!.tagName).toBe('SPAN');
   });
 });

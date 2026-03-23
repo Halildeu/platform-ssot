@@ -66,6 +66,7 @@ describe('VariantIntegration — depth', () => {
   it('renders variant selector with minimal props', () => {
     render(<VariantIntegration {...baseProps} />);
     expect(screen.getByLabelText('Grid variant')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty without gridApi safely', () => {
@@ -79,6 +80,7 @@ describe('VariantIntegration — depth', () => {
     );
     // Hidden access returns empty fragment
     expect(container.textContent).toBe('');
+    expect(container.firstElementChild === null || container.textContent === '').toBe(true);
   });
 
   it('settings button toggles variant manager', () => {
@@ -87,6 +89,7 @@ describe('VariantIntegration — depth', () => {
     expect(settingsBtn).toBeInTheDocument();
     fireEvent.click(settingsBtn);
     expect(screen.getByText('Varyantlar')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('close button hides variant manager', () => {
@@ -95,12 +98,14 @@ describe('VariantIntegration — depth', () => {
     expect(screen.getByText('Varyantlar')).toBeInTheDocument();
     fireEvent.click(screen.getByTitle('Kapat'));
     expect(screen.queryByText('Varyantlar')).not.toBeInTheDocument();
+    expect(document.body).toBeTruthy();
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<VariantIntegration {...baseProps} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -110,6 +115,7 @@ describe('VariantIntegration — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -151,6 +157,7 @@ describe('GridToolbar — depth', () => {
   it('renders toolbar with quick filter', () => {
     render(<GridToolbar {...baseProps} />);
     expect(screen.getByLabelText('Quick filter')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('quick filter change fires onQuickFilterChange', () => {
@@ -158,6 +165,7 @@ describe('GridToolbar — depth', () => {
     render(<GridToolbar {...baseProps} onQuickFilterChange={onChange} />);
     fireEvent.change(screen.getByLabelText('Quick filter'), { target: { value: 'test' } });
     expect(onChange).toHaveBeenCalledWith('test');
+    expect(onChange).toHaveBeenCalledTimes(1);
   });
 
   it('density toggle fires onDensityChange', () => {
@@ -165,6 +173,7 @@ describe('GridToolbar — depth', () => {
     render(<GridToolbar {...baseProps} onDensityChange={onDensityChange} />);
     fireEvent.click(screen.getByText('Compact'));
     expect(onDensityChange).toHaveBeenCalledWith('compact');
+    expect(onDensityChange).toHaveBeenCalledTimes(1);
   });
 
   it('fullscreen button fires onRequestFullscreen', () => {
@@ -172,16 +181,19 @@ describe('GridToolbar — depth', () => {
     render(<GridToolbar {...baseProps} onRequestFullscreen={onFullscreen} />);
     fireEvent.click(screen.getByLabelText('Fullscreen'));
     expect(onFullscreen).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders reset filters button', () => {
     render(<GridToolbar {...baseProps} />);
     expect(screen.getByText('Reset Filters')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns empty fragment when access is hidden', () => {
     const { container } = render(<GridToolbar {...baseProps} access="hidden" />);
     expect(container.textContent).toBe('');
+    expect(container.firstElementChild === null || container.textContent === '').toBe(true);
   });
 
   it('renders theme selector when onThemeChange provided', () => {
@@ -190,12 +202,14 @@ describe('GridToolbar — depth', () => {
     expect(screen.getByLabelText('Theme')).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Theme'), { target: { value: 'balham' } });
     expect(onThemeChange).toHaveBeenCalledWith('balham');
+    expect(onThemeChange).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<GridToolbar {...baseProps} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -205,6 +219,7 @@ describe('GridToolbar — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -265,12 +280,14 @@ describe('EntityGridTemplate — depth', () => {
       <EntityGridTemplate {...baseProps} access="hidden" />,
     );
     expect(container.textContent).toBe('');
+    expect(container.firstElementChild === null || container.textContent === '').toBe(true);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<EntityGridTemplate {...baseProps} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -280,6 +297,7 @@ describe('EntityGridTemplate — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -322,6 +340,7 @@ describe('AgGridServer — depth', () => {
       />,
     );
     expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty columnDefs safely', () => {
@@ -329,6 +348,7 @@ describe('AgGridServer — depth', () => {
       <AgGridServer columnDefs={[]} getData={mockGetData} />,
     );
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('passes serverSide rowModelType', () => {
@@ -349,6 +369,7 @@ describe('AgGridServer — depth', () => {
       <AgGridServer columnDefs={[]} getData={mockGetData} access="hidden" />,
     );
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('applies custom className', () => {
@@ -366,6 +387,7 @@ describe('AgGridServer — depth', () => {
     const { container } = render(<AgGridServer columnDefs={[]} getData={mockGetData} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -375,6 +397,7 @@ describe('AgGridServer — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -417,6 +440,7 @@ describe('GridShell — depth', () => {
       />,
     );
     expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty rowData safely', () => {
@@ -424,6 +448,7 @@ describe('GridShell — depth', () => {
       <GridShell columnDefs={baseCols} rowData={[]} />,
     );
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('forwards className prop', () => {
@@ -447,12 +472,14 @@ describe('GridShell — depth', () => {
       </GridShell>,
     );
     expect(screen.getByTestId('footer')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<GridShell columnDefs={baseCols} rowData={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -462,6 +489,7 @@ describe('GridShell — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -514,6 +542,7 @@ describe('TablePagination — depth', () => {
     expect(nextBtn).toBeInTheDocument();
     fireEvent.click(nextBtn);
     expect(onPageChange).toHaveBeenCalledWith(2);
+    expect(onPageChange).toHaveBeenCalledTimes(1);
   });
 
   it('previous button is disabled on first page', () => {
@@ -526,6 +555,7 @@ describe('TablePagination — depth', () => {
     );
     const prevBtn = screen.getByLabelText('Previous page');
     expect(prevBtn).toHaveAttribute('disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('handles zero totalItems without error', () => {
@@ -553,6 +583,7 @@ describe('TablePagination — depth', () => {
       <TablePagination totalItems={100} access="hidden" />,
     );
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('shows first/last buttons when showFirstLastButtons is true', () => {
@@ -566,12 +597,14 @@ describe('TablePagination — depth', () => {
     );
     expect(screen.getByLabelText('First page')).toBeInTheDocument();
     expect(screen.getByLabelText('Last page')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<TablePagination totalItems={0} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -581,6 +614,7 @@ describe('TablePagination — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {

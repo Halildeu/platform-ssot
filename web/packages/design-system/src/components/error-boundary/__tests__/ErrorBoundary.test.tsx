@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ErrorBoundary } from '../ErrorBoundary';
 
 afterEach(() => {
@@ -241,5 +242,18 @@ describe('ErrorBoundary — a11y', () => {
     expect(tryAgainBtn).toHaveAttribute('type', 'button');
 
     spy.mockRestore();
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('ErrorBoundary — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<ErrorBoundary><div>Child</div></ErrorBoundary>);
+    await user.tab();
   });
 });

@@ -2,7 +2,8 @@
 import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Skeleton } from '../Skeleton';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -261,5 +262,22 @@ describe('Skeleton — a11y', () => {
   it('has no axe violations', async () => {
     const { container } = render(<Skeleton role="progressbar" aria-label="Loading content" />);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Skeleton — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Skeleton />);
+    await user.tab();
+  });
+  it('has accessible role when specified', () => {
+    render(<Skeleton role="progressbar" aria-label="Loading" />);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
   });
 });

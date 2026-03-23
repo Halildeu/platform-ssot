@@ -105,9 +105,9 @@ describe('IconButton — loading state', () => {
 /*  Rounded                                                            */
 /* ------------------------------------------------------------------ */
 
-describe('IconButton — rounded-sm', () => {
+describe('IconButton — rounded', () => {
   it('rounded=true durumunda rounded-full class uygular', () => {
-    const { container } = render(<IconButton icon={TestIcon} label="Test" rounded-sm />);
+    const { container } = render(<IconButton icon={TestIcon} label="Test" rounded />);
     const button = container.querySelector('button');
     expect(button?.className).toContain('rounded-full');
   });

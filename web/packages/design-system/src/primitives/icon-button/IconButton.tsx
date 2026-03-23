@@ -29,7 +29,7 @@ export interface IconButtonProps
   size?: IconButtonSize;
   /** Show a spinner instead of the icon. @default false */
   loading?: boolean;
-  /** Use fully rounded-sm (pill) border radius. @default false */
+  /** Use fully rounded (pill) border radius. @default false */
   rounded?: boolean;
   /**
    * Render via Slot — merges IconButton props onto the child element.
@@ -67,7 +67,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(
       variant = "ghost",
       size = "md",
       loading = false,
-      rounded-sm = false,
+      rounded = false,
       disabled,
       className,
       access = "full",
@@ -91,7 +91,7 @@ export const IconButton = forwardRef<HTMLElement, IconButtonProps>(
       focusRingClass("ring"),
       variantStyles[variant],
       sizeStyles[size],
-      rounded-sm ? "rounded-full" : "rounded-lg",
+      rounded ? "rounded-full" : "rounded-lg",
       className,
     );
 

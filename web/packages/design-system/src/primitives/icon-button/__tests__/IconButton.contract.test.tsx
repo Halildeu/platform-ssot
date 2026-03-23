@@ -91,7 +91,7 @@ describe('IconButton contract', () => {
 
   /* ---- Rounded ---- */
   it('applies rounded-full class when rounded=true', () => {
-    const { container } = render(<IconButton {...defaultProps} rounded-sm />);
+    const { container } = render(<IconButton {...defaultProps} rounded />);
     expect(container.querySelector('button')).toHaveClass('rounded-full');
   });
 

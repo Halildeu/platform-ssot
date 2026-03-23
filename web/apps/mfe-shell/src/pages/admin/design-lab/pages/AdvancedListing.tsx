@@ -68,7 +68,7 @@ export default function AdvancedListing() {
           >
             <div className="absolute inset-0 bg-linear-to-br from-orange-500/10 to-red-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <div className="relative">
-              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 text-orange-600 transition-transform duration-300 group-hover:scale-110">
+              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 text-orange-600 transition-[scale] duration-300 group-hover:scale-110">
                 <Database className="h-4.5 w-4.5" />
               </div>
               <Text

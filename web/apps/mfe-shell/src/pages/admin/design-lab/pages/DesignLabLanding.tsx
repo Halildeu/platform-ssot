@@ -366,7 +366,7 @@ export default function DesignLabLanding() {
               <div className={`absolute inset-0 bg-linear-to-br ${card.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
 
               <div className="relative">
-                <div className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl ${card.iconBg} transition-transform duration-300 group-hover:scale-110`}>
+                <div className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl ${card.iconBg} transition-[scale] duration-300 group-hover:scale-110`}>
                   {card.icon}
                 </div>
                 <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -394,7 +394,7 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/icons")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 transition-transform duration-300 group-hover:scale-110">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 transition-[scale] duration-300 group-hover:scale-110">
             <Sparkles className="h-5 w-5 text-amber-600" />
           </div>
           <div className="min-w-0 flex-1">
@@ -412,7 +412,7 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/bundle-size")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 transition-transform duration-300 group-hover:scale-110">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-rose-500/10 transition-[scale] duration-300 group-hover:scale-110">
             <Package className="h-5 w-5 text-rose-600" />
           </div>
           <div className="min-w-0 flex-1">
@@ -430,7 +430,7 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/quality-dashboard")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 transition-transform duration-300 group-hover:scale-110">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 transition-[scale] duration-300 group-hover:scale-110">
             <Award className="h-5 w-5 text-indigo-600" />
           </div>
           <div className="min-w-0 flex-1">
@@ -448,7 +448,7 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/observability")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 transition-transform duration-300 group-hover:scale-110">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10 transition-[scale] duration-300 group-hover:scale-110">
             <Activity className="h-5 w-5 text-cyan-600" />
           </div>
           <div className="min-w-0 flex-1">
@@ -466,7 +466,7 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/governance")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 transition-transform duration-300 group-hover:scale-110">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 transition-[scale] duration-300 group-hover:scale-110">
             <ShieldCheck className="h-5 w-5 text-emerald-600" />
           </div>
           <div className="min-w-0 flex-1">
@@ -484,7 +484,7 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/intelligence")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 transition-transform duration-300 group-hover:scale-110">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-500/10 transition-[scale] duration-300 group-hover:scale-110">
             <Brain className="h-5 w-5 text-violet-600" />
           </div>
           <div className="min-w-0 flex-1">
@@ -502,7 +502,7 @@ export default function DesignLabLanding() {
           onClick={() => navigate("/admin/design-lab/leadership")}
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
         >
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 transition-transform duration-300 group-hover:scale-110">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 transition-[scale] duration-300 group-hover:scale-110">
             <Trophy className="h-5 w-5 text-amber-600" />
           </div>
           <div className="min-w-0 flex-1">

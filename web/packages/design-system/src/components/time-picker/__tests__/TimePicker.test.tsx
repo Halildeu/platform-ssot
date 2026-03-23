@@ -205,3 +205,17 @@ describe('TimePicker — a11y', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('TimePicker — interaction & role', () => {
+  it('has accessible role', () => {
+    const { container } = render(<TimePicker />);
+    expect(container.querySelector('input[type="time"]')).toBeInTheDocument();
+    const allGenericRoles = screen.queryAllByRole('generic');
+    expect(allGenericRoles.length).toBeGreaterThan(0);
+  });
+});

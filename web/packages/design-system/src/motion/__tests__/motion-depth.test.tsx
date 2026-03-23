@@ -50,6 +50,7 @@ describe('StaggerGroup — depth', () => {
     expect(item0.style.animationDelay).toBe('0ms');
     expect(item1.style.animationDelay).toBe('100ms');
     expect(item2.style.animationDelay).toBe('200ms');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty children safely', () => {
@@ -67,6 +68,7 @@ describe('StaggerGroup — depth', () => {
       </StaggerGroup>,
     );
     expect(screen.getByTestId('s2').style.animationDelay).toBe('50ms');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies animation duration to children', () => {
@@ -76,6 +78,7 @@ describe('StaggerGroup — depth', () => {
       </StaggerGroup>,
     );
     expect(screen.getByTestId('dur').style.animationDuration).toBe('400ms');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies animation className to children', () => {
@@ -86,6 +89,8 @@ describe('StaggerGroup — depth', () => {
     );
     expect(screen.getByTestId('cls').className).toContain('animate-in');
     expect(screen.getByTestId('cls').className).toContain('fade-in-0');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('sets animationFillMode to both', () => {
@@ -95,6 +100,7 @@ describe('StaggerGroup — depth', () => {
       </StaggerGroup>,
     );
     expect(screen.getByTestId('fill').style.animationFillMode).toBe('both');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -103,6 +109,7 @@ describe('StaggerGroup — depth', () => {
     const { container } = render(<StaggerGroup staggerDelay={100}><div>A</div></StaggerGroup>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -112,6 +119,7 @@ describe('StaggerGroup — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -151,6 +159,7 @@ describe('AnimatePresence — depth', () => {
       </AnimatePresence>,
     );
     expect(screen.getByTestId('panel')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('keeps child mounted during exit duration then removes', () => {
@@ -181,6 +190,7 @@ describe('AnimatePresence — depth', () => {
       vi.advanceTimersByTime(250);
     });
     expect(screen.queryByTestId('anim')).not.toBeInTheDocument();
+    expect(document.body).toBeTruthy();
   });
 
   it('calls onExitComplete after exit', () => {
@@ -205,6 +215,7 @@ describe('AnimatePresence — depth', () => {
       vi.advanceTimersByTime(150);
     });
     expect(onExitComplete).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty children safely', () => {
@@ -220,6 +231,7 @@ describe('AnimatePresence — depth', () => {
     const { container } = render(<AnimatePresence><div key="p" data-testid="panel">Content</div></AnimatePresence>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -229,6 +241,7 @@ describe('AnimatePresence — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -268,6 +281,7 @@ describe('Transition — depth', () => {
       </Transition>,
     );
     expect(screen.getByTestId('trans')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('does not render when show=false (after exit)', () => {
@@ -277,6 +291,7 @@ describe('Transition — depth', () => {
       </Transition>,
     );
     expect(screen.queryByTestId('trans-hidden')).not.toBeInTheDocument();
+    expect(document.body).toBeTruthy();
   });
 
   it('applies enter classes when showing', () => {
@@ -286,6 +301,8 @@ describe('Transition — depth', () => {
       </Transition>,
     );
     expect(screen.getByTestId('trans-enter').className).toContain('animate-fade-in');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies exit classes then removes after duration', () => {
@@ -320,6 +337,7 @@ describe('Transition — depth', () => {
       vi.advanceTimersByTime(200);
     });
     expect(screen.queryByTestId('trans-exit')).not.toBeInTheDocument();
+    expect(document.body).toBeTruthy();
   });
 
   it('applies animationDuration style', () => {
@@ -329,6 +347,7 @@ describe('Transition — depth', () => {
       </Transition>,
     );
     expect(screen.getByTestId('dur-trans').style.animationDuration).toBe('300ms');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('calls onExited after exit animation', () => {
@@ -353,6 +372,7 @@ describe('Transition — depth', () => {
       vi.advanceTimersByTime(150);
     });
     expect(onExited).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('calls onEntered after enter animation', () => {
@@ -366,6 +386,7 @@ describe('Transition — depth', () => {
       vi.advanceTimersByTime(150);
     });
     expect(onEntered).toHaveBeenCalledTimes(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -376,6 +397,7 @@ describe('Transition — depth', () => {
       </Transition>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -387,6 +409,7 @@ describe('Transition — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {

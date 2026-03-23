@@ -222,3 +222,15 @@ describe('TreeTable — accessibility', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('TreeTable — interaction & role', () => {
+  it('has accessible table role', () => {
+    render(<TreeTable nodes={nodes} columns={columns} />);
+    expect(screen.getByRole('table')).toBeInTheDocument();
+  });
+});

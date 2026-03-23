@@ -60,7 +60,7 @@ const entry: DesignLabComponentDocEntry = {
     "size: sm | md",
     "density: default | compact | simple",
     "appearance: default | outline | ghost",
-    "shape: rounded-sm | pill",
+    "shape: rounded | pill",
     "align: start | center | end",
     "built-ins: size changer | quick jumper",
     "responsive: fixed | compact viewport",

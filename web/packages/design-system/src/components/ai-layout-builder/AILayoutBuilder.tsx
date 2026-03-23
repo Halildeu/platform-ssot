@@ -208,7 +208,7 @@ const BlockCard: React.FC<{
                 fill="none"
                 aria-hidden="true"
                 className={cn(
-                  "transition-transform duration-200",
+                  "transition-[rotate] duration-200",
                   collapsed && "-rotate-90",
                 )}
               >

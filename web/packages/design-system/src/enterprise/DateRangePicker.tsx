@@ -275,7 +275,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
           width="12"
           height="12"
           viewBox="0 0 12 12"
-          className={cn('transition-transform', open && 'rotate-180')}
+          className={cn('transition-[rotate]', open && 'rotate-180')}
           aria-hidden="true"
         >
           <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />

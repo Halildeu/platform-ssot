@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { SummaryStrip, type SummaryStripItem } from '../SummaryStrip';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -173,5 +174,22 @@ describe('SummaryStrip — accessibility', () => {
   it('title renders as heading when provided', () => {
     render(<SummaryStrip items={defaultItems} title="Metrics" />);
     expect(screen.getByText('Metrics')).toBeInTheDocument();
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('SummaryStrip — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<SummaryStrip items={defaultItems} />);
+    await user.tab();
+  });
+  it('has accessible article role', () => {
+    render(<SummaryStrip items={defaultItems} />);
+    expect(screen.getAllByRole('article').length).toBeGreaterThan(0);
   });
 });

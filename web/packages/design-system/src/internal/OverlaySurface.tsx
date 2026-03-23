@@ -125,7 +125,7 @@ export const OverlaySurface: React.FC<OverlaySurfaceProps> = ({
     >
       <div
         className={cn(
-          "transition-transform duration-300",
+          "transition-[translate] duration-300",
           placement === "right" && (open ? "translate-x-0" : "translate-x-full"),
           placement === "left" && (open ? "translate-x-0" : "-translate-x-full"),
           surfaceClassName,

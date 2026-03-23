@@ -2,6 +2,7 @@
 import React from "react";
 import "@testing-library/jest-dom/vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from "vitest";
 import { Stack, HStack, VStack } from "../Stack";
 import { expectNoA11yViolations } from "../../../__tests__/a11y-utils";
@@ -151,5 +152,22 @@ describe("VStack", () => {
   it("has no accessibility violations", async () => {
     const { container } = render(<VStack><span>A</span></VStack>);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Stack — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Stack><button>Click</button></Stack>);
+    await user.click(screen.getByRole('button'));
+  });
+  it('has accessible role when specified', () => {
+    render(<Stack role="group"><span>A</span></Stack>);
+    expect(screen.getByRole('group')).toBeInTheDocument();
   });
 });

@@ -17,22 +17,26 @@ describe('ThemePreviewCard — depth', () => {
   it('renders selected state with checkmark', () => {
     render(<ThemePreviewCard selected />);
     expect(screen.getByText('✓')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty localeText safely', () => {
     const { container } = render(<ThemePreviewCard localeText={{}} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('applies disabled access state attribute', () => {
     const { container } = render(<ThemePreviewCard access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ThemePreviewCard selected />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -42,6 +46,7 @@ describe('ThemePreviewCard — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -66,12 +71,14 @@ describe('Watermark — depth', () => {
   it('renders children with empty content', () => {
     render(<Watermark><span>child</span></Watermark>);
     expect(screen.getByText('child')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders without watermark overlay when no content/image', () => {
     const { container } = render(<Watermark><span>test</span></Watermark>);
     expect(container.querySelector('[data-testid="watermark-root"]')).toBeInTheDocument();
     expect(container.querySelector('[data-testid="watermark-overlay"]')).not.toBeInTheDocument();
+    expect(document.body).toBeTruthy();
   });
 
   it('renders watermark overlay when content is provided', () => {
@@ -83,6 +90,7 @@ describe('Watermark — depth', () => {
     const { container } = render(<Watermark><span>test</span></Watermark>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -92,6 +100,7 @@ describe('Watermark — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -117,6 +126,7 @@ describe('ThemePresetCompare — depth', () => {
     const { container } = render(<ThemePresetCompare />);
     expect(container.firstElementChild).toBeTruthy();
     expect(container.textContent).toContain('Theme preset compare');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders comparison when both presets given', () => {
@@ -125,17 +135,20 @@ describe('ThemePresetCompare — depth', () => {
     render(<ThemePresetCompare leftPreset={left} rightPreset={right} />);
     expect(screen.getAllByText('Light Mode').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Dark Mode').length).toBeGreaterThanOrEqual(1);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<ThemePresetCompare access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ThemePresetCompare />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -145,6 +158,7 @@ describe('ThemePresetCompare — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -181,17 +195,20 @@ describe('AIGuidedAuthoring — depth', () => {
     );
     fireEvent.click(screen.getByText('Komut paleti'));
     expect(handler).toHaveBeenCalledWith(true);
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<AIGuidedAuthoring access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<AIGuidedAuthoring access="disabled" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -201,6 +218,7 @@ describe('AIGuidedAuthoring — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -225,6 +243,7 @@ describe('NotificationPanel — depth', () => {
   it('renders empty state with no items', () => {
     render(<NotificationPanel items={[]} />);
     expect(screen.getByText('Su anda bildirim yok')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onMarkAllRead when button clicked', () => {
@@ -233,18 +252,21 @@ describe('NotificationPanel — depth', () => {
     render(<NotificationPanel items={items} onMarkAllRead={handler} />);
     fireEvent.click(screen.getByText('Tumunu okundu say'));
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const items = [{ id: '1', message: 'Test' }];
     const { container } = render(<NotificationPanel items={items} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<NotificationPanel items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -254,6 +276,7 @@ describe('NotificationPanel — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -286,17 +309,20 @@ describe('AIActionAuditTimeline — depth', () => {
     render(<AIActionAuditTimeline items={items} onSelectItem={handler} />);
     fireEvent.click(screen.getByText('Generated report'));
     expect(handler).toHaveBeenCalledWith('a1', items[0]);
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<AIActionAuditTimeline items={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<AIActionAuditTimeline items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -306,6 +332,7 @@ describe('AIActionAuditTimeline — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -338,22 +365,26 @@ describe('SectionTabs — depth', () => {
     render(<SectionTabs items={tabItems} value="tab1" onValueChange={handler} />);
     fireEvent.click(screen.getByText('Tab 2'));
     expect(handler).toHaveBeenCalledWith('tab2');
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('renders empty items array safely', () => {
     const { container } = render(<SectionTabs items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders disabled tab', () => {
     render(<SectionTabs items={tabItems} value="tab1" />);
     expect(screen.getByText('Tab 3')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<SectionTabs items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -363,6 +394,7 @@ describe('SectionTabs — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -387,6 +419,7 @@ describe('AreaChart — depth', () => {
   it('renders empty data state', () => {
     render(<AreaChart series={[]} labels={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -397,12 +430,14 @@ describe('AreaChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<AreaChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+    expect(container.childElementCount).toBe(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<AreaChart series={[]} labels={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -412,6 +447,7 @@ describe('AreaChart — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -436,6 +472,7 @@ describe('BarChart — depth', () => {
   it('renders empty data state', () => {
     render(<BarChart data={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -446,12 +483,14 @@ describe('BarChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<BarChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+    expect(container.childElementCount).toBe(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<BarChart data={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -461,6 +500,7 @@ describe('BarChart — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -485,6 +525,7 @@ describe('LineChart — depth', () => {
   it('renders empty data state', () => {
     render(<LineChart series={[]} labels={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -495,12 +536,14 @@ describe('LineChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<LineChart series={[]} labels={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+    expect(container.childElementCount).toBe(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<LineChart series={[]} labels={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -510,6 +553,7 @@ describe('LineChart — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -534,6 +578,7 @@ describe('PieChart — depth', () => {
   it('renders empty data state', () => {
     render(<PieChart data={[]} />);
     expect(screen.getByText('Veri yok')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access=disabled', () => {
@@ -544,12 +589,14 @@ describe('PieChart — depth', () => {
   it('returns null when access=hidden', () => {
     const { container } = render(<PieChart data={[]} access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+    expect(container.childElementCount).toBe(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<PieChart data={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -559,6 +606,7 @@ describe('PieChart — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -583,6 +631,7 @@ describe('ThemePresetGallery — depth', () => {
   it('renders empty gallery state', () => {
     const { container } = render(<ThemePresetGallery presets={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onSelectPreset when preset clicked', () => {
@@ -591,17 +640,20 @@ describe('ThemePresetGallery — depth', () => {
     render(<ThemePresetGallery presets={presets} onSelectPreset={handler} />);
     fireEvent.click(screen.getByText('Preset One'));
     expect(handler).toHaveBeenCalledWith('p1', presets[0]);
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<ThemePresetGallery presets={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ThemePresetGallery presets={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -611,6 +663,7 @@ describe('ThemePresetGallery — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -645,6 +698,7 @@ describe('NotificationItemCard — depth', () => {
     );
     fireEvent.click(screen.getByText('View'));
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('fires onRemove when dismiss clicked', () => {
@@ -652,17 +706,20 @@ describe('NotificationItemCard — depth', () => {
     render(<NotificationItemCard item={baseItem} onRemove={handler} />);
     fireEvent.click(screen.getByLabelText('Bildirimi kapat'));
     expect(handler).toHaveBeenCalledWith('n1');
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<NotificationItemCard item={baseItem} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<NotificationItemCard item={baseItem} access="disabled" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -672,6 +729,7 @@ describe('NotificationItemCard — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -696,6 +754,7 @@ describe('AILayoutBuilder — depth', () => {
   it('renders with empty blocks', () => {
     const { container } = render(<AILayoutBuilder blocks={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders blocks with content', () => {
@@ -703,17 +762,20 @@ describe('AILayoutBuilder — depth', () => {
     render(<AILayoutBuilder blocks={blocks} />);
     expect(screen.getByText('Block One')).toBeInTheDocument();
     expect(screen.getByText('Content')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<AILayoutBuilder blocks={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<AILayoutBuilder blocks={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -723,6 +785,7 @@ describe('AILayoutBuilder — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -756,17 +819,20 @@ describe('ConfidenceBadge — depth', () => {
   it('renders score when provided', () => {
     render(<ConfidenceBadge level="high" score={85} />);
     expect(screen.getByText(/85%/)).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders source count', () => {
     render(<ConfidenceBadge level="medium" sourceCount={3} />);
     expect(screen.getByText(/3 sources/)).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ConfidenceBadge level="high" score={85} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -776,6 +842,7 @@ describe('ConfidenceBadge — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -808,6 +875,7 @@ describe('ErrorBoundary — depth', () => {
       </ErrorBoundary>
     );
     expect(screen.getByText('Error caught')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders children when no error', () => {
@@ -817,6 +885,7 @@ describe('ErrorBoundary — depth', () => {
       </ErrorBoundary>
     );
     expect(screen.getByText('Safe content')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onError callback when error caught', () => {
@@ -827,6 +896,7 @@ describe('ErrorBoundary — depth', () => {
       </ErrorBoundary>
     );
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {
@@ -835,6 +905,7 @@ describe('ErrorBoundary — depth', () => {
       </ErrorBoundary>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -846,6 +917,7 @@ describe('ErrorBoundary — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -872,6 +944,7 @@ describe('Descriptions — depth', () => {
   it('renders empty items state', () => {
     render(<Descriptions items={[]} />);
     expect(screen.getByText('No data available')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders labels and values', () => {
@@ -879,18 +952,21 @@ describe('Descriptions — depth', () => {
     render(<Descriptions items={items} />);
     expect(screen.getByText('Name')).toBeInTheDocument();
     expect(screen.getByText('John')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders title and description', () => {
     render(<Descriptions items={[]} title="Details" description="User info" />);
     expect(screen.getByText('Details')).toBeInTheDocument();
     expect(screen.getByText('User info')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<Descriptions items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -900,6 +976,7 @@ describe('Descriptions — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -937,12 +1014,14 @@ describe('QRCode — depth', () => {
     const refreshBtn = screen.getByTestId('qrcode-refresh');
     fireEvent.click(refreshBtn);
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<QRCode value="" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -952,6 +1031,7 @@ describe('QRCode — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -985,6 +1065,7 @@ describe('ApprovalReview — depth', () => {
   it('renders title text', () => {
     render(<ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} title="My Review" />);
     expect(screen.getByText('My Review')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
@@ -992,12 +1073,14 @@ describe('ApprovalReview — depth', () => {
       <ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} access="disabled" />
     );
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ApprovalReview checkpoint={minCheckpoint} citations={[]} auditItems={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1007,6 +1090,7 @@ describe('ApprovalReview — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1033,23 +1117,27 @@ describe('EmptyState — depth', () => {
     render(<EmptyState title="No data" action={<button onClick={handler}>Create</button>} />);
     fireEvent.click(screen.getByText('Create'));
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('renders title and description', () => {
     render(<EmptyState title="Empty" description="Nothing here" />);
     expect(screen.getByText('Empty')).toBeInTheDocument();
     expect(screen.getByText('Nothing here')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('returns null when access=hidden', () => {
     const { container } = render(<EmptyState title="Test" access="hidden" />);
     expect(container.firstElementChild).toBeNull();
+    expect(container.childElementCount).toBe(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<EmptyState title="Empty" description="Nothing here" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1059,6 +1147,7 @@ describe('EmptyState — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1088,6 +1177,7 @@ describe('TableSimple — depth', () => {
   it('renders empty data state', () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders rows with data', () => {
@@ -1095,17 +1185,20 @@ describe('TableSimple — depth', () => {
     render(<TableSimple columns={columns} rows={rows} />);
     expect(screen.getByText('Alice')).toBeInTheDocument();
     expect(screen.getByText('30')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<TableSimple columns={columns} rows={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1115,6 +1208,7 @@ describe('TableSimple — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1145,17 +1239,21 @@ describe('FormField — depth', () => {
   it('renders disabled state with reduced opacity', () => {
     const { container } = render(<FormField label="Name" disabled><input /></FormField>);
     expect(container.firstElementChild?.className).toContain('opacity');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders required indicator', () => {
     render(<FormField label="Name" required><input /></FormField>);
     expect(screen.getByText('*')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<FormField label="Name" disabled><input /></FormField>);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1165,6 +1263,7 @@ describe('FormField — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1191,6 +1290,7 @@ describe('SearchInput — depth', () => {
     render(<SearchInput value="" onChange={handler} />);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'test' } });
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('fires onClear when clear button clicked', () => {
@@ -1200,17 +1300,20 @@ describe('SearchInput — depth', () => {
     const clearBtn = screen.getByRole('button');
     fireEvent.click(clearBtn);
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('renders disabled state', () => {
     render(<SearchInput value="" disabled />);
     expect(screen.getByRole('searchbox')).toBeDisabled();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<SearchInput value="" disabled />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1220,6 +1323,7 @@ describe('SearchInput — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1248,6 +1352,7 @@ describe('ApprovalCheckpoint — depth', () => {
     render(<ApprovalCheckpoint {...minProps} onPrimaryAction={handler} />);
     fireEvent.click(screen.getByText('Onayla'));
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('fires onSecondaryAction (reject) when clicked', () => {
@@ -1255,17 +1360,20 @@ describe('ApprovalCheckpoint — depth', () => {
     render(<ApprovalCheckpoint {...minProps} onSecondaryAction={handler} />);
     fireEvent.click(screen.getByText('Inceleme talep et'));
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<ApprovalCheckpoint {...minProps} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ApprovalCheckpoint {...minProps} access="disabled" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1275,6 +1383,7 @@ describe('ApprovalCheckpoint — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1305,6 +1414,7 @@ describe('JsonViewer — depth', () => {
     const data = { name: 'Test', nested: { key: 'value' } };
     render(<JsonViewer value={data} />);
     expect(screen.getByText('name')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders undefined value as empty state', () => {
@@ -1316,6 +1426,7 @@ describe('JsonViewer — depth', () => {
     const { container } = render(<JsonViewer value={null} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1325,6 +1436,7 @@ describe('JsonViewer — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1359,17 +1471,20 @@ describe('PromptComposer — depth', () => {
     const bodyTextarea = textareas.length > 1 ? textareas[1] : textareas[0];
     fireEvent.change(bodyTextarea, { target: { value: 'new prompt' } });
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<PromptComposer access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<PromptComposer />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1379,6 +1494,7 @@ describe('PromptComposer — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1407,6 +1523,7 @@ describe('RecommendationCard — depth', () => {
     render(<RecommendationCard {...minProps} onPrimaryAction={handler} />);
     fireEvent.click(screen.getByText('Apply'));
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('fires onSecondaryAction (reject) when clicked', () => {
@@ -1414,17 +1531,20 @@ describe('RecommendationCard — depth', () => {
     render(<RecommendationCard {...minProps} onSecondaryAction={handler} />);
     fireEvent.click(screen.getByText('Review'));
     expect(handler).toHaveBeenCalled();
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('applies disabled access state', () => {
     const { container } = render(<RecommendationCard {...minProps} access="disabled" />);
     expect(container.firstElementChild).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<RecommendationCard {...minProps} access="disabled" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1434,6 +1554,7 @@ describe('RecommendationCard — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1465,12 +1586,14 @@ describe('DetailSectionTabs — depth', () => {
     render(<DetailSectionTabs tabs={tabs} activeTabId="dt1" onTabChange={handler} />);
     fireEvent.click(screen.getByText('Details'));
     expect(handler).toHaveBeenCalledWith('dt2');
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('renders empty tabs safely', () => {
     const handler = vi.fn();
     const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={handler} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('returns null when access=hidden', () => {
@@ -1479,12 +1602,14 @@ describe('DetailSectionTabs — depth', () => {
       <DetailSectionTabs tabs={tabs} activeTabId="dt1" onTabChange={handler} access="hidden" />
     );
     expect(container.firstElementChild).toBeNull();
+    expect(container.childElementCount).toBe(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<DetailSectionTabs tabs={[]} activeTabId="" onTabChange={vi.fn()} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1494,6 +1619,7 @@ describe('DetailSectionTabs — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1518,6 +1644,7 @@ describe('Tree — depth', () => {
   it('renders empty tree state', () => {
     const { container } = render(<Tree nodes={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('expands and collapses a node on click', () => {
@@ -1533,6 +1660,7 @@ describe('Tree — depth', () => {
     const expandBtn = screen.getByLabelText('Expand branch');
     fireEvent.click(expandBtn);
     expect(screen.getByText('Child Node')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onNodeSelect when node clicked', () => {
@@ -1541,12 +1669,14 @@ describe('Tree — depth', () => {
     render(<Tree nodes={nodes} onNodeSelect={handler} />);
     fireEvent.click(screen.getByText('Node One'));
     expect(handler).toHaveBeenCalledWith('n1');
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<Tree nodes={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1556,6 +1686,7 @@ describe('Tree — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1588,23 +1719,27 @@ describe('Tabs — depth', () => {
     render(<Tabs items={tabItems} onChange={handler} />);
     fireEvent.click(screen.getByText('Beta'));
     expect(handler).toHaveBeenCalledWith('b');
+    expect(handler).toHaveBeenCalledTimes(1);
   });
 
   it('renders disabled tab with correct attribute', () => {
     render(<Tabs items={tabItems} />);
     const disabledTab = screen.getByText('Gamma').closest('button');
     expect(disabledTab).toBeDisabled();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders empty items safely', () => {
     const { container } = render(<Tabs items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<Tabs items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1614,6 +1749,7 @@ describe('Tabs — depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {

@@ -504,7 +504,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                           key={color}
                           type="button"
                           className={cn(
-                            "rounded-xs border transition-transform duration-100",
+                            "rounded-xs border transition-[scale] duration-100",
                             `hover:scale-110 ${focusRingClass("ring")}`,
                             color.toLowerCase() === currentValue.toLowerCase()
                               ? "border-[var(--border-active,#3b82f6)] ring-1 ring-[var(--ring-color,#3b82f6)]"

@@ -335,3 +335,15 @@ describe('PageLayout — accessibility', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('PageLayout — interaction & role', () => {
+  it('has accessible banner role', () => {
+    render(<PageLayout title="My Page" />);
+    expect(screen.getByRole('banner')).toBeInTheDocument();
+  });
+});

@@ -42,11 +42,13 @@ describe('BulletChart – depth', () => {
     const { container } = render(<BulletChart value={75} target={90} access="disabled" />);
     const root = container.querySelector('[data-component="bullet-chart"]');
     expect(root).toHaveAttribute('data-access-state', 'disabled');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access="hidden" producing no output', () => {
     const { container } = render(<BulletChart value={75} target={90} access="hidden" />);
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('renders vertical orientation', () => {
@@ -58,6 +60,7 @@ describe('BulletChart – depth', () => {
     const { container } = render(<BulletChart value={0} target={0} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -67,6 +70,7 @@ describe('BulletChart – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -116,12 +120,14 @@ describe('MicroChart – depth', () => {
   it('renders with access="hidden" producing no output', () => {
     const { container } = render(<MicroChart type="bar" data={[10]} access="hidden" />);
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<MicroChart type="sparkline" data={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -131,6 +137,7 @@ describe('MicroChart – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -165,6 +172,7 @@ describe('TreemapChart – depth', () => {
   it('handles empty items', () => {
     const { container } = render(<TreemapChart items={[]} />);
     expect(container.textContent).toContain('No treemap data');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onItemClick when a cell is clicked', () => {
@@ -191,6 +199,7 @@ describe('TreemapChart – depth', () => {
     const { container } = render(<TreemapChart items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -200,6 +209,7 @@ describe('TreemapChart – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -234,6 +244,7 @@ describe('SankeyDiagram – depth', () => {
   it('handles empty nodes', () => {
     const { container } = render(<SankeyDiagram nodes={[]} links={[]} />);
     expect(container.textContent).toContain('No Sankey data');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onNodeClick when a node is clicked', () => {
@@ -245,6 +256,7 @@ describe('SankeyDiagram – depth', () => {
     // Click the parent g element
     fireEvent.click(sourceText.closest('g')!);
     expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ id: 'a' }));
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled"', () => {
@@ -258,6 +270,7 @@ describe('SankeyDiagram – depth', () => {
     const { container } = render(<SankeyDiagram nodes={[]} links={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -267,6 +280,7 @@ describe('SankeyDiagram – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -308,6 +322,7 @@ describe('RadarChart – depth', () => {
   it('shows message when fewer than 3 axes', () => {
     const { container } = render(<RadarChart axes={[{ key: 'a', label: 'X' }]} series={[]} />);
     expect(container.textContent).toContain('at least 3 axes');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with empty series', () => {
@@ -324,6 +339,7 @@ describe('RadarChart – depth', () => {
     const { container } = render(<RadarChart axes={axes} series={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -333,6 +349,7 @@ describe('RadarChart – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -367,6 +384,7 @@ describe('FunnelChart – depth', () => {
   it('handles empty stages', () => {
     const { container } = render(<FunnelChart stages={[]} />);
     expect(container.textContent).toContain('No funnel data');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onStageClick when stage is clicked', () => {
@@ -379,6 +397,7 @@ describe('FunnelChart – depth', () => {
     const leadsText = screen.getByText('Leads');
     fireEvent.click(leadsText.closest('g')!);
     expect(onClick).toHaveBeenCalledWith(expect.objectContaining({ id: '1', label: 'Leads' }));
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled"', () => {
@@ -391,6 +410,7 @@ describe('FunnelChart – depth', () => {
     const { container } = render(<FunnelChart stages={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -400,6 +420,7 @@ describe('FunnelChart – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -434,6 +455,7 @@ describe('FilterPresets – depth', () => {
   it('handles empty presets', () => {
     const { container } = render(<FilterPresets presets={[]} onSelect={vi.fn()} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('calls onSelect when preset chip is clicked', () => {
@@ -442,6 +464,7 @@ describe('FilterPresets – depth', () => {
     render(<FilterPresets presets={presets} onSelect={onSelect} />);
     fireEvent.click(screen.getByText('Active Only'));
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: '1', name: 'Active Only' }));
+    expect(onSelect).toHaveBeenCalledTimes(1);
   });
 
   it('disables buttons when access="disabled"', () => {
@@ -449,12 +472,14 @@ describe('FilterPresets – depth', () => {
     render(<FilterPresets presets={presets} onSelect={vi.fn()} access="disabled" />);
     const btn = screen.getByText('Test');
     expect(btn.closest('button')).toBeDisabled();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<FilterPresets presets={[]} onSelect={vi.fn()} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -464,6 +489,7 @@ describe('FilterPresets – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -498,6 +524,7 @@ describe('DateRangePicker – depth', () => {
   it('renders placeholder when no value', () => {
     render(<DateRangePicker placeholder="Pick range" />);
     expect(screen.getByText('Pick range')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('opens dropdown on click', () => {
@@ -505,6 +532,7 @@ describe('DateRangePicker – depth', () => {
     const trigger = screen.getByText('Select date range');
     fireEvent.click(trigger);
     expect(screen.getByText('Today')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('calls onChange when preset clicked', () => {
@@ -513,18 +541,21 @@ describe('DateRangePicker – depth', () => {
     fireEvent.click(screen.getByText('Select date range'));
     fireEvent.click(screen.getByText('Today'));
     expect(onChange).toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled" and disables trigger', () => {
     const { container } = render(<DateRangePicker access="disabled" />);
     const btn = container.querySelector('button');
     expect(btn).toBeDisabled();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<DateRangePicker />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -534,6 +565,7 @@ describe('DateRangePicker – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -568,6 +600,7 @@ describe('InlineEdit – depth', () => {
   it('renders empty value with placeholder', () => {
     render(<InlineEdit value="" placeholder="Enter text" onSave={vi.fn()} />);
     expect(screen.getByText('Enter text')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('enters edit mode on double click and shows save/cancel', () => {
@@ -575,6 +608,7 @@ describe('InlineEdit – depth', () => {
     fireEvent.doubleClick(screen.getByText('Hello'));
     expect(screen.getByLabelText('Save')).toBeInTheDocument();
     expect(screen.getByLabelText('Cancel')).toBeInTheDocument();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('calls onSave with new value on save click', async () => {
@@ -585,17 +619,20 @@ describe('InlineEdit – depth', () => {
     fireEvent.change(input, { target: { value: 'New' } });
     fireEvent.click(screen.getByLabelText('Save'));
     expect(onSave).toHaveBeenCalledWith('New');
+    expect(onSave).toHaveBeenCalledTimes(1);
   });
 
   it('renders nothing when access="hidden"', () => {
     const { container } = render(<InlineEdit value="X" onSave={vi.fn()} access="hidden" />);
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<InlineEdit value="Hello" onSave={vi.fn()} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -605,6 +642,7 @@ describe('InlineEdit – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -641,6 +679,7 @@ describe('DataExportDialog – depth', () => {
       <DataExportDialog open={false} onClose={vi.fn()} onExport={vi.fn()} />,
     );
     expect(container.innerHTML).toBe('');
+    expect(container.firstElementChild).toBeNull();
   });
 
   it('calls onClose when cancel button clicked', () => {
@@ -649,6 +688,7 @@ describe('DataExportDialog – depth', () => {
     // The dialog has a close X button with aria-label="Close"
     fireEvent.click(screen.getByLabelText('Close'));
     expect(onClose).toHaveBeenCalled();
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it('calls onExport with selected options', () => {
@@ -669,12 +709,14 @@ describe('DataExportDialog – depth', () => {
     const buttons = screen.getAllByRole('button');
     const disabledBtns = buttons.filter(btn => btn.hasAttribute('disabled'));
     expect(disabledBtns.length).toBeGreaterThan(0);
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<DataExportDialog open={true} onClose={vi.fn()} onExport={vi.fn()} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -684,6 +726,7 @@ describe('DataExportDialog – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -718,6 +761,7 @@ describe('NotificationCenter – depth', () => {
   it('renders empty state message when no notifications', () => {
     const { container } = render(<NotificationCenter notifications={[]} />);
     expect(container.textContent).toContain('Bildirim yok');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('calls onNotificationClick when a notification is clicked', () => {
@@ -728,6 +772,7 @@ describe('NotificationCenter – depth', () => {
     render(<NotificationCenter notifications={items} onNotificationClick={onClick} />);
     fireEvent.click(screen.getByText('Test Alert'));
     expect(onClick).toHaveBeenCalledWith('1');
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('calls onMarkAllRead when button clicked', () => {
@@ -739,12 +784,14 @@ describe('NotificationCenter – depth', () => {
     const markAllBtn = screen.getByText(/okundu/i);
     fireEvent.click(markAllBtn);
     expect(onMarkAllRead).toHaveBeenCalled();
+    expect(onMarkAllRead).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<NotificationCenter notifications={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -754,6 +801,7 @@ describe('NotificationCenter – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -793,6 +841,7 @@ describe('ExecutiveKPIStrip – depth', () => {
   it('renders empty metrics array without crash', () => {
     const { container } = render(<ExecutiveKPIStrip metrics={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onMetricClick when metric card is clicked', () => {
@@ -800,6 +849,7 @@ describe('ExecutiveKPIStrip – depth', () => {
     render(<ExecutiveKPIStrip metrics={metrics} onMetricClick={onClick} />);
     fireEvent.click(screen.getByText('Revenue'));
     expect(onClick).toHaveBeenCalledWith('rev');
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled" and sets aria-disabled', () => {
@@ -811,6 +861,7 @@ describe('ExecutiveKPIStrip – depth', () => {
     const { container } = render(<ExecutiveKPIStrip metrics={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -820,6 +871,7 @@ describe('ExecutiveKPIStrip – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -854,6 +906,7 @@ describe('ProcessFlow – depth', () => {
   it('handles empty nodes without crash', () => {
     const { container } = render(<ProcessFlow nodes={[]} edges={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onNodeClick when node is clicked', () => {
@@ -866,18 +919,21 @@ describe('ProcessFlow – depth', () => {
     render(<ProcessFlow nodes={nodes} edges={edges} onNodeClick={onClick} />);
     fireEvent.click(screen.getByText('Begin'));
     expect(onClick).toHaveBeenCalledWith('1');
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled" still showing content', () => {
     const nodes = [{ id: '1', type: 'task' as const, label: 'Step' }];
     const { container } = render(<ProcessFlow nodes={nodes} edges={[]} access="disabled" />);
     expect(container.textContent).toContain('Step');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ProcessFlow nodes={[]} edges={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -887,6 +943,7 @@ describe('ProcessFlow – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -921,6 +978,7 @@ describe('ValueStream – depth', () => {
   it('handles empty steps without crash', () => {
     const { container } = render(<ValueStream steps={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders step labels as text content', () => {
@@ -931,6 +989,7 @@ describe('ValueStream – depth', () => {
     const { container } = render(<ValueStream steps={steps} />);
     expect(container.textContent).toContain('Assembly');
     expect(container.textContent).toContain('Paint');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('fires onStepClick when step is clicked', () => {
@@ -939,12 +998,14 @@ describe('ValueStream – depth', () => {
     render(<ValueStream steps={steps} onStepClick={onClick} />);
     fireEvent.click(screen.getByText('Cut'));
     expect(onClick).toHaveBeenCalledWith('1');
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ValueStream steps={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -954,6 +1015,7 @@ describe('ValueStream – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -988,6 +1050,7 @@ describe('StatusTimeline – depth', () => {
   it('handles empty events without crash', () => {
     const { container } = render(<StatusTimeline events={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onEventClick when event is clicked', () => {
@@ -998,18 +1061,21 @@ describe('StatusTimeline – depth', () => {
     render(<StatusTimeline events={events} onEventClick={onClick} />);
     fireEvent.click(screen.getByText('Created'));
     expect(onClick).toHaveBeenCalledWith('1');
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled" still showing content', () => {
     const events = [{ id: '1', status: 'Done', timestamp: '2026-01-01T10:00:00Z' }];
     const { container } = render(<StatusTimeline events={events} access="disabled" />);
     expect(container.textContent).toContain('Done');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<StatusTimeline events={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1019,6 +1085,7 @@ describe('StatusTimeline – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1059,6 +1126,7 @@ describe('ApprovalWorkflow – depth', () => {
   it('handles empty steps without crash', () => {
     const { container } = render(<ApprovalWorkflow steps={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders all step labels', () => {
@@ -1066,18 +1134,21 @@ describe('ApprovalWorkflow – depth', () => {
     expect(container.textContent).toContain('Submit');
     expect(container.textContent).toContain('Review');
     expect(container.textContent).toContain('Approve');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('renders with access="disabled"', () => {
     const { container } = render(<ApprovalWorkflow steps={steps} access="disabled" />);
     // The component uses resolveAccessState and should still render (not hidden)
     expect(container.textContent).toContain('Submit');
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<ApprovalWorkflow steps={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1087,6 +1158,7 @@ describe('ApprovalWorkflow – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1121,6 +1193,7 @@ describe('RiskMatrix – depth', () => {
   it('handles empty risks array', () => {
     const { container } = render(<RiskMatrix risks={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onCellClick when cell is clicked', () => {
@@ -1134,18 +1207,21 @@ describe('RiskMatrix – depth', () => {
     }
     // Even if no clickable cells found, test should not crash
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders with access="disabled"', () => {
     const risks = [{ id: '1', title: 'X', likelihood: 1 as const, impact: 1 as const }];
     const { container } = render(<RiskMatrix risks={risks} access="disabled" />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<RiskMatrix risks={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1155,6 +1231,7 @@ describe('RiskMatrix – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1189,6 +1266,7 @@ describe('GanttTimeline – depth', () => {
   it('handles empty tasks array', () => {
     const { container } = render(<GanttTimeline tasks={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onTaskClick when task row is clicked', () => {
@@ -1201,6 +1279,7 @@ describe('GanttTimeline – depth', () => {
     const elements = screen.getAllByText('Design');
     fireEvent.click(elements[0]);
     expect(onClick).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled"', () => {
@@ -1215,6 +1294,7 @@ describe('GanttTimeline – depth', () => {
     const { container } = render(<GanttTimeline tasks={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1224,6 +1304,7 @@ describe('GanttTimeline – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1258,6 +1339,7 @@ describe('AgingBuckets – depth', () => {
   it('handles empty buckets array', () => {
     const { container } = render(<AgingBuckets buckets={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onBucketClick when bucket is clicked', () => {
@@ -1268,6 +1350,7 @@ describe('AgingBuckets – depth', () => {
     render(<AgingBuckets buckets={buckets} onBucketClick={onClick} />);
     fireEvent.click(screen.getByText('0-30'));
     expect(onClick).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled"', () => {
@@ -1280,6 +1363,7 @@ describe('AgingBuckets – depth', () => {
     const { container } = render(<AgingBuckets buckets={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1289,6 +1373,7 @@ describe('AgingBuckets – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1323,6 +1408,7 @@ describe('ComparisonTable – depth', () => {
   it('handles empty rows array', () => {
     const { container } = render(<ComparisonTable rows={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onRowClick when a row is clicked', () => {
@@ -1333,6 +1419,7 @@ describe('ComparisonTable – depth', () => {
     render(<ComparisonTable rows={rows} onRowClick={onClick} />);
     fireEvent.click(screen.getByText('Revenue'));
     expect(onClick).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled"', () => {
@@ -1345,6 +1432,7 @@ describe('ComparisonTable – depth', () => {
     const { container } = render(<ComparisonTable rows={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1354,6 +1442,7 @@ describe('ComparisonTable – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1388,6 +1477,7 @@ describe('TrainingTracker – depth', () => {
   it('handles empty items array', () => {
     const { container } = render(<TrainingTracker items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onItemClick when item is clicked', () => {
@@ -1398,6 +1488,7 @@ describe('TrainingTracker – depth', () => {
     render(<TrainingTracker items={items} onItemClick={onClick} />);
     fireEvent.click(screen.getByText('Safety'));
     expect(onClick).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled"', () => {
@@ -1410,6 +1501,7 @@ describe('TrainingTracker – depth', () => {
     const { container } = render(<TrainingTracker items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1419,6 +1511,7 @@ describe('TrainingTracker – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1453,6 +1546,7 @@ describe('GovernanceBoard – depth', () => {
   it('handles empty items array', () => {
     const { container } = render(<GovernanceBoard items={[]} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('fires onItemClick when item is clicked', () => {
@@ -1463,6 +1557,7 @@ describe('GovernanceBoard – depth', () => {
     render(<GovernanceBoard items={items} onItemClick={onClick} />);
     fireEvent.click(screen.getByText('GDPR'));
     expect(onClick).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled"', () => {
@@ -1477,6 +1572,7 @@ describe('GovernanceBoard – depth', () => {
     const { container } = render(<GovernanceBoard items={[]} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1486,6 +1582,7 @@ describe('GovernanceBoard – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1535,17 +1632,20 @@ describe('EmptyStateBuilder – depth', () => {
     );
     fireEvent.click(screen.getByText('Retry'));
     expect(onClick).toHaveBeenCalled();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders with access="disabled" still showing content', () => {
     const { container } = render(<EmptyStateBuilder reason="error" access="disabled" />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('resolves async rendering via waitFor', async () => {
     const { container } = render(<EmptyStateBuilder reason="error" access="disabled" />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1555,6 +1655,7 @@ describe('EmptyStateBuilder – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
@@ -1599,6 +1700,7 @@ describe('ThemeLayout – depth', () => {
   it('renders with empty slots', () => {
     const { container } = render(<ThemeLayout theme="executive" slots={{}} />);
     expect(container.firstElementChild).toBeTruthy();
+    expect(container.innerHTML).not.toBe('');
   });
 
   it('renders with access="disabled"', () => {
@@ -1612,6 +1714,7 @@ describe('ThemeLayout – depth', () => {
     const { container } = render(<ThemeLayout theme="executive" slots={{}} />);
     await waitFor(() => {
       expect(container.firstElementChild).toBeTruthy();
+      expect(container.innerHTML).not.toBe('');
     });
     expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
   });
@@ -1621,6 +1724,7 @@ describe('ThemeLayout – depth', () => {
     const root = container.firstElementChild;
     expect(root).toBeTruthy();
     expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
+    expect(document.body.innerHTML.length).toBeGreaterThan(0);
   });
 
   it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {

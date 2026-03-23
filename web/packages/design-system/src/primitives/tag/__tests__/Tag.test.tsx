@@ -262,3 +262,15 @@ describe('Tag — a11y', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Tag — interaction & role', () => {
+  it('has accessible button role for close', () => {
+    render(<Tag closable onClose={() => {}}>Label</Tag>);
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+});

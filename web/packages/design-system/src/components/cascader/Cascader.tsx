@@ -416,7 +416,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
         </span>
         <svg
           className={cn(
-            "ms-2 h-4 w-4 shrink-0 text-text-secondary transition-transform",
+            "ms-2 h-4 w-4 shrink-0 text-text-secondary transition-[rotate]",
             isOpen && "rotate-180",
           )}
           fill="none"

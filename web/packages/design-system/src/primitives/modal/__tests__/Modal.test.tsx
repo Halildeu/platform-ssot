@@ -514,3 +514,19 @@ describe('Modal — a11y', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Modal — interaction & role', () => {
+  it('has accessible dialog role', () => {
+    render(
+      <Modal open title="Test" onClose={() => {}} disablePortal>
+        <p>content</p>
+      </Modal>,
+    );
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+});

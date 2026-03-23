@@ -214,3 +214,15 @@ describe('List — accessibility', () => {
     await expectNoA11yViolations(container);
   });
 });
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('List — interaction & role', () => {
+  it('has accessible list role', () => {
+    render(<List items={defaultItems} />);
+    expect(screen.getByRole('list')).toBeInTheDocument();
+  });
+});

@@ -336,7 +336,7 @@ export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
           <span
             aria-hidden="true"
             className={cn(
-              "inline-flex shrink-0 items-center justify-center text-text-secondary transition-transform",
+              "inline-flex shrink-0 items-center justify-center text-text-secondary transition-[rotate]",
               expanded && "rotate-180",
               classes?.icon,
             )}

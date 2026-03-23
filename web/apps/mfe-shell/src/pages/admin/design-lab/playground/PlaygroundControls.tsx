@@ -222,7 +222,7 @@ function BooleanControl({
       >
         <span
           className={[
-            "pointer-events-none inline-block h-4 w-4 translate-y-0.5 rounded-full bg-[var(--surface-default,#fff)] shadow-xs transition-transform",
+            "pointer-events-none inline-block h-4 w-4 translate-y-0.5 rounded-full bg-[var(--surface-default,#fff)] shadow-xs transition-[translate]",
             value ? "translate-x-4" : "translate-x-0.5",
           ].join(" ")}
         />

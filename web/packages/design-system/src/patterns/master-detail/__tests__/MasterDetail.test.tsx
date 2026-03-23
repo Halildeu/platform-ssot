@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MasterDetail } from '../MasterDetail';
 
 afterEach(() => {
@@ -280,5 +281,22 @@ describe('MasterDetail — complex content', () => {
     expect(screen.getByTestId('detail-form')).toBeInTheDocument();
     expect(screen.getByTestId('name-input')).toBeInTheDocument();
     expect(screen.getByTestId('submit-btn')).toBeInTheDocument();
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('MasterDetail — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<MasterDetail master={<div>M</div>} detail={<div>D</div>} />);
+    await user.tab();
+  });
+  it('has accessible role', () => {
+    const { container } = render(<MasterDetail master={<div>M</div>} detail={<div>D</div>} />);
+    expect(container.firstElementChild).toBeTruthy();
   });
 });

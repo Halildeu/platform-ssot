@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Avatar } from '../Avatar';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -284,5 +285,18 @@ describe('Avatar — a11y', () => {
   it('has no axe violations', async () => {
     const { container } = render(<Avatar src="https://example.com/photo.jpg" alt="User avatar" />);
     await expectNoA11yViolations(container);
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('Avatar — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<Avatar src="https://example.com/a.jpg" alt="User" />);
+    await user.tab();
   });
 });

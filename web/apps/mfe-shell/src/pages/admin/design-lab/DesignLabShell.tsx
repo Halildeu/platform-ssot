@@ -54,7 +54,7 @@ function Sidebar({ children }: { children: React.ReactNode }) {
       <div
         className={[
           // Mobile: slide-over drawer
-          "fixed inset-y-0 left-0 z-50 w-[300px] transform transition-transform duration-300 sm:relative sm:inset-auto sm:z-auto sm:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 w-[300px] transform transition-[translate] duration-300 sm:relative sm:inset-auto sm:z-auto sm:translate-x-0",
           // Desktop: static in grid
           "sm:w-[240px] lg:w-[280px] xl:w-[300px]",
           // Shrink behaviour

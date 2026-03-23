@@ -188,7 +188,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
         >
           <span
             className={cn(
-              "pointer-events-none inline-flex items-center justify-center rounded-full bg-surface-default shadow-xs transition-transform duration-200",
+              "pointer-events-none inline-flex items-center justify-center rounded-full bg-surface-default shadow-xs transition-[translate] duration-200",
               thumbSizes[resolvedSize].base,
               "translate-y-0.5 translate-x-0.5",
               checked && thumbSizes[resolvedSize].translate,

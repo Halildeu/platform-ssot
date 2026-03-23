@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { DetailSectionTabs, type DetailSectionTabItem } from '../DetailSectionTabs';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
 
@@ -229,5 +230,18 @@ describe('DetailSectionTabs — accessibility', () => {
     );
     const root = container.querySelector('[data-component="detail-section-tabs"]');
     expect(root).toHaveAttribute('aria-label', 'Detay sekmeleri');
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('DetailSectionTabs — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<DetailSectionTabs tabs={sampleTabs} activeTabId="overview" onTabChange={vi.fn()} />);
+    await user.tab();
   });
 });

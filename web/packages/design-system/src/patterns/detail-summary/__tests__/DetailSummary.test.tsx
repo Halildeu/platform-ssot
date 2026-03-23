@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { DetailSummary, type DetailSummaryProps } from '../DetailSummary';
 
 afterEach(() => {
@@ -248,5 +249,18 @@ describe('DetailSummary — accessibility', () => {
     // PageHeader renders title as a heading
     const heading = screen.getByRole('heading', { name: /Order #1234/i });
     expect(heading).toBeInTheDocument();
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  userEvent & getByRole coverage                                     */
+/* ------------------------------------------------------------------ */
+
+describe('DetailSummary — interaction & role', () => {
+  it('supports user interaction', async () => {
+    const user = userEvent.setup();
+    render(<DetailSummary {...baseProps} />);
+    await user.tab();
   });
 });

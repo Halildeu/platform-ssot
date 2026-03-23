@@ -28,7 +28,7 @@ const entry: DesignLabComponentDocEntry = {
   apiItem: {
   "name": "setRadius",
   "variantAxes": [
-    "radius: rounded-sm | sharp",
+    "radius: rounded | sharp",
     "consumer: theme editor",
     "update: single-axis patch"
   ],

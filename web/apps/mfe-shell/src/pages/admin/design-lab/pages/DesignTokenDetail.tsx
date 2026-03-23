@@ -221,7 +221,7 @@ function ColorsContent() {
                 {colors.map(({ name, value }) => (
                   <div key={name} className="group relative">
                     <div
-                      className="h-14 w-14 rounded-xl border border-border-subtle shadow-xs transition-transform duration-200 group-hover:scale-110"
+                      className="h-14 w-14 rounded-xl border border-border-subtle shadow-xs transition-[scale] duration-200 group-hover:scale-110"
                       style={{ backgroundColor: value }}
                     />
                     <div className="mt-1.5 text-center">
