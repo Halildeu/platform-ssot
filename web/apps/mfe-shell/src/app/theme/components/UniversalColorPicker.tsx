@@ -247,7 +247,7 @@ const UniversalColorPicker: React.FC<Props> = ({
           }}
         >
           <div
-            className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow"
+            className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-sm"
             style={{
               left: `${padX * 100}%`,
               top: `${padY * 100}%`,

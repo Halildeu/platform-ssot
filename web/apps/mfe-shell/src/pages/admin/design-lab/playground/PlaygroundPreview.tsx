@@ -2309,7 +2309,7 @@ const DEFAULT_PROPS: Record<string, Record<string, unknown>> = {
               React.createElement("div", { className: "text-xs text-[var(--text-secondary)]" }, "Tum yonetici kullanicilar icin zorunlu"),
             ),
             React.createElement("div", { className: "h-5 w-9 rounded-full bg-[var(--status-success,#16a34a)] relative" },
-              React.createElement("div", { className: "absolute right-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--surface-default,#fff)] shadow" }),
+              React.createElement("div", { className: "absolute right-0.5 top-0.5 h-4 w-4 rounded-full bg-[var(--surface-default,#fff)] shadow-sm" }),
             ),
           ),
         ),
