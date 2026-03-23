@@ -349,7 +349,7 @@ export const SmartDashboard = React.forwardRef<HTMLElement, SmartDashboardProps>
       {/* Greeting banner */}
       {greeting && (
         <div
-          className="rounded-2xl bg-gradient-to-r from-[var(--action-primary-bg)]/10 to-transparent px-5 py-4"
+          className="rounded-2xl bg-linear-to-r from-[var(--action-primary-bg)]/10 to-transparent px-5 py-4"
           data-testid="greeting-banner"
         >
           <p className="text-lg font-semibold text-text-primary">

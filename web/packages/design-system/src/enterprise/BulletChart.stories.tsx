@@ -5,6 +5,7 @@ const meta: Meta<typeof BulletChart> = {
   title: 'Enterprise/BulletChart',
   component: BulletChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof BulletChart>;
@@ -53,5 +54,21 @@ export const LargeSize: Story = {
     subtitle: 'Last 30 days',
     size: 'lg',
     formatOptions: { style: 'percent' },
+  },
+};
+
+export const ExceedsTarget: Story = {
+  args: {
+    value: 110,
+    target: 85,
+    label: 'Over-Achievement',
+  },
+};
+
+export const ZeroValue: Story = {
+  args: {
+    value: 0,
+    target: 50,
+    label: 'Not Started',
   },
 };

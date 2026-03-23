@@ -16,6 +16,7 @@ const meta: Meta<typeof RiskMatrix> = {
   title: 'Enterprise/RiskMatrix',
   component: RiskMatrix,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof RiskMatrix>;
@@ -57,6 +58,14 @@ export const Interactive: Story = {
 export const EmptyMatrix: Story = {
   args: {
     risks: [],
+    showLegend: true,
+  },
+};
+
+export const MediumSize: Story = {
+  args: {
+    risks: sampleRisks,
+    size: 'md',
     showLegend: true,
   },
 };

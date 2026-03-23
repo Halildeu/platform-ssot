@@ -53,3 +53,17 @@ export const WithValidation: Story = {
   render: () => <FormContextDemo mode="onBlur" />,
   name: 'With Validation',
 };
+
+export const OnSubmitMode: Story = {
+  render: () => <FormContextDemo mode="onSubmit" />,
+};
+
+export const WithPrefilledData: Story = {
+  render: () => <FormContextDemo mode="onBlur" />,
+  name: 'With Prefilled Data',
+};
+
+export const EmptyForm: Story = {
+  render: () => <FormContextDemo mode="onChange" />,
+  name: 'Empty Form',
+};

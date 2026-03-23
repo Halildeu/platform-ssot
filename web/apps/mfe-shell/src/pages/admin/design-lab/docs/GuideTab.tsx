@@ -291,7 +291,7 @@ export const GuideTab: React.FC<GuideTabProps> = ({ componentName }) => {
       {/* Main content */}
       <div className="min-w-0 flex-1 space-y-6">
         {/* Summary card */}
-        <div className="rounded-2xl border border-border-subtle bg-gradient-to-r from-blue-500/5 to-transparent p-5">
+        <div className="rounded-2xl border border-border-subtle bg-linear-to-r from-blue-500/5 to-transparent p-5">
           <Text as="div" className="text-sm leading-relaxed text-text-primary">
             {guide.summary}
           </Text>

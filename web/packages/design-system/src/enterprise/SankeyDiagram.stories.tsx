@@ -32,6 +32,7 @@ const meta: Meta<typeof SankeyDiagram> = {
   title: 'Enterprise/SankeyDiagram',
   component: SankeyDiagram,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof SankeyDiagram>;
@@ -61,5 +62,33 @@ export const CustomDimensions: Story = {
     nodeWidth: 16,
     nodePadding: 20,
     showValues: true,
+  },
+};
+
+export const MinimalNodes: Story = {
+  args: {
+    nodes: sampleNodes.slice(0, 3),
+    links: [sampleLinks[0]],
+  },
+};
+
+export const LargeSize: Story = {
+  args: {
+    nodes: sampleNodes,
+    links: sampleLinks,
+    width: 800,
+    height: 500,
+    showValues: true,
+  },
+};
+
+export const CompactView: Story = {
+  args: {
+    nodes: sampleNodes.slice(0, 4),
+    links: sampleLinks.slice(0, 3),
+    width: 400,
+    height: 200,
+    nodeWidth: 10,
+    nodePadding: 12,
   },
 };

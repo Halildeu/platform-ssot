@@ -18,6 +18,7 @@ const meta: Meta<typeof LineChart> = {
   title: 'Components/Charts/LineChart',
   component: LineChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof LineChart>;
@@ -47,5 +48,31 @@ export const CurvedWithArea: Story = {
     curved: true,
     showArea: true,
     size: 'lg',
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    series: singleSeries,
+    labels: weekLabels,
+    size: 'sm',
+    title: 'Compact Line Chart',
+  },
+};
+
+export const WithDots: Story = {
+  args: {
+    series: singleSeries,
+    labels: weekLabels,
+    showDots: true,
+    title: 'Line Chart with Dots',
+  },
+};
+
+export const SinglePoint: Story = {
+  args: {
+    series: [{ name: 'Views', data: [500] }],
+    labels: ['Today'],
+    title: 'Single Data Point',
   },
 };

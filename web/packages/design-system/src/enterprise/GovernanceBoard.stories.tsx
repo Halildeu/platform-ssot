@@ -15,6 +15,7 @@ const meta: Meta<typeof GovernanceBoard> = {
   title: 'Enterprise/GovernanceBoard',
   component: GovernanceBoard,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof GovernanceBoard>;
@@ -36,5 +37,24 @@ export const GroupedBySeverity: Story = {
   args: {
     items: sampleItems,
     groupBy: 'severity',
+  },
+};
+
+export const Empty: Story = {
+  args: {
+    items: [],
+  },
+};
+
+export const SingleItem: Story = {
+  args: {
+    items: [sampleItems[0]],
+  },
+};
+
+export const GroupedByStatus: Story = {
+  args: {
+    items: sampleItems,
+    groupBy: 'status',
   },
 };

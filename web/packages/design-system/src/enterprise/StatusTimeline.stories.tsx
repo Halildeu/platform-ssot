@@ -15,6 +15,7 @@ const meta: Meta<typeof StatusTimeline> = {
   title: 'Enterprise/StatusTimeline',
   component: StatusTimeline,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof StatusTimeline>;
@@ -52,5 +53,17 @@ export const WithRejection: Story = {
       'in-review': '#8b5cf6',
       rejected: '#ef4444',
     },
+  },
+};
+
+export const SingleEvent: Story = {
+  args: {
+    events: [orderEvents[0]],
+  },
+};
+
+export const AllCompleted: Story = {
+  args: {
+    events: orderEvents.map((e) => ({ ...e, status: 'completed' })),
   },
 };

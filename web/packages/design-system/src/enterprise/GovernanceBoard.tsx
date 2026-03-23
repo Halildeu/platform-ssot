@@ -207,7 +207,7 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
                             <span className="text-sm font-medium text-text-primary truncate">
                               {item.title}
                             </span>
-                            <span className="inline-flex items-center rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary flex-shrink-0">
+                            <span className="inline-flex items-center rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary shrink-0">
                               {item.domain}
                             </span>
                           </div>
@@ -235,12 +235,12 @@ export const GovernanceBoard: React.FC<GovernanceBoardProps> = ({
                         </div>
 
                         {/* Severity indicator */}
-                        <span className={cn('inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide flex-shrink-0', severityCfg.textColor)}>
+                        <span className={cn('inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide shrink-0', severityCfg.textColor)}>
                           {severityCfg.label}
                         </span>
 
                         {/* Status badge */}
-                        <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex-shrink-0', statusCfg.bg, statusCfg.text)}>
+                        <span className={cn('inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-semibold shrink-0', statusCfg.bg, statusCfg.text)}>
                           {statusCfg.label}
                         </span>
                       </div>

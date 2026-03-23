@@ -70,3 +70,10 @@ export const WithDisabledItem: Story = {
     defaultValue: 'home',
   },
 };
+
+export const FewItems: Story = {
+  args: {
+    items: items.slice(0, 2),
+    defaultValue: 'home',
+  },
+};

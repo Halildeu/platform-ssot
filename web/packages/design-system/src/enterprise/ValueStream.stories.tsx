@@ -25,6 +25,7 @@ const meta: Meta<typeof ValueStream> = {
   title: 'Enterprise/ValueStream',
   component: ValueStream,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ValueStream>;
@@ -49,6 +50,30 @@ export const MinimalSteps: Story = {
   args: {
     steps: manufacturingSteps.slice(0, 3),
     waits: manufacturingWaits.slice(0, 2),
+    timeUnit: 'minutes',
+  },
+};
+
+export const SingleStep: Story = {
+  args: {
+    steps: [manufacturingSteps[0]],
+    waits: [],
+    timeUnit: 'minutes',
+  },
+};
+
+export const AllValueAdd: Story = {
+  args: {
+    steps: manufacturingSteps.filter((s) => s.category === 'value-add'),
+    waits: manufacturingWaits.slice(0, 3),
+    timeUnit: 'minutes',
+  },
+};
+
+export const LargeProcess: Story = {
+  args: {
+    steps: [...manufacturingSteps, ...manufacturingSteps.map((s) => ({ ...s, id: s.id + '-dup', label: s.label + ' (2nd)' }))],
+    waits: [...manufacturingWaits, ...manufacturingWaits],
     timeUnit: 'minutes',
   },
 };

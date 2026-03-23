@@ -88,3 +88,18 @@ export const Empty: Story = {
     emptyStateLabel: 'Dosya bulunamadi.',
   },
 };
+
+export const SingleNode: Story = {
+  args: {
+    nodes: [nodes[1]],
+    columns,
+  },
+};
+
+export const DeepNesting: Story = {
+  args: {
+    nodes,
+    columns,
+    defaultExpandAll: true,
+  },
+};

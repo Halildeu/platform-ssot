@@ -41,3 +41,15 @@ export const ZoomIn: Story = {
 export const SlideUp: Story = {
   render: () => <TransitionDemo preset="slideUp" />,
 };
+
+export const SlideDown: Story = {
+  render: () => <TransitionDemo preset="slideDown" />,
+};
+
+export const SlideLeft: Story = {
+  render: () => <TransitionDemo preset="slideLeft" />,
+};
+
+export const SlideRight: Story = {
+  render: () => <TransitionDemo preset="slideRight" />,
+};

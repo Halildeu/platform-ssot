@@ -46,3 +46,19 @@ export const WithValidation: Story = {
     onSave: (value: string) => console.log('Saved:', value),
   },
 };
+
+export const Disabled: Story = {
+  args: {
+    value: 'Read-only value',
+    disabled: true,
+    onSave: (value: string) => console.log('Saved:', value),
+  },
+};
+
+export const EmptyValue: Story = {
+  args: {
+    value: '',
+    placeholder: 'Click to edit',
+    onSave: (value: string) => console.log('Saved:', value),
+  },
+};

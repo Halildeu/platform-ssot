@@ -161,7 +161,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
               )}
             </div>
 
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
               {actions}
               <button
                 type="button"

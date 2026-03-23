@@ -14,6 +14,7 @@ const meta: Meta<typeof PieChart> = {
   title: 'Components/Charts/PieChart',
   component: PieChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof PieChart>;
@@ -43,5 +44,33 @@ export const LargeDonut: Story = {
     size: 'lg',
     showLegend: true,
     innerLabel: 'Total',
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    data: marketShareData,
+    size: 'sm',
+    title: 'Compact Pie Chart',
+  },
+};
+
+export const TwoSlices: Story = {
+  args: {
+    data: [
+      { label: 'Yes', value: 72 },
+      { label: 'No', value: 28 },
+    ],
+    title: 'Binary Distribution',
+    showPercentage: true,
+  },
+};
+
+export const WithLabelsOnly: Story = {
+  args: {
+    data: marketShareData,
+    showLabels: true,
+    showPercentage: false,
+    title: 'Labels Only',
   },
 };

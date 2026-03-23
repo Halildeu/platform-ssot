@@ -194,7 +194,7 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
                 disabled={!clickable}
                 onClick={() => clickable && onChange?.(index)}
                 className={cn(
-                  "relative flex-shrink-0 flex items-center justify-center rounded-full transition-colors",
+                  "relative shrink-0 flex items-center justify-center rounded-full transition-colors",
                   focusRingClass("ring"),
                   clickable && "cursor-pointer",
                   !clickable && "cursor-default",

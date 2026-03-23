@@ -14,6 +14,7 @@ const meta: Meta<typeof NotificationPanel> = {
   title: 'Components/NotificationPanel',
   component: NotificationPanel,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof NotificationPanel>;
@@ -62,5 +63,12 @@ export const Selectable: Story = {
     title: 'Notifications',
     selectable: true,
     onSelectedIdsChange: (ids: string[]) => console.log('Selected:', ids),
+  },
+};
+
+export const SingleItem: Story = {
+  args: {
+    items: [sampleItems[0]],
+    title: 'Single Notification',
   },
 };

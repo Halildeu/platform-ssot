@@ -15,6 +15,7 @@ const meta: Meta<typeof TrainingTracker> = {
   title: 'Enterprise/TrainingTracker',
   component: TrainingTracker,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof TrainingTracker>;
@@ -36,6 +37,25 @@ export const FilteredOverdue: Story = {
   args: {
     items: sampleItems,
     filterStatuses: ['overdue', 'expired'],
+    groupBy: 'status',
+  },
+};
+
+export const Empty: Story = {
+  args: {
+    items: [],
+  },
+};
+
+export const AllCompleted: Story = {
+  args: {
+    items: sampleItems.map((item) => ({ ...item, status: 'completed' as const, progress: 100 })),
+  },
+};
+
+export const MandatoryOnly: Story = {
+  args: {
+    items: sampleItems.filter((item) => item.mandatory),
     groupBy: 'status',
   },
 };

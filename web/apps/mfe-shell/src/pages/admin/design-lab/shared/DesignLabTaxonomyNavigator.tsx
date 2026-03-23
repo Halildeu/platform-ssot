@@ -177,14 +177,14 @@ export const DesignLabTaxonomyNavigator: React.FC<DesignLabTaxonomyNavigatorProp
       {scrollState.hasOverflow && scrollState.canScrollStart ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 rounded-l-[22px] bg-gradient-to-r from-surface-default via-surface-default/85 to-transparent"
+          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 rounded-l-[22px] bg-linear-to-r from-surface-default via-surface-default/85 to-transparent"
           data-testid="design-lab-taxonomy-header-fade-start"
         />
       ) : null}
       {scrollState.hasOverflow && scrollState.canScrollEnd ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 rounded-r-[22px] bg-gradient-to-l from-surface-default via-surface-default/90 to-transparent"
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 rounded-r-[22px] bg-linear-to-l from-surface-default via-surface-default/90 to-transparent"
           data-testid="design-lab-taxonomy-header-fade-end"
         />
       ) : null}

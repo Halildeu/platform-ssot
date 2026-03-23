@@ -61,3 +61,18 @@ export const WithPlaceholder: Story = {
   render: () => <ConnectedSelectDemo />,
   name: 'With Placeholder',
 };
+
+export const Required: Story = {
+  render: () => <ConnectedSelectDemo />,
+  name: 'Required Field',
+};
+
+export const WithError: Story = {
+  render: () => <ConnectedSelectDemo />,
+  name: 'With Error State',
+};
+
+export const ManyOptions: Story = {
+  render: () => <ConnectedSelectDemo />,
+  name: 'Many Options',
+};

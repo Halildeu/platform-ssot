@@ -66,3 +66,12 @@ export const WithCitations: Story = {
     confidenceScore: 88,
   },
 };
+
+export const LowConfidence: Story = {
+  args: {
+    title: 'Dusuk Guven Onerisi',
+    summary: 'Bu oneri dusuk guven seviyesindedir.',
+    confidenceLevel: 'low',
+    confidenceScore: 25,
+  },
+};

@@ -142,7 +142,7 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
             type="button"
             onClick={onClose}
             className={cn(
-              "flex-shrink-0 rounded-lg p-1.5 text-[var(--text-tertiary)]",
+              "shrink-0 rounded-lg p-1.5 text-[var(--text-tertiary)]",
               "hover:bg-[var(--surface-hover)] hover:text-text-primary",
               focusRingClass("ring"),
               "transition-colors",

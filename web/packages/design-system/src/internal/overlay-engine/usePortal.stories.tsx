@@ -3,6 +3,7 @@ import React from 'react';
 
 const meta: Meta = {
   title: 'Internal/usePortal',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 

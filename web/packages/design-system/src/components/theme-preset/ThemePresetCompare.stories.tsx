@@ -26,6 +26,7 @@ const meta: Meta<typeof ThemePresetCompare> = {
   title: 'Components/ThemePresetCompare',
   component: ThemePresetCompare,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ThemePresetCompare>;
@@ -69,5 +70,14 @@ export const Disabled: Story = {
     rightPreset,
     access: 'disabled',
     accessReason: 'Insufficient permissions',
+  },
+};
+
+export const WithDescription: Story = {
+  args: {
+    leftPreset,
+    rightPreset,
+    title: 'Full Comparison',
+    description: 'Detailed side-by-side preset analysis with all axes visible.',
   },
 };

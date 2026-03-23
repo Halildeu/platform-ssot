@@ -69,3 +69,47 @@ export const FullWidth: Story = {
     ),
   ],
 };
+
+export const WideLayout: Story = {
+  args: {
+    title: 'Genis Sayfa',
+    pageWidth: 'wide',
+    children: <div style={{ padding: 24, fontSize: 14 }}>Genis icerik</div>,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ height: 400, border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'auto' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const StickyHeader: Story = {
+  args: {
+    title: 'Yapiskan Baslik',
+    stickyHeader: true,
+    children: <div style={{ padding: 24, fontSize: 14, height: 800 }}>Uzun icerik alani</div>,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ height: 400, border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'auto' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const MinimalContent: Story = {
+  args: {
+    title: 'Minimal',
+    children: <div style={{ padding: 24, fontSize: 14 }}>Basit icerik</div>,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ height: 300, border: '1px solid var(--border-subtle)', borderRadius: 12, overflow: 'auto' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};

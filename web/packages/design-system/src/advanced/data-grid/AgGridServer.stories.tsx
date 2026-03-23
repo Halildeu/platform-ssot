@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-const meta: Meta = { title: 'Advanced/DataGrid/AgGridServer' };
+const meta: Meta = { title: 'Advanced/DataGrid/AgGridServer' 
+  argTypes: { disabled: { control: 'boolean' } },
+};
 export default meta;
 
 type Story = StoryObj;
@@ -16,4 +18,16 @@ export const WithServerSideModel: Story = {
 
 export const ErrorState: Story = {
   render: () => <div>AgGridServer — error / empty state when datasource fails</div>,
+};
+
+export const LoadingState: Story = {
+  render: () => <div>AgGridServer — loading state with skeleton placeholder</div>,
+};
+
+export const WithPagination: Story = {
+  render: () => <div>AgGridServer — paginated server-side row model</div>,
+};
+
+export const WithFiltering: Story = {
+  render: () => <div>AgGridServer — server-side filtering enabled</div>,
 };

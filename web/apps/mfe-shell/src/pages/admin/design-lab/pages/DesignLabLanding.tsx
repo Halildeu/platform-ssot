@@ -243,7 +243,7 @@ export default function DesignLabLanding() {
   return (
     <div className="space-y-10 pb-12">
       {/* ── Hero Section with gradient background ── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-action-primary/5 via-surface-default to-surface-canvas px-6 py-12 sm:px-10 sm:py-16">
+      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-action-primary/5 via-surface-default to-surface-canvas px-6 py-12 sm:px-10 sm:py-16">
         {/* Decorative grid dots */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.03]"
@@ -363,7 +363,7 @@ export default function DesignLabLanding() {
               ].join(" ")}
             >
               {/* Gradient background overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
+              <div className={`absolute inset-0 bg-linear-to-br ${card.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
 
               <div className="relative">
                 <div className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl ${card.iconBg} transition-transform duration-300 group-hover:scale-110`}>
@@ -574,7 +574,7 @@ function StatCard({
         {value}
       </Text>
       {/* Decorative corner gradient */}
-      <div className="pointer-events-none absolute -bottom-4 -right-4 h-16 w-16 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="pointer-events-none absolute -bottom-4 -right-4 h-16 w-16 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
     </div>
   );
 }

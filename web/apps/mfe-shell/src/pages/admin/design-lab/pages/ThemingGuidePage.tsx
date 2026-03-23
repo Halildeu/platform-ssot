@@ -84,7 +84,7 @@ function App() {
     {
       title: "CSS Class Overrides",
       code: `// Override specific component styles via className
-<Button className="!bg-gradient-to-r !from-violet-500 !to-fuchsia-500">
+<Button className="!bg-linear-to-r !from-violet-500 !to-fuchsia-500">
   Gradient Button
 </Button>
 
@@ -205,7 +205,7 @@ export default function ThemingGuidePage() {
     <div className="mx-auto max-w-4xl space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500/20 to-fuchsia-500/20">
           <Paintbrush className="h-5 w-5 text-violet-600" />
         </div>
         <div>

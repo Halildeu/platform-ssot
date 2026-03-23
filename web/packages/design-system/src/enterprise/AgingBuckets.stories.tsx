@@ -14,6 +14,7 @@ const meta: Meta<typeof AgingBuckets> = {
   title: 'Enterprise/AgingBuckets',
   component: AgingBuckets,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof AgingBuckets>;
@@ -34,6 +35,26 @@ export const Vertical: Story = {
 export const WithStackedBar: Story = {
   args: {
     buckets: sampleBuckets,
+    showStackedBar: true,
+    formatOptions: { style: 'currency', currency: 'USD' },
+  },
+};
+
+export const SingleBucket: Story = {
+  args: {
+    buckets: [sampleBuckets[0]],
+  },
+};
+
+export const EmptyBuckets: Story = {
+  args: {
+    buckets: sampleBuckets.map((b) => ({ ...b, count: 0, value: 0 })),
+  },
+};
+
+export const HighValues: Story = {
+  args: {
+    buckets: sampleBuckets.map((b) => ({ ...b, value: b.value * 10 })),
     showStackedBar: true,
     formatOptions: { style: 'currency', currency: 'USD' },
   },

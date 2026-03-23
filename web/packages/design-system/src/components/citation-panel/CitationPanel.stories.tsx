@@ -45,3 +45,15 @@ export const Empty: Story = {
     items: [],
   },
 };
+
+export const SingleItem: Story = {
+  args: {
+    items: [items[0]],
+  },
+};
+
+export const ManyItems: Story = {
+  args: {
+    items: [...items, ...items.map((item) => ({ ...item, id: item.id + '-dup', title: item.title + ' (Copy)' }))],
+  },
+};

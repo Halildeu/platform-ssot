@@ -62,7 +62,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
         )}
       >
         {/* Search */}
-        {search && <div className="flex-shrink-0">{search}</div>}
+        {search && <div className="shrink-0">{search}</div>}
 
         {/* Filter controls */}
         <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
@@ -107,7 +107,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
 
         {/* Actions */}
         {actions && (
-          <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
+          <div className="flex items-center gap-2 shrink-0 ml-auto">
             {actions}
           </div>
         )}

@@ -6,6 +6,7 @@ const meta: Meta<typeof PromptComposer> = {
   title: 'Components/AI/PromptComposer',
   component: PromptComposer,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof PromptComposer>;
@@ -30,5 +31,19 @@ export const ApprovalScope: Story = {
   args: {
     defaultScope: 'approval',
     defaultTone: 'strict',
+  },
+};
+
+export const StrictTone: Story = {
+  args: {
+    defaultTone: 'strict',
+    guardrails: ['Yalnizca dogrulanmis veriler kullanilmali'],
+  },
+};
+
+export const FriendlyTone: Story = {
+  args: {
+    defaultTone: 'friendly',
+    citations: ['Kullanici Kilavuzu v1.0'],
   },
 };

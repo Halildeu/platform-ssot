@@ -165,7 +165,7 @@ export const NotificationItemCard: React.FC<NotificationItemCardProps> = ({
       data-read={item.read ? "true" : "false"}
       title={accessReason}
       className={cn(
-        "relative overflow-hidden rounded-[24px] border p-4 ring-1 ring-border-subtle/20 shadow-[0_26px_54px_-34px_var(--shadow-color)] backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent",
+        "relative overflow-hidden rounded-[24px] border p-4 ring-1 ring-border-subtle/20 shadow-[0_26px_54px_-34px_var(--shadow-color)] backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent",
         resolvedPriority === "high"
           ? "border-state-warning-border/80 bg-[linear-gradient(180deg,rgba(255,251,235,0.96),rgba(255,248,224,0.9))] ring-state-warning-border/35"
           : "border-border-subtle/75 bg-[var(--surface-card)]",

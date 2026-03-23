@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-const meta: Meta = { title: 'Advanced/DataGrid/VariantIntegration' };
+const meta: Meta = { title: 'Advanced/DataGrid/VariantIntegration' 
+  argTypes: { disabled: { control: 'boolean' } },
+};
 export default meta;
 
 type Story = StoryObj;
@@ -16,4 +18,16 @@ export const QuartzTheme: Story = {
 
 export const CompactDensity: Story = {
   render: () => <div>VariantIntegration — compact density mode</div>,
+};
+
+export const BalhamTheme: Story = {
+  render: () => <div>VariantIntegration — Balham theme variant</div>,
+};
+
+export const AlpineTheme: Story = {
+  render: () => <div>VariantIntegration — Alpine theme variant</div>,
+};
+
+export const MaterialTheme: Story = {
+  render: () => <div>VariantIntegration — Material theme variant</div>,
 };

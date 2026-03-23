@@ -197,7 +197,7 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
                         onClick={() => onItemClick?.(item)}
                       >
                         {/* Mandatory star */}
-                        <div className="w-4 flex-shrink-0 text-center">
+                        <div className="w-4 shrink-0 text-center">
                           {item.mandatory && (
                             <span className="text-state-warning-text text-sm" title="Mandatory">{'\u2605'}</span>
                           )}
@@ -209,7 +209,7 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
                             <span className="text-sm font-medium text-text-primary truncate">
                               {item.title}
                             </span>
-                            <span className="inline-flex items-center rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary flex-shrink-0">
+                            <span className="inline-flex items-center rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary shrink-0">
                               {item.category}
                             </span>
                           </div>
@@ -229,13 +229,13 @@ export const TrainingTracker: React.FC<TrainingTrackerProps> = ({
                         </div>
 
                         {/* Status badge */}
-                        <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold flex-shrink-0', statusCfg.bg, statusCfg.text)}>
+                        <span className={cn('inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold shrink-0', statusCfg.bg, statusCfg.text)}>
                           {statusCfg.label}
                         </span>
 
                         {/* Due date */}
                         {item.dueDate && (
-                          <span className={cn('text-xs flex-shrink-0', overdue && item.status !== 'completed' ? 'text-state-danger-text font-medium' : 'text-[var(--text-tertiary)]')}>
+                          <span className={cn('text-xs shrink-0', overdue && item.status !== 'completed' ? 'text-state-danger-text font-medium' : 'text-[var(--text-tertiary)]')}>
                             {formatDate(item.dueDate)}
                           </span>
                         )}

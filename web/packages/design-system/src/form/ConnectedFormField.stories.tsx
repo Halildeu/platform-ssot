@@ -66,3 +66,18 @@ export const WithError: Story = {
   render: () => <ConnectedFormFieldDemo />,
   name: 'With Error',
 };
+
+export const Required: Story = {
+  render: () => <ConnectedFormFieldDemo />,
+  name: 'Required Field',
+};
+
+export const WithHelp: Story = {
+  render: () => <ConnectedFormFieldDemo />,
+  name: 'With Help Text',
+};
+
+export const Disabled: Story = {
+  render: () => <ConnectedFormFieldDemo />,
+  name: 'Disabled State',
+};

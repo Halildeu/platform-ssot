@@ -22,3 +22,15 @@ export const WithPageSizes: Story = {
 export const DisabledState: Story = {
   render: () => <div>TablePagination — disabled / readonly mode</div>,
 };
+
+export const FirstPage: Story = {
+  render: () => <div>TablePagination — first page selected, previous disabled</div>,
+};
+
+export const LastPage: Story = {
+  render: () => <div>TablePagination — last page selected, next disabled</div>,
+};
+
+export const SinglePage: Story = {
+  render: () => <div>TablePagination — single page of data, no navigation</div>,
+};

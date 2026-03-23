@@ -46,3 +46,15 @@ export const Empty: Story = {
     items: [],
   },
 };
+
+export const SingleItem: Story = {
+  args: {
+    items: [sampleItems[0]],
+  },
+};
+
+export const ManyItems: Story = {
+  args: {
+    items: [...sampleItems, ...sampleItems.map((item) => ({ ...item, id: item.id + '-dup', timestamp: '14:00' }))],
+  },
+};

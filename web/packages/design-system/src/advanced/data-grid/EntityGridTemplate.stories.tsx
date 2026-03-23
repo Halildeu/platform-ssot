@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-const meta: Meta = { title: 'Advanced/DataGrid/EntityGridTemplate' };
+const meta: Meta = { title: 'Advanced/DataGrid/EntityGridTemplate' 
+  argTypes: { disabled: { control: 'boolean' } },
+};
 export default meta;
 
 type Story = StoryObj;
@@ -16,4 +18,16 @@ export const WithToolbar: Story = {
 
 export const EmptyState: Story = {
   render: () => <div>EntityGridTemplate — no data / empty state</div>,
+};
+
+export const LoadingState: Story = {
+  render: () => <div>EntityGridTemplate — loading state with skeleton rows</div>,
+};
+
+export const WithPagination: Story = {
+  render: () => <div>EntityGridTemplate — with pagination controls</div>,
+};
+
+export const CompactDensity: Story = {
+  render: () => <div>EntityGridTemplate — compact density mode</div>,
 };

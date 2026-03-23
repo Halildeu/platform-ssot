@@ -27,6 +27,7 @@ const meta: Meta<typeof NotificationItemCard> = {
   title: 'Components/NotificationItemCard',
   component: NotificationItemCard,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof NotificationItemCard>;
@@ -49,5 +50,23 @@ export const HighPriorityError: Story = {
 export const ReadNotification: Story = {
   args: {
     item: { ...infoItem, read: true, type: 'success', message: 'Deployment v2.14.0 completed successfully.' },
+  },
+};
+
+export const WarningType: Story = {
+  args: {
+    item: { ...infoItem, type: 'warning', message: 'Disk usage approaching threshold.' },
+  },
+};
+
+export const PinnedNotification: Story = {
+  args: {
+    item: { ...infoItem, pinned: true, message: 'Pinned notification item.' },
+  },
+};
+
+export const LongDescription: Story = {
+  args: {
+    item: { ...infoItem, description: 'This is a much longer description that provides additional context about the notification event and its implications for the system.' },
   },
 };

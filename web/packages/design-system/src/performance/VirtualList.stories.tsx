@@ -68,3 +68,15 @@ export const LargeDataset: Story = {
 export const CompactHeight: Story = {
   render: () => <VirtualListDemo itemCount={500} height={250} />,
 };
+
+export const SmallDataset: Story = {
+  render: () => <VirtualListDemo itemCount={10} height={300} />,
+};
+
+export const TallContainer: Story = {
+  render: () => <VirtualListDemo itemCount={2000} height={600} />,
+};
+
+export const MinimalItems: Story = {
+  render: () => <VirtualListDemo itemCount={3} height={200} />,
+};

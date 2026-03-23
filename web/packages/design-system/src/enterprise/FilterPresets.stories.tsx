@@ -14,6 +14,7 @@ const meta: Meta<typeof FilterPresets> = {
   title: 'Enterprise/FilterPresets',
   component: FilterPresets,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof FilterPresets>;
@@ -44,5 +45,34 @@ export const EmptyPresets: Story = {
     onSelect: () => {},
     onSave: (name, filters) => console.log('Save:', name, filters),
     currentFilters: { status: 'active' },
+  },
+};
+
+export const SinglePreset: Story = {
+  args: {
+    presets: [{ id: 'p1', name: 'Default View', filters: { status: 'all' }, isDefault: true }],
+    activePresetId: 'p1',
+    onSelect: (preset) => console.log('Selected:', preset.name),
+  },
+};
+
+export const ManyPresets: Story = {
+  args: {
+    presets: Array.from({ length: 10 }, (_, i) => ({
+      id: `p${i}`,
+      name: `Preset ${i + 1}`,
+      filters: { status: i % 2 === 0 ? 'active' : 'inactive' },
+      isDefault: i === 0,
+    })),
+    activePresetId: 'p0',
+    onSelect: (preset) => console.log('Selected:', preset.name),
+  },
+};
+
+export const SharedPresets: Story = {
+  args: {
+    presets: samplePresets.map((p) => ({ ...p, isShared: true })),
+    activePresetId: 'p1',
+    onSelect: (preset) => console.log('Selected:', preset.name),
   },
 };

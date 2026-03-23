@@ -17,6 +17,7 @@ const meta: Meta<typeof AreaChart> = {
   title: 'Components/Charts/AreaChart',
   component: AreaChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof AreaChart>;
@@ -47,5 +48,32 @@ export const CurvedWithGradient: Story = {
     gradient: true,
     showDots: true,
     size: 'lg',
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    series: revenueSeries,
+    labels: monthLabels,
+    size: 'sm',
+    title: 'Compact Area Chart',
+  },
+};
+
+export const WithDotsAndLegend: Story = {
+  args: {
+    series: multiSeries,
+    labels: monthLabels,
+    showDots: true,
+    showLegend: true,
+    title: 'Area Chart with Dots',
+  },
+};
+
+export const SingleDataPoint: Story = {
+  args: {
+    series: [{ name: 'Revenue', data: [42] }],
+    labels: ['Jan'],
+    title: 'Single Point',
   },
 };

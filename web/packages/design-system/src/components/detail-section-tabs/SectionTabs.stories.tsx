@@ -42,3 +42,26 @@ export const WithDescriptionTooltip: Story = {
     layout: 'scroll',
   },
 };
+
+export const WithDisabled: Story = {
+  args: {
+    items: sampleItems,
+    defaultValue: 'overview',
+    density: 'comfortable',
+  },
+};
+
+export const FewItems: Story = {
+  args: {
+    items: sampleItems.slice(0, 2),
+    defaultValue: 'overview',
+  },
+};
+
+export const ScrollLayout: Story = {
+  args: {
+    items: sampleItems,
+    defaultValue: 'details',
+    layout: 'scroll',
+  },
+};

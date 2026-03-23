@@ -270,7 +270,7 @@ export default function ComponentDetail() {
       </nav>
 
       {/* ── Hero header ── */}
-      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-gradient-to-br from-surface-default via-surface-default to-surface-canvas p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-linear-to-br from-surface-default via-surface-default to-surface-canvas p-6 sm:p-8">
         {/* Decorative dots */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.02]"
@@ -1414,7 +1414,7 @@ function QualityTab({
     <div className="space-y-6">
       {/* ── A11y Scorecard — Modern card with categories ── */}
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-        <div className="flex items-center justify-between border-b border-border-subtle bg-gradient-to-r from-violet-500/5 to-transparent px-5 py-4">
+        <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
               <ShieldCheck className="h-4 w-4 text-violet-600" />
@@ -1500,7 +1500,7 @@ function QualityTab({
 
       {/* ── Quality Gates ── */}
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-        <div className="flex items-center gap-3 border-b border-border-subtle bg-gradient-to-r from-emerald-500/5 to-transparent px-5 py-4">
+        <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-emerald-500/5 to-transparent px-5 py-4">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
             <ShieldCheck className="h-4 w-4 text-emerald-600" />
           </div>
@@ -1534,7 +1534,7 @@ function QualityTab({
       {/* ── Regression Focus ── */}
       {regressionFocus.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-          <div className="flex items-center gap-3 border-b border-border-subtle bg-gradient-to-r from-amber-500/5 to-transparent px-5 py-4">
+          <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-amber-500/5 to-transparent px-5 py-4">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
               <Eye className="h-4 w-4 text-amber-600" />
             </div>
@@ -1573,7 +1573,7 @@ function QualityTab({
           ].join(" ")}>
             {indexItem.lifecycle}
           </Text>
-          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
         <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
@@ -1585,7 +1585,7 @@ function QualityTab({
           ].join(" ")}>
             {indexItem.maturity ? `${indexItem.maturity === "enterprise" ? "🏢" : indexItem.maturity === "stable" ? "✅" : indexItem.maturity === "beta" ? "🔶" : "🧪"} ${indexItem.maturity}` : "—"}
           </Text>
-          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
         <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
@@ -1594,7 +1594,7 @@ function QualityTab({
           <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-blue-600">
             {apiItem?.props?.length ?? 0}
           </Text>
-          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
         <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
@@ -1603,7 +1603,7 @@ function QualityTab({
           <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-violet-600">
             {(indexItem?.whereUsed ?? []).length}
           </Text>
-          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
         <div className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-center transition-all duration-300 hover:border-border-default hover:shadow-xs">
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
@@ -1615,13 +1615,13 @@ function QualityTab({
           <Text variant="secondary" className="mt-0.5 text-[9px]">
             gzip estimate
           </Text>
-          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-gradient-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+          <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
         </div>
       </div>
 
       {/* ── Component Complexity Breakdown ── */}
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-        <div className="flex items-center gap-3 border-b border-border-subtle bg-gradient-to-r from-blue-500/5 to-transparent px-5 py-4">
+        <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-blue-500/5 to-transparent px-5 py-4">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
             <Code2 className="h-4 w-4 text-blue-600" />
           </div>

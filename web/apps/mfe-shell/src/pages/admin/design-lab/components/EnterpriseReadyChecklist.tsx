@@ -298,7 +298,7 @@ export function EnterpriseReadyChecklist({
   return (
     <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border-subtle bg-gradient-to-r from-indigo-500/5 to-transparent px-5 py-4">
+      <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-indigo-500/5 to-transparent px-5 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10">
             <svg

@@ -4,6 +4,7 @@ import { DesignSystemProvider } from './DesignSystemProvider';
 const meta: Meta<typeof DesignSystemProvider> = {
   component: DesignSystemProvider,
   title: 'Providers/DesignSystemProvider',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 
 export default meta;

@@ -154,7 +154,7 @@ const BreadcrumbNav: React.FC<BreadcrumbNavProps> = ({
           <li key={idx} className="flex items-center gap-1.5">
             {idx > 0 && (
               <svg
-                className="h-3.5 w-3.5 flex-shrink-0 text-text-secondary opacity-50"
+                className="h-3.5 w-3.5 shrink-0 text-text-secondary opacity-50"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -291,7 +291,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                 {actions && (
                   <div
                     className={cn(
-                      "flex items-center gap-2 flex-shrink-0",
+                      "flex items-center gap-2 shrink-0",
                       classes?.actions,
                     )}
                   >
@@ -367,7 +367,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
               </div>
               <div
                 className={cn(
-                  "flex-shrink-0",
+                  "shrink-0",
                   !responsiveDetailCollapse && "w-80",
                   responsiveDetailCollapse && "w-full",
                   responsiveDetailCollapse &&

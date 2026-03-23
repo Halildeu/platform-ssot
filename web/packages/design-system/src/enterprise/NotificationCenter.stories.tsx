@@ -15,6 +15,7 @@ const meta: Meta<typeof NotificationCenter> = {
   title: 'Enterprise/NotificationCenter',
   component: NotificationCenter,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof NotificationCenter>;
@@ -38,5 +39,25 @@ export const LimitedVisible: Story = {
     notifications: sampleNotifications,
     maxVisible: 3,
     title: 'Recent Alerts',
+  },
+};
+
+export const Empty: Story = {
+  args: {
+    notifications: [],
+    title: 'No Notifications',
+  },
+};
+
+export const SingleNotification: Story = {
+  args: {
+    notifications: [sampleNotifications[0]],
+  },
+};
+
+export const AllRead: Story = {
+  args: {
+    notifications: sampleNotifications.map((n) => ({ ...n, read: true })),
+    title: 'All Read',
   },
 };

@@ -208,3 +208,20 @@ export const CustomFooter: Story = {
     );
   },
 };
+
+export const SingleGroup: Story = {
+  render: () => {
+    const [open, setOpen] = useState(false);
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>Tek Grup</Button>
+        <CommandPalette
+          open={open}
+          items={ornekKomutlar.filter((k) => k.group === 'Navigasyon')}
+          onClose={() => setOpen(false)}
+          onSelect={() => setOpen(false)}
+        />
+      </>
+    );
+  },
+};

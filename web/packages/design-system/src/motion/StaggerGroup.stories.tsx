@@ -20,6 +20,7 @@ const meta: Meta<typeof StaggerGroup> = {
   title: 'Motion/StaggerGroup',
   component: StaggerGroup,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof StaggerGroup>;
@@ -59,5 +60,35 @@ export const FastStagger: Story = {
     children: Array.from({ length: 8 }, (_, i) => (
       <CardItem key={i} label={`Item ${i + 1}`} />
     )),
+  },
+};
+
+export const SingleItem: Story = {
+  args: {
+    staggerDelay: 50,
+    duration: 200,
+    children: [<CardItem key="1" label="Single Item" />],
+  },
+};
+
+export const ManyItems: Story = {
+  args: {
+    staggerDelay: 30,
+    duration: 150,
+    children: Array.from({ length: 12 }, (_, i) => (
+      <CardItem key={i} label={`Entry ${i + 1}`} />
+    )),
+  },
+};
+
+export const ZeroDelay: Story = {
+  args: {
+    staggerDelay: 0,
+    duration: 200,
+    children: [
+      <CardItem key="1" label="Instant A" />,
+      <CardItem key="2" label="Instant B" />,
+      <CardItem key="3" label="Instant C" />,
+    ],
   },
 };

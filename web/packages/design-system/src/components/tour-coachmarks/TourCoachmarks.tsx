@@ -158,7 +158,7 @@ export const TourCoachmarks = React.forwardRef<HTMLDivElement, TourCoachmarksPro
           className="relative overflow-hidden rounded-[2rem] border border-border-subtle bg-surface-muted shadow-2xl"
           data-testid={testIdPrefix ? `${testIdPrefix}-panel` : undefined}
         >
-          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--action-primary)] via-[var(--action-primary-hover)] to-[var(--action-primary)]" />
+          <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-[var(--action-primary)] via-[var(--action-primary-hover)] to-[var(--action-primary)]" />
           <div
             className="space-y-6 p-6 pt-7"
             role="dialog"

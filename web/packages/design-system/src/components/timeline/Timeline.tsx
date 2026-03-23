@@ -325,7 +325,7 @@ export const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(({
             )}
 
             {/* DOT + CONNECTOR COLUMN */}
-            <div className="relative flex flex-col items-center flex-shrink-0">
+            <div className="relative flex flex-col items-center shrink-0">
               <TimelineDot
                 color={color}
                 dot={item.dot}

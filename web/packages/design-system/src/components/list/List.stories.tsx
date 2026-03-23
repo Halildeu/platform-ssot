@@ -61,3 +61,11 @@ export const Empty: Story = {
     emptyStateLabel: 'Henuz kayit bulunmuyor.',
   },
 };
+
+export const Bordered: Story = {
+  args: {
+    items,
+    bordered: true,
+    title: 'Cerceveli Liste',
+  },
+};

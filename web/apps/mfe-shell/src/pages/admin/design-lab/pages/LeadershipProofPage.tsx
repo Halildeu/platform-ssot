@@ -142,7 +142,7 @@ export default function LeadershipProofPage() {
   return (
     <div className="space-y-10 pb-12">
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500/5 via-surface-default to-violet-500/5 px-6 py-10 sm:px-10 sm:py-14">
+      <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-500/5 via-surface-default to-violet-500/5 px-6 py-10 sm:px-10 sm:py-14">
         <div className="pointer-events-none absolute inset-0 opacity-[0.02]"
           style={{
             backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)",

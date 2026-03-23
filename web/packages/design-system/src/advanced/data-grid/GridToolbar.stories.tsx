@@ -4,6 +4,7 @@ import { GridToolbar } from './GridToolbar';
 const meta: Meta<typeof GridToolbar> = {
   component: GridToolbar,
   title: 'Advanced/DataGrid/GridToolbar',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 
@@ -29,6 +30,30 @@ export const BalhamTheme: Story = {
   args: {
     gridApi: null,
     theme: 'balham',
+    density: 'comfortable',
+  },
+};
+
+export const AlpineTheme: Story = {
+  args: {
+    gridApi: null,
+    theme: 'alpine',
+    density: 'comfortable',
+  },
+};
+
+export const CompactBalham: Story = {
+  args: {
+    gridApi: null,
+    theme: 'balham',
+    density: 'compact',
+  },
+};
+
+export const MaterialTheme: Story = {
+  args: {
+    gridApi: null,
+    theme: 'material',
     density: 'comfortable',
   },
 };

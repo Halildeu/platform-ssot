@@ -5,6 +5,7 @@ import { PortalProvider } from './PortalProvider';
 const meta: Meta<typeof PortalProvider> = {
   component: PortalProvider,
   title: 'Internal/PortalProvider',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 

@@ -38,3 +38,18 @@ export const WithError: Story = {
   render: () => <ConnectedInputDemo placeholder="Error state" />,
   name: 'With Error State',
 };
+
+export const Empty: Story = {
+  render: () => <ConnectedInputDemo placeholder="Empty field" />,
+  name: 'Empty State',
+};
+
+export const WithValue: Story = {
+  render: () => <ConnectedInputDemo placeholder="Has value" />,
+  name: 'With Value',
+};
+
+export const Required: Story = {
+  render: () => <ConnectedInputDemo placeholder="Required field" />,
+  name: 'Required Field',
+};

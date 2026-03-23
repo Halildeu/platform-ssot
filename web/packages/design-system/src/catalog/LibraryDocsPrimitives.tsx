@@ -25,7 +25,7 @@ const LibrarySurfaceAccent: React.FC<{
     <div
       aria-hidden="true"
       className={clsx(
-        'pointer-events-none absolute inset-x-5 top-0 rounded-b-[32px] bg-gradient-to-b from-[var(--surface-card)] via-[var(--surface-card)] to-transparent',
+        'pointer-events-none absolute inset-x-5 top-0 rounded-b-[32px] bg-linear-to-b from-[var(--surface-card)] via-[var(--surface-card)] to-transparent',
         compact ? 'h-12 opacity-80' : 'h-16 opacity-90',
       )}
     />
@@ -83,7 +83,7 @@ export const LibraryPreviewPanel: React.FC<LibraryPreviewPanelProps> = ({ title,
     <LibrarySurfaceAccent compact />
     <div className="relative z-[1]">
       <LibraryDetailLabel className="text-[11px]">{title}</LibraryDetailLabel>
-      <div className="mt-2 h-px w-14 bg-gradient-to-r from-text-primary/20 via-text-primary/10 to-transparent" />
+      <div className="mt-2 h-px w-14 bg-linear-to-r from-text-primary/20 via-text-primary/10 to-transparent" />
       <div className="mt-3">{children}</div>
     </div>
   </div>

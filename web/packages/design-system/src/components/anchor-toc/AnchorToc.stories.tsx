@@ -64,3 +64,18 @@ export const WithMeta: Story = {
     syncWithHash: false,
   },
 };
+
+export const FewItems: Story = {
+  args: {
+    items: items.slice(0, 3),
+    syncWithHash: false,
+  },
+};
+
+export const WithTitle: Story = {
+  args: {
+    items,
+    title: 'Table of Contents',
+    syncWithHash: false,
+  },
+};

@@ -66,7 +66,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       {/* Title row */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          {avatar && <div className="flex-shrink-0">{avatar}</div>}
+          {avatar && <div className="shrink-0">{avatar}</div>}
 
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
@@ -85,7 +85,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         </div>
 
         {actions && (
-          <div className="flex items-center gap-2 flex-shrink-0">{actions}</div>
+          <div className="flex items-center gap-2 shrink-0">{actions}</div>
         )}
       </div>
 

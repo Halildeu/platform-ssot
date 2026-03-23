@@ -46,3 +46,15 @@ export const WithDisabledItem: Story = {
 export const EmptyMenu: Story = {
   render: () => <div>MenuSurface — empty items list</div>,
 };
+
+export const ManyItems: Story = {
+  render: () => <div>MenuSurface — with many menu items requiring scroll</div>,
+};
+
+export const WithSeparator: Story = {
+  render: () => <div>MenuSurface — items separated by dividers</div>,
+};
+
+export const WithShortcuts: Story = {
+  render: () => <div>MenuSurface — items with keyboard shortcut labels</div>,
+};

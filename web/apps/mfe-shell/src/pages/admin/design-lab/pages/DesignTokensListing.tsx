@@ -180,7 +180,7 @@ export default function DesignTokensListing() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-gradient-to-br from-surface-default to-surface-canvas px-6 py-8">
+      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-linear-to-br from-surface-default to-surface-canvas px-6 py-8">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.02]"
           style={{
@@ -219,7 +219,7 @@ export default function DesignTokensListing() {
             className="group relative overflow-hidden rounded-2xl border border-border-subtle bg-surface-default p-5 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
           >
             <div
-              className={`absolute inset-0 bg-gradient-to-br ${group.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
+              className={`absolute inset-0 bg-linear-to-br ${group.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-100`}
             />
             <div className="relative">
               <div

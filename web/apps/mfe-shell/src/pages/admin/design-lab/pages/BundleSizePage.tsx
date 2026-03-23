@@ -158,7 +158,7 @@ export default function BundleSizePage() {
   return (
     <div className="space-y-6">
       {/* ── Header ── */}
-      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-gradient-to-br from-surface-default to-surface-canvas px-6 py-8">
+      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-linear-to-br from-surface-default to-surface-canvas px-6 py-8">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.02]"
           style={{

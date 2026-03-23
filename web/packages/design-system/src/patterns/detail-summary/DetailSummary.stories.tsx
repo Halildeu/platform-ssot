@@ -6,6 +6,7 @@ const meta: Meta<typeof DetailSummary> = {
   title: 'Patterns/DetailSummary',
   component: DetailSummary,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof DetailSummary>;
@@ -74,5 +75,45 @@ export const WithManyItems: Story = {
       { key: 'd1', label: 'Detail 1', value: 'Info' },
       { key: 'd2', label: 'Detail 2', value: 'Data' },
     ],
+  },
+};
+
+export const WithTone: Story = {
+  args: {
+    title: 'Status Detail',
+    entity: {
+      title: 'Service Health',
+      items: [
+        { key: 'status', label: 'Status', value: 'Degraded', tone: 'warning' as const },
+        { key: 'uptime', label: 'Uptime', value: '99.2%', tone: 'success' as const },
+      ],
+    },
+    summaryItems: [
+      { key: 'incidents', label: 'Incidents', value: '3' },
+    ],
+  },
+};
+
+export const WithDescription: Story = {
+  args: {
+    title: 'With Description',
+    description: 'A detail view with full description text.',
+    entity: {
+      title: 'Entity',
+      subtitle: 'Sub',
+      items: [{ key: 'a', label: 'A', value: '1' }],
+    },
+    summaryItems: [{ key: 's', label: 'S', value: '2' }],
+  },
+};
+
+export const NoSummary: Story = {
+  args: {
+    title: 'No Summary Items',
+    entity: {
+      title: 'Entity Only',
+      items: [{ key: 'a', label: 'Field', value: 'Value' }],
+    },
+    summaryItems: [],
   },
 };

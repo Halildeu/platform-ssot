@@ -5,6 +5,7 @@ const meta: Meta<typeof MicroChart> = {
   title: 'Enterprise/MicroChart',
   component: MicroChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof MicroChart>;
@@ -55,5 +56,15 @@ export const Waffle: Story = {
     width: 48,
     height: 48,
     color: '#f59e0b',
+  },
+};
+
+export const SmallSparkline: Story = {
+  args: {
+    type: 'sparkline',
+    data: [5, 10, 8, 15, 12],
+    width: 64,
+    height: 24,
+    color: '#ef4444',
   },
 };

@@ -54,3 +54,39 @@ export const CustomStyle: Story = {
     ),
   },
 };
+
+export const LightOpacity: Story = {
+  args: {
+    content: 'ONAY BEKLIYOR',
+    opacity: 0.08,
+    children: (
+      <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
+        <p style={{ fontSize: 14 }}>Cok hafif filigran.</p>
+      </div>
+    ),
+  },
+};
+
+export const LargeFont: Story = {
+  args: {
+    content: 'KOPYA',
+    fontSize: 28,
+    children: (
+      <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
+        <p style={{ fontSize: 14 }}>Buyuk yazili filigran.</p>
+      </div>
+    ),
+  },
+};
+
+export const HorizontalRotation: Story = {
+  args: {
+    content: 'TASLAK',
+    rotate: 0,
+    children: (
+      <div style={{ height: 200, padding: 24, border: '1px solid var(--border-subtle)', borderRadius: 12 }}>
+        <p style={{ fontSize: 14 }}>Yatay filigran.</p>
+      </div>
+    ),
+  },
+};

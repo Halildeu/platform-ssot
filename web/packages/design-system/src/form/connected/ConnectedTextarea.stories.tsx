@@ -47,3 +47,18 @@ export const WithCustomRows: Story = {
   render: () => <ConnectedTextareaDemo />,
   name: 'With Custom Rows',
 };
+
+export const Empty: Story = {
+  render: () => <ConnectedTextareaDemo />,
+  name: 'Empty State',
+};
+
+export const WithPlaceholder: Story = {
+  render: () => <ConnectedTextareaDemo />,
+  name: 'With Placeholder',
+};
+
+export const ReadOnly: Story = {
+  render: () => <ConnectedTextareaDemo disabled />,
+  name: 'Read Only',
+};

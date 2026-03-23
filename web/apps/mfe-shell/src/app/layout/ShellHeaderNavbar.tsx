@@ -215,7 +215,7 @@ export const ShellHeaderNavbar: React.FC<ShellHeaderNavbarProps> = ({
             >
               {utility}
               {overflowItems.length > 0 ? (
-                <div className="relative flex-shrink-0">
+                <div className="relative shrink-0">
                   <button
                     type="button"
                     data-testid="shell-header-navbar-overflow-trigger"

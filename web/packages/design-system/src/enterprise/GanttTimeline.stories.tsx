@@ -22,6 +22,7 @@ const meta: Meta<typeof GanttTimeline> = {
   title: 'Enterprise/GanttTimeline',
   component: GanttTimeline,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof GanttTimeline>;
@@ -46,5 +47,26 @@ export const GroupedWithDependencies: Story = {
     viewMode: 'week',
     groupBy: 'group',
     showDependencies: true,
+  },
+};
+
+export const MonthView: Story = {
+  args: {
+    tasks: sampleTasks,
+    viewMode: 'month',
+  },
+};
+
+export const SingleTask: Story = {
+  args: {
+    tasks: [sampleTasks[0]],
+    viewMode: 'day',
+  },
+};
+
+export const MilestonesOnly: Story = {
+  args: {
+    tasks: sampleTasks.filter((t) => t.type === 'milestone'),
+    viewMode: 'week',
   },
 };

@@ -59,3 +59,22 @@ export const SingleItem: Story = {
     items: [{ label: 'Ana Sayfa' }],
   },
 };
+
+export const TwoItems: Story = {
+  args: {
+    items: [
+      { label: 'Ana Sayfa', href: '#' },
+      { label: 'Detay' },
+    ],
+  },
+};
+
+export const ManyItems: Story = {
+  args: {
+    items: Array.from({ length: 7 }, (_, i) => ({
+      label: \`Level \${i + 1}\`,
+      href: i < 6 ? '#' : undefined,
+    })),
+    maxItems: 4,
+  },
+};

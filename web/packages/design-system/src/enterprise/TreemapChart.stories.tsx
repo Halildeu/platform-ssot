@@ -17,6 +17,7 @@ const meta: Meta<typeof TreemapChart> = {
   title: 'Enterprise/TreemapChart',
   component: TreemapChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof TreemapChart>;
@@ -59,5 +60,27 @@ export const NestedItems: Story = {
       },
     ],
     height: 400,
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    items: departmentSpend.slice(0, 3),
+    height: 200,
+  },
+};
+
+export const SingleItem: Story = {
+  args: {
+    items: [departmentSpend[0]],
+    height: 200,
+  },
+};
+
+export const LargeHeight: Story = {
+  args: {
+    items: departmentSpend,
+    height: 600,
+    formatOptions: { style: 'currency', currency: 'USD' },
   },
 };

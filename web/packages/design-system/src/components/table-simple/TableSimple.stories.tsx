@@ -74,3 +74,11 @@ export const Empty: Story = {
     emptyStateLabel: 'Kayit bulunamadi.',
   },
 };
+
+export const StickyHeader: Story = {
+  args: {
+    columns,
+    rows: [...rows, ...rows.map((r) => ({ ...r, id: r.id + 10 }))],
+    stickyHeader: true,
+  },
+};

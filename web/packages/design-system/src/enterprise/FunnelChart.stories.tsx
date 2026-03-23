@@ -14,6 +14,7 @@ const meta: Meta<typeof FunnelChart> = {
   title: 'Enterprise/FunnelChart',
   component: FunnelChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof FunnelChart>;
@@ -37,6 +38,28 @@ export const WithCustomColors: Story = {
       ...s,
       color: ['#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#c084fc'][i],
     })),
+    animated: true,
+  },
+};
+
+export const TwoStages: Story = {
+  args: {
+    stages: salesFunnel.slice(0, 2),
+  },
+};
+
+export const WithLabels: Story = {
+  args: {
+    stages: salesFunnel,
+    showLabels: true,
+    showPercentage: true,
+  },
+};
+
+export const LargeSize: Story = {
+  args: {
+    stages: salesFunnel,
+    size: 'lg',
     animated: true,
   },
 };

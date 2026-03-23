@@ -204,3 +204,21 @@ export const MinimalData: Story = {
     ],
   },
 };
+
+export const NoCitations: Story = {
+  args: {
+    title: 'Referanssiz Inceleme',
+    checkpoint: ornekCheckpoint,
+    citations: [],
+    auditItems: ornekAuditItems,
+  },
+};
+
+export const NoAuditTrail: Story = {
+  args: {
+    title: 'Iz Sureci Olmayan Inceleme',
+    checkpoint: ornekCheckpoint,
+    citations: ornekCitations,
+    auditItems: [],
+  },
+};

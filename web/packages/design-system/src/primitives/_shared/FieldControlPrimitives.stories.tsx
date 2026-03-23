@@ -5,6 +5,7 @@ import { FieldControlShell } from './FieldControlPrimitives';
 const meta: Meta<typeof FieldControlShell> = {
   component: FieldControlShell,
   title: 'Primitives/Shared/FieldControlShell',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 

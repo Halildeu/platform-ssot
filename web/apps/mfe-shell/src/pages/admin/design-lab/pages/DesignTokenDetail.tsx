@@ -159,7 +159,7 @@ export default function DesignTokenDetail() {
       </button>
 
       {/* Header */}
-      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-gradient-to-br from-surface-default to-surface-canvas px-6 py-8">
+      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-linear-to-br from-surface-default to-surface-canvas px-6 py-8">
         <div className="pointer-events-none absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle, currentColor 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
         <div className="relative flex items-start gap-4">
           <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${accent}`}>

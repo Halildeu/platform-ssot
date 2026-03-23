@@ -21,6 +21,7 @@ const meta: Meta<typeof BarChart> = {
   title: 'Components/Charts/BarChart',
   component: BarChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof BarChart>;
@@ -48,5 +49,31 @@ export const LargeWithLegend: Story = {
     showLegend: true,
     showValues: true,
     valueFormatter: (v: number) => `$${(v / 1000).toFixed(0)}k`,
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    data: quarterlyData,
+    size: 'sm',
+    title: 'Compact Bar Chart',
+  },
+};
+
+export const SingleBar: Story = {
+  args: {
+    data: [{ label: 'Q1', value: 100 }],
+    title: 'Single Bar',
+  },
+};
+
+export const ManyBars: Story = {
+  args: {
+    data: Array.from({ length: 12 }, (_, i) => ({
+      label: \`Month \${i + 1}\`,
+      value: Math.round(50 + Math.random() * 200),
+    })),
+    title: 'Monthly Data',
+    showValues: true,
   },
 };

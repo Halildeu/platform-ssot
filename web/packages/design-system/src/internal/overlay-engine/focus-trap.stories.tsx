@@ -5,6 +5,7 @@ import { FocusTrap } from './focus-trap';
 const meta: Meta<typeof FocusTrap> = {
   component: FocusTrap,
   title: 'Internal/FocusTrap',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 
@@ -37,6 +38,43 @@ export const MultipleFocusable: Story = {
         <button>First</button>
         <input placeholder="Text input" />
         <button>Last</button>
+      </div>
+    </FocusTrap>
+  ),
+};
+
+export const WithInitialFocus: Story = {
+  render: () => (
+    <FocusTrap active>
+      <div>
+        <button>Skip</button>
+        <input placeholder="Should receive initial focus" autoFocus />
+        <button>Last</button>
+      </div>
+    </FocusTrap>
+  ),
+};
+
+export const NestedTraps: Story = {
+  render: () => (
+    <FocusTrap active>
+      <div>
+        <button>Outer button</button>
+        <FocusTrap active={false}>
+          <div>
+            <button>Inner button (trap inactive)</button>
+          </div>
+        </FocusTrap>
+      </div>
+    </FocusTrap>
+  ),
+};
+
+export const SingleFocusable: Story = {
+  render: () => (
+    <FocusTrap active>
+      <div>
+        <button>Only focusable element</button>
       </div>
     </FocusTrap>
   ),

@@ -58,3 +58,18 @@ export const CustomStep: Story = {
     showProgress: true,
   },
 };
+
+export const SingleStep: Story = {
+  args: {
+    steps: [steps[0]],
+    defaultOpen: true,
+  },
+};
+
+export const NoProgress: Story = {
+  args: {
+    steps,
+    defaultOpen: true,
+    showProgress: false,
+  },
+};

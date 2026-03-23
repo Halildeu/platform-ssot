@@ -450,7 +450,7 @@ export const NavigationRail = React.forwardRef<
       ref={ref}
       aria-label={ariaLabel}
       className={cn(
-        "navigation-rail-root relative inline-flex overflow-hidden rounded-[30px] p-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent",
+        "navigation-rail-root relative inline-flex overflow-hidden rounded-[30px] p-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent",
         compact ? "w-20" : "w-64",
         rootClassByAppearance[appearance],
         classes?.root,
@@ -541,7 +541,7 @@ export const NavigationRail = React.forwardRef<
                 sizeClassNames[size],
                 compact ? "justify-center" : "justify-start",
                 selected
-                  ? "border-border-default/70 bg-[var(--surface-card)] text-text-primary shadow-[0_18px_36px_-28px_var(--shadow-color,rgba(15,23,42,0.3))] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent"
+                  ? "border-border-default/70 bg-[var(--surface-card)] text-text-primary shadow-[0_18px_36px_-28px_var(--shadow-color,rgba(15,23,42,0.3))] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent"
                   : "text-text-secondary hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-hover)] hover:text-text-primary hover:shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.22))]",
                 blocked && "cursor-not-allowed opacity-50",
                 isReadonly &&

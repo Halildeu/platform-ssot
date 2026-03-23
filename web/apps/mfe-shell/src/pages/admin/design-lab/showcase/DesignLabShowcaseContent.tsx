@@ -805,7 +805,7 @@ const PreviewWorkspace: React.FC<{
     return (
       <div className="space-y-5">
         <div className="relative overflow-hidden rounded-[26px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,244,252,0.92)))] p-4 shadow-[0_22px_48px_-30px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[var(--border-subtle)]/20">
-          <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-0 h-12 rounded-b-[28px] bg-gradient-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] to-transparent" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-0 h-12 rounded-b-[28px] bg-linear-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] to-transparent" />
           <div className="relative z-[1] flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
             <div className="flex flex-wrap gap-2">
               {panelSections.map((section, index) => (
@@ -859,7 +859,7 @@ const PreviewWorkspace: React.FC<{
 
   return (
     <div className="relative overflow-hidden rounded-[30px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,242,250,0.92)))] p-5 shadow-[0_28px_64px_-34px_var(--shadow-color,rgba(24,18,68,0.3))] ring-1 ring-[var(--border-subtle)]/20">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-8 top-0 h-16 rounded-b-[34px] bg-gradient-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] via-[var(--surface-card,rgba(255,255,255,0.4))] to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-8 top-0 h-16 rounded-b-[34px] bg-linear-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] via-[var(--surface-card,rgba(255,255,255,0.4))] to-transparent" />
       <div className="relative z-[1] flex flex-col gap-4 border-b border-border-subtle/80 pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <DetailLabel>{t('designlab.showcase.preview.workspace.title')}</DetailLabel>

@@ -72,3 +72,12 @@ export const WithDisabled: Story = {
     onTabChange: () => {},
   },
 };
+
+export const CompactDensity: Story = {
+  args: {
+    tabs,
+    activeTabId: 'overview',
+    onTabChange: () => {},
+    density: 'compact',
+  },
+};

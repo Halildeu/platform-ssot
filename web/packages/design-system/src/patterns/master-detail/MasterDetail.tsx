@@ -102,7 +102,7 @@ export const MasterDetail = React.forwardRef<HTMLDivElement, MasterDetailProps>(
 
       {/* Divider */}
       {divider && !collapsed && (
-        <div className="w-px flex-shrink-0 bg-border-subtle" />
+        <div className="w-px shrink-0 bg-border-subtle" />
       )}
 
       {/* Expand button when collapsed */}
@@ -111,7 +111,7 @@ export const MasterDetail = React.forwardRef<HTMLDivElement, MasterDetailProps>(
           type="button"
           onClick={() => setCollapsed(false)}
           className={cn(
-            "flex-shrink-0 flex items-center justify-center w-6",
+            "shrink-0 flex items-center justify-center w-6",
             "bg-surface-default border-e border-border-subtle",
             "text-[var(--text-tertiary)] hover:text-text-primary hover:bg-[var(--surface-hover)]",
             focusRingClass("ring"),

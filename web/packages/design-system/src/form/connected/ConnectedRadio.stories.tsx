@@ -52,3 +52,17 @@ export const Disabled: Story = {
   render: () => <ConnectedRadioDemo />,
   name: 'Disabled State',
 };
+
+export const EnterpriseSelected: Story = {
+  render: () => <ConnectedRadioDemo defaultValue="enterprise" />,
+};
+
+export const NoDefault: Story = {
+  render: () => <ConnectedRadioDemo defaultValue="" />,
+  name: 'No Default Selection',
+};
+
+export const Required: Story = {
+  render: () => <ConnectedRadioDemo />,
+  name: 'Required Field',
+};

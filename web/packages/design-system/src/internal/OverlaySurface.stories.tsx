@@ -4,6 +4,7 @@ import { OverlaySurface } from './OverlaySurface';
 const meta: Meta<typeof OverlaySurface> = {
   component: OverlaySurface,
   title: 'Internal/OverlaySurface',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 
 export default meta;
@@ -33,5 +34,34 @@ export const WithLongContent: Story = {
     disablePortal: true,
     ariaLabel: 'Scrollable overlay',
     children: 'Overlay with longer content that may require scrolling or layout adjustments',
+  },
+};
+
+export const WithCustomRole: Story = {
+  args: {
+    open: true,
+    disablePortal: true,
+    ariaLabel: 'Dialog overlay',
+    role: 'dialog',
+    children: 'Dialog role overlay',
+  },
+};
+
+export const FullWidth: Story = {
+  args: {
+    open: true,
+    disablePortal: true,
+    ariaLabel: 'Full width overlay',
+    children: 'Full width overlay content',
+    className: 'w-full',
+  },
+};
+
+export const WithMultipleChildren: Story = {
+  args: {
+    open: true,
+    disablePortal: true,
+    ariaLabel: 'Multi-child overlay',
+    children: 'Header content | Body content | Footer content',
   },
 };

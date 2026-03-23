@@ -4,6 +4,7 @@ import { ThemeProvider } from './ThemeProvider';
 const meta: Meta<typeof ThemeProvider> = {
   component: ThemeProvider,
   title: 'Providers/ThemeProvider',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 
 export default meta;
@@ -24,5 +25,23 @@ export const DarkMode: Story = {
 export const CustomTheme: Story = {
   args: {
     children: 'Custom theme overrides applied',
+  },
+};
+
+export const HighContrast: Story = {
+  args: {
+    children: 'High contrast theme content',
+  },
+};
+
+export const CompactDensity: Story = {
+  args: {
+    children: 'Compact density theme content',
+  },
+};
+
+export const WithNestedContent: Story = {
+  args: {
+    children: 'Nested theme provider content with overrides',
   },
 };

@@ -34,6 +34,7 @@ const meta: Meta<typeof RadarChart> = {
   title: 'Enterprise/RadarChart',
   component: RadarChart,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof RadarChart>;
@@ -61,5 +62,28 @@ export const LargeSize: Story = {
     size: 450,
     levels: 10,
     showLegend: true,
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    axes: performanceAxes,
+    series: singleSeries,
+    size: 250,
+  },
+};
+
+export const WithTooltip: Story = {
+  args: {
+    axes: performanceAxes,
+    series: singleSeries,
+    showTooltip: true,
+  },
+};
+
+export const ThreeAxes: Story = {
+  args: {
+    axes: performanceAxes.slice(0, 3),
+    series: [{ id: 'current', label: 'Current', values: { speed: 70, reliability: 85, security: 90 } }],
   },
 };

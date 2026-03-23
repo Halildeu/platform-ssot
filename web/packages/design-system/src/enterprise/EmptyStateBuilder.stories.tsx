@@ -5,6 +5,7 @@ const meta: Meta<typeof EmptyStateBuilder> = {
   title: 'Enterprise/EmptyStateBuilder',
   component: EmptyStateBuilder,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof EmptyStateBuilder>;
@@ -45,5 +46,14 @@ export const NoPermission: Story = {
   args: {
     reason: 'no-permission',
     size: 'sm',
+  },
+};
+
+export const Maintenance: Story = {
+  args: {
+    reason: 'maintenance' as any,
+    title: 'Under maintenance',
+    description: 'This feature is temporarily unavailable.',
+    size: 'md',
   },
 };

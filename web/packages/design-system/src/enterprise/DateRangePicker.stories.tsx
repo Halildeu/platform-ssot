@@ -5,6 +5,7 @@ const meta: Meta<typeof DateRangePicker> = {
   title: 'Enterprise/DateRangePicker',
   component: DateRangePicker,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof DateRangePicker>;
@@ -34,5 +35,19 @@ export const DisabledPresets: Story = {
   args: {
     disabledPresets: ['ytd', 'lastYear'],
     locale: 'tr-TR',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    placeholder: 'Picker is disabled',
+  },
+};
+
+export const WithLocale: Story = {
+  args: {
+    locale: 'en-US',
+    placeholder: 'Select date range',
   },
 };

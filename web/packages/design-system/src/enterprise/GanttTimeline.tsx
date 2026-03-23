@@ -265,7 +265,7 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
     >
       <div className="flex overflow-x-auto" ref={containerRef}>
         {/* Left: Task labels */}
-        <div className="flex-shrink-0 border-r border-border-default" style={{ width: TASK_LABEL_WIDTH }}>
+        <div className="shrink-0 border-r border-border-default" style={{ width: TASK_LABEL_WIDTH }}>
           {/* Header */}
           <div className="h-10 border-b border-border-default bg-surface-muted px-3 flex items-center">
             <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Tasks</span>
@@ -309,7 +309,7 @@ export const GanttTimeline: React.FC<GanttTimelineProps> = ({
               return (
                 <div
                   key={i}
-                  className="flex-shrink-0 border-r border-border-subtle flex items-center justify-center"
+                  className="shrink-0 border-r border-border-subtle flex items-center justify-center"
                   style={{ width: slotDays * colWidth }}
                 >
                   <span className="text-[10px] text-[var(--text-tertiary)] font-medium whitespace-nowrap">

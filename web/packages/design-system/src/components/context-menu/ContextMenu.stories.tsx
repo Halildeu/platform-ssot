@@ -77,3 +77,25 @@ export const Disabled: Story = {
     ),
   },
 };
+
+export const WithShortcuts: Story = {
+  args: {
+    items: menuItems,
+    children: (
+      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14 }}>
+        Kisayol tuslu menu
+      </div>
+    ),
+  },
+};
+
+export const EmptyMenu: Story = {
+  args: {
+    items: [],
+    children: (
+      <div style={{ padding: 40, border: '2px dashed var(--border-subtle)', borderRadius: 12, textAlign: 'center', fontSize: 14 }}>
+        Bos menu
+      </div>
+    ),
+  },
+};

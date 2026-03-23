@@ -41,6 +41,7 @@ const meta: Meta<typeof ExecutiveKPIStrip> = {
   title: 'Enterprise/ExecutiveKPIStrip',
   component: ExecutiveKPIStrip,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ExecutiveKPIStrip>;
@@ -73,5 +74,19 @@ export const WithTargets: Story = {
       target: { current: 72, goal: 100 },
     })),
     size: 'md',
+  },
+};
+
+export const SingleMetric: Story = {
+  args: {
+    metrics: [sampleMetrics[0]],
+    columns: 1,
+  },
+};
+
+export const SmallSize: Story = {
+  args: {
+    metrics: sampleMetrics,
+    size: 'sm',
   },
 };

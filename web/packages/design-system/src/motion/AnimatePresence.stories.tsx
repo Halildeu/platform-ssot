@@ -71,3 +71,18 @@ export const FastExit: Story = {
   render: () => <AnimatePresenceDemo exitDuration={50} />,
   name: 'Fast Exit',
 };
+
+export const MediumExit: Story = {
+  render: () => <AnimatePresenceDemo exitDuration={300} />,
+  name: 'Medium Exit Duration',
+};
+
+export const ZeroExit: Story = {
+  render: () => <AnimatePresenceDemo exitDuration={0} />,
+  name: 'Instant Exit',
+};
+
+export const LongExit: Story = {
+  render: () => <AnimatePresenceDemo exitDuration={1000} />,
+  name: 'Long Exit Duration',
+};

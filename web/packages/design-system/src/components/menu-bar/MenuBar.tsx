@@ -1135,7 +1135,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
     >
       <div
         className={cn(
-          'relative flex min-h-12 w-full items-center gap-3 rounded-[28px] px-2 py-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent',
+          'relative flex min-h-12 w-full items-center gap-3 rounded-[28px] px-2 py-2 before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent',
           overflowBehavior === 'scroll' ? 'overflow-visible' : 'overflow-hidden',
           rootClassByAppearance[appearance],
         )}
@@ -1193,7 +1193,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
             `group relative inline-flex min-h-10 items-center gap-2 rounded-2xl border border-transparent font-medium transition duration-200 ${focusRingClass("ring")}`,
             sizeClassNames[size],
             isActive
-              ? 'border-border-default/70 bg-[var(--surface-card)] text-accent-primary shadow-[0_16px_34px_-26px_var(--shadow-color)] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent'
+              ? 'border-border-default/70 bg-[var(--surface-card)] text-accent-primary shadow-[0_16px_34px_-26px_var(--shadow-color)] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent'
               : itemEmphasis === 'promoted'
                 ? 'border-sky-200/70 bg-[var(--surface-card-alt)] text-text-primary shadow-[0_14px_30px_-24px_var(--shadow-color)] hover:-translate-y-px hover:border-sky-300/80 hover:bg-[var(--surface-card)] hover:shadow-[0_18px_34px_-24px_var(--shadow-color)]'
                 : itemEmphasis === 'subtle'
@@ -1273,7 +1273,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
                   role="separator"
                   aria-orientation="vertical"
                   data-slot="segment-divider"
-                  className="mx-1 inline-flex h-8 w-px shrink-0 bg-gradient-to-b from-transparent via-border-default/70 to-transparent"
+                  className="mx-1 inline-flex h-8 w-px shrink-0 bg-linear-to-b from-transparent via-border-default/70 to-transparent"
                 />
               ) : null}
               <span className="relative inline-flex min-w-0">

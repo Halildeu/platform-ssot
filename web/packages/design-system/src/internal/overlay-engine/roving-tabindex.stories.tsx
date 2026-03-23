@@ -3,6 +3,7 @@ import React from 'react';
 
 const meta: Meta = {
   title: 'Internal/useRovingTabindex',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 
@@ -27,4 +28,12 @@ export const VerticalNavigation: Story = {
 
 export const WithLoop: Story = {
   render: () => <div>useRovingTabindex — loop=true wraps focus from last to first item</div>,
+};
+
+export const WithDisabledItems: Story = {
+  render: () => <div>useRovingTabindex — skips disabled items during navigation</div>,
+};
+
+export const GridNavigation: Story = {
+  render: () => <div>useRovingTabindex — 2D grid navigation with arrow keys</div>,
 };

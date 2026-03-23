@@ -125,13 +125,13 @@ const RowRenderer: React.FC<RowRendererProps> = ({
           <div className="flex items-center" style={{ paddingLeft: indent }}>
             {hasChildren && (
               <button
-                className="mr-1.5 text-[10px] text-[var(--text-tertiary)] hover:text-text-primary w-4 flex-shrink-0"
+                className="mr-1.5 text-[10px] text-[var(--text-tertiary)] hover:text-text-primary w-4 shrink-0"
                 onClick={(e) => { e.stopPropagation(); onToggle(row.id); }}
               >
                 {isExpanded ? '\u25BC' : '\u25B6'}
               </button>
             )}
-            {!hasChildren && depth > 0 && <span className="w-4 flex-shrink-0" />}
+            {!hasChildren && depth > 0 && <span className="w-4 shrink-0" />}
             <span className="truncate">{row.label}</span>
           </div>
         </td>

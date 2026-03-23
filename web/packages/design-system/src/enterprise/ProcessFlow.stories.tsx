@@ -28,6 +28,7 @@ const meta: Meta<typeof ProcessFlow> = {
   title: 'Enterprise/ProcessFlow',
   component: ProcessFlow,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ProcessFlow>;
@@ -58,6 +59,20 @@ export const WithHighlightedPath: Story = {
 export const AllCompleted: Story = {
   args: {
     nodes: sampleNodes.map((n) => ({ ...n, status: 'completed' as const })),
+    edges: sampleEdges,
+  },
+};
+
+export const SingleNode: Story = {
+  args: {
+    nodes: [sampleNodes[0]],
+    edges: [],
+  },
+};
+
+export const AllIdle: Story = {
+  args: {
+    nodes: sampleNodes.map((n) => ({ ...n, status: 'idle' as const })),
     edges: sampleEdges,
   },
 };

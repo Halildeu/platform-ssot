@@ -13,6 +13,7 @@ const meta: Meta<typeof ApprovalWorkflow> = {
   title: 'Enterprise/ApprovalWorkflow',
   component: ApprovalWorkflow,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ApprovalWorkflow>;
@@ -48,5 +49,17 @@ export const WithRejection: Story = {
       { ...sampleSteps[2], status: 'skipped' as const },
       { ...sampleSteps[3], status: 'pending' as const },
     ],
+  },
+};
+
+export const SingleStep: Story = {
+  args: {
+    steps: [sampleSteps[0]],
+  },
+};
+
+export const AllPending: Story = {
+  args: {
+    steps: sampleSteps.map((s) => ({ ...s, status: 'pending' as const, timestamp: undefined })),
   },
 };

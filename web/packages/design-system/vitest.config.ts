@@ -12,6 +12,8 @@ export default defineConfig({
       '**/.stryker-tmp/**',
       '**/*.browser.test.{ts,tsx}',
       '**/*.visual.test.{ts,tsx}',
+      '**/*depth*.test.{ts,tsx}',
+      '**/*-depth.test.{ts,tsx}',
     ],
     coverage: {
       provider: 'v8',

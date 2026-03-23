@@ -23,6 +23,7 @@ const meta: Meta<typeof ComparisonTable> = {
   title: 'Enterprise/ComparisonTable',
   component: ComparisonTable,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ComparisonTable>;
@@ -54,5 +55,26 @@ export const InvertedVariance: Story = {
       { id: 'defects', label: 'Defect Count', actual: 12, target: 20 },
     ],
     invertVarianceColors: true,
+  },
+};
+
+export const SingleRow: Story = {
+  args: {
+    rows: [sampleRows[0]],
+  },
+};
+
+export const EmptyTable: Story = {
+  args: {
+    rows: [],
+  },
+};
+
+export const PercentageOnly: Story = {
+  args: {
+    rows: [
+      { id: 'margin', label: 'Margin', actual: 42.5, target: 40.0, format: { style: 'percent' } },
+      { id: 'efficiency', label: 'Efficiency', actual: 88.0, target: 90.0, format: { style: 'percent' } },
+    ],
   },
 };

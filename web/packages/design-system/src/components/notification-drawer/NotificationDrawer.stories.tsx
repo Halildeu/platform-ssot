@@ -65,3 +65,43 @@ export const EmptyState: Story = {
     ),
   ],
 };
+
+export const ManyItems: Story = {
+  args: {
+    open: true,
+    items: [...sampleItems, ...sampleItems.map((i) => ({ ...i, key: i.key + '-dup' }))],
+    title: 'Bildirimler',
+    disablePortal: true,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ position: 'relative', height: 500, overflow: 'hidden' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const Closed: Story = {
+  args: {
+    open: false,
+    items: sampleItems,
+    disablePortal: true,
+  },
+};
+
+export const AllRead: Story = {
+  args: {
+    open: true,
+    items: sampleItems.map((i) => ({ ...i, read: true })),
+    title: 'Tumu Okundu',
+    disablePortal: true,
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ position: 'relative', height: 500, overflow: 'hidden' }}>
+        <Story />
+      </div>
+    ),
+  ],
+};

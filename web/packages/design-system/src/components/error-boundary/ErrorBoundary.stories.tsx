@@ -10,6 +10,7 @@ const meta: Meta<typeof ErrorBoundary> = {
   title: 'Components/Feedback/ErrorBoundary',
   component: ErrorBoundary,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ErrorBoundary>;

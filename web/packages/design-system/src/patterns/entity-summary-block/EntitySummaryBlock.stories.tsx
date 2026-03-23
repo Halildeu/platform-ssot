@@ -56,3 +56,33 @@ export const WithImage: Story = {
     ],
   },
 };
+
+export const Minimal: Story = {
+  args: {
+    title: 'Minimal Entity',
+    items: [{ key: 'status', label: 'Status', value: 'Active' }],
+  },
+};
+
+export const WithManyItems: Story = {
+  args: {
+    title: 'Full Entity',
+    subtitle: 'Extended info',
+    avatar: { name: 'FE' },
+    items: Array.from({ length: 6 }, (_, i) => ({
+      key: \`f\${i}\`,
+      label: \`Field \${i + 1}\`,
+      value: \`Value \${i + 1}\`,
+    })),
+  },
+};
+
+export const WithoutAvatar: Story = {
+  args: {
+    title: 'No Avatar Entity',
+    items: [
+      { key: 'type', label: 'Type', value: 'Service' },
+      { key: 'region', label: 'Region', value: 'EU-West' },
+    ],
+  },
+};

@@ -220,7 +220,7 @@ export default function APIDetail() {
       </nav>
 
       {/* ── Hero header ── */}
-      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-gradient-to-br from-surface-default via-surface-default to-surface-canvas p-6 sm:p-8">
+      <div className="relative overflow-hidden rounded-2xl border border-border-subtle bg-linear-to-br from-surface-default via-surface-default to-surface-canvas p-6 sm:p-8">
         {/* Decorative dots */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.02]"
@@ -587,7 +587,7 @@ function ApiParamsTab({
       {/* Parameters / Arguments table */}
       {props.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-          <div className="border-b border-border-subtle bg-gradient-to-r from-blue-500/5 to-transparent px-5 py-4">
+          <div className="border-b border-border-subtle bg-linear-to-r from-blue-500/5 to-transparent px-5 py-4">
             <Text as="div" className="text-sm font-semibold text-text-primary">
               {kind === "hook" ? "Parametreler" : kind === "const" ? "Anahtarlar" : "Argumanlar"}
             </Text>
@@ -658,7 +658,7 @@ function ApiParamsTab({
       {/* Return value / State model table (for hooks) */}
       {kind === "hook" && stateModel.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-          <div className="border-b border-border-subtle bg-gradient-to-r from-violet-500/5 to-transparent px-5 py-4">
+          <div className="border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Donus Degerleri
             </Text>
@@ -869,7 +869,7 @@ function QualityTab({
     <div className="space-y-6">
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
         {/* Header with score */}
-        <div className="flex items-center justify-between border-b border-border-subtle bg-gradient-to-r from-violet-500/5 to-transparent px-5 py-4">
+        <div className="flex items-center justify-between border-b border-border-subtle bg-linear-to-r from-violet-500/5 to-transparent px-5 py-4">
           <div className="flex items-center gap-3">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-500/10">
               <ShieldCheck className="h-4 w-4 text-violet-600" />

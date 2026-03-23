@@ -54,3 +54,19 @@ export const WithoutIcon: Story = {
     description: 'Bu bolumde henuz icerik bulunmamaktadir.',
   },
 };
+
+export const WithCustomAction: Story = {
+  args: {
+    icon: DefaultIcon,
+    title: 'Ozel islem',
+    description: 'Farkli bir islem baslatin.',
+    action: <Button variant="outline">Geri Don</Button>,
+  },
+};
+
+export const LargeTitle: Story = {
+  args: {
+    title: 'Bu bolumde henuz hicbir icerik bulunmamaktadir',
+    description: 'Icerik eklemek icin yukaridaki butona tiklayin.',
+  },
+};

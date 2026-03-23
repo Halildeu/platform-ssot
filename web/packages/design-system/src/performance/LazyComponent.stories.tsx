@@ -64,3 +64,13 @@ export const MultipleInstances: Story = {
     </div>
   ),
 };
+
+export const WithTitle: Story = {
+  render: () => <LazyHeavy title="Named Widget" />,
+  name: 'With Custom Title',
+};
+
+export const SmallWidget: Story = {
+  render: () => <LazyHeavy title="Compact Widget" />,
+  name: 'Small Widget',
+};

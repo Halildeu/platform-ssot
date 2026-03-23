@@ -312,13 +312,13 @@ describe('FilterBar — contract: responsive collapse (flex-wrap)', () => {
     expect(filtersDiv).toBeInTheDocument();
   });
 
-  it('search slotu flex-shrink-0 ile sabit genislikte kalir', () => {
+  it('search slotu shrink-0 ile sabit genislikte kalir', () => {
     const { container } = render(
       <FilterBar search={<input data-testid="s" />}>
         <span>F</span>
       </FilterBar>,
     );
-    const searchWrap = container.querySelector('.flex-shrink-0');
+    const searchWrap = container.querySelector('.shrink-0');
     expect(searchWrap).toBeInTheDocument();
     expect(searchWrap?.querySelector('[data-testid="s"]')).toBeInTheDocument();
   });

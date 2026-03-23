@@ -54,3 +54,18 @@ export const WithDescription: Story = {
     description: 'Sistem performans ozeti.',
   },
 };
+
+export const SingleItem: Story = {
+  args: {
+    items: [items[0]],
+    columns: 1,
+  },
+};
+
+export const FourColumns: Story = {
+  args: {
+    items,
+    columns: 4,
+    title: 'Dort Sutunlu',
+  },
+};

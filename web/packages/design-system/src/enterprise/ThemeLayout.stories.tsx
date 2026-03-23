@@ -68,3 +68,17 @@ export const Compact: Story = {
     slots: sampleSlots,
   },
 };
+
+export const MinimalSlots: Story = {
+  args: {
+    theme: 'executive',
+    slots: { header: sampleSlots.header, grid: sampleSlots.grid },
+  },
+};
+
+export const WithSidebar: Story = {
+  args: {
+    theme: 'operations',
+    slots: { ...sampleSlots, sidebar: sampleSlots.sidebar },
+  },
+};

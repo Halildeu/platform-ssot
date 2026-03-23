@@ -6,6 +6,7 @@ const meta: Meta<typeof AIGuidedAuthoring> = {
   title: 'Components/AI/AIGuidedAuthoring',
   component: AIGuidedAuthoring,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof AIGuidedAuthoring>;
@@ -33,5 +34,37 @@ export const WithConfidence: Story = {
 export const Empty: Story = {
   args: {
     recommendations: [],
+  },
+};
+
+export const LowConfidence: Story = {
+  args: {
+    confidenceLevel: 'low',
+    confidenceScore: 35,
+    recommendations: [
+      { id: '1', title: 'Veri dogrula', summary: 'Veriler yetersiz, dogrulama onerilir.', confidenceLevel: 'low', confidenceScore: 35 },
+    ],
+  },
+};
+
+export const ManyRecommendations: Story = {
+  args: {
+    recommendations: Array.from({ length: 8 }, (_, i) => ({
+      id: String(i + 1),
+      title: `Oneri ${i + 1}`,
+      summary: `Detayli aciklama ${i + 1}.`,
+      confidenceLevel: 'medium' as const,
+      confidenceScore: 50 + i * 5,
+    })),
+  },
+};
+
+export const SingleRecommendation: Story = {
+  args: {
+    recommendations: [
+      { id: '1', title: 'Tek oneri', summary: 'Yalnizca bir oneri mevcut.', confidenceLevel: 'very-high', confidenceScore: 99 },
+    ],
+    confidenceLevel: 'very-high',
+    confidenceScore: 99,
   },
 };

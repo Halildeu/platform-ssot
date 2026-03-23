@@ -7,6 +7,7 @@ const meta: Meta<typeof ThemePresetGallery> = {
   title: 'Components/Theme/ThemePresetGallery',
   component: ThemePresetGallery,
   tags: ['autodocs'],
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 type Story = StoryObj<typeof ThemePresetGallery>;
@@ -34,5 +35,24 @@ export const WithSelection: Story = {
 export const Empty: Story = {
   args: {
     presets: [],
+  },
+};
+
+export const SinglePreset: Story = {
+  args: {
+    presets: [presets[0]],
+  },
+};
+
+export const HighContrastOnly: Story = {
+  args: {
+    presets: presets.filter((p) => p.isHighContrast),
+    selectedPresetId: 'high-contrast',
+  },
+};
+
+export const ManyPresets: Story = {
+  args: {
+    presets: [...presets, ...presets.map((p) => ({ ...p, presetId: p.presetId + '-alt', label: p.label + ' Alt' }))],
   },
 };

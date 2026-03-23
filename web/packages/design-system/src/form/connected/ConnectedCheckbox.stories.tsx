@@ -43,3 +43,18 @@ export const Disabled: Story = {
   render: () => <ConnectedCheckboxDemo />,
   name: 'Disabled State',
 };
+
+export const WithLabel: Story = {
+  render: () => <ConnectedCheckboxDemo />,
+  name: 'With Label',
+};
+
+export const Indeterminate: Story = {
+  render: () => <ConnectedCheckboxDemo />,
+  name: 'Indeterminate State',
+};
+
+export const Required: Story = {
+  render: () => <ConnectedCheckboxDemo />,
+  name: 'Required Field',
+};

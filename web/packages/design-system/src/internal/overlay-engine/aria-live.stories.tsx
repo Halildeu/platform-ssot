@@ -5,6 +5,7 @@ import { AriaLiveRegion } from './aria-live';
 const meta: Meta<typeof AriaLiveRegion> = {
   component: AriaLiveRegion,
   title: 'Internal/AriaLiveRegion',
+  argTypes: { disabled: { control: 'boolean' } },
 };
 export default meta;
 
@@ -24,4 +25,12 @@ export const Assertive: Story = {
 
 export const AutoClear: Story = {
   render: () => <div>AriaLiveRegion — messages auto-clear after 5 seconds</div>,
+};
+
+export const WithRole: Story = {
+  render: () => <div>AriaLiveRegion — role=status for non-critical updates</div>,
+};
+
+export const OffScreen: Story = {
+  render: () => <div>AriaLiveRegion — visually hidden but accessible to screen readers</div>,
 };

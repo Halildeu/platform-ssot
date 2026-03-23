@@ -141,7 +141,7 @@ export default function ROICalculator() {
       </div>
 
       {/* Summary banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-emerald-500/10 via-blue-500/5 to-violet-500/10 p-6">
+      <div className="rounded-2xl bg-linear-to-r from-emerald-500/10 via-blue-500/5 to-violet-500/10 p-6">
         <Text className="text-center text-sm font-medium text-text-secondary">
           Bu platform {formatNumber(calculations.totalHoursSaved)} saat geliştirme süresinden{" "}
           <span className="text-lg font-bold text-emerald-600">
