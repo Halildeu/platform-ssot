@@ -7,16 +7,29 @@
  * 3. Ownership Coverage
  * 4. Audit Trail (recent entries)
  * 5. RBAC info (current role)
+ * 6. Deprecation Timeline
+ * 7. Quality Exception Registry
+ * 8. Policy Compliance Summary
+ * 9. Known Issues Panel
  */
 
-import React from "react";
-import { Shield } from "lucide-react";
+import React, { useMemo } from "react";
+import {
+  Shield,
+  Clock,
+  AlertOctagon,
+  CheckSquare,
+  AlertCircle,
+  ArrowRight,
+  BarChart3,
+} from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { ReleaseHealthCard } from "../governance/ReleaseHealthCard";
 import { ApprovalQueue } from "../governance/ApprovalQueue";
 import { OwnershipPanel } from "../governance/OwnershipPanel";
 import { AuditTrailPanel } from "../governance/AuditTrailPanel";
 import { useDesignLabRBAC } from "../governance/useDesignLabRBAC";
+import { useDesignLab } from "../DesignLabProvider";
 import { DataProvenanceBadge } from "../components/DataProvenanceBadge";
 
 const ROLE_LABELS: Record<string, string> = {
@@ -32,6 +45,324 @@ const ROLE_COLORS: Record<string, string> = {
   maintainer: "bg-purple-100 text-purple-700",
   admin: "bg-emerald-100 text-emerald-700",
 };
+
+/* ------------------------------------------------------------------ */
+/*  Quality gate constants                                             */
+/* ------------------------------------------------------------------ */
+
+const ALL_QUALITY_GATES = [
+  "design_tokens",
+  "a11y_keyboard_support",
+  "unit_tests",
+  "visual_regression",
+  "documentation",
+];
+
+/* ------------------------------------------------------------------ */
+/*  Deprecation Timeline                                               */
+/* ------------------------------------------------------------------ */
+
+function DeprecationTimeline() {
+  const { index } = useDesignLab();
+
+  const deprecated = useMemo(() => {
+    return index.items.filter(
+      (item) =>
+        item.lifecycle === ("deprecated" as string) ||
+        (item.tags && item.tags.includes("deprecated")),
+    );
+  }, [index.items]);
+
+  return (
+    <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Clock className="h-4 w-4 text-amber-600" />
+          <Text as="h3" className="text-sm font-semibold text-text-primary">
+            Deprecation Timeline
+          </Text>
+        </div>
+        <DataProvenanceBadge level="derived" />
+      </div>
+
+      <div className="mt-3">
+        {deprecated.length === 0 ? (
+          <div className="rounded-xl bg-emerald-50 p-4 text-center">
+            <CheckSquare className="mx-auto h-6 w-6 text-emerald-500" />
+            <Text className="mt-2 text-sm font-medium text-emerald-700">
+              0 deprecated — tum bilesenler guncel
+            </Text>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {deprecated.map((item) => (
+              <div
+                key={item.name}
+                className="flex items-center gap-3 rounded-xl border border-amber-200/50 bg-amber-50/50 p-3"
+              >
+                <AlertCircle className="h-4 w-4 shrink-0 text-amber-600" />
+                <div className="min-w-0 flex-1">
+                  <Text className="text-sm font-semibold text-text-primary">
+                    {item.name}
+                  </Text>
+                  <Text variant="secondary" className="text-xs">
+                    {item.group} / {item.subgroup}
+                  </Text>
+                </div>
+                <div className="text-right">
+                  <Text variant="secondary" className="text-[10px]">
+                    Lifecycle: {item.lifecycle}
+                  </Text>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Quality Exception Registry                                         */
+/* ------------------------------------------------------------------ */
+
+function QualityExceptionRegistry() {
+  const { index } = useDesignLab();
+
+  const exceptions = useMemo(() => {
+    return index.items.filter(
+      (item) =>
+        item.lifecycle === ("experimental" as string) &&
+        item.whereUsed.length > 0,
+    );
+  }, [index.items]);
+
+  return (
+    <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <AlertOctagon className="h-4 w-4 text-rose-600" />
+          <Text as="h3" className="text-sm font-semibold text-text-primary">
+            Quality Exception Registry
+          </Text>
+        </div>
+        <DataProvenanceBadge level="derived" />
+      </div>
+
+      <div className="mt-3">
+        {exceptions.length === 0 ? (
+          <div className="rounded-xl bg-emerald-50 p-4 text-center">
+            <CheckSquare className="mx-auto h-6 w-6 text-emerald-500" />
+            <Text className="mt-2 text-sm font-medium text-emerald-700">
+              Kalite istisna kaydı yok — tum uretim bilesenleri stabil
+            </Text>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {exceptions.map((item) => (
+              <div
+                key={item.name}
+                className="flex items-center gap-3 rounded-xl border border-rose-200/50 bg-rose-50/30 p-3"
+              >
+                <AlertOctagon className="h-4 w-4 shrink-0 text-rose-500" />
+                <div className="min-w-0 flex-1">
+                  <Text className="text-sm font-semibold text-text-primary">
+                    {item.name}
+                  </Text>
+                  <Text variant="secondary" className="text-xs">
+                    Maturity: {item.lifecycle} &middot; Kullanim:{" "}
+                    {item.whereUsed.length} uygulama
+                  </Text>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {item.whereUsed.slice(0, 3).map((app) => (
+                    <span
+                      key={app}
+                      className="rounded bg-rose-100 px-1.5 py-0.5 text-[10px] font-medium text-rose-700"
+                    >
+                      {app}
+                    </span>
+                  ))}
+                  {item.whereUsed.length > 3 && (
+                    <span className="rounded bg-surface-muted px-1.5 py-0.5 text-[10px] text-text-secondary">
+                      +{item.whereUsed.length - 3}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Policy Compliance Summary                                          */
+/* ------------------------------------------------------------------ */
+
+function PolicyComplianceSummary() {
+  const { index } = useDesignLab();
+
+  const stats = useMemo(() => {
+    const items = index.items;
+    const total = items.length;
+    if (total === 0)
+      return { total: 0, allGates: 0, designTokens: 0, a11yKeyboard: 0, pct: 0 };
+
+    const allGates = items.filter(
+      (item) =>
+        item.qualityGates.length >= ALL_QUALITY_GATES.length &&
+        ALL_QUALITY_GATES.every((g) => item.qualityGates.includes(g)),
+    ).length;
+
+    const designTokens = items.filter((item) =>
+      item.qualityGates.includes("design_tokens"),
+    ).length;
+
+    const a11yKeyboard = items.filter((item) =>
+      item.qualityGates.includes("a11y_keyboard_support"),
+    ).length;
+
+    const pct =
+      total > 0 ? Math.round((allGates / total) * 100) : 0;
+
+    return { total, allGates, designTokens, a11yKeyboard, pct };
+  }, [index.items]);
+
+  return (
+    <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <BarChart3 className="h-4 w-4 text-blue-600" />
+          <Text as="h3" className="text-sm font-semibold text-text-primary">
+            Policy Compliance Summary
+          </Text>
+        </div>
+        <DataProvenanceBadge level="derived" />
+      </div>
+
+      <div className="mt-4 space-y-3">
+        {/* Overall compliance bar */}
+        <div>
+          <div className="flex items-center justify-between">
+            <Text variant="secondary" className="text-xs">
+              Tum kapilar gecen bilesenler
+            </Text>
+            <Text className="text-sm font-bold text-text-primary">
+              {stats.pct}%
+            </Text>
+          </div>
+          <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-surface-muted">
+            <div
+              className={`h-full rounded-full transition-all ${
+                stats.pct >= 80
+                  ? "bg-emerald-500"
+                  : stats.pct >= 50
+                    ? "bg-amber-500"
+                    : "bg-rose-500"
+              }`}
+              style={{ width: `${stats.pct}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Gate breakdown */}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-xl bg-surface-muted p-3 text-center">
+            <Text className="text-xl font-bold text-text-primary">
+              {stats.allGates}
+              <span className="text-sm font-normal text-text-secondary">
+                /{stats.total}
+              </span>
+            </Text>
+            <Text variant="secondary" className="text-[10px]">
+              Tum 5 kapi
+            </Text>
+          </div>
+          <div className="rounded-xl bg-surface-muted p-3 text-center">
+            <Text className="text-xl font-bold text-text-primary">
+              {stats.designTokens}
+              <span className="text-sm font-normal text-text-secondary">
+                /{stats.total}
+              </span>
+            </Text>
+            <Text variant="secondary" className="text-[10px]">
+              design_tokens
+            </Text>
+          </div>
+          <div className="rounded-xl bg-surface-muted p-3 text-center">
+            <Text className="text-xl font-bold text-text-primary">
+              {stats.a11yKeyboard}
+              <span className="text-sm font-normal text-text-secondary">
+                /{stats.total}
+              </span>
+            </Text>
+            <Text variant="secondary" className="text-[10px]">
+              a11y_keyboard
+            </Text>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Known Issues Panel                                                 */
+/* ------------------------------------------------------------------ */
+
+function KnownIssuesPanel() {
+  const { index } = useDesignLab();
+
+  const issueCount = useMemo(() => {
+    // Count items with lifecycle=beta and quality gates < 3 as potential issues
+    return index.items.filter(
+      (item) =>
+        item.lifecycle === "beta" && item.qualityGates.length < 3,
+    ).length;
+  }, [index.items]);
+
+  return (
+    <div className="rounded-2xl border border-border-subtle bg-surface-default p-5">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 text-amber-600" />
+          <Text as="h3" className="text-sm font-semibold text-text-primary">
+            Known Issues
+          </Text>
+        </div>
+        <DataProvenanceBadge level="derived" />
+      </div>
+
+      <div className="mt-3">
+        <div className="flex items-center justify-between rounded-xl bg-surface-muted p-4">
+          <div>
+            <Text className="text-2xl font-bold text-text-primary">
+              {issueCount}
+            </Text>
+            <Text variant="secondary" className="text-xs">
+              beta bilesen, yetersiz kalite kapisi (&lt;3)
+            </Text>
+          </div>
+          <a
+            href="/admin/design-lab/quality-dashboard"
+            className="flex items-center gap-1.5 rounded-lg bg-action-primary/10 px-3 py-2 text-xs font-semibold text-action-primary transition hover:bg-action-primary/20"
+          >
+            Quality Dashboard
+            <ArrowRight className="h-3.5 w-3.5" />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main Page                                                          */
+/* ------------------------------------------------------------------ */
 
 export default function GovernancePage() {
   const { role, permissions } = useDesignLabRBAC();
@@ -117,6 +448,21 @@ export default function GovernancePage() {
           ))}
         </div>
       </div>
+
+      {/* 6. Policy Compliance Summary */}
+      <PolicyComplianceSummary />
+
+      {/* Two-column layout for deprecation + exceptions */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* 7. Deprecation Timeline */}
+        <DeprecationTimeline />
+
+        {/* 8. Quality Exception Registry */}
+        <QualityExceptionRegistry />
+      </div>
+
+      {/* 9. Known Issues */}
+      <KnownIssuesPanel />
     </div>
   );
 }
