@@ -291,26 +291,52 @@ check('display-name', 'Component displayName coverage', () => {
 });
 
 // 8. Hardcoded color leaks in production TSX
-check('color-leaks', 'Hardcoded color values in production TSX', () => {
-  const tsxFiles = walkDir(DS_SRC, '.tsx');
+check('color-leaks', 'Hardcoded color values in production code (all patterns)', () => {
+  const scanDirs = [DS_SRC, join(ROOT, 'packages/x-form-builder/src'), join(ROOT, 'packages/x-charts/src'), join(ROOT, 'packages/x-data-grid/src'), join(ROOT, 'packages/x-editor/src'), join(ROOT, 'packages/x-kanban/src'), join(ROOT, 'packages/x-scheduler/src'), join(ROOT, 'apps/mfe-shell/src'), join(ROOT, 'apps/mfe-audit/src'), join(ROOT, 'apps/mfe-users/src'), join(ROOT, 'apps/mfe-access/src'), join(ROOT, 'apps/mfe-reporting/src'), join(ROOT, 'apps/mfe-ethic/src'), join(ROOT, 'apps/mfe-suggestions/src')];
+  const internalPaths = ['design-lab', 'demos/', 'playground/', 'showcase/', '__stories__'];
   const violations = [];
-  const colorRe = /(?:color|background|backgroundColor|borderColor|fill|stroke)\s*[:=]\s*['"]#[0-9a-fA-F]{3,8}['"]/g;
+  const patterns = [
+    /* 1. Inline style hex: style={{ color: '#fff' }} or backgroundColor: '#000' */
+    { name: 'inline-hex', re: /(?:color|background|backgroundColor|borderColor|fill|stroke|boxShadow)\s*[:=]\s*['"]#[0-9a-fA-F]{3,8}['"]/g },
+    /* 2. SVG attribute hex: fill="#fff", stroke="#000" (not var()) */
+    { name: 'svg-hex', re: /\b(?:fill|stroke|stop-color|flood-color)="(?!var\()#[0-9a-fA-F]{3,8}"/g },
+    /* 3. rgb/rgba in inline style */
+    { name: 'inline-rgb', re: /(?:color|background|backgroundColor|borderColor|border|outline)\s*[:=]\s*[`'"](?:rgba?\([^)]+\))/g },
+    /* 4. JS variable with hardcoded hex: color: '#ffffff', const c = '#ff0' */
+    { name: 'js-hex', re: /\b(?:color|background|bg|fill|stroke)\s*[:=]\s*['"]#[0-9a-fA-F]{3,8}['"]/g },
+  ];
 
-  for (const file of tsxFiles) {
-    const content = readSafe(file);
-    const matches = content.match(colorRe) || [];
-    if (matches.length > 0) {
-      violations.push({ file: relative(ROOT, file), count: matches.length, samples: matches.slice(0, 3) });
+  for (const dir of scanDirs) {
+    const tsxFiles = [...walkDir(dir, '.tsx'), ...walkDir(dir, '.ts')];
+    for (const file of tsxFiles) {
+      const rel = relative(ROOT, file);
+      if (internalPaths.some(p => rel.includes(p))) continue;
+      /* Color pickers naturally use dynamic rgba — skip */
+      if (rel.includes('ColorPicker') || rel.includes('color-picker')) continue;
+      const content = readSafe(file);
+      const fileMatches = new Set();
+      for (const { re } of patterns) {
+        const matches = content.match(re) || [];
+        /* Skip var(--token, #fallback) pattern — fallback hex inside var() is acceptable */
+        for (const m of matches) {
+          if (m.includes('var(')) continue;
+          fileMatches.add(m.trim().substring(0, 60));
+        }
+        re.lastIndex = 0;
+      }
+      if (fileMatches.size > 0) {
+        violations.push({ file: rel, count: fileMatches.size, samples: [...fileMatches].slice(0, 4) });
+      }
     }
   }
 
-  if (violations.length === 0) return { status: 'pass', message: 'No hardcoded color values in production TSX' };
+  if (violations.length === 0) return { status: 'pass', message: 'No hardcoded color values in production code (hex, rgb, SVG, JS vars)' };
   const total = violations.reduce((s, v) => s + v.count, 0);
   return {
-    status: 'warn',
-    message: `${total} hardcoded color values in ${violations.length} files`,
+    status: total > 10 ? 'fail' : 'warn',
+    message: `${total} hardcoded colors in ${violations.length} production files (inline hex, SVG hex, rgb/rgba, JS vars)`,
     details: violations.slice(0, 10),
-    fix: FIX_HINT ? 'Replace hardcoded hex/rgb with CSS variable references: var(--surface-default), var(--text-primary), etc.' : undefined,
+    fix: FIX_HINT ? 'Replace with var(--token, fallback): color: "#fff" → color: "var(--text-inverse, #fff)"; fill="#000" → fill="var(--text-primary, #000)"' : undefined,
   };
 });
 

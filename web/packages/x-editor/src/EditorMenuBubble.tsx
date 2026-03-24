@@ -44,7 +44,7 @@ const bubbleButtonStyles: React.CSSProperties = {
 
 const activeBubbleButtonStyles: React.CSSProperties = {
   ...bubbleButtonStyles,
-  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  backgroundColor: 'var(--surface-raised, rgba(255, 255, 255, 0.2))',
 };
 
 interface BubbleAction {

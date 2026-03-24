@@ -53,7 +53,7 @@ export const ContextHealthTrendWidget: React.FC = () => {
     {
       name: "Health Score",
       data: history.map((h) => h.score),
-      color: "#22c55e",
+      color: "var(--state-success-text, #22c55e)",
     },
   ];
 
@@ -76,7 +76,7 @@ export const ContextHealthTrendWidget: React.FC = () => {
       <CardBody>
         {history.length < 2 ? (
           <div style={{ textAlign: "center", padding: 24 }}>
-            <div style={{ fontSize: 48, fontWeight: 800, color: current ? "#22c55e" : "var(--text-secondary)" }}>
+            <div style={{ fontSize: 48, fontWeight: 800, color: current ? "var(--state-success-text, #22c55e)" : "var(--text-secondary)" }}>
               {current?.score ?? "—"}
             </div>
             <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 8 }}>
@@ -96,7 +96,7 @@ export const ContextHealthTrendWidget: React.FC = () => {
         )}
         {trendDir !== 0 && (
           <div style={{ textAlign: "center", marginTop: 8 }}>
-            <span style={{ fontSize: 12, color: trendDir > 0 ? "#22c55e" : "#ef4444" }}>
+            <span style={{ fontSize: 12, color: trendDir > 0 ? "var(--state-success-text, #22c55e)" : "var(--state-danger-text, #ef4444)" }}>
               {trendDir > 0 ? "▲" : "▼"} {Math.abs(trendDir)} pts
             </span>
           </div>

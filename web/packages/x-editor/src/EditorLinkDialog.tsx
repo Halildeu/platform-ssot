@@ -14,7 +14,7 @@ export interface EditorLinkDialogProps {
 const overlayStyles: React.CSSProperties = {
   position: 'fixed',
   inset: 0,
-  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  backgroundColor: 'var(--surface-overlay, rgba(0, 0, 0, 0.3))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -97,7 +97,7 @@ const confirmButtonStyles: React.CSSProperties = {
   ...buttonBaseStyles,
   border: '1px solid transparent',
   backgroundColor: 'var(--surface-accent, #3b82f6)',
-  color: '#ffffff',
+  color: 'var(--text-inverse, #ffffff)',
 };
 
 const removeButtonStyles: React.CSSProperties = {

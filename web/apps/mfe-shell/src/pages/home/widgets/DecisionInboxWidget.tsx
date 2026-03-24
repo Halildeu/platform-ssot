@@ -67,7 +67,7 @@ export const DecisionInboxWidget: React.FC<{ onRefresh?: () => void }> = ({ onRe
             </div>
             <div style={{ width: 1, height: 40, background: "var(--border-primary)" }} />
             <div style={{ textAlign: "center", flex: 1 }}>
-              <div style={{ fontSize: 32, fontWeight: 800, color: "#3b82f6" }}>
+              <div style={{ fontSize: 32, fontWeight: 800, color: "var(--action-primary, #3b82f6)" }}>
                 {seeds}
               </div>
               <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>Seeds</div>

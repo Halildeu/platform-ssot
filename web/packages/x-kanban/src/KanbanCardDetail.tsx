@@ -104,7 +104,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.4)',
+          background: 'var(--surface-overlay, rgba(0, 0, 0, 0.4))',
         }}
       />
 
@@ -424,7 +424,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = 'var(--color-error, #ef4444)';
-                  e.currentTarget.style.color = '#fff';
+                  e.currentTarget.style.color = 'var(--text-inverse, #fff)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent';
@@ -459,7 +459,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                     border: 'none',
                     borderRadius: 'var(--radius-sm, 4px)',
                     background: 'var(--color-error, #ef4444)',
-                    color: '#fff',
+                    color: 'var(--text-inverse, #fff)',
                     cursor: 'pointer',
                   }}
                 >
@@ -523,7 +523,7 @@ export const KanbanCardDetail: React.FC<KanbanCardDetailProps> = ({
                 border: 'none',
                 borderRadius: 'var(--radius-md, 8px)',
                 background: 'var(--color-primary, #3b82f6)',
-                color: '#fff',
+                color: 'var(--text-inverse, #fff)',
                 cursor: 'pointer',
                 transition: 'background 0.15s ease',
               }}

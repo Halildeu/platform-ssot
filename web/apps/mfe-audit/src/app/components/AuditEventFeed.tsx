@@ -454,12 +454,12 @@ export const AuditEventFeed: React.FC = () => {
         </div>
       </div>
       {exportError ? (
-        <div role="alert" style={{ marginBottom: '0.75rem', color: '#9f1239' }}>
+        <div role="alert" style={{ marginBottom: '0.75rem', color: 'var(--state-danger-text, #9f1239)' }}>
           {exportError}
         </div>
       ) : null}
       {!canExportAudit ? (
-        <div style={{ marginBottom: '0.75rem', color: '#475569' }}>
+        <div style={{ marginBottom: '0.75rem', color: 'var(--text-secondary, #475569)' }}>
           Export unavailable: audit-export permission required.
         </div>
       ) : null}
