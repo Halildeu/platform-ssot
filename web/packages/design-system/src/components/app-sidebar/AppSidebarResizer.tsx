@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
-import type { AppSidebarResizerProps } from './types';
+import type { AppSidebarResizerProps as AppSidebarResizerPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -21,7 +21,7 @@ import type { AppSidebarResizerProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarResizer = React.forwardRef<HTMLDivElement, AppSidebarResizerProps>(({
+export const AppSidebarResizer = React.forwardRef<HTMLDivElement, AppSidebarResizerPropsBase>(({
   className,
 }, ref) => {
   const { resize, setWidth, setIsResizing, isCollapsed } = useSidebar();
@@ -86,5 +86,12 @@ export const AppSidebarResizer = React.forwardRef<HTMLDivElement, AppSidebarResi
 
 AppSidebarResizer.displayName = 'AppSidebar.Resizer';
 
-/** Props interface for AppSidebarResizer. */
-export type { AppSidebarResizerProps };
+/** Props for the AppSidebarResizer component. */
+export interface AppSidebarResizerProps extends AppSidebarResizerPropsBase {}
+
+/** Ref type for AppSidebarResizer. */
+export type AppSidebarResizerRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarResizer. */
+export type AppSidebarResizerElement = HTMLDivElement;
+/** CSS properties type for AppSidebarResizer. */
+export type AppSidebarResizerCSSProperties = React.CSSProperties;

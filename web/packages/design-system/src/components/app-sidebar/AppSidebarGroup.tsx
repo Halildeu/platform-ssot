@@ -1,7 +1,7 @@
 import React, { useRef, useState, Children } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
-import type { AppSidebarGroupProps } from './types';
+import type { AppSidebarGroupProps as AppSidebarGroupPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -20,7 +20,7 @@ import type { AppSidebarGroupProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarGroup = React.forwardRef<HTMLDivElement, AppSidebarGroupProps>(({
+export const AppSidebarGroup = React.forwardRef<HTMLDivElement, AppSidebarGroupPropsBase>(({
   label,
   icon,
   collapsible = true,
@@ -142,5 +142,12 @@ export const AppSidebarGroup = React.forwardRef<HTMLDivElement, AppSidebarGroupP
 
 AppSidebarGroup.displayName = 'AppSidebar.Group';
 
-/** Props interface for AppSidebarGroup. */
-export type { AppSidebarGroupProps };
+/** Props for the AppSidebarGroup component. */
+export interface AppSidebarGroupProps extends AppSidebarGroupPropsBase {}
+
+/** Ref type for AppSidebarGroup. */
+export type AppSidebarGroupRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarGroup. */
+export type AppSidebarGroupElement = HTMLDivElement;
+/** CSS properties type for AppSidebarGroup. */
+export type AppSidebarGroupCSSProperties = React.CSSProperties;

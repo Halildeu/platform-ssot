@@ -113,7 +113,7 @@ const defaultFormatTimestamp = (timestamp: number | undefined) => {
 };
 
 /** Individual notification card with type indicator, timestamp, and optional primary action. */
-export const NotificationItemCard: React.FC<NotificationItemCardProps> = ({
+export const NotificationItemCard = React.forwardRef<HTMLDivElement, NotificationItemCardProps>(({
   item,
   className = "",
   removeLabel = "Bildirimi kapat",
@@ -127,7 +127,7 @@ export const NotificationItemCard: React.FC<NotificationItemCardProps> = ({
   onSelectedChange,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -277,7 +277,7 @@ export const NotificationItemCard: React.FC<NotificationItemCardProps> = ({
       </div>
     </article>
   );
-};
+});
 
 NotificationItemCard.displayName = "NotificationItemCard";
 

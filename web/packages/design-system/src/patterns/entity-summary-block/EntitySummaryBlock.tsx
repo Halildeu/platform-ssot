@@ -116,3 +116,10 @@ export const EntitySummaryBlock = React.forwardRef<HTMLElement, EntitySummaryBlo
 EntitySummaryBlock.displayName = "EntitySummaryBlock";
 
 export default EntitySummaryBlock;
+
+/** Type alias for EntitySummaryBlock ref. */
+export type EntitySummaryBlockRef = React.Ref<HTMLElement>;
+/** Type alias for EntitySummaryBlock element. */
+export type EntitySummaryBlockElement = HTMLElement;
+/** Type alias for EntitySummaryBlock cssproperties. */
+export type EntitySummaryBlockCSSProperties = React.CSSProperties;

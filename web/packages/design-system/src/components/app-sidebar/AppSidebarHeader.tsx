@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
-import type { AppSidebarHeaderProps } from './types';
+import type { AppSidebarHeaderProps as AppSidebarHeaderPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -23,7 +23,7 @@ import type { AppSidebarHeaderProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarHeader = React.forwardRef<HTMLDivElement, AppSidebarHeaderProps>(({
+export const AppSidebarHeader = React.forwardRef<HTMLDivElement, AppSidebarHeaderPropsBase>(({
   title,
   subtitle,
   logo,
@@ -66,5 +66,12 @@ export const AppSidebarHeader = React.forwardRef<HTMLDivElement, AppSidebarHeade
 
 AppSidebarHeader.displayName = 'AppSidebar.Header';
 
-/** Props interface for AppSidebarHeader. */
-export type { AppSidebarHeaderProps };
+/** Props for the AppSidebarHeader component. */
+export interface AppSidebarHeaderProps extends AppSidebarHeaderPropsBase {}
+
+/** Ref type for AppSidebarHeader. */
+export type AppSidebarHeaderRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarHeader. */
+export type AppSidebarHeaderElement = HTMLDivElement;
+/** CSS properties type for AppSidebarHeader. */
+export type AppSidebarHeaderCSSProperties = React.CSSProperties;

@@ -192,3 +192,10 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function S
 Slider.displayName = "Slider";
 
 export default Slider;
+
+/** Type alias for Slider ref. */
+export type SliderRef = React.Ref<HTMLElement>;
+/** Type alias for Slider element. */
+export type SliderElement = HTMLElement;
+/** Type alias for Slider cssproperties. */
+export type SliderCSSProperties = React.CSSProperties;

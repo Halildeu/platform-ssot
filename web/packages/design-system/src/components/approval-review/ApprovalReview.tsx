@@ -153,3 +153,10 @@ export const ApprovalReview = React.forwardRef<HTMLElement, ApprovalReviewProps>
 ApprovalReview.displayName = 'ApprovalReview';
 
 export default ApprovalReview;
+
+/** Type alias for ApprovalReview ref. */
+export type ApprovalReviewRef = React.Ref<HTMLElement>;
+/** Type alias for ApprovalReview element. */
+export type ApprovalReviewElement = HTMLElement;
+/** Type alias for ApprovalReview cssproperties. */
+export type ApprovalReviewCSSProperties = React.CSSProperties;

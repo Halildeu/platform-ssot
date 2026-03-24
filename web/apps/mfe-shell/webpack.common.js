@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const MAX_ENTRYPOINT_SIZE = 25 * 1024 * 1024; // 25 MB
 const MAX_ASSET_SIZE = 8 * 1024 * 1024; // 8 MB
@@ -74,7 +75,9 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          'style-loader',
+          // MiniCssExtractPlugin extracts CSS to <link> tag — preserves @layer cascade
+          // css-loader@7 breaks @layer shorthand/longhand cascade when injecting via <style>
+          MiniCssExtractPlugin.loader,
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -82,21 +85,6 @@ module.exports = {
               postcssOptions: {
                 plugins: [
                   ['@tailwindcss/postcss', {}],
-                  // Fix: css-loader@7 breaks @layer cascade for shorthand/longhand
-                  // Unwrap @layer blocks so css-loader processes flat CSS
-                  function postcssUnwrapLayers() {
-                    return {
-                      postcssPlugin: 'postcss-unwrap-layers',
-                      AtRule: {
-                        layer(atRule) {
-                          // Keep @layer declaration (e.g., @layer theme, base, ...)
-                          if (!atRule.nodes || atRule.nodes.length === 0) return;
-                          // Unwrap: move children to parent, remove @layer wrapper
-                          atRule.replaceWith(atRule.nodes);
-                        },
-                      },
-                    };
-                  },
                 ],
               },
             },
@@ -122,6 +110,9 @@ module.exports = {
   },
 
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash:8].css',
+    }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       minify: { collapseWhitespace: false, minifyJS: false, minifyCSS: false },

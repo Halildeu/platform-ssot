@@ -308,3 +308,10 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function
 Carousel.displayName = "Carousel";
 
 export default Carousel;
+
+/** Type alias for Carousel ref. */
+export type CarouselRef = React.Ref<HTMLElement>;
+/** Type alias for Carousel element. */
+export type CarouselElement = HTMLElement;
+/** Type alias for Carousel cssproperties. */
+export type CarouselCSSProperties = React.CSSProperties;

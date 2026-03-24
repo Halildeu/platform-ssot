@@ -55,3 +55,10 @@ export const ConnectedSelect = forwardRef<HTMLSelectElement, ConnectedSelectProp
 );
 
 ConnectedSelect.displayName = "ConnectedSelect";
+
+/** Type alias for ConnectedSelect ref. */
+export type ConnectedSelectRef = React.Ref<HTMLElement>;
+/** Type alias for ConnectedSelect element. */
+export type ConnectedSelectElement = HTMLElement;
+/** Type alias for ConnectedSelect cssproperties. */
+export type ConnectedSelectCSSProperties = React.CSSProperties;

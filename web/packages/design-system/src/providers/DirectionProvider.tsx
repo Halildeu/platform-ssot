@@ -37,3 +37,10 @@ export function DirectionProvider({ direction, children, className, id, style, .
 }
 
 DirectionProvider.displayName = "DirectionProvider";
+
+/** Type alias for DirectionProvider ref. */
+export type DirectionProviderRef = React.Ref<HTMLElement>;
+/** Type alias for DirectionProvider element. */
+export type DirectionProviderElement = HTMLElement;
+/** Type alias for DirectionProvider cssproperties. */
+export type DirectionProviderCSSProperties = React.CSSProperties;

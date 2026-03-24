@@ -136,3 +136,10 @@ export const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(({
 });
 
 FormField.displayName = "FormField";
+
+/** Type alias for FormField ref. */
+export type FormFieldRef = React.Ref<HTMLElement>;
+/** Type alias for FormField element. */
+export type FormFieldElement = HTMLElement;
+/** Type alias for FormField cssproperties. */
+export type FormFieldCSSProperties = React.CSSProperties;

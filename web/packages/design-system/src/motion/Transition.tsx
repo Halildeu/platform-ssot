@@ -114,3 +114,10 @@ export function Transition({
 }
 
 Transition.displayName = 'Transition';
+
+/** Type alias for Transition ref. */
+export type TransitionRef = React.Ref<HTMLElement>;
+/** Type alias for Transition element. */
+export type TransitionElement = HTMLElement;
+/** Type alias for Transition cssproperties. */
+export type TransitionCSSProperties = React.CSSProperties;

@@ -145,3 +145,10 @@ export const Slot = React.forwardRef<HTMLElement, SlotProps>(
 );
 
 Slot.displayName = "Slot";
+
+/** Type alias for Slot ref. */
+export type SlotRef = React.Ref<HTMLElement>;
+/** Type alias for Slot element. */
+export type SlotElement = HTMLElement;
+/** Type alias for Slot cssproperties. */
+export type SlotCSSProperties = React.CSSProperties;

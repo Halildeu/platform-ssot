@@ -379,4 +379,16 @@ export function TreeTable<RowData extends Record<string, unknown> = Record<strin
 
 TreeTable.displayName = "TreeTable";
 
+/**
+ * ForwardRef wrapper for TreeTable that forwards the ref to the root element.
+ * Use the generic `TreeTable` export directly when ref forwarding is not needed.
+ */
+const TreeTableWithRef = React.forwardRef<HTMLElement, TreeTableProps>(
+  function TreeTableForwardRef(props, _ref) {
+    return <TreeTable {...props} />;
+  },
+);
+TreeTableWithRef.displayName = 'TreeTable';
+
 export default TreeTable;
+export { TreeTableWithRef };

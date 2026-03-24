@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
-import type { AppSidebarFooterProps } from './types';
+import type { AppSidebarFooterProps as AppSidebarFooterPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -18,7 +18,7 @@ import type { AppSidebarFooterProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarFooter = React.forwardRef<HTMLDivElement, AppSidebarFooterProps>(({
+export const AppSidebarFooter = React.forwardRef<HTMLDivElement, AppSidebarFooterPropsBase>(({
   children,
   className,
 }, ref) => (
@@ -35,5 +35,12 @@ export const AppSidebarFooter = React.forwardRef<HTMLDivElement, AppSidebarFoote
 
 AppSidebarFooter.displayName = 'AppSidebar.Footer';
 
-/** Props interface for AppSidebarFooter. */
-export type { AppSidebarFooterProps };
+/** Props for the AppSidebarFooter component. */
+export interface AppSidebarFooterProps extends AppSidebarFooterPropsBase {}
+
+/** Ref type for AppSidebarFooter. */
+export type AppSidebarFooterRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarFooter. */
+export type AppSidebarFooterElement = HTMLDivElement;
+/** CSS properties type for AppSidebarFooter. */
+export type AppSidebarFooterCSSProperties = React.CSSProperties;

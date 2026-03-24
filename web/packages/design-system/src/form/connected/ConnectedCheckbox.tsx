@@ -53,3 +53,10 @@ export const ConnectedCheckbox = forwardRef<HTMLInputElement, ConnectedCheckboxP
 );
 
 ConnectedCheckbox.displayName = "ConnectedCheckbox";
+
+/** Type alias for ConnectedCheckbox ref. */
+export type ConnectedCheckboxRef = React.Ref<HTMLElement>;
+/** Type alias for ConnectedCheckbox element. */
+export type ConnectedCheckboxElement = HTMLElement;
+/** Type alias for ConnectedCheckbox cssproperties. */
+export type ConnectedCheckboxCSSProperties = React.CSSProperties;

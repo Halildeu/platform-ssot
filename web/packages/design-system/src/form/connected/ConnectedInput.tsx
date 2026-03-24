@@ -57,3 +57,10 @@ export const ConnectedInput = forwardRef<HTMLInputElement, ConnectedInputProps>(
 );
 
 ConnectedInput.displayName = "ConnectedInput";
+
+/** Type alias for ConnectedInput ref. */
+export type ConnectedInputRef = React.Ref<HTMLElement>;
+/** Type alias for ConnectedInput element. */
+export type ConnectedInputElement = HTMLElement;
+/** Type alias for ConnectedInput cssproperties. */
+export type ConnectedInputCSSProperties = React.CSSProperties;

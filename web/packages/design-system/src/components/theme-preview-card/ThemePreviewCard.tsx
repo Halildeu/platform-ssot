@@ -95,3 +95,10 @@ export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCar
 ThemePreviewCard.displayName = "ThemePreviewCard";
 
 export default ThemePreviewCard;
+
+/** Type alias for ThemePreviewCard ref. */
+export type ThemePreviewCardRef = React.Ref<HTMLElement>;
+/** Type alias for ThemePreviewCard element. */
+export type ThemePreviewCardElement = HTMLElement;
+/** Type alias for ThemePreviewCard cssproperties. */
+export type ThemePreviewCardCSSProperties = React.CSSProperties;

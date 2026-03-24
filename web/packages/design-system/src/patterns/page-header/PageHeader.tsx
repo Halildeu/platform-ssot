@@ -39,7 +39,7 @@ export interface PageHeaderProps extends AccessControlledProps {
 }
 
 /** Standard page-level header with title, breadcrumb, avatar, actions, tags, and footer slot. */
-export const PageHeader: React.FC<PageHeaderProps> = ({
+export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(({
   title,
   subtitle,
   breadcrumb,
@@ -53,7 +53,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   className,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   return (
@@ -107,7 +107,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       {!footer && !extra && <div className="h-4" />}
     </header>
   );
-};
+});
 
 PageHeader.displayName = "PageHeader";
 

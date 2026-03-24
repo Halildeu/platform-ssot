@@ -188,3 +188,10 @@ export const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
 LineChart.displayName = "LineChart";
 
 export default LineChart;
+
+/** Type alias for LineChart ref. */
+export type LineChartRef = React.Ref<HTMLElement>;
+/** Type alias for LineChart element. */
+export type LineChartElement = HTMLElement;
+/** Type alias for LineChart cssproperties. */
+export type LineChartCSSProperties = React.CSSProperties;

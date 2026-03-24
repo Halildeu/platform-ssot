@@ -183,3 +183,10 @@ export const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
 PieChart.displayName = "PieChart";
 
 export default PieChart;
+
+/** Type alias for PieChart ref. */
+export type PieChartRef = React.Ref<HTMLElement>;
+/** Type alias for PieChart element. */
+export type PieChartElement = HTMLElement;
+/** Type alias for PieChart cssproperties. */
+export type PieChartCSSProperties = React.CSSProperties;

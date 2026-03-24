@@ -72,7 +72,7 @@ const auditTimelineSurfaceClassName =
   "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 /** Chronological timeline of AI-initiated actions with actor, status, and audit trail details. */
-export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
+export const AIActionAuditTimeline = React.forwardRef<HTMLDivElement, AIActionAuditTimelineProps>(({
   items,
   title = "Denetim zaman cizelgesi",
   description = "AI aksiyonlari ve insan onayi kronolojik iz olarak ayni timeline primitive ile gorunur.",
@@ -83,7 +83,7 @@ export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -218,7 +218,7 @@ export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
       )}
     </section>
   );
-};
+});
 
 AIActionAuditTimeline.displayName = 'AIActionAuditTimeline';
 

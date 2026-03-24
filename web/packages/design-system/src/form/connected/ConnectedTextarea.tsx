@@ -58,3 +58,10 @@ export const ConnectedTextarea = forwardRef<
 });
 
 ConnectedTextarea.displayName = "ConnectedTextarea";
+
+/** Type alias for ConnectedTextarea ref. */
+export type ConnectedTextareaRef = React.Ref<HTMLElement>;
+/** Type alias for ConnectedTextarea element. */
+export type ConnectedTextareaElement = HTMLElement;
+/** Type alias for ConnectedTextarea cssproperties. */
+export type ConnectedTextareaCSSProperties = React.CSSProperties;

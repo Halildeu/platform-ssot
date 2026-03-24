@@ -84,3 +84,10 @@ export const Portal: React.FC<PortalProps> = ({ children, container }) => {
 };
 
 Portal.displayName = "Portal";
+
+/** Type alias for Portal ref. */
+export type PortalRef = React.Ref<HTMLElement>;
+/** Type alias for Portal element. */
+export type PortalElement = HTMLElement;
+/** Type alias for Portal cssproperties. */
+export type PortalCSSProperties = React.CSSProperties;

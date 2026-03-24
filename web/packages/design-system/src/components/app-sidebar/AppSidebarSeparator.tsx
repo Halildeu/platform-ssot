@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
-import type { AppSidebarSeparatorProps } from './types';
+import type { AppSidebarSeparatorProps as AppSidebarSeparatorPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -21,7 +21,7 @@ import type { AppSidebarSeparatorProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarSeparator = React.forwardRef<HTMLHRElement, AppSidebarSeparatorProps>(({
+export const AppSidebarSeparator = React.forwardRef<HTMLHRElement, AppSidebarSeparatorPropsBase>(({
   className,
 }, ref) => {
   const { isCollapsed } = useSidebar();
@@ -40,5 +40,12 @@ export const AppSidebarSeparator = React.forwardRef<HTMLHRElement, AppSidebarSep
 
 AppSidebarSeparator.displayName = 'AppSidebar.Separator';
 
-/** Props interface for AppSidebarSeparator. */
-export type { AppSidebarSeparatorProps };
+/** Props for the AppSidebarSeparator component. */
+export interface AppSidebarSeparatorProps extends AppSidebarSeparatorPropsBase {}
+
+/** Ref type for AppSidebarSeparator. */
+export type AppSidebarSeparatorRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarSeparator. */
+export type AppSidebarSeparatorElement = HTMLDivElement;
+/** CSS properties type for AppSidebarSeparator. */
+export type AppSidebarSeparatorCSSProperties = React.CSSProperties;

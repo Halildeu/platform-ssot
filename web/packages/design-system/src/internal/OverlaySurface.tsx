@@ -151,3 +151,10 @@ export const OverlaySurface: React.FC<OverlaySurfaceProps> = ({
 };
 
 OverlaySurface.displayName = "OverlaySurface";
+
+/** Type alias for OverlaySurface ref. */
+export type OverlaySurfaceRef = React.Ref<HTMLElement>;
+/** Type alias for OverlaySurface element. */
+export type OverlaySurfaceElement = HTMLElement;
+/** Type alias for OverlaySurface cssproperties. */
+export type OverlaySurfaceCSSProperties = React.CSSProperties;

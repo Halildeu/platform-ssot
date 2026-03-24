@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
-import type { AppSidebarSectionProps } from './types';
+import type { AppSidebarSectionProps as AppSidebarSectionPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -20,7 +20,7 @@ import type { AppSidebarSectionProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarSection = React.forwardRef<HTMLDivElement, AppSidebarSectionProps>(({
+export const AppSidebarSection = React.forwardRef<HTMLDivElement, AppSidebarSectionPropsBase>(({
   title,
   collapsible = false,
   defaultOpen = true,
@@ -77,5 +77,12 @@ export const AppSidebarSection = React.forwardRef<HTMLDivElement, AppSidebarSect
 
 AppSidebarSection.displayName = 'AppSidebar.Section';
 
-/** Props interface for AppSidebarSection. */
-export type { AppSidebarSectionProps };
+/** Props for the AppSidebarSection component. */
+export interface AppSidebarSectionProps extends AppSidebarSectionPropsBase {}
+
+/** Ref type for AppSidebarSection. */
+export type AppSidebarSectionRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarSection. */
+export type AppSidebarSectionElement = HTMLDivElement;
+/** CSS properties type for AppSidebarSection. */
+export type AppSidebarSectionCSSProperties = React.CSSProperties;

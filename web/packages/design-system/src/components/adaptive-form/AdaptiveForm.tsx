@@ -313,7 +313,7 @@ const FieldRenderer: React.FC<{
 /* ---- Main Component ---- */
 
 /** Intelligent adaptive form that adjusts layout, field visibility, and validation based on user input and context. */
-export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
+export const AdaptiveForm = React.forwardRef<HTMLDivElement, AdaptiveFormProps>(({
   fields,
   values: controlledValues,
   onValuesChange,
@@ -328,7 +328,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
   className,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
@@ -563,7 +563,7 @@ export const AdaptiveForm: React.FC<AdaptiveFormProps> = ({
       </div>
     </form>
   );
-};
+});
 
 AdaptiveForm.displayName = "AdaptiveForm";
 

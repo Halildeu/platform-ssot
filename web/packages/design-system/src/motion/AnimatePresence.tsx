@@ -101,3 +101,10 @@ export function AnimatePresence({
 }
 
 AnimatePresence.displayName = 'AnimatePresence';
+
+/** Type alias for AnimatePresence ref. */
+export type AnimatePresenceRef = React.Ref<HTMLElement>;
+/** Type alias for AnimatePresence element. */
+export type AnimatePresenceElement = HTMLElement;
+/** Type alias for AnimatePresence cssproperties. */
+export type AnimatePresenceCSSProperties = React.CSSProperties;

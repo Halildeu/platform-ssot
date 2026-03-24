@@ -103,14 +103,14 @@ const indicatorColors: Record<ToastVariant, string> = {
   error: "bg-state-danger-text",
 };
 
-export const ToastProvider: React.FC<ToastProviderProps> = ({
+export const ToastProvider = React.forwardRef<HTMLDivElement, ToastProviderProps>(({
   position = "top-right",
   duration = 4000,
   maxVisible = 5,
   children,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const [toasts, setToasts] = useState<ToastData[]>([]);
@@ -167,7 +167,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
       </div>
     </ToastContext.Provider>
   );
-};
+});
 
 ToastProvider.displayName = "ToastProvider";
 

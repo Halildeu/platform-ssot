@@ -242,7 +242,7 @@ const BlockCard: React.FC<{
 
 /* ---- Main Component ---- */
 
-export const AILayoutBuilder: React.FC<AILayoutBuilderProps> = ({
+export const AILayoutBuilder = React.forwardRef<HTMLDivElement, AILayoutBuilderProps>(({
   blocks,
   intent = "overview",
   columns = 3,
@@ -255,7 +255,7 @@ export const AILayoutBuilder: React.FC<AILayoutBuilderProps> = ({
   className,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
 
@@ -384,7 +384,7 @@ export const AILayoutBuilder: React.FC<AILayoutBuilderProps> = ({
       </div>
     </section>
   );
-};
+});
 
 AILayoutBuilder.displayName = "AILayoutBuilder";
 

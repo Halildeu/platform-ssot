@@ -260,3 +260,6 @@ export const Button = forwardRef<HTMLElement, ButtonProps>(
 );
 
 Button.displayName = "Button";
+
+/** Default button props (non-polymorphic) for simple use cases. */
+export interface ButtonDefaultProps extends Omit<ButtonProps<'button'>, keyof React.ComponentPropsWithoutRef<'button'>> {}

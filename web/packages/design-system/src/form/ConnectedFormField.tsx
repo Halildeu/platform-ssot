@@ -87,3 +87,10 @@ export const ConnectedFormField = React.forwardRef<HTMLDivElement, ConnectedForm
 });
 
 ConnectedFormField.displayName = 'ConnectedFormField';
+
+/** Type alias for ConnectedFormField ref. */
+export type ConnectedFormFieldRef = React.Ref<HTMLElement>;
+/** Type alias for ConnectedFormField element. */
+export type ConnectedFormFieldElement = HTMLElement;
+/** Type alias for ConnectedFormField cssproperties. */
+export type ConnectedFormFieldCSSProperties = React.CSSProperties;

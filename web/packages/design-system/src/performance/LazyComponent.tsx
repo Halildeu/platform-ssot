@@ -171,3 +171,10 @@ export const LazyTreeTable = createLazyComponent(
   () => import('../components/tree-table').then((m) => ({ default: m.TreeTable as unknown as ComponentType<Record<string, unknown>> })) as Promise<{ default: ComponentType<Record<string, unknown>> }>,
   'LazyTreeTable',
 );
+
+/** Type alias for LazyComponent ref. */
+export type LazyComponentRef = React.Ref<HTMLElement>;
+/** Type alias for LazyComponent element. */
+export type LazyComponentElement = HTMLElement;
+/** Type alias for LazyComponent cssproperties. */
+export type LazyComponentCSSProperties = React.CSSProperties;

@@ -107,3 +107,10 @@ export const Divider = React.forwardRef<HTMLElement, DividerProps>(
 );
 
 Divider.displayName = "Divider";
+
+/** Type alias for Divider ref. */
+export type DividerRef = React.Ref<HTMLElement>;
+/** Type alias for Divider element. */
+export type DividerElement = HTMLElement;
+/** Type alias for Divider cssproperties. */
+export type DividerCSSProperties = React.CSSProperties;

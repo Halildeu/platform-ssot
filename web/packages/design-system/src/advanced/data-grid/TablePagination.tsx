@@ -78,8 +78,7 @@ export type TablePaginationSlotProps = {
   };
 };
 
-export type TablePaginationProps = AccessControlledProps &
-  UsePaginationStateOptions & {
+export interface TablePaginationProps extends AccessControlledProps, UsePaginationStateOptions {
     /** Available page size options shown in the size selector. */
     pageSizeOptions?: PaginationSizeOption[];
     /** Additional CSS class name for the root element. */
@@ -98,7 +97,7 @@ export type TablePaginationProps = AccessControlledProps &
     slots?: TablePaginationSlots;
     /** Props forwarded to slot sub-components. */
     slotProps?: TablePaginationSlotProps;
-  };
+  }
 
 /* ------------------------------------------------------------------ */
 /*  Default actions                                                    */

@@ -361,3 +361,10 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
 );
 
 InputNumber.displayName = "InputNumber";
+
+/** Type alias for InputNumber ref. */
+export type InputNumberRef = React.Ref<HTMLElement>;
+/** Type alias for InputNumber element. */
+export type InputNumberElement = HTMLElement;
+/** Type alias for InputNumber cssproperties. */
+export type InputNumberCSSProperties = React.CSSProperties;

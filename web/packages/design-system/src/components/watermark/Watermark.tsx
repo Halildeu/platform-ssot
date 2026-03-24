@@ -275,3 +275,10 @@ function buildWatermarkStyle(bgUrl: string, zIndex: number): string {
 Watermark.displayName = "Watermark";
 
 export default Watermark;
+
+/** Type alias for Watermark ref. */
+export type WatermarkRef = React.Ref<HTMLElement>;
+/** Type alias for Watermark element. */
+export type WatermarkElement = HTMLElement;
+/** Type alias for Watermark cssproperties. */
+export type WatermarkCSSProperties = React.CSSProperties;

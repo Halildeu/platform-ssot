@@ -53,7 +53,7 @@ const sizeMap: Record<FormDrawerSize, string> = {
 };
 
 /** Slide-in panel for create/edit forms with submit/cancel footer, loading overlay, and escape handling. */
-export const FormDrawer: React.FC<FormDrawerProps> = ({
+export const FormDrawer = React.forwardRef<HTMLDivElement, FormDrawerProps>(({
   open,
   onClose,
   title,
@@ -68,7 +68,7 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
   className,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const panelRef = useRef<HTMLDivElement>(null);
   const layerId = useId();
@@ -186,6 +186,9 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
       </div>
     </div>
   );
-};
+});
 
 FormDrawer.displayName = "FormDrawer";
+
+/** Ref type for FormDrawer. */
+export type FormDrawerRef = React.Ref<HTMLDivElement>;

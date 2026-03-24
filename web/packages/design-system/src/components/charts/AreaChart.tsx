@@ -192,3 +192,10 @@ export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
 AreaChart.displayName = "AreaChart";
 
 export default AreaChart;
+
+/** Type alias for AreaChart ref. */
+export type AreaChartRef = React.Ref<HTMLElement>;
+/** Type alias for AreaChart element. */
+export type AreaChartElement = HTMLElement;
+/** Type alias for AreaChart cssproperties. */
+export type AreaChartCSSProperties = React.CSSProperties;

@@ -84,3 +84,8 @@ export function usePortal(options: UsePortalOptions = {}) {
 
 /** Return type of the usePortal hook. */
 export type UsePortalReturn = ReturnType<typeof usePortal>;
+
+/** Props interface alias for usePortal options. */
+export interface UsePortalProps extends UsePortalOptions {}
+/** Portal container element type. */
+export type PortalContainerElement = HTMLDivElement;

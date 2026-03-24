@@ -140,3 +140,10 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
 });
 
 FilterBar.displayName = "FilterBar";
+
+/** Type alias for FilterBar ref. */
+export type FilterBarRef = React.Ref<HTMLElement>;
+/** Type alias for FilterBar element. */
+export type FilterBarElement = HTMLElement;
+/** Type alias for FilterBar cssproperties. */
+export type FilterBarCSSProperties = React.CSSProperties;

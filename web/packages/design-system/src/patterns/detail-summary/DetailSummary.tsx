@@ -212,3 +212,10 @@ export const DetailSummary = React.forwardRef<HTMLElement, DetailSummaryProps>((
 DetailSummary.displayName = 'DetailSummary';
 
 export default DetailSummary;
+
+/** Type alias for DetailSummary ref. */
+export type DetailSummaryRef = React.Ref<HTMLElement>;
+/** Type alias for DetailSummary element. */
+export type DetailSummaryElement = HTMLElement;
+/** Type alias for DetailSummary cssproperties. */
+export type DetailSummaryCSSProperties = React.CSSProperties;

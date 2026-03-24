@@ -66,3 +66,10 @@ export function StaggerGroup({
 }
 
 StaggerGroup.displayName = 'StaggerGroup';
+
+/** Type alias for StaggerGroup ref. */
+export type StaggerGroupRef = React.Ref<HTMLElement>;
+/** Type alias for StaggerGroup element. */
+export type StaggerGroupElement = HTMLElement;
+/** Type alias for StaggerGroup cssproperties. */
+export type StaggerGroupCSSProperties = React.CSSProperties;

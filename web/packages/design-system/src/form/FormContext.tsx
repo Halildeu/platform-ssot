@@ -70,5 +70,9 @@ export function useFormContext(): FormContextValue {
 
 export { FormContext };
 
-/** Alias for FormContextValue for external consumers. */
-export type FormContextProps = FormContextValue;
+/** Props interface for FormContext provider consumers. */
+export interface FormContextProps extends FormContextValue {}
+/** Form field name type. */
+export type FormFieldName = string;
+/** Form validation mode type. */
+export type FormValidationMode = 'onBlur' | 'onChange' | 'onSubmit';

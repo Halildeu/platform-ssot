@@ -209,7 +209,7 @@ const BreadcrumbNav: React.FC<BreadcrumbNavProps> = ({
 // --------------- Component ---------------
 
 /** Full-page scaffold with breadcrumb, header, filter bar, content area, sidebar, and footer slots. */
-export const PageLayout: React.FC<PageLayoutProps> = ({
+export const PageLayout = React.forwardRef<HTMLDivElement, PageLayoutProps>(({
   title,
   description,
   breadcrumbItems,
@@ -236,7 +236,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   style,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const widthCls = PAGE_WIDTH_CLASSES[pageWidth];
@@ -421,7 +421,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       )}
     </div>
   );
-};
+});
 
 PageLayout.displayName = "PageLayout";
 

@@ -17,9 +17,17 @@ import { AppSidebarTrigger } from './AppSidebarTrigger';
 import { AppSidebarResizer } from './AppSidebarResizer';
 import { AppSidebarSeparator } from './AppSidebarSeparator';
 import { useAppSidebarResize } from './hooks/useAppSidebarResize';
-import type { AppSidebarProps, SidebarMode, SidebarContextValue, SidebarResizeState } from './types';
+import type { AppSidebarProps as AppSidebarPropsBase, SidebarMode, SidebarContextValue, SidebarResizeState } from './types';
 
-export type { AppSidebarProps, SidebarMode, SidebarContextValue, SidebarResizeState };
+/** Props for the AppSidebar compound component. */
+export interface AppSidebarProps extends AppSidebarPropsBase {}
+
+/** Sidebar display mode. */
+export type AppSidebarMode = SidebarMode;
+/** Sidebar context value shape. */
+export type AppSidebarContextValue = SidebarContextValue;
+/** Sidebar resize state shape. */
+export type AppSidebarResizeState = SidebarResizeState;
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -71,7 +79,7 @@ function writeStoredMode(key: string | undefined, mode: SidebarMode): void {
  * @since 1.0.0
  * @see useSidebar
  */
-const AppSidebarRoot: React.FC<AppSidebarProps> = ({
+const AppSidebarRoot = React.forwardRef<HTMLElement, AppSidebarPropsBase>(({
   defaultMode = 'expanded',
   storageKey,
   collapsedWidth = 56,
@@ -84,7 +92,7 @@ const AppSidebarRoot: React.FC<AppSidebarProps> = ({
   accessReason,
   className,
   children,
-}) => {
+}, ref) => {
   const { state: accessState, isHidden } = resolveAccessState(access);
 
   /* Access control — hidden guard */
@@ -177,6 +185,7 @@ const AppSidebarRoot: React.FC<AppSidebarProps> = ({
   return (
     <SidebarContext.Provider value={ctx}>
       <aside
+        ref={ref}
         data-sidebar=""
         data-state={mode}
         data-access-state={accessState}
@@ -195,7 +204,7 @@ const AppSidebarRoot: React.FC<AppSidebarProps> = ({
       </aside>
     </SidebarContext.Provider>
   );
-};
+});
 
 AppSidebarRoot.displayName = 'AppSidebar';
 

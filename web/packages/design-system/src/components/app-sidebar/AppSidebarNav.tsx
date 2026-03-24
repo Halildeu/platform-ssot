@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
-import type { AppSidebarNavProps } from './types';
+import type { AppSidebarNavProps as AppSidebarNavPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -19,7 +19,7 @@ import type { AppSidebarNavProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarNav = React.forwardRef<HTMLElement, AppSidebarNavProps>(({
+export const AppSidebarNav = React.forwardRef<HTMLElement, AppSidebarNavPropsBase>(({
   children,
   className,
 }, ref) => (
@@ -34,5 +34,12 @@ export const AppSidebarNav = React.forwardRef<HTMLElement, AppSidebarNavProps>((
 
 AppSidebarNav.displayName = 'AppSidebar.Nav';
 
-/** Props interface for AppSidebarNav. */
-export type { AppSidebarNavProps };
+/** Props for the AppSidebarNav component. */
+export interface AppSidebarNavProps extends AppSidebarNavPropsBase {}
+
+/** Ref type for AppSidebarNav. */
+export type AppSidebarNavRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarNav. */
+export type AppSidebarNavElement = HTMLDivElement;
+/** CSS properties type for AppSidebarNav. */
+export type AppSidebarNavCSSProperties = React.CSSProperties;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
-import type { AppSidebarTriggerProps } from './types';
+import type { AppSidebarTriggerProps as AppSidebarTriggerPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -18,7 +18,7 @@ import type { AppSidebarTriggerProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarTriggerProps>(({
+export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarTriggerPropsBase>(({
   className,
 }, ref) => {
   const { isCollapsed, toggle } = useSidebar();
@@ -86,5 +86,12 @@ function PanelLeftOpenIcon() {
   );
 }
 
-/** Props interface for AppSidebarTrigger. */
-export type { AppSidebarTriggerProps };
+/** Props for the AppSidebarTrigger component. */
+export interface AppSidebarTriggerProps extends AppSidebarTriggerPropsBase {}
+
+/** Ref type for AppSidebarTrigger. */
+export type AppSidebarTriggerRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarTrigger. */
+export type AppSidebarTriggerElement = HTMLDivElement;
+/** CSS properties type for AppSidebarTrigger. */
+export type AppSidebarTriggerCSSProperties = React.CSSProperties;

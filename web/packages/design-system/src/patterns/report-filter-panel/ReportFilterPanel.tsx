@@ -137,3 +137,10 @@ export const ReportFilterPanel = React.forwardRef<HTMLFormElement, ReportFilterP
 });
 
 ReportFilterPanel.displayName = "ReportFilterPanel";
+
+/** Type alias for ReportFilterPanel ref. */
+export type ReportFilterPanelRef = React.Ref<HTMLElement>;
+/** Type alias for ReportFilterPanel element. */
+export type ReportFilterPanelElement = HTMLElement;
+/** Type alias for ReportFilterPanel cssproperties. */
+export type ReportFilterPanelCSSProperties = React.CSSProperties;

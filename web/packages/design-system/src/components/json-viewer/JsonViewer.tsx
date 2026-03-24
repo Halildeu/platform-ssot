@@ -259,3 +259,10 @@ export const JsonViewer = React.forwardRef<HTMLElement, JsonViewerProps>(({
 JsonViewer.displayName = "JsonViewer";
 
 export default JsonViewer;
+
+/** Type alias for JsonViewer ref. */
+export type JsonViewerRef = React.Ref<HTMLElement>;
+/** Type alias for JsonViewer element. */
+export type JsonViewerElement = HTMLElement;
+/** Type alias for JsonViewer cssproperties. */
+export type JsonViewerCSSProperties = React.CSSProperties;

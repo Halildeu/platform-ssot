@@ -20,7 +20,7 @@ export type DetailSectionTabItem = {
   badgeClassName?: string;
 };
 
-export type DetailSectionTabsProps = AccessControlledProps & {
+export interface DetailSectionTabsProps extends AccessControlledProps {
   /** Tab items to render. */
   tabs: DetailSectionTabItem[];
   /** Currently active tab identifier. */
@@ -41,7 +41,7 @@ export type DetailSectionTabsProps = AccessControlledProps & {
   autoWrapBreakpoint?: SectionTabsBreakpoint;
   /** Custom class name overrides for sub-elements. */
   classes?: SectionTabsClasses;
-};
+}
 
 /** Horizontal tab strip for detail views, with sticky positioning, badge support, and responsive auto-wrap.
    * @example

@@ -57,7 +57,7 @@ const sizeMap: Record<DetailDrawerSize, string> = {
 };
 
 /** Read-only slide-in detail panel with section layout, header actions, and tags. */
-export const DetailDrawer: React.FC<DetailDrawerProps> = ({
+export const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(({
   open,
   onClose,
   title,
@@ -72,7 +72,7 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
   className,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const panelRef = useRef<HTMLDivElement>(null);
   const layerId = useId();
@@ -207,6 +207,9 @@ export const DetailDrawer: React.FC<DetailDrawerProps> = ({
       </div>
     </div>
   );
-};
+});
 
 DetailDrawer.displayName = "DetailDrawer";
+
+/** Ref type for DetailDrawer. */
+export type DetailDrawerRef = React.Ref<HTMLDivElement>;

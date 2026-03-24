@@ -194,3 +194,10 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
 BarChart.displayName = "BarChart";
 
 export default BarChart;
+
+/** Type alias for BarChart ref. */
+export type BarChartRef = React.Ref<HTMLElement>;
+/** Type alias for BarChart element. */
+export type BarChartElement = HTMLElement;
+/** Type alias for BarChart cssproperties. */
+export type BarChartCSSProperties = React.CSSProperties;

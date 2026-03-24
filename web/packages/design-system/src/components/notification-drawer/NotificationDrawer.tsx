@@ -124,3 +124,10 @@ export const NotificationDrawer = React.forwardRef<HTMLDivElement, NotificationD
 NotificationDrawer.displayName = 'NotificationDrawer';
 
 export default NotificationDrawer;
+
+/** Type alias for NotificationDrawer ref. */
+export type NotificationDrawerRef = React.Ref<HTMLElement>;
+/** Type alias for NotificationDrawer element. */
+export type NotificationDrawerElement = HTMLElement;
+/** Type alias for NotificationDrawer cssproperties. */
+export type NotificationDrawerCSSProperties = React.CSSProperties;

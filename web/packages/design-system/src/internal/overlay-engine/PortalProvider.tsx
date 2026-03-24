@@ -51,7 +51,7 @@ const PortalContext = createContext<PortalConfig>({});
  * ```
  */
 /** Props for the PortalProvider component. */
-export type PortalProviderProps = PortalConfig & { children: React.ReactNode };
+export interface PortalProviderProps extends PortalConfig { children: React.ReactNode }
 
 export const PortalProvider = React.forwardRef<HTMLDivElement, PortalProviderProps>(({
   children,
@@ -69,3 +69,8 @@ PortalProvider.displayName = "PortalProvider";
 export function usePortalConfig(): PortalConfig {
   return useContext(PortalContext);
 }
+
+/** Ref type for PortalProvider. */
+export type PortalProviderRef = React.Ref<HTMLDivElement>;
+/** Element type for PortalProvider. */
+export type PortalProviderElement = HTMLDivElement;

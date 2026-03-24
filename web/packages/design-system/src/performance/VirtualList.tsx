@@ -245,3 +245,10 @@ export function VirtualList<T>({
 }
 
 VirtualList.displayName = "VirtualList";
+
+/** Type alias for VirtualList ref. */
+export type VirtualListRef = React.Ref<HTMLElement>;
+/** Type alias for VirtualList element. */
+export type VirtualListElement = HTMLElement;
+/** Type alias for VirtualList cssproperties. */
+export type VirtualListCSSProperties = React.CSSProperties;

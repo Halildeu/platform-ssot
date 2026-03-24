@@ -100,3 +100,10 @@ export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(({
 });
 
 EmptyState.displayName = "EmptyState";
+
+/** Type alias for EmptyState ref. */
+export type EmptyStateRef = React.Ref<HTMLElement>;
+/** Type alias for EmptyState element. */
+export type EmptyStateElement = HTMLElement;
+/** Type alias for EmptyState cssproperties. */
+export type EmptyStateCSSProperties = React.CSSProperties;

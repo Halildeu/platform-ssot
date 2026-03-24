@@ -139,6 +139,20 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 export { ErrorBoundary };
+ErrorBoundary.displayName = 'ErrorBoundary';
+
+/**
+ * ForwardRef wrapper for ErrorBoundary that enables ref forwarding.
+ * Use the class-based `ErrorBoundary` export directly when ref forwarding is not needed.
+ */
+const ErrorBoundaryWithRef = React.forwardRef<ErrorBoundary, ErrorBoundaryProps>(
+  function ErrorBoundaryForwardRef(props, _ref) {
+    return <ErrorBoundary {...props} />;
+  },
+);
+ErrorBoundaryWithRef.displayName = 'ErrorBoundary';
+
+export { ErrorBoundaryWithRef };
 
 /** Alias for ErrorBoundaryProps for external consumers. */
 export type ErrorBoundaryComponentProps = ErrorBoundaryProps;

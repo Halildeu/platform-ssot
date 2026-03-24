@@ -72,7 +72,7 @@ const scopeOptions: PromptComposerScope[] = [
 ];
 const toneOptions: PromptComposerTone[] = ["neutral", "strict", "exploratory"];
 
-export const PromptComposer: React.FC<PromptComposerProps> = ({
+export const PromptComposer = React.forwardRef<HTMLDivElement, PromptComposerProps>(({
   title = "Prompt olusturucu",
   description = "Scope-safe prompt yazimi, tone guardrail ve source referanslari ayni composer yuzeyinde birlesir.",
   subject,
@@ -94,7 +94,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
   className = "",
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const [internalSubject, setInternalSubject] = React.useState(defaultSubject);
   const [internalValue, setInternalValue] = React.useState(defaultValue);
@@ -260,8 +260,11 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
       </div>
     </section>
   );
-};
+});
 
 PromptComposer.displayName = 'PromptComposer';
 
 export default PromptComposer;
+
+/** Ref type for PromptComposer. */
+export type PromptComposerRef = React.Ref<HTMLDivElement>;

@@ -217,3 +217,6 @@ export function useRovingTabindex({
     [activeIndex, setActiveIndex, getItemProps, moveNext, movePrev, moveFirst, moveLast],
   );
 }
+
+/** Props interface alias for useRovingTabindex options. */
+export interface UseRovingTabindexProps extends UseRovingTabindexOptions {}

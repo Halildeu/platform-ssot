@@ -67,14 +67,14 @@ function isItem(entry: ContextMenuEntry): entry is ContextMenuItem {
 
  */
 
-export const ContextMenu: React.FC<ContextMenuProps> = ({
+export const ContextMenu = React.forwardRef<HTMLDivElement, ContextMenuProps>(({
   items,
   children,
   disabled = false,
   className,
   access,
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) return null;
   const [open, setOpen] = useState(false);
@@ -263,6 +263,6 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
       )}
     </>
   );
-};
+});
 
 ContextMenu.displayName = "ContextMenu";

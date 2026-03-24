@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
-import type { AppSidebarSearchProps } from './types';
+import type { AppSidebarSearchProps as AppSidebarSearchPropsBase } from './types';
 // Access control: inherits from parent AppSidebar which uses AccessControlledProps,
 // resolveAccessState, accessStyles, data-access-state, and accessReason.
 
@@ -23,7 +23,7 @@ import type { AppSidebarSearchProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearchProps>(({
+export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearchPropsBase>(({
   value,
   onChange,
   placeholder = 'Search...',
@@ -127,5 +127,12 @@ function SearchIcon() {
   );
 }
 
-/** Props interface for AppSidebarSearch. */
-export type { AppSidebarSearchProps };
+/** Props for the AppSidebarSearch component. */
+export interface AppSidebarSearchProps extends AppSidebarSearchPropsBase {}
+
+/** Ref type for AppSidebarSearch. */
+export type AppSidebarSearchRef = React.Ref<HTMLDivElement>;
+/** Element type for AppSidebarSearch. */
+export type AppSidebarSearchElement = HTMLDivElement;
+/** CSS properties type for AppSidebarSearch. */
+export type AppSidebarSearchCSSProperties = React.CSSProperties;

@@ -331,7 +331,7 @@ const PanelButton: React.FC<
   />
 );
 
-export const NotificationPanel: React.FC<NotificationPanelProps> = ({
+export const NotificationPanel = React.forwardRef<HTMLDivElement, NotificationPanelProps>(({
   items,
   title = "Bildirimler",
   summaryLabel,
@@ -374,7 +374,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
   onRemoveSelected,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
     return null;
@@ -692,7 +692,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
       </div>
     </section>
   );
-};
+});
 
 NotificationPanel.displayName = "NotificationPanel";
 

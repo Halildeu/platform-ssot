@@ -91,3 +91,10 @@ export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
 );
 
 Skeleton.displayName = "Skeleton";
+
+/** Type alias for Skeleton ref. */
+export type SkeletonRef = React.Ref<HTMLElement>;
+/** Type alias for Skeleton element. */
+export type SkeletonElement = HTMLElement;
+/** Type alias for Skeleton cssproperties. */
+export type SkeletonCSSProperties = React.CSSProperties;

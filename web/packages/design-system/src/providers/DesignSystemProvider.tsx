@@ -46,3 +46,10 @@ export function DesignSystemProvider({
 }
 
 DesignSystemProvider.displayName = "DesignSystemProvider";
+
+/** Type alias for DesignSystemProvider ref. */
+export type DesignSystemProviderRef = React.Ref<HTMLElement>;
+/** Type alias for DesignSystemProvider element. */
+export type DesignSystemProviderElement = HTMLElement;
+/** Type alias for DesignSystemProvider cssproperties. */
+export type DesignSystemProviderCSSProperties = React.CSSProperties;

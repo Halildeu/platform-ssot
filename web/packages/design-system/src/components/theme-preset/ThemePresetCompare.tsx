@@ -158,3 +158,10 @@ export const ThemePresetCompare = React.forwardRef<HTMLElement, ThemePresetCompa
 ThemePresetCompare.displayName = 'ThemePresetCompare';
 
 export default ThemePresetCompare;
+
+/** Type alias for ThemePresetCompare ref. */
+export type ThemePresetCompareRef = React.Ref<HTMLElement>;
+/** Type alias for ThemePresetCompare element. */
+export type ThemePresetCompareElement = HTMLElement;
+/** Type alias for ThemePresetCompare cssproperties. */
+export type ThemePresetCompareCSSProperties = React.CSSProperties;

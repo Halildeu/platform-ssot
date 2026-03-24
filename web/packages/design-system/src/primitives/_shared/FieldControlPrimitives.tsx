@@ -117,7 +117,7 @@ export const getFieldSlotClass = (
     density === "compact" ? "translate-y-px" : undefined,
   );
 
-export type FieldControlShellProps = {
+export interface FieldControlShellProps {
   /** ID of the associated input element for label association. */
   inputId: string;
   /** Field label displayed above the input. */
@@ -136,7 +136,7 @@ export type FieldControlShellProps = {
   fullWidth?: boolean;
   /** Field input element(s) to wrap. */
   children: React.ReactNode;
-};
+}
 
 /** Field control shell providing label, hint text, error message, and required indicator layout for form fields.
    * @example
@@ -146,7 +146,7 @@ export type FieldControlShellProps = {
    * @since 1.0.0
    * @see [Docs](https://design.mfe.dev/components/field-control-primitives)
    */
-export const FieldControlShell: React.FC<FieldControlShellProps> = ({
+export const FieldControlShell = React.forwardRef<HTMLDivElement, FieldControlShellProps>(({
   inputId,
   label,
   description,
@@ -156,8 +156,8 @@ export const FieldControlShell: React.FC<FieldControlShellProps> = ({
   required = false,
   fullWidth = true,
   children,
-}) => (
-  <div className={cn("flex flex-col gap-2.5", fullWidth && "w-full")}>
+}, ref) => (
+  <div ref={ref} className={cn("flex flex-col gap-2.5", fullWidth && "w-full")}>
     {label || description ? (
       <div className="flex flex-col gap-1">
         {label ? (
@@ -208,7 +208,7 @@ export const FieldControlShell: React.FC<FieldControlShellProps> = ({
       </div>
     ) : null}
   </div>
-);
+));
 
 FieldControlShell.displayName = "FieldControlShell";
 

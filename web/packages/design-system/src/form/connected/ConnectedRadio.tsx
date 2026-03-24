@@ -48,3 +48,10 @@ export const ConnectedRadio = forwardRef<HTMLInputElement, ConnectedRadioProps>(
 );
 
 ConnectedRadio.displayName = "ConnectedRadio";
+
+/** Type alias for ConnectedRadio ref. */
+export type ConnectedRadioRef = React.Ref<HTMLElement>;
+/** Type alias for ConnectedRadio element. */
+export type ConnectedRadioElement = HTMLElement;
+/** Type alias for ConnectedRadio cssproperties. */
+export type ConnectedRadioCSSProperties = React.CSSProperties;
