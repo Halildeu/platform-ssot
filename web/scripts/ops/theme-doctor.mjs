@@ -554,6 +554,139 @@ check('forward-ref', 'forwardRef on interactive primitives', () => {
   };
 });
 
+/* ================================================================== */
+/*  TW4 BEHAVIOR CHANGE RISK CHECKS                                    */
+/* ================================================================== */
+
+// 18. hover: variant — TW4 only fires on hover-capable devices
+check('tw4-hover-risk', 'TW4 hover variant behavior (touch device risk)', () => {
+  const scanDirs = ['apps', 'packages/design-system/src'];
+  let hoverCount = 0;
+  const hoverFiles = [];
+  const customHoverOverride = readSafe(SHELL_INDEX_CSS).includes('@custom-variant hover');
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      const matches = content.match(/\bhover:/g) || [];
+      if (matches.length > 0) {
+        hoverCount += matches.length;
+        if (hoverFiles.length < 3) hoverFiles.push(relative(ROOT, file));
+      }
+    }
+  }
+
+  if (customHoverOverride) return { status: 'pass', message: `hover: overridden via @custom-variant — works on all devices (${hoverCount} usages)` };
+  return {
+    status: 'pass',
+    message: `${hoverCount} hover: usages — TW4 default: only fires on hover-capable devices (@media hover:hover)`,
+    details: hoverFiles.length > 0 ? [`Tip: If touch hover needed, add @custom-variant hover (&:hover); to index.css`] : undefined,
+  };
+});
+
+// 19. space-y/x selector change — TW4 uses :not(:last-child) instead of ~ :not([hidden])
+check('tw4-space-selector', 'TW4 space-y/x selector change risk', () => {
+  const scanDirs = ['apps', 'packages/design-system/src'];
+  let spaceCount = 0;
+  const affectedFiles = [];
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      const matches = content.match(/\bspace-[xy]-\d+\b/g) || [];
+      if (matches.length > 0) {
+        spaceCount += matches.length;
+        if (affectedFiles.length < 5) affectedFiles.push({ file: relative(ROOT, file), count: matches.length });
+      }
+    }
+  }
+
+  if (spaceCount === 0) return { status: 'pass', message: 'No space-y/x utilities found' };
+  return {
+    status: 'pass',
+    message: `${spaceCount} space-y/x usages — TW4 uses :not(:last-child) selector (may affect inline elements)`,
+    details: [...affectedFiles.slice(0, 3), 'Tip: Consider migrating to flex/grid gap-* for safer spacing'],
+  };
+});
+
+// 20. divide-y/x selector change — TW4 border placement changed
+check('tw4-divide-selector', 'TW4 divide-y/x selector change risk', () => {
+  const scanDirs = ['apps', 'packages/design-system/src'];
+  let divideCount = 0;
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      const matches = content.match(/\bdivide-[xy](?:-\d+)?\b/g) || [];
+      divideCount += matches.length;
+    }
+  }
+
+  if (divideCount === 0) return { status: 'pass', message: 'No divide-y/x utilities found' };
+  return {
+    status: 'pass',
+    message: `${divideCount} divide-y/x usages — TW4 uses border-bottom on :not(:last-child) instead of border-top on ~ siblings`,
+  };
+});
+
+// 21. transition includes outline-color in TW4
+check('tw4-transition-outline', 'TW4 transition includes outline-color', () => {
+  const scanDirs = ['apps', 'packages/design-system/src'];
+  let transitionFocusCount = 0;
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      // Check for transition + focus:outline combination
+      if (content.includes('transition') && (content.includes('focus:outline') || content.includes('focus-visible:outline'))) {
+        transitionFocusCount++;
+      }
+    }
+  }
+
+  if (transitionFocusCount === 0) return { status: 'pass', message: 'No transition + focus:outline combinations found' };
+  return {
+    status: 'pass',
+    message: `${transitionFocusCount} files use transition + focus:outline — TW4 now transitions outline-color (may flash from default)`,
+    details: ['Tip: Set outline color unconditionally (e.g., outline-blue-500 transition hover:outline-2) to avoid flash'],
+  };
+});
+
+// 22. hidden attribute priority — TW4 hidden overrides display utilities
+check('tw4-hidden-priority', 'TW4 hidden attribute priority change', () => {
+  const scanDirs = ['apps', 'packages/design-system/src'];
+  let riskCount = 0;
+  const riskFiles = [];
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      // Check for hidden attribute + display class on same element pattern
+      if (content.match(/hidden.*class.*\b(block|flex|grid|inline|table)\b/g) ||
+          content.match(/\b(block|flex|grid|inline|table)\b.*hidden/g)) {
+        // More specific: look for hidden={...} or hidden attribute with display classes
+        if (content.includes('hidden={') || content.includes('hidden ') || content.includes('hidden\n')) {
+          riskCount++;
+          if (riskFiles.length < 3) riskFiles.push(relative(ROOT, file));
+        }
+      }
+    }
+  }
+
+  if (riskCount === 0) return { status: 'pass', message: 'No hidden attribute + display class conflicts detected' };
+  return {
+    status: 'warn',
+    message: `${riskCount} files may use hidden attribute with display overrides — TW4: hidden wins over block/flex/grid`,
+    details: riskFiles,
+    fix: FIX_HINT ? 'In TW4, <div class="hidden block"> stays hidden. Remove hidden attribute or use conditional rendering instead.' : undefined,
+  };
+});
+
 /* ------------------------------------------------------------------ */
 /*  Report                                                             */
 /* ------------------------------------------------------------------ */
@@ -561,7 +694,7 @@ check('forward-ref', 'forwardRef on interactive primitives', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '2.1.0',
+    version: '3.0.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -570,7 +703,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║              🩺 Theme Doctor v2.1 (17 checks)               ║');
+  console.log('║              🩺 Theme Doctor v3.0 (22 checks)               ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 
