@@ -1,0 +1,157 @@
+---
+title: Tema Sistemi
+description: Dark mode, density, accent yapılandırması
+---
+
+## Tema Eksenleri
+
+| Eksen | Seçenekler |
+|-------|-----------|
+| Appearance | light, dark, high-contrast |
+| Density | compact, comfortable, spacious |
+| Radius | sharp, rounded |
+| Elevation | flat, raised |
+
+## Dark Mode
+
+```tsx
+import { useTheme } from '@mfe/design-system';
+
+function ThemeToggle() {
+  const { axes, setAppearance } = useTheme();
+  return (
+    <button onClick={() => setAppearance(axes.appearance === 'dark' ? 'light' : 'dark')}>
+      {axes.appearance === 'dark' ? 'Light' : 'Dark'}
+    </button>
+  );
+}
+```
+
+## Semantic Token'lar
+
+```css
+:root {
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-disabled: #9ca3af;
+  --surface-default: #ffffff;
+  --surface-raised: #f9fafb;
+  --surface-sunken: #f3f4f6;
+  --border-default: #d1d5db;
+  --border-strong: #9ca3af;
+  --action-primary: #2563eb;
+  --action-primary-hover: #1d4ed8;
+  --action-danger: #dc2626;
+  --action-success: #16a34a;
+}
+
+[data-mode="dark"] {
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-disabled: #6b7280;
+  --surface-default: #1f2937;
+  --surface-raised: #374151;
+  --surface-sunken: #111827;
+  --border-default: #4b5563;
+  --border-strong: #6b7280;
+  --action-primary: #3b82f6;
+  --action-primary-hover: #60a5fa;
+  --action-danger: #ef4444;
+  --action-success: #22c55e;
+}
+```
+
+## Density Yapılandırması
+
+Density ekseni bileşenlerin padding ve spacing değerlerini kontrol eder:
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider
+      theme={{
+        density: 'compact', // compact | comfortable | spacious
+      }}
+    >
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+| Density | Padding | Row Height | Font Size |
+|---------|---------|-----------|-----------|
+| compact | 4px 8px | 32px | 13px |
+| comfortable | 8px 12px | 40px | 14px |
+| spacious | 12px 16px | 48px | 15px |
+
+## Radius Yapılandırması
+
+```tsx
+<DesignSystemProvider
+  theme={{
+    radius: 'rounded', // sharp | rounded
+  }}
+>
+```
+
+| Radius | Değerler |
+|--------|---------|
+| sharp | border-radius: 2px |
+| rounded | border-radius: 8px |
+
+## Elevation Yapılandırması
+
+Elevation ekseni gölge ve kenar stillerini kontrol eder:
+
+```tsx
+<DesignSystemProvider
+  theme={{
+    elevation: 'raised', // flat | raised
+  }}
+>
+```
+
+## Programatik Tema Değişimi
+
+```tsx
+import { useTheme } from '@mfe/design-system';
+
+function ThemePanel() {
+  const { axes, setAxes } = useTheme();
+
+  return (
+    <div>
+      <select
+        value={axes.appearance}
+        onChange={(e) => setAxes({ appearance: e.target.value })}
+      >
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="high-contrast">High Contrast</option>
+      </select>
+
+      <select
+        value={axes.density}
+        onChange={(e) => setAxes({ density: e.target.value })}
+      >
+        <option value="compact">Compact</option>
+        <option value="comfortable">Comfortable</option>
+        <option value="spacious">Spacious</option>
+      </select>
+    </div>
+  );
+}
+```
+
+## CSS ile Özel Token Ekleme
+
+```css
+:root {
+  /* Kendi özel token'larınızı ekleyebilirsiniz */
+  --brand-gradient: linear-gradient(135deg, var(--action-primary), #7c3aed);
+  --custom-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+```

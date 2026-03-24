@@ -1,0 +1,107 @@
+---
+title: Kurulum
+description: Design system kurulum adımları
+---
+
+## Paket Kurulumu
+
+```bash
+npm install @mfe/design-system
+# veya
+pnpm add @mfe/design-system
+```
+
+## Token CSS
+
+```tsx
+// Ana uygulama girişinde import edin
+import '@mfe/design-system/tokens/build/tokens.css';
+import '@mfe/design-system/tokens/build/dark-mode.css';
+```
+
+## Provider
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+## İlk Bileşen
+
+```tsx
+import { Button } from '@mfe/design-system';
+
+function MyComponent() {
+  return <Button variant="primary">Merhaba</Button>;
+}
+```
+
+## Peer Dependencies
+
+Aşağıdaki paketlerin projenizde kurulu olması gerekir:
+
+| Paket | Minimum Versiyon |
+|-------|-----------------|
+| react | ^18.2.0 |
+| react-dom | ^18.2.0 |
+| typescript | ^5.0.0 |
+
+## Monorepo Kullanımı
+
+Eğer bir monorepo yapısında çalışıyorsanız, kök `package.json` dosyasına ekleyin:
+
+```json
+{
+  "dependencies": {
+    "@mfe/design-system": "workspace:*"
+  }
+}
+```
+
+## Vite Yapılandırması
+
+Vite kullanan projelerde ek yapılandırma gerekli değildir. CSS token'ları otomatik olarak yüklenir.
+
+```ts
+// vite.config.ts — ek yapılandırma gerekmez
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+});
+```
+
+## Sorun Giderme
+
+### CSS Token'ları Yüklenmiyor
+
+Token CSS dosyalarının uygulama girişinde import edildiğinden emin olun. Import sırası önemlidir:
+
+```tsx
+// 1. Önce base token'lar
+import '@mfe/design-system/tokens/build/tokens.css';
+// 2. Sonra dark mode token'ları
+import '@mfe/design-system/tokens/build/dark-mode.css';
+// 3. Son olarak uygulama stilleri
+import './App.css';
+```
+
+### TypeScript Hataları
+
+`tsconfig.json` dosyanızda `moduleResolution` ayarını kontrol edin:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}
+```

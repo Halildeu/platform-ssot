@@ -1,0 +1,230 @@
+---
+title: Pattern Bileşenler
+description: Hazır kullanım kalıpları — AppShell, CRUD, Dashboard layout ve daha fazlası
+---
+
+Pattern bileşenler, sık kullanılan uygulama kalıplarını kapsayan üst düzey kompozisyon bileşenleridir. Primitives ve enterprise bileşenlerini birleştirerek tutarlı kullanıcı deneyimi sağlarlar.
+
+## AppShell
+
+Uygulama ana yapısını oluşturan layout bileşeni:
+
+```tsx
+import { AppShell, Sidebar, TopBar } from '@mfe/design-system';
+
+<AppShell>
+  <TopBar
+    logo={<Logo />}
+    search={<GlobalSearch />}
+    actions={
+      <>
+        <NotificationBell count={3} />
+        <UserMenu user={currentUser} />
+      </>
+    }
+  />
+  <Sidebar
+    items={[
+      { icon: <HomeIcon />, label: 'Ana Sayfa', href: '/' },
+      { icon: <UsersIcon />, label: 'Kullanıcılar', href: '/users' },
+      { icon: <ChartIcon />, label: 'Raporlar', href: '/reports' },
+      { icon: <GearIcon />, label: 'Ayarlar', href: '/settings' },
+    ]}
+    collapsible
+    defaultCollapsed={false}
+  />
+  <AppShell.Content>
+    {children}
+  </AppShell.Content>
+</AppShell>
+```
+
+## CRUDPage
+
+Standart CRUD (Create, Read, Update, Delete) sayfa kalıbı:
+
+```tsx
+import { CRUDPage } from '@mfe/design-system';
+
+<CRUDPage
+  title="Kullanıcılar"
+  resource="users"
+  columns={[
+    { field: 'name', headerName: 'Ad Soyad' },
+    { field: 'email', headerName: 'E-posta' },
+    { field: 'role', headerName: 'Rol' },
+    { field: 'status', headerName: 'Durum', type: 'badge' },
+  ]}
+  createForm={<UserCreateForm />}
+  editForm={(record) => <UserEditForm user={record} />}
+  filters={[
+    { field: 'role', type: 'select', options: roles },
+    { field: 'status', type: 'select', options: statuses },
+  ]}
+  bulkActions={[
+    { label: 'Aktif Yap', action: activateUsers },
+    { label: 'Sil', action: deleteUsers, confirm: true },
+  ]}
+  exportFormats={['xlsx', 'csv']}
+/>
+```
+
+## DashboardLayout
+
+Dashboard sayfası kalıbı — sürükle-bırak widget düzeni:
+
+```tsx
+import { DashboardLayout, Widget } from '@mfe/design-system';
+
+<DashboardLayout
+  columns={12}
+  rowHeight={80}
+  draggable
+  resizable
+  onLayoutChange={saveLayout}
+>
+  <Widget id="kpi" x={0} y={0} w={12} h={1} title="KPI Metrikleri">
+    <ExecutiveKPIStrip metrics={kpis} />
+  </Widget>
+  <Widget id="chart1" x={0} y={1} w={6} h={3} title="Aylık Gelir">
+    <LineChart data={revenueData} />
+  </Widget>
+  <Widget id="chart2" x={6} y={1} w={6} h={3} title="Departman Dağılımı">
+    <PieChart data={deptData} />
+  </Widget>
+  <Widget id="table" x={0} y={4} w={12} h={4} title="Son İşlemler">
+    <DataGrid rows={recentTransactions} columns={txColumns} />
+  </Widget>
+</DashboardLayout>
+```
+
+## MasterDetail
+
+Ana liste ve detay paneli kalıbı:
+
+```tsx
+import { MasterDetail } from '@mfe/design-system';
+
+<MasterDetail
+  masterTitle="Siparişler"
+  masterContent={
+    <DataGrid
+      rows={orders}
+      columns={orderColumns}
+      onRowClick={(row) => setSelectedOrder(row)}
+    />
+  }
+  detailTitle={selectedOrder?.id}
+  detailContent={
+    selectedOrder ? <OrderDetail order={selectedOrder} /> : <EmptyState />
+  }
+  splitRatio={60}
+  responsive
+/>
+```
+
+## SettingsPage
+
+Ayarlar sayfası kalıbı:
+
+```tsx
+import { SettingsPage, SettingsSection } from '@mfe/design-system';
+
+<SettingsPage title="Ayarlar">
+  <SettingsSection title="Profil" icon={<UserIcon />}>
+    <Input label="Ad Soyad" value={name} onChange={setName} />
+    <Input label="E-posta" value={email} onChange={setEmail} />
+    <Select label="Dil" options={languages} value={lang} onChange={setLang} />
+  </SettingsSection>
+
+  <SettingsSection title="Bildirimler" icon={<BellIcon />}>
+    <Switch label="E-posta Bildirimleri" checked={emailNotif} onChange={setEmailNotif} />
+    <Switch label="Push Bildirimleri" checked={pushNotif} onChange={setPushNotif} />
+    <Switch label="SMS Bildirimleri" checked={smsNotif} onChange={setSmsNotif} />
+  </SettingsSection>
+
+  <SettingsSection title="Güvenlik" icon={<ShieldIcon />}>
+    <Button variant="secondary" onClick={changePassword}>Şifre Değiştir</Button>
+    <Switch label="İki Faktörlü Doğrulama" checked={twoFactor} onChange={setTwoFactor} />
+  </SettingsSection>
+</SettingsPage>
+```
+
+## WizardPage
+
+Adım adım sihirbaz kalıbı:
+
+```tsx
+import { WizardPage } from '@mfe/design-system';
+
+<WizardPage
+  title="Yeni Proje Oluştur"
+  steps={[
+    { label: 'Temel Bilgiler', content: <ProjectBasicInfo /> },
+    { label: 'Ekip Seçimi', content: <TeamSelection /> },
+    { label: 'Bütçe', content: <BudgetSetup /> },
+    { label: 'Onay', content: <ProjectSummary /> },
+  ]}
+  onComplete={createProject}
+  onCancel={() => navigate('/projects')}
+  validateStep={validateCurrentStep}
+/>
+```
+
+## LoginPage
+
+Giriş sayfası kalıbı:
+
+```tsx
+import { LoginPage } from '@mfe/design-system';
+
+<LoginPage
+  logo={<Logo />}
+  title="Hoş Geldiniz"
+  onLogin={handleLogin}
+  providers={[
+    { id: 'azure', label: 'Azure AD ile Giriş', icon: <AzureIcon /> },
+  ]}
+  forgotPasswordLink="/forgot-password"
+  footer={<p>Yardım: destek@sirket.com</p>}
+/>
+```
+
+## ErrorPage
+
+Hata sayfası kalıbı:
+
+```tsx
+import { ErrorPage } from '@mfe/design-system';
+
+<ErrorPage
+  code={404}
+  title="Sayfa Bulunamadı"
+  description="Aradığınız sayfa mevcut değil veya taşınmış olabilir."
+  action={{ label: 'Ana Sayfaya Dön', href: '/' }}
+/>
+
+<ErrorPage
+  code={500}
+  title="Sunucu Hatası"
+  description="Bir sorun oluştu. Lütfen daha sonra tekrar deneyin."
+  action={{ label: 'Yeniden Dene', onClick: () => window.location.reload() }}
+/>
+```
+
+## Tüm Pattern Listesi
+
+| Pattern | Açıklama |
+|---------|----------|
+| `AppShell` | Uygulama ana çerçevesi |
+| `CRUDPage` | CRUD işlemleri sayfası |
+| `DashboardLayout` | Dashboard widget düzeni |
+| `MasterDetail` | Liste-detay bölünmüş görünüm |
+| `SettingsPage` | Ayarlar sayfası |
+| `WizardPage` | Adım adım sihirbaz |
+| `LoginPage` | Giriş sayfası |
+| `ErrorPage` | Hata sayfası (404, 500, vb.) |
+| `EmptyStatePage` | Boş durum sayfası |
+| `ProfilePage` | Kullanıcı profil sayfası |
+| `SearchResults` | Arama sonuçları sayfası |
+| `NotificationPage` | Bildirim merkezi sayfası |

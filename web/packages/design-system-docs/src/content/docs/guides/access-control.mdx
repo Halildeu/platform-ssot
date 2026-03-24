@@ -1,0 +1,243 @@
+---
+title: Access Control Rehberi
+description: Rol tabanlı erişim kontrolü, izin yönetimi ve güvenlik bileşenleri
+---
+
+## Genel Bakış
+
+Design system, kurumsal uygulamalar için kapsamlı erişim kontrolü altyapısı sunar. RBAC (Role-Based Access Control) tabanlı sistem, bileşen düzeyinde izin kontrolü ve denetim günlüğü özellikleri içerir.
+
+## RBAC Kurulumu
+
+### Provider Yapılandırması
+
+```tsx
+import { AccessControlProvider } from '@mfe/design-system';
+
+const permissions = {
+  admin: ['*'], // Tüm izinler
+  manager: ['users:read', 'users:update', 'reports:read', 'reports:export'],
+  editor: ['content:read', 'content:create', 'content:update'],
+  viewer: ['content:read', 'reports:read'],
+};
+
+function App() {
+  const user = useCurrentUser();
+
+  return (
+    <AccessControlProvider
+      role={user.role}
+      permissions={permissions[user.role]}
+      userId={user.id}
+    >
+      <YourApp />
+    </AccessControlProvider>
+  );
+}
+```
+
+### İzin Formatı
+
+İzinler `resource:action` formatında tanımlanır:
+
+| İzin | Açıklama |
+|------|----------|
+| `users:read` | Kullanıcı listesini görüntüleme |
+| `users:create` | Yeni kullanıcı oluşturma |
+| `users:update` | Kullanıcı düzenleme |
+| `users:delete` | Kullanıcı silme |
+| `reports:read` | Rapor görüntüleme |
+| `reports:export` | Rapor dışa aktarma |
+| `settings:manage` | Ayarları yönetme |
+| `*` | Tüm izinler (admin) |
+
+## Bileşen Düzeyi Erişim Kontrolü
+
+### Gate Bileşeni
+
+```tsx
+import { Gate } from '@mfe/design-system';
+
+<Gate permission="users:create">
+  <Button onClick={openCreateModal}>Yeni Kullanıcı</Button>
+</Gate>
+
+// Yetki yoksa alternatif göster
+<Gate
+  permission="reports:export"
+  fallback={<Tooltip content="Bu işlem için yetkiniz yok"><Button disabled>Dışa Aktar</Button></Tooltip>}
+>
+  <Button onClick={exportReport}>Dışa Aktar</Button>
+</Gate>
+
+// Birden fazla izin kontrolü
+<Gate permissions={['users:read', 'users:update']} mode="all">
+  <UserEditForm />
+</Gate>
+
+<Gate permissions={['reports:read', 'analytics:read']} mode="any">
+  <DashboardWidget />
+</Gate>
+```
+
+### usePermission Hook
+
+```tsx
+import { usePermission } from '@mfe/design-system';
+
+function UserActions({ user }) {
+  const canEdit = usePermission('users:update');
+  const canDelete = usePermission('users:delete');
+
+  return (
+    <div>
+      {canEdit && <Button onClick={() => editUser(user)}>Düzenle</Button>}
+      {canDelete && <Button variant="danger" onClick={() => deleteUser(user)}>Sil</Button>}
+    </div>
+  );
+}
+```
+
+### useRole Hook
+
+```tsx
+import { useRole } from '@mfe/design-system';
+
+function AdminPanel() {
+  const { role, isAdmin, isManager } = useRole();
+
+  if (!isAdmin && !isManager) {
+    return <ErrorPage code={403} title="Yetkisiz Erişim" />;
+  }
+
+  return <ManagementDashboard />;
+}
+```
+
+## PermissionMatrix Bileşeni
+
+Rol-izin matrisini görsel olarak yönetme:
+
+```tsx
+import { PermissionMatrix } from '@mfe/design-system';
+
+<PermissionMatrix
+  roles={['admin', 'manager', 'editor', 'viewer']}
+  resources={[
+    {
+      name: 'Kullanıcılar',
+      key: 'users',
+      actions: ['read', 'create', 'update', 'delete'],
+    },
+    {
+      name: 'Raporlar',
+      key: 'reports',
+      actions: ['read', 'create', 'export'],
+    },
+    {
+      name: 'Ayarlar',
+      key: 'settings',
+      actions: ['read', 'manage'],
+    },
+  ]}
+  value={currentPermissions}
+  onChange={updatePermissions}
+  readOnly={!isAdmin}
+/>
+```
+
+## RolePicker Bileşeni
+
+```tsx
+import { RolePicker } from '@mfe/design-system';
+
+<RolePicker
+  roles={[
+    { id: 'admin', label: 'Yönetici', description: 'Tüm sistem yetkilerine sahip', icon: <ShieldIcon /> },
+    { id: 'manager', label: 'Müdür', description: 'Ekip ve raporları yönetir', icon: <UsersIcon /> },
+    { id: 'editor', label: 'Editör', description: 'İçerik oluşturur ve düzenler', icon: <EditIcon /> },
+    { id: 'viewer', label: 'İzleyici', description: 'Sadece görüntüleme yetkisi', icon: <EyeIcon /> },
+  ]}
+  value={selectedRole}
+  onChange={setSelectedRole}
+/>
+```
+
+## AuditLog Bileşeni
+
+Erişim ve işlem denetim günlüğü:
+
+```tsx
+import { AuditLog } from '@mfe/design-system';
+
+<AuditLog
+  entries={auditEntries}
+  columns={[
+    { field: 'timestamp', label: 'Tarih', type: 'datetime' },
+    { field: 'user', label: 'Kullanıcı' },
+    { field: 'action', label: 'İşlem' },
+    { field: 'resource', label: 'Kaynak' },
+    { field: 'details', label: 'Detay' },
+    { field: 'ip', label: 'IP Adresi' },
+  ]}
+  filters={[
+    { field: 'action', type: 'select', options: actionTypes },
+    { field: 'user', type: 'search' },
+    { field: 'timestamp', type: 'daterange' },
+  ]}
+  exportable
+  pageSize={50}
+/>
+```
+
+## Rota Koruması
+
+```tsx
+import { ProtectedRoute } from '@mfe/design-system';
+
+<Routes>
+  <Route path="/dashboard" element={
+    <ProtectedRoute permission="dashboard:read">
+      <DashboardPage />
+    </ProtectedRoute>
+  } />
+
+  <Route path="/admin" element={
+    <ProtectedRoute role="admin" redirectTo="/unauthorized">
+      <AdminPage />
+    </ProtectedRoute>
+  } />
+
+  <Route path="/reports" element={
+    <ProtectedRoute permissions={['reports:read']} fallback={<UnauthorizedPage />}>
+      <ReportsPage />
+    </ProtectedRoute>
+  } />
+</Routes>
+```
+
+## API İsteklerinde Yetkilendirme
+
+```tsx
+import { useAuthorizedFetch } from '@mfe/design-system';
+
+function UserList() {
+  const fetchWithAuth = useAuthorizedFetch();
+
+  const loadUsers = async () => {
+    const response = await fetchWithAuth('/api/users', {
+      method: 'GET',
+    });
+    return response.json();
+  };
+}
+```
+
+## En İyi Pratikler
+
+1. **En az yetki prensibi** — Kullanıcılara yalnızca ihtiyaç duydukları izinleri verin
+2. **Sunucu tarafında da kontrol edin** — İstemci tarafı kontroller UI amaçlıdır, güvenlik sunucuda sağlanmalıdır
+3. **Denetim günlüğü tutun** — Hassas işlemleri AuditLog ile kayıt altına alın
+4. **İzinleri gruplandırın** — Rol bazlı gruplandırma yönetimi kolaylaştırır
+5. **Yetki yoksa gizleyin, devre dışı bırakmayın** — Kullanıcı karmaşasını azaltır
+6. **Token yenileme** — Oturum süresini ve token yenilemeyi düzgün yönetin

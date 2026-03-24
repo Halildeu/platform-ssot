@@ -1,0 +1,249 @@
+---
+title: Enterprise Bileşenler
+description: 44 enterprise-grade bileşen — ProcessFlow, PivotTable, FineKinney ve daha fazlası
+---
+
+Enterprise bileşenler, rakip kütüphanelerde bulunmayan ileri düzey iş uygulaması bileşenleridir. Toplam 44 enterprise bileşen mevcuttur.
+
+## Tam Liste
+
+| # | Bileşen | Kategori |
+|---|---------|----------|
+| 1 | `ExecutiveKPIStrip` | Dashboard |
+| 2 | `BarChart` | Charts |
+| 3 | `LineChart` | Charts |
+| 4 | `PieChart` | Charts |
+| 5 | `AreaChart` | Charts |
+| 6 | `ScatterChart` | Charts |
+| 7 | `RadarChart` | Charts |
+| 8 | `HeatmapChart` | Charts |
+| 9 | `GanttChart` | Project |
+| 10 | `ProcessFlow` | Workflow |
+| 11 | `PivotTable` | Analytics |
+| 12 | `FineKinney` | Risk |
+| 13 | `RiskMatrix` | Risk |
+| 14 | `DataGrid` | Data |
+| 15 | `TreeGrid` | Data |
+| 16 | `VirtualList` | Data |
+| 17 | `KanbanBoard` | Project |
+| 18 | `Scheduler` | Calendar |
+| 19 | `Timeline` | Calendar |
+| 20 | `AdaptiveForm` | Form |
+| 21 | `FormBuilder` | Form |
+| 22 | `FilterPresets` | Data |
+| 23 | `DataExportDialog` | Data |
+| 24 | `BulkActionBar` | Data |
+| 25 | `AuditLog` | Compliance |
+| 26 | `PermissionMatrix` | Access |
+| 27 | `RolePicker` | Access |
+| 28 | `ApprovalFlow` | Workflow |
+| 29 | `DocumentViewer` | Content |
+| 30 | `RichTextEditor` | Content |
+| 31 | `FileUploader` | Content |
+| 32 | `ImageCropper` | Content |
+| 33 | `NotificationCenter` | Communication |
+| 34 | `ChatWidget` | Communication |
+| 35 | `CommentThread` | Communication |
+| 36 | `OrgChart` | Organization |
+| 37 | `TreeView` | Navigation |
+| 38 | `CommandPalette` | Navigation |
+| 39 | `Stepper` | Workflow |
+| 40 | `WizardFlow` | Workflow |
+| 41 | `DashboardGrid` | Dashboard |
+| 42 | `WidgetContainer` | Dashboard |
+| 43 | `ReportBuilder` | Analytics |
+| 44 | `SignaturePad` | Form |
+
+## ExecutiveKPIStrip
+
+Yönetici dashboard'larında KPI metriklerini gösteren üst şerit:
+
+```tsx
+import { ExecutiveKPIStrip } from '@mfe/design-system';
+
+<ExecutiveKPIStrip
+  metrics={[
+    { label: 'Toplam Gelir', value: '₺12.4M', trend: 12.5, status: 'positive' },
+    { label: 'Aktif Kullanıcı', value: '8,432', trend: -2.1, status: 'negative' },
+    { label: 'Tamamlanma', value: '%94', trend: 5.0, status: 'positive' },
+    { label: 'SLA Uyum', value: '%99.2', trend: 0.1, status: 'neutral' },
+  ]}
+/>
+```
+
+## ProcessFlow
+
+BPMN uyumlu süreç akış diyagramı:
+
+```tsx
+import { ProcessFlow } from '@mfe/design-system';
+
+<ProcessFlow
+  nodes={[
+    { id: '1', type: 'start', label: 'Başlangıç' },
+    { id: '2', type: 'task', label: 'Başvuru Al' },
+    { id: '3', type: 'gateway', label: 'Onay?' },
+    { id: '4', type: 'task', label: 'Onayla' },
+    { id: '5', type: 'task', label: 'Reddet' },
+    { id: '6', type: 'end', label: 'Bitiş' },
+  ]}
+  edges={[
+    { from: '1', to: '2' },
+    { from: '2', to: '3' },
+    { from: '3', to: '4', label: 'Evet' },
+    { from: '3', to: '5', label: 'Hayır' },
+    { from: '4', to: '6' },
+    { from: '5', to: '6' },
+  ]}
+  onNodeClick={(node) => console.log(node)}
+/>
+```
+
+## PivotTable
+
+Çok boyutlu veri analizi:
+
+```tsx
+import { PivotTable } from '@mfe/design-system';
+
+<PivotTable
+  data={salesData}
+  rows={['region', 'city']}
+  columns={['year', 'quarter']}
+  values={[
+    { field: 'revenue', aggregate: 'sum', format: 'currency' },
+    { field: 'count', aggregate: 'count' },
+  ]}
+  grandTotals
+  subTotals
+  exportable
+/>
+```
+
+## FineKinney
+
+İş güvenliği risk değerlendirme bileşeni:
+
+```tsx
+import { FineKinney } from '@mfe/design-system';
+
+<FineKinney
+  assessment={{
+    probability: 6,    // 0.1 - 10
+    frequency: 3,      // 0.5 - 10
+    severity: 15,      // 1 - 100
+  }}
+  onScoreChange={(score) => {
+    // score = probability * frequency * severity
+    console.log('Risk Skoru:', score);
+  }}
+  thresholds={{
+    low: 20,
+    medium: 70,
+    high: 200,
+    critical: 400,
+  }}
+/>
+```
+
+## DataGrid
+
+Yüksek performanslı veri tablosu:
+
+```tsx
+import { DataGrid } from '@mfe/design-system';
+
+<DataGrid
+  rows={employees}
+  columns={[
+    { field: 'id', headerName: 'ID', width: 80, pinned: 'left' },
+    { field: 'name', headerName: 'Ad Soyad', flex: 1, sortable: true },
+    { field: 'department', headerName: 'Departman', width: 150, filterable: true },
+    { field: 'salary', headerName: 'Maaş', width: 120, type: 'currency' },
+    { field: 'startDate', headerName: 'Başlangıç', width: 120, type: 'date' },
+  ]}
+  pagination
+  pageSize={50}
+  rowSelection="multiple"
+  onRowClick={(row) => navigate(`/employee/${row.id}`)}
+  virtualScroll
+  exportFormats={['xlsx', 'csv', 'pdf']}
+/>
+```
+
+## KanbanBoard
+
+Sürükle-bırak kanban panosu:
+
+```tsx
+import { KanbanBoard } from '@mfe/design-system';
+
+<KanbanBoard
+  columns={[
+    { id: 'todo', title: 'Yapılacak', limit: 10 },
+    { id: 'progress', title: 'Devam Eden', limit: 5 },
+    { id: 'review', title: 'İnceleme', limit: 3 },
+    { id: 'done', title: 'Tamamlandı' },
+  ]}
+  cards={tasks}
+  onCardMove={(cardId, fromCol, toCol) => updateTask(cardId, toCol)}
+  renderCard={(card) => <TaskCard task={card} />}
+/>
+```
+
+## Scheduler
+
+Takvim ve zamanlama bileşeni:
+
+```tsx
+import { Scheduler } from '@mfe/design-system';
+
+<Scheduler
+  events={calendarEvents}
+  view="week"
+  views={['day', 'week', 'month', 'agenda']}
+  onEventCreate={(event) => createEvent(event)}
+  onEventUpdate={(event) => updateEvent(event)}
+  locale="tr-TR"
+  businessHours={{ start: '09:00', end: '18:00' }}
+  resources={meetingRooms}
+/>
+```
+
+## ApprovalFlow
+
+Çok aşamalı onay iş akışı:
+
+```tsx
+import { ApprovalFlow } from '@mfe/design-system';
+
+<ApprovalFlow
+  steps={[
+    { id: '1', label: 'Yönetici Onayı', assignee: 'manager', status: 'approved' },
+    { id: '2', label: 'Bütçe Onayı', assignee: 'finance', status: 'pending' },
+    { id: '3', label: 'İK Onayı', assignee: 'hr', status: 'waiting' },
+  ]}
+  onApprove={(stepId) => approve(stepId)}
+  onReject={(stepId, reason) => reject(stepId, reason)}
+  comments
+/>
+```
+
+## CommandPalette
+
+Klavye kısayolu ile açılan komut paleti:
+
+```tsx
+import { CommandPalette } from '@mfe/design-system';
+
+<CommandPalette
+  trigger="cmd+k"
+  commands={[
+    { id: 'search', label: 'Ara...', icon: <SearchIcon />, action: openSearch },
+    { id: 'new-doc', label: 'Yeni Belge', icon: <FileIcon />, action: createDoc },
+    { id: 'settings', label: 'Ayarlar', icon: <GearIcon />, action: openSettings },
+  ]}
+  recentCommands={recentlyUsed}
+  placeholder="Komut ara..."
+/>
+```
