@@ -96,7 +96,7 @@ function buildKeyMap(figmaKeys, dtcgKeys) {
       continue;
     }
 
-    // Try common renames
+    // Try common renames (Figma namespace → DTCG namespace)
     const candidates = [
       fk,
       fk.replace(/^color\.brand\./, 'color.'),
@@ -106,6 +106,20 @@ function buildKeyMap(figmaKeys, dtcgKeys) {
       fk.replace(/^motion\.easing\./, 'motion.easing.'),
       fk.replace(/^motion\.duration\./, 'motion.duration.'),
       fk.replace(/^typography\.font\.family\./, 'typography.fontFamily.'),
+      /* Exact aliases for tokens with different naming conventions */
+      ...(fk === 'color.neutral.0' ? ['color.white'] : []),
+      ...(fk === 'color.neutral.950' ? ['color.gray.950'] : []),
+      ...(fk === 'color.info.500' ? ['color.blue.500'] : []),
+      ...(fk === 'color.success.500' ? ['color.green.500'] : []),
+      ...(fk === 'color.warning.500' ? ['color.amber.500'] : []),
+      ...(fk === 'color.danger.500' ? ['color.red.500'] : []),
+      ...(fk === 'typography.font.family.base' ? ['typography.fontFamily.base', 'typography.fontFamily.sans'] : []),
+      /* Motion easing renames */
+      ...(fk === 'motion.easing.standard' ? ['motion.easing.default'] : []),
+      ...(fk === 'motion.easing.enter' ? ['motion.easing.in'] : []),
+      ...(fk === 'motion.easing.exit' ? ['motion.easing.out'] : []),
+      /* Motion duration renames */
+      ...(fk === 'motion.duration.medium' ? ['motion.duration.normal'] : []),
     ];
 
     let matched = false;
