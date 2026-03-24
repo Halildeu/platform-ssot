@@ -143,7 +143,7 @@ export const SearchHeader: Story = {
         showFavoriteToggle
         currentPath="/approval"
         startSlot={
-          <div className="flex items-center gap-2 rounded-full border border-border-subtle/70 bg-white/78 px-3 py-1.5 shadow-[0_12px_24px_-24px_rgba(15,23,42,0.2)] ring-1 ring-white/70 backdrop-blur-sm">
+          <div className="flex items-center gap-2 rounded-full border border-border-subtle/70 bg-white/78 px-3 py-1.5 shadow-[0_12px_24px_-24px_rgba(15,23,42,0.2)] ring-1 ring-white/70 backdrop-blur-xs">
             <span aria-hidden="true">⌕</span>
             <Text variant="secondary" className="text-xs">
               Ara, komut çalıştır, rota aç

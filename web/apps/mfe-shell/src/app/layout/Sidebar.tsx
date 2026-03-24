@@ -302,11 +302,11 @@ export const Sidebar: React.FC = () => {
             value={currentRailValue}
             items={railItems}
             onItemClick={handleRailItemClick}
-            className="!w-full"
+            className="w-full!"
             classes={{
-              root: '!w-full !rounded-[24px]',
+              root: 'w-full! rounded-[24px]!',
               list: 'gap-1',
-              item: '!rounded-xl',
+              item: 'rounded-xl!',
             }}
           />
 

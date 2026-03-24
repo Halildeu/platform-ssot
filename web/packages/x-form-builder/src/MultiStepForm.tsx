@@ -254,7 +254,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
             <button
               type="button"
               onClick={handlePrevious}
-              className="inline-flex items-center justify-center rounded-md border border-ds-border px-4 py-2 text-sm font-medium text-ds-text-primary hover:bg-ds-surface-secondary focus:outline-none focus:ring-2 focus:ring-ds-ring"
+              className="inline-flex items-center justify-center rounded-md border border-ds-border px-4 py-2 text-sm font-medium text-ds-text-primary hover:bg-ds-surface-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring"
             >
               <svg
                 className="mr-1.5 h-4 w-4"
@@ -277,7 +277,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
           {multi.isLastStep ? (
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-none focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
             >
               {schema.submitLabel ?? 'Submit'}
             </button>
@@ -285,7 +285,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-none focus:ring-2 focus:ring-ds-ring"
+              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-hidden focus:ring-2 focus:ring-ds-ring"
             >
               Next
               <svg

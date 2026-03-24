@@ -21,7 +21,7 @@ const mockModule: ReportModule<Filters, Row> = {
       <label className="text-sm font-semibold text-slate-700">
         {t('reports.filters.query')}
         <input
-          className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200"
+          className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-hidden focus:ring-2 focus:ring-brand-200"
           value={values.query}
           onChange={(event) => setFieldValue('query', event.target.value)}
           placeholder="Arama..."

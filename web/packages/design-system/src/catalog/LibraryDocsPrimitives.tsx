@@ -108,7 +108,7 @@ export const LibraryCodeBlock: React.FC<LibraryCodeBlockProps> = ({
         language={languageLabel}
         variant="light"
         label={languageLabel}
-        className="!rounded-none !border-0 !shadow-none !ring-0"
+        className="rounded-none! border-0! shadow-none! ring-0!"
       />
     </div>
   </div>

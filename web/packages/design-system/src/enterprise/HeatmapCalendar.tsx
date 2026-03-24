@@ -369,7 +369,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
       {/* Tooltip (fixed, portal-free) */}
       {tooltip && (
         <div
-          className="fixed z-50 px-2 py-1 rounded text-xs shadow-md pointer-events-none bg-[var(--surface-elevated,#1f2937)] text-[var(--text-on-elevated,#fff)]"
+          className="fixed z-50 px-2 py-1 rounded-xs text-xs shadow-md pointer-events-none bg-[var(--surface-elevated,#1f2937)] text-[var(--text-on-elevated,#fff)]"
           style={{
             left: tooltip.x,
             top: tooltip.y,

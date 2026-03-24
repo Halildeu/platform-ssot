@@ -82,7 +82,7 @@ export const KPICard = React.forwardRef<HTMLDivElement, KPICardProps>(
         {/* ---- header row: icon + title ---- */}
         <div className="flex items-center gap-2">
           {icon && (
-            <span className="flex-shrink-0 text-[var(--text-secondary)]" aria-hidden="true">
+            <span className="shrink-0 text-[var(--text-secondary)]" aria-hidden="true">
               {icon}
             </span>
           )}

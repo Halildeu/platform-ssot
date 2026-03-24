@@ -263,7 +263,7 @@ function PropRow({
                     code={example}
                     language="tsx"
                     variant="dark"
-                    className="!rounded-lg"
+                    className="rounded-lg!"
                   />
                 </div>
               )}

@@ -102,7 +102,7 @@ function inputProps(
       onChange(e.target.value),
     onBlur,
     className:
-      'w-full rounded-md border border-ds-border bg-ds-surface px-3 py-2 text-sm text-ds-text-primary placeholder:text-ds-text-secondary focus:outline-none focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50',
+      'w-full rounded-md border border-ds-border bg-ds-surface px-3 py-2 text-sm text-ds-text-primary placeholder:text-ds-text-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50',
   };
 }
 
@@ -194,7 +194,7 @@ export const CheckboxFieldRenderer: React.FC<FieldRendererProps & Record<string,
         disabled={field.disabled || readOnly}
         onChange={(e) => onChange(e.target.checked)}
         onBlur={onBlur}
-        className="h-4 w-4 rounded border-ds-border text-ds-primary focus:ring-2 focus:ring-ds-ring"
+        className="h-4 w-4 rounded-xs border-ds-border text-ds-primary focus:ring-2 focus:ring-ds-ring"
         aria-invalid={Boolean(props.error && props.touched) || undefined}
         aria-describedby={
           [(props as Record<string, unknown>).errorId, (props as Record<string, unknown>).helpId]
@@ -246,13 +246,13 @@ export const SwitchFieldRenderer: React.FC<FieldRendererProps & Record<string, u
       disabled={field.disabled || readOnly}
       onClick={() => onChange(!checked)}
       onBlur={onBlur}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50 ${
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50 ${
         checked ? 'bg-ds-primary' : 'bg-ds-border'
       }`}
     >
       <span
         aria-hidden="true"
-        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs transition-transform ${
           checked ? 'translate-x-5' : 'translate-x-0'
         }`}
       />

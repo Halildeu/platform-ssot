@@ -67,7 +67,7 @@ export const ChartLegend = React.forwardRef<HTMLDivElement, ChartLegendProps>(
           >
             {/* colour dot */}
             <span
-              className="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-full"
+              className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
               style={{ backgroundColor: item.color }}
               aria-hidden="true"
             />

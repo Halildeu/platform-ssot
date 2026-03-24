@@ -120,7 +120,7 @@ export const ExampleCard: React.FC<ExampleCardProps> = ({
             language="tsx"
             variant="dark"
             label="TSX"
-            className="!rounded-none !border-0"
+            className="rounded-none! border-0!"
           />
         </div>
       )}

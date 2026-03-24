@@ -114,7 +114,7 @@ export const FormSummary: React.FC<FormSummaryProps> = ({
         <button
           type="button"
           onClick={() => onEdit(field.id)}
-          className="shrink-0 text-xs font-medium text-ds-primary hover:text-ds-primary-hover focus:outline-none focus:underline"
+          className="shrink-0 text-xs font-medium text-ds-primary hover:text-ds-primary-hover focus:outline-hidden focus:underline"
           aria-label={`Edit ${field.label}`}
         >
           Edit

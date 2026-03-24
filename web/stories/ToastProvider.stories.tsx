@@ -29,7 +29,7 @@ const StoryShell = ({
       <div className="rounded-[32px] border border-border-subtle bg-surface-default p-6 shadow-[0_28px_64px_-42px_rgba(15,23,42,0.22)]">
         {children}
       </div>
-      <div className="rounded-[28px] border border-border-subtle bg-white/78 p-5 shadow-[0_20px_46px_-36px_rgba(15,23,42,0.18)] backdrop-blur-sm">
+      <div className="rounded-[28px] border border-border-subtle bg-white/78 p-5 shadow-[0_20px_46px_-36px_rgba(15,23,42,0.18)] backdrop-blur-xs">
         {sidebar}
       </div>
     </div>
@@ -208,7 +208,7 @@ export const PlacementAndQueuePolicy: Story = {
         newestOnTop={false}
         maxVisible={2}
         autoHideDuration={4000}
-        viewportClassName="!max-w-md"
+        viewportClassName="max-w-md!"
         toastTestId="toast-queue-item"
       >
         <StoryShell

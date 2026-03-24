@@ -132,7 +132,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-none focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading && (
                 <svg
@@ -163,7 +163,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             <button
               type="reset"
               disabled={loading}
-              className="inline-flex items-center justify-center rounded-md border border-ds-border px-4 py-2 text-sm font-medium text-ds-text-primary hover:bg-ds-surface-secondary focus:outline-none focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md border border-ds-border px-4 py-2 text-sm font-medium text-ds-text-primary hover:bg-ds-surface-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
             >
               {schema.resetLabel ?? 'Reset'}
             </button>

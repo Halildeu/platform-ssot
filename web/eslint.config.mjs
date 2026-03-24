@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import css from '@eslint/css';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { rules as semanticThemeRules } from './scripts/lint/eslint-plugin-semantic-theme.mjs';
@@ -57,6 +58,25 @@ export default tseslint.config(
       'semantic-theme/no-inline-color-literals': 'error',
       'css-var-fallback/no-css-var-without-fallback': 'error',
       'no-ant-import/no-new-ant-import': 'error',
+    },
+  },
+  /* ---- @eslint/css — native CSS linting (ESLint 9+) ---- */
+  {
+    files: ['**/*.css'],
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      '**/coverage/**',
+      /* Auto-generated files — read-only */
+      '**/tokens/build/**',
+      '**/styles/theme.css',
+    ],
+    plugins: { css },
+    language: 'css/css',
+    rules: {
+      'css/no-invalid-at-rules': 'error',
+      'css/no-invalid-properties': 'error',
+      'css/no-duplicate-imports': 'error',
     },
   },
   {

@@ -174,9 +174,9 @@ export const ShellHeaderNavbar: React.FC<ShellHeaderNavbarProps> = ({
         },
       ).map((item) => ({
         ...item,
-        itemClassName: '!min-h-0 !rounded-full !px-3 !py-1 !text-xs !font-medium',
+        itemClassName: 'min-h-0! rounded-full! px-3! py-1! text-xs! font-medium!',
         activeClassName:
-          '!border-[var(--accent-primary-hover)] !bg-[var(--accent-primary)] !text-[var(--action-primary-text)] !shadow-xs',
+          'border-[var(--accent-primary-hover)]! bg-[var(--accent-primary)]! text-[var(--action-primary-text)]! shadow-xs!',
       })),
     [activeKey, itemTestIdPrefix, visibleItems],
   );

@@ -345,13 +345,37 @@ check('tsconfig-dupe', 'Duplicate keys in app tsconfig files', () => {
 /*  TW4 NATIVE CHECKS                                                 */
 /* ================================================================== */
 
-// 11. Deprecated TW3 class names
-check('tw4-class-renames', 'TW4 class renames (shadow-sm→shadow-xs, rounded-sm→rounded-xs)', () => {
-  const appDirs = ['apps', 'packages/design-system/src'];
+// 11. Deprecated TW3 class names (comprehensive per official migration guide)
+check('tw4-class-renames', 'TW4 class renames (shadow, rounded, blur, outline, ring, backdrop, etc.)', () => {
+  const appDirs = ['apps', 'packages/design-system/src', 'packages/x-form-builder/src', 'packages/x-charts/src', 'packages/x-data-grid/src', 'packages/x-editor/src', 'packages/x-kanban/src', 'packages/x-scheduler/src', 'stories'];
   const renames = [
+    /* Shadow scale */
     { old: 'shadow-sm', new: 'shadow-xs', re: /\bshadow-sm\b/g },
-    { old: 'rounded-sm', new: 'rounded-xs', re: /\brounded-sm\b/g },
+    { old: 'drop-shadow-sm', new: 'drop-shadow-xs', re: /\bdrop-shadow-sm\b/g },
+    /* Blur scale */
     { old: 'blur-sm', new: 'blur-xs', re: /\bblur-sm\b/g },
+    { old: 'backdrop-blur-sm', new: 'backdrop-blur-xs', re: /\bbackdrop-blur-sm\b/g },
+    /* Border radius scale */
+    { old: 'rounded-sm', new: 'rounded-xs', re: /\brounded-sm\b/g },
+    /* Outline */
+    { old: 'outline-none', new: 'outline-hidden', re: /\boutline-none\b/g },
+    /* Deprecated utilities */
+    { old: 'flex-shrink-0', new: 'shrink-0', re: /\bflex-shrink-0\b/g },
+    { old: 'flex-shrink', new: 'shrink', re: /(?<!")flex-shrink\b(?!-|")/g },
+    { old: 'flex-grow-0', new: 'grow-0', re: /\bflex-grow-0\b/g },
+    { old: 'flex-grow', new: 'grow', re: /\bflex-grow\b(?!-)/g },
+    { old: 'overflow-ellipsis', new: 'text-ellipsis', re: /\boverflow-ellipsis\b/g },
+    { old: 'decoration-slice', new: 'box-decoration-slice', re: /\bdecoration-slice\b/g },
+    { old: 'decoration-clone', new: 'box-decoration-clone', re: /\bdecoration-clone\b/g },
+    /* Opacity utilities (removed in TW4) */
+    { old: 'bg-opacity-*', new: 'bg-color/opacity', re: /\bbg-opacity-\d+\b/g },
+    { old: 'text-opacity-*', new: 'text-color/opacity', re: /\btext-opacity-\d+\b/g },
+    { old: 'border-opacity-*', new: 'border-color/opacity', re: /\bborder-opacity-\d+\b/g },
+    { old: 'ring-opacity-*', new: 'ring-color/opacity', re: /\bring-opacity-\d+\b/g },
+    /* Gradient rename */
+    { old: 'bg-gradient-to-*', new: 'bg-linear-to-*', re: /\bbg-gradient-to-[trbl]{1,2}\b/g },
+    /* Transform */
+    { old: 'transform-none', new: 'scale-none', re: /\btransform-none\b/g },
   ];
 
   const violations = [];
@@ -375,6 +399,33 @@ check('tw4-class-renames', 'TW4 class renames (shadow-sm→shadow-xs, rounded-sm
     message: `${total} deprecated TW3 classes in ${violations.length} files (shadow-sm, rounded-sm, blur-sm)`,
     details: violations.slice(0, 8),
     fix: FIX_HINT ? 'TW4 renames: shadow-sm→shadow-xs, rounded-sm→rounded-xs, blur-sm→blur-xs. Use find-and-replace.' : undefined,
+  };
+});
+
+// 11b. TW4 important modifier syntax (!prefix → prefix!)
+check('tw4-important', 'TW4 important modifier syntax (prefix! not !prefix)', () => {
+  const scanDirs = ['apps', 'packages/design-system/src', 'packages/x-form-builder/src', 'stories'];
+  const importantRe = /\b!(w|h|p|m|flex|grid|bg|text|border|rounded|shadow|ring|outline|max|min|gap|z|opacity|font|leading|tracking|inset|top|right|bottom|left|overflow|whitespace|break|cursor|pointer|select|resize|fill|stroke|sr|not|scale|rotate|translate|skew|origin|transition|duration|ease|delay|animate|order|col|row|self|justify|items|content|place|float|clear|isolation|object|aspect|columns|container|box|block|inline|table|hidden|visible|invisible|static|fixed|absolute|relative|sticky|decoration|underline|overline|line|list|align|vertical|indent|truncate|hyphens|space|divide|accent)\b/g;
+  const violations = [];
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      const matches = content.match(importantRe) || [];
+      if (matches.length > 0) {
+        violations.push({ file: relative(ROOT, file), count: matches.length, samples: matches.slice(0, 3) });
+      }
+    }
+  }
+
+  if (violations.length === 0) return { status: 'pass', message: 'No old !prefix important modifiers found' };
+  const total = violations.reduce((s, v) => s + v.count, 0);
+  return {
+    status: 'warn',
+    message: `${total} old !prefix important modifiers in ${violations.length} files`,
+    details: violations.slice(0, 5),
+    fix: FIX_HINT ? 'TW4: !flex → flex!, !bg-red-500 → bg-red-500! (important at end)' : undefined,
   };
 });
 
@@ -510,7 +561,7 @@ check('forward-ref', 'forwardRef on interactive primitives', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '2.0.0',
+    version: '2.1.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -519,7 +570,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║               🩺 Theme Doctor v2.0 (16 checks)              ║');
+  console.log('║              🩺 Theme Doctor v2.1 (17 checks)               ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

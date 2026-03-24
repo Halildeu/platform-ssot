@@ -74,7 +74,7 @@ export const FormPreview: React.FC<FormPreviewProps> = ({
 
   return (
     <div
-      className={`rounded-lg border border-ds-border bg-ds-surface p-6 shadow-sm ${className ?? ''}`}
+      className={`rounded-lg border border-ds-border bg-ds-surface p-6 shadow-xs ${className ?? ''}`}
     >
       {/* Preview badge */}
       <div className="mb-4 flex items-center gap-2">
