@@ -26,6 +26,10 @@ export const Default: Story = {
     data: marketShareData,
     title: 'Browser Market Share',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const DonutWithLabels: Story = {

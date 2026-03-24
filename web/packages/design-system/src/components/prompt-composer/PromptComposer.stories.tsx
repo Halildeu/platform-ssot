@@ -14,6 +14,10 @@ type Story = StoryObj<typeof PromptComposer>;
 
 export const Default: Story = {
   args: {},
+  play: async ({ canvasElement }) => {
+    const input = canvasElement.querySelector('input, textarea, select');
+    if (input) (input as HTMLElement).focus();
+  },
 };
 
 export const WithGuardrails: Story = {

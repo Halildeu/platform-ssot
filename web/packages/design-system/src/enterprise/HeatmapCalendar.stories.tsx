@@ -62,6 +62,10 @@ export const Default: Story = {
     showDayLabels: true,
     showTooltip: true,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const YearView: Story = {

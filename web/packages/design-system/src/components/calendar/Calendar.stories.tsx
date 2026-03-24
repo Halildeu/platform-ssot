@@ -37,6 +37,10 @@ export const Default: Story = {
     mode: 'single',
     size: 'md',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const SingleSelection: Story = {

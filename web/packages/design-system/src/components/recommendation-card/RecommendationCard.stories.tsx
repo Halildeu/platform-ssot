@@ -27,6 +27,10 @@ export const Default: Story = {
     sourceCount: 5,
     rationale: ['N+1 sorgu deseni tespit edildi', 'Eager loading %40 performans artisi saglayabilir'],
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const Warning: Story = {

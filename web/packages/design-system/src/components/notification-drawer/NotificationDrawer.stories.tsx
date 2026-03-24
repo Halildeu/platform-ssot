@@ -26,6 +26,10 @@ export const Default: Story = {
     title: 'Bildirimler',
     disablePortal: true,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
   decorators: [
     (Story) => (
       <div style={{ position: 'relative', height: 500, overflow: 'hidden' }}>

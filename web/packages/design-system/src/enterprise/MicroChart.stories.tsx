@@ -20,6 +20,10 @@ export const Sparkline: Story = {
     height: 32,
     color: '#3b82f6',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const Bar: Story = {

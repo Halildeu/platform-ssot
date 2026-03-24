@@ -33,6 +33,10 @@ export const Default: Story = {
     data: quarterlyData,
     title: 'Quarterly Revenue',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const HorizontalWithValues: Story = {

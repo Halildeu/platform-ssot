@@ -23,6 +23,10 @@ export const Default: Story = {
     label: 'Dosya Yukle',
     description: 'PNG, JPG veya PDF dosyalari yukleyebilirsiniz.',
   },
+  play: async ({ canvasElement }) => {
+    const input = canvasElement.querySelector('input, textarea, select');
+    if (input) (input as HTMLElement).focus();
+  },
   decorators: [
     (Story) => (
       <div style={{ width: 400 }}>

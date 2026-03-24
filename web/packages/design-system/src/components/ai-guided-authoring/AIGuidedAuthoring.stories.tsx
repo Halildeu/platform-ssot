@@ -19,6 +19,10 @@ export const Default: Story = {
       { id: '2', title: 'Kaynak ekle', summary: 'Daha fazla referans eklenmesi onerilir.', confidenceLevel: 'medium', confidenceScore: 68 },
     ],
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const WithConfidence: Story = {

@@ -38,6 +38,10 @@ export const Default: Story = {
   args: {
     item: infoItem,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const HighPriorityError: Story = {

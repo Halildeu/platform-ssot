@@ -46,6 +46,10 @@ export const Default: Story = {
     axes: performanceAxes,
     series: singleSeries,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const MultiSeries: Story = {

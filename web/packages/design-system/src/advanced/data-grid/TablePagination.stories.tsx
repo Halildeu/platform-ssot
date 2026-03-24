@@ -14,6 +14,10 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => <div>TablePagination — requires grid context for full functionality</div>,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const WithPageSizes: Story = {

@@ -31,6 +31,10 @@ export const Default: Story = {
     labels: weekLabels,
     title: 'Weekly Page Views',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const MultiSeriesWithLegend: Story = {

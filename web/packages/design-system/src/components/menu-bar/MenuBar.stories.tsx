@@ -35,6 +35,10 @@ export const Default: Story = {
     items,
     defaultValue: 'home',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const OutlineAppearance: Story = {

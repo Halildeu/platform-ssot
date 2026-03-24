@@ -30,6 +30,10 @@ export const Default: Story = {
     labels: monthLabels,
     title: 'Monthly Revenue',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const StackedMultiSeries: Story = {

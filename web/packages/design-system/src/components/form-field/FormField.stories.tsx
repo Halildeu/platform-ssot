@@ -23,6 +23,10 @@ export const Default: Story = {
     help: 'Is e-posta adresinizi girin.',
     children: <input type="email" placeholder="ornek@sirket.com" style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border-default)', fontSize: 14 }} />,
   },
+  play: async ({ canvasElement }) => {
+    const input = canvasElement.querySelector('input, textarea, select');
+    if (input) (input as HTMLElement).focus();
+  },
 };
 
 export const Required: Story = {

@@ -19,6 +19,10 @@ export const Default: Story = {
     hint: 'Enter your username',
     required: true,
   },
+  play: async ({ canvasElement }) => {
+    const input = canvasElement.querySelector('input, textarea, select');
+    if (input) (input as HTMLElement).focus();
+  },
   render: (args) => (
     <FieldControlShell {...args}>
       <input

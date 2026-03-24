@@ -18,6 +18,10 @@ export const Default: Story = {
     theme: 'quartz',
     density: 'comfortable',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const CompactDensity: Story = {

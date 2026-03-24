@@ -28,6 +28,10 @@ export const Default: Story = {
     description: 'Ilk kaydinizi ekleyerek baslayin.',
     action: <Button variant="primary">Yeni Ekle</Button>,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const WithSecondaryAction: Story = {

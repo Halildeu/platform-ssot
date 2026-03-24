@@ -41,6 +41,10 @@ export const Default: Story = {
   args: {
     children: <p style={{ padding: 16 }}>Everything is fine. No error here.</p>,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="button"], button, [data-testid], input, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const WithError: Story = {

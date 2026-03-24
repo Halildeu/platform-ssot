@@ -45,6 +45,10 @@ export const Default: Story = {
     showValues: true,
     showConnectors: true,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('svg, [role="img"], [data-component]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const ProfitLoss: Story = {

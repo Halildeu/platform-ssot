@@ -23,6 +23,10 @@ export const Default: Story = {
     label: 'Saat',
     defaultValue: '14:30',
   },
+  play: async ({ canvasElement }) => {
+    const input = canvasElement.querySelector('input, textarea, select');
+    if (input) (input as HTMLElement).focus();
+  },
   decorators: [
     (Story) => (
       <div style={{ width: 240 }}>
