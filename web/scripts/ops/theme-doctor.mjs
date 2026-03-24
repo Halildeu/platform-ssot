@@ -1858,8 +1858,8 @@ check('a11y-contrast-ratio', 'WCAG contrast ratio for text/surface token pairs',
     const m = themeCss.match(re);
     return m ? parseFloat(m[1]) / 100 : null;
   }
-  /* Approximate relative luminance from OKLCH lightness */
-  function oklchToLuminance(L) { return L * L; } /* simplified perceptual model */
+  /* OKLCH L → relative luminance (cubic model, better approximation) */
+  function oklchToLuminance(L) { return Math.pow(L, 3); }
   function contrastRatio(L1, L2) {
     const l1 = oklchToLuminance(Math.max(L1, L2));
     const l2 = oklchToLuminance(Math.min(L1, L2));

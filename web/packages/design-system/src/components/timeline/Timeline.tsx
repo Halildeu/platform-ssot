@@ -79,24 +79,24 @@ const dotColorMap: Record<
     ring: "ring-action-primary/20",
   },
   success: {
-    bg: "bg-[var(--feedback-success)]",
-    border: "border-[var(--feedback-success)]",
-    ring: "ring-[color-mix(in_oklab,var(--feedback-success)_20%,transparent)]",
+    bg: "bg-[var(--state-success-text)]",
+    border: "border-[var(--state-success-text)]",
+    ring: "ring-[color-mix(in_oklab,var(--state-success-text)_20%,transparent)]",
   },
   warning: {
-    bg: "bg-[var(--feedback-warning)]",
-    border: "border-[var(--feedback-warning)]",
-    ring: "ring-[color-mix(in_oklab,var(--feedback-warning)_20%,transparent)]",
+    bg: "bg-[var(--state-warning-text)]",
+    border: "border-[var(--state-warning-text)]",
+    ring: "ring-[color-mix(in_oklab,var(--state-warning-text)_20%,transparent)]",
   },
   danger: {
-    bg: "bg-[var(--feedback-error)]",
-    border: "border-[var(--feedback-error)]",
-    ring: "ring-[color-mix(in_oklab,var(--feedback-error)_20%,transparent)]",
+    bg: "bg-[var(--state-danger-text)]",
+    border: "border-[var(--state-danger-text)]",
+    ring: "ring-[color-mix(in_oklab,var(--state-danger-text)_20%,transparent)]",
   },
   info: {
-    bg: "bg-[var(--feedback-info)]",
-    border: "border-[var(--feedback-info)]",
-    ring: "ring-[color-mix(in_oklab,var(--feedback-info)_20%,transparent)]",
+    bg: "bg-[var(--state-info-text)]",
+    border: "border-[var(--state-info-text)]",
+    ring: "ring-[color-mix(in_oklab,var(--state-info-text)_20%,transparent)]",
   },
 };
 

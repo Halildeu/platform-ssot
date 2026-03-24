@@ -104,12 +104,12 @@ const TONE_PRIORITY: Record<WidgetTone, number> = {
 
 const TONE_BORDER: Record<WidgetTone, string> = {
   danger:
-    "border-s-4 border-s-[var(--danger-color)]",
+    "border-s-4 border-s-[var(--state-danger-text)]",
   warning:
-    "border-s-4 border-s-[var(--warning-color)]",
-  info: "border-s-4 border-s-[var(--info-color)]",
+    "border-s-4 border-s-[var(--state-warning-text)]",
+  info: "border-s-4 border-s-[var(--state-info-text)]",
   success:
-    "border-s-4 border-s-[var(--success-color)]",
+    "border-s-4 border-s-[var(--state-success-text)]",
   default: "",
 };
 
@@ -121,8 +121,8 @@ const SIZE_SPAN: Record<WidgetSize, string> = {
 };
 
 const TREND_COLORS: Record<TrendDirection, string> = {
-  up: "text-[var(--success-color)]",
-  down: "text-[var(--danger-color)]",
+  up: "text-[var(--state-success-text)]",
+  down: "text-[var(--state-danger-text)]",
   stable: "text-text-secondary",
 };
 

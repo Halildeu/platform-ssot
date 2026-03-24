@@ -240,7 +240,7 @@ export const ContextMenu = React.forwardRef<HTMLDivElement, ContextMenuProps>(({
                   "disabled:opacity-50 disabled:cursor-not-allowed",
                   item.danger
                     ? cn(
-                        "text-[var(--feedback-error)]",
+                        "text-[var(--state-danger-text)]",
                         isFocused && "bg-state-danger-bg",
                       )
                     : cn(

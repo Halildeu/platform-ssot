@@ -133,5 +133,18 @@
 
   /* Ring */
   --ring-color: var(--focus-outline);
+
+  /* Missing semantic tokens (added for component coverage) */
+  --color-surface-card: var(--surface-card);
+  --color-surface-card-alt: var(--surface-card-alt);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-interactive-primary: var(--interactive-primary);
+  --color-text-accent: var(--text-accent);
+  --color-shadow: var(--shadow-color);
+
+  /* Elevation: complete system */
+  --shadow-tooltip: var(--elevation-tooltip);
+  --shadow-dialog: var(--elevation-dialog);
 }
 

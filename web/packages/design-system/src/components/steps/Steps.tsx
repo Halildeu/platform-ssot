@@ -87,9 +87,9 @@ const statusColors: Record<StepStatus, { bg: string; border: string; text: strin
   },
   error: {
     bg: "bg-transparent",
-    border: "border-[var(--feedback-error)]",
-    text: "text-[var(--feedback-error)]",
-    titleText: "text-[var(--feedback-error)]",
+    border: "border-[var(--state-danger-text)]",
+    text: "text-[var(--state-danger-text)]",
+    titleText: "text-[var(--state-danger-text)]",
   },
 };
 

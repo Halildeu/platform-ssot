@@ -482,7 +482,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                   className={cn(
                     "flex-1 rounded-xs border border-border-subtle px-2 py-1",
                     "bg-[var(--surface-primary)] text-text-primary",
-                    "focus:outline-hidden focus:ring-1 focus:ring-[var(--ring-color)]",
+                    "focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-outline)]",
                     sizeConfig.font,
                     "font-mono",
                   )}
@@ -515,7 +515,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                             "rounded-xs border transition-[scale] duration-100",
                             `hover:scale-110 ${focusRingClass("ring")}`,
                             color.toLowerCase() === currentValue.toLowerCase()
-                              ? "border-[var(--border-active)] ring-1 ring-[var(--ring-color)]"
+                              ? "border-[var(--border-active)] ring-1 ring-[var(--focus-outline)]"
                               : "border-border-subtle",
                           )}
                           style={{
