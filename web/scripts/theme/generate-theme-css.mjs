@@ -80,10 +80,22 @@ for (const [axis, entries] of Object.entries(axisTokens)) {
 
 if (Object.keys(surfaceTones).length > 0) {
   for (const [toneKey, toneEntry] of Object.entries(surfaceTones)) {
+    /* Resolve the default (light) tone value for duplicate detection */
+    const defaultToneResolved = resolveValue(toneEntry?.modes?.[defaultAppearance]?.value);
+
     for (const theme of appearanceThemes) {
       const toneMode = toneEntry?.modes?.[theme];
       if (!toneMode) continue;
       const resolved = resolveValue(toneMode.value);
+
+      /* Skip if dark/hc tone value is identical to the light default — the
+         Figma token source hasn't defined a mode-specific dark tone yet, so
+         emitting an override here would clobber the dark surface colors with
+         light values. Let the base dark mode block win instead. */
+      const modeInfo = themeContract.modes?.[theme];
+      const isDark = modeInfo?.appearance === 'dark' || modeInfo?.isHighContrast;
+      if (isDark && defaultToneResolved && resolved === defaultToneResolved) continue;
+
       const selector = `:root[data-theme="${theme}"][data-surface-tone="${toneKey}"], [data-theme-scope][data-theme="${theme}"][data-surface-tone="${toneKey}"]`;
       pushBlock(selector, [
         `  --surface-default-bg: ${resolved};`,
