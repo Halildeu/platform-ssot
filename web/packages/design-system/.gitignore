@@ -1,3 +1,4 @@
 reports/
 .stryker-cache/
 .stryker-tmp/
+coverage/
