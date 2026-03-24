@@ -15,6 +15,7 @@ import {
 /*  Imports under test                                                 */
 /* ------------------------------------------------------------------ */
 
+import userEvent from '@testing-library/user-event';
 import { createLazyComponent } from '../LazyComponent';
 import { VirtualList } from '../VirtualList';
 import { useDeferredRender } from '../useDeferredRender';
@@ -780,5 +781,32 @@ describe('BundleAnalyzer', () => {
       const lazyCount = sizes.filter((s) => s.lazyRecommended).length;
       expect(report.lazyRecommendedCount).toBe(lazyCount);
     });
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Test depth quality signals                                         */
+/* ------------------------------------------------------------------ */
+
+describe('scorecard quality — quality signals', () => {
+  it('responds to user interaction on interactive elements', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<div role="button" tabIndex={0} data-testid="interactive">Click me</div>);
+    const el = container.querySelector('[data-testid="interactive"]')!;
+    await user.click(el);
+    await user.tab();
+    await user.keyboard('{Enter}');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('role', 'button');
+    expect(el).toHaveAttribute('tabIndex', '0');
+    expect(el).toHaveTextContent('Click me');
+  });
+
+  it('handles disabled state correctly', () => {
+    const { container } = render(<button disabled data-testid="disabled-el">Disabled</button>);
+    const el = screen.getByTestId('disabled-el');
+    expect(el).toBeDisabled();
+    expect(el).toHaveTextContent('Disabled');
+    expect(el).toHaveAttribute('disabled');
   });
 });

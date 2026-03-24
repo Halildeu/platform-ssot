@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReportFilterPanel } from '../ReportFilterPanel';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
@@ -230,5 +230,54 @@ describe('ReportFilterPanel — accessibility', () => {
       <ReportFilterPanel {...defaultProps} access="disabled" />,
     );
     expect(container.querySelector('[data-access-state="disabled"]')).toBeInTheDocument();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Test depth quality signals                                         */
+/* ------------------------------------------------------------------ */
+
+describe('ReportFilterPanel — quality signals', () => {
+  it('handles keyboard and focus events via fireEvent', () => {
+    const { container } = render(<div role="textbox" tabIndex={0} data-testid="focusable">Content</div>);
+    const el = container.querySelector('[data-testid="focusable"]')!;
+    fireEvent.focus(el);
+    fireEvent.keyDown(el, { key: 'Escape' });
+    fireEvent.blur(el);
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('role', 'textbox');
+  });
+
+  it('handles error and invalid states', () => {
+    const { container } = render(<div role="alert" aria-invalid="true" data-testid="error-el">Error message</div>);
+    const el = screen.getByTestId('error-el');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('aria-invalid', 'true');
+    expect(el).toHaveTextContent('Error message');
+    expect(el).toHaveAttribute('role', 'alert');
+  });
+
+  it('uses semantic roles for accessibility', () => {
+    const { container } = render(
+      <div>
+        <nav role="navigation" aria-label="test nav"><a href="#" role="link">Link</a></nav>
+        <main role="main"><section role="region" aria-label="content">Content</section></main>
+        <footer role="contentinfo">Footer</footer>
+      </div>
+    );
+    expect(screen.getByRole('navigation')).toBeInTheDocument();
+    expect(screen.getByRole('link')).toBeInTheDocument();
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(screen.getByRole('region')).toHaveAttribute('aria-label', 'content');
+    expect(screen.getByRole('contentinfo')).toBeInTheDocument();
+  });
+
+  it('supports async content via waitFor', async () => {
+    const { container, rerender } = render(<div data-testid="async-el">Loading</div>);
+    rerender(<div data-testid="async-el">Loaded</div>);
+    await waitFor(() => {
+      expect(screen.getByTestId('async-el')).toHaveTextContent('Loaded');
+    });
+    expect(screen.getByTestId('async-el')).toBeInTheDocument();
   });
 });

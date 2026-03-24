@@ -50,11 +50,7 @@ const entry: DesignLabComponentDocEntry = {
       "nested hierarchy",
       "hover highlight"
     ],
-    "previewStates": [
-      "flat",
-      "nested",
-      "dark-theme"
-    ],
+    "previewStates": ["flat", "nested", "dark-theme"],
     "behaviorModel": [
       "squarified treemap layout algorithm",
       "nested hierarchy drill-down",

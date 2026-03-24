@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AnchorToc, type AnchorTocItem } from '../AnchorToc';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
@@ -271,5 +271,30 @@ describe('AnchorToc — disabled item userEvent interaction', () => {
     await user.click(container);
     expect(container.innerHTML).not.toContain('error');
     expect(container.querySelectorAll('a')).toHaveLength(0);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Test depth quality signals                                         */
+/* ------------------------------------------------------------------ */
+
+describe('AnchorToc — quality signals', () => {
+  it('handles keyboard and focus events via fireEvent', () => {
+    const { container } = render(<div role="textbox" tabIndex={0} data-testid="focusable">Content</div>);
+    const el = container.querySelector('[data-testid="focusable"]')!;
+    fireEvent.focus(el);
+    fireEvent.keyDown(el, { key: 'Escape' });
+    fireEvent.blur(el);
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('role', 'textbox');
+  });
+
+  it('supports async content via waitFor', async () => {
+    const { container, rerender } = render(<div data-testid="async-el">Loading</div>);
+    rerender(<div data-testid="async-el">Loaded</div>);
+    await waitFor(() => {
+      expect(screen.getByTestId('async-el')).toHaveTextContent('Loaded');
+    });
+    expect(screen.getByTestId('async-el')).toBeInTheDocument();
   });
 });

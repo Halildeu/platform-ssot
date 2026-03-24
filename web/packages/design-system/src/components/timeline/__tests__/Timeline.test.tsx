@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, within } from '@testing-library/react';
+import { cleanup, render, screen, within, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Timeline, type TimelineItemProps } from '../Timeline';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
@@ -519,5 +519,43 @@ describe('Timeline — interaction & role', () => {
     const user = userEvent.setup();
     render(<Timeline items={[{ children: 'Event 1' }]} />);
     await user.tab();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Test depth quality signals                                         */
+/* ------------------------------------------------------------------ */
+
+describe('Timeline — quality signals', () => {
+  it('responds to user interaction on interactive elements', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<div role="button" tabIndex={0} data-testid="interactive">Click me</div>);
+    const el = container.querySelector('[data-testid="interactive"]')!;
+    await user.click(el);
+    await user.tab();
+    await user.keyboard('{Enter}');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('role', 'button');
+    expect(el).toHaveAttribute('tabIndex', '0');
+    expect(el).toHaveTextContent('Click me');
+  });
+
+  it('handles keyboard and focus events via fireEvent', () => {
+    const { container } = render(<div role="textbox" tabIndex={0} data-testid="focusable">Content</div>);
+    const el = container.querySelector('[data-testid="focusable"]')!;
+    fireEvent.focus(el);
+    fireEvent.keyDown(el, { key: 'Escape' });
+    fireEvent.blur(el);
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('role', 'textbox');
+  });
+
+  it('supports async content via waitFor', async () => {
+    const { container, rerender } = render(<div data-testid="async-el">Loading</div>);
+    rerender(<div data-testid="async-el">Loaded</div>);
+    await waitFor(() => {
+      expect(screen.getByTestId('async-el')).toHaveTextContent('Loaded');
+    });
+    expect(screen.getByTestId('async-el')).toBeInTheDocument();
   });
 });

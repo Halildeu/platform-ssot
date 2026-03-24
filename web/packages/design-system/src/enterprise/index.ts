@@ -78,3 +78,19 @@ export type { FilterPresetsLocaleText } from './FilterPresets';
 // Export
 export { DataExportDialog } from './DataExportDialog';
 export type { DataExportDialogLocaleText } from './DataExportDialog';
+
+// Fine-Kinney Risk Assessment
+export { FineKinney } from './FineKinney';
+export type { FineKinneyProps, FineKinneyRisk } from './FineKinney';
+
+// Waterfall Chart
+export { WaterfallChart } from './WaterfallChart';
+export type { WaterfallChartProps, WaterfallItem } from './WaterfallChart';
+
+// Pareto Chart
+export { ParetoChart } from './ParetoChart';
+export type { ParetoChartProps, ParetoItem } from './ParetoChart';
+
+// Heatmap Calendar
+export { HeatmapCalendar } from './HeatmapCalendar';
+export type { HeatmapCalendarProps, HeatmapDay } from './HeatmapCalendar';

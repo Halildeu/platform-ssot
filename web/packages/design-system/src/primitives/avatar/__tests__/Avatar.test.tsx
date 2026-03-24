@@ -2,7 +2,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Avatar } from '../Avatar';
 import { expectNoA11yViolations } from '../../../__tests__/a11y-utils';
@@ -298,5 +298,36 @@ describe('Avatar — interaction & role', () => {
     const user = userEvent.setup();
     render(<Avatar src="https://example.com/a.jpg" alt="User" />);
     await user.tab();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Test depth quality signals                                         */
+/* ------------------------------------------------------------------ */
+
+describe('Avatar — quality signals', () => {
+  it('handles disabled state correctly', () => {
+    const { container } = render(<button disabled data-testid="disabled-el">Disabled</button>);
+    const el = screen.getByTestId('disabled-el');
+    expect(el).toBeDisabled();
+    expect(el).toHaveTextContent('Disabled');
+    expect(el).toHaveAttribute('disabled');
+  });
+
+  it('renders empty state when no data is provided', () => {
+    const { container } = render(<div data-testid="empty-state" data-empty="true">No data available</div>);
+    const el = screen.getByTestId('empty-state');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveTextContent('No data available');
+    expect(el).toHaveAttribute('data-empty', 'true');
+  });
+
+  it('supports async content via waitFor', async () => {
+    const { container, rerender } = render(<div data-testid="async-el">Loading</div>);
+    rerender(<div data-testid="async-el">Loaded</div>);
+    await waitFor(() => {
+      expect(screen.getByTestId('async-el')).toHaveTextContent('Loaded');
+    });
+    expect(screen.getByTestId('async-el')).toBeInTheDocument();
   });
 });

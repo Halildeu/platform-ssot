@@ -51,11 +51,7 @@ const entry: DesignLabComponentDocEntry = {
       "with-total summary",
       "connector lines active"
     ],
-    "previewStates": [
-      "increase-decrease",
-      "with-total",
-      "dark-theme"
-    ],
+    "previewStates": ["increase-decrease", "with-total", "dark-theme"],
     "behaviorModel": [
       "cumulative bar position calculation",
       "increase/decrease color differentiation",

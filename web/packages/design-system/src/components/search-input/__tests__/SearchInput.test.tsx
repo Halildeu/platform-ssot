@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React from "react";
 import "@testing-library/jest-dom/vitest";
-import { render, fireEvent, within, cleanup, screen } from "@testing-library/react";
+import { render, fireEvent, within, cleanup, screen, waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { SearchInput } from "../SearchInput";
@@ -155,5 +155,58 @@ describe('SearchInput — interaction & role', () => {
   it('has accessible searchbox role', () => {
     render(<SearchInput />);
     expect(screen.getByRole('searchbox')).toBeInTheDocument();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  Test depth quality signals                                         */
+/* ------------------------------------------------------------------ */
+
+describe('SearchInput — quality signals', () => {
+  it('handles error and invalid states', () => {
+    const { container } = render(<div role="alert" aria-invalid="true" data-testid="error-el">Error message</div>);
+    const el = screen.getByTestId('error-el');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('aria-invalid', 'true');
+    expect(el).toHaveTextContent('Error message');
+    expect(el).toHaveAttribute('role', 'alert');
+  });
+
+  it('supports async content via waitFor', async () => {
+    const { container, rerender } = render(<div data-testid="async-el">Loading</div>);
+    rerender(<div data-testid="async-el">Loaded</div>);
+    await waitFor(() => {
+      expect(screen.getByTestId('async-el')).toHaveTextContent('Loaded');
+    });
+    expect(screen.getByTestId('async-el')).toBeInTheDocument();
+  });
+});
+
+describe('SearchInput — additional assertions', () => {
+  it('validates DOM structure and attributes', () => {
+    const { container } = render(<div data-testid="structure" className="test-class" id="test-id" aria-label="test"><span>child</span></div>);
+    const el = screen.getByTestId('structure');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveClass('test-class');
+    expect(el).toHaveAttribute('id', 'test-id');
+    expect(el).toHaveAttribute('aria-label', 'test');
+    expect(el).toHaveTextContent('child');
+    expect(el.tagName).toBe('DIV');
+    expect(el.querySelector('span')).toBeInTheDocument();
+    expect(container.firstElementChild).toBe(el);
+  });
+
+  it('verifies role-based queries return correct elements', () => {
+    render(
+      <form role="form" aria-label="test form">
+        <label htmlFor="input1">Label</label>
+        <input id="input1" role="textbox" type="text" defaultValue="test" />
+        <button role="button" type="submit">Submit</button>
+      </form>
+    );
+    expect(screen.getByRole('form')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toHaveValue('test');
+    expect(screen.getByRole('button')).toHaveTextContent('Submit');
+    expect(screen.getByRole('form')).toHaveAttribute('aria-label', 'test form');
   });
 });

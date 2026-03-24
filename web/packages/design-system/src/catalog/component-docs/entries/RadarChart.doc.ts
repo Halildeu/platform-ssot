@@ -51,12 +51,7 @@ const entry: DesignLabComponentDocEntry = {
       "multi-series",
       "filled"
     ],
-    "previewStates": [
-      "single-series",
-      "multi-series",
-      "filled",
-      "dark-theme"
-    ],
+    "previewStates": ["single-series", "multi-series", "filled", "dark-theme"],
     "behaviorModel": [
       "radial axis rendering",
       "multi-series overlay comparison",
