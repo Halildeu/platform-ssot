@@ -1597,6 +1597,254 @@ check('component-completeness', 'Components missing essential styles for their r
   };
 });
 
+// 40. Dark Mode Readiness — components using token-based colors vs hardcoded/missing
+check('dark-mode-readiness', 'Component dark mode readiness (token coverage vs hardcoded/transparent)', () => {
+  const scanDirs = [
+    join(DS_SRC, 'components'),
+    join(DS_SRC, 'enterprise'),
+    join(ROOT, 'packages', 'x-form-builder', 'src'),
+    join(ROOT, 'packages', 'x-charts', 'src'),
+    join(ROOT, 'packages', 'x-data-grid', 'src'),
+  ];
+  const skipPaths = ['__tests__', '__stories__', '__visual__', 'design-lab', 'demos', 'index.ts', 'index.tsx', 'types.ts', 'utils.ts', 'constants.ts', 'hooks', '.figma.'];
+  const paletteRe = /(?:bg|text|border|ring|shadow|outline|fill|stroke)-(?:white|black|gray|slate|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d/;
+  const tokenBgRe = /bg-surface|bg-action|bg-state|bg-overlay|bg-accent|bg-card/;
+  const tokenTextRe = /text-text-|text-action-|text-state-|text-accent/;
+  const hasRenderedOutput = /className|style=/;
+
+  const stats = { total: 0, tokenBased: 0, noBg: [], palette: [], noText: [] };
+
+  for (const dir of scanDirs) {
+    for (const file of walkDir(dir, '.tsx')) {
+      const rel = relative(ROOT, file);
+      const name = file.split('/').pop().replace('.tsx', '');
+      if (skipPaths.some(p => rel.includes(p))) continue;
+      if (name.startsWith('use') || name.endsWith('.types')) continue;
+
+      const content = readSafe(file);
+      if (!hasRenderedOutput.test(content)) continue;
+      stats.total++;
+
+      /* Check for palette colors (won't adapt to dark) */
+      if (paletteRe.test(content)) stats.palette.push(name);
+
+      /* Check for token-based bg */
+      if (!tokenBgRe.test(content) && !content.includes('var(--surface') && !content.includes('var(--color-surface') && !content.includes('bg-[')) {
+        stats.noBg.push(name);
+      } else {
+        stats.tokenBased++;
+      }
+
+      /* Check for token-based text */
+      if (!tokenTextRe.test(content) && !content.includes('var(--text-') && !content.includes('var(--color-text-') && !content.includes('text-[')) {
+        stats.noText.push(name);
+      }
+    }
+  }
+
+  const coverage = stats.total > 0 ? Math.round((stats.tokenBased / stats.total) * 100) : 0;
+  const details = [];
+  if (stats.palette.length > 0) details.push(`Palette colors (won't adapt): ${stats.palette.slice(0, 5).join(', ')}${stats.palette.length > 5 ? ` +${stats.palette.length - 5} more` : ''}`);
+  if (stats.noBg.length > 0) details.push(`No bg-surface token (transparent in dark): ${stats.noBg.slice(0, 5).join(', ')}${stats.noBg.length > 5 ? ` +${stats.noBg.length - 5} more` : ''}`);
+  if (stats.noText.length > 0) details.push(`No text-text token (inherit in dark): ${stats.noText.slice(0, 5).join(', ')}${stats.noText.length > 5 ? ` +${stats.noText.length - 5} more` : ''}`);
+
+  if (stats.palette.length === 0 && stats.noBg.length <= 5) {
+    return { status: 'pass', message: `${coverage}% dark-ready (${stats.tokenBased}/${stats.total} with token bg), 0 palette hardcodes` };
+  }
+  return {
+    status: stats.palette.length > 0 || stats.noBg.length > 15 ? 'warn' : 'pass',
+    message: `${coverage}% dark-ready, ${stats.palette.length} palette hardcodes, ${stats.noBg.length} missing bg token, ${stats.noText.length} missing text token`,
+    details,
+    fix: FIX_HINT ? 'Replace palette colors with tokens: bg-gray-100→bg-surface-muted, text-gray-600→text-text-secondary. Add bg-surface-* to transparent components.' : undefined,
+  };
+});
+
+// 41. High Contrast Readiness — forced-colors, prefers-contrast, border visibility
+check('high-contrast-readiness', 'High contrast / forced-colors mode support', () => {
+  const scanDirs = [DS_SRC, join(ROOT, 'packages', 'x-form-builder', 'src')];
+  const skipPaths = ['__tests__', '__stories__', '__visual__', 'design-lab', 'demos'];
+
+  let totalComponents = 0;
+  let hasForcedColors = 0;
+  let hasPrefersContrast = 0;
+  let hasTransparentBorder = 0;
+  const interactiveWithout = [];
+
+  /* Check CSS files for forced-colors */
+  const themeCss = readSafe(THEME_CSS);
+  const indexCss = readSafe(SHELL_INDEX_CSS);
+  const allCss = themeCss + indexCss;
+  const hasForcedColorsGlobal = allCss.includes('forced-colors');
+  const hasPrefersContrastGlobal = allCss.includes('prefers-contrast');
+  const hasHcTheme = themeCss.includes('serban-hc') || themeCss.includes('high-contrast');
+
+  /* Check interactive components for transparent border trick */
+  const interactiveFiles = /Button|Toggle|Switch|Chip|Tag|Input|Select|Checkbox|Radio/;
+
+  for (const dir of scanDirs) {
+    for (const file of walkDir(dir, '.tsx')) {
+      const rel = relative(ROOT, file);
+      const name = file.split('/').pop().replace('.tsx', '');
+      if (skipPaths.some(p => rel.includes(p))) continue;
+      if (name.startsWith('use') || name.endsWith('.types') || name === 'index') continue;
+
+      const content = readSafe(file);
+      if (!content.includes('className')) continue;
+      totalComponents++;
+
+      if (content.includes('forced-colors')) hasForcedColors++;
+      if (content.includes('prefers-contrast')) hasPrefersContrast++;
+      if (content.includes('border-transparent') || content.includes('border border-')) hasTransparentBorder++;
+
+      /* Interactive components should have visible borders for HC */
+      if (interactiveFiles.test(name)) {
+        const hasBorder = /border-border|border-input|border-action|border-state|border-transparent/.test(content);
+        if (!hasBorder) interactiveWithout.push(name);
+      }
+    }
+  }
+
+  const details = [];
+  details.push(`Global: HC theme=${hasHcTheme ? 'yes' : 'NO'}, forced-colors=${hasForcedColorsGlobal ? 'yes' : 'NO'}, prefers-contrast=${hasPrefersContrastGlobal ? 'yes' : 'NO'}`);
+  details.push(`Components: ${hasForcedColors} use forced-colors, ${hasPrefersContrast} use prefers-contrast, ${hasTransparentBorder} use border-transparent trick`);
+  if (interactiveWithout.length > 0) {
+    details.push(`Interactive without border: ${interactiveWithout.slice(0, 6).join(', ')}${interactiveWithout.length > 6 ? ` +${interactiveWithout.length - 6} more` : ''}`);
+  }
+
+  if (hasHcTheme && (hasForcedColorsGlobal || interactiveWithout.length <= 3)) {
+    return { status: 'pass', message: `HC theme present, ${hasForcedColors}/${totalComponents} forced-colors aware, ${interactiveWithout.length} interactive without border`, details };
+  }
+  return {
+    status: 'warn',
+    message: `HC gaps: ${!hasHcTheme ? 'no HC theme, ' : ''}${interactiveWithout.length} interactive without border, ${hasForcedColors} forced-colors aware`,
+    details,
+    fix: FIX_HINT ? 'Add border-transparent to interactive components (visible in forced-colors), add @media (forced-colors: active) overrides' : undefined,
+  };
+});
+
+// 42. Theme Mode Coverage — check all 4 modes have token overrides in theme.css
+check('theme-mode-coverage', 'All theme modes (light/dark/HC/compact) have complete token overrides', () => {
+  const themeCss = readSafe(THEME_CSS);
+
+  /* Extract mode blocks */
+  const modes = {
+    light: { selector: ':root', tokens: new Set() },
+    dark: { selector: '[data-mode="dark"]', tokens: new Set() },
+    hc: { selector: 'serban-hc', tokens: new Set() },
+    compact: { selector: 'compact', tokens: new Set() },
+  };
+
+  /* Parse :root tokens */
+  const rootBlock = themeCss.split('[data-mode=')[0] || '';
+  for (const m of rootBlock.matchAll(/--([a-z][a-z0-9-]+)\s*:/g)) modes.light.tokens.add(m[1]);
+
+  /* Parse dark tokens */
+  const darkMatch = themeCss.match(/\[data-mode="dark"\]\s*\{([^}]+)\}/s);
+  if (darkMatch) {
+    for (const m of darkMatch[1].matchAll(/--([a-z][a-z0-9-]+)\s*:/g)) modes.dark.tokens.add(m[1]);
+  }
+
+  /* Parse HC tokens */
+  const hcMatch = themeCss.match(/serban-hc[^{]*\{([^}]+)\}/s);
+  if (hcMatch) {
+    for (const m of hcMatch[1].matchAll(/--([a-z][a-z0-9-]+)\s*:/g)) modes.hc.tokens.add(m[1]);
+  }
+
+  /* Parse compact */
+  const compactMatch = themeCss.match(/compact[^{]*\{([^}]+)\}/s);
+  if (compactMatch) {
+    for (const m of compactMatch[1].matchAll(/--([a-z][a-z0-9-]+)\s*:/g)) modes.compact.tokens.add(m[1]);
+  }
+
+  const lightCount = modes.light.tokens.size;
+  const darkCount = modes.dark.tokens.size;
+  const hcCount = modes.hc.tokens.size;
+  const compactCount = modes.compact.tokens.size;
+
+  /* Dark should have same color tokens as light */
+  const lightColorTokens = [...modes.light.tokens].filter(t => /surface|text|action|border|state|accent|overlay|ring|focus/.test(t));
+  const darkMissing = lightColorTokens.filter(t => !modes.dark.tokens.has(t));
+  const hcMissing = lightColorTokens.filter(t => !modes.hc.tokens.has(t));
+
+  const details = [
+    `Light: ${lightCount} tokens (${lightColorTokens.length} color)`,
+    `Dark: ${darkCount} tokens (${darkMissing.length} color tokens missing)`,
+    `HC: ${hcCount} tokens (${hcMissing.length} color tokens missing)`,
+    `Compact: ${compactCount} tokens`,
+  ];
+  if (darkMissing.length > 0) details.push(`Dark missing: ${darkMissing.slice(0, 5).join(', ')}${darkMissing.length > 5 ? ` +${darkMissing.length - 5} more` : ''}`);
+  if (hcMissing.length > 0) details.push(`HC missing: ${hcMissing.slice(0, 5).join(', ')}${hcMissing.length > 5 ? ` +${hcMissing.length - 5} more` : ''}`);
+
+  if (darkMissing.length <= 5 && hcCount > 0 && darkCount > 0) {
+    return { status: 'pass', message: `4 modes: light=${lightCount}, dark=${darkCount}, HC=${hcCount}, compact=${compactCount}`, details };
+  }
+  return {
+    status: darkCount === 0 || hcCount === 0 ? 'fail' : 'warn',
+    message: `Mode gaps: dark=${darkCount}(${darkMissing.length} missing), HC=${hcCount}(${hcMissing.length} missing), compact=${compactCount}`,
+    details,
+    fix: FIX_HINT ? 'Ensure all color tokens have overrides in dark/HC modes. Run: diff light vs dark tokens in theme.css' : undefined,
+  };
+});
+
+// 43. Dark Mode Visual Risks — components with opacity, shadows, or gradients that break in dark
+check('dark-visual-risks', 'Visual patterns that commonly break in dark mode', () => {
+  const scanDirs = [join(DS_SRC, 'components'), join(DS_SRC, 'enterprise')];
+  const skipPaths = ['__tests__', '__stories__', '__visual__', 'design-lab', 'demos'];
+  const risks = [];
+
+  for (const dir of scanDirs) {
+    for (const file of walkDir(dir, '.tsx')) {
+      const rel = relative(ROOT, file);
+      const name = file.split('/').pop().replace('.tsx', '');
+      if (skipPaths.some(p => rel.includes(p))) continue;
+      if (name.startsWith('use') || name === 'index') continue;
+
+      const content = readSafe(file);
+      if (!content.includes('className')) continue;
+
+      const issues = [];
+
+      /* White/black shadows won't adapt */
+      if (/shadow-\[.*(?:rgba?\(0|rgba?\(255|#000|#fff|#FFF)/.test(content)) {
+        issues.push('hardcoded-shadow');
+      }
+
+      /* bg-opacity with white/black base */
+      if (/bg-white\/|bg-black\//.test(content)) {
+        issues.push('opacity-on-hardcoded-bg');
+      }
+
+      /* Gradient with hardcoded colors */
+      if (/(?:from|via|to)-(?:white|black|gray|slate)-/.test(content) || /gradient.*#[0-9a-f]/i.test(content)) {
+        issues.push('hardcoded-gradient');
+      }
+
+      /* Backdrop with hardcoded color */
+      if (/backdrop.*(?:white|black|#[0-9a-f]{3,8})/i.test(content)) {
+        issues.push('hardcoded-backdrop');
+      }
+
+      /* SVG fill/stroke with hardcoded colors */
+      if (/(?:fill|stroke)=["']#(?!none)[0-9a-fA-F]/.test(content)) {
+        issues.push('svg-hardcoded-color');
+      }
+
+      if (issues.length > 0) {
+        risks.push({ component: name, issues, file: rel });
+      }
+    }
+  }
+
+  if (risks.length === 0) return { status: 'pass', message: 'No dark mode visual risks detected (shadows, gradients, SVG all use tokens)' };
+  const total = risks.reduce((s, r) => s + r.issues.length, 0);
+  return {
+    status: total > 10 ? 'warn' : 'pass',
+    message: `${total} dark mode visual risks in ${risks.length} components`,
+    details: risks.slice(0, 8).map(r => `${r.component}: ${r.issues.join(', ')}`),
+    fix: FIX_HINT ? 'Replace hardcoded shadow/gradient/SVG colors with token references for dark mode compatibility' : undefined,
+  };
+});
+
 /* ------------------------------------------------------------------ */
 /*  Report                                                             */
 /* ------------------------------------------------------------------ */
@@ -1604,7 +1852,7 @@ check('component-completeness', 'Components missing essential styles for their r
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '4.3.0',
+    version: '4.4.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -1613,7 +1861,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log(`║         🩺 Theme Doctor v4.3 (${results.length} checks)                ║`);
+  console.log(`║         🩺 Theme Doctor v4.4 (${results.length} checks)                ║`);
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 
