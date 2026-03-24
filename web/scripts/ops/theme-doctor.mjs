@@ -43,6 +43,8 @@ const SHELL_INDEX_CSS = join(ROOT, 'apps', 'mfe-shell', 'src', 'index.css');
 const FIGMA_PATH = join(ROOT, 'design-tokens', 'figma.tokens.json');
 const THEME_CSS = join(SHELL_STYLES, 'theme.css');
 const TOKEN_BRIDGE_CSS = join(SHELL_STYLES, 'token-bridge.css');
+const TOKENS_CSS = join(ROOT, 'packages', 'design-system', 'src', 'tokens', 'build', 'tokens.css');
+const THEME_INLINE_CSS = join(SHELL_STYLES, 'generated-theme-inline.css');
 
 const flags = new Set(process.argv.slice(2));
 const JSON_MODE = flags.has('--json');
@@ -1209,6 +1211,145 @@ check('system-preference', 'Dark mode: @media (prefers-color-scheme: dark) suppo
   return { status: 'warn', message: `Missing in theme.css: ${missing.join(', ')}` };
 });
 
+/* ================================================================== */
+/*  TOKEN ARCHITECTURE CHECKS                                          */
+/* ================================================================== */
+
+/** Helper: extract all --custom-prop names from CSS content */
+function extractCSSVars(css) {
+  const vars = new Set();
+  for (const m of css.matchAll(/--([a-z][a-z0-9-]*)/g)) vars.add(m[1]);
+  return vars;
+}
+
+// 34. Token Layer Drift — tokens.css vs theme.css gap
+check('token-layer-drift', 'Token layer gap: tokens.css (DS) ↔ theme.css (app)', () => {
+  const tokensCss = readSafe(TOKENS_CSS);
+  const themeCss = readSafe(THEME_CSS);
+  if (!tokensCss) return { status: 'warn', message: 'tokens.css not found at packages/design-system/src/tokens/build/tokens.css' };
+
+  const tokensVars = extractCSSVars(tokensCss);
+  const themeVars = extractCSSVars(themeCss);
+
+  /* In theme.css but NOT in tokens.css — app-only tokens, DS can't be self-contained */
+  const appOnly = [...themeVars].filter(v => !tokensVars.has(v) && !v.startsWith('color-'));
+  /* In tokens.css but NOT in theme.css — potentially unused tokens */
+  const orphaned = [...tokensVars].filter(v => !themeVars.has(v) && !v.startsWith('color-') && !v.startsWith('font-'));
+
+  /* Categorize app-only tokens */
+  const categories = {};
+  for (const v of appOnly) {
+    const cat = v.split('-')[0];
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push(v);
+  }
+  const catSummary = Object.entries(categories)
+    .sort((a, b) => b[1].length - a[1].length)
+    .slice(0, 6)
+    .map(([cat, vars]) => `${cat}: ${vars.length}`);
+
+  if (appOnly.length === 0) return { status: 'pass', message: `Token layers in sync — ${tokensVars.size} DS tokens, ${themeVars.size} app tokens` };
+  return {
+    status: appOnly.length > 50 ? 'warn' : 'pass',
+    message: `${appOnly.length} tokens in theme.css missing from tokens.css (DS not self-contained), ${orphaned.length} orphaned in tokens.css`,
+    details: [`Categories: ${catSummary.join(', ')}`, ...appOnly.slice(0, 10).map(v => `--${v}`)],
+    fix: FIX_HINT ? 'Move semantic tokens from theme.css → tokens.css so DS package is self-contained' : undefined,
+  };
+});
+
+// 35. Missing Semantic Tokens — component var() refs not defined anywhere
+check('missing-semantic-tokens', 'Component var() refs missing from all CSS layers', () => {
+  const tokensCss = readSafe(TOKENS_CSS);
+  const themeCss = readSafe(THEME_CSS);
+  const themeInline = readSafe(THEME_INLINE_CSS);
+  const bridgeCss = readSafe(TOKEN_BRIDGE_CSS);
+  const allCss = [tokensCss, themeCss, themeInline, bridgeCss].join('\n');
+  const definedVars = extractCSSVars(allCss);
+
+  /* Scan DS component files for var(--xxx) references */
+  const scanDirs = [DS_SRC, join(ROOT, 'packages', 'x-form-builder', 'src'), join(ROOT, 'packages', 'x-data-grid', 'src'), join(ROOT, 'packages', 'x-charts', 'src')];
+  const referencedVars = new Map(); /* var name → [files] */
+  const skipPaths = ['__tests__', '__stories__', '__visual__', 'design-lab', 'demos', 'catalog/component-docs'];
+
+  for (const dir of scanDirs) {
+    for (const file of walkDir(dir, '.tsx').concat(walkDir(dir, '.ts')).concat(walkDir(dir, '.css'))) {
+      const rel = relative(ROOT, file);
+      if (skipPaths.some(p => rel.includes(p))) continue;
+      const content = readSafe(file);
+      for (const m of content.matchAll(/var\(--([a-z][a-z0-9-]*)/g)) {
+        const name = m[1];
+        if (!referencedVars.has(name)) referencedVars.set(name, []);
+        referencedVars.get(name).push(rel);
+      }
+    }
+  }
+
+  /* Find referenced but undefined */
+  const missing = [];
+  for (const [name, files] of referencedVars) {
+    if (!definedVars.has(name) && !name.startsWith('ds-color-') && !name.startsWith('ag-')) {
+      missing.push({ token: `--${name}`, refCount: files.length, files: [...new Set(files)].slice(0, 2) });
+    }
+  }
+  missing.sort((a, b) => b.refCount - a.refCount);
+
+  if (missing.length === 0) return { status: 'pass', message: `All ${referencedVars.size} component var() refs have definitions` };
+  return {
+    status: missing.length > 10 ? 'warn' : 'pass',
+    message: `${missing.length} var() refs in components have no definition in any CSS layer`,
+    details: missing.slice(0, 8).map(m => `${m.token} (${m.refCount} refs) — ${m.files[0]}`),
+    fix: FIX_HINT ? 'Add missing tokens to tokens.css or theme.css' : undefined,
+  };
+});
+
+// 36. Elevation System — elevation tokens defined and consistent
+check('elevation-system', 'Elevation/shadow token system completeness', () => {
+  const themeCss = readSafe(THEME_CSS);
+  const required = ['elevation-surface', 'elevation-overlay', 'elevation-tooltip', 'elevation-dialog'];
+  const defined = required.filter(t => themeCss.includes(`--${t}`));
+  const missing = required.filter(t => !themeCss.includes(`--${t}`));
+
+  /* Check dark mode has elevation overrides */
+  const darkBlock = themeCss.split('[data-mode="dark"]')[1] || '';
+  const darkElevation = required.filter(t => darkBlock.includes(`--${t}`));
+
+  if (missing.length === 0 && darkElevation.length >= 2) {
+    return { status: 'pass', message: `${defined.length}/${required.length} elevation tokens defined, ${darkElevation.length} dark overrides` };
+  }
+  return {
+    status: missing.length > 0 ? 'warn' : 'pass',
+    message: `${defined.length}/${required.length} elevation tokens (missing: ${missing.join(', ') || 'none'}), ${darkElevation.length} dark overrides`,
+    fix: FIX_HINT ? 'Add elevation-* tokens to theme.css for all modes (light/dark/hc)' : undefined,
+  };
+});
+
+// 37. Hardcoded Fallbacks — var() with hardcoded hex fallback that should reference another token
+check('hardcoded-fallbacks', 'var() with hardcoded hex fallbacks that should use token references', () => {
+  const scanFiles = [THEME_CSS, readSafe(TOKEN_BRIDGE_CSS) ? TOKEN_BRIDGE_CSS : null, SHELL_INDEX_CSS].filter(Boolean);
+  const violations = [];
+
+  for (const file of scanFiles) {
+    const content = readSafe(file);
+    const rel = relative(ROOT, file);
+    /* Match var(--token, #hex) where fallback is bare hex */
+    for (const m of content.matchAll(/var\(--([a-z][a-z0-9-]*),\s*(#[0-9a-fA-F]{3,8})\)/g)) {
+      const token = m[1];
+      const fallback = m[2];
+      /* Skip color-* tokens (Tailwind namespace) */
+      if (token.startsWith('color-')) continue;
+      violations.push({ token: `--${token}`, fallback, file: rel });
+    }
+  }
+
+  if (violations.length === 0) return { status: 'pass', message: 'No hardcoded hex fallbacks in var() — all use token references' };
+  return {
+    status: violations.length > 5 ? 'warn' : 'pass',
+    message: `${violations.length} var() calls with hardcoded hex fallbacks instead of token references`,
+    details: violations.slice(0, 8).map(v => `var(${v.token}, ${v.fallback}) in ${v.file}`),
+    fix: FIX_HINT ? 'Replace hex fallback with var(--other-token): var(--focus-ring-color, #2c5282) → var(--focus-ring-color, var(--action-primary))' : undefined,
+  };
+});
+
 /* ------------------------------------------------------------------ */
 /*  Report                                                             */
 /* ------------------------------------------------------------------ */
@@ -1216,7 +1357,7 @@ check('system-preference', 'Dark mode: @media (prefers-color-scheme: dark) suppo
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '4.0.0',
+    version: '4.1.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -1225,7 +1366,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log(`║         🩺 Theme Doctor v4.0 (${results.length} checks)                ║`);
+  console.log(`║         🩺 Theme Doctor v4.1 (${results.length} checks)                ║`);
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

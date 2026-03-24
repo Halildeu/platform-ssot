@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// MiniCssExtractPlugin not needed — TW4 CSS served via <link> in index.html
-// css-loader@7 breaks @layer cascade; pre-built CSS bypasses this
+// TW4 CSS processed by @tailwindcss/webpack loader — native @layer cascade
+// AG Grid + other CSS use standard css-loader pipeline
 
 const MAX_ENTRYPOINT_SIZE = 25 * 1024 * 1024; // 25 MB
 const MAX_ASSET_SIZE = 8 * 1024 * 1024; // 8 MB
@@ -74,7 +74,23 @@ module.exports = {
         },
       },
       {
+        // TW4 entry CSS — @tailwindcss/webpack processes @import "tailwindcss",
+        // @source, @theme, @layer natively without css-loader interference
         test: /\.css$/,
+        include: [path.resolve(__dirname, 'src/index.css')],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 },
+          },
+          '@tailwindcss/webpack',
+        ],
+      },
+      {
+        // AG Grid, tokens, and other CSS — standard pipeline
+        test: /\.css$/,
+        exclude: [path.resolve(__dirname, 'src/index.css')],
         use: [
           'style-loader',
           'css-loader',
