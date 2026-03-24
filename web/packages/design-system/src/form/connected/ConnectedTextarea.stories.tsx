@@ -31,6 +31,7 @@ const meta: Meta = {
   title: 'Form/ConnectedTextarea',
   component: ConnectedTextarea,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj;

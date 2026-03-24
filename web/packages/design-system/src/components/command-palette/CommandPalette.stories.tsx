@@ -9,6 +9,7 @@ const meta: Meta<typeof CommandPalette> = {
   title: 'Components/Navigation/CommandPalette',
   component: CommandPalette,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof CommandPalette>;

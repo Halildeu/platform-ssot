@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FunnelChart } from './FunnelChart';
 import type { FunnelStage } from './FunnelChart';
@@ -15,6 +16,7 @@ const meta: Meta<typeof FunnelChart> = {
   component: FunnelChart,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof FunnelChart>;

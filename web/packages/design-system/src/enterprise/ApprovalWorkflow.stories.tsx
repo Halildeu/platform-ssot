@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ApprovalWorkflow } from './ApprovalWorkflow';
 import type { ApprovalStep } from './ApprovalWorkflow';
@@ -14,6 +15,7 @@ const meta: Meta<typeof ApprovalWorkflow> = {
   component: ApprovalWorkflow,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ApprovalWorkflow>;

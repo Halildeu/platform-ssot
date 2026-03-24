@@ -19,6 +19,7 @@ const meta: Meta<typeof Drawer> = {
     closeOnEscape: { control: 'boolean' },
     showOverlay: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Drawer>;

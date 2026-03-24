@@ -14,6 +14,7 @@ const meta: Meta<typeof Dropdown> = {
       options: ['bottom-start', 'bottom-end', 'top-start', 'top-end'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Dropdown>;

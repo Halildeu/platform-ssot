@@ -37,6 +37,7 @@ const meta: Meta<typeof ThemeLayout> = {
   title: 'Enterprise/ThemeLayout',
   component: ThemeLayout,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ThemeLayout>;

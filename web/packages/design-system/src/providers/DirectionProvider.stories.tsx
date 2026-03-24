@@ -5,6 +5,7 @@ import { DirectionProvider } from './DirectionProvider';
 const meta: Meta<typeof DirectionProvider> = {
   component: DirectionProvider,
   title: 'Providers/DirectionProvider',
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 
 export default meta;

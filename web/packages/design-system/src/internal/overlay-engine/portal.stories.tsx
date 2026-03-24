@@ -6,6 +6,7 @@ const meta: Meta<typeof Portal> = {
   component: Portal,
   title: 'Internal/Portal',
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 

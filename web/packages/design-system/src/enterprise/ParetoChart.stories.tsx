@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ParetoChart } from './ParetoChart';
 import type { ParetoItem } from './ParetoChart';
@@ -35,6 +36,7 @@ const meta: Meta<typeof ParetoChart> = {
       options: ['full', 'readonly', 'disabled', 'hidden'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ParetoChart>;

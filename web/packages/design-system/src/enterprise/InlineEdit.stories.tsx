@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { InlineEdit } from './InlineEdit';
 
@@ -5,6 +6,7 @@ const meta: Meta<typeof InlineEdit> = {
   title: 'Enterprise/InlineEdit',
   component: InlineEdit,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof InlineEdit>;

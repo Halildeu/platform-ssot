@@ -12,6 +12,7 @@ const meta: Meta<typeof RadioGroup> = {
       options: ['horizontal', 'vertical'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof RadioGroup>;

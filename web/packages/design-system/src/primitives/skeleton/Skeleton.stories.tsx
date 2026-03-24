@@ -13,6 +13,7 @@ const meta: Meta<typeof Skeleton> = {
     lines: { control: 'number' },
     animated: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Skeleton>;

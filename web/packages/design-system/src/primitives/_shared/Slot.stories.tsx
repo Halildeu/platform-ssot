@@ -6,6 +6,7 @@ const meta: Meta<typeof Slot> = {
   component: Slot,
   title: 'Primitives/Shared/Slot',
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 

@@ -39,6 +39,7 @@ const meta: Meta = {
   title: 'Form/FormContext',
   component: FormContextDemo,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj;

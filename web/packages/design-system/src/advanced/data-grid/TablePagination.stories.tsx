@@ -6,6 +6,7 @@ const meta: Meta = {
   argTypes: {
     pageSize: { control: 'select', options: [10, 25, 50, 100] },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 

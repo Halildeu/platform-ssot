@@ -22,6 +22,7 @@ const meta: Meta = {
   title: 'Form/ConnectedInput',
   component: ConnectedInput,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj;

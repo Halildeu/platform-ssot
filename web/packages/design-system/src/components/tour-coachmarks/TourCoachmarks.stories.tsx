@@ -15,6 +15,7 @@ const meta: Meta<typeof TourCoachmarks> = {
       options: ['guided', 'readonly'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof TourCoachmarks>;

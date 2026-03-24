@@ -12,6 +12,7 @@ const meta: Meta<typeof ApprovalCheckpoint> = {
       options: ['pending', 'approved', 'rejected', 'blocked'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ApprovalCheckpoint>;

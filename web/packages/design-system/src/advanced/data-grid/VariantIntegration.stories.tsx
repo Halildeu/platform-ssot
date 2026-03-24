@@ -3,6 +3,7 @@ import React from 'react';
 
 const meta: Meta = { title: 'Advanced/DataGrid/VariantIntegration' 
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 

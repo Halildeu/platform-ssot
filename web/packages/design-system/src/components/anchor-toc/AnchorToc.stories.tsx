@@ -14,6 +14,7 @@ const meta: Meta<typeof AnchorToc> = {
     },
     sticky: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof AnchorToc>;

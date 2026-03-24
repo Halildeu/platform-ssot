@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { GridToolbar } from './GridToolbar';
 
@@ -5,6 +6,7 @@ const meta: Meta<typeof GridToolbar> = {
   component: GridToolbar,
   title: 'Advanced/DataGrid/GridToolbar',
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 

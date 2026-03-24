@@ -19,6 +19,7 @@ const meta: Meta<typeof Avatar> = {
     alt: { control: 'text' },
     initials: { control: 'text' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Avatar>;

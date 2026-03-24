@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { HeatmapCalendar } from './HeatmapCalendar';
 import type { HeatmapDay } from './HeatmapCalendar';
@@ -47,6 +48,7 @@ const meta: Meta<typeof HeatmapCalendar> = {
       options: ['full', 'readonly', 'disabled', 'hidden'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof HeatmapCalendar>;

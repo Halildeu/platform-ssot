@@ -13,6 +13,7 @@ const meta: Meta<typeof SummaryStrip> = {
       options: [2, 3, 4],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof SummaryStrip>;

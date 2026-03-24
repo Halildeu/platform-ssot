@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { LineChart } from './LineChart';
 import type { ChartSeries } from './types';
@@ -19,6 +20,7 @@ const meta: Meta<typeof LineChart> = {
   component: LineChart,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof LineChart>;

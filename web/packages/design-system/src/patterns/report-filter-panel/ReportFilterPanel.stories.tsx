@@ -9,6 +9,7 @@ const meta: Meta<typeof ReportFilterPanel> = {
   argTypes: {
     loading: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ReportFilterPanel>;

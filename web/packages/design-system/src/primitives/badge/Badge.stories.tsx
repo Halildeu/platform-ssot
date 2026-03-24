@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from './Badge';
 
@@ -16,6 +17,7 @@ const meta: Meta<typeof Badge> = {
     },
     dot: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Badge>;

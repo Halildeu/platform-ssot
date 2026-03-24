@@ -20,6 +20,7 @@ const meta: Meta<typeof Timeline> = {
     reverse: { control: 'boolean' },
     showConnector: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Timeline>;

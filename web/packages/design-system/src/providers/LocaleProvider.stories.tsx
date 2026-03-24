@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { LocaleProvider } from './LocaleProvider';
 
@@ -5,6 +6,7 @@ const meta: Meta<typeof LocaleProvider> = {
   component: LocaleProvider,
   title: 'Providers/LocaleProvider',
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 
 export default meta;

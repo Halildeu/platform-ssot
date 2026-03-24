@@ -9,6 +9,7 @@ const meta: Meta<typeof ThemePreviewCard> = {
   argTypes: {
     selected: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ThemePreviewCard>;

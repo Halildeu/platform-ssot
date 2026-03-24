@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ThemePresetCompare } from './ThemePresetCompare';
 import type { ThemePresetGalleryItem } from './ThemePresetGallery';
@@ -27,6 +28,7 @@ const meta: Meta<typeof ThemePresetCompare> = {
   component: ThemePresetCompare,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ThemePresetCompare>;

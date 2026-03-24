@@ -11,6 +11,7 @@ const meta: Meta<typeof Watermark> = {
     fontSize: { control: 'number' },
     opacity: { control: 'number' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Watermark>;

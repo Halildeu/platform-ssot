@@ -15,6 +15,7 @@ const meta: Meta<typeof List> = {
     bordered: { control: 'boolean' },
     loading: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof List>;

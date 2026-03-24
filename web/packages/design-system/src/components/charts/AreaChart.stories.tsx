@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { AreaChart } from './AreaChart';
 import type { ChartSeries } from './types';
@@ -18,6 +19,7 @@ const meta: Meta<typeof AreaChart> = {
   component: AreaChart,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof AreaChart>;

@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { OverlaySurface } from './OverlaySurface';
 
@@ -5,6 +6,7 @@ const meta: Meta<typeof OverlaySurface> = {
   component: OverlaySurface,
   title: 'Internal/OverlaySurface',
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 
 export default meta;

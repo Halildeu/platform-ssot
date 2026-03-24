@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { AgingBuckets } from './AgingBuckets';
 import type { AgingBucket } from './AgingBuckets';
@@ -15,6 +16,7 @@ const meta: Meta<typeof AgingBuckets> = {
   component: AgingBuckets,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof AgingBuckets>;

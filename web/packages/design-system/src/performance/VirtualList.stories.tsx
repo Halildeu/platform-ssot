@@ -53,6 +53,7 @@ const meta: Meta = {
   title: 'Performance/VirtualList',
   component: VirtualList,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj;

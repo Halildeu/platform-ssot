@@ -15,6 +15,7 @@ const meta: Meta<typeof TableSimple> = {
     stickyHeader: { control: 'boolean' },
     loading: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof TableSimple>;

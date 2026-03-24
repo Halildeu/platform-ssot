@@ -18,6 +18,7 @@ const meta: Meta<typeof ColorPicker> = {
     showInput: { control: 'boolean' },
     showPresets: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ColorPicker>;

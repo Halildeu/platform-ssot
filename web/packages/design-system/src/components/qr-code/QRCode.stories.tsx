@@ -18,6 +18,7 @@ const meta: Meta<typeof QRCode> = {
       options: ['active', 'expired', 'loading'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof QRCode>;

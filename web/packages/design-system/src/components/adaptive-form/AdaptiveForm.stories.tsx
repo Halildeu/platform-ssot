@@ -23,6 +23,7 @@ const meta: Meta<typeof AdaptiveForm> = {
     loading: { control: 'boolean' },
     showReset: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof AdaptiveForm>;

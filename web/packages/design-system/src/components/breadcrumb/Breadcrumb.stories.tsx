@@ -9,6 +9,7 @@ const meta: Meta<typeof Breadcrumb> = {
   argTypes: {
     maxItems: { control: 'number' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Breadcrumb>;

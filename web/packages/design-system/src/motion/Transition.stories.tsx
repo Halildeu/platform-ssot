@@ -26,6 +26,7 @@ const meta: Meta<typeof Transition> = {
   title: 'Motion/Transition',
   component: Transition,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Transition>;

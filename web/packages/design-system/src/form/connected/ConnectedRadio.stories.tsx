@@ -36,6 +36,7 @@ const meta: Meta = {
   title: 'Form/ConnectedRadio',
   component: ConnectedRadio,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj;

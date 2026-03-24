@@ -22,6 +22,7 @@ const meta: Meta<typeof AILayoutBuilder> = {
     },
     draggable: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof AILayoutBuilder>;

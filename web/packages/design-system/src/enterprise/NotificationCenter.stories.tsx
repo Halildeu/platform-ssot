@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { NotificationCenter } from './NotificationCenter';
 import type { NotificationItem } from './NotificationCenter';
@@ -16,6 +17,7 @@ const meta: Meta<typeof NotificationCenter> = {
   component: NotificationCenter,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof NotificationCenter>;

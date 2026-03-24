@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { GovernanceBoard } from './GovernanceBoard';
 import type { GovernanceItem } from './GovernanceBoard';
@@ -16,6 +17,7 @@ const meta: Meta<typeof GovernanceBoard> = {
   component: GovernanceBoard,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof GovernanceBoard>;

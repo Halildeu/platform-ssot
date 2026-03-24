@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { GanttTimeline } from './GanttTimeline';
 import type { GanttTask } from './GanttTimeline';
@@ -23,6 +24,7 @@ const meta: Meta<typeof GanttTimeline> = {
   component: GanttTimeline,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof GanttTimeline>;

@@ -16,6 +16,7 @@ const meta: Meta<typeof ConfidenceBadge> = {
     score: { control: 'number' },
     sourceCount: { control: 'number' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ConfidenceBadge>;

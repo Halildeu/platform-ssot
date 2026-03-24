@@ -20,6 +20,7 @@ const meta: Meta<typeof Carousel> = {
       options: [1, 2, 3],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Carousel>;

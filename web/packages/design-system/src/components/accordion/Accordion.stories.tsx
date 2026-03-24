@@ -24,6 +24,7 @@ const meta: Meta<typeof Accordion> = {
       options: ['start', 'end'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Accordion>;

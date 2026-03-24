@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SectionTabs } from './SectionTabs';
 import type { SectionTabsItem } from './SectionTabs';
@@ -14,6 +15,7 @@ const meta: Meta<typeof SectionTabs> = {
   title: 'Components/SectionTabs',
   component: SectionTabs,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof SectionTabs>;

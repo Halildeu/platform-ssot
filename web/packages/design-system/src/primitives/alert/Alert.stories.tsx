@@ -14,6 +14,7 @@ const meta: Meta<typeof Alert> = {
     },
     closable: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Alert>;

@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { WaterfallChart } from './WaterfallChart';
 import type { WaterfallItem } from './WaterfallChart';
@@ -33,6 +34,7 @@ const meta: Meta<typeof WaterfallChart> = {
       options: ['full', 'readonly', 'disabled', 'hidden'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof WaterfallChart>;

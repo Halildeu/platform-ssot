@@ -15,6 +15,7 @@ const meta: Meta<typeof Pagination> = {
     pageSize: { control: 'number' },
     siblingCount: { control: 'number' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Pagination>;

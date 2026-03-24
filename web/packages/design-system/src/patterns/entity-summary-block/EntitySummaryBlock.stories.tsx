@@ -8,6 +8,7 @@ const meta: Meta<typeof EntitySummaryBlock> = {
   title: 'Patterns/EntitySummaryBlock',
   component: EntitySummaryBlock,
   tags: ['autodocs'],
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof EntitySummaryBlock>;

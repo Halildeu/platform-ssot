@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { ValueStream } from './ValueStream';
 import type { ValueStreamStep, ValueStreamWait } from './ValueStream';
@@ -26,6 +27,7 @@ const meta: Meta<typeof ValueStream> = {
   component: ValueStream,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof ValueStream>;

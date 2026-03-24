@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { MicroChart } from './MicroChart';
 
@@ -6,6 +7,7 @@ const meta: Meta<typeof MicroChart> = {
   component: MicroChart,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof MicroChart>;

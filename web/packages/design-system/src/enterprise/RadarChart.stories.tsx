@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { RadarChart } from './RadarChart';
 import type { RadarAxis, RadarSeries } from './RadarChart';
@@ -35,6 +36,7 @@ const meta: Meta<typeof RadarChart> = {
   component: RadarChart,
   tags: ['autodocs'],
   argTypes: { disabled: { control: 'boolean' } },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof RadarChart>;

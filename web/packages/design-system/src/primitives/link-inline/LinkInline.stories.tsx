@@ -19,6 +19,7 @@ const meta: Meta<typeof LinkInline> = {
     external: { control: 'boolean' },
     current: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof LinkInline>;

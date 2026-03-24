@@ -17,6 +17,7 @@ const meta: Meta<typeof MenuBar> = {
       options: ['default', 'outline', 'ghost'],
     },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof MenuBar>;

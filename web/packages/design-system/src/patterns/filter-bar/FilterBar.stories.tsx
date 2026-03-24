@@ -12,6 +12,7 @@ const meta: Meta<typeof FilterBar> = {
     compact: { control: 'boolean' },
     activeCount: { control: 'number' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof FilterBar>;

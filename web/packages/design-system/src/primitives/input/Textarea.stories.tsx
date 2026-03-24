@@ -21,6 +21,7 @@ const meta: Meta<typeof Textarea> = {
     fullWidth: { control: 'boolean' },
     showCount: { control: 'boolean' },
   },
+  decorators: [(Story) => <div style={{ padding: '1rem' }}><Story /></div>],
 };
 export default meta;
 type Story = StoryObj<typeof Textarea>;
