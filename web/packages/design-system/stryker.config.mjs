@@ -47,7 +47,7 @@ export default {
   thresholds: {
     high: 80,     // Green: 80%+ mutations killed
     low: 50,      // Yellow: 50-80%
-    break: null,  // Disabled until tests are deepened — current baseline is 8.98%
+    break: 40,    // CI fails below 40%
   },
 
   // ── Coverage Analysis ──

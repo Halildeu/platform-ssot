@@ -106,3 +106,23 @@ export type { GaugeChartProps, GaugeThreshold } from './GaugeChart';
 // Pivot Table
 export { PivotTable } from './PivotTable';
 export type { PivotTableProps, PivotValueConfig, PivotCellClickEvent } from './PivotTable';
+
+// Comment Thread
+export { CommentThread } from './CommentThread';
+export type { CommentThreadProps, Comment } from './CommentThread';
+
+// Activity Feed
+export { ActivityFeed } from './ActivityFeed';
+export type { ActivityFeedProps, ActivityItem } from './ActivityFeed';
+
+// Box Plot
+export { BoxPlot } from './BoxPlot';
+export type { BoxPlotProps, BoxPlotData } from './BoxPlot';
+
+// Histogram Chart
+export { HistogramChart } from './HistogramChart';
+export type { HistogramChartProps, HistogramBin } from './HistogramChart';
+
+// Control Chart
+export { ControlChart } from './ControlChart';
+export type { ControlChartProps, ControlChartPoint } from './ControlChart';
