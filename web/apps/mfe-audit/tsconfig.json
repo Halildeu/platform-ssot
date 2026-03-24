@@ -15,7 +15,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
       "@mfe/design-system": ["../../packages/design-system/src"],
       "@mfe/design-system/*": ["../../packages/design-system/src/*"]
