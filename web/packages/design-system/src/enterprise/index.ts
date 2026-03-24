@@ -126,3 +126,19 @@ export type { HistogramChartProps, HistogramBin } from './HistogramChart';
 // Control Chart
 export { ControlChart } from './ControlChart';
 export type { ControlChartProps, ControlChartPoint } from './ControlChart';
+
+// SWOT Matrix
+export { SWOTMatrix } from './SWOTMatrix';
+export type { SWOTMatrixProps, SWOTItem, SWOTQuadrant } from './SWOTMatrix';
+
+// Decision Matrix
+export { DecisionMatrix } from './DecisionMatrix';
+export type { DecisionMatrixProps, DecisionOption, DecisionCriterion, DecisionScore } from './DecisionMatrix';
+
+// File Upload
+export { FileUploadZone } from './FileUploadZone';
+export type { FileUploadZoneProps, UploadedFile } from './FileUploadZone';
+
+// Metric Comparison
+export { MetricComparisonCard } from './MetricComparisonCard';
+export type { MetricComparisonCardProps } from './MetricComparisonCard';
