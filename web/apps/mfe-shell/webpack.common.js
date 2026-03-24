@@ -110,8 +110,24 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      templateParameters: { runtimeEnvJson: JSON.stringify(runtimeEnv) },
+      minify: { collapseWhitespace: false, minifyJS: false, minifyCSS: false },
     }),
+    {
+      apply(compiler) {
+        compiler.hooks.compilation.tap('InjectRuntimeEnv', (compilation) => {
+          HtmlWebpackPlugin.getHooks(compilation).afterTemplateExecution.tapAsync(
+            'InjectRuntimeEnv',
+            (data, cb) => {
+              data.html = data.html.replace(
+                'window.__env__ = window.__env__ || {};',
+                `window.__env__ = Object.assign({}, ${JSON.stringify(runtimeEnv)});`,
+              );
+              cb(null, data);
+            },
+          );
+        });
+      },
+    },
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(runtimeEnv),
     }),
