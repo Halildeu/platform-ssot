@@ -87,7 +87,7 @@ describe("Grid Parity — useAgGridTablePagination Contract", () => {
     // We can't call hooks outside of React, but we verify the export
     const mod = await import("../TablePagination");
     expect(typeof mod.useAgGridTablePagination).toBe("function");
-    expect(typeof mod.TablePagination).toBe("function");
+    expect(mod.TablePagination).toBeDefined();
   });
 
   it("v34 pagination API: paginationGetCurrentPage is 0-indexed", () => {

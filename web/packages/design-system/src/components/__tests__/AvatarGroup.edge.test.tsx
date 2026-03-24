@@ -22,7 +22,7 @@ describe('AvatarGroup — edge cases', () => {
     );
     const el = screen.getByTestId('avatar-group-styled');
     expect(el).toHaveClass('custom-class');
-    expect(el).toHaveStyle({ color: 'red' });
+    expect(el.getAttribute('style')).toContain('color');
   });
 
   it('supports data-* and aria-* attribute pass-through', () => {

@@ -12,7 +12,9 @@ describe('PortalProvider — contract', () => {
   });
 
   it('exports a named component', () => {
-    expect(typeof PortalProvider).toBe('function');
+    // PortalProvider is a forwardRef, which is an object in React
+    expect(PortalProvider).toBeTruthy();
+    expect(typeof PortalProvider === 'function' || typeof PortalProvider === 'object').toBe(true);
   });
 
   it('renders children', () => {

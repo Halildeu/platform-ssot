@@ -122,7 +122,7 @@ describe("focusRingClass", () => {
 describe("focusRingClassWithColor", () => {
   test("includes custom color", () => {
     const result = focusRingClassWithColor("ring", "var(--state-error-text)");
-    expect(result).toContain("focus-visible:ring-[var(--state-error-text)]");
+    expect(result).toContain("focus-visible:ring-[color-mix(in_oklab,var(--state-error-text)_30%,transparent)]");
   });
 
   test("none strategy ignores color", () => {

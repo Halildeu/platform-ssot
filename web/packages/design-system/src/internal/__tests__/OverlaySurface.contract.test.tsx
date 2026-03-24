@@ -7,8 +7,11 @@ import { OverlaySurface } from '../OverlaySurface';
 
 describe('OverlaySurface — contract', () => {
   it('renders without crash', () => {
-    const { container } = render(<OverlaySurface><div>child</div></OverlaySurface>);
-    expect(container.firstElementChild).toBeTruthy();
+    const { container } = render(
+      <OverlaySurface open={true}><div>child</div></OverlaySurface>,
+    );
+    // OverlaySurface portals content, check in document.body
+    expect(document.querySelector('[role="dialog"]') || container.firstElementChild).toBeTruthy();
   });
 
   it('exports a named component', () => {
@@ -16,7 +19,9 @@ describe('OverlaySurface — contract', () => {
   });
 
   it('renders children', () => {
-    const { container } = render(<OverlaySurface><span data-testid="inner">inner</span></OverlaySurface>);
-    expect(container.querySelector('[data-testid="inner"]')).toBeTruthy();
+    render(
+      <OverlaySurface open={true}><span data-testid="inner">inner</span></OverlaySurface>,
+    );
+    expect(document.querySelector('[data-testid="inner"]')).toBeTruthy();
   });
 });

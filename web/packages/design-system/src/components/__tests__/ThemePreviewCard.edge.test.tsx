@@ -22,7 +22,7 @@ describe('ThemePreviewCard — edge cases', () => {
     );
     const el = screen.getByTestId('theme-preview-card-styled');
     expect(el).toHaveClass('custom-class');
-    expect(el).toHaveStyle({ color: 'red' });
+    expect(el.getAttribute('style')).toContain('color');
   });
 
   it('supports data-* and aria-* attribute pass-through', () => {

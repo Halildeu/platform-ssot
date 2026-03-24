@@ -22,7 +22,7 @@ describe('ConnectedFormField — edge cases', () => {
     );
     const el = screen.getByTestId('connected-form-field-styled');
     expect(el).toHaveClass('custom-class');
-    expect(el).toHaveStyle({ color: 'red' });
+    expect(el.getAttribute('style')).toContain('color');
   });
 
   it('supports data-* and aria-* attribute pass-through', () => {

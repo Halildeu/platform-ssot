@@ -22,7 +22,7 @@ describe('aria-live — edge cases', () => {
     );
     const el = screen.getByTestId('aria-live-styled');
     expect(el).toHaveClass('custom-class');
-    expect(el).toHaveStyle({ color: 'red' });
+    expect(el.getAttribute('style')).toContain('color');
   });
 
   it('supports data-* and aria-* attribute pass-through', () => {

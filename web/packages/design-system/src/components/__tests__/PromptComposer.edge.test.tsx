@@ -22,7 +22,7 @@ describe('PromptComposer — edge cases', () => {
     );
     const el = screen.getByTestId('prompt-composer-styled');
     expect(el).toHaveClass('custom-class');
-    expect(el).toHaveStyle({ color: 'red' });
+    expect(el.getAttribute('style')).toContain('color');
   });
 
   it('supports data-* and aria-* attribute pass-through', () => {

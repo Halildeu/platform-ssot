@@ -315,6 +315,11 @@ export const STATE_PROP_MAP: Record<string, Record<string, unknown>> = {
 
   /* ---- Max / limit states ---- */
   "max-reached": { maxReached: true },
+
+  /* ---- Flow builder states ---- */
+  "empty-canvas": { nodes: [], edges: [] },
+  "sample-flow": { preset: "sample" },
+  "read-only": { readOnly: true },
 };
 
 /** Set of all valid STATE_PROP_MAP keys — for fast lookup and contract testing. */
