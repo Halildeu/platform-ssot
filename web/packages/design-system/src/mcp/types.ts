@@ -217,3 +217,20 @@ export type MCPFormSchemaResult = {
   formConfig: string;
   description: string;
 };
+
+// predictComponents
+export type MCPPredictionResult = {
+  component: string;
+  confidence: number;
+  reason: string;
+  category: 'missing' | 'recommended' | 'optional';
+  bundleImpactKB: number;
+  importStatement: string;
+};
+
+export type MCPPredictionReport = {
+  detectedPattern: { id: string; name: string; confidence: number } | null;
+  existingComponents: string[];
+  predictions: MCPPredictionResult[];
+  totalBundleImpactKB: number;
+};

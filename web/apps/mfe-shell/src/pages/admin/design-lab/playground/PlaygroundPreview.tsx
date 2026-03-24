@@ -955,6 +955,121 @@ _xSuiteComponents.useScheduler = function UseSchedulerStub() {
   );
 };
 
+/* ---- AppSidebar preview stub ---- */
+
+const _appSidebarStub: Record<string, React.FC<any>> = {};
+
+_appSidebarStub.AppSidebar = function AppSidebarStub() {
+  const [collapsed, setCollapsed] = React.useState(false);
+  const [activeItem, setActiveItem] = React.useState("dashboard");
+  const [searchValue, setSearchValue] = React.useState("");
+  const width = collapsed ? 56 : 260;
+
+  const items = [
+    { id: "home", icon: "\u2302", label: "Home", group: "Navigation" },
+    { id: "dashboard", icon: "\u25A6", label: "Dashboard", group: "Navigation" },
+    { id: "users", icon: "\u263A", label: "Users", group: "Management", badge: "12" },
+    { id: "reports", icon: "\u2630", label: "Reports", group: "Management" },
+    { id: "analytics", icon: "\u2261", label: "Analytics", group: "Data", badge: "new" },
+    { id: "settings", icon: "\u2699", label: "Settings", group: "System" },
+    { id: "help", icon: "\u2753", label: "Help & Support", group: "System" },
+  ];
+
+  const filtered = searchValue
+    ? items.filter((i) => i.label.toLowerCase().includes(searchValue.toLowerCase()))
+    : items;
+
+  const groups = Array.from(new Set(filtered.map((i) => i.group)));
+
+  return React.createElement("div", {
+    style: {
+      width, minHeight: 420, display: "flex", flexDirection: "column" as const,
+      border: "1px solid var(--border-subtle)", borderRadius: 12,
+      background: "var(--surface-default)", transition: "width 200ms ease",
+      overflow: "hidden", fontFamily: "inherit",
+    },
+  },
+    /* Header */
+    React.createElement("div", {
+      style: { padding: collapsed ? "12px 8px" : "16px", borderBottom: "1px solid var(--border-subtle)",
+        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, minHeight: 56 },
+    },
+      !collapsed && React.createElement("div", null,
+        React.createElement("div", { style: { fontWeight: 700, fontSize: 14, color: "var(--text-primary)" } }, "Workspace"),
+        React.createElement("div", { style: { fontSize: 10, color: "var(--text-secondary)" } }, "Enterprise Platform"),
+      ),
+      React.createElement("button", {
+        onClick: () => setCollapsed(!collapsed),
+        style: { background: "none", border: "none", cursor: "pointer", padding: 6, borderRadius: 6,
+          color: "var(--text-secondary)", display: "flex", alignItems: "center", justifyContent: "center" },
+        title: collapsed ? "Expand" : "Collapse",
+      }, collapsed ? "\u25B6" : "\u25C0"),
+    ),
+
+    /* Search */
+    !collapsed && React.createElement("div", { style: { padding: "8px 12px" } },
+      React.createElement("input", {
+        value: searchValue, onChange: (e: any) => setSearchValue(e.target.value),
+        placeholder: "Search...",
+        style: { width: "100%", padding: "6px 10px", borderRadius: 8, border: "1px solid var(--border-subtle)",
+          background: "var(--surface-muted)", fontSize: 12, color: "var(--text-primary)", outline: "none" },
+      }),
+    ),
+
+    /* Nav */
+    React.createElement("div", { style: { flex: 1, overflowY: "auto" as const, padding: collapsed ? "8px 4px" : "8px" } },
+      ...groups.map((group) =>
+        React.createElement("div", { key: group, style: { marginBottom: 12 } },
+          !collapsed && React.createElement("div", {
+            style: { fontSize: 9, fontWeight: 600, textTransform: "uppercase" as const,
+              letterSpacing: 1, color: "var(--text-secondary)", padding: "4px 8px", marginBottom: 2 },
+          }, group),
+          ...filtered.filter((i) => i.group === group).map((item) =>
+            React.createElement("button", {
+              key: item.id,
+              onClick: () => setActiveItem(item.id),
+              style: {
+                display: "flex", alignItems: "center", gap: 8, width: "100%",
+                padding: collapsed ? "8px 0" : "7px 10px", borderRadius: 8, border: "none",
+                background: activeItem === item.id ? "var(--surface-muted)" : "transparent",
+                cursor: "pointer", fontSize: 13, color: activeItem === item.id ? "var(--text-primary)" : "var(--text-secondary)",
+                fontWeight: activeItem === item.id ? 600 : 400, justifyContent: collapsed ? "center" : "flex-start",
+                borderLeft: activeItem === item.id ? "3px solid var(--action-primary)" : "3px solid transparent",
+                transition: "all 150ms ease",
+              },
+              title: collapsed ? item.label : undefined,
+            },
+              React.createElement("span", { style: { fontSize: 16, flexShrink: 0 } }, item.icon),
+              !collapsed && React.createElement("span", { style: { flex: 1, textAlign: "left" as const } }, item.label),
+              !collapsed && item.badge && React.createElement("span", {
+                style: { fontSize: 9, padding: "1px 6px", borderRadius: 10,
+                  background: item.badge === "new" ? "var(--action-primary)" : "var(--surface-muted)",
+                  color: item.badge === "new" ? "#fff" : "var(--text-secondary)", fontWeight: 600 },
+              }, item.badge),
+            ),
+          ),
+        ),
+      ),
+    ),
+
+    /* Footer */
+    React.createElement("div", {
+      style: { borderTop: "1px solid var(--border-subtle)", padding: collapsed ? "8px 4px" : "8px 12px",
+        display: "flex", alignItems: "center", gap: 8, justifyContent: collapsed ? "center" : "flex-start" },
+    },
+      React.createElement("div", { style: { width: 28, height: 28, borderRadius: "50%", background: "var(--action-primary)",
+        display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 12, fontWeight: 700 } }, "HA"),
+      !collapsed && React.createElement("div", null,
+        React.createElement("div", { style: { fontSize: 12, fontWeight: 600, color: "var(--text-primary)" } }, "Halil Admin"),
+        React.createElement("div", { style: { fontSize: 10, color: "var(--text-secondary)" } }, "admin@example.com"),
+      ),
+    ),
+  );
+};
+
+// Register AppSidebar stub in X-Suite components for preview
+_xSuiteComponents.AppSidebar = _appSidebarStub.AppSidebar;
+
 /* ---- Non-DOM props that should not be spread to native elements ---- */
 /* These are custom props recognized by @mfe/design-system components    */
 /* but cause React warnings when they leak to native DOM elements.       */

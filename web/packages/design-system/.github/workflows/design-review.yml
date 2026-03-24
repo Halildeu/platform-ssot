@@ -1,0 +1,50 @@
+name: Design System Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'packages/design-system/src/**/*.tsx'
+      - 'apps/*/src/**/*.tsx'
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Run Design Review
+        id: review
+        run: |
+          cd packages/design-system
+          node scripts/ci/pr-design-review.mjs --json --threshold 50 > /tmp/review.json 2>&1 || true
+          echo "score=$(cat /tmp/review.json | node -e "process.stdin.on('data',d=>{try{console.log(JSON.parse(d).score)}catch{console.log(0)}})")" >> $GITHUB_OUTPUT
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            try {
+              const review = JSON.parse(fs.readFileSync('/tmp/review.json', 'utf-8'));
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: review.markdown
+              });
+            } catch(e) {
+              console.log('Review output not available:', e.message);
+            }

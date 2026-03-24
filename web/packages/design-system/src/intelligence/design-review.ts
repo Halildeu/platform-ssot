@@ -28,6 +28,11 @@ const RULES: Array<{ id: string; severity: ReviewSeverity; pattern: RegExp; mess
   { id: 'missing-access-control', severity: 'info', pattern: /<(Button|Input|Select|Switch|Checkbox)(?![^>]*access=)[^>]*>/g, message: 'Component may benefit from access control prop', fix: 'Consider adding access prop for permission-aware rendering' },
   { id: 'raw-html-input', severity: 'warning', pattern: /<input(?![^>]*className)[^>]*>/g, message: 'Raw HTML <input> — use design-system Input component', fix: 'Replace with <Input /> from @mfe/design-system' },
   { id: 'raw-html-button', severity: 'warning', pattern: /<button(?![^>]*className)[^>]*>/g, message: 'Raw HTML <button> — use design-system Button component', fix: 'Replace with <Button /> from @mfe/design-system' },
+  { id: 'missing-forward-ref', severity: 'info', pattern: /export\s+const\s+\w+\s*=\s*\(/g, message: 'Component exports function but no forwardRef', fix: 'Wrap with React.forwardRef for ref forwarding support' },
+  { id: 'missing-locale-text', severity: 'info', pattern: />\s*[A-Za-zÀ-ÿĞğÜüŞşÖöÇçİı]+(?:\s+[A-Za-zÀ-ÿĞğÜüŞşÖöÇçİı]+){3,}\s*</g, message: 'Hardcoded text string in JSX (possible missing i18n)', fix: 'Use i18n translation function: t("key") instead of hardcoded text' },
+  { id: 'missing-error-boundary', severity: 'warning', pattern: /useEffect\s*\(\s*(?:async\s*)?\(\)\s*=>\s*\{[^}]*(?:fetch|await)[^}]*(?!try)[^}]*\}/g, message: 'Async data fetch in useEffect without error handling', fix: 'Wrap fetch/await in try/catch or use ErrorBoundary component' },
+  { id: 'excessive-rerender-risk', severity: 'warning', pattern: /\w+=\{\s*(?:\{[^}]*\}|\[[^\]]*\])\s*\}/g, message: 'Object/array literal in JSX prop causes re-renders', fix: 'Extract to useMemo/useCallback or define outside component' },
+  { id: 'missing-display-name', severity: 'info', pattern: /forwardRef\s*\(/g, message: 'forwardRef without displayName assignment', fix: 'Add ComponentName.displayName = "ComponentName" after forwardRef' },
 ];
 
 /**
@@ -37,7 +42,14 @@ const RULES: Array<{ id: string; severity: ReviewSeverity; pattern: RegExp; mess
 export function reviewCode(source: string, filePath = 'unknown'): ReviewResult {
   const issues: ReviewIssue[] = [];
 
+  const hasForwardRef = /forwardRef\s*\(/.test(source);
+  const hasDisplayName = /\.displayName\s*=/.test(source);
+
   for (const rule of RULES) {
+    // Context-aware skipping
+    if (rule.id === 'missing-forward-ref' && hasForwardRef) continue;
+    if (rule.id === 'missing-display-name' && hasDisplayName) continue;
+
     rule.pattern.lastIndex = 0;
     let match: RegExpExecArray | null;
     while ((match = rule.pattern.exec(source)) !== null) {

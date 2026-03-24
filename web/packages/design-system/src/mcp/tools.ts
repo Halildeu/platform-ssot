@@ -13,6 +13,8 @@ import { spacing } from '../tokens/spacing';
 import { radius } from '../tokens/radius';
 import { fontSize, fontWeight } from '../tokens/typography';
 import { duration, easing } from '../tokens/motion';
+import { detectDrift } from '../intelligence/drift-detector';
+import type { DriftReport } from '../intelligence/drift-detector';
 import type {
   MCPComponentInfo,
   MCPPropInfo,
@@ -40,7 +42,9 @@ import type {
   MCPQualityReport,
   MCPMigrationGuide,
   MCPFormSchemaResult,
+  MCPPredictionReport,
 } from './types';
+import { predictComponents as predictComponentsEngine } from '../intelligence/predictive-engine';
 
 /* ------------------------------------------------------------------ */
 /*  Dahili yardimcilar                                                 */
@@ -1098,4 +1102,17 @@ export function generateFormSchema(description: string): MCPFormSchemaResult {
   const fieldNames = fields.map(f => f.trim().split(':')[0].trim());
   const formConfig = fieldNames.map(f => `<ConnectedInput name="${f}" label="${f}" />`).join('\n');
   return { zodSchema, formConfig, description: `Form schema for: ${description}` };
+}
+
+/** 22. predictComponents — predict missing components from source code */
+export function predictComponents(code: string): MCPPredictionReport {
+  return predictComponentsEngine(code);
+}
+
+/** 23. detectDesignDrift — detect design system drift in code */
+export function detectDesignDrift(
+  code: string,
+  fileName?: string,
+): DriftReport {
+  return detectDrift(code, { fileName });
 }
