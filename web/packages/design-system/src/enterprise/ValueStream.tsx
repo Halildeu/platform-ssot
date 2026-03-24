@@ -101,7 +101,6 @@ function StepBox({
 
   return (
     <div
-      data-access-state={accessState.state}
       className={cn(
         'flex flex-col items-center gap-1 rounded-lg border-2 px-4 py-3 min-w-[120px] transition-shadow',
         styles.border,
@@ -262,6 +261,7 @@ export function ValueStream({
         accessStyles(state),
         className,
       )}
+      data-access-state={state}
       role="figure"
       aria-label="Value stream map"
       title={accessReason}

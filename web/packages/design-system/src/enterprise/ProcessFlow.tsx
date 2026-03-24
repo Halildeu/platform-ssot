@@ -195,7 +195,6 @@ function renderNodeShape(
     case 'end':
       return (
         <g>
-            data-access-state={accessState.state}
           <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-error-text, #ef4444)" fillOpacity={0.2} stroke="var(--state-error-text, #dc2626)" strokeWidth={4} strokeDasharray={dashArray} />
           <circle cx={x} cy={y} r={CIRCLE_R - 6} fill="var(--state-error-text, #ef4444)" fillOpacity={0.4} stroke="none" />
         </g>
@@ -414,6 +413,7 @@ export function ProcessFlow({
     <div
       ref={containerRef}
       className={cn('relative overflow-auto rounded-lg border border-border-default bg-[var(--surface-primary)]', accessStyles(state), className)}
+      data-access-state={state}
       role="figure"
       aria-label="Process flow diagram"
       title={accessReason}

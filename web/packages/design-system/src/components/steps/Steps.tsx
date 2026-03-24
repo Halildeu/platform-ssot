@@ -98,7 +98,6 @@ const statusColors: Record<StepStatus, { bg: string; border: string; text: strin
 function CheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        data-access-state={accessState.state}
       <path d="M3.5 8.5L6.5 11.5L12.5 5" />
     </svg>
   );
@@ -163,6 +162,7 @@ export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
         className,
       )}
       title={accessReason}
+      data-access-state={accessState.state}
       role="list"
       aria-label="Progress steps"
       {...stateAttrs({ component: "steps" })}

@@ -93,7 +93,6 @@ function TypeIcon({ type }: { type: NotificationType }) {
   const { path, color } = TYPE_ICONS[type];
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill={color} className="shrink-0 mt-0.5">
-        data-access-state={accessState.state}
       <path d={path} />
     </svg>
   );
@@ -300,6 +299,7 @@ export function NotificationCenter({
         accessStyles(state),
         className,
       )}
+      data-access-state={state}
       role="region"
       aria-label={resolvedTitle}
       title={accessReason}

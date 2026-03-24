@@ -106,7 +106,6 @@ const SIZE_CONFIG: Record<EmptyStateSize, { icon: number; titleCls: string; desc
 function IconDatabase({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
-        data-access-state={accessState.state}
       <ellipse cx="12" cy="5" rx="9" ry="3" />
       <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
       <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
@@ -209,6 +208,7 @@ export const EmptyStateBuilder = React.forwardRef<HTMLDivElement, EmptyStateBuil
       )}
       role="status"
       aria-label={resolvedTitle}
+      data-access-state={state}
       title={accessReason}
     >
       <IconComponent size={config.icon} />

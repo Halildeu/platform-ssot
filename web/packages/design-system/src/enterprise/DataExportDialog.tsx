@@ -115,7 +115,6 @@ function RadioOption({
 }) {
   return (
     <label
-      data-access-state={accessState.state}
       className={cn(
         'flex items-center gap-2 rounded-md border px-3 py-2 text-sm cursor-pointer transition-colors',
         checked
@@ -234,6 +233,7 @@ export function DataExportDialog({
         role="dialog"
         aria-modal="true"
         aria-label={t.ariaLabel}
+        data-access-state={state}
         title={accessReason}
       >
         {/* Header */}

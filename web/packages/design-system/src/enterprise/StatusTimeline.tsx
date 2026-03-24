@@ -107,7 +107,6 @@ function EventDot({
   const size = compact ? 10 : 14;
   return (
     <span
-      data-access-state={accessState.state}
       className={cn(
         'inline-block shrink-0 rounded-full border-2 border-surface-default shadow-xs',
         active && 'ring-2 ring-offset-1',
@@ -265,6 +264,7 @@ export function StatusTimeline({
         accessStyles(state),
         className,
       )}
+      data-access-state={state}
       role="group"
       aria-label="Status timeline"
       title={accessReason}

@@ -194,7 +194,6 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
       height="12"
       viewBox="0 0 12 12"
       fill="none"
-      data-access-state={accessState.state}
       className={cn(
         "shrink-0 transition-[rotate] duration-150",
         expanded && "rotate-90",
@@ -774,7 +773,7 @@ export const VariantIntegration = <RowData = unknown,>({
   return (
     <>
       {/* Variant selector dropdown (inline in toolbar) */}
-      <div className={`flex items-center gap-2 ${accessStyles(accessState.state)}`} data-component="variant-selector" title={accessReason}>
+      <div className={`flex items-center gap-2 ${accessStyles(accessState.state)}`} data-component="variant-selector" data-access-state={accessState.state} title={accessReason}>
         <select
           value={activeId ?? ""}
           onChange={(e) => {
