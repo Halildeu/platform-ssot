@@ -36,7 +36,7 @@ afterEach(() => {
 
 describe('StaggerGroup — depth', () => {
   it('renders children in sequence with stagger delays', () => {
-    const { container } = render(
+    render(
       <StaggerGroup staggerDelay={100}>
         <div data-testid="item-0">A</div>
         <div data-testid="item-1">B</div>

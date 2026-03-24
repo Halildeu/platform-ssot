@@ -91,7 +91,7 @@ describe('Transition — depth', () => {
   });
 
   it('empty — show=false with no children renders nothing', () => {
-    const { container } = render(
+    render(
       <Transition show={false}>
         <div data-testid="empty-child">Empty</div>
       </Transition>,

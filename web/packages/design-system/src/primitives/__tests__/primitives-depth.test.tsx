@@ -33,7 +33,7 @@ afterEach(cleanup);
 
 describe('Slot — depth', () => {
   it('renders children element', () => {
-    const { container } = render(
+    render(
       <Slot><span data-testid="slot-child">hello</span></Slot>,
     );
     expect(screen.getByTestId('slot-child')).toBeInTheDocument();
@@ -180,7 +180,7 @@ describe('Stack — depth', () => {
 
 describe('Skeleton — depth', () => {
   it('renders single skeleton', () => {
-    const { container } = render(<Skeleton data-testid="sk" />);
+    render(<Skeleton data-testid="sk" />);
     expect(screen.getByTestId('sk')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
@@ -603,7 +603,7 @@ describe('Badge — depth', () => {
   });
 
   it('renders empty content safely', () => {
-    const { container } = render(<Badge data-testid="empty-badge" />);
+    render(<Badge data-testid="empty-badge" />);
     expect(screen.getByTestId('empty-badge')).toBeInTheDocument();
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
     expect(document.body.innerHTML.length).toBeGreaterThan(0);
@@ -619,7 +619,7 @@ describe('Badge — depth', () => {
   });
 
   it('renders dot variant', () => {
-    const { container } = render(<Badge dot data-testid="dot-badge" />);
+    render(<Badge dot data-testid="dot-badge" />);
     const el = screen.getByTestId('dot-badge');
     expect(el.className).toContain('rounded-full');
     expect(document.body.innerHTML.length).toBeGreaterThan(0);

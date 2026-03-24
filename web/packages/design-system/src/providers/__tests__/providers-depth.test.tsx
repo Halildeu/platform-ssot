@@ -67,7 +67,7 @@ describe('DesignSystemProvider — depth', () => {
   });
 
   it('a11y: provides direction attribute on root', () => {
-    const { container } = render(
+    render(
       <DesignSystemProvider locale="ar">
         <button aria-label="test action">Click</button>
       </DesignSystemProvider>,

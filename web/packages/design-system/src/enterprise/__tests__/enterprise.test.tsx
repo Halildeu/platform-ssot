@@ -86,7 +86,7 @@ describe('ExecutiveKPIStrip', () => {
   });
 
   it('has accessible ARIA structure', () => {
-    const { container } = render(<ExecutiveKPIStrip metrics={metrics} />);
+    render(<ExecutiveKPIStrip metrics={metrics} />);
     const region = screen.getByRole('region');
     expect(region).toBeInTheDocument();
     expect(region).toHaveAttribute('aria-label', 'Key performance indicators');
@@ -146,7 +146,7 @@ describe('RiskMatrix', () => {
   });
 
   it('has accessible ARIA structure', () => {
-    const { container } = render(<RiskMatrix risks={risks} />);
+    render(<RiskMatrix risks={risks} />);
     const group = screen.getByRole('group');
     expect(group).toBeInTheDocument();
     expect(group).toHaveAttribute('aria-label', 'Risk assessment matrix');

@@ -256,7 +256,7 @@ export const menuBarVariantCatalog: MenuBarVariantDescriptor[] = [
     cluster: 'governance_and_access',
     name: 'Theme Contrast',
     description:
-      'Ayni primitive’in tema ve kontrast davranisini gosteren varyant. Farkli renk duzenlerinde okunurlugu ve buton ritmini test eder.',
+      `Ayni primitive’in tema ve kontrast davranisini gosteren varyant. Farkli renk duzenlerinde okunurlugu ve buton ritmini test eder.`,
     badges: ['THEME', 'CONTRAST', 'VISUAL'],
     modes: ['theme stress', 'contrast shell', 'visual QA'],
     benchmarkPrimary: ['MUI Toolbar', 'Ant Design Menu'],
