@@ -17,6 +17,7 @@ const TOKEN_FILE = path.resolve(repoRoot, 'design-tokens/figma.tokens.json');
 const OUTPUT_CSS = path.resolve(repoRoot, 'apps/mfe-shell/src/styles/theme.css');
 const OUTPUT_THEME_INLINE = path.resolve(repoRoot, 'apps/mfe-shell/src/styles/generated-theme-inline.css');
 const OUTPUT_CONTRACT = path.resolve(repoRoot, 'design-tokens/generated/theme-contract.json');
+const OUTPUT_TOKEN_TYPES = path.resolve(repoRoot, 'design-tokens/generated/token-types.ts');
 
 const isCheckMode = process.argv.includes('--check');
 
@@ -306,6 +307,7 @@ const contractWithEol = `${JSON.stringify(themeContract, null, 2)}\n`;
 
 /* ---- Build @theme inline block for TW4 utility generation ---- */
 const themeInlineOutput = buildThemeInlineBlock(colorTokens, bridgeAliases);
+const tokenTypesOutput = buildTokenTypes(themeInlineOutput);
 
 if (isCheckMode) {
   const errors = [];
@@ -313,6 +315,7 @@ if (isCheckMode) {
     ['theme.css', OUTPUT_CSS, cssWithEol],
     ['theme-contract.json', OUTPUT_CONTRACT, contractWithEol],
     ['generated-theme-inline.css', OUTPUT_THEME_INLINE, themeInlineOutput],
+    ['token-types.ts', OUTPUT_TOKEN_TYPES, tokenTypesOutput],
   ]) {
     try {
       const existing = fs.readFileSync(outputPath, 'utf8');
@@ -330,15 +333,17 @@ if (isCheckMode) {
     process.exit(1);
   }
 
-  console.log(`✅ tokens:build --check OK (${[OUTPUT_CSS, OUTPUT_CONTRACT, OUTPUT_THEME_INLINE].map(p => path.relative(repoRoot, p)).join(', ')})`);
+  console.log(`✅ tokens:build --check OK (4 files)`);
 } else {
   fs.mkdirSync(path.dirname(OUTPUT_CONTRACT), { recursive: true });
   fs.writeFileSync(OUTPUT_CONTRACT, contractWithEol);
   fs.writeFileSync(OUTPUT_CSS, cssWithEol);
   fs.writeFileSync(OUTPUT_THEME_INLINE, themeInlineOutput);
+  fs.writeFileSync(OUTPUT_TOKEN_TYPES, tokenTypesOutput);
   console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CSS)} from ${path.relative(repoRoot, TOKEN_FILE)}`);
-  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CONTRACT)} from ${path.relative(repoRoot, TOKEN_FILE)}`);
-  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_THEME_INLINE)} (@theme inline for TW4)`);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_CONTRACT)}`);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_THEME_INLINE)} (@theme inline)`);
+  console.log(`✅ Generated ${path.relative(repoRoot, OUTPUT_TOKEN_TYPES)} (TypeScript types)`);
 }
 
 function flattenSemantic(node, pathSegments = [], acc = []) {
@@ -701,6 +706,61 @@ function buildThemeInlineBlock(colorEntries, aliases) {
   lines.push('');
 
   return lines.join('\n') + '\n';
+}
+
+/**
+ * Build TypeScript type definitions from @theme inline block.
+ * Extracts all token names and creates branded union types.
+ */
+function buildTokenTypes(themeInlineCss) {
+  const lines = [];
+  lines.push('/* ⚠️ Auto-generated via scripts/theme/generate-theme-css.mjs. Do NOT edit manually. */');
+  lines.push('/* Run: npm run tokens:build:theme to regenerate. */');
+  lines.push('');
+
+  const colorTokens = [];
+  const radiusTokens = [];
+  const shadowTokens = [];
+  const spacingTokens = [];
+  const ringTokens = [];
+
+  for (const line of themeInlineCss.split('\n')) {
+    const m = line.match(/^\s+--([\w-]+):/);
+    if (!m) continue;
+    const name = m[1];
+    if (name.startsWith('color-')) colorTokens.push(name.slice(6)); // strip 'color-' prefix
+    else if (name.startsWith('radius-')) radiusTokens.push(name);
+    else if (name.startsWith('shadow-')) shadowTokens.push(name);
+    else if (name.startsWith('spacing-')) spacingTokens.push(name);
+    else if (name.startsWith('ring-')) ringTokens.push(name);
+  }
+
+  const toUnion = (arr) => arr.map(t => `  | '${t}'`).join('\n');
+
+  lines.push('/** Semantic color token names available as TW4 utilities (bg-*, text-*, border-*) */');
+  lines.push('export type TokenColor =');
+  lines.push(toUnion(colorTokens) + ';');
+  lines.push('');
+
+  lines.push('/** Radius token names (rounded-*) */');
+  lines.push('export type TokenRadius =');
+  lines.push(toUnion(radiusTokens) + ';');
+  lines.push('');
+
+  lines.push('/** Shadow token names (shadow-*) */');
+  lines.push('export type TokenShadow =');
+  lines.push(toUnion(shadowTokens) + ';');
+  lines.push('');
+
+  lines.push('/** All design token names */');
+  lines.push('export type DesignToken = TokenColor | TokenRadius | TokenShadow;');
+  lines.push('');
+
+  lines.push(`/** Total token count: ${colorTokens.length} colors, ${radiusTokens.length} radius, ${shadowTokens.length} shadows */`);
+  lines.push(`export const TOKEN_COUNT = { color: ${colorTokens.length}, radius: ${radiusTokens.length}, shadow: ${shadowTokens.length} } as const;`);
+  lines.push('');
+
+  return lines.join('\n');
 }
 
 /**

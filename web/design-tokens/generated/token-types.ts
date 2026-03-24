@@ -1,0 +1,105 @@
+/* ⚠️ Auto-generated via scripts/theme/generate-theme-css.mjs. Do NOT edit manually. */
+/* Run: npm run tokens:build:theme to regenerate. */
+
+/** Semantic color token names available as TW4 utilities (bg-*, text-*, border-*) */
+export type TokenColor =
+  | 'surface-default'
+  | 'surface-raised'
+  | 'surface-muted'
+  | 'surface-panel'
+  | 'surface-header'
+  | 'surface-overlay'
+  | 'surface-page'
+  | 'surface-canvas'
+  | 'text-primary'
+  | 'text-secondary'
+  | 'text-subtle'
+  | 'text-inverse'
+  | 'text-tertiary'
+  | 'text-disabled'
+  | 'border'
+  | 'border-subtle'
+  | 'border-default'
+  | 'border-bold'
+  | 'border-strong'
+  | 'selection'
+  | 'selection-outline'
+  | 'action-primary'
+  | 'action-primary-text'
+  | 'action-primary-border'
+  | 'action-primary-soft'
+  | 'action-secondary'
+  | 'action-secondary-text'
+  | 'action-secondary-border'
+  | 'action-ghost'
+  | 'action-ghost-text'
+  | 'action-ghost-border'
+  | 'accent-primary'
+  | 'accent-primary-hover'
+  | 'accent-focus'
+  | 'accent-soft'
+  | 'accent'
+  | 'state-info'
+  | 'state-info-bg'
+  | 'state-info-text'
+  | 'state-info-border'
+  | 'state-info-surface'
+  | 'state-success'
+  | 'state-success-bg'
+  | 'state-success-text'
+  | 'state-success-border'
+  | 'state-success-surface'
+  | 'state-warning'
+  | 'state-warning-bg'
+  | 'state-warning-text'
+  | 'state-warning-border'
+  | 'state-warning-surface'
+  | 'state-danger'
+  | 'state-danger-bg'
+  | 'state-danger-text'
+  | 'state-danger-border'
+  | 'state-error-bg'
+  | 'state-error-text'
+  | 'status-info'
+  | 'status-info-bg'
+  | 'status-info-text'
+  | 'status-info-border'
+  | 'status-success'
+  | 'status-success-bg'
+  | 'status-success-text'
+  | 'status-success-border'
+  | 'status-warning'
+  | 'status-warning-bg'
+  | 'status-warning-text'
+  | 'status-warning-border'
+  | 'status-danger'
+  | 'status-danger-bg'
+  | 'status-danger-text'
+  | 'status-danger-border'
+  | 'data-table-header'
+  | 'data-table-header-text'
+  | 'data-table-header-divider'
+  | 'data-table-row-hover'
+  | 'data-table-row-selected'
+  | 'data-table-row-border'
+  | 'menu-action-trigger'
+  | 'menu-surface-trigger'
+  | 't-action-primary'
+  | 'on-elevated'
+  | 'hover';
+
+/** Radius token names (rounded-*) */
+export type TokenRadius =
+  | 'radius-control'
+  | 'radius-surface';
+
+/** Shadow token names (shadow-*) */
+export type TokenShadow =
+  | 'shadow-surface'
+  | 'shadow-overlay';
+
+/** All design token names */
+export type DesignToken = TokenColor | TokenRadius | TokenShadow;
+
+/** Total token count: 84 colors, 2 radius, 2 shadows */
+export const TOKEN_COUNT = { color: 84, radius: 2, shadow: 2 } as const;
