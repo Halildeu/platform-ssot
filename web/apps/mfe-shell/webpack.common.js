@@ -3,7 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// MiniCssExtractPlugin not needed — TW4 CSS served via <link> in index.html
+// css-loader@7 breaks @layer cascade; pre-built CSS bypasses this
 
 const MAX_ENTRYPOINT_SIZE = 25 * 1024 * 1024; // 25 MB
 const MAX_ASSET_SIZE = 8 * 1024 * 1024; // 8 MB
@@ -75,20 +76,8 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          // MiniCssExtractPlugin extracts CSS to <link> tag — preserves @layer cascade
-          // css-loader@7 breaks @layer shorthand/longhand cascade when injecting via <style>
-          MiniCssExtractPlugin.loader,
+          'style-loader',
           'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [
-                  ['@tailwindcss/postcss', {}],
-                ],
-              },
-            },
-          },
         ],
       },
       {
@@ -110,9 +99,6 @@ module.exports = {
   },
 
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[contenthash:8].css',
-    }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
       minify: { collapseWhitespace: false, minifyJS: false, minifyCSS: false },

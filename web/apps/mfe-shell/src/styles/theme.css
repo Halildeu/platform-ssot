@@ -795,6 +795,54 @@
   --ring-focus: color(srgb 0.3765 0.6471 0.9804);
   --ring-error: color(srgb 0.9373 0.2667 0.2667);
   --ring-color: color(srgb 0.3765 0.6471 0.9804);
+  color-scheme: dark;
+}
+
+/* System preference fallback (prefers-color-scheme) */
+@media (prefers-color-scheme: dark) {
+  [data-mode="system"] {
+    --action-primary: color(srgb 0.2314 0.5098 0.9647);
+    --action-secondary: color(srgb 0.1216 0.1608 0.2157);
+    --surface-canvas: color(srgb 0.0118 0.0275 0.0706);
+    --surface-raised: color(srgb 0.0667 0.0941 0.1529);
+    --surface-page: color(srgb 0.0118 0.0275 0.0706);
+    --surface-overlay: color(srgb 0.0078 0.0235 0.0902);
+    --surface-primary: color(srgb 0.2314 0.5098 0.9647);
+    --surface-active: color(srgb 0.1137 0.3059 0.8471);
+    --surface-inverse: color(srgb 0.0078 0.0235 0.0902);
+    --text-disabled: color(srgb 0.5804 0.6392 0.7216);
+    --text-tertiary: color(srgb 0.5804 0.6392 0.7216);
+    --text-placeholder: color(srgb 0.5804 0.6392 0.7216);
+    --text-danger: color(srgb 0.9373 0.2667 0.2667);
+    --border-strong: color(srgb 0.1451 0.3882 0.9216);
+    --border-active: color(srgb 0.3765 0.6471 0.9804);
+    --border-hover: color(srgb 0.2157 0.2549 0.3176);
+    --border-error: color(srgb 0.9373 0.2667 0.2667);
+    --border-danger: color(srgb 0.9373 0.2667 0.2667);
+    --focus-ring: color(srgb 0.3765 0.6471 0.9804);
+    --state-error-bg: color(srgb 0.9882 0.5059 0.5059 / 25%);
+    --state-error-text: color(srgb 0.9373 0.2667 0.2667);
+    --state-error-border: color(srgb 0.9373 0.2667 0.2667);
+    --state-danger: color(srgb 0.9373 0.2667 0.2667);
+    --state-success: color(srgb 0.1333 0.7725 0.3686);
+    --state-warning: color(srgb 0.9608 0.6196 0.0431);
+    --state-info: color(srgb 0.2314 0.5098 0.9647);
+    --feedback-error: color(srgb 0.9373 0.2667 0.2667);
+    --feedback-success: color(srgb 0.1333 0.7725 0.3686);
+    --feedback-warning: color(srgb 0.9608 0.6196 0.0431);
+    --feedback-info: color(srgb 0.2314 0.5098 0.9647);
+    --danger-color: color(srgb 0.9373 0.2667 0.2667);
+    --success-color: color(srgb 0.1333 0.7725 0.3686);
+    --warning-color: color(srgb 0.9608 0.6196 0.0431);
+    --info-color: color(srgb 0.2314 0.5098 0.9647);
+    --bg-primary: color(srgb 0.2314 0.5098 0.9647);
+    --ring-primary: color(srgb 0.2314 0.5098 0.9647);
+    --ring-focus: color(srgb 0.3765 0.6471 0.9804);
+    --ring-error: color(srgb 0.9373 0.2667 0.2667);
+    --ring-color: color(srgb 0.3765 0.6471 0.9804);
+    color-scheme: dark;
+    color-scheme: dark;
+  }
 }
 
 html {

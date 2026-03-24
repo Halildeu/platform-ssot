@@ -42,7 +42,6 @@ const SHELL_STYLES = join(ROOT, 'apps', 'mfe-shell', 'src', 'styles');
 const SHELL_INDEX_CSS = join(ROOT, 'apps', 'mfe-shell', 'src', 'index.css');
 const FIGMA_PATH = join(ROOT, 'design-tokens', 'figma.tokens.json');
 const THEME_CSS = join(SHELL_STYLES, 'theme.css');
-const DARK_MODE_CSS = join(SHELL_STYLES, 'dark-mode.css');
 const TOKEN_BRIDGE_CSS = join(SHELL_STYLES, 'token-bridge.css');
 
 const flags = new Set(process.argv.slice(2));

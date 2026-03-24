@@ -241,8 +241,25 @@ if (darkAppearanceKey) {
     }
   }
 
+  darkBridgeLines.push('  color-scheme: dark;');
   darkBridgeLines.push('}');
   cssChunks.push(...darkBridgeLines);
+  cssChunks.push('');
+
+  /* System preference fallback: when data-mode="system", use OS preference */
+  const systemLines = [];
+  systemLines.push('/* System preference fallback (prefers-color-scheme) */');
+  systemLines.push('@media (prefers-color-scheme: dark) {');
+  systemLines.push('  [data-mode="system"] {');
+  for (const line of darkBridgeLines) {
+    if (line.startsWith('  ') && line.includes(':') && !line.startsWith('/*') && !line.startsWith('[') && !line.startsWith('}')) {
+      systemLines.push(`  ${line}`);
+    }
+  }
+  systemLines.push('    color-scheme: dark;');
+  systemLines.push('  }');
+  systemLines.push('}');
+  cssChunks.push(...systemLines);
   cssChunks.push('');
 }
 
