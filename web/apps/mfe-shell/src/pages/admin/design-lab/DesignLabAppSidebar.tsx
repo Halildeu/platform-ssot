@@ -230,9 +230,12 @@ export const DesignLabAppSidebar: React.FC = () => {
   }, [activeLayer, activeItem, searchValue, handleItemSelect]);
 
   return (
+    <div className="flex h-full w-full flex-col overflow-hidden">
     <AppSidebar
       storageKey="design-lab-sidebar"
-      className="rounded-[28px] border border-border-subtle shadow-xs"
+      defaultMode="expanded"
+      expandedWidth={9999}
+      className="h-full !w-full !border-0 !bg-transparent"
     >
       {/* Mobile menu toggle */}
       <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2 sm:hidden">
@@ -318,6 +321,7 @@ export const DesignLabAppSidebar: React.FC = () => {
         {navContent}
       </AppSidebar.Nav>
     </AppSidebar>
+    </div>
   );
 };
 

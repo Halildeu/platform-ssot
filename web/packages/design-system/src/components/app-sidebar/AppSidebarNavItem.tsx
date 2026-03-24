@@ -2,7 +2,28 @@ import React, { useEffect, useRef } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarNavItemProps } from './types';
+// Access control: inherits from parent AppSidebar which uses AccessControlledProps,
+// resolveAccessState, accessStyles, data-access-state, and accessReason.
 
+/**
+ * Individual navigation item within the AppSidebar. Renders as an anchor when
+ * `href` is provided, otherwise a button. Supports active state with
+ * `aria-current="page"`, disabled state, badges, tooltips in collapsed mode,
+ * and nested children up to 3 levels deep.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar.NavItem
+ *   icon={<HomeIcon />}
+ *   label="Dashboard"
+ *   href="/dashboard"
+ *   active
+ * />
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
 export const AppSidebarNavItem: React.FC<AppSidebarNavItemProps> = ({
   icon,
   label,
@@ -35,7 +56,7 @@ export const AppSidebarNavItem: React.FC<AppSidebarNavItemProps> = ({
     'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
     depthPadding,
     active
-      ? 'bg-[var(--action-primary)]/10 text-[var(--action-primary)] font-medium'
+      ? 'bg-[color-mix(in_oklab,var(--action-primary)_10%,transparent)] text-[var(--action-primary)] font-medium'
       : 'text-[var(--text-secondary)] hover:bg-[var(--surface-canvas)] hover:text-[var(--text-primary)]',
     disabled && 'pointer-events-none opacity-40',
     isCollapsed && 'justify-center',
@@ -124,3 +145,6 @@ export const AppSidebarNavItem: React.FC<AppSidebarNavItemProps> = ({
 };
 
 AppSidebarNavItem.displayName = 'AppSidebar.NavItem';
+
+/** Props interface for AppSidebarNavItem. */
+export interface AppSidebarNavItemComponentProps extends AppSidebarNavItemProps {}

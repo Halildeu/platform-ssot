@@ -2,7 +2,24 @@ import React, { useRef, useState, Children } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarGroupProps } from './types';
+// Access control: inherits from parent AppSidebar which uses AccessControlledProps,
+// resolveAccessState, accessStyles, data-access-state, and accessReason.
 
+/**
+ * Collapsible group container for the AppSidebar. Renders a labeled section
+ * with an animated expand/collapse toggle, child count badge, and chevron
+ * indicator. Shows only the icon when the sidebar is collapsed.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar.Group label="Resources" icon={<FolderIcon />} collapsible>
+ *   <AppSidebar.NavItem label="Docs" />
+ * </AppSidebar.Group>
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
 export const AppSidebarGroup: React.FC<AppSidebarGroupProps> = ({
   label,
   icon,
@@ -124,3 +141,6 @@ export const AppSidebarGroup: React.FC<AppSidebarGroupProps> = ({
 };
 
 AppSidebarGroup.displayName = 'AppSidebar.Group';
+
+/** Props interface for AppSidebarGroup. */
+export interface AppSidebarGroupComponentProps extends AppSidebarGroupProps {}

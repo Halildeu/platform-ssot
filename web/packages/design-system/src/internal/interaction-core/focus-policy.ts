@@ -25,14 +25,14 @@ const FOCUS_RING_CLASSES: Record<FocusStrategy, string> = {
   ring: [
     "focus-visible:outline-hidden",
     "focus-visible:ring-2",
-    "focus-visible:ring-[var(--focus-ring)]/30",
+    "focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_30%,transparent)]",
     "focus-visible:ring-offset-2",
   ].join(" "),
 
   outline: [
     "focus-visible:outline-hidden",
     "focus-visible:ring-1",
-    "focus-visible:ring-[var(--focus-ring)]/50",
+    "focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_50%,transparent)]",
     "focus-visible:ring-offset-1",
   ].join(" "),
 
@@ -40,7 +40,7 @@ const FOCUS_RING_CLASSES: Record<FocusStrategy, string> = {
     "focus-visible:outline-hidden",
     "focus-visible:ring-2",
     "focus-visible:ring-inset",
-    "focus-visible:ring-[var(--focus-ring)]/40",
+    "focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_40%,transparent)]",
   ].join(" "),
 
   none: "focus-visible:outline-hidden",
@@ -85,7 +85,7 @@ export function focusRingClassWithColor(
     "focus-visible:outline-hidden",
     `focus-visible:ring-${ringWidth}`,
     inset,
-    `focus-visible:ring-[${color}]/${opacity}`,
+    `focus-visible:ring-[color-mix(in_oklab,${color}_${opacity}%,transparent)]`,
     offset ? `focus-visible:ring-offset-${offset}` : "",
   ]
     .filter(Boolean)

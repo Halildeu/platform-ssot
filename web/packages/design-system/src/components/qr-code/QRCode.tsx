@@ -659,7 +659,7 @@ export const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(function QRC
 
       {status === "expired" && (
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-[var(--surface-canvas)]/90"
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-[color-mix(in_oklab,var(--surface-canvas)_90%,transparent)]"
           data-testid="qrcode-expired"
         >
           <span className="mb-2 text-sm text-text-secondary">

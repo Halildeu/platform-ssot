@@ -263,7 +263,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
         className={cn(
           'flex items-center gap-2 rounded-md border px-3 py-2 text-sm',
           'border-border-default bg-surface-default',
-          'hover:border-[var(--interactive-primary)] focus:outline-hidden focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
+          'hover:border-[var(--interactive-primary)] focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
           'transition-colors',
           !isInteractive && 'pointer-events-none',
         )}
@@ -347,7 +347,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
                   className={cn(
                     'w-full rounded-md border px-2 py-1.5 text-sm',
                     'border-border-default bg-surface-default',
-                    'focus:outline-hidden focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
+                    'focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
                   )}
                   aria-label="Start date"
                 />
@@ -364,7 +364,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
                   className={cn(
                     'w-full rounded-md border px-2 py-1.5 text-sm',
                     'border-border-default bg-surface-default',
-                    'focus:outline-hidden focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
+                    'focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
                   )}
                   aria-label="End date"
                 />
@@ -375,7 +375,7 @@ export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerP
               className={cn(
                 'mt-2 w-full rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
                 'bg-[var(--interactive-primary)] text-text-inverse',
-                'hover:opacity-90 focus:outline-hidden focus:ring-2 focus:ring-[var(--interactive-primary)]/30',
+                'hover:opacity-90 focus:outline-hidden focus:ring-2 focus:ring-[color-mix(in_oklab,var(--interactive-primary)_30%,transparent)]',
                 'disabled:opacity-40 disabled:cursor-not-allowed',
               )}
               onClick={handleCustomApply}

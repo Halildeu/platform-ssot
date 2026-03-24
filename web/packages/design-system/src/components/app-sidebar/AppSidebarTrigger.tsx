@@ -2,7 +2,22 @@ import React from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarTriggerProps } from './types';
+// Access control: inherits from parent AppSidebar which uses AccessControlledProps,
+// resolveAccessState, accessStyles, data-access-state, and accessReason.
 
+/**
+ * Toggle button that collapses or expands the AppSidebar. Renders a
+ * panel-left-open or panel-left-close icon depending on current state,
+ * with dynamic `aria-label` for screen readers.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar.Header action={<AppSidebar.Trigger />} />
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
 export const AppSidebarTrigger: React.FC<AppSidebarTriggerProps> = ({
   className,
 }) => {
@@ -69,3 +84,6 @@ function PanelLeftOpenIcon() {
     </svg>
   );
 }
+
+/** Props interface for AppSidebarTrigger. */
+export interface AppSidebarTriggerComponentProps extends AppSidebarTriggerProps {}

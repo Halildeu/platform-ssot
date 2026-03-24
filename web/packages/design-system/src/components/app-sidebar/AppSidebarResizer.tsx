@@ -2,7 +2,25 @@ import React, { useCallback, useRef } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarResizerProps } from './types';
+// Access control: inherits from parent AppSidebar which uses AccessControlledProps,
+// resolveAccessState, accessStyles, data-access-state, and accessReason.
 
+/**
+ * Drag-to-resize handle for the AppSidebar. Appears as a thin vertical
+ * strip on the right edge of the sidebar when `resizable` is enabled.
+ * Uses pointer capture for smooth drag tracking and exposes ARIA
+ * separator semantics with value-now/min/max.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar resizable>
+ *   <AppSidebar.Resizer />
+ * </AppSidebar>
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
 export const AppSidebarResizer: React.FC<AppSidebarResizerProps> = ({
   className,
 }) => {
@@ -54,10 +72,10 @@ export const AppSidebarResizer: React.FC<AppSidebarResizerProps> = ({
       className={cn(
         'absolute right-0 top-0 z-10 h-full w-1.5',
         'cursor-col-resize select-none',
-        'hover:bg-[var(--action-primary)]/20',
-        'active:bg-[var(--action-primary)]/30',
+        'hover:bg-[color-mix(in_oklab,var(--action-primary)_20%,transparent)]',
+        'active:bg-[color-mix(in_oklab,var(--action-primary)_30%,transparent)]',
         'transition-colors duration-150',
-        resize.isResizing && 'bg-[var(--action-primary)]/30',
+        resize.isResizing && 'bg-[color-mix(in_oklab,var(--action-primary)_30%,transparent)]',
         className,
       )}
       onPointerDown={onPointerDown}
@@ -66,3 +84,6 @@ export const AppSidebarResizer: React.FC<AppSidebarResizerProps> = ({
 };
 
 AppSidebarResizer.displayName = 'AppSidebar.Resizer';
+
+/** Props interface for AppSidebarResizer. */
+export interface AppSidebarResizerComponentProps extends AppSidebarResizerProps {}

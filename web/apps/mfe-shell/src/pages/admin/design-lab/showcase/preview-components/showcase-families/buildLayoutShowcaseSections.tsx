@@ -262,7 +262,7 @@ export const buildLayoutShowcaseSections = (
           <SectionBadge label={profile.experienceLabel} />
         </div>
       </div>
-      <div className="mt-3 rounded-[18px] border border-[var(--border-subtle)]/20 bg-[var(--surface-card,rgba(255,255,255,0.35))] px-3 py-3 backdrop-blur-xs">
+      <div className="mt-3 rounded-[18px] border border-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)] bg-[var(--surface-card,rgba(255,255,255,0.35))] px-3 py-3 backdrop-blur-xs">
         {renderTemplateSilhouette(profile.silhouette)}
       </div>
       <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">

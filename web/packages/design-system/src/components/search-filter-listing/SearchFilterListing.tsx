@@ -185,7 +185,7 @@ const SelectionBar: React.FC<{
   return (
     <div
       className={cn(
-        "flex items-center justify-between rounded-2xl border border-[var(--selection-outline,var(--action-primary))]/40 bg-[var(--selection-bg)] transition-all duration-200",
+        "flex items-center justify-between rounded-2xl border border-[color-mix(in_oklab,var(--selection-outline,var(--action-primary))_40%,transparent)] bg-[var(--selection-bg)] transition-all duration-200",
         compact ? "px-3 py-2" : "px-5 py-3",
       )}
       role="status"

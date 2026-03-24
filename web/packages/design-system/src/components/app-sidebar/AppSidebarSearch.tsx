@@ -2,7 +2,27 @@ import React, { useRef } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarSearchProps } from './types';
+// Access control: inherits from parent AppSidebar which uses AccessControlledProps,
+// resolveAccessState, accessStyles, data-access-state, and accessReason.
 
+/**
+ * Search input slot for the AppSidebar compound component. Shows a full text
+ * input with keyboard shortcut hint when expanded, and a search icon button
+ * when collapsed.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar.Search
+ *   placeholder="Search navigation..."
+ *   shortcut="Cmd+K"
+ *   value={query}
+ *   onChange={setQuery}
+ * />
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
 export const AppSidebarSearch: React.FC<AppSidebarSearchProps> = ({
   value,
   onChange,
@@ -106,3 +126,6 @@ function SearchIcon() {
     </svg>
   );
 }
+
+/** Props interface for AppSidebarSearch. */
+export interface AppSidebarSearchComponentProps extends AppSidebarSearchProps {}

@@ -341,23 +341,23 @@ const demoSurfaceMeta: Record<
   live: {
     label: 'LIVE',
     badgeClassName:
-      'border-state-success-border/60 bg-[var(--surface-card,rgba(255,255,255,0.85))] text-state-success-text ring-1 ring-[var(--border-subtle)]/20 shadow-[0_14px_28px_-22px_var(--shadow-color,rgba(24,18,68,0.34))]',
+      'border-state-success-border/60 bg-[var(--surface-card,rgba(255,255,255,0.85))] text-state-success-text ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)] shadow-[0_14px_28px_-22px_var(--shadow-color,rgba(24,18,68,0.34))]',
     panelClassName:
-      'border-state-success-border/30 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(243,253,247,0.92)))] shadow-[0_20px_42px_-28px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[var(--border-subtle)]/20',
+      'border-state-success-border/30 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(243,253,247,0.92)))] shadow-[0_20px_42px_-28px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)]',
   },
   reference: {
     label: 'REFERENCE',
     badgeClassName:
-      'border-border-subtle bg-[var(--surface-card,rgba(255,255,255,0.82))] text-text-secondary ring-1 ring-[var(--border-subtle)]/20 shadow-[0_14px_28px_-22px_var(--shadow-color,rgba(24,18,68,0.24))]',
+      'border-border-subtle bg-[var(--surface-card,rgba(255,255,255,0.82))] text-text-secondary ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)] shadow-[0_14px_28px_-22px_var(--shadow-color,rgba(24,18,68,0.24))]',
     panelClassName:
-      'border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,243,250,0.9)))] shadow-[0_20px_42px_-28px_var(--shadow-color,rgba(24,18,68,0.2))] ring-1 ring-[var(--border-subtle)]/20',
+      'border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,243,250,0.9)))] shadow-[0_20px_42px_-28px_var(--shadow-color,rgba(24,18,68,0.2))] ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)]',
   },
   recipe: {
     label: 'RECIPE',
     badgeClassName:
-      'border-state-warning-border/60 bg-[var(--surface-card,rgba(255,255,255,0.85))] text-state-warning-text ring-1 ring-[var(--border-subtle)]/20 shadow-[0_14px_28px_-22px_var(--shadow-color,rgba(24,18,68,0.34))]',
+      'border-state-warning-border/60 bg-[var(--surface-card,rgba(255,255,255,0.85))] text-state-warning-text ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)] shadow-[0_14px_28px_-22px_var(--shadow-color,rgba(24,18,68,0.34))]',
     panelClassName:
-      'border-state-warning-border/30 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,248,239,0.92)))] shadow-[0_20px_42px_-28px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[var(--border-subtle)]/20',
+      'border-state-warning-border/30 bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(255,248,239,0.92)))] shadow-[0_20px_42px_-28px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)]',
   },
 };
 
@@ -804,7 +804,7 @@ const PreviewWorkspace: React.FC<{
 
     return (
       <div className="flex flex-col gap-5">
-        <div className="relative overflow-hidden rounded-[26px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,244,252,0.92)))] p-4 shadow-[0_22px_48px_-30px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[var(--border-subtle)]/20">
+        <div className="relative overflow-hidden rounded-[26px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(246,244,252,0.92)))] p-4 shadow-[0_22px_48px_-30px_var(--shadow-color,rgba(24,18,68,0.24))] ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)]">
           <div aria-hidden="true" className="pointer-events-none absolute inset-x-6 top-0 h-12 rounded-b-[28px] bg-linear-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] to-transparent" />
           <div className="relative z-[1] flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
             <div className="flex flex-wrap gap-2">
@@ -846,7 +846,7 @@ const PreviewWorkspace: React.FC<{
               </div>
             ))
           ) : (
-            <div className="rounded-[24px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,243,250,0.92)))] p-5 shadow-[0_18px_40px_-28px_var(--shadow-color,rgba(24,18,68,0.22))] ring-1 ring-[var(--border-subtle)]/20">
+            <div className="rounded-[24px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.96),rgba(244,243,250,0.92)))] p-5 shadow-[0_18px_40px_-28px_var(--shadow-color,rgba(24,18,68,0.22))] ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)]">
               <Text variant="secondary" className="block leading-7">
                 {emptyMessage}
               </Text>
@@ -858,7 +858,7 @@ const PreviewWorkspace: React.FC<{
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[30px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,242,250,0.92)))] p-5 shadow-[0_28px_64px_-34px_var(--shadow-color,rgba(24,18,68,0.3))] ring-1 ring-[var(--border-subtle)]/20">
+    <div className="relative overflow-hidden rounded-[30px] border border-border-subtle bg-[var(--surface-card,linear-gradient(180deg,rgba(255,255,255,0.98),rgba(244,242,250,0.92)))] p-5 shadow-[0_28px_64px_-34px_var(--shadow-color,rgba(24,18,68,0.3))] ring-1 ring-[color-mix(in_oklab,var(--border-subtle)_20%,transparent)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-8 top-0 h-16 rounded-b-[34px] bg-linear-to-b from-[var(--surface-card,rgba(255,255,255,0.9))] via-[var(--surface-card,rgba(255,255,255,0.4))] to-transparent" />
       <div className="relative z-[1] flex flex-col gap-4 border-b border-border-subtle/80 pb-4 xl:flex-row xl:items-start xl:justify-between">
         <div>

@@ -73,19 +73,36 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
+        oneOf: [
           {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                config: false,
-                plugins: [
-                  ['@tailwindcss/postcss', {}],
-                ],
+            // TW4 entry CSS — bypass css-loader, inject raw PostCSS output
+            resourceQuery: /\?tw/,
+            use: [
+              'style-loader',
+              {
+                loader: 'postcss-loader',
+                options: {
+                  postcssOptions: {
+                    plugins: [['@tailwindcss/postcss', {}]],
+                  },
+                },
               },
-            },
+            ],
+          },
+          {
+            // Regular CSS — standard pipeline
+            use: [
+              'style-loader',
+              'css-loader',
+              {
+                loader: 'postcss-loader',
+                options: {
+                  postcssOptions: {
+                    plugins: [['@tailwindcss/postcss', {}]],
+                  },
+                },
+              },
+            ],
           },
         ],
       },

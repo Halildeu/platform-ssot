@@ -9,7 +9,7 @@ export const focusRing = {
   style: "solid",
   /* Utility class */
   class:
-    "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2",
+    "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_30%,transparent)] focus-visible:ring-offset-2",
 } as const;
 
 export type FocusRingKey = keyof typeof focusRing;

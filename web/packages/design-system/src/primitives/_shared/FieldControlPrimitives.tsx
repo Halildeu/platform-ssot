@@ -101,7 +101,7 @@ export const getFieldInputClass = (
   density: FieldDensity = "comfortable",
 ) =>
   cn(
-    "min-w-0 flex-1 border-0 bg-transparent p-0 text-text-primary placeholder:text-[var(--text-disabled)]/90 focus:outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:text-[var(--text-disabled)]",
+    "min-w-0 flex-1 border-0 bg-transparent p-0 text-text-primary placeholder:text-[color-mix(in_oklab,var(--text-disabled)_90%,transparent)] focus:outline-hidden focus:ring-0 disabled:cursor-not-allowed disabled:text-[var(--text-disabled)]",
     fieldInputTextClass[size],
     density === "compact" ? "leading-5" : undefined,
     className,

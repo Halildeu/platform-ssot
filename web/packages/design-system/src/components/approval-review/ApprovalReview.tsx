@@ -59,7 +59,7 @@ export interface ApprovalReviewProps extends AccessControlledProps {
 }
 
 const approvalReviewSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[color-mix(in_oklab,var(--border-subtle)_40%,transparent)] before:to-transparent";
 
 export const ApprovalReview = React.forwardRef<HTMLElement, ApprovalReviewProps>(({
   title = "Approval review",

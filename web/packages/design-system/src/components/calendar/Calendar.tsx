@@ -714,7 +714,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                                   !isSelected &&
                                   !isStart &&
                                   !isEnd &&
-                                  "bg-[var(--action-primary-bg)]/10 rounded-none",
+                                  "bg-[color-mix(in_oklab,var(--action-primary-bg)_10%,transparent)] rounded-none",
                                 isStart && inRange && "rounded-r-none",
                                 isEnd && inRange && "rounded-l-none",
                                 // Disabled

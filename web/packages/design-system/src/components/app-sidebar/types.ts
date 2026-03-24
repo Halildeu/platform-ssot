@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { AccessControlledProps } from '../../internal/access-controller';
 
 /* ------------------------------------------------------------------ */
 /*  Sidebar mode                                                       */
@@ -43,7 +44,7 @@ export interface SidebarContextValue {
 /*  Component props                                                    */
 /* ------------------------------------------------------------------ */
 
-export interface AppSidebarProps {
+export interface AppSidebarProps extends AccessControlledProps {
   /** Initial sidebar mode. @default 'expanded' */
   defaultMode?: SidebarMode;
   /** localStorage key used to persist the sidebar state. */

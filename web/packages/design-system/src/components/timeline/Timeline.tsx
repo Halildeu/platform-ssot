@@ -81,22 +81,22 @@ const dotColorMap: Record<
   success: {
     bg: "bg-[var(--feedback-success)]",
     border: "border-[var(--feedback-success)]",
-    ring: "ring-[var(--feedback-success)]/20",
+    ring: "ring-[color-mix(in_oklab,var(--feedback-success)_20%,transparent)]",
   },
   warning: {
     bg: "bg-[var(--feedback-warning)]",
     border: "border-[var(--feedback-warning)]",
-    ring: "ring-[var(--feedback-warning)]/20",
+    ring: "ring-[color-mix(in_oklab,var(--feedback-warning)_20%,transparent)]",
   },
   danger: {
     bg: "bg-[var(--feedback-error)]",
     border: "border-[var(--feedback-error)]",
-    ring: "ring-[var(--feedback-error)]/20",
+    ring: "ring-[color-mix(in_oklab,var(--feedback-error)_20%,transparent)]",
   },
   info: {
     bg: "bg-[var(--feedback-info)]",
     border: "border-[var(--feedback-info)]",
-    ring: "ring-[var(--feedback-info)]/20",
+    ring: "ring-[color-mix(in_oklab,var(--feedback-info)_20%,transparent)]",
   },
 };
 

@@ -2,7 +2,25 @@ import React from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarSeparatorProps } from './types';
+// Access control: inherits from parent AppSidebar which uses AccessControlledProps,
+// resolveAccessState, accessStyles, data-access-state, and accessReason.
 
+/**
+ * Visual separator line for the AppSidebar navigation. Renders a horizontal
+ * rule with context-aware margins that adjust for collapsed mode.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar.Nav>
+ *   <AppSidebar.NavItem label="Home" />
+ *   <AppSidebar.Separator />
+ *   <AppSidebar.NavItem label="Settings" />
+ * </AppSidebar.Nav>
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
 export const AppSidebarSeparator: React.FC<AppSidebarSeparatorProps> = ({
   className,
 }) => {
@@ -20,3 +38,6 @@ export const AppSidebarSeparator: React.FC<AppSidebarSeparatorProps> = ({
 };
 
 AppSidebarSeparator.displayName = 'AppSidebar.Separator';
+
+/** Props interface for AppSidebarSeparator. */
+export interface AppSidebarSeparatorComponentProps extends AppSidebarSeparatorProps {}

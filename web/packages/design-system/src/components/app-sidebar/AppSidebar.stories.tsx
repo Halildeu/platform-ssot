@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { expect, within, userEvent } from '@storybook/test';
 import { AppSidebar } from './AppSidebar';
 
 /* ------------------------------------------------------------------ */
@@ -54,6 +55,13 @@ const meta: Meta<typeof AppSidebar> = {
   parameters: {
     layout: 'fullscreen',
   },
+  argTypes: {
+    defaultMode: { control: 'select', options: ['expanded', 'collapsed'], description: 'Initial sidebar mode' },
+    collapsedWidth: { control: 'number', description: 'Width when collapsed (px)' },
+    expandedWidth: { control: 'number', description: 'Width when expanded (px)' },
+    resizable: { control: 'boolean', description: 'Enable drag-to-resize' },
+    className: { control: 'text', description: 'Additional CSS class' },
+  },
   decorators: [
     (Story) => (
       <div style={{ height: 600, display: 'flex', background: 'var(--surface-canvas, #f5f5f5)' }}>
@@ -91,6 +99,14 @@ export const Default: Story = {
       </AppSidebar.Footer>
     </AppSidebar>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sidebar = canvas.getByLabelText('Sidebar');
+    await expect(sidebar).toBeInTheDocument();
+    const trigger = canvas.getByLabelText('Collapse sidebar');
+    await userEvent.click(trigger);
+    await expect(sidebar).toHaveAttribute('data-state', 'collapsed');
+  },
 };
 
 /* ================================================================== */

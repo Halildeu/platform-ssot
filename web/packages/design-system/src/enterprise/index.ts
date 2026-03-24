@@ -55,6 +55,8 @@ export { ThemeLayout } from './ThemeLayout';
 
 // Process & Flow
 export { ProcessFlow } from './ProcessFlow';
+export { FlowBuilder } from './FlowBuilder';
+export type { FlowBuilderProps, FlowNode, FlowEdge, FlowNodeType } from './FlowBuilder';
 export { ValueStream } from './ValueStream';
 
 // Status & Timeline

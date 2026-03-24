@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { cn } from '../../utils/cn';
+import {
+  resolveAccessState,
+  accessStyles,
+  type AccessControlledProps,
+} from '../../internal/access-controller';
 import { SidebarContext } from './useSidebar';
 import { AppSidebarHeader } from './AppSidebarHeader';
 import { AppSidebarNav } from './AppSidebarNav';
@@ -44,6 +49,26 @@ function writeStoredMode(key: string | undefined, mode: SidebarMode): void {
 /*  AppSidebar root                                                    */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Composable, collapsible sidebar compound component with header, nav,
+ * search, groups, sections, resizer, and footer slots. Persists state
+ * to localStorage, auto-collapses on mobile, and supports keyboard
+ * navigation, drag-to-resize, and nested nav items up to 3 levels.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar defaultMode="expanded" storageKey="my-sidebar">
+ *   <AppSidebar.Header title="App" action={<AppSidebar.Trigger />} />
+ *   <AppSidebar.Nav>
+ *     <AppSidebar.NavItem icon={<HomeIcon />} label="Home" active />
+ *   </AppSidebar.Nav>
+ *   <AppSidebar.Footer><span>v1.0</span></AppSidebar.Footer>
+ * </AppSidebar>
+ * ```
+ *
+ * @since 1.0.0
+ * @see useSidebar
+ */
 const AppSidebarRoot: React.FC<AppSidebarProps> = ({
   defaultMode = 'expanded',
   storageKey,
@@ -53,9 +78,15 @@ const AppSidebarRoot: React.FC<AppSidebarProps> = ({
   resizeStorageKey = 'sidebar-width',
   minWidth = 200,
   maxWidth = 500,
+  access,
+  accessReason,
   className,
   children,
 }) => {
+  const { state: accessState, isHidden } = resolveAccessState(access);
+
+  /* Access control — hidden guard */
+  if (isHidden) return null;
   const [mode, setMode] = useState<SidebarMode>(
     () => readStoredMode(storageKey) ?? defaultMode,
   );
@@ -146,12 +177,15 @@ const AppSidebarRoot: React.FC<AppSidebarProps> = ({
       <aside
         data-sidebar=""
         data-state={mode}
+        data-access-state={accessState}
         aria-label="Sidebar"
-        style={{ width, position: 'relative' }}
+        title={accessReason}
+        style={{ width: width > 2000 ? '100%' : width, position: 'relative' }}
         className={cn(
           'flex h-full flex-col',
           'bg-[var(--surface-default)] border-r border-[var(--border-subtle)]',
           resizeState.isResizing ? '' : 'transition-all duration-200',
+          accessStyles(accessState),
           className,
         )}
       >

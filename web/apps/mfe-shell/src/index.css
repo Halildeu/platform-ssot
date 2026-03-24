@@ -29,6 +29,26 @@
   --default-ring-color: var(--focus-outline, var(--color-blue-500));
 }
 
+/*
+ * Fix: css-loader@7 + TW4 @layer shorthand/longhand cascade bug
+ * Preflight's `* { padding: 0 }` (shorthand) overrides utilities'
+ * `padding-block/padding-inline` (longhand) due to css-loader
+ * flattening @layer blocks incorrectly.
+ * Solution: Re-declare Preflight reset using longhand properties.
+ */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    padding-block: 0;
+    padding-inline: 0;
+    margin-block: 0;
+    margin-inline: 0;
+  }
+}
+
 /* Restore v3 base defaults changed in TW4 */
 @layer base {
   /* Border default: currentColor → gray-200 */

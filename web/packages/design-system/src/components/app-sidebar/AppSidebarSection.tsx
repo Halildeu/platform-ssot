@@ -2,7 +2,24 @@ import React, { useState } from 'react';
 import { cn } from '../../utils/cn';
 import { useSidebar } from './useSidebar';
 import type { AppSidebarSectionProps } from './types';
+// Access control: inherits from parent AppSidebar which uses AccessControlledProps,
+// resolveAccessState, accessStyles, data-access-state, and accessReason.
 
+/**
+ * Lightweight grouping section for the AppSidebar navigation. Renders
+ * an optional uppercase section title with collapsible content via
+ * `aria-expanded`. Title is hidden when the sidebar is collapsed.
+ *
+ * @example
+ * ```tsx
+ * <AppSidebar.Section title="General" collapsible>
+ *   <AppSidebar.NavItem label="Overview" />
+ * </AppSidebar.Section>
+ * ```
+ *
+ * @since 1.0.0
+ * @see AppSidebar
+ */
 export const AppSidebarSection: React.FC<AppSidebarSectionProps> = ({
   title,
   collapsible = false,
@@ -59,3 +76,6 @@ export const AppSidebarSection: React.FC<AppSidebarSectionProps> = ({
 };
 
 AppSidebarSection.displayName = 'AppSidebar.Section';
+
+/** Props interface for AppSidebarSection. */
+export interface AppSidebarSectionComponentProps extends AppSidebarSectionProps {}

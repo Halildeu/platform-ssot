@@ -172,7 +172,7 @@ const appearanceStyles: Record<
     container: "border border-[var(--segmented-border,var(--border-subtle))] p-1",
     active: cn(
       "border border-[var(--segmented-active-border,var(--action-primary))]",
-      "bg-[var(--segmented-active-bg,var(--action-primary))]/10",
+      "bg-[color-mix(in_oklab,var(--segmented-active-bg,var(--action-primary))_10%,transparent)]",
       "text-[var(--segmented-active-text,var(--action-primary))]",
     ),
     inactive: cn(

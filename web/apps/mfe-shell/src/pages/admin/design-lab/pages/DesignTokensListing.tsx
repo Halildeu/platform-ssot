@@ -116,7 +116,7 @@ const TOKEN_GROUPS = [
   {
     id: "shadows",
     icon: <Sun className="h-5 w-5" />,
-    gradient: "from-[var(--text-subtle)]/10 to-[var(--text-subtle)]/5",
+    gradient: "from-[color-mix(in_oklab,var(--text-subtle)_10%,transparent)] to-[color-mix(in_oklab,var(--text-subtle)_5%,transparent)]",
     iconBg: "bg-[var(--surface-muted)] text-[var(--text-secondary)]",
     count: "12",
     preview: (
