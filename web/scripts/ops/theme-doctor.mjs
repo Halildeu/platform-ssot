@@ -559,7 +559,32 @@ check('forward-ref', 'forwardRef on interactive primitives', () => {
   };
 });
 
-// 17. Undefined Tailwind class prefixes (ds-*, tw-*, etc.)
+// 17. @source coverage — all workspace packages included in TW4 content scanning
+check('tw4-source-coverage', 'TW4 @source covers all workspace packages', () => {
+  const indexCss = readSafe(SHELL_INDEX_CSS);
+  const sourceMatches = indexCss.match(/@source\s+"([^"]+)"/g) || [];
+  const sourcePaths = sourceMatches.map(s => s.match(/"([^"]+)"/)?.[1] || '');
+
+  /* Expected packages that use Tailwind classes */
+  const expectedPackages = ['design-system', 'x-form-builder', 'x-charts', 'x-data-grid', 'x-editor', 'x-kanban', 'x-scheduler', 'blocks'];
+  const expectedApps = ['mfe-suggestions', 'mfe-ethic', 'mfe-users', 'mfe-access', 'mfe-audit', 'mfe-reporting'];
+
+  const missing = [];
+  for (const pkg of [...expectedPackages, ...expectedApps]) {
+    const found = sourcePaths.some(p => p.includes(pkg));
+    if (!found) missing.push(pkg);
+  }
+
+  if (missing.length === 0) return { status: 'pass', message: `${sourcePaths.length} @source directives cover all ${expectedPackages.length + expectedApps.length} workspace entries` };
+  return {
+    status: 'fail',
+    message: `${missing.length} workspace packages missing from @source — their Tailwind classes won't be generated`,
+    details: missing,
+    fix: FIX_HINT ? 'Add @source "../../../packages/<pkg>/src/**/*.{ts,tsx}"; to apps/mfe-shell/src/index.css' : undefined,
+  };
+});
+
+// 18. Undefined Tailwind class prefixes (ds-*, tw-*, etc.)
 check('undefined-tw-prefix', 'Undefined Tailwind class prefixes in production TSX', () => {
   const scanDirs = ['apps', 'packages/design-system/src', 'packages/x-form-builder/src', 'packages/x-charts/src', 'packages/x-data-grid/src', 'packages/x-editor/src', 'packages/x-kanban/src', 'packages/x-scheduler/src', 'packages/blocks/src'];
   /* Known valid prefixes in TW4 @theme: text-, bg-, border-, ring-, divide-, shadow-, outline-
@@ -764,7 +789,7 @@ check('tw4-hidden-priority', 'TW4 hidden attribute priority change', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '3.1.0',
+    version: '3.2.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -773,7 +798,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║              🩺 Theme Doctor v3.1 (23 checks)               ║');
+  console.log('║              🩺 Theme Doctor v3.2 (24 checks)               ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

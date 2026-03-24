@@ -2,6 +2,13 @@
 
 /* Content scanning for monorepo — TW4 native @source */
 @source "../../../packages/design-system/src/**/*.{ts,tsx}";
+@source "../../../packages/x-form-builder/src/**/*.{ts,tsx}";
+@source "../../../packages/x-charts/src/**/*.{ts,tsx}";
+@source "../../../packages/x-data-grid/src/**/*.{ts,tsx}";
+@source "../../../packages/x-editor/src/**/*.{ts,tsx}";
+@source "../../../packages/x-kanban/src/**/*.{ts,tsx}";
+@source "../../../packages/x-scheduler/src/**/*.{ts,tsx}";
+@source "../../../packages/blocks/src/**/*.{ts,tsx}";
 @source "../../mfe-suggestions/src/**/*.{ts,tsx}";
 @source "../../mfe-ethic/src/**/*.{ts,tsx}";
 @source "../../mfe-users/src/**/*.{ts,tsx}";
