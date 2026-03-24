@@ -15,6 +15,7 @@ import React, {
 } from "react";
 import type { ThemeAxes, ThemeAppearance, ThemeDensity } from "../theme/core/semantic-theme";
 import { DEFAULT_THEME_AXES, THEME_ATTRIBUTE_MAP } from "../theme/core/semantic-theme";
+import { resolveThemeModeKey } from "../theme/core/theme-contract";
 
 /* ---------- Storage ---------- */
 
@@ -51,6 +52,7 @@ function applyAxesToDom(axes: ThemeAxes) {
 
   const isDark = axes.appearance === "dark" || axes.appearance === "high-contrast";
   root.setAttribute("data-mode", isDark ? "dark" : "light");
+  root.setAttribute("data-theme", resolveThemeModeKey(axes));
   root.style.setProperty("--overlay-intensity", String(axes.overlayIntensity));
   root.style.setProperty("--overlay-opacity", (axes.overlayOpacity / 100).toString());
 }
