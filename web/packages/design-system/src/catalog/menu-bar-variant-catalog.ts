@@ -151,7 +151,7 @@ export const menuBarVariantCatalog: MenuBarVariantDescriptor[] = [
     cluster: 'header_shells',
     name: 'Account Utility Cluster',
     description:
-      'Bildirim, rol ve hesap alanlarini ust barda toplayan urun shell recipe'i. Dense admin yuzeylerinde daginik utility hissini azaltir.',
+      `Bildirim, rol ve hesap alanlarini ust barda toplayan urun shell recipe’i. Dense admin yuzeylerinde daginik utility hissini azaltir.`,
     badges: ['ACCOUNT', 'UTILITY', 'ADMIN'],
     modes: ['account cluster', 'notification shell', 'product header'],
     benchmarkPrimary: ['MUI Toolbar', 'Ant Design Menu'],
@@ -256,7 +256,7 @@ export const menuBarVariantCatalog: MenuBarVariantDescriptor[] = [
     cluster: 'governance_and_access',
     name: 'Theme Contrast',
     description:
-      'Ayni primitive'in tema ve kontrast davranisini gosteren varyant. Farkli renk duzenlerinde okunurlugu ve buton ritmini test eder.',
+      'Ayni primitive’in tema ve kontrast davranisini gosteren varyant. Farkli renk duzenlerinde okunurlugu ve buton ritmini test eder.',
     badges: ['THEME', 'CONTRAST', 'VISUAL'],
     modes: ['theme stress', 'contrast shell', 'visual QA'],
     benchmarkPrimary: ['MUI Toolbar', 'Ant Design Menu'],

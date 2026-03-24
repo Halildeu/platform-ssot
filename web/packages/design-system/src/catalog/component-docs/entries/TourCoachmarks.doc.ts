@@ -13,7 +13,7 @@ const entry: DesignLabComponentDocEntry = {
   "taxonomyGroupId": "overlays_portals",
   "taxonomySubgroup": "Tour / Coachmarks",
   "demoMode": "live",
-  "description": "TourCoachmarks guided onboarding ve compliance walkthrough akislari icin overlay extension primitive'i.",
+  "description": "TourCoachmarks guided onboarding ve compliance walkthrough akislari icin overlay extension primitive’i.",
   "sectionIds": [
     "component_library_management",
     "overlay_components",

@@ -13,7 +13,7 @@ const entry: DesignLabComponentDocEntry = {
   "taxonomyGroupId": "overlays_portals",
   "taxonomySubgroup": "Context menu",
   "demoMode": "live",
-  "description": "ContextMenu action ve right-click akislari icin overlay extension primitive'i.",
+  "description": "ContextMenu action ve right-click akislari icin overlay extension primitive’i.",
   "sectionIds": [
     "utility_components",
     "integration_distribution",

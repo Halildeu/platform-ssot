@@ -76,7 +76,7 @@ export const buildTabsFeedbackShowcaseSections = (
           id: 'tabs-manual-router-review',
           eyebrow: 'Activation semantics',
           title: 'Manual activation ve non-loop review',
-          description: 'React Aria ve Base UI benchmark'ina yakin, router-aware ama kontrollu klavye aktivasyonlu sekme davranisini gosterir.',
+          description: 'React Aria ve Base UI benchmark’ina yakin, router-aware ama kontrollu klavye aktivasyonlu sekme davranisini gosterir.',
           badges: ['manual', 'router-aware', 'non-loop'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">

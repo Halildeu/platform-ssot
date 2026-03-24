@@ -95,7 +95,7 @@ const common = {
   'shell.theme.panel.noEditableRegistry': 'Düzenlenebilir registry alanı bulunamadı.',
   'shell.theme.panel.colorInputPlaceholder': '#rrggbb veya rgba(...)',
   'shell.theme.panel.colorPickerAria': '{label} renk seç',
-  'shell.theme.panel.clearOverride': 'Override'ı kaldır',
+  'shell.theme.panel.clearOverride': 'Override’ı kaldır',
 
   // Login / register
   'auth.login.title': 'Giriş Yap',

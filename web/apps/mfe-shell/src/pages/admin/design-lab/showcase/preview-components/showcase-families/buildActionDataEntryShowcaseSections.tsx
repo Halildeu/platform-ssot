@@ -179,7 +179,7 @@ export const buildActionDataEntryShowcaseSections = (
           id: 'button-decision-footer-lane',
           eyebrow: 'Decision footers',
           title: 'Karar footer aksiyonları',
-          description: 'Modal, drawer ve review footer'larında birincil ve ikincil aksiyon ayrımını daha sakin bir düzenle gösterir.',
+          description: 'Modal, drawer ve review footer’larında birincil ve ikincil aksiyon ayrımını daha sakin bir düzenle gösterir.',
           badges: ['footer', 'decision', 'handoff'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
@@ -194,7 +194,7 @@ export const buildActionDataEntryShowcaseSections = (
               </PreviewPanel>
               <PreviewPanel title="Yorum">
                 <Text variant="secondary" className="block leading-7">
-                  Footer aksiyonlarinda destructive veya primary karari en saga sabitlemek, enterprise shell'lerde karar hizini artirir.
+                  Footer aksiyonlarinda destructive veya primary karari en saga sabitlemek, enterprise shell’lerde karar hizini artirir.
                 </Text>
               </PreviewPanel>
             </div>
@@ -397,7 +397,7 @@ export const buildActionDataEntryShowcaseSections = (
               </PreviewPanel>
               <PreviewPanel title="Kural">
                 <Text variant="secondary" className="block leading-7">
-                  Birden fazla select yan yana kullanildiginda her birinin label ve helper'ini koruyup CTA'yi sonda tutmak daha okunabilir bir ownership shell'i verir.
+                  Birden fazla select yan yana kullanildiginda her birinin label ve helper’ini koruyup CTA’yi sonda tutmak daha okunabilir bir ownership shell’i verir.
                 </Text>
               </PreviewPanel>
             </div>
@@ -407,7 +407,7 @@ export const buildActionDataEntryShowcaseSections = (
           id: 'select-stateful-compact-stack',
           eyebrow: 'Compact stacks',
           title: 'Durum odakli compact stack',
-          description: 'Badge, helper ve readonly/clearable davranislarini daha yogun bir decision stack'te birlikte gosterir.',
+          description: 'Badge, helper ve readonly/clearable davranislarini daha yogun bir decision stack’te birlikte gosterir.',
           badges: ['compact', 'stateful', 'stack'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
@@ -472,7 +472,7 @@ export const buildActionDataEntryShowcaseSections = (
               <PreviewPanel title="Searchable combobox">
                 <Combobox
                   label="Owner"
-                  description="Arama, keyword ve daha zengin popup anatomy'si gerektiginde combobox'a gec."
+                  description="Arama, keyword ve daha zengin popup anatomy’si gerektiginde combobox'a gec."
                   defaultValue="governance"
                   defaultInputValue="Governance desk"
                   options={[
@@ -777,7 +777,7 @@ export const buildActionDataEntryShowcaseSections = (
               </PreviewPanel>
               <PreviewPanel title="Yorum">
                 <Text variant="secondary" className="block leading-7">
-                  Inline edit shell'lerinde ust alanlari kisa tutup helper'lari ikinci satira almak, uzun form hissini azaltir.
+                  Inline edit shell’lerinde ust alanlari kisa tutup helper’lari ikinci satira almak, uzun form hissini azaltir.
                 </Text>
               </PreviewPanel>
             </div>
@@ -959,7 +959,7 @@ export const buildActionDataEntryShowcaseSections = (
           id: 'filter-bar-saved-view-stack',
           eyebrow: 'Saved views',
           title: 'Kaydedilmis gorunum satiri',
-          description: 'View secimi, arama ve owner filtresini tek saved-view shell'i icinde toplar.',
+          description: 'View secimi, arama ve owner filtresini tek saved-view shell’i icinde toplar.',
           badges: ['saved-view', 'owner', 'toolbar'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
@@ -990,7 +990,7 @@ export const buildActionDataEntryShowcaseSections = (
               </PreviewPanel>
               <PreviewPanel title="Not">
                 <Text variant="secondary" className="block leading-7">
-                  Saved-view shell'lerinde ilk secim gorunumu acmak, geri kalan filter alanlarini ikincil tutmak daha net bir bilgi mimarisi verir.
+                  Saved-view shell’lerinde ilk secim gorunumu acmak, geri kalan filter alanlarini ikincil tutmak daha net bir bilgi mimarisi verir.
                 </Text>
               </PreviewPanel>
             </div>
@@ -1000,7 +1000,7 @@ export const buildActionDataEntryShowcaseSections = (
           id: 'filter-bar-compliance-queue',
           eyebrow: 'Compliance queue',
           title: 'Compliance filtre satiri',
-          description: 'Policy state, evidence readiness ve owner filtrelerini tek governance toolbar'inda toplar.',
+          description: 'Policy state, evidence readiness ve owner filtrelerini tek governance toolbar’inda toplar.',
           badges: ['compliance', 'evidence', 'queue'],
           content: (
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
@@ -1035,7 +1035,7 @@ export const buildActionDataEntryShowcaseSections = (
                 <LibraryMetricCard
                   label="Queue state"
                   value={dropdownAction}
-                  note="Saved view, waiver ve evidence filtreleri ayni toolbar shell'inde birlesiyor."
+                  note="Saved view, waiver ve evidence filtreleri ayni toolbar shell’inde birlesiyor."
                 />
               </PreviewPanel>
             </div>

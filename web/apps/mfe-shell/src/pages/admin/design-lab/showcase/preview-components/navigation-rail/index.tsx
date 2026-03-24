@@ -133,7 +133,7 @@ const NavigationRailRouteAwarePanel = () => (
         Route aware preset
       </Text>
       <Text variant="secondary" className="mt-2 block text-sm leading-6">
-        Helper adapter, preset export ve currentPath secimi birlikte calisir; canonical side navigation contract'i budur.
+        Helper adapter, preset export ve currentPath secimi birlikte calisir; canonical side navigation contract’i budur.
       </Text>
     </div>
   </div>
@@ -201,7 +201,7 @@ export const buildNavigationRailShowcaseSections = (
       id: 'navigationrail-route-aware',
       eyebrow: 'Pattern 03',
       title: 'Route aware preset',
-      description: 'Preset helper, route adapter ve currentPath secimi birlikte canonical navigation contract'i kurar.',
+      description: 'Preset helper, route adapter ve currentPath secimi birlikte canonical navigation contract’i kurar.',
       badges: ['reference', 'route-aware', 'preset'],
       content: (
         <PreviewPanel title="Route aware preset" kind="reference">

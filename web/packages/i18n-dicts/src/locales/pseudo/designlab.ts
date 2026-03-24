@@ -77,7 +77,7 @@ const pseudo = {
   "designlab.sidebar.help.components":
     "Brówsé thé sámé tréé thróúgh fóúñdátíóñs, çómpóñéñts, flóws, págés, ÁÍ éxpéríéñçés áñd góvérñáñçé séçtíóñs.",
   "designlab.sidebar.help.recipes":
-    "Fíltér réçípé fámílíés wíth thé sámé systém séçtíóñs. Thé bádgé óñ éáçh çárd shóws thé réçípé's sémáñtíç hómé, whílé thé séléçtéd séçtíóñ ábóvé shóws thé víéw yóú áré çúrréñtly brówsíñg.",
+    "Fíltér réçípé fámílíés wíth thé sámé systém séçtíóñs. Thé bádgé óñ éáçh çárd shóws thé réçípé’s sémáñtíç hómé, whílé thé séléçtéd séçtíóñ ábóvé shóws thé víéw yóú áré çúrréñtly brówsíñg.",
   "designlab.sidebar.help.pages":
     "Brówsé págé fámílíés áñd témplátés ás théír ówñ léñs. Thís láyér shóúld stày témpláté-fírst íñstéád óf úsíñg réçípé wórdíñg.",
   "designlab.sidebar.tooltip.components": "Désígñ Systém Éxplórér hélp",

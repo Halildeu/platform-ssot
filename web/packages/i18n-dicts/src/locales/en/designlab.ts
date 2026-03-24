@@ -81,7 +81,7 @@ const designlab = {
   "designlab.sidebar.help.components":
     "Browse the same tree through foundations, components, flows, pages, AI experiences and governance sections.",
   "designlab.sidebar.help.recipes":
-    "Filter recipe families with the same system sections. The badge on each card shows the recipe's semantic home, while the selected section above shows the view you are currently browsing.",
+    "Filter recipe families with the same system sections. The badge on each card shows the recipe’s semantic home, while the selected section above shows the view you are currently browsing.",
   "designlab.sidebar.help.pages":
     "Browse page families and templates as their own lens. This layer should stay template-first instead of inheriting recipe wording.",
   "designlab.sidebar.title.ecosystem": "Extension catalog",

@@ -357,8 +357,8 @@ const buildInteractiveVariantConfig = (
               { key: 'density', label: t('Density tokens', 'Density tokens'), groupLabel: t('Layout', 'Layout'), description: t('Compact ve comfortable ritimler', 'Compact and comfortable rhythms') },
             ],
           },
-          { value: 'recipes', label: t('Recipe'ler', 'Recipes'), href: '/library/recipes', icon: <BookOpen className={iconClassName} />, overflowPriority: 8, group: 'secondary' },
-          { value: 'patterns', label: t('Pattern'ler', 'Patterns'), href: '/library/patterns', icon: <Sparkles className={iconClassName} />, overflowPriority: 7, group: 'secondary' },
+          { value: 'recipes', label: t('Recipe’ler', 'Recipes'), href: '/library/recipes', icon: <BookOpen className={iconClassName} />, overflowPriority: 8, group: 'secondary' },
+          { value: 'patterns', label: t('Pattern’ler', 'Patterns'), href: '/library/patterns', icon: <Sparkles className={iconClassName} />, overflowPriority: 7, group: 'secondary' },
           { value: 'docs', label: 'Docs', href: '/library/docs', icon: <FileText className={iconClassName} />, overflowPriority: 4, group: 'utility', emphasis: 'subtle' },
         ],
         appearance: 'default',
@@ -374,7 +374,7 @@ const buildInteractiveVariantConfig = (
         endSlot: <Badge variant="success">v3.4</Badge>,
         contextTitle: t('Canonical navigation menu', 'Canonical navigation menu'),
         contextDescription: t(
-          'Bilgi kokusu yuksek, route gruplari okunur ve submenu paneli aciklayicidir. Buyuk IA icin menu bar'dan navigation menu hissine gecis verir.',
+          'Bilgi kokusu yuksek, route gruplari okunur ve submenu paneli aciklayicidir. Buyuk IA icin menu bar’dan navigation menu hissine gecis verir.',
           'High information scent, readable route groups, and an explanatory submenu panel. It shifts the menubar toward a true navigation menu for large IA.',
         ),
         contextMetrics: [
@@ -416,7 +416,7 @@ const buildInteractiveVariantConfig = (
           },
           {
             value: 'lanes',
-            label: t('Lane'ler', 'Lanes'),
+            label: t('Lane’ler', 'Lanes'),
             href: '/console/lanes',
             icon: <Workflow className={iconClassName} />,
             overflowPriority: 9,
@@ -935,7 +935,7 @@ const buildInteractiveVariantConfig = (
           { value: 'overview', label: t('Genel Bakış', 'Overview'), href: '/ops/overview', icon: <LayoutDashboard className={iconClassName} />, group: 'primary', keywords: ['summary', 'overview'] },
           {
             value: 'lanes',
-            label: t('Lane'ler', 'Lanes'),
+            label: t('Lane’ler', 'Lanes'),
             href: '/ops/lanes',
             icon: <Workflow className={iconClassName} />,
             group: 'primary',
@@ -1035,8 +1035,8 @@ const buildInteractiveVariantConfig = (
               { key: 'density', label: t('Density tokens', 'Density tokens'), groupLabel: t('Layout', 'Layout') },
             ],
           },
-          { value: 'recipes', label: t('Recipe'ler', 'Recipes'), href: '/library/recipes', icon: <BookOpen className={iconClassName} />, overflowPriority: 8, group: 'secondary' },
-          { value: 'patterns', label: t('Pattern'ler', 'Patterns'), href: '/library/patterns', icon: <Sparkles className={iconClassName} />, overflowPriority: 7, group: 'secondary' },
+          { value: 'recipes', label: t('Recipe’ler', 'Recipes'), href: '/library/recipes', icon: <BookOpen className={iconClassName} />, overflowPriority: 8, group: 'secondary' },
+          { value: 'patterns', label: t('Pattern’ler', 'Patterns'), href: '/library/patterns', icon: <Sparkles className={iconClassName} />, overflowPriority: 7, group: 'secondary' },
           { value: 'releases', label: t('Sürümler', 'Releases'), href: '/library/releases', icon: <Rocket className={iconClassName} />, overflowPriority: 5, group: 'utility', emphasis: 'subtle' },
           { value: 'docs', label: 'Docs', href: '/library/docs', icon: <FileText className={iconClassName} />, overflowPriority: 4, group: 'utility', emphasis: 'subtle' },
         ],
