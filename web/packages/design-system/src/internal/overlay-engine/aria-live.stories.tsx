@@ -14,6 +14,10 @@ type Story = StoryObj<typeof AriaLiveRegion>;
 
 export const Default: Story = {
   render: () => <AriaLiveRegion />,
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const Polite: Story = {

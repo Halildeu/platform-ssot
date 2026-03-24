@@ -16,6 +16,10 @@ export const Default: Story = {
   args: {
     children: 'Themed content',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const DarkMode: Story = {

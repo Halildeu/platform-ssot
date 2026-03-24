@@ -703,17 +703,42 @@ function buildThemeInlineBlock(colorEntries, aliases) {
   return lines.join('\n') + '\n';
 }
 
+/**
+ * Convert RGB (0-255) to OKLCH color string.
+ * Uses the sRGB → Linear RGB → OKLab → OKLCH pipeline.
+ * TW4 recommends OKLCH for perceptually uniform, wide-gamut colors.
+ */
 function formatColor(r, g, b, a = 1) {
-  const toUnit = (component) => {
-    const clamped = Math.max(0, Math.min(255, component));
-    const unit = clamped / 255;
-    return unit === 0 ? '0' : unit === 1 ? '1' : unit.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
-  };
   const alpha = Math.max(0, Math.min(1, Number.isFinite(a) ? a : 1));
-  const parts = [toUnit(r), toUnit(g), toUnit(b)];
-  const alphaPart =
-    alpha >= 1
-      ? ''
-      : ` / ${Math.round(alpha * 10000) / 100}%`;
-  return `color(srgb ${parts.join(' ')}${alphaPart})`;
+
+  /* sRGB (0-255) → linear RGB (0-1) */
+  const linearize = (c) => {
+    const s = Math.max(0, Math.min(255, c)) / 255;
+    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+  };
+  const lr = linearize(r);
+  const lg = linearize(g);
+  const lb = linearize(b);
+
+  /* Linear RGB → OKLab (Björn Ottosson's method) */
+  const l_ = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+  const m_ = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+  const s_ = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+
+  const L = 0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_;
+  const A = 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_;
+  const B = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_;
+
+  /* OKLab → OKLCH */
+  const C = Math.sqrt(A * A + B * B);
+  let H = (Math.atan2(B, A) * 180) / Math.PI;
+  if (H < 0) H += 360;
+
+  /* Format with appropriate precision */
+  const fmtL = L <= 0 ? '0%' : L >= 1 ? '100%' : `${(L * 100).toFixed(2).replace(/\.?0+$/, '')}%`;
+  const fmtC = C < 0.0005 ? '0' : C.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+  const fmtH = C < 0.0005 ? '0' : H.toFixed(2).replace(/\.?0+$/, '');
+  const alphaPart = alpha >= 1 ? '' : ` / ${(alpha * 100).toFixed(2).replace(/\.?0+$/, '')}%`;
+
+  return `oklch(${fmtL} ${fmtC} ${fmtH}${alphaPart})`;
 }

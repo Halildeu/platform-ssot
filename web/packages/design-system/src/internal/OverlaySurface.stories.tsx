@@ -19,6 +19,10 @@ export const Default: Story = {
     ariaLabel: 'Example overlay',
     children: 'Overlay content',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('button, [role="button"], input, a, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const Closed: Story = {

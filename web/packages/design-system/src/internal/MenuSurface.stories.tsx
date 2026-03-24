@@ -37,7 +37,12 @@ const meta: Meta<typeof MenuSurface> = {
 export default meta;
 type Story = StoryObj<typeof MenuSurface>;
 
-export const Default: Story = {};
+export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('button, [role="button"], input, a, [tabindex]');
+    if (el) (el as HTMLElement).click();
+  },
+};
 
 export const WithDisabledItem: Story = {
   render: () => <div>MenuSurface — variant with disabled menu items</div>,

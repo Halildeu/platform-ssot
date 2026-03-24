@@ -18,6 +18,10 @@ export const Default: Story = {
       <button type="button">Slot renders child with merged props</button>
     </Slot>
   ),
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const WithAnchor: Story = {

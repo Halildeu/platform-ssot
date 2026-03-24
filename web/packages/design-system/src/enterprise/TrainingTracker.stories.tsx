@@ -26,6 +26,10 @@ export const Default: Story = {
   args: {
     items: sampleItems,
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const GroupedByCategory: Story = {

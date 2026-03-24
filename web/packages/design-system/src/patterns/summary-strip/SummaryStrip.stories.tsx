@@ -30,6 +30,10 @@ export const Default: Story = {
     items,
     title: 'Ozet Metrikleri',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const ThreeColumns: Story = {

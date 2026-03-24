@@ -17,6 +17,10 @@ export const Default: Story = {
       (tabs, menus, toolbars).
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const HorizontalNavigation: Story = {

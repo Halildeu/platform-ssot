@@ -38,6 +38,10 @@ export const Default: Story = {
     waits: manufacturingWaits,
     timeUnit: 'minutes',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const HoursUnit: Story = {

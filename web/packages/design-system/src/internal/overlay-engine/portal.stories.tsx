@@ -18,6 +18,10 @@ export const Default: Story = {
       <div>Portaled content rendered at document.body</div>
     </Portal>
   ),
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-component], div, svg');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const WithCustomContainer: Story = {
