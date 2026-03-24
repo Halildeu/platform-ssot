@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { cn } from '../utils/cn';
 import {
   resolveAccessState,
@@ -10,53 +10,28 @@ import {
 // Types
 // ---------------------------------------------------------------------------
 
-/** A single option (column) in the decision matrix. */
 export interface DecisionOption {
-  /** Unique identifier */
   id: string;
-  /** Display name */
   name: string;
 }
 
-/** A criterion (row) with associated weight. */
 export interface DecisionCriterion {
-  /** Unique identifier */
   id: string;
-  /** Display name */
   name: string;
-  /** Relative weight (0-100). Used for weighted total calculation. */
   weight: number;
 }
 
-/** A score for a specific option-criterion pair. */
 export interface DecisionScore {
-  /** References DecisionOption.id */
   optionId: string;
-  /** References DecisionCriterion.id */
   criterionId: string;
-  /** Score value (0 to maxScore) */
   score: number;
 }
 
-/**
- * Props for the DecisionMatrix component.
- *
+/** Props for the DecisionMatrix component.
  * @example
  * ```tsx
- * <DecisionMatrix
- *   options={[{ id: 'a', name: 'Option A' }, { id: 'b', name: 'Option B' }]}
- *   criteria={[{ id: 'c1', name: 'Cost', weight: 40 }, { id: 'c2', name: 'Quality', weight: 60 }]}
- *   scores={[
- *     { optionId: 'a', criterionId: 'c1', score: 8 },
- *     { optionId: 'a', criterionId: 'c2', score: 6 },
- *     { optionId: 'b', criterionId: 'c1', score: 5 },
- *     { optionId: 'b', criterionId: 'c2', score: 9 },
- *   ]}
- *   showWeightedTotals
- *   highlightWinner
- * />
+ * <DecisionMatrix options={[]} criteria={[]} scores={[]} />
  * ```
- *
  * @since 1.0.0
  * @see [Docs](https://design.mfe.dev/components/decision-matrix)
  */
@@ -65,16 +40,18 @@ export interface DecisionMatrixProps extends AccessControlledProps {
   options: DecisionOption[];
   /** Evaluation criteria (table rows) */
   criteria: DecisionCriterion[];
-  /** Score data mapping options to criteria */
+  /** Score entries linking options to criteria */
   scores: DecisionScore[];
-  /** Callback when a score cell is clicked for editing */
+  /** Called when a score cell value changes */
   onScoreChange?: (optionId: string, criterionId: string, score: number) => void;
-  /** Maximum possible score value (default 10) */
+  /** Maximum possible score value */
   maxScore?: number;
-  /** Show the weighted totals row at the bottom */
+  /** Show weighted total row at the bottom */
   showWeightedTotals?: boolean;
   /** Highlight the winning option column */
   highlightWinner?: boolean;
+  /** Optional title displayed above the matrix */
+  title?: string;
   /** Additional CSS class names for the root element */
   className?: string;
 }
@@ -83,153 +60,89 @@ export interface DecisionMatrixProps extends AccessControlledProps {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getScoreColor(score: number, maxScore: number): string {
+function getScoreColor(score: number, maxScore: number): { bg: string; text: string } {
   const ratio = score / maxScore;
-  if (ratio >= 0.8) return 'var(--state-success-text, #16a34a)';
-  if (ratio >= 0.6) return 'var(--state-success-text, #16a34a)';
-  if (ratio >= 0.4) return 'var(--state-warning-text, #a16207)';
-  if (ratio >= 0.2) return 'var(--state-error-text, #dc2626)';
-  return 'var(--state-error-text, #dc2626)';
+  if (ratio >= 0.8) return { bg: 'var(--state-success-bg, #22c55e20)', text: 'var(--state-success-text, #16a34a)' };
+  if (ratio >= 0.6) return { bg: 'var(--state-info-bg, #3b82f620)', text: 'var(--state-info-text, #2563eb)' };
+  if (ratio >= 0.4) return { bg: 'var(--state-warning-bg, #eab30830)', text: 'var(--state-warning-text, #a16207)' };
+  return { bg: 'var(--state-error-bg, #ef444420)', text: 'var(--state-error-text, #dc2626)' };
 }
 
-function getScoreBg(score: number, maxScore: number): string {
-  const ratio = score / maxScore;
-  if (ratio >= 0.8) return 'var(--state-success-bg, #22c55e15)';
-  if (ratio >= 0.6) return 'var(--state-success-bg, #22c55e10)';
-  if (ratio >= 0.4) return 'var(--state-warning-bg, #eab30815)';
-  if (ratio >= 0.2) return 'var(--state-error-bg, #ef444415)';
-  return 'var(--state-error-bg, #ef444410)';
-}
-
-function normalizeWeight(criteria: DecisionCriterion[]): Map<string, number> {
-  const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
-  const map = new Map<string, number>();
-  for (const c of criteria) {
-    map.set(c.id, totalWeight > 0 ? c.weight / totalWeight : 0);
-  }
-  return map;
+function getScoreBarWidth(score: number, maxScore: number): string {
+  return `${Math.min(100, Math.round((score / maxScore) * 100))}%`;
 }
 
 // ---------------------------------------------------------------------------
-// Inline score editor
+// Score cell sub-component
 // ---------------------------------------------------------------------------
 
 interface ScoreCellProps {
   score: number;
   maxScore: number;
-  canEdit: boolean;
-  onEdit: (newScore: number) => void;
+  isWinner: boolean;
+  canInteract: boolean;
+  optionId: string;
+  criterionId: string;
+  onScoreChange?: (optionId: string, criterionId: string, score: number) => void;
 }
 
-function ScoreCell({ score, maxScore, canEdit, onEdit }: ScoreCellProps) {
-  const [editing, setEditing] = useState(false);
-  const [editValue, setEditValue] = useState(String(score));
-
-  const handleStartEdit = useCallback(() => {
-    if (!canEdit) return;
-    setEditValue(String(score));
-    setEditing(true);
-  }, [canEdit, score]);
-
-  const handleCommit = useCallback(() => {
-    setEditing(false);
-    const parsed = parseFloat(editValue);
-    if (!isNaN(parsed)) {
-      const clamped = Math.max(0, Math.min(maxScore, Math.round(parsed * 10) / 10));
-      onEdit(clamped);
-    }
-  }, [editValue, maxScore, onEdit]);
+const ScoreCell: React.FC<ScoreCellProps> = ({
+  score,
+  maxScore,
+  isWinner,
+  canInteract,
+  optionId,
+  criterionId,
+  onScoreChange,
+}) => {
+  const color = getScoreColor(score, maxScore);
+  const barWidth = getScoreBarWidth(score, maxScore);
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        handleCommit();
-      } else if (e.key === 'Escape') {
-        setEditing(false);
+    (e: React.KeyboardEvent) => {
+      if (!canInteract || !onScoreChange) return;
+      if (e.key === 'ArrowUp' && score < maxScore) {
+        e.preventDefault();
+        onScoreChange(optionId, criterionId, score + 1);
+      } else if (e.key === 'ArrowDown' && score > 0) {
+        e.preventDefault();
+        onScoreChange(optionId, criterionId, score - 1);
       }
     },
-    [handleCommit],
+    [canInteract, onScoreChange, optionId, criterionId, score, maxScore],
   );
 
-  if (editing) {
-    return (
-      <input
-        type="number"
-        min={0}
-        max={maxScore}
-        step={1}
-        value={editValue}
-        onChange={(e) => setEditValue(e.target.value)}
-        onBlur={handleCommit}
-        onKeyDown={handleKeyDown}
-        className="w-12 text-center text-xs rounded border px-1 py-0.5 outline-hidden focus:ring-1"
-        style={{
-          borderColor: 'var(--border-default)',
-          backgroundColor: 'var(--surface-default)',
-          color: 'var(--text-primary)',
-        }}
-        autoFocus
-        aria-label="Edit score"
-      />
-    );
-  }
-
-  const color = getScoreColor(score, maxScore);
-  const bg = getScoreBg(score, maxScore);
+  const isEditable = canInteract && !!onScoreChange;
 
   return (
-    <span
-      role={canEdit ? 'button' : undefined}
-      tabIndex={canEdit ? 0 : undefined}
-      onClick={handleStartEdit}
-      onKeyDown={(e) => {
-        if ((e.key === 'Enter' || e.key === ' ') && canEdit) {
-          e.preventDefault();
-          handleStartEdit();
-        }
-      }}
+    <td
       className={cn(
-        'inline-flex items-center justify-center rounded-md font-semibold text-xs min-w-[2rem] px-1.5 py-0.5',
-        canEdit
-          ? 'cursor-pointer hover:ring-1 hover:ring-[var(--focus-ring)] focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]'
-          : '',
+        'py-2 px-3 text-center relative',
+        isWinner && 'bg-[var(--state-success-bg,#22c55e08)]',
       )}
-      style={{ backgroundColor: bg, color }}
-      aria-label={`Score: ${score} of ${maxScore}${canEdit ? ' (click to edit)' : ''}`}
+      role={isEditable ? 'gridcell' : undefined}
+      tabIndex={isEditable ? 0 : undefined}
+      onKeyDown={isEditable ? handleKeyDown : undefined}
+      aria-label={`${score} out of ${maxScore}`}
     >
-      {score}
-    </span>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Score bar (visual indicator)
-// ---------------------------------------------------------------------------
-
-function ScoreBar({ score, maxScore }: { score: number; maxScore: number }) {
-  const pct = maxScore > 0 ? (score / maxScore) * 100 : 0;
-  return (
-    <div
-      className="w-full h-1 rounded-full mt-0.5"
-      style={{ backgroundColor: 'var(--surface-muted, #e5e7eb)' }}
-      aria-hidden="true"
-    >
+      {/* Score bar background */}
       <div
-        className="h-full rounded-full transition-all duration-200"
-        style={{
-          width: `${Math.min(100, pct)}%`,
-          backgroundColor: getScoreColor(score, maxScore),
-        }}
+        className="absolute inset-y-0 left-0 opacity-20 transition-all duration-200"
+        style={{ width: barWidth, backgroundColor: color.text }}
       />
-    </div>
+      {/* Score value */}
+      <span className="relative z-10 text-sm font-mono font-medium" style={{ color: color.text }}>
+        {score}
+      </span>
+    </td>
   );
-}
+};
 
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
-/** Weighted scoring decision matrix table for structured option evaluation. */
+/** Weighted scoring decision matrix table for comparing alternatives against criteria. */
 export function DecisionMatrix({
   options,
   criteria,
@@ -238,257 +151,185 @@ export function DecisionMatrix({
   maxScore = 10,
   showWeightedTotals = true,
   highlightWinner = true,
+  title,
   className,
   access,
   accessReason,
 }: DecisionMatrixProps) {
   const accessState = resolveAccessState(access);
-  const { isHidden, isDisabled, isReadonly } = accessState;
-  if (isHidden) return null;
+  if (accessState.isHidden) return null;
 
-  const canEdit = !isDisabled && !isReadonly && !!onScoreChange;
+  const canInteract = !accessState.isDisabled && !accessState.isReadonly;
 
-  // Build a lookup: optionId -> criterionId -> score
+  // Build score lookup
   const scoreMap = useMemo(() => {
-    const map = new Map<string, Map<string, number>>();
+    const map = new Map<string, number>();
     for (const s of scores) {
-      if (!map.has(s.optionId)) map.set(s.optionId, new Map());
-      map.get(s.optionId)!.set(s.criterionId, s.score);
+      map.set(`${s.optionId}:${s.criterionId}`, s.score);
     }
     return map;
   }, [scores]);
 
-  // Normalize weights
-  const weightMap = useMemo(() => normalizeWeight(criteria), [criteria]);
-
   // Calculate weighted totals per option
-  const totals = useMemo(() => {
-    const result = new Map<string, number>();
-    for (const opt of options) {
-      let total = 0;
-      const optScores = scoreMap.get(opt.id);
-      for (const crit of criteria) {
-        const raw = optScores?.get(crit.id) ?? 0;
-        const w = weightMap.get(crit.id) ?? 0;
-        total += raw * w;
+  const weightedTotals = useMemo(() => {
+    const totals = new Map<string, number>();
+    const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
+
+    for (const option of options) {
+      let weightedSum = 0;
+      for (const criterion of criteria) {
+        const rawScore = scoreMap.get(`${option.id}:${criterion.id}`) ?? 0;
+        const normalizedWeight = totalWeight > 0 ? criterion.weight / totalWeight : 0;
+        weightedSum += rawScore * normalizedWeight;
       }
-      result.set(opt.id, Math.round(total * 100) / 100);
+      totals.set(option.id, Math.round(weightedSum * 100) / 100);
     }
-    return result;
-  }, [options, criteria, scoreMap, weightMap]);
+    return totals;
+  }, [options, criteria, scoreMap]);
 
   // Find winner
   const winnerId = useMemo(() => {
-    let bestId = '';
-    let bestTotal = -Infinity;
-    for (const [id, total] of totals) {
-      if (total > bestTotal) {
-        bestTotal = total;
-        bestId = id;
+    if (!highlightWinner) return null;
+    let maxTotal = -Infinity;
+    let winner: string | null = null;
+    for (const [optId, total] of weightedTotals) {
+      if (total > maxTotal) {
+        maxTotal = total;
+        winner = optId;
       }
     }
-    return bestId;
-  }, [totals]);
+    return winner;
+  }, [weightedTotals, highlightWinner]);
 
-  const handleScoreChange = useCallback(
-    (optionId: string, criterionId: string, newScore: number) => {
-      if (onScoreChange) {
-        onScoreChange(optionId, criterionId, newScore);
-      }
-    },
-    [onScoreChange],
-  );
-
-  const totalWeight = criteria.reduce((sum, c) => sum + c.weight, 0);
+  // Total weight for display
+  const totalWeight = useMemo(() => criteria.reduce((sum, c) => sum + c.weight, 0), [criteria]);
 
   return (
     <div
-      className={cn('w-full overflow-x-auto', accessStyles(accessState.state), className)}
-      role="group"
-      aria-label="Decision Matrix"
+      className={cn(
+        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
+        accessStyles(accessState.state),
+        className,
+      )}
       data-component="decision-matrix"
       data-access-state={accessState.state}
-      {...(isDisabled ? { 'aria-disabled': true } : {})}
+      role="table"
+      aria-label={title ?? 'Decision Matrix'}
+      {...(accessState.isDisabled ? { 'aria-disabled': true } : {})}
       {...(accessReason ? { title: accessReason } : {})}
     >
-      <table
-        className="w-full border-collapse text-xs"
-        style={{ color: 'var(--text-primary)' }}
-        role="table"
-        aria-label="Decision scoring table"
-      >
-        {/* Header: criterion | weight | option1 | option2 | ... */}
-        <thead>
-          <tr>
-            <th
-              className="text-left px-3 py-2 font-semibold border-b"
-              style={{
-                borderColor: 'var(--border-default)',
-                color: 'var(--text-secondary)',
-                backgroundColor: 'var(--surface-muted)',
-              }}
-            >
-              Criterion
-            </th>
-            <th
-              className="text-center px-2 py-2 font-semibold border-b"
-              style={{
-                borderColor: 'var(--border-default)',
-                color: 'var(--text-secondary)',
-                backgroundColor: 'var(--surface-muted)',
-                minWidth: 60,
-              }}
-            >
-              Weight
-            </th>
-            {options.map((opt) => {
-              const isWinner = highlightWinner && opt.id === winnerId && showWeightedTotals;
-              return (
+      {/* Title */}
+      {title && (
+        <div className="px-4 py-3 border-b border-border-default">
+          <h3 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h3>
+        </div>
+      )}
+
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-surface-muted border-b border-border-default">
+              <th className="py-2.5 px-3 text-left text-xs font-semibold text-text-secondary uppercase tracking-wide">
+                Criteria
+              </th>
+              <th className="py-2.5 px-3 text-center text-xs font-semibold text-text-secondary uppercase tracking-wide w-20">
+                Weight
+              </th>
+              {options.map((option) => (
                 <th
-                  key={opt.id}
+                  key={option.id}
                   className={cn(
-                    'text-center px-3 py-2 font-semibold border-b transition-colors',
-                    isWinner ? 'ring-2 ring-inset rounded-t-md' : '',
+                    'py-2.5 px-3 text-center text-xs font-semibold uppercase tracking-wide min-w-[80px]',
+                    highlightWinner && option.id === winnerId
+                      ? 'text-[var(--state-success-text)] bg-[var(--state-success-bg,#22c55e08)]'
+                      : 'text-text-secondary',
                   )}
-                  style={{
-                    borderColor: 'var(--border-default)',
-                    color: isWinner ? 'var(--state-success-text)' : 'var(--text-primary)',
-                    backgroundColor: isWinner
-                      ? 'var(--state-success-bg, #22c55e10)'
-                      : 'var(--surface-muted)',
-                    ...(isWinner ? { ringColor: 'var(--state-success-text)' } : {}),
-                    minWidth: 80,
-                  }}
                 >
-                  {opt.name}
-                  {isWinner && (
-                    <span
-                      className="block text-[10px] font-normal mt-0.5"
-                      style={{ color: 'var(--state-success-text)' }}
-                      aria-label="Winner"
-                    >
-                      ★ Winner
-                    </span>
-                  )}
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span>{option.name}</span>
+                    {highlightWinner && option.id === winnerId && (
+                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[var(--state-success-text)] text-[var(--text-inverse,#fff)] font-bold">
+                        WINNER
+                      </span>
+                    )}
+                  </div>
                 </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {criteria.map((criterion) => {
+              const weightPercent = totalWeight > 0 ? Math.round((criterion.weight / totalWeight) * 100) : 0;
+              return (
+                <tr
+                  key={criterion.id}
+                  className="border-b border-border-subtle transition-colors hover:bg-surface-muted"
+                >
+                  <td className="py-2 px-3 text-sm text-text-primary">{criterion.name}</td>
+                  <td className="py-2 px-3 text-center">
+                    <span className="text-xs font-mono text-text-secondary">
+                      {criterion.weight}
+                    </span>
+                    <span className="text-[10px] text-text-tertiary ml-1">
+                      ({weightPercent}%)
+                    </span>
+                  </td>
+                  {options.map((option) => {
+                    const score = scoreMap.get(`${option.id}:${criterion.id}`) ?? 0;
+                    return (
+                      <ScoreCell
+                        key={`${option.id}-${criterion.id}`}
+                        score={score}
+                        maxScore={maxScore}
+                        isWinner={highlightWinner && option.id === winnerId}
+                        canInteract={canInteract}
+                        optionId={option.id}
+                        criterionId={criterion.id}
+                        onScoreChange={onScoreChange}
+                      />
+                    );
+                  })}
+                </tr>
               );
             })}
-          </tr>
-        </thead>
+          </tbody>
 
-        <tbody>
-          {criteria.map((crit, idx) => {
-            const weightPct = totalWeight > 0 ? Math.round((crit.weight / totalWeight) * 100) : 0;
-            return (
-              <tr
-                key={crit.id}
-                className="transition-colors hover:bg-[var(--surface-hover)]"
-                style={{
-                  borderBottomColor: 'var(--border-default)',
-                  borderBottomWidth: idx < criteria.length - 1 ? 1 : 0,
-                }}
-              >
-                {/* Criterion name */}
-                <td
-                  className="px-3 py-2 font-medium"
-                  style={{ color: 'var(--text-primary)' }}
-                >
-                  {crit.name}
+          {/* Weighted totals footer */}
+          {showWeightedTotals && (
+            <tfoot>
+              <tr className="bg-surface-muted border-t-2 border-border-default">
+                <td className="py-3 px-3 text-sm font-bold text-text-primary">
+                  Weighted Total
                 </td>
-
-                {/* Weight */}
-                <td className="text-center px-2 py-2">
-                  <span
-                    className="inline-flex items-center gap-1"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    <span className="font-semibold">{crit.weight}</span>
-                    <span className="text-[10px] opacity-70">({weightPct}%)</span>
-                  </span>
+                <td className="py-3 px-3 text-center text-xs font-mono text-text-secondary font-bold">
+                  {totalWeight}
                 </td>
-
-                {/* Score cells */}
-                {options.map((opt) => {
-                  const raw = scoreMap.get(opt.id)?.get(crit.id) ?? 0;
-                  const isWinnerCol = highlightWinner && opt.id === winnerId && showWeightedTotals;
+                {options.map((option) => {
+                  const total = weightedTotals.get(option.id) ?? 0;
+                  const isWin = highlightWinner && option.id === winnerId;
                   return (
                     <td
-                      key={`${opt.id}-${crit.id}`}
+                      key={option.id}
                       className={cn(
-                        'text-center px-3 py-2',
-                        isWinnerCol ? 'ring-2 ring-inset' : '',
+                        'py-3 px-3 text-center font-mono text-sm font-bold',
+                        isWin
+                          ? 'text-[var(--state-success-text)] bg-[var(--state-success-bg,#22c55e08)]'
+                          : 'text-text-primary',
                       )}
-                      style={
-                        isWinnerCol
-                          ? { backgroundColor: 'var(--state-success-bg, #22c55e05)' }
-                          : undefined
-                      }
                     >
-                      <div className="flex flex-col items-center gap-0.5">
-                        <ScoreCell
-                          score={raw}
-                          maxScore={maxScore}
-                          canEdit={canEdit}
-                          onEdit={(val) => handleScoreChange(opt.id, crit.id, val)}
-                        />
-                        <ScoreBar score={raw} maxScore={maxScore} />
-                      </div>
+                      {total.toFixed(2)}
                     </td>
                   );
                 })}
               </tr>
-            );
-          })}
-        </tbody>
-
-        {/* Weighted totals */}
-        {showWeightedTotals && (
-          <tfoot>
-            <tr
-              className="font-semibold"
-              style={{
-                borderTopWidth: 2,
-                borderTopColor: 'var(--border-default)',
-                backgroundColor: 'var(--surface-muted)',
-              }}
-            >
-              <td className="px-3 py-2" style={{ color: 'var(--text-primary)' }}>
-                Weighted Total
-              </td>
-              <td className="text-center px-2 py-2" style={{ color: 'var(--text-secondary)' }}>
-                —
-              </td>
-              {options.map((opt) => {
-                const total = totals.get(opt.id) ?? 0;
-                const isWinner = highlightWinner && opt.id === winnerId;
-                return (
-                  <td
-                    key={`total-${opt.id}`}
-                    className={cn(
-                      'text-center px-3 py-2 text-sm',
-                      isWinner ? 'ring-2 ring-inset rounded-b-md' : '',
-                    )}
-                    style={{
-                      color: isWinner
-                        ? 'var(--state-success-text)'
-                        : 'var(--text-primary)',
-                      backgroundColor: isWinner
-                        ? 'var(--state-success-bg, #22c55e15)'
-                        : undefined,
-                    }}
-                  >
-                    {total.toFixed(2)}
-                  </td>
-                );
-              })}
-            </tr>
-          </tfoot>
-        )}
-      </table>
+            </tfoot>
+          )}
+        </table>
+      </div>
     </div>
   );
 }
 
 DecisionMatrix.displayName = 'DecisionMatrix';
-
 export default DecisionMatrix;

@@ -5,247 +5,193 @@ import {
   accessStyles,
   type AccessControlledProps,
 } from '../internal/access-controller';
-import {
-  formatValue,
-  getTrendColor,
-  getTrendIcon,
-  type TrendDirection,
-} from './types';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-/**
- * Props for the MetricComparisonCard component.
- *
+export type MetricFormat = 'number' | 'currency' | 'percent';
+export type MetricSize = 'sm' | 'md' | 'lg';
+
+/** Props for the MetricComparisonCard component.
  * @example
  * ```tsx
- * <MetricComparisonCard
- *   title="Revenue"
- *   currentValue={125000}
- *   previousValue={100000}
- *   format="currency"
- *   currencySymbol="USD"
- *   period={{ current: 'Q1 2025', previous: 'Q4 2024' }}
- *   target={130000}
- *   sparklineData={[95000, 98000, 102000, 110000, 125000]}
- *   size="md"
- * />
+ * <MetricComparisonCard title="Revenue" currentValue={125000} previousValue={100000} />
  * ```
- *
  * @since 1.0.0
  * @see [Docs](https://design.mfe.dev/components/metric-comparison-card)
  */
 export interface MetricComparisonCardProps extends AccessControlledProps {
-  /** Metric title */
+  /** Metric display label */
   title: string;
   /** Current period value */
   currentValue: number;
   /** Previous period value for comparison */
   previousValue: number;
-  /** Number format for display */
-  format?: 'number' | 'currency' | 'percent';
-  /** Currency code (used when format is 'currency') */
+  /** Number display format */
+  format?: MetricFormat;
+  /** Currency code for currency format */
   currencySymbol?: string;
-  /** Period labels */
+  /** Period labels for current and previous */
   period?: { current: string; previous: string };
-  /** Optional target value — renders a target progress bar */
+  /** Target value to show progress bar */
   target?: number;
-  /** Optional sparkline data points */
+  /** Data points for mini sparkline chart */
   sparklineData?: number[];
   /** Card size variant */
-  size?: 'sm' | 'md' | 'lg';
-  /** Invert trend colors (down = good, up = bad) */
+  size?: MetricSize;
+  /** Invert trend colors (green for down, red for up) — useful for cost metrics */
   invertTrend?: boolean;
   /** Additional CSS class names for the root element */
   className?: string;
 }
 
 // ---------------------------------------------------------------------------
-// Size config
+// Constants
 // ---------------------------------------------------------------------------
 
-interface SizeConfig {
+const SIZE_CONFIG: Record<MetricSize, {
+  valueFontSize: string;
+  labelFontSize: string;
+  badgeFontSize: string;
   padding: string;
-  titleSize: string;
-  valueSize: string;
-  subSize: string;
-  trendSize: string;
-  sparkW: number;
-  sparkH: number;
-}
-
-const SIZE_CONFIGS: Record<string, SizeConfig> = {
-  sm: {
-    padding: 'p-3',
-    titleSize: 'text-xs',
-    valueSize: 'text-lg',
-    subSize: 'text-[10px]',
-    trendSize: 'text-xs',
-    sparkW: 48,
-    sparkH: 20,
-  },
-  md: {
-    padding: 'p-4',
-    titleSize: 'text-sm',
-    valueSize: 'text-2xl',
-    subSize: 'text-xs',
-    trendSize: 'text-sm',
-    sparkW: 64,
-    sparkH: 28,
-  },
-  lg: {
-    padding: 'p-5',
-    titleSize: 'text-base',
-    valueSize: 'text-3xl',
-    subSize: 'text-sm',
-    trendSize: 'text-base',
-    sparkW: 80,
-    sparkH: 36,
-  },
+  sparkHeight: number;
+}> = {
+  sm: { valueFontSize: 'text-xl', labelFontSize: 'text-xs', badgeFontSize: 'text-[10px]', padding: 'p-3', sparkHeight: 24 },
+  md: { valueFontSize: 'text-3xl', labelFontSize: 'text-sm', badgeFontSize: 'text-xs', padding: 'p-4', sparkHeight: 32 },
+  lg: { valueFontSize: 'text-4xl', labelFontSize: 'text-base', badgeFontSize: 'text-sm', padding: 'p-5', sparkHeight: 40 },
 };
 
 // ---------------------------------------------------------------------------
-// Sparkline renderer
+// Helpers
 // ---------------------------------------------------------------------------
 
-function Sparkline({
-  data,
-  width,
-  height,
-  color,
-}: {
+function formatMetricValue(value: number, format: MetricFormat, currency: string): string {
+  switch (format) {
+    case 'currency':
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(value);
+    case 'percent':
+      return `${value.toFixed(1)}%`;
+    default:
+      return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value);
+  }
+}
+
+function computeChange(current: number, previous: number): { percent: number; direction: 'up' | 'down' | 'flat' } {
+  if (previous === 0) return { percent: current === 0 ? 0 : 100, direction: current >= 0 ? 'up' : 'down' };
+  const percent = ((current - previous) / Math.abs(previous)) * 100;
+  const rounded = Math.round(percent * 10) / 10;
+  if (rounded > 0) return { percent: rounded, direction: 'up' };
+  if (rounded < 0) return { percent: Math.abs(rounded), direction: 'down' };
+  return { percent: 0, direction: 'flat' };
+}
+
+// ---------------------------------------------------------------------------
+// Sparkline SVG sub-component
+// ---------------------------------------------------------------------------
+
+interface SparklineProps {
   data: number[];
-  width: number;
   height: number;
   color: string;
-}) {
+}
+
+const Sparkline: React.FC<SparklineProps> = ({ data, height, color }) => {
   if (data.length < 2) return null;
 
-  const minVal = Math.min(...data);
-  const maxVal = Math.max(...data);
-  const range = maxVal - minVal || 1;
-  const pad = 2;
-  const innerH = height - pad * 2;
-  const stepX = width / (data.length - 1);
+  const width = 120;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const padding = 2;
 
-  const points = data
-    .map((v, i) => {
-      const x = i * stepX;
-      const y = pad + innerH - ((v - minVal) / range) * innerH;
-      return `${x},${y}`;
-    })
-    .join(' ');
+  const points = data.map((v, i) => {
+    const x = (i / (data.length - 1)) * (width - padding * 2) + padding;
+    const y = height - ((v - min) / range) * (height - padding * 2) - padding;
+    return `${x},${y}`;
+  });
 
-  const areaPath = [
-    `M 0,${pad + innerH - ((data[0] - minVal) / range) * innerH}`,
-    ...data.map((v, i) => {
-      const x = i * stepX;
-      const y = pad + innerH - ((v - minVal) / range) * innerH;
-      return `L ${x},${y}`;
-    }),
-    `L ${width},${height}`,
-    `L 0,${height}`,
-    'Z',
-  ].join(' ');
-
-  const gradId = `mc-spark-${width}-${height}`;
+  const pathD = points.reduce((acc, pt, i) => (i === 0 ? `M ${pt}` : `${acc} L ${pt}`), '');
 
   return (
     <svg
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      role="img"
-      aria-label="Sparkline trend"
       className="shrink-0"
+      aria-hidden="true"
+      role="img"
     >
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity={0.25} />
-          <stop offset="100%" stopColor={color} stopOpacity={0.02} />
-        </linearGradient>
-      </defs>
-      <path d={areaPath} fill={`url(#${gradId})`} />
-      <polyline
-        points={points}
+      <path
+        d={pathD}
         fill="none"
         stroke={color}
-        strokeWidth={1.5}
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle
-        cx={(data.length - 1) * stepX}
-        cy={pad + innerH - ((data[data.length - 1] - minVal) / range) * innerH}
-        r={2}
-        fill={color}
-      />
+      {/* Last point dot */}
+      {data.length > 0 && (
+        <circle
+          cx={parseFloat(points[points.length - 1].split(',')[0])}
+          cy={parseFloat(points[points.length - 1].split(',')[1])}
+          r="2.5"
+          fill={color}
+        />
+      )}
     </svg>
   );
-}
+};
 
 // ---------------------------------------------------------------------------
-// Target progress bar
+// Target progress bar sub-component
 // ---------------------------------------------------------------------------
 
-function TargetBar({
-  current,
-  target,
-  size,
-}: {
+interface TargetBarProps {
   current: number;
   target: number;
-  size: SizeConfig;
-}) {
-  const pct = target > 0 ? Math.min(100, (current / target) * 100) : 0;
-  const isOnTrack = pct >= 100;
+  color: string;
+}
+
+const TargetBar: React.FC<TargetBarProps> = ({ current, target, color }) => {
+  const percent = Math.min(100, Math.round((current / target) * 100));
+  const isReached = current >= target;
 
   return (
     <div className="mt-2">
-      <div className="flex items-center justify-between mb-0.5">
-        <span className={cn(size.subSize)} style={{ color: 'var(--text-secondary)' }}>
-          Target
-        </span>
-        <span className={cn(size.subSize, 'font-medium')} style={{ color: 'var(--text-secondary)' }}>
-          {Math.round(pct)}%
-        </span>
+      <div className="flex items-center justify-between text-[10px] text-[var(--text-tertiary)] mb-1">
+        <span>Target</span>
+        <span className="font-mono">{percent}%</span>
       </div>
-      <div
-        className="w-full h-1.5 rounded-full overflow-hidden"
-        style={{ backgroundColor: 'var(--surface-muted, #e5e7eb)' }}
-        role="progressbar"
-        aria-valuenow={Math.round(pct)}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={`Target progress: ${Math.round(pct)}%`}
-      >
+      <div className="h-1.5 rounded-full bg-[var(--surface-muted,#e5e7eb)] overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-300"
           style={{
-            width: `${pct}%`,
-            backgroundColor: isOnTrack
-              ? 'var(--state-success-text, #16a34a)'
-              : 'var(--interactive-primary, #3b82f6)',
+            width: `${percent}%`,
+            backgroundColor: isReached ? 'var(--state-success-text, #16a34a)' : color,
           }}
         />
       </div>
     </div>
   );
-}
+};
 
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
-/** Period-over-period metric comparison card with trend, optional target bar, and sparkline. */
+/** Period-over-period metric comparison card with trend indicator, sparkline, and target progress. */
 export function MetricComparisonCard({
   title,
   currentValue,
   previousValue,
   format = 'number',
-  currencySymbol = 'TRY',
+  currencySymbol = 'USD',
   period,
   target,
   sparklineData,
@@ -256,127 +202,96 @@ export function MetricComparisonCard({
   accessReason,
 }: MetricComparisonCardProps) {
   const accessState = resolveAccessState(access);
-  const { isHidden } = accessState;
-  if (isHidden) return null;
+  if (accessState.isHidden) return null;
 
-  const s = SIZE_CONFIGS[size] ?? SIZE_CONFIGS.md;
+  const s = SIZE_CONFIG[size];
+  const change = useMemo(() => computeChange(currentValue, previousValue), [currentValue, previousValue]);
 
-  // Calculate trend
-  const trendInfo = useMemo(() => {
-    if (previousValue === 0 && currentValue === 0) {
-      return { direction: 'flat' as TrendDirection, pct: 0 };
-    }
-    if (previousValue === 0) {
-      return { direction: 'up' as TrendDirection, pct: 100 };
-    }
-    const change = ((currentValue - previousValue) / Math.abs(previousValue)) * 100;
-    const direction: TrendDirection = change > 0.5 ? 'up' : change < -0.5 ? 'down' : 'flat';
-    return { direction, pct: Math.abs(Math.round(change * 10) / 10) };
-  }, [currentValue, previousValue]);
+  // Determine trend color
+  const isPositive = useMemo(() => {
+    if (change.direction === 'flat') return true;
+    return invertTrend ? change.direction === 'down' : change.direction === 'up';
+  }, [change.direction, invertTrend]);
 
-  const trendColor = getTrendColor(trendInfo.direction, invertTrend);
-  const trendIcon = getTrendIcon(trendInfo.direction);
+  const trendColor = isPositive
+    ? 'var(--state-success-text, #16a34a)'
+    : 'var(--state-error-text, #dc2626)';
 
-  // Format values
-  const formatOpts = { format, currency: currencySymbol };
-  const formattedCurrent = formatValue(currentValue, formatOpts);
-  const formattedPrevious = formatValue(previousValue, formatOpts);
+  const trendBg = isPositive
+    ? 'var(--state-success-bg, #22c55e15)'
+    : 'var(--state-error-bg, #ef444415)';
 
-  // Determine change sign for display
-  const changeSign = trendInfo.direction === 'up' ? '+' : trendInfo.direction === 'down' ? '-' : '';
-  const absoluteChange = Math.abs(currentValue - previousValue);
-  const formattedChange = formatValue(absoluteChange, formatOpts);
+  const trendIcon = change.direction === 'up' ? '\u2191' : change.direction === 'down' ? '\u2193' : '\u2192';
+  const accentColor = isPositive ? 'var(--state-success-text, #16a34a)' : 'var(--state-error-text, #dc2626)';
 
   return (
     <div
       className={cn(
-        'rounded-lg border',
+        'border border-border-default rounded-lg bg-surface-default overflow-hidden',
         s.padding,
         accessStyles(accessState.state),
         className,
       )}
-      style={{
-        borderColor: 'var(--border-default)',
-        backgroundColor: 'var(--surface-default)',
-      }}
-      role="region"
-      aria-label={`${title} metric comparison`}
       data-component="metric-comparison-card"
       data-access-state={accessState.state}
+      role="group"
+      aria-label={`${title} metric`}
+      {...(accessState.isDisabled ? { 'aria-disabled': true } : {})}
       {...(accessReason ? { title: accessReason } : {})}
     >
-      {/* Header row: title + sparkline */}
-      <div className="flex items-start justify-between gap-2">
-        <span
-          className={cn(s.titleSize, 'font-medium')}
-          style={{ color: 'var(--text-secondary)' }}
-        >
+      {/* Header: Label + sparkline */}
+      <div className="flex items-start justify-between mb-1">
+        <span className={cn(s.labelFontSize, 'font-medium text-[var(--text-secondary)]')}>
           {title}
         </span>
         {sparklineData && sparklineData.length >= 2 && (
-          <Sparkline
-            data={sparklineData}
-            width={s.sparkW}
-            height={s.sparkH}
-            color={trendColor}
-          />
+          <Sparkline data={sparklineData} height={s.sparkHeight} color={accentColor} />
         )}
       </div>
 
       {/* Current value */}
-      <div className="flex items-baseline gap-2 mt-1">
-        <span
-          className={cn(s.valueSize, 'font-bold tracking-tight')}
-          style={{ color: 'var(--text-primary)' }}
-        >
-          {formattedCurrent}
+      <div className="flex items-end gap-3 mb-1">
+        <span className={cn(s.valueFontSize, 'font-bold text-[var(--text-primary)] leading-none font-mono')}>
+          {formatMetricValue(currentValue, format, currencySymbol)}
         </span>
 
-        {/* Trend badge */}
+        {/* Change badge */}
         <span
           className={cn(
-            s.trendSize,
-            'inline-flex items-center gap-0.5 font-semibold',
+            'inline-flex items-center gap-0.5 rounded-full font-medium px-2 py-0.5',
+            s.badgeFontSize,
           )}
-          style={{ color: trendColor }}
-          aria-label={`${trendInfo.direction === 'up' ? 'Increased' : trendInfo.direction === 'down' ? 'Decreased' : 'No change'} by ${trendInfo.pct}%`}
+          style={{ backgroundColor: trendBg, color: trendColor }}
+          aria-label={`${change.direction === 'up' ? 'increased' : change.direction === 'down' ? 'decreased' : 'unchanged'} by ${change.percent}%`}
         >
-          <span aria-hidden="true">{trendIcon}</span>
-          {trendInfo.pct}%
+          <span>{trendIcon}</span>
+          <span className="font-mono">{change.percent}%</span>
         </span>
       </div>
 
-      {/* Previous value + change */}
-      <div
-        className={cn('flex items-center gap-2 mt-1', s.subSize)}
-        style={{ color: 'var(--text-tertiary)' }}
-      >
-        <span>
-          {period?.previous ?? 'Previous'}: {formattedPrevious}
-        </span>
-        <span style={{ color: trendColor }}>
-          ({changeSign}{formattedChange})
+      {/* Previous value */}
+      <div className="flex items-center gap-2">
+        <span className={cn('text-[var(--text-tertiary)] font-mono', s.badgeFontSize)}>
+          Previous: {formatMetricValue(previousValue, format, currencySymbol)}
         </span>
       </div>
 
       {/* Period labels */}
       {period && (
-        <div
-          className={cn('mt-1', s.subSize)}
-          style={{ color: 'var(--text-tertiary)' }}
-        >
-          {period.current}
+        <div className="flex items-center gap-3 mt-1 text-[10px] text-[var(--text-tertiary)]">
+          <span>{period.current}</span>
+          <span>vs</span>
+          <span>{period.previous}</span>
         </div>
       )}
 
-      {/* Target bar */}
-      {typeof target === 'number' && (
-        <TargetBar current={currentValue} target={target} size={s} />
+      {/* Target progress bar */}
+      {target != null && target > 0 && (
+        <TargetBar current={currentValue} target={target} color={accentColor} />
       )}
     </div>
   );
 }
 
 MetricComparisonCard.displayName = 'MetricComparisonCard';
-
 export default MetricComparisonCard;

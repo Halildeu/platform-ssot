@@ -310,20 +310,20 @@ export default function ComponentDetail() {
                 className={[
                   "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
                   indexItem.lifecycle === "stable"
-                    ? "bg-emerald-500/10 text-emerald-600"
+                    ? "bg-state-success-bg text-state-success-text"
                     : indexItem.lifecycle === "beta"
-                      ? "bg-amber-500/10 text-amber-600"
-                      : "bg-blue-500/10 text-blue-600",
+                      ? "bg-state-warning-bg text-state-warning-text"
+                      : "bg-state-info-bg text-state-info-text",
                 ].join(" ")}
               >
                 <span
                   className={[
                     "h-1.5 w-1.5 rounded-full",
                     indexItem.lifecycle === "stable"
-                      ? "bg-emerald-500"
+                      ? "bg-state-success-text"
                       : indexItem.lifecycle === "beta"
-                        ? "bg-amber-500"
-                        : "bg-blue-500",
+                        ? "bg-state-warning-text"
+                        : "bg-state-info-text",
                   ].join(" ")}
                 />
                 {indexItem.lifecycle}
@@ -374,7 +374,7 @@ export default function ComponentDetail() {
             <IconButton
               icon={
                 copied ? (
-                  <Check className="h-3.5 w-3.5 text-emerald-500" />
+                  <Check className="h-3.5 w-3.5 text-state-success-text" />
                 ) : (
                   <Copy className="h-3.5 w-3.5" />
                 )
@@ -539,8 +539,8 @@ function OverviewTab({
         {apiItem && (apiItem.props ?? []).length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/10">
-                <FileCode2 className="h-3.5 w-3.5 text-blue-600" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-state-info-bg">
+                <FileCode2 className="h-3.5 w-3.5 text-state-info-text" />
               </div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 {t("designlab.detail.overview.keyProps")}
@@ -558,7 +558,7 @@ function OverviewTab({
                   <code className="text-xs font-semibold text-text-primary">
                     {prop.name}
                   </code>
-                  <code className="truncate text-[11px] text-blue-600/70">
+                  <code className="truncate text-[11px] text-state-info-text/70">
                     {prop.type}
                   </code>
                 </div>
@@ -598,8 +598,8 @@ function OverviewTab({
         {apiItem && (getEffectivePreviewStates(apiItem).length > 0 || getEffectiveBehaviorModel(apiItem).length > 0) && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/10">
-                <Gamepad2 className="h-3.5 w-3.5 text-amber-600" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-state-warning-bg">
+                <Gamepad2 className="h-3.5 w-3.5 text-state-warning-text" />
               </div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 {t("designlab.detail.overview.stateModel")}
@@ -615,7 +615,7 @@ function OverviewTab({
                   {getEffectivePreviewStates(apiItem).map((state) => (
                     <span
                       key={state}
-                      className="rounded-lg border border-green-200 bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 transition-colors hover:border-green-300 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400"
+                      className="rounded-lg border border-state-success-border bg-state-success-bg px-3 py-1.5 text-xs font-medium text-state-success-text transition-colors hover:border-state-success-border"
                     >
                       {state}
                     </span>
@@ -647,8 +647,8 @@ function OverviewTab({
         {(indexItem?.whereUsed ?? []).length > 0 && (
           <div className="group rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:border-border-default hover:shadow-xs">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10">
-                <Globe className="h-3.5 w-3.5 text-emerald-600" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-state-success-bg">
+                <Globe className="h-3.5 w-3.5 text-state-success-text" />
               </div>
               <Text as="div" className="text-sm font-semibold text-text-primary">
                 {t("designlab.detail.overview.whereUsed")}
@@ -950,15 +950,15 @@ function StateDemoSection({
           // Subtle card tint per state category for visual differentiation
           const cardTint =
             state === "disabled" || state === "hidden"
-              ? "border-red-200 bg-red-50/40 dark:border-red-900/40 dark:bg-red-950/20"
+              ? "border-state-danger-border/40 bg-state-danger-bg/40"
               : state === "readonly" || state === "readOnly"
-                ? "border-amber-200 bg-amber-50/40 dark:border-amber-900/40 dark:bg-amber-950/20"
+                ? "border-state-warning-border/40 bg-state-warning-bg/40"
                 : state === "error" || state === "invalid"
-                  ? "border-red-200 bg-red-50/30 dark:border-red-900/30 dark:bg-red-950/15"
+                  ? "border-state-danger-border/30 bg-state-danger-bg/30"
                   : state === "loading"
-                    ? "border-blue-200 bg-blue-50/30 dark:border-blue-900/30 dark:bg-blue-950/15"
+                    ? "border-state-info-border/30 bg-state-info-bg/30"
                     : state === "checked" || state === "selected" || state === "active" || state === "success" || state === "approved"
-                      ? "border-green-200 bg-green-50/30 dark:border-green-900/30 dark:bg-green-950/15"
+                      ? "border-state-success-border/30 bg-state-success-bg/30"
                       : "border-border-subtle bg-surface-canvas";
 
           return (
@@ -1010,8 +1010,8 @@ function ApiTab({ apiItem, componentName }: { apiItem: ApiItem; componentName?: 
     <div className="flex flex-col gap-4">
       {/* Prop count header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
-          <FileCode2 className="h-4 w-4 text-blue-600" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-state-info-bg">
+          <FileCode2 className="h-4 w-4 text-state-info-text" />
         </div>
         <div>
           <Text as="div" className="text-sm font-semibold text-text-primary">
@@ -1441,7 +1441,7 @@ function QualityTab({
                   cx="22" cy="22" r="18" fill="none" strokeWidth="3"
                   strokeDasharray={`${(a11yTotal > 0 ? a11yScore / a11yTotal : 0) * 113.1} 113.1`}
                   strokeLinecap="round"
-                  className={a11yTotal === 0 ? "text-surface-muted" : a11yScore === a11yTotal ? "text-emerald-500" : a11yScore >= a11yTotal / 2 ? "text-amber-500" : "text-red-500"}
+                  className={a11yTotal === 0 ? "text-surface-muted" : a11yScore === a11yTotal ? "text-state-success-text" : a11yScore >= a11yTotal / 2 ? "text-state-warning-text" : "text-state-danger-text"}
                 />
               </svg>
               <span className="absolute text-[10px] font-bold tabular-nums text-text-primary">
@@ -1478,12 +1478,12 @@ function QualityTab({
                         <span className="text-[9px] font-semibold text-text-tertiary">N/A</span>
                       </span>
                     ) : check.pass ? (
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/10">
-                        <Check className="h-3 w-3 text-emerald-600" />
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-state-success-bg">
+                        <Check className="h-3 w-3 text-state-success-text" />
                       </span>
                     ) : (
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500/10">
-                        <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-state-danger-bg">
+                        <span className="h-1.5 w-1.5 rounded-full bg-state-danger-text" />
                       </span>
                     )}
                     <Text className={`text-xs ${check.pass === "na" ? "text-text-tertiary" : "text-text-primary"}`}>{check.label}</Text>
@@ -1500,9 +1500,9 @@ function QualityTab({
 
       {/* ── Quality Gates ── */}
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-        <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-emerald-500/5 to-transparent px-5 py-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
-            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+        <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-state-success-bg to-transparent px-5 py-4">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-state-success-bg">
+            <ShieldCheck className="h-4 w-4 text-state-success-text" />
           </div>
           <Text as="div" className="text-sm font-semibold text-text-primary">
             {t("designlab.detail.quality.gates")}
@@ -1515,8 +1515,8 @@ function QualityTab({
                 key={gate}
                 className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-surface-canvas/30"
               >
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500/10">
-                  <Check className="h-3 w-3 text-emerald-600" />
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-state-success-bg">
+                  <Check className="h-3 w-3 text-state-success-text" />
                 </span>
                 <Text className="text-xs text-text-primary">{gate}</Text>
               </div>
@@ -1534,14 +1534,14 @@ function QualityTab({
       {/* ── Regression Focus ── */}
       {regressionFocus.length > 0 && (
         <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-          <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-amber-500/5 to-transparent px-5 py-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10">
-              <Eye className="h-4 w-4 text-amber-600" />
+          <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-state-warning-bg to-transparent px-5 py-4">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-state-warning-bg">
+              <Eye className="h-4 w-4 text-state-warning-text" />
             </div>
             <Text as="div" className="text-sm font-semibold text-text-primary">
               Regression Focus Areas
             </Text>
-            <span className="rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold tabular-nums text-amber-600">
+            <span className="rounded-full bg-state-warning-bg px-2 py-0.5 text-[10px] font-semibold tabular-nums text-state-warning-text">
               {regressionFocus.length}
             </span>
           </div>
@@ -1551,8 +1551,8 @@ function QualityTab({
                 key={focus}
                 className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-surface-canvas/30"
               >
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/10">
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-state-warning-bg">
+                  <span className="h-1.5 w-1.5 rounded-full bg-state-warning-text" />
                 </span>
                 <Text className="text-xs text-text-primary">{focus}</Text>
               </div>
@@ -1569,7 +1569,7 @@ function QualityTab({
           </Text>
           <Text as="div" className={[
             "mt-2 text-xl font-extrabold capitalize",
-            indexItem.lifecycle === "stable" ? "text-emerald-600" : indexItem.lifecycle === "beta" ? "text-amber-600" : "text-blue-600",
+            indexItem.lifecycle === "stable" ? "text-state-success-text" : indexItem.lifecycle === "beta" ? "text-state-warning-text" : "text-state-info-text",
           ].join(" ")}>
             {indexItem.lifecycle}
           </Text>
@@ -1591,7 +1591,7 @@ function QualityTab({
           <Text variant="secondary" className="text-[10px] font-semibold uppercase tracking-widest">
             Props Count
           </Text>
-          <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-blue-600">
+          <Text as="div" className="mt-2 text-xl font-extrabold tabular-nums text-state-info-text">
             {apiItem?.props?.length ?? 0}
           </Text>
           <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 rounded-full bg-linear-to-tl from-action-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
@@ -1621,9 +1621,9 @@ function QualityTab({
 
       {/* ── Component Complexity Breakdown ── */}
       <div className="overflow-hidden rounded-2xl border border-border-subtle bg-surface-default">
-        <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-blue-500/5 to-transparent px-5 py-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10">
-            <Code2 className="h-4 w-4 text-blue-600" />
+        <div className="flex items-center gap-3 border-b border-border-subtle bg-linear-to-r from-state-info-bg to-transparent px-5 py-4">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-state-info-bg">
+            <Code2 className="h-4 w-4 text-state-info-text" />
           </div>
           <Text as="div" className="text-sm font-semibold text-text-primary">
             Component Complexity
@@ -1695,9 +1695,9 @@ function ComplexityMetric({
 }) {
   const pct = Math.min((value / max) * 100, 100);
   const colorMap = {
-    blue: { bar: "bg-blue-500", text: "text-blue-600", light: "bg-blue-500/10" },
+    blue: { bar: "bg-state-info-text", text: "text-state-info-text", light: "bg-state-info-bg" },
     violet: { bar: "bg-violet-500", text: "text-violet-600", light: "bg-violet-500/10" },
-    amber: { bar: "bg-amber-500", text: "text-amber-600", light: "bg-amber-500/10" },
+    amber: { bar: "bg-state-warning-text", text: "text-state-warning-text", light: "bg-state-warning-bg" },
   };
   const c = colorMap[color];
 
@@ -1731,10 +1731,10 @@ type ChangelogEntry = {
 };
 
 const CHANGELOG_TYPE_CONFIG: Record<ChangelogEntry["type"], { label: string; color: string; dot: string }> = {
-  feature: { label: "Feature", color: "bg-emerald-100 text-emerald-700", dot: "bg-emerald-500" },
-  fix: { label: "Fix", color: "bg-blue-100 text-blue-700", dot: "bg-blue-500" },
-  breaking: { label: "Breaking", color: "bg-red-100 text-red-700", dot: "bg-red-500" },
-  deprecation: { label: "Deprecated", color: "bg-amber-100 text-amber-700", dot: "bg-amber-500" },
+  feature: { label: "Feature", color: "bg-state-success-bg text-state-success-text", dot: "bg-state-success-text" },
+  fix: { label: "Fix", color: "bg-state-info-bg text-state-info-text", dot: "bg-state-info-text" },
+  breaking: { label: "Breaking", color: "bg-state-danger-bg text-state-danger-text", dot: "bg-state-danger-text" },
+  deprecation: { label: "Deprecated", color: "bg-state-warning-bg text-state-warning-text", dot: "bg-state-warning-text" },
   refactor: { label: "Refactor", color: "bg-purple-100 text-purple-700", dot: "bg-purple-500" },
 };
 

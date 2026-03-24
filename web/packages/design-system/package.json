@@ -166,6 +166,9 @@
     "predict": "node scripts/ci/component-predictor.mjs",
     "a11y-guardian": "node scripts/ci/a11y-guardian.mjs",
     "a11y-guardian:ci": "node scripts/ci/a11y-guardian.mjs --ci",
+    "token-audit": "node scripts/ci/token-audit.mjs",
+    "token-audit:ci": "node scripts/ci/token-audit.mjs --ci",
+    "keyboard-matrix": "node scripts/ci/keyboard-matrix.mjs",
     "prepack": "[ -d dist ] || npm run build",
     "prepublishOnly": "npm run build"
   },
