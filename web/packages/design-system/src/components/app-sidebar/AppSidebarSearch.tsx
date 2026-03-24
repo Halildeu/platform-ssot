@@ -41,7 +41,7 @@ export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearc
           className={cn(
             'group relative flex h-8 w-8 items-center justify-center rounded-md',
             'text-[var(--text-secondary)] hover:bg-[var(--surface-canvas)]',
-            'transition-colors duration-200 outline-none',
+            'transition-colors duration-200 outline-hidden',
             'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
           )}
           onClick={() => {
@@ -83,7 +83,7 @@ export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearc
             'h-8 w-full rounded-md border border-[var(--border-subtle)]',
             'bg-[var(--surface-default)] pl-8 pr-8 text-sm',
             'text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]',
-            'outline-none transition-colors duration-200',
+            'outline-hidden transition-colors duration-200',
             'focus:border-[var(--action-primary)] focus:ring-1 focus:ring-[var(--action-primary)]',
           )}
         />

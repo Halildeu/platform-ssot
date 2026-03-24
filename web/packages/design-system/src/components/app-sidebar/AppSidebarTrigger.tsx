@@ -32,7 +32,7 @@ export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarT
       className={cn(
         'flex h-8 w-8 items-center justify-center rounded-md',
         'text-[var(--text-secondary)] hover:bg-[var(--surface-canvas)] hover:text-[var(--text-primary)]',
-        'transition-colors duration-200 outline-none',
+        'transition-colors duration-200 outline-hidden',
         'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)]',
         className,
       )}

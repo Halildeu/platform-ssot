@@ -672,10 +672,16 @@ check('undefined-tw-prefix', 'Undefined Tailwind class prefixes in production TS
 
 // 19. Phantom classes — used in code but NOT in @theme (won't generate CSS)
 check('phantom-classes', 'Tailwind classes using tokens not defined in @theme inline', () => {
-  /* Extract all token names from @theme inline block */
-  const indexCss = readSafe(SHELL_INDEX_CSS);
-  const themeBlock = indexCss.match(/@theme\s+inline\s*\{([\s\S]*?)\}/);
-  if (!themeBlock) return { status: 'warn', message: 'No @theme inline block found in index.css' };
+  /* Extract all token names from @theme inline block (may be in index.css or generated file) */
+  let indexCss = readSafe(SHELL_INDEX_CSS);
+  let themeBlock = indexCss.match(/@theme\s+inline\s*\{([\s\S]*?)\}/);
+  if (!themeBlock) {
+    /* Check for imported generated file */
+    const genPath = join(SHELL_STYLES, 'generated-theme-inline.css');
+    const genCss = readSafe(genPath);
+    themeBlock = genCss.match(/@theme\s+inline\s*\{([\s\S]*?)\}/);
+  }
+  if (!themeBlock) return { status: 'warn', message: 'No @theme inline block found in index.css or generated-theme-inline.css' };
 
   const themeTokens = new Set();
   for (const line of themeBlock[1].split('\n')) {

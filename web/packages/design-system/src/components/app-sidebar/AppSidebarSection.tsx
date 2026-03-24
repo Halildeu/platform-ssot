@@ -43,7 +43,7 @@ export const AppSidebarSection = React.forwardRef<HTMLDivElement, AppSidebarSect
               className={cn(
                 'flex w-full items-center gap-1 text-[10px] font-semibold uppercase tracking-wider',
                 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
-                'transition-colors duration-200 outline-none',
+                'transition-colors duration-200 outline-hidden',
                 'focus-visible:ring-2 focus-visible:ring-[var(--action-primary)] rounded',
               )}
               onClick={() => setOpen((prev) => !prev)}
