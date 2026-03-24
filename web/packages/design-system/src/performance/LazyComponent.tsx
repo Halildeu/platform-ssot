@@ -75,7 +75,7 @@ const DefaultSkeleton: React.FC<{ className?: string }> = ({ className }) => (
     className={className}
     style={{
       minHeight: 48,
-      background: 'var(--ds-color-surface-secondary, #f3f4f6)',
+      background: 'var(--ds-color-surface-secondary)',
       borderRadius: 'var(--ds-radius-md, 8px)',
       animation: 'pulse 1.5s ease-in-out infinite',
     }}

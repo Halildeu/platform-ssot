@@ -13,10 +13,10 @@ import {
 } from '../components/navigation-rail';
 
 const libraryElevatedSurfaceClass =
-  'relative overflow-hidden border border-border-subtle bg-surface-default ring-1 ring-border-subtle/20 shadow-[0_24px_56px_-30px_var(--shadow-color,rgba(24,18,68,0.32))]';
+  'relative overflow-hidden border border-border-subtle bg-surface-default ring-1 ring-border-subtle/20 shadow-[0_24px_56px_-30px_var(--shadow-color)]';
 
 const libraryPanelSurfaceClass =
-  'relative overflow-hidden border border-border-subtle bg-surface-panel ring-1 ring-border-subtle/18 shadow-[0_18px_42px_-28px_var(--shadow-color,rgba(24,18,68,0.24))]';
+  'relative overflow-hidden border border-border-subtle bg-surface-panel ring-1 ring-border-subtle/18 shadow-[0_18px_42px_-28px_var(--shadow-color)]';
 
 const LibrarySurfaceAccent: React.FC<{
   compact?: boolean;
@@ -49,7 +49,7 @@ export type LibrarySectionBadgeProps = {
 export const LibrarySectionBadge: React.FC<LibrarySectionBadgeProps> = ({ label, className }) => (
   <span
     className={clsx(
-      'inline-flex min-h-[28px] items-center rounded-full border border-border-subtle/20 bg-[var(--surface-card)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-text-secondary shadow-[0_12px_24px_-20px_var(--shadow-color,rgba(24,18,68,0.34))] backdrop-blur-xs',
+      'inline-flex min-h-[28px] items-center rounded-full border border-border-subtle/20 bg-[var(--surface-card)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-text-secondary shadow-[0_12px_24px_-20px_var(--shadow-color)] backdrop-blur-xs',
       className,
     )}
   >
@@ -393,7 +393,7 @@ export const LibraryOutlinePanel: React.FC<LibraryOutlinePanelProps> = ({
           root: 'border-transparent bg-transparent p-0 shadow-none',
           list: 'gap-1.5',
           item: 'rounded-2xl px-3 py-2',
-          activeItem: 'bg-[var(--surface-card)] shadow-[0_14px_28px_-20px_var(--shadow-color,rgba(24,18,68,0.32))] ring-1 ring-border-subtle/20',
+          activeItem: 'bg-[var(--surface-card)] shadow-[0_14px_28px_-20px_var(--shadow-color)] ring-1 ring-border-subtle/20',
           label: 'text-sm',
         }}
         />

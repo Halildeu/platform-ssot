@@ -479,7 +479,7 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                   ? 'cursor-not-allowed opacity-50'
                   : item.danger
                     ? 'hover:border-state-danger-border/30 hover:bg-state-danger/10 focus:border-state-danger-border/30 focus:bg-state-danger/10'
-                    : 'hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-hover)] hover:shadow-[0_12px_26px_-22px_var(--shadow-color,rgba(15,23,42,0.22))] focus:border-border-subtle/70 focus:bg-[var(--surface-hover)]'
+                    : 'hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-hover)] hover:shadow-[0_12px_26px_-22px_var(--shadow-color)] focus:border-border-subtle/70 focus:bg-[var(--surface-hover)]'
               }`}
             >
               <span className="flex min-w-0 items-start gap-3">
@@ -504,12 +504,12 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                   </span>
                 ) : null}
                 {item.badge ? (
-                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
+                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs">
                     {item.badge}
                   </span>
                 ) : null}
                 {item.shortcut ? (
-                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color,rgba(15,23,42,0.2))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
+                  <span className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2 py-1 text-[11px] font-semibold text-text-secondary shadow-[0_10px_20px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs">
                     {item.shortcut}
                   </span>
                 ) : null}
@@ -538,7 +538,7 @@ const MenuSurfaceList = <TItem extends MenuSurfaceItemBase<TItem>>({
                   collisionFlipped: submenuPosition?.flipped ?? false,
                   positioningMode: 'anchor',
                 }}
-                className="fixed z-50 min-w-[18rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color,rgba(15,23,42,0.4))] backdrop-blur-md"
+                className="fixed z-50 min-w-[18rem] rounded-[24px] border border-border-subtle/80 bg-[var(--surface-card)] p-2 ring-1 ring-border-subtle/20 shadow-[0_30px_70px_-40px_var(--shadow-color)] backdrop-blur-md"
                 style={{
                   boxShadow: 'var(--elevation-overlay)',
                   left: submenuPosition?.left ?? 0,

@@ -75,14 +75,14 @@ export interface BoxPlotProps extends AccessControlledProps {
 // Constants
 // ---------------------------------------------------------------------------
 
-const DEFAULT_COLOR = 'var(--box-plot-fill, #3b82f6)';
-const MEDIAN_COLOR = 'var(--box-plot-median, #fff)';
-const WHISKER_COLOR = 'var(--box-plot-whisker, #374151)';
-const OUTLIER_COLOR = 'var(--box-plot-outlier, #ef4444)';
-const MEAN_COLOR = 'var(--box-plot-mean, #f59e0b)';
-const GRID_COLOR = 'var(--border-subtle, #e5e7eb)';
-const TEXT_COLOR = 'var(--text-secondary, #6b7280)';
-const AXIS_COLOR = 'var(--text-tertiary, #9ca3af)';
+const DEFAULT_COLOR = 'var(--box-plot-fill)';
+const MEDIAN_COLOR = 'var(--box-plot-median)';
+const WHISKER_COLOR = 'var(--box-plot-whisker)';
+const OUTLIER_COLOR = 'var(--box-plot-outlier)';
+const MEAN_COLOR = 'var(--box-plot-mean)';
+const GRID_COLOR = 'var(--border-subtle)';
+const TEXT_COLOR = 'var(--text-secondary)';
+const AXIS_COLOR = 'var(--text-tertiary)';
 
 const PADDING = { top: 30, right: 30, bottom: 50, left: 55 };
 
@@ -189,7 +189,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
     return (
       <div
         className={cn(
-          'p-8 text-center text-sm text-[var(--text-tertiary,#6b7280)]',
+          'p-8 text-center text-sm text-[var(--text-tertiary)]',
           className,
         )}
         data-component="box-plot"
@@ -224,7 +224,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg bg-[var(--surface-default,#fff)] p-4',
+        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -362,7 +362,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
                     <polygon
                       points={`${cx},${valueToY(computeMean(item)) - 5} ${cx + 5},${valueToY(computeMean(item))} ${cx},${valueToY(computeMean(item)) + 5} ${cx - 5},${valueToY(computeMean(item))}`}
                       fill={MEAN_COLOR}
-                      stroke="var(--text-inverse, #fff)"
+                      stroke="var(--text-inverse)"
                       strokeWidth={1}
                     />
                   )}
@@ -400,7 +400,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
                         width={100}
                         height={50}
                         rx={4}
-                        fill="var(--surface-elevated, #1f2937)"
+                        fill="var(--surface-elevated)"
                         opacity={0.92}
                       />
                       <text
@@ -408,7 +408,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
                         y={yMax - 44}
                         textAnchor="middle"
                         fontSize={9}
-                        fill="var(--text-inverse, #fff)"
+                        fill="var(--text-inverse)"
                       >
                         Min: {item.min} | Q1: {item.q1}
                       </text>
@@ -417,7 +417,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
                         y={yMax - 32}
                         textAnchor="middle"
                         fontSize={9}
-                        fill="var(--text-inverse, #fff)"
+                        fill="var(--text-inverse)"
                       >
                         Med: {item.median}
                       </text>
@@ -426,7 +426,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
                         y={yMax - 20}
                         textAnchor="middle"
                         fontSize={9}
-                        fill="var(--text-inverse, #fff)"
+                        fill="var(--text-inverse)"
                       >
                         Q3: {item.q3} | Max: {item.max}
                       </text>
@@ -533,7 +533,7 @@ export const BoxPlot: React.FC<BoxPlotProps> = ({
                     <polygon
                       points={`${valueToX(computeMean(item))},${cy - 5} ${valueToX(computeMean(item)) + 5},${cy} ${valueToX(computeMean(item))},${cy + 5} ${valueToX(computeMean(item)) - 5},${cy}`}
                       fill={MEAN_COLOR}
-                      stroke="var(--text-inverse, #fff)"
+                      stroke="var(--text-inverse)"
                       strokeWidth={1}
                     />
                   )}

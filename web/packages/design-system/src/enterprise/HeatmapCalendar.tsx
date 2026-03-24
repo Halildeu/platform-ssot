@@ -68,14 +68,14 @@ export interface HeatmapCalendarProps extends AccessControlledProps {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_COLOR_SCALE: [string, string, string, string, string] = [
-  'var(--heatmap-l1, #9be9a8)',
-  'var(--heatmap-l2, #40c463)',
-  'var(--heatmap-l3, #30a14e)',
-  'var(--heatmap-l4, #216e39)',
-  'var(--heatmap-l5, #0e4429)',
+  'var(--heatmap-l1)',
+  'var(--heatmap-l2)',
+  'var(--heatmap-l3)',
+  'var(--heatmap-l4)',
+  'var(--heatmap-l5)',
 ];
 
-const DEFAULT_EMPTY_COLOR = 'var(--heatmap-empty, #ebedf0)';
+const DEFAULT_EMPTY_COLOR = 'var(--heatmap-empty)';
 
 const CELL_SIZE = 12;
 const CELL_GAP = 2;
@@ -273,7 +273,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
   return (
     <div
       className={cn(
-        'inline-block border border-[var(--border-default,#e5e7eb)] rounded-lg bg-[var(--surface-default,#fff)] p-4',
+        'inline-block border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -297,7 +297,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
               x={offsetX + ml.weekIndex * (CELL_SIZE + CELL_GAP)}
               y={offsetY - 4}
               fontSize={10}
-              fill="var(--text-tertiary, #9ca3af)"
+              fill="var(--text-tertiary)"
             >
               {ml.label}
             </text>
@@ -312,7 +312,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
               y={offsetY + dl.index * (CELL_SIZE + CELL_GAP) + CELL_SIZE - 1}
               textAnchor="end"
               fontSize={9}
-              fill="var(--text-tertiary, #9ca3af)"
+              fill="var(--text-tertiary)"
             >
               {dl.label}
             </text>
@@ -369,7 +369,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
       {/* Tooltip (fixed, portal-free) */}
       {tooltip && (
         <div
-          className="fixed z-50 px-2 py-1 rounded-xs text-xs shadow-md pointer-events-none bg-[var(--surface-elevated,#1f2937)] text-[var(--text-on-elevated,#fff)]"
+          className="fixed z-50 px-2 py-1 rounded-xs text-xs shadow-md pointer-events-none bg-[var(--surface-elevated)] text-[var(--text-on-elevated)]"
           style={{
             left: tooltip.x,
             top: tooltip.y,
@@ -383,7 +383,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
 
       {/* Color scale legend */}
       <div className="flex items-center gap-1.5 mt-3">
-        <span className="text-[10px] text-[var(--text-tertiary,#9ca3af)]">Less</span>
+        <span className="text-[10px] text-[var(--text-tertiary)]">Less</span>
         <span
           className="inline-block rounded-xs"
           style={{ width: CELL_SIZE, height: CELL_SIZE, backgroundColor: emptyColor }}
@@ -397,7 +397,7 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
             aria-hidden="true"
           />
         ))}
-        <span className="text-[10px] text-[var(--text-tertiary,#9ca3af)]">More</span>
+        <span className="text-[10px] text-[var(--text-tertiary)]">More</span>
       </div>
     </div>
   );

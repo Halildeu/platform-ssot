@@ -42,21 +42,21 @@ export interface StatusTimelineProps extends AccessControlledProps {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_COLORS: Record<string, string> = {
-  created: 'var(--action-primary, #3b82f6)',
-  pending: 'var(--state-warning-text, #f59e0b)',
-  'in-progress': 'var(--state-info-text, #6366f1)',
-  'in-review': 'var(--chart-purple, #8b5cf6)',
-  approved: 'var(--state-success-text, #22c55e)',
-  rejected: 'var(--state-error-text, #ef4444)',
-  completed: 'var(--state-success-text, #10b981)',
-  cancelled: 'var(--text-secondary, #6b7280)',
-  error: 'var(--state-error-text, #dc2626)',
+  created: 'var(--action-primary)',
+  pending: 'var(--state-warning-text)',
+  'in-progress': 'var(--state-info-text)',
+  'in-review': 'var(--chart-purple)',
+  approved: 'var(--state-success-text)',
+  rejected: 'var(--state-error-text)',
+  completed: 'var(--state-success-text)',
+  cancelled: 'var(--text-secondary)',
+  error: 'var(--state-error-text)',
 };
 
 function resolveColor(status: string, custom?: Record<string, string>): string {
   if (custom?.[status]) return custom[status];
   const lower = status.toLowerCase();
-  return DEFAULT_COLORS[lower] ?? 'var(--border-strong, #94a3b8)';
+  return DEFAULT_COLORS[lower] ?? 'var(--border-strong)';
 }
 
 // ---------------------------------------------------------------------------

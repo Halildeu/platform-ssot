@@ -62,19 +62,19 @@ const CIRCLE_R = 22;
 // ---------------------------------------------------------------------------
 
 const STATUS_FILL: Record<ProcessNodeStatus, string> = {
-  idle: 'var(--text-disabled, #d1d5db)',
-  active: 'var(--action-primary, #3b82f6)',
-  completed: 'var(--state-success-text, #22c55e)',
-  error: 'var(--state-error-text, #ef4444)',
-  skipped: 'var(--border-strong, #9ca3af)',
+  idle: 'var(--text-disabled)',
+  active: 'var(--action-primary)',
+  completed: 'var(--state-success-text)',
+  error: 'var(--state-error-text)',
+  skipped: 'var(--border-strong)',
 };
 
 const STATUS_STROKE: Record<ProcessNodeStatus, string> = {
-  idle: 'var(--border-strong, #9ca3af)',
-  active: 'var(--action-primary, #2563eb)',
-  completed: 'var(--state-success-text, #16a34a)',
-  error: 'var(--state-error-text, #dc2626)',
-  skipped: 'var(--text-secondary, #6b7280)',
+  idle: 'var(--border-strong)',
+  active: 'var(--action-primary)',
+  completed: 'var(--state-success-text)',
+  error: 'var(--state-error-text)',
+  skipped: 'var(--text-secondary)',
 };
 
 // ---------------------------------------------------------------------------
@@ -182,21 +182,21 @@ function renderNodeShape(
   highlight: boolean,
 ): React.ReactNode {
   const fill = STATUS_FILL[status];
-  const stroke = highlight ? 'var(--state-info-text, #6366f1)' : STATUS_STROKE[status];
+  const stroke = highlight ? 'var(--state-info-text)' : STATUS_STROKE[status];
   const sw = highlight ? 3 : 2;
   const dashArray = status === 'skipped' ? '6 3' : undefined;
 
   switch (type) {
     case 'start':
       return (
-        <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-success-text, #22c55e)" fillOpacity={0.2} stroke="var(--state-success-text, #16a34a)" strokeWidth={sw} strokeDasharray={dashArray} /
+        <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-success-text)" fillOpacity={0.2} stroke="var(--state-success-text)" strokeWidth={sw} strokeDasharray={dashArray} /
         >
       );
     case 'end':
       return (
         <g>
-          <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-error-text, #ef4444)" fillOpacity={0.2} stroke="var(--state-error-text, #dc2626)" strokeWidth={4} strokeDasharray={dashArray} />
-          <circle cx={x} cy={y} r={CIRCLE_R - 6} fill="var(--state-error-text, #ef4444)" fillOpacity={0.4} stroke="none" />
+          <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-error-text)" fillOpacity={0.2} stroke="var(--state-error-text)" strokeWidth={4} strokeDasharray={dashArray} />
+          <circle cx={x} cy={y} r={CIRCLE_R - 6} fill="var(--state-error-text)" fillOpacity={0.4} stroke="none" />
         </g>
       );
     case 'task':
@@ -217,7 +217,7 @@ function renderNodeShape(
     case 'decision': {
       const half = 30;
       const pts = `${x},${y - half} ${x + half},${y} ${x},${y + half} ${x - half},${y}`;
-      return <polygon points={pts} fill="var(--state-warning-text, #eab308)" fillOpacity={0.2} stroke="var(--state-warning-text, #ca8a04)" strokeWidth={sw} strokeDasharray={dashArray} />;
+      return <polygon points={pts} fill="var(--state-warning-text)" fillOpacity={0.2} stroke="var(--state-warning-text)" strokeWidth={sw} strokeDasharray={dashArray} />;
     }
     case 'subprocess':
       return (
@@ -281,8 +281,8 @@ function StatusBadge({ status, x, y }: { status: ProcessNodeStatus; x: number; y
   };
   return (
     <g>
-      <circle cx={x + NODE_W / 2 - 8} cy={y - NODE_H / 2 + 4} r={9} fill={color} stroke="var(--surface-default, #fff)" strokeWidth={1.5} />
-      <text x={x + NODE_W / 2 - 8} y={y - NODE_H / 2 + 8} textAnchor="middle" fontSize={10} fill="var(--text-inverse, #fff)" fontWeight="bold">
+      <circle cx={x + NODE_W / 2 - 8} cy={y - NODE_H / 2 + 4} r={9} fill={color} stroke="var(--surface-default)" strokeWidth={1.5} />
+      <text x={x + NODE_W / 2 - 8} y={y - NODE_H / 2 + 8} textAnchor="middle" fontSize={10} fill="var(--text-inverse)" fontWeight="bold">
         {labels[status]}
       </text>
     </g>
@@ -295,7 +295,7 @@ function StatusBadge({ status, x, y }: { status: ProcessNodeStatus; x: number; y
 
 function ActivePulse({ x, y }: { x: number; y: number }) {
   return (
-    <circle cx={x} cy={y} r={CIRCLE_R + 6} fill="none" stroke="var(--action-primary, #3b82f6)" strokeWidth={1.5} opacity={0.5}>
+    <circle cx={x} cy={y} r={CIRCLE_R + 6} fill="none" stroke="var(--action-primary)" strokeWidth={1.5} opacity={0.5}>
       <animate attributeName="r" from={String(CIRCLE_R + 2)} to={String(CIRCLE_R + 16)} dur="1.5s" repeatCount="indefinite" />
       <animate attributeName="opacity" from="0.6" to="0" dur="1.5s" repeatCount="indefinite" />
     </circle>
@@ -312,7 +312,7 @@ function renderEdge(
   label?: string,
   highlight?: boolean,
 ) {
-  const stroke = highlight ? 'var(--state-info-text, #6366f1)' : 'var(--border-strong, #94a3b8)';
+  const stroke = highlight ? 'var(--state-info-text)' : 'var(--border-strong)';
   const sw = highlight ? 2.5 : 1.5;
   const mx = (fromNode.x + toNode.x) / 2;
   const my = (fromNode.y + toNode.y) / 2;
@@ -338,7 +338,7 @@ function renderEdge(
         markerEnd={`url(#arrow-${fromNode.id}-${toNode.id})`}
       />
       {label && (
-        <text x={mx} y={my - 6} textAnchor="middle" fontSize={10} fill="var(--text-secondary, #64748b)" className="pointer-events-none">
+        <text x={mx} y={my - 6} textAnchor="middle" fontSize={10} fill="var(--text-secondary)" className="pointer-events-none">
           {label}
         </text>
       )}

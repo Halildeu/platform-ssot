@@ -62,10 +62,10 @@ export interface DecisionMatrixProps extends AccessControlledProps {
 
 function getScoreColor(score: number, maxScore: number): { bg: string; text: string } {
   const ratio = score / maxScore;
-  if (ratio >= 0.8) return { bg: 'var(--state-success-bg, #22c55e20)', text: 'var(--state-success-text, #16a34a)' };
-  if (ratio >= 0.6) return { bg: 'var(--state-info-bg, #3b82f620)', text: 'var(--state-info-text, #2563eb)' };
-  if (ratio >= 0.4) return { bg: 'var(--state-warning-bg, #eab30830)', text: 'var(--state-warning-text, #a16207)' };
-  return { bg: 'var(--state-error-bg, #ef444420)', text: 'var(--state-error-text, #dc2626)' };
+  if (ratio >= 0.8) return { bg: 'var(--state-success-bg)', text: 'var(--state-success-text)' };
+  if (ratio >= 0.6) return { bg: 'var(--state-info-bg)', text: 'var(--state-info-text)' };
+  if (ratio >= 0.4) return { bg: 'var(--state-warning-bg)', text: 'var(--state-warning-text)' };
+  return { bg: 'var(--state-error-bg)', text: 'var(--state-error-text)' };
 }
 
 function getScoreBarWidth(score: number, maxScore: number): string {
@@ -118,7 +118,7 @@ const ScoreCell: React.FC<ScoreCellProps> = ({
     <td
       className={cn(
         'py-2 px-3 text-center relative',
-        isWinner && 'bg-[var(--state-success-bg,#22c55e08)]',
+        isWinner && 'bg-[var(--state-success-bg)]',
       )}
       role={isEditable ? 'gridcell' : undefined}
       tabIndex={isEditable ? 0 : undefined}
@@ -241,14 +241,14 @@ export function DecisionMatrix({
                   className={cn(
                     'py-2.5 px-3 text-center text-xs font-semibold uppercase tracking-wide min-w-[80px]',
                     highlightWinner && option.id === winnerId
-                      ? 'text-[var(--state-success-text)] bg-[var(--state-success-bg,#22c55e08)]'
+                      ? 'text-[var(--state-success-text)] bg-[var(--state-success-bg)]'
                       : 'text-text-secondary',
                   )}
                 >
                   <div className="flex flex-col items-center gap-0.5">
                     <span>{option.name}</span>
                     {highlightWinner && option.id === winnerId && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[var(--state-success-text)] text-[var(--text-inverse,#fff)] font-bold">
+                      <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-[var(--state-success-text)] text-[var(--text-inverse)] font-bold">
                         WINNER
                       </span>
                     )}
@@ -314,7 +314,7 @@ export function DecisionMatrix({
                       className={cn(
                         'py-3 px-3 text-center font-mono text-sm font-bold',
                         isWin
-                          ? 'text-[var(--state-success-text)] bg-[var(--state-success-bg,#22c55e08)]'
+                          ? 'text-[var(--state-success-text)] bg-[var(--state-success-bg)]'
                           : 'text-text-primary',
                       )}
                     >

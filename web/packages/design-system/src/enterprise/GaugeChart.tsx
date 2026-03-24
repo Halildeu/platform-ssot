@@ -30,9 +30,9 @@ export interface GaugeThreshold {
  *   label="CPU Usage"
  *   unit="%"
  *   thresholds={[
- *     { value: 33, color: 'var(--state-success-text, #22c55e)', label: 'Low' },
- *     { value: 66, color: 'var(--state-warning-text, #eab308)', label: 'Medium' },
- *     { value: 100, color: 'var(--state-danger-text, #ef4444)', label: 'High' },
+ *     { value: 33, color: 'var(--state-success-text)', label: 'Low' },
+ *     { value: 66, color: 'var(--state-warning-text)', label: 'Medium' },
+ *     { value: 100, color: 'var(--state-danger-text)', label: 'High' },
  *   ]}
  * />
  * ```
@@ -74,9 +74,9 @@ const SIZE_MAP = {
 } as const;
 
 const DEFAULT_THRESHOLDS: GaugeThreshold[] = [
-  { value: 33, color: 'var(--state-danger-text, #ef4444)', label: 'Low' },
-  { value: 66, color: 'var(--state-warning-text, #eab308)', label: 'Medium' },
-  { value: 100, color: 'var(--state-success-text, #22c55e)', label: 'High' },
+  { value: 33, color: 'var(--state-danger-text)', label: 'Low' },
+  { value: 66, color: 'var(--state-warning-text)', label: 'Medium' },
+  { value: 100, color: 'var(--state-success-text)', label: 'High' },
 ];
 
 /**
@@ -125,7 +125,7 @@ function getValueColor(value: number, min: number, max: number, thresholds: Gaug
     const tNorm = ((t.value - min) / (max - min)) * 100;
     if (normalized <= tNorm) return t.color;
   }
-  return sorted[sorted.length - 1]?.color ?? 'var(--text-secondary, #6b7280)';
+  return sorted[sorted.length - 1]?.color ?? 'var(--text-secondary)';
 }
 
 // ── Component ──
@@ -252,7 +252,7 @@ export function GaugeChart({
         <path
           d={describeArc(cx, cy, radius, 0, 180)}
           fill="none"
-          stroke="var(--border-default, #e5e7eb)"
+          stroke="var(--border-default)"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
         />
@@ -286,7 +286,7 @@ export function GaugeChart({
               y1={cy - innerR * Math.sin(rad)}
               x2={cx + outerR * Math.cos(rad)}
               y2={cy - outerR * Math.sin(rad)}
-              stroke="var(--surface-primary, #ffffff)"
+              stroke="var(--surface-primary)"
               strokeWidth={2}
             />
           );
@@ -309,7 +309,7 @@ export function GaugeChart({
             cx={cx}
             cy={cy}
             r={strokeWidth * 0.45}
-            fill="var(--surface-primary, #ffffff)"
+            fill="var(--surface-primary)"
             stroke={valueColor}
             strokeWidth={2}
           />
@@ -324,11 +324,11 @@ export function GaugeChart({
             dominantBaseline="central"
             fontSize={valueFontSize}
             fontWeight={700}
-            fill="var(--text-primary, #111827)"
+            fill="var(--text-primary)"
           >
             {displayValue}
             {unit && (
-              <tspan fontSize={unitFontSize} fill="var(--text-secondary, #6b7280)">
+              <tspan fontSize={unitFontSize} fill="var(--text-secondary)">
                 {' '}{unit}
               </tspan>
             )}
@@ -341,7 +341,7 @@ export function GaugeChart({
           y={cy + labelFontSize + 4}
           textAnchor="start"
           fontSize={labelFontSize * 0.8}
-          fill="var(--text-secondary, #6b7280)"
+          fill="var(--text-secondary)"
         >
           {min}
         </text>
@@ -350,7 +350,7 @@ export function GaugeChart({
           y={cy + labelFontSize + 4}
           textAnchor="end"
           fontSize={labelFontSize * 0.8}
-          fill="var(--text-secondary, #6b7280)"
+          fill="var(--text-secondary)"
         >
           {max}
         </text>
@@ -362,7 +362,7 @@ export function GaugeChart({
             y={cy + labelFontSize + 10}
             textAnchor="middle"
             fontSize={labelFontSize}
-            fill="var(--text-secondary, #6b7280)"
+            fill="var(--text-secondary)"
             fontWeight={500}
           >
             {label}

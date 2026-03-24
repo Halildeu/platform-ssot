@@ -160,7 +160,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           isCard && "rounded-lg border px-3 py-2.5 transition-colors duration-150",
           isCard &&
             (checked
-              ? "border-action-primary bg-[var(--action-primary-soft,rgba(43,108,176,0.05))]"
+              ? "border-action-primary bg-[var(--action-primary-soft)]"
               : "border-border-default bg-transparent"),
           className,
         )}

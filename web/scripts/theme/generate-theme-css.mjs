@@ -112,67 +112,138 @@ if (Object.keys(surfaceTones).length > 0) {
 /* Components use short names (--action-primary) set by ThemeProvider at runtime.
    These aliases bridge theme.css names (--action-primary-bg) to component names
    so components render correctly before ThemeProvider mounts. */
-const bridgeBlock = [
-  '/* Token Bridge — component-level aliases (Faz 0A.1) */',
-  ':root {',
-  '  /* Action */',
-  '  --action-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
-  '  --action-primary-hover: var(--accent-primary-hover, #1a5490);',
-  '  --action-primary-active: var(--accent-primary-hover, #155080);',
-  '  --action-primary-soft: var(--accent-soft, rgba(43, 108, 176, 0.12));',
-  '  --action-secondary: var(--action-secondary-bg, #f1f5f9);',
-  '  /* Surface */',
-  '  --surface-canvas: var(--surface-default-bg, #ffffff);',
-  '  --surface-raised: var(--surface-raised-bg, #ffffff);',
-  '  --surface-page: var(--surface-page-bg, var(--surface-default-bg, #ffffff));',
-  '  --surface-overlay: var(--surface-overlay-bg, rgba(15, 23, 42, 0.6));',
-  '  --surface-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
-  '  --surface-accent: var(--accent-soft, rgba(43, 108, 176, 0.08));',
-  '  --surface-active: var(--selection-bg, rgba(219, 234, 254, 0.6));',
-  '  --surface-inverse: var(--surface-overlay-bg, #0f172a);',
-  '  /* Text */',
-  '  --text-disabled: var(--text-subtle, #64748b);',
-  '  --text-tertiary: var(--text-subtle, #64748b);',
-  '  --text-placeholder: var(--text-subtle, #94a3b8);',
-  '  --text-danger: var(--state-danger-text, #e53e3e);',
-  '  /* Border */',
-  '  --border-strong: var(--border-bold, #2c5282);',
-  '  --border-active: var(--selection-outline, #2b6cb0);',
-  '  --border-hover: var(--border-default, #cbd5e1);',
-  '  --border-error: var(--state-danger-border, #e53e3e);',
-  '  --border-danger: var(--state-danger-border, #e53e3e);',
-  '  /* Focus */',
-  '  --focus-ring: var(--focus-outline, #2c5282);',
-  '  /* State error → danger bridge */',
-  '  --state-error-bg: var(--state-danger-bg, rgba(229, 62, 62, 0.12));',
-  '  --state-error-text: var(--state-danger-text, #e53e3e);',
-  '  --state-error-border: var(--state-danger-border, #e53e3e);',
-  '  /* State short aliases */',
-  '  --state-danger: var(--state-danger-text, #e53e3e);',
-  '  --state-success: var(--state-success-text, #38a169);',
-  '  --state-warning: var(--state-warning-text, #dd6b20);',
-  '  --state-info: var(--state-info-text, #3182ce);',
-  '  /* Feedback aliases */',
-  '  --feedback-error: var(--state-danger-text, #e53e3e);',
-  '  --feedback-success: var(--state-success-text, #38a169);',
-  '  --feedback-warning: var(--state-warning-text, #dd6b20);',
-  '  --feedback-info: var(--state-info-text, #3182ce);',
-  '  /* Legacy */',
-  '  --danger-color: var(--state-danger-text, #e53e3e);',
-  '  --success-color: var(--state-success-text, #38a169);',
-  '  --warning-color: var(--state-warning-text, #dd6b20);',
-  '  --info-color: var(--state-info-text, #3182ce);',
-  '  --bg-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
-  '  --ring-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));',
-  '  --ring-focus: var(--focus-outline, #2c5282);',
-  '  --ring-error: var(--state-danger-border, #e53e3e);',
-  '  --ring-color: var(--focus-outline, #2c5282);',
-  '  --accent-primary-muted: var(--accent-soft, rgba(43, 108, 176, 0.15));',
-  '}',
+
+/**
+ * Bridge alias definitions: [aliasVar, varExpression, ...semanticTokenPaths]
+ * semanticTokenPaths are used to resolve the dark-mode value from the token tree.
+ * The first resolvable path wins.
+ */
+const bridgeAliases = [
+  // Action
+  ['--action-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--action-primary-hover', 'var(--accent-primary-hover)', ['color.action.primary.hover.bg']],
+  ['--action-primary-active', 'var(--accent-primary-hover)', ['color.action.primary.hover.bg']],
+  ['--action-primary-soft', 'var(--accent-soft)', ['color.action.primary.soft.bg']],
+  ['--action-secondary', 'var(--action-secondary-bg)', ['color.action.secondary.bg']],
+  // Surface
+  ['--surface-canvas', 'var(--surface-default-bg)', ['color.surface.default.bg']],
+  ['--surface-raised', 'var(--surface-raised-bg)', ['color.surface.raised.bg']],
+  ['--surface-page', 'var(--surface-page-bg, var(--surface-default-bg))', ['color.surface.default.bg']],
+  ['--surface-overlay', 'var(--surface-overlay-bg)', ['color.surface.overlay.bg']],
+  ['--surface-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--surface-accent', 'var(--accent-soft)', ['color.action.primary.soft.bg']],
+  ['--surface-active', 'var(--selection-bg)', ['color.selection.bg']],
+  ['--surface-inverse', 'var(--surface-overlay-bg)', ['color.surface.overlay.bg']],
+  // Text
+  ['--text-disabled', 'var(--text-subtle)', ['color.text.subtle']],
+  ['--text-tertiary', 'var(--text-subtle)', ['color.text.subtle']],
+  ['--text-placeholder', 'var(--text-subtle)', ['color.text.subtle']],
+  ['--text-danger', 'var(--state-danger-text)', ['color.state.danger.text']],
+  // Border
+  ['--border-strong', 'var(--border-bold)', ['color.border.bold']],
+  ['--border-active', 'var(--selection-outline)', ['color.selection.outline']],
+  ['--border-hover', 'var(--border-default)', ['color.border.default']],
+  ['--border-error', 'var(--state-danger-border)', ['color.state.danger.border']],
+  ['--border-danger', 'var(--state-danger-border)', ['color.state.danger.border']],
+  // Focus
+  ['--focus-ring', 'var(--focus-outline)', ['color.focus.outline']],
+  // State error → danger bridge
+  ['--state-error-bg', 'var(--state-danger-bg)', ['color.state.danger.bg']],
+  ['--state-error-text', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--state-error-border', 'var(--state-danger-border)', ['color.state.danger.border']],
+  // State short aliases
+  ['--state-danger', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--state-success', 'var(--state-success-text)', ['color.state.success.text']],
+  ['--state-warning', 'var(--state-warning-text)', ['color.state.warning.text']],
+  ['--state-info', 'var(--state-info-text)', ['color.state.info.text']],
+  // Feedback aliases
+  ['--feedback-error', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--feedback-success', 'var(--state-success-text)', ['color.state.success.text']],
+  ['--feedback-warning', 'var(--state-warning-text)', ['color.state.warning.text']],
+  ['--feedback-info', 'var(--state-info-text)', ['color.state.info.text']],
+  // Legacy
+  ['--danger-color', 'var(--state-danger-text)', ['color.state.danger.text']],
+  ['--success-color', 'var(--state-success-text)', ['color.state.success.text']],
+  ['--warning-color', 'var(--state-warning-text)', ['color.state.warning.text']],
+  ['--info-color', 'var(--state-info-text)', ['color.state.info.text']],
+  ['--bg-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--ring-primary', 'var(--action-primary-bg, var(--accent-primary))', ['color.action.primary.bg']],
+  ['--ring-focus', 'var(--focus-outline)', ['color.focus.outline']],
+  ['--ring-error', 'var(--state-danger-border)', ['color.state.danger.border']],
+  ['--ring-color', 'var(--focus-outline)', ['color.focus.outline']],
+  ['--accent-primary-muted', 'var(--accent-soft)', ['color.action.primary.soft.bg']],
 ];
+
+/* Group aliases by category for readability in output */
+const bridgeCategoryBreaks = {
+  '--action-primary': '/* Action */',
+  '--surface-canvas': '/* Surface */',
+  '--text-disabled': '/* Text */',
+  '--border-strong': '/* Border */',
+  '--focus-ring': '/* Focus */',
+  '--state-error-bg': '/* State error → danger bridge */',
+  '--state-danger': '/* State short aliases */',
+  '--feedback-error': '/* Feedback aliases */',
+  '--danger-color': '/* Legacy */',
+};
+
+/* Build :root bridge block (no terminal hex fallbacks) */
+const bridgeLines = ['/* Token Bridge — component-level aliases (Faz 0A.1) */'];
+bridgeLines.push(':root {');
+for (const [alias, expr] of bridgeAliases) {
+  if (bridgeCategoryBreaks[alias]) {
+    bridgeLines.push(`  ${bridgeCategoryBreaks[alias]}`);
+  }
+  bridgeLines.push(`  ${alias}: ${expr};`);
+}
+bridgeLines.push('}');
+
 cssChunks.push('');
-cssChunks.push(...bridgeBlock);
+cssChunks.push(...bridgeLines);
 cssChunks.push('');
+
+/* Build [data-mode="dark"] bridge overrides from token tree */
+const darkAppearanceKey = Object.entries(themeContract.modes || {})
+  .find(([, info]) => info.appearance === 'dark')?.[0];
+
+if (darkAppearanceKey) {
+  const darkBridgeLines = [];
+  darkBridgeLines.push('/* Dark mode bridge overrides */');
+  darkBridgeLines.push('[data-mode="dark"] {');
+
+  for (const [alias, , tokenPaths] of bridgeAliases) {
+    if (!tokenPaths || tokenPaths.length === 0) continue;
+    let resolved = null;
+    for (const tokenPath of tokenPaths) {
+      const segments = ['semantic'].concat(tokenPath.split('.'));
+      let node = tokens;
+      let valid = true;
+      for (const seg of segments) {
+        if (node && typeof node === 'object' && seg in node) {
+          node = node[seg];
+        } else {
+          valid = false;
+          break;
+        }
+      }
+      if (valid && node?.modes?.[darkAppearanceKey]) {
+        try {
+          resolved = resolveValue(node.modes[darkAppearanceKey].value);
+        } catch {
+          resolved = null;
+        }
+        if (resolved) break;
+      }
+    }
+    if (resolved) {
+      darkBridgeLines.push(`  ${alias}: ${resolved};`);
+    }
+  }
+
+  darkBridgeLines.push('}');
+  cssChunks.push(...darkBridgeLines);
+  cssChunks.push('');
+}
 
 while (cssChunks.at(-1) === '') {
   cssChunks.pop();

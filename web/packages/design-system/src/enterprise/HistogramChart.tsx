@@ -74,13 +74,13 @@ export interface HistogramChartProps extends AccessControlledProps {
 // Constants
 // ---------------------------------------------------------------------------
 
-const DEFAULT_COLOR = 'var(--histogram-bar, #3b82f6)';
-const CURVE_COLOR = 'var(--histogram-curve, #ef4444)';
-const MEAN_COLOR = 'var(--histogram-mean, #f59e0b)';
-const MEDIAN_COLOR = 'var(--histogram-median, #8b5cf6)';
-const GRID_COLOR = 'var(--border-subtle, #e5e7eb)';
-const TEXT_COLOR = 'var(--text-secondary, #6b7280)';
-const AXIS_COLOR = 'var(--text-tertiary, #9ca3af)';
+const DEFAULT_COLOR = 'var(--histogram-bar)';
+const CURVE_COLOR = 'var(--histogram-curve)';
+const MEAN_COLOR = 'var(--histogram-mean)';
+const MEDIAN_COLOR = 'var(--histogram-median)';
+const GRID_COLOR = 'var(--border-subtle)';
+const TEXT_COLOR = 'var(--text-secondary)';
+const AXIS_COLOR = 'var(--text-tertiary)';
 
 const PADDING = { top: 30, right: 30, bottom: 60, left: 55 };
 
@@ -238,7 +238,7 @@ export const HistogramChart: React.FC<HistogramChartProps> = ({
     return (
       <div
         className={cn(
-          'p-8 text-center text-sm text-[var(--text-tertiary,#6b7280)]',
+          'p-8 text-center text-sm text-[var(--text-tertiary)]',
           className,
         )}
         data-component="histogram-chart"
@@ -287,7 +287,7 @@ export const HistogramChart: React.FC<HistogramChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg bg-[var(--surface-default,#fff)] p-4',
+        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -363,7 +363,7 @@ export const HistogramChart: React.FC<HistogramChartProps> = ({
                   textAnchor="middle"
                   fontSize={10}
                   fontWeight={600}
-                  fill="var(--text-primary, #111827)"
+                  fill="var(--text-primary)"
                 >
                   {bin.count}
                 </text>

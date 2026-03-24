@@ -73,17 +73,17 @@ export interface ControlChartProps extends AccessControlledProps {
 // Constants
 // ---------------------------------------------------------------------------
 
-const DATA_COLOR = 'var(--control-data, #3b82f6)';
-const UCL_COLOR = 'var(--control-ucl, #dc2626)';
-const LCL_COLOR = 'var(--control-lcl, #dc2626)';
-const TARGET_COLOR = 'var(--control-target, #16a34a)';
-const VIOLATION_COLOR = 'var(--control-violation, #dc2626)';
-const ZONE_A_COLOR = 'var(--control-zone-a, rgba(239,68,68,0.08))';
-const ZONE_B_COLOR = 'var(--control-zone-b, rgba(245,158,11,0.08))';
-const ZONE_C_COLOR = 'var(--control-zone-c, rgba(34,197,94,0.06))';
-const GRID_COLOR = 'var(--border-subtle, #e5e7eb)';
-const TEXT_COLOR = 'var(--text-secondary, #6b7280)';
-const AXIS_COLOR = 'var(--text-tertiary, #9ca3af)';
+const DATA_COLOR = 'var(--control-data)';
+const UCL_COLOR = 'var(--control-ucl)';
+const LCL_COLOR = 'var(--control-lcl)';
+const TARGET_COLOR = 'var(--control-target)';
+const VIOLATION_COLOR = 'var(--control-violation)';
+const ZONE_A_COLOR = 'var(--control-zone-a)';
+const ZONE_B_COLOR = 'var(--control-zone-b)';
+const ZONE_C_COLOR = 'var(--control-zone-c)';
+const GRID_COLOR = 'var(--border-subtle)';
+const TEXT_COLOR = 'var(--text-secondary)';
+const AXIS_COLOR = 'var(--text-tertiary)';
 
 const PADDING = { top: 30, right: 40, bottom: 60, left: 60 };
 
@@ -225,7 +225,7 @@ export const ControlChart: React.FC<ControlChartProps> = ({
     return (
       <div
         className={cn(
-          'p-8 text-center text-sm text-[var(--text-tertiary,#6b7280)]',
+          'p-8 text-center text-sm text-[var(--text-tertiary)]',
           className,
         )}
         data-component="control-chart"
@@ -277,7 +277,7 @@ export const ControlChart: React.FC<ControlChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg bg-[var(--surface-default,#fff)] p-4',
+        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -463,7 +463,7 @@ export const ControlChart: React.FC<ControlChartProps> = ({
                 cx={px}
                 cy={py}
                 r={isHovered ? 5 : 3.5}
-                fill="var(--surface-default, #fff)"
+                fill="var(--surface-default)"
                 stroke={pointColor}
                 strokeWidth={2}
               />
@@ -475,10 +475,10 @@ export const ControlChart: React.FC<ControlChartProps> = ({
                     width={90}
                     height={28}
                     rx={4}
-                    fill="var(--surface-elevated, #1f2937)"
+                    fill="var(--surface-elevated)"
                     opacity={0.92}
                   />
-                  <text x={px} y={py - 18} textAnchor="middle" fontSize={9} fill="var(--text-inverse, #fff)">
+                  <text x={px} y={py - 18} textAnchor="middle" fontSize={9} fill="var(--text-inverse)">
                     x: {pt.x} | y: {pt.y.toFixed(2)}
                   </text>
                   {isViolation && (
@@ -542,7 +542,7 @@ export const ControlChart: React.FC<ControlChartProps> = ({
         {/* Legend */}
         <g transform={`translate(${PADDING.left}, ${chartHeight - 10})`}>
           <line x1={0} y1={0} x2={14} y2={0} stroke={DATA_COLOR} strokeWidth={2} />
-          <circle cx={7} cy={0} r={2.5} fill="var(--surface-default, #fff)" stroke={DATA_COLOR} strokeWidth={1.5} />
+          <circle cx={7} cy={0} r={2.5} fill="var(--surface-default)" stroke={DATA_COLOR} strokeWidth={1.5} />
           <text x={18} y={3} fontSize={9} fill={TEXT_COLOR}>Data</text>
 
           <line x1={50} y1={0} x2={68} y2={0} stroke={UCL_COLOR} strokeWidth={1.5} strokeDasharray="6 3" />

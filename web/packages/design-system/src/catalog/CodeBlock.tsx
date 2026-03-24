@@ -93,7 +93,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       className={clsx(
         "rounded-2xl border overflow-hidden",
         isDark
-          ? "border-white/10 bg-[var(--surface-code,#282c34)] text-white"
+          ? "border-white/10 bg-[var(--surface-code)] text-white"
           : "border-border-subtle bg-surface-panel text-text-primary",
         className,
       )}

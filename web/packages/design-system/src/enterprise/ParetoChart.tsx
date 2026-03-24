@@ -63,9 +63,9 @@ export interface ParetoChartProps extends AccessControlledProps {
 // Constants
 // ---------------------------------------------------------------------------
 
-const DEFAULT_BAR_COLOR = 'var(--pareto-bar, #3b82f6)';
-const LINE_COLOR = 'var(--pareto-line, #ef4444)';
-const LINE_80_COLOR = 'var(--pareto-80line, #9ca3af)';
+const DEFAULT_BAR_COLOR = 'var(--pareto-bar)';
+const LINE_COLOR = 'var(--pareto-line)';
+const LINE_80_COLOR = 'var(--pareto-80line)';
 
 const PADDING = { top: 30, right: 50, bottom: 70, left: 55 };
 
@@ -142,7 +142,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
     return (
       <div
         className={cn(
-          'p-8 text-center text-sm text-[var(--text-tertiary,#6b7280)]',
+          'p-8 text-center text-sm text-[var(--text-tertiary)]',
           className,
         )}
       >
@@ -182,7 +182,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg bg-[var(--surface-default,#fff)] p-4',
+        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -209,7 +209,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
                 y1={y}
                 x2={PADDING.left + plotWidth}
                 y2={y}
-                stroke="var(--border-subtle, #e5e7eb)"
+                stroke="var(--border-subtle)"
                 strokeWidth={0.5}
               />
               <text
@@ -217,7 +217,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
                 y={y + 4}
                 textAnchor="end"
                 fontSize={10}
-                fill="var(--text-tertiary, #9ca3af)"
+                fill="var(--text-tertiary)"
               >
                 {format(Math.round(val))}
               </text>
@@ -236,7 +236,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
                 y={y + 4}
                 textAnchor="start"
                 fontSize={10}
-                fill="var(--text-tertiary, #9ca3af)"
+                fill="var(--text-tertiary)"
               >
                 {pct}%
               </text>
@@ -315,7 +315,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
                 y={baseY + 12}
                 textAnchor="end"
                 fontSize={10}
-                fill="var(--text-secondary, #6b7280)"
+                fill="var(--text-secondary)"
                 transform={`rotate(-35, ${x + barWidth / 2}, ${baseY + 12})`}
               >
                 {item.label}
@@ -347,7 +347,7 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
                   cx={x}
                   cy={y}
                   r={3.5}
-                  fill="var(--surface-default, #fff)"
+                  fill="var(--surface-default)"
                   stroke={LINE_COLOR}
                   strokeWidth={2}
                 />
@@ -370,12 +370,12 @@ export const ParetoChart: React.FC<ParetoChartProps> = ({
         {/* Legend */}
         <g transform={`translate(${PADDING.left}, ${chartHeight - 10})`}>
           <rect x={0} y={-6} width={10} height={10} rx={2} fill={DEFAULT_BAR_COLOR} opacity={0.8} />
-          <text x={14} y={3} fontSize={10} fill="var(--text-secondary, #6b7280)">Value</text>
+          <text x={14} y={3} fontSize={10} fill="var(--text-secondary)">Value</text>
           {showCumulativeLine && (
             <>
               <line x1={60} y1={0} x2={80} y2={0} stroke={LINE_COLOR} strokeWidth={2} />
-              <circle cx={70} cy={0} r={3} fill="var(--surface-default, #fff)" stroke={LINE_COLOR} strokeWidth={2} />
-              <text x={84} y={3} fontSize={10} fill="var(--text-secondary, #6b7280)">Cumulative %</text>
+              <circle cx={70} cy={0} r={3} fill="var(--surface-default)" stroke={LINE_COLOR} strokeWidth={2} />
+              <text x={84} y={3} fontSize={10} fill="var(--text-secondary)">Cumulative %</text>
             </>
           )}
         </g>

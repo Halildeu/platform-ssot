@@ -55,8 +55,8 @@ function StarIcon({ filled }: { filled: boolean }) {
       width="12"
       height="12"
       viewBox="0 0 24 24"
-      fill={filled ? 'var(--state-warning-text, #f59e0b)' : 'none'}
-      stroke={filled ? 'var(--state-warning-text, #f59e0b)' : 'currentColor'}
+      fill={filled ? 'var(--state-warning-text)' : 'none'}
+      stroke={filled ? 'var(--state-warning-text)' : 'currentColor'}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

@@ -136,11 +136,11 @@ const sizeClassNames: Record<NavigationRailSize, string> = {
 
 const rootClassByAppearance: Record<NavigationRailAppearance, string> = {
   default:
-    "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_22px_48px_-32px_var(--shadow-color,rgba(15,23,42,0.28))] backdrop-blur-xs",
+    "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_22px_48px_-32px_var(--shadow-color)] backdrop-blur-xs",
   outline:
-    "border border-border-default/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_18px_40px_-34px_var(--shadow-color,rgba(15,23,42,0.24))] backdrop-blur-xs",
+    "border border-border-default/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_18px_40px_-34px_var(--shadow-color)] backdrop-blur-xs",
   ghost:
-    "border border-transparent bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_14px_34px_-32px_var(--shadow-color,rgba(15,23,42,0.18))] backdrop-blur-xs",
+    "border border-transparent bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_14px_34px_-32px_var(--shadow-color)] backdrop-blur-xs",
 };
 
 function getEnabledValues(items: NavigationRailItem[]): string[] {
@@ -440,7 +440,7 @@ export const NavigationRail = React.forwardRef<
         <span
           className={cn(
             "navigation-rail-badge inline-flex min-w-6 items-center justify-center rounded-full border border-border-subtle bg-surface-panel px-2 py-0.5 text-[11px] font-medium text-text-primary",
-            "shadow-[0_10px_22px_-18px_var(--shadow-color,rgba(15,23,42,0.24))] ring-1 ring-border-subtle/20 backdrop-blur-xs",
+            "shadow-[0_10px_22px_-18px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs",
             compact && "absolute right-1 top-1",
             classes?.badge,
           )}
@@ -548,8 +548,8 @@ export const NavigationRail = React.forwardRef<
                 sizeClassNames[size],
                 compact ? "justify-center" : "justify-start",
                 selected
-                  ? "border-border-default/70 bg-[var(--surface-card)] text-text-primary shadow-[0_18px_36px_-28px_var(--shadow-color,rgba(15,23,42,0.3))] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent"
-                  : "text-text-secondary hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-hover)] hover:text-text-primary hover:shadow-[0_14px_28px_-24px_var(--shadow-color,rgba(15,23,42,0.22))]",
+                  ? "border-border-default/70 bg-[var(--surface-card)] text-text-primary shadow-[0_18px_36px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent"
+                  : "text-text-secondary hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-hover)] hover:text-text-primary hover:shadow-[0_14px_28px_-24px_var(--shadow-color)]",
                 blocked && "cursor-not-allowed opacity-50",
                 isReadonly &&
                   !item.disabled &&

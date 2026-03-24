@@ -153,7 +153,7 @@ export const Watermark = React.forwardRef<HTMLDivElement, WatermarkProps>(functi
     gap = DEFAULT_GAP,
     offset,
     fontSize = DEFAULT_FONT_SIZE,
-    fontColor = "var(--text-disabled, rgba(0,0,0,0.15))",
+    fontColor = "var(--text-disabled)",
     opacity = DEFAULT_OPACITY,
     zIndex = DEFAULT_Z_INDEX,
     children,

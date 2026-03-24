@@ -319,7 +319,7 @@ export const MicroChart: React.FC<MicroChartProps> = ({
   width = 64,
   height = 32,
   color = 'var(--interactive-primary)',
-  trackColor = 'var(--surface-muted, #d1d5db)',
+  trackColor = 'var(--surface-muted)',
   className,
   ariaLabel,
   access,

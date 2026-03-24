@@ -384,7 +384,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           className={cn(
             "rounded-md border-2 border-border-subtle transition-all duration-150",
             focusRingClass("ring"),
-            isInteractive && "cursor-pointer hover:border-[var(--border-hover,#9ca3af)]",
+            isInteractive && "cursor-pointer hover:border-[var(--border-hover)]",
             accessState.isDisabled && "opacity-50 cursor-not-allowed",
             !isInteractive && !accessState.isDisabled && "cursor-default",
           )}
@@ -409,7 +409,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
             ref={popoverRef}
             className={cn(
               "mt-1 rounded-lg border border-border-subtle",
-              "bg-[var(--surface-primary,#ffffff)] p-3 shadow-lg",
+              "bg-[var(--surface-primary)] p-3 shadow-lg",
               "flex flex-col gap-3",
               "w-full max-w-[232px]",
             )}
@@ -481,8 +481,8 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                   onBlur={handleInputBlur}
                   className={cn(
                     "flex-1 rounded-xs border border-border-subtle px-2 py-1",
-                    "bg-[var(--surface-primary,#ffffff)] text-text-primary",
-                    "focus:outline-hidden focus:ring-1 focus:ring-[var(--ring-color,#3b82f6)]",
+                    "bg-[var(--surface-primary)] text-text-primary",
+                    "focus:outline-hidden focus:ring-1 focus:ring-[var(--ring-color)]",
                     sizeConfig.font,
                     "font-mono",
                   )}
@@ -515,7 +515,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                             "rounded-xs border transition-[scale] duration-100",
                             `hover:scale-110 ${focusRingClass("ring")}`,
                             color.toLowerCase() === currentValue.toLowerCase()
-                              ? "border-[var(--border-active,#3b82f6)] ring-1 ring-[var(--ring-color,#3b82f6)]"
+                              ? "border-[var(--border-active)] ring-1 ring-[var(--ring-color)]"
                               : "border-border-subtle",
                           )}
                           style={{

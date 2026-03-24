@@ -84,10 +84,10 @@ const DEFAULT_SCOPE_LABELS: Record<ExportScope, string> = {
 // ---------------------------------------------------------------------------
 
 const FORMAT_COLORS: Record<ExportFormat, string> = {
-  pdf: 'var(--state-error-text, #ef4444)',
-  excel: 'var(--state-success-text, #22c55e)',
-  csv: 'var(--action-primary, #3b82f6)',
-  png: 'var(--chart-purple, #a855f7)',
+  pdf: 'var(--state-error-text)',
+  excel: 'var(--state-success-text)',
+  csv: 'var(--action-primary)',
+  png: 'var(--chart-purple)',
 };
 
 // ---------------------------------------------------------------------------

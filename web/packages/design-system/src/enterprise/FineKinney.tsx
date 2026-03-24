@@ -151,41 +151,41 @@ const CATEGORIES: CategoryConfig[] = [
     key: 'acceptable',
     min: 0,
     max: 20,
-    bg: 'var(--fk-acceptable-bg, #22c55e20)',
-    text: 'var(--fk-acceptable-text, #16a34a)',
-    badge: 'var(--fk-acceptable-badge, #16a34a)',
+    bg: 'var(--fk-acceptable-bg)',
+    text: 'var(--fk-acceptable-text)',
+    badge: 'var(--fk-acceptable-badge)',
   },
   {
     key: 'notable',
     min: 21,
     max: 70,
-    bg: 'var(--fk-notable-bg, #3b82f620)',
-    text: 'var(--fk-notable-text, #2563eb)',
-    badge: 'var(--fk-notable-badge, #2563eb)',
+    bg: 'var(--fk-notable-bg)',
+    text: 'var(--fk-notable-text)',
+    badge: 'var(--fk-notable-badge)',
   },
   {
     key: 'significant',
     min: 71,
     max: 200,
-    bg: 'var(--fk-significant-bg, #eab30830)',
-    text: 'var(--fk-significant-text, #a16207)',
-    badge: 'var(--fk-significant-badge, #ca8a04)',
+    bg: 'var(--fk-significant-bg)',
+    text: 'var(--fk-significant-text)',
+    badge: 'var(--fk-significant-badge)',
   },
   {
     key: 'high',
     min: 201,
     max: 400,
-    bg: 'var(--fk-high-bg, #f9731630)',
-    text: 'var(--fk-high-text, #c2410c)',
-    badge: 'var(--fk-high-badge, #ea580c)',
+    bg: 'var(--fk-high-bg)',
+    text: 'var(--fk-high-text)',
+    badge: 'var(--fk-high-badge)',
   },
   {
     key: 'veryHigh',
     min: 401,
     max: Infinity,
-    bg: 'var(--fk-veryhigh-bg, #ef444430)',
-    text: 'var(--fk-veryhigh-text, #dc2626)',
-    badge: 'var(--fk-veryhigh-badge, #dc2626)',
+    bg: 'var(--fk-veryhigh-bg)',
+    text: 'var(--fk-veryhigh-text)',
+    badge: 'var(--fk-veryhigh-badge)',
   },
 ];
 
@@ -202,16 +202,16 @@ function computeRiskScore(risk: FineKinneyRisk): number {
 
 const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
   open: {
-    bg: 'var(--fk-status-open-bg, #ef444420)',
-    text: 'var(--fk-status-open-text, #dc2626)',
+    bg: 'var(--fk-status-open-bg)',
+    text: 'var(--fk-status-open-text)',
   },
   'in-progress': {
-    bg: 'var(--fk-status-inprogress-bg, #f59e0b20)',
-    text: 'var(--fk-status-inprogress-text, #d97706)',
+    bg: 'var(--fk-status-inprogress-bg)',
+    text: 'var(--fk-status-inprogress-text)',
   },
   closed: {
-    bg: 'var(--fk-status-closed-bg, #22c55e20)',
-    text: 'var(--fk-status-closed-text, #16a34a)',
+    bg: 'var(--fk-status-closed-bg)',
+    text: 'var(--fk-status-closed-text)',
   },
 };
 
@@ -292,7 +292,7 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
       <div
         className={cn(
           'p-8 text-center text-sm',
-          'text-[var(--text-tertiary,#6b7280)]',
+          'text-[var(--text-tertiary)]',
           className,
         )}
       >
@@ -307,7 +307,7 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg bg-[var(--surface-default,#fff)] overflow-hidden',
+        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] overflow-hidden',
         accessStyles(accessState.state),
         className,
       )}
@@ -322,14 +322,14 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
       <div
         className={cn(
           'flex flex-wrap items-center gap-2 px-4 py-3',
-          'border-b border-[var(--border-default,#e5e7eb)]',
-          'bg-[var(--surface-subtle,#f9fafb)]',
+          'border-b border-[var(--border-default)]',
+          'bg-[var(--surface-subtle)]',
         )}
       >
-        <span className="text-sm font-medium text-[var(--text-primary,#111827)]">
+        <span className="text-sm font-medium text-[var(--text-primary)]">
           {t.totalRisks}: {risks.length}
         </span>
-        <span className="text-[var(--border-default,#d1d5db)]">|</span>
+        <span className="text-[var(--border-default)]">|</span>
         {CATEGORIES.map((cat) => {
           const count = categoryCounts[cat.key];
           if (count === 0) return null;
@@ -354,20 +354,20 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full border-collapse" role="table">
           <thead>
-            <tr className="bg-[var(--surface-subtle,#f9fafb)]">
-              <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)]')}>{t.hazard}</th>
-              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)] whitespace-nowrap')}>{t.probability}</th>
-              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)] whitespace-nowrap')}>{t.frequency}</th>
-              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)] whitespace-nowrap')}>{t.severity}</th>
-              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)] whitespace-nowrap')}>{t.riskScore}</th>
-              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)]')}>{t.level}</th>
+            <tr className="bg-[var(--surface-subtle)]">
+              <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)]')}>{t.hazard}</th>
+              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)] whitespace-nowrap')}>{t.probability}</th>
+              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)] whitespace-nowrap')}>{t.frequency}</th>
+              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)] whitespace-nowrap')}>{t.severity}</th>
+              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)] whitespace-nowrap')}>{t.riskScore}</th>
+              <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)]')}>{t.level}</th>
               {showControls && (
-                <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)]')}>{t.controls}</th>
+                <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)]')}>{t.controls}</th>
               )}
-              <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)]')}>{t.responsible}</th>
-              <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)] whitespace-nowrap')}>{t.deadline}</th>
+              <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)]')}>{t.responsible}</th>
+              <th className={cn('text-left font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)] whitespace-nowrap')}>{t.deadline}</th>
               {showStatus && (
-                <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary,#111827)]')}>{t.status}</th>
+                <th className={cn('text-center font-semibold', fontSize, rowPadding, 'text-[var(--text-primary)]')}>{t.status}</th>
               )}
             </tr>
           </thead>
@@ -382,9 +382,9 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
                 <tr
                   key={risk.id}
                   className={cn(
-                    'border-t border-[var(--border-default,#e5e7eb)]',
+                    'border-t border-[var(--border-default)]',
                     'transition-colors duration-100',
-                    isClickable && 'cursor-pointer hover:bg-[var(--surface-hover,#f3f4f6)]',
+                    isClickable && 'cursor-pointer hover:bg-[var(--surface-hover)]',
                   )}
                   onClick={isClickable ? () => onRiskClick!(risk) : undefined}
                   role={isClickable ? 'button' : undefined}
@@ -403,23 +403,23 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
                 >
                   {/* Hazard */}
                   <td className={cn('text-left', fontSize, rowPadding)}>
-                    <div className="font-medium text-[var(--text-primary,#111827)]">{risk.hazard}</div>
+                    <div className="font-medium text-[var(--text-primary)]">{risk.hazard}</div>
                     {risk.description && (
-                      <div className="text-xs text-[var(--text-tertiary,#9ca3af)] mt-0.5 line-clamp-2">
+                      <div className="text-xs text-[var(--text-tertiary)] mt-0.5 line-clamp-2">
                         {risk.description}
                       </div>
                     )}
                   </td>
                   {/* P */}
-                  <td className={cn('text-center tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary,#4b5563)]')}>
+                  <td className={cn('text-center tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary)]')}>
                     {risk.probability}
                   </td>
                   {/* F */}
-                  <td className={cn('text-center tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary,#4b5563)]')}>
+                  <td className={cn('text-center tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary)]')}>
                     {risk.frequency}
                   </td>
                   {/* S */}
-                  <td className={cn('text-center tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary,#4b5563)]')}>
+                  <td className={cn('text-center tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary)]')}>
                     {risk.severity}
                   </td>
                   {/* Score */}
@@ -447,7 +447,7 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
                   </td>
                   {/* Controls */}
                   {showControls && (
-                    <td className={cn('text-left', fontSize, rowPadding, 'text-[var(--text-secondary,#4b5563)] max-w-[200px]')}>
+                    <td className={cn('text-left', fontSize, rowPadding, 'text-[var(--text-secondary)] max-w-[200px]')}>
                       {risk.controls && risk.controls.length > 0 ? (
                         <ul className="list-disc list-inside space-y-0.5">
                           {risk.controls.map((ctrl, idx) => (
@@ -455,16 +455,16 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
                           ))}
                         </ul>
                       ) : (
-                        <span className="text-[var(--text-tertiary,#9ca3af)]">—</span>
+                        <span className="text-[var(--text-tertiary)]">—</span>
                       )}
                     </td>
                   )}
                   {/* Responsible */}
-                  <td className={cn('text-left', fontSize, rowPadding, 'text-[var(--text-secondary,#4b5563)] whitespace-nowrap')}>
+                  <td className={cn('text-left', fontSize, rowPadding, 'text-[var(--text-secondary)] whitespace-nowrap')}>
                     {risk.responsiblePerson || '—'}
                   </td>
                   {/* Deadline */}
-                  <td className={cn('text-left tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary,#4b5563)] whitespace-nowrap')}>
+                  <td className={cn('text-left tabular-nums', fontSize, rowPadding, 'text-[var(--text-secondary)] whitespace-nowrap')}>
                     {risk.deadline || '—'}
                   </td>
                   {/* Status */}
@@ -481,7 +481,7 @@ export const FineKinney: React.FC<FineKinneyProps> = ({
                           {statusLabel(risk.status)}
                         </span>
                       ) : (
-                        <span className="text-[var(--text-tertiary,#9ca3af)]">—</span>
+                        <span className="text-[var(--text-tertiary)]">—</span>
                       )}
                     </td>
                   )}

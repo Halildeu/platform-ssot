@@ -50,9 +50,9 @@ export interface SWOTMatrixProps extends AccessControlledProps {
 // ---------------------------------------------------------------------------
 
 const PRIORITY_DOT_COLORS: Record<string, string> = {
-  high: 'var(--state-error-text, #dc2626)',
-  medium: 'var(--state-warning-text, #a16207)',
-  low: 'var(--state-success-text, #16a34a)',
+  high: 'var(--state-error-text)',
+  medium: 'var(--state-warning-text)',
+  low: 'var(--state-success-text)',
 };
 
 interface QuadrantConfig {
@@ -71,40 +71,40 @@ const QUADRANT_CONFIG: QuadrantConfig[] = [
     key: 'S',
     label: 'Strengths',
     subtitle: 'Internal positive',
-    bg: 'var(--state-success-bg, #22c55e10)',
-    border: 'var(--state-success-text, #16a34a)',
-    headerBg: 'var(--state-success-text, #16a34a)',
-    headerText: 'var(--text-inverse, #fff)',
+    bg: 'var(--state-success-bg)',
+    border: 'var(--state-success-text)',
+    headerBg: 'var(--state-success-text)',
+    headerText: 'var(--text-inverse)',
     itemProp: 'strengths',
   },
   {
     key: 'W',
     label: 'Weaknesses',
     subtitle: 'Internal negative',
-    bg: 'var(--state-error-bg, #ef444410)',
-    border: 'var(--state-error-text, #dc2626)',
-    headerBg: 'var(--state-error-text, #dc2626)',
-    headerText: 'var(--text-inverse, #fff)',
+    bg: 'var(--state-error-bg)',
+    border: 'var(--state-error-text)',
+    headerBg: 'var(--state-error-text)',
+    headerText: 'var(--text-inverse)',
     itemProp: 'weaknesses',
   },
   {
     key: 'O',
     label: 'Opportunities',
     subtitle: 'External positive',
-    bg: 'var(--state-info-bg, #3b82f610)',
-    border: 'var(--state-info-text, #2563eb)',
-    headerBg: 'var(--state-info-text, #2563eb)',
-    headerText: 'var(--text-inverse, #fff)',
+    bg: 'var(--state-info-bg)',
+    border: 'var(--state-info-text)',
+    headerBg: 'var(--state-info-text)',
+    headerText: 'var(--text-inverse)',
     itemProp: 'opportunities',
   },
   {
     key: 'T',
     label: 'Threats',
     subtitle: 'External negative',
-    bg: 'var(--state-warning-bg, #eab30810)',
-    border: 'var(--state-warning-text, #a16207)',
-    headerBg: 'var(--state-warning-text, #a16207)',
-    headerText: 'var(--text-inverse, #fff)',
+    bg: 'var(--state-warning-bg)',
+    border: 'var(--state-warning-text)',
+    headerBg: 'var(--state-warning-text)',
+    headerText: 'var(--text-inverse)',
     itemProp: 'threats',
   },
 ];
@@ -148,7 +148,7 @@ const SWOTChip: React.FC<SWOTChipProps> = ({ item, quadrant, canInteract, compac
       onKeyDown={isClickable ? handleKeyDown : undefined}
       className={cn(
         'inline-flex items-center gap-1.5 rounded-md',
-        'bg-[var(--surface-default,#fff)] border border-[var(--border-subtle,#e5e7eb)]',
+        'bg-[var(--surface-default)] border border-[var(--border-subtle)]',
         'text-[var(--text-primary)]',
         'transition-colors duration-100',
         compact ? 'px-1.5 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs',
@@ -224,7 +224,7 @@ const QuadrantPanel: React.FC<QuadrantPanelProps> = ({ config, items, canInterac
       {/* Items */}
       <div className={cn('flex flex-wrap gap-1.5 flex-1', compact ? 'p-2' : 'p-3')}>
         {items.length === 0 && (
-          <span className="text-xs text-[var(--text-tertiary,#9ca3af)] italic">
+          <span className="text-xs text-[var(--text-tertiary)] italic">
             No items
           </span>
         )}
@@ -320,7 +320,7 @@ export function SWOTMatrix({
       )}
 
       {/* 2x2 Grid */}
-      <div className={cn('grid grid-cols-2 bg-[var(--border-default,#e5e7eb)] rounded-lg overflow-hidden', compact ? 'gap-px' : 'gap-0.5')}>
+      <div className={cn('grid grid-cols-2 bg-[var(--border-default)] rounded-lg overflow-hidden', compact ? 'gap-px' : 'gap-0.5')}>
         {QUADRANT_CONFIG.map((config, idx) => (
           <QuadrantPanel
             key={config.key}

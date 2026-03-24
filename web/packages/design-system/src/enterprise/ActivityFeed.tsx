@@ -73,14 +73,14 @@ const TYPE_CONFIG: Record<
   ActivityItem['type'],
   { icon: string; color: string; bgColor: string }
 > = {
-  create: { icon: '+', color: 'var(--state-success-text, #16a34a)', bgColor: 'var(--state-success-bg, #dcfce7)' },
-  update: { icon: '~', color: 'var(--state-info-text, #2563eb)', bgColor: 'var(--state-info-bg, #dbeafe)' },
-  delete: { icon: '-', color: 'var(--state-error-text, #dc2626)', bgColor: 'var(--state-error-bg, #fee2e2)' },
-  comment: { icon: '\u2709', color: 'var(--text-secondary, #6b7280)', bgColor: 'var(--surface-muted, #f3f4f6)' },
-  approve: { icon: '\u2713', color: 'var(--state-success-text, #16a34a)', bgColor: 'var(--state-success-bg, #dcfce7)' },
-  assign: { icon: '\u2192', color: 'var(--state-warning-text, #d97706)', bgColor: 'var(--state-warning-bg, #fef3c7)' },
-  complete: { icon: '\u2714', color: 'var(--state-success-text, #16a34a)', bgColor: 'var(--state-success-bg, #dcfce7)' },
-  alert: { icon: '!', color: 'var(--state-error-text, #dc2626)', bgColor: 'var(--state-error-bg, #fee2e2)' },
+  create: { icon: '+', color: 'var(--state-success-text)', bgColor: 'var(--state-success-bg)' },
+  update: { icon: '~', color: 'var(--state-info-text)', bgColor: 'var(--state-info-bg)' },
+  delete: { icon: '-', color: 'var(--state-error-text)', bgColor: 'var(--state-error-bg)' },
+  comment: { icon: '\u2709', color: 'var(--text-secondary)', bgColor: 'var(--surface-muted)' },
+  approve: { icon: '\u2713', color: 'var(--state-success-text)', bgColor: 'var(--state-success-bg)' },
+  assign: { icon: '\u2192', color: 'var(--state-warning-text)', bgColor: 'var(--state-warning-bg)' },
+  complete: { icon: '\u2714', color: 'var(--state-success-text)', bgColor: 'var(--state-success-bg)' },
+  alert: { icon: '!', color: 'var(--state-error-text)', bgColor: 'var(--state-error-bg)' },
 };
 
 // ---------------------------------------------------------------------------
@@ -161,8 +161,8 @@ const ActivityAvatar: React.FC<ActivityAvatarProps> = ({ name, avatar }) => {
       style={{
         width: 32,
         height: 32,
-        backgroundColor: 'var(--surface-muted, #e5e7eb)',
-        color: 'var(--text-secondary, #6b7280)',
+        backgroundColor: 'var(--surface-muted)',
+        color: 'var(--text-secondary)',
       }}
       aria-label={name}
     >
@@ -200,7 +200,7 @@ const ActivityRow: React.FC<ActivityRowProps> = ({ item, isLast, canInteract, on
     <div
       className={cn(
         'relative flex gap-3 py-3 px-2 rounded-md',
-        isClickable && 'cursor-pointer hover:bg-[var(--surface-hover,#f9fafb)]',
+        isClickable && 'cursor-pointer hover:bg-[var(--surface-hover)]',
         'transition-colors',
       )}
       onClick={handleClick}
@@ -215,7 +215,7 @@ const ActivityRow: React.FC<ActivityRowProps> = ({ item, isLast, canInteract, on
       {!isLast && (
         <div
           className="absolute left-[17px] top-[44px] bottom-0 w-0.5"
-          style={{ backgroundColor: 'var(--border-subtle, #e5e7eb)' }}
+          style={{ backgroundColor: 'var(--border-subtle)' }}
           aria-hidden="true"
         />
       )}
@@ -224,7 +224,7 @@ const ActivityRow: React.FC<ActivityRowProps> = ({ item, isLast, canInteract, on
       <div className="relative shrink-0">
         <ActivityAvatar name={item.actor.name} avatar={item.actor.avatar} />
         <div
-          className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold border-2 border-[var(--surface-default,#fff)]"
+          className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold border-2 border-[var(--surface-default)]"
           style={{ backgroundColor: config.bgColor, color: config.color }}
           aria-hidden="true"
         >
@@ -235,19 +235,19 @@ const ActivityRow: React.FC<ActivityRowProps> = ({ item, isLast, canInteract, on
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-1 flex-wrap">
-          <span className="text-sm font-semibold text-[var(--text-primary,#111827)]">
+          <span className="text-sm font-semibold text-[var(--text-primary)]">
             {item.actor.name}
           </span>
-          <span className="text-sm text-[var(--text-secondary,#374151)]">
+          <span className="text-sm text-[var(--text-secondary)]">
             {item.description}
           </span>
           {item.target && (
-            <span className="text-sm font-medium text-[var(--text-accent,#3b82f6)]">
+            <span className="text-sm font-medium text-[var(--text-accent)]">
               {item.target}
             </span>
           )}
         </div>
-        <span className="text-xs text-[var(--text-tertiary,#9ca3af)] mt-0.5 block">
+        <span className="text-xs text-[var(--text-tertiary)] mt-0.5 block">
           {relativeTime(item.timestamp)}
         </span>
       </div>
@@ -315,8 +315,8 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
     return (
       <div
         className={cn(
-          'p-6 text-center text-sm text-[var(--text-tertiary,#6b7280)]',
-          'border border-[var(--border-default,#e5e7eb)] rounded-lg',
+          'p-6 text-center text-sm text-[var(--text-tertiary)]',
+          'border border-[var(--border-default)] rounded-lg',
           className,
         )}
         data-component="activity-feed"
@@ -345,8 +345,8 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg',
-        'bg-[var(--surface-default,#fff)] p-4',
+        'border border-[var(--border-default)] rounded-lg',
+        'bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -361,10 +361,10 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
         Array.from(dateGroups.entries()).map(([dateLabel, groupItems]) => (
           <div key={dateLabel} className="mb-4 last:mb-0">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-semibold text-[var(--text-tertiary,#9ca3af)] uppercase tracking-wider">
+              <span className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wider">
                 {dateLabel}
               </span>
-              <div className="flex-1 h-px bg-[var(--border-subtle,#e5e7eb)]" />
+              <div className="flex-1 h-px bg-[var(--border-subtle)]" />
             </div>
             {renderItems(groupItems)}
           </div>
@@ -375,13 +375,13 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
       {/* Load more */}
       {(hasMore || (showLoadMore && onLoadMore)) && canInteract && (
-        <div className="mt-3 pt-3 border-t border-[var(--border-subtle,#e5e7eb)] text-center">
+        <div className="mt-3 pt-3 border-t border-[var(--border-subtle)] text-center">
           <button
             type="button"
             className={cn(
               'px-4 py-1.5 text-xs font-medium rounded-md',
-              'text-[var(--text-accent,#3b82f6)]',
-              'hover:bg-[var(--surface-hover,#f9fafb)] transition-colors',
+              'text-[var(--text-accent)]',
+              'hover:bg-[var(--surface-hover)] transition-colors',
             )}
             onClick={handleLoadMore}
             aria-label="Load more activities"

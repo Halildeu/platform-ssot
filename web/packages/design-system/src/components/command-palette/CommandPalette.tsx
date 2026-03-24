@@ -203,7 +203,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
         style={{
           backgroundColor:
             // eslint-disable-next-line semantic-theme/no-inline-color-literals -- color-mix with CSS var fallback
-            "color-mix(in srgb, var(--surface-overlay-bg, rgba(0,0,0,0.5)) calc(var(--overlay-intensity, 50) * 1%), transparent)",
+            "color-mix(in srgb, var(--surface-overlay-bg) calc(var(--overlay-intensity, 50) * 1%), transparent)",
           opacity: "var(--overlay-opacity, 0.6)",
         }}
         onClick={() => onClose?.()}
@@ -295,7 +295,7 @@ export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPalettePro
                           className={cn(
                             "flex w-full items-start justify-between gap-4 rounded-2xl border px-4 py-3 text-left transition",
                             isActive
-                              ? "border-action-primary bg-[var(--action-primary-soft,rgba(79,70,229,0.08))]"
+                              ? "border-action-primary bg-[var(--action-primary-soft)]"
                               : "border-border-subtle bg-surface-muted hover:bg-[var(--surface-hover,var(--surface-muted))]",
                             (item.disabled || !canExecute) &&
                               "cursor-not-allowed opacity-60",

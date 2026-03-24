@@ -69,19 +69,19 @@ const densityClass: Record<ListDensity, string> = {
 };
 
 const listSurfaceClassName =
-  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
+  "relative overflow-hidden rounded-[28px] bg-[var(--surface-card)] shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent";
 
 const toneClass: Record<ListTone, string> = {
   default:
-    "border border-border-subtle/75 bg-[var(--surface-card-alt)] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.18))]",
+    "border border-border-subtle/75 bg-[var(--surface-card-alt)] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   info:
-    "border border-state-info-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(239,246,255,0.98),rgba(246,247,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(37,99,235,0.18))]",
+    "border border-state-info-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(239,246,255,0.98),rgba(246,247,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   success:
-    "border border-state-success-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(240,253,244,0.98),rgba(247,250,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(22,163,74,0.18))]",
+    "border border-state-success-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(240,253,244,0.98),rgba(247,250,255,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   warning:
-    "border border-state-warning-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(255,251,235,0.98),rgba(255,247,237,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(217,119,6,0.18))]",
+    "border border-state-warning-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(255,251,235,0.98),rgba(255,247,237,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
   danger:
-    "border border-state-danger-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(254,242,242,0.98),rgba(255,247,247,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(220,38,38,0.18))]",
+    "border border-state-danger-border/55 bg-[var(--surface-card-alt,linear-gradient(180deg,rgba(254,242,242,0.98),rgba(255,247,247,0.88)))] ring-1 ring-border-subtle/20 shadow-[0_16px_30px_-28px_var(--shadow-color)]",
 };
 
 const badgeToneMap: Record<ListTone, BadgeVariant> = {
@@ -188,7 +188,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
                     blocked
                       ? "cursor-not-allowed opacity-70"
                       : interactive
-                        ? "hover:-translate-y-px hover:bg-[var(--surface-card)] hover:shadow-[0_18px_30px_-26px_var(--shadow-color,rgba(15,23,42,0.18))] active:translate-y-0"
+                        ? "hover:-translate-y-px hover:bg-[var(--surface-card)] hover:shadow-[0_18px_30px_-26px_var(--shadow-color)] active:translate-y-0"
                         : "",
                   ]
                     .filter(Boolean)
@@ -222,7 +222,7 @@ export const List = React.forwardRef<HTMLElement, ListProps>(({
                           {(item.meta || item.suffix) ? (
                             <div className="flex shrink-0 flex-col items-end gap-2">
                               {item.meta ? (
-                                <Text variant="secondary" className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color,rgba(15,23,42,0.16))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
+                                <Text variant="secondary" className="rounded-full border border-border-subtle/70 bg-[var(--surface-card)] px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.16em] shadow-[0_12px_24px_-24px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs">
                                   {item.meta}
                                 </Text>
                               ) : null}

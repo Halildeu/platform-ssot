@@ -209,7 +209,7 @@ export const Modal = React.forwardRef<HTMLDialogElement, ModalProps>(({
         "bg-surface-default p-0 shadow-xl",
 
         /* backdrop */
-        "backdrop:bg-[var(--surface-overlay,rgba(0,0,0,0.5))] backdrop:backdrop-blur-xs",
+        "backdrop:bg-[var(--surface-overlay)] backdrop:backdrop-blur-xs",
 
         /* animation */
         "open:animate-in open:fade-in-0 open:zoom-in-95",

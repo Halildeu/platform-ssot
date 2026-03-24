@@ -77,10 +77,26 @@ const preview: Preview = {
     (Story: any, context: any) => {
       const theme = context.globals.theme || 'light';
       const density = context.globals.density || 'comfortable';
+
+      // Set theme attributes on <html> for CSS to pick up
+      if (typeof document !== 'undefined') {
+        const root = document.documentElement;
+        const isDark = theme === 'dark' || theme === 'high-contrast';
+        root.setAttribute('data-mode', isDark ? 'dark' : 'light');
+        root.setAttribute('data-appearance', theme);
+
+        // Map to theme.css selector names
+        const themeMap: Record<string, string> = {
+          'light': 'serban-light',
+          'dark': 'serban-dark',
+          'high-contrast': 'serban-hc',
+        };
+        root.setAttribute('data-theme', themeMap[theme] || 'serban-light');
+      }
+
       return React.createElement(
         'div',
         {
-          'data-theme': theme,
           'data-density': density,
           className: theme === 'dark' ? 'dark bg-slate-900 text-white p-4' : 'bg-white p-4',
           style: { minHeight: '100px' },

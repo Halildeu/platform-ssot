@@ -944,7 +944,7 @@ function ActionBtn({
         variant === "danger"
           ? "text-state-error-text hover:bg-state-danger-bg"
           : variant === "active"
-            ? "bg-state-warning-bg text-state-warning-text hover:bg-[var(--state-warning-bg-hover,#fde68a)]"
+            ? "bg-state-warning-bg text-state-warning-text hover:bg-[var(--state-warning-bg-hover)]"
             : "text-text-secondary hover:bg-surface-muted",
       )}
       onClick={onClick}

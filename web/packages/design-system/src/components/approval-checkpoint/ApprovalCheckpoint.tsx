@@ -102,7 +102,7 @@ const stepBadgeLabel: Record<ApprovalCheckpointItemStatus, string> = {
 };
 
 const approvalCheckpointSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--border-subtle)]/40 before:to-transparent";
 
 /** Approval gate card displaying status, checklist steps, evidence, and approve/reject actions. */
 export const ApprovalCheckpoint = React.forwardRef<HTMLElement, ApprovalCheckpointProps>(({
@@ -221,7 +221,7 @@ export const ApprovalCheckpoint = React.forwardRef<HTMLElement, ApprovalCheckpoi
       ) : null}
 
       {citations.length > 0 ? (
-        <div className="mt-4 flex flex-wrap gap-2 rounded-[24px] border border-border-subtle/70 bg-[var(--surface-card)] p-3 shadow-[0_16px_30px_-28px_var(--shadow-color,rgba(15,23,42,0.14))] ring-1 ring-border-subtle/20 backdrop-blur-xs">
+        <div className="mt-4 flex flex-wrap gap-2 rounded-[24px] border border-border-subtle/70 bg-[var(--surface-card)] p-3 shadow-[0_16px_30px_-28px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs">
           {citations.map((citation) => (
             <Badge key={citation} variant="muted">
               {citation}

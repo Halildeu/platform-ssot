@@ -58,16 +58,16 @@ export interface TreemapChartProps extends AccessControlledProps {
 // ── Default palette ──
 
 const DEFAULT_PALETTE = [
-  'var(--action-primary, #3b82f6)',
-  'var(--state-info-text, #2563eb)',
-  'var(--state-success-text, #22c55e)',
-  'var(--state-warning-text, #f59e0b)',
-  'var(--state-error-text, #ef4444)',
-  'var(--chart-purple, #8b5cf6)',
-  'var(--chart-pink, #ec4899)',
-  'var(--chart-cyan, #06b6d4)',
-  'var(--chart-amber, #f59e0b)',
-  'var(--chart-emerald, #10b981)',
+  'var(--action-primary)',
+  'var(--state-info-text)',
+  'var(--state-success-text)',
+  'var(--state-warning-text)',
+  'var(--state-error-text)',
+  'var(--chart-purple)',
+  'var(--chart-pink)',
+  'var(--chart-cyan)',
+  'var(--chart-amber)',
+  'var(--chart-emerald)',
 ];
 
 // ── Squarify algorithm ──
@@ -318,7 +318,7 @@ export const TreemapChart: React.FC<TreemapChartProps> = ({
                   dominantBaseline="central"
                   fontSize={Math.min(13, cell.w / 8)}
                   fontWeight={600}
-                  fill="var(--text-inverse, #fff)"
+                  fill="var(--text-inverse)"
                   style={{ pointerEvents: 'none' }}
                 >
                   {cell.item.label}
@@ -332,7 +332,7 @@ export const TreemapChart: React.FC<TreemapChartProps> = ({
                   textAnchor="middle"
                   dominantBaseline="central"
                   fontSize={Math.min(11, cell.w / 10)}
-                  fill="var(--text-inverse, #fff)"
+                  fill="var(--text-inverse)"
                   opacity={0.85}
                   style={{ pointerEvents: 'none' }}
                 >

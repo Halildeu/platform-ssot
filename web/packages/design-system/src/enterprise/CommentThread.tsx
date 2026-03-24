@@ -121,8 +121,8 @@ const Avatar: React.FC<AvatarProps> = ({ name, avatar, size = 32 }) => {
       style={{
         width: size,
         height: size,
-        backgroundColor: 'var(--surface-muted, #e5e7eb)',
-        color: 'var(--text-secondary, #6b7280)',
+        backgroundColor: 'var(--surface-muted)',
+        color: 'var(--text-secondary)',
       }}
       aria-label={name}
     >
@@ -165,10 +165,10 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, currentUser, placeholde
         <textarea
           className={cn(
             'w-full rounded-md border px-3 py-2 text-sm resize-none',
-            'bg-[var(--surface-default,#fff)] text-[var(--text-primary,#111827)]',
-            'border-[var(--border-default,#e5e7eb)]',
-            'placeholder:text-[var(--text-tertiary,#9ca3af)]',
-            'focus:outline-hidden focus:ring-2 focus:ring-[var(--ring-primary,#3b82f6)]',
+            'bg-[var(--surface-default)] text-[var(--text-primary)]',
+            'border-[var(--border-default)]',
+            'placeholder:text-[var(--text-tertiary)]',
+            'focus:outline-hidden focus:ring-2 focus:ring-[var(--ring-primary)]',
           )}
           rows={2}
           placeholder={placeholder}
@@ -183,7 +183,7 @@ const ReplyForm: React.FC<ReplyFormProps> = ({ onSubmit, currentUser, placeholde
             type="button"
             className={cn(
               'px-3 py-1.5 text-xs font-medium rounded-md',
-              'bg-[var(--surface-accent,#3b82f6)] text-[var(--text-on-accent,#fff)]',
+              'bg-[var(--surface-accent)] text-[var(--text-on-accent)]',
               'hover:opacity-90 transition-opacity',
               'disabled:opacity-40 disabled:cursor-not-allowed',
             )}
@@ -261,7 +261,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
       {/* Connector line */}
       {depth > 0 && (
         <div
-          className="absolute top-0 bottom-0 border-l-2 border-[var(--border-subtle,#e5e7eb)]"
+          className="absolute top-0 bottom-0 border-l-2 border-[var(--border-subtle)]"
           style={{ left: -12 }}
           aria-hidden="true"
         />
@@ -270,7 +270,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
       <div
         className={cn(
           'flex gap-3 py-3 px-2 rounded-md',
-          'hover:bg-[var(--surface-hover,#f9fafb)] transition-colors',
+          'hover:bg-[var(--surface-hover)] transition-colors',
         )}
         role="article"
         aria-label={`Comment by ${comment.author.name}`}
@@ -279,15 +279,15 @@ const SingleComment: React.FC<SingleCommentProps> = ({
         <div className="flex-1 min-w-0">
           {/* Header */}
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm font-semibold text-[var(--text-primary,#111827)]">
+            <span className="text-sm font-semibold text-[var(--text-primary)]">
               {comment.author.name}
             </span>
-            <span className="text-xs text-[var(--text-tertiary,#9ca3af)]">
+            <span className="text-xs text-[var(--text-tertiary)]">
               {relativeTime(comment.timestamp)}
             </span>
             {comment.edited && (
               <span
-                className="text-xs italic text-[var(--text-tertiary,#9ca3af)]"
+                className="text-xs italic text-[var(--text-tertiary)]"
                 aria-label="Edited"
               >
                 (duzenlendi)
@@ -301,9 +301,9 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               <textarea
                 className={cn(
                   'w-full rounded-md border px-3 py-2 text-sm resize-none',
-                  'bg-[var(--surface-default,#fff)] text-[var(--text-primary,#111827)]',
-                  'border-[var(--border-default,#e5e7eb)]',
-                  'focus:outline-hidden focus:ring-2 focus:ring-[var(--ring-primary,#3b82f6)]',
+                  'bg-[var(--surface-default)] text-[var(--text-primary)]',
+                  'border-[var(--border-default)]',
+                  'focus:outline-hidden focus:ring-2 focus:ring-[var(--ring-primary)]',
                 )}
                 rows={3}
                 value={editText}
@@ -313,14 +313,14 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               <div className="flex gap-2 mt-1">
                 <button
                   type="button"
-                  className="text-xs font-medium text-[var(--text-accent,#3b82f6)] hover:underline"
+                  className="text-xs font-medium text-[var(--text-accent)] hover:underline"
                   onClick={handleEditSave}
                 >
                   Kaydet
                 </button>
                 <button
                   type="button"
-                  className="text-xs text-[var(--text-tertiary,#9ca3af)] hover:underline"
+                  className="text-xs text-[var(--text-tertiary)] hover:underline"
                   onClick={() => {
                     setIsEditing(false);
                     setEditText(comment.content);
@@ -331,7 +331,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               </div>
             </div>
           ) : (
-            <p className="mt-1 text-sm text-[var(--text-secondary,#374151)] whitespace-pre-wrap break-words">
+            <p className="mt-1 text-sm text-[var(--text-secondary)] whitespace-pre-wrap break-words">
               {comment.content}
             </p>
           )}
@@ -342,7 +342,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               {depth < maxDepth && onReply && (
                 <button
                   type="button"
-                  className="text-xs font-medium text-[var(--text-accent,#3b82f6)] hover:underline"
+                  className="text-xs font-medium text-[var(--text-accent)] hover:underline"
                   onClick={() => setShowReply((v) => !v)}
                   aria-label="Reply"
                 >
@@ -352,7 +352,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               {isOwn && onEdit && (
                 <button
                   type="button"
-                  className="text-xs text-[var(--text-tertiary,#9ca3af)] hover:text-[var(--text-primary,#111827)] hover:underline"
+                  className="text-xs text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:underline"
                   onClick={() => setIsEditing(true)}
                   aria-label="Edit"
                 >
@@ -362,7 +362,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               {isOwn && onDelete && (
                 <button
                   type="button"
-                  className="text-xs text-[var(--state-error-text,#dc2626)] hover:underline"
+                  className="text-xs text-[var(--state-error-text)] hover:underline"
                   onClick={handleDelete}
                   aria-label="Delete"
                 >
@@ -463,8 +463,8 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
     return (
       <div
         className={cn(
-          'p-6 text-center text-sm text-[var(--text-tertiary,#6b7280)]',
-          'border border-[var(--border-default,#e5e7eb)] rounded-lg',
+          'p-6 text-center text-sm text-[var(--text-tertiary)]',
+          'border border-[var(--border-default)] rounded-lg',
           className,
         )}
         data-component="comment-thread"
@@ -484,8 +484,8 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg',
-        'bg-[var(--surface-default,#fff)] p-4',
+        'border border-[var(--border-default)] rounded-lg',
+        'bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -497,11 +497,11 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
       aria-label={`Comment thread (${totalComments} comments)`}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[var(--border-subtle,#e5e7eb)]">
-        <span className="text-sm font-semibold text-[var(--text-primary,#111827)]">
+      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[var(--border-subtle)]">
+        <span className="text-sm font-semibold text-[var(--text-primary)]">
           Yorumlar
         </span>
-        <span className="text-xs text-[var(--text-tertiary,#9ca3af)]">({totalComments})</span>
+        <span className="text-xs text-[var(--text-tertiary)]">({totalComments})</span>
       </div>
 
       {/* Comment list */}
@@ -523,7 +523,7 @@ export const CommentThread: React.FC<CommentThreadProps> = ({
 
       {/* Top-level reply form */}
       {showReplyForm && canInteract && currentUser && (
-        <div className="mt-3 pt-3 border-t border-[var(--border-subtle,#e5e7eb)]">
+        <div className="mt-3 pt-3 border-t border-[var(--border-subtle)]">
           <ReplyForm
             onSubmit={(content) => onReply?.('root', content)}
             currentUser={currentUser}

@@ -47,14 +47,14 @@ function computeConversionRate(current: number, previous: number): number {
 }
 
 const DEFAULT_COLORS = [
-  'var(--action-primary, #3b82f6)',
-  'var(--state-info-text, #2563eb)',
-  'var(--state-success-text, #22c55e)',
-  'var(--state-warning-text, #f59e0b)',
-  'var(--state-error-text, #ef4444)',
-  'var(--chart-purple, #8b5cf6)',
-  'var(--chart-pink, #ec4899)',
-  'var(--chart-cyan, #06b6d4)',
+  'var(--action-primary)',
+  'var(--state-info-text)',
+  'var(--state-success-text)',
+  'var(--state-warning-text)',
+  'var(--state-error-text)',
+  'var(--chart-purple)',
+  'var(--chart-pink)',
+  'var(--chart-cyan)',
 ];
 
 // ── Component ──
@@ -278,7 +278,7 @@ export const FunnelChart: React.FC<FunnelChartProps> = ({
                   textAnchor="middle"
                   fontSize={11}
                   fontWeight={600}
-                  fill="var(--text-inverse, #fff)"
+                  fill="var(--text-inverse)"
                 >
                   {formatValue(stage.value, formatOptions)}
                 </text>

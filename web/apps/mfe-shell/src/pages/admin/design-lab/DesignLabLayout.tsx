@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { DesignLabProvider } from "./DesignLabProvider";
 import { DesignLabShell } from "./DesignLabShell";
-import { DesignLabSidebarRouter } from "./DesignLabSidebarRouter";
+import { DesignLabAppSidebar } from "./DesignLabAppSidebar";
 import { DesignLabSearchModal, useSearchModal } from "./DesignLabSearchModal";
 
 /* ------------------------------------------------------------------ */
@@ -30,7 +30,7 @@ export function DesignLabLayout() {
     <DesignLabProvider>
       <DesignLabShell>
         <DesignLabShell.Sidebar>
-          <DesignLabSidebarRouter />
+          <DesignLabAppSidebar />
         </DesignLabShell.Sidebar>
         <DesignLabShell.Main>
           <Suspense fallback={<PageSkeleton />}>

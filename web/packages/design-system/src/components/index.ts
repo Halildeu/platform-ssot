@@ -4,6 +4,20 @@
 /*  Examples: Tabs, Accordion, Breadcrumb, Toast, FormField, etc.      */
 /* ------------------------------------------------------------------ */
 
+/* Sidebar */
+export { AppSidebar, useSidebar } from "./app-sidebar";
+export type {
+  AppSidebarProps,
+  AppSidebarHeaderProps,
+  AppSidebarNavProps,
+  AppSidebarNavItemProps,
+  AppSidebarSectionProps,
+  AppSidebarFooterProps,
+  AppSidebarSearchProps,
+  SidebarMode,
+  SidebarContextValue,
+} from "./app-sidebar";
+
 /* Navigation */
 export { Tabs } from "./tabs";
 export type { TabsProps, TabItem, TabsVariant, TabsSize } from "./tabs";

@@ -9,6 +9,9 @@
     // webpack DefinePlugin replaces process.env at compile time,
     // but design-system (separate chunk) reads from window.__env__.
     window.__env__ = window.__env__ || {};
+    <% if (typeof runtimeEnvJson !== 'undefined') { %>
+    Object.assign(window.__env__, <%- runtimeEnvJson %>);
+    <% } %>
     // Debug: capture first uncaught errors before React loads
     window.__earlyErrors = [];
     window.addEventListener('error', function(e) {

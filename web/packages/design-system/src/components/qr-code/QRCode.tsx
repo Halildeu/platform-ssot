@@ -27,9 +27,9 @@ export interface QRCodeProps extends AccessControlledProps {
   value: string;
   /** Size of the QR code in pixels. @default 128 */
   size?: number;
-  /** Foreground color for QR modules. @default "var(--text-primary, #000000)" */
+  /** Foreground color for QR modules. @default "var(--text-primary)" */
   color?: string;
-  /** Background color behind the QR code. @default "var(--surface-canvas, #ffffff)" */
+  /** Background color behind the QR code. @default "var(--surface-canvas)" */
   bgColor?: string;
   /** Reed-Solomon error correction level. @default "M" */
   errorLevel?: QRErrorLevel;
@@ -544,8 +544,8 @@ export const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(function QRC
   {
     value,
     size = 128,
-    color = "var(--text-primary, #000000)",
-    bgColor = "var(--surface-canvas, #ffffff)",
+    color = "var(--text-primary)",
+    bgColor = "var(--surface-canvas)",
     errorLevel = "M",
     icon,
     iconSize: iconSizeProp,

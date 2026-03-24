@@ -63,9 +63,9 @@ const DEFAULT_RANGES: BulletChartRange[] = [
 ];
 
 const RANGE_GRAYS = [
-  'var(--surface-muted, #d1d5db)',
-  'var(--border-default, #9ca3af)',
-  'var(--text-tertiary, #6b7280)',
+  'var(--surface-muted)',
+  'var(--border-default)',
+  'var(--text-tertiary)',
 ];
 
 function scaleValue(value: number, min: number, max: number): number {

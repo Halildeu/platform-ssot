@@ -63,9 +63,9 @@ export interface WaterfallChartProps extends AccessControlledProps {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_COLORS = {
-  increase: 'var(--wf-increase, #22c55e)',
-  decrease: 'var(--wf-decrease, #ef4444)',
-  total: 'var(--wf-total, #3b82f6)',
+  increase: 'var(--wf-increase)',
+  decrease: 'var(--wf-decrease)',
+  total: 'var(--wf-total)',
 } as const;
 
 const PADDING = { top: 40, right: 20, bottom: 60, left: 20 };
@@ -158,7 +158,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
     return (
       <div
         className={cn(
-          'p-8 text-center text-sm text-[var(--text-tertiary,#6b7280)]',
+          'p-8 text-center text-sm text-[var(--text-tertiary)]',
           className,
         )}
       >
@@ -187,7 +187,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
   return (
     <div
       className={cn(
-        'border border-[var(--border-default,#e5e7eb)] rounded-lg bg-[var(--surface-default,#fff)] p-4',
+        'border border-[var(--border-default)] rounded-lg bg-[var(--surface-default)] p-4',
         accessStyles(accessState.state),
         className,
       )}
@@ -209,7 +209,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
           y1={zeroY}
           x2={chartWidth - PADDING.right}
           y2={zeroY}
-          stroke="var(--border-default, #d1d5db)"
+          stroke="var(--border-default)"
           strokeWidth={1}
         />
 
@@ -234,7 +234,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
                   y1={yScale(bars[i - 1].end)}
                   x2={x}
                   y2={yScale(bars[i - 1].end)}
-                  stroke="var(--border-default, #9ca3af)"
+                  stroke="var(--border-default)"
                   strokeWidth={1}
                   strokeDasharray="4 3"
                 />
@@ -285,7 +285,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
                   textAnchor="middle"
                   fontSize={11}
                   fontWeight={600}
-                  fill="var(--text-primary, #111827)"
+                  fill="var(--text-primary)"
                 >
                   {format(displayValue)}
                 </text>
@@ -297,7 +297,7 @@ export const WaterfallChart: React.FC<WaterfallChartProps> = ({
                 y={chartHeight - PADDING.bottom + 18}
                 textAnchor="middle"
                 fontSize={10}
-                fill="var(--text-secondary, #6b7280)"
+                fill="var(--text-secondary)"
               >
                 {bar.item.label}
               </text>

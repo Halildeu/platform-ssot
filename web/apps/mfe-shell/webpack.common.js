@@ -108,7 +108,10 @@ module.exports = {
   },
 
   plugins: [
-    new HtmlWebpackPlugin({ template: './public/index.html' }),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      templateParameters: { runtimeEnvJson: JSON.stringify(runtimeEnv) },
+    }),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(runtimeEnv),
     }),

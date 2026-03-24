@@ -235,8 +235,8 @@ export function PivotTable({
 
   const cellPadding = compact ? 'px-2 py-1' : 'px-3 py-2';
   const fontSize = compact ? 'text-xs' : 'text-sm';
-  const headerBg = 'bg-[var(--surface-muted,#f9fafb)]';
-  const borderColor = 'border-[var(--border-default,#e5e7eb)]';
+  const headerBg = 'bg-[var(--surface-muted)]';
+  const borderColor = 'border-[var(--border-default)]';
 
   const handleSort = (colKey: string) => {
     if (!sortable) return;
@@ -334,7 +334,7 @@ export function PivotTable({
             {rows.map((field) => (
               <th
                 key={`rh-${field}`}
-                className={cn(cellPadding, headerBg, `border ${borderColor}`, 'text-left font-semibold text-[var(--text-primary,#111827)]')}
+                className={cn(cellPadding, headerBg, `border ${borderColor}`, 'text-left font-semibold text-[var(--text-primary)]')}
                 rowSpan={values.length > 1 ? 2 : 1}
               >
                 {field}
@@ -351,8 +351,8 @@ export function PivotTable({
                     cellPadding,
                     headerBg,
                     `border ${borderColor}`,
-                    'text-center font-semibold text-[var(--text-primary,#111827)]',
-                    sortable && 'cursor-pointer select-none hover:bg-[var(--surface-hover,#f3f4f6)]',
+                    'text-center font-semibold text-[var(--text-primary)]',
+                    sortable && 'cursor-pointer select-none hover:bg-[var(--surface-hover)]',
                   )}
                   colSpan={values.length}
                   onClick={() => handleSort(ck)}
@@ -366,7 +366,7 @@ export function PivotTable({
             {/* Totals header */}
             {showTotals && (
               <th
-                className={cn(cellPadding, headerBg, `border ${borderColor}`, 'text-center font-semibold text-[var(--text-primary,#111827)]')}
+                className={cn(cellPadding, headerBg, `border ${borderColor}`, 'text-center font-semibold text-[var(--text-primary)]')}
                 colSpan={values.length}
                 rowSpan={values.length > 1 ? 2 : 1}
               >
@@ -381,7 +381,7 @@ export function PivotTable({
                 values.map((v, vi) => (
                   <th
                     key={`sh-${ck}-${vi}`}
-                    className={cn(cellPadding, headerBg, `border ${borderColor}`, 'text-center font-medium text-[var(--text-secondary,#6b7280)]')}
+                    className={cn(cellPadding, headerBg, `border ${borderColor}`, 'text-center font-medium text-[var(--text-secondary)]')}
                   >
                     {v.label ?? v.field}
                   </th>
@@ -396,7 +396,7 @@ export function PivotTable({
           {sortedRowKeys.map((rk) => {
             const parsed = parseKey(rk, rows);
             return (
-              <tr key={`row-${rk}`} className="hover:bg-[var(--surface-hover,#f9fafb)]">
+              <tr key={`row-${rk}`} className="hover:bg-[var(--surface-hover)]">
                 {/* Row headers */}
                 {rows.map((field) => (
                   <td
@@ -404,7 +404,7 @@ export function PivotTable({
                     className={cn(
                       cellPadding,
                       `border ${borderColor}`,
-                      'font-medium text-[var(--text-primary,#111827)] whitespace-nowrap',
+                      'font-medium text-[var(--text-primary)] whitespace-nowrap',
                     )}
                   >
                     {String(parsed[field] ?? '')}
@@ -421,8 +421,8 @@ export function PivotTable({
                         className={cn(
                           cellPadding,
                           `border ${borderColor}`,
-                          'text-right tabular-nums text-[var(--text-primary,#111827)]',
-                          !isDisabled && onCellClick && 'cursor-pointer hover:bg-[var(--interactive-primary-hover,#eff6ff)]',
+                          'text-right tabular-nums text-[var(--text-primary)]',
+                          !isDisabled && onCellClick && 'cursor-pointer hover:bg-[var(--interactive-primary-hover)]',
                         )}
                         onClick={() => handleCellClick(rk, ck, vi)}
                         role={onCellClick ? 'gridcell' : undefined}
@@ -448,7 +448,7 @@ export function PivotTable({
                         cellPadding,
                         `border ${borderColor}`,
                         headerBg,
-                        'text-right tabular-nums font-semibold text-[var(--text-primary,#111827)]',
+                        'text-right tabular-nums font-semibold text-[var(--text-primary)]',
                       )}
                     >
                       {formatCell(computeRowTotal(rk, vi), vi)}
@@ -465,7 +465,7 @@ export function PivotTable({
                 className={cn(
                   cellPadding,
                   `border ${borderColor}`,
-                  'font-semibold text-[var(--text-primary,#111827)]',
+                  'font-semibold text-[var(--text-primary)]',
                 )}
                 colSpan={rowHeaderCount}
               >
@@ -478,7 +478,7 @@ export function PivotTable({
                     className={cn(
                       cellPadding,
                       `border ${borderColor}`,
-                      'text-right tabular-nums font-semibold text-[var(--text-primary,#111827)]',
+                      'text-right tabular-nums font-semibold text-[var(--text-primary)]',
                     )}
                   >
                     {formatCell(computeColTotal(ck, vi), vi)}
@@ -492,7 +492,7 @@ export function PivotTable({
                   className={cn(
                     cellPadding,
                     `border ${borderColor}`,
-                    'text-right tabular-nums font-bold text-[var(--text-primary,#111827)]',
+                    'text-right tabular-nums font-bold text-[var(--text-primary)]',
                   )}
                 >
                   {formatCell(computeGrandTotal(vi), vi)}

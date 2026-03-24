@@ -177,7 +177,7 @@ function renderConnectors(layout: LayoutNode): React.ReactNode[] {
         key={`conn-${layout.node.id}-${child.node.id}`}
         d={`M ${parentCx} ${parentBottom} L ${parentCx} ${midY} L ${childCx} ${midY} L ${childCx} ${childTop}`}
         fill="none"
-        stroke="var(--border-default, #d1d5db)"
+        stroke="var(--border-default)"
         strokeWidth={1.5}
         strokeLinejoin="round"
       />,
@@ -242,8 +242,8 @@ function renderNode(
         width={width}
         height={height}
         rx={rx}
-        fill="var(--surface-primary, #ffffff)"
-        stroke={isHighlighted ? 'var(--interactive-primary, #3b82f6)' : 'var(--border-default, #d1d5db)'}
+        fill="var(--surface-primary)"
+        stroke={isHighlighted ? 'var(--interactive-primary)' : 'var(--border-default)'}
         strokeWidth={isHighlighted ? 2.5 : 1}
       />
       {/* Avatar circle */}
@@ -251,8 +251,8 @@ function renderNode(
         cx={x + padding + avatarR}
         cy={y + height / 2}
         r={avatarR}
-        fill="var(--surface-muted, #f3f4f6)"
-        stroke="var(--border-default, #d1d5db)"
+        fill="var(--surface-muted)"
+        stroke="var(--border-default)"
         strokeWidth={0.5}
       />
       {/* Avatar initials */}
@@ -263,7 +263,7 @@ function renderNode(
         dominantBaseline="central"
         fontSize={avatarR * 0.85}
         fontWeight={600}
-        fill="var(--text-secondary, #6b7280)"
+        fill="var(--text-secondary)"
       >
         {node.avatar ?? node.label.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()}
       </text>
@@ -273,7 +273,7 @@ function renderNode(
         y={y + height / 2 - (node.title ? titleFontSize * 0.6 : 0)}
         fontSize={labelFontSize}
         fontWeight={600}
-        fill="var(--text-primary, #111827)"
+        fill="var(--text-primary)"
         dominantBaseline="central"
       >
         {node.label.length > 16 ? `${node.label.slice(0, 15)}...` : node.label}
@@ -284,7 +284,7 @@ function renderNode(
           x={x + padding + avatarR * 2 + 8}
           y={y + height / 2 + titleFontSize * 1.1}
           fontSize={titleFontSize}
-          fill="var(--text-secondary, #6b7280)"
+          fill="var(--text-secondary)"
           dominantBaseline="central"
         >
           {node.title.length > 20 ? `${node.title.slice(0, 19)}...` : node.title}
@@ -297,8 +297,8 @@ function renderNode(
             cx={x + width / 2}
             cy={y + height + 8}
             r={8}
-            fill="var(--surface-primary, #ffffff)"
-            stroke="var(--border-default, #d1d5db)"
+            fill="var(--surface-primary)"
+            stroke="var(--border-default)"
             strokeWidth={1}
           />
           <text
@@ -307,7 +307,7 @@ function renderNode(
             textAnchor="middle"
             dominantBaseline="central"
             fontSize={12}
-            fill="var(--text-secondary, #6b7280)"
+            fill="var(--text-secondary)"
           >
             {collapsed ? '+' : '\u2212'}
           </text>

@@ -168,12 +168,12 @@ const TargetBar: React.FC<TargetBarProps> = ({ current, target, color }) => {
         <span>Target</span>
         <span className="font-mono">{percent}%</span>
       </div>
-      <div className="h-1.5 rounded-full bg-[var(--surface-muted,#e5e7eb)] overflow-hidden">
+      <div className="h-1.5 rounded-full bg-[var(--surface-muted)] overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-300"
           style={{
             width: `${percent}%`,
-            backgroundColor: isReached ? 'var(--state-success-text, #16a34a)' : color,
+            backgroundColor: isReached ? 'var(--state-success-text)' : color,
           }}
         />
       </div>
@@ -214,15 +214,15 @@ export function MetricComparisonCard({
   }, [change.direction, invertTrend]);
 
   const trendColor = isPositive
-    ? 'var(--state-success-text, #16a34a)'
-    : 'var(--state-error-text, #dc2626)';
+    ? 'var(--state-success-text)'
+    : 'var(--state-error-text)';
 
   const trendBg = isPositive
-    ? 'var(--state-success-bg, #22c55e15)'
-    : 'var(--state-error-bg, #ef444415)';
+    ? 'var(--state-success-bg)'
+    : 'var(--state-error-bg)';
 
   const trendIcon = change.direction === 'up' ? '\u2191' : change.direction === 'down' ? '\u2193' : '\u2192';
-  const accentColor = isPositive ? 'var(--state-success-text, #16a34a)' : 'var(--state-error-text, #dc2626)';
+  const accentColor = isPositive ? 'var(--state-success-text)' : 'var(--state-error-text)';
 
   return (
     <div

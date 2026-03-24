@@ -62,10 +62,10 @@ function getRiskLevel(likelihood: number, impact: number): RiskLevel {
 }
 
 const RISK_COLORS: Record<RiskLevel, { bg: string; text: string; label: string }> = {
-  low:     { bg: 'var(--state-success-bg, #22c55e20)', text: 'var(--state-success-text, #16a34a)', label: 'Low (1-4)' },
-  medium:  { bg: 'var(--state-warning-bg, #eab30830)', text: 'var(--state-warning-text, #a16207)', label: 'Medium (5-9)' },
-  high:    { bg: 'var(--state-error-bg, #f9731630)', text: 'var(--state-error-text, #c2410c)', label: 'High (10-14)' },
-  extreme: { bg: 'var(--state-error-bg, #ef444430)', text: 'var(--state-error-text, #dc2626)', label: 'Extreme (15-25)' },
+  low:     { bg: 'var(--state-success-bg)', text: 'var(--state-success-text)', label: 'Low (1-4)' },
+  medium:  { bg: 'var(--state-warning-bg)', text: 'var(--state-warning-text)', label: 'Medium (5-9)' },
+  high:    { bg: 'var(--state-error-bg)', text: 'var(--state-error-text)', label: 'High (10-14)' },
+  extreme: { bg: 'var(--state-error-bg)', text: 'var(--state-error-text)', label: 'Extreme (15-25)' },
 };
 
 const SIZE_CONFIG: Record<RiskMatrixSize, { cell: number; fontSize: string; labelSize: string; badgeSize: string }> = {
@@ -226,7 +226,7 @@ export function RiskMatrix({
                     {count > 0 && (
                       <span
                         className={`${s.badgeSize} inline-flex items-center justify-center rounded-full font-semibold`}
-                          style={{ backgroundColor: color.text, color: 'var(--text-inverse, #fff)' }}
+                          style={{ backgroundColor: color.text, color: 'var(--text-inverse)' }}
                       >
                         {count}
                       </span>
@@ -250,7 +250,7 @@ export function RiskMatrix({
       {/* Tooltip (portal-free, positioned via fixed) */}
       {tooltip && tooltip.risks.length > 0 && (
         <div
-          className="fixed z-50 px-2.5 py-1.5 rounded-xs shadow-lg bg-[var(--surface-elevated,#1f2937)] text-[var(--text-on-elevated,#fff)] text-xs max-w-[220px] pointer-events-none"
+          className="fixed z-50 px-2.5 py-1.5 rounded-xs shadow-lg bg-[var(--surface-elevated)] text-[var(--text-on-elevated)] text-xs max-w-[220px] pointer-events-none"
           style={{
             left: tooltip.x,
             top: tooltip.y,
