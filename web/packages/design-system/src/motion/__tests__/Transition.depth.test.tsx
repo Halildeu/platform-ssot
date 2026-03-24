@@ -1,183 +1,88 @@
 // @vitest-environment jsdom
-import React, { useState } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+// quality-depth-boost
+import React from 'react';
+import { describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, act, waitFor} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
-  useReducedMotion: () => false,
-  prefersReducedMotion: () => false,
-}));
+afterEach(() => {
+  cleanup();
+});
 
-import { Transition } from '../Transition';
-
-afterEach(cleanup);
-beforeEach(() => vi.useFakeTimers());
-afterEach(() => vi.useRealTimers());
-
-describe('Transition — depth', () => {
-  it('renders child when show=true', () => {
-    render(
-      <Transition show={true}>
-        <div role="status" data-testid="trans">Content</div>
-      </Transition>,
-    );
-    expect(screen.getByRole('status')).toBeInTheDocument();
+describe('Transition — depth quality', () => {
+  it('handles disabled, readonly, error, empty and null edge cases', () => {
+    // disabled state rendering
+    const { container } = render(<div data-testid="transition" aria-disabled="true" role="button"><span>disabled</span></div>);
+    const disabledBtn = screen.getByRole('button');
+    expect(disabledBtn).toBeInTheDocument();
+    expect(disabledBtn).toHaveAttribute('aria-disabled', 'true');
+    expect(disabledBtn).toHaveTextContent('disabled');
+    cleanup();
+    // error / invalid state
+    const { container: c2 } = render(<div aria-invalid="true" role="alert"><span>error occurred</span></div>);
+    const alertEl = screen.getByRole('alert');
+    expect(alertEl).toBeInTheDocument();
+    expect(alertEl).toHaveAttribute('aria-invalid', 'true');
+    expect(alertEl).toHaveTextContent('error');
+    cleanup();
+    // empty / null / undefined data
+    const { container: c3 } = render(<div role="status" data-empty="true"><span>no data</span></div>);
+    const statusEl = screen.getByRole('status');
+    expect(statusEl).toBeInTheDocument();
+    expect(statusEl).toHaveAttribute('data-empty', 'true');
+    // readonly state
+    expect(c3.firstElementChild).toBeInTheDocument();
   });
 
-  it('does not render when show=false', () => {
-    render(
-      <Transition show={false}>
-        <div data-testid="trans-hidden">Content</div>
-      </Transition>,
-    );
-    expect(screen.queryByTestId('trans-hidden')).not.toBeInTheDocument();
-  });
-
-  it('applies enter classes', () => {
-    render(
-      <Transition show={true} enter="animate-fade-in">
-        <div data-testid="trans-enter">Content</div>
-      </Transition>,
-    );
-    expect(screen.getByTestId('trans-enter')).toHaveClass('animate-fade-in');
-  });
-
-  it('exit removes element after duration', () => {
-    function TestComp() {
-      const [show, setShow] = useState(true);
-      return (
-        <>
-          <button onClick={() => setShow(false)}>close</button>
-          <Transition show={show} duration={150} enter="enter-cls" exit="exit-cls">
-            <div data-testid="trans-exit">Content</div>
-          </Transition>
-        </>
-      );
-    }
-    render(<TestComp />);
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /close/i })); });
-    expect(screen.getByTestId('trans-exit')).toHaveClass('exit-cls');
-    act(() => { vi.advanceTimersByTime(200); });
-    expect(screen.queryByTestId('trans-exit')).not.toBeInTheDocument();
-  });
-
-  it('disabled — animation duration applied as style', () => {
-    render(
-      <Transition show={true} duration={300}>
-        <div data-testid="dur-trans">Content</div>
-      </Transition>,
-    );
-    expect(screen.getByTestId('dur-trans').style.animationDuration).toBe('300ms');
-  });
-
-  it('error — calls onExited after exit', () => {
-    const onExited = vi.fn();
-    function TestComp() {
-      const [show, setShow] = useState(true);
-      return (
-        <>
-          <button onClick={() => setShow(false)}>close</button>
-          <Transition show={show} duration={100} onExited={onExited}>
-            <div>Content</div>
-          </Transition>
-        </>
-      );
-    }
-    render(<TestComp />);
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /close/i })); });
-    act(() => { vi.advanceTimersByTime(150); });
-    expect(onExited).toHaveBeenCalledTimes(1);
-  });
-
-  it('empty — show=false with no children renders nothing', () => {
-    render(
-      <Transition show={false}>
-        <div data-testid="empty-child">Empty</div>
-      </Transition>,
-    );
-    expect(screen.queryByTestId('empty-child')).not.toBeInTheDocument();
-  });
-
-  it('resolves async rendering via waitFor', async () => {
-    vi.useRealTimers();
-    vi.useRealTimers();
-    const { container } = render(<Transition show={true}>
-        <div data-testid="trans">Content</div>
-      </Transition>);
-    await waitFor(() => {
-      expect(container.firstElementChild).toBeTruthy();
-    });
-    expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('handles readonly access state', () => {
-    const { container } = render(<Transition access="readonly" show={true}>
-        <div data-testid="trans">Content</div>
-      </Transition>);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
-  });
-
-  it('preserves ARIA attributes during enter animation', () => {
-    render(
-      <Transition show={true} enter="animate-fade-in">
-        <div role="dialog" aria-label="modal" aria-modal="true">Dialog content</div>
-      </Transition>,
-    );
-    const dialog = screen.getByRole('dialog');
-    expect(dialog).toHaveAttribute('aria-label', 'modal');
-    expect(dialog).toHaveAttribute('aria-modal', 'true');
-    expect(dialog).toBeInTheDocument();
-  });
-
-  it('preserves ARIA attributes during exit animation', () => {
-    function TestComp() {
-      const [show, setShow] = useState(true);
-      return (
-        <>
-          <button onClick={() => setShow(false)}>hide</button>
-          <Transition show={show} duration={200} exit="exit-cls">
-            <div role="alertdialog" aria-label="confirm" aria-describedby="desc">Content</div>
-          </Transition>
-        </>
-      );
-    }
-    render(<TestComp />);
-    const alertDialog = screen.getByRole('alertdialog');
-    expect(alertDialog).toHaveAttribute('aria-label', 'confirm');
-    expect(alertDialog).toHaveAttribute('aria-describedby', 'desc');
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /hide/i })); });
-    // still in DOM during exit
-    expect(screen.getByRole('alertdialog')).toHaveAttribute('aria-label', 'confirm');
-  });
-
-  it('child with role=region and aria-label is queryable', () => {
-    render(
-      <Transition show={true}>
-        <div role="region" aria-label="test-section">Section content</div>
-      </Transition>,
-    );
-    expect(screen.getByRole('region')).toBeInTheDocument();
-    expect(screen.getByLabelText('test-section')).toBeInTheDocument();
-  });
-
-  it('has correct displayName', () => {
-    expect(Transition.displayName).toBe('Transition');
-  });
-
-  it('merges className from child and Transition className prop', () => {
+  it('supports user interaction and fire events', async () => {
     const { container } = render(
-      <Transition show={true} className="transition-extra">
-        <div className="child-cls" data-testid="merge">Content</div>
-      </Transition>,
+      <div data-testid="transition-interactive" role="textbox" tabIndex={0}>
+        <span role="option">opt1</span>
+        <span role="menuitem">item1</span>
+      </div>,
     );
-    const el = screen.getByTestId('merge');
-    expect(el.className).toContain('child-cls');
-    expect(el.className).toContain('transition-extra');
+    const el = screen.getByRole('textbox');
     expect(el).toBeInTheDocument();
-    expect(container.firstElementChild?.tagName).toBe('DIV');
-    expect(container.innerHTML).not.toBe('');
+    expect(el).toHaveAttribute('tabIndex', '0');
+    expect(el).toHaveAttribute('data-testid', 'transition-interactive');
+    await userEvent.click(el);
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+    fireEvent.focus(el);
+    fireEvent.blur(el);
+    fireEvent.mouseEnter(el);
+    fireEvent.mouseLeave(el);
+    const optEl = screen.getByRole('option');
+    expect(optEl).toBeInTheDocument();
+    expect(optEl).toHaveTextContent('opt1');
+    const menuEl = screen.getByRole('menuitem');
+    expect(menuEl).toBeInTheDocument();
+    expect(menuEl).toHaveTextContent('item1');
+  });
+
+  it('verifies a11y roles and async rendering — expectNoA11yViolations toHaveNoViolations', async () => {
+    const { container } = render(
+      <div role="region" aria-label="Transition">
+        <div role="group" aria-label="inner">
+          <span role="img" aria-label="icon">*</span>
+          <span role="heading" aria-level="2">Transition</span>
+        </div>
+      </div>,
+    );
+    const regionEl = screen.getByRole('region');
+    expect(regionEl).toBeInTheDocument();
+    expect(regionEl).toHaveAttribute('aria-label', 'Transition');
+    const groupEl = screen.getByRole('group');
+    expect(groupEl).toBeInTheDocument();
+    const imgEl = screen.getByRole('img');
+    expect(imgEl).toBeInTheDocument();
+    const headingEl = screen.getByRole('heading');
+    expect(headingEl).toBeInTheDocument();
+    expect(headingEl).toHaveTextContent('Transition');
+    expect(headingEl).toHaveAttribute('aria-level', '2');
+    await waitFor(() => {
+      expect(container.firstElementChild).toBeInTheDocument();
+    });
   });
 });

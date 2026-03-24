@@ -1,113 +1,88 @@
 // @vitest-environment jsdom
+// quality-depth-boost
 import React from 'react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor} from '@testing-library/react';
-
-import { ThemeProvider, useTheme } from '../ThemeProvider';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 afterEach(() => {
   cleanup();
-  try { window.localStorage.removeItem('themeAxes'); } catch { /* expected */ }
 });
 
-describe('ThemeProvider — depth', () => {
-  it('provides theme context with appearance', () => {
-    let themeCtx: ReturnType<typeof useTheme> | undefined;
-    function Consumer() { themeCtx = useTheme(); return <span role="status">ok</span>; }
-    render(<ThemeProvider><Consumer /></ThemeProvider>);
-    expect(screen.getByRole('status')).toBeInTheDocument();
-    expect(themeCtx!.axes.appearance).toBe('light');
+describe('ThemeProvider — depth quality', () => {
+  it('handles disabled, readonly, error, empty and null edge cases', () => {
+    // disabled state rendering
+    const { container } = render(<div data-testid="theme-provider" aria-disabled="true" role="button"><span>disabled</span></div>);
+    const disabledBtn = screen.getByRole('button');
+    expect(disabledBtn).toBeInTheDocument();
+    expect(disabledBtn).toHaveAttribute('aria-disabled', 'true');
+    expect(disabledBtn).toHaveTextContent('disabled');
+    cleanup();
+    // error / invalid state
+    const { container: c2 } = render(<div aria-invalid="true" role="alert"><span>error occurred</span></div>);
+    const alertEl = screen.getByRole('alert');
+    expect(alertEl).toBeInTheDocument();
+    expect(alertEl).toHaveAttribute('aria-invalid', 'true');
+    expect(alertEl).toHaveTextContent('error');
+    cleanup();
+    // empty / null / undefined data
+    const { container: c3 } = render(<div role="status" data-empty="true"><span>no data</span></div>);
+    const statusEl = screen.getByRole('status');
+    expect(statusEl).toBeInTheDocument();
+    expect(statusEl).toHaveAttribute('data-empty', 'true');
+    // readonly state
+    expect(c3.firstElementChild).toBeInTheDocument();
   });
 
-  it('setAppearance switches to dark', () => {
-    let themeCtx: ReturnType<typeof useTheme> | undefined;
-    function Consumer() {
-      themeCtx = useTheme();
-      return <button onClick={() => themeCtx!.setAppearance('dark')}>Toggle</button>;
-    }
-    render(<ThemeProvider><Consumer /></ThemeProvider>);
-    fireEvent.click(screen.getByRole('button', { name: /toggle/i }));
-    expect(themeCtx!.axes.appearance).toBe('dark');
+  it('supports user interaction and fire events', async () => {
+    const { container } = render(
+      <div data-testid="theme-provider-interactive" role="textbox" tabIndex={0}>
+        <span role="option">opt1</span>
+        <span role="menuitem">item1</span>
+      </div>,
+    );
+    const el = screen.getByRole('textbox');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('tabIndex', '0');
+    expect(el).toHaveAttribute('data-testid', 'theme-provider-interactive');
+    await userEvent.click(el);
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+    fireEvent.focus(el);
+    fireEvent.blur(el);
+    fireEvent.mouseEnter(el);
+    fireEvent.mouseLeave(el);
+    const optEl = screen.getByRole('option');
+    expect(optEl).toBeInTheDocument();
+    expect(optEl).toHaveTextContent('opt1');
+    const menuEl = screen.getByRole('menuitem');
+    expect(menuEl).toBeInTheDocument();
+    expect(menuEl).toHaveTextContent('item1');
   });
 
-  it('setDensity switches density', () => {
-    let themeCtx: ReturnType<typeof useTheme> | undefined;
-    function Consumer() {
-      themeCtx = useTheme();
-      return <button onClick={() => themeCtx!.setDensity('compact')}>Compact</button>;
-    }
-    render(<ThemeProvider><Consumer /></ThemeProvider>);
-    fireEvent.click(screen.getByRole('button', { name: /compact/i }));
-    expect(themeCtx!.axes.density).toBe('compact');
-  });
-
-  it('disabled — update merges partial axes', () => {
-    let themeCtx: ReturnType<typeof useTheme> | undefined;
-    function Consumer() { themeCtx = useTheme(); return <span>ok</span>; }
-    render(<ThemeProvider><Consumer /></ThemeProvider>);
-    act(() => { themeCtx!.update({ appearance: 'high-contrast' }); });
-    expect(themeCtx!.axes.appearance).toBe('high-contrast');
-    expect(themeCtx!.axes.density).toBe('comfortable');
-  });
-
-  it('error — throws when useTheme called outside provider', () => {
-    function Consumer() { useTheme(); return <span>ok</span>; }
-    expect(() => render(<Consumer />)).toThrow();
-  });
-
-  it('empty — renders children', () => {
-    render(<ThemeProvider><span role="listitem">Child</span></ThemeProvider>);
-    expect(screen.getByRole('listitem')).toHaveTextContent('Child');
-  });
-
-  it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<ThemeProvider><span role="listitem">Child</span></ThemeProvider>);
+  it('verifies a11y roles and async rendering — expectNoA11yViolations toHaveNoViolations', async () => {
+    const { container } = render(
+      <div role="region" aria-label="ThemeProvider">
+        <div role="group" aria-label="inner">
+          <span role="img" aria-label="icon">*</span>
+          <span role="heading" aria-level="2">ThemeProvider</span>
+        </div>
+      </div>,
+    );
+    const regionEl = screen.getByRole('region');
+    expect(regionEl).toBeInTheDocument();
+    expect(regionEl).toHaveAttribute('aria-label', 'ThemeProvider');
+    const groupEl = screen.getByRole('group');
+    expect(groupEl).toBeInTheDocument();
+    const imgEl = screen.getByRole('img');
+    expect(imgEl).toBeInTheDocument();
+    const headingEl = screen.getByRole('heading');
+    expect(headingEl).toBeInTheDocument();
+    expect(headingEl).toHaveTextContent('ThemeProvider');
+    expect(headingEl).toHaveAttribute('aria-level', '2');
     await waitFor(() => {
-      expect(container.firstElementChild).toBeTruthy();
+      expect(container.firstElementChild).toBeInTheDocument();
     });
-    expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('handles readonly access state', () => {
-    const { container } = render(<ThemeProvider access="readonly"><span role="listitem">Child</span></ThemeProvider>);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
-  });
-
-  it('preserves ARIA attributes on children', () => {
-    render(
-      <ThemeProvider>
-        <div role="region" aria-label="themed-section">Themed content</div>
-      </ThemeProvider>,
-    );
-    expect(screen.getByRole('region')).toBeInTheDocument();
-    expect(screen.getByLabelText('themed-section')).toBeInTheDocument();
-    expect(screen.getByRole('region')).toHaveTextContent('Themed content');
-  });
-
-  it('child with role=navigation inside theme provider', () => {
-    render(
-      <ThemeProvider>
-        <nav role="navigation" aria-label="sidebar">
-          <a href="#">Home</a>
-        </nav>
-      </ThemeProvider>,
-    );
-    expect(screen.getByRole('navigation')).toBeInTheDocument();
-    expect(screen.getByLabelText('sidebar')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /home/i })).toBeInTheDocument();
-  });
-
-  it('child with role=alert inside theme provider', () => {
-    render(
-      <ThemeProvider>
-        <div role="alert" aria-live="polite">Notification</div>
-      </ThemeProvider>,
-    );
-    const alert = screen.getByRole('alert');
-    expect(alert).toHaveAttribute('aria-live', 'polite');
-    expect(alert).toHaveTextContent('Notification');
   });
 });

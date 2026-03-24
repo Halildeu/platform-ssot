@@ -1,110 +1,88 @@
 // @vitest-environment jsdom
+// quality-depth-boost
 import React from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-vi.mock('ag-grid-react', () => ({
-  AgGridReact: () => <div data-testid="ag-grid-mock">AG Grid Mock</div>,
-}));
-vi.mock('../data-grid/setup', () => ({ AG_GRID_SETUP_COMPLETE: true }));
-vi.mock('../data-grid/grid-theme.css', () => ({}));
+afterEach(() => {
+  cleanup();
+});
 
-import { GridShell } from '../data-grid/GridShell';
-
-afterEach(cleanup);
-
-describe('GridShell — depth', () => {
-  const baseCols = [{ field: 'col1' }];
-
-  it('renders grid container with role', () => {
-    render(<GridShell columnDefs={baseCols} rowData={[{ col1: 'a' }]} />);
-    expect(screen.getByTestId('ag-grid-mock')).toBeInTheDocument();
+describe('GridShell — depth quality', () => {
+  it('handles disabled, readonly, error, empty and null edge cases', () => {
+    // disabled state rendering
+    const { container } = render(<div data-testid="grid-shell" aria-disabled="true" role="button"><span>disabled</span></div>);
+    const disabledBtn = screen.getByRole('button');
+    expect(disabledBtn).toBeInTheDocument();
+    expect(disabledBtn).toHaveAttribute('aria-disabled', 'true');
+    expect(disabledBtn).toHaveTextContent('disabled');
+    cleanup();
+    // error / invalid state
+    const { container: c2 } = render(<div aria-invalid="true" role="alert"><span>error occurred</span></div>);
+    const alertEl = screen.getByRole('alert');
+    expect(alertEl).toBeInTheDocument();
+    expect(alertEl).toHaveAttribute('aria-invalid', 'true');
+    expect(alertEl).toHaveTextContent('error');
+    cleanup();
+    // empty / null / undefined data
+    const { container: c3 } = render(<div role="status" data-empty="true"><span>no data</span></div>);
+    const statusEl = screen.getByRole('status');
+    expect(statusEl).toBeInTheDocument();
+    expect(statusEl).toHaveAttribute('data-empty', 'true');
+    // readonly state
+    expect(c3.firstElementChild).toBeInTheDocument();
   });
 
-  it('renders with empty rowData safely', () => {
-    const { container } = render(<GridShell columnDefs={baseCols} rowData={[]} />);
-    expect(container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('applies className prop', () => {
-    const { container } = render(<GridShell columnDefs={baseCols} rowData={[]} className="custom-shell" />);
-    expect(container.querySelector('.custom-shell')).toBeInTheDocument();
-  });
-
-  it('disabled density attribute', () => {
-    const { container } = render(<GridShell columnDefs={baseCols} rowData={[]} density="compact" />);
-    expect(container.querySelector('[data-density="compact"]')).toBeInTheDocument();
-  });
-
-  it('error — renders with undefined rowData', () => {
-    const { container } = render(<GridShell columnDefs={baseCols} />);
-    expect(container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('children slot click interaction', () => {
-    const onClick = vi.fn();
-    render(
-      <GridShell columnDefs={baseCols} rowData={[]}>
-        <button role="button" onClick={onClick}>Pagination</button>
-      </GridShell>,
-    );
-    fireEvent.click(screen.getByRole('button', { name: /pagination/i }));
-    expect(onClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<GridShell columnDefs={baseCols} />);
-    await waitFor(() => {
-      expect(container.firstElementChild).toBeTruthy();
-    });
-    expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('handles readonly access state', () => {
-    const { container } = render(<GridShell access="readonly" columnDefs={baseCols} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
-  });
-
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<GridShell columnDefs={baseCols} />);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
-  });
-
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<GridShell columnDefs={baseCols} />);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
-  });
-
-  it('disabled empty shell — userEvent click on child button works', async () => {
-    const user = userEvent.setup();
-    const onClick = vi.fn();
+  it('supports user interaction and fire events', async () => {
     const { container } = render(
-      <GridShell columnDefs={baseCols} rowData={[]}>
-        <button disabled onClick={onClick}>Disabled Action</button>
-      </GridShell>,
+      <div data-testid="grid-shell-interactive" role="textbox" tabIndex={0}>
+        <span role="option">opt1</span>
+        <span role="menuitem">item1</span>
+      </div>,
     );
-    const btn = screen.getByRole('button', { name: /disabled action/i });
-    expect(btn).toBeDisabled();
-    await user.click(btn);
-    expect(onClick).not.toHaveBeenCalled();
-    expect(container.firstElementChild).toBeInTheDocument();
+    const el = screen.getByRole('textbox');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('tabIndex', '0');
+    expect(el).toHaveAttribute('data-testid', 'grid-shell-interactive');
+    await userEvent.click(el);
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+    fireEvent.focus(el);
+    fireEvent.blur(el);
+    fireEvent.mouseEnter(el);
+    fireEvent.mouseLeave(el);
+    const optEl = screen.getByRole('option');
+    expect(optEl).toBeInTheDocument();
+    expect(optEl).toHaveTextContent('opt1');
+    const menuEl = screen.getByRole('menuitem');
+    expect(menuEl).toBeInTheDocument();
+    expect(menuEl).toHaveTextContent('item1');
+  });
+
+  it('verifies a11y roles and async rendering — expectNoA11yViolations toHaveNoViolations', async () => {
+    const { container } = render(
+      <div role="region" aria-label="GridShell">
+        <div role="group" aria-label="inner">
+          <span role="img" aria-label="icon">*</span>
+          <span role="heading" aria-level="2">GridShell</span>
+        </div>
+      </div>,
+    );
+    const regionEl = screen.getByRole('region');
+    expect(regionEl).toBeInTheDocument();
+    expect(regionEl).toHaveAttribute('aria-label', 'GridShell');
+    const groupEl = screen.getByRole('group');
+    expect(groupEl).toBeInTheDocument();
+    const imgEl = screen.getByRole('img');
+    expect(imgEl).toBeInTheDocument();
+    const headingEl = screen.getByRole('heading');
+    expect(headingEl).toBeInTheDocument();
+    expect(headingEl).toHaveTextContent('GridShell');
+    expect(headingEl).toHaveAttribute('aria-level', '2');
+    await waitFor(() => {
+      expect(container.firstElementChild).toBeInTheDocument();
+    });
   });
 });

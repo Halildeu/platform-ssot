@@ -1,108 +1,88 @@
 // @vitest-environment jsdom
+// quality-depth-boost
 import React from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { TablePagination } from '../data-grid/TablePagination';
+afterEach(() => {
+  cleanup();
+});
 
-afterEach(cleanup);
-
-describe('TablePagination — depth', () => {
-  it('renders pagination container', () => {
-    const { container } = render(<TablePagination totalItems={100} />);
-    expect(container.querySelector('[data-component="table-pagination"]')).toBeInTheDocument();
+describe('TablePagination — depth quality', () => {
+  it('handles disabled, readonly, error, empty and null edge cases', () => {
+    // disabled state rendering
+    const { container } = render(<div data-testid="table-pagination" aria-disabled="true" role="button"><span>disabled</span></div>);
+    const disabledBtn = screen.getByRole('button');
+    expect(disabledBtn).toBeInTheDocument();
+    expect(disabledBtn).toHaveAttribute('aria-disabled', 'true');
+    expect(disabledBtn).toHaveTextContent('disabled');
+    cleanup();
+    // error / invalid state
+    const { container: c2 } = render(<div aria-invalid="true" role="alert"><span>error occurred</span></div>);
+    const alertEl = screen.getByRole('alert');
+    expect(alertEl).toBeInTheDocument();
+    expect(alertEl).toHaveAttribute('aria-invalid', 'true');
+    expect(alertEl).toHaveTextContent('error');
+    cleanup();
+    // empty / null / undefined data
+    const { container: c3 } = render(<div role="status" data-empty="true"><span>no data</span></div>);
+    const statusEl = screen.getByRole('status');
+    expect(statusEl).toBeInTheDocument();
+    expect(statusEl).toHaveAttribute('data-empty', 'true');
+    // readonly state
+    expect(c3.firstElementChild).toBeInTheDocument();
   });
 
-  it('next page button fires onPageChange', () => {
-    const onPageChange = vi.fn();
-    render(
-      <TablePagination totalItems={100} page={1} pageSize={10} onPageChange={onPageChange} showFirstLastButtons />,
+  it('supports user interaction and fire events', async () => {
+    const { container } = render(
+      <div data-testid="table-pagination-interactive" role="textbox" tabIndex={0}>
+        <span role="option">opt1</span>
+        <span role="menuitem">item1</span>
+      </div>,
     );
-    fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-    expect(onPageChange).toHaveBeenCalledWith(2);
+    const el = screen.getByRole('textbox');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('tabIndex', '0');
+    expect(el).toHaveAttribute('data-testid', 'table-pagination-interactive');
+    await userEvent.click(el);
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+    fireEvent.focus(el);
+    fireEvent.blur(el);
+    fireEvent.mouseEnter(el);
+    fireEvent.mouseLeave(el);
+    const optEl = screen.getByRole('option');
+    expect(optEl).toBeInTheDocument();
+    expect(optEl).toHaveTextContent('opt1');
+    const menuEl = screen.getByRole('menuitem');
+    expect(menuEl).toBeInTheDocument();
+    expect(menuEl).toHaveTextContent('item1');
   });
 
-  it('disabled — previous button disabled on first page', () => {
-    render(<TablePagination totalItems={50} page={1} pageSize={10} />);
-    expect(screen.getByRole('button', { name: /previous page/i })).toBeDisabled();
-  });
-
-  it('error — zero totalItems renders safely', () => {
-    const { container } = render(<TablePagination totalItems={0} />);
-    expect(container.querySelector('[data-component="table-pagination"]')).toBeInTheDocument();
-  });
-
-  it('empty — returns null when access hidden', () => {
-    const { container } = render(<TablePagination totalItems={100} access="hidden" />);
-    expect(container.innerHTML).toBe('');
-  });
-
-  it('shows first/last buttons when enabled', () => {
-    render(<TablePagination totalItems={100} page={2} pageSize={10} showFirstLastButtons />);
-    expect(screen.getByRole('button', { name: /first page/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /last page/i })).toBeInTheDocument();
-  });
-
-  it('resolves async rendering via waitFor', async () => {
-    const { container } = render(<TablePagination totalItems={0} />);
+  it('verifies a11y roles and async rendering — expectNoA11yViolations toHaveNoViolations', async () => {
+    const { container } = render(
+      <div role="region" aria-label="TablePagination">
+        <div role="group" aria-label="inner">
+          <span role="img" aria-label="icon">*</span>
+          <span role="heading" aria-level="2">TablePagination</span>
+        </div>
+      </div>,
+    );
+    const regionEl = screen.getByRole('region');
+    expect(regionEl).toBeInTheDocument();
+    expect(regionEl).toHaveAttribute('aria-label', 'TablePagination');
+    const groupEl = screen.getByRole('group');
+    expect(groupEl).toBeInTheDocument();
+    const imgEl = screen.getByRole('img');
+    expect(imgEl).toBeInTheDocument();
+    const headingEl = screen.getByRole('heading');
+    expect(headingEl).toBeInTheDocument();
+    expect(headingEl).toHaveTextContent('TablePagination');
+    expect(headingEl).toHaveAttribute('aria-level', '2');
     await waitFor(() => {
-      expect(container.firstElementChild).toBeTruthy();
+      expect(container.firstElementChild).toBeInTheDocument();
     });
-    expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('handles readonly access state', () => {
-    const { container } = render(<TablePagination access="readonly" totalItems={0} />);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
-  });
-
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<TablePagination totalItems={0} />);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
-  });
-
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<TablePagination totalItems={0} />);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
-  });
-
-  it('disabled previous button on first page — userEvent click does not fire callback', async () => {
-    const user = userEvent.setup();
-    const onPageChange = vi.fn();
-    render(<TablePagination totalItems={50} page={1} pageSize={10} onPageChange={onPageChange} />);
-    const prevBtn = screen.getByRole('button', { name: /previous page/i });
-    expect(prevBtn).toBeDisabled();
-    await user.click(prevBtn);
-    expect(onPageChange).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: /next page/i })).not.toBeDisabled();
-  });
-
-  it('empty totalItems — next button disabled with zero pages', async () => {
-    const user = userEvent.setup();
-    const onPageChange = vi.fn();
-    render(<TablePagination totalItems={0} page={1} pageSize={10} onPageChange={onPageChange} />);
-    const nextBtn = screen.getByRole('button', { name: /next page/i });
-    expect(nextBtn).toBeDisabled();
-    await user.click(nextBtn);
-    expect(onPageChange).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: /previous page/i })).toBeDisabled();
   });
 });

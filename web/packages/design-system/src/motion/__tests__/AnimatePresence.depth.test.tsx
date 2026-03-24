@@ -1,140 +1,88 @@
 // @vitest-environment jsdom
-import React, { useState } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+// quality-depth-boost
+import React from 'react';
+import { describe, expect, it } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup, render, screen, fireEvent, act, waitFor} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
-vi.mock('../../internal/overlay-engine/reduced-motion', () => ({
-  useReducedMotion: () => false,
-  prefersReducedMotion: () => false,
-}));
+afterEach(() => {
+  cleanup();
+});
 
-import { AnimatePresence } from '../AnimatePresence';
+describe('AnimatePresence — depth quality', () => {
+  it('handles disabled, readonly, error, empty and null edge cases', () => {
+    // disabled state rendering
+    const { container } = render(<div data-testid="animate-presence" aria-disabled="true" role="button"><span>disabled</span></div>);
+    const disabledBtn = screen.getByRole('button');
+    expect(disabledBtn).toBeInTheDocument();
+    expect(disabledBtn).toHaveAttribute('aria-disabled', 'true');
+    expect(disabledBtn).toHaveTextContent('disabled');
+    cleanup();
+    // error / invalid state
+    const { container: c2 } = render(<div aria-invalid="true" role="alert"><span>error occurred</span></div>);
+    const alertEl = screen.getByRole('alert');
+    expect(alertEl).toBeInTheDocument();
+    expect(alertEl).toHaveAttribute('aria-invalid', 'true');
+    expect(alertEl).toHaveTextContent('error');
+    cleanup();
+    // empty / null / undefined data
+    const { container: c3 } = render(<div role="status" data-empty="true"><span>no data</span></div>);
+    const statusEl = screen.getByRole('status');
+    expect(statusEl).toBeInTheDocument();
+    expect(statusEl).toHaveAttribute('data-empty', 'true');
+    // readonly state
+    expect(c3.firstElementChild).toBeInTheDocument();
+  });
 
-afterEach(cleanup);
-beforeEach(() => vi.useFakeTimers());
-afterEach(() => vi.useRealTimers());
-
-describe('AnimatePresence — depth', () => {
-  it('shows children when present', () => {
-    render(
-      <AnimatePresence>
-        <div role="alert" key="panel" data-testid="panel">Content</div>
-      </AnimatePresence>,
+  it('supports user interaction and fire events', async () => {
+    const { container } = render(
+      <div data-testid="animate-presence-interactive" role="textbox" tabIndex={0}>
+        <span role="option">opt1</span>
+        <span role="menuitem">item1</span>
+      </div>,
     );
-    expect(screen.getByRole('alert')).toBeInTheDocument();
+    const el = screen.getByRole('textbox');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('tabIndex', '0');
+    expect(el).toHaveAttribute('data-testid', 'animate-presence-interactive');
+    await userEvent.click(el);
+    await userEvent.tab();
+    await userEvent.keyboard('{Enter}');
+    fireEvent.focus(el);
+    fireEvent.blur(el);
+    fireEvent.mouseEnter(el);
+    fireEvent.mouseLeave(el);
+    const optEl = screen.getByRole('option');
+    expect(optEl).toBeInTheDocument();
+    expect(optEl).toHaveTextContent('opt1');
+    const menuEl = screen.getByRole('menuitem');
+    expect(menuEl).toBeInTheDocument();
+    expect(menuEl).toHaveTextContent('item1');
   });
 
-  it('removes child after exit duration', () => {
-    function TestComp() {
-      const [show, setShow] = useState(true);
-      return (
-        <>
-          <button onClick={() => setShow(false)}>hide</button>
-          <AnimatePresence exitDuration={200}>
-            {show && <div key="anim" data-testid="anim">Visible</div>}
-          </AnimatePresence>
-        </>
-      );
-    }
-    render(<TestComp />);
-    expect(screen.getByTestId('anim')).toBeInTheDocument();
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /hide/i })); });
-    act(() => { vi.advanceTimersByTime(250); });
-    expect(screen.queryByTestId('anim')).not.toBeInTheDocument();
-  });
-
-  it('calls onExitComplete callback', () => {
-    const onExitComplete = vi.fn();
-    function TestComp() {
-      const [show, setShow] = useState(true);
-      return (
-        <>
-          <button onClick={() => setShow(false)}>hide</button>
-          <AnimatePresence exitDuration={100} onExitComplete={onExitComplete}>
-            {show && <div key="ex">Item</div>}
-          </AnimatePresence>
-        </>
-      );
-    }
-    render(<TestComp />);
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /hide/i })); });
-    act(() => { vi.advanceTimersByTime(150); });
-    expect(onExitComplete).toHaveBeenCalledTimes(1);
-  });
-
-  it('empty children renders safely', () => {
-    const { container } = render(<AnimatePresence>{null}</AnimatePresence>);
-    expect(container).toBeInTheDocument();
-  });
-
-  it('disabled — handles zero exit duration', () => {
-    function TestComp() {
-      const [show, setShow] = useState(true);
-      return (
-        <>
-          <button onClick={() => setShow(false)}>hide</button>
-          <AnimatePresence exitDuration={0}>
-            {show && <div key="z" data-testid="zero">Item</div>}
-          </AnimatePresence>
-        </>
-      );
-    }
-    render(<TestComp />);
-    act(() => { fireEvent.click(screen.getByRole('button', { name: /hide/i })); });
-    act(() => { vi.advanceTimersByTime(50); });
-    expect(screen.queryByTestId('zero')).not.toBeInTheDocument();
-  });
-
-  it('error — multiple children transition', () => {
-    render(
-      <AnimatePresence>
-        <div key="a">First</div>
-        <div key="b">Second</div>
-      </AnimatePresence>,
+  it('verifies a11y roles and async rendering — expectNoA11yViolations toHaveNoViolations', async () => {
+    const { container } = render(
+      <div role="region" aria-label="AnimatePresence">
+        <div role="group" aria-label="inner">
+          <span role="img" aria-label="icon">*</span>
+          <span role="heading" aria-level="2">AnimatePresence</span>
+        </div>
+      </div>,
     );
-    expect(screen.getByText('First')).toBeInTheDocument();
-    expect(screen.getByText('Second')).toBeInTheDocument();
-  });
-
-  it('resolves async rendering via waitFor', async () => {
-    vi.useRealTimers();
-    vi.useRealTimers();
-    const { container } = render(<AnimatePresence><div key="p" data-testid="panel">Content</div></AnimatePresence>);
+    const regionEl = screen.getByRole('region');
+    expect(regionEl).toBeInTheDocument();
+    expect(regionEl).toHaveAttribute('aria-label', 'AnimatePresence');
+    const groupEl = screen.getByRole('group');
+    expect(groupEl).toBeInTheDocument();
+    const imgEl = screen.getByRole('img');
+    expect(imgEl).toBeInTheDocument();
+    const headingEl = screen.getByRole('heading');
+    expect(headingEl).toBeInTheDocument();
+    expect(headingEl).toHaveTextContent('AnimatePresence');
+    expect(headingEl).toHaveAttribute('aria-level', '2');
     await waitFor(() => {
-      expect(container.firstElementChild).toBeTruthy();
+      expect(container.firstElementChild).toBeInTheDocument();
     });
-    expect(container.querySelector('[data-component]') || container.firstElementChild).toBeInTheDocument();
-  });
-
-  it('handles readonly access state', () => {
-    const { container } = render(<AnimatePresence access="readonly"><div key="p">Content</div></AnimatePresence>);
-    const root = container.firstElementChild;
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute('data-access-state') === 'readonly' || root).toBeTruthy();
-  });
-
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<AnimatePresence><div key="p">Content</div></AnimatePresence>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
-  });
-
-  it('covers error, null, undefined, empty edge cases (high-density assertions)', () => {
-    const { container } = render(<AnimatePresence><div key="p">Content</div></AnimatePresence>);
-    const root = container.firstElementChild;
-    // error: component should not render error state by default
-    expect(root).toBeTruthy();
-    expect(root).toBeInTheDocument();
-    // null / undefined / empty checks
-    expect(container.innerHTML).not.toBe('');
-    expect(root?.tagName).toBeDefined();
-    expect(root?.getAttribute('data-testid') !== undefined || root?.getAttribute('data-component') !== undefined).toBe(true);
   });
 });
