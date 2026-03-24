@@ -3,40 +3,40 @@
     "color": {
       "brand": {
         "primary": {
-          "500": { "value": "#2B6CB0" },
-          "600": { "value": "#2C5282" }
+          "500": { "value": "#3b82f6" },
+          "600": { "value": "#2563eb" }
         }
       },
       "neutral": {
         "0": { "value": "#FFFFFF" },
-        "50": { "value": "#F8FAFC" },
-        "100": { "value": "#F1F5F9" },
-        "200": { "value": "#E2E8F0" },
-        "300": { "value": "#CBD5E1" },
-        "500": { "value": "#64748B" },
-        "600": { "value": "#475569" },
-        "700": { "value": "#334155" },
-        "800": { "value": "#1F2937" },
-        "900": { "value": "#0F172A" },
-        "950": { "value": "#0B1220" }
+        "50": { "value": "#f9fafb" },
+        "100": { "value": "#f3f4f6" },
+        "200": { "value": "#e5e7eb" },
+        "300": { "value": "#d1d5db" },
+        "500": { "value": "#6b7280" },
+        "600": { "value": "#4b5563" },
+        "700": { "value": "#374151" },
+        "800": { "value": "#1f2937" },
+        "900": { "value": "#111827" },
+        "950": { "value": "#030712" }
       },
       "info": {
-        "500": { "value": "#3182CE" }
+        "500": { "value": "#3b82f6" }
       },
       "success": {
-        "500": { "value": "#38A169" }
+        "500": { "value": "#22c55e" }
       },
       "warning": {
-        "500": { "value": "#DD6B20" }
+        "500": { "value": "#f59e0b" }
       },
       "danger": {
-        "500": { "value": "#E53E3E" }
+        "500": { "value": "#ef4444" }
       }
     },
     "radius": {
-      "sm": { "value": "6px" },
-      "md": { "value": "10px" },
-      "lg": { "value": "14px" }
+      "sm": { "value": "4px" },
+      "md": { "value": "8px" },
+      "lg": { "value": "12px" }
     },
     "shadow": {
       "sm": { "value": "0 1px 2px rgba(15, 23, 42, 0.08)" },
@@ -50,9 +50,9 @@
         "exit": { "value": "cubic-bezier(.4,0,1,1)" }
       },
       "duration": {
-        "fast": { "value": "120ms" },
+        "fast": { "value": "100ms" },
         "medium": { "value": "200ms" },
-        "slow": { "value": "320ms" }
+        "slow": { "value": "300ms" }
       }
     },
     "space": {
