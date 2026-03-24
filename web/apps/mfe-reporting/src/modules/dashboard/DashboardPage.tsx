@@ -291,7 +291,7 @@ const KpiFallbackCard: React.FC<{ kpi: KpiResult; onClick: () => void }> = ({ kp
       <div className="text-xs text-text-subtle">{kpi.title}</div>
       <div className="mt-1 text-xl font-bold text-text-primary">{kpi.formattedValue}</div>
       {kpi.trend && (
-        <div className={`mt-1 text-xs ${kpi.trend.direction === 'up' ? 'text-green-600' : kpi.trend.direction === 'down' ? 'text-red-600' : 'text-text-subtle'}`}>
+        <div className={`mt-1 text-xs ${kpi.trend.direction === 'up' ? 'text-state-success-text' : kpi.trend.direction === 'down' ? 'text-state-danger-text' : 'text-text-subtle'}`}>
           {kpi.trend.direction === 'up' ? '↑' : kpi.trend.direction === 'down' ? '↓' : '→'}{' '}
           {kpi.trend.percentage}%
         </div>

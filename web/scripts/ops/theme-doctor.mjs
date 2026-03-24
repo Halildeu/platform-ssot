@@ -804,6 +804,51 @@ check('phantom-classes', 'Tailwind classes using tokens not defined in @theme in
   };
 });
 
+// 20. Hardcoded Tailwind palette colors instead of design tokens
+check('palette-over-token', 'Tailwind palette colors used instead of design tokens in className', () => {
+  const scanDirs = ['apps', 'packages/design-system/src', 'packages/x-form-builder/src', 'packages/x-charts/src', 'packages/x-data-grid/src', 'packages/x-editor/src', 'packages/x-kanban/src', 'packages/x-scheduler/src', 'packages/blocks/src'];
+  /* Detect: bg-red-500, text-zinc-400, dark:bg-emerald-900, border-gray-200, etc.
+     These should use design tokens: bg-state-danger-bg, text-text-secondary, etc. */
+  const paletteColors = ['red', 'blue', 'green', 'gray', 'amber', 'orange', 'yellow', 'indigo', 'purple', 'pink', 'rose', 'emerald', 'teal', 'cyan', 'sky', 'violet', 'fuchsia', 'lime', 'stone', 'zinc', 'slate', 'neutral'];
+  const paletteRe = new RegExp(
+    `\\b(?:dark:)?(?:hover:)?(?:focus:)?(?:bg|text|border|ring|divide|from|via|to)-(${paletteColors.join('|')})-(\\d{2,3})\\b`,
+    'g'
+  );
+  /* Separate production code from internal tools (design-lab, demos) */
+  const internalPaths = ['design-lab', 'demos/', 'playground/', 'showcase/'];
+  const prodViolations = [];
+  const internalViolations = [];
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      const matches = content.match(paletteRe) || [];
+      if (matches.length === 0) continue;
+      const rel = relative(ROOT, file);
+      const isInternal = internalPaths.some(p => rel.includes(p));
+      const entry = { file: rel, count: matches.length, samples: [...new Set(matches)].slice(0, 5) };
+      if (isInternal) internalViolations.push(entry);
+      else prodViolations.push(entry);
+    }
+  }
+
+  const prodTotal = prodViolations.reduce((s, v) => s + v.count, 0);
+  const internalTotal = internalViolations.reduce((s, v) => s + v.count, 0);
+
+  if (prodTotal === 0 && internalTotal === 0) return { status: 'pass', message: 'No hardcoded Tailwind palette colors — all use design tokens' };
+  if (prodTotal === 0) return {
+    status: 'pass',
+    message: `Production code clean. ${internalTotal} palette colors in ${internalViolations.length} internal/design-lab files (cosmetic)`,
+  };
+  return {
+    status: prodTotal > 20 ? 'fail' : 'warn',
+    message: `${prodTotal} palette colors in ${prodViolations.length} production files + ${internalTotal} in ${internalViolations.length} internal files`,
+    details: prodViolations.slice(0, 10),
+    fix: FIX_HINT ? 'Replace palette colors with token utilities: bg-red-500→bg-state-danger-text, text-gray-500→text-text-secondary, dark:bg-zinc-800→dark:bg-surface-default, border-gray-200→border-border-subtle' : undefined,
+  };
+});
+
 /* ================================================================== */
 /*  TW4 BEHAVIOR CHANGE RISK CHECKS                                    */
 /* ================================================================== */
@@ -949,7 +994,7 @@ check('tw4-hidden-priority', 'TW4 hidden attribute priority change', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '3.3.0',
+    version: '3.4.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -958,7 +1003,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║              🩺 Theme Doctor v3.3 (25 checks)               ║');
+  console.log('║              🩺 Theme Doctor v3.4 (26 checks)               ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

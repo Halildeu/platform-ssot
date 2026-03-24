@@ -54,7 +54,7 @@ const STATUS_CONFIG: Record<ComplianceStatus, { label: string; bg: string; text:
 
 const SEVERITY_CONFIG: Record<SeverityLevel, { label: string; borderColor: string; textColor: string }> = {
   critical: { label: 'Critical', borderColor: 'border-l-[var(--state-error-text)]', textColor: 'text-state-danger-text' },
-  high: { label: 'High', borderColor: 'border-l-orange-500', textColor: 'text-orange-600' },
+  high: { label: 'High', borderColor: 'border-l-[var(--state-warning-text)]', textColor: 'text-state-warning-text' },
   medium: { label: 'Medium', borderColor: 'border-l-[var(--state-warning-text)]', textColor: 'text-state-warning-text' },
   low: { label: 'Low', borderColor: 'border-l-[var(--state-success-text)]', textColor: 'text-state-success-text' },
 };

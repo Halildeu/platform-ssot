@@ -1202,7 +1202,7 @@ export const MenuBar = React.forwardRef<HTMLElement, MenuBarProps>(function Menu
             isActive
               ? 'border-border-default/70 bg-[var(--surface-card)] text-accent-primary shadow-[0_16px_34px_-26px_var(--shadow-color)] ring-1 ring-border-subtle/20 before:pointer-events-none before:absolute before:inset-x-4 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent'
               : itemEmphasis === 'promoted'
-                ? 'border-sky-200/70 bg-[var(--surface-card-alt)] text-text-primary shadow-[0_14px_30px_-24px_var(--shadow-color)] hover:-translate-y-px hover:border-sky-300/80 hover:bg-[var(--surface-card)] hover:shadow-[0_18px_34px_-24px_var(--shadow-color)]'
+                ? 'border-selection-outline/70 bg-[var(--surface-card-alt)] text-text-primary shadow-[0_14px_30px_-24px_var(--shadow-color)] hover:-translate-y-px hover:border-action-primary/80 hover:bg-[var(--surface-card)] hover:shadow-[0_18px_34px_-24px_var(--shadow-color)]'
                 : itemEmphasis === 'subtle'
                   ? 'bg-transparent text-text-subtle hover:-translate-y-px hover:border-border-subtle/60 hover:bg-[var(--surface-card)] hover:text-text-primary hover:shadow-[0_12px_26px_-24px_var(--shadow-color)]'
                   : 'bg-transparent text-text-secondary hover:-translate-y-px hover:border-border-subtle/70 hover:bg-[var(--surface-card)] hover:text-text-primary hover:shadow-[0_12px_26px_-24px_var(--shadow-color)]',

@@ -66,8 +66,8 @@ const LoginPage = () => {
           </div>
 
           {permitAllMode ? (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 px-4 py-3">
-              <p className="text-xs font-medium text-emerald-700">
+            <div className="rounded-xl border border-state-success-border bg-state-success-bg/50 px-4 py-3">
+              <p className="text-xs font-medium text-state-success-text">
                 Geliştirme modunda oturum açmaya gerek yok.
               </p>
               <Button
@@ -97,7 +97,7 @@ const LoginPage = () => {
               {/* Güvenlik bilgisi */}
               <div className="rounded-xl border border-border-subtle bg-surface-muted/50 px-4 py-3">
                 <div className="flex items-start gap-2">
-                  <svg className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="mt-0.5 h-3.5 w-3.5 shrink-0 text-state-success-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                     <path d="m9 12 2 2 4-4" />
                   </svg>

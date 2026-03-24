@@ -228,7 +228,7 @@ export function InlineEdit({
             disabled={saving}
             className={cn(
               'rounded-xs border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
-              error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-border-default focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
+              error ? 'border-state-danger-border focus:ring-1 focus:ring-state-danger-border' : 'border-border-default focus:border-action-primary focus:ring-1 focus:ring-accent-soft',
             )}
           >
             {options.map((opt) => (
@@ -251,7 +251,7 @@ export function InlineEdit({
             placeholder={placeholder}
             className={cn(
               'rounded-xs border bg-[var(--surface-primary)] px-2 py-1 text-sm text-text-primary outline-hidden transition-colors',
-              error ? 'border-red-500 focus:ring-1 focus:ring-red-300' : 'border-border-default focus:border-blue-400 focus:ring-1 focus:ring-blue-200',
+              error ? 'border-state-danger-border focus:ring-1 focus:ring-state-danger-border' : 'border-border-default focus:border-action-primary focus:ring-1 focus:ring-accent-soft',
             )}
           />
         )}
