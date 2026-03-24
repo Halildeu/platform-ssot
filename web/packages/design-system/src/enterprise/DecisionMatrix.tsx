@@ -162,7 +162,7 @@ function ScoreCell({ score, maxScore, canEdit, onEdit }: ScoreCellProps) {
         onChange={(e) => setEditValue(e.target.value)}
         onBlur={handleCommit}
         onKeyDown={handleKeyDown}
-        className="w-12 text-center text-xs rounded border px-1 py-0.5 outline-none focus:ring-1"
+        className="w-12 text-center text-xs rounded border px-1 py-0.5 outline-hidden focus:ring-1"
         style={{
           borderColor: 'var(--border-default)',
           backgroundColor: 'var(--surface-default)',

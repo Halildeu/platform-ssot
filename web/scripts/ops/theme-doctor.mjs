@@ -559,6 +559,66 @@ check('forward-ref', 'forwardRef on interactive primitives', () => {
   };
 });
 
+// 17. Undefined Tailwind class prefixes (ds-*, tw-*, etc.)
+check('undefined-tw-prefix', 'Undefined Tailwind class prefixes in production TSX', () => {
+  const scanDirs = ['apps', 'packages/design-system/src', 'packages/x-form-builder/src', 'packages/x-charts/src', 'packages/x-data-grid/src', 'packages/x-editor/src', 'packages/x-kanban/src', 'packages/x-scheduler/src', 'packages/blocks/src'];
+  /* Known valid prefixes in TW4 @theme: text-, bg-, border-, ring-, divide-, shadow-, outline-
+     followed by a design token name from @theme inline.
+     Unknown prefixes like ds-*, tw-*, cx-* mean the class won't resolve. */
+  const knownTokenPrefixes = new Set([
+    'surface-', 'text-', 'action-', 'state-', 'border-', 'accent-', 'selection-',
+    'data-table-', 'menu-', 'status-', 'color-',
+  ]);
+  /* Detect custom prefixed classes that aren't in @theme — e.g. ds-text-primary, tw-bg-red.
+     Only scan inside className/class strings, not id/key/data attributes. */
+  const classNameBlockRe = /className\s*=\s*(?:{[^}]*`([^`]*)`[^}]*}|{[^}]*['"]([^'"]*)['"]}|['"]([^'"]*)['"]\s*|{[^}]*\([^)]*['"]([^'"]*)['"]\))/g;
+  const tokenClassRe = /\b(?:text|bg|border|ring|divide|shadow|outline|from|via|to)-([a-z]{2,4})-[a-z][\w-]*/g;
+  const twColors = new Set(['red', 'blue', 'green', 'gray', 'white', 'black', 'amber', 'orange', 'yellow', 'indigo', 'purple', 'pink', 'rose', 'emerald', 'teal', 'cyan', 'sky', 'violet', 'fuchsia', 'lime', 'stone', 'zinc', 'slate', 'neutral']);
+  const violations = [];
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      /* Extract all className string content */
+      const classStrings = [];
+      let cm;
+      while ((cm = classNameBlockRe.exec(content)) !== null) {
+        classStrings.push(cm[1] || cm[2] || cm[3] || cm[4] || '');
+      }
+      classNameBlockRe.lastIndex = 0;
+
+      const matches = new Set();
+      for (const cls of classStrings) {
+        let tm;
+        while ((tm = tokenClassRe.exec(cls)) !== null) {
+          const prefix = tm[1];
+          if (knownTokenPrefixes.has(prefix + '-')) continue;
+          if (twColors.has(prefix)) continue;
+          /* Skip var() wrapped classes and arbitrary [var(--...)] — they resolve at runtime */
+          const before = cls.substring(Math.max(0, tm.index - 10), tm.index);
+          if (tm[0].includes('var(') || before.includes('var(') || before.includes('[var(') || before.includes('[')) continue;
+          matches.add(tm[0]);
+        }
+        tokenClassRe.lastIndex = 0;
+      }
+
+      if (matches.size > 0) {
+        violations.push({ file: relative(ROOT, file), classes: [...matches].slice(0, 5), count: matches.size });
+      }
+    }
+  }
+
+  if (violations.length === 0) return { status: 'pass', message: 'No undefined Tailwind class prefixes found in production TSX' };
+  const total = violations.reduce((s, v) => s + v.count, 0);
+  return {
+    status: 'fail',
+    message: `${total} undefined Tailwind class prefixes in ${violations.length} files (classes won't resolve — no styles applied)`,
+    details: violations.slice(0, 8),
+    fix: FIX_HINT ? 'Replace custom-prefixed classes (ds-*, tw-*) with @theme inline token names (text-text-primary, bg-surface-default, etc.)' : undefined,
+  };
+});
+
 /* ================================================================== */
 /*  TW4 BEHAVIOR CHANGE RISK CHECKS                                    */
 /* ================================================================== */
@@ -704,7 +764,7 @@ check('tw4-hidden-priority', 'TW4 hidden attribute priority change', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '3.0.0',
+    version: '3.1.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -713,7 +773,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║              🩺 Theme Doctor v3.0 (22 checks)               ║');
+  console.log('║              🩺 Theme Doctor v3.1 (23 checks)               ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

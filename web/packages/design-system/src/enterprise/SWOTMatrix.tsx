@@ -381,7 +381,7 @@ export function SWOTMatrix({
             return (
               <span key={cfg.key} className="flex items-center gap-1">
                 <span
-                  className="inline-block w-2.5 h-2.5 rounded-sm"
+                  className="inline-block w-2.5 h-2.5 rounded-xs"
                   style={{ backgroundColor: cfg.headerText }}
                   aria-hidden="true"
                 />
