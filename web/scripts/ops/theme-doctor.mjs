@@ -875,11 +875,75 @@ check('palette-over-token', 'Tailwind palette colors used instead of design toke
   };
 });
 
+// 21. Token-eligible hardcodes — hex values matching known tokens but not using var()
+check('token-eligible', 'Hardcoded hex values that match known design tokens', () => {
+  const themeCss = readSafe(THEME_CSS);
+  const bridgeCss = readSafe(TOKEN_BRIDGE_CSS);
+  const tokenMap = new Map();
+
+  /* Build hex → token name map from theme.css */
+  for (const line of themeCss.split('\n')) {
+    const m = line.trim().match(/^--([\w-]+):\s*(.+);$/);
+    if (!m) continue;
+    const val = m[2].trim();
+    const srgb = val.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
+    if (srgb) {
+      const hex = '#' + [1,2,3].map(i => Math.round(parseFloat(srgb[i])*255).toString(16).padStart(2,'0')).join('');
+      tokenMap.set(hex, m[1]);
+    }
+    if (/^#[0-9a-f]{3,8}$/i.test(val)) tokenMap.set(val.toLowerCase(), m[1]);
+  }
+  for (const line of bridgeCss.split('\n')) {
+    const hm = line.match(/#[0-9a-f]{6}/i);
+    const pm = line.match(/^\s+--([\w-]+):/);
+    if (hm && pm) tokenMap.set(hm[0].toLowerCase(), pm[1]);
+  }
+
+  const scanDirs = ['apps', 'packages/design-system/src', 'packages/x-form-builder/src', 'packages/x-charts/src', 'packages/x-data-grid/src', 'packages/x-editor/src', 'packages/x-kanban/src', 'packages/x-scheduler/src'];
+  const skipPaths = ['design-lab', 'demos/', '__tests__', '__stories__', '__visual__', 'ColorPicker', 'color-picker', 'UniversalColor', 'chart-theme', 'intelligence/', 'catalog/component-docs', 'theme/core/', 'tokens/', 'ThemeAdmin'];
+  const violations = [];
+
+  for (const dir of scanDirs) {
+    const files = [...walkDir(join(ROOT, dir), '.tsx'), ...walkDir(join(ROOT, dir), '.ts')];
+    for (const file of files) {
+      const rel = relative(ROOT, file);
+      if (skipPaths.some(p => rel.includes(p))) continue;
+      const content = readSafe(file);
+      const hits = [];
+      const hexRe = /#[0-9a-fA-F]{6}\b/g;
+      let hm;
+      while ((hm = hexRe.exec(content)) !== null) {
+        const hex = hm[0].toLowerCase();
+        if (!tokenMap.has(hex)) continue;
+        const before = content.substring(Math.max(0, hm.index - 30), hm.index);
+        if (before.includes('var(')) continue;
+        const lineStart = content.lastIndexOf('\n', hm.index) + 1;
+        const lineText = content.substring(lineStart, hm.index);
+        if (lineText.includes('//') || lineText.includes('*')) continue;
+        hits.push({ hex, token: tokenMap.get(hex) });
+      }
+      if (hits.length > 0) {
+        const unique = [...new Map(hits.map(h => [h.hex, h])).values()];
+        violations.push({ file: rel, count: hits.length, suggestions: unique.slice(0, 3).map(h => `${h.hex} → var(--${h.token})`) });
+      }
+    }
+  }
+
+  if (violations.length === 0) return { status: 'pass', message: 'No bare hex values matching design tokens — all use var(--token)' };
+  const total = violations.reduce((s, v) => s + v.count, 0);
+  return {
+    status: total > 20 ? 'warn' : 'pass',
+    message: `${total} hex values in ${violations.length} files match tokens but use bare hex instead of var(--token)`,
+    details: violations.slice(0, 8),
+    fix: FIX_HINT ? 'Replace: "#3b82f6" → "var(--action-primary, #3b82f6)"' : undefined,
+  };
+});
+
 /* ================================================================== */
 /*  TW4 BEHAVIOR CHANGE RISK CHECKS                                    */
 /* ================================================================== */
 
-// 18. hover: variant — TW4 only fires on hover-capable devices
+// 22. hover: variant — TW4 only fires on hover-capable devices
 check('tw4-hover-risk', 'TW4 hover variant behavior (touch device risk)', () => {
   const scanDirs = ['apps', 'packages/design-system/src'];
   let hoverCount = 0;
@@ -1020,7 +1084,7 @@ check('tw4-hidden-priority', 'TW4 hidden attribute priority change', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '3.4.0',
+    version: '3.5.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -1029,7 +1093,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║              🩺 Theme Doctor v3.4 (26 checks)               ║');
+  console.log('║              🩺 Theme Doctor v3.5 (27 checks)               ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

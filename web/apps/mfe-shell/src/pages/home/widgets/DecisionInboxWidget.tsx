@@ -60,7 +60,7 @@ export const DecisionInboxWidget: React.FC<{ onRefresh?: () => void }> = ({ onRe
         <VStack gap={3}>
           <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
             <div style={{ textAlign: "center", flex: 1 }}>
-              <div style={{ fontSize: 32, fontWeight: 800, color: pending > 0 ? "#f59e0b" : "#22c55e" }}>
+              <div style={{ fontSize: 32, fontWeight: 800, color: pending > 0 ? "var(--state-warning-text, #f59e0b)" : "var(--state-success-text, #22c55e)" }}>
                 {pending}
               </div>
               <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>Pending</div>
