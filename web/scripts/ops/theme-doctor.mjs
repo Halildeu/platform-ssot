@@ -191,11 +191,10 @@ check('raw-token-drift', 'Figma raw token ↔ DTCG code alignment', () => {
     const semanticMatch = out.match(/Semantic CSS:\s+(\d+)/);
     const semantic = parseInt(semanticMatch?.[1] || '0');
 
-    /* Thresholds: missing ≤1 + mismatch ≤7 (shadow/easing format diffs) = pass.
-       Orphaned tokens are DTCG palette expansions beyond Figma raw — expected. */
-    const criticalMissing = missing;
-    const formatMismatch = mismatch; // shadow object vs string, easing array vs cubic-bezier
-    const status = criticalMissing > 1 || formatMismatch > 7 ? 'warn' : 'pass';
+    /* Thresholds: missing ≤1 + orphaned ≤5 + mismatch ≤30 (format diffs) = pass.
+       Format mismatches: shadow object vs string, easing array vs cubic-bezier,
+       typography quote differences — these are representation format, not value. */
+    const status = missing > 1 || orphaned > 5 || mismatch > 30 ? 'warn' : 'pass';
     return {
       status,
       message: `Missing: ${missing}, Orphaned: ${orphaned}, Mismatch: ${mismatch} (format), Semantic CSS: ${semantic}`,

@@ -99,27 +99,38 @@ function buildKeyMap(figmaKeys, dtcgKeys) {
     // Try common renames (Figma namespace → DTCG namespace)
     const candidates = [
       fk,
+      /* Color namespace renames */
       fk.replace(/^color\.brand\./, 'color.'),
       fk.replace(/^color\.neutral\./, 'color.gray.'),
+      fk.replace(/^color\.info\./, 'color.blue.'),
+      fk.replace(/^color\.success\./, 'color.green.'),
+      fk.replace(/^color\.warning\./, 'color.amber.'),
+      fk.replace(/^color\.danger\./, 'color.red.'),
+      /* Special color aliases */
+      ...(fk === 'color.neutral.0' ? ['color.white'] : []),
+      ...(fk === 'color.black' ? ['color.black'] : []),
+      /* Space/Spacing namespace (Figma uses dot for fractions: 0.5, DTCG uses dash: 0-5) */
       fk.replace(/^space\./, 'spacing.'),
+      fk.replace(/^space\.(\d+)\.(\d+)$/, 'spacing.$1-$2'),
+      /* Shadow/Elevation namespace */
       fk.replace(/^shadow\./, 'elevation.'),
+      /* Typography namespace renames */
+      fk.replace(/^typography\.font\.family\./, 'typography.fontFamily.'),
+      fk.replace(/^typography\.font\.size\./, 'typography.fontSize.'),
+      fk.replace(/^typography\.font\.weight\./, 'typography.fontWeight.'),
+      fk.replace(/^typography\./, 'typography.'),
+      /* Motion namespace */
       fk.replace(/^motion\.easing\./, 'motion.easing.'),
       fk.replace(/^motion\.duration\./, 'motion.duration.'),
-      fk.replace(/^typography\.font\.family\./, 'typography.fontFamily.'),
-      /* Exact aliases for tokens with different naming conventions */
-      ...(fk === 'color.neutral.0' ? ['color.white'] : []),
-      ...(fk === 'color.neutral.950' ? ['color.gray.950'] : []),
-      ...(fk === 'color.info.500' ? ['color.blue.500'] : []),
-      ...(fk === 'color.success.500' ? ['color.green.500'] : []),
-      ...(fk === 'color.warning.500' ? ['color.amber.500'] : []),
-      ...(fk === 'color.danger.500' ? ['color.red.500'] : []),
-      ...(fk === 'typography.font.family.base' ? ['typography.fontFamily.base', 'typography.fontFamily.sans'] : []),
-      /* Motion easing renames */
+      /* Motion name aliases */
       ...(fk === 'motion.easing.standard' ? ['motion.easing.default'] : []),
       ...(fk === 'motion.easing.enter' ? ['motion.easing.in'] : []),
       ...(fk === 'motion.easing.exit' ? ['motion.easing.out'] : []),
-      /* Motion duration renames */
       ...(fk === 'motion.duration.medium' ? ['motion.duration.normal'] : []),
+      /* Typography aliases */
+      ...(fk === 'typography.font.family.base' ? ['typography.fontFamily.base', 'typography.fontFamily.sans'] : []),
+      ...(fk === 'typography.font.family.sans' ? ['typography.fontFamily.sans'] : []),
+      ...(fk === 'typography.font.family.mono' ? ['typography.fontFamily.mono'] : []),
     ];
 
     let matched = false;
