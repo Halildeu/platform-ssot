@@ -156,6 +156,9 @@
     "test:a11y-gate:ci": "node scripts/ci/a11y-gate.mjs --ci",
     "quality:release": "node scripts/ci/quality-gate.mjs",
     "quality:release:visual": "node scripts/ci/quality-gate.mjs --visual",
+    "license-audit": "node scripts/ci/license-audit.mjs",
+    "license-audit:ci": "node scripts/ci/license-audit.mjs --ci",
+    "bundle-report": "node scripts/ci/bundle-analyzer.mjs",
     "prepack": "[ -d dist ] || npm run build",
     "prepublishOnly": "npm run build"
   },

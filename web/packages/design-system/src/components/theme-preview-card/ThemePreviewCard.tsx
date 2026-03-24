@@ -74,7 +74,7 @@ export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCar
         </div>
       ) : null}
       <div className="flex flex-col gap-1 rounded-lg border border-border-subtle bg-surface-muted px-2 py-2">
-        <div className="h-2 w-10 rounded-sm bg-surface-default" />
+        <div className="h-2 w-10 rounded-xs bg-surface-default" />
         <div className="mt-1 h-[6px] rounded-xs bg-transparent text-[9px] font-medium text-text-primary">
           {resolvedTitleText}
         </div>

@@ -310,7 +310,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                         updateSessionTimeoutMutation.isPending
                         || Math.round(sessionTimeoutMinutes ?? 0) === Math.round(user.sessionTimeoutMinutes ?? 15)
                       }
-                      className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm hover:opacity-90 disabled:opacity-50"
+                      className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90 disabled:opacity-50"
                     >
                       {updateSessionTimeoutMutation.isPending
                         ? t('users.detail.sessionTimeout.saving')

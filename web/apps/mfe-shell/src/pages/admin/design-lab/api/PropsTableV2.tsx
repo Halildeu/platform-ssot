@@ -194,7 +194,7 @@ function PropRow({
               {prop.name}
             </code>
             {prop.required && (
-              <span className="rounded-sm bg-amber-500/10 px-1 py-0.5 text-[9px] font-bold uppercase text-amber-600">
+              <span className="rounded-xs bg-amber-500/10 px-1 py-0.5 text-[9px] font-bold uppercase text-amber-600">
                 req
               </span>
             )}

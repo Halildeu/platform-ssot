@@ -3,11 +3,12 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { Text } from '../Text';
+import { LIGHT_BG_HEX } from '../../../__tests__/visual-constants';
 
 describe('Text Visual Regression', () => {
   it('text variants match screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Text as="h1" size="3xl" weight="bold">Heading 1</Text>
         <Text as="h2" size="2xl" weight="semibold">Heading 2</Text>
         <Text size="base">Body text</Text>
@@ -19,7 +20,7 @@ describe('Text Visual Regression', () => {
 
   it('text color variants match screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, display: 'flex', flexDirection: 'column', gap: 8 }}>
         <Text variant="default">Default</Text>
         <Text variant="success">Success</Text>
         <Text variant="error">Error</Text>

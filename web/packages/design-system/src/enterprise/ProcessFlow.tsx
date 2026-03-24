@@ -464,7 +464,7 @@ export function ProcessFlow({
       </svg>
 
       {scrollNeeded && (
-        <div className="absolute bottom-1 right-1 rounded-sm bg-surface-muted px-1.5 py-0.5 text-[10px] text-text-secondary opacity-70">
+        <div className="absolute bottom-1 right-1 rounded-xs bg-surface-muted px-1.5 py-0.5 text-[10px] text-text-secondary opacity-70">
           scroll to explore
         </div>
       )}

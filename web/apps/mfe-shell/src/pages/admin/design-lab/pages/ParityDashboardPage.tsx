@@ -215,7 +215,7 @@ export default function ParityDashboardPage() {
               <tr key={row.name} className="border-t border-border-subtle hover:bg-surface-muted/30 transition">
                 <td className="px-4 py-2.5">
                   <div className="flex items-center gap-2">
-                    <span className="rounded-sm bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium text-text-tertiary">{row.category}</span>
+                    <span className="rounded-xs bg-surface-muted px-1.5 py-0.5 text-[9px] font-medium text-text-tertiary">{row.category}</span>
                     <Text className="text-xs text-text-primary">{row.name}</Text>
                   </div>
                 </td>

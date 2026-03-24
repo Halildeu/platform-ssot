@@ -276,7 +276,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
               <button
                 type="button"
                 onClick={onApprove}
-                className="px-3 py-1 text-xs font-medium rounded-sm bg-[var(--brand-primary)] text-text-inverse hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                className="px-3 py-1 text-xs font-medium rounded-xs bg-[var(--brand-primary)] text-text-inverse hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
               >
                 Approve
               </button>
@@ -285,7 +285,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
               <button
                 type="button"
                 onClick={() => setShowRejectBox(true)}
-                className="px-3 py-1 text-xs font-medium rounded-sm bg-state-danger-bg text-state-danger-text hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                className="px-3 py-1 text-xs font-medium rounded-xs bg-state-danger-bg text-state-danger-text hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
               >
                 Reject
               </button>
@@ -294,7 +294,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
               <button
                 type="button"
                 onClick={() => setShowDelegateBox(true)}
-                className="px-3 py-1 text-xs font-medium rounded-sm border border-border-default text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
+                className="px-3 py-1 text-xs font-medium rounded-xs border border-border-default text-text-secondary hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[var(--focus-ring)]"
               >
                 Delegate
               </button>
@@ -310,7 +310,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                 onChange={(e) => setRejectComment(e.target.value)}
                 placeholder="Reason for rejection (required)"
                 rows={2}
-                className="text-xs rounded-sm border border-border-default bg-surface-default text-text-primary p-1.5 resize-none focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-ring)]"
+                className="text-xs rounded-xs border border-border-default bg-surface-default text-text-primary p-1.5 resize-none focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-ring)]"
                 aria-label="Rejection reason"
               />
               <div className="flex gap-1">
@@ -318,14 +318,14 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                   type="button"
                   onClick={handleRejectSubmit}
                   disabled={!rejectComment.trim()}
-                  className="px-2 py-0.5 text-[10px] font-medium rounded-sm bg-state-danger-text text-text-inverse disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] font-medium rounded-xs bg-state-danger-text text-text-inverse disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Confirm Reject
                 </button>
                 <button
                   type="button"
                   onClick={() => { setShowRejectBox(false); setRejectComment(''); }}
-                  className="px-2 py-0.5 text-[10px] rounded-sm border border-border-default text-text-secondary focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] rounded-xs border border-border-default text-text-secondary focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Cancel
                 </button>
@@ -342,7 +342,7 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                 value={delegateValue}
                 onChange={(e) => setDelegateValue(e.target.value)}
                 placeholder="New assignee name or email"
-                className="text-xs rounded-sm border border-border-default bg-surface-default text-text-primary p-1.5 focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-ring)]"
+                className="text-xs rounded-xs border border-border-default bg-surface-default text-text-primary p-1.5 focus:outline-hidden focus:ring-1 focus:ring-[var(--focus-ring)]"
                 aria-label="New assignee"
                 onKeyDown={(e) => { if (e.key === 'Enter') handleDelegateSubmit(); }}
               />
@@ -351,14 +351,14 @@ function StepCard({ step, isCurrent, compact, orientation, canAct, onApprove, on
                   type="button"
                   onClick={handleDelegateSubmit}
                   disabled={!delegateValue.trim()}
-                  className="px-2 py-0.5 text-[10px] font-medium rounded-sm bg-[var(--brand-primary)] text-text-inverse disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] font-medium rounded-xs bg-[var(--brand-primary)] text-text-inverse disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Confirm Delegate
                 </button>
                 <button
                   type="button"
                   onClick={() => { setShowDelegateBox(false); setDelegateValue(''); }}
-                  className="px-2 py-0.5 text-[10px] rounded-sm border border-border-default text-text-secondary focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                  className="px-2 py-0.5 text-[10px] rounded-xs border border-border-default text-text-secondary focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
                 >
                   Cancel
                 </button>

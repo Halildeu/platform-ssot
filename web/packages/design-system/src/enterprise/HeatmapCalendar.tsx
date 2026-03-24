@@ -385,14 +385,14 @@ export const HeatmapCalendar: React.FC<HeatmapCalendarProps> = ({
       <div className="flex items-center gap-1.5 mt-3">
         <span className="text-[10px] text-[var(--text-tertiary,#9ca3af)]">Less</span>
         <span
-          className="inline-block rounded-sm"
+          className="inline-block rounded-xs"
           style={{ width: CELL_SIZE, height: CELL_SIZE, backgroundColor: emptyColor }}
           aria-hidden="true"
         />
         {colorScale.map((color, i) => (
           <span
             key={`legend-${i}`}
-            className="inline-block rounded-sm"
+            className="inline-block rounded-xs"
             style={{ width: CELL_SIZE, height: CELL_SIZE, backgroundColor: color }}
             aria-hidden="true"
           />

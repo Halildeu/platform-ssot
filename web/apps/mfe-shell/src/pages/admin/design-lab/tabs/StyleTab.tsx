@@ -312,7 +312,7 @@ ${activeOverrides
                   <button
                     type="button"
                     onClick={() => toggleClass(cls.className)}
-                    className={`rounded-sm p-1 transition ${isDisabled ? "text-red-400 hover:text-red-500" : "text-emerald-500 hover:text-emerald-600"}`}
+                    className={`rounded-xs p-1 transition ${isDisabled ? "text-red-400 hover:text-red-500" : "text-emerald-500 hover:text-emerald-600"}`}
                     title={isDisabled ? "Enable class" : "Disable class"}
                   >
                     {isDisabled ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
@@ -324,7 +324,7 @@ ${activeOverrides
                   </code>
 
                   {/* Category */}
-                  <span className={`rounded-sm px-1 py-0.5 text-[8px] font-bold uppercase ${CATEGORY_COLORS[cls.category]}`}>
+                  <span className={`rounded-xs px-1 py-0.5 text-[8px] font-bold uppercase ${CATEGORY_COLORS[cls.category]}`}>
                     {cls.category}
                   </span>
 
@@ -339,7 +339,7 @@ ${activeOverrides
                   <button
                     type="button"
                     onClick={() => copyClassName(cls.className)}
-                    className="rounded-sm p-1 text-text-tertiary hover:text-text-primary transition"
+                    className="rounded-xs p-1 text-text-tertiary hover:text-text-primary transition"
                   >
                     {isCopied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
                   </button>

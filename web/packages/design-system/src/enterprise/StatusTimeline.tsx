@@ -142,7 +142,7 @@ function ConnectorLine({
       {duration !== null && !compact && (
         <span
           className={cn(
-            'absolute whitespace-nowrap rounded-sm bg-surface-muted px-1 py-0.5 text-[10px] text-text-secondary',
+            'absolute whitespace-nowrap rounded-xs bg-surface-muted px-1 py-0.5 text-[10px] text-text-secondary',
             isH ? '-top-4' : '-left-12',
           )}
         >

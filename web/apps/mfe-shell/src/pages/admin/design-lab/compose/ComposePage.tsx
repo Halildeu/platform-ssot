@@ -250,7 +250,7 @@ export default function ComposePage() {
                   key={c}
                   type="button"
                   onClick={() => setLayout({ ...layout, columns: c })}
-                  className={`rounded-sm px-1.5 py-0.5 text-[10px] font-medium ${layout.columns === c ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+                  className={`rounded-xs px-1.5 py-0.5 text-[10px] font-medium ${layout.columns === c ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
                 >
                   {c}
                 </button>
@@ -265,7 +265,7 @@ export default function ComposePage() {
                 key={g}
                 type="button"
                 onClick={() => setLayout({ ...layout, gap: g })}
-                className={`rounded-sm px-1.5 py-0.5 text-[10px] font-medium ${layout.gap === g ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
+                className={`rounded-xs px-1.5 py-0.5 text-[10px] font-medium ${layout.gap === g ? "bg-action-primary text-white" : "bg-surface-muted text-text-secondary"}`}
               >
                 {g}
               </button>
@@ -332,7 +332,7 @@ export default function ComposePage() {
                         propValues={node.props as Record<string, string | number | boolean>}
                       />
                       {/* Node label */}
-                      <div className="absolute -top-2 left-2 rounded-sm bg-surface-default px-1 py-0.5 text-[8px] font-mono font-bold text-text-tertiary shadow-xs border border-border-subtle">
+                      <div className="absolute -top-2 left-2 rounded-xs bg-surface-default px-1 py-0.5 text-[8px] font-mono font-bold text-text-tertiary shadow-xs border border-border-subtle">
                         {node.componentName}
                       </div>
                     </div>
@@ -359,21 +359,21 @@ export default function ComposePage() {
               <button
                 type="button"
                 onClick={() => moveNode(selectedNode.id, "up")}
-                className="rounded-sm p-1 text-text-tertiary hover:text-text-primary hover:bg-surface-muted transition text-[10px]"
+                className="rounded-xs p-1 text-text-tertiary hover:text-text-primary hover:bg-surface-muted transition text-[10px]"
               >
                 Move Up
               </button>
               <button
                 type="button"
                 onClick={() => moveNode(selectedNode.id, "down")}
-                className="rounded-sm p-1 text-text-tertiary hover:text-text-primary hover:bg-surface-muted transition text-[10px]"
+                className="rounded-xs p-1 text-text-tertiary hover:text-text-primary hover:bg-surface-muted transition text-[10px]"
               >
                 Move Down
               </button>
               <button
                 type="button"
                 onClick={() => removeNode(selectedNode.id)}
-                className="ml-auto rounded-sm p-1 text-red-400 hover:text-red-500 hover:bg-red-50 transition"
+                className="ml-auto rounded-xs p-1 text-red-400 hover:text-red-500 hover:bg-red-50 transition"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -390,7 +390,7 @@ export default function ComposePage() {
                 type="checkbox"
                 checked={Boolean(selectedNode.props.disabled)}
                 onChange={(e) => updateNodeProp(selectedNode.id, "disabled", e.target.checked)}
-                className="rounded-sm"
+                className="rounded-xs"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -399,7 +399,7 @@ export default function ComposePage() {
                 type="checkbox"
                 checked={Boolean(selectedNode.props.loading)}
                 onChange={(e) => updateNodeProp(selectedNode.id, "loading", e.target.checked)}
-                className="rounded-sm"
+                className="rounded-xs"
               />
             </div>
           </div>
@@ -443,7 +443,7 @@ export default function ComposePage() {
           <div className="relative w-full max-w-md rounded-2xl border border-border-subtle bg-surface-default shadow-2xl">
             <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
               <Text as="h2" className="text-sm font-semibold text-text-primary">Saved Compositions</Text>
-              <button type="button" onClick={() => setShowLibrary(false)} className="rounded-sm p-1 text-text-tertiary hover:text-text-primary">
+              <button type="button" onClick={() => setShowLibrary(false)} className="rounded-xs p-1 text-text-tertiary hover:text-text-primary">
                 <X className="h-4 w-4" />
               </button>
             </div>

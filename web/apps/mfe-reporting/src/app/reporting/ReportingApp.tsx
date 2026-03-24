@@ -157,7 +157,7 @@ const ReportingApp: React.FC = () => {
   if (!dynamicLoaded && mergedModules.length === 0) {
     return (
       <div className="flex flex-col gap-4">
-        <div className="h-10 w-full animate-pulse rounded-sm bg-surface-muted" />
+        <div className="h-10 w-full animate-pulse rounded-xs bg-surface-muted" />
       </div>
     );
   }

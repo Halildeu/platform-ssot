@@ -84,7 +84,7 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
           />
           <button
             type="submit"
-            className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm hover:opacity-90"
+            className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90"
             disabled={loading}
           >
             {t('users.filters.search.button')}
@@ -146,7 +146,7 @@ const UsersFilterPanel: React.FC<UsersFilterPanelProps> = ({ filters, onChange, 
       <div className="ml-auto flex flex-wrap gap-2">
         <button
           type="submit"
-          className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm hover:opacity-90 disabled:opacity-50"
+          className="rounded-lg bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90 disabled:opacity-50"
           disabled={loading}
         >
           {t('users.filters.apply')}

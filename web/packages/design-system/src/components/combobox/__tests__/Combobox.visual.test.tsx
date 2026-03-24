@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { Combobox } from '../Combobox';
+import { LIGHT_BG_HEX } from '../../../__tests__/visual-constants';
 
 const options = [
   { label: 'Apple', value: 'apple' },
@@ -13,7 +14,7 @@ const options = [
 describe('Combobox Visual Regression', () => {
   it('closed combobox matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 300 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 300 }}>
         <Combobox label="Fruit" placeholder="Select..." options={options} />
       </div>,
     );
@@ -22,7 +23,7 @@ describe('Combobox Visual Regression', () => {
 
   it('combobox with value matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 300 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 300 }}>
         <Combobox label="Fruit" options={options} defaultValue="banana" />
       </div>,
     );

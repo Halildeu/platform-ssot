@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { Tabs } from '../Tabs';
+import { LIGHT_BG_HEX, DARK_BG_HEX } from '../../../__tests__/visual-constants';
 
 const items = [
   { key: 'tab1', label: 'First', content: <div>First tab content</div> },
@@ -20,7 +21,7 @@ describe('Tabs Visual Regression', () => {
   /* ---- 1. Default line variant ---- */
   it('line variant matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 500 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 500 }}>
         <Tabs items={items} />
       </div>,
     );
@@ -30,7 +31,7 @@ describe('Tabs Visual Regression', () => {
   /* ---- 2. All variants ---- */
   it('enclosed variant matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 500 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 500 }}>
         <Tabs items={items} variant="enclosed" />
       </div>,
     );
@@ -39,7 +40,7 @@ describe('Tabs Visual Regression', () => {
 
   it('pill variant matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 500 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 500 }}>
         <Tabs items={items} variant="pill" />
       </div>,
     );
@@ -49,7 +50,7 @@ describe('Tabs Visual Regression', () => {
   /* ---- 3. All sizes ---- */
   it('all sizes (line variant) match screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 500, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 500, display: 'flex', flexDirection: 'column', gap: 24 }}>
         <Tabs items={items} size="sm" />
         <Tabs items={items} size="md" />
         <Tabs items={items} size="lg" />
@@ -61,7 +62,7 @@ describe('Tabs Visual Regression', () => {
   /* ---- 4. Disabled tab ---- */
   it('disabled tab state matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 500 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 500 }}>
         <Tabs items={itemsWithDisabled} />
       </div>,
     );
@@ -71,7 +72,7 @@ describe('Tabs Visual Regression', () => {
   /* ---- 5. Second tab selected ---- */
   it('second tab selected matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 500 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 500 }}>
         <Tabs items={items} defaultActiveKey="tab2" />
       </div>,
     );
@@ -81,7 +82,7 @@ describe('Tabs Visual Regression', () => {
   /* ---- 6. Dark mode ---- */
   it('dark theme matches screenshot', async () => {
     await render(
-      <div data-theme="dark" style={{ padding: 20, background: '#1a1a2e', width: 500 }}>
+      <div data-theme="dark" style={{ padding: 20, background: DARK_BG_HEX, width: 500 }}>
         <Tabs items={items} />
       </div>,
     );

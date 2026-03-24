@@ -3,11 +3,12 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { Tag } from '../Tag';
+import { LIGHT_BG_HEX } from '../../../__tests__/visual-constants';
 
 describe('Tag Visual Regression', () => {
   it('default variant matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff' }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX }}>
         <Tag>Default</Tag>
       </div>,
     );
@@ -16,7 +17,7 @@ describe('Tag Visual Regression', () => {
 
   it('closable variant matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff' }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX }}>
         <Tag closable>Closable</Tag>
       </div>,
     );
@@ -25,7 +26,7 @@ describe('Tag Visual Regression', () => {
 
   it('color variants match screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', display: 'flex', gap: 8 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, display: 'flex', gap: 8 }}>
         <Tag variant="primary">Primary</Tag>
         <Tag variant="success">Success</Tag>
         <Tag variant="warning">Warning</Tag>

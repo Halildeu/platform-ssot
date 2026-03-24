@@ -421,7 +421,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
           >
             {/* Saturation-Value gradient */}
             <div
-              className="relative w-full rounded-sm cursor-crosshair"
+              className="relative w-full rounded-xs cursor-crosshair"
               style={{
                 maxWidth: 200,
                 height: 150,
@@ -470,7 +470,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
             {showInput && (
               <div className="flex items-center gap-2">
                 <div
-                  className="w-6 h-6 rounded-sm border border-border-subtle"
+                  className="w-6 h-6 rounded-xs border border-border-subtle"
                   style={{ backgroundColor: currentValue }}
                   data-testid="color-picker-preview"
                 />
@@ -480,7 +480,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
                   onChange={handleInputChange}
                   onBlur={handleInputBlur}
                   className={cn(
-                    "flex-1 rounded-sm border border-border-subtle px-2 py-1",
+                    "flex-1 rounded-xs border border-border-subtle px-2 py-1",
                     "bg-[var(--surface-primary,#ffffff)] text-text-primary",
                     "focus:outline-hidden focus:ring-1 focus:ring-[var(--ring-color,#3b82f6)]",
                     sizeConfig.font,

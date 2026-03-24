@@ -130,18 +130,18 @@ function SavePopover({
           if (e.key === 'Escape') onCancel();
         }}
         placeholder={localeText?.savePlaceholder ?? "Preset ad\u0131..."}
-        className="rounded-sm border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-text-primary outline-hidden focus:border-action-primary w-36"
+        className="rounded-xs border border-border-default bg-[var(--surface-primary)] px-2 py-1 text-xs text-text-primary outline-hidden focus:border-action-primary w-36"
       />
       <button
         type="button"
-        className="rounded-sm bg-action-primary px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
+        className="rounded-xs bg-action-primary px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
         onClick={handleSubmit}
       >
         {localeText?.saveButton ?? 'Kaydet'}
       </button>
       <button
         type="button"
-        className="rounded-sm px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
+        className="rounded-xs px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
         onClick={onCancel}
       >
         {localeText?.cancelButton ?? '\u0130ptal'}
@@ -173,14 +173,14 @@ function DeleteConfirmation({
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="rounded-sm bg-state-danger-text px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
+          className="rounded-xs bg-state-danger-text px-2 py-1 text-xs font-medium text-text-inverse hover:opacity-90 transition-colors"
           onClick={onConfirm}
         >
           {localeText?.deleteButton ?? 'Sil'}
         </button>
         <button
           type="button"
-          className="rounded-sm px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
+          className="rounded-xs px-2 py-1 text-xs text-text-secondary hover:text-text-primary transition-colors"
           onClick={onCancel}
         >
           {localeText?.cancelButton ?? 'Vazge\u00e7'}

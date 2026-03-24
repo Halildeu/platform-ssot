@@ -342,7 +342,7 @@ function ChildItem({
         <button
           type="button"
           onClick={onRemove}
-          className="rounded-sm p-1 text-text-tertiary hover:text-red-500 transition"
+          className="rounded-xs p-1 text-text-tertiary hover:text-red-500 transition"
         >
           <Trash2 className="h-3 w-3" />
         </button>
@@ -376,7 +376,7 @@ function ChildItem({
               type="checkbox"
               checked={Boolean(child.props.disabled)}
               onChange={(e) => onPropChange("disabled", e.target.checked)}
-              className="rounded-sm"
+              className="rounded-xs"
             />
           </div>
         </div>

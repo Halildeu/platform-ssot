@@ -241,7 +241,7 @@ export function DataExportDialog({
           <h2 className="text-base font-semibold text-text-primary">{t.title}</h2>
           <button
             type="button"
-            className="rounded-sm p-1 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
+            className="rounded-xs p-1 text-text-secondary hover:text-text-primary hover:bg-surface-muted transition-colors"
             onClick={onClose}
             aria-label="Close"
           >

@@ -17,7 +17,7 @@ export const DesignLabPaginationRoundedOutlinedShowcase: React.FC<DesignLabPagin
   return (
     <DesignLabPaginationScenarioFrame
       variantId="rounded_outlined"
-      insight="MUI benzeri outlined + rounded-sm gorunumu, dashboard ve filter-toolbar alanlarinda daha hafif ama hala belirgin bir sayfalama dili verir."
+      insight="MUI benzeri outlined + rounded-xs gorunumu, dashboard ve filter-toolbar alanlarinda daha hafif ama hala belirgin bir sayfalama dili verir."
     >
       <div className="rounded-[28px] border border-border-subtle bg-surface-default p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">

@@ -185,7 +185,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 function CategoryBadge({ category }: { category: string }) {
   return (
-    <span className={`rounded-sm px-1 py-0.5 text-[8px] font-bold uppercase ${CATEGORY_COLORS[category] ?? "bg-[var(--surface-muted)] text-[var(--text-secondary)]"}`}>
+    <span className={`rounded-xs px-1 py-0.5 text-[8px] font-bold uppercase ${CATEGORY_COLORS[category] ?? "bg-[var(--surface-muted)] text-[var(--text-secondary)]"}`}>
       {category}
     </span>
   );

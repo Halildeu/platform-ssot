@@ -214,7 +214,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
                             </div>
                           </td>
                           <td className="px-4 py-2.5">
-                            <code className="rounded-sm bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-rose-600">
+                            <code className="rounded-xs bg-surface-muted px-1.5 py-0.5 text-[11px] font-mono text-rose-600">
                               {token.cssVar}
                             </code>
                           </td>
@@ -222,7 +222,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
                             <div className="flex items-center gap-2">
                               {cat === "color" && (
                                 <div
-                                  className="h-5 w-5 rounded-sm border border-border-subtle shrink-0"
+                                  className="h-5 w-5 rounded-xs border border-border-subtle shrink-0"
                                   style={{ backgroundColor: overrides[token.cssVar] || token.resolvedValue }}
                                 />
                               )}
@@ -245,7 +245,7 @@ export const TokensTab: React.FC<TokensTabProps> = ({ componentName }) => {
                                 placeholder={token.resolvedValue}
                                 className={
                                   cat === "color"
-                                    ? "h-7 w-10 cursor-pointer rounded-sm border border-border-subtle"
+                                    ? "h-7 w-10 cursor-pointer rounded-xs border border-border-subtle"
                                     : "w-24 rounded-lg border border-border-subtle bg-surface-default px-2 py-1 text-[11px] font-mono outline-hidden focus:border-action-primary"
                                 }
                               />

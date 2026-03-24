@@ -269,7 +269,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                 onChange={handleSelectAll}
                 disabled={blocked || enabledItems.length === 0}
                 className={cn(
-                  "h-3.5 w-3.5 rounded-sm border-border-subtle text-action-primary",
+                  "h-3.5 w-3.5 rounded-xs border-border-subtle text-action-primary",
                   "focus:ring-2 focus:ring-action-primary/20 focus:ring-offset-0",
                   "accent-action-primary",
                 )}
@@ -367,7 +367,7 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
                   role="presentation"
                   aria-hidden="true"
                   className={cn(
-                    "inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-sm border",
+                    "inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-xs border",
                     checked
                       ? "border-action-primary bg-action-primary text-text-inverse"
                       : "border-border-subtle bg-[var(--surface-canvas)]",

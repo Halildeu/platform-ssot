@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { TreeTable } from '../TreeTable';
+import { LIGHT_BG_HEX } from '../../../__tests__/visual-constants';
 
 const columns = [{ key: 'status', label: 'Status' }];
 const nodes = [
@@ -14,7 +15,7 @@ const nodes = [
 describe('TreeTable Visual Regression', () => {
   it('expanded state matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 500 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 500 }}>
         <TreeTable nodes={nodes} columns={columns} defaultExpandedKeys={['1']} />
       </div>,
     );

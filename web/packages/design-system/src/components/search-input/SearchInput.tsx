@@ -139,7 +139,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             <button
               type="button"
               onClick={handleClear}
-              className="rounded-sm p-0.5 text-text-secondary transition hover:text-text-primary"
+              className="rounded-xs p-0.5 text-text-secondary transition hover:text-text-primary"
               aria-label="Clear search"
             >
               <svg className="h-3.5 w-3.5" viewBox="0 0 14 14" fill="none">

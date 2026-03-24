@@ -712,7 +712,7 @@ export function KullaniciYonetimi() {
                     : prev.filter((key) => key !== k.id)
                 );
               }}
-              className="h-4 w-4 rounded-sm border-gray-300"
+              className="h-4 w-4 rounded-xs border-gray-300"
             />
             <div>
               <div className="font-medium">{k.ad}</div>
@@ -808,13 +808,13 @@ export function KompaktListe() {
         { key: 'down', label: 'Kapali', value: '6', tone: 'danger' },
       ]}
       items={[
-        <div key="1" className="flex justify-between p-2 border rounded-sm text-sm">
+        <div key="1" className="flex justify-between p-2 border rounded-xs text-sm">
           <span>auth-service</span><span className="text-green-600 text-xs">Calisiyor</span>
         </div>,
-        <div key="2" className="flex justify-between p-2 border rounded-sm text-sm">
+        <div key="2" className="flex justify-between p-2 border rounded-xs text-sm">
           <span>payment-gateway</span><span className="text-green-600 text-xs">Calisiyor</span>
         </div>,
-        <div key="3" className="flex justify-between p-2 border rounded-sm text-sm">
+        <div key="3" className="flex justify-between p-2 border rounded-xs text-sm">
           <span>notification-svc</span><span className="text-yellow-600 text-xs">Dusuk</span>
         </div>,
       ]}
@@ -1636,9 +1636,9 @@ import { Heart, Share2, Bookmark } from 'lucide-react';
 export function Example() {
   return (
     <div className="flex items-center gap-2">
-      <IconButton icon={<Heart />} label="Begeni" variant="primary" rounded-sm />
-      <IconButton icon={<Share2 />} label="Paylas" variant="secondary" rounded-sm />
-      <IconButton icon={<Bookmark />} label="Kaydediliyor" variant="outline" rounded-sm loading />
+      <IconButton icon={<Heart />} label="Begeni" variant="primary" rounded-xs />
+      <IconButton icon={<Share2 />} label="Paylas" variant="secondary" rounded-xs />
+      <IconButton icon={<Bookmark />} label="Kaydediliyor" variant="outline" rounded-xs loading />
     </div>
   );
 }`,

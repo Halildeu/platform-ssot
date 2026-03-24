@@ -83,7 +83,7 @@ const RoleCloneModal: React.FC<RoleCloneModalProps> = ({ open, role, confirmLoad
           </button>
           <button
             type="button"
-            className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-sm hover:opacity-90 disabled:opacity-50"
+            className="rounded-xl bg-action-primary px-4 py-2 text-sm font-semibold text-action-primary-text shadow-xs hover:opacity-90 disabled:opacity-50"
             onClick={handleSubmit}
             disabled={confirmLoading}
           >

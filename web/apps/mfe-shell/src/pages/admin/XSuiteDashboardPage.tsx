@@ -177,7 +177,7 @@ export default function XSuiteDashboardPage() {
                 selectedCount={3}
                 onClearSelection={() => console.log('clear selection')}
               >
-                <button className="rounded-sm bg-[var(--action-primary,#3b82f6)] px-3 py-1 text-xs text-white">
+                <button className="rounded-xs bg-[var(--action-primary,#3b82f6)] px-3 py-1 text-xs text-white">
                   Toplu Sil
                 </button>
               </DataGridSelectionBar>

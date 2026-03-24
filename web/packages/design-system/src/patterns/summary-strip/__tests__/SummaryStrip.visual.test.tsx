@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { SummaryStrip } from '../SummaryStrip';
+import { LIGHT_BG_HEX } from '../../../__tests__/visual-constants';
 
 const items = [
   { key: 'revenue', label: 'Revenue', value: '$12,500' },
@@ -14,7 +15,7 @@ const items = [
 describe('SummaryStrip Visual Regression', () => {
   it('4-column strip matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 800 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 800 }}>
         <SummaryStrip items={items} columns={4} />
       </div>,
     );
@@ -23,7 +24,7 @@ describe('SummaryStrip Visual Regression', () => {
 
   it('strip with title matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 800 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 800 }}>
         <SummaryStrip items={items} title="Monthly Overview" description="Last 30 days" />
       </div>,
     );

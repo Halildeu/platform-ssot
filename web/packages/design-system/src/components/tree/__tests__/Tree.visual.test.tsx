@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { Tree } from '../Tree';
+import { LIGHT_BG_HEX } from '../../../__tests__/visual-constants';
 
 const nodes = [
   { key: '1', label: 'Root Node', children: [
@@ -14,7 +15,7 @@ const nodes = [
 describe('Tree Visual Regression', () => {
   it('collapsed state matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 400 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 400 }}>
         <Tree nodes={nodes} />
       </div>,
     );
@@ -23,7 +24,7 @@ describe('Tree Visual Regression', () => {
 
   it('expanded state matches screenshot', async () => {
     await render(
-      <div style={{ padding: 20, background: '#fff', width: 400 }}>
+      <div style={{ padding: 20, background: LIGHT_BG_HEX, width: 400 }}>
         <Tree nodes={nodes} defaultExpandedKeys={['1']} />
       </div>,
     );

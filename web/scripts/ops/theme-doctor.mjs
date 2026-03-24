@@ -1,16 +1,28 @@
 #!/usr/bin/env node
 /**
- * Theme Doctor — comprehensive health check for the design-token + theme pipeline.
+ * Theme Doctor v2.0 — full-stack UI health check.
  *
- * Checks:
- *  1. Attribute consistency  (data-theme / data-mode / data-appearance)
- *  2. @theme inline usage    (TW4 runtime variable resolution)
- *  3. Token format drift     (Figma raw ↔ DTCG code)
- *  4. Semantic CSS drift     (theme.css ↔ dark-mode.css)
- *  5. Token bridge staleness (fallback values ≠ theme.css defaults)
- *  6. displayName coverage   (exported components missing displayName)
- *  7. Hardcoded color leaks  (production TSX using inline hex/rgb)
- *  8. Surface tone integrity (dark-mode tones ≠ light defaults)
+ * Theme & Token (10 checks):
+ *  1.  Attribute consistency     (data-theme / data-mode / data-appearance)
+ *  2.  @theme inline usage       (TW4 runtime variable resolution)
+ *  3.  @custom-variant dark      (data-mode selector)
+ *  4.  Token format drift        (Figma raw ↔ DTCG code)
+ *  5.  Surface tone integrity    (dark-mode tones ≠ light defaults)
+ *  6.  Token bridge staleness    (fallback values ≠ theme.css defaults)
+ *  7.  displayName coverage      (exported components missing displayName)
+ *  8.  Hardcoded color leaks     (production TSX using inline hex/rgb)
+ *  9.  Provider race condition   (shell ThemeProvider data-mode)
+ *  10. Duplicate tsconfig keys
+ *
+ * TW4 Native (3 checks):
+ *  11. Deprecated TW3 classes    (shadow-sm→shadow-xs, rounded-sm→rounded-xs)
+ *  12. Deprecated TW3 directives (@apply, @screen, @variants, @responsive)
+ *  13. PostCSS config            (@tailwindcss/postcss plugin)
+ *
+ * Component Quality (3 checks):
+ *  14. Bundle size limits        (.size-limit.json presence + thresholds)
+ *  15. Test fixture colors       (hardcoded hex in visual test files)
+ *  16. forwardRef coverage       (interactive components)
  *
  * Usage:
  *   node scripts/ops/theme-doctor.mjs [--json] [--fix-hint]
@@ -309,7 +321,7 @@ check('provider-race', 'Shell ThemeProvider data-mode race condition', () => {
   };
 });
 
-// 10. Duplicate tsconfig keys
+// 10. Duplicate tsconfig keys (existing)
 check('tsconfig-dupe', 'Duplicate keys in app tsconfig files', () => {
   const apps = ['mfe-shell', 'mfe-audit', 'mfe-ethic', 'mfe-access', 'mfe-users', 'mfe-suggestions', 'mfe-reporting'];
   const dupes = [];
@@ -329,6 +341,168 @@ check('tsconfig-dupe', 'Duplicate keys in app tsconfig files', () => {
   return { status: 'warn', message: `Duplicate tsconfig keys in ${dupes.length} apps`, details: dupes };
 });
 
+/* ================================================================== */
+/*  TW4 NATIVE CHECKS                                                 */
+/* ================================================================== */
+
+// 11. Deprecated TW3 class names
+check('tw4-class-renames', 'TW4 class renames (shadow-sm→shadow-xs, rounded-sm→rounded-xs)', () => {
+  const appDirs = ['apps', 'packages/design-system/src'];
+  const renames = [
+    { old: 'shadow-sm', new: 'shadow-xs', re: /\bshadow-sm\b/g },
+    { old: 'rounded-sm', new: 'rounded-xs', re: /\brounded-sm\b/g },
+    { old: 'blur-sm', new: 'blur-xs', re: /\bblur-sm\b/g },
+  ];
+
+  const violations = [];
+  for (const dir of appDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      for (const r of renames) {
+        const matches = content.match(r.re) || [];
+        if (matches.length > 0) {
+          violations.push({ file: relative(ROOT, file), pattern: r.old, replacement: r.new, count: matches.length });
+        }
+      }
+    }
+  }
+
+  if (violations.length === 0) return { status: 'pass', message: 'No deprecated TW3 class names found' };
+  const total = violations.reduce((s, v) => s + v.count, 0);
+  return {
+    status: 'warn',
+    message: `${total} deprecated TW3 classes in ${violations.length} files (shadow-sm, rounded-sm, blur-sm)`,
+    details: violations.slice(0, 8),
+    fix: FIX_HINT ? 'TW4 renames: shadow-sm→shadow-xs, rounded-sm→rounded-xs, blur-sm→blur-xs. Use find-and-replace.' : undefined,
+  };
+});
+
+// 12. Deprecated TW3 directives in CSS
+check('tw4-directives', 'No deprecated TW3 CSS directives (@apply, @screen, @variants)', () => {
+  const cssFiles = [
+    ...walkDir(join(ROOT, 'apps'), '.css'),
+    ...walkDir(join(ROOT, 'packages', 'design-system', 'src'), '.css'),
+  ];
+
+  const deprecated = ['@apply', '@screen', '@variants', '@responsive'];
+  const violations = [];
+  for (const file of cssFiles) {
+    const content = readSafe(file);
+    for (const directive of deprecated) {
+      const re = new RegExp(`^\\s*${directive.replace('@', '\\@')}\\b`, 'gm');
+      const matches = content.match(re) || [];
+      if (matches.length > 0) {
+        violations.push({ file: relative(ROOT, file), directive, count: matches.length });
+      }
+    }
+  }
+
+  if (violations.length === 0) return { status: 'pass', message: 'No deprecated TW3 directives in CSS files' };
+  const total = violations.reduce((s, v) => s + v.count, 0);
+  return {
+    status: 'warn',
+    message: `${total} deprecated TW3 directives in ${violations.length} files`,
+    details: violations.slice(0, 8),
+    fix: FIX_HINT ? 'TW4: @apply → inline styles or utility classes; @screen → @media; @variants/@responsive → removed' : undefined,
+  };
+});
+
+// 13. PostCSS config
+check('postcss-tw4', 'PostCSS uses @tailwindcss/postcss (TW4 native)', () => {
+  const config = readSafe(join(ROOT, 'postcss.config.js')) + readSafe(join(ROOT, 'postcss.config.cjs')) + readSafe(join(ROOT, 'postcss.config.mjs'));
+  if (config.includes('@tailwindcss/postcss')) return { status: 'pass', message: 'PostCSS uses @tailwindcss/postcss plugin' };
+  if (config.includes('tailwindcss')) return { status: 'warn', message: 'PostCSS uses legacy tailwindcss plugin — migrate to @tailwindcss/postcss' };
+  return { status: 'fail', message: 'No Tailwind plugin found in postcss config' };
+});
+
+/* ================================================================== */
+/*  COMPONENT QUALITY CHECKS                                           */
+/* ================================================================== */
+
+// 14. Bundle size limits
+check('bundle-size', 'Bundle size limits configured (.size-limit.json)', () => {
+  const sizeLimitPath = join(ROOT, '.size-limit.json');
+  if (!existsSync(sizeLimitPath)) {
+    return { status: 'fail', message: 'No .size-limit.json found — bundle bloat risk', fix: FIX_HINT ? 'Create .size-limit.json with per-package limits' : undefined };
+  }
+  try {
+    const limits = JSON.parse(readSafe(sizeLimitPath));
+    const entries = Array.isArray(limits) ? limits : [];
+    const dsEntry = entries.find(e => e.path?.includes('design-system'));
+    const dsLimit = dsEntry?.limit || 'not set';
+    return { status: 'pass', message: `${entries.length} packages tracked, design-system limit: ${dsLimit}` };
+  } catch {
+    return { status: 'warn', message: '.size-limit.json exists but failed to parse' };
+  }
+});
+
+// 15. Test fixture hardcoded colors
+check('test-fixtures', 'Hardcoded colors in visual test files', () => {
+  const testFiles = [];
+  function walkTests(dir) {
+    if (!existsSync(dir)) return;
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== 'dist') walkTests(full);
+      else if (entry.isFile() && (entry.name.includes('.visual.test.') || entry.name.includes('.visual.spec.'))) testFiles.push(full);
+    }
+  }
+  walkTests(DS_SRC);
+
+  let totalViolations = 0;
+  const affectedFiles = [];
+  const colorRe = /(?:background|color|bg)\s*:\s*['"]#[0-9a-fA-F]{3,8}['"]/gi;
+  for (const file of testFiles) {
+    const content = readSafe(file);
+    const matches = content.match(colorRe) || [];
+    if (matches.length > 0) {
+      totalViolations += matches.length;
+      affectedFiles.push(relative(ROOT, file));
+    }
+  }
+
+  if (totalViolations === 0) return { status: 'pass', message: `${testFiles.length} visual test files — no hardcoded colors` };
+  return {
+    status: 'warn',
+    message: `${totalViolations} hardcoded colors in ${affectedFiles.length}/${testFiles.length} visual test files`,
+    details: affectedFiles.slice(0, 8),
+    fix: FIX_HINT ? 'Use shared test constants: import { LIGHT_BG, DARK_BG } from "../../__tests__/visual-constants"' : undefined,
+  };
+});
+
+// 16. forwardRef coverage on interactive components
+check('forward-ref', 'forwardRef on interactive primitives', () => {
+  const primDir = join(DS_SRC, 'primitives');
+  if (!existsSync(primDir)) return { status: 'pass', message: 'No primitives directory found' };
+
+  const interactive = ['button', 'input', 'textarea', 'select', 'checkbox', 'radio', 'switch', 'slider', 'dialog', 'modal', 'drawer', 'popover', 'tooltip', 'dropdown'];
+  const missing = [];
+
+  for (const name of interactive) {
+    const dir = join(primDir, name);
+    if (!existsSync(dir)) continue;
+    const files = readdirSync(dir).filter(f => f.endsWith('.tsx') && !f.includes('.test.') && !f.includes('.stories.'));
+    let hasForwardRef = false;
+    for (const f of files) {
+      const content = readSafe(join(dir, f));
+      if (content.includes('forwardRef') || content.includes('React.forwardRef')) {
+        hasForwardRef = true;
+        break;
+      }
+    }
+    if (!hasForwardRef) missing.push(name);
+  }
+
+  if (missing.length === 0) return { status: 'pass', message: `${interactive.length} interactive primitives — all use forwardRef` };
+  return {
+    status: 'warn',
+    message: `${missing.length}/${interactive.length} interactive primitives missing forwardRef`,
+    details: missing,
+    fix: FIX_HINT ? 'Wrap component with React.forwardRef<HTMLElement, Props>() for imperative access' : undefined,
+  };
+});
+
 /* ------------------------------------------------------------------ */
 /*  Report                                                             */
 /* ------------------------------------------------------------------ */
@@ -336,7 +510,7 @@ check('tsconfig-dupe', 'Duplicate keys in app tsconfig files', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '1.0.0',
+    version: '2.0.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -345,7 +519,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║                    🩺 Theme Doctor v1.0                     ║');
+  console.log('║               🩺 Theme Doctor v2.0 (16 checks)              ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

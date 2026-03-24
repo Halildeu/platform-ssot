@@ -250,7 +250,7 @@ export function RiskMatrix({
       {/* Tooltip (portal-free, positioned via fixed) */}
       {tooltip && tooltip.risks.length > 0 && (
         <div
-          className="fixed z-50 px-2.5 py-1.5 rounded-sm shadow-lg bg-[var(--surface-elevated,#1f2937)] text-[var(--text-on-elevated,#fff)] text-xs max-w-[220px] pointer-events-none"
+          className="fixed z-50 px-2.5 py-1.5 rounded-xs shadow-lg bg-[var(--surface-elevated,#1f2937)] text-[var(--text-on-elevated,#fff)] text-xs max-w-[220px] pointer-events-none"
           style={{
             left: tooltip.x,
             top: tooltip.y,

@@ -3,11 +3,12 @@ import { describe, it, expect } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { page } from 'vitest/browser';
 import { FloatButton } from '../FloatButton';
+import { LIGHT_BG_HEX } from '../../../__tests__/visual-constants';
 
 describe('FloatButton Visual Regression', () => {
   it('default button matches screenshot', async () => {
     await render(
-      <div style={{ padding: 80, background: '#fff', position: 'relative', width: 200, height: 200 }}>
+      <div style={{ padding: 80, background: LIGHT_BG_HEX, position: 'relative', width: 200, height: 200 }}>
         <FloatButton position="bottom-right" offset={[16, 16]} />
       </div>,
     );

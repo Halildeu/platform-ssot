@@ -167,7 +167,7 @@ function ErrorSummaryPanel() {
                 key={i}
                 className="flex items-start gap-2 rounded-lg bg-surface-muted p-2"
               >
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-sm bg-rose-100 text-[10px] font-bold text-rose-700">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-xs bg-rose-100 text-[10px] font-bold text-rose-700">
                   {err.count}
                 </span>
                 <Text className="text-xs text-text-secondary line-clamp-2 font-mono">
@@ -638,7 +638,7 @@ export default function ObservabilityPage() {
         <div className="mt-4 rounded-xl bg-surface-muted p-4 text-sm text-text-secondary">
           <p>
             Synthetic monitor{' '}
-            <code className="rounded-sm bg-surface-canvas px-1.5 py-0.5 text-xs font-mono">
+            <code className="rounded-xs bg-surface-canvas px-1.5 py-0.5 text-xs font-mono">
               npm run monitor:synthetic
             </code>{' '}
             komutuyla calistirilabilir.

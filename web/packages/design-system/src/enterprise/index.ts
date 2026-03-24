@@ -94,3 +94,15 @@ export type { ParetoChartProps, ParetoItem } from './ParetoChart';
 // Heatmap Calendar
 export { HeatmapCalendar } from './HeatmapCalendar';
 export type { HeatmapCalendarProps, HeatmapDay } from './HeatmapCalendar';
+
+// Organization Chart
+export { OrgChart } from './OrgChart';
+export type { OrgChartProps, OrgChartNode } from './OrgChart';
+
+// Gauge Chart
+export { GaugeChart } from './GaugeChart';
+export type { GaugeChartProps, GaugeThreshold } from './GaugeChart';
+
+// Pivot Table
+export { PivotTable } from './PivotTable';
+export type { PivotTableProps, PivotValueConfig, PivotCellClickEvent } from './PivotTable';
