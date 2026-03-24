@@ -33,7 +33,8 @@ import { TablePagination, useAgGridTablePagination } from "./TablePagination";
 /*  Re-exported AG Grid types (convenience for consumers)              */
 /* ------------------------------------------------------------------ */
 
-/* eslint-disable @typescript-eslint/no-explicit-any -- AG Grid generic defaults */
+/* eslint-disable @typescript-eslint/no-explicit-any -- AG Grid generic defaults
+ */
 export type ColDef<RowData = any> = AgColDef<RowData>;
 export type GridOptions<RowData = any> = AgGridOptions<RowData>;
 export type GridReadyEvent<RowData = any> = AgGridReadyEvent<RowData>;
@@ -248,7 +249,14 @@ export interface EntityGridTemplateProps<
 /*  EntityGridTemplate orchestrator                                    */
 /* ------------------------------------------------------------------ */
 
-/** Full-featured entity grid orchestrator combining GridShell, toolbar, pagination, and variant management. */
+/** Full-featured entity grid orchestrator combining GridShell, toolbar, pagination, and variant management. 
+ * @example
+ * ```tsx
+ * <EntityGridTemplate />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/entity-grid-template)
+ */
 export function EntityGridTemplate<
   RowData extends Record<string, unknown> = Record<string, unknown>,
 >(props: EntityGridTemplateProps<RowData>): React.ReactElement {
@@ -443,6 +451,7 @@ export function EntityGridTemplate<
 
   return (
     <div
+      data-access-state={accessState.state}
       className={`relative flex flex-col ${accessStyles(accessState.state)}`}
       data-component="entity-grid-template"
       data-grid-id={gridId}
@@ -524,5 +533,7 @@ export function EntityGridTemplate<
     </div>
   );
 }
+
+EntityGridTemplate.displayName = "EntityGridTemplate";
 
 export default EntityGridTemplate;

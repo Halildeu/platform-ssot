@@ -32,7 +32,14 @@ export interface ComparisonColumnLabels {
   variancePercent?: string;
 }
 
-/** Table comparing actual vs target values with variance and trend indicators. */
+/** Table comparing actual vs target values with variance and trend indicators.
+ * @example
+ * ```tsx
+ * <ComparisonTable />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/comparison-table)
+ */
 export interface ComparisonTableProps extends AccessControlledProps {
   /** Data rows to display, supports nested children for hierarchical grouping */
   rows: ComparisonRow[];

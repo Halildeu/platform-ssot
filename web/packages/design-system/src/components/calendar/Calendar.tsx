@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
@@ -73,7 +73,8 @@ export interface CalendarProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const DEFAULT_MONTHS = [
   "Ocak", "Subat", "Mart", "Nisan", "Mayis", "Haziran",
@@ -220,8 +221,14 @@ const SIZE_MAP: Record<CalendarSize, { cell: string; header: string; wrapper: st
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <Calendar />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/calendar)
+ */
 export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
   function Calendar(
     {
@@ -508,6 +515,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
     return (
       <div
         ref={forwardedRef}
+        data-access-state={accessState.state}
         className={cn(
           "inline-flex flex-wrap rounded-lg border border-border-default bg-[var(--surface-card)]",
           accessState.isDisabled && "pointer-events-none opacity-50",

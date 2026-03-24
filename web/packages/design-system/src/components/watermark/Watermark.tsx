@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -8,6 +8,13 @@ import { resolveAccessState, type AccessControlledProps } from "../../internal/a
 
 /**
  * Watermark renders a repeating text or image watermark overlay on top of its children.
+ * @example
+ * ```tsx
+ * <Watermark />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/watermark)
+
  */
 export interface WatermarkProps extends AccessControlledProps {
   /** Text content for the watermark; pass an array for multi-line. */
@@ -238,6 +245,7 @@ export const Watermark = React.forwardRef<HTMLDivElement, WatermarkProps>(functi
   return (
     <div
       ref={mergedRef}
+      data-access-state={accessState.state}
       className={cn("relative", accessState.isDisabled && "pointer-events-none opacity-50", className)}
       title={accessReason}
       data-testid="watermark-root"

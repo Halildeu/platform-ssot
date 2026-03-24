@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -16,7 +16,14 @@ export type CascaderOption = {
   disabled?: boolean;
 };
 
-/** Props for the Cascader component. */
+/** Props for the Cascader component.
+ * @example
+ * ```tsx
+ * <Cascader />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/cascader)
+ */
 export interface CascaderProps extends AccessControlledProps {
   /** Hierarchical option data for the cascade panels. */
   options: CascaderOption[];
@@ -360,6 +367,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
   return (
     <div
       ref={forwardedRef}
+      data-access-state={accessState.state}
       className={cn("relative inline-block", className)}
       onKeyDown={handleKeyDown}
       title={accessReason}

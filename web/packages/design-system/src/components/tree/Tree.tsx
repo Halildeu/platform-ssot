@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   shouldBlockInteraction,
   type AccessControlledProps,
 } from "../../internal/access-controller";

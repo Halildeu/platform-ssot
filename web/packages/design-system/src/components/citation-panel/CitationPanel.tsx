@@ -3,7 +3,7 @@ import { Badge, type BadgeVariant } from "../../primitives/badge/Badge";
 import { Text } from "../../primitives/text/Text";
 import { EmptyState as Empty } from "../empty-state";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,
@@ -21,7 +21,14 @@ export interface CitationPanelItem {
   badges?: React.ReactNode[];
 }
 
-/** Props for the CitationPanel component. */
+/** Props for the CitationPanel component.
+ * @example
+ * ```tsx
+ * <CitationPanel />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/citation-panel)
+ */
 export interface CitationPanelProps extends AccessControlledProps {
   /** Citation items to display in the panel. */
   items: CitationPanelItem[];

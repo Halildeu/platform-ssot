@@ -5,7 +5,14 @@ import { Checkbox, type CheckboxProps } from '../../primitives/checkbox/Checkbox
 import { useFormField } from '../useFormField';
 import type { AccessLevel } from '../../internal/access-controller';
 
-/** Form-connected checkbox that binds to a form field by name. */
+/** Form-connected checkbox that binds to a form field by name.
+ * @example
+ * ```tsx
+ * <ConnectedCheckbox />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/connected-checkbox)
+ */
 export interface ConnectedCheckboxProps
   extends Omit<CheckboxProps, 'checked' | 'onChange' | 'onBlur'> {
   /** Form field name used to read/write the boolean value. */
@@ -44,3 +51,5 @@ export const ConnectedCheckbox = forwardRef<HTMLInputElement, ConnectedCheckboxP
     );
   },
 );
+
+ConnectedCheckbox.displayName = "ConnectedCheckbox";

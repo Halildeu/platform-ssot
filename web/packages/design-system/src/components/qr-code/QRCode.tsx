@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -14,6 +14,13 @@ export type QRErrorLevel = "L" | "M" | "Q" | "H";
 /**
  * QRCode generates and renders a QR code from a text value using a pure
  * TypeScript encoder with configurable error correction and visual options.
+ * @example
+ * ```tsx
+ * <QRCode />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/q-r-code)
+
  */
 export interface QRCodeProps extends AccessControlledProps {
   /** Text or URL to encode in the QR code. */
@@ -574,6 +581,7 @@ export const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(function QRC
   return (
     <div
       ref={forwardedRef}
+      data-access-state={accessState.state}
       className={cn(
         "relative inline-flex items-center justify-center",
         bordered && "rounded-lg border border-border-default p-3",

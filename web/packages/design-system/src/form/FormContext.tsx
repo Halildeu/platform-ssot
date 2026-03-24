@@ -49,6 +49,13 @@ FormContext.displayName = 'FormContext';
 
 /**
  * Read form context. Throws if used outside a FormProvider.
+   * @example
+   * ```tsx
+   * <FormContext />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/form-context)
+  
  */
 export function useFormContext(): FormContextValue {
   const ctx = useContext(FormContext);

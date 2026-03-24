@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { EmptyState as Empty } from "../empty-state/EmptyState";

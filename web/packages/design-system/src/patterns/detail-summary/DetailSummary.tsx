@@ -14,7 +14,7 @@ import {
   type EntitySummaryBlockProps,
 } from "../entity-summary-block/EntitySummaryBlock";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -23,7 +23,14 @@ import {
 /*  entity block, descriptions and optional JSON viewer               */
 /* ------------------------------------------------------------------ */
 
-/** Props for the DetailSummary component. */
+/** Props for the DetailSummary component.
+ * @example
+ * ```tsx
+ * <DetailSummary />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/detail-summary)
+ */
 export interface DetailSummaryProps extends AccessControlledProps {
   /** Breadcrumb or eyebrow text above the title */
   eyebrow?: React.ReactNode;

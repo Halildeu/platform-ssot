@@ -7,7 +7,7 @@ import type { AgChartOptions } from "ag-charts-community";
 const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
@@ -52,14 +52,21 @@ export interface AreaChartProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SIZE_HEIGHT: Record<ChartSize, number> = { sm: 200, md: 300, lg: 400 };
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <AreaChart />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/area-chart)
+ */
 export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
   function AreaChart(
     {
@@ -148,6 +155,7 @@ export const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       return (
         <div
           ref={forwardedRef}
+          data-access-state={accessState.state}
           className={cn(
             "inline-flex items-center justify-center text-sm text-text-secondary",
             accessState.isDisabled && "opacity-50",

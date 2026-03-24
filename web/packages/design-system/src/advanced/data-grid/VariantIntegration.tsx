@@ -31,7 +31,8 @@ import { useAccordion } from "../../headless/hooks/useAccordion";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+ */
 
 export interface GridVariantState {
   columnState?: unknown[];
@@ -193,6 +194,7 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
       height="12"
       viewBox="0 0 12 12"
       fill="none"
+      data-access-state={accessState.state}
       className={cn(
         "shrink-0 transition-[rotate] duration-150",
         expanded && "rotate-90",
@@ -207,7 +209,14 @@ function ChevronIcon({ expanded }: { expanded: boolean }) {
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-/** Grid variant manager for saving, loading, and switching named column/filter configurations. */
+/** Grid variant manager for saving, loading, and switching named column/filter configurations. 
+ * @example
+ * ```tsx
+ * <VariantIntegration />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/variant-integration)
+ */
 export const VariantIntegration = <RowData = unknown,>({
   gridId,
   gridSchemaVersion,
@@ -908,6 +917,8 @@ export const VariantIntegration = <RowData = unknown,>({
     </>
   );
 };
+
+VariantIntegration.displayName = "VariantIntegration";
 
 /* ------------------------------------------------------------------ */
 /*  Action button (tiny, reused in accordion detail)                   */

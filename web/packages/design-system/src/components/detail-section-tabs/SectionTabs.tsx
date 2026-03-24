@@ -1,7 +1,7 @@
 import React from 'react';
 import { cn } from '../../utils/cn';
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from '../../internal/access-controller';
 import {
@@ -147,6 +147,13 @@ function getDescriptionVisibilityClassName(
 /**
  * Segmented tab strip for switching between detail page sections with support
  * for responsive scroll/wrap layouts, density variants and description tooltips.
+   * @example
+   * ```tsx
+   * <SectionTabs />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/section-tabs)
+  
  */
 export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(function SectionTabs(
   {
@@ -211,6 +218,7 @@ export const SectionTabs = React.forwardRef<HTMLDivElement, SectionTabsProps>(fu
             <span data-segmented-badge-cluster="true" className="inline-flex items-center gap-1.5">
               {item.badge ? (
                 <span
+                  data-access-state={accessState.state}
                   className={cn(
                     'inline-flex min-w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-text-primary',
                     densityClasses.badge,

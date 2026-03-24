@@ -7,7 +7,7 @@ import type { AgChartOptions } from "ag-charts-community";
 const AgCharts = AgChartsBase as unknown as React.FC<{ options: AgChartOptions; style?: React.CSSProperties; className?: string }>;
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { getChartThemeOverrides, getChartColorPalette } from "../../advanced/data-grid/chart-theme-bridge";
@@ -50,14 +50,21 @@ export interface BarChartProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SIZE_HEIGHT: Record<ChartSize, number> = { sm: 200, md: 300, lg: 400 };
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <BarChart />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/bar-chart)
+ */
 export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
   function BarChart(
     {
@@ -150,6 +157,7 @@ export const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       return (
         <div
           ref={forwardedRef}
+          data-access-state={accessState.state}
           className={cn(
             "inline-flex items-center justify-center text-sm text-text-secondary",
             accessState.isDisabled && "opacity-50",

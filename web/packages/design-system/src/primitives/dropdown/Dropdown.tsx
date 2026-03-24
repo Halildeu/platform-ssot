@@ -22,7 +22,14 @@ export type DropdownEntry = DropdownItem | DropdownSeparator | DropdownLabel;
 
 export type DropdownPlacement = "bottom-start" | "bottom-end" | "top-start" | "top-end";
 
-/** Props for the Dropdown component. */
+/** Props for the Dropdown component.
+ * @example
+ * ```tsx
+ * <Dropdown />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/dropdown)
+ */
 export interface DropdownProps {
   /** Trigger element that toggles the dropdown on click. */
   children: React.ReactElement;

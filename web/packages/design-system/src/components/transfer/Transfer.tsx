@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   shouldBlockInteraction,
   type AccessControlledProps,
 } from "../../internal/access-controller";
@@ -62,7 +62,8 @@ export interface TransferProps extends AccessControlledProps {
   className?: string;
 }
 
-/* ---- Defaults ---- */
+/* ---- Defaults ----
+   */
 
 const DEFAULT_TITLES: [string, string] = ["Kaynak", "Hedef"];
 
@@ -406,8 +407,14 @@ const TransferPanel: React.FC<TransferPanelProps> = ({
 
 /* ------------------------------------------------------------------ */
 /*  Transfer                                                           */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <Transfer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/transfer)
+ */
 export const Transfer = React.forwardRef<HTMLDivElement, TransferProps>(({
   dataSource,
   targetKeys: controlledTargetKeys,

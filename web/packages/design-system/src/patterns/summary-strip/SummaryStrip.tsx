@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -19,7 +19,14 @@ export interface SummaryStripItem {
   tone?: "default" | "info" | "success" | "warning";
 }
 
-/** Props for the SummaryStrip component. */
+/** Props for the SummaryStrip component.
+ * @example
+ * ```tsx
+ * <SummaryStrip />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/summary-strip)
+ */
 export interface SummaryStripProps extends AccessControlledProps {
   /** KPI / metric items to display in the strip. */
   items: SummaryStripItem[];

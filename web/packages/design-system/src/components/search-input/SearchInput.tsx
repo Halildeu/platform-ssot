@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback } from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  SearchInput — Input with search icon, clear button, loading        */
@@ -92,6 +92,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       <div className={cn("relative w-full", disabled && "opacity-50 cursor-not-allowed", accessState.isDisabled && "pointer-events-none opacity-50")} title={accessReason}>
         {/* Search icon */}
         <svg
+          data-access-state={accessState.state}
           className={cn(
             "pointer-events-none absolute top-1/2 -translate-y-1/2 text-text-secondary",
             iconSizes[resolvedSize],

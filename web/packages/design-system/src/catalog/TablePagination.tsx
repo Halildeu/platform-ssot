@@ -345,4 +345,6 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   );
 };
 
+TablePagination.displayName = "TablePagination";
+
 export default TablePagination;

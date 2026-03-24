@@ -13,9 +13,10 @@
 /*  1. ThemeProvider sets --action-primary via inline style → wins     */
 /*  2. theme.css defines --action-primary-bg → bridge resolves         */
 /*  3. --accent-primary from theme.css → secondary bridge              */
-/*  4. Hardcoded fallback → safe default                               */
+/*  4. Hardcoded fallback → safe default (Tailwind palette)            */
 /*                                                                     */
-/*  Faz 0A.1 — CSS Variable Fallback Policy                            */
+/*  Fallback values aligned with Tailwind CSS defaults.                */
+/*  Run `node scripts/ops/theme-doctor.mjs` to detect staleness.       */
 /* ------------------------------------------------------------------ */
 
 :root {
@@ -25,73 +26,73 @@
      SearchInput, CommandPalette, Transfer, TourCoachmarks, AnchorToc,
      Breadcrumb, FieldControlPrimitives, FilterBar, FormDrawer,
      DetailDrawer, ReportFilterPanel, MasterDetail, ThemePreviewCard */
-  --action-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));
-  --action-primary-hover: var(--accent-primary-hover, #1a5490);
-  --action-primary-active: var(--accent-primary-hover, #155080);
-  --action-primary-soft: var(--accent-soft, rgba(43, 108, 176, 0.12));
+  --action-primary: var(--action-primary-bg, var(--accent-primary, #3b82f6));
+  --action-primary-hover: var(--accent-primary-hover, #0066cc);
+  --action-primary-active: var(--accent-primary-hover, #0066cc);
+  --action-primary-soft: var(--accent-soft, rgba(59, 130, 246, 0.12));
 
   /* ---- Action Secondary ---- */
-  --action-secondary: var(--action-secondary-bg, #f1f5f9);
+  --action-secondary: var(--action-secondary-bg, #f3f4f6);
 
   /* ---- Surface ---- */
   --surface-canvas: var(--surface-default-bg, #ffffff);
   --surface-raised: var(--surface-raised-bg, #ffffff);
   --surface-page: var(--surface-page-bg, var(--surface-default-bg, #ffffff));
-  --surface-overlay: var(--surface-overlay-bg, rgba(15, 23, 42, 0.6));
-  --surface-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));
-  --surface-accent: var(--accent-soft, rgba(43, 108, 176, 0.08));
+  --surface-overlay: var(--surface-overlay-bg, rgba(17, 24, 39, 0.6));
+  --surface-primary: var(--action-primary-bg, var(--accent-primary, #3b82f6));
+  --surface-accent: var(--accent-soft, rgba(59, 130, 246, 0.08));
   --surface-active: var(--selection-bg, rgba(219, 234, 254, 0.6));
   --surface-inverse: var(--surface-overlay-bg, #0f172a);
 
   /* ---- Text ---- */
-  --text-disabled: var(--text-subtle, #64748b);
-  --text-tertiary: var(--text-subtle, #64748b);
-  --text-placeholder: var(--text-subtle, #94a3b8);
-  --text-danger: var(--state-danger-text, #e53e3e);
+  --text-disabled: var(--text-subtle, #6b7280);
+  --text-tertiary: var(--text-subtle, #6b7280);
+  --text-placeholder: var(--text-subtle, #6b7280);
+  --text-danger: var(--state-danger-text, #ef4444);
 
   /* ---- Border ---- */
-  --border-strong: var(--border-bold, #2c5282);
-  --border-active: var(--selection-outline, #2b6cb0);
-  --border-hover: var(--border-default, #cbd5e1);
-  --border-error: var(--state-danger-border, #e53e3e);
-  --border-danger: var(--state-danger-border, #e53e3e);
+  --border-strong: var(--border-bold, #2563eb);
+  --border-active: var(--selection-outline, #3b82f6);
+  --border-hover: var(--border-default, #d1d5db);
+  --border-error: var(--state-danger-border, #ef4444);
+  --border-danger: var(--state-danger-border, #ef4444);
 
   /* ---- Focus ---- */
-  --focus-ring: var(--focus-outline, #2c5282);
+  --focus-ring: var(--focus-outline, #2563eb);
 
   /* ---- State Error → Danger bridge ---- */
   /* theme.css uses "danger", adapter/components use "error" */
-  --state-error-bg: var(--state-danger-bg, rgba(229, 62, 62, 0.12));
-  --state-error-text: var(--state-danger-text, #e53e3e);
-  --state-error-border: var(--state-danger-border, #e53e3e);
+  --state-error-bg: var(--state-danger-bg, rgba(239, 68, 68, 0.12));
+  --state-error-text: var(--state-danger-text, #ef4444);
+  --state-error-border: var(--state-danger-border, #ef4444);
 
   /* ---- State short aliases ---- */
   /* Some components use --state-X without -bg/-text suffix */
-  --state-danger: var(--state-danger-text, #e53e3e);
-  --state-success: var(--state-success-text, #38a169);
-  --state-warning: var(--state-warning-text, #dd6b20);
-  --state-info: var(--state-info-text, #3182ce);
+  --state-danger: var(--state-danger-text, #ef4444);
+  --state-success: var(--state-success-text, #22c55e);
+  --state-warning: var(--state-warning-text, #f59e0b);
+  --state-info: var(--state-info-text, #3b82f6);
 
   /* ---- Feedback aliases ---- */
-  --feedback-error: var(--state-danger-text, #e53e3e);
-  --feedback-success: var(--state-success-text, #38a169);
-  --feedback-warning: var(--state-warning-text, #dd6b20);
-  --feedback-info: var(--state-info-text, #3182ce);
+  --feedback-error: var(--state-danger-text, #ef4444);
+  --feedback-success: var(--state-success-text, #22c55e);
+  --feedback-warning: var(--state-warning-text, #f59e0b);
+  --feedback-info: var(--state-info-text, #3b82f6);
 
   /* ---- Legacy color aliases ---- */
-  --danger-color: var(--state-danger-text, #e53e3e);
-  --success-color: var(--state-success-text, #38a169);
-  --warning-color: var(--state-warning-text, #dd6b20);
-  --info-color: var(--state-info-text, #3182ce);
-  --bg-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));
-  --color-action-primary-bg: var(--action-primary-bg, var(--accent-primary, #2b6cb0));
+  --danger-color: var(--state-danger-text, #ef4444);
+  --success-color: var(--state-success-text, #22c55e);
+  --warning-color: var(--state-warning-text, #f59e0b);
+  --info-color: var(--state-info-text, #3b82f6);
+  --bg-primary: var(--action-primary-bg, var(--accent-primary, #3b82f6));
+  --color-action-primary-bg: var(--action-primary-bg, var(--accent-primary, #3b82f6));
 
   /* ---- Ring aliases ---- */
-  --ring-primary: var(--action-primary-bg, var(--accent-primary, #2b6cb0));
-  --ring-focus: var(--focus-outline, #2c5282);
-  --ring-error: var(--state-danger-border, #e53e3e);
-  --ring-color: var(--focus-outline, #2c5282);
+  --ring-primary: var(--action-primary-bg, var(--accent-primary, #3b82f6));
+  --ring-focus: var(--focus-outline, #2563eb);
+  --ring-error: var(--state-danger-border, #ef4444);
+  --ring-color: var(--focus-outline, #2563eb);
 
   /* ---- Accent aliases ---- */
-  --accent-primary-muted: var(--accent-soft, rgba(43, 108, 176, 0.15));
+  --accent-primary-muted: var(--accent-soft, rgba(59, 130, 246, 0.15));
 }

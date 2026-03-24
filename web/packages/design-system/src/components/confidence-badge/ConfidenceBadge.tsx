@@ -1,13 +1,20 @@
 import React from "react";
 import { Badge } from "../../primitives/badge/Badge";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
 export type ConfidenceLevel = "low" | "medium" | "high" | "very-high";
 
-/** Props for the ConfidenceBadge component. */
+/** Props for the ConfidenceBadge component.
+ * @example
+ * ```tsx
+ * <ConfidenceBadge />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/confidence-badge)
+ */
 export interface ConfidenceBadgeProps extends AccessControlledProps {
   /** Confidence tier determining the badge tone. */
   level?: ConfidenceLevel;
@@ -52,6 +59,7 @@ export const ConfidenceBadge = React.forwardRef<HTMLSpanElement, ConfidenceBadge
   label,
   className,
   access = "full",
+  accessReason,
 }, ref) => {
   const accessState = resolveAccessState(access);
   if (accessState.isHidden) {
@@ -77,6 +85,8 @@ export const ConfidenceBadge = React.forwardRef<HTMLSpanElement, ConfidenceBadge
       className={className}
       aria-label={labelByLevel[level]}
       data-confidence-level={level}
+      data-access-state={accessState.state}
+      title={accessReason}
     >
       {compact ? parts.slice(0, 2).join(" · ") : parts.join(" · ")}
     </Badge>

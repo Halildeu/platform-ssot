@@ -10,7 +10,10 @@ import {
 // Types
 // ---------------------------------------------------------------------------
 
-/** A single item in the waterfall chart. */
+/** A single item in the waterfall chart.
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/waterfall-chart)
+ */
 export interface WaterfallItem {
   /** Unique identifier */
   id: string;

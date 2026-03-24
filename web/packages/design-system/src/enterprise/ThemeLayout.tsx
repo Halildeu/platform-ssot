@@ -18,7 +18,14 @@ export interface ThemeLayoutSlots {
   footer?: React.ReactNode;
 }
 
-/** Slot-based dashboard layout that adapts its grid arrangement to the selected theme. */
+/** Slot-based dashboard layout that adapts its grid arrangement to the selected theme.
+ * @example
+ * ```tsx
+ * <ThemeLayout />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/theme-layout)
+ */
 export interface ThemeLayoutProps extends AccessControlledProps {
   /** Layout theme controlling grid arrangement and density. */
   theme: LayoutTheme;

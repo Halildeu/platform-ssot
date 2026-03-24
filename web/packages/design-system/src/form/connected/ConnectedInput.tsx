@@ -5,7 +5,14 @@ import { Input, type InputProps } from '../../primitives/input/Input';
 import { useFormField } from '../useFormField';
 import type { AccessLevel } from '../../internal/access-controller';
 
-/** Props for the ConnectedInput component. */
+/** Props for the ConnectedInput component.
+ * @example
+ * ```tsx
+ * <ConnectedInput />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/connected-input)
+ */
 export interface ConnectedInputProps
   extends Omit<InputProps, 'value' | 'onChange' | 'onValueChange' | 'onBlur' | 'error'> {
   /** Field name matching the form schema key. */
@@ -48,3 +55,5 @@ export const ConnectedInput = forwardRef<HTMLInputElement, ConnectedInputProps>(
     );
   },
 );
+
+ConnectedInput.displayName = "ConnectedInput";

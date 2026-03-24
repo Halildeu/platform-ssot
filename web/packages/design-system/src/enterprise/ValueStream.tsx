@@ -101,6 +101,7 @@ function StepBox({
 
   return (
     <div
+      data-access-state={accessState.state}
       className={cn(
         'flex flex-col items-center gap-1 rounded-lg border-2 px-4 py-3 min-w-[120px] transition-shadow',
         styles.border,
@@ -294,3 +295,5 @@ export function ValueStream({
     </div>
   );
 }
+
+ValueStream.displayName = "ValueStream";

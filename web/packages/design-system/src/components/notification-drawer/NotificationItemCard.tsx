@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
 } from "../../internal/access-controller";
@@ -34,7 +34,14 @@ export type NotificationSurfaceItem = {
 /*  NotificationItemCard                                                */
 /* ------------------------------------------------------------------ */
 
-/** Props for the NotificationItemCard component. */
+/** Props for the NotificationItemCard component.
+ * @example
+ * ```tsx
+ * <NotificationItemCard />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/notification-item-card)
+ */
 export interface NotificationItemCardProps extends AccessControlledProps {
   /** Notification data to render. */
   item: NotificationSurfaceItem;

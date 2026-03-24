@@ -13,13 +13,20 @@ import {
 } from "../ai-action-audit-timeline/AIActionAuditTimeline";
 import { Text } from "../../primitives/text/Text";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
 /**
  * ApprovalReview combines a human checkpoint, citation evidence, and audit trail
  * into a single review surface for AI-generated actions.
+ * @example
+ * ```tsx
+ * <ApprovalReview />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/approval-review)
+
  */
 export interface ApprovalReviewProps extends AccessControlledProps {
   /** Section heading. @default "Approval review" */

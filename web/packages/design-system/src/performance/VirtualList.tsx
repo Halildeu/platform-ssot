@@ -37,7 +37,8 @@ export interface VirtualListProps<T> {
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 function getItemOffset(
   index: number,
@@ -81,6 +82,13 @@ function getTotalHeight(
  * - `role="listbox"` with proper ARIA
  * - Zero external dependencies
  * - CSS variable compatible
+ 
+ * @example
+ * ```tsx
+ * <VirtualList />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/virtual-list)
  */
 export function VirtualList<T>({
   items,
@@ -235,3 +243,5 @@ export function VirtualList<T>({
     </div>
   );
 }
+
+VirtualList.displayName = "VirtualList";

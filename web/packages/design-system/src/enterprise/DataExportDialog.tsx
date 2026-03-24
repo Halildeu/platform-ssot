@@ -30,7 +30,14 @@ export interface DataExportDialogLocaleText {
   scopeFiltered?: string;
 }
 
-/** Modal dialog for configuring and triggering data exports in various formats. */
+/** Modal dialog for configuring and triggering data exports in various formats.
+ * @example
+ * ```tsx
+ * <DataExportDialog />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/data-export-dialog)
+ */
 export interface DataExportDialogProps extends AccessControlledProps {
   /** Whether the dialog is currently visible */
   open: boolean;
@@ -108,6 +115,7 @@ function RadioOption({
 }) {
   return (
     <label
+      data-access-state={accessState.state}
       className={cn(
         'flex items-center gap-2 rounded-md border px-3 py-2 text-sm cursor-pointer transition-colors',
         checked
@@ -340,3 +348,5 @@ export function DataExportDialog({
     </>
   );
 }
+
+DataExportDialog.displayName = "DataExportDialog";

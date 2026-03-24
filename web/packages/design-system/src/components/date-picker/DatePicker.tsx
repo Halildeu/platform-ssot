@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import {
@@ -133,6 +133,7 @@ export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(fu
       error={error}
       required={required}
       fullWidth={fullWidth}
+      data-access-state={accessState.state}
     >
       <div className={getFieldFrameClass(size, tone, fullWidth, className)}>
         <input

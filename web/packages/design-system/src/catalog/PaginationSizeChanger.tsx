@@ -51,4 +51,6 @@ export const PaginationSizeChanger: React.FC<PaginationSizeChangerProps> = ({
   />
 );
 
+PaginationSizeChanger.displayName = "PaginationSizeChanger";
+
 export default PaginationSizeChanger;

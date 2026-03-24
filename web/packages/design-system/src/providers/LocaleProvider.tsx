@@ -20,7 +20,14 @@ export function useLocale(): LocaleContextValue {
   return useContext(LocaleContext);
 }
 
-/** Props for the LocaleProvider component. */
+/** Props for the LocaleProvider component.
+ * @example
+ * ```tsx
+ * <LocaleProvider />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/locale-provider)
+ */
 export interface LocaleProviderProps {
   /** BCP 47 locale tag (e.g. "en", "tr", "ar"). @default "en" */
   locale?: string;
@@ -57,3 +64,5 @@ export function LocaleProvider({
     </LocaleContext.Provider>
   );
 }
+
+LocaleProvider.displayName = "LocaleProvider";

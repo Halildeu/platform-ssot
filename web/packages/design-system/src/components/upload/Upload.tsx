@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import {
@@ -153,6 +153,7 @@ export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function U
       error={error}
       required={required}
       fullWidth={fullWidth}
+      data-access-state={accessState.state}
     >
       <div className={cn("flex flex-col gap-3", fullWidth && "w-full")}>
         <label

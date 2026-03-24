@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import { stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Toast — Notification system with provider + hook                   */
@@ -40,6 +40,24 @@ interface ToastOptions {
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
+
+/**
+
+ * Toast component.
+
+ * @example
+
+ * ```tsx
+
+ * <Toast />
+
+ * ```
+
+ * @since 1.0.0
+
+ * @see [Docs](https://design.mfe.dev/components/toast)
+
+ */
 
 export function useToast(): ToastContextValue {
   const ctx = useContext(ToastContext);
@@ -125,7 +143,9 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   };
 
   return (
-    <ToastContext.Provider value={value}>
+    <ToastContext.Provider value={value}
+      data-access-state={accessState.state}
+    >
       {children}
       {/* Toast container */}
       <div
@@ -151,7 +171,8 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
 
 ToastProvider.displayName = "ToastProvider";
 
-/* ---- Individual toast ---- */
+/* ---- Individual toast ----
+   */
 
 function ToastItem({
   toast,

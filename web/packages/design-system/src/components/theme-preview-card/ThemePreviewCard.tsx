@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -30,6 +30,13 @@ export interface ThemePreviewCardProps extends AccessControlledProps {
 /**
  * Miniature theme swatch card that renders a compact preview of a theme's
  * visual style, used in theme selection galleries and comparison views.
+   * @example
+   * ```tsx
+   * <ThemePreviewCard />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/theme-preview-card)
+  
  */
 export const ThemePreviewCard = React.forwardRef<HTMLDivElement, ThemePreviewCardProps>(({
   selected = false,

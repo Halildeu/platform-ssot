@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -57,7 +57,14 @@ export type FormField = {
 export type FormLayout = "vertical" | "horizontal" | "inline";
 export type FormSize = "sm" | "md" | "lg";
 
-/** Props for the AdaptiveForm component. */
+/** Props for the AdaptiveForm component.
+ * @example
+ * ```tsx
+ * <AdaptiveForm />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/adaptive-form)
+ */
 export interface AdaptiveFormProps extends AccessControlledProps {
   /** Field definitions describing the form schema. */
   fields: FormField[];

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { resolveAccessState, accessStyles } from '../internal/access-controller';
-import type { AccessLevel } from '../internal/access-controller';
+import type { AccessLevel, AccessControlledProps } from '../internal/access-controller';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -24,7 +24,14 @@ export interface ApprovalStep {
   comment?: string;
 }
 
-/** Multi-step approval workflow with approve, reject, and delegate actions. */
+/** Multi-step approval workflow with approve, reject, and delegate actions.
+ * @example
+ * ```tsx
+ * <ApprovalWorkflow />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/approval-workflow)
+ */
 export interface ApprovalWorkflowProps {
   /** Ordered list of approval steps to render */
   steps: ApprovalStep[];
@@ -433,5 +440,7 @@ export function ApprovalWorkflow({
     </div>
   );
 }
+
+ApprovalWorkflow.displayName = "ApprovalWorkflow";
 
 export default ApprovalWorkflow;

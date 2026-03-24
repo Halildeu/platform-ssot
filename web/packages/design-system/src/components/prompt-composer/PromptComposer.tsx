@@ -5,7 +5,7 @@ import { Text } from "../../primitives/text/Text";
 import { TextArea } from "../../primitives/input/Textarea";
 import { TextInput } from "../../primitives/input/Input";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -15,6 +15,13 @@ export type PromptComposerTone = "neutral" | "strict" | "exploratory";
 /**
  * PromptComposer provides a structured prompt authoring surface with
  * scope selection, tone control, guardrail badges, and source anchors.
+ * @example
+ * ```tsx
+ * <PromptComposer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/prompt-composer)
+
  */
 export interface PromptComposerProps extends AccessControlledProps {
   /** Section heading. @default "Prompt olusturucu" */

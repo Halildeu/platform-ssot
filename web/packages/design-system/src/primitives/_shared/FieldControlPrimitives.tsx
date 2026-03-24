@@ -138,7 +138,14 @@ export type FieldControlShellProps = {
   children: React.ReactNode;
 };
 
-/** Field control shell providing label, hint text, error message, and required indicator layout for form fields. */
+/** Field control shell providing label, hint text, error message, and required indicator layout for form fields.
+   * @example
+   * ```tsx
+   * <FieldControlPrimitives />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/field-control-primitives)
+   */
 export const FieldControlShell: React.FC<FieldControlShellProps> = ({
   inputId,
   label,

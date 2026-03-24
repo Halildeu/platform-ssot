@@ -3,7 +3,7 @@ import { Badge, type BadgeVariant } from "../../primitives/badge/Badge";
 import { Text } from "../../primitives/text/Text";
 import { EmptyState as Empty } from "../empty-state";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,
@@ -27,7 +27,14 @@ export interface AIActionAuditTimelineItem {
   badges?: React.ReactNode[];
 }
 
-/** Props for the AIActionAuditTimeline component. */
+/** Props for the AIActionAuditTimeline component.
+ * @example
+ * ```tsx
+ * <AIActionAuditTimeline />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/a-i-action-audit-timeline)
+ */
 export interface AIActionAuditTimelineProps extends AccessControlledProps {
   /** Timeline entries to render. */
   items: AIActionAuditTimelineItem[];

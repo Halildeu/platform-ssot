@@ -15,7 +15,14 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 
 export type DialogSlot = "root" | "backdrop" | "panel" | "title" | "description";
 
-/** Props for the Dialog component. */
+/** Props for the Dialog component.
+ * @example
+ * ```tsx
+ * <Dialog />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/dialog)
+ */
 export interface DialogProps {
   open: boolean;
   onClose: () => void;

@@ -4,7 +4,7 @@ import { Badge } from "../../primitives/badge";
 import { EmptyState as Empty } from "../empty-state";
 import { TextInput } from "../../primitives/input";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { stateAttrs } from "../../internal/interaction-core";

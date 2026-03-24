@@ -14,14 +14,15 @@ import {
   type UsePaginationStateOptions,
 } from "./usePaginationState";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
   type AccessLevel,
 } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  TablePagination types                                              */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+ */
 
 export type TablePaginationLocaleText = {
   rowsPerPageLabel?: React.ReactNode;
@@ -185,7 +186,14 @@ const DefaultTablePaginationActions: React.FC<TablePaginationActionsProps> = ({
 /*  TablePagination component                                          */
 /* ------------------------------------------------------------------ */
 
-/** Pagination controls with page navigation, page-size selector, and item range display. */
+/** Pagination controls with page navigation, page-size selector, and item range display. 
+ * @example
+ * ```tsx
+ * <TablePagination />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/table-pagination)
+ */
 export const TablePagination: React.FC<TablePaginationProps> = ({
   totalItems,
   page,
@@ -372,6 +380,8 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
     </div>
   );
 };
+
+TablePagination.displayName = "TablePagination";
 
 /* ------------------------------------------------------------------ */
 /*  useAgGridTablePagination — real AG Grid v34 pagination sync        */

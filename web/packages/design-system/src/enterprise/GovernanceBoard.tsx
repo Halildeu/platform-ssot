@@ -24,7 +24,14 @@ export interface GovernanceItem {
 
 export type GovernanceGroupBy = 'domain' | 'status' | 'severity';
 
-/** Compliance governance board with summary strip, severity indicators, and collapsible groups. */
+/** Compliance governance board with summary strip, severity indicators, and collapsible groups.
+ * @example
+ * ```tsx
+ * <GovernanceBoard />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/governance-board)
+ */
 export interface GovernanceBoardProps extends AccessControlledProps {
   /** Governance control items to display */
   items: GovernanceItem[];

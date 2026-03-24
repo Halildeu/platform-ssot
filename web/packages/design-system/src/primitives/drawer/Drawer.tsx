@@ -21,7 +21,14 @@ import { cn } from "../../utils/cn";
 export type DrawerPlacement = "left" | "right" | "top" | "bottom";
 export type DrawerSize = "sm" | "md" | "lg" | "full";
 
-/** Props for the Drawer component. */
+/** Props for the Drawer component.
+ * @example
+ * ```tsx
+ * <Drawer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/drawer)
+ */
 export interface DrawerProps {
   /** Controlled open state */
   open: boolean;

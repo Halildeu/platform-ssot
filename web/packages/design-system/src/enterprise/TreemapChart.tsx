@@ -29,7 +29,14 @@ interface RenderedCell extends LayoutRect {
   color: string;
 }
 
-/** Props for the TreemapChart component. */
+/** Props for the TreemapChart component.
+ * @example
+ * ```tsx
+ * <TreemapChart />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/treemap-chart)
+ */
 export interface TreemapChartProps extends AccessControlledProps {
   items: TreemapItem[];
   /** Chart width (default responsive via viewBox) */

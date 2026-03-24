@@ -10,7 +10,14 @@ import {
 export type MenuSurfaceDismissReason = 'outside-click' | 'escape' | 'tab' | 'select';
 export type MenuSurfaceItemType = 'action' | 'checkbox' | 'radio';
 
-/** Options passed when the menu surface is dismissed. */
+/** Options passed when the menu surface is dismissed.
+ * @example
+ * ```tsx
+ * <MenuSurface />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/menu-surface)
+ */
 export interface MenuSurfaceDismissOptions {
   /** Whether focus should be restored to the trigger element. */
   restoreFocus?: boolean;
@@ -722,3 +729,5 @@ export const MenuSurface = <TItem extends MenuSurfaceItemBase<TItem>>({
 
   return createPortal(panelNode, portalTarget ?? document.body);
 };
+
+MenuSurface.displayName = "MenuSurface";

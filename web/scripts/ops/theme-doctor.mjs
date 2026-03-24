@@ -204,39 +204,38 @@ check('surface-tone-dark', 'Dark mode surface tone override integrity', () => {
 check('token-bridge', 'Token bridge fallback staleness', () => {
   const bridge = readSafe(TOKEN_BRIDGE_CSS);
   const theme = readSafe(THEME_CSS);
-
-  const bridgeFallbacks = [];
-  const hexRe = /#[0-9a-f]{6}/gi;
-  for (const line of bridge.split('\n')) {
-    const m = line.match(/^  --([\w-]+):\s*var\(--[\w-]+,\s*(.*)\);$/);
-    if (m) {
-      const varName = m[1];
-      const fallback = m[2].trim().replace(/\)$/, '');
-      const hexMatch = fallback.match(hexRe);
-      if (hexMatch) bridgeFallbacks.push({ varName, fallback: hexMatch[0] });
-    }
-  }
-
-  // Check if theme.css :root defines corresponding values
   const themeVars = parseCssVarsFlat(theme);
+
+  /* Extract bridge entries: --short-name: var(--theme-name, <fallback>); */
+  const bridgeEntries = [];
+  const hexRe = /#[0-9a-f]{3,8}/gi;
+  for (const line of bridge.split('\n')) {
+    const m = line.match(/^\s+--([\w-]+):\s*var\(--([\w-]+),?\s*(.*)\);$/);
+    if (!m) continue;
+    const shortName = m[1];
+    const refName = m[2]; // the theme.css variable it references
+    const tail = m[3].trim().replace(/\)$/, '');
+    const hexMatch = tail.match(hexRe);
+    if (hexMatch) bridgeEntries.push({ shortName, refName, fallback: hexMatch[hexMatch.length - 1].toLowerCase() });
+  }
+
+  /* Compare: bridge fallback hex ↔ theme.css :root value for the *referenced* variable */
   const stale = [];
-  for (const { varName, fallback } of bridgeFallbacks) {
-    const themeEntries = themeVars.get(`--${varName}`) || themeVars.get(`--${varName}-bg`);
-    if (themeEntries) {
-      const rootEntry = themeEntries.find(e => e.selector === ':root');
-      if (rootEntry) {
-        const themeHex = srgbToHex(rootEntry.value);
-        if (themeHex !== fallback.toLowerCase()) {
-          stale.push({ varName, bridgeFallback: fallback, themeValue: themeHex });
-        }
-      }
+  for (const { shortName, refName, fallback } of bridgeEntries) {
+    const themeEntries = themeVars.get(`--${refName}`);
+    if (!themeEntries) continue; // ref not in theme.css — bridge provides the only value, skip
+    const rootEntry = themeEntries.find(e => e.selector === ':root');
+    if (!rootEntry) continue;
+    const themeHex = srgbToHex(rootEntry.value);
+    if (themeHex !== fallback) {
+      stale.push({ shortName, refName, bridgeFallback: fallback, themeValue: themeHex });
     }
   }
 
-  if (stale.length === 0) return { status: 'pass', message: `${bridgeFallbacks.length} bridge fallbacks checked — all current` };
+  if (stale.length === 0) return { status: 'pass', message: `${bridgeEntries.length} bridge fallbacks checked — all current` };
   return {
     status: 'warn',
-    message: `${stale.length}/${bridgeFallbacks.length} bridge fallbacks stale`,
+    message: `${stale.length}/${bridgeEntries.length} bridge fallbacks stale`,
     details: stale.slice(0, 10),
     fix: FIX_HINT ? 'Update token-bridge.css fallback hex values to match theme.css :root defaults' : undefined,
   };
@@ -251,8 +250,11 @@ check('display-name', 'Component displayName coverage', () => {
 
   for (const file of tsxFiles) {
     const content = readSafe(file);
-    // Only check files that export components (have JSX return)
+    // Only check files that export components (have JSX return), skip hook-only files
     if (!content.includes('export') || (!content.includes('return (') && !content.includes('return <'))) continue;
+    const basename = file.split('/').pop() || '';
+    if (basename.startsWith('use') && basename[3] === basename[3].toUpperCase()) continue; // hook file
+    if (basename.includes('roving-tabindex') || basename.includes('interaction-core')) continue; // hook-only utilities
     total++;
     if (!content.includes('displayName')) {
       missing++;

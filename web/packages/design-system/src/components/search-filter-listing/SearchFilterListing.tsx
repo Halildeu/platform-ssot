@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { PageHeader } from "../../patterns/page-header";
@@ -118,7 +118,8 @@ export interface SearchFilterListingProps extends AccessControlledProps {
   size?: "default" | "compact";
 }
 
-/* ---- Style constants ---- */
+/* ---- Style constants ----
+   */
 
 const panelBase =
   "relative overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card,var(--surface-default))] shadow-[0_22px_48px_-34px_var(--shadow-color,rgba(15,23,42,0.28))] ring-1 ring-border-subtle/20 backdrop-blur-xs transition-all duration-200";
@@ -254,8 +255,14 @@ const SortDropdown: React.FC<{
   );
 };
 
-/* ---- Main Component ---- */
-
+/* ---- Main Component ---- 
+ * @example
+ * ```tsx
+ * <SearchFilterListing />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/search-filter-listing)
+ */
 export const SearchFilterListing = React.forwardRef<HTMLElement, SearchFilterListingProps>(({
   eyebrow,
   title,

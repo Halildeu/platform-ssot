@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useMemo, useState } from "react";
 import { Button } from "../../primitives/button/Button";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -17,7 +17,14 @@ export type TourCoachmarkStep = {
   tone?: "info" | "success" | "warning";
 };
 
-/** Props for the TourCoachmarks component. */
+/** Props for the TourCoachmarks component.
+ * @example
+ * ```tsx
+ * <TourCoachmarks />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/tour-coachmarks)
+ */
 export interface TourCoachmarksProps extends AccessControlledProps {
   /** Ordered list of tour steps. */
   steps: TourCoachmarkStep[];

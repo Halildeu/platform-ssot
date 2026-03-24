@@ -9,7 +9,7 @@ import {
   getFieldTone,
   type FieldSize,
 } from "../../primitives/_shared/FieldControlPrimitives";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Autocomplete — Input with dropdown suggestions                     */
@@ -72,7 +72,14 @@ const matchesQuery = (option: AutocompleteOption, query: string): boolean => {
   return option.label.toLowerCase().includes(query.trim().toLowerCase());
 };
 
-/** Input with dropdown suggestions supporting type-ahead filtering, async search, and keyboard navigation. */
+/** Input with dropdown suggestions supporting type-ahead filtering, async search, and keyboard navigation.
+   * @example
+   * ```tsx
+   * <Autocomplete />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/autocomplete)
+   */
 export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps>(
   function Autocomplete(
     {
@@ -298,6 +305,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
           error ? <span id={errorId}>{error}</span> : undefined
         }
         fullWidth={fullWidth}
+        data-access-state={accessState.state}
       >
         <div ref={rootRef} className={cn(fullWidth ? "relative w-full" : "relative")}>
           <div

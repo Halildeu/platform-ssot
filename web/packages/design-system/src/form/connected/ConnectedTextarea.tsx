@@ -4,7 +4,14 @@ import React, { forwardRef } from 'react';
 import { useFormField } from '../useFormField';
 import type { AccessLevel } from '../../internal/access-controller';
 
-/** Props for the ConnectedTextarea component. */
+/** Props for the ConnectedTextarea component.
+ * @example
+ * ```tsx
+ * <ConnectedTextarea />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/connected-textarea)
+ */
 export interface ConnectedTextareaProps
   extends Omit<
     React.TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -49,3 +56,5 @@ export const ConnectedTextarea = forwardRef<
     />
   );
 });
+
+ConnectedTextarea.displayName = "ConnectedTextarea";

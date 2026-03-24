@@ -26,7 +26,14 @@ import {
 
 export type TextAreaResize = "vertical" | "none" | "auto";
 
-/** Props for the Textarea component. */
+/** Props for the Textarea component.
+ * @example
+ * ```tsx
+ * <Textarea />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/textarea)
+ */
 export interface TextareaProps
   extends Omit<
       React.TextareaHTMLAttributes<HTMLTextAreaElement>,

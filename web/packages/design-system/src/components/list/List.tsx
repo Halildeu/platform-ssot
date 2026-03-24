@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   shouldBlockInteraction,
   type AccessControlledProps,
 } from "../../internal/access-controller";
@@ -28,7 +28,14 @@ export type ListItem = {
   disabled?: boolean;
 };
 
-/** Props for the List component. */
+/** Props for the List component.
+ * @example
+ * ```tsx
+ * <List />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/list)
+ */
 export interface ListProps extends AccessControlledProps {
   /** Data items to render in the list. */
   items: ListItem[];

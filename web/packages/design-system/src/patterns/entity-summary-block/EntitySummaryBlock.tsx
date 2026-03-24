@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { Avatar } from "../../primitives/avatar/Avatar";
@@ -15,7 +15,14 @@ import { Text } from "../../primitives/text/Text";
 /*  EntitySummaryBlock — Summary card with avatar, title & key-values  */
 /* ------------------------------------------------------------------ */
 
-/** Props for {@link EntitySummaryBlock}. */
+/** Props for {@link EntitySummaryBlock}.
+ * @example
+ * ```tsx
+ * <EntitySummaryBlock />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/entity-summary-block)
+ */
 export interface EntitySummaryBlockProps extends AccessControlledProps {
   /** Primary heading for the entity. */
   title: React.ReactNode;

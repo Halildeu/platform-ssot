@@ -17,7 +17,14 @@ export interface AgingBucket {
   tone?: EnterpriseTone;
 }
 
-/** Displays aging analysis with bucket cards, optional stacked bar, and totals. */
+/** Displays aging analysis with bucket cards, optional stacked bar, and totals.
+ * @example
+ * ```tsx
+ * <AgingBuckets />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/aging-buckets)
+ */
 export interface AgingBucketsProps extends AccessControlledProps {
   /** Aging bucket data items to display */
   buckets: AgingBucket[];

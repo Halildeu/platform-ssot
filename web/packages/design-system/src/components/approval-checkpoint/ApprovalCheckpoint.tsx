@@ -5,7 +5,7 @@ import { Text } from "../../primitives/text/Text";
 import { Descriptions } from "../descriptions";
 import { List, type ListItem } from "../list";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,
@@ -30,7 +30,14 @@ export interface ApprovalCheckpointItem {
   status?: ApprovalCheckpointItemStatus;
 }
 
-/** Props for the ApprovalCheckpoint component. */
+/** Props for the ApprovalCheckpoint component.
+ * @example
+ * ```tsx
+ * <ApprovalCheckpoint />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/approval-checkpoint)
+ */
 export interface ApprovalCheckpointProps extends AccessControlledProps {
   /** Heading text for the checkpoint card. */
   title: React.ReactNode;

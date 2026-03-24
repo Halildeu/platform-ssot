@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
@@ -61,7 +61,8 @@ export interface FloatButtonProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Size map                                                           */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SIZE_MAP: Record<FloatButtonSize, { button: number; icon: number; font: string }> = {
   sm: { button: 40, icon: 18, font: "text-xs" },
@@ -147,8 +148,14 @@ const Badge: React.FC<{ badge?: number | boolean; size: FloatButtonSize }> = ({
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <FloatButton />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/float-button)
+ */
 export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
   function FloatButton(
     {
@@ -249,6 +256,7 @@ export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
     return (
       <div
         ref={forwardedRef}
+        data-access-state={accessState.state}
         className={cn("z-50 flex flex-col items-center gap-2", className)}
         style={positionStyle}
         title={accessReason}

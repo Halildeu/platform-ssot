@@ -5,7 +5,7 @@ import { Skeleton } from "../../primitives/skeleton/Skeleton";
 import { Spinner } from "../../primitives/spinner/Spinner";
 import { Text } from "../../primitives/text/Text";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -18,7 +18,14 @@ import {
 
 export type EmptyErrorLoadingMode = "empty" | "error" | "loading";
 
-/** Props for the EmptyErrorLoading component. */
+/** Props for the EmptyErrorLoading component.
+ * @example
+ * ```tsx
+ * <EmptyErrorLoading />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/empty-error-loading)
+ */
 export interface EmptyErrorLoadingProps extends AccessControlledProps {
   /** Current display mode: empty, error, or loading. */
   mode: EmptyErrorLoadingMode;

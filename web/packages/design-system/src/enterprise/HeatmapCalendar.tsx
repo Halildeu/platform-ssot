@@ -10,7 +10,10 @@ import {
 // Types
 // ---------------------------------------------------------------------------
 
-/** A single day entry in the heatmap calendar. */
+/** A single day entry in the heatmap calendar.
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/heatmap-calendar)
+ */
 export interface HeatmapDay {
   /** Date string in YYYY-MM-DD format */
   date: string;

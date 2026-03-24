@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { Badge, type BadgeVariant } from "../../primitives/badge/Badge";
@@ -13,7 +13,14 @@ import { Text } from "../../primitives/text/Text";
 
 type JsonExpandable = Record<string, unknown> | unknown[];
 
-/** Props for the JsonViewer component. */
+/** Props for the JsonViewer component.
+ * @example
+ * ```tsx
+ * <JsonViewer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/json-viewer)
+ */
 export interface JsonViewerProps extends AccessControlledProps {
   /** JSON data to display in the tree. */
   value: unknown;

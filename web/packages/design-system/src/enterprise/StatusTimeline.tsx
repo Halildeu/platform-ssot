@@ -14,7 +14,14 @@ export interface StatusTimelineEvent {
   description?: string;
 }
 
-/** Chronological timeline of status change events with duration indicators. */
+/** Chronological timeline of status change events with duration indicators.
+ * @example
+ * ```tsx
+ * <StatusTimeline />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/status-timeline)
+ */
 export interface StatusTimelineProps extends AccessControlledProps {
   /** Ordered list of status events to display */
   events: StatusTimelineEvent[];
@@ -100,6 +107,7 @@ function EventDot({
   const size = compact ? 10 : 14;
   return (
     <span
+      data-access-state={accessState.state}
       className={cn(
         'inline-block shrink-0 rounded-full border-2 border-surface-default shadow-xs',
         active && 'ring-2 ring-offset-1',
@@ -290,3 +298,5 @@ export function StatusTimeline({
     </div>
   );
 }
+
+StatusTimeline.displayName = "StatusTimeline";

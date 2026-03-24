@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -52,7 +52,8 @@ export interface MentionsProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Size map                                                           */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SIZE_CLASSES: Record<"sm" | "md" | "lg", string> = {
   sm: "text-sm py-1.5 px-2.5",
@@ -62,8 +63,14 @@ const SIZE_CLASSES: Record<"sm" | "md" | "lg", string> = {
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <Mentions />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/mentions)
+ */
 export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function Mentions(
   {
     value,
@@ -233,6 +240,7 @@ export const Mentions = React.forwardRef<HTMLDivElement, MentionsProps>(function
   return (
     <div
       ref={forwardedRef}
+      data-access-state={accessState.state}
       className={cn("relative w-full max-w-full", className)}
       title={accessReason}
       {...rest}

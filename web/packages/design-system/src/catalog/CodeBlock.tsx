@@ -171,3 +171,5 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
     </div>
   );
 };
+
+CodeBlock.displayName = "CodeBlock";

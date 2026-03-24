@@ -5,7 +5,14 @@ import { Select, type SelectProps } from '../../primitives/select/Select';
 import { useFormField } from '../useFormField';
 import type { AccessLevel } from '../../internal/access-controller';
 
-/** Form-connected select that binds to a form field by name. */
+/** Form-connected select that binds to a form field by name.
+ * @example
+ * ```tsx
+ * <ConnectedSelect />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/connected-select)
+ */
 export interface ConnectedSelectProps
   extends Omit<SelectProps, 'value' | 'onChange' | 'onBlur' | 'error'> {
   /** Form field name used to read/write the selected value. */
@@ -46,3 +53,5 @@ export const ConnectedSelect = forwardRef<HTMLSelectElement, ConnectedSelectProp
     );
   },
 );
+
+ConnectedSelect.displayName = "ConnectedSelect";

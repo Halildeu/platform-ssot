@@ -1,12 +1,19 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  PageHeader — Standard page-level header with title, actions, tabs  */
 /* ------------------------------------------------------------------ */
 
-/** Props for the PageHeader component. */
+/** Props for the PageHeader component.
+ * @example
+ * ```tsx
+ * <PageHeader />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/page-header)
+ */
 export interface PageHeaderProps extends AccessControlledProps {
   /** Page title */
   title: React.ReactNode;
@@ -51,6 +58,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   if (accessState.isHidden) return null;
   return (
     <header
+      data-access-state={accessState.state}
       className={cn(
         "bg-surface-default px-6 pt-4 pb-0",
         !noBorder && "border-b border-border-subtle",

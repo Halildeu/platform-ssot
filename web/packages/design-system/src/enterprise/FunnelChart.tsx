@@ -16,7 +16,14 @@ export interface FunnelStage {
   color?: string;
 }
 
-/** Funnel visualization with conversion rates between stages. */
+/** Funnel visualization with conversion rates between stages.
+ * @example
+ * ```tsx
+ * <FunnelChart />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/funnel-chart)
+ */
 export interface FunnelChartProps extends AccessControlledProps {
   /** Ordered funnel stages from widest to narrowest */
   stages: FunnelStage[];

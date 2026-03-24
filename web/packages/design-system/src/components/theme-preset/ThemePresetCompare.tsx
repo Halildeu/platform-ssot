@@ -3,7 +3,7 @@ import { EmptyState as Empty } from "../empty-state";
 import { Text } from "../../primitives/text";
 import { ThemePreviewCard } from "../theme-preview-card";
 import { type ThemePresetGalleryItem } from "./ThemePresetGallery";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 export interface ThemePresetCompareProps extends AccessControlledProps {
   /** Left-side preset to compare. */
@@ -41,6 +41,13 @@ const normalizeAxisValue = (preset: ThemePresetGalleryItem, axis: string) => {
 /**
  * Side-by-side comparison view for two theme presets, displaying a matrix
  * of appearance, density, contrast and intent axes with preview cards.
+   * @example
+   * ```tsx
+   * <ThemePresetCompare />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/theme-preset-compare)
+  
  */
 export const ThemePresetCompare = React.forwardRef<HTMLElement, ThemePresetCompareProps>(({
   leftPreset,

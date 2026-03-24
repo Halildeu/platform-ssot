@@ -48,6 +48,7 @@ function PencilIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      data-access-state={accessState.state}
       className="opacity-0 group-hover:opacity-60 transition-opacity"
     >
       <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
@@ -291,3 +292,5 @@ export function InlineEdit({
     </div>
   );
 }
+
+InlineEdit.displayName = "InlineEdit";

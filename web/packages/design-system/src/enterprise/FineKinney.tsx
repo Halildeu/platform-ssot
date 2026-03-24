@@ -10,7 +10,9 @@ import {
 // Types
 // ---------------------------------------------------------------------------
 
-/** Probability values for the Fine-Kinney risk assessment method. */
+/** Probability values for the Fine-Kinney risk assessment method.
+ * @since 1.0.0
+ */
 export type FineKinneyProbability = 0.1 | 0.2 | 0.5 | 1 | 3 | 6 | 10;
 
 /** Frequency (exposure) values for the Fine-Kinney method. */

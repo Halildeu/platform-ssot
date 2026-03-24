@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -57,7 +57,14 @@ export type DashboardWidget = {
 
 export type DashboardDensity = "comfortable" | "compact";
 
-/** Props for the SmartDashboard component. */
+/** Props for the SmartDashboard component.
+ * @example
+ * ```tsx
+ * <SmartDashboard />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/smart-dashboard)
+ */
 export interface SmartDashboardProps extends AccessControlledProps {
   /** Widget definitions to display in the dashboard grid. */
   widgets: DashboardWidget[];

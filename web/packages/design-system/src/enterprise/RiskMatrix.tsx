@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import { resolveAccessState, accessStyles } from '../internal/access-controller';
-import type { AccessLevel } from '../internal/access-controller';
+import type { AccessLevel, AccessControlledProps } from '../internal/access-controller';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -15,7 +15,14 @@ export interface RiskItem {
 
 export type RiskMatrixSize = 'sm' | 'md' | 'lg';
 
-/** Props for the RiskMatrix component. */
+/** Props for the RiskMatrix component.
+ * @example
+ * ```tsx
+ * <RiskMatrix />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/risk-matrix)
+ */
 export interface RiskMatrixProps {
   /** Risk items to plot on the 5x5 matrix grid */
   risks: RiskItem[];
@@ -286,5 +293,7 @@ export function RiskMatrix({
     </div>
   );
 }
+
+RiskMatrix.displayName = "RiskMatrix";
 
 export default RiskMatrix;

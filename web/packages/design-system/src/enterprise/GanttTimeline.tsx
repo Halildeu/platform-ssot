@@ -22,7 +22,14 @@ export interface GanttTask {
 
 export type GanttViewMode = 'day' | 'week' | 'month' | 'quarter';
 
-/** Props for the GanttTimeline component. */
+/** Props for the GanttTimeline component.
+ * @example
+ * ```tsx
+ * <GanttTimeline />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/gantt-timeline)
+ */
 export interface GanttTimelineProps extends AccessControlledProps {
   /** Task data to render in the timeline. */
   tasks: GanttTask[];

@@ -9,7 +9,7 @@ import {
   getFieldTone,
   type FieldSize,
 } from "../../primitives/_shared/FieldControlPrimitives";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  InputNumber — Numeric input with increment/decrement buttons       */
@@ -18,7 +18,14 @@ import { resolveAccessState, type AccessControlledProps } from "../../internal/a
 /*  min/max clamping, step, precision, keyboard arrows, forwardRef.   */
 /* ------------------------------------------------------------------ */
 
-/** Props for the InputNumber component. */
+/** Props for the InputNumber component.
+ * @example
+ * ```tsx
+ * <InputNumber />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/input-number)
+ */
 export interface InputNumberProps
   extends Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
@@ -279,6 +286,7 @@ export const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>(
         }
         required={required}
         fullWidth={fullWidth}
+        data-access-state={accessState.state}
       >
         <div
           className={getFieldFrameClass(size, tone, fullWidth, className)}

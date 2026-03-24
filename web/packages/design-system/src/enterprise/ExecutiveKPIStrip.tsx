@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { resolveAccessState, accessStyles } from '../internal/access-controller';
-import type { AccessLevel } from '../internal/access-controller';
+import type { AccessLevel, AccessControlledProps } from '../internal/access-controller';
 import { formatValue, getTrendColor, getTrendIcon } from './types';
 import type { FormatOptions, TrendInfo } from './types';
 
@@ -27,7 +27,14 @@ export interface KPIMetric {
   access?: AccessLevel;
 }
 
-/** Props for the ExecutiveKPIStrip component. */
+/** Props for the ExecutiveKPIStrip component.
+   * @example
+   * ```tsx
+   * <ExecutiveKPIStrip />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/executive-k-p-i-strip)
+   */
 export interface ExecutiveKPIStripProps {
   metrics: KPIMetric[];
   /** Number of visible columns on desktop (2-6). Mobile=1, tablet=2. Default 4. */
@@ -268,5 +275,7 @@ export function ExecutiveKPIStrip({
     </div>
   );
 }
+
+ExecutiveKPIStrip.displayName = "ExecutiveKPIStrip";
 
 export default ExecutiveKPIStrip;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Steps — Progress indicator for multi-step workflows                */
@@ -98,6 +98,7 @@ const statusColors: Record<StepStatus, { bg: string; border: string; text: strin
 function CheckIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        data-access-state={accessState.state}
       <path d="M3.5 8.5L6.5 11.5L12.5 5" />
     </svg>
   );

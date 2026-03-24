@@ -25,7 +25,8 @@ import "./setup";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+ */
 
 export type GridTheme = "quartz" | "balham" | "alpine" | "material";
 export type GridDensity = "comfortable" | "compact";
@@ -187,6 +188,7 @@ function GridShellInner<RowData = unknown>(
 
   return (
     <div
+      data-access-state={accessState.state}
       className={[className ?? "", accessStyles(accessState.state)].join(" ").trim() || undefined}
       data-component="grid-shell"
       data-density={density}
@@ -228,7 +230,14 @@ function GridShellInner<RowData = unknown>(
   );
 }
 
-/** Core AG Grid shell with theme, density, selection, empty state, and imperative API access. */
+/** Core AG Grid shell with theme, density, selection, empty state, and imperative API access. 
+ * @example
+ * ```tsx
+ * <GridShell />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/grid-shell)
+ */
 export const GridShell = forwardRef(GridShellInner) as <RowData = unknown>(
   props: GridShellProps<RowData> & { ref?: React.Ref<GridShellApi<RowData>> },
 ) => React.ReactElement;

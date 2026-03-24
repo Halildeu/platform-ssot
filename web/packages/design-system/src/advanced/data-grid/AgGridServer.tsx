@@ -52,7 +52,14 @@ export interface AgGridServerMessages {
   noRowsLabel?: string;
 }
 
-/** Props for the AgGridServer component. */
+/** Props for the AgGridServer component.
+ * @example
+ * ```tsx
+ * <AgGridServer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/ag-grid-server)
+ */
 export interface AgGridServerProps extends AccessControlledProps {
   /** Column definitions */
   columnDefs: (ColDef | ColGroupDef)[];
@@ -148,6 +155,7 @@ export const AgGridServer: React.FC<AgGridServerProps> = ({
         theme={theme}
         density={density}
         height={height}
+        data-access-state={accessState.state}
         className={className}
         onGridReady={handleGridReady}
         overlayLoadingTemplate={messages?.loadingLabel}
@@ -157,5 +165,7 @@ export const AgGridServer: React.FC<AgGridServerProps> = ({
     </div>
   );
 };
+
+AgGridServer.displayName = "AgGridServer";
 
 export default AgGridServer;

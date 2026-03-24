@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
@@ -47,7 +47,8 @@ export interface ColorPickerProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Size map                                                           */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SIZE_MAP: Record<ColorPickerSize, { swatch: number; presetSwatch: number; font: string }> = {
   sm: { swatch: 24, presetSwatch: 20, font: "text-xs" },
@@ -175,8 +176,14 @@ function hexToHsv(hex: string): { h: number; s: number; v: number } {
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <ColorPicker />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/color-picker)
+ */
 export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
   function ColorPicker(
     {
@@ -335,6 +342,7 @@ export const ColorPicker = React.forwardRef<HTMLDivElement, ColorPickerProps>(
     return (
       <div
         ref={forwardedRef}
+        data-access-state={accessState.state}
         className={cn("inline-flex flex-col gap-1", className)}
         title={accessReason}
         aria-label={ariaLabel}

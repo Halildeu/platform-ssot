@@ -472,4 +472,6 @@ export const LibraryProductTree: React.FC<LibraryProductTreeProps> = ({
   );
 };
 
+LibraryProductTree.displayName = "LibraryProductTree";
+
 export default LibraryProductTree;

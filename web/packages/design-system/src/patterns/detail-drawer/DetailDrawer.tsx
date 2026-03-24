@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useId } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRestore } from "../../internal/overlay-engine";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 /* ------------------------------------------------------------------ */
 /*  DetailDrawer — Read-only detail panel (wider, with sections)       */
 /* ------------------------------------------------------------------ */
@@ -15,7 +15,14 @@ export interface DetailDrawerSection {
   content: React.ReactNode;
 }
 
-/** Props for the DetailDrawer component. */
+/** Props for the DetailDrawer component.
+ * @example
+ * ```tsx
+ * <DetailDrawer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/detail-drawer)
+ */
 export interface DetailDrawerProps extends AccessControlledProps {
   /** Controlled open state */
   open: boolean;

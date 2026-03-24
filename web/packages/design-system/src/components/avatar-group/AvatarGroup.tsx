@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "../../utils/cn";
 import { Avatar } from "../../primitives/avatar";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -42,7 +42,8 @@ export interface AvatarGroupProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Spacing map (negative margin for overlap)                          */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SPACING_ML: Record<AvatarGroupSpacing, string> = {
   tight: "-ms-3",
@@ -63,8 +64,14 @@ function getInitials(name?: string): string | undefined {
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <AvatarGroup />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/avatar-group)
+ */
 export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
   function AvatarGroup(
     {
@@ -97,6 +104,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
         aria-label="Avatar grubu"
         aria-disabled={accessState.isDisabled || undefined}
         title={accessReason}
+        data-access-state={accessState.state}
         className={cn(
           "inline-flex items-center",
           accessState.isDisabled && "opacity-50 cursor-not-allowed",

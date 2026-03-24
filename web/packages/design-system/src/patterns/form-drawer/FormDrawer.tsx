@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useId } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
 import { useScrollLock, registerLayer, unregisterLayer, useEscapeKey, useFocusRestore } from "../../internal/overlay-engine";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FormDrawer — Slide-in panel for create/edit forms                  */
@@ -11,7 +11,14 @@ import { resolveAccessState, type AccessControlledProps } from "../../internal/a
 export type FormDrawerSize = "sm" | "md" | "lg" | "xl";
 export type FormDrawerPlacement = "right" | "left";
 
-/** Props for the FormDrawer component. */
+/** Props for the FormDrawer component.
+ * @example
+ * ```tsx
+ * <FormDrawer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/form-drawer)
+ */
 export interface FormDrawerProps extends AccessControlledProps {
   /** Controlled open state */
   open: boolean;
@@ -105,6 +112,7 @@ export const FormDrawer: React.FC<FormDrawerProps> = ({
     <div className="fixed inset-0 z-[1300] flex">
       {/* Backdrop */}
       <div
+        data-access-state={accessState.state}
         className="absolute inset-0 bg-black/40 animate-in fade-in-0"
         onClick={handleBackdropClick}
         aria-hidden

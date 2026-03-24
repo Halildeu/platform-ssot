@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -50,7 +50,8 @@ export interface RatingProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Size map                                                           */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SIZE_PX: Record<RatingSize, number> = {
   sm: 16,
@@ -144,8 +145,14 @@ function clamp(val: number, min: number, max: number) {
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <Rating />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/rating)
+ */
 export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rating(
   {
     value,
@@ -310,6 +317,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
         aria-checked={checked}
         aria-label={`${starNumber} ${starNumber === 1 ? "yildiz" : "yildiz"}`}
         tabIndex={-1}
+        data-access-state={accessState.state}
         className={cn(
           "inline-flex cursor-pointer transition-transform duration-100",
           !isInteractive && "cursor-default",

@@ -10,7 +10,14 @@ import { LocaleProvider } from "./LocaleProvider";
 import type { ThemeAxes } from "../theme/core/semantic-theme";
 import type { Direction } from "./LocaleProvider";
 
-/** Props for {@link DesignSystemProvider}. */
+/** Props for {@link DesignSystemProvider}.
+ * @example
+ * ```tsx
+ * <DesignSystemProvider />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/design-system-provider)
+ */
 export interface DesignSystemProviderProps {
   /** Override default theme axes. */
   defaultTheme?: Partial<ThemeAxes>;
@@ -37,3 +44,5 @@ export function DesignSystemProvider({
     </ThemeProvider>
   );
 }
+
+DesignSystemProvider.displayName = "DesignSystemProvider";

@@ -7,7 +7,7 @@ import {
   type ConfidenceLevel,
 } from "../confidence-badge/ConfidenceBadge";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,
@@ -18,6 +18,13 @@ export type RecommendationCardTone = "info" | "success" | "warning";
 /**
  * RecommendationCard displays an AI-generated recommendation with confidence scoring,
  * rationale, citation badges, and primary/secondary action buttons.
+ * @example
+ * ```tsx
+ * <RecommendationCard />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/recommendation-card)
+
  */
 export interface RecommendationCardProps extends AccessControlledProps {
   /** Recommendation heading. */

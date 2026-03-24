@@ -18,7 +18,7 @@ import {
   type RecommendationCardProps,
 } from "../recommendation-card/RecommendationCard";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -35,6 +35,13 @@ export interface AIGuidedAuthoringRecommendation
 /**
  * AIGuidedAuthoring orchestrates a prompt composer, recommendation stack,
  * confidence badge, and command palette into a unified authoring workflow.
+ * @example
+ * ```tsx
+ * <AIGuidedAuthoring />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/a-i-guided-authoring)
+
  */
 export interface AIGuidedAuthoringProps extends AccessControlledProps {
   /** Section heading. @default "AI guided authoring" */

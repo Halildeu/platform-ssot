@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
 } from "../../internal/access-controller";
@@ -34,6 +34,13 @@ type NotificationPanelSection = {
 /**
  * NotificationPanel renders a filterable, groupable list of notifications
  * with bulk actions and optional multi-select support.
+ * @example
+ * ```tsx
+ * <NotificationPanel />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/notification-panel)
+
  */
 export interface NotificationPanelProps extends AccessControlledProps {
   /** Array of notification items to display. */

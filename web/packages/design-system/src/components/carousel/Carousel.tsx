@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -40,7 +40,8 @@ export interface CarouselProps extends AccessControlledProps {
 
 /* ------------------------------------------------------------------ */
 /*  Size map                                                           */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   */
 
 const SIZE_HEIGHT: Record<"sm" | "md" | "lg", string> = {
   sm: "h-48",
@@ -88,8 +89,14 @@ const ChevronRight: React.FC = () => (
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ 
+ * @example
+ * ```tsx
+ * <Carousel />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/carousel)
+ */
 export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function Carousel(
   {
     items,
@@ -184,6 +191,7 @@ export const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(function
       aria-readonly={accessState.isReadonly || undefined}
       title={accessReason}
       tabIndex={isInteractive ? 0 : undefined}
+      data-access-state={accessState.state}
       className={cn(
         "relative w-full overflow-hidden",
         "bg-surface-default text-text-primary",

@@ -21,7 +21,14 @@ export interface TrainingItem {
   mandatory?: boolean;
 }
 
-/** Training compliance tracker with progress bars, status filters, and collapsible groups. */
+/** Training compliance tracker with progress bars, status filters, and collapsible groups.
+ * @example
+ * ```tsx
+ * <TrainingTracker />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/training-tracker)
+ */
 export interface TrainingTrackerProps extends AccessControlledProps {
   /** Training items to display */
   items: TrainingItem[];

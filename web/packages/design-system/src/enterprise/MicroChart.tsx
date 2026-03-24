@@ -10,7 +10,14 @@ import {
 
 export type MicroChartType = 'sparkline' | 'bar' | 'bullet' | 'progress' | 'waffle' | 'donut-ring';
 
-/** Props for the MicroChart component. */
+/** Props for the MicroChart component.
+ * @example
+ * ```tsx
+ * <MicroChart />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/micro-chart)
+ */
 export interface MicroChartProps extends AccessControlledProps {
   /** Visualization type */
   type: MicroChartType;

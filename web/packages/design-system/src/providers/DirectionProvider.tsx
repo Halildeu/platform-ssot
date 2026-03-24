@@ -8,7 +8,14 @@
 import React from "react";
 import type { Direction } from "./LocaleProvider";
 
-/** Props for the DirectionProvider component. */
+/** Props for the DirectionProvider component.
+ * @example
+ * ```tsx
+ * <DirectionProvider />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/direction-provider)
+ */
 export interface DirectionProviderProps {
   /** Text direction to apply to the subtree. */
   direction: Direction;
@@ -28,3 +35,5 @@ export interface DirectionProviderProps {
 export function DirectionProvider({ direction, children, className, id, style, ...rest }: DirectionProviderProps) {
   return <div dir={direction} className={className} id={id} style={style} {...rest}>{children}</div>;
 }
+
+DirectionProvider.displayName = "DirectionProvider";

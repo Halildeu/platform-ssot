@@ -3,7 +3,7 @@ import { stateAttrs, focusRingClass } from "../../internal/interaction-core";
 import { useRovingTabindex } from "../../internal/overlay-engine";
 import { cn } from "../../utils/cn";
 import type { SlotProps } from "../../primitives/_shared/slot-types";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Tabs — Segmented content switcher                                  */
@@ -174,6 +174,7 @@ export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
       <div
         role="tablist"
         {...slotProps?.list}
+        data-access-state={accessState.state}
         className={cn(
           "flex",
           variantBaseStyles[variant],

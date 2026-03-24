@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 
@@ -15,7 +15,14 @@ import {
 
 /* ---- Types ---- */
 
-/** Describes a single content block within the AI layout grid. */
+/** Describes a single content block within the AI layout grid.
+ * @example
+ * ```tsx
+ * <AILayoutBuilder />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/a-i-layout-builder)
+ */
 export type LayoutBlock = {
   /** Unique identifier for this block. */
   key: string;

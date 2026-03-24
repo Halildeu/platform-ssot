@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import {
@@ -17,7 +17,14 @@ export interface TimePickerMessages {
   emptyValueLabel?: string;
 }
 
-/** Props for the TimePicker component. */
+/** Props for the TimePicker component.
+ * @example
+ * ```tsx
+ * <TimePicker />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/time-picker)
+ */
 export interface TimePickerProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type" | "children">,
     AccessControlledProps {
@@ -116,6 +123,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
       error={error}
       required={required}
       fullWidth={fullWidth}
+      data-access-state={accessState.state}
     >
       <div className={getFieldFrameClass(size, tone, fullWidth, className)}>
         <input

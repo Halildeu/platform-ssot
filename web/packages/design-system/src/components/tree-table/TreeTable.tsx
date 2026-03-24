@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   shouldBlockInteraction,
   type AccessControlledProps,
 } from "../../internal/access-controller";
@@ -47,7 +47,14 @@ export interface TreeTableLocaleText {
   collapseNodeAriaLabel?: string;
 }
 
-/** Props for the TreeTable component. */
+/** Props for the TreeTable component.
+ * @example
+ * ```tsx
+ * <TreeTable />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/tree-table)
+ */
 export interface TreeTableProps<RowData extends Record<string, unknown> = Record<string, unknown>>
   extends AccessControlledProps {
   /** Hierarchical node data to display. */

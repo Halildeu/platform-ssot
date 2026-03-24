@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useId } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Segmented — Multi-mode segmented control                           */
@@ -78,8 +78,15 @@ export interface SegmentedProps extends AccessControlledProps {
   className?: string;
 }
 
-/* ---- Helper: next-value resolution ------------------------------- */
-
+/* ---- Helper: next-value resolution -------------------------------
+   
+ * @example
+ * ```tsx
+ * <Segmented />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/segmented)
+ */
 export function resolveSegmentedNextValue(
   currentValue: string | string[],
   itemValue: string,
@@ -325,6 +332,7 @@ export const Segmented = React.forwardRef<HTMLDivElement, SegmentedProps>(
         ref={ref}
         role="group"
         aria-label={ariaLabel}
+        data-access-state={accessState.state}
         className={cn(
           "inline-flex",
           isVertical ? "flex-col" : "flex-row",

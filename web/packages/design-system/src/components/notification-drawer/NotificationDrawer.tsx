@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import {
@@ -18,7 +18,14 @@ import {
 /*  NotificationDrawer                                                  */
 /* ------------------------------------------------------------------ */
 
-/** Props for the NotificationDrawer component. */
+/** Props for the NotificationDrawer component.
+ * @example
+ * ```tsx
+ * <NotificationDrawer />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/notification-drawer)
+ */
 export interface NotificationDrawerProps
   extends AccessControlledProps,
     Omit<
@@ -75,6 +82,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
   return (
     <OverlaySurface
       open={open}
+      data-access-state={accessState.state}
       accessState={accessState}
       onClose={onClose}
       closeOnOverlayClick={closeOnOverlayClick}

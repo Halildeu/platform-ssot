@@ -13,7 +13,14 @@ export type StackAlign = "start" | "center" | "end" | "stretch" | "baseline";
 export type StackJustify = "start" | "center" | "end" | "between" | "around" | "evenly";
 export type StackGap = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12;
 
-/** Props for the Stack component. */
+/** Props for the Stack component.
+ * @example
+ * ```tsx
+ * <Stack />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/stack)
+ */
 export interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Flex direction of the stack. */
   direction?: StackDirection;

@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
@@ -71,7 +71,14 @@ export interface NavigationRailClasses {
   footer?: string;
 }
 
-/** Props for the NavigationRail component. */
+/** Props for the NavigationRail component.
+ * @example
+ * ```tsx
+ * <NavigationRail />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/navigation-rail)
+ */
 export interface NavigationRailProps extends AccessControlledProps {
   /** Navigation items to render in the rail. */
   items: NavigationRailItem[];

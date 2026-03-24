@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Pagination — Page navigation with smart ellipsis                   */
@@ -134,7 +134,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
   );
 
   return (
-    <nav ref={ref as React.Ref<HTMLElement>} aria-label="Pagination" title={accessReason} className={cn("flex items-center gap-1.5", isAccessDisabled && "opacity-50 pointer-events-none", className)} {...stateAttrs({ component: "pagination", disabled: isAccessDisabled, access })}>
+    <nav ref={ref as React.Ref<HTMLElement>} aria-label="Pagination" title={accessReason} className={cn("flex items-center gap-1.5", isAccessDisabled && "opacity-50 pointer-events-none", className)} data-access-state={accessState.state} {...stateAttrs({ component: "pagination", disabled: isAccessDisabled, access })}>
       {showTotal && (
         <span className="me-2 text-xs text-text-secondary">
           {total} items

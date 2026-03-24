@@ -1,6 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from '../../internal/access-controller';
 
@@ -74,6 +74,17 @@ const DefaultFallback: React.FC<{ error: Error; onReset: () => void }> = ({
 /*  ErrorBoundary                                                      */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Error boundary component that catches JavaScript errors in child components.
+ * @example
+ * ```tsx
+ * <ErrorBoundary fallback={<p>Something went wrong</p>}>
+ *   <App />
+ * </ErrorBoundary>
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/error-boundary)
+ */
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   static displayName = 'ErrorBoundary';
   constructor(props: ErrorBoundaryProps) {

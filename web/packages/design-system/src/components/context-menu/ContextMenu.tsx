@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  ContextMenu — Right-click or long-press activated menu             */
@@ -49,6 +49,24 @@ function isItem(entry: ContextMenuEntry): entry is ContextMenuItem {
   return !entry.type || entry.type === "item";
 }
 
+/**
+
+ * ContextMenu component.
+
+ * @example
+
+ * ```tsx
+
+ * <ContextMenu />
+
+ * ```
+
+ * @since 1.0.0
+
+ * @see [Docs](https://design.mfe.dev/components/context-menu)
+
+ */
+
 export const ContextMenu: React.FC<ContextMenuProps> = ({
   items,
   children,
@@ -72,7 +90,8 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     setFocusIndex(-1);
   }, []);
 
-  /* Right-click handler */
+  /* Right-click handler
+   */
   const handleContextMenu = useCallback(
     (e: React.MouseEvent) => {
       if (disabled) return;
@@ -158,6 +177,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   return (
     <>
+      data-access-state={accessState.state}
       <div ref={triggerRef} onContextMenu={handleContextMenu} className={cn("inline-flex", accessState.isDisabled && "pointer-events-none opacity-50")} title={accessReason}>
         {children}
       </div>

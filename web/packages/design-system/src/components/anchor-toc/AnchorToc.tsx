@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,
@@ -22,7 +22,14 @@ export interface AnchorTocItem {
   disabled?: boolean;
 }
 
-/** Props for the AnchorToc component. */
+/** Props for the AnchorToc component.
+ * @example
+ * ```tsx
+ * <AnchorToc />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/anchor-toc)
+ */
 export interface AnchorTocProps extends AccessControlledProps {
   /** Ordered list of table-of-contents entries. */
   items: AnchorTocItem[];

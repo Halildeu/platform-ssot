@@ -18,7 +18,8 @@ import type { GridExportConfig } from "./EntityGridTemplate";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+ */
 
 export interface GridToolbarMessages {
   quickFilterPlaceholder?: string;
@@ -86,7 +87,14 @@ const DEFAULT_THEME_OPTIONS: readonly { label: string; value: GridTheme }[] = [
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
-/** Toolbar strip for data grids with search, density toggle, theme switcher, and CSV export. */
+/** Toolbar strip for data grids with search, density toggle, theme switcher, and CSV export. 
+ * @example
+ * ```tsx
+ * <GridToolbar />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/grid-toolbar)
+ */
 export const GridToolbar = <RowData = unknown>({
   gridApi,
   theme,
@@ -173,6 +181,7 @@ export const GridToolbar = <RowData = unknown>({
 
   return (
     <div
+      data-access-state={accessState.state}
       className={[
         "flex flex-wrap items-center gap-3 rounded-t-lg border border-b-0 border-border-subtle bg-surface-default px-4 py-2",
         className ?? "",
@@ -310,5 +319,7 @@ export const GridToolbar = <RowData = unknown>({
     </div>
   );
 };
+
+GridToolbar.displayName = "GridToolbar";
 
 export default GridToolbar;

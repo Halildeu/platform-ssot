@@ -33,6 +33,13 @@ type PopoverPosition = OverlayPosition;
 /**
  * Popover renders a positioned overlay panel triggered by click, hover, or focus
  * with portal support, collision flipping, and arrow indicator.
+ * @example
+ * ```tsx
+ * <Popover />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/popover)
+
  */
 export interface PopoverProps extends AccessControlledProps {
   /** The element that anchors and triggers the popover. */

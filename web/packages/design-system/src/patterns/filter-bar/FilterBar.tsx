@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FilterBar — Horizontal filter strip with collapsible "More" area   */
 /* ------------------------------------------------------------------ */
 
-/** Props for the FilterBar component. */
+/** Props for the FilterBar component.
+ * @example
+ * ```tsx
+ * <FilterBar />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/filter-bar)
+ */
 export interface FilterBarProps extends AccessControlledProps {
   /** Primary filter controls (always visible) */
   children: React.ReactNode;
@@ -46,6 +53,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(({
   return (
     <div
       ref={ref}
+      data-access-state={accessState.state}
       className={cn(
         "border-b border-border-subtle bg-surface-default",
         accessState.isDisabled && "pointer-events-none opacity-50",

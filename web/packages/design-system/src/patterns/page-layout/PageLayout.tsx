@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  PageLayout — Full-page scaffold with header, content, detail,     */
@@ -50,7 +50,14 @@ export interface PageLayoutClasses {
   secondaryNav?: string;
 }
 
-/** Props for the PageLayout component. */
+/** Props for the PageLayout component.
+ * @example
+ * ```tsx
+ * <PageLayout />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/page-layout)
+ */
 export interface PageLayoutProps extends AccessControlledProps {
   /** Page heading text. */
   title?: React.ReactNode;
@@ -241,6 +248,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       style={style}
       title={accessReason}
       aria-label={ariaLabel}
+      data-access-state={accessState.state}
     >
       {/* ---- Header ---- */}
       {hasHeader && (

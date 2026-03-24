@@ -4,13 +4,20 @@ import { EmptyState as Empty } from "../empty-state";
 import { Text } from "../../primitives/text";
 import { ThemePreviewCard } from "../theme-preview-card";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   withAccessGuard,
   type AccessControlledProps,
   type AccessLevel,
 } from "../../internal/access-controller";
 
-/** Describes a single theme preset entry within the gallery. */
+/** Describes a single theme preset entry within the gallery.
+ * @example
+ * ```tsx
+ * <ThemePresetGallery />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/theme-preset-gallery)
+ */
 export interface ThemePresetGalleryItem {
   /** Unique identifier for this preset. */
   presetId: string;

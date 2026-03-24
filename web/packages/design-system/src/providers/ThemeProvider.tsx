@@ -59,7 +59,14 @@ function applyAxesToDom(axes: ThemeAxes) {
 
 /* ---------- Context ---------- */
 
-/** Value exposed by the theme context to consumers. */
+/** Value exposed by the theme context to consumers.
+ * @example
+ * ```tsx
+ * <ThemeProvider />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/theme-provider)
+ */
 export interface ThemeContextValue {
   /** Current resolved theme axes. */
   axes: ThemeAxes;
@@ -130,3 +137,5 @@ export function ThemeProvider({ defaultAxes, children }: ThemeProviderProps) {
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }
+
+ThemeProvider.displayName = "ThemeProvider";

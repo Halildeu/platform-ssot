@@ -24,4 +24,6 @@ export function LibraryQueryProvider({ children }: LibraryQueryProviderProps) {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
+LibraryQueryProvider.displayName = "LibraryQueryProvider";
+
 export default LibraryQueryProvider;

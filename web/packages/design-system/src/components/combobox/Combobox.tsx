@@ -1,6 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { resolveAccessState, type AccessControlledProps } from '../../internal/access-controller';
+import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
 import { stateAttrs } from '../../internal/interaction-core';
 import { useOutsideClick } from '../../internal/overlay-engine';
 import {
@@ -196,7 +196,14 @@ const getInitialInputValue = ({
   return '';
 };
 
-/** Props for the Combobox component. */
+/** Props for the Combobox component.
+ * @example
+ * ```tsx
+ * <Combobox />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/combobox)
+ */
 export interface ComboboxProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'value' | 'defaultValue' | 'onChange' | 'children' | 'onSelect'>,
     AccessControlledProps {

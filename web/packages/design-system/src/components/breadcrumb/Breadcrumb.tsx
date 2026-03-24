@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Breadcrumb — Navigation hierarchy                                  */
@@ -72,6 +72,7 @@ export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(({
 
   return (
     <nav ref={ref as React.Ref<HTMLElement>} aria-label="Breadcrumb" className={cn(accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason} {...stateAttrs({ component: "breadcrumb" })}>
+      data-access-state={accessState.state}
       <ol className="flex items-center gap-1.5">
         {visibleItems.map((item, i) => {
           const isLast = i === visibleItems.length - 1;

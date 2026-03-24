@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import {
-  resolveAccessState,
+  resolveAccessState, accessStyles,
   type AccessControlledProps,
 } from "../../internal/access-controller";
 import {
@@ -147,6 +147,7 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function S
       error={error}
       required={required}
       fullWidth={fullWidth}
+      data-access-state={accessState.state}
     >
       <div className="flex flex-col gap-3">
         <div className={getFieldFrameClass(size, tone, fullWidth, className)}>

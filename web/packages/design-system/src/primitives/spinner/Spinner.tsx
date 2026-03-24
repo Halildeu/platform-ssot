@@ -39,6 +39,8 @@ const sizeMap: Record<SpinnerSize, string> = {
  * <Spinner size="md" label="Loading data..." />
  * <Spinner size="sm" mode="block" />
  * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/spinner)
  */
 export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
   ({

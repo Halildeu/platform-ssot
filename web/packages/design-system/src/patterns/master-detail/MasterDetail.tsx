@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 import { focusRingClass, stateAttrs } from "../../internal/interaction-core";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  MasterDetail — Split-pane layout: list on left, detail on right    */
@@ -9,7 +9,14 @@ import { resolveAccessState, type AccessControlledProps } from "../../internal/a
 
 export type MasterDetailRatio = "1:2" | "1:3" | "2:3" | "1:1";
 
-/** Props for the MasterDetail component. */
+/** Props for the MasterDetail component.
+ * @example
+ * ```tsx
+ * <MasterDetail />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/master-detail)
+ */
 export interface MasterDetailProps extends AccessControlledProps {
   /** Master (list) panel content */
   master: React.ReactNode;
@@ -66,6 +73,7 @@ export const MasterDetail = React.forwardRef<HTMLDivElement, MasterDetailProps>(
     <div ref={ref} className={cn("flex h-full overflow-hidden", accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason} {...stateAttrs({ component: "master-detail" })}>
       {/* Master panel */}
       <div
+        data-access-state={accessState.state}
         className={cn(
           "flex flex-col overflow-hidden transition-all",
           collapsed ? "w-0" : sizes.master,

@@ -1,12 +1,19 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  Descriptions — Key-value grid for displaying structured metadata  */
 /* ------------------------------------------------------------------ */
 
-/** A single key-value item rendered inside the Descriptions grid. */
+/** A single key-value item rendered inside the Descriptions grid.
+ * @example
+ * ```tsx
+ * <Descriptions />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/descriptions)
+ */
 export interface DescriptionsItem {
   /** Unique identifier for the item. */
   key: string;
@@ -81,7 +88,7 @@ export const Descriptions = React.forwardRef<HTMLDivElement, DescriptionsProps>(
       "No data available";
 
     return (
-      <div ref={ref} className={cn("w-full", accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason}>
+      <div ref={ref} className={cn("w-full", accessState.isDisabled && "pointer-events-none opacity-50", className)} title={accessReason} data-access-state={accessState.state}>
         {(title || description) && (
           <div className="mb-4">
             {title && (

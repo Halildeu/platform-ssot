@@ -26,6 +26,8 @@ export const PaginationStateProvider: React.FC<PaginationStateProviderProps> = (
   );
 };
 
+PaginationStateProvider.displayName = "PaginationStateProvider";
+
 export const usePaginationContext = () => {
   const contextValue = React.useContext(PaginationContext);
   if (!contextValue) {

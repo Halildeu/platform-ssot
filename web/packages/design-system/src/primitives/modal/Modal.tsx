@@ -27,7 +27,14 @@ export interface ModalClasses {
 
 export type ModalSlot = "root" | "overlay" | "content" | "header" | "body" | "footer";
 
-/** Props for the Modal component. */
+/** Props for the Modal component.
+ * @example
+ * ```tsx
+ * <Modal />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/modal)
+ */
 export interface ModalProps {
   /** Whether the modal is open and visible. */
   open: boolean;

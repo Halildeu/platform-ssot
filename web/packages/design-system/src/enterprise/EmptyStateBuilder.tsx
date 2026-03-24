@@ -31,7 +31,14 @@ export interface EmptyStateBuilderLocaleText {
   'filtered-empty'?: { title?: string; description?: string };
 }
 
-/** Contextual empty state with reason-based icon, messaging, and optional action buttons. */
+/** Contextual empty state with reason-based icon, messaging, and optional action buttons.
+ * @example
+ * ```tsx
+ * <EmptyStateBuilder />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/empty-state-builder)
+ */
 export interface EmptyStateBuilderProps extends AccessControlledProps {
   /** The reason for the empty state, determines the default icon and messaging */
   reason: EmptyStateReason;
@@ -99,6 +106,7 @@ const SIZE_CONFIG: Record<EmptyStateSize, { icon: number; titleCls: string; desc
 function IconDatabase({ size }: { size: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-secondary opacity-50">
+        data-access-state={accessState.state}
       <ellipse cx="12" cy="5" rx="9" ry="3" />
       <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
       <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />

@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 import { cn } from "../../utils/cn";
-import { resolveAccessState, type AccessControlledProps } from "../../internal/access-controller";
+import { resolveAccessState, accessStyles, type AccessControlledProps } from "../../internal/access-controller";
 
 /* ------------------------------------------------------------------ */
 /*  FormField — Composed form control wrapper                          */
@@ -64,6 +64,7 @@ export const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(({
   return (
     <div
       ref={ref}
+      data-access-state={accessState.state}
       className={cn(
         horizontal ? "flex items-start gap-4" : "flex flex-col gap-1.5",
         disabled && "opacity-60",

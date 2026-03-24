@@ -102,4 +102,6 @@ export const PaginationQuickJumper: React.FC<PaginationQuickJumperProps> = ({
   );
 };
 
+PaginationQuickJumper.displayName = "PaginationQuickJumper";
+
 export default PaginationQuickJumper;

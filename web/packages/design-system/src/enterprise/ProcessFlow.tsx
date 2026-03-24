@@ -189,11 +189,13 @@ function renderNodeShape(
   switch (type) {
     case 'start':
       return (
-        <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-success-text, #22c55e)" fillOpacity={0.2} stroke="var(--state-success-text, #16a34a)" strokeWidth={sw} strokeDasharray={dashArray} />
+        <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-success-text, #22c55e)" fillOpacity={0.2} stroke="var(--state-success-text, #16a34a)" strokeWidth={sw} strokeDasharray={dashArray} /
+        >
       );
     case 'end':
       return (
         <g>
+            data-access-state={accessState.state}
           <circle cx={x} cy={y} r={CIRCLE_R} fill="var(--state-error-text, #ef4444)" fillOpacity={0.2} stroke="var(--state-error-text, #dc2626)" strokeWidth={4} strokeDasharray={dashArray} />
           <circle cx={x} cy={y} r={CIRCLE_R - 6} fill="var(--state-error-text, #ef4444)" fillOpacity={0.4} stroke="none" />
         </g>
@@ -469,3 +471,5 @@ export function ProcessFlow({
     </div>
   );
 }
+
+ProcessFlow.displayName = "ProcessFlow";

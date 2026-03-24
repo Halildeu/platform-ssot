@@ -5,7 +5,14 @@ import { Radio, type RadioProps } from '../../primitives/radio/Radio';
 import { useFormField } from '../useFormField';
 import type { AccessLevel } from '../../internal/access-controller';
 
-/** Form-connected radio button that binds to a form field by name. */
+/** Form-connected radio button that binds to a form field by name.
+ * @example
+ * ```tsx
+ * <ConnectedRadio />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/connected-radio)
+ */
 export interface ConnectedRadioProps
   extends Omit<RadioProps, 'checked' | 'onChange' | 'onBlur'> {
   /** Form field name used to read/write the selected radio value. */
@@ -39,3 +46,5 @@ export const ConnectedRadio = forwardRef<HTMLInputElement, ConnectedRadioProps>(
     );
   },
 );
+
+ConnectedRadio.displayName = "ConnectedRadio";

@@ -46,7 +46,14 @@ interface OverlaySurfaceProps {
   children: React.ReactNode;
 }
 
-/** Internal overlay panel with backdrop, scroll lock, focus trap, and portal rendering. */
+/** Internal overlay panel with backdrop, scroll lock, focus trap, and portal rendering.
+ * @example
+ * ```tsx
+ * <OverlaySurface />
+ * ```
+ * @since 1.0.0
+ * @see [Docs](https://design.mfe.dev/components/overlay-surface)
+ */
 export const OverlaySurface: React.FC<OverlaySurfaceProps> = ({
   open,
   accessState,
@@ -142,3 +149,5 @@ export const OverlaySurface: React.FC<OverlaySurfaceProps> = ({
 
   return createPortal(content, portalTarget ?? document.body);
 };
+
+OverlaySurface.displayName = "OverlaySurface";

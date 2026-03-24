@@ -43,7 +43,14 @@ export type DetailSectionTabsProps = AccessControlledProps & {
   classes?: SectionTabsClasses;
 };
 
-/** Horizontal tab strip for detail views, with sticky positioning, badge support, and responsive auto-wrap. */
+/** Horizontal tab strip for detail views, with sticky positioning, badge support, and responsive auto-wrap.
+   * @example
+   * ```tsx
+   * <DetailSectionTabs />
+   * ```
+   * @since 1.0.0
+   * @see [Docs](https://design.mfe.dev/components/detail-section-tabs)
+   */
 export const DetailSectionTabs = React.forwardRef<HTMLDivElement, DetailSectionTabsProps>(({
   tabs,
   activeTabId,
@@ -81,6 +88,7 @@ export const DetailSectionTabs = React.forwardRef<HTMLDivElement, DetailSectionT
       ref={ref}
       data-component="detail-section-tabs"
       aria-label={ariaLabel}
+      data-access-state={accessState.state}
       className={cn(sticky && 'sticky top-4 z-10', className, accessStyles(accessState.state))}
       title={accessReason}
     >
