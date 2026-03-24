@@ -53,7 +53,7 @@ export const PreviewThemeWrapper: React.FC<PreviewThemeWrapperProps> = ({
       {...attrs}
       data-theme-scope=""
       className={clsx(
-        "preview-theme-scope transition-colors duration-200",
+        "preview-theme-scope bg-surface-default text-text-primary transition-colors duration-200 rounded-lg",
         className,
       )}
     >
