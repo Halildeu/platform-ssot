@@ -77,7 +77,19 @@ const sizeMap: Record<PaginationSize, string> = {
   md: "h-8 min-w-8 px-2.5 text-sm",
 };
 
-/** Page navigation control with smart ellipsis, controlled/uncontrolled modes, and keyboard support. */
+/**
+ * Page navigation control with smart ellipsis, controlled/uncontrolled modes, and keyboard support.
+ *
+ * @example
+ * ```tsx
+ * <Pagination
+ *   total={150}
+ *   pageSize={10}
+ *   current={currentPage}
+ *   onChange={setCurrentPage}
+ * />
+ * ```
+ */
 export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(({
   total: totalProp,
   current: currentProp,

@@ -44,7 +44,17 @@ const dotSizes: Record<RadioSize, { outer: string; inner: string }> = {
   lg: { outer: "h-5 w-5", inner: "h-2.5 w-2.5" },
 };
 
-/** Single-select radio option with label, description, density control, and loading state. */
+/**
+ * Single-select radio option with label, description, density control, and loading state.
+ *
+ * @example
+ * ```tsx
+ * <RadioGroup name="plan" value={plan} onChange={setPlan}>
+ *   <Radio value="free" label="Free" description="Up to 5 users" />
+ *   <Radio value="pro" label="Pro" description="Unlimited users" />
+ * </RadioGroup>
+ * ```
+ */
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
   (
     {

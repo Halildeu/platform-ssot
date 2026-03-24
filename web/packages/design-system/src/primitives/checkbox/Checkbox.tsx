@@ -56,7 +56,18 @@ const iconSizes: Record<CheckboxSize, string> = {
   lg: "h-3.5 w-3.5",
 };
 
-/** Boolean toggle with label, description, indeterminate state, and card variant. */
+/**
+ * Boolean toggle with label, description, indeterminate state, and card variant.
+ *
+ * @example
+ * ```tsx
+ * <Checkbox
+ *   label="Accept terms and conditions"
+ *   checked={accepted}
+ *   onChange={(e) => setAccepted(e.target.checked)}
+ * />
+ * ```
+ */
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
     {

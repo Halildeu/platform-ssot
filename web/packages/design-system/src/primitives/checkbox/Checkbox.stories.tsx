@@ -24,6 +24,10 @@ export const Default: Story = {
   args: {
     label: 'Kullanim kosullarini kabul ediyorum',
   },
+  play: async ({ canvasElement }) => {
+    const cb = canvasElement.querySelector('input[type="checkbox"], [role="checkbox"]');
+    if (cb) (cb as HTMLElement).click();
+  },
 };
 
 export const Checked: Story = {

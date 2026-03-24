@@ -12,6 +12,10 @@ type Story = StoryObj<typeof DateRangePicker>;
 
 export const Default: Story = {
   args: {},
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('input, button, [role="combobox"]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const WithInitialRange: Story = {

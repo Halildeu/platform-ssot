@@ -75,7 +75,20 @@ function scaleValue(value: number, min: number, max: number): number {
 
 // ── Component ──
 
-/** Horizontal bullet chart comparing an actual value against a target within qualitative ranges. */
+/**
+ * Horizontal bullet chart comparing an actual value against a target within qualitative ranges.
+ *
+ * @example
+ * ```tsx
+ * <BulletChart
+ *   value={72}
+ *   target={85}
+ *   label="Revenue"
+ *   subtitle="Q4 2025"
+ *   size="md"
+ * />
+ * ```
+ */
 export const BulletChart: React.FC<BulletChartProps> = ({
   value,
   target,

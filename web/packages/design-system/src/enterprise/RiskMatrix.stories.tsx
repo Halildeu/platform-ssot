@@ -26,6 +26,10 @@ export const Default: Story = {
     risks: sampleRisks,
     showLegend: true,
   },
+  play: async ({ canvasElement }) => {
+    const cell = canvasElement.querySelector('td, [role="cell"], [role="button"]');
+    if (cell) (cell as HTMLElement).click();
+  },
 };
 
 export const LargeWithCustomLabels: Story = {

@@ -186,7 +186,20 @@ const gutterlessSizeClassNames: Record<AccordionSize, string> = {
 const accordionPremiumSurfaceClassName =
   "border border-border-subtle/80 bg-[var(--surface-card)] ring-1 ring-border-subtle/20 shadow-[0_28px_60px_-34px_var(--shadow-color)] backdrop-blur-xs";
 
-/** Collapsible content panels with single or multiple expand modes, keyboard navigation, and preset support. */
+/**
+ * Collapsible content panels with single or multiple expand modes, keyboard navigation, and preset support.
+ *
+ * @example
+ * ```tsx
+ * <Accordion
+ *   items={[
+ *     { value: 'faq-1', title: 'How do I reset my password?', content: <p>Go to Settings...</p> },
+ *     { value: 'faq-2', title: 'Where is my order?', content: <p>Track your order...</p> },
+ *   ]}
+ *   selectionMode="single"
+ * />
+ * ```
+ */
 export const Accordion = React.forwardRef<HTMLDivElement, AccordionProps>(({
   items,
   value,

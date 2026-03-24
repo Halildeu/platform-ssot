@@ -105,6 +105,22 @@ function CheckIcon({ className }: { className?: string }) {
 
 /* ---- Main component ---- */
 
+/**
+ * Progress indicator for multi-step workflows with numbered or dot variants.
+ *
+ * @example
+ * ```tsx
+ * <Steps
+ *   current={1}
+ *   items={[
+ *     { key: 'info', title: 'Information' },
+ *     { key: 'review', title: 'Review' },
+ *     { key: 'confirm', title: 'Confirm' },
+ *   ]}
+ *   onChange={setStep}
+ * />
+ * ```
+ */
 export const Steps = React.forwardRef<HTMLDivElement, StepsProps>(({
   items,
   current: currentProp,

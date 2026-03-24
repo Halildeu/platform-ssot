@@ -31,6 +31,10 @@ export const Default: Story = {
     options: sehirler,
     placeholder: 'Sehir seciniz...',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('select, [role="combobox"], [role="listbox"], button');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const WithPlaceholder: Story = {

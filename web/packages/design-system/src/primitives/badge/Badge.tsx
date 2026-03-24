@@ -63,7 +63,15 @@ const sizeStyles: Record<BadgeSize, string> = {
   lg: "px-2.5 py-1 text-xs",
 };
 
-/** Small status or count indicator with semantic color variants and optional dot mode. */
+/**
+ * Small status or count indicator with semantic color variants and optional dot mode.
+ *
+ * @example
+ * ```tsx
+ * <Badge variant="success" size="md">Active</Badge>
+ * <Badge variant="error" dot />
+ * ```
+ */
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   (
     {

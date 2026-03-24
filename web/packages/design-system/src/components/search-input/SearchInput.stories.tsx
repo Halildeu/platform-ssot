@@ -29,6 +29,10 @@ export const Default: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    const input = canvasElement.querySelector('input');
+    if (input) { (input as HTMLInputElement).focus(); (input as HTMLInputElement).value = 'test'; input.dispatchEvent(new Event('input', { bubbles: true })); }
+  },
 };
 
 export const WithValue: Story = {

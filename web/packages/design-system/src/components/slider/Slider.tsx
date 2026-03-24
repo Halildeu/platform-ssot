@@ -47,7 +47,21 @@ const toNumericValue = (value: string | number | readonly string[] | undefined, 
   return Number.isFinite(numeric) ? numeric : fallback;
 };
 
-/** Range slider input with min/max labels, value formatter, and field control shell integration. */
+/**
+ * Range slider input with min/max labels, value formatter, and field control shell integration.
+ *
+ * @example
+ * ```tsx
+ * <Slider
+ *   label="Volume"
+ *   min={0}
+ *   max={100}
+ *   value={volume}
+ *   onValueChange={setVolume}
+ *   valueFormatter={(v) => `${v}%`}
+ * />
+ * ```
+ */
 export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(function Slider(
   {
     id,

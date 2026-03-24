@@ -79,6 +79,10 @@ export const Line: Story = {
     items: temelSekmeler,
     variant: 'line',
   },
+  play: async ({ canvasElement }) => {
+    const tab = canvasElement.querySelector('[role="tab"], button');
+    if (tab) (tab as HTMLElement).click();
+  },
 };
 
 export const Enclosed: Story = {

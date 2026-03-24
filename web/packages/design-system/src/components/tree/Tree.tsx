@@ -88,7 +88,22 @@ const badgeToneMap: Record<TreeTone, BadgeVariant> = {
 const flattenKeys = (nodes: TreeNode[]): React.Key[] =>
   nodes.flatMap((node) => [node.key, ...(node.children ? flattenKeys(node.children) : [])]);
 
-/** Hierarchical tree view with expand/collapse, selection, badges, and tone-based node styling. */
+/**
+ * Hierarchical tree view with expand/collapse, selection, badges, and tone-based node styling.
+ *
+ * @example
+ * ```tsx
+ * <Tree
+ *   nodes={[
+ *     { key: 'src', label: 'src', children: [
+ *       { key: 'index', label: 'index.tsx' },
+ *       { key: 'app', label: 'App.tsx' },
+ *     ]},
+ *   ]}
+ *   onNodeSelect={(key) => openFile(key)}
+ * />
+ * ```
+ */
 export const Tree = React.forwardRef<HTMLElement, TreeProps>(({
   nodes,
   title,

@@ -194,7 +194,19 @@ function DeleteConfirmation({
 // FilterPresets component
 // ---------------------------------------------------------------------------
 
-/** Toolbar for managing saved filter presets with save, delete, and default actions. */
+/**
+ * Toolbar for managing saved filter presets with save, delete, and default actions.
+ *
+ * @example
+ * ```tsx
+ * <FilterPresets
+ *   presets={[{ id: 'active', name: 'Active Only', filters: { status: 'active' } }]}
+ *   activePresetId="active"
+ *   onSelect={(preset) => applyFilters(preset.filters)}
+ *   onSave={(name, filters) => savePreset(name, filters)}
+ * />
+ * ```
+ */
 export function FilterPresets({
   presets,
   activePresetId,

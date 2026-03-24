@@ -66,7 +66,18 @@ const thumbSizes: Record<SwitchSize, { base: string; translate: string }> = {
   lg: { base: "h-5 w-5", translate: "translate-x-5" },
 };
 
-/** Toggle switch control with label, description, destructive variant, and loading state. */
+/**
+ * Toggle switch control with label, description, destructive variant, and loading state.
+ *
+ * @example
+ * ```tsx
+ * <Switch
+ *   label="Enable notifications"
+ *   checked={enabled}
+ *   onCheckedChange={setEnabled}
+ * />
+ * ```
+ */
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
   (
     {

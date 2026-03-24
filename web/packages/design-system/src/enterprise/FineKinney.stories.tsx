@@ -116,6 +116,10 @@ export const Default: Story = {
     showControls: true,
     showStatus: true,
   },
+  play: async ({ canvasElement }) => {
+    const cell = canvasElement.querySelector('td, [role="cell"], [role="button"]');
+    if (cell) (cell as HTMLElement).click();
+  },
 };
 
 export const HighRisk: Story = {

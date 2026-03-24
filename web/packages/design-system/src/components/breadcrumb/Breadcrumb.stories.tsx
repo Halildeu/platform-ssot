@@ -21,6 +21,10 @@ export const Default: Story = {
       { label: 'Proje Detayi' },
     ],
   },
+  play: async ({ canvasElement }) => {
+    const link = canvasElement.querySelector('a, [role="link"]');
+    if (link) (link as HTMLElement).click();
+  },
 };
 
 export const WithIcons: Story = {

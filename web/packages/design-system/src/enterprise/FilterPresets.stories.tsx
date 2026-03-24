@@ -25,6 +25,10 @@ export const Default: Story = {
     activePresetId: 'p1',
     onSelect: (preset) => console.log('Selected:', preset.name),
   },
+  play: async ({ canvasElement }) => {
+    const chip = canvasElement.querySelector('button, [role="button"], [data-testid]');
+    if (chip) (chip as HTMLElement).click();
+  },
 };
 
 export const WithSaveAction: Story = {

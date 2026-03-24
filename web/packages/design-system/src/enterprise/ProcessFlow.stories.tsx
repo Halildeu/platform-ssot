@@ -38,6 +38,10 @@ export const Default: Story = {
     nodes: sampleNodes,
     edges: sampleEdges,
   },
+  play: async ({ canvasElement }) => {
+    const node = canvasElement.querySelector('[data-testid], [role="button"], button');
+    if (node) (node as HTMLElement).click();
+  },
 };
 
 export const Vertical: Story = {

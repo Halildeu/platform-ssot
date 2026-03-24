@@ -32,6 +32,10 @@ export const Default: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    const slider = canvasElement.querySelector('[role="slider"], input[type="range"]');
+    if (slider) (slider as HTMLElement).focus();
+  },
 };
 
 export const WithLabels: Story = {

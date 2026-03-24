@@ -31,7 +31,15 @@ const sizeMap: Record<SpinnerSize, string> = {
   xl: "h-8 w-8",
 };
 
-/** Animated circular loading indicator with configurable size and optional visible label. */
+/**
+ * Animated circular loading indicator with configurable size and optional visible label.
+ *
+ * @example
+ * ```tsx
+ * <Spinner size="md" label="Loading data..." />
+ * <Spinner size="sm" mode="block" />
+ * ```
+ */
 export const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
   ({
     size = "md",

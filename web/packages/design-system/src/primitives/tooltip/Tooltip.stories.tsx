@@ -33,6 +33,10 @@ export const Default: Story = {
     content: 'Bu bir tooltip mesajidir',
     children: <Button>Uzerine gel</Button>,
   },
+  play: async ({ canvasElement }) => {
+    const btn = canvasElement.querySelector('button');
+    if (btn) btn.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const Top: Story = {

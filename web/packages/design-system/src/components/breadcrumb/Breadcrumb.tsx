@@ -35,6 +35,21 @@ const DefaultSeparator = () => (
   </svg>
 );
 
+/**
+ * Navigation hierarchy breadcrumb trail with collapsible overflow and custom separators.
+ *
+ * @example
+ * ```tsx
+ * <Breadcrumb
+ *   items={[
+ *     { label: 'Home', href: '/' },
+ *     { label: 'Products', href: '/products' },
+ *     { label: 'Widget Pro' },
+ *   ]}
+ *   maxItems={4}
+ * />
+ * ```
+ */
 export const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(({
   items,
   separator,

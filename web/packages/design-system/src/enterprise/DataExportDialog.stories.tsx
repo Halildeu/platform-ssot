@@ -17,6 +17,10 @@ export const Default: Story = {
     onExport: (opts) => console.log('Export:', opts),
     recordCounts: { visible: 25, all: 1420, selected: 5, filtered: 120 },
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[role="radio"], [role="button"], button, input[type="radio"]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const LimitedFormats: Story = {

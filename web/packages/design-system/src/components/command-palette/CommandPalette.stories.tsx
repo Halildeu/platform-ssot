@@ -90,6 +90,10 @@ export const Default: Story = {
       </>
     );
   },
+  play: async ({ canvasElement }) => {
+    const btn = canvasElement.querySelector('button');
+    if (btn) (btn as HTMLElement).click();
+  },
 };
 
 export const WithBadges: Story = {

@@ -17,6 +17,10 @@ export const Default: Story = {
     label: 'Revenue',
     subtitle: 'Q1 2024 vs Target',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-testid], svg, [role="img"]');
+    if (el) el.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+  },
 };
 
 export const WithCustomRanges: Story = {

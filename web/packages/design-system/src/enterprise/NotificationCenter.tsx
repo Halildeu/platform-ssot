@@ -229,7 +229,20 @@ function NotificationRow({
 // NotificationCenter component
 // ---------------------------------------------------------------------------
 
-/** Notification feed with unread badges, grouping, dismissal, and action support. */
+/**
+ * Notification feed with unread badges, grouping, dismissal, and action support.
+ *
+ * @example
+ * ```tsx
+ * <NotificationCenter
+ *   notifications={[
+ *     { id: '1', type: 'info', title: 'New update', timestamp: new Date().toISOString() },
+ *   ]}
+ *   onMarkAllRead={handleMarkAllRead}
+ *   onDismiss={(id) => removeNotification(id)}
+ * />
+ * ```
+ */
 export function NotificationCenter({
   notifications,
   title,

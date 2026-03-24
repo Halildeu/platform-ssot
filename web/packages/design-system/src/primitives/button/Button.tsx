@@ -125,7 +125,16 @@ const iconOnlySizes: Record<ButtonSize, string> = {
   xl: "h-12 w-12 rounded-xl",
 };
 
-/** Primary action trigger with solid, outline, ghost, and link variants in multiple sizes. */
+/**
+ * Primary action trigger with solid, outline, ghost, and link variants in multiple sizes.
+ *
+ * @example
+ * ```tsx
+ * <Button variant="primary" size="md" onClick={handleSave}>
+ *   Save Changes
+ * </Button>
+ * ```
+ */
 export const Button = forwardRef<HTMLElement, ButtonProps>(
   (
     {

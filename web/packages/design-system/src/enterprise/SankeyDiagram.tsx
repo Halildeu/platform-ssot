@@ -248,7 +248,19 @@ function computeLayout(
 
 // ── Component ──
 
-/** Flow diagram visualizing weighted directional relationships between nodes using proportional links. */
+/**
+ * Flow diagram visualizing weighted directional relationships between nodes using proportional links.
+ *
+ * @example
+ * ```tsx
+ * <SankeyDiagram
+ *   nodes={[{ id: 'a', label: 'Source' }, { id: 'b', label: 'Target' }]}
+ *   links={[{ source: 'a', target: 'b', value: 100 }]}
+ *   width={600}
+ *   height={300}
+ * />
+ * ```
+ */
 export const SankeyDiagram: React.FC<SankeyDiagramProps> = ({
   nodes,
   links,

@@ -41,7 +41,19 @@ export interface DatePickerProps
   messages?: DatePickerMessages;
 }
 
-/** Native date input wrapped in the field control shell with label, description, and validation. */
+/**
+ * Native date input wrapped in the field control shell with label, description, and validation.
+ *
+ * @example
+ * ```tsx
+ * <DatePicker
+ *   label="Start date"
+ *   value={startDate}
+ *   onChange={handleChange}
+ *   error={errors.startDate}
+ * />
+ * ```
+ */
 export const DatePicker = React.forwardRef<HTMLInputElement, DatePickerProps>(function DatePicker(
   {
     id,

@@ -14,6 +14,10 @@ export const Default: Story = {
     value: 'Project Alpha',
     onSave: (value: string) => console.log('Saved:', value),
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('[data-testid], span, button');
+    if (el) { const dblClick = new MouseEvent('dblclick', { bubbles: true }); el.dispatchEvent(dblClick); }
+  },
 };
 
 export const NumberType: Story = {

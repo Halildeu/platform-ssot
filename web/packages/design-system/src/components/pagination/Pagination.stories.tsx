@@ -31,6 +31,11 @@ export const Default: Story = {
       />
     );
   },
+  play: async ({ canvasElement }) => {
+    const btns = canvasElement.querySelectorAll('button, [role="button"]');
+    const next = btns[btns.length - 1];
+    if (next) (next as HTMLElement).click();
+  },
 };
 
 export const WithTotal: Story = {

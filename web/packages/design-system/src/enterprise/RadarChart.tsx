@@ -78,7 +78,18 @@ function getAngleForIndex(index: number, total: number): number {
 
 // ── Component ──
 
-/** Multi-axis radar/spider chart comparing one or more data series on a radial grid. */
+/**
+ * Multi-axis radar/spider chart comparing one or more data series on a radial grid.
+ *
+ * @example
+ * ```tsx
+ * <RadarChart
+ *   axes={[{ key: 'speed', label: 'Speed' }, { key: 'power', label: 'Power' }]}
+ *   series={[{ id: 'car-a', label: 'Car A', values: { speed: 80, power: 90 } }]}
+ *   size={300}
+ * />
+ * ```
+ */
 export const RadarChart: React.FC<RadarChartProps> = ({
   axes,
   series,

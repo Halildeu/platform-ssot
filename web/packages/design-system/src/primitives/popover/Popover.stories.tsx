@@ -39,6 +39,10 @@ export const Default: Story = {
     title: 'Bilgi',
     content: 'Bu bir popover icerigidir. Ek bilgi gostermek icin kullanilir.',
   },
+  play: async ({ canvasElement }) => {
+    const btn = canvasElement.querySelector('button');
+    if (btn) (btn as HTMLElement).click();
+  },
 };
 
 export const HoverTrigger: Story = {

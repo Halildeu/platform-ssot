@@ -279,6 +279,21 @@ function TableSimpleInner<
   );
 }
 
+/**
+ * Lightweight static data table with striped rows, sticky header, and loading skeleton state.
+ *
+ * @example
+ * ```tsx
+ * <TableSimple
+ *   columns={[
+ *     { key: 'name', label: 'Name' },
+ *     { key: 'role', label: 'Role' },
+ *   ]}
+ *   rows={[{ name: 'Jane', role: 'Admin' }, { name: 'Ali', role: 'Editor' }]}
+ *   striped
+ * />
+ * ```
+ */
 export const TableSimple = React.forwardRef<HTMLElement, TableSimpleProps>(
   (props, ref) => <TableSimpleInner {...props} innerRef={ref} />,
 ) as (<Row extends Record<string, unknown> = Record<string, unknown>>(

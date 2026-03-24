@@ -51,7 +51,16 @@ const sizeStyles: Record<TagSize, string> = {
   lg: "h-7 px-2.5 text-xs gap-1.5",
 };
 
-/** Removable label chip with semantic color variants, optional icon, and close button. */
+/**
+ * Removable label chip with semantic color variants, optional icon, and close button.
+ *
+ * @example
+ * ```tsx
+ * <Tag variant="primary" closable onClose={() => removeTag(id)}>
+ *   React
+ * </Tag>
+ * ```
+ */
 export const Tag = forwardRef<HTMLSpanElement, TagProps>(
   (
     {

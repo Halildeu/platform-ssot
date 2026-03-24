@@ -297,6 +297,15 @@ function scoreDocumentation(content, componentName, componentDir) {
   const propsWithDoc = (content.match(/\/\*\*[\s\S]*?\*\/\s*\w+\??:/g) || []).length;
   score += Math.min(30, propsWithDoc * 5);
 
+  // @example tag in JSDoc (+20)
+  if (/@example/.test(content)) score += 20;
+
+  // @since tag in JSDoc (+5)
+  if (/@since/.test(content)) score += 5;
+
+  // @see tag in JSDoc (+5)
+  if (/@see/.test(content)) score += 5;
+
   // API reference exists (check main + all part files)
   const catalogDir = path.join(SRC, 'catalog');
   if (fs.existsSync(catalogDir)) {

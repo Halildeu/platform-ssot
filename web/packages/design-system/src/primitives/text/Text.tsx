@@ -106,7 +106,15 @@ const lineClampStyles: Record<number, string> = {
   5: "line-clamp-5",
 };
 
-/** Typography primitive with variant, size, weight, truncation, and polymorphic element support. */
+/**
+ * Typography primitive with variant, size, weight, truncation, and polymorphic element support.
+ *
+ * @example
+ * ```tsx
+ * <Text as="h2" size="xl" weight="bold">Dashboard</Text>
+ * <Text variant="secondary" size="sm" truncate>Long text...</Text>
+ * ```
+ */
 export const Text = forwardRef<HTMLElement, TextProps>(
   (
     {

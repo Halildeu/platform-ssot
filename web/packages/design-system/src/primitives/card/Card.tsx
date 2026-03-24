@@ -51,7 +51,17 @@ const paddingStyles: Record<CardPadding, string> = {
   lg: "p-6",
 };
 
-/** Elevated content container with variant styles, optional hover effect, and polymorphic element support. */
+/**
+ * Elevated content container with variant styles, optional hover effect, and polymorphic element support.
+ *
+ * @example
+ * ```tsx
+ * <Card variant="elevated" padding="md" hoverable>
+ *   <CardHeader title="Project" subtitle="Updated 2 hours ago" />
+ *   <CardBody>Card content here</CardBody>
+ * </Card>
+ * ```
+ */
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   (
     {

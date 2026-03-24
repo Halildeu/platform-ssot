@@ -67,7 +67,16 @@ const defaultIcons: Record<AlertVariant, React.ReactNode> = {
   ),
 };
 
-/** Contextual feedback banner with semantic variants, optional title, icon, action slot, and close button. */
+/**
+ * Contextual feedback banner with semantic variants, optional title, icon, action slot, and close button.
+ *
+ * @example
+ * ```tsx
+ * <Alert variant="success" title="Saved" closable onClose={dismiss}>
+ *   Your changes have been saved successfully.
+ * </Alert>
+ * ```
+ */
 export const Alert = forwardRef<HTMLDivElement, AlertProps>(
   (
     {

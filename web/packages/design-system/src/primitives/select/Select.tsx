@@ -61,7 +61,18 @@ const sizeStyles: Record<SelectSize, string> = {
   lg: "h-11 text-base px-3.5 pe-10",
 };
 
-/** Native select dropdown with consistent styling, placeholder, loading state, and access control. */
+/**
+ * Native select dropdown with consistent styling, placeholder, loading state, and access control.
+ *
+ * @example
+ * ```tsx
+ * <Select
+ *   options={[{ value: 'tr', label: 'Turkey' }, { value: 'us', label: 'USA' }]}
+ *   placeholder="Select a country"
+ *   onChange={handleChange}
+ * />
+ * ```
+ */
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
     {

@@ -349,7 +349,21 @@ function renderEdge(
 // ProcessFlow component
 // ---------------------------------------------------------------------------
 
-/** SVG-based process flow diagram with auto-layout, status badges, and path highlighting. */
+/**
+ * SVG-based process flow diagram with auto-layout, status badges, and path highlighting.
+ *
+ * @example
+ * ```tsx
+ * <ProcessFlow
+ *   nodes={[
+ *     { id: 'start', type: 'start', label: 'Begin' },
+ *     { id: 'review', type: 'task', label: 'Review', status: 'active' },
+ *     { id: 'end', type: 'end', label: 'Done' },
+ *   ]}
+ *   edges={[{ from: 'start', to: 'review' }, { from: 'review', to: 'end' }]}
+ * />
+ * ```
+ */
 export function ProcessFlow({
   nodes,
   edges,

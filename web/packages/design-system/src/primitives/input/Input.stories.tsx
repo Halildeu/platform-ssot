@@ -24,6 +24,10 @@ export const Default: Story = {
     label: 'Ad Soyad',
     placeholder: 'Ornegin: Ahmet Yilmaz',
   },
+  play: async ({ canvasElement }) => {
+    const input = canvasElement.querySelector('input');
+    if (input) { (input as HTMLInputElement).focus(); (input as HTMLInputElement).value = 'Test'; input.dispatchEvent(new Event('input', { bubbles: true })); }
+  },
 };
 
 export const WithDescription: Story = {

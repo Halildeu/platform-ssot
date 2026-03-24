@@ -70,7 +70,19 @@ const getInitialValue = (
   return "";
 };
 
-/** Full-featured text input with field shell, label, visuals, character count, and access control. */
+/**
+ * Full-featured text input with field shell, label, visuals, character count, and access control.
+ *
+ * @example
+ * ```tsx
+ * <Input
+ *   label="Email"
+ *   placeholder="you@example.com"
+ *   error={errors.email}
+ *   onChange={handleChange}
+ * />
+ * ```
+ */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   function Input(
     {

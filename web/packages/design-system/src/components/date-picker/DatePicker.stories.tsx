@@ -31,6 +31,10 @@ export const Default: Story = {
     label: 'Tarih',
     placeholder: 'Tarih seciniz',
   },
+  play: async ({ canvasElement }) => {
+    const el = canvasElement.querySelector('input, button, [role="combobox"]');
+    if (el) (el as HTMLElement).click();
+  },
 };
 
 export const WithDescription: Story = {

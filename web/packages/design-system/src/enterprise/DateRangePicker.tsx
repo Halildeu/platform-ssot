@@ -144,7 +144,18 @@ function clampDate(d: Date, min?: Date, max?: Date): Date {
 
 // ── Component ──
 
-/** Dual-input date range selector with preset shortcuts, comparison toggle, and calendar panel. */
+/**
+ * Dual-input date range selector with preset shortcuts, comparison toggle, and calendar panel.
+ *
+ * @example
+ * ```tsx
+ * <DateRangePicker
+ *   value={{ start: new Date('2025-01-01'), end: new Date('2025-03-31') }}
+ *   onChange={(range) => setDateRange(range)}
+ *   placeholder="Select a date range"
+ * />
+ * ```
+ */
 export const DateRangePicker = React.forwardRef<HTMLDivElement, DateRangePickerProps>(({
   value,
   onChange,

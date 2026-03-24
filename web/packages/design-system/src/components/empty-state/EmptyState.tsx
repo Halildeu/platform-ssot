@@ -28,6 +28,19 @@ export interface EmptyStateProps {
   accessReason?: string;
 }
 
+/**
+ * Placeholder for empty data views with icon, title, description, and action buttons.
+ *
+ * @example
+ * ```tsx
+ * <EmptyState
+ *   icon={<SearchIcon />}
+ *   title="No results found"
+ *   description="Try adjusting your search or filter criteria."
+ *   action={<Button onClick={resetFilters}>Reset Filters</Button>}
+ * />
+ * ```
+ */
 export const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(({
   icon,
   title,

@@ -60,6 +60,10 @@ export const Default: Story = {
     items: sssItems,
     selectionMode: 'single',
   },
+  play: async ({ canvasElement }) => {
+    const trigger = canvasElement.querySelector('button, [role="button"], [data-testid]');
+    if (trigger) (trigger as HTMLElement).click();
+  },
 };
 
 export const MultipleSelection: Story = {

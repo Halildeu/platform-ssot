@@ -210,6 +210,20 @@ function TimelineDot({
 
 /* ---- Main component ---- */
 
+/**
+ * Chronological event display with left, right, or alternating layout and color-coded dots.
+ *
+ * @example
+ * ```tsx
+ * <Timeline
+ *   items={[
+ *     { key: '1', color: 'success', children: 'Order placed' },
+ *     { key: '2', color: 'primary', children: 'Shipped', pending: true },
+ *   ]}
+ *   mode="left"
+ * />
+ * ```
+ */
 export const Timeline = React.forwardRef<HTMLDivElement, TimelineProps>(({
   items,
   mode = "left",

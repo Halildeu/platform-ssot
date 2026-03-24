@@ -29,6 +29,10 @@ export const Default: Story = {
       />
     );
   },
+  play: async ({ canvasElement }) => {
+    const sw = canvasElement.querySelector('[role="switch"], button');
+    if (sw) (sw as HTMLElement).click();
+  },
 };
 
 export const Checked: Story = {

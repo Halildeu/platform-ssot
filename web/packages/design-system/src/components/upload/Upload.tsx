@@ -71,7 +71,20 @@ const normalizeFiles = (files: FileList | null, maxFiles?: number): UploadFileIt
   return maxFiles ? nextFiles.slice(0, maxFiles) : nextFiles;
 };
 
-/** Drag-and-drop file upload input with file list preview, size formatting, and removal support. */
+/**
+ * Drag-and-drop file upload input with file list preview, size formatting, and removal support.
+ *
+ * @example
+ * ```tsx
+ * <Upload
+ *   label="Attachments"
+ *   accept="image/*,.pdf"
+ *   multiple
+ *   onFilesChange={(files) => setAttachments(files)}
+ *   maxFiles={5}
+ * />
+ * ```
+ */
 export const Upload = React.forwardRef<HTMLInputElement, UploadProps>(function Upload(
   {
     id,

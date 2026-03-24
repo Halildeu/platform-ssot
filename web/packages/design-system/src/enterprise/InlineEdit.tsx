@@ -80,7 +80,18 @@ function CloseIcon() {
 // InlineEdit component
 // ---------------------------------------------------------------------------
 
-/** Click-to-edit field supporting text, number, and select input types. */
+/**
+ * Click-to-edit field supporting text, number, and select input types.
+ *
+ * @example
+ * ```tsx
+ * <InlineEdit
+ *   value={title}
+ *   onSave={(newValue) => updateTitle(newValue)}
+ *   placeholder="Click to edit"
+ * />
+ * ```
+ */
 export function InlineEdit({
   value,
   type = 'text',

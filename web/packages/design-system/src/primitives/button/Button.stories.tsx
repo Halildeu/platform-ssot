@@ -29,6 +29,10 @@ export const Default: Story = {
     variant: 'primary',
     size: 'md',
   },
+  play: async ({ canvasElement }) => {
+    const btn = canvasElement.querySelector('button');
+    if (btn) (btn as HTMLElement).click();
+  },
 };
 
 export const Secondary: Story = {

@@ -32,6 +32,10 @@ export const Default: Story = {
     tasks: sampleTasks,
     viewMode: 'week',
   },
+  play: async ({ canvasElement }) => {
+    const task = canvasElement.querySelector('[data-testid], [role="button"], button');
+    if (task) (task as HTMLElement).click();
+  },
 };
 
 export const DayView: Story = {

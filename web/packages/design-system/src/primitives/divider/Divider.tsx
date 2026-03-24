@@ -37,7 +37,16 @@ const spacingVerticalMap: Record<string, string> = {
   lg: "mx-6",
 };
 
-/** Horizontal or vertical line separator with optional center label for content sectioning. */
+/**
+ * Horizontal or vertical line separator with optional center label for content sectioning.
+ *
+ * @example
+ * ```tsx
+ * <Divider spacing="md" />
+ * <Divider label="OR" />
+ * <Divider orientation="vertical" />
+ * ```
+ */
 export const Divider = React.forwardRef<HTMLElement, DividerProps>(
   ({
     orientation = "horizontal",

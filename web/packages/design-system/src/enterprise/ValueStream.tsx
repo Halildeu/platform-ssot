@@ -221,7 +221,21 @@ function TimelineBar({
 // ValueStream component
 // ---------------------------------------------------------------------------
 
-/** Lean value stream map showing process steps, wait times, and PCE metrics. */
+/**
+ * Lean value stream map showing process steps, wait times, and PCE metrics.
+ *
+ * @example
+ * ```tsx
+ * <ValueStream
+ *   steps={[
+ *     { id: 'cut', label: 'Cutting', processTime: 30, category: 'value-add' },
+ *     { id: 'weld', label: 'Welding', processTime: 45, category: 'value-add' },
+ *   ]}
+ *   waits={[{ duration: 120 }]}
+ *   timeUnit="minutes"
+ * />
+ * ```
+ */
 export function ValueStream({
   steps,
   waits = [],

@@ -27,6 +27,10 @@ export const Default: Story = {
       </RadioGroup>
     );
   },
+  play: async ({ canvasElement }) => {
+    const radio = canvasElement.querySelector('input[type="radio"], [role="radio"]');
+    if (radio) (radio as HTMLElement).click();
+  },
 };
 
 export const Horizontal: Story = {

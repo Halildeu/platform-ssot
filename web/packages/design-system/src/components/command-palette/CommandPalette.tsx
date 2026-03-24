@@ -59,7 +59,22 @@ const stringify = (value: React.ReactNode) => {
   return "";
 };
 
-/** Keyboard-driven search overlay for quickly finding and executing commands or navigating routes. */
+/**
+ * Keyboard-driven search overlay for quickly finding and executing commands or navigating routes.
+ *
+ * @example
+ * ```tsx
+ * <CommandPalette
+ *   open={isOpen}
+ *   items={[
+ *     { id: 'dashboard', title: 'Go to Dashboard', group: 'Navigation' },
+ *     { id: 'settings', title: 'Open Settings', shortcut: '⌘,' },
+ *   ]}
+ *   onSelect={(id) => navigate(id)}
+ *   onClose={() => setIsOpen(false)}
+ * />
+ * ```
+ */
 export const CommandPalette = React.forwardRef<HTMLDivElement, CommandPaletteProps>(({
   open,
   items,

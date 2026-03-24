@@ -32,6 +32,10 @@ export const Default: Story = {
       <Button variant="outline">Islemler</Button>
     </Dropdown>
   ),
+  play: async ({ canvasElement }) => {
+    const btn = canvasElement.querySelector('button');
+    if (btn) (btn as HTMLElement).click();
+  },
 };
 
 export const WithDescriptions: Story = {

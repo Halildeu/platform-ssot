@@ -1,7 +1,7 @@
 # API Reference
 
-> Auto-generated on 2026-03-23 by `generate-api-reference.mjs`
-> 94 component interfaces documented.
+> Auto-generated on 2026-03-24 by `generate-api-reference.mjs`
+> 95 component interfaces documented.
 
 ## Table of Contents
 
@@ -17,6 +17,7 @@
 - [Divider](#divider)
 - [Drawer](#drawer)
 - [Dropdown](#dropdown)
+- [FieldControlShell](#fieldcontrolshell)
 - [HStack](#hstack)
 - [IconButton](#iconbutton)
 - [Input](#input)
@@ -116,13 +117,13 @@
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `variant` | `AlertVariant` | No | - |  |
+| `variant` | `AlertVariant` | No | - | Semantic color variant. @default "info" |
 | `severity` | `AlertVariant` | No | - | **DEPRECATED** (Use `variant` instead. Will be removed in v3.0.0.) |
-| `title` | `React.ReactNode` | No | - | Title (optional) |
-| `icon` | `React.ReactNode` | No | - | Leading icon |
-| `closable` | `boolean` | No | `false` | Closable |
-| `onClose` | `() => void` | No | - |  |
-| `action` | `React.ReactNode` | No | - | Action node (e.g. button) |
+| `title` | `React.ReactNode` | No | - | Optional bold heading above the message body. |
+| `icon` | `React.ReactNode` | No | - | Custom leading icon; defaults to the variant's built-in icon. |
+| `closable` | `boolean` | No | `false` | Show a close/dismiss button. @default false |
+| `onClose` | `() => void` | No | - | Callback fired when the close button is clicked. |
+| `action` | `React.ReactNode` | No | - | Action element (e.g. button) rendered below the message body. |
 | `asChild` | `boolean` | No | `false` | Render via Slot — merges Alert root styling onto the child element. When asChild is true, Alert's internal layout (icon, title, close button) is not rendered; only the root styling and role are merged. |
 
 ---
@@ -137,10 +138,10 @@
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
 | `src` | `string` | No | - | Image URL |
-| `alt` | `string` | No | - |  |
+| `alt` | `string` | No | - | Alt text for the avatar image. |
 | `initials` | `string` | No | - | Fallback initials (1-2 chars) |
-| `size` | `AvatarSize` | No | `md` |  |
-| `shape` | `AvatarShape` | No | `circle` |  |
+| `size` | `AvatarSize` | No | `md` | Avatar dimensions. @default "md" |
+| `shape` | `AvatarShape` | No | `circle` | Border radius shape. @default "circle" |
 | `icon` | `React.ReactNode` | No | - | Fallback icon (when no src or initials) |
 
 ---
@@ -154,9 +155,9 @@
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `variant` | `BadgeVariant` | No | - |  |
+| `variant` | `BadgeVariant` | No | - | Visual color variant. @default "default" |
 | `tone` | `BadgeVariant` | No | - | **DEPRECATED** (Use `variant` instead. Will be removed in v3.0.0.) |
-| `size` | `BadgeSize` | No | `md` |  |
+| `size` | `BadgeSize` | No | `md` | Badge size controlling padding and font size. @default "md" |
 | `dot` | `boolean` | No | `false` | Render as a dot (no children) |
 | `asChild` | `boolean` | No | `false` | Render via Slot — merges Badge props onto the child element. |
 
@@ -250,9 +251,11 @@
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `orientation` | `"horizontal" \| "vertical"` | No | `horizontal` | Orientation |
-| `label` | `string` | No | - | Label in the center |
-| `spacing` | `"none" \| "sm" \| "md" \| "lg"` | No | `md` | Margin spacing |
+| `orientation` | `"horizontal" \| "vertical"` | No | `horizontal` | Orientation of the divider line. @default "horizontal" |
+| `label` | `string` | No | - | Label text displayed centered within the divider line. |
+| `spacing` | `"none" \| "sm" \| "md" \| "lg"` | No | `md` | Margin spacing around the divider. @default "md" |
+| `className` | `string` | No | - | Additional CSS class name for the divider element. |
+| `role` | `React.AriaRole` | No | - | ARIA role override for the separator element. |
 
 ---
 
@@ -287,12 +290,22 @@
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `children` | `React.ReactElement` | Yes | - | Trigger element |
-| `items` | `DropdownEntry[]` | Yes | - |  |
-| `placement` | `DropdownPlacement` | No | `bottom-start` |  |
-| `minWidth` | `number` | No | `180` | Min width in px |
-| `className` | `string` | No | - |  |
-| `disabled` | `boolean` | No | `false` | Disable the dropdown — prevents opening |
+| `children` | `React.ReactElement` | Yes | - | Trigger element that toggles the dropdown on click. |
+| `items` | `DropdownEntry[]` | Yes | - | Menu entries including items, separators, and group labels. |
+| `placement` | `DropdownPlacement` | No | `bottom-start` | Position of the dropdown menu relative to the trigger. @default "bottom-start" |
+| `minWidth` | `number` | No | `180` | Minimum width of the dropdown menu in pixels. @default 180 |
+| `className` | `string` | No | - | Additional CSS class name for the dropdown menu panel. |
+| `disabled` | `boolean` | No | `false` | Whether the dropdown is disabled and cannot be opened. |
+
+---
+
+## FieldControlShell
+
+**Category:** primitives
+**Interface:** `FieldControlShellProps`
+**Source:** `src/primitives/_shared/FieldControlPrimitives.tsx`
+
+_No props defined._
 
 ---
 
@@ -316,12 +329,12 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `icon` | `React.ReactNode` | Yes | - | Icon element |
-| `label` | `string` | Yes | - | Accessible label (required since there's no visible text) |
-| `variant` | `IconButtonVariant` | No | `ghost` |  |
-| `size` | `IconButtonSize` | No | `md` |  |
-| `loading` | `boolean` | No | `false` |  |
-| `rounded` | `boolean` | No | `false` | Rounded pill shape |
+| `icon` | `React.ReactNode` | Yes | - | Icon element rendered inside the button. |
+| `label` | `string` | Yes | - | Accessible label (required since there's no visible text). |
+| `variant` | `IconButtonVariant` | No | `ghost` | Visual style variant. @default "ghost" |
+| `size` | `IconButtonSize` | No | `md` | Button dimensions. @default "md" |
+| `loading` | `boolean` | No | `false` | Show a spinner instead of the icon. @default false |
+| `rounded` | `boolean` | No | `false` | Use fully rounded (pill) border radius. @default false |
 | `asChild` | `boolean` | No | `false` | Render via Slot — merges IconButton props onto the child element. |
 
 ---
@@ -370,17 +383,17 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `children` | `React.ReactNode` | Yes | - |  |
-| `tone` | `LinkInlineTone` | No | - | Visual tone. Use `variant` as a modern alias. |
-| `variant` | `LinkInlineTone` | No | - | Alias for `tone` — aligns with the standard component API. |
-| `underline` | `LinkInlineUnderline` | No | `hover` |  |
-| `current` | `boolean` | No | `false` |  |
-| `disabled` | `boolean` | No | `false` |  |
-| `external` | `boolean` | No | - |  |
-| `leadingVisual` | `React.ReactNode` | No | - |  |
-| `trailingVisual` | `React.ReactNode` | No | - |  |
-| `localeText` | `{` | No | - |  |
-| `externalScreenReaderLabel` | `React.ReactNode` | No | - |  |
+| `children` | `React.ReactNode` | Yes | - | Link content. |
+| `tone` | `LinkInlineTone` | No | - | **DEPRECATED** (Visual tone. Use `variant` as a modern alias.) |
+| `variant` | `LinkInlineTone` | No | - | Color variant for the link text. @default "primary" |
+| `underline` | `LinkInlineUnderline` | No | `hover` | Underline behavior. @default "hover" |
+| `current` | `boolean` | No | `false` | Whether this link represents the current page (sets aria-current). |
+| `disabled` | `boolean` | No | `false` | Disable interaction and render as an inert span. |
+| `external` | `boolean` | No | - | Force external link behavior (target="_blank", rel="noopener"). Auto-detected from href. |
+| `leadingVisual` | `React.ReactNode` | No | - | Icon or element rendered before the link text. |
+| `trailingVisual` | `React.ReactNode` | No | - | Icon or element rendered after the link text. |
+| `localeText` | `{` | No | - | Locale text overrides. |
+| `externalScreenReaderLabel` | `React.ReactNode` | No | - | Screen reader label for external link indicator. @default "External link" |
 | `asChild` | `boolean` | No | `false` | Render via Slot — merges LinkInline props onto the child element. Useful for composing with router Link components. |
 
 ---
@@ -393,25 +406,25 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `open` | `boolean` | Yes | - |  |
-| `children` | `React.ReactNode` | Yes | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `onClose` | `(reason?: OverlayCloseReason) => void` | No | - |  |
-| `footer` | `React.ReactNode` | No | - |  |
-| `className` | `string` | No | - |  |
-| `size` | `"sm" \| "md" \| "lg"` | No | `md` |  |
-| `maxWidth` | `number \| string` | No | - |  |
-| `fullWidth` | `boolean` | No | `false` |  |
-| `surface` | `"base" \| "confirm" \| "destructive" \| "audit"` | No | - |  |
-| `variant` | `"base" \| "confirm" \| "destructive" \| "audit"` | No | - | Alias for `surface` — aligns with the standard component API. |
-| `closeOnOverlayClick` | `boolean` | No | `true` |  |
-| `closeOnEscape` | `boolean` | No | `true` |  |
-| `keepMounted` | `boolean` | No | `false` |  |
-| `destroyOnHidden` | `boolean` | No | `false` |  |
-| `portalTarget` | `HTMLElement \| null` | No | - |  |
-| `disablePortal` | `boolean` | No | `false` |  |
-| `classes` | `ModalClasses` | No | - |  |
-| `slotProps` | `SlotProps<ModalSlot>` | No | - | Override props (className, style, etc.) on internal slot elements |
+| `open` | `boolean` | Yes | - | Whether the modal is open and visible. |
+| `children` | `React.ReactNode` | Yes | - | Content rendered inside the modal body. |
+| `title` | `React.ReactNode` | No | - | Title displayed in the modal header. |
+| `onClose` | `(reason?: OverlayCloseReason) => void` | No | - | Callback fired when the modal requests to close, with the close reason. |
+| `footer` | `React.ReactNode` | No | - | Content rendered in the modal footer area. |
+| `className` | `string` | No | - | Additional CSS class name for the dialog element. |
+| `size` | `"sm" \| "md" \| "lg"` | No | `md` | Size preset controlling the maximum width. @default "md" |
+| `maxWidth` | `number \| string` | No | - | Custom maximum width as a number (px) or CSS string. |
+| `fullWidth` | `boolean` | No | `false` | Whether the modal spans the full available width. |
+| `surface` | `"base" \| "confirm" \| "destructive" \| "audit"` | No | - | **DEPRECATED** (Use `variant` instead. Visual surface style.) |
+| `variant` | `"base" \| "confirm" \| "destructive" \| "audit"` | No | - | Visual surface variant controlling header styling. |
+| `closeOnOverlayClick` | `boolean` | No | `true` | Whether clicking the overlay backdrop closes the modal. @default true |
+| `closeOnEscape` | `boolean` | No | `true` | Whether pressing Escape closes the modal. @default true |
+| `keepMounted` | `boolean` | No | `false` | Whether to keep the modal in the DOM when closed. |
+| `destroyOnHidden` | `boolean` | No | `false` | Whether to destroy modal content when hidden. |
+| `portalTarget` | `HTMLElement \| null` | No | - | Custom DOM element to render the portal into. |
+| `disablePortal` | `boolean` | No | `false` | Whether to disable portal rendering and render inline. |
+| `classes` | `ModalClasses` | No | - | Custom CSS class overrides for internal elements. |
+| `slotProps` | `SlotProps<ModalSlot>` | No | - | Override props (className, style, etc.) on internal slot elements. |
 
 ---
 
@@ -424,25 +437,25 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `trigger` | `React.ReactNode` | Yes | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `content` | `React.ReactNode` | Yes | - |  |
-| `align` | `PopoverAlign` | No | `center` |  |
-| `side` | `PopoverSide` | No | `bottom` |  |
-| `triggerMode` | `PopoverTriggerMode` | No | `click` |  |
-| `open` | `boolean` | No | - |  |
-| `defaultOpen` | `boolean` | No | `false` |  |
-| `onOpenChange` | `(open: boolean) => void` | No | - |  |
-| `className` | `string` | No | `` |  |
-| `portalTarget` | `HTMLElement \| null` | No | - |  |
-| `disablePortal` | `boolean` | No | `false` |  |
-| `ariaLabel` | `string` | No | `Popover` |  |
-| `flipOnCollision` | `boolean` | No | `true` |  |
-| `openDelay` | `number` | No | - |  |
-| `closeDelay` | `number` | No | - |  |
-| `showArrow` | `boolean` | No | `true` |  |
-| `arrowClassName` | `string` | No | `` |  |
-| `panelClassName` | `string` | No | `` |  |
+| `trigger` | `React.ReactNode` | Yes | - | The element that anchors and triggers the popover. |
+| `title` | `React.ReactNode` | No | - | Optional title rendered at the top of the panel. |
+| `content` | `React.ReactNode` | Yes | - | Body content rendered inside the popover panel. |
+| `align` | `PopoverAlign` | No | `center` | Horizontal alignment relative to the trigger. @default "center" |
+| `side` | `PopoverSide` | No | `bottom` | Preferred side the popover appears on. @default "bottom" |
+| `triggerMode` | `PopoverTriggerMode` | No | `click` | Interaction mode that opens the popover. @default "click" |
+| `open` | `boolean` | No | - | Controlled open state. |
+| `defaultOpen` | `boolean` | No | `false` | Initial open state for uncontrolled mode. @default false |
+| `onOpenChange` | `(open: boolean) => void` | No | - | Callback fired when the open state changes. |
+| `className` | `string` | No | `` | Additional CSS class name on the root wrapper. |
+| `portalTarget` | `HTMLElement \| null` | No | - | DOM element to portal the panel into. @default document.body |
+| `disablePortal` | `boolean` | No | `false` | Disable portaling and render the panel inline. @default false |
+| `ariaLabel` | `string` | No | `Popover` | Accessible label for the popover dialog. @default "Popover" |
+| `flipOnCollision` | `boolean` | No | `true` | Flip to the opposite side when clipped by viewport edges. @default true |
+| `openDelay` | `number` | No | - | Delay in ms before showing on hover/focus triggers. |
+| `closeDelay` | `number` | No | - | Delay in ms before hiding on hover/focus leave. |
+| `showArrow` | `boolean` | No | `true` | Show a directional arrow pointing to the trigger. @default true |
+| `arrowClassName` | `string` | No | `` | Additional CSS class name for the arrow element. |
+| `panelClassName` | `string` | No | `` | Additional CSS class name for the panel element. |
 
 ---
 
@@ -533,7 +546,12 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `children` | `React.ReactNode` | Yes | - |  |
+| `children` | `React.ReactNode` | Yes | - | Single child element to merge parent props onto. |
+| `className` | `string` | No | - | CSS class name merged with the child's existing className via `cn()`. |
+| `style` | `React.CSSProperties` | No | - | Inline styles shallow-merged with the child's style (child wins on conflict). |
+| `role` | `React.AriaRole` | No | - | ARIA role forwarded to the child element. |
+| `id` | `string` | No | - | HTML id forwarded to the child element. |
+| `tabIndex` | `number` | No | - | Tab index forwarded to the child element. |
 
 ---
 
@@ -545,10 +563,10 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `size` | `SpinnerSize` | No | `md` |  |
-| `className` | `string` | No | - |  |
-| `label` | `string` | No | `Loading` | Accessible label |
-| `mode` | `SpinnerMode` | No | `inline` | Display mode: inline (default) or block (centered with visible label) |
+| `size` | `SpinnerSize` | No | `md` | Spinner dimensions. @default "md" |
+| `className` | `string` | No | - | Additional CSS class name. |
+| `label` | `string` | No | `Loading` | Accessible label for screen readers. @default "Loading" |
+| `mode` | `SpinnerMode` | No | `inline` | Display mode: inline (default) or block (centered with visible label). @default "inline" |
 
 ---
 
@@ -561,11 +579,11 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `direction` | `StackDirection` | No | `column` |  |
-| `align` | `StackAlign` | No | `center` |  |
-| `justify` | `StackJustify` | No | - |  |
-| `gap` | `StackGap` | No | `3` |  |
-| `wrap` | `boolean` | No | `false` |  |
+| `direction` | `StackDirection` | No | `column` | Flex direction of the stack. |
+| `align` | `StackAlign` | No | `center` | Cross-axis alignment of items. |
+| `justify` | `StackJustify` | No | - | Main-axis justification of items. |
+| `gap` | `StackGap` | No | `3` | Spacing gap between items. |
+| `wrap` | `boolean` | No | `false` | Whether items wrap to multiple lines. |
 | `as` | `"div" \| "section" \| "article" \| "nav" \| "main" \| "aside" \| "ul" \| "ol"` | No | - | Render as another element |
 
 ---
@@ -648,20 +666,20 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `leadingVisual` | `React.ReactNode` | No | - |  |
-| `trailingVisual` | `React.ReactNode` | No | - |  |
-| `onChange` | `React.ChangeEventHandler<HTMLTextAreaElement>` | No | - |  |
-| `onValueChange` | `(` | No | - |  |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the textarea. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the textarea. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `leadingVisual` | `React.ReactNode` | No | - | Visual element rendered before the text area. |
+| `trailingVisual` | `React.ReactNode` | No | - | Visual element rendered after the text area. |
+| `onChange` | `React.ChangeEventHandler<HTMLTextAreaElement>` | No | - | Native change event handler. |
+| `onValueChange` | `(` | No | - | Callback fired with the new string value on change. |
 | `value` | `string` | Yes | - |  |
 | `event` | `React.ChangeEvent<HTMLTextAreaElement>` | Yes | - |  |
-| `showCount` | `boolean` | No | `false` |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `resize` | `TextAreaResize` | No | `vertical` |  |
+| `showCount` | `boolean` | No | `false` | Whether to display a character count indicator. |
+| `fullWidth` | `boolean` | No | `true` | Whether the textarea spans the full container width. |
+| `resize` | `TextAreaResize` | No | `vertical` | Resize behavior of the textarea. |
 | `loading` | `boolean` | No | `false` | Show a loading indicator and disable editing |
 
 ---
@@ -674,17 +692,17 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `content` | `React.ReactNode` | No | - | Tooltip content — primary prop |
-| `placement` | `TooltipPlacement` | No | `top` |  |
-| `align` | `TooltipAlign` | No | - |  |
-| `delay` | `number` | No | - | Delay before showing (ms) |
-| `openDelay` | `number` | No | - | Alias for delay — delay before showing (ms) |
-| `closeDelay` | `number` | No | `0` | Delay before hiding (ms) |
-| `disabled` | `boolean` | No | `false` | Disable tooltip |
-| `showArrow` | `boolean` | No | `false` | Show arrow indicator |
-| `className` | `string` | No | - | Additional class for the wrapper |
+| `content` | `React.ReactNode` | No | - | Tooltip content displayed in the overlay. |
+| `placement` | `TooltipPlacement` | No | `top` | Side on which the tooltip appears. @default "top" |
+| `align` | `TooltipAlign` | No | - | Horizontal alignment relative to the trigger. @default "center" |
+| `delay` | `number` | No | - | **DEPRECATED** (Use `openDelay` instead. Delay before showing (ms).) |
+| `openDelay` | `number` | No | - | Delay in ms before the tooltip appears. @default 200 |
+| `closeDelay` | `number` | No | `0` | Delay in ms before the tooltip hides. @default 0 |
+| `disabled` | `boolean` | No | `false` | Prevent the tooltip from appearing. @default false |
+| `showArrow` | `boolean` | No | `false` | Show a directional arrow pointing to the trigger. @default false |
+| `className` | `string` | No | - | Additional CSS class name for the wrapper span. |
 | `asChild` | `boolean` | No | `false` | Render the trigger via Slot — merges tooltip event handlers directly onto the child element, removing the wrapper `<span>`. The child element must accept `className`, `onMouseEnter`, `onMouseLeave`, `onFocus`, `onBlur`, and `onKeyDown` props. |
-| `children` | `React.ReactNode` | Yes | - |  |
+| `children` | `React.ReactNode` | Yes | - | Trigger element that the tooltip wraps. |
 
 ---
 
@@ -697,24 +715,24 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `AccordionItem[]` | Yes | - |  |
-| `value` | `string \| string[]` | No | - |  |
-| `defaultValue` | `string \| string[]` | No | - |  |
-| `onValueChange` | `(nextValue: string[]) => void` | No | - |  |
-| `onItemToggle` | `(itemValue: string, expanded: boolean) => void` | No | - |  |
-| `selectionMode` | `AccordionSelectionMode` | No | `multiple` |  |
-| `ariaLabel` | `string` | No | `Accordion` |  |
-| `size` | `AccordionSize` | No | `md` |  |
-| `bordered` | `boolean` | No | `true` |  |
-| `ghost` | `boolean` | No | `false` |  |
-| `showArrow` | `boolean` | No | `true` |  |
-| `expandIcon` | `React.ReactNode` | No | - |  |
-| `expandIconPosition` | `AccordionExpandIconPosition` | No | `start` |  |
-| `disableGutters` | `boolean` | No | `false` |  |
-| `destroyOnHidden` | `boolean` | No | `true` |  |
-| `collapsible` | `AccordionCollapsible` | No | `header` |  |
-| `classes` | `AccordionClasses` | No | - |  |
-| `className` | `string` | No | - |  |
+| `items` | `AccordionItem[]` | Yes | - | Accordion section items to render. |
+| `value` | `string \| string[]` | No | - | Controlled expanded section value(s). |
+| `defaultValue` | `string \| string[]` | No | - | Initially expanded section(s) for uncontrolled mode. |
+| `onValueChange` | `(nextValue: string[]) => void` | No | - | Callback fired when the expanded sections change. |
+| `onItemToggle` | `(itemValue: string, expanded: boolean) => void` | No | - | Callback fired when a single item is toggled. |
+| `selectionMode` | `AccordionSelectionMode` | No | `multiple` | Whether one or multiple sections can be open simultaneously. |
+| `ariaLabel` | `string` | No | `Accordion` | Accessible label for the accordion. |
+| `size` | `AccordionSize` | No | `md` | Size variant for header and content spacing. |
+| `bordered` | `boolean` | No | `true` | Whether to show borders between sections. |
+| `ghost` | `boolean` | No | `false` | Whether to use the ghost (transparent) appearance. |
+| `showArrow` | `boolean` | No | `true` | Whether to show the expand/collapse arrow indicator. |
+| `expandIcon` | `React.ReactNode` | No | - | Custom expand icon element. |
+| `expandIconPosition` | `AccordionExpandIconPosition` | No | `start` | Position of the expand icon relative to the header. |
+| `disableGutters` | `boolean` | No | `false` | Whether to remove horizontal padding from sections. |
+| `destroyOnHidden` | `boolean` | No | `true` | Whether to unmount collapsed section content from the DOM. |
+| `collapsible` | `AccordionCollapsible` | No | `header` | Controls which part of the header triggers collapse. |
+| `classes` | `AccordionClasses` | No | - | Custom class name overrides for sub-elements. |
+| `className` | `string` | No | - | Additional CSS class name. |
 | `slotProps` | `SlotProps<AccordionSlot>` | No | - | Override props (className, style, etc.) on internal slot elements |
 
 ---
@@ -728,18 +746,18 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `fields` | `FormField[]` | Yes | - |  |
-| `values` | `Record<string, unknown>` | No | - |  |
-| `onValuesChange` | `(values: Record<string, unknown>) => void` | No | - |  |
-| `onSubmit` | `(values: Record<string, unknown>) => void` | No | - |  |
-| `layout` | `FormLayout` | No | `vertical` |  |
-| `columns` | `1 \| 2` | No | `1` |  |
-| `size` | `FormSize` | No | `md` |  |
-| `submitLabel` | `string` | No | `Gonder` |  |
-| `resetLabel` | `string` | No | `Sifirla` |  |
-| `showReset` | `boolean` | No | `false` |  |
-| `loading` | `boolean` | No | `false` |  |
-| `className` | `string` | No | - |  |
+| `fields` | `FormField[]` | Yes | - | Field definitions describing the form schema. |
+| `values` | `Record<string, unknown>` | No | - | Controlled form values keyed by field key. |
+| `onValuesChange` | `(values: Record<string, unknown>) => void` | No | - | Callback fired when any field value changes. |
+| `onSubmit` | `(values: Record<string, unknown>) => void` | No | - | Callback fired on form submission with validated values. |
+| `layout` | `FormLayout` | No | `vertical` | Layout direction for form fields. |
+| `columns` | `1 \| 2` | No | `1` | Number of grid columns for the form layout. |
+| `size` | `FormSize` | No | `md` | Size variant for input controls. |
+| `submitLabel` | `string` | No | `Gonder` | Label for the submit button. |
+| `resetLabel` | `string` | No | `Sifirla` | Label for the reset button. |
+| `showReset` | `boolean` | No | `false` | Whether to show the reset button. |
+| `loading` | `boolean` | No | `false` | Whether to show loading skeleton placeholders. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -752,14 +770,14 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `AIActionAuditTimelineItem[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | `Denetim zaman cizelgesi` |  |
-| `description` | `React.ReactNode` | No | `AI aksiyonlari ve insan onayi kronolojik iz olarak ayni timeline primitive ile gorunur.` |  |
-| `selectedId` | `string \| null` | No | `null` |  |
-| `onSelectItem` | `(id: string, item: AIActionAuditTimelineItem) => void` | No | - |  |
-| `compact` | `boolean` | No | `false` |  |
-| `emptyStateLabel` | `React.ReactNode` | No | `Timeline kaydi bulunamadi.` |  |
-| `className` | `string` | No | `` |  |
+| `items` | `AIActionAuditTimelineItem[]` | Yes | - | Timeline entries to render. |
+| `title` | `React.ReactNode` | No | `Denetim zaman cizelgesi` | Heading text above the timeline. |
+| `description` | `React.ReactNode` | No | `AI aksiyonlari ve insan onayi kronolojik iz olarak ayni timeline primitive ile gorunur.` | Descriptive text below the heading. |
+| `selectedId` | `string \| null` | No | `null` | ID of the currently selected timeline entry. |
+| `onSelectItem` | `(id: string, item: AIActionAuditTimelineItem) => void` | No | - | Callback fired when a timeline entry is selected. |
+| `compact` | `boolean` | No | `false` | Whether to use a compact layout. |
+| `emptyStateLabel` | `React.ReactNode` | No | `Timeline kaydi bulunamadi.` | Label shown when the timeline is empty. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -772,25 +790,25 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `title` | `React.ReactNode` | No | `AI guided authoring` |  |
-| `description` | `React.ReactNode` | No | `Prompt yazimi, recommendation stack ve command palette ayni authoring recipe altinda birlikte calisir.` |  |
-| `promptComposerProps` | `Partial<PromptComposerProps>` | No | - |  |
-| `recommendations` | `AIGuidedAuthoringRecommendation[]` | No | - |  |
-| `commandItems` | `CommandPaletteItem[]` | No | - |  |
-| `confidenceLevel` | `ConfidenceLevel` | No | `medium` |  |
-| `confidenceScore` | `number` | No | - |  |
-| `sourceCount` | `number` | No | - |  |
-| `confidenceLabel` | `React.ReactNode` | No | `MEVCUT GUVEN` |  |
-| `paletteOpen` | `boolean` | No | - |  |
-| `defaultPaletteOpen` | `boolean` | No | `false` |  |
-| `onPaletteOpenChange` | `(open: boolean) => void` | No | - |  |
-| `onApplyRecommendation` | `(` | No | - |  |
+| `title` | `React.ReactNode` | No | `AI guided authoring` | Section heading. @default "AI guided authoring" |
+| `description` | `React.ReactNode` | No | `Prompt yazimi, recommendation stack ve command palette ayni authoring recipe altinda birlikte calisir.` | Explanatory text below the title. |
+| `promptComposerProps` | `Partial<PromptComposerProps>` | No | - | Props forwarded to the embedded PromptComposer. |
+| `recommendations` | `AIGuidedAuthoringRecommendation[]` | No | - | List of recommendation cards to display alongside the composer. |
+| `commandItems` | `CommandPaletteItem[]` | No | - | Items available in the command palette. |
+| `confidenceLevel` | `ConfidenceLevel` | No | `medium` | Overall confidence level indicator. @default "medium" |
+| `confidenceScore` | `number` | No | - | Numeric confidence score (0-100). |
+| `sourceCount` | `number` | No | - | Number of sources contributing to the confidence. |
+| `confidenceLabel` | `React.ReactNode` | No | `MEVCUT GUVEN` | Label above the confidence badge. |
+| `paletteOpen` | `boolean` | No | - | Controlled open state for the command palette. |
+| `defaultPaletteOpen` | `boolean` | No | `false` | Initial palette open state for uncontrolled mode. @default false |
+| `onPaletteOpenChange` | `(open: boolean) => void` | No | - | Callback fired when the palette open state changes. |
+| `onApplyRecommendation` | `(` | No | - | Callback fired when a recommendation's primary action is triggered. |
 | `id` | `string` | Yes | - |  |
 | `item` | `AIGuidedAuthoringRecommendation` | Yes | - |  |
-| `onReviewRecommendation` | `(` | No | - |  |
+| `onReviewRecommendation` | `(` | No | - | Callback fired when a recommendation's secondary action is triggered. |
 | `id` | `string` | Yes | - |  |
 | `item` | `AIGuidedAuthoringRecommendation` | Yes | - |  |
-| `className` | `string` | No | `` |  |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -803,16 +821,16 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `blocks` | `LayoutBlock[]` | Yes | - |  |
-| `intent` | `LayoutIntent` | No | `overview` |  |
-| `columns` | `1 \| 2 \| 3 \| 4` | No | `3` |  |
-| `density` | `LayoutDensity` | No | `comfortable` |  |
-| `onBlockReorder` | `(keys: string[]) => void` | No | - |  |
-| `onBlockToggle` | `(key: string, collapsed: boolean) => void` | No | - |  |
-| `draggable` | `boolean` | No | `false` |  |
-| `title` | `string` | No | - |  |
-| `description` | `string` | No | - |  |
-| `className` | `string` | No | - |  |
+| `blocks` | `LayoutBlock[]` | Yes | - | Array of content blocks to render in the grid. |
+| `intent` | `LayoutIntent` | No | `overview` | Layout intent that controls block ordering and span heuristics. @default "overview" |
+| `columns` | `1 \| 2 \| 3 \| 4` | No | `3` | Maximum number of grid columns. @default 3 |
+| `density` | `LayoutDensity` | No | `comfortable` | Spacing density for the grid and block cards. @default "comfortable" |
+| `onBlockReorder` | `(keys: string[]) => void` | No | - | Callback fired after a drag-and-drop reorder with the new key order. |
+| `onBlockToggle` | `(key: string, collapsed: boolean) => void` | No | - | Callback fired when a block's collapsed state changes. |
+| `draggable` | `boolean` | No | `false` | Enable drag-and-drop reordering of blocks. @default false |
+| `title` | `string` | No | - | Optional section heading. |
+| `description` | `string` | No | - | Optional subtitle below the heading. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -825,16 +843,16 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `AnchorTocItem[]` | Yes | - |  |
-| `value` | `string` | No | - |  |
-| `defaultValue` | `string` | No | - |  |
-| `onValueChange` | `(value: string) => void` | No | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `density` | `AnchorTocDensity` | No | `comfortable` |  |
-| `sticky` | `boolean` | No | `false` |  |
-| `syncWithHash` | `boolean` | No | `true` |  |
-| `className` | `string` | No | - |  |
-| `localeText` | `{` | No | - |  |
+| `items` | `AnchorTocItem[]` | Yes | - | Ordered list of table-of-contents entries. |
+| `value` | `string` | No | - | Controlled active item ID. |
+| `defaultValue` | `string` | No | - | Initial active item ID for uncontrolled mode. |
+| `onValueChange` | `(value: string) => void` | No | - | Callback fired when the active item changes. |
+| `title` | `React.ReactNode` | No | - | Heading text above the navigation list. |
+| `density` | `AnchorTocDensity` | No | `comfortable` | Spacing density variant. |
+| `sticky` | `boolean` | No | `false` | Whether the TOC sticks to the viewport on scroll. |
+| `syncWithHash` | `boolean` | No | `true` | Whether to synchronize active item with the URL hash. |
+| `className` | `string` | No | - | Additional CSS class name. |
+| `localeText` | `{` | No | - | Locale-specific label overrides. |
 | `title` | `React.ReactNode` | No | - |  |
 | `navigationLabel` | `string` | No | - |  |
 
@@ -849,22 +867,22 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `title` | `React.ReactNode` | Yes | - |  |
-| `summary` | `React.ReactNode` | Yes | - |  |
-| `status` | `ApprovalCheckpointStatus` | No | `pending` |  |
-| `checkpointLabel` | `React.ReactNode` | No | `Onay kapisi` |  |
-| `approverLabel` | `React.ReactNode` | No | `Insan inceleme kurulu` |  |
-| `dueLabel` | `React.ReactNode` | No | `Yayindan once` |  |
-| `evidenceItems` | `string[]` | No | - |  |
-| `steps` | `ApprovalCheckpointItem[]` | No | - |  |
-| `citations` | `string[]` | No | - |  |
-| `primaryActionLabel` | `string` | No | `Onayla` |  |
-| `secondaryActionLabel` | `string` | No | `Inceleme talep et` |  |
-| `onPrimaryAction` | `() => void` | No | - |  |
-| `onSecondaryAction` | `() => void` | No | - |  |
-| `footerNote` | `React.ReactNode` | No | - |  |
-| `badges` | `React.ReactNode[]` | No | - |  |
-| `className` | `string` | No | `` |  |
+| `title` | `React.ReactNode` | Yes | - | Heading text for the checkpoint card. |
+| `summary` | `React.ReactNode` | Yes | - | Summary description of the approval context. |
+| `status` | `ApprovalCheckpointStatus` | No | `pending` | Current approval status. |
+| `checkpointLabel` | `React.ReactNode` | No | `Onay kapisi` | Label displayed on the checkpoint badge. |
+| `approverLabel` | `React.ReactNode` | No | `Insan inceleme kurulu` | Label identifying the approver or review board. |
+| `dueLabel` | `React.ReactNode` | No | `Yayindan once` | Due-date or deadline label. |
+| `evidenceItems` | `string[]` | No | - | List of evidence item descriptions. |
+| `steps` | `ApprovalCheckpointItem[]` | No | - | Checklist steps within the checkpoint. |
+| `citations` | `string[]` | No | - | Citation labels rendered as badges. |
+| `primaryActionLabel` | `string` | No | `Onayla` | Label for the primary action button. |
+| `secondaryActionLabel` | `string` | No | `Inceleme talep et` | Label for the secondary action button. |
+| `onPrimaryAction` | `() => void` | No | - | Callback fired when the primary action is triggered. |
+| `onSecondaryAction` | `() => void` | No | - | Callback fired when the secondary action is triggered. |
+| `footerNote` | `React.ReactNode` | No | - | Footer note displayed below actions. |
+| `badges` | `React.ReactNode[]` | No | - | Additional badges rendered in the header. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -877,20 +895,20 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `title` | `React.ReactNode` | No | `Approval review` |  |
-| `description` | `React.ReactNode` | No | `Human checkpoint, source evidence ve audit izleri ayni review recipe altinda gorunur.` |  |
-| `checkpoint` | `ApprovalCheckpointProps` | Yes | - |  |
-| `citations` | `CitationPanelItem[]` | Yes | - |  |
-| `auditItems` | `AIActionAuditTimelineItem[]` | Yes | - |  |
-| `selectedCitationId` | `string \| null` | No | - |  |
-| `defaultSelectedCitationId` | `string \| null` | No | `null` |  |
-| `onCitationSelect` | `(citationId: string, item: CitationPanelItem) => void` | No | - |  |
-| `selectedAuditId` | `string \| null` | No | - |  |
-| `defaultSelectedAuditId` | `string \| null` | No | `null` |  |
-| `onAuditSelect` | `(` | No | - |  |
+| `title` | `React.ReactNode` | No | `Approval review` | Section heading. @default "Approval review" |
+| `description` | `React.ReactNode` | No | `Human checkpoint, source evidence ve audit izleri ayni review recipe altinda gorunur.` | Explanatory text below the title. |
+| `checkpoint` | `ApprovalCheckpointProps` | Yes | - | Props forwarded to the ApprovalCheckpoint sub-component. |
+| `citations` | `CitationPanelItem[]` | Yes | - | Citation items displayed in the evidence panel. |
+| `auditItems` | `AIActionAuditTimelineItem[]` | Yes | - | Audit trail entries for the AI action timeline. |
+| `selectedCitationId` | `string \| null` | No | - | Controlled active citation ID. |
+| `defaultSelectedCitationId` | `string \| null` | No | `null` | Initial citation ID for uncontrolled mode. |
+| `onCitationSelect` | `(citationId: string, item: CitationPanelItem) => void` | No | - | Callback when a citation is selected. |
+| `selectedAuditId` | `string \| null` | No | - | Controlled active audit item ID. |
+| `defaultSelectedAuditId` | `string \| null` | No | `null` | Initial audit item ID for uncontrolled mode. |
+| `onAuditSelect` | `(` | No | - | Callback when an audit item is selected. |
 | `auditId` | `string` | Yes | - |  |
 | `item` | `AIActionAuditTimelineItem` | Yes | - |  |
-| `className` | `string` | No | `` |  |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -929,26 +947,27 @@ _No props defined._
 **Extends:** `Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "size" | "onChange" | "value" | "defaultValue" | "children"
-  >`
+  >,
+    AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `value` | `string` | No | - |  |
-| `defaultValue` | `string` | No | `` |  |
-| `onChange` | `(value: string) => void` | No | - |  |
-| `options` | `AutocompleteOption[]` | Yes | - |  |
+| `value` | `string` | No | - | Controlled input value. |
+| `defaultValue` | `string` | No | `` | Initial value for uncontrolled mode. |
+| `onChange` | `(value: string) => void` | No | - | Callback fired when the value changes. |
+| `options` | `AutocompleteOption[]` | Yes | - | Available suggestion options. |
 | `onSearch` | `(query: string) => void` | No | - | Async search handler — called on input change with debounce |
-| `loading` | `boolean` | No | `false` |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `disabled` | `boolean` | No | `false` |  |
-| `invalid` | `boolean` | No | `false` |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `placeholder` | `string` | No | - |  |
-| `className` | `string` | No | - |  |
-| `fullWidth` | `boolean` | No | `true` |  |
+| `loading` | `boolean` | No | `false` | Whether a loading spinner is shown in the dropdown. |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `disabled` | `boolean` | No | `false` | Whether the input is disabled. |
+| `invalid` | `boolean` | No | `false` | Whether the input is in an invalid state. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the input. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the input. |
+| `placeholder` | `string` | No | - | Placeholder text shown when empty. |
+| `className` | `string` | No | - | Additional CSS class name. |
+| `fullWidth` | `boolean` | No | `true` | Whether the input spans the full container width. |
 | `allowCustomValue` | `boolean` | No | `true` | If true, allows freeform text; if false, only options can be selected |
 | `maxSuggestions` | `number` | No | `10` | Max number of suggestions shown |
 
@@ -1005,13 +1024,14 @@ _No props defined._
 **Category:** components
 **Interface:** `BreadcrumbProps`
 **Source:** `src/components/breadcrumb/Breadcrumb.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `BreadcrumbItem[]` | Yes | - |  |
+| `items` | `BreadcrumbItem[]` | Yes | - | Ordered list of breadcrumb navigation items. |
 | `separator` | `React.ReactNode` | No | - | Separator character |
 | `maxItems` | `number` | No | - | Max items before collapsing |
-| `className` | `string` | No | - |  |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -1080,20 +1100,20 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `options` | `CascaderOption[]` | Yes | - |  |
-| `value` | `string[]` | No | - |  |
-| `defaultValue` | `string[]` | No | - |  |
-| `placeholder` | `string` | No | `Select...` |  |
-| `size` | `"sm" \| "md" \| "lg"` | No | `md` |  |
-| `multiple` | `boolean` | No | `false` |  |
-| `searchable` | `boolean` | No | `false` |  |
-| `expandTrigger` | `"click" \| "hover"` | No | `click` |  |
-| `displayRender` | `(labels: string[]) => string` | No | - |  |
-| `onValueChange` | `(value: string[], selectedOptions: CascaderOption[]) => void` | No | - |  |
-| `label` | `string` | No | - |  |
-| `error` | `boolean` | No | `false` |  |
-| `description` | `string` | No | - |  |
-| `className` | `string` | No | - |  |
+| `options` | `CascaderOption[]` | Yes | - | Hierarchical option data for the cascade panels. |
+| `value` | `string[]` | No | - | Controlled selected value path. |
+| `defaultValue` | `string[]` | No | - | Initial value path for uncontrolled mode. |
+| `placeholder` | `string` | No | `Select...` | Placeholder text shown when no value is selected. |
+| `size` | `"sm" \| "md" \| "lg"` | No | `md` | Size variant of the trigger control. |
+| `multiple` | `boolean` | No | `false` | Whether multiple leaf values can be selected. |
+| `searchable` | `boolean` | No | `false` | Whether inline search filtering is enabled. |
+| `expandTrigger` | `"click" \| "hover"` | No | `click` | How child panels are revealed on parent options. |
+| `displayRender` | `(labels: string[]) => string` | No | - | Custom renderer for the displayed selected value. |
+| `onValueChange` | `(value: string[], selectedOptions: CascaderOption[]) => void` | No | - | Callback fired when the selected path changes. |
+| `label` | `string` | No | - | Field label displayed above the trigger. |
+| `error` | `boolean` | No | `false` | Whether to show the error state. |
+| `description` | `string` | No | - | Descriptive text below the label. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -1106,14 +1126,14 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `CitationPanelItem[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | `Alintilar` |  |
-| `description` | `React.ReactNode` | No | `Kaynak seffafligi ve alinti parcasi tek panel yuzeyinde okunur.` |  |
-| `compact` | `boolean` | No | `false` |  |
-| `activeCitationId` | `string \| null` | No | `null` |  |
-| `emptyStateLabel` | `React.ReactNode` | No | `Kaynak bulunamadi.` |  |
-| `onOpenCitation` | `(id: string, item: CitationPanelItem) => void` | No | - |  |
-| `className` | `string` | No | `` |  |
+| `items` | `CitationPanelItem[]` | Yes | - | Citation items to display in the panel. |
+| `title` | `React.ReactNode` | No | `Alintilar` | Heading text above the citation list. |
+| `description` | `React.ReactNode` | No | `Kaynak seffafligi ve alinti parcasi tek panel yuzeyinde okunur.` | Descriptive text below the heading. |
+| `compact` | `boolean` | No | `false` | Whether to use a compact layout. |
+| `activeCitationId` | `string \| null` | No | `null` | ID of the currently selected citation. |
+| `emptyStateLabel` | `React.ReactNode` | No | `Kaynak bulunamadi.` | Label shown when there are no citations. |
+| `onOpenCitation` | `(id: string, item: CitationPanelItem) => void` | No | - | Callback fired when a citation is clicked. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -1150,21 +1170,21 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `invalid` | `boolean` | No | `false` |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `selectionMode` | `ComboboxSelectionMode` | No | `single` |  |
-| `value` | `string \| null` | No | - |  |
-| `defaultValue` | `string \| null` | No | `null` |  |
-| `values` | `string[]` | No | - |  |
-| `defaultValues` | `string[]` | No | - |  |
-| `inputValue` | `string` | No | - |  |
-| `defaultInputValue` | `string` | No | - |  |
-| `options` | `Array<ComboboxOption \| ComboboxOptionGroup>` | Yes | - |  |
-| `freeSolo` | `boolean` | No | `false` |  |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the input. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the input. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `invalid` | `boolean` | No | `false` | Whether the input is in an invalid state. |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `selectionMode` | `ComboboxSelectionMode` | No | `single` | Selection behavior: single value, multiple values, or free-form tags. |
+| `value` | `string \| null` | No | - | Controlled selected value for single mode. |
+| `defaultValue` | `string \| null` | No | `null` | Initial selected value for uncontrolled single mode. |
+| `values` | `string[]` | No | - | Controlled selected values for multiple/tag mode. |
+| `defaultValues` | `string[]` | No | - | Initial selected values for uncontrolled multiple/tag mode. |
+| `inputValue` | `string` | No | - | Controlled text in the search input. |
+| `defaultInputValue` | `string` | No | - | Initial search text for uncontrolled mode. |
+| `options` | `Array<ComboboxOption \| ComboboxOptionGroup>` | Yes | - | Available options or option groups. |
+| `freeSolo` | `boolean` | No | `false` | Whether freeform text can be committed as a value. |
 | `onInputChange` | `(inputValue: string, event?: React.ChangeEvent<HTMLInputElement>) => void` | No | - |  |
 | `onQueryRequest` | `(query: string) => void` | No | - |  |
 | `queryDebounceMs` | `number` | No | `250` |  |
@@ -1209,18 +1229,18 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `open` | `boolean` | Yes | - |  |
-| `items` | `CommandPaletteItem[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | `Komut Paleti` |  |
-| `subtitle` | `React.ReactNode` | No | `Rota, komut ve AI destekli is akislarini tek yerden arayin.` |  |
-| `query` | `string` | No | - |  |
-| `defaultQuery` | `string` | No | `` |  |
-| `onQueryChange` | `(query: string) => void` | No | - |  |
-| `onSelect` | `(id: string, item: CommandPaletteItem) => void` | No | - |  |
-| `onClose` | `() => void` | No | - |  |
-| `placeholder` | `string` | No | `Komut, rota, politika ara\u2026` |  |
-| `emptyStateLabel` | `string` | No | `Eslesen komut bulunamadi.` |  |
-| `footer` | `React.ReactNode` | No | - |  |
+| `open` | `boolean` | Yes | - | Whether the command palette overlay is visible. |
+| `items` | `CommandPaletteItem[]` | Yes | - | Available command items to search and select. |
+| `title` | `React.ReactNode` | No | `Komut Paleti` | Heading text for the palette dialog. |
+| `subtitle` | `React.ReactNode` | No | `Rota, komut ve AI destekli is akislarini tek yerden arayin.` | Subtitle text displayed below the heading. |
+| `query` | `string` | No | - | Controlled search query value. |
+| `defaultQuery` | `string` | No | `` | Initial search query for uncontrolled mode. |
+| `onQueryChange` | `(query: string) => void` | No | - | Callback fired when the search query changes. |
+| `onSelect` | `(id: string, item: CommandPaletteItem) => void` | No | - | Callback fired when a command item is selected. |
+| `onClose` | `() => void` | No | - | Callback fired when the palette is dismissed. |
+| `placeholder` | `string` | No | `Komut, rota, politika ara\u2026` | Placeholder text for the search input. |
+| `emptyStateLabel` | `string` | No | `Eslesen komut bulunamadi.` | Label shown when no commands match the query. |
+| `footer` | `React.ReactNode` | No | - | Custom content rendered in the palette footer. |
 
 ---
 
@@ -1233,13 +1253,13 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `level` | `ConfidenceLevel` | No | `medium` |  |
-| `score` | `number` | No | - |  |
-| `sourceCount` | `number` | No | - |  |
-| `compact` | `boolean` | No | `false` |  |
-| `showScore` | `boolean` | No | `true` |  |
-| `label` | `React.ReactNode` | No | - |  |
-| `className` | `string` | No | - |  |
+| `level` | `ConfidenceLevel` | No | `medium` | Confidence tier determining the badge tone. |
+| `score` | `number` | No | - | Numeric confidence score (0-100). |
+| `sourceCount` | `number` | No | - | Number of sources backing the confidence. |
+| `compact` | `boolean` | No | `false` | Whether to render in compact mode with fewer details. |
+| `showScore` | `boolean` | No | `true` | Whether to display the numeric score. |
+| `label` | `React.ReactNode` | No | - | Custom label overriding the default level text. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -1248,13 +1268,16 @@ _No props defined._
 **Category:** components
 **Interface:** `ContextMenuProps`
 **Source:** `src/components/context-menu/ContextMenu.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `ContextMenuEntry[]` | Yes | - | Menu entries |
-| `children` | `React.ReactElement` | Yes | - | Trigger element |
-| `disabled` | `boolean` | No | `false` | Disable the context menu |
-| `className` | `string` | No | - |  |
+| `items` | `ContextMenuEntry[]` | Yes | - | Menu entries (items, separators, and labels). |
+| `children` | `React.ReactElement` | Yes | - | Trigger element that activates the context menu on right-click. |
+| `disabled` | `boolean` | No | `false` | Whether the context menu is disabled. |
+| `className` | `string` | No | - | Additional CSS class name for the menu panel. |
+| `access` | `import('../../internal/access-controller').AccessLevel` | No | - | Access level controlling visibility and interactivity. |
+| `accessReason` | `string` | No | - | Tooltip text explaining access restrictions. |
 
 ---
 
@@ -1268,15 +1291,15 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `invalid` | `boolean` | No | `false` |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `onValueChange` | `(value: string, event: React.ChangeEvent<HTMLInputElement>) => void` | No | - |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `messages` | `DatePickerMessages` | No | - |  |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the input. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the input. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `invalid` | `boolean` | No | `false` | **DEPRECATED** (Use `error` instead. Whether the input is in an invalid state.) |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `onValueChange` | `(value: string, event: React.ChangeEvent<HTMLInputElement>) => void` | No | - | Callback fired when the date value changes. |
+| `fullWidth` | `boolean` | No | `true` | Whether the input spans the full container width. |
+| `messages` | `DatePickerMessages` | No | - | Locale-specific message overrides. |
 
 ---
 
@@ -1285,19 +1308,20 @@ _No props defined._
 **Category:** components
 **Interface:** `DescriptionsProps`
 **Source:** `src/components/descriptions/Descriptions.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `DescriptionsItem[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `columns` | `1 \| 2 \| 3` | No | `2` |  |
-| `density` | `"comfortable" \| "compact"` | No | `comfortable` |  |
-| `bordered` | `boolean` | No | `false` |  |
-| `emptyStateLabel` | `React.ReactNode` | No | - |  |
-| `localeText` | `{ emptyFallbackDescription?: React.ReactNode }` | No | - |  |
-| `fullWidth` | `boolean` | No | `false` |  |
-| `className` | `string` | No | - |  |
+| `items` | `DescriptionsItem[]` | Yes | - | Array of key-value items to render. |
+| `title` | `React.ReactNode` | No | - | Optional heading above the grid. |
+| `description` | `React.ReactNode` | No | - | Optional subtitle below the heading. |
+| `columns` | `1 \| 2 \| 3` | No | `2` | Number of grid columns. @default 2 |
+| `density` | `"comfortable" \| "compact"` | No | `comfortable` | Vertical density of the grid cells. @default "comfortable" |
+| `bordered` | `boolean` | No | `false` | Whether to render cell borders. @default false |
+| `emptyStateLabel` | `React.ReactNode` | No | - | Custom label shown when items array is empty. |
+| `localeText` | `{ emptyFallbackDescription?: React.ReactNode }` | No | - | Locale-specific text overrides. |
+| `fullWidth` | `boolean` | No | `false` | Stretch grid to full container width. @default false |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -1307,7 +1331,18 @@ _No props defined._
 **Interface:** `DetailSectionTabsProps`
 **Source:** `src/components/detail-section-tabs/DetailSectionTabs.tsx`
 
-_No props defined._
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `tabs` | `DetailSectionTabItem[]` | Yes | - | Tab items to render. |
+| `activeTabId` | `string` | Yes | - | Currently active tab identifier. |
+| `onTabChange` | `(tabId: string) => void` | Yes | - | Callback fired when the active tab changes. |
+| `ariaLabel` | `string` | No | `Detay sekmeleri` | Accessible label for the tab strip. |
+| `testIdPrefix` | `string` | No | - | Prefix for generated test IDs. |
+| `className` | `string` | No | - | Additional CSS class name. |
+| `sticky` | `boolean` | No | `true` | Whether the tab strip sticks to the top on scroll. |
+| `density` | `SectionTabsDensity` | No | `compact` | Spacing density variant. |
+| `autoWrapBreakpoint` | `SectionTabsBreakpoint` | No | `xl` | Breakpoint at which tabs switch from scroll to wrap layout. |
+| `classes` | `SectionTabsClasses` | No | - | Custom class name overrides for sub-elements. |
 
 ---
 
@@ -1320,15 +1355,15 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `mode` | `EmptyErrorLoadingMode` | Yes | - |  |
-| `title` | `React.ReactNode` | No | `Durum tarifi` |  |
-| `description` | `React.ReactNode` | No | `Bos, hata ve yukleme durumlari ayni geri bildirim dilini kullanir.` |  |
-| `errorLabel` | `React.ReactNode` | No | `Something went wrong. Check the evidence set and upstream connections.` |  |
-| `retryLabel` | `string` | No | `Retry` |  |
-| `onRetry` | `() => void` | No | - |  |
-| `loadingLabel` | `string` | No | `Loading` |  |
-| `showSkeleton` | `boolean` | No | `true` |  |
-| `className` | `string` | No | `` |  |
+| `mode` | `EmptyErrorLoadingMode` | Yes | - | Current display mode: empty, error, or loading. |
+| `title` | `React.ReactNode` | No | `Durum tarifi` | Heading text displayed above the feedback area. |
+| `description` | `React.ReactNode` | No | `Bos, hata ve yukleme durumlari ayni geri bildirim dilini kullanir.` | Descriptive text below the heading. |
+| `errorLabel` | `React.ReactNode` | No | `Something went wrong. Check the evidence set and upstream connections.` | Message shown when mode is error. |
+| `retryLabel` | `string` | No | `Retry` | Label for the retry button in error state. |
+| `onRetry` | `() => void` | No | - | Callback fired when the retry button is clicked. |
+| `loadingLabel` | `string` | No | `Loading` | Accessible label for the loading spinner. |
+| `showSkeleton` | `boolean` | No | `true` | Whether to show skeleton placeholders during loading. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -1340,13 +1375,13 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `icon` | `React.ReactNode` | No | - | Illustration or icon |
-| `title` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `action` | `React.ReactNode` | No | - | Primary action (e.g. Button) |
-| `secondaryAction` | `React.ReactNode` | No | - | Secondary action |
-| `compact` | `boolean` | No | `false` | Compact variant for inline use |
-| `className` | `string` | No | - |  |
+| `icon` | `React.ReactNode` | No | - | Illustration or icon displayed above the title. |
+| `title` | `React.ReactNode` | No | - | Heading text for the empty state. |
+| `description` | `React.ReactNode` | No | - | Descriptive text shown below the title. |
+| `action` | `React.ReactNode` | No | - | Primary action element (e.g. Button). |
+| `secondaryAction` | `React.ReactNode` | No | - | Secondary action element displayed beside the primary action. |
+| `compact` | `boolean` | No | `false` | Compact variant with reduced padding for inline use. |
+| `className` | `string` | No | - | Additional CSS class name for the root element. |
 | `access` | `AccessLevel` | No | `full` | Access level — controls visibility |
 | `accessReason` | `string` | No | - | Tooltip/title text explaining access restriction |
 
@@ -1357,6 +1392,7 @@ _No props defined._
 **Category:** components
 **Interface:** `ErrorBoundaryProps`
 **Source:** `src/components/error-boundary/ErrorBoundary.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -1398,6 +1434,7 @@ _No props defined._
 **Category:** components
 **Interface:** `FormFieldProps`
 **Source:** `src/components/form-field/FormField.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -1422,31 +1459,32 @@ _No props defined._
 **Extends:** `Omit<
     React.InputHTMLAttributes<HTMLInputElement>,
     "size" | "onChange" | "value" | "defaultValue" | "type" | "prefix"
-  >`
+  >,
+    AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `value` | `number \| null` | No | - |  |
-| `defaultValue` | `number \| null` | No | - |  |
-| `onChange` | `(value: number \| null) => void` | No | - |  |
-| `min` | `number` | No | - |  |
-| `max` | `number` | No | - |  |
-| `step` | `number` | No | `1` |  |
+| `value` | `number \| null` | No | - | Controlled numeric value. |
+| `defaultValue` | `number \| null` | No | - | Initial value for uncontrolled mode. |
+| `onChange` | `(value: number \| null) => void` | No | - | Callback fired when the numeric value changes. |
+| `min` | `number` | No | - | Minimum allowed value. |
+| `max` | `number` | No | - | Maximum allowed value. |
+| `step` | `number` | No | `1` | Increment/decrement step amount. |
 | `precision` | `number` | No | - | Number of decimal places to display |
-| `prefix` | `React.ReactNode` | No | - |  |
-| `suffix` | `React.ReactNode` | No | - |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `disabled` | `boolean` | No | `false` |  |
-| `readOnly` | `boolean` | No | `false` |  |
-| `invalid` | `boolean` | No | `false` |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `required` | `boolean` | No | `false` |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `placeholder` | `string` | No | - |  |
-| `className` | `string` | No | - |  |
+| `prefix` | `React.ReactNode` | No | - | Content rendered before the input. |
+| `suffix` | `React.ReactNode` | No | - | Content rendered after the input. |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `disabled` | `boolean` | No | `false` | Whether the input is disabled. |
+| `readOnly` | `boolean` | No | `false` | Whether the input is read-only. |
+| `invalid` | `boolean` | No | `false` | Whether the input is in an invalid state. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the input. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the input. |
+| `required` | `boolean` | No | `false` | Whether the field is required. |
+| `fullWidth` | `boolean` | No | `true` | Whether the input spans the full container width. |
+| `placeholder` | `string` | No | - | Placeholder text shown when empty. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -1459,16 +1497,16 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `value` | `unknown` | Yes | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `rootLabel` | `string` | No | `payload` |  |
-| `defaultExpandedDepth` | `number` | No | `1` |  |
-| `maxHeight` | `number \| string` | No | `420` |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `showTypes` | `boolean` | No | `true` |  |
-| `emptyStateLabel` | `React.ReactNode` | No | - |  |
-| `localeText` | `{` | No | - |  |
+| `value` | `unknown` | Yes | - | JSON data to display in the tree. |
+| `title` | `React.ReactNode` | No | - | Heading text above the viewer. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the heading. |
+| `rootLabel` | `string` | No | `payload` | Label for the root tree node. |
+| `defaultExpandedDepth` | `number` | No | `1` | Number of tree levels expanded by default. |
+| `maxHeight` | `number \| string` | No | `420` | Maximum height of the scrollable viewer area. |
+| `fullWidth` | `boolean` | No | `true` | Whether the viewer spans full container width. |
+| `showTypes` | `boolean` | No | `true` | Whether to show type badges on each node. |
+| `emptyStateLabel` | `React.ReactNode` | No | - | Label shown when no data is available. |
+| `localeText` | `{` | No | - | Locale-specific label overrides. |
 | `emptyStateLabel` | `React.ReactNode` | No | - |  |
 | `emptyFallbackDescription` | `React.ReactNode` | No | - |  |
 | `emptyNodeDescription` | `React.ReactNode` | No | - |  |
@@ -1517,18 +1555,18 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `ListItem[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `density` | `ListDensity` | No | `comfortable` |  |
-| `bordered` | `boolean` | No | `true` |  |
-| `emptyStateLabel` | `React.ReactNode` | No | `No records found for this list.` |  |
-| `localeText` | `{` | No | - |  |
+| `items` | `ListItem[]` | Yes | - | Data items to render in the list. |
+| `title` | `React.ReactNode` | No | - | Heading text above the list. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the heading. |
+| `density` | `ListDensity` | No | `comfortable` | Row spacing density variant. |
+| `bordered` | `boolean` | No | `true` | Whether to show a border around the list container. |
+| `emptyStateLabel` | `React.ReactNode` | No | `No records found for this list.` | Label shown when the list is empty. |
+| `localeText` | `{` | No | - | Locale-specific label overrides. |
 | `emptyFallbackDescription` | `React.ReactNode` | No | - |  |
-| `loading` | `boolean` | No | `false` |  |
-| `selectedKey` | `React.Key \| null` | No | `null` |  |
-| `onItemSelect` | `(key: React.Key) => void` | No | - |  |
-| `fullWidth` | `boolean` | No | `true` |  |
+| `loading` | `boolean` | No | `false` | Whether to show loading skeleton rows. |
+| `selectedKey` | `React.Key \| null` | No | `null` | Key of the currently selected item. |
+| `onItemSelect` | `(key: React.Key) => void` | No | - | Callback fired when a list item is selected. |
+| `fullWidth` | `boolean` | No | `true` | Whether the list spans the full container width. |
 
 ---
 
@@ -1568,19 +1606,19 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `MenuBarItem[]` | Yes | - |  |
-| `value` | `string` | No | - |  |
-| `defaultValue` | `string` | No | - |  |
-| `onValueChange` | `(value: string) => void` | No | - |  |
-| `onItemClick` | `(value: string, event: React.MouseEvent<HTMLElement>) => void` | No | - |  |
-| `onMenuItemSelect` | `(rootValue: string, item: MenuBarMenuItem) => void` | No | - |  |
-| `openValue` | `string \| null` | No | - |  |
-| `defaultOpenValue` | `string \| null` | No | `null` |  |
-| `onOpenValueChange` | `(value: string \| null) => void` | No | - |  |
-| `ariaLabel` | `string` | No | `Application menu` |  |
-| `menuAriaLabel` | `string` | No | `Menu bar submenu` |  |
-| `size` | `MenuBarSize` | No | `md` |  |
-| `appearance` | `MenuBarAppearance` | No | `default` |  |
+| `items` | `MenuBarItem[]` | Yes | - | Navigation items to render in the bar. |
+| `value` | `string` | No | - | Controlled active item value. |
+| `defaultValue` | `string` | No | - | Initial active item value for uncontrolled mode. |
+| `onValueChange` | `(value: string) => void` | No | - | Callback fired when the active item changes. |
+| `onItemClick` | `(value: string, event: React.MouseEvent<HTMLElement>) => void` | No | - | Callback fired when a bar item is clicked. |
+| `onMenuItemSelect` | `(rootValue: string, item: MenuBarMenuItem) => void` | No | - | Callback fired when a submenu item is selected. |
+| `openValue` | `string \| null` | No | - | Controlled open submenu value. |
+| `defaultOpenValue` | `string \| null` | No | `null` | Initial open submenu value for uncontrolled mode. |
+| `onOpenValueChange` | `(value: string \| null) => void` | No | - | Callback fired when the open submenu changes. |
+| `ariaLabel` | `string` | No | `Application menu` | Accessible label for the navigation bar. |
+| `menuAriaLabel` | `string` | No | `Menu bar submenu` | Accessible label for submenu surfaces. |
+| `size` | `MenuBarSize` | No | `md` | Size variant of the menu bar. |
+| `appearance` | `MenuBarAppearance` | No | `default` | Visual appearance variant. |
 | `labelVisibility` | `MenuBarLabelVisibility` | No | `always` |  |
 | `overflowBehavior` | `MenuBarOverflowBehavior` | No | `none` |  |
 | `overflowLabel` | `React.ReactNode` | No | - |  |
@@ -1619,23 +1657,23 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `NavigationRailItem[]` | Yes | - |  |
-| `value` | `string` | No | - |  |
-| `defaultValue` | `string` | No | - |  |
-| `onValueChange` | `(value: string) => void` | No | - |  |
-| `onItemClick` | `(` | No | - |  |
+| `items` | `NavigationRailItem[]` | Yes | - | Navigation items to render in the rail. |
+| `value` | `string` | No | - | Controlled active item value. |
+| `defaultValue` | `string` | No | - | Initial active item value for uncontrolled mode. |
+| `onValueChange` | `(value: string) => void` | No | - | Callback fired when the active item changes. |
+| `onItemClick` | `(` | No | - | Callback fired when a navigation item is clicked. |
 | `value` | `string` | Yes | - |  |
 | `event` | `React.MouseEvent<HTMLElement>` | Yes | - |  |
-| `ariaLabel` | `string` | No | `Navigation rail` |  |
-| `align` | `NavigationRailAlignment` | No | `start` |  |
-| `compact` | `boolean` | No | `false` |  |
-| `size` | `NavigationRailSize` | No | `md` |  |
-| `appearance` | `NavigationRailAppearance` | No | `default` |  |
-| `labelVisibility` | `NavigationRailLabelVisibility` | No | `always` |  |
-| `currentPath` | `string` | No | - |  |
-| `footer` | `React.ReactNode` | No | - |  |
-| `className` | `string` | No | - |  |
-| `classes` | `NavigationRailClasses` | No | - |  |
+| `ariaLabel` | `string` | No | `Navigation rail` | Accessible label for the navigation rail. |
+| `align` | `NavigationRailAlignment` | No | `start` | Vertical alignment of items within the rail. |
+| `compact` | `boolean` | No | `false` | Whether to use the narrow compact layout. |
+| `size` | `NavigationRailSize` | No | `md` | Size variant for item spacing. |
+| `appearance` | `NavigationRailAppearance` | No | `default` | Visual appearance variant. |
+| `labelVisibility` | `NavigationRailLabelVisibility` | No | `always` | Controls when item labels are visible. |
+| `currentPath` | `string` | No | - | Current URL path used for automatic active detection. |
+| `footer` | `React.ReactNode` | No | - | Content rendered at the bottom of the rail. |
+| `className` | `string` | No | - | Additional CSS class name. |
+| `classes` | `NavigationRailClasses` | No | - | Custom class name overrides for sub-elements. |
 
 ---
 
@@ -1652,18 +1690,18 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `open` | `boolean` | Yes | - |  |
-| `onClose` | `(reason: OverlayCloseReason) => void` | No | - |  |
-| `closeLabel` | `string` | No | `Bildirim merkezini kapat` |  |
-| `closeOnOverlayClick` | `boolean` | No | `true` |  |
-| `closeOnEscape` | `boolean` | No | `true` |  |
-| `keepMounted` | `boolean` | No | `false` |  |
-| `destroyOnHidden` | `boolean` | No | `true` |  |
-| `portalTarget` | `HTMLElement \| null` | No | - |  |
-| `disablePortal` | `boolean` | No | `false` |  |
-| `dialogLabel` | `string` | No | `Bildirimler` |  |
-| `widthClassName` | `string` | No | `max-w-md` |  |
-| `panelClassName` | `string` | No | `` |  |
+| `open` | `boolean` | Yes | - | Whether the drawer is open. |
+| `onClose` | `(reason: OverlayCloseReason) => void` | No | - | Callback fired when the drawer is dismissed. |
+| `closeLabel` | `string` | No | `Bildirim merkezini kapat` | Accessible label for the close button. |
+| `closeOnOverlayClick` | `boolean` | No | `true` | Whether clicking the overlay backdrop closes the drawer. |
+| `closeOnEscape` | `boolean` | No | `true` | Whether pressing Escape closes the drawer. |
+| `keepMounted` | `boolean` | No | `false` | Keep the drawer DOM mounted when closed. |
+| `destroyOnHidden` | `boolean` | No | `true` | Destroy drawer content when hidden. |
+| `portalTarget` | `HTMLElement \| null` | No | - | Target element for the portal. |
+| `disablePortal` | `boolean` | No | `false` | Disable React portal rendering. |
+| `dialogLabel` | `string` | No | `Bildirimler` | Accessible label for the drawer dialog. |
+| `widthClassName` | `string` | No | `max-w-md` | Tailwind class controlling drawer width. |
+| `panelClassName` | `string` | No | `` | Additional CSS class for the inner panel. |
 
 ---
 
@@ -1676,20 +1714,20 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
+| `item` | `NotificationSurfaceItem` | Yes | - | Notification data to render. |
+| `className` | `string` | No | `` | Additional CSS class name. |
+| `removeLabel` | `string` | No | `Bildirimi kapat` | Accessible label for the remove button. |
+| `getPrimaryActionLabel` | `(` | No | - | Returns the primary action button label for a given item, or null to hide it. |
 | `item` | `NotificationSurfaceItem` | Yes | - |  |
-| `className` | `string` | No | `` |  |
-| `removeLabel` | `string` | No | `Bildirimi kapat` |  |
-| `getPrimaryActionLabel` | `(` | No | - |  |
-| `item` | `NotificationSurfaceItem` | Yes | - |  |
-| `onPrimaryAction` | `(item: NotificationSurfaceItem) => void` | No | - |  |
-| `onRemove` | `(id: string) => void` | No | - |  |
-| `formatTimestamp` | `(` | No | - |  |
+| `onPrimaryAction` | `(item: NotificationSurfaceItem) => void` | No | - | Callback fired when the primary action button is clicked. |
+| `onRemove` | `(id: string) => void` | No | - | Callback fired when the remove button is clicked. |
+| `formatTimestamp` | `(` | No | - | Custom formatter for the notification timestamp. |
 | `timestamp` | `number \| undefined` | Yes | - |  |
 | `item` | `NotificationSurfaceItem` | Yes | - |  |
-| `selectable` | `boolean` | No | `false` |  |
-| `selected` | `boolean` | No | `false` |  |
-| `selectLabel` | `string` | No | - |  |
-| `onSelectedChange` | `(` | No | - |  |
+| `selectable` | `boolean` | No | `false` | Whether the card shows a selection checkbox. |
+| `selected` | `boolean` | No | `false` | Whether the card is currently selected. |
+| `selectLabel` | `string` | No | - | Accessible label for the selection checkbox. |
+| `onSelectedChange` | `(` | No | - | Callback fired when the selection state changes. |
 | `item` | `NotificationSurfaceItem` | Yes | - |  |
 | `selected` | `boolean` | Yes | `false` |  |
 
@@ -1704,46 +1742,46 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `NotificationSurfaceItem[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | `Bildirimler` |  |
-| `summaryLabel` | `React.ReactNode` | No | - |  |
-| `emptyTitle` | `React.ReactNode` | No | `Su anda bildirim yok` |  |
-| `emptyDescription` | `string` | No | `Yeni olaylar geldiginde burada gorunecek.` |  |
-| `filteredEmptyTitle` | `React.ReactNode` | No | `Bu filtre icin bildirim yok` |  |
-| `className` | `string` | No | `` |  |
-| `markAllReadLabel` | `string` | No | `Tumunu okundu say` |  |
-| `clearLabel` | `string` | No | `Temizle` |  |
-| `removeLabel` | `string` | No | `Bildirimi kapat` |  |
-| `headerAccessory` | `React.ReactNode` | No | - |  |
-| `getPrimaryActionLabel` | `NotificationItemCardProps["getPrimaryActionLabel"]` | No | - |  |
-| `onPrimaryAction` | `NotificationItemCardProps["onPrimaryAction"]` | No | - |  |
-| `onRemoveItem` | `(id: string) => void` | No | - |  |
-| `onMarkAllRead` | `() => void` | No | - |  |
-| `onClear` | `() => void` | No | - |  |
-| `formatTimestamp` | `NotificationItemCardProps["formatTimestamp"]` | No | - |  |
-| `showFilters` | `boolean` | No | `false` |  |
-| `availableFilters` | `NotificationPanelFilter[]` | No | - |  |
-| `activeFilter` | `NotificationPanelFilter` | No | - |  |
-| `defaultFilter` | `NotificationPanelFilter` | No | `all` |  |
-| `onFilterChange` | `(filter: NotificationPanelFilter) => void` | No | - |  |
-| `grouping` | `NotificationPanelGrouping` | No | `none` |  |
-| `filterLabels` | `Partial<Record<NotificationPanelFilter, string>>` | No | - |  |
-| `sectionLabels` | `Partial<` | No | - |  |
-| `dateGrouping` | `NotificationPanelDateGrouping` | No | `none` |  |
-| `dateSectionLabels` | `Partial<` | No | - |  |
-| `dateGroupingReferenceTime` | `number` | No | - |  |
-| `selectable` | `boolean` | No | `false` |  |
-| `selectedIds` | `string[]` | No | - |  |
-| `defaultSelectedIds` | `string[]` | No | - |  |
-| `onSelectedIdsChange` | `(ids: string[]) => void` | No | - |  |
-| `selectVisibleLabel` | `string` | No | `Gorunenleri sec` |  |
-| `clearSelectionLabel` | `string` | No | `Secimi temizle` |  |
-| `markSelectedReadLabel` | `string` | No | `Secimi okundu say` |  |
-| `removeSelectedLabel` | `string` | No | `Secilenleri sil` |  |
-| `selectionSummaryLabel` | `(count: number) => React.ReactNode` | No | - |  |
-| `getSelectionLabel` | `(item: NotificationSurfaceItem) => string` | No | - |  |
-| `onMarkSelectedRead` | `(ids: string[]) => void` | No | - |  |
-| `onRemoveSelected` | `(ids: string[]) => void` | No | - |  |
+| `items` | `NotificationSurfaceItem[]` | Yes | - | Array of notification items to display. |
+| `title` | `React.ReactNode` | No | `Bildirimler` | Panel heading text. |
+| `summaryLabel` | `React.ReactNode` | No | - | Summary line shown below the title (e.g. unread count). |
+| `emptyTitle` | `React.ReactNode` | No | `Su anda bildirim yok` | Title shown when the items array is empty. |
+| `emptyDescription` | `string` | No | `Yeni olaylar geldiginde burada gorunecek.` | Description shown in the empty state. |
+| `filteredEmptyTitle` | `React.ReactNode` | No | `Bu filtre icin bildirim yok` | Title shown when no items match the active filter. |
+| `className` | `string` | No | `` | Additional CSS class name. |
+| `markAllReadLabel` | `string` | No | `Tumunu okundu say` | Label for the "mark all as read" button. |
+| `clearLabel` | `string` | No | `Temizle` | Label for the "clear" button. |
+| `removeLabel` | `string` | No | `Bildirimi kapat` | Label for the per-item remove action. |
+| `headerAccessory` | `React.ReactNode` | No | - | Custom element rendered in the header actions area. |
+| `getPrimaryActionLabel` | `NotificationItemCardProps["getPrimaryActionLabel"]` | No | - | Returns a label for each item's primary action button. |
+| `onPrimaryAction` | `NotificationItemCardProps["onPrimaryAction"]` | No | - | Callback fired when a notification's primary action is triggered. |
+| `onRemoveItem` | `(id: string) => void` | No | - | Callback fired when a single notification is removed. |
+| `onMarkAllRead` | `() => void` | No | - | Callback fired when "mark all as read" is clicked. |
+| `onClear` | `() => void` | No | - | Callback fired when "clear" is clicked. |
+| `formatTimestamp` | `NotificationItemCardProps["formatTimestamp"]` | No | - | Custom timestamp formatter for notification cards. |
+| `showFilters` | `boolean` | No | `false` | Whether to show the filter bar. @default false |
+| `availableFilters` | `NotificationPanelFilter[]` | No | - | Which filter options are available. |
+| `activeFilter` | `NotificationPanelFilter` | No | - | Controlled active filter value. |
+| `defaultFilter` | `NotificationPanelFilter` | No | `all` | Initial filter for uncontrolled mode. @default "all" |
+| `onFilterChange` | `(filter: NotificationPanelFilter) => void` | No | - | Callback fired when the active filter changes. |
+| `grouping` | `NotificationPanelGrouping` | No | `none` | Group items by priority. @default "none" |
+| `filterLabels` | `Partial<Record<NotificationPanelFilter, string>>` | No | - | Custom labels for each filter option. |
+| `sectionLabels` | `Partial<` | No | - | Custom labels for priority-based section headers. |
+| `dateGrouping` | `NotificationPanelDateGrouping` | No | `none` | Group items by relative date. @default "none" |
+| `dateSectionLabels` | `Partial<` | No | - | Custom labels for date-based section headers. |
+| `dateGroupingReferenceTime` | `number` | No | - | Reference timestamp (epoch ms) used for date bucketing. @default Date.now() |
+| `selectable` | `boolean` | No | `false` | Enable checkbox selection on notification items. @default false |
+| `selectedIds` | `string[]` | No | - | Controlled set of selected item IDs. |
+| `defaultSelectedIds` | `string[]` | No | - | Initial selected IDs for uncontrolled mode. |
+| `onSelectedIdsChange` | `(ids: string[]) => void` | No | - | Callback fired when the selected IDs change. |
+| `selectVisibleLabel` | `string` | No | `Gorunenleri sec` | Label for the "select visible" toggle button. |
+| `clearSelectionLabel` | `string` | No | `Secimi temizle` | Label for the "clear selection" button. |
+| `markSelectedReadLabel` | `string` | No | `Secimi okundu say` | Label for the "mark selected as read" button. |
+| `removeSelectedLabel` | `string` | No | `Secilenleri sil` | Label for the "remove selected" button. |
+| `selectionSummaryLabel` | `(count: number) => React.ReactNode` | No | - | Render function for the selection count badge. |
+| `getSelectionLabel` | `(item: NotificationSurfaceItem) => string` | No | - | Returns an accessible label for each selectable item's checkbox. |
+| `onMarkSelectedRead` | `(ids: string[]) => void` | No | - | Callback fired when selected items are marked as read. |
+| `onRemoveSelected` | `(ids: string[]) => void` | No | - | Callback fired when selected items are removed. |
 
 ---
 
@@ -1756,15 +1794,15 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `total` | `number` | No | - |  |
-| `current` | `number` | No | - |  |
+| `total` | `number` | No | - | Total number of items across all pages. |
+| `current` | `number` | No | - | Controlled current page number. |
 | `defaultCurrent` | `number` | No | - | Initial page for uncontrolled mode. Ignored when `current` is provided. |
-| `pageSize` | `number` | No | `10` |  |
-| `onChange` | `(page: number) => void` | No | - |  |
+| `pageSize` | `number` | No | `10` | Number of items per page. |
+| `onChange` | `(page: number) => void` | No | - | Callback fired when the page changes. |
 | `siblingCount` | `number` | No | `1` | Max page buttons visible (excluding prev/next) |
-| `size` | `PaginationSize` | No | `md` |  |
+| `size` | `PaginationSize` | No | `md` | Size variant for the pagination buttons. |
 | `showTotal` | `boolean` | No | `false` | Show total count |
-| `className` | `string` | No | - |  |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -1802,25 +1840,25 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `title` | `React.ReactNode` | No | `Prompt olusturucu` |  |
-| `description` | `React.ReactNode` | No | `Scope-safe prompt yazimi, tone guardrail ve source referanslari ayni composer yuzeyinde birlesir.` |  |
-| `subject` | `string` | No | - |  |
-| `defaultSubject` | `string` | No | `` |  |
-| `onSubjectChange` | `(value: string) => void` | No | - |  |
-| `value` | `string` | No | - |  |
-| `defaultValue` | `string` | No | `` |  |
-| `onValueChange` | `(value: string) => void` | No | - |  |
-| `scope` | `PromptComposerScope` | No | - |  |
-| `defaultScope` | `PromptComposerScope` | No | `general` |  |
-| `onScopeChange` | `(value: PromptComposerScope) => void` | No | - |  |
-| `tone` | `PromptComposerTone` | No | - |  |
-| `defaultTone` | `PromptComposerTone` | No | `neutral` |  |
-| `onToneChange` | `(value: PromptComposerTone) => void` | No | - |  |
-| `maxLength` | `number` | No | `1200` |  |
-| `guardrails` | `string[]` | No | - |  |
-| `citations` | `string[]` | No | - |  |
-| `footerNote` | `React.ReactNode` | No | - |  |
-| `className` | `string` | No | `` |  |
+| `title` | `React.ReactNode` | No | `Prompt olusturucu` | Section heading. @default "Prompt olusturucu" |
+| `description` | `React.ReactNode` | No | `Scope-safe prompt yazimi, tone guardrail ve source referanslari ayni composer yuzeyinde birlesir.` | Explanatory text below the title. |
+| `subject` | `string` | No | - | Controlled prompt subject/title value. |
+| `defaultSubject` | `string` | No | `` | Initial subject for uncontrolled mode. |
+| `onSubjectChange` | `(value: string) => void` | No | - | Callback fired when the subject changes. |
+| `value` | `string` | No | - | Controlled prompt body value. |
+| `defaultValue` | `string` | No | `` | Initial body for uncontrolled mode. |
+| `onValueChange` | `(value: string) => void` | No | - | Callback fired when the body text changes. |
+| `scope` | `PromptComposerScope` | No | - | Controlled scope selection. |
+| `defaultScope` | `PromptComposerScope` | No | `general` | Initial scope for uncontrolled mode. @default "general" |
+| `onScopeChange` | `(value: PromptComposerScope) => void` | No | - | Callback fired when the scope changes. |
+| `tone` | `PromptComposerTone` | No | - | Controlled tone selection. |
+| `defaultTone` | `PromptComposerTone` | No | `neutral` | Initial tone for uncontrolled mode. @default "neutral" |
+| `onToneChange` | `(value: PromptComposerTone) => void` | No | - | Callback fired when the tone changes. |
+| `maxLength` | `number` | No | `1200` | Maximum character count for the prompt body. @default 1200 |
+| `guardrails` | `string[]` | No | - | List of guardrail labels shown as warning badges. |
+| `citations` | `string[]` | No | - | List of source anchor labels shown as reference badges. |
+| `footerNote` | `React.ReactNode` | No | - | Optional footer note rendered below the side panel. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -1833,17 +1871,17 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `value` | `string` | Yes | - |  |
-| `size` | `number` | No | `128` |  |
-| `color` | `string` | No | `var(--text-primary, #000000)` |  |
-| `bgColor` | `string` | No | `var(--surface-canvas, #ffffff)` |  |
-| `errorLevel` | `QRErrorLevel` | No | `M` |  |
-| `icon` | `string` | No | - |  |
-| `iconSize` | `number` | No | - |  |
-| `bordered` | `boolean` | No | `true` |  |
-| `status` | `"active" \| "expired" \| "loading"` | No | `active` |  |
-| `onRefresh` | `() => void` | No | - |  |
-| `className` | `string` | No | - |  |
+| `value` | `string` | Yes | - | Text or URL to encode in the QR code. |
+| `size` | `number` | No | `128` | Size of the QR code in pixels. @default 128 |
+| `color` | `string` | No | `var(--text-primary, #000000)` | Foreground color for QR modules. @default "var(--text-primary, #000000)" |
+| `bgColor` | `string` | No | `var(--surface-canvas, #ffffff)` | Background color behind the QR code. @default "var(--surface-canvas, #ffffff)" |
+| `errorLevel` | `QRErrorLevel` | No | `M` | Reed-Solomon error correction level. @default "M" |
+| `icon` | `string` | No | - | URL of a center icon overlay image. |
+| `iconSize` | `number` | No | - | Size of the center icon in pixels. Defaults to 25% of the QR size. |
+| `bordered` | `boolean` | No | `true` | Render a border and padding around the QR code. @default true |
+| `status` | `"active" \| "expired" \| "loading"` | No | `active` | Current status affecting the visual state. @default "active" |
+| `onRefresh` | `() => void` | No | - | Callback fired when the "Refresh" button is clicked in expired state. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -1884,23 +1922,23 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `title` | `React.ReactNode` | Yes | - |  |
-| `summary` | `React.ReactNode` | Yes | - |  |
-| `recommendationType` | `React.ReactNode` | No | `Recommendation` |  |
-| `rationale` | `string[]` | No | - |  |
-| `citations` | `string[]` | No | - |  |
-| `confidenceLevel` | `ConfidenceLevel` | No | `medium` |  |
-| `confidenceScore` | `number` | No | - |  |
-| `sourceCount` | `number` | No | - |  |
-| `primaryActionLabel` | `string` | No | `Apply` |  |
-| `secondaryActionLabel` | `string` | No | `Review` |  |
-| `onPrimaryAction` | `() => void` | No | - |  |
-| `onSecondaryAction` | `() => void` | No | - |  |
-| `tone` | `RecommendationCardTone` | No | `info` |  |
-| `compact` | `boolean` | No | `false` |  |
-| `badges` | `React.ReactNode[]` | No | - |  |
-| `footerNote` | `React.ReactNode` | No | - |  |
-| `className` | `string` | No | `` |  |
+| `title` | `React.ReactNode` | Yes | - | Recommendation heading. |
+| `summary` | `React.ReactNode` | Yes | - | Brief summary of the recommendation. |
+| `recommendationType` | `React.ReactNode` | No | `Recommendation` | Category label shown as a badge (e.g. "Recommendation"). |
+| `rationale` | `string[]` | No | - | List of reasons supporting the recommendation. |
+| `citations` | `string[]` | No | - | Source citation labels shown as muted badges. |
+| `confidenceLevel` | `ConfidenceLevel` | No | `medium` | AI confidence level indicator. @default "medium" |
+| `confidenceScore` | `number` | No | - | Numeric confidence score (0-100). |
+| `sourceCount` | `number` | No | - | Number of sources used for the recommendation. |
+| `primaryActionLabel` | `string` | No | `Apply` | Label for the primary action button. @default "Apply" |
+| `secondaryActionLabel` | `string` | No | `Review` | Label for the secondary action button. @default "Review" |
+| `onPrimaryAction` | `() => void` | No | - | Callback fired when the primary action is clicked. |
+| `onSecondaryAction` | `() => void` | No | - | Callback fired when the secondary action is clicked. |
+| `tone` | `RecommendationCardTone` | No | `info` | Semantic tone affecting the card's accent color. @default "info" |
+| `compact` | `boolean` | No | `false` | Use compact layout for the confidence badge. @default false |
+| `badges` | `React.ReactNode[]` | No | - | Additional badge elements rendered beside the type badge. |
+| `footerNote` | `React.ReactNode` | No | - | Optional footer note below the action buttons. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -1953,7 +1991,8 @@ _No props defined._
 **Category:** components
 **Interface:** `SearchInputProps`
 **Source:** `src/components/search-input/SearchInput.tsx`
-**Extends:** `Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type">`
+**Extends:** `Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type">,
+    AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -1961,7 +2000,7 @@ _No props defined._
 | `searchSize` | `SearchInputSize` | No | - | **DEPRECATED** (Use `size` instead. Will be removed in v3.0.0.) |
 | `loading` | `boolean` | No | `false` | Show loading spinner |
 | `clearable` | `boolean` | No | `true` | Show clear button when value is non-empty |
-| `onClear` | `() => void` | No | - |  |
+| `onClear` | `() => void` | No | - | Callback fired when the clear button is clicked. |
 | `shortcutHint` | `string` | No | - | Keyboard shortcut hint (e.g. "⌘K") |
 | `disabled` | `boolean` | No | `false` | Disable the search input |
 
@@ -1976,18 +2015,18 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `SectionTabsItem[]` | Yes | - |  |
-| `value` | `string` | No | - |  |
-| `defaultValue` | `string` | No | - |  |
-| `onValueChange` | `(nextValue: string) => void` | No | - |  |
-| `ariaLabel` | `string` | No | `Section tabs` |  |
-| `density` | `SectionTabsDensity` | No | `compact` |  |
-| `layout` | `SectionTabsLayout` | No | `scroll` |  |
-| `autoWrapBreakpoint` | `SectionTabsBreakpoint` | No | `2xl` |  |
-| `descriptionVisibility` | `SectionTabsDescriptionVisibility` | No | `active-or-hover` |  |
-| `descriptionDisplay` | `SectionTabsDescriptionDisplay` | No | `tooltip` |  |
-| `className` | `string` | No | - |  |
-| `classes` | `SectionTabsClasses` | No | - |  |
+| `items` | `SectionTabsItem[]` | Yes | - | Tab items to render. |
+| `value` | `string` | No | - | Controlled active tab value. |
+| `defaultValue` | `string` | No | - | Initial active tab value for uncontrolled mode. |
+| `onValueChange` | `(nextValue: string) => void` | No | - | Callback fired when the active tab changes. |
+| `ariaLabel` | `string` | No | `Section tabs` | Accessible label for the tab group. |
+| `density` | `SectionTabsDensity` | No | `compact` | Spacing density variant. |
+| `layout` | `SectionTabsLayout` | No | `scroll` | Layout strategy for tab overflow. |
+| `autoWrapBreakpoint` | `SectionTabsBreakpoint` | No | `2xl` | Breakpoint at which auto layout switches from scroll to wrap. |
+| `descriptionVisibility` | `SectionTabsDescriptionVisibility` | No | `active-or-hover` | Controls when tab descriptions become visible. |
+| `descriptionDisplay` | `SectionTabsDescriptionDisplay` | No | `tooltip` | How descriptions are rendered (inline text or tooltip). |
+| `className` | `string` | No | - | Additional CSS class name. |
+| `classes` | `SectionTabsClasses` | No | - | Custom class name overrides for sub-elements. |
 
 ---
 
@@ -2000,25 +2039,25 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `items` | `SegmentedItem[]` | Yes | - |  |
-| `value` | `string \| string[]` | No | - |  |
-| `defaultValue` | `string \| string[]` | No | - |  |
-| `onValueChange` | `(nextValue: string \| string[]) => void` | No | - |  |
-| `onItemClick` | `(` | No | - |  |
+| `items` | `SegmentedItem[]` | Yes | - | Array of segment items to render. |
+| `value` | `string \| string[]` | No | - | Controlled selected value(s). |
+| `defaultValue` | `string \| string[]` | No | - | Default selected value(s) for uncontrolled mode. |
+| `onValueChange` | `(nextValue: string \| string[]) => void` | No | - | Callback fired when the selection changes. |
+| `onItemClick` | `(` | No | - | Callback fired when a segment item is clicked. |
 | `value` | `string` | Yes | - |  |
 | `event` | `React.MouseEvent<HTMLButtonElement>` | Yes | - |  |
-| `selectionMode` | `"single" \| "multiple"` | No | `single` |  |
-| `size` | `"sm" \| "md" \| "lg"` | No | `md` |  |
-| `orientation` | `"horizontal" \| "vertical"` | No | `horizontal` |  |
-| `appearance` | `"default" \| "outline" \| "ghost"` | No | - |  |
-| `variant` | `"default" \| "outline" \| "ghost"` | No | - | Alias for `appearance` — aligns with the standard component API. |
-| `shape` | `"rounded" \| "pill"` | No | `rounded` |  |
-| `iconPosition` | `"start" \| "end" \| "top"` | No | `start` |  |
-| `allowEmptySelection` | `boolean` | No | `false` |  |
-| `fullWidth` | `boolean` | No | `false` |  |
-| `ariaLabel` | `string` | No | - |  |
-| `classes` | `SegmentedClasses` | No | - |  |
-| `className` | `string` | No | - |  |
+| `selectionMode` | `"single" \| "multiple"` | No | `single` | Whether single or multiple segments can be selected. @default "single" |
+| `size` | `"sm" \| "md" \| "lg"` | No | `md` | Size variant for the segment buttons. @default "md" |
+| `orientation` | `"horizontal" \| "vertical"` | No | `horizontal` | Layout orientation of the segment group. @default "horizontal" |
+| `appearance` | `"default" \| "outline" \| "ghost"` | No | - | **DEPRECATED** (Use `variant` instead. Visual appearance style.) |
+| `variant` | `"default" \| "outline" \| "ghost"` | No | - | Visual style variant for the segmented control. |
+| `shape` | `"rounded" \| "pill"` | No | `rounded` | Border radius shape of the container and items. @default "rounded" |
+| `iconPosition` | `"start" \| "end" \| "top"` | No | `start` | Position of item icons relative to the label. @default "start" |
+| `allowEmptySelection` | `boolean` | No | `false` | Whether deselecting all items is allowed. @default false |
+| `fullWidth` | `boolean` | No | `false` | Whether the control spans the full container width. |
+| `ariaLabel` | `string` | No | - | Accessible label for the segment group. |
+| `classes` | `SegmentedClasses` | No | - | Custom CSS class overrides for internal elements. |
+| `className` | `string` | No | - | Additional CSS class name for the root element. |
 
 ---
 
@@ -2032,17 +2071,17 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `invalid` | `boolean` | No | `false` |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `onValueChange` | `(value: number, event: React.ChangeEvent<HTMLInputElement>) => void` | No | - |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `minLabel` | `React.ReactNode` | No | - |  |
-| `maxLabel` | `React.ReactNode` | No | - |  |
-| `valueFormatter` | `(value: number) => React.ReactNode` | No | - |  |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the slider. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the slider. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `invalid` | `boolean` | No | `false` | **DEPRECATED** (Use `error` instead. Whether the slider is in an invalid state.) |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `onValueChange` | `(value: number, event: React.ChangeEvent<HTMLInputElement>) => void` | No | - | Callback fired when the slider value changes. |
+| `fullWidth` | `boolean` | No | `true` | Whether the slider spans the full container width. |
+| `minLabel` | `React.ReactNode` | No | - | Label displayed at the minimum end of the track. |
+| `maxLabel` | `React.ReactNode` | No | - | Label displayed at the maximum end of the track. |
+| `valueFormatter` | `(value: number) => React.ReactNode` | No | - | Custom formatter for the displayed value. |
 
 ---
 
@@ -2055,18 +2094,18 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `widgets` | `DashboardWidget[]` | Yes | - |  |
-| `title` | `string` | No | - |  |
-| `description` | `string` | No | - |  |
-| `greeting` | `string` | No | - |  |
-| `onWidgetReorder` | `(keys: string[]) => void` | No | - |  |
-| `onWidgetPin` | `(key: string, pinned: boolean) => void` | No | - |  |
-| `refreshAll` | `() => void` | No | - |  |
-| `timeRange` | `string` | No | - |  |
-| `onTimeRangeChange` | `(range: string) => void` | No | - |  |
-| `columns` | `2 \| 3 \| 4` | No | `3` |  |
-| `density` | `DashboardDensity` | No | `comfortable` |  |
-| `className` | `string` | No | - |  |
+| `widgets` | `DashboardWidget[]` | Yes | - | Widget definitions to display in the dashboard grid. |
+| `title` | `string` | No | - | Heading text for the dashboard. |
+| `description` | `string` | No | - | Descriptive text below the heading. |
+| `greeting` | `string` | No | - | Personalized greeting message shown in a banner. |
+| `onWidgetReorder` | `(keys: string[]) => void` | No | - | Callback fired when widget order changes. |
+| `onWidgetPin` | `(key: string, pinned: boolean) => void` | No | - | Callback fired when a widget is pinned or unpinned. |
+| `refreshAll` | `() => void` | No | - | Callback to refresh all widgets at once. |
+| `timeRange` | `string` | No | - | Currently selected time range value. |
+| `onTimeRangeChange` | `(range: string) => void` | No | - | Callback fired when the time range selector changes. |
+| `columns` | `2 \| 3 \| 4` | No | `3` | Number of grid columns for the widget layout. |
+| `density` | `DashboardDensity` | No | `comfortable` | Spacing density variant. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---
 
@@ -2075,6 +2114,7 @@ _No props defined._
 **Category:** components
 **Interface:** `StepsProps`
 **Source:** `src/components/steps/Steps.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -2095,6 +2135,7 @@ _No props defined._
 **Category:** components
 **Interface:** `TabsProps`
 **Source:** `src/components/tabs/Tabs.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -2121,12 +2162,12 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `leftPreset` | `ThemePresetGalleryItem \| null` | No | - |  |
-| `rightPreset` | `ThemePresetGalleryItem \| null` | No | - |  |
-| `title` | `React.ReactNode` | No | `Theme preset compare` |  |
-| `description` | `React.ReactNode` | No | `Presetler appearance, density, contrast ve intent eksenlerinde ayni compare matrisiyle okunur.` |  |
-| `axes` | `string[]` | No | - |  |
-| `className` | `string` | No | `` |  |
+| `leftPreset` | `ThemePresetGalleryItem \| null` | No | - | Left-side preset to compare. |
+| `rightPreset` | `ThemePresetGalleryItem \| null` | No | - | Right-side preset to compare. |
+| `title` | `React.ReactNode` | No | `Theme preset compare` | Heading displayed above the comparison. |
+| `description` | `React.ReactNode` | No | `Presetler appearance, density, contrast ve intent eksenlerinde ayni compare matrisiyle okunur.` | Descriptive text below the heading. |
+| `axes` | `string[]` | No | - | Theme axes to include in the comparison matrix. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -2139,14 +2180,14 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `presets` | `ThemePresetGalleryItem[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | `Tema on tanim galerisi` |  |
-| `description` | `React.ReactNode` | No | `Resmi preset ailesi docs, runtime ve release diliyle ayni preset kimlikleri uzerinden okunur.` |  |
-| `compareAxes` | `React.ReactNode[]` | No | - |  |
-| `selectedPresetId` | `string \| null` | No | - |  |
-| `defaultSelectedPresetId` | `string \| null` | No | `null` |  |
-| `onSelectPreset` | `(presetId: string, preset: ThemePresetGalleryItem) => void` | No | - |  |
-| `className` | `string` | No | `` |  |
+| `presets` | `ThemePresetGalleryItem[]` | Yes | - | Array of theme presets to display. |
+| `title` | `React.ReactNode` | No | `Tema on tanim galerisi` | Gallery heading. |
+| `description` | `React.ReactNode` | No | `Resmi preset ailesi docs, runtime ve release diliyle ayni preset kimlikleri uzerinden okunur.` | Explanatory text below the heading. |
+| `compareAxes` | `React.ReactNode[]` | No | - | Comparison axis labels shown as badges above the grid. |
+| `selectedPresetId` | `string \| null` | No | - | Controlled selected preset ID. |
+| `defaultSelectedPresetId` | `string \| null` | No | `null` | Initial selected preset for uncontrolled mode. |
+| `onSelectPreset` | `(presetId: string, preset: ThemePresetGalleryItem) => void` | No | - | Callback fired when a preset is selected. |
+| `className` | `string` | No | `` | Additional CSS class name. |
 
 ---
 
@@ -2155,16 +2196,17 @@ _No props defined._
 **Category:** components
 **Interface:** `ThemePreviewCardProps`
 **Source:** `src/components/theme-preview-card/ThemePreviewCard.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `selected` | `boolean` | No | `false` |  |
-| `className` | `string` | No | - |  |
-| `localeText` | `{` | No | - |  |
-| `titleText` | `React.ReactNode` | No | - |  |
-| `secondaryText` | `React.ReactNode` | No | - |  |
-| `saveLabel` | `React.ReactNode` | No | - |  |
-| `selectedLabel` | `React.ReactNode` | No | - |  |
+| `selected` | `boolean` | No | `false` | Whether this theme card is currently selected. |
+| `className` | `string` | No | - | Additional CSS class name. |
+| `localeText` | `{` | No | - | Locale-specific label overrides for the preview card. |
+| `titleText` | `React.ReactNode` | No | - | Title text shown in the swatch. |
+| `secondaryText` | `React.ReactNode` | No | - | Secondary descriptive text. |
+| `saveLabel` | `React.ReactNode` | No | - | Label for the save action button. |
+| `selectedLabel` | `React.ReactNode` | No | - | Accessible label for the selected indicator. |
 
 ---
 
@@ -2216,15 +2258,15 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `invalid` | `boolean` | No | `false` |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `onValueChange` | `(value: string, event: React.ChangeEvent<HTMLInputElement>) => void` | No | - |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `messages` | `TimePickerMessages` | No | - |  |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the input. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the input. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `invalid` | `boolean` | No | `false` | Whether the input is in an invalid state. |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `onValueChange` | `(value: string, event: React.ChangeEvent<HTMLInputElement>) => void` | No | - | Callback fired when the time value changes. |
+| `fullWidth` | `boolean` | No | `true` | Whether the input spans the full container width. |
+| `messages` | `TimePickerMessages` | No | - | Locale-specific message overrides. |
 
 ---
 
@@ -2233,13 +2275,16 @@ _No props defined._
 **Category:** components
 **Interface:** `ToastProviderProps`
 **Source:** `src/components/toast/Toast.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `position` | `ToastPosition` | No | `top-right` |  |
-| `duration` | `number` | No | `4000` | Default auto-dismiss duration in ms |
-| `maxVisible` | `number` | No | `5` | Max visible toasts |
-| `children` | `React.ReactNode` | Yes | - |  |
+| `position` | `ToastPosition` | No | `top-right` | Position of the toast container on screen. @default "top-right" |
+| `duration` | `number` | No | `4000` | Default auto-dismiss duration in milliseconds. @default 4000 |
+| `maxVisible` | `number` | No | `5` | Maximum number of toasts visible at once. @default 5 |
+| `children` | `React.ReactNode` | Yes | - | Application content rendered within the toast context. |
+| `className` | `string` | No | - | Additional CSS class name for the toast container. |
+| `animated` | `boolean` | No | - | Whether toast animations are enabled. @default true |
 
 ---
 
@@ -2252,19 +2297,19 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `steps` | `TourCoachmarkStep[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `open` | `boolean` | No | - |  |
-| `defaultOpen` | `boolean` | No | `false` |  |
-| `currentStep` | `number` | No | - |  |
-| `defaultStep` | `number` | No | `0` |  |
-| `onStepChange` | `(index: number) => void` | No | - |  |
-| `onClose` | `() => void` | No | - |  |
-| `onFinish` | `() => void` | No | - |  |
-| `allowSkip` | `boolean` | No | `true` |  |
-| `showProgress` | `boolean` | No | `true` |  |
-| `mode` | `"guided" \| "readonly"` | No | `guided` |  |
-| `localeText` | `{` | No | - |  |
+| `steps` | `TourCoachmarkStep[]` | Yes | - | Ordered list of tour steps. |
+| `title` | `React.ReactNode` | No | - | Heading text for the tour overlay. |
+| `open` | `boolean` | No | - | Controlled open state of the tour. |
+| `defaultOpen` | `boolean` | No | `false` | Initial open state for uncontrolled mode. |
+| `currentStep` | `number` | No | - | Controlled current step index. |
+| `defaultStep` | `number` | No | `0` | Initial step index for uncontrolled mode. |
+| `onStepChange` | `(index: number) => void` | No | - | Callback fired when the active step changes. |
+| `onClose` | `() => void` | No | - | Callback fired when the tour is dismissed. |
+| `onFinish` | `() => void` | No | - | Callback fired when the final step is completed. |
+| `allowSkip` | `boolean` | No | `true` | Whether the user can skip the tour. |
+| `showProgress` | `boolean` | No | `true` | Whether to show the step progress indicator. |
+| `mode` | `"guided" \| "readonly"` | No | `guided` | Interaction mode: guided allows navigation, readonly disables it. |
+| `localeText` | `{` | No | - | Locale-specific label overrides. |
 | `title` | `React.ReactNode` | No | - |  |
 | `skipLabel` | `React.ReactNode` | No | - |  |
 | `closeLabel` | `React.ReactNode` | No | - |  |
@@ -2314,19 +2359,19 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `nodes` | `TreeNode[]` | Yes | - |  |
-| `title` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `density` | `TreeDensity` | No | `comfortable` |  |
-| `emptyStateLabel` | `React.ReactNode` | No | - |  |
-| `loading` | `boolean` | No | `false` |  |
-| `selectedKey` | `React.Key \| null` | No | `null` |  |
-| `onNodeSelect` | `(key: React.Key) => void` | No | - |  |
-| `defaultExpandedKeys` | `React.Key[]` | No | - |  |
-| `expandedKeys` | `React.Key[]` | No | - |  |
-| `onExpandedKeysChange` | `(keys: React.Key[]) => void` | No | - |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `localeText` | `TreeLocaleText` | No | - |  |
+| `nodes` | `TreeNode[]` | Yes | - | Hierarchical node data to display. |
+| `title` | `React.ReactNode` | No | - | Heading text above the tree. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the heading. |
+| `density` | `TreeDensity` | No | `comfortable` | Node spacing density variant. |
+| `emptyStateLabel` | `React.ReactNode` | No | - | Label shown when the tree is empty. |
+| `loading` | `boolean` | No | `false` | Whether to show loading skeleton placeholders. |
+| `selectedKey` | `React.Key \| null` | No | `null` | Key of the currently selected node. |
+| `onNodeSelect` | `(key: React.Key) => void` | No | - | Callback fired when a node is selected. |
+| `defaultExpandedKeys` | `React.Key[]` | No | - | Initially expanded node keys for uncontrolled mode. |
+| `expandedKeys` | `React.Key[]` | No | - | Controlled set of expanded node keys. |
+| `onExpandedKeysChange` | `(keys: React.Key[]) => void` | No | - | Callback fired when expanded keys change. |
+| `fullWidth` | `boolean` | No | `true` | Whether the tree spans the full container width. |
+| `localeText` | `TreeLocaleText` | No | - | Locale-specific label overrides. |
 
 ---
 
@@ -2340,18 +2385,18 @@ _No props defined._
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `label` | `React.ReactNode` | No | - |  |
-| `description` | `React.ReactNode` | No | - |  |
-| `hint` | `React.ReactNode` | No | - |  |
-| `error` | `React.ReactNode` | No | - |  |
-| `invalid` | `boolean` | No | `false` |  |
-| `size` | `FieldSize` | No | `md` |  |
-| `onFilesChange` | `(files: UploadFileItem[], event: React.ChangeEvent<HTMLInputElement>) => void` | No | - |  |
-| `fullWidth` | `boolean` | No | `true` |  |
-| `files` | `UploadFileItem[]` | No | - |  |
-| `defaultFiles` | `UploadFileItem[]` | No | - |  |
-| `maxFiles` | `number` | No | - |  |
-| `emptyStateLabel` | `React.ReactNode` | No | `Dosya sec veya surukleyip birak` |  |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the drop zone. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the input. |
+| `error` | `React.ReactNode` | No | - | Error message that activates the invalid state. |
+| `invalid` | `boolean` | No | `false` | Whether the input is in an invalid state. |
+| `size` | `FieldSize` | No | `md` | Size variant of the field control. |
+| `onFilesChange` | `(files: UploadFileItem[], event: React.ChangeEvent<HTMLInputElement>) => void` | No | - | Callback fired when selected files change. |
+| `fullWidth` | `boolean` | No | `true` | Whether the upload zone spans the full container width. |
+| `files` | `UploadFileItem[]` | No | - | Controlled list of selected files. |
+| `defaultFiles` | `UploadFileItem[]` | No | - | Initial file list for uncontrolled mode. |
+| `maxFiles` | `number` | No | - | Maximum number of files allowed. |
+| `emptyStateLabel` | `React.ReactNode` | No | `Dosya sec veya surukleyip birak` | Placeholder text shown when no files are selected. |
 
 ---
 
@@ -2360,19 +2405,20 @@ _No props defined._
 **Category:** components
 **Interface:** `WatermarkProps`
 **Source:** `src/components/watermark/Watermark.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `content` | `string \| string[]` | No | - |  |
-| `image` | `string` | No | - |  |
-| `rotate` | `number` | No | - |  |
-| `gap` | `[number, number]` | No | - |  |
-| `offset` | `[number, number]` | No | - |  |
-| `fontSize` | `number` | No | - |  |
-| `fontColor` | `string` | No | `var(--text-disabled, rgba(0,0,0,0.15))` |  |
-| `opacity` | `number` | No | - |  |
-| `zIndex` | `number` | No | - |  |
-| `children` | `React.ReactNode` | No | - |  |
-| `className` | `string` | No | - |  |
+| `content` | `string \| string[]` | No | - | Text content for the watermark; pass an array for multi-line. |
+| `image` | `string` | No | - | Image URL to use as watermark instead of text. |
+| `rotate` | `number` | No | - | Rotation angle in degrees. @default -22 |
+| `gap` | `[number, number]` | No | - | Horizontal and vertical gap between watermark tiles in pixels. @default [100,100] |
+| `offset` | `[number, number]` | No | - | X/Y offset of the watermark within each tile. |
+| `fontSize` | `number` | No | - | Font size in pixels for text watermarks. @default 14 |
+| `fontColor` | `string` | No | `var(--text-disabled, rgba(0,0,0,0.15))` | CSS color value for text watermarks. |
+| `opacity` | `number` | No | - | Opacity of the watermark layer (0-1). @default 0.15 |
+| `zIndex` | `number` | No | - | CSS z-index of the watermark overlay. @default 9 |
+| `children` | `React.ReactNode` | No | - | Content to render beneath the watermark. |
+| `className` | `string` | No | - | Additional CSS class name. |
 
 ---

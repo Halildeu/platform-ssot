@@ -41,7 +41,15 @@ const shapeStyles: Record<AvatarShape, string> = {
   square: "rounded-lg",
 };
 
-/** Circular or square avatar displaying an image, initials fallback, or icon with configurable size. */
+/**
+ * Circular or square avatar displaying an image, initials fallback, or icon with configurable size.
+ *
+ * @example
+ * ```tsx
+ * <Avatar src="/avatars/jane.jpg" alt="Jane Doe" size="lg" />
+ * <Avatar initials="JD" size="md" shape="square" />
+ * ```
+ */
 export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
   ({
     src,

@@ -22,7 +22,16 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   animated?: boolean;
 }
 
-/** Placeholder loading shape with pulse animation, supporting rectangles, circles, and multi-line stacks. */
+/**
+ * Placeholder loading shape with pulse animation, supporting rectangles, circles, and multi-line stacks.
+ *
+ * @example
+ * ```tsx
+ * <Skeleton width="100%" height={16} />
+ * <Skeleton circle height={40} />
+ * <Skeleton lines={3} />
+ * ```
+ */
 export const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
   ({
     width,

@@ -92,6 +92,10 @@ export const Default: Story = {
     nodes: organizasyon,
     defaultExpandedKeys: ['yonetim', 'bilgi-teknolojileri'],
   },
+  play: async ({ canvasElement }) => {
+    const node = canvasElement.querySelector('[role="treeitem"], button, [data-testid]');
+    if (node) (node as HTMLElement).click();
+  },
 };
 
 export const WithSelection: Story = {

@@ -39,6 +39,10 @@ export const Default: Story = {
     items: temelAdimlar,
     current: 1,
   },
+  play: async ({ canvasElement }) => {
+    const step = canvasElement.querySelector('[role="button"], button, [data-testid]');
+    if (step) (step as HTMLElement).click();
+  },
 };
 
 export const Interactive: Story = {

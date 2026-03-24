@@ -94,6 +94,21 @@ const sizeStyles: Record<TabsSize, string> = {
 
 const resolveKey = (item: TabItem): string => item.key;
 
+/**
+ * Segmented content switcher with line, enclosed, and pill variants.
+ *
+ * @example
+ * ```tsx
+ * <Tabs
+ *   items={[
+ *     { key: 'overview', label: 'Overview', content: <Overview /> },
+ *     { key: 'settings', label: 'Settings', content: <Settings /> },
+ *   ]}
+ *   variant="line"
+ *   defaultActiveKey="overview"
+ * />
+ * ```
+ */
 export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(({
   items,
   variant: variantProp = "line",

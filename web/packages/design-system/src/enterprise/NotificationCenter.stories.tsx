@@ -24,6 +24,10 @@ export const Default: Story = {
   args: {
     notifications: sampleNotifications,
   },
+  play: async ({ canvasElement }) => {
+    const btn = canvasElement.querySelector('button, [role="button"], [data-testid]');
+    if (btn) (btn as HTMLElement).click();
+  },
 };
 
 export const GroupedByType: Story = {
