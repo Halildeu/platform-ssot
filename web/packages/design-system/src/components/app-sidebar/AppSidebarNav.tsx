@@ -19,19 +19,20 @@ import type { AppSidebarNavProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarNav: React.FC<AppSidebarNavProps> = ({
+export const AppSidebarNav = React.forwardRef<HTMLElement, AppSidebarNavProps>(({
   children,
   className,
-}) => (
+}, ref) => (
   <nav
+    ref={ref}
     className={cn('flex-1 overflow-y-auto px-2 py-2', className)}
     role="navigation"
   >
     {children}
   </nav>
-);
+));
 
 AppSidebarNav.displayName = 'AppSidebar.Nav';
 
 /** Props interface for AppSidebarNav. */
-export interface AppSidebarNavComponentProps extends AppSidebarNavProps {}
+export type { AppSidebarNavProps };

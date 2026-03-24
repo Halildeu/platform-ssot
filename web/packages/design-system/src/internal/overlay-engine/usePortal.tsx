@@ -81,3 +81,6 @@ export function usePortal(options: UsePortalOptions = {}) {
 
   return { Portal, portalElement: portalRef };
 }
+
+/** Return type of the usePortal hook. */
+export type UsePortalReturn = ReturnType<typeof usePortal>;

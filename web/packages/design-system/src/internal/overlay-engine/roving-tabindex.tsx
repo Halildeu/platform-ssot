@@ -74,6 +74,9 @@ export type RovingTabindexReturn = {
  * }
  * ```
  */
+/** Props returned for each roving item. */
+export type RovingItemProps = ReturnType<RovingTabindexReturn['getItemProps']>;
+
 export function useRovingTabindex({
   itemCount,
   initialIndex = 0,

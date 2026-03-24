@@ -73,36 +73,33 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        oneOf: [
+        use: [
+          'style-loader',
+          'css-loader',
           {
-            // TW4 entry CSS — bypass css-loader, inject raw PostCSS output
-            resourceQuery: /\?tw/,
-            use: [
-              'style-loader',
-              {
-                loader: 'postcss-loader',
-                options: {
-                  postcssOptions: {
-                    plugins: [['@tailwindcss/postcss', {}]],
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  ['@tailwindcss/postcss', {}],
+                  // Fix: css-loader@7 breaks @layer cascade for shorthand/longhand
+                  // Unwrap @layer blocks so css-loader processes flat CSS
+                  function postcssUnwrapLayers() {
+                    return {
+                      postcssPlugin: 'postcss-unwrap-layers',
+                      AtRule: {
+                        layer(atRule) {
+                          // Keep @layer declaration (e.g., @layer theme, base, ...)
+                          if (!atRule.nodes || atRule.nodes.length === 0) return;
+                          // Unwrap: move children to parent, remove @layer wrapper
+                          atRule.replaceWith(atRule.nodes);
+                        },
+                      },
+                    };
                   },
-                },
+                ],
               },
-            ],
-          },
-          {
-            // Regular CSS — standard pipeline
-            use: [
-              'style-loader',
-              'css-loader',
-              {
-                loader: 'postcss-loader',
-                options: {
-                  postcssOptions: {
-                    plugins: [['@tailwindcss/postcss', {}]],
-                  },
-                },
-              },
-            ],
+            },
           },
         ],
       },

@@ -1,2 +1,2 @@
-import './index.css?tw';
+import './index.css';
 import('./app/bootstrap');

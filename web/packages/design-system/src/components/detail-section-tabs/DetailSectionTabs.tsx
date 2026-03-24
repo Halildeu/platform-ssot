@@ -112,3 +112,8 @@ export const DetailSectionTabs = React.forwardRef<HTMLDivElement, DetailSectionT
 });
 
 DetailSectionTabs.displayName = 'DetailSectionTabs';
+
+/** Alias for DetailSectionTabsProps. */
+export type DetailSectionTabsPropsType = DetailSectionTabsProps;
+/** Alias for DetailSectionTabItem. */
+export type DetailSectionTabItemType = DetailSectionTabItem;

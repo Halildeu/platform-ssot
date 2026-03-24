@@ -23,17 +23,18 @@ import type { AppSidebarHeaderProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarHeader: React.FC<AppSidebarHeaderProps> = ({
+export const AppSidebarHeader = React.forwardRef<HTMLDivElement, AppSidebarHeaderProps>(({
   title,
   subtitle,
   logo,
   action,
   className,
-}) => {
+}, ref) => {
   const { isCollapsed } = useSidebar();
 
   return (
     <div
+      ref={ref}
       className={cn(
         'flex items-center gap-3 px-3 py-4 border-b',
         'border-[var(--border-subtle)]',
@@ -61,9 +62,9 @@ export const AppSidebarHeader: React.FC<AppSidebarHeaderProps> = ({
       {action && <span className="shrink-0">{action}</span>}
     </div>
   );
-};
+});
 
 AppSidebarHeader.displayName = 'AppSidebar.Header';
 
 /** Props interface for AppSidebarHeader. */
-export interface AppSidebarHeaderComponentProps extends AppSidebarHeaderProps {}
+export type { AppSidebarHeaderProps };

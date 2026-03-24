@@ -139,3 +139,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 }
 
 export { ErrorBoundary };
+
+/** Alias for ErrorBoundaryProps for external consumers. */
+export type ErrorBoundaryComponentProps = ErrorBoundaryProps;
+/** Alias for ErrorBoundaryFallback for external consumers. */
+export type ErrorBoundaryFallbackType = ErrorBoundaryFallback;
+

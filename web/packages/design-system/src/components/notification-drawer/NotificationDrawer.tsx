@@ -59,7 +59,7 @@ export interface NotificationDrawerProps
 }
 
 /** Slide-over drawer that wraps the NotificationPanel in an overlay surface. */
-export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
+export const NotificationDrawer = React.forwardRef<HTMLDivElement, NotificationDrawerProps>(({
   open,
   onClose,
   closeLabel = "Bildirim merkezini kapat",
@@ -119,7 +119,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
       />
     </OverlaySurface>
   );
-};
+});
 
 NotificationDrawer.displayName = 'NotificationDrawer';
 

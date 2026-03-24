@@ -23,19 +23,19 @@ import type { AppSidebarSearchProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarSearch: React.FC<AppSidebarSearchProps> = ({
+export const AppSidebarSearch = React.forwardRef<HTMLDivElement, AppSidebarSearchProps>(({
   value,
   onChange,
   placeholder = 'Search...',
   shortcut,
   className,
-}) => {
+}, ref) => {
   const { isCollapsed } = useSidebar();
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (isCollapsed) {
     return (
-      <div className={cn('flex justify-center px-2 py-2', className)}>
+      <div ref={ref} className={cn('flex justify-center px-2 py-2', className)}>
         <button
           type="button"
           className={cn(
@@ -68,7 +68,7 @@ export const AppSidebarSearch: React.FC<AppSidebarSearchProps> = ({
   }
 
   return (
-    <div className={cn('px-3 py-2', className)}>
+    <div ref={ref} className={cn('px-3 py-2', className)}>
       <label className="relative flex items-center">
         <span className="absolute left-2 text-[var(--text-secondary)]">
           <SearchIcon />
@@ -101,7 +101,7 @@ export const AppSidebarSearch: React.FC<AppSidebarSearchProps> = ({
       </label>
     </div>
   );
-};
+});
 
 AppSidebarSearch.displayName = 'AppSidebar.Search';
 
@@ -128,4 +128,4 @@ function SearchIcon() {
 }
 
 /** Props interface for AppSidebarSearch. */
-export interface AppSidebarSearchComponentProps extends AppSidebarSearchProps {}
+export type { AppSidebarSearchProps };

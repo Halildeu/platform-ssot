@@ -20,7 +20,7 @@ import type { AppSidebarGroupProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarGroup: React.FC<AppSidebarGroupProps> = ({
+export const AppSidebarGroup = React.forwardRef<HTMLDivElement, AppSidebarGroupProps>(({
   label,
   icon,
   collapsible = true,
@@ -28,7 +28,7 @@ export const AppSidebarGroup: React.FC<AppSidebarGroupProps> = ({
   action,
   children,
   className,
-}) => {
+}, ref) => {
   const { isCollapsed: sidebarCollapsed } = useSidebar();
   const [open, setOpen] = useState(defaultOpen);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,7 @@ export const AppSidebarGroup: React.FC<AppSidebarGroupProps> = ({
   /* When the sidebar is collapsed, show only the icon */
   if (sidebarCollapsed) {
     return (
-      <div className={cn('py-1', className)} role="group" aria-label={label}>
+      <div ref={ref} className={cn('py-1', className)} role="group" aria-label={label}>
         {icon && (
           <div className="group relative flex justify-center px-2 py-1.5">
             <span className="text-[var(--text-secondary)] text-lg">{icon}</span>
@@ -62,7 +62,7 @@ export const AppSidebarGroup: React.FC<AppSidebarGroupProps> = ({
   }
 
   return (
-    <div className={cn('py-1', className)} role="group" aria-label={label}>
+    <div ref={ref} className={cn('py-1', className)} role="group" aria-label={label}>
       {/* Header */}
       <div className="flex items-center px-3 py-1.5">
         {collapsible ? (
@@ -138,9 +138,9 @@ export const AppSidebarGroup: React.FC<AppSidebarGroupProps> = ({
       </div>
     </div>
   );
-};
+});
 
 AppSidebarGroup.displayName = 'AppSidebar.Group';
 
 /** Props interface for AppSidebarGroup. */
-export interface AppSidebarGroupComponentProps extends AppSidebarGroupProps {}
+export type { AppSidebarGroupProps };

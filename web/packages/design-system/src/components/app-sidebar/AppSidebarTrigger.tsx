@@ -18,13 +18,14 @@ import type { AppSidebarTriggerProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarTrigger: React.FC<AppSidebarTriggerProps> = ({
+export const AppSidebarTrigger = React.forwardRef<HTMLButtonElement, AppSidebarTriggerProps>(({
   className,
-}) => {
+}, ref) => {
   const { isCollapsed, toggle } = useSidebar();
 
   return (
     <button
+      ref={ref}
       type="button"
       onClick={toggle}
       aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -39,7 +40,7 @@ export const AppSidebarTrigger: React.FC<AppSidebarTriggerProps> = ({
       {isCollapsed ? <PanelLeftOpenIcon /> : <PanelLeftCloseIcon />}
     </button>
   );
-};
+});
 
 AppSidebarTrigger.displayName = 'AppSidebar.Trigger';
 
@@ -86,4 +87,4 @@ function PanelLeftOpenIcon() {
 }
 
 /** Props interface for AppSidebarTrigger. */
-export interface AppSidebarTriggerComponentProps extends AppSidebarTriggerProps {}
+export type { AppSidebarTriggerProps };

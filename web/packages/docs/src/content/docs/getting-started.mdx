@@ -1,0 +1,82 @@
+---
+title: Hızlı Başlangıç
+description: '@mfe/design-system ile ilk uygulamanızı oluşturun'
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Hızlı Başlangıç
+
+<Steps>
+
+1. **Paketi yükleyin**
+
+   <Tabs>
+     <TabItem label="pnpm">
+     ```bash
+     pnpm add @mfe/design-system
+     ```
+     </TabItem>
+     <TabItem label="npm">
+     ```bash
+     npm install @mfe/design-system
+     ```
+     </TabItem>
+     <TabItem label="yarn">
+     ```bash
+     yarn add @mfe/design-system
+     ```
+     </TabItem>
+   </Tabs>
+
+2. **Provider'ı ekleyin**
+
+   Uygulamanızın kök bileşenini `DesignSystemProvider` ile sarın:
+
+   ```tsx
+   import { DesignSystemProvider } from '@mfe/design-system';
+
+   function App() {
+     return (
+       <DesignSystemProvider>
+         <YourApp />
+       </DesignSystemProvider>
+     );
+   }
+   ```
+
+3. **İlk bileşeninizi kullanın**
+
+   ```tsx
+   import { Button } from '@mfe/design-system';
+
+   function MyPage() {
+     return (
+       <Button variant="primary" size="md">
+         Merhaba Dünya
+       </Button>
+     );
+   }
+   ```
+
+4. **Dark mode ekleyin (opsiyonel)**
+
+   ```tsx
+   import { DesignSystemProvider } from '@mfe/design-system';
+
+   function App() {
+     return (
+       <DesignSystemProvider theme={{ mode: 'dark' }}>
+         <YourApp />
+       </DesignSystemProvider>
+     );
+   }
+   ```
+
+</Steps>
+
+## Sonraki Adımlar
+
+- [Tema Sistemi](/theming/) — Renk, tipografi ve spacing özelleştirmeleri
+- [Dark Mode](/dark-mode/) — Karanlık mod kurulumu ve kullanımı
+- [Bileşenler](/components/) — Tüm bileşen dokümantasyonu

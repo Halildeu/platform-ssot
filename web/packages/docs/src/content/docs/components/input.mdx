@@ -1,0 +1,122 @@
+---
+title: Input
+description: 'Text input — validation, masking, prefix/suffix desteği.'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Import
+
+```tsx
+import { Input } from '@mfe/design-system';
+```
+
+## Kullanım
+
+```tsx
+<Input label="Ad Soyad" placeholder="Adınızı girin" />
+<Input label="E-posta" type="email" required />
+<Input label="Telefon" mask="+90 (___) ___ __ __" />
+```
+
+## Variants
+
+```tsx
+<Input variant="outlined" label="Outlined" />
+<Input variant="filled" label="Filled" />
+<Input variant="underlined" label="Underlined" />
+```
+
+## Validation
+
+```tsx
+<Input
+  label="E-posta"
+  type="email"
+  error="Geçerli bir e-posta adresi girin"
+/>
+
+<Input
+  label="Kullanıcı Adı"
+  helperText="En az 3 karakter"
+  minLength={3}
+/>
+```
+
+## Prefix / Suffix
+
+```tsx
+<Input label="Fiyat" prefix="₺" suffix=".00" type="number" />
+<Input label="Web Sitesi" prefix="https://" />
+<Input label="Arama" prefix={<IconSearch />} />
+```
+
+## Masking
+
+Giriş maskesi ile formatlanmış veri girişi:
+
+```tsx
+<Input label="Telefon" mask="+90 (___) ___ __ __" />
+<Input label="IBAN" mask="TR__ ____ ____ ____ ____ ____ __" />
+<Input label="Tarih" mask="__/__/____" />
+```
+
+## Props
+
+| Prop | Tip | Varsayılan | Açıklama |
+|------|-----|-----------|----------|
+| `label` | `string` | — | Etiket metni |
+| `placeholder` | `string` | — | Placeholder |
+| `variant` | `'outlined' \| 'filled' \| 'underlined'` | `'outlined'` | Görsel stil |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Boyut |
+| `type` | `'text' \| 'email' \| 'password' \| 'number' \| 'tel' \| 'url'` | `'text'` | Input tipi |
+| `value` | `string` | — | Kontrollü değer |
+| `defaultValue` | `string` | — | Varsayılan değer |
+| `onChange` | `(e: ChangeEvent) => void` | — | Değişiklik handler'ı |
+| `error` | `string \| boolean` | — | Hata mesajı veya durumu |
+| `helperText` | `string` | — | Yardımcı metin |
+| `required` | `boolean` | `false` | Zorunlu alan |
+| `disabled` | `boolean` | `false` | Devre dışı |
+| `readOnly` | `boolean` | `false` | Salt okunur |
+| `prefix` | `ReactNode` | — | Sol ek bileşen |
+| `suffix` | `ReactNode` | — | Sağ ek bileşen |
+| `mask` | `string` | — | Giriş maskesi (`_` = karakter yeri) |
+| `maxLength` | `number` | — | Maksimum karakter sayısı |
+
+## Erişilebilirlik
+
+- **Label**: `<label>` elementi `htmlFor` ile otomatik bağlanır
+- **Error**: `aria-invalid="true"` ve `aria-describedby` ile hata mesajı ilişkilendirilir
+- **Required**: `aria-required="true"` otomatik eklenir
+- **Helper text**: `aria-describedby` ile yardımcı metin ilişkilendirilir
+
+<Aside type="caution">
+  `label` prop'u her zaman belirtin. Görsel etiket istemiyorsanız `hideLabel` prop'unu kullanın — bu durumda etiket ekran okuyucular için korunur.
+</Aside>
+
+## Örnekler
+
+### Arama Kutusu
+
+```tsx
+<Input
+  label="Ara"
+  hideLabel
+  placeholder="Bileşen ara..."
+  prefix={<IconSearch />}
+  suffix={query && <IconClear onClick={() => setQuery('')} />}
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+/>
+```
+
+### Şifre Alanı
+
+```tsx
+<Input
+  label="Şifre"
+  type="password"
+  showPasswordToggle
+  helperText="En az 8 karakter, 1 büyük harf, 1 rakam"
+/>
+```

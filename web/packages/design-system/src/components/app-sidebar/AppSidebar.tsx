@@ -17,7 +17,9 @@ import { AppSidebarTrigger } from './AppSidebarTrigger';
 import { AppSidebarResizer } from './AppSidebarResizer';
 import { AppSidebarSeparator } from './AppSidebarSeparator';
 import { useAppSidebarResize } from './hooks/useAppSidebarResize';
-import type { AppSidebarProps, SidebarMode } from './types';
+import type { AppSidebarProps, SidebarMode, SidebarContextValue, SidebarResizeState } from './types';
+
+export type { AppSidebarProps, SidebarMode, SidebarContextValue, SidebarResizeState };
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */

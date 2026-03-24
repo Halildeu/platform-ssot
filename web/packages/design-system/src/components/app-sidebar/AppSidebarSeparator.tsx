@@ -21,13 +21,14 @@ import type { AppSidebarSeparatorProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarSeparator: React.FC<AppSidebarSeparatorProps> = ({
+export const AppSidebarSeparator = React.forwardRef<HTMLHRElement, AppSidebarSeparatorProps>(({
   className,
-}) => {
+}, ref) => {
   const { isCollapsed } = useSidebar();
 
   return (
     <hr
+      ref={ref}
       className={cn(
         'border-t border-[var(--border-subtle)]',
         isCollapsed ? 'mx-2 my-1' : 'mx-3 my-2',
@@ -35,9 +36,9 @@ export const AppSidebarSeparator: React.FC<AppSidebarSeparatorProps> = ({
       )}
     />
   );
-};
+});
 
 AppSidebarSeparator.displayName = 'AppSidebar.Separator';
 
 /** Props interface for AppSidebarSeparator. */
-export interface AppSidebarSeparatorComponentProps extends AppSidebarSeparatorProps {}
+export type { AppSidebarSeparatorProps };

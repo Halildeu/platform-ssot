@@ -69,3 +69,6 @@ export function useFormContext(): FormContextValue {
 }
 
 export { FormContext };
+
+/** Alias for FormContextValue for external consumers. */
+export type FormContextProps = FormContextValue;

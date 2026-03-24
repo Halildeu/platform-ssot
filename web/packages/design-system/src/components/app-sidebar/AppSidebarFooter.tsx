@@ -18,11 +18,12 @@ import type { AppSidebarFooterProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarFooter: React.FC<AppSidebarFooterProps> = ({
+export const AppSidebarFooter = React.forwardRef<HTMLDivElement, AppSidebarFooterProps>(({
   children,
   className,
-}) => (
+}, ref) => (
   <div
+    ref={ref}
     className={cn(
       'mt-auto border-t border-[var(--border-subtle)] px-2 py-2',
       className,
@@ -30,9 +31,9 @@ export const AppSidebarFooter: React.FC<AppSidebarFooterProps> = ({
   >
     {children}
   </div>
-);
+));
 
 AppSidebarFooter.displayName = 'AppSidebar.Footer';
 
 /** Props interface for AppSidebarFooter. */
-export interface AppSidebarFooterComponentProps extends AppSidebarFooterProps {}
+export type { AppSidebarFooterProps };

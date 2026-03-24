@@ -20,13 +20,13 @@ import type { AppSidebarSectionProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarSection: React.FC<AppSidebarSectionProps> = ({
+export const AppSidebarSection = React.forwardRef<HTMLDivElement, AppSidebarSectionProps>(({
   title,
   collapsible = false,
   defaultOpen = true,
   children,
   className,
-}) => {
+}, ref) => {
   const { isCollapsed: sidebarCollapsed } = useSidebar();
   const [open, setOpen] = useState(defaultOpen);
 
@@ -34,7 +34,7 @@ export const AppSidebarSection: React.FC<AppSidebarSectionProps> = ({
   const isOpen = !collapsible || open;
 
   return (
-    <div className={cn('py-1', className)} role="group" aria-label={title}>
+    <div ref={ref} className={cn('py-1', className)} role="group" aria-label={title}>
       {showHeader && (
         <div className="flex items-center px-3 py-1.5">
           {collapsible ? (
@@ -73,9 +73,9 @@ export const AppSidebarSection: React.FC<AppSidebarSectionProps> = ({
       {isOpen && <div className="space-y-0.5">{children}</div>}
     </div>
   );
-};
+});
 
 AppSidebarSection.displayName = 'AppSidebar.Section';
 
 /** Props interface for AppSidebarSection. */
-export interface AppSidebarSectionComponentProps extends AppSidebarSectionProps {}
+export type { AppSidebarSectionProps };

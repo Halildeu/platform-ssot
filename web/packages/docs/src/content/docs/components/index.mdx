@@ -1,0 +1,52 @@
+---
+title: Bileşenler
+description: '@mfe/design-system bileşen kataloğu'
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Genel Bakış
+
+`@mfe/design-system` 185+ bileşen sunar. Bileşenler dört katmanda organize edilmiştir:
+
+<CardGrid>
+  <Card title="Primitives (24)" icon="puzzle">
+    Button, Input, Checkbox, Radio, Select, Switch, Badge, Tooltip ve daha fazlası.
+  </Card>
+  <Card title="Components (60)" icon="laptop">
+    DataGrid, Form, Modal, Tabs, Accordion, Card, DatePicker ve daha fazlası.
+  </Card>
+  <Card title="Enterprise (38)" icon="setting">
+    ProcessFlow, RiskMatrix, Kanban, Scheduler, FormBuilder ve daha fazlası.
+  </Card>
+  <Card title="Patterns (10)" icon="document">
+    MasterDetail, FilterPanel, WizardFlow, DashboardLayout ve daha fazlası.
+  </Card>
+</CardGrid>
+
+## Sık Kullanılanlar
+
+<CardGrid>
+  <LinkCard title="Button" href="/components/button/" description="Temel etkileşim butonu — variant, size, loading, icon desteği." />
+  <LinkCard title="Input" href="/components/input/" description="Text input — validation, masking, prefix/suffix desteği." />
+  <LinkCard title="DataGrid" href="/components/data-grid/" description="Enterprise veri tablosu — sıralama, filtreleme, gruplama, export." />
+</CardGrid>
+
+## Naming Convention
+
+Tüm bileşenler PascalCase ile adlandırılır ve `@mfe/design-system` paketinden named export olarak sunulur:
+
+```tsx
+import { Button, Input, DataGrid } from '@mfe/design-system';
+```
+
+## Durum Göstergeleri
+
+Her bileşen dokümantasyon sayfasında durum göstergesi bulunur:
+
+| Durum | Açıklama |
+|-------|---------|
+| **Stable** | Üretim ortamında kullanıma hazır |
+| **Beta** | API değişebilir, geri bildirim bekleniyor |
+| **Alpha** | Erken aşama, deneysel |
+| **Deprecated** | Kullanımdan kaldırılacak, alternatif belirtilmiştir |

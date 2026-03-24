@@ -1,0 +1,115 @@
+---
+title: Button
+description: 'Temel etkileşim butonu — variant, size, loading, icon desteği.'
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Import
+
+```tsx
+import { Button } from '@mfe/design-system';
+```
+
+## Kullanım
+
+```tsx
+<Button variant="primary">Kaydet</Button>
+<Button variant="secondary">İptal</Button>
+<Button variant="danger" size="sm">Sil</Button>
+```
+
+## Variants
+
+```tsx
+<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="danger">Danger</Button>
+<Button variant="ghost">Ghost</Button>
+```
+
+## Boyutlar
+
+```tsx
+<Button size="sm">Küçük</Button>
+<Button size="md">Orta</Button>
+<Button size="lg">Büyük</Button>
+```
+
+## Loading Durumu
+
+```tsx
+<Button loading>Kaydediliyor...</Button>
+```
+
+Loading durumunda buton otomatik olarak `disabled` olur ve bir spinner gösterir.
+
+## İkon Desteği
+
+```tsx
+import { IconPlus, IconSave } from '@mfe/design-system/icons';
+
+<Button icon={<IconPlus />}>Yeni Ekle</Button>
+<Button icon={<IconSave />} variant="primary">Kaydet</Button>
+```
+
+## Props
+
+| Prop | Tip | Varsayılan | Açıklama |
+|------|-----|-----------|----------|
+| `variant` | `'primary' \| 'secondary' \| 'danger' \| 'ghost'` | `'primary'` | Görsel stil |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Boyut |
+| `loading` | `boolean` | `false` | Yükleniyor durumu |
+| `disabled` | `boolean` | `false` | Devre dışı |
+| `icon` | `ReactNode` | — | Sol ikon |
+| `iconPosition` | `'left' \| 'right'` | `'left'` | İkon konumu |
+| `fullWidth` | `boolean` | `false` | Tam genişlik |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | HTML button type |
+| `onClick` | `(e: MouseEvent) => void` | — | Tıklama handler'ı |
+
+## Erişilebilirlik
+
+- **Keyboard**: `Enter` / `Space` ile aktivasyon
+- **ARIA**: `role="button"`, `aria-disabled` otomatik
+- **Focus**: `:focus-visible` ring ile görsel geri bildirim
+- **Loading**: `aria-busy="true"` ve spinner `aria-label` ile duyurulur
+- **Kontrast**: Tüm variant'lar WCAG AA minimum 4.5:1 kontrast oranını karşılar
+
+<Aside type="tip">
+  Buton içinde sadece ikon kullanıyorsanız, `aria-label` prop'unu mutlaka ekleyin.
+</Aside>
+
+## Örnekler
+
+### Form Gönderimi
+
+```tsx
+<form onSubmit={handleSubmit}>
+  <Button type="submit" loading={isSubmitting}>
+    Formu Gönder
+  </Button>
+</form>
+```
+
+### Buton Grubu
+
+```tsx
+import { ButtonGroup } from '@mfe/design-system';
+
+<ButtonGroup>
+  <Button variant="primary">Kaydet</Button>
+  <Button variant="secondary">Taslak</Button>
+  <Button variant="ghost">İptal</Button>
+</ButtonGroup>
+```
+
+### Tehlikeli İşlem
+
+```tsx
+<Button
+  variant="danger"
+  onClick={() => confirm('Silmek istediğinize emin misiniz?')}
+>
+  Kaydı Sil
+</Button>
+```

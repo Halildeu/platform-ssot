@@ -24,7 +24,7 @@ import type { AppSidebarNavItemProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarNavItem: React.FC<AppSidebarNavItemProps> = ({
+export const AppSidebarNavItem = React.forwardRef<HTMLDivElement, AppSidebarNavItemProps>(({
   icon,
   label,
   href,
@@ -36,7 +36,7 @@ export const AppSidebarNavItem: React.FC<AppSidebarNavItemProps> = ({
   children,
   depth = 0,
   className,
-}) => {
+}, ref) => {
   const { isCollapsed } = useSidebar();
   const itemRef = useRef<HTMLElement>(null);
 
@@ -125,7 +125,7 @@ export const AppSidebarNavItem: React.FC<AppSidebarNavItemProps> = ({
   /* Nested children */
   if (children && !isCollapsed) {
     return (
-      <div>
+      <div ref={ref}>
         {element}
         <div className="space-y-0.5">
           {React.Children.map(children, (child) => {
@@ -141,10 +141,10 @@ export const AppSidebarNavItem: React.FC<AppSidebarNavItemProps> = ({
     );
   }
 
-  return element;
-};
+  return <div ref={ref}>{element}</div>;
+});
 
 AppSidebarNavItem.displayName = 'AppSidebar.NavItem';
 
 /** Props interface for AppSidebarNavItem. */
-export interface AppSidebarNavItemComponentProps extends AppSidebarNavItemProps {}
+export type { AppSidebarNavItemProps };

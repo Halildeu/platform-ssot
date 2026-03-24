@@ -1,0 +1,103 @@
+---
+title: ProcessFlow
+description: 'İş akışı görselleştirme ve tasarım — BPMN uyumlu, sürükle-bırak.'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Import
+
+```tsx
+import { ProcessFlow } from '@mfe/design-system';
+```
+
+## Kullanım
+
+```tsx
+const nodes = [
+  { id: '1', type: 'start', label: 'Başlangıç', position: { x: 0, y: 100 } },
+  { id: '2', type: 'task', label: 'Onay Bekliyor', position: { x: 200, y: 100 } },
+  { id: '3', type: 'decision', label: 'Onaylandı mı?', position: { x: 400, y: 100 } },
+  { id: '4', type: 'task', label: 'İşleme Al', position: { x: 600, y: 50 } },
+  { id: '5', type: 'end', label: 'Reddedildi', position: { x: 600, y: 200 } },
+];
+
+const edges = [
+  { source: '1', target: '2' },
+  { source: '2', target: '3' },
+  { source: '3', target: '4', label: 'Evet' },
+  { source: '3', target: '5', label: 'Hayır' },
+];
+
+<ProcessFlow nodes={nodes} edges={edges} />
+```
+
+## Node Tipleri
+
+| Tip | Açıklama | Görsel |
+|-----|---------|--------|
+| `start` | Süreç başlangıcı | Yeşil daire |
+| `end` | Süreç bitişi | Kırmızı daire |
+| `task` | Görev/aktivite | Dikdörtgen |
+| `decision` | Karar noktası | Elmas şekli |
+| `subprocess` | Alt süreç | Çift çerçeve dikdörtgen |
+| `parallel` | Paralel geçit | Artı işareti |
+
+## Sürükle-Bırak Tasarımcı
+
+```tsx
+<ProcessFlow
+  nodes={nodes}
+  edges={edges}
+  editable
+  onNodesChange={setNodes}
+  onEdgesChange={setEdges}
+  toolbox  // sol panel araç kutusu
+/>
+```
+
+## Durum Görselleştirme
+
+Çalışan süreçlerin anlık durumunu göstermek için:
+
+```tsx
+const nodeStates = {
+  '1': 'completed',
+  '2': 'completed',
+  '3': 'active',
+  '4': 'pending',
+};
+
+<ProcessFlow
+  nodes={nodes}
+  edges={edges}
+  nodeStates={nodeStates}
+  animated  // aktif kenarlar animasyonlu
+/>
+```
+
+## Props
+
+| Prop | Tip | Varsayılan | Açıklama |
+|------|-----|-----------|----------|
+| `nodes` | `ProcessNode[]` | — | Düğüm listesi |
+| `edges` | `ProcessEdge[]` | — | Bağlantı listesi |
+| `editable` | `boolean` | `false` | Düzenleme modu |
+| `nodeStates` | `Record<string, NodeState>` | — | Düğüm durumları |
+| `animated` | `boolean` | `false` | Kenar animasyonları |
+| `toolbox` | `boolean` | `false` | Araç kutusu paneli |
+| `minimap` | `boolean` | `true` | Mini harita |
+| `fitView` | `boolean` | `true` | Otomatik sığdırma |
+| `onNodesChange` | `(nodes) => void` | — | Düğüm değişikliği |
+| `onEdgesChange` | `(edges) => void` | — | Bağlantı değişikliği |
+| `onNodeClick` | `(node) => void` | — | Düğüm tıklama |
+
+## Erişilebilirlik
+
+- **Keyboard**: Tab ile düğümler arası navigasyon, Enter ile seçim
+- **ARIA**: Her düğüm `role="treeitem"`, bağlantılar `aria-describedby`
+- **Screen Reader**: Düğüm tipleri ve bağlantılar sesli duyurulur
+
+<Aside type="note">
+  ProcessFlow bileşeni BPMN 2.0 XML formatını destekler. `importBPMN` ve `exportBPMN` yardımcı fonksiyonlarını kullanın.
+</Aside>

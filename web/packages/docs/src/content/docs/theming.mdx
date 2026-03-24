@@ -1,0 +1,122 @@
+---
+title: Tema Sistemi
+description: 'Renk, tipografi ve spacing özelleştirmeleri'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Genel Bakış
+
+`@mfe/design-system` üç eksen üzerinde tam özelleştirilebilir bir tema sistemi sunar:
+
+- **Renk** — Semantic token tabanlı renk paleti
+- **Tipografi** — Font ailesi, boyut ve ağırlık scale'leri
+- **Spacing** — 4px grid tabanlı tutarlı boşluk sistemi
+
+## Tema Yapılandırması
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+const customTheme = {
+  colors: {
+    primary: {
+      50: '#eff6ff',
+      100: '#dbeafe',
+      500: '#3b82f6',
+      600: '#2563eb',
+      700: '#1d4ed8',
+      900: '#1e3a5f',
+    },
+    semantic: {
+      success: '#22c55e',
+      warning: '#f59e0b',
+      danger: '#ef4444',
+      info: '#3b82f6',
+    },
+  },
+  typography: {
+    fontFamily: {
+      sans: 'Inter, system-ui, sans-serif',
+      mono: 'JetBrains Mono, monospace',
+    },
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+    },
+  },
+  spacing: {
+    unit: 4,  // base unit in px
+    scale: [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24],
+  },
+};
+
+function App() {
+  return (
+    <DesignSystemProvider theme={customTheme}>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+## Semantic Token'lar
+
+Tema sistemi renkleri doğrudan hex değerleri yerine semantic token'lar üzerinden yönetir. Bu yaklaşım dark mode geçişlerini sorunsuz hale getirir.
+
+| Token | Açıklama | Light | Dark |
+|-------|---------|-------|------|
+| `bg.primary` | Ana arka plan | `#ffffff` | `#0f172a` |
+| `bg.secondary` | İkincil arka plan | `#f8fafc` | `#1e293b` |
+| `text.primary` | Ana metin rengi | `#0f172a` | `#f8fafc` |
+| `text.secondary` | İkincil metin | `#64748b` | `#94a3b8` |
+| `border.default` | Varsayılan kenarlık | `#e2e8f0` | `#334155` |
+| `interactive.primary` | Birincil etkileşim | `#3b82f6` | `#60a5fa` |
+
+## CSS Custom Properties
+
+Tüm token'lar CSS custom property olarak da erişilebilir:
+
+```css
+.my-component {
+  color: var(--mfe-text-primary);
+  background: var(--mfe-bg-primary);
+  border: 1px solid var(--mfe-border-default);
+  padding: var(--mfe-spacing-4);
+}
+```
+
+## Tema Genişletme
+
+Mevcut temayı kısmen override edebilirsiniz — sadece değiştirmek istediğiniz token'ları belirtin:
+
+```tsx
+<DesignSystemProvider
+  theme={{
+    colors: {
+      primary: { 500: '#8b5cf6' },  // sadece primary.500 değişir
+    },
+  }}
+>
+  <YourApp />
+</DesignSystemProvider>
+```
+
+<Aside type="caution">
+  Tema token'larını doğrudan CSS'de hardcode etmekten kaçının. Semantic token'lar kullanarak dark mode ve high-contrast uyumluluğunu koruyun.
+</Aside>
+
+## Tipografi Scale
+
+| Token | Boyut | Kullanım |
+|-------|-------|---------|
+| `text-xs` | 0.75rem | Badge, caption |
+| `text-sm` | 0.875rem | Helper text, label |
+| `text-base` | 1rem | Body text |
+| `text-lg` | 1.125rem | Subtitle |
+| `text-xl` | 1.25rem | Section heading |
+| `text-2xl` | 1.5rem | Page heading |
+| `text-3xl` | 1.875rem | Hero heading |

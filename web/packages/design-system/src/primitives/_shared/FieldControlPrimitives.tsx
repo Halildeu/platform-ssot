@@ -211,3 +211,6 @@ export const FieldControlShell: React.FC<FieldControlShellProps> = ({
 );
 
 FieldControlShell.displayName = "FieldControlShell";
+
+/** Re-export props type for FieldControlShell. */
+export type { FieldControlShellProps as FieldControlPrimitivesProps };

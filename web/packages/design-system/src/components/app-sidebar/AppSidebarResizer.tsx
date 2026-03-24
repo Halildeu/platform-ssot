@@ -21,9 +21,9 @@ import type { AppSidebarResizerProps } from './types';
  * @since 1.0.0
  * @see AppSidebar
  */
-export const AppSidebarResizer: React.FC<AppSidebarResizerProps> = ({
+export const AppSidebarResizer = React.forwardRef<HTMLDivElement, AppSidebarResizerProps>(({
   className,
-}) => {
+}, ref) => {
   const { resize, setWidth, setIsResizing, isCollapsed } = useSidebar();
   const startXRef = useRef(0);
   const startWidthRef = useRef(0);
@@ -63,6 +63,7 @@ export const AppSidebarResizer: React.FC<AppSidebarResizerProps> = ({
 
   return (
     <div
+      ref={ref}
       role="separator"
       aria-orientation="vertical"
       aria-label="Resize sidebar"
@@ -81,9 +82,9 @@ export const AppSidebarResizer: React.FC<AppSidebarResizerProps> = ({
       onPointerDown={onPointerDown}
     />
   );
-};
+});
 
 AppSidebarResizer.displayName = 'AppSidebar.Resizer';
 
 /** Props interface for AppSidebarResizer. */
-export interface AppSidebarResizerComponentProps extends AppSidebarResizerProps {}
+export type { AppSidebarResizerProps };

@@ -1,0 +1,110 @@
+---
+title: Kurulum
+description: '@mfe/design-system paketini projenize ekleyin'
+---
+
+import { Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+## Paket Yöneticisi
+
+<Tabs>
+  <TabItem label="pnpm">
+  ```bash
+  pnpm add @mfe/design-system
+  ```
+  </TabItem>
+  <TabItem label="npm">
+  ```bash
+  npm install @mfe/design-system
+  ```
+  </TabItem>
+  <TabItem label="yarn">
+  ```bash
+  yarn add @mfe/design-system
+  ```
+  </TabItem>
+</Tabs>
+
+<Aside type="tip">
+  Monorepo kullanıyorsanız, paketi workspace root yerine ilgili app paketine ekleyin.
+</Aside>
+
+## Gereksinimler
+
+| Bağımlılık | Minimum Versiyon |
+|-----------|-----------------|
+| React     | ≥ 18.0          |
+| ReactDOM  | ≥ 18.0          |
+| TypeScript| ≥ 5.0 (opsiyonel) |
+
+## Provider Kurulumu
+
+Uygulamanızın kök bileşenini `DesignSystemProvider` ile sarın. Bu provider tema, locale ve diğer global ayarları yönetir.
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+function App() {
+  return (
+    <DesignSystemProvider>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+## İlk Bileşen
+
+```tsx
+import { Button } from '@mfe/design-system';
+
+function MyPage() {
+  return (
+    <Button variant="primary" size="md">
+      Merhaba Dünya
+    </Button>
+  );
+}
+```
+
+## Tree Shaking
+
+Paket ES modules formatında dağıtılır. Modern bundler'lar (webpack 5, Vite, esbuild) otomatik olarak kullanılmayan bileşenleri atar:
+
+```tsx
+// Sadece Button bundle'a dahil edilir
+import { Button } from '@mfe/design-system';
+```
+
+## Peer Dependencies
+
+Aşağıdaki paketler peer dependency olarak tanımlıdır ve projenizde yüklü olmalıdır:
+
+```json
+{
+  "react": ">=18.0.0",
+  "react-dom": ">=18.0.0"
+}
+```
+
+## Sorun Giderme
+
+### Module not found hatası
+
+Paketin doğru yüklendiğinden emin olun:
+
+```bash
+pnpm list @mfe/design-system
+```
+
+### TypeScript hataları
+
+`tsconfig.json` dosyanızda `moduleResolution` ayarını kontrol edin:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
+}
+```

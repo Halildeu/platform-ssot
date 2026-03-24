@@ -194,7 +194,7 @@ const DefaultTablePaginationActions: React.FC<TablePaginationActionsProps> = ({
  * @since 1.0.0
  * @see [Docs](https://design.mfe.dev/components/table-pagination)
  */
-export const TablePagination: React.FC<TablePaginationProps> = ({
+export const TablePagination = React.forwardRef<HTMLDivElement, TablePaginationProps>(({
   totalItems,
   page,
   defaultPage,
@@ -214,7 +214,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
   slotProps,
   access = "full",
   accessReason,
-}) => {
+}, ref) => {
   const accessState = resolveAccessState(access);
   const knownPagination = usePaginationState({
     totalItems,
@@ -321,6 +321,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
 
   return (
     <div
+      ref={ref}
       className={[
         "relative flex flex-wrap items-center justify-end gap-4 overflow-hidden rounded-[28px] border border-border-subtle/80 bg-[var(--surface-card)] p-4 shadow-[0_22px_48px_-34px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[var(--surface-card)] before:to-transparent",
         className ?? "",
@@ -379,7 +380,7 @@ export const TablePagination: React.FC<TablePaginationProps> = ({
       />
     </div>
   );
-};
+});
 
 TablePagination.displayName = "TablePagination";
 
