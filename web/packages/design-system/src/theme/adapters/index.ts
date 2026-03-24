@@ -3,3 +3,5 @@ export { tokenSetToGridTheme } from "./grid-adapter";
 export type { GridThemeParams } from "./grid-adapter";
 export { tokenSetToChartColors } from "./chart-adapter";
 export type { ChartColorConfig } from "./chart-adapter";
+export { cssVarsToGridTheme, cssVarsToChartColors, useAutoThemeAdapter } from "../../hooks/useAutoThemeAdapter";
+export type { AutoThemeAdapterResult } from "../../hooks/useAutoThemeAdapter";
