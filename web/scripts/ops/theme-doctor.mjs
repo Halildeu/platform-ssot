@@ -644,6 +644,166 @@ check('undefined-tw-prefix', 'Undefined Tailwind class prefixes in production TS
   };
 });
 
+// 19. Phantom classes — used in code but NOT in @theme (won't generate CSS)
+check('phantom-classes', 'Tailwind classes using tokens not defined in @theme inline', () => {
+  /* Extract all token names from @theme inline block */
+  const indexCss = readSafe(SHELL_INDEX_CSS);
+  const themeBlock = indexCss.match(/@theme\s+inline\s*\{([\s\S]*?)\}/);
+  if (!themeBlock) return { status: 'warn', message: 'No @theme inline block found in index.css' };
+
+  const themeTokens = new Set();
+  for (const line of themeBlock[1].split('\n')) {
+    const m = line.match(/^\s+--([\w-]+):/);
+    if (m) themeTokens.add(m[1]);
+  }
+
+  /* Also extract token-bridge.css tokens (they provide component-level aliases) */
+  const bridge = readSafe(TOKEN_BRIDGE_CSS);
+  for (const line of bridge.split('\n')) {
+    const m = line.match(/^\s+--([\w-]+):/);
+    if (m) themeTokens.add(m[1]);
+  }
+
+  /* Also add theme.css tokens */
+  const theme = readSafe(THEME_CSS);
+  for (const line of theme.split('\n')) {
+    const m = line.trim().match(/^--([\w-]+):/);
+    if (m) themeTokens.add(m[1]);
+  }
+
+  /* Build set of valid token-based utility class patterns.
+     TW4 generates: bg-<token>, text-<token>, border-<token>, ring-<token>, etc.
+     Token name: --color-surface-default → utility: bg-surface-default, text-surface-default */
+  const validTokenNames = new Set();
+  for (const token of themeTokens) {
+    validTokenNames.add(token);
+    /* Strip common prefixes to get the utility suffix */
+    const stripped = token
+      .replace(/^color-/, '')
+      .replace(/^spacing-/, '')
+      .replace(/^radius-/, '')
+      .replace(/^shadow-/, '');
+    validTokenNames.add(stripped);
+  }
+
+  /* Standard TW color names that don't need @theme (built-in) */
+  const builtinColors = new Set([
+    'transparent', 'current', 'inherit', 'white', 'black',
+    'red', 'blue', 'green', 'gray', 'amber', 'orange', 'yellow', 'indigo',
+    'purple', 'pink', 'rose', 'emerald', 'teal', 'cyan', 'sky', 'violet',
+    'fuchsia', 'lime', 'stone', 'zinc', 'slate', 'neutral',
+  ]);
+
+  /* Scan all TSX files for color-related utility classes */
+  const colorUtilRe = /\b(text|bg|border|ring|divide|from|via|to|outline|shadow|accent)-([\w][\w-]*?)(?=\s|"|'|`|\\|\/|\)|\]|$)/g;
+  const scanDirs = ['apps', 'packages/design-system/src', 'packages/x-form-builder/src', 'packages/x-charts/src', 'packages/x-data-grid/src', 'packages/x-editor/src', 'packages/x-kanban/src', 'packages/x-scheduler/src', 'packages/blocks/src'];
+  const phantoms = new Map(); /* class → [files] */
+
+  for (const dir of scanDirs) {
+    const files = walkDir(join(ROOT, dir), '.tsx');
+    for (const file of files) {
+      const content = readSafe(file);
+      /* Only scan className contexts */
+      const classChunks = [];
+      const clsRe = /className\s*=\s*(?:{[^}]*`([^`]*)`|{[^}]*['"]([^'"]*)['"]}|['"]([^'"]*)['"]\s*|{[^}]*cn\(([^)]*)\))/g;
+      let cm;
+      while ((cm = clsRe.exec(content)) !== null) {
+        classChunks.push(cm[1] || cm[2] || cm[3] || cm[4] || '');
+      }
+      clsRe.lastIndex = 0;
+
+      for (const chunk of classChunks) {
+        let um;
+        while ((um = colorUtilRe.exec(chunk)) !== null) {
+          const prefix = um[1]; // text, bg, border, etc.
+          const suffix = um[2]; // the token part
+
+          /* Skip standard patterns */
+          if (/^\d/.test(suffix)) continue; /* numeric: text-2xl, p-4 */
+          if (/^\[/.test(suffix)) continue; /* arbitrary: bg-[#fff] */
+          if (suffix.includes('(')) continue; /* function: bg-(--var) */
+
+          /* Check if it's a built-in color scale (e.g., red-500, gray-200) */
+          const colorBase = suffix.split('-')[0];
+          if (builtinColors.has(colorBase)) continue;
+
+          /* Check standard TW utility suffixes (not token-based) */
+          const stdSuffixes = new Set([
+            'none', 'auto', 'full', 'screen', 'fit', 'min', 'max',
+            'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl',
+            'px', 'clip', 'visible', 'hidden', 'scroll',
+            'fixed', 'absolute', 'relative', 'sticky', 'static',
+            'block', 'inline', 'flex', 'grid', 'table', 'contents',
+            'center', 'start', 'end', 'between', 'around', 'evenly',
+            'stretch', 'baseline', 'wrap', 'nowrap', 'reverse',
+            'col', 'row', 'left', 'right', 'top', 'bottom',
+            'ellipsis', 'balance', 'pretty',
+            /* Border/divide directional */
+            'b', 't', 'l', 'r', 'x', 'y',
+            /* Border styles */
+            'dashed', 'dotted', 'double', 'solid',
+            /* Typography */
+            'base', 'bold', 'semibold', 'medium', 'normal', 'light', 'thin', 'extrabold', 'extralight',
+            'italic', 'not-italic', 'uppercase', 'lowercase', 'capitalize', 'underline', 'overline', 'line-through', 'no-underline',
+            /* Layout */
+            'gap', 'grow', 'shrink', 'order', 'span', 'cols', 'rows',
+            /* Gradient */
+            'linear-to-r', 'linear-to-l', 'linear-to-t', 'linear-to-b', 'linear-to-br', 'linear-to-bl', 'linear-to-tr', 'linear-to-tl',
+            /* Ring */
+            'offset-0', 'offset-1', 'offset-2', 'offset-4', 'offset-8',
+            /* Cursor */
+            'pointer', 'default', 'wait', 'move', 'not-allowed', 'grab', 'grabbing',
+          ]);
+          if (stdSuffixes.has(suffix)) continue;
+          /* Multi-word standard suffixes and numeric variants */
+          if (/^(offset-\d+|linear-to-\w+)$/.test(suffix)) continue;
+          if (/^[btlrxy]-\d/.test(suffix)) continue; /* border-b-0, border-l-2 */
+          if (/^\d/.test(suffix)) continue; /* ring-1, border-2 */
+          if (/^collapse|^separate|^spacing|^color$/.test(suffix)) continue; /* table utils */
+          if (/^top-|^bottom-|^left-|^right-/.test(suffix)) continue; /* directional */
+          if (/^[se]$/.test(suffix)) continue; /* logical border-s, border-e */
+          if (/^inset$/.test(suffix)) continue; /* ring-inset */
+          if (/^[lrtbse]-\w/.test(suffix) && builtinColors.has(suffix.split('-').pop())) continue; /* border-l-transparent */
+
+          /* Check if token exists in @theme or bridge */
+          const tokenCandidates = [
+            suffix,
+            `color-${suffix}`,
+            `${prefix}-${suffix}`,
+          ];
+          const found = tokenCandidates.some(c => validTokenNames.has(c));
+          if (!found) {
+            const cls = `${prefix}-${suffix}`;
+            if (!phantoms.has(cls)) phantoms.set(cls, new Set());
+            phantoms.get(cls).add(relative(ROOT, file));
+          }
+        }
+        colorUtilRe.lastIndex = 0;
+      }
+    }
+  }
+
+  /* Filter out known safe patterns to reduce false positives */
+  const safePatterns = /^(text|bg|border|ring)-(opacity|center|left|right|top|bottom|inherit|current|transparent|clip|balance|pretty|wrap|nowrap|ellipsis)/;
+  for (const [cls] of phantoms) {
+    if (safePatterns.test(cls)) phantoms.delete(cls);
+  }
+
+  if (phantoms.size === 0) return { status: 'pass', message: 'All Tailwind token classes resolve to @theme inline definitions' };
+
+  const entries = [...phantoms.entries()]
+    .sort((a, b) => b[1].size - a[1].size)
+    .slice(0, 10)
+    .map(([cls, files]) => ({ class: cls, usedIn: files.size, files: [...files].slice(0, 3) }));
+
+  return {
+    status: phantoms.size > 20 ? 'fail' : 'warn',
+    message: `${phantoms.size} Tailwind classes reference tokens not in @theme inline — styles may not apply`,
+    details: entries,
+    fix: FIX_HINT ? 'Either add missing tokens to @theme inline in index.css, or replace with existing token names. Run with --fix-hint for details.' : undefined,
+  };
+});
+
 /* ================================================================== */
 /*  TW4 BEHAVIOR CHANGE RISK CHECKS                                    */
 /* ================================================================== */
@@ -789,7 +949,7 @@ check('tw4-hidden-priority', 'TW4 hidden attribute priority change', () => {
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '3.2.0',
+    version: '3.3.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -798,7 +958,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log('║              🩺 Theme Doctor v3.2 (24 checks)               ║');
+  console.log('║              🩺 Theme Doctor v3.3 (25 checks)               ║');
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

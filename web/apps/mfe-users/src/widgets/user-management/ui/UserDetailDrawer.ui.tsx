@@ -463,7 +463,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                       )}
                       {isUpdatingThisModule && (
                         <span className="inline-flex items-center gap-2 text-xs text-text-subtle">
-                        <span className="inline-flex h-4 w-4 animate-spin rounded-full border border-border-subtle border-t-action-primary-border" />
+                        <span className="inline-flex h-4 w-4 animate-spin rounded-full border border-border-subtle border-t-action-primary" />
                           {t('users.detail.modulePermission.updating')}
                         </span>
                       )}

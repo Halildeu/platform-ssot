@@ -161,6 +161,11 @@
     "license-audit": "node scripts/ci/license-audit.mjs",
     "license-audit:ci": "node scripts/ci/license-audit.mjs --ci",
     "bundle-report": "node scripts/ci/bundle-analyzer.mjs",
+    "pr-review": "node scripts/ci/ai-pr-review.mjs",
+    "pr-review:ci": "node scripts/ci/ai-pr-review.mjs --ci",
+    "predict": "node scripts/ci/component-predictor.mjs",
+    "a11y-guardian": "node scripts/ci/a11y-guardian.mjs",
+    "a11y-guardian:ci": "node scripts/ci/a11y-guardian.mjs --ci",
     "prepack": "[ -d dist ] || npm run build",
     "prepublishOnly": "npm run build"
   },

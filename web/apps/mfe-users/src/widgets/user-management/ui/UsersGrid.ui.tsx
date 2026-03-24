@@ -815,7 +815,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
     if (!accessProbeReady && dataSourceMode === 'server') {
       return (
         <div className="flex min-h-[320px] items-center justify-center rounded-3xl border border-border-subtle bg-surface-default p-6 shadow-xs">
-          <span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary-border" />
+          <span className="inline-flex h-6 w-6 animate-spin rounded-full border-2 border-border-subtle border-t-action-primary" />
         </div>
       );
     }

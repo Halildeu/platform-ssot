@@ -135,7 +135,7 @@ export const AIActionAuditTimeline: React.FC<AIActionAuditTimelineProps> = ({
                   />
                   {index < items.length - 1 ? (
                     <span
-                      className={`mt-2 h-full min-h-10 w-px ${selected ? "bg-[linear-gradient(180deg,var(--accent-primary-muted),var(--border-subtle-muted))]" : "bg-[linear-gradient(180deg,var(--border-subtle-muted),var(--border-subtle-muted))]"}`}
+                      className={`mt-2 h-full min-h-10 w-px ${selected ? "bg-[linear-gradient(180deg,var(--accent-primary-muted),var(--border-subtle))]" : "bg-[linear-gradient(180deg,var(--border-subtle),var(--border-subtle))]"}`}
                     />
                   ) : null}
                 </div>
