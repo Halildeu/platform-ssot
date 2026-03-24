@@ -44,10 +44,10 @@ export const FieldRenderer: React.FC<FieldRendererProps> = (props) => {
       style={{ gridColumn: field.span ? `span ${field.span}` : undefined }}
     >
       {/* Label */}
-      <label htmlFor={inputId} className="text-sm font-medium text-ds-text-primary">
+      <label htmlFor={inputId} className="text-sm font-medium text-text-primary">
         {field.label}
         {field.required && (
-          <span className="ml-0.5 text-ds-text-danger" aria-hidden="true">
+          <span className="ml-0.5 text-state-danger-text" aria-hidden="true">
             *
           </span>
         )}
@@ -62,14 +62,14 @@ export const FieldRenderer: React.FC<FieldRendererProps> = (props) => {
 
       {/* Help text */}
       {field.helpText && !showError && (
-        <p id={helpId} className="text-xs text-ds-text-secondary">
+        <p id={helpId} className="text-xs text-text-secondary">
           {field.helpText}
         </p>
       )}
 
       {/* Error message */}
       {showError && (
-        <p id={errorId} role="alert" className="text-xs text-ds-text-danger">
+        <p id={errorId} role="alert" className="text-xs text-state-danger-text">
           {error}
         </p>
       )}
@@ -102,7 +102,7 @@ function inputProps(
       onChange(e.target.value),
     onBlur,
     className:
-      'w-full rounded-md border border-ds-border bg-ds-surface px-3 py-2 text-sm text-ds-text-primary placeholder:text-ds-text-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50',
+      'w-full rounded-md border border-border-default bg-surface-default px-3 py-2 text-sm text-text-primary placeholder:text-text-secondary focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:cursor-not-allowed disabled:opacity-50',
   };
 }
 
@@ -194,7 +194,7 @@ export const CheckboxFieldRenderer: React.FC<FieldRendererProps & Record<string,
         disabled={field.disabled || readOnly}
         onChange={(e) => onChange(e.target.checked)}
         onBlur={onBlur}
-        className="h-4 w-4 rounded-xs border-ds-border text-ds-primary focus:ring-2 focus:ring-ds-ring"
+        className="h-4 w-4 rounded-xs border-border-default text-action-primary focus:ring-2 focus:ring-accent-focus"
         aria-invalid={Boolean(props.error && props.touched) || undefined}
         aria-describedby={
           [(props as Record<string, unknown>).errorId, (props as Record<string, unknown>).helpId]
@@ -222,7 +222,7 @@ export const RadioFieldRenderer: React.FC<FieldRendererProps & Record<string, un
             disabled={field.disabled || readOnly}
             onChange={() => onChange(opt.value)}
             onBlur={onBlur}
-            className="h-4 w-4 border-ds-border text-ds-primary focus:ring-2 focus:ring-ds-ring"
+            className="h-4 w-4 border-border-default text-action-primary focus:ring-2 focus:ring-accent-focus"
           />
           {opt.label}
         </label>
@@ -246,8 +246,8 @@ export const SwitchFieldRenderer: React.FC<FieldRendererProps & Record<string, u
       disabled={field.disabled || readOnly}
       onClick={() => onChange(!checked)}
       onBlur={onBlur}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50 ${
-        checked ? 'bg-ds-primary' : 'bg-ds-border'
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:cursor-not-allowed disabled:opacity-50 ${
+        checked ? 'bg-action-primary' : 'bg-border-default'
       }`}
     >
       <span
@@ -291,7 +291,7 @@ export const FileFieldRenderer: React.FC<FieldRendererProps & Record<string, unk
       disabled={field.disabled || readOnly}
       onChange={(e) => onChange(e.target.files)}
       onBlur={onBlur}
-      className="w-full text-sm text-ds-text-primary file:mr-3 file:rounded-md file:border-0 file:bg-ds-surface-secondary file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-ds-surface-tertiary"
+      className="w-full text-sm text-text-primary file:mr-3 file:rounded-md file:border-0 file:bg-surface-muted file:px-3 file:py-2 file:text-sm file:font-medium hover:file:bg-surface-muted"
       aria-invalid={Boolean(props.error && props.touched) || undefined}
       aria-describedby={
         [(props as Record<string, unknown>).errorId, (props as Record<string, unknown>).helpId]
@@ -306,7 +306,7 @@ export const FileFieldRenderer: React.FC<FieldRendererProps & Record<string, unk
 
 export const CustomFieldRenderer: React.FC<FieldRendererProps & Record<string, unknown>> = (props) => {
   return (
-    <div className="text-xs text-ds-text-secondary italic">
+    <div className="text-xs text-text-secondary italic">
       Custom field: {props.field.name} (provide via FieldRegistry)
     </div>
   );

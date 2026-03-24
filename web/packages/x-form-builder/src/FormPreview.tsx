@@ -74,15 +74,15 @@ export const FormPreview: React.FC<FormPreviewProps> = ({
 
   return (
     <div
-      className={`rounded-lg border border-ds-border bg-ds-surface p-6 shadow-xs ${className ?? ''}`}
+      className={`rounded-lg border border-border-default bg-surface-default p-6 shadow-xs ${className ?? ''}`}
     >
       {/* Preview badge */}
       <div className="mb-4 flex items-center gap-2">
-        <span className="inline-flex items-center rounded-full bg-ds-surface-secondary px-2.5 py-0.5 text-xs font-medium text-ds-text-secondary">
+        <span className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-xs font-medium text-text-secondary">
           Preview
         </span>
         {schema.title && (
-          <span className="text-sm font-medium text-ds-text-primary">{schema.title}</span>
+          <span className="text-sm font-medium text-text-primary">{schema.title}</span>
         )}
       </div>
 

@@ -88,11 +88,11 @@ export const RepeatableFieldGroup: React.FC<RepeatableFieldGroupProps> = ({
       {values.map((row, rowIndex) => (
         <div
           key={rowIndex}
-          className="group relative rounded-lg border border-ds-border bg-ds-surface p-4"
+          className="group relative rounded-lg border border-border-default bg-surface-default p-4"
         >
           {/* Row header with reorder + remove controls */}
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-xs font-medium text-ds-text-secondary">
+            <span className="text-xs font-medium text-text-secondary">
               Row {rowIndex + 1}
             </span>
 
@@ -102,7 +102,7 @@ export const RepeatableFieldGroup: React.FC<RepeatableFieldGroupProps> = ({
                 type="button"
                 disabled={rowIndex === 0}
                 onClick={() => handleMoveUp(rowIndex)}
-                className="rounded-xs p-1 text-ds-text-secondary hover:bg-ds-surface-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:opacity-30 disabled:cursor-not-allowed"
+                className="rounded-xs p-1 text-text-secondary hover:bg-surface-muted focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:opacity-30 disabled:cursor-not-allowed"
                 aria-label={`Move row ${rowIndex + 1} up`}
               >
                 <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -119,7 +119,7 @@ export const RepeatableFieldGroup: React.FC<RepeatableFieldGroupProps> = ({
                 type="button"
                 disabled={rowIndex === values.length - 1}
                 onClick={() => handleMoveDown(rowIndex)}
-                className="rounded-xs p-1 text-ds-text-secondary hover:bg-ds-surface-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:opacity-30 disabled:cursor-not-allowed"
+                className="rounded-xs p-1 text-text-secondary hover:bg-surface-muted focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:opacity-30 disabled:cursor-not-allowed"
                 aria-label={`Move row ${rowIndex + 1} down`}
               >
                 <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -136,7 +136,7 @@ export const RepeatableFieldGroup: React.FC<RepeatableFieldGroupProps> = ({
                 <button
                   type="button"
                   onClick={() => handleRemoveRow(rowIndex)}
-                  className="ml-1 rounded-xs p-1 text-ds-text-danger hover:bg-red-50 focus:outline-hidden focus:ring-2 focus:ring-ds-ring"
+                  className="ml-1 rounded-xs p-1 text-state-danger-text hover:bg-state-danger-bg focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
                   aria-label={`${removeLabel} row ${rowIndex + 1}`}
                 >
                   <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -171,7 +171,7 @@ export const RepeatableFieldGroup: React.FC<RepeatableFieldGroupProps> = ({
         <button
           type="button"
           onClick={handleAddRow}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-ds-border px-4 py-3 text-sm font-medium text-ds-text-secondary hover:border-ds-primary hover:text-ds-primary focus:outline-hidden focus:ring-2 focus:ring-ds-ring transition-colors"
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-border-default px-4 py-3 text-sm font-medium text-text-secondary hover:border-action-primary hover:text-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus transition-colors"
         >
           <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
@@ -181,7 +181,7 @@ export const RepeatableFieldGroup: React.FC<RepeatableFieldGroupProps> = ({
       )}
 
       {/* Row count indicator */}
-      <p className="text-xs text-ds-text-secondary">
+      <p className="text-xs text-text-secondary">
         {values.length} {values.length === 1 ? 'row' : 'rows'}
         {maxRows < Infinity && ` (max ${maxRows})`}
       </p>

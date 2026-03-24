@@ -30,14 +30,14 @@ export const FormSectionComponent: React.FC<FormSectionProps> = ({
 
   return (
     <fieldset
-      className={`rounded-lg border border-ds-border bg-ds-surface ${className ?? ''}`}
+      className={`rounded-lg border border-border-default bg-surface-default ${className ?? ''}`}
     >
       {/* Section header */}
       <legend className="sr-only">{section.title}</legend>
       <div
         className={`flex items-center justify-between px-4 py-3 ${
           isCollapsible ? 'cursor-pointer select-none' : ''
-        } ${collapsed ? '' : 'border-b border-ds-border'}`}
+        } ${collapsed ? '' : 'border-b border-border-default'}`}
         role={isCollapsible ? 'button' : undefined}
         tabIndex={isCollapsible ? 0 : undefined}
         aria-expanded={isCollapsible ? !collapsed : undefined}
@@ -51,22 +51,22 @@ export const FormSectionComponent: React.FC<FormSectionProps> = ({
         }}
       >
         <div className="flex flex-col gap-0.5">
-          <h3 className="text-sm font-semibold text-ds-text-primary">{section.title}</h3>
+          <h3 className="text-sm font-semibold text-text-primary">{section.title}</h3>
           {section.description && (
-            <p className="text-xs text-ds-text-secondary">{section.description}</p>
+            <p className="text-xs text-text-secondary">{section.description}</p>
           )}
         </div>
 
         <div className="flex items-center gap-2">
           {/* Field count indicator */}
-          <span className="inline-flex items-center rounded-full bg-ds-surface-secondary px-2 py-0.5 text-xs font-medium text-ds-text-secondary">
+          <span className="inline-flex items-center rounded-full bg-surface-muted px-2 py-0.5 text-xs font-medium text-text-secondary">
             {section.fields.length} {section.fields.length === 1 ? 'field' : 'fields'}
           </span>
 
           {/* Collapse toggle icon */}
           {isCollapsible && (
             <svg
-              className={`h-4 w-4 text-ds-text-secondary transition-transform duration-200 ${
+              className={`h-4 w-4 text-text-secondary transition-transform duration-200 ${
                 collapsed ? '' : 'rotate-180'
               }`}
               viewBox="0 0 20 20"

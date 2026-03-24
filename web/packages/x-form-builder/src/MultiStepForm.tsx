@@ -126,10 +126,10 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
       {(schema.title || schema.description) && (
         <div className="mb-6">
           {schema.title && (
-            <h2 className="text-lg font-semibold text-ds-text-primary">{schema.title}</h2>
+            <h2 className="text-lg font-semibold text-text-primary">{schema.title}</h2>
           )}
           {schema.description && (
-            <p className="mt-1 text-sm text-ds-text-secondary">{schema.description}</p>
+            <p className="mt-1 text-sm text-text-secondary">{schema.description}</p>
           )}
         </div>
       )}
@@ -155,13 +155,13 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
                       onClick={() => handleStepClick(index)}
                       className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium transition-colors ${
                         isActive
-                          ? 'bg-ds-primary text-white'
+                          ? 'bg-action-primary text-white'
                           : isCompleted
-                            ? 'bg-ds-primary/20 text-ds-primary'
-                            : 'bg-ds-surface-secondary text-ds-text-secondary'
+                            ? 'bg-action-primary/20 text-action-primary'
+                            : 'bg-surface-muted text-text-secondary'
                       } ${
                         isClickable
-                          ? 'cursor-pointer hover:ring-2 hover:ring-ds-ring'
+                          ? 'cursor-pointer hover:ring-2 hover:ring-accent-focus'
                           : 'cursor-default'
                       }`}
                       aria-label={`Step ${index + 1}: ${step.title}`}
@@ -181,7 +181,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
                     </button>
                     <span
                       className={`text-xs font-medium ${
-                        isActive ? 'text-ds-text-primary' : 'text-ds-text-secondary'
+                        isActive ? 'text-text-primary' : 'text-text-secondary'
                       }`}
                     >
                       {step.title}
@@ -192,7 +192,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
                   {index < schema.steps.length - 1 && (
                     <div
                       className={`mx-2 h-0.5 flex-1 transition-colors ${
-                        index < multi.currentStep ? 'bg-ds-primary' : 'bg-ds-border'
+                        index < multi.currentStep ? 'bg-action-primary' : 'bg-border-default'
                       }`}
                       aria-hidden="true"
                     />
@@ -203,9 +203,9 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
           </div>
 
           {/* Progress bar */}
-          <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-ds-surface-secondary">
+          <div className="mt-4 h-1 w-full overflow-hidden rounded-full bg-surface-muted">
             <div
-              className="h-full rounded-full bg-ds-primary transition-all duration-300 ease-in-out"
+              className="h-full rounded-full bg-action-primary transition-all duration-300 ease-in-out"
               style={{ width: `${multi.progress}%` }}
               role="progressbar"
               aria-valuenow={multi.progress}
@@ -222,11 +222,11 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
         {/* Step title + description */}
         {(currentStepDef.title || currentStepDef.description) && (
           <div className="mb-4">
-            <h3 className="text-base font-semibold text-ds-text-primary">
+            <h3 className="text-base font-semibold text-text-primary">
               {currentStepDef.title}
             </h3>
             {currentStepDef.description && (
-              <p className="mt-1 text-sm text-ds-text-secondary">
+              <p className="mt-1 text-sm text-text-secondary">
                 {currentStepDef.description}
               </p>
             )}
@@ -254,7 +254,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
             <button
               type="button"
               onClick={handlePrevious}
-              className="inline-flex items-center justify-center rounded-md border border-ds-border px-4 py-2 text-sm font-medium text-ds-text-primary hover:bg-ds-surface-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring"
+              className="inline-flex items-center justify-center rounded-md border border-border-default px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
             >
               <svg
                 className="mr-1.5 h-4 w-4"
@@ -277,7 +277,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
           {multi.isLastStep ? (
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:cursor-not-allowed disabled:opacity-50"
             >
               {schema.submitLabel ?? 'Submit'}
             </button>
@@ -285,7 +285,7 @@ export const MultiStepForm: React.FC<MultiStepFormProps> = ({
             <button
               type="button"
               onClick={handleNext}
-              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-hidden focus:ring-2 focus:ring-ds-ring"
+              className="inline-flex items-center justify-center rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus"
             >
               Next
               <svg

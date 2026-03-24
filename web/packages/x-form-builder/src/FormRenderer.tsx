@@ -101,10 +101,10 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
       {(schema.title || schema.description) && (
         <div className="mb-6">
           {schema.title && (
-            <h2 className="text-lg font-semibold text-ds-text-primary">{schema.title}</h2>
+            <h2 className="text-lg font-semibold text-text-primary">{schema.title}</h2>
           )}
           {schema.description && (
-            <p className="mt-1 text-sm text-ds-text-secondary">{schema.description}</p>
+            <p className="mt-1 text-sm text-text-secondary">{schema.description}</p>
           )}
         </div>
       )}
@@ -132,7 +132,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center justify-center rounded-md bg-ds-primary px-4 py-2 text-sm font-medium text-white hover:bg-ds-primary-hover focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading && (
                 <svg
@@ -163,7 +163,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             <button
               type="reset"
               disabled={loading}
-              className="inline-flex items-center justify-center rounded-md border border-ds-border px-4 py-2 text-sm font-medium text-ds-text-primary hover:bg-ds-surface-secondary focus:outline-hidden focus:ring-2 focus:ring-ds-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center rounded-md border border-border-default px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-muted focus:outline-hidden focus:ring-2 focus:ring-accent-focus disabled:cursor-not-allowed disabled:opacity-50"
             >
               {schema.resetLabel ?? 'Reset'}
             </button>

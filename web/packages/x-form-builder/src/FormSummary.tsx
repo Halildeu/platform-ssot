@@ -103,10 +103,10 @@ export const FormSummary: React.FC<FormSummaryProps> = ({
       className="flex items-start justify-between gap-4 py-2"
     >
       <div className="flex flex-col gap-0.5">
-        <span className="text-sm font-medium text-ds-text-secondary">
+        <span className="text-sm font-medium text-text-secondary">
           {field.label}
         </span>
-        <span className="text-sm text-ds-text-primary">
+        <span className="text-sm text-text-primary">
           {formatValue(field, values[field.name])}
         </span>
       </div>
@@ -114,7 +114,7 @@ export const FormSummary: React.FC<FormSummaryProps> = ({
         <button
           type="button"
           onClick={() => onEdit(field.id)}
-          className="shrink-0 text-xs font-medium text-ds-primary hover:text-ds-primary-hover focus:outline-hidden focus:underline"
+          className="shrink-0 text-xs font-medium text-action-primary hover:text-action-primary-hover focus:outline-hidden focus:underline"
           aria-label={`Edit ${field.label}`}
         >
           Edit
@@ -124,19 +124,19 @@ export const FormSummary: React.FC<FormSummaryProps> = ({
   );
 
   return (
-    <div className={`rounded-lg border border-ds-border bg-ds-surface ${className ?? ''}`}>
+    <div className={`rounded-lg border border-border-default bg-surface-default ${className ?? ''}`}>
       {/* Summary header */}
-      <div className="border-b border-ds-border px-4 py-3">
-        <h3 className="text-sm font-semibold text-ds-text-primary">Review</h3>
-        <p className="mt-0.5 text-xs text-ds-text-secondary">
+      <div className="border-b border-border-default px-4 py-3">
+        <h3 className="text-sm font-semibold text-text-primary">Review</h3>
+        <p className="mt-0.5 text-xs text-text-secondary">
           Please review your answers before submitting.
         </p>
       </div>
 
-      <div className="divide-y divide-ds-border">
+      <div className="divide-y divide-border-default">
         {groups.map((group) => (
           <div key={group.id} className="px-4 py-4">
-            <h4 className="mb-2 text-sm font-semibold text-ds-text-primary">
+            <h4 className="mb-2 text-sm font-semibold text-text-primary">
               {group.title}
             </h4>
 
@@ -144,17 +144,17 @@ export const FormSummary: React.FC<FormSummaryProps> = ({
               <div className="flex flex-col gap-4">
                 {group.sections.map((section) => (
                   <div key={section.id}>
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-ds-text-secondary">
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-text-secondary">
                       {section.title}
                     </p>
-                    <div className="divide-y divide-ds-border/50">
+                    <div className="divide-y divide-border-default/50">
                       {section.fields.map(renderFieldRow)}
                     </div>
                   </div>
                 ))}
               </div>
             ) : group.fields ? (
-              <div className="divide-y divide-ds-border/50">
+              <div className="divide-y divide-border-default/50">
                 {group.fields.map(renderFieldRow)}
               </div>
             ) : null}
