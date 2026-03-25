@@ -301,6 +301,33 @@
   --data-table-row-hover: oklch(26.86% 0 0);
   --data-table-row-selected: oklch(100% 0 0);
   --data-table-row-border: oklch(100% 0 0);
+
+  /* HC: missing semantic tokens */
+  --surface-card: oklch(17.76% 0 0);
+  --surface-card-alt: oklch(23.93% 0 0);
+  --shadow-color: oklch(100% 0 0 / 20%);
+  --surface-hover: oklch(30% 0 0);
+  --interactive-primary: oklch(88.68% 0.1822 95.33);
+  --text-accent: oklch(88.68% 0.1822 95.33);
+  --surface-elevated: oklch(17.76% 0 0);
+  --accent-primary: oklch(88.68% 0.1822 95.33);
+  --accent-primary-hover: oklch(78% 0.16 95);
+  --accent-focus: oklch(88.68% 0.1822 95.33);
+  --accent-soft: oklch(88.68% 0.1822 95.33 / 25%);
+  --accent-primary-muted: oklch(88.68% 0.1822 95.33 / 25%);
+  --surface-accent: oklch(88.68% 0.1822 95.33 / 25%);
+  --surface-page-bg: var(--surface-default-bg);
+
+  /* HC: elevation (use borders instead of shadows for visibility) */
+  --elevation-surface: 0 0 0 1px oklch(100% 0 0);
+  --elevation-overlay: 0 0 0 2px oklch(100% 0 0);
+  --elevation-tooltip: 0 0 0 1px oklch(88.68% 0.1822 95.33);
+  --elevation-dialog: 0 0 0 2px oklch(88.68% 0.1822 95.33);
+
+  /* HC: ensure active/selected states have max contrast */
+  --action-primary-hover: oklch(78% 0.16 95);
+  --action-primary-active: oklch(68% 0.14 95);
+  --action-primary-soft: oklch(88.68% 0.1822 95.33 / 30%);
 }
 
 :root[data-theme="serban-compact"], [data-theme-scope][data-theme="serban-compact"] {
