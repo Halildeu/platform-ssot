@@ -57,7 +57,7 @@ const kindTone: Record<CitationKind, BadgeVariant> = {
 };
 
 const citationPanelSurfaceClassName =
-  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[color-mix(in_oklab,var(--border-subtle)_40%,transparent)] before:to-transparent";
+  "relative overflow-hidden rounded-[32px] border border-border-subtle/80 bg-surface-raised bg-[var(--surface-card)] p-5 shadow-[0_24px_52px_-36px_var(--shadow-color)] ring-1 ring-border-subtle/20 backdrop-blur-xs before:pointer-events-none before:absolute before:inset-x-7 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-[color-mix(in_oklab,var(--border-subtle)_40%,transparent)] before:to-transparent";
 
 /** Panel displaying a list of source citations with excerpt, kind badge, and selection support. */
 export const CitationPanel = React.forwardRef<HTMLElement, CitationPanelProps>(({

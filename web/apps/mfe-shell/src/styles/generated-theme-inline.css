@@ -161,5 +161,17 @@
   /* Brand & Surface aliases */
   --color-brand-primary: var(--brand-primary);
   --color-surface-subtle: var(--surface-subtle);
+
+  /* Additional surface/text semantic aliases */
+  --color-surface-default-raw: var(--surface-default);
+  --color-surface-muted-raw: var(--surface-muted);
+  --color-surface-code: var(--surface-code);
+  --color-text-on-elevated: var(--text-on-elevated);
+  --color-text-on-accent: var(--text-on-accent);
+  --color-state-warning-bg-hover: var(--state-warning-bg-hover);
+
+  /* Typography & spacing tokens */
+  --font-size-md: var(--font-size-md, 0.875rem);
+  --spacing-1: var(--spacing-1, 0.25rem);
 }
 

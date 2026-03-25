@@ -400,7 +400,7 @@ export const Cascader = React.forwardRef<HTMLDivElement, CascaderProps>(function
         aria-readonly={accessState.isReadonly || undefined}
         disabled={accessState.isDisabled}
         className={cn(
-          "inline-flex w-full items-center justify-between rounded-md border bg-[var(--surface-canvas)] text-start transition-colors",
+          "inline-flex w-full items-center justify-between rounded-md border bg-[var(--surface-canvas)] text-start transition-colors focus-within:ring-2 focus-within:ring-focus-outline/30",
           SIZE_CLASS[size],
           error
             ? "border-[var(--border-danger)]"

@@ -309,7 +309,7 @@ export const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps
       >
         <div ref={rootRef} className={cn(fullWidth ? "relative w-full" : "relative")}>
           <div
-            className={getFieldFrameClass(size, tone, fullWidth, className)}
+            className={cn(getFieldFrameClass(size, tone, fullWidth, className), "focus-within:ring-2 focus-within:ring-focus-outline")}
             data-field-tone={tone}
             data-size={size}
             data-field-type="autocomplete"
