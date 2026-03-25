@@ -113,9 +113,33 @@ for (const relPath of docFiles) {
     }
   }
 
-  // Also update inline metric patterns like "Bilesen: 158" -> "Bilesen: 186"
-  // And "Test: 7,200+" -> current count
-  // And "Ortalama: 85.4" -> current avg
+  // Also update inline metric patterns (regex-based, works on every run)
+  const patterns = [
+    // Component counts
+    [/(\bBilesen\w*:\s*)\d+/gi, `$1${total}`],
+    [/(\bComponents?:\s*)\d+/gi, `$1${total}`],
+    [/(\d+)\/\1\s*A-grade/g, `${total}/${total} A-grade`],
+    [/(\d+)\/(\d+)\s*A-grade/g, `${grades.A || 0}/${total} A-grade`],
+    // Scorecard average
+    [/(\bScorecard\s*(?:Avg|Average|Ortalama)?:\s*)\d+\.?\d*/gi, `$1${avg}`],
+    [/(ortalama[:\s]*)\d+\.?\d*\/100/gi, `$1${avg}/100`],
+    // Test files
+    [/(\bTest\s*(?:Dosya\w*|Files?):\s*)\d+/gi, `$1${testFiles}`],
+    [/(\d+)\+?\s*(?:test\s*)?dosya/gi, `${testFiles}+ dosya`],
+    // Story count
+    [/(\bStory|Stories):\s*\d+/gi, `$1: ${storyCount}`],
+    // Grade distribution (preserve format)
+    [/(A=)\d+/g, `$1${grades.A || 0}`],
+    [/(B=)\d+/g, `$1${grades.B || 0}`],
+    [/(C=)\d+/g, `$1${grades.C || 0}`],
+    [/(D=)\d+/g, `$1${grades.D || 0}`],
+  ];
+
+  for (const [regex, replacement] of patterns) {
+    const before = content;
+    content = content.replace(regex, replacement);
+    if (content !== before) changed = true;
+  }
 
   if (changed) {
     fs.writeFileSync(fullPath, content);

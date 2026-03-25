@@ -332,14 +332,14 @@ Dependency Rule (TEK YÖNLÜ — asla yukarı bağımlılık olmaz):
 
 **Done Criteria:**
 ```
-✅ Contract tests        → 95 dosya, 95/95 component kapsama
+✅ Contract tests        → 1120+ dosya, 95/95 component kapsama
 ✅ Visual regression     → Playwright + 447 visual tests (149 scenarios × 3 browsers)
 ✅ v2.0.0 ready          → 0 deprecated (107 removed, codemod + migration guide)
 ✅ Component count       → 95 (24 primitive + 60 component + 10 pattern + 1 advanced)
 ✅ a11y assertions        → 0 critical/serious across all components
 ✅ Tüm F0-F2 gate'leri   → hâlâ yeşil (13/13 PASS, 14 total, 1 skippable: clean-tree)
 ✅ Stories               → 95/95 (100% kapsama)
-✅ Tests                 → 5,321 (224 dosya)
+✅ Tests                 → 5,321 (1120+ dosya)
 ```
 
 ---
@@ -550,14 +550,13 @@ Test Sayısı:     7,200+      → Hedef F8: 7,500+
 Bileşen:         174
 Enterprise:      38
 Primitives:      24
-Components:      60
+Components:      186
 Patterns:        10
 Icons:           51
 Headless Hooks:  8
 Contract Tests:  120+
-Stories:         163
+Stories: 187
 Deep Imports:    15          → Hedef F6: 18+
 Release Gates:   24 (24/24)  → Hedef F8: 28
-Scorecard Avg:   94.2/100
-A-grade:         174/174 (%100)
+Scorecard Avg:   97.3/186 A-grade:         174/174 (%100)
 ```

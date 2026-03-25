@@ -44,12 +44,12 @@
 Test Dosyasi:       1120+
 Test Sayisi:      7,200+
 Bilesen Sayisi:    186 (24 primitiv + 60 component + 10 pattern + 38 enterprise + 6 advanced + 7 form + 3 motion + 4 provider + 8 internal + 2 performance + 12 other)
-Stories:            187
+Stories: 187
 Release Gates:      28+ (original 14 + a11y-gate + mutation-gate + token-audit + keyboard-matrix + license-audit + bundle-report + changelog + scorecard-dashboard + perf-benchmark)
 Scorecard Average:  97.3/100
 Grade Distribution: 186/186 A-grade
 Deep Imports:       17
-Enterprise Bilesen: 38 (BulletChart, ProcessFlow, FineKinney, PivotTable, OrgChart, BoxPlot, etc.)
+Enterprise Bilesen: 186 (BulletChart, ProcessFlow, FineKinney, PivotTable, OrgChart, BoxPlot, etc.)
 CI Scripts:         25+ automated quality gates
 ESLint:             0 error
 Bundle (ESM):       ~5 MB
@@ -155,9 +155,9 @@ Rekabet gap'lerini kapat (form validation, animation, RTL) + agir enterprise yuz
 - Rekabet skoru: 45 → ~54/60
 - Test sayisi: 5,321 → 7,200+
 - Bilesen sayisi: 94 → 186
-- Stories: 95 → 187
+- Stories: 187 → 187
 - Release gates: 14 → 28+
-- Scorecard: 186/186 A-grade (97.3 ortalama)
+- Scorecard: 97.3/186 A-grade (97.3 ortalama)
 
 ---
 
