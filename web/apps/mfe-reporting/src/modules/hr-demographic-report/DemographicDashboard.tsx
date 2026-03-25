@@ -6,8 +6,16 @@ import type { DemographicSummary } from './types';
 // Color palette
 // ---------------------------------------------------------------------------
 const SERIES_COLORS = [
-  '#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6',
-  '#06b6d4', '#ec4899', '#14b8a6', '#f97316', '#6366f1',
+  'var(--action-primary, #3b82f6)',
+  'var(--state-success-text, #22c55e)',
+  'var(--state-warning-text, #f59e0b)',
+  'var(--state-error-text, #ef4444)',
+  'var(--accent-primary, #8b5cf6)',
+  'var(--state-info-text, #06b6d4)',
+  'var(--accent-soft, #ec4899)',
+  'var(--state-success-border, #14b8a6)',
+  'var(--state-warning-border, #f97316)',
+  'var(--accent-focus, #6366f1)',
 ];
 
 // ---------------------------------------------------------------------------
@@ -430,7 +438,7 @@ function Treemap({ data }: { data: Array<{ label: string; value: number }> }) {
                 textAnchor="middle"
                 fontSize="10"
                 fontWeight="600"
-                fill="#fff"
+                fill="var(--surface-default, #fff)"
               >
                 {r.item.label.length > Math.floor(r.w / 7)
                   ? r.item.label.slice(0, Math.floor(r.w / 7) - 1) + '\u2026'
@@ -593,7 +601,7 @@ function StackedBar({
                 textAnchor="middle"
                 fontSize="10"
                 fontWeight="600"
-                fill="#fff"
+                fill="var(--surface-default, #fff)"
               >
                 {Math.round((d.value / total) * 100)}%
               </text>
@@ -794,10 +802,10 @@ function AgePyramidChart({
     <div>
       <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} width="100%" style={{ display: 'block' }}>
         {/* Header */}
-        <text x={centerX - sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="#3b82f6">
+        <text x={centerX - sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="var(--action-primary, #3b82f6)">
           Erkek
         </text>
-        <text x={centerX + sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="#ec4899">
+        <text x={centerX + sideWidth / 2} y={12} textAnchor="middle" fontSize="9" fontWeight="600" fill="var(--accent-soft, #ec4899)">
           Kadin
         </text>
         {data.map((d, i) => {
@@ -813,7 +821,7 @@ function AgePyramidChart({
                 width={maleW}
                 height={barHeight}
                 rx={3}
-                fill="#3b82f6"
+                fill="var(--action-primary, #3b82f6)"
                 opacity={0.8}
               >
                 <title>Erkek {d.ageGroup}: {d.male}</title>
@@ -847,7 +855,7 @@ function AgePyramidChart({
                 width={femaleW}
                 height={barHeight}
                 rx={3}
-                fill="#ec4899"
+                fill="var(--accent-soft, #ec4899)"
                 opacity={0.8}
               >
                 <title>Kadin {d.ageGroup}: {d.female}</title>
@@ -1428,10 +1436,10 @@ const DemographicDashboard: React.FC = () => {
                   {[0, 30, 60, 90, 120].map((y, i) => (
                     <line key={i} x1={30} y1={y} x2={270} y2={y} stroke="var(--border-subtle, #e5e7eb)" strokeWidth="0.5" />
                   ))}
-                  <polyline points={polyline} fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinejoin="round" />
+                  <polyline points={polyline} fill="none" stroke="var(--state-warning-text, #f59e0b)" strokeWidth="2" strokeLinejoin="round" />
                   {pts.map((p, idx) => (
                     <g key={idx}>
-                      <circle cx={p.x} cy={p.y} r="3" fill="#f59e0b" />
+                      <circle cx={p.x} cy={p.y} r="3" fill="var(--state-warning-text, #f59e0b)" />
                       <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize="8" fontWeight="600" fill="var(--text-primary, #111827)">
                         %{p.v}
                       </text>
