@@ -274,12 +274,12 @@
   --selection-bg: oklch(100% 0 0);
   --selection-outline: oklch(88.68% 0.1822 95.33);
   --focus-outline: oklch(88.68% 0.1822 95.33);
-  --action-primary-bg: oklch(0% 0 0);
-  --action-primary-text: oklch(88.68% 0.1822 95.33);
+  --action-primary-bg: oklch(88.68% 0.1822 95.33);
+  --action-primary-text: oklch(0% 0 0);
   --action-primary-border: oklch(88.68% 0.1822 95.33);
   --action-secondary-bg: oklch(0% 0 0);
   --action-secondary-text: oklch(100% 0 0);
-  --action-secondary-border: oklch(100% 0 0);
+  --action-secondary-border: oklch(88.68% 0.1822 95.33);
   --action-ghost-bg: transparent;
   --action-ghost-text: oklch(88.68% 0.1822 95.33);
   --action-ghost-border: oklch(88.68% 0.1822 95.33);
