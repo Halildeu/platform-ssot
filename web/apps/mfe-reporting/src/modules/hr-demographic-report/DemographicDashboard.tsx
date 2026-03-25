@@ -943,6 +943,13 @@ const DemographicDashboard: React.FC = () => {
     return null;
   };
 
+  // Helper: chart başlığına [MOCK] etiketi ekle — canlı veri yoksa
+  const chartTitle = (title: string, chartId?: string): string => {
+    if (chartId && getChartData(chartId)) return title;
+    if (!chartId) return `${title} [MOCK]`;
+    return `${title} [MOCK]`;
+  };
+
   // Helper: canlı KPI değerini al
   const getKPIValue = (kpiId: string): { value: string; trend?: number } | null => {
     if (liveKPIs) {
@@ -1031,13 +1038,13 @@ const DemographicDashboard: React.FC = () => {
             marginBottom: 16,
           }}
         >
-          <ChartCard title="Cinsiyet Dagilimi">
+          <ChartCard title={chartTitle("Cinsiyet Dagilimi", "gender-distribution")}>
             <PieChart data={getChartData('gender-distribution') ?? summary.genderDistribution} />
           </ChartCard>
-          <ChartCard title="Yas Grubu Dagilimi">
+          <ChartCard title={chartTitle("Yas Grubu Dagilimi", "age-distribution")}>
             <VerticalBarChart data={getChartData('age-distribution') ?? summary.ageGroups} />
           </ChartCard>
-          <ChartCard title="Egitim Seviyesi">
+          <ChartCard title={chartTitle("Egitim Seviyesi", "education-distribution")}>
             <HorizontalBarChart data={getChartData('education-distribution') ?? summary.educationLevels} />
           </ChartCard>
         </div>
@@ -1051,13 +1058,13 @@ const DemographicDashboard: React.FC = () => {
             marginBottom: 16,
           }}
         >
-          <ChartCard title="Departman Dagilimi">
+          <ChartCard title={chartTitle("Departman Dagilimi", "dept-headcount")}>
             <Treemap data={getChartData('home-city') ?? summary.departments} />
           </ChartCard>
-          <ChartCard title="Kidem Dagilimi">
+          <ChartCard title={chartTitle("Kidem Dagilimi", "tenure-distribution")}>
             <VerticalBarChart data={getChartData('tenure-distribution') ?? summary.tenureDistribution} />
           </ChartCard>
-          <ChartCard title="Istihdam Turu">
+          <ChartCard title={chartTitle("Istihdam Turu", "duty-type")}>
             <PieChart data={getChartData('smoking-distribution') ?? summary.employmentTypes} />
           </ChartCard>
         </div>
@@ -1071,7 +1078,7 @@ const DemographicDashboard: React.FC = () => {
             marginBottom: 16,
           }}
         >
-          <ChartCard title="DEI Gostergeleri">
+          <ChartCard title={chartTitle("DEI Gostergeleri")}>
             <div
               style={{
                 display: 'grid',
@@ -1090,13 +1097,13 @@ const DemographicDashboard: React.FC = () => {
               <Gauge value={summary.deiScore} target={80} label="Genel DEI" unit="/100" />
             </div>
           </ChartCard>
-          <ChartCard title="Nesil Dagilimi">
+          <ChartCard title={chartTitle("Nesil Dagilimi", "language-count")}>
             <StackedBar data={getChartData('language-count') ?? summary.generationDistribution} />
             <div style={{ marginTop: 12 }}>
               <HorizontalBarChart data={getChartData('relative-count') ?? summary.generationDistribution} />
             </div>
           </ChartCard>
-          <ChartCard title="Lokasyon Dagilimi">
+          <ChartCard title={chartTitle("Lokasyon Dagilimi", "nationality-distribution")}>
             <PieChart data={getChartData('nationality-distribution') ?? summary.locationDistribution} />
           </ChartCard>
         </div>
@@ -1110,7 +1117,7 @@ const DemographicDashboard: React.FC = () => {
             marginBottom: 16,
           }}
         >
-          <ChartCard title="Yonetici / Calisan Oranlari">
+          <ChartCard title={chartTitle("Yonetici / Calisan Oranlari")}>
             <BulletChart
               label="Kadin Yonetici Orani"
               actual={summary.femaleManagerRate}
@@ -1130,7 +1137,7 @@ const DemographicDashboard: React.FC = () => {
               max={30}
             />
           </ChartCard>
-          <ChartCard title="Etik ve Uyum">
+          <ChartCard title={chartTitle("Etik ve Uyum")}>
             <ProgressBar label="Etik Egitim Tamamlama" value={88} target={95} />
             <ProgressBar label="Veri Gizliligi Uyumu" value={92} target={100} />
             <ProgressBar label="Davranis Kurallari Onayi" value={96} target={100} />
@@ -1148,13 +1155,13 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <SectionHeader>Temel Demografik (APQC HC-1)</SectionHeader>
-          <ChartCard title="Medeni Durum">
+          <ChartCard title={chartTitle("Medeni Durum", "marital-status")}>
             <PieChart data={getChartData('marital-status') ?? summary.maritalStatusDistribution} />
           </ChartCard>
-          <ChartCard title="Askerlik Durumu (Erkek)">
+          <ChartCard title={chartTitle("Askerlik Durumu (Erkek)", "military-status")}>
             <VerticalBarChart data={getChartData('military-status') ?? summary.militaryStatusDistribution} />
           </ChartCard>
-          <ChartCard title="Engel Durumu">
+          <ChartCard title={chartTitle("Engel Durumu", "disability-distribution")}>
             <PieChart data={getChartData('disability-distribution') ?? summary.disabilityDistribution} />
           </ChartCard>
         </div>
@@ -1169,14 +1176,27 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <SectionHeader>Organizasyonel (APQC HC-2)</SectionHeader>
-          <ChartCard title="Lokasyon Dagilimi">
+          <ChartCard title={chartTitle("Lokasyon Dagilimi", "nationality-distribution")}>
             <PieChart data={getChartData('nationality-distribution') ?? summary.locationDistribution} />
           </ChartCard>
-          <ChartCard title="Pozisyon Seviyesi">
+          <ChartCard title={chartTitle("Pozisyon Seviyesi", "course-count")}>
             <VerticalBarChart data={getChartData('course-count') ?? summary.positionLevelDistribution} />
           </ChartCard>
-          <ChartCard title="Yas Piramidi (Erkek / Kadin)">
-            <AgePyramidChart data={summary.agePyramid} />
+          <ChartCard title={chartTitle("Yas Piramidi (Erkek / Kadin)", "age-pyramid-male")}>
+            <AgePyramidChart data={(() => {
+              const maleData = getChartData('age-pyramid-male');
+              const femaleData = getChartData('age-pyramid-female');
+              if (maleData && femaleData) {
+                // Merge live data into pyramid format
+                const groups = Array.from(new Set([...maleData.map(d => d.label), ...femaleData.map(d => d.label)])).sort();
+                return groups.map(g => ({
+                  ageGroup: g,
+                  male: maleData.find(d => d.label === g)?.value ?? 0,
+                  female: femaleData.find(d => d.label === g)?.value ?? 0,
+                }));
+              }
+              return summary.agePyramid;
+            })()} />
           </ChartCard>
         </div>
 
@@ -1190,19 +1210,19 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <SectionHeader>Isgucu Dinamikleri (APQC HC-4)</SectionHeader>
-          <ChartCard title="Devamsizlik & Ise Alim">
+          <ChartCard title={chartTitle("Devamsizlik & Ise Alim")}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               <Gauge value={summary.absenteeismRate} target={3} label="Devamsizlik Orani" />
               <Gauge value={Math.min(summary.timeToFillDays, 100)} target={30} label="Ise Alim Suresi (gun)" unit="" />
             </div>
           </ChartCard>
-          <ChartCard title="Ic Transfer & Terfi">
+          <ChartCard title={chartTitle("Ic Transfer & Terfi")}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               <Gauge value={summary.internalTransferRate} target={10} label="Ic Transfer Orani" />
               <Gauge value={summary.promotionRate} target={8} label="Terfi Orani" />
             </div>
           </ChartCard>
-          <ChartCard title="Ayrilma Oranlari">
+          <ChartCard title={chartTitle("Ayrilma Oranlari")}>
             <BulletChart
               label="Gonullu Ayrilma"
               actual={summary.voluntaryTurnoverRate}
@@ -1231,7 +1251,7 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <SectionHeader>Etik & Uyum</SectionHeader>
-          <ChartCard title="Etik Metrikler">
+          <ChartCard title={chartTitle("Etik Metrikler")}>
             <ProgressBar label="Etik Egitim Tamamlama" value={summary.ethicsTrainingRate} target={95} />
             <ProgressBar label="Veri Gizliligi Uyumu" value={summary.dataPrivacyComplianceRate} target={100} />
             <div style={{ marginTop: 8, fontSize: 12, color: 'var(--text-secondary, #6b7280)' }}>
@@ -1241,10 +1261,10 @@ const DemographicDashboard: React.FC = () => {
               </strong>
             </div>
           </ChartCard>
-          <ChartCard title="Disiplin Islemleri">
+          <ChartCard title={chartTitle("Disiplin Islemleri")}>
             <VerticalBarChart data={summary.disciplinaryActions} />
           </ChartCard>
-          <ChartCard title="Uyum Ozeti">
+          <ChartCard title={chartTitle("Uyum Ozeti")}>
             <BulletChart
               label="Etik Egitim"
               actual={summary.ethicsTrainingRate}
@@ -1270,10 +1290,10 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <SectionHeader>Maas & Esitlik</SectionHeader>
-          <ChartCard title="Cinsiyet Maas Karsilastirma">
+          <ChartCard title={chartTitle("Cinsiyet Maas Karsilastirma", "salary-by-gender")}>
             <HorizontalBarChart data={summary.avgSalaryByGender} />
           </ChartCard>
-          <ChartCard title="Maas Farki">
+          <ChartCard title={chartTitle("Maas Farki")}>
             <BulletChart
               label="Cinsiyet Maas Farki"
               actual={summary.genderPayGapPercent}
@@ -1287,7 +1307,7 @@ const DemographicDashboard: React.FC = () => {
               </strong>
             </div>
           </ChartCard>
-          <ChartCard title="Maas Farki Trendi">
+          <ChartCard title={chartTitle("Maas Farki Trendi")}>
             {/* Simulated trend line */}
             <svg viewBox="0 0 280 120" width="100%" style={{ display: 'block' }}>
               {/* Grid */}
