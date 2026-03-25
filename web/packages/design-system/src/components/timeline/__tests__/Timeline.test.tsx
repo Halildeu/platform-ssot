@@ -134,7 +134,7 @@ describe('Timeline — dots', () => {
     ];
     const { container } = render(<Timeline items={items} />);
     const dot = container.querySelector('[data-testid="timeline-dot"]');
-    expect(dot?.className).toContain('bg-[var(--feedback-success)]');
+    expect(dot?.className).toContain('bg-[var(--state-success-text)]');
   });
 
   it('applies primary color', () => {
@@ -152,7 +152,7 @@ describe('Timeline — dots', () => {
     ];
     const { container } = render(<Timeline items={items} />);
     const dot = container.querySelector('[data-testid="timeline-dot"]');
-    expect(dot?.className).toContain('bg-[var(--feedback-error)]');
+    expect(dot?.className).toContain('bg-[var(--state-danger-text)]');
   });
 
   it('applies warning color', () => {
@@ -161,7 +161,7 @@ describe('Timeline — dots', () => {
     ];
     const { container } = render(<Timeline items={items} />);
     const dot = container.querySelector('[data-testid="timeline-dot"]');
-    expect(dot?.className).toContain('bg-[var(--feedback-warning)]');
+    expect(dot?.className).toContain('bg-[var(--state-warning-text)]');
   });
 
   it('applies info color', () => {
@@ -170,7 +170,7 @@ describe('Timeline — dots', () => {
     ];
     const { container } = render(<Timeline items={items} />);
     const dot = container.querySelector('[data-testid="timeline-dot"]');
-    expect(dot?.className).toContain('bg-[var(--feedback-info)]');
+    expect(dot?.className).toContain('bg-[var(--state-info-text)]');
   });
 
   it('applies default color when no color specified', () => {
@@ -496,8 +496,8 @@ describe('Timeline — edge cases', () => {
     ];
     const { container } = render(<Timeline items={items} />);
     const dots = container.querySelectorAll('[data-testid="timeline-dot"]');
-    expect(dots[0]?.className).toContain('bg-[var(--feedback-success)]');
-    expect(dots[1]?.className).toContain('bg-[var(--feedback-error)]');
+    expect(dots[0]?.className).toContain('bg-[var(--state-success-text)]');
+    expect(dots[1]?.className).toContain('bg-[var(--state-danger-text)]');
     expect(dots[2]?.className).toContain('bg-action-primary');
   });
 });

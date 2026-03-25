@@ -207,7 +207,7 @@ describe('ContextMenu — edge cases', () => {
     );
     fireEvent.contextMenu(screen.getByText('Trigger'), { clientX: 0, clientY: 0 });
     const deleteBtn = screen.getByText('Delete').closest('button');
-    expect(deleteBtn?.className).toContain('feedback-error');
+    expect(deleteBtn?.className).toContain('state-danger-text');
   });
 });
 
