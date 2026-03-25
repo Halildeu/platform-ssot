@@ -75,7 +75,7 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
 
 export default function DesignLabLanding() {
   const navigate = useNavigate();
-  const { index, t } = useDesignLab();
+  const { index, taxonomy, t } = useDesignLab();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [searchFocused, setSearchFocused] = React.useState(false);
 
@@ -118,7 +118,19 @@ export default function DesignLabLanding() {
         iconBg: LAYER_ICON_BG.components,
         title: t("designlab.landing.layer.components.title"),
         description: t("designlab.landing.layer.components.description"),
-        count: index.items.filter((i) => i.availability === "exported" && !API_NAMES.has(i.name) && !PRIMITIVE_NAMES.has(i.name) && !ADVANCED_NAMES.has(i.name)).length,
+        count: (() => {
+          const compSection = taxonomy.sections?.find((s: { id: string }) => s.id === "components");
+          if (!compSection) return 0;
+          const gIds = new Set((compSection.groupIds ?? []) as string[]);
+          let n = 0;
+          for (const g of taxonomy.groups) {
+            if (!gIds.has(g.id)) continue;
+            for (const sg of g.subgroups) {
+              n += (sg.items ?? []).filter((name: string) => !PRIMITIVE_NAMES.has(name) && !ADVANCED_NAMES.has(name)).length;
+            }
+          }
+          return n;
+        })(),
         href: "/admin/design-lab/components",
       },
       {
