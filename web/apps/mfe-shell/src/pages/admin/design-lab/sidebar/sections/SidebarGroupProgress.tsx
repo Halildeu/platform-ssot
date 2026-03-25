@@ -1,8 +1,8 @@
 import React from "react";
 
 /* ------------------------------------------------------------------ */
-/*  SidebarGroupProgress — mini progress bar on group headers          */
-/*  Shows: "12/15 documented" with visual bar                         */
+/*  SidebarGroupProgress — compact progress indicator for group action */
+/*  Shows: mini bar + "8/8" text, fits in ~60px width                  */
 /* ------------------------------------------------------------------ */
 
 type Props = {
@@ -29,14 +29,17 @@ export const SidebarGroupProgress: React.FC<Props> = ({
         : "bg-state-danger-text";
 
   return (
-    <div className={`flex items-center gap-2 ${className ?? ""}`} title={`${current}/${total} ${label ?? "items"}`}>
-      <div className="flex-1 h-1 rounded-full bg-surface-muted overflow-hidden min-w-[40px]">
+    <div
+      className={`inline-flex items-center gap-1.5 ${className ?? ""}`}
+      title={`${current}/${total} ${label ?? "stable"}`}
+    >
+      <div className="w-8 h-1 rounded-full bg-surface-muted overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-500 ${color}`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className="text-[9px] text-text-tertiary tabular-nums whitespace-nowrap">
+      <span className="text-[9px] text-text-tertiary tabular-nums">
         {current}/{total}
       </span>
     </div>

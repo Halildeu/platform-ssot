@@ -55,7 +55,7 @@ function parseBreadcrumb(pathname: string) {
 
   // Item (e.g., "Tabs")
   if (segments.length >= 3) {
-    const item = segments[2];
+    const item = decodeURIComponent(segments[2]);
     crumbs.push({
       label: item,
       path: `/admin/design-lab/${segments.join("/")}`,

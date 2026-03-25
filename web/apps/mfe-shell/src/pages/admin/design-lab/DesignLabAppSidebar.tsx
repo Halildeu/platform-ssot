@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  CircleHelp, Menu, ChevronDown, ChevronUp, Star,
+  CircleHelp, Menu, ChevronDown, Star,
   Palette, Shapes, Box, Layout, BookOpen, Globe, Code,
 } from "lucide-react";
-import { AppSidebar, IconButton, Text, Tooltip } from "@mfe/design-system";
+import { AppSidebar, IconButton, Text } from "@mfe/design-system";
 import { useDesignLabI18n } from "./useDesignLabI18n";
 import { useDesignLab } from "./DesignLabProvider";
 import { useDesignLabShell } from "./DesignLabShell";
@@ -237,56 +237,46 @@ export const DesignLabAppSidebar: React.FC = () => {
         {/* Health Banner */}
         <SidebarHealthBanner />
 
-        {/* Layer tabs — icon pills */}
-        <AppSidebar.Header className="border-b-0 p-0">
-          <div className="border-b border-border-subtle p-2">
-            <div className="flex gap-1">
-              {LAYER_IDS.map((id) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => handleLayerSwitch(id)}
-                  data-testid={`design-lab-layer-tab-${id}`}
-                  className={[
-                    "flex flex-1 items-center justify-center rounded-lg py-2 transition-all duration-200 cursor-pointer",
-                    activeLayer === id
-                      ? "bg-action-primary text-white shadow-xs"
-                      : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
-                  ].join(" ")}
-                  title={t(`designlab.sidebar.title.${id}`)}
-                >
-                  {LAYER_ICONS[id]}
-                </button>
-              ))}
-            </div>
+        {/* Layer tabs — icon pills (outside AppSidebar.Header since Header ignores children) */}
+        <div className="border-b border-border-subtle p-2">
+          <div className="flex gap-1">
+            {LAYER_IDS.map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => handleLayerSwitch(id)}
+                data-testid={`design-lab-layer-tab-${id}`}
+                className={[
+                  "flex flex-1 items-center justify-center rounded-lg py-2 transition-all duration-200 cursor-pointer",
+                  activeLayer === id
+                    ? "bg-action-primary text-white shadow-xs"
+                    : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
+                ].join(" ")}
+                title={t(`designlab.sidebar.title.${id}`)}
+              >
+                {LAYER_ICONS[id]}
+              </button>
+            ))}
           </div>
+        </div>
 
-          {/* Title + count + expand/collapse controls */}
-          <div className="border-b border-border-subtle px-4 py-3">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <Text as="div" className="text-[1.1rem] font-semibold leading-tight text-text-primary">
-                  {layerTitle}
-                </Text>
-                <Text variant="secondary" className="mt-0.5 block text-[11px] leading-5">
-                  {t("designlab.sidebar.itemCount", { count: layerItemCount })}
-                </Text>
-              </div>
-              <div className="flex items-center gap-1 shrink-0">
-                <Tooltip content="Expand all">
-                  <span>
-                    <IconButton icon={<ChevronDown className="h-3.5 w-3.5" />} label="Expand all" size="sm" variant="ghost" onClick={groupState.expandAll} />
-                  </span>
-                </Tooltip>
-                <Tooltip content={layerHelpText}>
-                  <span>
-                    <IconButton icon={<CircleHelp className="h-3.5 w-3.5" />} label="Help" size="sm" variant="ghost" />
-                  </span>
-                </Tooltip>
-              </div>
+        {/* Title + count + expand/collapse controls */}
+        <div className="border-b border-border-subtle px-3 py-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <Text as="div" className="text-sm font-semibold leading-tight text-text-primary">
+                {layerTitle}
+              </Text>
+              <Text variant="secondary" className="block text-[10px] leading-4 mt-0.5">
+                {layerItemCount} items
+              </Text>
+            </div>
+            <div className="flex items-center gap-0.5 shrink-0">
+              <IconButton icon={<ChevronDown className="h-3.5 w-3.5" />} label="Expand all" size="sm" variant="ghost" onClick={groupState.expandAll} />
+              <IconButton icon={<CircleHelp className="h-3.5 w-3.5" />} label="Help" size="sm" variant="ghost" />
             </div>
           </div>
-        </AppSidebar.Header>
+        </div>
 
         {/* Breadcrumb */}
         <SidebarBreadcrumb />
