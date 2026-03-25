@@ -30,7 +30,7 @@ export const AppSidebarSeparator = React.forwardRef<HTMLHRElement, AppSidebarSep
     <hr
       ref={ref}
       className={cn(
-        'border-t border-[var(--border-subtle)] border-border-subtle',
+        'border-t border-[var(--border-subtle)] border-border-subtle text-text-primary',
         isCollapsed ? 'mx-2 my-1' : 'mx-3 my-2',
         className,
       )}

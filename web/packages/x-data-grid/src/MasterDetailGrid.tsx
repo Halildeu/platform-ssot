@@ -82,7 +82,7 @@ export function MasterDetailGrid<TParent, TDetail>({
   );
 
   return (
-    <GridShell columnDefs={parentColumnDefs} className={cn('ag-theme-alpine', className)}>
+    <GridShell columnDefs={parentColumnDefs} className={cn('ag-theme-alpine text-text-primary', className)}>
       <AgGridReact<TParent>
         gridId={gridId}
         columnDefs={parentColumnDefs}

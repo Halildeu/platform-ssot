@@ -95,7 +95,7 @@ export function ChartDashboard({
 }: ChartDashboardProps) {
   return (
     <div
-      className={cn("grid", COL_MAP[columns], GAP_MAP[gap], className)}
+      className={cn("grid text-text-primary", COL_MAP[columns], GAP_MAP[gap], className)}
       data-testid="chart-dashboard"
     >
       {children}

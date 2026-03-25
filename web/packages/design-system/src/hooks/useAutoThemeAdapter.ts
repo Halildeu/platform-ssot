@@ -58,7 +58,7 @@ export function cssVarsToChartColors(): ChartColorConfig {
 type ThemeSnapshot = number; // monotonic counter
 
 let _snapshot: ThemeSnapshot = 0;
-let _listeners = new Set<() => void>();
+const _listeners = new Set<() => void>();
 let _observerActive = false;
 
 function setupObserver() {

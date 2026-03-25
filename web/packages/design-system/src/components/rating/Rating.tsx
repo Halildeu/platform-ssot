@@ -355,7 +355,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
       title={accessReason}
       tabIndex={isInteractive ? 0 : undefined}
       className={cn(
-        "inline-flex items-center gap-1",
+        "inline-flex items-center gap-1 text-text-primary",
         className,
       )}
       onMouseLeave={handleMouseLeave}

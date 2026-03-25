@@ -152,7 +152,7 @@ export const SparklineChart = React.forwardRef<HTMLDivElement, SparklineChartPro
       return (
         <div
           ref={forwardedRef}
-          className={cn("inline-block", className)}
+          className={cn("inline-block text-text-primary", className)}
           style={{ width, height }}
           role="img"
           aria-label="Sparkline chart — no data"
@@ -165,7 +165,7 @@ export const SparklineChart = React.forwardRef<HTMLDivElement, SparklineChartPro
     return (
       <div
         ref={forwardedRef}
-        className={cn("inline-block", className)}
+        className={cn("inline-block text-text-primary", className)}
         style={{ width, height }}
         data-testid="sparkline-chart"
         {...rest}

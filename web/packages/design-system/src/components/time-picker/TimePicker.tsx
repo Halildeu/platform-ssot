@@ -123,6 +123,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
       error={error}
       required={required}
       fullWidth={fullWidth}
+      className="text-text-primary"
       data-access-state={accessState.state}
     >
       <div className={getFieldFrameClass(size, tone, fullWidth, className)}>

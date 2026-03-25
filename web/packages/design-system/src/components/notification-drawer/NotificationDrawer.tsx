@@ -95,7 +95,7 @@ export const NotificationDrawer = React.forwardRef<HTMLDivElement, NotificationD
       disablePortal={disablePortal}
       ariaLabel={dialogLabel}
       viewportClassName="flex h-full justify-end"
-      surfaceClassName={`${premiumOverlayPanelClassName} flex h-full w-full flex-col overflow-hidden bg-surface-default ${widthClassName}`.trim()}
+      surfaceClassName={`${premiumOverlayPanelClassName} flex h-full w-full flex-col overflow-hidden bg-surface-default text-text-primary ${widthClassName}`.trim()}
       surfaceAppearance="premium"
     >
       <NotificationPanel

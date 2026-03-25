@@ -98,7 +98,7 @@ export function PivotGrid<TRow>({
   }, []);
 
   return (
-    <GridShell columnDefs={enrichedColumnDefs} className={cn('ag-theme-alpine', className)}>
+    <GridShell columnDefs={enrichedColumnDefs} className={cn('ag-theme-alpine text-text-primary', className)}>
       <AgGridReact<TRow>
         gridId={gridId}
         columnDefs={enrichedColumnDefs}

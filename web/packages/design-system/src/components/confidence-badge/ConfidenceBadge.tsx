@@ -1,5 +1,6 @@
 import React from "react";
 import { Badge } from "../../primitives/badge/Badge";
+import { cn } from "../../utils/cn";
 import {
   resolveAccessState, accessStyles,
   type AccessControlledProps,
@@ -82,7 +83,7 @@ export const ConfidenceBadge = React.forwardRef<HTMLSpanElement, ConfidenceBadge
     <Badge
       ref={ref}
       variant={toneByLevel[level]}
-      className={className}
+      className={cn("text-text-primary", className)}
       aria-label={labelByLevel[level]}
       data-confidence-level={level}
       data-access-state={accessState.state}

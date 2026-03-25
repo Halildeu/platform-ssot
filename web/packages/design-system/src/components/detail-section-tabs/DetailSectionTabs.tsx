@@ -89,7 +89,7 @@ export const DetailSectionTabs = React.forwardRef<HTMLDivElement, DetailSectionT
       data-component="detail-section-tabs"
       aria-label={ariaLabel}
       data-access-state={accessState.state}
-      className={cn(sticky && 'sticky top-4 z-10', className, accessStyles(accessState.state))}
+      className={cn('text-text-primary', sticky && 'sticky top-4 z-10', className, accessStyles(accessState.state))}
       title={accessReason}
     >
       <SectionTabs

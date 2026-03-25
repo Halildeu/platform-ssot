@@ -148,7 +148,7 @@ export const ApprovalCheckpoint = React.forwardRef<HTMLElement, ApprovalCheckpoi
   return (
     <article
       ref={ref}
-      className={`${approvalCheckpointSurfaceClassName} ${className}`.trim()}
+      className={`${approvalCheckpointSurfaceClassName} text-text-primary ${className}`.trim()}
       data-access-state={accessState.state}
       data-component="approval-checkpoint"
       data-surface-appearance="premium"
