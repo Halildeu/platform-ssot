@@ -404,6 +404,8 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
             })}
           </ReportFilterPanel>
 
+          {module.renderDashboard ? module.renderDashboard(t) : null}
+
           <EntityGridTemplate<TRow>
             key={reloadSignal}
             gridId={module.id}

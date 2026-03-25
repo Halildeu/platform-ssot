@@ -127,7 +127,8 @@ export const DesignLabAppSidebar: React.FC = () => {
   const { recents, track: trackRecent } = useSidebarRecents();
   const groupState = useSidebarGroupState(activeLayer);
   const { filters, setFilters, matches: filterMatches } = useFilterState();
-  const [allGroupsOpen, setAllGroupsOpen] = useState<boolean | null>(null); // null = use individual state
+  // Expand/Collapse All: bump version + direction, groups read it once then use local state
+  const [groupBroadcast, setGroupBroadcast] = useState<{ version: number; open: boolean }>({ version: 0, open: true });
 
   /* All searchable items for fuzzy search */
   const searchableItems = useMemo(() => {
@@ -207,7 +208,7 @@ export const DesignLabAppSidebar: React.FC = () => {
       case "primitives":
         return <PrimitivesNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
       case "components":
-        return <ComponentsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} groupState={groupState} filterMatches={filterMatches} allGroupsOpen={allGroupsOpen} />;
+        return <ComponentsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} groupState={groupState} filterMatches={filterMatches} groupBroadcast={groupBroadcast} />;
       case "patterns":
         return <PatternsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
       case "apis":
@@ -217,7 +218,7 @@ export const DesignLabAppSidebar: React.FC = () => {
       case "ecosystem":
         return <FamilyNav layer="ecosystem" activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
     }
-  }, [activeLayer, activeItem, fuzzy.query, fuzzy.isSearching, handleItemSelect, getHighlightRanges, isFavorite, toggleFavorite, groupState, filterMatches, allGroupsOpen]);
+  }, [activeLayer, activeItem, fuzzy.query, fuzzy.isSearching, handleItemSelect, getHighlightRanges, isFavorite, toggleFavorite, groupState, filterMatches, groupBroadcast]);
 
   return (
     <ContextMenuProvider>
@@ -272,8 +273,8 @@ export const DesignLabAppSidebar: React.FC = () => {
               {/* Expand All */}
               <button
                 type="button"
-                onClick={() => setAllGroupsOpen(true)}
-                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === true ? "bg-surface-canvas text-action-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
+                onClick={() => setGroupBroadcast((prev) => ({ version: prev.version + 1, open: true }))}
+                className="p-1 rounded transition-colors cursor-pointer text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"
                 title="Expand all groups"
                 aria-label="Expand all groups"
               >
@@ -282,8 +283,8 @@ export const DesignLabAppSidebar: React.FC = () => {
               {/* Collapse All */}
               <button
                 type="button"
-                onClick={() => setAllGroupsOpen(false)}
-                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === false ? "bg-surface-canvas text-action-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
+                onClick={() => setGroupBroadcast((prev) => ({ version: prev.version + 1, open: false }))}
+                className="p-1 rounded transition-colors cursor-pointer text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"
                 title="Collapse all groups"
                 aria-label="Collapse all groups"
               >
@@ -359,7 +360,7 @@ interface LayerNavProps {
   onToggleFavorite?: (item: { name: string; layer: string; path: string }) => void;
   groupState?: ReturnType<typeof useSidebarGroupState>;
   filterMatches?: (item: { lifecycle?: string; demoMode?: string }) => boolean;
-  allGroupsOpen?: boolean | null;
+  groupBroadcast?: { version: number; open: boolean };
 }
 
 /* ---- Foundations ---- */
@@ -442,7 +443,7 @@ function PrimitivesNav({ activeItem, query, searchValue, onItemSelect, getHighli
 
 /* ---- Components (grouped by taxonomy) ---- */
 
-function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite, groupState, filterMatches, allGroupsOpen }: LayerNavProps) {
+function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite, groupState, filterMatches, groupBroadcast }: LayerNavProps) {
   const { index, taxonomy } = useDesignLab();
 
   const groups = useMemo(() => {
@@ -482,7 +483,8 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
           key={group.id}
           label={`${group.label} (${stableItems}/${totalItems})`}
           defaultOpen={groupState?.isOpen(group.id) ?? true}
-          forceOpen={allGroupsOpen}
+          key={`${group.id}-v${groupBroadcast?.version ?? 0}`}
+          defaultOpen={groupBroadcast?.version ? groupBroadcast.open : (groupState?.isOpen(group.id) ?? true)}
         >
           {group.subgroups.flatMap((sg) =>
             sg.items.map((itemName) => {
@@ -747,25 +749,36 @@ function LifecycleBadge({ lifecycle }: { lifecycle?: string }) {
 function SidebarGroup({
   label,
   defaultOpen = true,
-  forceOpen,
+  broadcastVersion,
+  broadcastOpen,
   action,
   children,
 }: {
   label: string;
   defaultOpen?: boolean;
-  forceOpen?: boolean | null;
+  broadcastVersion?: number;
+  broadcastOpen?: boolean;
   action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
-  // forceOpen overrides local state when not null
-  const isOpen = forceOpen != null ? forceOpen : open;
+  const lastBroadcastRef = useRef(0);
+
+  // When broadcast version changes, sync local state then let user control individually
+  useEffect(() => {
+    if (broadcastVersion != null && broadcastVersion > lastBroadcastRef.current) {
+      lastBroadcastRef.current = broadcastVersion;
+      setOpen(broadcastOpen ?? true);
+    }
+  }, [broadcastVersion, broadcastOpen]);
+
+  const isOpen = open;
 
   return (
     <div className="mb-1" role="group" aria-label={label}>
       <button
         type="button"
-        onClick={() => { setOpen(!isOpen); if (forceOpen != null) setOpen(!forceOpen); }}
+        onClick={() => setOpen(!isOpen)}
         className="flex w-full items-center justify-between gap-1 rounded-md px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:bg-surface-canvas transition-colors cursor-pointer"
         aria-expanded={isOpen}
       >

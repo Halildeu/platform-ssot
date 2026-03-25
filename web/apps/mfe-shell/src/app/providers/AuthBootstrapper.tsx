@@ -11,7 +11,7 @@ import {
   subscribeAuthState,
   withSuppressedAuthBroadcast,
 } from "../auth/auth-sync";
-import { createFakeAuthSession, mapKeycloakProfile } from "../config/auth-helpers";
+import { createFakeAuthSession, createDevAuthSession, mapKeycloakProfile } from "../config/auth-helpers";
 import { api } from "@mfe/shared-http";
 
 /* ------------------------------------------------------------------ */
@@ -77,14 +77,18 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!shouldUseKeycloak) {
       if (authConfig.enableFakeAuth) {
-        const session = createFakeAuthSession();
-        dispatch(
-          setKeycloakSession({
-            token: session.token,
-            profile: session.profile ?? undefined,
-            expiresAt: session.expiresAt,
-          }),
-        );
+        // Try real Keycloak token first (async), fallback to fake JWT
+        createDevAuthSession().then((session) => {
+          dispatch(
+            setKeycloakSession({
+              token: session.token,
+              profile: session.profile ?? undefined,
+              expiresAt: session.expiresAt,
+            }),
+          );
+          dispatch(setAuthInitialized(true));
+        });
+        return;
       } else {
         dispatch(setKeycloakSession({ token: null }));
       }

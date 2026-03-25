@@ -1,12 +1,17 @@
 import { listSharedReportsForChannel } from '@platform/capabilities';
+import type { ReportModule } from './types';
 import { usersReportModule } from './users-report';
 import { accessReportModule } from './access-report';
 import { auditReportModule } from './audit-report';
+import { hrDemographicReportModule } from './hr-demographic-report';
 
-const reportModuleMap = new Map([
-  [usersReportModule.id, usersReportModule],
-  [accessReportModule.id, accessReportModule],
-  [auditReportModule.id, auditReportModule],
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyReportModule = ReportModule<any, any>;
+const reportModuleMap = new Map<string, AnyReportModule>([
+  [usersReportModule.id, usersReportModule as AnyReportModule],
+  [accessReportModule.id, accessReportModule as AnyReportModule],
+  [auditReportModule.id, auditReportModule as AnyReportModule],
+  [hrDemographicReportModule.id, hrDemographicReportModule as AnyReportModule],
 ]);
 
 export const reportModules = listSharedReportsForChannel('web')

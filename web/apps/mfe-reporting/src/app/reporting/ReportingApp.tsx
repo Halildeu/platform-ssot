@@ -125,12 +125,12 @@ const ReportingApp: React.FC = () => {
   const activeEntry = mergedModules.find((e) => e.module.route === activeKey) ?? mergedModules[0];
 
   React.useEffect(() => {
-    if (!activeEntry) return;
+    if (!activeEntry || !dynamicLoaded) return;
     const expectedPath = `${basePath}/${activeEntry.module.route}`;
     if (!location.pathname.startsWith(expectedPath)) {
       navigate(expectedPath, { replace: true });
     }
-  }, [activeEntry, basePath, location.pathname, navigate]);
+  }, [activeEntry, basePath, location.pathname, navigate, dynamicLoaded]);
 
   const groupedByCategory = React.useMemo(() => {
     const dashboardGroup: MergedModule[] = [];

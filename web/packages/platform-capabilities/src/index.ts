@@ -40,7 +40,7 @@ export type OfflineMutationCapabilityId =
   | "profile.date-format.sync"
   | "profile.time-format.sync";
 
-export type SharedReportFilterKey = "search" | "status" | "level";
+export type SharedReportFilterKey = "search" | "status" | "level" | "department" | "location" | "gender" | "employmentType";
 export type ReportExportMode = "none" | "download" | "job";
 
 export type AuditFeedCapability = {
@@ -119,7 +119,7 @@ export type OfflineMutationPolicyDescriptor = {
   conflictAuditCapabilityId: AuditFeedCapabilityId;
 };
 
-export type SharedReportId = "users-overview" | "roles-access" | "audit-activity";
+export type SharedReportId = "users-overview" | "roles-access" | "audit-activity" | "hr-demografik-yapi";
 
 export type SharedReportCatalogItem = {
   id: SharedReportId;
@@ -364,6 +364,34 @@ const SHARED_REPORT_CATALOG: readonly SharedReportCatalogItem[] = [
     webRouteSegment: "audit",
     webRoute: "/admin/reports/audit",
     webModuleId: "reports.audit",
+  },
+  {
+    id: "hr-demografik-yapi",
+    title: "IK demografik yapi",
+    description: "Cinsiyet, yas, egitim, kidem ve cesitlilik metrikleriyle insan kaynaklari demografik raporu.",
+    permissionCode: "hr-read",
+    exportPermissionCode: null,
+    metricLabel: "Toplam calisan",
+    emptyMessage: "IK demografik raporu icin gosterilecek kayit bulunamadi.",
+    supportedChannels: ["web"],
+    dataModeByChannel: {
+      web: "mock",
+    },
+    favoriteChannels: ["web"],
+    savedFilterChannels: ["web"],
+    exportModeByChannel: {
+      web: "none",
+    },
+    filterParity: [
+      { key: "search", label: "Arama", supportedChannels: ["web"] },
+      { key: "department", label: "Departman", supportedChannels: ["web"] },
+      { key: "location", label: "Lokasyon", supportedChannels: ["web"] },
+      { key: "gender", label: "Cinsiyet", supportedChannels: ["web"] },
+      { key: "employmentType", label: "Istihdam Turu", supportedChannels: ["web"] },
+    ],
+    webRouteSegment: "hr-demografik-yapi",
+    webRoute: "/admin/reports/hr-demografik-yapi",
+    webModuleId: "reports.hr-demographic",
   },
 ] as const;
 

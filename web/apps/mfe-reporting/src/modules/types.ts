@@ -27,6 +27,7 @@ export interface ReportModule<TFilters extends Record<string, unknown>, TRow> {
   renderFilters: (ctx: FilterRenderContext<TFilters>) => ReactNode;
   getColumns: (t: TranslateFn) => ColumnDef<TRow>[];
   fetchRows: (filters: TFilters, request: GridRequest) => Promise<GridResponse<TRow>>;
+  renderDashboard?: (t: TranslateFn) => ReactNode;
   renderDetail?: (row: TRow | null, t: TranslateFn) => ReactNode;
   exportRows?: (
     filters: TFilters,

@@ -20,6 +20,13 @@ const devConfig = {
     },
     proxy: [
       {
+        context: ['/auth/realms'],
+        target: 'http://localhost:8081', // keycloak (for dev token grant)
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: { '^/auth': '' },
+      },
+      {
         context: ['/api/v1/reports', '/api/v1/dashboards'],
         target: 'http://localhost:8095', // report-service (direct)
         changeOrigin: true,

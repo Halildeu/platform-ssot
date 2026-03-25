@@ -273,11 +273,8 @@ const installInterceptors = (client: AxiosInstance) => {
         console.debug('[AUTH DEBUG] url=<unknown> method=<unknown> hasToken', Boolean(token));
       }
     }
-    if (!isPermitAllMode() && token && !headers.Authorization) {
+    if (token && !headers.Authorization) {
       headers.Authorization = `Bearer ${token}`;
-    }
-    if (isPermitAllMode() && headers.Authorization) {
-      delete headers.Authorization;
     }
     const traceId = traceResolver();
     if (traceId && !headers['X-Trace-Id']) {
