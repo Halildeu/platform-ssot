@@ -955,6 +955,196 @@ _xSuiteComponents.useScheduler = function UseSchedulerStub() {
   );
 };
 
+/* ---- Enterprise stubs ---- */
+
+_xSuiteComponents.AgingBuckets = function AgingBucketsStub(props: any) {
+  const buckets = props.buckets || [
+    { label: "0-30 gun", value: 45200, count: 12 },
+    { label: "31-60 gun", value: 23100, count: 8 },
+    { label: "61-90 gun", value: 12800, count: 5 },
+    { label: "90+ gun", value: 8400, count: 3 },
+  ];
+  const total = buckets.reduce((s: number, b: any) => s + b.value, 0);
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
+    React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, props.title || "Vade Analizi"),
+    React.createElement("div", { style: { display: "flex", gap: 8 } },
+      ...buckets.map((b: any, i: number) => {
+        const pct = ((b.value / total) * 100).toFixed(0);
+        const colors = ["var(--state-success-text,#16a34a)", "var(--state-info-text,#3b82f6)", "var(--state-warning-text,#d97706)", "var(--state-error-text,#dc2626)"];
+        return React.createElement("div", { key: i, style: { flex: 1, textAlign: "center" as const, padding: 8, borderRadius: 8, background: "var(--surface-muted)" } },
+          React.createElement("div", { style: { fontSize: 10, color: "var(--text-secondary)", marginBottom: 4 } }, b.label),
+          React.createElement("div", { style: { fontSize: 18, fontWeight: 700, color: colors[i] || colors[0] } }, typeof b.value === "number" ? b.value.toLocaleString("tr-TR") : b.value),
+          React.createElement("div", { style: { fontSize: 9, color: "var(--text-secondary)", marginTop: 2 } }, `${b.count} kayit · %${pct}`),
+        );
+      })
+    )
+  );
+};
+
+_xSuiteComponents.ApprovalWorkflow = function ApprovalWorkflowStub(props: any) {
+  const steps = props.steps || [
+    { id: "s1", label: "Talep", status: "completed", actor: "Ahmet Y." },
+    { id: "s2", label: "Yonetici Onayi", status: "completed", actor: "Elif D." },
+    { id: "s3", label: "Finans Onayi", status: "current", actor: "Mehmet K." },
+    { id: "s4", label: "CEO Onayi", status: "pending" },
+  ];
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
+    React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, props.title || "Onay Is Akisi"),
+    React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 0 } },
+      ...steps.flatMap((s: any, i: number) => {
+        const statusColors: Record<string, string> = { completed: "var(--state-success-text,#16a34a)", current: "var(--action-primary,#3b82f6)", pending: "var(--text-secondary)" };
+        const statusIcons: Record<string, string> = { completed: "\u2713", current: "\u25CF", pending: "\u25CB" };
+        const items = [
+          React.createElement("div", { key: s.id, style: { textAlign: "center" as const, flex: 1 } },
+            React.createElement("div", { style: { width: 28, height: 28, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", background: s.status === "completed" ? statusColors.completed : "var(--surface-muted)", color: s.status === "completed" ? "#fff" : statusColors[s.status], fontSize: 14, fontWeight: 700, border: `2px solid ${statusColors[s.status]}` } }, statusIcons[s.status]),
+            React.createElement("div", { style: { fontSize: 11, fontWeight: 600, color: statusColors[s.status], marginTop: 4 } }, s.label),
+            s.actor && React.createElement("div", { style: { fontSize: 9, color: "var(--text-secondary)" } }, s.actor),
+          ),
+        ];
+        if (i < steps.length - 1) {
+          items.push(React.createElement("div", { key: `line-${i}`, style: { flex: 1, height: 2, background: s.status === "completed" ? statusColors.completed : "var(--border-subtle)", maxWidth: 40 } }));
+        }
+        return items;
+      })
+    )
+  );
+};
+
+_xSuiteComponents.BulletChart = function BulletChartStub(props: any) {
+  const value = props.value ?? 275;
+  const target = props.target ?? 300;
+  const max = props.max ?? 400;
+  const ranges = props.ranges || [{ value: 150, color: "var(--state-error-bg,#fecaca)" }, { value: 250, color: "var(--state-warning-bg,#fef3c7)" }, { value: max, color: "var(--state-success-bg,#dcfce7)" }];
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
+    React.createElement("div", { style: { fontSize: 12, fontWeight: 600, color: "var(--text-primary)", marginBottom: 8 } }, props.title || "Performans"),
+    React.createElement("div", { style: { position: "relative" as const, height: 24, borderRadius: 4, overflow: "hidden", background: "var(--surface-muted)" } },
+      ...ranges.map((r: any, i: number) => React.createElement("div", { key: i, style: { position: "absolute" as const, left: 0, top: 0, height: "100%", width: `${(r.value / max) * 100}%`, background: r.color, zIndex: ranges.length - i } })),
+      React.createElement("div", { style: { position: "absolute" as const, left: 0, top: 4, height: 16, width: `${(value / max) * 100}%`, background: "var(--text-primary)", borderRadius: 2, zIndex: ranges.length + 1 } }),
+      React.createElement("div", { style: { position: "absolute" as const, left: `${(target / max) * 100}%`, top: 0, width: 2, height: "100%", background: "var(--state-error-text,#dc2626)", zIndex: ranges.length + 2 } }),
+    ),
+    React.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginTop: 4, fontSize: 10, color: "var(--text-secondary)" } },
+      React.createElement("span", null, `Gerceklesen: ${value}`),
+      React.createElement("span", null, `Hedef: ${target}`),
+    ),
+  );
+};
+
+_xSuiteComponents.AuditLog = function AuditLogStub(props: any) {
+  const entries = props.entries || [
+    { id: "1", action: "Kullanici olusturuldu", actor: "Sistem", timestamp: "2024-03-15 09:00", level: "info" },
+    { id: "2", action: "Rol degistirildi", actor: "Ahmet Y.", timestamp: "2024-03-15 10:30", level: "warning" },
+    { id: "3", action: "Erisim reddedildi", actor: "Bilinmeyen", timestamp: "2024-03-15 11:15", level: "error" },
+  ];
+  const levelColors: Record<string, string> = { info: "var(--state-info-text,#3b82f6)", warning: "var(--state-warning-text,#d97706)", error: "var(--state-error-text,#dc2626)" };
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
+    React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, props.title || "Denetim Kayitlari"),
+    React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 8 } },
+      ...entries.map((e: any) => React.createElement("div", { key: e.id, style: { display: "flex", alignItems: "center", gap: 8, padding: "8px 12px", borderRadius: 8, background: "var(--surface-muted)", fontSize: 12 } },
+        React.createElement("span", { style: { width: 6, height: 6, borderRadius: "50%", background: levelColors[e.level] || levelColors.info, flexShrink: 0 } }),
+        React.createElement("span", { style: { fontWeight: 500, color: "var(--text-primary)", flex: 1 } }, e.action),
+        React.createElement("span", { style: { color: "var(--text-secondary)", fontSize: 10 } }, e.actor),
+        React.createElement("span", { style: { color: "var(--text-secondary)", fontSize: 10 } }, e.timestamp),
+      ))
+    )
+  );
+};
+
+_xSuiteComponents.TenantSwitcher = function TenantSwitcherStub(props: any) {
+  const tenants = props.tenants || [{ id: "t1", name: "Acme A.S.", active: true }, { id: "t2", name: "Beta Ltd." }, { id: "t3", name: "Gamma Holding" }];
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 12, background: "var(--surface-default)", minWidth: 220 } },
+    React.createElement("div", { style: { fontSize: 10, fontWeight: 600, textTransform: "uppercase" as const, color: "var(--text-secondary)", letterSpacing: 1, marginBottom: 8 } }, "Organizasyon"),
+    React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 4 } },
+      ...tenants.map((t: any) => React.createElement("div", { key: t.id, style: { display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", borderRadius: 8, background: t.active ? "var(--surface-muted)" : "transparent", cursor: "pointer", border: t.active ? "1px solid var(--action-primary,#3b82f6)" : "1px solid transparent" } },
+        React.createElement("div", { style: { width: 24, height: 24, borderRadius: 6, background: "var(--action-primary,#3b82f6)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10, fontWeight: 700 } }, t.name.charAt(0)),
+        React.createElement("span", { style: { fontSize: 12, fontWeight: t.active ? 600 : 400, color: "var(--text-primary)" } }, t.name),
+        t.active && React.createElement("span", { style: { marginLeft: "auto", fontSize: 10, color: "var(--action-primary,#3b82f6)" } }, "\u2713"),
+      ))
+    )
+  );
+};
+
+_xSuiteComponents.OnboardingChecklist = function OnboardingChecklistStub(props: any) {
+  const items = props.items || [
+    { id: "1", label: "Hesap olustur", completed: true },
+    { id: "2", label: "Profil tamamla", completed: true },
+    { id: "3", label: "Ekip uyeleri ekle", completed: false },
+    { id: "4", label: "Ilk projeyi baslat", completed: false },
+  ];
+  const completed = items.filter((i: any) => i.completed).length;
+  const pct = Math.round((completed / items.length) * 100);
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
+    React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 } },
+      React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)" } }, props.title || "Baslangic Rehberi"),
+      React.createElement("span", { style: { fontSize: 11, color: "var(--text-secondary)" } }, `${completed}/${items.length} tamamlandi`),
+    ),
+    React.createElement("div", { style: { height: 4, borderRadius: 2, background: "var(--surface-muted)", marginBottom: 12 } },
+      React.createElement("div", { style: { height: "100%", borderRadius: 2, background: "var(--action-primary,#3b82f6)", width: `${pct}%`, transition: "width 300ms ease" } }),
+    ),
+    React.createElement("div", { style: { display: "flex", flexDirection: "column" as const, gap: 6 } },
+      ...items.map((item: any) => React.createElement("div", { key: item.id, style: { display: "flex", alignItems: "center", gap: 8, fontSize: 12 } },
+        React.createElement("span", { style: { width: 18, height: 18, borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", background: item.completed ? "var(--state-success-text,#16a34a)" : "var(--surface-muted)", color: item.completed ? "#fff" : "var(--text-secondary)", fontSize: 10, fontWeight: 600, border: item.completed ? "none" : "1px solid var(--border-subtle)" } }, item.completed ? "\u2713" : ""),
+        React.createElement("span", { style: { color: item.completed ? "var(--text-secondary)" : "var(--text-primary)", textDecoration: item.completed ? "line-through" : "none" } }, item.label),
+      ))
+    )
+  );
+};
+
+_xSuiteComponents.PermissionMatrix = function PermissionMatrixStub(props: any) {
+  const roles = props.roles || ["Admin", "Editor", "Viewer"];
+  const permissions = props.permissions || [
+    { label: "Okuma", values: [true, true, true] },
+    { label: "Yazma", values: [true, true, false] },
+    { label: "Silme", values: [true, false, false] },
+    { label: "Yonetim", values: [true, false, false] },
+  ];
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, overflow: "hidden", background: "var(--surface-default)" } },
+    React.createElement("div", { style: { padding: "12px 16px", borderBottom: "1px solid var(--border-subtle)", fontSize: 14, fontWeight: 600, color: "var(--text-primary)" } }, props.title || "Yetki Matrisi"),
+    React.createElement("table", { style: { width: "100%", borderCollapse: "collapse" as const, fontSize: 12 } },
+      React.createElement("thead", null,
+        React.createElement("tr", { style: { borderBottom: "1px solid var(--border-subtle)", background: "var(--surface-muted)" } },
+          React.createElement("th", { style: { padding: "8px 16px", textAlign: "left" as const, color: "var(--text-secondary)", fontWeight: 500 } }, "Izin"),
+          ...roles.map((r: string) => React.createElement("th", { key: r, style: { padding: "8px 16px", textAlign: "center" as const, color: "var(--text-secondary)", fontWeight: 500 } }, r)),
+        ),
+      ),
+      React.createElement("tbody", null,
+        ...permissions.map((p: any, i: number) => React.createElement("tr", { key: i, style: { borderBottom: i < permissions.length - 1 ? "1px solid var(--border-subtle)" : "none" } },
+          React.createElement("td", { style: { padding: "8px 16px", fontWeight: 500, color: "var(--text-primary)" } }, p.label),
+          ...p.values.map((v: boolean, j: number) => React.createElement("td", { key: j, style: { padding: "8px 16px", textAlign: "center" as const } },
+            React.createElement("span", { style: { color: v ? "var(--state-success-text,#16a34a)" : "var(--state-error-text,#dc2626)", fontSize: 14 } }, v ? "\u2713" : "\u2717"),
+          )),
+        )),
+      ),
+    ),
+  );
+};
+
+_xSuiteComponents.DataPipeline = function DataPipelineStub(props: any) {
+  const stages = props.stages || [
+    { id: "s1", label: "Veri Toplama", status: "completed", duration: "2.3s" },
+    { id: "s2", label: "Donusum", status: "completed", duration: "1.1s" },
+    { id: "s3", label: "Dogrulama", status: "running", duration: "..." },
+    { id: "s4", label: "Yukleme", status: "pending" },
+  ];
+  const statusColors: Record<string, string> = { completed: "var(--state-success-text,#16a34a)", running: "var(--action-primary,#3b82f6)", pending: "var(--text-secondary)", failed: "var(--state-error-text,#dc2626)" };
+  return React.createElement("div", { style: { border: "1px solid var(--border-subtle)", borderRadius: 12, padding: 16, background: "var(--surface-default)" } },
+    React.createElement("div", { style: { fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 } }, props.title || "Veri Hatti"),
+    React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 0 } },
+      ...stages.flatMap((s: any, i: number) => {
+        const items = [
+          React.createElement("div", { key: s.id, style: { flex: 1, padding: "8px 12px", borderRadius: 8, border: `1px solid ${statusColors[s.status]}20`, background: `${statusColors[s.status]}08`, textAlign: "center" as const } },
+            React.createElement("div", { style: { fontSize: 11, fontWeight: 600, color: statusColors[s.status] } }, s.label),
+            s.duration && React.createElement("div", { style: { fontSize: 9, color: "var(--text-secondary)", marginTop: 2 } }, s.duration),
+          ),
+        ];
+        if (i < stages.length - 1) {
+          items.push(React.createElement("div", { key: `arrow-${i}`, style: { padding: "0 4px", color: "var(--text-secondary)", fontSize: 14 } }, "\u2192"));
+        }
+        return items;
+      })
+    )
+  );
+};
+
 /* ---- AppSidebar preview stub ---- */
 
 const _appSidebarStub: Record<string, React.FC<any>> = {};
@@ -1490,6 +1680,47 @@ const DEFAULT_CHILDREN: Record<string, React.ReactNode> = {
   MultiStepForm: undefined,
   FormSummary: undefined,
   RepeatableFieldGroup: undefined,
+
+  /* ---- Primitives (missing) ---- */
+  Drawer: undefined,
+  CardHeader: undefined,
+  CardBody: undefined,
+  CardFooter: undefined,
+  Slot: undefined,
+
+  /* ---- Components (missing) ---- */
+  AppSidebar: undefined,
+  ErrorBoundary: undefined,
+  InputNumber: undefined,
+
+  /* ---- Charts (missing) ---- */
+  BarChart: undefined,
+  LineChart: undefined,
+  PieChart: undefined,
+  AreaChart: undefined,
+
+  /* ---- Generative UI (missing) ---- */
+  AILayoutBuilder: undefined,
+  AdaptiveForm: undefined,
+  SmartDashboard: undefined,
+
+  /* ---- Advanced Grid (missing) ---- */
+  GridShell: undefined,
+  GridToolbar: undefined,
+  VariantIntegration: undefined,
+
+  /* ---- X-FormBuilder (missing) ---- */
+  FieldRegistry: undefined,
+
+  /* ---- Enterprise (missing) ---- */
+  AgingBuckets: undefined,
+  ApprovalWorkflow: undefined,
+  BulletChart: undefined,
+  AuditLog: undefined,
+  TenantSwitcher: undefined,
+  OnboardingChecklist: undefined,
+  PermissionMatrix: undefined,
+  DataPipeline: undefined,
 };
 
 /**
@@ -3091,6 +3322,101 @@ DEFAULT_PROPS.MultiStepForm = { schema: { id: "multi", title: "Kayit Formu", ste
 DEFAULT_PROPS.FormSummary = { schema: { id: "summary", fields: [{ id: "name", type: "text", name: "name", label: "Ad Soyad" }, { id: "email", type: "email", name: "email", label: "E-posta" }, { id: "role", type: "select", name: "role", label: "Rol", options: [{ label: "Admin", value: "admin" }] }] }, values: { name: "Ahmet Yilmaz", email: "ahmet@ornek.com", role: "admin" } };
 DEFAULT_PROPS.RepeatableFieldGroup = { fields: [{ id: "item", type: "text", name: "item", label: "Kalem" }, { id: "qty", type: "number", name: "qty", label: "Miktar" }], values: [{ item: "Urun A", qty: 5 }, { item: "Urun B", qty: 3 }], onChange: () => {}, addLabel: "Satir Ekle" };
 DEFAULT_PROPS.FieldRenderer = { field: { id: "demo", type: "text", name: "demo", label: "Ornek Alan", placeholder: "Deger girin..." }, value: "", onChange: () => {}, onBlur: () => {} };
+
+/* ---- Primitives (missing) ---- */
+DEFAULT_PROPS.Drawer = { open: false, title: "Ornek Cekmece", placement: "right", size: "md", keepMounted: true, disablePortal: true, onClose: () => {}, children: React.createElement("div", { className: "p-4 text-sm" }, "Cekmece icerigi burada gorunur.") };
+DEFAULT_PROPS.HStack = { gap: "md", children: React.createElement(React.Fragment, null, React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 1"), React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 2"), React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 3")) };
+DEFAULT_PROPS.VStack = { gap: "md", children: React.createElement(React.Fragment, null, React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 1"), React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 2"), React.createElement("div", { className: "rounded-lg border border-border-subtle px-3 py-2 text-sm" }, "Oge 3")) };
+DEFAULT_PROPS.CardHeader = { children: React.createElement("div", { className: "text-sm font-semibold" }, "Kart Basligi") };
+DEFAULT_PROPS.CardBody = { children: React.createElement("div", { className: "text-sm" }, "Kart govde icerigi burada yer alir.") };
+DEFAULT_PROPS.CardFooter = { children: React.createElement("div", { className: "flex justify-end gap-2" }, React.createElement("button", { className: "rounded-lg border border-border-subtle px-3 py-1.5 text-xs" }, "Iptal"), React.createElement("button", { className: "rounded-lg bg-action-primary px-3 py-1.5 text-xs text-white" }, "Kaydet")) };
+DEFAULT_PROPS.Slot = { children: React.createElement("div", { className: "rounded-lg border border-dashed border-border-subtle p-4 text-sm text-center text-text-secondary" }, "Slot icerigi — alt bilesenler burada birlestirilir") };
+
+/* ---- Components (missing) ---- */
+DEFAULT_PROPS.AppSidebar = { mode: "expanded", header: React.createElement("div", { className: "text-sm font-bold" }, "Uygulama"), children: React.createElement("div", { className: "flex flex-col gap-1 p-2 text-sm" }, React.createElement("div", { className: "rounded-lg px-3 py-2 bg-surface-muted font-medium" }, "Ana Sayfa"), React.createElement("div", { className: "rounded-lg px-3 py-2" }, "Projeler"), React.createElement("div", { className: "rounded-lg px-3 py-2" }, "Ayarlar")) };
+DEFAULT_PROPS.ErrorBoundary = { fallback: React.createElement("div", { className: "rounded-lg border border-state-error-border bg-state-error-bg p-4 text-sm text-state-error-text" }, "Bir hata olustu. Lutfen sayfayi yenileyin."), children: React.createElement("div", { className: "p-4 text-sm" }, "Hata siniri tarafindan korunan icerik") };
+DEFAULT_PROPS.InputNumber = { label: "Miktar", placeholder: "0", min: 0, max: 100, step: 1, description: "0 ile 100 arasinda bir deger girin." };
+
+/* ---- Charts (missing) ---- */
+DEFAULT_PROPS.BarChart = { data: [{ label: "Oca", value: 45 }, { label: "Sub", value: 52 }, { label: "Mar", value: 48 }, { label: "Nis", value: 61 }, { label: "May", value: 55 }], xKey: "label", yKey: "value", size: "md" };
+DEFAULT_PROPS.LineChart = { data: [{ label: "Oca", value: 30 }, { label: "Sub", value: 45 }, { label: "Mar", value: 38 }, { label: "Nis", value: 52 }, { label: "May", value: 48 }], xKey: "label", yKey: "value", size: "md" };
+DEFAULT_PROPS.PieChart = { data: [{ label: "Web", value: 45 }, { label: "Mobil", value: 30 }, { label: "API", value: 25 }], labelKey: "label", valueKey: "value", size: "md" };
+DEFAULT_PROPS.AreaChart = { data: [{ label: "Oca", value: 20 }, { label: "Sub", value: 35 }, { label: "Mar", value: 28 }, { label: "Nis", value: 42 }, { label: "May", value: 38 }], xKey: "label", yKey: "value", size: "md" };
+
+/* ---- Generative UI / Adaptive Interface (missing) ---- */
+DEFAULT_PROPS.AILayoutBuilder = { blocks: [{ id: "b1", type: "metric", title: "Toplam Kullanici", value: "8.432" }, { id: "b2", type: "chart", title: "Haftalik Trend" }, { id: "b3", type: "table", title: "Son Islemler" }], intent: "dashboard", density: "comfortable" };
+DEFAULT_PROPS.AdaptiveForm = { fields: [{ id: "name", type: "text", name: "name", label: "Ad Soyad", required: true }, { id: "email", type: "email", name: "email", label: "E-posta", required: true }, { id: "department", type: "select", name: "department", label: "Departman", options: [{ label: "Muhendislik", value: "eng" }, { label: "Tasarim", value: "design" }] }], layout: "vertical", size: "md" };
+DEFAULT_PROPS.SmartDashboard = { widgets: [{ id: "w1", type: "metric", title: "Gelir", value: "1.24M", trend: { direction: "up", value: "+12.3%" } }, { id: "w2", type: "metric", title: "Kullanicilar", value: "8.432", trend: { direction: "up", value: "+5.7%" } }, { id: "w3", type: "chart", title: "Haftalik Trend", size: "lg" }], density: "comfortable" };
+
+/* ---- Advanced Grid (missing) ---- */
+DEFAULT_PROPS.GridShell = { columnDefs: [{ field: "name", headerName: "Ad" }, { field: "role", headerName: "Rol" }], rowData: [{ name: "Ayse", role: "Yonetici" }, { name: "Mehmet", role: "Gelistirici" }], height: 200 };
+DEFAULT_PROPS.GridToolbar = { quickFilterPlaceholder: "Hizli filtre...", showDensityToggle: true, showFullscreen: true };
+DEFAULT_PROPS.VariantIntegration = { gridId: "demo-variant", variants: [{ id: "default", label: "Varsayilan" }, { id: "compact", label: "Kompakt" }], activeVariant: "default" };
+
+/* ---- X-Suite: FieldRegistry (missing DEFAULT_PROPS) ---- */
+DEFAULT_PROPS.FieldRegistry = { fields: [{ id: "text", type: "text", label: "Metin Alani" }, { id: "number", type: "number", label: "Sayi Alani" }, { id: "select", type: "select", label: "Secim Alani" }] };
+
+/* ---- Enterprise (missing) ---- */
+DEFAULT_PROPS.AgingBuckets = { title: "Vade Analizi", buckets: [{ label: "0-30 gun", value: 45200, count: 12 }, { label: "31-60 gun", value: 23100, count: 8 }, { label: "61-90 gun", value: 12800, count: 5 }, { label: "90+ gun", value: 8400, count: 3 }] };
+DEFAULT_PROPS.ApprovalWorkflow = { title: "Onay Is Akisi", steps: [{ id: "s1", label: "Talep", status: "completed", actor: "Ahmet Y." }, { id: "s2", label: "Yonetici Onayi", status: "completed", actor: "Elif D." }, { id: "s3", label: "Finans Onayi", status: "current", actor: "Mehmet K." }, { id: "s4", label: "CEO Onayi", status: "pending" }] };
+DEFAULT_PROPS.BulletChart = { title: "Performans", value: 275, target: 300, max: 400, ranges: [{ value: 150, color: "var(--state-error-bg,#fecaca)" }, { value: 250, color: "var(--state-warning-bg,#fef3c7)" }, { value: 400, color: "var(--state-success-bg,#dcfce7)" }] };
+DEFAULT_PROPS.AuditLog = { title: "Denetim Kayitlari", entries: [{ id: "1", action: "Kullanici olusturuldu", actor: "Sistem", timestamp: "2024-03-15 09:00", level: "info" }, { id: "2", action: "Rol degistirildi", actor: "Ahmet Y.", timestamp: "2024-03-15 10:30", level: "warning" }, { id: "3", action: "Erisim reddedildi", actor: "Bilinmeyen", timestamp: "2024-03-15 11:15", level: "error" }] };
+DEFAULT_PROPS.TenantSwitcher = { tenants: [{ id: "t1", name: "Acme A.S.", active: true }, { id: "t2", name: "Beta Ltd." }, { id: "t3", name: "Gamma Holding" }] };
+DEFAULT_PROPS.OnboardingChecklist = { title: "Baslangic Rehberi", items: [{ id: "1", label: "Hesap olustur", completed: true }, { id: "2", label: "Profil tamamla", completed: true }, { id: "3", label: "Ekip uyeleri ekle", completed: false }, { id: "4", label: "Ilk projeyi baslat", completed: false }] };
+DEFAULT_PROPS.PermissionMatrix = { title: "Yetki Matrisi", roles: ["Admin", "Editor", "Viewer"], permissions: [{ label: "Okuma", values: [true, true, true] }, { label: "Yazma", values: [true, true, false] }, { label: "Silme", values: [true, false, false] }, { label: "Yonetim", values: [true, false, false] }] };
+DEFAULT_PROPS.DataPipeline = { title: "Veri Hatti", stages: [{ id: "s1", label: "Veri Toplama", status: "completed", duration: "2.3s" }, { id: "s2", label: "Donusum", status: "completed", duration: "1.1s" }, { id: "s3", label: "Dogrulama", status: "running", duration: "..." }, { id: "s4", label: "Yukleme", status: "pending" }] };
+
+/* ---- Inline preview stubs (batch 1 — primitives & form) ---- */
+DEFAULT_PROPS.AutoComplete = { label: "Sehir", placeholder: "Sehir ara...", options: [{ value: "istanbul", label: "Istanbul" }, { value: "ankara", label: "Ankara" }, { value: "izmir", label: "Izmir" }], description: "Bir sehir secin." };
+DEFAULT_PROPS.Calendar = { defaultDate: new Date(2025, 2, 21) };
+DEFAULT_PROPS.Carousel = { items: [{ id: "1", content: React.createElement("div", { className: "flex h-40 items-center justify-center rounded-lg bg-surface-muted text-sm" }, "Slayt 1") }, { id: "2", content: React.createElement("div", { className: "flex h-40 items-center justify-center rounded-lg bg-surface-muted text-sm" }, "Slayt 2") }, { id: "3", content: React.createElement("div", { className: "flex h-40 items-center justify-center rounded-lg bg-surface-muted text-sm" }, "Slayt 3") }] };
+DEFAULT_PROPS.Cascader = { label: "Kategori", placeholder: "Kategori secin...", options: [{ value: "elektronik", label: "Elektronik", children: [{ value: "telefon", label: "Telefon" }, { value: "bilgisayar", label: "Bilgisayar" }] }, { value: "giyim", label: "Giyim", children: [{ value: "erkek", label: "Erkek" }, { value: "kadin", label: "Kadin" }] }] };
+DEFAULT_PROPS.ColorPicker = { label: "Renk", defaultValue: "#3b82f6", description: "Tema rengi secin." };
+DEFAULT_PROPS.DateRangePicker = { label: "Tarih Araligi", startPlaceholder: "Baslangic", endPlaceholder: "Bitis", description: "Rapor tarih araligini secin." };
+DEFAULT_PROPS.FileUploadZone = { label: "Dosya Yukle", accept: ".pdf,.png,.jpg,.xlsx", maxSize: 10485760, description: "Dosyalari surukleyip birakin veya secin. Maks 10MB." };
+DEFAULT_PROPS.FloatButton = { icon: React.createElement("span", { style: { fontSize: 18 } }, "+"), label: "Ekle" };
+DEFAULT_PROPS.InlineEdit = { value: "Duzenlenebilir metin", onSave: () => {}, onCancel: () => {} };
+DEFAULT_PROPS.Mentions = { placeholder: "@kisi ile bahset...", options: [{ id: "1", label: "Ahmet Yilmaz" }, { id: "2", label: "Ayse Demir" }, { id: "3", label: "Mehmet Kaya" }] };
+DEFAULT_PROPS.QRCode = { value: "https://ornek.com", size: 128 };
+DEFAULT_PROPS.Rating = { label: "Degerlendirme", defaultValue: 3, max: 5, size: "md" };
+DEFAULT_PROPS.Toast = { title: "Basarili", description: "Islem tamamlandi.", variant: "success", duration: 5000 };
+DEFAULT_PROPS.Transfer = { sourceTitle: "Mevcut", targetTitle: "Secilen", dataSource: [{ key: "1", label: "React" }, { key: "2", label: "Vue" }, { key: "3", label: "Angular" }, { key: "4", label: "Svelte" }], targetKeys: ["1"] };
+DEFAULT_PROPS.Watermark = { text: "TASLAK", children: React.createElement("div", { className: "h-32 rounded-lg border border-border-subtle p-4 text-sm" }, "Filigranli icerik alani") };
+
+/* ---- Inline preview stubs (batch 2 — data viz / charts) ---- */
+DEFAULT_PROPS.BoxPlot = { data: [{ label: "Q1", min: 10, q1: 25, median: 45, q3: 65, max: 90 }, { label: "Q2", min: 15, q1: 30, median: 50, q3: 70, max: 85 }], size: "md" };
+DEFAULT_PROPS.ControlChart = { data: [{ x: 1, y: 50 }, { x: 2, y: 52 }, { x: 3, y: 48 }, { x: 4, y: 55 }, { x: 5, y: 47 }, { x: 6, y: 53 }], ucl: 58, lcl: 42, cl: 50, title: "Kontrol Grafigi" };
+DEFAULT_PROPS.FunnelChart = { data: [{ label: "Ziyaret", value: 1000 }, { label: "Kayit", value: 600 }, { label: "Deneme", value: 350 }, { label: "Satin Alma", value: 120 }], size: "md" };
+DEFAULT_PROPS.HeatmapCalendar = { data: [{ date: "2025-03-01", value: 3 }, { date: "2025-03-05", value: 8 }, { date: "2025-03-10", value: 5 }, { date: "2025-03-15", value: 12 }, { date: "2025-03-20", value: 7 }], startDate: "2025-03-01", endDate: "2025-03-31" };
+DEFAULT_PROPS.HistogramChart = { data: [{ bin: "0-10", count: 5 }, { bin: "10-20", count: 12 }, { bin: "20-30", count: 18 }, { bin: "30-40", count: 8 }, { bin: "40-50", count: 3 }], size: "md" };
+DEFAULT_PROPS.MicroChart = { data: [5, 8, 3, 12, 7, 10, 6], type: "sparkline", width: 80, height: 24 };
+DEFAULT_PROPS.ParetoChart = { data: [{ label: "Hata A", value: 45 }, { label: "Hata B", value: 30 }, { label: "Hata C", value: 15 }, { label: "Hata D", value: 10 }], size: "md" };
+DEFAULT_PROPS.SankeyDiagram = { nodes: [{ id: "a", label: "Kaynak A" }, { id: "b", label: "Kaynak B" }, { id: "c", label: "Hedef C" }, { id: "d", label: "Hedef D" }], links: [{ source: "a", target: "c", value: 30 }, { source: "a", target: "d", value: 20 }, { source: "b", target: "c", value: 15 }, { source: "b", target: "d", value: 35 }] };
+
+/* ---- Inline preview stubs (batch 3 — enterprise / process) ---- */
+DEFAULT_PROPS.ActivityFeed = { items: [{ id: "1", actor: "Ahmet Y.", action: "dosya yukledi", target: "rapor.pdf", timestamp: "5 dk once" }, { id: "2", actor: "Elif D.", action: "yorum ekledi", target: "Gorev #42", timestamp: "12 dk once" }, { id: "3", actor: "Sistem", action: "yedekleme tamamlandi", timestamp: "1 saat once" }] };
+DEFAULT_PROPS.CommentThread = { comments: [{ id: "1", author: "Ahmet Yilmaz", content: "Bu degisiklik onaylanabilir.", timestamp: "10:30", avatar: "AY" }, { id: "2", author: "Elif Demir", content: "Katiliyorum, birlestirelim.", timestamp: "10:45", avatar: "ED" }] };
+DEFAULT_PROPS.ComparisonTable = { columns: [{ key: "feature", label: "Ozellik" }, { key: "planA", label: "Baslangic" }, { key: "planB", label: "Profesyonel" }, { key: "planC", label: "Kurumsal" }], rows: [{ feature: "Kullanici", planA: "5", planB: "25", planC: "Sinirsiz" }, { feature: "Depolama", planA: "1 GB", planB: "10 GB", planC: "100 GB" }, { feature: "Destek", planA: "E-posta", planB: "Oncelikli", planC: "7/24" }] };
+DEFAULT_PROPS.DataExportDialog = { open: false, title: "Veri Disa Aktar", formats: [{ id: "csv", label: "CSV" }, { id: "xlsx", label: "Excel" }, { id: "pdf", label: "PDF" }], onExport: () => {}, onClose: () => {}, keepMounted: true, disablePortal: true };
+DEFAULT_PROPS.DecisionMatrix = { title: "Karar Matrisi", criteria: [{ id: "c1", label: "Maliyet", weight: 0.3 }, { id: "c2", label: "Kalite", weight: 0.4 }, { id: "c3", label: "Sure", weight: 0.3 }], alternatives: [{ id: "a1", label: "Secenek A", scores: { c1: 8, c2: 7, c3: 9 } }, { id: "a2", label: "Secenek B", scores: { c1: 6, c2: 9, c3: 7 } }] };
+DEFAULT_PROPS.EmptyStateBuilder = { icon: React.createElement("span", { style: { fontSize: 32 } }, "\u{1F4E6}"), title: "Henuz icerik yok", description: "Baslangic icin yeni bir oge olusturun.", actionLabel: "Olustur", onAction: () => {} };
+DEFAULT_PROPS.ExecutiveKPIStrip = { kpis: [{ id: "1", label: "Gelir", value: "2.4M", trend: "+12%", status: "success" }, { id: "2", label: "Maliyet", value: "890K", trend: "-3%", status: "success" }, { id: "3", label: "Kar Marji", value: "%28", trend: "+2%", status: "info" }] };
+DEFAULT_PROPS.FilterPresets = { presets: [{ id: "1", label: "Aktif Kayitlar", filters: { status: "active" } }, { id: "2", label: "Son 30 Gun", filters: { period: "30d" } }, { id: "3", label: "Yuksek Oncelik", filters: { priority: "high" } }], activePresetId: "1" };
+DEFAULT_PROPS.FineKinney = { title: "Fine-Kinney Risk Degerlendirmesi", risks: [{ id: "1", hazard: "Elektrik carpmasi", probability: 6, frequency: 3, severity: 15, score: 270 }, { id: "2", hazard: "Dusme", probability: 3, frequency: 6, severity: 7, score: 126 }, { id: "3", hazard: "Kimyasal maruz kalma", probability: 2, frequency: 2, severity: 40, score: 160 }] };
+DEFAULT_PROPS.FlowBuilder = { nodes: [{ id: "1", type: "start", label: "Baslangic", x: 50, y: 50 }, { id: "2", type: "process", label: "Islem", x: 200, y: 50 }, { id: "3", type: "end", label: "Bitis", x: 350, y: 50 }], edges: [{ from: "1", to: "2" }, { from: "2", to: "3" }] };
+DEFAULT_PROPS.GanttTimeline = { tasks: [{ id: "1", title: "Tasarim", start: "2025-03-01", end: "2025-03-10", progress: 100 }, { id: "2", title: "Gelistirme", start: "2025-03-08", end: "2025-03-25", progress: 60 }, { id: "3", title: "Test", start: "2025-03-20", end: "2025-03-30", progress: 10 }] };
+DEFAULT_PROPS.GovernanceBoard = { title: "Yonetisim Panosu", items: [{ id: "1", label: "Veri Gizliligi", status: "compliant", owner: "Guvenlik Ekibi" }, { id: "2", label: "Erisim Kontrolu", status: "warning", owner: "IT Ekibi" }, { id: "3", label: "Denetim Kayitlari", status: "compliant", owner: "Uyumluluk" }] };
+DEFAULT_PROPS.MetricComparisonCard = { title: "Performans Karsilastirmasi", current: { label: "Bu Ay", value: 8420 }, previous: { label: "Gecen Ay", value: 7350 }, unit: "islem", trend: "up" };
+DEFAULT_PROPS.NotificationCenter = { notifications: [{ id: "1", title: "Yeni mesaj", description: "Ahmet sizden bahsetti", read: false, timestamp: "5 dk once" }, { id: "2", title: "Gorev tamamlandi", description: "Sprint gorev #42 kapatildi", read: true, timestamp: "1 saat once" }], unreadCount: 1 };
+DEFAULT_PROPS.OrgChart = { nodes: [{ id: "1", label: "CEO", title: "Genel Mudur" }, { id: "2", label: "CTO", title: "Teknoloji Muduru", parentId: "1" }, { id: "3", label: "CFO", title: "Finans Muduru", parentId: "1" }, { id: "4", label: "Muhendislik", title: "Ekip Lideri", parentId: "2" }] };
+DEFAULT_PROPS.PivotTable = { data: [{ bolge: "Marmara", urun: "A", satis: 120 }, { bolge: "Marmara", urun: "B", satis: 80 }, { bolge: "Ege", urun: "A", satis: 95 }, { bolge: "Ege", urun: "B", satis: 110 }], rows: ["bolge"], columns: ["urun"], values: ["satis"] };
+DEFAULT_PROPS.ProcessFlow = { steps: [{ id: "1", label: "Siparis", status: "completed" }, { id: "2", label: "Odeme", status: "completed" }, { id: "3", label: "Hazirlama", status: "active" }, { id: "4", label: "Kargo", status: "pending" }, { id: "5", label: "Teslim", status: "pending" }] };
+DEFAULT_PROPS.RiskMatrix = { title: "Risk Matrisi", risks: [{ id: "1", label: "Veri Kaybi", likelihood: 2, impact: 5 }, { id: "2", label: "Sistem Cokme", likelihood: 3, impact: 4 }, { id: "3", label: "Gecikme", likelihood: 4, impact: 2 }], likelihoodLabels: ["Cok Dusuk", "Dusuk", "Orta", "Yuksek", "Cok Yuksek"], impactLabels: ["Onemsiz", "Dusuk", "Orta", "Yuksek", "Kritik"] };
+DEFAULT_PROPS.SWOTMatrix = { title: "SWOT Analizi", strengths: ["Guclu muhendislik ekibi", "Modern teknoloji yigini"], weaknesses: ["Sinirli pazarlama butcesi", "Kucuk musteri tabani"], opportunities: ["Buyuyen pazar", "Yeni ortakliklar"], threats: ["Rekabet artisi", "Regulator degisiklikler"] };
+DEFAULT_PROPS.StatusTimeline = { items: [{ id: "1", label: "Siparis alindi", timestamp: "09:00", status: "completed" }, { id: "2", label: "Isleniyor", timestamp: "09:15", status: "completed" }, { id: "3", label: "Kargoya verildi", timestamp: "11:30", status: "active" }, { id: "4", label: "Teslim edildi", status: "pending" }] };
+DEFAULT_PROPS.ThemeLayout = { mode: "light", children: React.createElement("div", { className: "rounded-lg border border-border-subtle p-4 text-sm" }, "Tema duzeni icerik alani") };
+DEFAULT_PROPS.TrainingTracker = { title: "Egitim Takibi", modules: [{ id: "1", title: "Giris Egitimi", progress: 100, status: "completed" }, { id: "2", title: "Guvenlik Egitimi", progress: 60, status: "in_progress" }, { id: "3", title: "Ileri Duzey", progress: 0, status: "not_started" }] };
+DEFAULT_PROPS.ValueStream = { title: "Deger Akisi", stages: [{ id: "1", label: "Fikir", leadTime: "2 gun", processTime: "4 saat" }, { id: "2", label: "Gelistirme", leadTime: "5 gun", processTime: "3 gun" }, { id: "3", label: "Test", leadTime: "2 gun", processTime: "1 gun" }, { id: "4", label: "Yayin", leadTime: "1 gun", processTime: "2 saat" }] };
 
 /** Check whether a component has playground default props configured. */
 export function hasPlayground(componentName: string): boolean {
