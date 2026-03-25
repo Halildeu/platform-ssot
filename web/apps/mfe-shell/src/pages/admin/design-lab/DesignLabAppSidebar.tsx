@@ -14,7 +14,7 @@ import {
   API_NAMES,
 } from "./DesignLabSidebarRouter";
 
-/* New sidebar v2 modules */
+/* Sidebar v3 modules */
 import {
   SidebarHealthBanner,
   SidebarBreadcrumb,
@@ -24,6 +24,14 @@ import {
   useFilterState,
   SidebarFavorites,
   SidebarRecentlyViewed,
+  ContextMenuProvider,
+  useContextMenu,
+  buildComponentMenuItems,
+  HoverPreviewProvider,
+  useHoverPreview,
+  SidebarQuickActions,
+  SidebarGroupProgress,
+  type PreviewData,
 } from "./sidebar/sections";
 import {
   useSidebarFavorites,
@@ -211,6 +219,8 @@ export const DesignLabAppSidebar: React.FC = () => {
   }, [activeLayer, activeItem, fuzzy.query, fuzzy.isSearching, handleItemSelect, getHighlightRanges, isFavorite, toggleFavorite, groupState, filterMatches]);
 
   return (
+    <ContextMenuProvider>
+    <HoverPreviewProvider>
     <div className="flex h-full w-full flex-col overflow-hidden">
       <AppSidebar
         storageKey="design-lab-sidebar"
@@ -321,6 +331,8 @@ export const DesignLabAppSidebar: React.FC = () => {
         </AppSidebar.Nav>
       </AppSidebar>
     </div>
+    </HoverPreviewProvider>
+    </ContextMenuProvider>
   );
 };
 
@@ -449,11 +461,18 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
 
   return (
     <>
-      {groups.map((group) => (
+      {groups.map((group) => {
+        const totalItems = group.subgroups.reduce((sum, sg) => sum + sg.items.length, 0);
+        const stableItems = group.subgroups.reduce((sum, sg) => sum + sg.items.filter((name) => {
+          const item = index.items.find((i) => i.name === name);
+          return item?.lifecycle === "stable";
+        }).length, 0);
+        return (
         <AppSidebar.Group
           key={group.id}
           label={group.label}
           defaultOpen={groupState?.isOpen(group.id) ?? true}
+          action={<SidebarGroupProgress current={stableItems} total={totalItems} label="stable" />}
         >
           {group.subgroups.flatMap((sg) =>
             sg.items.map((itemName) => {
@@ -463,6 +482,9 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
                   key={itemName}
                   active={activeItem === itemName}
                   label={itemName}
+                  description={indexItem?.description}
+                  lifecycle={indexItem?.lifecycle}
+                  tags={indexItem?.tags}
                   highlightRanges={getHighlightRanges?.(itemName)}
                   badge={<LifecycleBadge lifecycle={indexItem?.lifecycle} />}
                   pinned={isFavorite?.(itemName)}
@@ -473,7 +495,8 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
             }),
           )}
         </AppSidebar.Group>
-      ))}
+        );
+      })}
     </>
   );
 }
@@ -601,6 +624,9 @@ function ScrollableNavItem({
   pinned,
   onPin,
   onClick,
+  description,
+  lifecycle,
+  tags,
 }: {
   active: boolean;
   label: string;
@@ -609,8 +635,13 @@ function ScrollableNavItem({
   pinned?: boolean;
   onPin?: () => void;
   onClick: () => void;
+  description?: string;
+  lifecycle?: string;
+  tags?: string[];
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const { show: showContextMenu } = useContextMenu();
+  const { scheduleShow, cancelShow } = useHoverPreview();
 
   useEffect(() => {
     if (active && ref.current) {
@@ -621,44 +652,81 @@ function ScrollableNavItem({
     }
   }, [active]);
 
-  const displayLabel = highlightRanges?.length ? (
-    <HighlightedLabel text={label} ranges={highlightRanges} />
-  ) : (
-    label
+  const handleContextMenu = useCallback(
+    (e: React.MouseEvent) => {
+      const items = buildComponentMenuItems({
+        name: label,
+        importPath: `@mfe/design-system`,
+        isPinned: pinned ?? false,
+        onTogglePin: onPin ?? (() => {}),
+        onNavigate: onClick as unknown as (path: string) => void,
+      });
+      showContextMenu(e, items);
+    },
+    [label, pinned, onPin, onClick, showContextMenu],
   );
 
+  const handleMouseEnter = useCallback(() => {
+    if (!ref.current || !description) return;
+    const rect = ref.current.getBoundingClientRect();
+    const previewData: PreviewData = {
+      name: label,
+      description,
+      lifecycle,
+      tags,
+    };
+    scheduleShow(rect, previewData);
+  }, [label, description, lifecycle, tags, scheduleShow]);
+
   return (
-    <div ref={ref} className="group scroll-mt-4 relative">
+    <div
+      ref={ref}
+      className="group scroll-mt-4 relative"
+      onContextMenu={handleContextMenu}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={cancelShow}
+    >
       <AppSidebar.NavItem
         label={label}
         active={active}
         badge={badge}
         onClick={onClick}
       />
-      {/* Pin button — appears on hover */}
+      {/* Quick actions — appear on hover */}
       {onPin && (
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onPin(); }}
-          className={`
-            absolute right-8 top-1/2 -translate-y-1/2
-            ${pinned ? "opacity-100 text-state-warning-text" : "opacity-0 group-hover:opacity-100 text-text-tertiary hover:text-state-warning-text"}
-            transition-opacity cursor-pointer
-          `}
-          aria-label={pinned ? `Unpin ${label}` : `Pin ${label}`}
-          title={pinned ? "Remove from favorites" : "Add to favorites"}
-        >
-          <Star className={`h-3 w-3 ${pinned ? "fill-current" : ""}`} />
-        </button>
+        <div className="absolute right-1 top-1/2 -translate-y-1/2">
+          <SidebarQuickActions
+            name={label}
+            isPinned={pinned ?? false}
+            onCopyImport={() =>
+              navigator.clipboard.writeText(
+                `import { ${label} } from '@mfe/design-system';`,
+              )
+            }
+            onTogglePin={onPin}
+          />
+        </div>
       )}
     </div>
   );
 }
 
+/* ---- Color-coded lifecycle badge with status dot ---- */
+
+const LIFECYCLE_STYLES: Record<string, { dot: string; text: string; bg: string }> = {
+  stable: { dot: "bg-state-success-text", text: "text-state-success-text", bg: "bg-state-success-bg" },
+  beta: { dot: "bg-state-warning-text", text: "text-state-warning-text", bg: "bg-state-warning-bg" },
+  planned: { dot: "bg-text-tertiary", text: "text-text-tertiary", bg: "bg-surface-muted" },
+  deprecated: { dot: "bg-state-danger-text", text: "text-state-danger-text", bg: "bg-state-danger-bg" },
+};
+
 function LifecycleBadge({ lifecycle }: { lifecycle?: string }) {
-  if (!lifecycle || lifecycle === "stable") return null;
+  if (!lifecycle) return null;
+  const style = LIFECYCLE_STYLES[lifecycle] ?? LIFECYCLE_STYLES.planned;
+
   return (
-    <span className="shrink-0 rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
+    <span className={`inline-flex items-center gap-1 shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${style.bg} ${style.text}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
       {lifecycle}
     </span>
   );

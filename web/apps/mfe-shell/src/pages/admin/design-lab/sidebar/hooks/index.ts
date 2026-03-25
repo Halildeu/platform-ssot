@@ -6,3 +6,5 @@ export { useFuzzySearch, highlightText } from "./useFuzzySearch";
 export type { FuzzyResult, HighlightRange } from "./useFuzzySearch";
 export { useSidebarHealth } from "./useSidebarHealth";
 export type { HealthSummary } from "./useSidebarHealth";
+export { useTypeAhead } from "./useTypeAhead";
+export { useDragDrop } from "./useDragDrop";
