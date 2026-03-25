@@ -104,7 +104,10 @@ function resolveActiveItemFromPath(pathname: string): string | null {
     .replace(/^\/admin\/design-lab\/?/, "")
     .split("/")
     .filter(Boolean);
-  if (segments.length >= 2) return segments[segments.length - 1];
+  if (segments.length >= 2) {
+    try { return decodeURIComponent(segments[segments.length - 1]); }
+    catch { return segments[segments.length - 1]; }
+  }
   return null;
 }
 
@@ -198,27 +201,19 @@ export const DesignLabAppSidebar: React.FC = () => {
     return true;
   }, [filterMatches, fuzzy.isSearching, fuzzy.results]);
 
-  /* Build nav content */
-  const navContent = useMemo(() => {
-    const query = fuzzy.isSearching ? "" : ""; // Fuzzy handles filtering
-
-    switch (activeLayer) {
-      case "foundations":
-        return <FoundationsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
-      case "primitives":
-        return <PrimitivesNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
-      case "components":
-        return <ComponentsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} groupState={groupState} filterMatches={filterMatches} groupBroadcast={groupBroadcast} />;
-      case "patterns":
-        return <PatternsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
-      case "apis":
-        return <ApisNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
-      case "recipes":
-        return <FamilyNav layer="recipes" activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
-      case "ecosystem":
-        return <FamilyNav layer="ecosystem" activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
-    }
-  }, [activeLayer, activeItem, fuzzy.query, fuzzy.isSearching, handleItemSelect, getHighlightRanges, isFavorite, toggleFavorite, groupState, filterMatches, groupBroadcast]);
+  /* Shared nav props */
+  const navProps: LayerNavProps = {
+    activeItem,
+    query: fuzzy.query.toLowerCase(),
+    searchValue: fuzzy.query,
+    onItemSelect: handleItemSelect,
+    getHighlightRanges,
+    isFavorite,
+    onToggleFavorite: toggleFavorite,
+    groupState,
+    filterMatches,
+    groupBroadcast,
+  };
 
   return (
     <ContextMenuProvider>
@@ -338,7 +333,13 @@ export const DesignLabAppSidebar: React.FC = () => {
           data-testid="design-lab-sidebar-scroll"
           aria-label="Component navigation"
         >
-          {navContent}
+          {activeLayer === "foundations" && <FoundationsNav {...navProps} />}
+          {activeLayer === "primitives" && <PrimitivesNav {...navProps} />}
+          {activeLayer === "components" && <ComponentsNav {...navProps} />}
+          {activeLayer === "patterns" && <PatternsNav {...navProps} />}
+          {activeLayer === "apis" && <ApisNav {...navProps} />}
+          {activeLayer === "recipes" && <FamilyNav layer="recipes" {...navProps} />}
+          {activeLayer === "ecosystem" && <FamilyNav layer="ecosystem" {...navProps} />}
         </nav>
     </aside>
     </HoverPreviewProvider>
@@ -693,7 +694,7 @@ function ScrollableNavItem({
   return (
     <div
       ref={ref}
-      className="group scroll-mt-4 relative"
+      className="group scroll-mt-4"
       onContextMenu={handleContextMenu}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={cancelShow}
@@ -702,23 +703,27 @@ function ScrollableNavItem({
         label={label}
         active={active}
         badge={badge}
+        action={
+          onPin ? (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onPin(); }}
+              className={`
+                shrink-0 p-0.5 rounded transition-all cursor-pointer
+                ${pinned
+                  ? "text-state-warning-text opacity-100"
+                  : "text-text-tertiary opacity-0 group-hover:opacity-100 hover:text-state-warning-text"
+                }
+              `}
+              aria-label={pinned ? `Unpin ${label}` : `Pin ${label}`}
+              title={pinned ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Star className={`h-3 w-3 ${pinned ? "fill-current" : ""}`} />
+            </button>
+          ) : undefined
+        }
         onClick={onClick}
       />
-      {/* Quick actions — appear on hover */}
-      {onPin && (
-        <div className="absolute right-1 top-1/2 -translate-y-1/2">
-          <SidebarQuickActions
-            name={label}
-            isPinned={pinned ?? false}
-            onCopyImport={() =>
-              navigator.clipboard.writeText(
-                `import { ${label} } from '@mfe/design-system';`,
-              )
-            }
-            onTogglePin={onPin}
-          />
-        </div>
-      )}
     </div>
   );
 }
@@ -749,29 +754,15 @@ function LifecycleBadge({ lifecycle }: { lifecycle?: string }) {
 function SidebarGroup({
   label,
   defaultOpen = true,
-  broadcastVersion,
-  broadcastOpen,
   action,
   children,
 }: {
   label: string;
   defaultOpen?: boolean;
-  broadcastVersion?: number;
-  broadcastOpen?: boolean;
   action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
-  const lastBroadcastRef = useRef(0);
-
-  // When broadcast version changes, sync local state then let user control individually
-  useEffect(() => {
-    if (broadcastVersion != null && broadcastVersion > lastBroadcastRef.current) {
-      lastBroadcastRef.current = broadcastVersion;
-      setOpen(broadcastOpen ?? true);
-    }
-  }, [broadcastVersion, broadcastOpen]);
-
   const isOpen = open;
 
   return (
@@ -809,22 +800,26 @@ function SidebarNavButton({
   label,
   active,
   badge,
+  action,
   onClick,
 }: {
   label: string;
   active: boolean;
   badge?: React.ReactNode;
+  action?: React.ReactNode;
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick(); } }}
       data-sidebar-item=""
       aria-current={active ? "page" : undefined}
       className={`
-        flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5
-        text-[13px] transition-colors cursor-pointer text-left
+        flex w-full items-center gap-2 rounded-md px-2 py-1.5
+        text-[13px] transition-colors cursor-pointer text-left select-none
         ${
           active
             ? "bg-action-primary/10 text-action-primary font-medium border-l-2 border-action-primary"
@@ -832,9 +827,10 @@ function SidebarNavButton({
         }
       `}
     >
-      <span className="truncate">{label}</span>
-      {badge}
-    </button>
+      <span className="truncate flex-1">{label}</span>
+      <span className="shrink-0 ml-auto">{badge}</span>
+      {action}
+    </div>
   );
 }
 
