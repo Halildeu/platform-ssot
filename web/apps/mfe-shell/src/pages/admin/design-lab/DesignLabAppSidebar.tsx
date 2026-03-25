@@ -127,6 +127,7 @@ export const DesignLabAppSidebar: React.FC = () => {
   const { recents, track: trackRecent } = useSidebarRecents();
   const groupState = useSidebarGroupState(activeLayer);
   const { filters, setFilters, matches: filterMatches } = useFilterState();
+  const [allGroupsOpen, setAllGroupsOpen] = useState<boolean | null>(null); // null = use individual state
 
   /* All searchable items for fuzzy search */
   const searchableItems = useMemo(() => {
@@ -206,7 +207,7 @@ export const DesignLabAppSidebar: React.FC = () => {
       case "primitives":
         return <PrimitivesNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
       case "components":
-        return <ComponentsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} groupState={groupState} filterMatches={filterMatches} />;
+        return <ComponentsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} groupState={groupState} filterMatches={filterMatches} allGroupsOpen={allGroupsOpen} />;
       case "patterns":
         return <PatternsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
       case "apis":
@@ -229,10 +230,12 @@ export const DesignLabAppSidebar: React.FC = () => {
         </div>
 
         {/* Health Banner */}
-        <SidebarHealthBanner />
+        <div className="shrink-0">
+          <SidebarHealthBanner />
+        </div>
 
-        {/* Layer tabs — icon pills (outside AppSidebar.Header since Header ignores children) */}
-        <div className="border-b border-border-subtle p-2">
+        {/* Layer tabs — icon pills */}
+        <div className="shrink-0 border-b border-border-subtle p-2">
           <div className="flex gap-1">
             {LAYER_IDS.map((id) => (
               <button
@@ -255,7 +258,7 @@ export const DesignLabAppSidebar: React.FC = () => {
         </div>
 
         {/* Title + count + expand/collapse controls */}
-        <div className="border-b border-border-subtle px-3 py-2">
+        <div className="shrink-0 border-b border-border-subtle px-3 py-2">
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0">
               <Text as="div" className="text-sm font-semibold leading-tight text-text-primary">
@@ -266,14 +269,23 @@ export const DesignLabAppSidebar: React.FC = () => {
               </Text>
             </div>
             <div className="flex items-center gap-0.5 shrink-0">
-              <IconButton icon={<ChevronDown className="h-3.5 w-3.5" />} label="Expand all" size="sm" variant="ghost" onClick={groupState.expandAll} />
+              <button
+                type="button"
+                onClick={() => setAllGroupsOpen(allGroupsOpen === true ? false : true)}
+                className="p-1 rounded hover:bg-surface-canvas text-text-tertiary hover:text-text-primary transition-colors cursor-pointer"
+                title={allGroupsOpen === false ? "Expand all groups" : "Collapse all groups"}
+              >
+                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${allGroupsOpen === false ? "" : "rotate-180"}`} />
+              </button>
               <IconButton icon={<CircleHelp className="h-3.5 w-3.5" />} label="Help" size="sm" variant="ghost" />
             </div>
           </div>
         </div>
 
         {/* Breadcrumb */}
-        <SidebarBreadcrumb />
+        <div className="shrink-0">
+          <SidebarBreadcrumb />
+        </div>
 
         {/* Enhanced Search */}
         <SidebarSearchEnhanced
@@ -281,29 +293,31 @@ export const DesignLabAppSidebar: React.FC = () => {
           onChange={fuzzy.setQuery}
           placeholder={t(`designlab.sidebar.search.${activeLayer}.placeholder`)}
           scopeLabel={layerTitle}
-          className="py-1"
+          className="shrink-0 py-1"
         />
 
         {/* Filter Chips */}
         {["components", "primitives", "patterns", "apis"].includes(activeLayer) && (
-          <SidebarFilterBar activeFilters={filters} onChange={setFilters} />
+          <div className="shrink-0">
+            <SidebarFilterBar activeFilters={filters} onChange={setFilters} />
+          </div>
         )}
 
-        {/* Favorites */}
-        {favorites.length > 0 && !fuzzy.isSearching && (
-          <>
-            <SidebarFavorites />
-            <SidebarDivider />
-          </>
-        )}
-
-        {/* Recently Viewed */}
-        {recents.length > 0 && !fuzzy.isSearching && (
-          <>
-            <SidebarRecentlyViewed />
-            <SidebarDivider />
-          </>
-        )}
+        {/* Favorites + Recently Viewed — collapsible, shrink-0 */}
+        <div className="shrink-0">
+          {favorites.length > 0 && !fuzzy.isSearching && (
+            <>
+              <SidebarFavorites />
+              <SidebarDivider />
+            </>
+          )}
+          {recents.length > 0 && !fuzzy.isSearching && (
+            <>
+              <SidebarRecentlyViewed />
+              <SidebarDivider />
+            </>
+          )}
+        </div>
 
         {/* Layer content — scrollable */}
         <nav
@@ -333,6 +347,7 @@ interface LayerNavProps {
   onToggleFavorite?: (item: { name: string; layer: string; path: string }) => void;
   groupState?: ReturnType<typeof useSidebarGroupState>;
   filterMatches?: (item: { lifecycle?: string; demoMode?: string }) => boolean;
+  allGroupsOpen?: boolean | null;
 }
 
 /* ---- Foundations ---- */
@@ -415,7 +430,7 @@ function PrimitivesNav({ activeItem, query, searchValue, onItemSelect, getHighli
 
 /* ---- Components (grouped by taxonomy) ---- */
 
-function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite, groupState, filterMatches }: LayerNavProps) {
+function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite, groupState, filterMatches, allGroupsOpen }: LayerNavProps) {
   const { index, taxonomy } = useDesignLab();
 
   const groups = useMemo(() => {
@@ -455,6 +470,7 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
           key={group.id}
           label={`${group.label} (${stableItems}/${totalItems})`}
           defaultOpen={groupState?.isOpen(group.id) ?? true}
+          forceOpen={allGroupsOpen}
         >
           {group.subgroups.flatMap((sg) =>
             sg.items.map((itemName) => {
@@ -719,27 +735,31 @@ function LifecycleBadge({ lifecycle }: { lifecycle?: string }) {
 function SidebarGroup({
   label,
   defaultOpen = true,
+  forceOpen,
   action,
   children,
 }: {
   label: string;
   defaultOpen?: boolean;
+  forceOpen?: boolean | null;
   action?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(defaultOpen);
+  // forceOpen overrides local state when not null
+  const isOpen = forceOpen != null ? forceOpen : open;
 
   return (
     <div className="mb-1" role="group" aria-label={label}>
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => { setOpen(!isOpen); }}
         className="flex w-full items-center justify-between gap-1 rounded-md px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:bg-surface-canvas transition-colors cursor-pointer"
-        aria-expanded={open}
+        aria-expanded={isOpen}
       >
         <div className="flex items-center gap-1.5 min-w-0">
           <svg
-            className={`w-3 h-3 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+            className={`w-3 h-3 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -751,11 +771,11 @@ function SidebarGroup({
         </div>
         {action && <div className="shrink-0" onClick={(e) => e.stopPropagation()}>{action}</div>}
       </button>
-      {open && (
+      <div className={`overflow-hidden transition-all duration-200 ${isOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"}`}>
         <div className="pl-1 space-y-px mt-0.5">
           {children}
         </div>
-      )}
+      </div>
     </div>
   );
 }
