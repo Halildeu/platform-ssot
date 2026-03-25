@@ -1845,6 +1845,132 @@ check('dark-visual-risks', 'Visual patterns that commonly break in dark mode', (
   };
 });
 
+// 58. HC/Dark Invisible Token Pairs — text+bg with same lightness (invisible content)
+check('invisible-token-pairs', 'Token pairs where text is invisible on its background (all modes)', () => {
+  const themeCss = readSafe(THEME_CSS);
+
+  /* Parse all mode blocks and extract OKLCH L values */
+  function extractBlock(css, startMarker) {
+    const idx = css.indexOf(startMarker);
+    if (idx === -1) return '';
+    const braceStart = css.indexOf('{', idx);
+    let depth = 1, i = braceStart + 1;
+    while (i < css.length && depth > 0) { if (css[i] === '{') depth++; if (css[i] === '}') depth--; i++; }
+    return css.substring(braceStart + 1, i - 1);
+  }
+
+  function getLValues(block) {
+    const map = new Map();
+    for (const m of block.matchAll(/--([\w-]+)\s*:\s*oklch\(([^)]+)\)/g)) {
+      const val = m[2].trim();
+      /* Skip opacity-modified colors like "61% 0.2 26 / 12%" — effective color differs */
+      if (val.includes('/')) continue;
+      const lMatch = val.match(/^([\d.]+)%/);
+      if (lMatch) map.set(m[1], parseFloat(lMatch[1]));
+    }
+    return map;
+  }
+
+  const modes = [
+    { name: 'light', block: extractBlock(themeCss, ':root {') || extractBlock(themeCss, ':root{') },
+    { name: 'dark', block: extractBlock(themeCss, '[data-mode="dark"]') },
+    { name: 'HC', block: extractBlock(themeCss, 'serban-hc') },
+  ];
+
+  /* Text → Background pairs to check */
+  const pairDefs = [
+    { text: 'text-primary', bgs: ['surface-default-bg', 'surface-raised-bg', 'surface-muted-bg'] },
+    { text: 'text-secondary', bgs: ['surface-default-bg'] },
+    { text: 'text-subtle', bgs: ['surface-default-bg'] },
+    { text: 'text-inverse', bgs: ['action-primary-bg', 'surface-overlay-bg'] },
+    { text: 'action-primary-text', bgs: ['action-primary-bg'] },
+    { text: 'action-secondary-text', bgs: ['action-secondary-bg'] },
+    { text: 'action-ghost-text', bgs: ['surface-default-bg'] },
+    { text: 'state-danger-text', bgs: ['surface-default-bg', 'state-danger-bg'] },
+    { text: 'state-success-text', bgs: ['surface-default-bg', 'state-success-bg'] },
+    { text: 'state-warning-text', bgs: ['surface-default-bg', 'state-warning-bg'] },
+    { text: 'state-info-text', bgs: ['surface-default-bg', 'state-info-bg'] },
+    { text: 'data-table-header-text', bgs: ['data-table-header-bg'] },
+  ];
+
+  const invisible = [];
+  for (const mode of modes) {
+    const vals = getLValues(mode.block);
+    for (const pair of pairDefs) {
+      const textL = vals.get(pair.text);
+      if (textL === undefined) continue;
+      for (const bgName of pair.bgs) {
+        const bgL = vals.get(bgName);
+        if (bgL === undefined) continue;
+        const diff = Math.abs(textL - bgL);
+        /* If lightness difference < 5%, text is effectively invisible */
+        if (diff < 5) {
+          invisible.push({
+            mode: mode.name,
+            text: `--${pair.text} (L=${textL}%)`,
+            bg: `--${bgName} (L=${bgL}%)`,
+            diff: `ΔL=${diff.toFixed(1)}%`,
+          });
+        }
+      }
+    }
+  }
+
+  if (invisible.length === 0) {
+    return { status: 'pass', message: `All text/bg token pairs have sufficient lightness difference across ${modes.length} modes` };
+  }
+  return {
+    status: 'fail',
+    message: `${invisible.length} invisible text/bg pairs (ΔL < 5%) — content will be unreadable`,
+    details: invisible.slice(0, 10).map(p => `[${p.mode}] ${p.text} on ${p.bg} — ${p.diff}`),
+    fix: FIX_HINT ? 'Ensure text and background tokens have ΔL > 30% for readability. HC mode: use white text on black bg, or yellow accent on black.' : undefined,
+  };
+});
+
+// 59. HC Token Completeness — all semantic tokens must have HC overrides
+check('hc-token-completeness', 'HC theme has overrides for all semantic color tokens', () => {
+  const themeCss = readSafe(THEME_CSS);
+
+  /* Extract light :root tokens */
+  const rootBlock = themeCss.split('[data-mode=')[0] || '';
+  const lightTokens = new Set();
+  for (const m of rootBlock.matchAll(/--((?:surface|text|action|border|state|accent|selection|focus|data-table|interactive|elevation)[a-z0-9-]*)\s*:\s*oklch/g)) {
+    lightTokens.add(m[1]);
+  }
+
+  /* Extract HC tokens */
+  const hcIdx = themeCss.indexOf('serban-hc');
+  let hcTokens = new Set();
+  if (hcIdx !== -1) {
+    const braceStart = themeCss.indexOf('{', hcIdx);
+    let depth = 1, i = braceStart + 1;
+    while (i < themeCss.length && depth > 0) { if (themeCss[i] === '{') depth++; if (themeCss[i] === '}') depth--; i++; }
+    const hcBlock = themeCss.substring(braceStart + 1, i - 1);
+    for (const m of hcBlock.matchAll(/--([\w-]+)\s*:/g)) hcTokens.add(m[1]);
+  }
+
+  const missing = [...lightTokens].filter(t => !hcTokens.has(t));
+
+  /* Categorize */
+  const categories = {};
+  for (const t of missing) {
+    const cat = t.split('-')[0];
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push(t);
+  }
+
+  if (missing.length === 0) {
+    return { status: 'pass', message: `HC theme covers all ${lightTokens.size} semantic color tokens` };
+  }
+  const catSummary = Object.entries(categories).sort((a, b) => b[1].length - a[1].length).map(([c, v]) => `${c}: ${v.length}`);
+  return {
+    status: missing.length > 10 ? 'warn' : 'pass',
+    message: `${missing.length}/${lightTokens.size} semantic tokens missing from HC theme`,
+    details: [`Categories: ${catSummary.join(', ')}`, ...missing.slice(0, 8).map(t => `--${t}`)],
+    fix: FIX_HINT ? 'Add HC overrides: surfaces→black/near-black, text→white, borders→white, accents→yellow, states→high-chroma' : undefined,
+  };
+});
+
 /* ================================================================== */
 /*  TOKEN QUALITY & CONSISTENCY CHECKS (#44–57)                        */
 /* ================================================================== */
@@ -2376,7 +2502,7 @@ check('responsive-consistency', 'Responsive breakpoint usage patterns across com
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '5.0.0',
+    version: '5.1.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -2385,7 +2511,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log(`║         🩺 Theme Doctor v5.0 (${results.length} checks)                ║`);
+  console.log(`║         🩺 Theme Doctor v5.1 (${results.length} checks)                ║`);
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 
