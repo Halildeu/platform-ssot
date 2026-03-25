@@ -217,7 +217,7 @@ export const DesignLabAppSidebar: React.FC = () => {
       case "ecosystem":
         return <FamilyNav layer="ecosystem" activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
     }
-  }, [activeLayer, activeItem, fuzzy.query, fuzzy.isSearching, handleItemSelect, getHighlightRanges, isFavorite, toggleFavorite, groupState, filterMatches]);
+  }, [activeLayer, activeItem, fuzzy.query, fuzzy.isSearching, handleItemSelect, getHighlightRanges, isFavorite, toggleFavorite, groupState, filterMatches, allGroupsOpen]);
 
   return (
     <ContextMenuProvider>
@@ -268,14 +268,32 @@ export const DesignLabAppSidebar: React.FC = () => {
                 {layerItemCount} items
               </Text>
             </div>
-            <div className="flex items-center gap-0.5 shrink-0">
+            <div className="flex items-center gap-1 shrink-0">
+              {/* Expand All */}
               <button
                 type="button"
-                onClick={() => setAllGroupsOpen(allGroupsOpen === true ? false : true)}
-                className="p-1 rounded hover:bg-surface-canvas text-text-tertiary hover:text-text-primary transition-colors cursor-pointer"
-                title={allGroupsOpen === false ? "Expand all groups" : "Collapse all groups"}
+                onClick={() => setAllGroupsOpen(true)}
+                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === true ? "bg-surface-canvas text-text-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
+                title="Expand all groups"
+                aria-label="Expand all groups"
               >
-                <ChevronDown className={`h-3.5 w-3.5 transition-transform ${allGroupsOpen === false ? "" : "rotate-180"}`} />
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path d="m7 15 5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="m7 9 5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              {/* Collapse All */}
+              <button
+                type="button"
+                onClick={() => setAllGroupsOpen(false)}
+                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === false ? "bg-surface-canvas text-text-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
+                title="Collapse all groups"
+                aria-label="Collapse all groups"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path d="m17 9-5 5-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="m17 15-5 5-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </button>
               <IconButton icon={<CircleHelp className="h-3.5 w-3.5" />} label="Help" size="sm" variant="ghost" />
             </div>
@@ -753,7 +771,7 @@ function SidebarGroup({
     <div className="mb-1" role="group" aria-label={label}>
       <button
         type="button"
-        onClick={() => { setOpen(!isOpen); }}
+        onClick={() => { setOpen(!isOpen); if (forceOpen != null) setOpen(!forceOpen); }}
         className="flex w-full items-center justify-between gap-1 rounded-md px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:bg-surface-canvas transition-colors cursor-pointer"
         aria-expanded={isOpen}
       >
