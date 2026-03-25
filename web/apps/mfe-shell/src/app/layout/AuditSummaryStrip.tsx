@@ -155,7 +155,7 @@ export const AuditSummaryStrip: React.FC = () => {
         gateReason: 'Audit özeti aktif. Ayrıntılı filtreler için audit ekranını açabilirsiniz.',
         lastFetchedAt: new Date().toISOString(),
       });
-    } catch (error) {
+    } catch (error: unknown) {
       setState({
         ...initialState,
         status: 'error',

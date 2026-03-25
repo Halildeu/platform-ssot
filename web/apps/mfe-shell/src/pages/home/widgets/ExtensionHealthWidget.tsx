@@ -25,7 +25,7 @@ export const ExtensionHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ on
       const json = await res.json();
       setExtensions(json.items || []);
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed");
     }
   }, []);

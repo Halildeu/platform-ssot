@@ -32,7 +32,7 @@ export const MultiRepoHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ on
       const json = await res.json();
       setRepos(json.entries || json.repos || []);
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed");
     }
   }, []);

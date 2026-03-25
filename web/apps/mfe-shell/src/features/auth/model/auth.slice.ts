@@ -162,7 +162,7 @@ export const loginUser = createAsyncThunk(
       }
 
       return { ...data, profile, authzSnapshot };
-    } catch (error) {
+    } catch (error: unknown) {
       if (isAxiosError(error)) {
         const payload = error.response?.data as { message?: string };
         return rejectWithValue(payload?.message || 'Giriş başarısız oldu');
@@ -179,7 +179,7 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await api.post('/users/public/register', userData);
       return response.data;
-    } catch (error) {
+    } catch (error: unknown) {
       if (isAxiosError(error)) {
         const payload = error.response?.data as { message?: string };
         return rejectWithValue(payload?.message || 'Kayıt başarısız oldu.');

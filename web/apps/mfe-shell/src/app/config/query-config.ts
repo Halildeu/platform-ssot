@@ -3,6 +3,12 @@
 /* ------------------------------------------------------------------ */
 
 import { QueryClient, QueryCache } from "@tanstack/react-query";
+
+declare global {
+  interface Window {
+    __queryErrorHandler?: (message: string, queryKey: unknown) => void;
+  }
+}
 import { readEnv } from "./env";
 
 export const shouldShowQueryDevtools =
@@ -16,6 +22,12 @@ export const queryClient = new QueryClient({
       if (query.meta?.skipGlobalError) return;
       if (process.env.NODE_ENV !== "production") {
         console.error("[QueryCache]", error);
+      }
+      // Global error notification for users
+      const message =
+        error instanceof Error ? error.message : "Bir hata oluştu";
+      if (typeof window !== "undefined" && window.__queryErrorHandler) {
+        window.__queryErrorHandler(message, query.queryKey);
       }
     },
   }),

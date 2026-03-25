@@ -25,7 +25,7 @@ if (isEnabled('x-charts-dashboard')) {
     SparklineChart = xCharts.SparklineChart;
     ChartContainer = xCharts.ChartContainer;
     ChartLegend = xCharts.ChartLegend;
-  } catch (e) {
+  } catch (e: unknown) {
     console.warn('[X-Suite] x-charts not available:', e);
   }
 }
@@ -35,7 +35,7 @@ if (isEnabled('x-data-grid')) {
     const xGrid = require('@mfe/x-data-grid');
     DataGridFilterChips = xGrid.DataGridFilterChips;
     DataGridSelectionBar = xGrid.DataGridSelectionBar;
-  } catch (e) {
+  } catch (e: unknown) {
     console.warn('[X-Suite] x-data-grid not available:', e);
   }
 }
@@ -44,7 +44,7 @@ if (isEnabled('x-editor-tiptap')) {
   try {
     const xEditor = require('@mfe/x-editor');
     RichTextEditor = xEditor.RichTextEditor;
-  } catch (e) {
+  } catch (e: unknown) {
     console.warn('[X-Suite] x-editor not available:', e);
   }
 }
@@ -53,7 +53,7 @@ if (isEnabled('x-form-builder')) {
   try {
     const xFormBuilder = require('@mfe/x-form-builder');
     FormRenderer = xFormBuilder.FormRenderer;
-  } catch (e) {
+  } catch (e: unknown) {
     console.warn('[X-Suite] x-form-builder not available:', e);
   }
 }

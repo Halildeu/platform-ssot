@@ -193,7 +193,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
           };
           const res: GridResponse<TRow> = await module.fetchRows(filters, req);
           params.success({ rowData: res.rows, rowCount: res.total });
-        } catch (error) {
+        } catch (error: unknown) {
           params.fail?.();
           const messageText = error instanceof Error ? error.message : 'Veriler yüklenemedi.';
           showToast('error', messageText);
@@ -276,7 +276,7 @@ export function ReportPage<TFilters extends Record<string, unknown>, TRow>({ mod
       document.body.removeChild(anchor);
       window.URL.revokeObjectURL(objectUrl);
       showToast('success', 'Export indirilmeye basladi.');
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Export baslatilamadi.';
       showToast('error', message);
     } finally {

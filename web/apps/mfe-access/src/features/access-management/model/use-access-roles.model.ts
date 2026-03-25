@@ -74,8 +74,8 @@ export const useAccessRoles = (filters: AccessFilters) => {
       return;
     }
     if (rolesQuery.status === 'error') {
-      console.warn('[useAccessRoles] Role listesi alınamadı, mock veri kullanılıyor.', rolesQuery.error);
-      setData(mockAccessRoles);
+      if (process.env.NODE_ENV !== 'production') console.warn('[useAccessRoles] Role listesi alınamadı.', rolesQuery.error);
+      /* Error state — let component render error UI instead of silent mock */
     }
   }, [rolesQuery.data, rolesQuery.error, rolesQuery.status]);
 
@@ -83,9 +83,9 @@ export const useAccessRoles = (filters: AccessFilters) => {
     async (id: string) => {
       try {
         return await queryClient.ensureQueryData(['role', id], () => getRole(id));
-      } catch (error) {
-        console.warn('[useAccessRoles] Role detayı alınamadı, mock veri kullanılıyor.', error);
-        return mockAccessRoles.find((role) => role.id === id) ?? null;
+      } catch (error: unknown) {
+        if (process.env.NODE_ENV !== 'production') console.warn('[useAccessRoles] Role detayı alınamadı.', error);
+        throw error; /* Propagate to React Query error state */
       }
     },
     [queryClient],
@@ -152,7 +152,7 @@ export const useAccessRoles = (filters: AccessFilters) => {
         const cloned = await roleCloneMutation.mutateAsync(payload);
         await queryClient.invalidateQueries({ queryKey: ['roles'] });
         return { role: cloned.role, auditId: cloned.auditId ?? cloned.role.id };
-      } catch (error) {
+      } catch (error: unknown) {
         console.warn('[useAccessRoles] Role klonlama başarısız, mock fallback.', error);
         const source = data.find((role) => role.id === payload.sourceRoleId);
         if (!source) {

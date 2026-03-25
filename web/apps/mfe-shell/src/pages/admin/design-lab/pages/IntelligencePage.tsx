@@ -102,7 +102,7 @@ function CodegenSandboxSection() {
       const props = JSON.parse(propsJson);
       const gen = generate(componentName.trim(), props);
       setResult(gen);
-    } catch (e) {
+    } catch (e: unknown) {
       setError("Props JSON gecersiz. Ornek: {\"variant\": \"primary\"}");
       setResult(null);
     }

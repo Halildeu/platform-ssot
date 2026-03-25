@@ -78,7 +78,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
         return {};
       }
       return parsed as { companyId?: string | number; projectId?: string | number; warehouseId?: string | number };
-    } catch (error) {
+    } catch (error: unknown) {
       console.warn('Scope bilgisi okunamadı', error);
       return {};
     }
@@ -189,7 +189,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
     try {
       await updateRoleMutation.mutateAsync({ userId: user.id, role });
       pushToast('success', t('users.detail.roleUpdated'));
-    } catch (error) {
+    } catch (error: unknown) {
       pushToast('error', (error as Error).message);
     }
   };
@@ -225,7 +225,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
           t('users.detail.modulePermission.updated').replace('{module}', moduleName),
         );
       }
-    } catch (error) {
+    } catch (error: unknown) {
       pushToast('error', (error as Error).message);
     } finally {
       setUpdatingModuleKey(null);
@@ -357,7 +357,7 @@ const UserDetailDrawer: React.FC<UserDetailDrawerProps> = ({ open, onClose, user
                             openInCenter: true,
                           }
                           : undefined);
-                      } catch (error) {
+                      } catch (error: unknown) {
                         pushToast('error', (error as Error).message);
                       }
                     }}

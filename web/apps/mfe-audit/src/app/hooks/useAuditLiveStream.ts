@@ -104,7 +104,7 @@ export const useAuditLiveStream = (enabled: boolean, handlers: LiveStreamHandler
         const normalised = normaliseAuditEvent(payload);
         handlers.onEvent?.(normalised);
         stopFallback();
-      } catch (error) {
+      } catch (error: unknown) {
         console.warn('Failed to parse audit live event', error);
         handlers.onFallbackTick?.();
       }
@@ -159,7 +159,7 @@ export const useAuditLiveStream = (enabled: boolean, handlers: LiveStreamHandler
           processEventPayload(buffer);
         }
         throw new Error('Audit live stream closed unexpectedly.');
-      } catch (error) {
+      } catch (error: unknown) {
         if (controller.signal.aborted) {
           return;
         }

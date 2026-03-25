@@ -82,7 +82,7 @@ export const AuditEventFeed: React.FC = () => {
   const shellServices = useMemo<RemoteShellServices | null>(() => {
     try {
       return getShellServices();
-    } catch (error) {
+    } catch (error: unknown) {
       if (process.env.NODE_ENV !== 'production') {
         console.warn('[audit] Shell servisleri hazır değil, noop kullanılacak.', error);
       }
@@ -109,7 +109,7 @@ export const AuditEventFeed: React.FC = () => {
       }
       try {
         shellServices?.telemetry?.emit({ type, payload });
-      } catch (error) {
+      } catch (error: unknown) {
         if (process.env.NODE_ENV !== 'production') {
           console.warn('[audit] Telemetry emit failed', error);
         }
@@ -166,7 +166,7 @@ export const AuditEventFeed: React.FC = () => {
             });
           }
         }
-      } catch (error) {
+      } catch (error: unknown) {
         console.error('Audit events fetch failed', error);
         failCallback();
         emitTelemetry('fe.audit.grid_fetch_failed', {
@@ -364,7 +364,7 @@ export const AuditEventFeed: React.FC = () => {
         jobId: resolvedJob.id,
         eventCount: resolvedJob.eventCount,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Audit export failed', error);
       setExportError(error instanceof Error ? error.message : 'Audit export failed');
       emitTelemetry('fe.audit.export_failed', {

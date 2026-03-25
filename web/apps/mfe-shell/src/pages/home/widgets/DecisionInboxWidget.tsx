@@ -22,7 +22,7 @@ export const DecisionInboxWidget: React.FC<{ onRefresh?: () => void }> = ({ onRe
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setData(await res.json());
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed");
     }
   }, []);

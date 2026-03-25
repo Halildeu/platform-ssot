@@ -25,7 +25,7 @@ async function fetchAppPermissions(token: string): Promise<string[]> {
     });
     const data = res.data as { permissions?: string[] };
     return Array.isArray(data?.permissions) ? data.permissions : [];
-  } catch (err) {
+  } catch (err: unknown) {
     console.warn("AuthBootstrapper: /v1/authz/me failed, falling back to JWT roles", err);
     return [];
   }
@@ -154,7 +154,7 @@ export const AuthBootstrapper: React.FC<{ children: React.ReactNode }> = ({
             dispatch(setKeycloakSession({ token: null }));
           }
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('[AuthBootstrapper] keycloak.init() failed:', err);
         if (mounted && !tokenRef.current) {
           dispatch(setKeycloakSession({ token: null }));

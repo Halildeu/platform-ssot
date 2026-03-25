@@ -15,7 +15,7 @@ const safeParse = <T,>(raw: string | null, fallback: T): T => {
   if (!raw) return fallback;
   try {
     return JSON.parse(raw) as T;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('[access-variants] JSON parse başarısız, fallback kullanılacak.', error);
     return fallback;
   }

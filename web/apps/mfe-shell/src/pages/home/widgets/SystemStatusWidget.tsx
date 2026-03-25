@@ -27,7 +27,7 @@ export const SystemStatusWidget: React.FC<{ onRefresh?: () => void }> = ({ onRef
       const payload = json.data || json;
       setData(payload);
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed");
     }
   }, []);

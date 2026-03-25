@@ -625,7 +625,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
             });
             const batch = inFlight.get(key) ?? [];
             batch.forEach((p) => ssrmSuccessFor(p, items, total));
-          } catch (error) {
+          } catch (error: unknown) {
             if (process.env.NODE_ENV !== 'production') {
               console.error('Kullanıcılar yüklenirken hata oluştu', error);
             }
@@ -689,7 +689,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       }
       setGridState('idle');
       setClientRows(response.items ?? []);
-    } catch (error) {
+    } catch (error: unknown) {
       if (process.env.NODE_ENV !== 'production') {
         console.error('Kullanıcılar yüklenirken hata oluştu (client mode)', error);
       }
@@ -731,7 +731,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       }
 
       setGridState('idle');
-    } catch (error) {
+    } catch (error: unknown) {
       setGridState('network-error');
       notifyOnce('network-error', 'error', error instanceof Error ? error.message : 'Kullanıcı listesi alınamadı. Lütfen bağlantınızı kontrol edin.');
     } finally {

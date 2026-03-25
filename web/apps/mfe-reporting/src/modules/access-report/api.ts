@@ -123,7 +123,7 @@ export const fetchAccessReport = async (
       rows: sortedRows,
       total: filteredRows.length,
     };
-  } catch (error) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const response = error as AxiosError<ErrorResponse>;
       const status = response.response?.status;

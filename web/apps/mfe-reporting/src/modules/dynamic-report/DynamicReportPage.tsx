@@ -134,7 +134,7 @@ export const DynamicReportPage: React.FC<DynamicReportPageProps> = ({ module, re
           };
           const res: GridResponse<DynamicReportRow> = await module.fetchRows(filters, req);
           params.success({ rowData: res.rows, rowCount: res.total });
-        } catch (error) {
+        } catch (error: unknown) {
           params.fail?.();
           const messageText =
             error instanceof Error ? error.message : 'Veriler yüklenemedi.';
@@ -161,7 +161,7 @@ export const DynamicReportPage: React.FC<DynamicReportPageProps> = ({ module, re
       document.body.removeChild(anchor);
       window.URL.revokeObjectURL(objectUrl);
       showToast('success', 'Export indirilmeye başladı.');
-    } catch (error) {
+    } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Export başlatılamadı.';
       showToast('error', message);
     } finally {

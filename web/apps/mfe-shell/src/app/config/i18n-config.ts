@@ -53,7 +53,7 @@ configureI18n({
         type: "i18n_fallback",
         payload: info,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       if (
         typeof process !== "undefined" &&
         process.env.NODE_ENV !== "production"
@@ -90,7 +90,7 @@ configureI18n({
         },
       };
       void trackAction(event);
-    } catch (error) {
+    } catch (error: unknown) {
       if (
         typeof process !== "undefined" &&
         process.env.NODE_ENV !== "production"

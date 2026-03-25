@@ -57,7 +57,7 @@ export const ContextHealthWidget: React.FC<{ onRefresh?: () => void }> = ({ onRe
       setHealth(data);
       setError(null);
       setLastUpdate(new Date().toLocaleTimeString("tr-TR"));
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Connection failed");
     }
   }, []);

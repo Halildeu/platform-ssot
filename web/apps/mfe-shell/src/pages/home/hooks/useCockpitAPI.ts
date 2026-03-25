@@ -87,7 +87,7 @@ export function useCockpitAPI() {
     try {
       const data = await fetchJSON<T>(path);
       return data;
-    } catch (err) {
+    } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Unknown error";
       setErrors((p) => ({ ...p, [key]: msg }));
       return null;

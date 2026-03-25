@@ -34,7 +34,7 @@ export const createLazyRemoteModule = (
   React.lazy(async () => {
     try {
       return await loader();
-    } catch (error) {
+    } catch (error: unknown) {
       if (process.env.NODE_ENV !== "production") {
         console.warn(`[shell] ${label} remote yuklenemedi`, error);
       }

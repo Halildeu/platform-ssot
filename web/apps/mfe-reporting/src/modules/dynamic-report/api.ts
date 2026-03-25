@@ -100,7 +100,7 @@ export const fetchReportData = async (
       rows: items,
       total: typeof data?.total === 'number' ? data.total : items.length,
     };
-  } catch (error) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       const response = error as AxiosError<ErrorResponse>;
       const status = response.response?.status;

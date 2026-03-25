@@ -46,7 +46,7 @@ const notifyListeners = (payload: AuthSyncPayload) => {
   listeners.forEach((listener) => {
     try {
       listener(payload);
-        } catch (error) {
+        } catch (error: unknown) {
           if (process.env.NODE_ENV !== 'production') {
             console.warn('[auth-sync] listener error', error);
           }
@@ -209,7 +209,7 @@ export const subscribeAuthState = (listener: AuthSyncListener): (() => void) => 
   if (lastPayload) {
     try {
       listener(lastPayload);
-      } catch (error) {
+      } catch (error: unknown) {
         if (process.env.NODE_ENV !== 'production') {
           console.warn('[auth-sync] immediate listener error', error);
         }

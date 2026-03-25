@@ -59,7 +59,7 @@ async function checkRemoteHealth(name: string, url: string): Promise<RemoteHealt
       lastCheck: new Date().toISOString(),
       latency,
     };
-  } catch (err) {
+  } catch (err: unknown) {
     clearTimeout(timer);
     return {
       name,

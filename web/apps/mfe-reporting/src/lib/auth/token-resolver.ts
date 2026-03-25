@@ -10,7 +10,7 @@ export const getResolvedToken = (): string | null => {
   try {
     const token = resolveToken();
     return token ?? null;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('Token resolver çalıştırılamadı:', error);
     return null;
   }

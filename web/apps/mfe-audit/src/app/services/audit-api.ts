@@ -158,7 +158,7 @@ export async function fetchAuditEvents(params: FetchAuditEventsParams): Promise<
       page: typeof payload.page === 'number' ? payload.page : params.page,
       fallback: false,
     };
-  } catch (error) {
+  } catch (error: unknown) {
     if (process.env.NODE_ENV !== 'production') {
       console.warn('[audit] Falling back to mock audit events', error);
     }

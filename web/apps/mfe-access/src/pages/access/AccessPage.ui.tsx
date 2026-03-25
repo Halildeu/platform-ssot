@@ -61,7 +61,7 @@ const AccessPage: React.FC = () => {
   const shellServices = React.useMemo(() => {
     try {
       return getShellServices();
-    } catch (error) {
+    } catch (error: unknown) {
       if (isRuntimeDev()) {
         console.debug('[mfe-access] Shell servislerine erişilemedi:', error);
       }
@@ -376,7 +376,7 @@ const AccessPage: React.FC = () => {
               roleId,
               permissionCount: permissionIds.length,
             });
-          } catch (error) {
+          } catch (error: unknown) {
             const durationMs = performance.now() - startedAt;
             emitMutationTelemetry('update_role_permissions', 'error', durationMs, undefined, { roleId });
             throw error;
@@ -432,7 +432,7 @@ const AccessPage: React.FC = () => {
                 roleId: result.role.id,
               },
             });
-          } catch (error) {
+          } catch (error: unknown) {
             const errorMessage =
               error instanceof Error ? error.message : t('access.notifications.cloneError');
             showToast('error', errorMessage);

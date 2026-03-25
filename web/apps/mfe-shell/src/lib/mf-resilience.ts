@@ -76,7 +76,7 @@ async function fetchWithTimeout(url: string, timeoutMs: number): Promise<Respons
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     return res;
-  } catch (err) {
+  } catch (err: unknown) {
     clearTimeout(timer);
     throw err;
   }
@@ -87,7 +87,7 @@ async function retryAsync<T>(fn: () => Promise<T>, retries: number): Promise<T> 
   for (let i = 0; i <= retries; i++) {
     try {
       return await fn();
-    } catch (err) {
+    } catch (err: unknown) {
       lastError = err instanceof Error ? err : new Error(String(err));
       if (i < retries) {
         // Exponential backoff: 500ms, 1000ms
@@ -159,7 +159,7 @@ export function createMFResilience(config: MFResilienceConfig): MFResilience {
       }, retries);
 
       return result;
-    } catch (err) {
+    } catch (err: unknown) {
       const error = err instanceof Error ? err.message : String(err);
       console.error(`[MF Resilience] Failed to load ${name}/${module}: ${error}`);
 
@@ -194,7 +194,7 @@ export function createMFResilience(config: MFResilienceConfig): MFResilience {
         };
         healthCache.set(name, health);
         return health;
-      } catch (err) {
+      } catch (err: unknown) {
         const health: RemoteHealth = {
           name,
           status: 'unavailable',

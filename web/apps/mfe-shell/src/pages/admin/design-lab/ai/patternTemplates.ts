@@ -186,7 +186,7 @@ export const PATTERN_TEMPLATES: PatternTemplate[] = [
     try {
       // Simulated API call
       throw new Error("Network request failed");
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Unknown error");
     }
   };

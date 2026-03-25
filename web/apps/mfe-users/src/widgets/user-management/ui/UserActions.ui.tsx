@@ -55,7 +55,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
           try {
             await resetPasswordMutation.mutateAsync({ email: user.email });
             pushToast('success', t('users.actions.resetPassword.success'));
-          } catch (error) {
+          } catch (error: unknown) {
             pushToast('error', (error as Error).message);
           }
         },
@@ -87,7 +87,7 @@ const UserActions: React.FC<UserActionsProps> = ({ user, onSelect }) => {
                 openInCenter: true,
               }
               : undefined);
-          } catch (error) {
+          } catch (error: unknown) {
             pushToast('error', (error as Error).message);
           }
         },

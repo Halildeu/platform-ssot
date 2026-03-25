@@ -29,7 +29,7 @@ export const WorkIntakeWidget: React.FC<{ onRefresh?: () => void }> = ({ onRefre
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setData(await res.json());
       setError(null);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed");
     }
   }, []);
