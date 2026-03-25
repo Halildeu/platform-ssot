@@ -20,29 +20,16 @@ export const SidebarRecentlyViewed: React.FC<Props> = ({ className, defaultColla
 
   return (
     <div className={`px-1 py-1 ${className ?? ""}`}>
-      {/* Header — clickable to collapse */}
-      <button
-        type="button"
-        onClick={() => setCollapsed(!collapsed)}
-        className="flex w-full items-center justify-between px-2 py-1 rounded hover:bg-surface-canvas transition-colors cursor-pointer"
-      >
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
-          Recently Viewed
-        </span>
-        <div className="flex items-center gap-1">
-          {recents.length > 0 && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                clear();
-              }}
-              className="text-[9px] text-text-tertiary hover:text-state-danger-text transition-colors cursor-pointer"
-              title="Clear history"
-            >
-              Clear
-            </button>
-          )}
+      {/* Header row */}
+      <div className="flex w-full items-center justify-between px-2 py-1">
+        <button
+          type="button"
+          onClick={() => setCollapsed(!collapsed)}
+          className="flex items-center gap-1 rounded hover:bg-surface-canvas transition-colors cursor-pointer px-1 -mx-1"
+        >
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+            Recently Viewed
+          </span>
           <svg
             className={`w-3 h-3 text-text-tertiary transition-transform duration-200 ${collapsed ? "" : "rotate-180"}`}
             fill="none"
@@ -52,8 +39,18 @@ export const SidebarRecentlyViewed: React.FC<Props> = ({ className, defaultColla
           >
             <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </div>
-      </button>
+        </button>
+        {recents.length > 0 && (
+          <button
+            type="button"
+            onClick={() => clear()}
+            className="text-[9px] text-text-tertiary hover:text-state-danger-text transition-colors cursor-pointer"
+            title="Clear history"
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
       {/* Items — collapsible */}
       <div
