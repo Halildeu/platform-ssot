@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  CircleHelp, Menu, ChevronDown, Star,
+  CircleHelp, Menu, Star, UnfoldVertical, FoldVertical,
   Palette, Shapes, Box, Layout, BookOpen, Globe, Code,
 } from "lucide-react";
 import { IconButton, Text } from "@mfe/design-system";
@@ -273,27 +273,21 @@ export const DesignLabAppSidebar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setAllGroupsOpen(true)}
-                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === true ? "bg-surface-canvas text-text-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
+                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === true ? "bg-surface-canvas text-action-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
                 title="Expand all groups"
                 aria-label="Expand all groups"
               >
-                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path d="m7 15 5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="m7 9 5-5 5 5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <UnfoldVertical className="h-3.5 w-3.5" />
               </button>
               {/* Collapse All */}
               <button
                 type="button"
                 onClick={() => setAllGroupsOpen(false)}
-                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === false ? "bg-surface-canvas text-text-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
+                className={`p-1 rounded transition-colors cursor-pointer ${allGroupsOpen === false ? "bg-surface-canvas text-action-primary" : "text-text-tertiary hover:bg-surface-canvas hover:text-text-primary"}`}
                 title="Collapse all groups"
                 aria-label="Collapse all groups"
               >
-                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path d="m17 9-5 5-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="m17 15-5 5-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <FoldVertical className="h-3.5 w-3.5" />
               </button>
               <IconButton icon={<CircleHelp className="h-3.5 w-3.5" />} label="Help" size="sm" variant="ghost" />
             </div>
