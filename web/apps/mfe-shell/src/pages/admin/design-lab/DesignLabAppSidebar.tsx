@@ -157,10 +157,23 @@ export const DesignLabAppSidebar: React.FC = () => {
     switch (activeLayer) {
       case "foundations": return 16;
       case "primitives": return PRIMITIVE_NAMES.size;
-      case "components":
-        return index.items.filter(
+      case "components": {
+        // Count items visible in taxonomy groups (excluding primitives/advanced)
+        const compSection = taxonomy.sections?.find((s: { id: string }) => s.id === "components");
+        if (!compSection) break;
+        const gIds = new Set((compSection.groupIds ?? []) as string[]);
+        let count = 0;
+        for (const g of taxonomy.groups) {
+          if (!gIds.has(g.id)) continue;
+          for (const sg of g.subgroups) {
+            const items = sg.items ?? [];
+            count += items.filter((n: string) => !PRIMITIVE_NAMES.has(n) && !ADVANCED_NAMES.has(n)).length;
+          }
+        }
+        return count || index.items.filter(
           (i) => i.availability === "exported" && !PRIMITIVE_NAMES.has(i.name) && !API_NAMES.has(i.name) && !ADVANCED_NAMES.has(i.name),
         ).length;
+      }
       case "patterns":
         return (index.pages?.currentFamilies.length ?? 0) + ADVANCED_NAMES.size;
       case "apis": return API_NAMES.size;
@@ -448,7 +461,12 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
   const { index, taxonomy } = useDesignLab();
 
   const groups = useMemo(() => {
+    // Only show groups belonging to the "components" section
+    const compSection = taxonomy.sections?.find((s: { id: string }) => s.id === "components");
+    const compGroupIds = new Set((compSection?.groupIds ?? []) as string[]);
+
     return taxonomy.groups
+      .filter((group) => compGroupIds.has(group.id))
       .map((group) => ({
         ...group,
         subgroups: group.subgroups

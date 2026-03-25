@@ -35,6 +35,9 @@
         "search_filtering",
         "overlays_portals",
         "layout",
+        "page_blocks",
+        "theme_tokens",
+        "ai_native_helpers",
         "auth_security_ui",
         "charts_visualization"
       ]
@@ -352,7 +355,11 @@
         "Summary Blocks",
         "Detail / inspector layouts",
         "Sectioned docs / playground shells",
-        "Page Templates"
+        "Page Templates",
+        "Card & Container",
+        "Master-Detail & Split View",
+        "Dashboard & Grid",
+        "Stack & Spacing"
       ]
     },
     {
