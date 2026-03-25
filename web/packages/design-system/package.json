@@ -176,7 +176,8 @@
     "dark-fallback-gate": "node scripts/ci/dark-fallback-gate.mjs",
     "dark-fallback-gate:ci": "node scripts/ci/dark-fallback-gate.mjs --ci",
     "prepack": "[ -d dist ] || npm run build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "figma:generate-stubs": "node ../../scripts/generate-figma-connect-stubs.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.10",

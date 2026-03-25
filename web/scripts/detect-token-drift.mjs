@@ -17,138 +17,17 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import {
+  flattenFigmaRaw,
+  flattenDtcg,
+  normalizeValue,
+  buildKeyMap,
+} from './tokens/shared-flatten.mjs';
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const FIGMA_PATH = join(ROOT, 'design-tokens', 'figma.tokens.json');
 const DTCG_DIR = join(ROOT, 'packages', 'design-system', 'tokens', 'dtcg');
-
-/* ------------------------------------------------------------------ */
-/*  Flatten helpers                                                    */
-/* ------------------------------------------------------------------ */
-
-/**
- * Flatten Figma raw tokens (format: { value: "..." }) into dot-path → value map.
- * Only processes the "raw" section since that is the source primitive palette.
- */
-function flattenFigmaRaw(obj, prefix = '') {
-  const result = {};
-  for (const [key, value] of Object.entries(obj)) {
-    const path = prefix ? `${prefix}.${key}` : key;
-
-    if (value && typeof value === 'object' && 'value' in value) {
-      // Leaf token in Figma format
-      result[path] = normalizeValue(value.value);
-    } else if (value && typeof value === 'object') {
-      Object.assign(result, flattenFigmaRaw(value, path));
-    }
-  }
-  return result;
-}
-
-/**
- * Flatten DTCG tokens ($value/$type format) into dot-path → value map.
- */
-function flattenDtcg(obj, prefix = '') {
-  const result = {};
-  for (const [key, value] of Object.entries(obj)) {
-    if (key.startsWith('$')) continue;
-    const path = prefix ? `${prefix}.${key}` : key;
-
-    if (value && typeof value === 'object' && '$value' in value) {
-      result[path] = normalizeValue(value.$value);
-    } else if (value && typeof value === 'object') {
-      Object.assign(result, flattenDtcg(value, path));
-    }
-  }
-  return result;
-}
-
-/**
- * Normalize values for comparison — stringify objects/arrays, lowercase strings.
- */
-function normalizeValue(val) {
-  if (val === null || val === undefined) return '';
-  if (typeof val === 'object') return JSON.stringify(val);
-  return String(val).toLowerCase().trim();
-}
-
-/* ------------------------------------------------------------------ */
-/*  Map Figma raw keys → DTCG keys                                    */
-/* ------------------------------------------------------------------ */
-
-/**
- * The Figma raw section uses a different namespace structure than DTCG.
- * This builds a best-effort mapping from figma raw flat keys to DTCG flat keys.
- *
- * Figma raw:  color.brand.primary.500 → DTCG: color.primary.500
- * Figma raw:  radius.sm              → DTCG: radius.sm
- * Figma raw:  space.1                → DTCG: spacing.1
- * etc.
- */
-function buildKeyMap(figmaKeys, dtcgKeys) {
-  const dtcgSet = new Set(dtcgKeys);
-  const map = new Map();
-
-  for (const fk of figmaKeys) {
-    // Direct match
-    if (dtcgSet.has(fk)) {
-      map.set(fk, fk);
-      continue;
-    }
-
-    // Try common renames (Figma namespace → DTCG namespace)
-    const candidates = [
-      fk,
-      /* Color namespace renames */
-      fk.replace(/^color\.brand\./, 'color.'),
-      fk.replace(/^color\.neutral\./, 'color.gray.'),
-      fk.replace(/^color\.info\./, 'color.blue.'),
-      fk.replace(/^color\.success\./, 'color.green.'),
-      fk.replace(/^color\.warning\./, 'color.amber.'),
-      fk.replace(/^color\.danger\./, 'color.red.'),
-      /* Special color aliases */
-      ...(fk === 'color.neutral.0' ? ['color.white'] : []),
-      ...(fk === 'color.black' ? ['color.black'] : []),
-      /* Space/Spacing namespace (Figma uses dot for fractions: 0.5, DTCG uses dash: 0-5) */
-      fk.replace(/^space\./, 'spacing.'),
-      fk.replace(/^space\.(\d+)\.(\d+)$/, 'spacing.$1-$2'),
-      /* Shadow/Elevation namespace */
-      fk.replace(/^shadow\./, 'elevation.'),
-      /* Typography namespace renames */
-      fk.replace(/^typography\.font\.family\./, 'typography.fontFamily.'),
-      fk.replace(/^typography\.font\.size\./, 'typography.fontSize.'),
-      fk.replace(/^typography\.font\.weight\./, 'typography.fontWeight.'),
-      fk.replace(/^typography\./, 'typography.'),
-      /* Motion namespace */
-      fk.replace(/^motion\.easing\./, 'motion.easing.'),
-      fk.replace(/^motion\.duration\./, 'motion.duration.'),
-      /* Motion name aliases */
-      ...(fk === 'motion.easing.standard' ? ['motion.easing.default'] : []),
-      ...(fk === 'motion.easing.enter' ? ['motion.easing.in'] : []),
-      ...(fk === 'motion.easing.exit' ? ['motion.easing.out'] : []),
-      ...(fk === 'motion.duration.medium' ? ['motion.duration.normal'] : []),
-      /* Typography aliases */
-      ...(fk === 'typography.font.family.base' ? ['typography.fontFamily.base', 'typography.fontFamily.sans'] : []),
-      ...(fk === 'typography.font.family.sans' ? ['typography.fontFamily.sans'] : []),
-      ...(fk === 'typography.font.family.mono' ? ['typography.fontFamily.mono'] : []),
-    ];
-
-    let matched = false;
-    for (const candidate of candidates) {
-      if (dtcgSet.has(candidate)) {
-        map.set(fk, candidate);
-        matched = true;
-        break;
-      }
-    }
-
-    if (!matched) {
-      map.set(fk, null); // not found in DTCG
-    }
-  }
-
-  return map;
-}
 
 /* ------------------------------------------------------------------ */
 /*  Main                                                               */
@@ -270,7 +149,6 @@ if (!totalDrift) {
   console.log(`    Missing:        ${missing.length}`);
   console.log(`    Orphaned:       ${orphaned.length}`);
   console.log(`    Mismatch:       ${mismatched.length}`);
-  console.log(`    Semantic CSS:   ${semanticDriftCount}`);
   console.log('');
   process.exit(1);
 }

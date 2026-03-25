@@ -1,0 +1,45 @@
+name: Token Drift Check
+
+on:
+  schedule:
+    - cron: '0 14 * * 1-5'  # Weekdays at 2 PM (offset from 9 AM sync)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Generate token diff report
+        run: node scripts/ci/token-diff-report.mjs
+      - name: Check for drift
+        id: drift
+        run: |
+          CONFLICTS=$(node -e "const r=JSON.parse(require('fs').readFileSync('reports/token-diff-report.json','utf-8')); console.log(r.summary?.conflicts || 0)")
+          DRIFT=$(node -e "const r=JSON.parse(require('fs').readFileSync('reports/token-diff-report.json','utf-8')); console.log((r.summary?.figmaAhead || 0) + (r.summary?.codeAhead || 0))")
+          echo "conflicts=$CONFLICTS" >> $GITHUB_OUTPUT
+          echo "drift=$DRIFT" >> $GITHUB_OUTPUT
+      - name: Create issue if drift detected
+        if: steps.drift.outputs.drift != '0' || steps.drift.outputs.conflicts != '0'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Token Drift Detected \u2014 ${{ steps.drift.outputs.drift }} drifted, ${{ steps.drift.outputs.conflicts }} conflicts"
+          content-filepath: reports/token-diff-report.json
+          labels: tokens, drift, automated
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: token-diff-report
+          path: reports/token-diff-report.*
