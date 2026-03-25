@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Text } from "@mfe/design-system";
 import { useDesignLab } from "../DesignLabProvider";
-import { API_NAMES } from "../DesignLabSidebarRouter";
+import { API_NAMES, PRIMITIVE_NAMES, ADVANCED_NAMES } from "../DesignLabSidebarRouter";
 
 /* ------------------------------------------------------------------ */
 /*  DesignLabLanding — Modern overview / search page                   */
@@ -118,7 +118,7 @@ export default function DesignLabLanding() {
         iconBg: LAYER_ICON_BG.components,
         title: t("designlab.landing.layer.components.title"),
         description: t("designlab.landing.layer.components.description"),
-        count: index.items.filter((i) => i.availability === "exported" && !API_NAMES.has(i.name)).length,
+        count: index.items.filter((i) => i.availability === "exported" && !API_NAMES.has(i.name) && !PRIMITIVE_NAMES.has(i.name) && !ADVANCED_NAMES.has(i.name)).length,
         href: "/admin/design-lab/components",
       },
       {
