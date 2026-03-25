@@ -72,7 +72,7 @@ export const SidebarSearchEnhanced: React.FC<Props> = ({
           text-text-primary placeholder:text-text-tertiary
           focus:border-action-primary focus:ring-1 focus:ring-action-primary
           focus:bg-surface-default
-          transition-colors outline-none
+          transition-colors outline-hidden
         "
         aria-label="Search components"
       />
@@ -127,7 +127,7 @@ export const HighlightedLabel: React.FC<HighlightedLabelProps> = ({
         part.highlighted ? (
           <mark
             key={i}
-            className="bg-state-warning-bg text-text-primary rounded-sm px-px"
+            className="bg-state-warning-bg text-text-primary rounded-xs px-px"
           >
             {part.text}
           </mark>
