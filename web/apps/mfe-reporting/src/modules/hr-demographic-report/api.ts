@@ -1,12 +1,18 @@
 import type { HrDemographicFilters, HrDemographicRow, DemographicSummary } from './types';
 import { generateMockEmployees, computeSummary } from './mock-data';
 import type { GridRequest, GridResponse } from '../../grid';
+import { api } from '@mfe/shared-http';
+import { getShellServices } from '../../app/services/shell-services';
 
 // ---------------------------------------------------------------------------
 // Backend Dashboard API — canlı Workcube verisi
 // ---------------------------------------------------------------------------
 
 const DASHBOARD_KEY = 'hr-demografik';
+
+const resolveHttp = () => {
+  try { return getShellServices().http; } catch { return api; }
+};
 
 interface DashboardKPI {
   id: string;
@@ -39,13 +45,14 @@ async function fetchLiveDashboardData(): Promise<void> {
 
   _liveFetchPromise = (async () => {
     try {
+      const client = resolveHttp();
       const [kpiRes, chartRes] = await Promise.all([
-        fetch(`/api/v1/dashboards/${DASHBOARD_KEY}/kpis?timeRange=ytd`),
-        fetch(`/api/v1/dashboards/${DASHBOARD_KEY}/charts?timeRange=ytd`),
+        client.get<DashboardKPI[]>(`/v1/dashboards/${DASHBOARD_KEY}/kpis?timeRange=ytd`),
+        client.get<DashboardChart[]>(`/v1/dashboards/${DASHBOARD_KEY}/charts?timeRange=ytd`),
       ]);
 
-      if (kpiRes.ok) _liveKPIs = await kpiRes.json();
-      if (chartRes.ok) _liveCharts = await chartRes.json();
+      if (kpiRes.data) _liveKPIs = Array.isArray(kpiRes.data) ? kpiRes.data : null;
+      if (chartRes.data) _liveCharts = Array.isArray(chartRes.data) ? chartRes.data : null;
     } catch (err) {
       console.warn('[hr-demographic] Live dashboard fetch failed, falling back to mock:', err);
     }
