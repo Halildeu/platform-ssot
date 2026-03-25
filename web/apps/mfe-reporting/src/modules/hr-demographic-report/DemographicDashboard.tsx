@@ -1059,13 +1059,13 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <ChartCard title={chartTitle("Departman Dagilimi", "dept-headcount")}>
-            <Treemap data={getChartData('home-city') ?? summary.departments} />
+            <Treemap data={getChartData('dept-headcount') ?? summary.departments} />
           </ChartCard>
           <ChartCard title={chartTitle("Kidem Dagilimi", "tenure-distribution")}>
             <VerticalBarChart data={getChartData('tenure-distribution') ?? summary.tenureDistribution} />
           </ChartCard>
           <ChartCard title={chartTitle("Istihdam Turu", "duty-type")}>
-            <PieChart data={getChartData('smoking-distribution') ?? summary.employmentTypes} />
+            <PieChart data={getChartData('duty-type') ?? summary.employmentTypes} />
           </ChartCard>
         </div>
 
@@ -1078,7 +1078,7 @@ const DemographicDashboard: React.FC = () => {
             marginBottom: 16,
           }}
         >
-          <ChartCard title={chartTitle("DEI Gostergeleri")}>
+          <ChartCard title={chartTitle("DEI Gostergeleri", "female-manager-ratio")}>
             <div
               style={{
                 display: 'grid',
@@ -1086,25 +1086,44 @@ const DemographicDashboard: React.FC = () => {
                 gap: 8,
               }}
             >
-              <Gauge value={summary.femaleManagerRate} target={50} label="Cinsiyet Esitligi" />
+              <Gauge value={(() => {
+                const fmData = getChartData('female-manager-ratio');
+                if (fmData) {
+                  const mgr = fmData.find(d => d.label === 'Yonetici')?.value ?? 0;
+                  const total = fmData.reduce((s, d) => s + d.value, 0);
+                  return total > 0 ? Math.round((mgr / total) * 100) : 0;
+                }
+                return summary.femaleManagerRate;
+              })()} target={50} label="Kadin Yonetici %" />
               <Gauge
-                value={Math.round(summary.disabilityRate * 10)}
+                value={(() => {
+                  const disData = getChartData('disability-employment');
+                  if (disData) {
+                    const disabled = disData.find(d => d.label === 'Engelli')?.value ?? 0;
+                    const total = disData.reduce((s, d) => s + d.value, 0);
+                    return total > 0 ? Math.round((disabled / total) * 1000) / 10 : 0;
+                  }
+                  return Math.round(summary.disabilityRate * 10);
+                })()}
                 target={30}
                 label="Engelli Istihdam"
                 unit="/100"
               />
-              <Gauge value={diversityIndex} target={70} label="Nesil Cesitliligi" unit="/100" />
+              <Gauge value={(() => {
+                const genData = getChartData('generation-distribution');
+                return genData ? computeDiversityIndex(genData) : diversityIndex;
+              })()} target={70} label="Nesil Cesitliligi" unit="/100" />
               <Gauge value={summary.deiScore} target={80} label="Genel DEI" unit="/100" />
             </div>
           </ChartCard>
-          <ChartCard title={chartTitle("Nesil Dagilimi", "language-count")}>
-            <StackedBar data={getChartData('language-count') ?? summary.generationDistribution} />
+          <ChartCard title={chartTitle("Nesil Dagilimi", "generation-distribution")}>
+            <StackedBar data={getChartData('generation-distribution') ?? summary.generationDistribution} />
             <div style={{ marginTop: 12 }}>
-              <HorizontalBarChart data={getChartData('relative-count') ?? summary.generationDistribution} />
+              <HorizontalBarChart data={getChartData('generation-distribution') ?? summary.generationDistribution} />
             </div>
           </ChartCard>
-          <ChartCard title={chartTitle("Lokasyon Dagilimi", "nationality-distribution")}>
-            <PieChart data={getChartData('nationality-distribution') ?? summary.locationDistribution} />
+          <ChartCard title={chartTitle("Lokasyon Dagilimi", "location-distribution")}>
+            <PieChart data={getChartData('location-distribution') ?? summary.locationDistribution} />
           </ChartCard>
         </div>
 
@@ -1117,22 +1136,46 @@ const DemographicDashboard: React.FC = () => {
             marginBottom: 16,
           }}
         >
-          <ChartCard title={chartTitle("Yonetici / Calisan Oranlari")}>
+          <ChartCard title={chartTitle("Yonetici / Calisan Oranlari", "manager-ratio")}>
             <BulletChart
               label="Kadin Yonetici Orani"
-              actual={summary.femaleManagerRate}
+              actual={(() => {
+                const fmData = getChartData('female-manager-ratio');
+                if (fmData) {
+                  const mgr = fmData.find(d => d.label === 'Yonetici')?.value ?? 0;
+                  const total = fmData.reduce((s, d) => s + d.value, 0);
+                  return total > 0 ? Math.round((mgr / total) * 100) : 0;
+                }
+                return summary.femaleManagerRate;
+              })()}
               target={50}
               max={100}
             />
             <BulletChart
               label="Engelli Istihdam Orani"
-              actual={summary.disabilityRate}
+              actual={(() => {
+                const disData = getChartData('disability-employment');
+                if (disData) {
+                  const disabled = disData.find(d => d.label === 'Engelli')?.value ?? 0;
+                  const total = disData.reduce((s, d) => s + d.value, 0);
+                  return total > 0 ? Math.round((disabled / total) * 1000) / 10 : 0;
+                }
+                return summary.disabilityRate;
+              })()}
               target={3}
               max={10}
             />
             <BulletChart
               label="Yonetici Orani"
-              actual={summary.managerRatio}
+              actual={(() => {
+                const mrData = getChartData('manager-ratio');
+                if (mrData) {
+                  const mgr = mrData.find(d => d.label === 'Yonetici')?.value ?? 0;
+                  const total = mrData.reduce((s, d) => s + d.value, 0);
+                  return total > 0 ? Math.round((mgr / total) * 1000) / 10 : 0;
+                }
+                return summary.managerRatio;
+              })()}
               target={15}
               max={30}
             />
@@ -1176,11 +1219,11 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <SectionHeader>Organizasyonel (APQC HC-2)</SectionHeader>
-          <ChartCard title={chartTitle("Lokasyon Dagilimi", "nationality-distribution")}>
-            <PieChart data={getChartData('nationality-distribution') ?? summary.locationDistribution} />
+          <ChartCard title={chartTitle("Lokasyon Dagilimi", "location-distribution")}>
+            <PieChart data={getChartData('location-distribution') ?? summary.locationDistribution} />
           </ChartCard>
-          <ChartCard title={chartTitle("Pozisyon Seviyesi", "course-count")}>
-            <VerticalBarChart data={getChartData('course-count') ?? summary.positionLevelDistribution} />
+          <ChartCard title={chartTitle("Pozisyon Seviyesi", "position-level")}>
+            <VerticalBarChart data={getChartData('position-level') ?? summary.positionLevelDistribution} />
           </ChartCard>
           <ChartCard title={chartTitle("Yas Piramidi (Erkek / Kadin)", "age-pyramid-male")}>
             <AgePyramidChart data={(() => {
@@ -1210,33 +1253,73 @@ const DemographicDashboard: React.FC = () => {
           }}
         >
           <SectionHeader>Isgucu Dinamikleri (APQC HC-4)</SectionHeader>
-          <ChartCard title={chartTitle("Devamsizlik & Ise Alim")}>
+          <ChartCard title={chartTitle("Devamsizlik & Ise Alim", "new-hires-12m")}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               <Gauge value={summary.absenteeismRate} target={3} label="Devamsizlik Orani" />
-              <Gauge value={Math.min(summary.timeToFillDays, 100)} target={30} label="Ise Alim Suresi (gun)" unit="" />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 11, color: 'var(--text-secondary, #6b7280)', marginBottom: 4, fontWeight: 500 }}>
+                  Yeni Ise Alim (12 ay)
+                </div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary, #111827)' }}>
+                  {(() => {
+                    const hireData = getChartData('new-hires-12m');
+                    if (hireData && hireData.length > 0) return hireData[0].value;
+                    return summary.timeToFillDays;
+                  })()}
+                </div>
+              </div>
             </div>
           </ChartCard>
-          <ChartCard title={chartTitle("Ic Transfer & Terfi")}>
+          <ChartCard title={chartTitle("Ic Transfer & Terfi", "internal-transfers")}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              <Gauge value={summary.internalTransferRate} target={10} label="Ic Transfer Orani" />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 11, color: 'var(--text-secondary, #6b7280)', marginBottom: 4, fontWeight: 500 }}>
+                  Ic Transfer (Son 1 Yil)
+                </div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--text-primary, #111827)' }}>
+                  {(() => {
+                    const trData = getChartData('internal-transfers');
+                    if (trData && trData.length > 0) return trData[0].value;
+                    return Math.round(summary.internalTransferRate);
+                  })()}
+                </div>
+              </div>
               <Gauge value={summary.promotionRate} target={8} label="Terfi Orani" />
             </div>
           </ChartCard>
-          <ChartCard title={chartTitle("Ayrilma Oranlari")}>
-            <BulletChart
-              label="Gonullu Ayrilma"
-              actual={summary.voluntaryTurnoverRate}
-              target={8}
-              max={20}
-            />
-            <BulletChart
-              label="Zorunlu Ayrilma"
-              actual={summary.involuntaryTurnoverRate}
-              target={2}
-              max={10}
-            />
+          <ChartCard title={chartTitle("Ayrilma Oranlari", "turnover-reasons")}>
+            {(() => {
+              const reasonData = getChartData('turnover-reasons');
+              if (reasonData && reasonData.length > 0) {
+                return <HorizontalBarChart data={reasonData} />;
+              }
+              return (
+                <>
+                  <BulletChart
+                    label="Gonullu Ayrilma"
+                    actual={summary.voluntaryTurnoverRate}
+                    target={8}
+                    max={20}
+                  />
+                  <BulletChart
+                    label="Zorunlu Ayrilma"
+                    actual={summary.involuntaryTurnoverRate}
+                    target={2}
+                    max={10}
+                  />
+                </>
+              );
+            })()}
             <div style={{ marginTop: 8, fontSize: 11, color: 'var(--text-secondary, #6b7280)' }}>
-              Kontrol Araligi: <strong style={{ color: 'var(--text-primary, #111827)' }}>{summary.spanOfControl}</strong> calisan/yonetici
+              Kontrol Araligi: <strong style={{ color: 'var(--text-primary, #111827)' }}>{(() => {
+                const mrData = getChartData('manager-ratio');
+                if (mrData) {
+                  const mgr = mrData.find(d => d.label === 'Yonetici')?.value ?? 0;
+                  const total = mrData.reduce((s, d) => s + d.value, 0);
+                  return mgr > 0 ? Math.round((total / mgr) * 10) / 10 : 0;
+                }
+                return summary.spanOfControl;
+              })()}</strong> calisan/yonetici
             </div>
           </ChartCard>
         </div>
@@ -1291,7 +1374,7 @@ const DemographicDashboard: React.FC = () => {
         >
           <SectionHeader>Maas & Esitlik</SectionHeader>
           <ChartCard title={chartTitle("Cinsiyet Maas Karsilastirma", "salary-by-gender")}>
-            <HorizontalBarChart data={summary.avgSalaryByGender} />
+            <HorizontalBarChart data={getChartData('salary-by-gender') ?? summary.avgSalaryByGender} />
           </ChartCard>
           <ChartCard title={chartTitle("Maas Farki")}>
             <BulletChart

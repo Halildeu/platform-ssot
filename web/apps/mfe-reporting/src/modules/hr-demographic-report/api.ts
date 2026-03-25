@@ -19,6 +19,7 @@ interface DashboardKPI {
 interface DashboardChartItem {
   label: string;
   value: number;
+  [key: string]: unknown;
 }
 
 interface DashboardChart {
