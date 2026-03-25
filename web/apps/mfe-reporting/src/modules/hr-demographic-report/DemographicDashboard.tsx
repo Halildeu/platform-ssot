@@ -1376,89 +1376,73 @@ const DemographicDashboard: React.FC = () => {
           <ChartCard title={chartTitle("Cinsiyet Maas Karsilastirma", "salary-by-gender")}>
             <HorizontalBarChart data={getChartData('salary-by-gender') ?? summary.avgSalaryByGender} />
           </ChartCard>
-          <ChartCard title={chartTitle("Maas Farki")}>
-            <BulletChart
-              label="Cinsiyet Maas Farki"
-              actual={summary.genderPayGapPercent}
-              target={0}
-              max={20}
-            />
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--text-secondary, #6b7280)' }}>
-              Hedef: <strong>%0</strong> fark &mdash; mevcut fark{' '}
-              <strong style={{ color: 'var(--state-warning-text, #d97706)' }}>
-                %{summary.genderPayGapPercent}
-              </strong>
-            </div>
+          <ChartCard title={chartTitle("Maas Farki", "salary-by-gender")}>
+            {(() => {
+              const salData = getChartData('salary-by-gender');
+              const male = salData?.find(d => d.label === 'Erkek')?.value ?? summary.avgSalaryByGender.find(d => d.label === 'Erkek')?.value ?? 0;
+              const female = salData?.find(d => d.label === 'Kadın' || d.label === 'Kadin')?.value ?? summary.avgSalaryByGender.find(d => d.label === 'Kadın')?.value ?? 0;
+              const gap = male > 0 ? Math.round(((male - female) / male) * 1000) / 10 : summary.genderPayGapPercent;
+              return (
+                <>
+                  <BulletChart label="Cinsiyet Maas Farki" actual={gap} target={0} max={20} />
+                  <div style={{ marginTop: 12, fontSize: 12, color: 'var(--text-secondary, #6b7280)' }}>
+                    Hedef: <strong>%0</strong> fark &mdash; mevcut fark{' '}
+                    <strong style={{ color: 'var(--state-warning-text, #d97706)' }}>%{gap}</strong>
+                  </div>
+                </>
+              );
+            })()}
           </ChartCard>
-          <ChartCard title={chartTitle("Maas Farki Trendi")}>
-            {/* Simulated trend line */}
-            <svg viewBox="0 0 280 120" width="100%" style={{ display: 'block' }}>
-              {/* Grid */}
-              {[0, 30, 60, 90, 120].map((y, i) => (
-                <line
-                  key={i}
-                  x1={30}
-                  y1={y}
-                  x2={270}
-                  y2={y}
-                  stroke="var(--border-subtle, #e5e7eb)"
-                  strokeWidth="0.5"
-                />
-              ))}
-              {/* Simulated data points: pay gap over 6 quarters */}
-              {(() => {
-                const points = [8.2, 7.5, 7.1, 6.8, 6.3, 5.9];
-                const labels = ['Q1-25', 'Q2-25', 'Q3-25', 'Q4-25', 'Q1-26', 'Q2-26'];
-                const maxY = 10;
-                const xStart = 40;
-                const xEnd = 260;
-                const xStep = (xEnd - xStart) / (points.length - 1);
-                const yTop = 10;
-                const yBottom = 110;
-                const pts = points.map((v, idx) => ({
-                  x: xStart + idx * xStep,
-                  y: yTop + ((maxY - v) / maxY) * (yBottom - yTop),
-                  v,
-                  label: labels[idx],
-                }));
-                const polyline = pts.map((p) => `${p.x},${p.y}`).join(' ');
-                return (
-                  <>
-                    <polyline
-                      points={polyline}
-                      fill="none"
-                      stroke="#f59e0b"
-                      strokeWidth="2"
-                      strokeLinejoin="round"
-                    />
-                    {pts.map((p, idx) => (
-                      <g key={idx}>
-                        <circle cx={p.x} cy={p.y} r="3" fill="#f59e0b" />
-                        <text
-                          x={p.x}
-                          y={p.y - 8}
-                          textAnchor="middle"
-                          fontSize="8"
-                          fontWeight="600"
-                          fill="var(--text-primary, #111827)"
-                        >
-                          %{p.v}
-                        </text>
-                        <text
-                          x={p.x}
-                          y={115}
-                          textAnchor="middle"
-                          fontSize="7"
-                          fill="var(--text-secondary, #6b7280)"
-                        >
-                          {p.label}
-                        </text>
-                      </g>
-                    ))}
-                  </>
-                );
-              })()}
-            </svg>
+          <ChartCard title={chartTitle("Maas Farki Trendi", "salary-gender-trend")}>
+            {(() => {
+              const trendData = getChartData('salary-gender-trend');
+              // Use live trend data if available, compute pay gap % per year
+              const trendPoints: Array<{ label: string; gap: number }> = [];
+              if (trendData && trendData.length > 0) {
+                for (const row of trendData) {
+                  const maleAvg = (row as Record<string, unknown>).male_avg as number | null;
+                  const femaleAvg = (row as Record<string, unknown>).female_avg as number | null;
+                  if (maleAvg && femaleAvg && maleAvg > 0) {
+                    trendPoints.push({ label: row.label, gap: Math.round(((maleAvg - femaleAvg) / maleAvg) * 1000) / 10 });
+                  }
+                }
+              }
+              const useMock = trendPoints.length === 0;
+              const points = useMock ? [8.2, 7.5, 7.1, 6.8, 6.3, 5.9] : trendPoints.map(p => p.gap);
+              const labels = useMock ? ['Q1-25', 'Q2-25', 'Q3-25', 'Q4-25', 'Q1-26', 'Q2-26'] : trendPoints.map(p => p.label);
+              const maxY = Math.max(10, ...points.map(p => Math.ceil(p)));
+              const xStart = 40;
+              const xEnd = 260;
+              const xStep = (xEnd - xStart) / Math.max(points.length - 1, 1);
+              const yTop = 10;
+              const yBottom = 110;
+              const pts = points.map((v, idx) => ({
+                x: xStart + idx * xStep,
+                y: yTop + ((maxY - v) / maxY) * (yBottom - yTop),
+                v,
+                label: labels[idx],
+              }));
+              const polyline = pts.map((p) => `${p.x},${p.y}`).join(' ');
+              return (
+                <svg viewBox="0 0 280 120" width="100%" style={{ display: 'block' }}>
+                  {[0, 30, 60, 90, 120].map((y, i) => (
+                    <line key={i} x1={30} y1={y} x2={270} y2={y} stroke="var(--border-subtle, #e5e7eb)" strokeWidth="0.5" />
+                  ))}
+                  <polyline points={polyline} fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinejoin="round" />
+                  {pts.map((p, idx) => (
+                    <g key={idx}>
+                      <circle cx={p.x} cy={p.y} r="3" fill="#f59e0b" />
+                      <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize="8" fontWeight="600" fill="var(--text-primary, #111827)">
+                        %{p.v}
+                      </text>
+                      <text x={p.x} y={115} textAnchor="middle" fontSize="7" fill="var(--text-secondary, #6b7280)">
+                        {p.label}
+                      </text>
+                    </g>
+                  ))}
+                </svg>
+              );
+            })()}
           </ChartCard>
         </div>
       </DashboardSection>
