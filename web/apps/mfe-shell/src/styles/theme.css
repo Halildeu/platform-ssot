@@ -106,6 +106,121 @@
 
   /* Surface aliases */
   --surface-subtle: var(--surface-muted-bg);
+  --surface-default: var(--surface-default-bg);
+  --surface-muted: var(--surface-muted-bg);
+  --surface-code: var(--surface-muted-bg);
+  --text-on-elevated: var(--text-primary);
+  --text-on-accent: var(--action-primary-text);
+  --state-warning-bg-hover: oklch(65.33% 0.1638 48.41 / 25%);
+  --interactive-primary-hover: var(--accent-primary-hover);
+  --color-action-primary-bg: var(--action-primary-bg);
+
+  /* Float button */
+  --float-button-bg: var(--action-primary-bg);
+  --float-button-text: var(--action-primary-text);
+  --float-button-bg-hover: var(--accent-primary-hover);
+  --float-button-badge: var(--state-danger-bg);
+  --float-button-item-bg: var(--surface-raised-bg);
+  --float-button-item-text: var(--text-primary);
+  --float-button-item-bg-hover: var(--surface-hover);
+
+  /* Rating */
+  --rating-filled: oklch(79.5% 0.1585 75.09);
+  --rating-empty: var(--border-subtle);
+
+  /* Segmented (additional) */
+  --segmented-bg: var(--surface-muted-bg);
+  --segmented-border: var(--border-subtle);
+  --segmented-active-border: var(--action-primary-border);
+
+  /* Box plot */
+  --box-plot-fill: oklch(62.43% 0.2056 255.49 / 30%);
+  --box-plot-median: oklch(62.43% 0.2056 255.49);
+  --box-plot-whisker: var(--border-default);
+  --box-plot-outlier: oklch(63.68% 0.2078 25.33);
+  --box-plot-mean: oklch(72.27% 0.192 149.58);
+
+  /* Control chart */
+  --control-data: var(--accent-primary);
+  --control-ucl: oklch(63.68% 0.2078 25.33);
+  --control-lcl: oklch(63.68% 0.2078 25.33);
+  --control-target: oklch(72.27% 0.192 149.58);
+  --control-violation: oklch(61.37% 0.2039 25.56);
+  --control-zone-a: oklch(63.68% 0.2078 25.33 / 15%);
+  --control-zone-b: oklch(76.86% 0.1647 70.08 / 15%);
+  --control-zone-c: oklch(72.27% 0.192 149.58 / 15%);
+
+  /* FineKinney risk levels */
+  --fk-acceptable-bg: oklch(72.27% 0.192 149.58 / 12%);
+  --fk-acceptable-text: oklch(55% 0.17 152);
+  --fk-acceptable-badge: oklch(72.27% 0.192 149.58);
+  --fk-notable-bg: oklch(76.86% 0.1647 70.08 / 12%);
+  --fk-notable-text: oklch(65% 0.14 70);
+  --fk-notable-badge: oklch(76.86% 0.1647 70.08);
+  --fk-significant-bg: oklch(65.33% 0.1638 48.41 / 15%);
+  --fk-significant-text: oklch(55% 0.16 48);
+  --fk-significant-badge: oklch(65.33% 0.1638 48.41);
+  --fk-high-bg: oklch(61.37% 0.2039 25.56 / 15%);
+  --fk-high-text: oklch(63.68% 0.2078 25.33);
+  --fk-high-badge: oklch(61.37% 0.2039 25.56);
+  --fk-veryhigh-bg: oklch(50% 0.22 25 / 18%);
+  --fk-veryhigh-text: oklch(55% 0.24 25);
+  --fk-veryhigh-badge: oklch(50% 0.22 25);
+  --fk-status-open-bg: var(--state-info-bg);
+  --fk-status-open-text: var(--state-info-text);
+  --fk-status-inprogress-bg: var(--state-warning-bg);
+  --fk-status-inprogress-text: var(--state-warning-text);
+  --fk-status-closed-bg: var(--state-success-bg);
+  --fk-status-closed-text: var(--state-success-text);
+
+  /* Heatmap calendar */
+  --heatmap-empty: var(--surface-muted-bg);
+  --heatmap-l1: oklch(72.27% 0.192 149.58 / 25%);
+  --heatmap-l2: oklch(72.27% 0.192 149.58 / 45%);
+  --heatmap-l3: oklch(72.27% 0.192 149.58 / 65%);
+  --heatmap-l4: oklch(72.27% 0.192 149.58 / 85%);
+  --heatmap-l5: oklch(55% 0.17 152);
+
+  /* Histogram chart */
+  --histogram-bar: var(--accent-primary);
+  --histogram-curve: oklch(65.6% 0.2044 354.31);
+  --histogram-mean: oklch(63.68% 0.2078 25.33);
+  --histogram-median: oklch(72.27% 0.192 149.58);
+
+  /* Pareto chart */
+  --pareto-bar: var(--accent-primary);
+  --pareto-line: oklch(63.68% 0.2078 25.33);
+  --pareto-80line: var(--border-default);
+
+  /* Waterfall chart */
+  --wf-increase: oklch(72.27% 0.192 149.58);
+  --wf-decrease: oklch(63.68% 0.2078 25.33);
+  --wf-total: var(--accent-primary);
+
+  /* Status tokens */
+  --status-success: var(--state-success-text);
+  --status-success-subtle: var(--state-success-bg);
+  --status-warning: var(--state-warning-text);
+  --status-warning-subtle: var(--state-warning-bg);
+  --status-error: var(--state-danger-text);
+  --status-error-subtle: var(--state-danger-bg);
+
+  /* Misc aliases */
+  --ds-radius-md: var(--radius-md);
+  --color-primary: var(--accent-primary);
+  --font-size-md: 1rem;
+
+  /* Grid / layout tokens */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-4: 1rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --font-family-sans: var(--font-family-base);
+  --font-size-sm: 0.875rem;
+  --focus-ring-width: 2px;
+  --focus-ring-color: var(--focus-outline);
+  --elevation-sm: 0 1px 2px oklch(21% 0.032 265 / 6%);
 }
 
 :root[data-theme="serban-light"], [data-theme-scope][data-theme="serban-light"] {
@@ -942,6 +1057,123 @@
   /* ── Elevation: tooltip/dialog (completing the system) ── */
   --elevation-tooltip: 0 2px 8px oklch(0% 0 0 / 40%);
   --elevation-dialog: 0 8px 24px oklch(0% 0 0 / 60%);
+
+  /* ── Surface aliases (dark) ── */
+  --surface-default: var(--surface-default-bg);
+  --surface-muted: var(--surface-muted-bg);
+  --surface-code: oklch(14% 0.02 261);
+  --text-on-elevated: oklch(93% 0.01 264);
+  --text-on-accent: oklch(100% 0 0);
+  --state-warning-bg-hover: oklch(65% 0.16 48 / 30%);
+  --interactive-primary-hover: var(--accent-primary-hover);
+  --color-action-primary-bg: var(--action-primary-bg);
+
+  /* ── Float button (dark) ── */
+  --float-button-bg: var(--action-primary-bg);
+  --float-button-text: var(--action-primary-text);
+  --float-button-bg-hover: var(--accent-primary-hover);
+  --float-button-badge: oklch(61% 0.2 26 / 80%);
+  --float-button-item-bg: var(--surface-raised-bg);
+  --float-button-item-text: var(--text-primary);
+  --float-button-item-bg-hover: var(--surface-hover);
+
+  /* ── Rating (dark) ── */
+  --rating-filled: oklch(82% 0.15 75);
+  --rating-empty: var(--border-subtle);
+
+  /* ── Segmented (dark) ── */
+  --segmented-bg: oklch(14% 0.02 261);
+  --segmented-border: var(--border-subtle);
+  --segmented-active-border: var(--action-primary-border);
+
+  /* ── Box plot (dark) ── */
+  --box-plot-fill: oklch(68% 0.19 255 / 35%);
+  --box-plot-median: oklch(72% 0.18 255);
+  --box-plot-whisker: var(--border-default);
+  --box-plot-outlier: oklch(70% 0.19 25);
+  --box-plot-mean: oklch(78% 0.17 150);
+
+  /* ── Control chart (dark) ── */
+  --control-data: var(--accent-primary);
+  --control-ucl: oklch(70% 0.19 25);
+  --control-lcl: oklch(70% 0.19 25);
+  --control-target: oklch(78% 0.17 150);
+  --control-violation: oklch(65% 0.21 26);
+  --control-zone-a: oklch(70% 0.19 25 / 18%);
+  --control-zone-b: oklch(82% 0.15 70 / 18%);
+  --control-zone-c: oklch(78% 0.17 150 / 18%);
+
+  /* ── FineKinney risk levels (dark) ── */
+  --fk-acceptable-bg: oklch(78% 0.17 150 / 15%);
+  --fk-acceptable-text: oklch(78% 0.17 150);
+  --fk-acceptable-badge: oklch(72% 0.19 150);
+  --fk-notable-bg: oklch(82% 0.15 70 / 15%);
+  --fk-notable-text: oklch(82% 0.15 70);
+  --fk-notable-badge: oklch(77% 0.16 70);
+  --fk-significant-bg: oklch(75% 0.15 48 / 18%);
+  --fk-significant-text: oklch(75% 0.15 48);
+  --fk-significant-badge: oklch(65% 0.16 48);
+  --fk-high-bg: oklch(70% 0.19 25 / 18%);
+  --fk-high-text: oklch(70% 0.19 25);
+  --fk-high-badge: oklch(64% 0.21 25);
+  --fk-veryhigh-bg: oklch(58% 0.22 25 / 22%);
+  --fk-veryhigh-text: oklch(62% 0.24 25);
+  --fk-veryhigh-badge: oklch(55% 0.22 25);
+  --fk-status-open-bg: var(--state-info-bg);
+  --fk-status-open-text: var(--state-info-text);
+  --fk-status-inprogress-bg: var(--state-warning-bg);
+  --fk-status-inprogress-text: var(--state-warning-text);
+  --fk-status-closed-bg: var(--state-success-bg);
+  --fk-status-closed-text: var(--state-success-text);
+
+  /* ── Heatmap calendar (dark) ── */
+  --heatmap-empty: oklch(21% 0.028 261);
+  --heatmap-l1: oklch(78% 0.17 150 / 20%);
+  --heatmap-l2: oklch(78% 0.17 150 / 40%);
+  --heatmap-l3: oklch(78% 0.17 150 / 60%);
+  --heatmap-l4: oklch(78% 0.17 150 / 80%);
+  --heatmap-l5: oklch(72% 0.19 150);
+
+  /* ── Histogram chart (dark) ── */
+  --histogram-bar: var(--accent-primary);
+  --histogram-curve: oklch(72% 0.18 354);
+  --histogram-mean: oklch(70% 0.19 25);
+  --histogram-median: oklch(78% 0.17 150);
+
+  /* ── Pareto chart (dark) ── */
+  --pareto-bar: var(--accent-primary);
+  --pareto-line: oklch(70% 0.19 25);
+  --pareto-80line: var(--border-default);
+
+  /* ── Waterfall chart (dark) ── */
+  --wf-increase: oklch(78% 0.17 150);
+  --wf-decrease: oklch(70% 0.19 25);
+  --wf-total: var(--accent-primary);
+
+  /* ── Status tokens (dark) ── */
+  --status-success: var(--state-success-text);
+  --status-success-subtle: var(--state-success-bg);
+  --status-warning: var(--state-warning-text);
+  --status-warning-subtle: var(--state-warning-bg);
+  --status-error: var(--state-danger-text);
+  --status-error-subtle: var(--state-danger-bg);
+
+  /* ── Misc aliases (dark) ── */
+  --ds-radius-md: var(--radius-md);
+  --color-primary: var(--accent-primary);
+  --font-size-md: 1rem;
+
+  /* ── Grid / layout tokens (dark) ── */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-4: 1rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --font-family-sans: var(--font-family-base);
+  --font-size-sm: 0.875rem;
+  --focus-ring-width: 2px;
+  --focus-ring-color: var(--focus-outline);
+  --elevation-sm: 0 1px 2px oklch(0% 0 0 / 20%);
 
   /* ── Bridge aliases (existing, kept for backwards compat) ── */
   --action-primary: oklch(62.31% 0.188 259.81);

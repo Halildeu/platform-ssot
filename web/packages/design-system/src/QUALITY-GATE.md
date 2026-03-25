@@ -12,19 +12,19 @@
 |---|---|---|---|
 | 1 | Clean Working Tree | No uncommitted changes | ✅ |
 | 2 | Build | `tsup` (15 entries) + `tsc` → 0 error | ✅ |
-| 3 | Tests | `vitest run` → 7,200+ tests pass | ✅ |
+| 3 | Tests | `vitest run` → 7,200+ tests pass (1120+ files) | ✅ |
 | 4 | Perf Benchmarks | 24+ component render budget (5/10/15ms tiers) | ✅ |
 | 5 | Bundle Size | Per-module budget check (17 modules) | ✅ |
 | 6 | Semver Check | Breaking change detection (900+ exports) | ✅ |
 | 7 | Deprecation Audit | @deprecated count + migration guidance | ✅ |
-| 8 | API Reference | Generated docs up to date (174 components) | ✅ |
+| 8 | API Reference | Generated docs up to date (186 components) | ✅ |
 | 9 | Pack Dry-Run | npm pack produces valid tarball | ✅ |
 | 10 | Consumer Smoke | SSR render (15 components) + CJS require + subpath exports | ✅ |
 | 11 | Visual Regression | Playwright snapshot diff (149 scenarios × 3 browsers = 447 tests) | ✅ |
 | 12 | TS Warning Budget | 0 non-storybook TypeScript errors | ✅ |
 | 13 | DesignLab Index | Python index build (250+ items) | ✅ |
 | 14 | Publish Dry-Run | npm publish --dry-run passes | ✅ |
-| 15 | Component Scorecard | All components A-grade, avg ≥90 | ✅ |
+| 15 | Component Scorecard | All 186 components A-grade, avg ≥90 (current: 97.3) | ✅ |
 | 16 | A11y Gate | axe-core coverage ≥70% | ✅ |
 | 17 | Mutation Gate | Stryker score ≥40% | ✅ |
 | 18 | Token Audit | ≥80% clean (no hardcoded colors) | ✅ |
@@ -52,7 +52,7 @@ Every component has a `.contract.test.tsx` file verifying the public API contrac
 
 ### Layer 2: A11y Regression
 
-axe-core assertions and centralized a11y engine audit. Depth test a11y assertions (174 components).
+axe-core assertions and centralized a11y engine audit. Depth test a11y assertions (186 components).
 
 - Engine: `src/a11y/audit.ts` + `src/a11y/keyboard.ts`
 - Helper: `src/__tests__/a11y-utils.ts` — `expectNoA11yViolations()`
@@ -94,7 +94,7 @@ Component-level quality tracking — every component scored and graded.
 
 - Engine: component scorecard system (per-component quality metrics)
 - Metrics: test coverage, a11y coverage, visual regression, contract depth, keyboard coverage
-- Gate: All 174 components must be A-grade, average ≥90/100
+- Gate: All 186 components must be A-grade, average ≥90/100
 
 ---
 
@@ -220,7 +220,7 @@ Component-level quality tracking — every component scored and graded.
 
 | Metric | Value |
 |---|---|
-| Total test files | 430+ |
+| Total test files | 1120+ |
 | Total tests | 7,200+ |
 | Test duration | ~18s |
 | Contract test files | 120+ (24 primitives + 57 components + 10 patterns + 4 advanced/cross-cutting + enterprise) |

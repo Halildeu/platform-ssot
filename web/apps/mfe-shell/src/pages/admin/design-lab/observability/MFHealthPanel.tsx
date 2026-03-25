@@ -10,18 +10,19 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import type { RemoteHealth } from '../../../../lib/mf-resilience';
+import { readEnv } from '../../../../app/config/env';
 
 /* ------------------------------------------------------------------ */
 /*  Known remotes — derived from shell config                          */
 /* ------------------------------------------------------------------ */
 
 const KNOWN_REMOTES: Record<string, string> = {
-  suggestions: 'http://localhost:3001/remoteEntry.js',
-  ethic: 'http://localhost:3002/remoteEntry.js',
-  users: 'http://localhost:3004/remoteEntry.js',
-  access: 'http://localhost:3005/remoteEntry.js',
-  audit: 'http://localhost:3006/remoteEntry.js',
-  reporting: 'http://localhost:3007/remoteEntry.js',
+  suggestions: readEnv('MFE_SUGGESTIONS_URL', 'http://localhost:3001/remoteEntry.js'),
+  ethic: readEnv('MFE_ETHIC_URL', 'http://localhost:3002/remoteEntry.js'),
+  users: readEnv('MFE_USERS_URL', 'http://localhost:3004/remoteEntry.js'),
+  access: readEnv('MFE_ACCESS_URL', 'http://localhost:3005/remoteEntry.js'),
+  audit: readEnv('MFE_AUDIT_URL', 'http://localhost:3006/remoteEntry.js'),
+  reporting: readEnv('MFE_REPORTING_URL', 'http://localhost:3007/remoteEntry.js'),
 };
 
 const STATUS_CONFIG: Record<RemoteHealth['status'], { label: string; color: string; dot: string }> = {

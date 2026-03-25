@@ -28,7 +28,10 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import { Text } from '@mfe/design-system';
+import { readEnv } from '../../../../app/config/env';
 import { DataProvenanceBadge } from '../components/DataProvenanceBadge';
+
+const GRAFANA_URL = readEnv('GRAFANA_URL', 'http://localhost:3010');
 
 const WebVitalsPanel = lazy(() => import('../observability/WebVitalsPanel'));
 const MFHealthPanel = lazy(() => import('../observability/MFHealthPanel'));
@@ -389,14 +392,14 @@ type ServiceStatus = {
 };
 
 const BACKEND_SERVICES = [
-  { name: 'auth', url: 'http://localhost:8088/actuator/health' },
-  { name: 'user', url: 'http://localhost:8089/actuator/health' },
-  { name: 'permission', url: 'http://localhost:8090/actuator/health' },
-  { name: 'variant', url: 'http://localhost:8091/actuator/health' },
-  { name: 'core-data', url: 'http://localhost:8092/actuator/health' },
-  { name: 'report', url: 'http://localhost:8095/actuator/health' },
-  { name: 'gateway', url: 'http://localhost:8080/actuator/health' },
-  { name: 'keycloak', url: 'http://localhost:8081/' },
+  { name: 'auth', url: `${readEnv('BACKEND_AUTH_URL', 'http://localhost:8088')}/actuator/health` },
+  { name: 'user', url: `${readEnv('BACKEND_USER_URL', 'http://localhost:8089')}/actuator/health` },
+  { name: 'permission', url: `${readEnv('BACKEND_PERMISSION_URL', 'http://localhost:8090')}/actuator/health` },
+  { name: 'variant', url: `${readEnv('BACKEND_VARIANT_URL', 'http://localhost:8091')}/actuator/health` },
+  { name: 'core-data', url: `${readEnv('BACKEND_CORE_DATA_URL', 'http://localhost:8092')}/actuator/health` },
+  { name: 'report', url: `${readEnv('BACKEND_REPORT_URL', 'http://localhost:8095')}/actuator/health` },
+  { name: 'gateway', url: `${readEnv('BACKEND_GATEWAY_URL', 'http://localhost:8080')}/actuator/health` },
+  { name: 'keycloak', url: `${readEnv('KEYCLOAK_URL', 'http://localhost:8081')}/` },
 ];
 
 function useInfraStatus(): ServiceStatus[] {
@@ -531,7 +534,7 @@ function LogStreamPanel() {
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <a
-          href="http://localhost:3010/explore"
+          href={`${GRAFANA_URL}/explore`}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-xs"
@@ -549,7 +552,7 @@ function LogStreamPanel() {
         </a>
 
         <a
-          href="http://localhost:3010/explore"
+          href={`${GRAFANA_URL}/explore`}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-3 rounded-xl border border-border-subtle/50 bg-surface-muted p-3 transition hover:border-border-default hover:shadow-xs"
@@ -671,7 +674,7 @@ export default function ObservabilityPage() {
         </a>
 
         <a
-          href="http://localhost:3010"
+          href={GRAFANA_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
@@ -691,7 +694,7 @@ export default function ObservabilityPage() {
         </a>
 
         <a
-          href="http://localhost:3010/explore"
+          href={`${GRAFANA_URL}/explore`}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"
@@ -711,7 +714,7 @@ export default function ObservabilityPage() {
         </a>
 
         <a
-          href="http://localhost:3010/explore"
+          href={`${GRAFANA_URL}/explore`}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-4 rounded-2xl border border-border-subtle bg-surface-default p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-border-default hover:shadow-lg"

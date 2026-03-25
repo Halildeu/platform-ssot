@@ -41,16 +41,16 @@
 ## Temel Olcum Noktasi (Baseline — 2026-03-24)
 
 ```
-Test Dosyasi:       430+
+Test Dosyasi:       1120+
 Test Sayisi:      7,200+
-Bilesen Sayisi:    174 (24 primitiv + 60 component + 10 pattern + 38 enterprise + 6 advanced + 7 form + 3 motion + 4 provider + 8 internal + 2 performance + 12 other)
-Stories:            163
+Bilesen Sayisi:    186 (24 primitiv + 60 component + 10 pattern + 38 enterprise + 6 advanced + 7 form + 3 motion + 4 provider + 8 internal + 2 performance + 12 other)
+Stories:            187
 Release Gates:      28+ (original 14 + a11y-gate + mutation-gate + token-audit + keyboard-matrix + license-audit + bundle-report + changelog + scorecard-dashboard + perf-benchmark)
-Scorecard Average:  94.2/100
-Grade Distribution: 174/174 A-grade
+Scorecard Average:  97.3/100
+Grade Distribution: 186/186 A-grade
 Deep Imports:       17
 Enterprise Bilesen: 38 (BulletChart, ProcessFlow, FineKinney, PivotTable, OrgChart, BoxPlot, etc.)
-CI Scripts:         12+ automated quality gates
+CI Scripts:         25+ automated quality gates
 ESLint:             0 error
 Bundle (ESM):       ~5 MB
 Bundle (CJS):       ~9 MB
@@ -154,10 +154,10 @@ Rekabet gap'lerini kapat (form validation, animation, RTL) + agir enterprise yuz
 ### Basari Metrikleri
 - Rekabet skoru: 45 → ~54/60
 - Test sayisi: 5,321 → 7,200+
-- Bilesen sayisi: 94 → 174
-- Stories: 95 → 163
+- Bilesen sayisi: 94 → 186
+- Stories: 95 → 187
 - Release gates: 14 → 28+
-- Scorecard: 174/174 A-grade (94.2 ortalama)
+- Scorecard: 186/186 A-grade (97.3 ortalama)
 
 ---
 
@@ -441,7 +441,7 @@ ci_gates:
 
 | Risk | Olasilik | Etki | Durum | Onlem |
 |---|---|---|---|---|
-| Dark mode gorsel regresyon (174 bilesen) | ORTA | ORTA | AKTIF | Sprint A ile ele alinacak. Visual regression suite genisletilecek. |
+| Dark mode gorsel regresyon (186 bilesen) | ORTA | ORTA | AKTIF | Sprint A ile ele alinacak. Visual regression suite genisletilecek. |
 | MCP tool halusinasyonu (18 tool) | ORTA | YUKSEK | AKTIF | Grounding test mevcut. 2 eksik tool eklenince kapsamlilik artacak. |
 | Docs portal yoklugu → developer onboarding yavasi | YUKSEK | YUKSEK | AKTIF | Sprint C planlandi. API ref + playground + search. |
 | Bundle size artisi (ESM ~5MB, CJS ~9MB) | ORTA | ORTA | IZLENIYOR | Per-module budget gate aktif. Tree-shaking calisiyor. |

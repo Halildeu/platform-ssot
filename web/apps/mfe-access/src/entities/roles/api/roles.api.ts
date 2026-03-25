@@ -94,9 +94,8 @@ export const getRoles = async (): Promise<{ items: AccessRole[]; total: number }
     const items = Array.isArray(res.data.items) ? res.data.items.map(mapRole) : [];
     const total = typeof res.data.total === 'number' ? res.data.total : items.length;
     return { items, total };
-  } catch (err) {
+  } catch (err: unknown) {
     parseError(err);
-    return { items: [], total: 0 };
   }
 };
 
@@ -105,9 +104,8 @@ export const getRole = async (id: string): Promise<AccessRole> => {
     const client = resolveHttpClient();
     const res = await client.get<RoleDto>(`/v1/roles/${encodeURIComponent(id)}`);
     return mapRole(res.data);
-  } catch (err) {
+  } catch (err: unknown) {
     parseError(err);
-    return mapRole({});
   }
 };
 
@@ -121,9 +119,8 @@ export const createRole = async (payload: CreateRoleRequestDto): Promise<AccessR
     const client = resolveHttpClient();
     const res = await client.post<RoleDto>('/v1/roles', payload);
     return mapRole(res.data);
-  } catch (err) {
+  } catch (err: unknown) {
     parseError(err);
-    return mapRole({});
   }
 };
 
@@ -137,9 +134,8 @@ export const updateRole = async (id: string, payload: UpdateRoleRequestDto): Pro
     const client = resolveHttpClient();
     const res = await client.put<RoleDto>(`/v1/roles/${encodeURIComponent(id)}`, payload);
     return mapRole(res.data);
-  } catch (err) {
+  } catch (err: unknown) {
     parseError(err);
-    return mapRole({});
   }
 };
 
@@ -165,9 +161,8 @@ export const cloneRole = async (
       role: mapRole(res.data.role ?? {}),
       auditId: res.data.auditId,
     };
-  } catch (err) {
+  } catch (err: unknown) {
     parseError(err);
-    return { role: mapRole({}), auditId: undefined };
   }
 };
 
@@ -183,8 +178,7 @@ export const updateRolePermissions = async (
     const client = resolveHttpClient();
     const res = await client.put<{ auditId?: string }>(`/v1/roles/${encodeURIComponent(id)}/permissions`, payload);
     return { updated: true, auditId: res.data.auditId };
-  } catch (err) {
+  } catch (err: unknown) {
     parseError(err);
-    return { updated: false, auditId: undefined };
   }
 };

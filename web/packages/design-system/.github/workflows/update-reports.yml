@@ -1,0 +1,68 @@
+name: Update Reports & Metrics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/design-system/src/**'
+      - 'packages/design-system/package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-reports:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/design-system
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Generate all reports
+      - name: Generate Scorecard
+        run: npm run scorecard:json
+
+      - name: Generate Scorecard Dashboard
+        run: npm run scorecard:dashboard
+
+      - name: Generate API Reference
+        run: npm run docs:api
+
+      - name: Generate Bundle Report
+        run: npm run bundle-report
+
+      - name: Generate Changelog
+        run: npm run changelog
+
+      - name: Update Doc Metrics
+        run: npm run docs:update-metrics
+
+      # Commit if changes exist
+      - name: Commit updated reports
+        run: |
+          cd ../..
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/design-system/reports/ packages/design-system/docs/ packages/design-system/CHANGELOG.md
+          if git diff --staged --quiet; then
+            echo "No report changes to commit"
+          else
+            git commit -m "chore(design-system): auto-update reports & metrics [skip ci]"
+            git push
+          fi

@@ -539,7 +539,7 @@ const getStoredScope = (): RequestScope => {
       return {};
     }
     return parsed as RequestScope;
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('Scope bilgisi çözümlenemedi', error);
     return {};
   }
@@ -634,7 +634,7 @@ const mergeHeaders = (scope?: RequestScope) => {
         headers.Authorization = `Bearer ${token}`;
       }
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.warn('Internal API anahtarı okunamadı', error);
   }
   return headers;
@@ -966,7 +966,7 @@ export const fetchUsers = async (
       buildControlledAccessRequestConfig(scope),
     );
     payload = response.data ?? {};
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
       const status = error.response?.status ?? 0;
       if (!error.response) {
@@ -991,10 +991,7 @@ export const fetchUsers = async (
       reportError('Kullanıcı listesi', parsed);
       throw new Error(parsed.message);
     }
-    console.warn('[usersApi] Kullanıcı listesi alınamadı, bilinmeyen hata.', error);
-    return Object.assign(buildEmptyUsersResponse(params), {
-      meta: { reason: 'network-error' as const },
-    });
+    throw error;
   }
 
   const items = Array.isArray(payload.items)
@@ -1130,7 +1127,7 @@ export const fetchUserDetail = async (
       controlledConfig,
     );
     userData = response.data as UserDetailWire;
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
       const status = error.response?.status ?? 0;
       if (!error.response || UNAUTHORIZED_STATUS.has(status)) {
@@ -1141,7 +1138,7 @@ export const fetchUserDetail = async (
       reportError('Kullanıcı bilgisi', parsed);
       throw new Error(parsed.message);
     }
-    return buildFallbackUserDetail(user);
+    throw error;
   }
 
   let assignments: AssignmentWire[] = [];
@@ -1155,7 +1152,7 @@ export const fetchUserDetail = async (
     assignments = Array.isArray(assignmentPayload)
       ? assignmentPayload.filter(isPermissionWire).map((item) => item as AssignmentWire)
       : [];
-  } catch (error) {
+  } catch (error: unknown) {
     if (isAxiosError(error)) {
       const status = error.response?.status ?? 0;
       if (!UNAUTHORIZED_STATUS.has(status)) {
@@ -1186,7 +1183,7 @@ export const updateUser = async (
       { headers: mergeHeaders(args.scope) },
     );
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Kullanıcı bilgisi güncelleme', parsed);
     throw new Error(parsed.message);
@@ -1228,7 +1225,7 @@ export const updateUserModuleAccess = async (
       headers: mergeHeaders(args.scope),
     });
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Modül yetkisi güncelleme', parsed);
     throw new Error(parsed.message);
@@ -1248,7 +1245,7 @@ export const revokeUserModuleAccess = async (
       `${PERMISSIONS_RESOURCE_PATH}/assignments/${encodeURIComponent(args.assignmentId)}${query}`,
       { headers: mergeHeaders(args.scope) },
     );
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Modül yetkisi kaldırma', parsed);
     throw new Error(parsed.message);
@@ -1266,7 +1263,7 @@ export const toggleUserStatus = async (
       { headers: mergeHeaders(args.scope) },
     );
     return response.data as UserMutationAck;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Kullanıcı durumu', parsed);
     throw new Error(parsed.message);
@@ -1284,7 +1281,7 @@ export const triggerPasswordReset = async (
       { headers: mergeHeaders() },
     );
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     const parsed = await parseErrorResponse(isAxiosError(error) ? error : undefined);
     reportError('Parola sıfırlama', parsed);
     throw new Error(parsed.message);

@@ -34,10 +34,10 @@ src/
 ```
 
 **Rakamlar:**
-- 174 bileşen (24 primitive + 60 component + 38 enterprise + 10 pattern + 1 advanced suite + ...)
+- 186 bileşen (24 primitive + 60 component + 38 enterprise + 10 pattern + 1 advanced suite + ...)
 - 250+ component doc entry
-- 7,200+ test (430+ dosya)
-- 163 story
+- 7,200+ test (1120+ dosya)
+- 187 story
 - 24 release gate (24/24 PASS)
 - 15 deep import entry points (ESM + CJS)
 - 51 tree-shakeable icons

@@ -1,8 +1,8 @@
 # Sprint Tracker — @mfe/design-system
 
 > **Güncelleme:** 2026-03-24
-> **Mevcut Skor:** 94.2/100 ortalama, 174/174 A-grade
-> **Test:** 7,200+, 430+ dosya
+> **Mevcut Skor:** 97.3/100 ortalama, 186/186 A-grade
+> **Test:** 7,200+, 1120+ dosya
 > **Hedef:** Dark mode polish → F8 AI Runtime → F6 Docs Portal → FlowBuilder
 
 ---
@@ -11,13 +11,13 @@
 
 | Metrik | Değer |
 |--------|:-----:|
-| Bileşen | 174 |
+| Bileşen | 186 |
 | Enterprise | 38 |
 | Test | 7,200+ |
-| Story | 163 |
+| Story | 187 |
 | CI Gate | 24 |
-| Scorecard Avg | 94.2/100 |
-| A-grade | 174/174 (%100) |
+| Scorecard Avg | 97.3/100 |
+| A-grade | 186/186 (%100) |
 
 ---
 
@@ -85,7 +85,7 @@
 | C.7 | Deploy pipeline (Vercel/Netlify) | 🟡 | 0.5 gün |
 
 **Tamamlanma Kriterleri:**
-- 174 bileşenin API reference'ı yayında
+- 186 bileşenin API reference'ı yayında
 - Playground'da canlı kod çalıştırılabiliyor
 - Lighthouse Performance ≥90
 - TR + EN tam çeviri
@@ -133,7 +133,7 @@
 
 | Metrik | Şimdi | Sprint A | Sprint B | Sprint C | Sprint D |
 |--------|:-----:|:--------:|:--------:|:--------:|:--------:|
-| Scorecard Avg | 94.2 | 95 | 95 | 95 | 95 |
+| Scorecard Avg | 97.3 | 95 | 95 | 95 | 95 |
 | Enterprise bileşen | 38 | 38 | 38 | 38 | 39 |
 | CI Gate | 24 | 26 | 28 | 28 | 28 |
 | Docs Portal | ⬜ | ⬜ | ⬜ | ✅ | ✅ |
