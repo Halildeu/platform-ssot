@@ -25,7 +25,7 @@ export const AppSidebarFooter = React.forwardRef<HTMLDivElement, AppSidebarFoote
   <div
     ref={ref}
     className={cn(
-      'mt-auto border-t border-[var(--border-subtle)] px-2 py-2',
+      'mt-auto border-t border-[var(--border-subtle)] px-2 py-2 text-text-primary',
       className,
     )}
   >

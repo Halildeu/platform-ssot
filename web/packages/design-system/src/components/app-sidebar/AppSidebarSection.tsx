@@ -34,7 +34,7 @@ export const AppSidebarSection = React.forwardRef<HTMLDivElement, AppSidebarSect
   const isOpen = !collapsible || open;
 
   return (
-    <div ref={ref} className={cn('py-1', className)} role="group" aria-label={title}>
+    <div ref={ref} className={cn('py-1 text-text-primary', className)} role="group" aria-label={title}>
       {showHeader && (
         <div className="flex items-center px-3 py-1.5">
           {collapsible ? (

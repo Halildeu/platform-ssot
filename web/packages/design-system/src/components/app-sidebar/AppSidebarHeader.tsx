@@ -36,7 +36,7 @@ export const AppSidebarHeader = React.forwardRef<HTMLDivElement, AppSidebarHeade
     <div
       ref={ref}
       className={cn(
-        'flex items-center gap-3 px-3 py-4 border-b',
+        'flex items-center gap-3 px-3 py-4 border-b text-text-primary',
         'border-[var(--border-subtle)]',
         isCollapsed && 'justify-center px-2',
         className,

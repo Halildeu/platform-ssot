@@ -88,6 +88,24 @@
   /* Elevation: complete 4-level system */
   --elevation-tooltip: 0 2px 8px oklch(21% 0.032 265 / 15%);
   --elevation-dialog: 0 8px 24px oklch(21% 0.032 265 / 20%);
+
+  /* Chart colors */
+  --chart-purple: oklch(58.87% 0.1965 293.54);
+  --chart-pink: oklch(65.6% 0.2044 354.31);
+  --chart-cyan: oklch(72.32% 0.1278 207.39);
+  --chart-emerald: oklch(69.59% 0.1743 162.48);
+  --chart-amber: oklch(79.5% 0.1585 75.09);
+
+  /* Segmented control */
+  --segmented-active-bg: var(--action-primary-bg);
+  --segmented-active-text: var(--action-primary-text);
+  --segmented-text: var(--text-secondary);
+
+  /* Brand */
+  --brand-primary: var(--accent-primary);
+
+  /* Surface aliases */
+  --surface-subtle: var(--surface-muted-bg);
 }
 
 :root[data-theme="serban-light"], [data-theme-scope][data-theme="serban-light"] {

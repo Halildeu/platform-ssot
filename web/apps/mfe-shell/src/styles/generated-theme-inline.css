@@ -146,5 +146,20 @@
   /* Elevation: complete system */
   --shadow-tooltip: var(--elevation-tooltip);
   --shadow-dialog: var(--elevation-dialog);
+
+  /* Chart colors */
+  --color-chart-purple: var(--chart-purple);
+  --color-chart-pink: var(--chart-pink);
+  --color-chart-cyan: var(--chart-cyan);
+  --color-chart-emerald: var(--chart-emerald);
+  --color-chart-amber: var(--chart-amber);
+
+  /* Segmented control */
+  --color-segmented-active: var(--segmented-active-bg);
+  --color-segmented-text: var(--segmented-text);
+
+  /* Brand & Surface aliases */
+  --color-brand-primary: var(--brand-primary);
+  --color-surface-subtle: var(--surface-subtle);
 }
 

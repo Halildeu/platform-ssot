@@ -3,6 +3,7 @@
 import React, { forwardRef, useCallback } from 'react';
 import { Checkbox, type CheckboxProps } from '../../primitives/checkbox/Checkbox';
 import { useFormField } from '../useFormField';
+import { cn } from '../../utils/cn';
 import type { AccessLevel } from '../../internal/access-controller';
 
 /** Form-connected checkbox that binds to a form field by name.
@@ -31,7 +32,7 @@ export interface ConnectedCheckboxProps
 
 /** Form-connected checkbox that auto-binds checked state, onChange, and onBlur to form context. */
 export const ConnectedCheckbox = forwardRef<HTMLInputElement, ConnectedCheckboxProps>(
-  function ConnectedCheckbox({ name, access, ...rest }, ref) {
+  function ConnectedCheckbox({ name, access, className, ...rest }, ref) {
     const field = useFormField(name, access);
 
     const handleChange = useCallback(
@@ -43,6 +44,7 @@ export const ConnectedCheckbox = forwardRef<HTMLInputElement, ConnectedCheckboxP
       <Checkbox
         ref={ref}
         {...rest}
+        className={cn("border border-transparent", className)}
         checked={Boolean(field.value)}
         onChange={handleChange}
         onBlur={field.onBlur}

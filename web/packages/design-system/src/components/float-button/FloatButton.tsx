@@ -218,6 +218,7 @@ export const FloatButton = React.forwardRef<HTMLDivElement, FloatButtonProps>(
 
     const buttonClasses = cn(
       "inline-flex items-center justify-center transition-all duration-200",
+      "border border-transparent",
       "bg-[var(--float-button-bg)] text-[var(--float-button-text)]",
       "shadow-lg hover:shadow-xl",
       focusRingClass("ring"),

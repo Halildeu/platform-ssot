@@ -25,7 +25,7 @@ export const AppSidebarNav = React.forwardRef<HTMLElement, AppSidebarNavPropsBas
 }, ref) => (
   <nav
     ref={ref}
-    className={cn('flex-1 overflow-y-auto px-2 py-2', className)}
+    className={cn('flex-1 overflow-y-auto px-2 py-2 text-text-primary', className)}
     role="navigation"
   >
     {children}

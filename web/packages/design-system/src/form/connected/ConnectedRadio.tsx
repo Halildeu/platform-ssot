@@ -3,6 +3,7 @@
 import React, { forwardRef } from 'react';
 import { Radio, type RadioProps } from '../../primitives/radio/Radio';
 import { useFormField } from '../useFormField';
+import { cn } from '../../utils/cn';
 import type { AccessLevel } from '../../internal/access-controller';
 
 /** Form-connected radio button that binds to a form field by name.
@@ -31,13 +32,14 @@ export interface ConnectedRadioProps
 
 /** Form-connected radio button that auto-binds checked state and onChange to form context. */
 export const ConnectedRadio = forwardRef<HTMLInputElement, ConnectedRadioProps>(
-  function ConnectedRadio({ name, radioValue, access, ...rest }, ref) {
+  function ConnectedRadio({ name, radioValue, access, className, ...rest }, ref) {
     const { fieldProps } = useFormField(name, access);
 
     return (
       <Radio
         ref={ref}
         {...rest}
+        className={cn("border border-transparent", className)}
         checked={fieldProps.value === radioValue}
         onChange={() => fieldProps.onChange(radioValue)}
         onBlur={fieldProps.onBlur}

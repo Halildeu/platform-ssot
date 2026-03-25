@@ -39,7 +39,7 @@ export const AppSidebarGroup = React.forwardRef<HTMLDivElement, AppSidebarGroupP
   /* When the sidebar is collapsed, show only the icon */
   if (sidebarCollapsed) {
     return (
-      <div ref={ref} className={cn('py-1', className)} role="group" aria-label={label}>
+      <div ref={ref} className={cn('py-1 text-text-primary', className)} role="group" aria-label={label}>
         {icon && (
           <div className="group relative flex justify-center px-2 py-1.5">
             <span className="text-[var(--text-secondary)] text-lg">{icon}</span>
@@ -62,7 +62,7 @@ export const AppSidebarGroup = React.forwardRef<HTMLDivElement, AppSidebarGroupP
   }
 
   return (
-    <div ref={ref} className={cn('py-1', className)} role="group" aria-label={label}>
+    <div ref={ref} className={cn('py-1 text-text-primary', className)} role="group" aria-label={label}>
       {/* Header */}
       <div className="flex items-center px-3 py-1.5">
         {collapsible ? (

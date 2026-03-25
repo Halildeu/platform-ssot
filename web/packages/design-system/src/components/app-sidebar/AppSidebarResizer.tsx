@@ -71,7 +71,7 @@ export const AppSidebarResizer = React.forwardRef<HTMLDivElement, AppSidebarResi
       aria-valuemin={resize.minWidth}
       aria-valuemax={resize.maxWidth}
       className={cn(
-        'absolute right-0 top-0 z-10 h-full w-1.5',
+        'absolute right-0 top-0 z-10 h-full w-1.5 text-text-primary',
         'cursor-col-resize select-none',
         'hover:bg-[color-mix(in_oklab,var(--action-primary)_20%,transparent)]',
         'active:bg-[color-mix(in_oklab,var(--action-primary)_30%,transparent)]',

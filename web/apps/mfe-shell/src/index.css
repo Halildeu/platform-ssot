@@ -121,3 +121,30 @@ body {
 [data-elevation="flat"] :is(.shadow, .shadow-xs, .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl, .shadow-2xl) {
   box-shadow: var(--elevation-surface) !important;
 }
+
+/* ------------------------------------------------------------------ */
+/*  Forced Colors / High Contrast support                              */
+/*  Ensures all interactive elements have visible borders when the OS  */
+/*  strips background colors in forced-colors mode.                    */
+/* ------------------------------------------------------------------ */
+@media (forced-colors: active) {
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea,
+  a {
+    border: 1px solid ButtonText;
+  }
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --border-subtle: oklch(60% 0 0);
+    --border-default: oklch(80% 0 0);
+  }
+}
