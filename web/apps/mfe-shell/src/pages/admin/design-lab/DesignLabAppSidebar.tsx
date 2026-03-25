@@ -4,7 +4,7 @@ import {
   CircleHelp, Menu, ChevronDown, Star,
   Palette, Shapes, Box, Layout, BookOpen, Globe, Code,
 } from "lucide-react";
-import { AppSidebar, IconButton, Text } from "@mfe/design-system";
+import { IconButton, Text } from "@mfe/design-system";
 import { useDesignLabI18n } from "./useDesignLabI18n";
 import { useDesignLab } from "./DesignLabProvider";
 import { useDesignLabShell } from "./DesignLabShell";
@@ -221,13 +221,7 @@ export const DesignLabAppSidebar: React.FC = () => {
   return (
     <ContextMenuProvider>
     <HoverPreviewProvider>
-    <div className="flex h-full w-full flex-col overflow-hidden">
-      <AppSidebar
-        storageKey="design-lab-sidebar"
-        defaultMode="expanded"
-        expandedWidth={9999}
-        className="h-full !w-full !border-0 !bg-transparent"
-      >
+    <aside className="flex h-full w-full flex-col overflow-hidden bg-surface-default text-text-primary" aria-label="Design Lab sidebar">
         {/* Mobile menu toggle */}
         <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2 sm:hidden">
           <Text className="text-sm font-semibold">Design Lab</Text>
@@ -299,7 +293,7 @@ export const DesignLabAppSidebar: React.FC = () => {
         {favorites.length > 0 && !fuzzy.isSearching && (
           <>
             <SidebarFavorites />
-            <AppSidebar.Separator />
+            <SidebarDivider />
           </>
         )}
 
@@ -307,20 +301,19 @@ export const DesignLabAppSidebar: React.FC = () => {
         {recents.length > 0 && !fuzzy.isSearching && (
           <>
             <SidebarRecentlyViewed />
-            <AppSidebar.Separator />
+            <SidebarDivider />
           </>
         )}
 
-        {/* Layer content */}
-        <AppSidebar.Nav
-          className="min-h-0 flex-1 overflow-auto px-3 py-2"
-          enableKeyboardNav
+        {/* Layer content — scrollable */}
+        <nav
+          className="min-h-0 flex-1 overflow-y-auto px-2 py-2 space-y-0.5"
           data-testid="design-lab-sidebar-scroll"
+          aria-label="Component navigation"
         >
           {navContent}
-        </AppSidebar.Nav>
-      </AppSidebar>
-    </div>
+        </nav>
+    </aside>
     </HoverPreviewProvider>
     </ContextMenuProvider>
   );
@@ -368,20 +361,20 @@ function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerN
   return (
     <>
       {tokenGroups.length > 0 && (
-        <AppSidebar.Group label={t("designlab.sidebar.group.designTokens") || "Design Tokens"}>
+        <SidebarGroup label={t("designlab.sidebar.group.designTokens") || "Design Tokens"}>
           {tokenGroups.map((g) => (
             <ScrollableNavItem key={g.id} active={activeItem === g.id} label={g.title} onClick={() => onItemSelect(`/admin/design-lab/design/${g.id}`)} />
           ))}
-        </AppSidebar.Group>
+        </SidebarGroup>
       )}
       {themeAxes.length > 0 && (
         <>
-          <AppSidebar.Separator />
-          <AppSidebar.Group label={t("designlab.sidebar.group.themeAxes") || "Theme Axes"}>
+          <SidebarDivider />
+          <SidebarGroup label={t("designlab.sidebar.group.themeAxes") || "Theme Axes"}>
             {themeAxes.map((a) => (
               <ScrollableNavItem key={a.id} active={activeItem === a.id} label={a.title} onClick={() => onItemSelect(`/admin/design-lab/theme/${a.id}`)} />
             ))}
-          </AppSidebar.Group>
+          </SidebarGroup>
         </>
       )}
     </>
@@ -458,11 +451,10 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
           return item?.lifecycle === "stable";
         }).length, 0);
         return (
-        <AppSidebar.Group
+        <SidebarGroup
           key={group.id}
-          label={group.label}
+          label={`${group.label} (${stableItems}/${totalItems})`}
           defaultOpen={groupState?.isOpen(group.id) ?? true}
-          action={<SidebarGroupProgress current={stableItems} total={totalItems} label="stable" />}
         >
           {group.subgroups.flatMap((sg) =>
             sg.items.map((itemName) => {
@@ -484,7 +476,7 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighli
               );
             }),
           )}
-        </AppSidebar.Group>
+        </SidebarGroup>
         );
       })}
     </>
@@ -514,16 +506,16 @@ function PatternsNav({ activeItem, query, searchValue, onItemSelect, getHighligh
   return (
     <>
       {pages.length > 0 && (
-        <AppSidebar.Group label="Pages">
+        <SidebarGroup label="Pages">
           {pages.map((f) => (
             <ScrollableNavItem key={f.id} active={activeItem === f.id} label={f.title} onClick={() => onItemSelect(`/admin/design-lab/patterns/${f.id}`)} />
           ))}
-        </AppSidebar.Group>
+        </SidebarGroup>
       )}
       {advancedItems.length > 0 && (
         <>
-          {pages.length > 0 && <AppSidebar.Separator />}
-          <AppSidebar.Group label="Advanced">
+          {pages.length > 0 && <SidebarDivider />}
+          <SidebarGroup label="Advanced">
             {advancedItems.map((item) => (
               <ScrollableNavItem
                 key={item.name}
@@ -536,7 +528,7 @@ function PatternsNav({ activeItem, query, searchValue, onItemSelect, getHighligh
                 onClick={() => onItemSelect(`/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, "~"))}`)}
               />
             ))}
-          </AppSidebar.Group>
+          </SidebarGroup>
         </>
       )}
     </>
@@ -676,7 +668,7 @@ function ScrollableNavItem({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={cancelShow}
     >
-      <AppSidebar.NavItem
+      <SidebarNavButton
         label={label}
         active={active}
         badge={badge}
@@ -720,6 +712,89 @@ function LifecycleBadge({ lifecycle }: { lifecycle?: string }) {
       {lifecycle}
     </span>
   );
+}
+
+/* ---- Lightweight sidebar primitives (no AppSidebar dependency) ---- */
+
+function SidebarGroup({
+  label,
+  defaultOpen = true,
+  action,
+  children,
+}: {
+  label: string;
+  defaultOpen?: boolean;
+  action?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
+  return (
+    <div className="mb-1" role="group" aria-label={label}>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between gap-1 rounded-md px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-secondary hover:bg-surface-canvas transition-colors cursor-pointer"
+        aria-expanded={open}
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          <svg
+            className={`w-3 h-3 shrink-0 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+          >
+            <path d="m9 18 6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span className="truncate">{label}</span>
+        </div>
+        {action && <div className="shrink-0" onClick={(e) => e.stopPropagation()}>{action}</div>}
+      </button>
+      {open && (
+        <div className="pl-1 space-y-px mt-0.5">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SidebarNavButton({
+  label,
+  active,
+  badge,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  badge?: React.ReactNode;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      data-sidebar-item=""
+      aria-current={active ? "page" : undefined}
+      className={`
+        flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5
+        text-[13px] transition-colors cursor-pointer text-left
+        ${
+          active
+            ? "bg-action-primary/10 text-action-primary font-medium border-l-2 border-action-primary"
+            : "text-text-secondary hover:bg-surface-canvas hover:text-text-primary"
+        }
+      `}
+    >
+      <span className="truncate">{label}</span>
+      {badge}
+    </button>
+  );
+}
+
+function SidebarDivider() {
+  return <hr className="my-2 border-border-subtle" />;
 }
 
 function EmptyNav({ searchValue }: { searchValue: string }) {
