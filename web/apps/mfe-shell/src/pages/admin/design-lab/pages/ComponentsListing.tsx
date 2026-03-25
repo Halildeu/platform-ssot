@@ -10,21 +10,21 @@ import { PRIMITIVE_NAMES, ADVANCED_NAMES } from "../DesignLabSidebarRouter";
 /* ------------------------------------------------------------------ */
 
 const GROUP_COLORS = [
-  "from-blue-500/10 to-cyan-500/5",
-  "from-violet-500/10 to-purple-500/5",
-  "from-emerald-500/10 to-teal-500/5",
-  "from-amber-500/10 to-orange-500/5",
-  "from-rose-500/10 to-pink-500/5",
-  "from-indigo-500/10 to-blue-500/5",
+  "from-state-info-bg/40 to-state-info-bg/10",
+  "from-accent-soft/30 to-accent-soft/10",
+  "from-state-success-bg/40 to-state-success-bg/10",
+  "from-state-warning-bg/40 to-state-warning-bg/10",
+  "from-state-danger-bg/40 to-state-danger-bg/10",
+  "from-action-primary/10 to-action-primary/5",
 ];
 
 const GROUP_ICON_BG = [
-  "bg-blue-500/10 text-blue-600",
-  "bg-violet-500/10 text-violet-600",
-  "bg-emerald-500/10 text-emerald-600",
-  "bg-amber-500/10 text-amber-600",
-  "bg-rose-500/10 text-rose-600",
-  "bg-indigo-500/10 text-indigo-600",
+  "bg-state-info-bg text-state-info-text",
+  "bg-accent-soft/20 text-accent-primary",
+  "bg-state-success-bg text-state-success-text",
+  "bg-state-warning-bg text-state-warning-text",
+  "bg-state-danger-bg text-state-danger-text",
+  "bg-action-primary/10 text-action-primary",
 ];
 
 export default function ComponentsListing() {
