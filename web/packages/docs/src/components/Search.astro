@@ -1,0 +1,27 @@
+---
+---
+<div class="search-container" id="search"></div>
+
+<script>
+  import { PagefindUI } from '@pagefind/default-ui';
+
+  new PagefindUI({
+    element: '#search',
+    showSubResults: true,
+    showImages: false,
+    translations: {
+      placeholder: 'Bileşen, token veya rehber ara...',
+      zero_results: 'Sonuç bulunamadı: [SEARCH_TERM]',
+      many_results: '[COUNT] sonuç bulundu',
+      one_result: '1 sonuç bulundu',
+      searching: 'Aranıyor...',
+    },
+  });
+</script>
+
+<style>
+.search-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+</style>

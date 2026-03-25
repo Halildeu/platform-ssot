@@ -1,9 +1,11 @@
 ---
 title: DataGrid
-description: 'Enterprise veri tablosu — sıralama, filtreleme, gruplama, export.'
+description: 'Enterprise veri tablosu — siralama, filtreleme, gruplama, export.'
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import Playground from '../../../components/Playground.astro';
+import PropsTable from '../../../components/PropsTable.astro';
 
 ## Import
 
@@ -11,7 +13,7 @@ import { Aside } from '@astrojs/starlight/components';
 import { DataGrid } from '@mfe/design-system';
 ```
 
-## Kullanım
+## Kullanim
 
 ```tsx
 const columns = [
@@ -22,14 +24,14 @@ const columns = [
 ];
 
 const rows = [
-  { id: 1, name: 'Ahmet Yılmaz', email: 'ahmet@ornek.com', role: 'Admin' },
-  { id: 2, name: 'Ayşe Demir', email: 'ayse@ornek.com', role: 'Editör' },
+  { id: 1, name: 'Ahmet Yilmaz', email: 'ahmet@ornek.com', role: 'Admin' },
+  { id: 2, name: 'Ayse Demir', email: 'ayse@ornek.com', role: 'Editor' },
 ];
 
 <DataGrid columns={columns} rows={rows} />
 ```
 
-## Sıralama
+## Siralama
 
 ```tsx
 <DataGrid
@@ -63,7 +65,7 @@ const rows = [
 />
 ```
 
-## Satır Seçimi
+## Satir Secimi
 
 ```tsx
 <DataGrid
@@ -97,56 +99,64 @@ const rows = [
 />
 ```
 
-## Kolon Tanımı
+## Canli Playground
 
-| Prop | Tip | Varsayılan | Açıklama |
-|------|-----|-----------|----------|
-| `field` | `string` | — | Veri alanı adı |
-| `headerName` | `string` | — | Kolon başlığı |
-| `width` | `number` | — | Sabit genişlik (px) |
-| `flex` | `number` | — | Esnek genişlik oranı |
-| `sortable` | `boolean` | `true` | Sıralanabilir |
-| `filterable` | `boolean` | `true` | Filtrelenebilir |
-| `resizable` | `boolean` | `true` | Yeniden boyutlandırılabilir |
-| `renderCell` | `(params) => ReactNode` | — | Özel hücre render'ı |
-| `valueFormatter` | `(value) => string` | — | Değer formatlayıcı |
-| `type` | `'string' \| 'number' \| 'date' \| 'boolean'` | `'string'` | Veri tipi |
+<Playground
+  code={`const columns = [\n  { field: 'id', headerName: 'ID', width: 70 },\n  { field: 'name', headerName: 'Ad', flex: 1 },\n  { field: 'email', headerName: 'E-posta', flex: 1 },\n];\n\nconst rows = [\n  { id: 1, name: 'Ahmet Yilmaz', email: 'ahmet@ornek.com' },\n  { id: 2, name: 'Ayse Demir', email: 'ayse@ornek.com' },\n];\n\n<DataGrid columns={columns} rows={rows} sortable filterable />`}
+  componentName="DataGrid"
+  height="250px"
+/>
+
+## Kolon Tanimi
+
+<PropsTable props={[
+  { name: 'field', type: 'string', required: true, description: 'Veri alani adi' },
+  { name: 'headerName', type: 'string', required: true, description: 'Kolon basligi' },
+  { name: 'width', type: 'number', description: 'Sabit genislik (px)' },
+  { name: 'flex', type: 'number', description: 'Esnek genislik orani' },
+  { name: 'sortable', type: 'boolean', default: 'true', description: 'Siralanabilir' },
+  { name: 'filterable', type: 'boolean', default: 'true', description: 'Filtrelenebilir' },
+  { name: 'resizable', type: 'boolean', default: 'true', description: 'Yeniden boyutlandirilabilir' },
+  { name: 'renderCell', type: '(params) => ReactNode', description: 'Ozel hucre render\'i' },
+  { name: 'valueFormatter', type: '(value) => string', description: 'Deger formatlayici' },
+  { name: 'type', type: "'string' | 'number' | 'date' | 'boolean'", default: "'string'", description: 'Veri tipi' },
+]} />
 
 ## DataGrid Props
 
-| Prop | Tip | Varsayılan | Açıklama |
-|------|-----|-----------|----------|
-| `columns` | `ColumnDef[]` | — | Kolon tanımları |
-| `rows` | `any[]` | — | Veri dizisi |
-| `loading` | `boolean` | `false` | Yükleniyor durumu |
-| `sortable` | `boolean` | `false` | Sıralama aktif |
-| `filterable` | `boolean` | `false` | Filtreleme aktif |
-| `pagination` | `boolean` | `false` | Sayfalama aktif |
-| `pageSize` | `number` | `25` | Sayfa başına satır |
-| `selectable` | `boolean` | `false` | Satır seçimi aktif |
-| `selectionMode` | `'single' \| 'multiple'` | `'multiple'` | Seçim modu |
-| `groupable` | `boolean` | `false` | Gruplama aktif |
-| `exportable` | `boolean` | `false` | Export aktif |
-| `height` | `number \| string` | `400` | Tablo yüksekliği |
-| `density` | `'compact' \| 'standard' \| 'comfortable'` | `'standard'` | Satır yoğunluğu |
-| `onRowClick` | `(row) => void` | — | Satır tıklama handler'ı |
-| `onSelectionChange` | `(ids: any[]) => void` | — | Seçim değişikliği |
+<PropsTable props={[
+  { name: 'columns', type: 'ColumnDef[]', required: true, description: 'Kolon tanimlari' },
+  { name: 'rows', type: 'any[]', required: true, description: 'Veri dizisi' },
+  { name: 'loading', type: 'boolean', default: 'false', description: 'Yukleniyor durumu' },
+  { name: 'sortable', type: 'boolean', default: 'false', description: 'Siralama aktif' },
+  { name: 'filterable', type: 'boolean', default: 'false', description: 'Filtreleme aktif' },
+  { name: 'pagination', type: 'boolean', default: 'false', description: 'Sayfalama aktif' },
+  { name: 'pageSize', type: 'number', default: '25', description: 'Sayfa basina satir' },
+  { name: 'selectable', type: 'boolean', default: 'false', description: 'Satir secimi aktif' },
+  { name: 'selectionMode', type: "'single' | 'multiple'", default: "'multiple'", description: 'Secim modu' },
+  { name: 'groupable', type: 'boolean', default: 'false', description: 'Gruplama aktif' },
+  { name: 'exportable', type: 'boolean', default: 'false', description: 'Export aktif' },
+  { name: 'height', type: 'number | string', default: '400', description: 'Tablo yuksekligi' },
+  { name: 'density', type: "'compact' | 'standard' | 'comfortable'", default: "'standard'", description: 'Satir yogunlugu' },
+  { name: 'onRowClick', type: '(row) => void', description: 'Satir tiklama handler\'i' },
+  { name: 'onSelectionChange', type: '(ids: any[]) => void', description: 'Secim degisikligi' },
+]} />
 
-## Erişilebilirlik
+## Erisilebilirlik
 
-- **Keyboard Navigation**: Ok tuşları ile hücre navigasyonu
+- **Keyboard Navigation**: Ok tuslari ile hucre navigasyonu
 - **ARIA**: `role="grid"`, `role="row"`, `role="gridcell"` otomatik
-- **Focus Management**: Hücre fokus yönetimi ve tab navigasyonu
-- **Screen Reader**: Kolon başlıkları ve sıralama durumu duyurulur
-- **Selection**: `aria-selected` ile seçim durumu belirtilir
+- **Focus Management**: Hucre fokus yonetimi ve tab navigasyonu
+- **Screen Reader**: Kolon basliklari ve siralama durumu duyurulur
+- **Selection**: `aria-selected` ile secim durumu belirtilir
 
 <Aside type="note">
-  Büyük veri setleri (10,000+ satır) için sanal kaydırma (virtualization) otomatik olarak aktif olur.
+  Buyuk veri setleri (10,000+ satir) icin sanal kaydirma (virtualization) otomatik olarak aktif olur.
 </Aside>
 
-## Server-Side İşlemler
+## Server-Side Islemler
 
-Büyük veri setleri için sunucu taraflı sıralama, filtreleme ve sayfalama:
+Buyuk veri setleri icin sunucu tarafli siralama, filtreleme ve sayfalama:
 
 ```tsx
 <DataGrid

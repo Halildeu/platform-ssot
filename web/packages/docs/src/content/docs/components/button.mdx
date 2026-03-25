@@ -1,9 +1,11 @@
 ---
 title: Button
-description: 'Temel etkileşim butonu — variant, size, loading, icon desteği.'
+description: 'Temel etkilesim butonu — variant, size, loading, icon destegi.'
 ---
 
 import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+import Playground from '../../../components/Playground.astro';
+import PropsTable from '../../../components/PropsTable.astro';
 
 ## Import
 
@@ -11,11 +13,11 @@ import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
 import { Button } from '@mfe/design-system';
 ```
 
-## Kullanım
+## Kullanim
 
 ```tsx
 <Button variant="primary">Kaydet</Button>
-<Button variant="secondary">İptal</Button>
+<Button variant="secondary">Iptal</Button>
 <Button variant="danger" size="sm">Sil</Button>
 ```
 
@@ -31,9 +33,9 @@ import { Button } from '@mfe/design-system';
 ## Boyutlar
 
 ```tsx
-<Button size="sm">Küçük</Button>
+<Button size="sm">Kucuk</Button>
 <Button size="md">Orta</Button>
-<Button size="lg">Büyük</Button>
+<Button size="lg">Buyuk</Button>
 ```
 
 ## Loading Durumu
@@ -42,9 +44,9 @@ import { Button } from '@mfe/design-system';
 <Button loading>Kaydediliyor...</Button>
 ```
 
-Loading durumunda buton otomatik olarak `disabled` olur ve bir spinner gösterir.
+Loading durumunda buton otomatik olarak `disabled` olur ve bir spinner gosterir.
 
-## İkon Desteği
+## Ikon Destegi
 
 ```tsx
 import { IconPlus, IconSave } from '@mfe/design-system/icons';
@@ -53,40 +55,48 @@ import { IconPlus, IconSave } from '@mfe/design-system/icons';
 <Button icon={<IconSave />} variant="primary">Kaydet</Button>
 ```
 
+## Canli Playground
+
+<Playground
+  code={`<Button variant="primary">Kaydet</Button>\n<Button variant="secondary">Iptal</Button>\n<Button variant="danger" size="sm">Sil</Button>`}
+  componentName="Button"
+  height="120px"
+/>
+
 ## Props
 
-| Prop | Tip | Varsayılan | Açıklama |
-|------|-----|-----------|----------|
-| `variant` | `'primary' \| 'secondary' \| 'danger' \| 'ghost'` | `'primary'` | Görsel stil |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Boyut |
-| `loading` | `boolean` | `false` | Yükleniyor durumu |
-| `disabled` | `boolean` | `false` | Devre dışı |
-| `icon` | `ReactNode` | — | Sol ikon |
-| `iconPosition` | `'left' \| 'right'` | `'left'` | İkon konumu |
-| `fullWidth` | `boolean` | `false` | Tam genişlik |
-| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | HTML button type |
-| `onClick` | `(e: MouseEvent) => void` | — | Tıklama handler'ı |
+<PropsTable props={[
+  { name: 'variant', type: "'primary' | 'secondary' | 'danger' | 'ghost'", default: "'primary'", description: 'Gorsel stil' },
+  { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Boyut' },
+  { name: 'loading', type: 'boolean', default: 'false', description: 'Yukleniyor durumu' },
+  { name: 'disabled', type: 'boolean', default: 'false', description: 'Devre disi' },
+  { name: 'icon', type: 'ReactNode', description: 'Sol ikon' },
+  { name: 'iconPosition', type: "'left' | 'right'", default: "'left'", description: 'Ikon konumu' },
+  { name: 'fullWidth', type: 'boolean', default: 'false', description: 'Tam genislik' },
+  { name: 'type', type: "'button' | 'submit' | 'reset'", default: "'button'", description: 'HTML button type' },
+  { name: 'onClick', type: '(e: MouseEvent) => void', description: 'Tiklama handler\'i' },
+]} />
 
-## Erişilebilirlik
+## Erisilebilirlik
 
 - **Keyboard**: `Enter` / `Space` ile aktivasyon
 - **ARIA**: `role="button"`, `aria-disabled` otomatik
-- **Focus**: `:focus-visible` ring ile görsel geri bildirim
+- **Focus**: `:focus-visible` ring ile gorsel geri bildirim
 - **Loading**: `aria-busy="true"` ve spinner `aria-label` ile duyurulur
-- **Kontrast**: Tüm variant'lar WCAG AA minimum 4.5:1 kontrast oranını karşılar
+- **Kontrast**: Tum variant'lar WCAG AA minimum 4.5:1 kontrast oranini karsilar
 
 <Aside type="tip">
-  Buton içinde sadece ikon kullanıyorsanız, `aria-label` prop'unu mutlaka ekleyin.
+  Buton icinde sadece ikon kullaniyorsaniz, `aria-label` prop'unu mutlaka ekleyin.
 </Aside>
 
-## Örnekler
+## Ornekler
 
-### Form Gönderimi
+### Form Gonderimi
 
 ```tsx
 <form onSubmit={handleSubmit}>
   <Button type="submit" loading={isSubmitting}>
-    Formu Gönder
+    Formu Gonder
   </Button>
 </form>
 ```
@@ -99,17 +109,17 @@ import { ButtonGroup } from '@mfe/design-system';
 <ButtonGroup>
   <Button variant="primary">Kaydet</Button>
   <Button variant="secondary">Taslak</Button>
-  <Button variant="ghost">İptal</Button>
+  <Button variant="ghost">Iptal</Button>
 </ButtonGroup>
 ```
 
-### Tehlikeli İşlem
+### Tehlikeli Islem
 
 ```tsx
 <Button
   variant="danger"
-  onClick={() => confirm('Silmek istediğinize emin misiniz?')}
+  onClick={() => confirm('Silmek istediginize emin misiniz?')}
 >
-  Kaydı Sil
+  Kaydi Sil
 </Button>
 ```

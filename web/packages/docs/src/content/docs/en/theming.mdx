@@ -1,0 +1,122 @@
+---
+title: Theme System
+description: 'Color, typography and spacing customizations'
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+`@mfe/design-system` offers a fully customizable theme system across three axes:
+
+- **Color** — Semantic token-based color palette
+- **Typography** — Font family, size and weight scales
+- **Spacing** — Consistent spacing system based on a 4px grid
+
+## Theme Configuration
+
+```tsx
+import { DesignSystemProvider } from '@mfe/design-system';
+
+const customTheme = {
+  colors: {
+    primary: {
+      50: '#eff6ff',
+      100: '#dbeafe',
+      500: '#3b82f6',
+      600: '#2563eb',
+      700: '#1d4ed8',
+      900: '#1e3a5f',
+    },
+    semantic: {
+      success: '#22c55e',
+      warning: '#f59e0b',
+      danger: '#ef4444',
+      info: '#3b82f6',
+    },
+  },
+  typography: {
+    fontFamily: {
+      sans: 'Inter, system-ui, sans-serif',
+      mono: 'JetBrains Mono, monospace',
+    },
+    fontSize: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+    },
+  },
+  spacing: {
+    unit: 4,  // base unit in px
+    scale: [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24],
+  },
+};
+
+function App() {
+  return (
+    <DesignSystemProvider theme={customTheme}>
+      <YourApp />
+    </DesignSystemProvider>
+  );
+}
+```
+
+## Semantic Tokens
+
+The theme system manages colors through semantic tokens rather than direct hex values. This approach makes dark mode transitions seamless.
+
+| Token | Description | Light | Dark |
+|-------|-------------|-------|------|
+| `bg.primary` | Main background | `#ffffff` | `#0f172a` |
+| `bg.secondary` | Secondary background | `#f8fafc` | `#1e293b` |
+| `text.primary` | Main text color | `#0f172a` | `#f8fafc` |
+| `text.secondary` | Secondary text | `#64748b` | `#94a3b8` |
+| `border.default` | Default border | `#e2e8f0` | `#334155` |
+| `interactive.primary` | Primary interaction | `#3b82f6` | `#60a5fa` |
+
+## CSS Custom Properties
+
+All tokens are also accessible as CSS custom properties:
+
+```css
+.my-component {
+  color: var(--mfe-text-primary);
+  background: var(--mfe-bg-primary);
+  border: 1px solid var(--mfe-border-default);
+  padding: var(--mfe-spacing-4);
+}
+```
+
+## Theme Extension
+
+You can partially override the existing theme — only specify the tokens you want to change:
+
+```tsx
+<DesignSystemProvider
+  theme={{
+    colors: {
+      primary: { 500: '#8b5cf6' },  // only primary.500 changes
+    },
+  }}
+>
+  <YourApp />
+</DesignSystemProvider>
+```
+
+<Aside type="caution">
+  Avoid hardcoding theme tokens directly in CSS. Use semantic tokens to maintain dark mode and high-contrast compatibility.
+</Aside>
+
+## Typography Scale
+
+| Token | Size | Usage |
+|-------|------|-------|
+| `text-xs` | 0.75rem | Badge, caption |
+| `text-sm` | 0.875rem | Helper text, label |
+| `text-base` | 1rem | Body text |
+| `text-lg` | 1.125rem | Subtitle |
+| `text-xl` | 1.25rem | Section heading |
+| `text-2xl` | 1.5rem | Page heading |
+| `text-3xl` | 1.875rem | Hero heading |

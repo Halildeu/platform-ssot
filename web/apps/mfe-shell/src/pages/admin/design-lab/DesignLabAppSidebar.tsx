@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  CircleHelp, Menu,
+  CircleHelp, Menu, ChevronDown, ChevronUp, Star,
   Palette, Shapes, Box, Layout, BookOpen, Globe, Code,
 } from "lucide-react";
 import { AppSidebar, IconButton, Text, Tooltip } from "@mfe/design-system";
@@ -14,12 +14,31 @@ import {
   API_NAMES,
 } from "./DesignLabSidebarRouter";
 
+/* New sidebar v2 modules */
+import {
+  SidebarHealthBanner,
+  SidebarBreadcrumb,
+  SidebarSearchEnhanced,
+  HighlightedLabel,
+  SidebarFilterBar,
+  useFilterState,
+  SidebarFavorites,
+  SidebarRecentlyViewed,
+} from "./sidebar/sections";
+import {
+  useSidebarFavorites,
+  useSidebarRecents,
+  useSidebarGroupState,
+  useFuzzySearch,
+  type HighlightRange,
+} from "./sidebar/hooks";
+
 /* ------------------------------------------------------------------ */
-/*  DesignLabAppSidebar — AppSidebar compound-component adapter        */
+/*  DesignLabAppSidebar v2 — World-Class Component Navigation          */
 /*                                                                     */
-/*  Replaces the monolithic DesignLabSidebarRouter render tree with    */
-/*  the design-system AppSidebar compound API while reusing all        */
-/*  existing data logic (layers, search, route detection, counts).     */
+/*  Features: Health banner, breadcrumb, fuzzy search with highlight,  */
+/*  filter chips, favorites, recently viewed, group state memory,      */
+/*  keyboard navigation, pin-on-hover.                                 */
 /* ------------------------------------------------------------------ */
 
 type LayerId =
@@ -32,13 +51,8 @@ type LayerId =
   | "ecosystem";
 
 const LAYER_IDS: LayerId[] = [
-  "foundations",
-  "primitives",
-  "components",
-  "patterns",
-  "apis",
-  "recipes",
-  "ecosystem",
+  "foundations", "primitives", "components", "patterns",
+  "apis", "recipes", "ecosystem",
 ];
 
 const LAYER_ICONS: Record<LayerId, React.ReactNode> = {
@@ -50,8 +64,6 @@ const LAYER_ICONS: Record<LayerId, React.ReactNode> = {
   recipes: <BookOpen className="h-4 w-4" />,
   ecosystem: <Globe className="h-4 w-4" />,
 };
-
-/* ---- Constants ---- */
 
 const DESIGN_TOKEN_GROUPS = [
   "colors", "typography", "spacing", "radius", "motion", "zindex",
@@ -89,7 +101,7 @@ function resolveActiveItemFromPath(pathname: string): string | null {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Component                                                          */
+/*  Main Component                                                     */
 /* ------------------------------------------------------------------ */
 
 export const DesignLabAppSidebar: React.FC = () => {
@@ -100,233 +112,220 @@ export const DesignLabAppSidebar: React.FC = () => {
   const { toggleSidebar, closeSidebar } = useDesignLabShell();
 
   const activeLayer = useMemo(() => resolveLayerFromPath(pathname), [pathname]);
-  const activeItem = useMemo(
-    () => resolveActiveItemFromPath(pathname),
-    [pathname],
-  );
+  const activeItem = useMemo(() => resolveActiveItemFromPath(pathname), [pathname]);
 
-  const [searchValue, setSearchValue] = React.useState("");
+  /* New v2 hooks */
+  const { favorites, isFavorite, toggle: toggleFavorite } = useSidebarFavorites();
+  const { recents, track: trackRecent } = useSidebarRecents();
+  const groupState = useSidebarGroupState(activeLayer);
+  const { filters, setFilters, matches: filterMatches } = useFilterState();
+
+  /* All searchable items for fuzzy search */
+  const searchableItems = useMemo(() => {
+    return index.items
+      .filter((i) => i.availability === "exported")
+      .map((i) => ({ name: i.name, lifecycle: i.lifecycle, demoMode: i.demoMode }));
+  }, [index]);
+
+  const fuzzy = useFuzzySearch(searchableItems);
+
+  /* Auto-track recent visits */
+  useEffect(() => {
+    if (activeItem) {
+      trackRecent({ name: activeItem, layer: activeLayer, path: pathname });
+    }
+  }, [pathname, activeItem, activeLayer, trackRecent]);
 
   const layerTitle = t(`designlab.sidebar.title.${activeLayer}`);
   const layerHelpText = t(`designlab.sidebar.help.${activeLayer}`);
-  const searchPlaceholder = t(
-    `designlab.sidebar.search.${activeLayer}.placeholder`,
-  );
 
   /* Count for current layer */
   const layerItemCount = useMemo(() => {
     switch (activeLayer) {
-      case "foundations":
-        return 16; // 6 token groups + 10 theme axes
-      case "primitives":
-        return PRIMITIVE_NAMES.size;
+      case "foundations": return 16;
+      case "primitives": return PRIMITIVE_NAMES.size;
       case "components":
         return index.items.filter(
-          (i) =>
-            i.availability === "exported" &&
-            !PRIMITIVE_NAMES.has(i.name) &&
-            !API_NAMES.has(i.name) &&
-            !ADVANCED_NAMES.has(i.name),
+          (i) => i.availability === "exported" && !PRIMITIVE_NAMES.has(i.name) && !API_NAMES.has(i.name) && !ADVANCED_NAMES.has(i.name),
         ).length;
       case "patterns":
         return (index.pages?.currentFamilies.length ?? 0) + ADVANCED_NAMES.size;
-      case "apis":
-        return API_NAMES.size;
-      case "recipes":
-        return index.recipes?.currentFamilies.length ?? 0;
+      case "apis": return API_NAMES.size;
+      case "recipes": return index.recipes?.currentFamilies.length ?? 0;
       case "ecosystem":
-        return (
-          (index.ecosystem?.currentFamilies.length ?? 0) +
-          index.items.filter(
-            (i) =>
-              ["x_data_grid", "x_charts", "x_scheduler", "x_kanban", "x_editor", "x_form_builder"].includes(
-                i.taxonomyGroupId,
-              ) && i.availability === "exported",
-          ).length
-        );
+        return (index.ecosystem?.currentFamilies.length ?? 0) +
+          index.items.filter((i) =>
+            ["x_data_grid", "x_charts", "x_scheduler", "x_kanban", "x_editor", "x_form_builder"].includes(i.taxonomyGroupId) && i.availability === "exported",
+          ).length;
     }
   }, [activeLayer, index]);
 
-  const handleLayerSwitch = (layerId: LayerId) => {
+  const handleLayerSwitch = useCallback((layerId: LayerId) => {
     navigate(`/admin/design-lab/${layerId}`);
-  };
+    fuzzy.clear();
+  }, [navigate, fuzzy]);
 
-  const handleItemSelect = (itemPath: string) => {
+  const handleItemSelect = useCallback((itemPath: string) => {
     navigate(itemPath);
     closeSidebar();
-  };
+    fuzzy.saveSearch(fuzzy.query);
+    fuzzy.clear();
+  }, [navigate, closeSidebar, fuzzy]);
 
-  /* ---- Build grouped nav items per layer ---- */
+  /* Fuzzy search highlight ranges for a given item name */
+  const getHighlightRanges = useCallback((name: string): HighlightRange[] => {
+    if (!fuzzy.isSearching) return [];
+    const match = fuzzy.results.find((r) => r.item.name === name);
+    return match?.ranges ?? [];
+  }, [fuzzy.isSearching, fuzzy.results]);
+
+  /* Filter + search combined matching */
+  const isItemVisible = useCallback((item: { name: string; lifecycle?: string; demoMode?: string }) => {
+    if (!filterMatches(item)) return false;
+    if (fuzzy.isSearching) {
+      return fuzzy.results.some((r) => r.item.name === item.name);
+    }
+    return true;
+  }, [filterMatches, fuzzy.isSearching, fuzzy.results]);
+
+  /* Build nav content */
   const navContent = useMemo(() => {
-    const query = searchValue.toLowerCase().trim();
+    const query = fuzzy.isSearching ? "" : ""; // Fuzzy handles filtering
 
     switch (activeLayer) {
       case "foundations":
-        return (
-          <FoundationsNav
-            activeItem={activeItem}
-            query={query}
-            searchValue={searchValue}
-            onItemSelect={handleItemSelect}
-          />
-        );
+        return <FoundationsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
       case "primitives":
-        return (
-          <PrimitivesNav
-            activeItem={activeItem}
-            query={query}
-            searchValue={searchValue}
-            onItemSelect={handleItemSelect}
-          />
-        );
+        return <PrimitivesNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
       case "components":
-        return (
-          <ComponentsNav
-            activeItem={activeItem}
-            query={query}
-            searchValue={searchValue}
-            onItemSelect={handleItemSelect}
-          />
-        );
+        return <ComponentsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} groupState={groupState} filterMatches={filterMatches} />;
       case "patterns":
-        return (
-          <PatternsNav
-            activeItem={activeItem}
-            query={query}
-            searchValue={searchValue}
-            onItemSelect={handleItemSelect}
-          />
-        );
+        return <PatternsNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
       case "apis":
-        return (
-          <ApisNav
-            activeItem={activeItem}
-            query={query}
-            searchValue={searchValue}
-            onItemSelect={handleItemSelect}
-          />
-        );
+        return <ApisNav activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} getHighlightRanges={getHighlightRanges} isFavorite={isFavorite} onToggleFavorite={toggleFavorite} />;
       case "recipes":
-        return (
-          <FamilyNav
-            layer="recipes"
-            activeItem={activeItem}
-            query={query}
-            searchValue={searchValue}
-            onItemSelect={handleItemSelect}
-          />
-        );
+        return <FamilyNav layer="recipes" activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
       case "ecosystem":
-        return (
-          <FamilyNav
-            layer="ecosystem"
-            activeItem={activeItem}
-            query={query}
-            searchValue={searchValue}
-            onItemSelect={handleItemSelect}
-          />
-        );
+        return <FamilyNav layer="ecosystem" activeItem={activeItem} query={fuzzy.query.toLowerCase()} searchValue={fuzzy.query} onItemSelect={handleItemSelect} />;
     }
-  }, [activeLayer, activeItem, searchValue, handleItemSelect]);
+  }, [activeLayer, activeItem, fuzzy.query, fuzzy.isSearching, handleItemSelect, getHighlightRanges, isFavorite, toggleFavorite, groupState, filterMatches]);
 
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
-    <AppSidebar
-      storageKey="design-lab-sidebar"
-      defaultMode="expanded"
-      expandedWidth={9999}
-      className="h-full !w-full !border-0 !bg-transparent"
-    >
-      {/* Mobile menu toggle */}
-      <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2 sm:hidden">
-        <Text className="text-sm font-semibold">
-          {t("designlab.breadcrumb.library")}
-        </Text>
-        <IconButton
-          icon={<Menu className="h-4 w-4" />}
-          label="Close menu"
-          size="sm"
-          variant="ghost"
-          onClick={toggleSidebar}
-        />
-      </div>
-
-      {/* Layer tabs — icon pills */}
-      <AppSidebar.Header
-        className="border-b-0 p-0"
+      <AppSidebar
+        storageKey="design-lab-sidebar"
+        defaultMode="expanded"
+        expandedWidth={9999}
+        className="h-full !w-full !border-0 !bg-transparent"
       >
-        <div className="border-b border-border-subtle p-2">
-          <div className="flex gap-1">
-            {LAYER_IDS.map((id) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => handleLayerSwitch(id)}
-                data-testid={`design-lab-layer-tab-${id}`}
-                className={[
-                  "flex flex-1 items-center justify-center rounded-lg py-2 transition-all duration-200",
-                  activeLayer === id
-                    ? "bg-action-primary text-white shadow-xs"
-                    : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
-                ].join(" ")}
-                title={t(`designlab.sidebar.title.${id}`)}
-              >
-                {LAYER_ICONS[id]}
-              </button>
-            ))}
-          </div>
+        {/* Mobile menu toggle */}
+        <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2 sm:hidden">
+          <Text className="text-sm font-semibold">Design Lab</Text>
+          <IconButton icon={<Menu className="h-4 w-4" />} label="Close menu" size="sm" variant="ghost" onClick={toggleSidebar} />
         </div>
 
-        {/* Title + count + help */}
-        <div className="border-b border-border-subtle px-4 py-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0 pr-2">
-              <Text
-                as="div"
-                className="text-[1.2rem] font-semibold leading-tight text-text-primary"
-              >
-                {layerTitle}
-              </Text>
-              <Text variant="secondary" className="mt-1 block text-xs leading-5">
-                {t("designlab.sidebar.itemCount", { count: layerItemCount })}
-              </Text>
+        {/* Health Banner */}
+        <SidebarHealthBanner />
+
+        {/* Layer tabs — icon pills */}
+        <AppSidebar.Header className="border-b-0 p-0">
+          <div className="border-b border-border-subtle p-2">
+            <div className="flex gap-1">
+              {LAYER_IDS.map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => handleLayerSwitch(id)}
+                  data-testid={`design-lab-layer-tab-${id}`}
+                  className={[
+                    "flex flex-1 items-center justify-center rounded-lg py-2 transition-all duration-200 cursor-pointer",
+                    activeLayer === id
+                      ? "bg-action-primary text-white shadow-xs"
+                      : "text-text-secondary hover:bg-surface-muted hover:text-text-primary",
+                  ].join(" ")}
+                  title={t(`designlab.sidebar.title.${id}`)}
+                >
+                  {LAYER_ICONS[id]}
+                </button>
+              ))}
             </div>
-            <Tooltip text={layerHelpText}>
-              <span className="shrink-0">
-                <IconButton
-                  icon={<CircleHelp className="h-4 w-4" />}
-                  label={t("designlab.sidebar.context.title")}
-                  size="sm"
-                  variant="ghost"
-                />
-              </span>
-            </Tooltip>
           </div>
-        </div>
-      </AppSidebar.Header>
 
-      {/* Search */}
-      <AppSidebar.Search
-        value={searchValue}
-        onChange={setSearchValue}
-        placeholder={searchPlaceholder}
-        shortcut="⌘K"
-      />
+          {/* Title + count + expand/collapse controls */}
+          <div className="border-b border-border-subtle px-4 py-3">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <Text as="div" className="text-[1.1rem] font-semibold leading-tight text-text-primary">
+                  {layerTitle}
+                </Text>
+                <Text variant="secondary" className="mt-0.5 block text-[11px] leading-5">
+                  {t("designlab.sidebar.itemCount", { count: layerItemCount })}
+                </Text>
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <Tooltip content="Expand all">
+                  <span>
+                    <IconButton icon={<ChevronDown className="h-3.5 w-3.5" />} label="Expand all" size="sm" variant="ghost" onClick={groupState.expandAll} />
+                  </span>
+                </Tooltip>
+                <Tooltip content={layerHelpText}>
+                  <span>
+                    <IconButton icon={<CircleHelp className="h-3.5 w-3.5" />} label="Help" size="sm" variant="ghost" />
+                  </span>
+                </Tooltip>
+              </div>
+            </div>
+          </div>
+        </AppSidebar.Header>
 
-      {/* Layer content */}
-      <AppSidebar.Nav
-        className="min-h-0 flex-1 overflow-auto px-3 py-4"
-        data-testid="design-lab-sidebar-scroll"
-      >
-        {navContent}
-      </AppSidebar.Nav>
-    </AppSidebar>
+        {/* Breadcrumb */}
+        <SidebarBreadcrumb />
+
+        {/* Enhanced Search */}
+        <SidebarSearchEnhanced
+          value={fuzzy.query}
+          onChange={fuzzy.setQuery}
+          placeholder={t(`designlab.sidebar.search.${activeLayer}.placeholder`)}
+          scopeLabel={layerTitle}
+          className="py-1"
+        />
+
+        {/* Filter Chips */}
+        {["components", "primitives", "patterns", "apis"].includes(activeLayer) && (
+          <SidebarFilterBar activeFilters={filters} onChange={setFilters} />
+        )}
+
+        {/* Favorites */}
+        {favorites.length > 0 && !fuzzy.isSearching && (
+          <>
+            <SidebarFavorites />
+            <AppSidebar.Separator />
+          </>
+        )}
+
+        {/* Recently Viewed */}
+        {recents.length > 0 && !fuzzy.isSearching && (
+          <>
+            <SidebarRecentlyViewed />
+            <AppSidebar.Separator />
+          </>
+        )}
+
+        {/* Layer content */}
+        <AppSidebar.Nav
+          className="min-h-0 flex-1 overflow-auto px-3 py-2"
+          enableKeyboardNav
+          data-testid="design-lab-sidebar-scroll"
+        >
+          {navContent}
+        </AppSidebar.Nav>
+      </AppSidebar>
     </div>
   );
 };
 
 /* ------------------------------------------------------------------ */
-/*  Per-layer nav renderers using AppSidebar compound components       */
+/*  Per-layer nav renderers                                            */
 /* ------------------------------------------------------------------ */
 
 interface LayerNavProps {
@@ -334,6 +333,11 @@ interface LayerNavProps {
   query: string;
   searchValue: string;
   onItemSelect: (path: string) => void;
+  getHighlightRanges?: (name: string) => HighlightRange[];
+  isFavorite?: (name: string) => boolean;
+  onToggleFavorite?: (item: { name: string; layer: string; path: string }) => void;
+  groupState?: ReturnType<typeof useSidebarGroupState>;
+  filterMatches?: (item: { lifecycle?: string; demoMode?: string }) => boolean;
 }
 
 /* ---- Foundations ---- */
@@ -346,11 +350,7 @@ function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerN
       if (!query) return true;
       const title = t(`designlab.tokenGroup.${id}.title`).toLowerCase();
       return title.includes(query) || id.includes(query);
-    }).map((id) => ({
-      id,
-      title: t(`designlab.tokenGroup.${id}.title`),
-      description: t(`designlab.tokenGroup.${id}.description`),
-    }));
+    }).map((id) => ({ id, title: t(`designlab.tokenGroup.${id}.title`) }));
   }, [query, t]);
 
   const themeAxes = useMemo(() => {
@@ -358,28 +358,17 @@ function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerN
       if (!query) return true;
       const title = t(`designlab.themeAxis.${id}.title`).toLowerCase();
       return title.includes(query) || id.includes(query);
-    }).map((id) => ({
-      id,
-      title: t(`designlab.themeAxis.${id}.title`),
-      description: t(`designlab.themeAxis.${id}.description`),
-    }));
+    }).map((id) => ({ id, title: t(`designlab.themeAxis.${id}.title`) }));
   }, [query, t]);
 
-  if (tokenGroups.length === 0 && themeAxes.length === 0) {
-    return <EmptyNav searchValue={searchValue} />;
-  }
+  if (tokenGroups.length === 0 && themeAxes.length === 0) return <EmptyNav searchValue={searchValue} />;
 
   return (
     <>
       {tokenGroups.length > 0 && (
         <AppSidebar.Group label={t("designlab.sidebar.group.designTokens") || "Design Tokens"}>
-          {tokenGroups.map((group) => (
-            <ScrollableNavItem
-              key={group.id}
-              active={activeItem === group.id}
-              label={group.title}
-              onClick={() => onItemSelect(`/admin/design-lab/design/${group.id}`)}
-            />
+          {tokenGroups.map((g) => (
+            <ScrollableNavItem key={g.id} active={activeItem === g.id} label={g.title} onClick={() => onItemSelect(`/admin/design-lab/design/${g.id}`)} />
           ))}
         </AppSidebar.Group>
       )}
@@ -387,13 +376,8 @@ function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerN
         <>
           <AppSidebar.Separator />
           <AppSidebar.Group label={t("designlab.sidebar.group.themeAxes") || "Theme Axes"}>
-            {themeAxes.map((axis) => (
-              <ScrollableNavItem
-                key={axis.id}
-                active={activeItem === axis.id}
-                label={axis.title}
-                onClick={() => onItemSelect(`/admin/design-lab/theme/${axis.id}`)}
-              />
+            {themeAxes.map((a) => (
+              <ScrollableNavItem key={a.id} active={activeItem === a.id} label={a.title} onClick={() => onItemSelect(`/admin/design-lab/theme/${a.id}`)} />
             ))}
           </AppSidebar.Group>
         </>
@@ -404,24 +388,17 @@ function FoundationsNav({ activeItem, query, searchValue, onItemSelect }: LayerN
 
 /* ---- Primitives ---- */
 
-function PrimitivesNav({ activeItem, query, searchValue, onItemSelect }: LayerNavProps) {
+function PrimitivesNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite }: LayerNavProps) {
   const { index } = useDesignLab();
 
   const items = useMemo(() => {
     return index.items
       .filter((i) => i.availability === "exported" && PRIMITIVE_NAMES.has(i.name))
       .filter((i) => !query || i.name.toLowerCase().includes(query))
-      .map((i) => ({
-        name: i.name,
-        description: i.description,
-        lifecycle: i.lifecycle,
-        groupId: i.taxonomyGroupId,
-      }));
+      .map((i) => ({ name: i.name, lifecycle: i.lifecycle, groupId: i.taxonomyGroupId }));
   }, [index, query]);
 
-  if (items.length === 0) {
-    return <EmptyNav searchValue={searchValue} />;
-  }
+  if (items.length === 0) return <EmptyNav searchValue={searchValue} />;
 
   return (
     <>
@@ -430,16 +407,11 @@ function PrimitivesNav({ activeItem, query, searchValue, onItemSelect }: LayerNa
           key={item.name}
           active={activeItem === item.name}
           label={item.name}
-          badge={item.lifecycle ? (
-            <span className="shrink-0 rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
-              {item.lifecycle}
-            </span>
-          ) : undefined}
-          onClick={() =>
-            onItemSelect(
-              `/admin/design-lab/primitives/${item.groupId}/${encodeURIComponent(item.name.replace(/\//g, "~"))}`,
-            )
-          }
+          highlightRanges={getHighlightRanges?.(item.name)}
+          badge={<LifecycleBadge lifecycle={item.lifecycle} />}
+          pinned={isFavorite?.(item.name)}
+          onPin={onToggleFavorite ? () => onToggleFavorite({ name: item.name, layer: "primitives", path: `/admin/design-lab/primitives/${item.groupId}/${encodeURIComponent(item.name)}` }) : undefined}
+          onClick={() => onItemSelect(`/admin/design-lab/primitives/${item.groupId}/${encodeURIComponent(item.name.replace(/\//g, "~"))}`)}
         />
       ))}
     </>
@@ -448,7 +420,7 @@ function PrimitivesNav({ activeItem, query, searchValue, onItemSelect }: LayerNa
 
 /* ---- Components (grouped by taxonomy) ---- */
 
-function ComponentsNav({ activeItem, query, searchValue, onItemSelect }: LayerNavProps) {
+function ComponentsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite, groupState, filterMatches }: LayerNavProps) {
   const { index, taxonomy } = useDesignLab();
 
   const groups = useMemo(() => {
@@ -460,23 +432,29 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect }: LayerNa
             ...sg,
             items: sg.items.filter((itemName) => {
               if (PRIMITIVE_NAMES.has(itemName) || ADVANCED_NAMES.has(itemName)) return false;
-              if (!query) return true;
-              return itemName.toLowerCase().includes(query);
+              if (query && !itemName.toLowerCase().includes(query)) return false;
+              if (filterMatches) {
+                const indexItem = index.items.find((i) => i.name === itemName);
+                if (indexItem && !filterMatches(indexItem)) return false;
+              }
+              return true;
             }),
           }))
           .filter((sg) => sg.items.length > 0),
       }))
       .filter((g) => g.subgroups.length > 0);
-  }, [taxonomy, query]);
+  }, [taxonomy, query, index, filterMatches]);
 
-  if (groups.length === 0) {
-    return <EmptyNav searchValue={searchValue} />;
-  }
+  if (groups.length === 0) return <EmptyNav searchValue={searchValue} />;
 
   return (
     <>
       {groups.map((group) => (
-        <AppSidebar.Group key={group.id} label={group.label}>
+        <AppSidebar.Group
+          key={group.id}
+          label={group.label}
+          defaultOpen={groupState?.isOpen(group.id) ?? true}
+        >
           {group.subgroups.flatMap((sg) =>
             sg.items.map((itemName) => {
               const indexItem = index.items.find((i) => i.name === itemName);
@@ -485,16 +463,11 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect }: LayerNa
                   key={itemName}
                   active={activeItem === itemName}
                   label={itemName}
-                  badge={indexItem?.lifecycle ? (
-                    <span className="shrink-0 rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
-                      {indexItem.lifecycle}
-                    </span>
-                  ) : undefined}
-                  onClick={() =>
-                    onItemSelect(
-                      `/admin/design-lab/components/${group.id}/${encodeURIComponent(itemName.replace(/\//g, "~"))}`,
-                    )
-                  }
+                  highlightRanges={getHighlightRanges?.(itemName)}
+                  badge={<LifecycleBadge lifecycle={indexItem?.lifecycle} />}
+                  pinned={isFavorite?.(itemName)}
+                  onPin={onToggleFavorite ? () => onToggleFavorite({ name: itemName, layer: "components", path: `/admin/design-lab/components/${group.id}/${encodeURIComponent(itemName)}` }) : undefined}
+                  onClick={() => onItemSelect(`/admin/design-lab/components/${group.id}/${encodeURIComponent(itemName.replace(/\//g, "~"))}`)}
                 />
               );
             }),
@@ -507,52 +480,30 @@ function ComponentsNav({ activeItem, query, searchValue, onItemSelect }: LayerNa
 
 /* ---- Patterns (pages + advanced) ---- */
 
-function PatternsNav({ activeItem, query, searchValue, onItemSelect }: LayerNavProps) {
+function PatternsNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite }: LayerNavProps) {
   const { index } = useDesignLab();
 
   const pages = useMemo(() => {
-    const rawFamilies =
-      index.pages?.currentFamilies.map((f) => ({
-        id: f.pageId,
-        title: f.title,
-        intent: f.intent,
-      })) ?? [];
-
-    if (!query) return rawFamilies;
-    return rawFamilies.filter(
-      (f) =>
-        f.title.toLowerCase().includes(query) ||
-        f.id.toLowerCase().includes(query) ||
-        f.intent.toLowerCase().includes(query),
-    );
+    const raw = index.pages?.currentFamilies.map((f) => ({ id: f.pageId, title: f.title, intent: f.intent })) ?? [];
+    if (!query) return raw;
+    return raw.filter((f) => f.title.toLowerCase().includes(query) || f.id.toLowerCase().includes(query));
   }, [index, query]);
 
   const advancedItems = useMemo(() => {
     return index.items
       .filter((i) => ADVANCED_NAMES.has(i.name))
       .filter((i) => !query || i.name.toLowerCase().includes(query))
-      .map((i) => ({
-        name: i.name,
-        description: i.description,
-        lifecycle: i.lifecycle,
-      }));
+      .map((i) => ({ name: i.name, lifecycle: i.lifecycle }));
   }, [index, query]);
 
-  if (pages.length === 0 && advancedItems.length === 0) {
-    return <EmptyNav searchValue={searchValue} />;
-  }
+  if (pages.length === 0 && advancedItems.length === 0) return <EmptyNav searchValue={searchValue} />;
 
   return (
     <>
       {pages.length > 0 && (
         <AppSidebar.Group label="Pages">
-          {pages.map((family) => (
-            <ScrollableNavItem
-              key={family.id}
-              active={activeItem === family.id}
-              label={family.title}
-              onClick={() => onItemSelect(`/admin/design-lab/patterns/${family.id}`)}
-            />
+          {pages.map((f) => (
+            <ScrollableNavItem key={f.id} active={activeItem === f.id} label={f.title} onClick={() => onItemSelect(`/admin/design-lab/patterns/${f.id}`)} />
           ))}
         </AppSidebar.Group>
       )}
@@ -565,16 +516,11 @@ function PatternsNav({ activeItem, query, searchValue, onItemSelect }: LayerNavP
                 key={item.name}
                 active={activeItem === item.name}
                 label={item.name}
-                badge={item.lifecycle ? (
-                  <span className="shrink-0 rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
-                    {item.lifecycle}
-                  </span>
-                ) : undefined}
-                onClick={() =>
-                  onItemSelect(
-                    `/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, "~"))}`,
-                  )
-                }
+                highlightRanges={getHighlightRanges?.(item.name)}
+                badge={<LifecycleBadge lifecycle={item.lifecycle} />}
+                pinned={isFavorite?.(item.name)}
+                onPin={onToggleFavorite ? () => onToggleFavorite({ name: item.name, layer: "patterns", path: `/admin/design-lab/advanced/${encodeURIComponent(item.name)}` }) : undefined}
+                onClick={() => onItemSelect(`/admin/design-lab/advanced/${encodeURIComponent(item.name.replace(/\//g, "~"))}`)}
               />
             ))}
           </AppSidebar.Group>
@@ -586,23 +532,17 @@ function PatternsNav({ activeItem, query, searchValue, onItemSelect }: LayerNavP
 
 /* ---- APIs ---- */
 
-function ApisNav({ activeItem, query, searchValue, onItemSelect }: LayerNavProps) {
+function ApisNav({ activeItem, query, searchValue, onItemSelect, getHighlightRanges, isFavorite, onToggleFavorite }: LayerNavProps) {
   const { index } = useDesignLab();
 
   const items = useMemo(() => {
     return index.items
       .filter((i) => API_NAMES.has(i.name))
       .filter((i) => !query || i.name.toLowerCase().includes(query))
-      .map((i) => ({
-        name: i.name,
-        description: i.description,
-        lifecycle: i.lifecycle,
-      }));
+      .map((i) => ({ name: i.name, lifecycle: i.lifecycle }));
   }, [index, query]);
 
-  if (items.length === 0) {
-    return <EmptyNav searchValue={searchValue} />;
-  }
+  if (items.length === 0) return <EmptyNav searchValue={searchValue} />;
 
   return (
     <>
@@ -611,16 +551,11 @@ function ApisNav({ activeItem, query, searchValue, onItemSelect }: LayerNavProps
           key={item.name}
           active={activeItem === item.name}
           label={item.name}
-          badge={item.lifecycle ? (
-            <span className="shrink-0 rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
-              {item.lifecycle}
-            </span>
-          ) : undefined}
-          onClick={() =>
-            onItemSelect(
-              `/admin/design-lab/apis/${encodeURIComponent(item.name.replace(/\//g, "~"))}`,
-            )
-          }
+          highlightRanges={getHighlightRanges?.(item.name)}
+          badge={<LifecycleBadge lifecycle={item.lifecycle} />}
+          pinned={isFavorite?.(item.name)}
+          onPin={onToggleFavorite ? () => onToggleFavorite({ name: item.name, layer: "apis", path: `/admin/design-lab/apis/${encodeURIComponent(item.name)}` }) : undefined}
+          onClick={() => onItemSelect(`/admin/design-lab/apis/${encodeURIComponent(item.name.replace(/\//g, "~"))}`)}
         />
       ))}
     </>
@@ -629,58 +564,26 @@ function ApisNav({ activeItem, query, searchValue, onItemSelect }: LayerNavProps
 
 /* ---- Family-based (Recipes / Ecosystem) ---- */
 
-function FamilyNav({
-  layer,
-  activeItem,
-  query,
-  searchValue,
-  onItemSelect,
-}: LayerNavProps & { layer: "recipes" | "ecosystem" }) {
+function FamilyNav({ layer, activeItem, query, searchValue, onItemSelect }: LayerNavProps & { layer: "recipes" | "ecosystem" }) {
   const { index } = useDesignLab();
 
   const families = useMemo(() => {
-    let rawFamilies: Array<{ id: string; title: string; intent: string }> = [];
-
+    let raw: Array<{ id: string; title: string; intent: string }> = [];
     if (layer === "recipes") {
-      rawFamilies =
-        index.recipes?.currentFamilies.map((f) => ({
-          id: f.recipeId,
-          title: f.title,
-          intent: f.intent,
-        })) ?? [];
+      raw = index.recipes?.currentFamilies.map((f) => ({ id: f.recipeId, title: f.title, intent: f.intent })) ?? [];
     } else {
-      rawFamilies =
-        index.ecosystem?.currentFamilies.map((f) => ({
-          id: f.extensionId,
-          title: f.title,
-          intent: f.intent,
-        })) ?? [];
+      raw = index.ecosystem?.currentFamilies.map((f) => ({ id: f.extensionId, title: f.title, intent: f.intent })) ?? [];
     }
-
-    if (!query) return rawFamilies;
-    return rawFamilies.filter(
-      (f) =>
-        f.title.toLowerCase().includes(query) ||
-        f.id.toLowerCase().includes(query) ||
-        f.intent.toLowerCase().includes(query),
-    );
+    if (!query) return raw;
+    return raw.filter((f) => f.title.toLowerCase().includes(query) || f.id.toLowerCase().includes(query));
   }, [layer, index, query]);
 
-  const basePath = `/admin/design-lab/${layer}`;
-
-  if (families.length === 0) {
-    return <EmptyNav searchValue={searchValue} />;
-  }
+  if (families.length === 0) return <EmptyNav searchValue={searchValue} />;
 
   return (
     <>
-      {families.map((family) => (
-        <ScrollableNavItem
-          key={family.id}
-          active={activeItem === family.id}
-          label={family.title}
-          onClick={() => onItemSelect(`${basePath}/${family.id}`)}
-        />
+      {families.map((f) => (
+        <ScrollableNavItem key={f.id} active={activeItem === f.id} label={f.title} onClick={() => onItemSelect(`/admin/design-lab/${layer}/${f.id}`)} />
       ))}
     </>
   );
@@ -690,19 +593,21 @@ function FamilyNav({
 /*  Shared helpers                                                     */
 /* ------------------------------------------------------------------ */
 
-/**
- * Wrapper around AppSidebar.NavItem that auto-scrolls the active item
- * into view on mount — matching the behaviour of the original sidebar.
- */
 function ScrollableNavItem({
   active,
   label,
   badge,
+  highlightRanges,
+  pinned,
+  onPin,
   onClick,
 }: {
   active: boolean;
   label: string;
   badge?: React.ReactNode;
+  highlightRanges?: HighlightRange[];
+  pinned?: boolean;
+  onPin?: () => void;
   onClick: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -716,22 +621,53 @@ function ScrollableNavItem({
     }
   }, [active]);
 
+  const displayLabel = highlightRanges?.length ? (
+    <HighlightedLabel text={label} ranges={highlightRanges} />
+  ) : (
+    label
+  );
+
   return (
-    <div ref={ref} className="scroll-mt-4">
+    <div ref={ref} className="group scroll-mt-4 relative">
       <AppSidebar.NavItem
         label={label}
         active={active}
         badge={badge}
         onClick={onClick}
       />
+      {/* Pin button — appears on hover */}
+      {onPin && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onPin(); }}
+          className={`
+            absolute right-8 top-1/2 -translate-y-1/2
+            ${pinned ? "opacity-100 text-state-warning-text" : "opacity-0 group-hover:opacity-100 text-text-tertiary hover:text-state-warning-text"}
+            transition-opacity cursor-pointer
+          `}
+          aria-label={pinned ? `Unpin ${label}` : `Pin ${label}`}
+          title={pinned ? "Remove from favorites" : "Add to favorites"}
+        >
+          <Star className={`h-3 w-3 ${pinned ? "fill-current" : ""}`} />
+        </button>
+      )}
     </div>
+  );
+}
+
+function LifecycleBadge({ lifecycle }: { lifecycle?: string }) {
+  if (!lifecycle || lifecycle === "stable") return null;
+  return (
+    <span className="shrink-0 rounded-full bg-surface-muted px-2 py-0.5 text-[10px] font-medium text-text-secondary">
+      {lifecycle}
+    </span>
   );
 }
 
 function EmptyNav({ searchValue }: { searchValue: string }) {
   const { t } = useDesignLabI18n();
   return (
-    <div className="rounded-[18px] border border-border-subtle bg-surface-canvas px-4 py-3.5">
+    <div className="rounded-xl border border-border-subtle bg-surface-canvas px-4 py-3.5">
       <Text variant="secondary" className="block text-sm leading-6">
         {searchValue.trim()
           ? t("designlab.sidebar.empty.search", { query: searchValue })

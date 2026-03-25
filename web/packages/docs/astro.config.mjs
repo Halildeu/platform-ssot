@@ -4,13 +4,15 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
   integrations: [
     starlight({
+      // Pagefind search is enabled by default in Starlight v0.15+
+      pagefind: true,
       title: '@mfe/design-system',
       description: 'Enterprise-grade AI-native React component library',
-      defaultLocale: 'tr',
       locales: {
-        tr: { label: 'Türkçe' },
-        en: { label: 'English' },
+        root: { label: 'Türkçe', lang: 'tr' },
+        en: { label: 'English', lang: 'en' },
       },
+      defaultLocale: 'root',
       sidebar: [
         {
           label: 'Başlarken',

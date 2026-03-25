@@ -1,9 +1,11 @@
 ---
 title: Input
-description: 'Text input — validation, masking, prefix/suffix desteği.'
+description: 'Text input — validation, masking, prefix/suffix destegi.'
 ---
 
 import { Aside } from '@astrojs/starlight/components';
+import Playground from '../../../components/Playground.astro';
+import PropsTable from '../../../components/PropsTable.astro';
 
 ## Import
 
@@ -11,10 +13,10 @@ import { Aside } from '@astrojs/starlight/components';
 import { Input } from '@mfe/design-system';
 ```
 
-## Kullanım
+## Kullanim
 
 ```tsx
-<Input label="Ad Soyad" placeholder="Adınızı girin" />
+<Input label="Ad Soyad" placeholder="Adinizi girin" />
 <Input label="E-posta" type="email" required />
 <Input label="Telefon" mask="+90 (___) ___ __ __" />
 ```
@@ -33,11 +35,11 @@ import { Input } from '@mfe/design-system';
 <Input
   label="E-posta"
   type="email"
-  error="Geçerli bir e-posta adresi girin"
+  error="Gecerli bir e-posta adresi girin"
 />
 
 <Input
-  label="Kullanıcı Adı"
+  label="Kullanici Adi"
   helperText="En az 3 karakter"
   minLength={3}
 />
@@ -53,7 +55,7 @@ import { Input } from '@mfe/design-system';
 
 ## Masking
 
-Giriş maskesi ile formatlanmış veri girişi:
+Giris maskesi ile formatlenmis veri girisi:
 
 ```tsx
 <Input label="Telefon" mask="+90 (___) ___ __ __" />
@@ -61,40 +63,48 @@ Giriş maskesi ile formatlanmış veri girişi:
 <Input label="Tarih" mask="__/__/____" />
 ```
 
+## Canli Playground
+
+<Playground
+  code={`<Input label="Ad Soyad" placeholder="Adinizi girin" />\n<Input label="E-posta" type="email" error="Gecerli bir e-posta girin" />\n<Input label="Telefon" mask="+90 (___) ___ __ __" />`}
+  componentName="Input"
+  height="200px"
+/>
+
 ## Props
 
-| Prop | Tip | Varsayılan | Açıklama |
-|------|-----|-----------|----------|
-| `label` | `string` | — | Etiket metni |
-| `placeholder` | `string` | — | Placeholder |
-| `variant` | `'outlined' \| 'filled' \| 'underlined'` | `'outlined'` | Görsel stil |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Boyut |
-| `type` | `'text' \| 'email' \| 'password' \| 'number' \| 'tel' \| 'url'` | `'text'` | Input tipi |
-| `value` | `string` | — | Kontrollü değer |
-| `defaultValue` | `string` | — | Varsayılan değer |
-| `onChange` | `(e: ChangeEvent) => void` | — | Değişiklik handler'ı |
-| `error` | `string \| boolean` | — | Hata mesajı veya durumu |
-| `helperText` | `string` | — | Yardımcı metin |
-| `required` | `boolean` | `false` | Zorunlu alan |
-| `disabled` | `boolean` | `false` | Devre dışı |
-| `readOnly` | `boolean` | `false` | Salt okunur |
-| `prefix` | `ReactNode` | — | Sol ek bileşen |
-| `suffix` | `ReactNode` | — | Sağ ek bileşen |
-| `mask` | `string` | — | Giriş maskesi (`_` = karakter yeri) |
-| `maxLength` | `number` | — | Maksimum karakter sayısı |
+<PropsTable props={[
+  { name: 'label', type: 'string', description: 'Etiket metni' },
+  { name: 'placeholder', type: 'string', description: 'Placeholder' },
+  { name: 'variant', type: "'outlined' | 'filled' | 'underlined'", default: "'outlined'", description: 'Gorsel stil' },
+  { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Boyut' },
+  { name: 'type', type: "'text' | 'email' | 'password' | 'number' | 'tel' | 'url'", default: "'text'", description: 'Input tipi' },
+  { name: 'value', type: 'string', description: 'Kontrollu deger' },
+  { name: 'defaultValue', type: 'string', description: 'Varsayilan deger' },
+  { name: 'onChange', type: '(e: ChangeEvent) => void', description: 'Degisiklik handler\'i' },
+  { name: 'error', type: 'string | boolean', description: 'Hata mesaji veya durumu' },
+  { name: 'helperText', type: 'string', description: 'Yardimci metin' },
+  { name: 'required', type: 'boolean', default: 'false', description: 'Zorunlu alan' },
+  { name: 'disabled', type: 'boolean', default: 'false', description: 'Devre disi' },
+  { name: 'readOnly', type: 'boolean', default: 'false', description: 'Salt okunur' },
+  { name: 'prefix', type: 'ReactNode', description: 'Sol ek bilesen' },
+  { name: 'suffix', type: 'ReactNode', description: 'Sag ek bilesen' },
+  { name: 'mask', type: 'string', description: 'Giris maskesi (_ = karakter yeri)' },
+  { name: 'maxLength', type: 'number', description: 'Maksimum karakter sayisi' },
+]} />
 
-## Erişilebilirlik
+## Erisilebilirlik
 
-- **Label**: `<label>` elementi `htmlFor` ile otomatik bağlanır
-- **Error**: `aria-invalid="true"` ve `aria-describedby` ile hata mesajı ilişkilendirilir
+- **Label**: `<label>` elementi `htmlFor` ile otomatik baglanir
+- **Error**: `aria-invalid="true"` ve `aria-describedby` ile hata mesaji iliskilendirilir
 - **Required**: `aria-required="true"` otomatik eklenir
-- **Helper text**: `aria-describedby` ile yardımcı metin ilişkilendirilir
+- **Helper text**: `aria-describedby` ile yardimci metin iliskilendirilir
 
 <Aside type="caution">
-  `label` prop'u her zaman belirtin. Görsel etiket istemiyorsanız `hideLabel` prop'unu kullanın — bu durumda etiket ekran okuyucular için korunur.
+  `label` prop'u her zaman belirtin. Gorsel etiket istemiyorsaniz `hideLabel` prop'unu kullanin — bu durumda etiket ekran okuyucular icin korunur.
 </Aside>
 
-## Örnekler
+## Ornekler
 
 ### Arama Kutusu
 
@@ -102,7 +112,7 @@ Giriş maskesi ile formatlanmış veri girişi:
 <Input
   label="Ara"
   hideLabel
-  placeholder="Bileşen ara..."
+  placeholder="Bilesen ara..."
   prefix={<IconSearch />}
   suffix={query && <IconClear onClick={() => setQuery('')} />}
   value={query}
@@ -110,13 +120,13 @@ Giriş maskesi ile formatlanmış veri girişi:
 />
 ```
 
-### Şifre Alanı
+### Sifre Alani
 
 ```tsx
 <Input
-  label="Şifre"
+  label="Sifre"
   type="password"
   showPasswordToggle
-  helperText="En az 8 karakter, 1 büyük harf, 1 rakam"
+  helperText="En az 8 karakter, 1 buyuk harf, 1 rakam"
 />
 ```

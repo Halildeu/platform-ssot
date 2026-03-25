@@ -1,0 +1,63 @@
+---
+interface Token {
+  name: string;
+  value: string;
+  cssVar: string;
+  preview?: 'color' | 'spacing' | 'radius' | 'shadow';
+}
+
+interface Props {
+  tokens: Token[];
+  category: string;
+}
+
+const { tokens, category } = Astro.props;
+---
+
+<div class="token-table-wrapper">
+  <table class="token-table">
+    <thead>
+      <tr>
+        <th>Token</th>
+        <th>CSS Variable</th>
+        <th>Deger</th>
+        <th>Onizleme</th>
+      </tr>
+    </thead>
+    <tbody>
+      {tokens.map((t) => (
+        <tr>
+          <td><code>{t.name}</code></td>
+          <td><code class="css-var">{t.cssVar}</code></td>
+          <td><code>{t.value}</code></td>
+          <td>
+            {t.preview === 'color' && (
+              <span class="color-swatch" style={`background: ${t.value}`} />
+            )}
+            {t.preview === 'spacing' && (
+              <span class="spacing-bar" style={`width: ${t.value}`} />
+            )}
+            {t.preview === 'radius' && (
+              <span class="radius-preview" style={`border-radius: ${t.value}`} />
+            )}
+            {t.preview === 'shadow' && (
+              <span class="shadow-preview" style={`box-shadow: ${t.value}`} />
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+.token-table-wrapper { overflow-x: auto; margin: 1rem 0; }
+.token-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.token-table th { text-align: left; padding: 0.75rem; background: var(--sl-color-gray-6); border-bottom: 2px solid var(--sl-color-gray-5); font-weight: 600; }
+.token-table td { padding: 0.75rem; border-bottom: 1px solid var(--sl-color-gray-6); vertical-align: middle; }
+.css-var { color: var(--sl-color-purple); font-size: 0.8125rem; }
+.color-swatch { display: inline-block; width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--sl-color-gray-4); vertical-align: middle; }
+.spacing-bar { display: inline-block; height: 8px; background: var(--sl-color-accent); border-radius: 2px; min-width: 4px; }
+.radius-preview { display: inline-block; width: 32px; height: 32px; border: 2px solid var(--sl-color-accent); background: transparent; }
+.shadow-preview { display: inline-block; width: 32px; height: 32px; background: var(--sl-color-bg); border-radius: 4px; }
+</style>
