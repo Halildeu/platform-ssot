@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "stable",
     "group": "feedback",
     "subgroup": "toast",
-    "taxonomyGroupId": "state_feedback",
+    "taxonomyGroupId": "feedback",
     "taxonomySubgroup": "Toast & Notification",
     "demoMode": "live",
     "description": "Toast bildirim componenti; pozisyon, sure, maksimum gosterim limiti ve provider tabanli yonetim destegi sunar.",

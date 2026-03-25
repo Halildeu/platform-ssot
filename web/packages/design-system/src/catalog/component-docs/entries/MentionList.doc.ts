@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_editor",
     "subgroup": "editor",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "data_entry",
     "taxonomySubgroup": "X-Editor Mention",
     "demoMode": "planned",
     "description": "Editor icerisinde '@' karakteri ile tetiklenen kullanici/kaynak mention overlay listesi; arama ve secim destegi saglar.",

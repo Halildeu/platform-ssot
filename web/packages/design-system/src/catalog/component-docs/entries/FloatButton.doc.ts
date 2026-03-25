@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "stable",
     "group": "actions",
     "subgroup": "float",
-    "taxonomyGroupId": "actions",
+    "taxonomyGroupId": "general",
     "taxonomySubgroup": "Float Button & FAB",
     "demoMode": "live",
     "description": "Sabit pozisyonlu aksiyon butonu (FAB); speed-dial grup modu, badge, tooltip ve access-control destegi sunar.",

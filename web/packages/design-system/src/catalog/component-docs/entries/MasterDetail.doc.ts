@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "stable",
     "group": "layout",
     "subgroup": "master-detail",
-    "taxonomyGroupId": "layout",
+    "taxonomyGroupId": "page_blocks",
     "taxonomySubgroup": "Master-Detail & Split View",
     "demoMode": "live",
     "description": "Master-detail yapisim deseni; liste-detay bolunmus goruntuleme, oran kontrolu, collapse ve divider destegi sunar.",

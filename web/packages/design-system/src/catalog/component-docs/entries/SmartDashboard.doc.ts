@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "stable",
     "group": "layout",
     "subgroup": "dashboard",
-    "taxonomyGroupId": "layout",
+    "taxonomyGroupId": "page_blocks",
     "taxonomySubgroup": "Dashboard & Grid",
     "demoMode": "live",
     "description": "Akilli dashboard componenti; widget grid yonetimi, siralama, pinleme, zaman araligi filtresi ve yogunluk kontrolleri sunar.",

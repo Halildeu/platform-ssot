@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "actions",
   "subgroup": "buttons",
-  "taxonomyGroupId": "actions",
+  "taxonomyGroupId": "general",
   "taxonomySubgroup": "Icon button",
   "demoMode": "live",
   "description": "Icon-only aksiyon primitivei; accessible name, selected state ve size kontratini Button ile hizali verir.",

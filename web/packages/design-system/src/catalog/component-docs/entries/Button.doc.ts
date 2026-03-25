@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
   "maturity": "stable",
   "group": "actions",
   "subgroup": "buttons",
-  "taxonomyGroupId": "actions",
+  "taxonomyGroupId": "general",
   "taxonomySubgroup": "Button",
   "demoMode": "live",
   "description": "Temel aksiyon primitivei; varyant, boyut, loading ve icon slot davranisini tek token zincirinde toplar.",

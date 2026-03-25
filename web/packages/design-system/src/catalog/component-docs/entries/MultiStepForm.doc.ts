@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_form_builder",
     "subgroup": "form_builder",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "data_entry",
     "taxonomySubgroup": "X-FormBuilder Multi Step",
     "demoMode": "planned",
     "description": "Cok adimli form container bileseni; adim navigasyonu, validasyon ve ilerleme gostergesi ile form akisi yonetimi saglar.",

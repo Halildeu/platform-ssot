@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_editor",
     "subgroup": "editor",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "data_entry",
     "taxonomySubgroup": "X-Editor Slash Command",
     "demoMode": "planned",
     "description": "Editor icerisinde '/' karakteri ile tetiklenen komut menusu overlay bileseni; blok ekleme ve formatlama komutlari sunar.",

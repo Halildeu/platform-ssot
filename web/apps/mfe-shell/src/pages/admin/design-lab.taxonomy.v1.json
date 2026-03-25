@@ -28,10 +28,13 @@
         "actions",
         "navigation",
         "data_entry",
+        "forms_data_entry",
         "data_display",
         "feedback",
+        "state_feedback",
         "search_filtering",
         "overlays_portals",
+        "layout",
         "auth_security_ui",
         "charts_visualization"
       ]
@@ -87,11 +90,18 @@
         "Iconography",
         "Avatar & Identity",
         "Badge / Tag / Chip",
+        "Button",
+        "Carousel & Gallery",
         "Divider",
         "Divider / Separator",
         "Copy / Clipboard",
+        "Float Button & FAB",
+        "Icon button",
         "Link",
-        "Link / Inline navigation"
+        "Link / Inline navigation",
+        "QR Code & Barcode",
+        "Timeline & History",
+        "Watermark & Overlay"
       ]
     },
     {
@@ -140,16 +150,25 @@
         "Text Input / TextArea",
         "Select / Dropdown / Combobox",
         "Autocomplete / Typeahead",
+        "Autocomplete & Combobox",
         "Checkbox / Radio",
         "Switch / Toggle",
         "OTP / PIN input",
         "Slider",
         "Slider / Range",
         "Date / Time pickers",
+        "Date & Time",
         "Upload / File picker",
         "Color picker",
+        "Color Picker",
         "Cascader / Tree select",
+        "Cascader & Hierarchy",
+        "Numeric Input",
         "Rating / Mentions",
+        "Mentions & Tagging",
+        "Rating & Scoring",
+        "Search & Filter",
+        "Transfer & Shuttle",
         "Form wrappers (Form, Field, Validation)",
         "Rich text editor"
       ]
@@ -177,7 +196,11 @@
       "title": "Feedback & Status",
       "subgroups": [
         "Alert / Banner",
+        "Drawer / Side Panel",
+        "Empty & Placeholder",
+        "Error Handling",
         "Toast / Notification",
+        "Toast & Notification",
         "Modal / Dialog / Confirm",
         "Popover / Hover card",
         "Tooltip",
@@ -214,6 +237,36 @@
         "Floating action button",
         "Inline actions",
         "Quick actions / command triggers"
+      ]
+    },
+    {
+      "id": "forms_data_entry",
+      "title": "Advanced Form Components",
+      "subgroups": [
+        "Multi-step form",
+        "Form summary",
+        "Repeatable field group",
+        "Field registry",
+        "Mention list",
+        "Slash command menu"
+      ]
+    },
+    {
+      "id": "state_feedback",
+      "title": "State & Feedback",
+      "subgroups": [
+        "Toast / Snackbar",
+        "Inline notifications"
+      ]
+    },
+    {
+      "id": "layout",
+      "title": "Layout Components",
+      "subgroups": [
+        "Card",
+        "Stack",
+        "Master-detail",
+        "Smart dashboard"
       ]
     },
     {

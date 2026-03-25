@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "stable",
     "group": "layout",
     "subgroup": "flexbox",
-    "taxonomyGroupId": "layout",
+    "taxonomyGroupId": "page_blocks",
     "taxonomySubgroup": "Stack & Spacing",
     "demoMode": "live",
     "description": "Flexbox layout primitivei; direction, align, justify, gap ve wrap ile tutarli spacing ve alignment sunar. HStack/VStack kolaylik wrapper'lari icerir.",

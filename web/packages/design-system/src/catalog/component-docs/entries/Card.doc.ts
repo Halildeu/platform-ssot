@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "stable",
     "group": "layout",
     "subgroup": "container",
-    "taxonomyGroupId": "layout",
+    "taxonomyGroupId": "page_blocks",
     "taxonomySubgroup": "Card & Container",
     "demoMode": "live",
     "description": "Elevated content container primitivei; variant, padding, hoverable ve slot-based polymorphism destegi sunar.",

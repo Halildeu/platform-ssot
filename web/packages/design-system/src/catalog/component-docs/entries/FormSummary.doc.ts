@@ -10,7 +10,7 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_form_builder",
     "subgroup": "form_builder",
-    "taxonomyGroupId": "forms_data_entry",
+    "taxonomyGroupId": "data_entry",
     "taxonomySubgroup": "X-FormBuilder Summary",
     "demoMode": "planned",
     "description": "Form verilerinin gonderim oncesi ozet gorunumunu sunan display bileseni; alan bazli deger listesi ve duzenleme baglantilari saglar.",
