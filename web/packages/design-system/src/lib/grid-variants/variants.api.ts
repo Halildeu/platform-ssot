@@ -215,6 +215,13 @@ const getAuthHeaders = (): Record<string, string> => {
 
 const getJsonHeaders = () => ({ 'Content-Type': 'application/json', ...getAuthHeaders() });
 
+/** fetch with 3s timeout — prevents UI freeze when variant service is down */
+const fetchWithTimeout = (url: string, init?: RequestInit): Promise<Response> => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3000);
+  return fetch(url, { ...init, signal: controller.signal }).finally(() => clearTimeout(timeoutId));
+};
+
 interface PersistedVariantsState {
   [gridId: string]: GridVariant[];
 }
@@ -582,7 +589,7 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
 
   if (typeof fetch === 'function') {
     try {
-      const res = await fetch(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}?gridId=${encodeURIComponent(gridId)}`, {
+      const res = await fetchWithTimeout(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}?gridId=${encodeURIComponent(gridId)}`, {
         headers: getAuthHeaders(),
       });
       if (!res.ok) {
@@ -679,7 +686,7 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
 export const createGridVariant = async (payload: CreateGridVariantPayload): Promise<GridVariant> => {
   if (typeof fetch === 'function') {
     try {
-      const res = await fetch(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}`, {
+      const res = await fetchWithTimeout(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}`, {
         method: 'POST',
         headers: getJsonHeaders(),
         body: JSON.stringify(payload),
@@ -818,7 +825,7 @@ export const updateVariantPreference = async (payload: UpdateVariantPreferencePa
   };
   if (typeof fetch === 'function') {
     try {
-      const res = await fetch(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}/${encodeURIComponent(variantId)}/preference`, {
+      const res = await fetchWithTimeout(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}/${encodeURIComponent(variantId)}/preference`, {
         method: 'PATCH',
         headers: getJsonHeaders(),
         body: JSON.stringify(body),
