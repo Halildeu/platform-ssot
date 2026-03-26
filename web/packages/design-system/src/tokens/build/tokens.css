@@ -41,29 +41,29 @@
   --palette-blue700: #1d4ed8;
 
   /* --- color / semanticColorTokens --- */
-  --semantic-color-tokens-surface-default: --surface-default;
-  --semantic-color-tokens-surface-canvas: --surface-canvas;
-  --semantic-color-tokens-surface-muted: --surface-muted;
-  --semantic-color-tokens-surface-raised: --surface-raised;
-  --semantic-color-tokens-text-primary: --text-primary;
-  --semantic-color-tokens-text-secondary: --text-secondary;
-  --semantic-color-tokens-text-disabled: --text-disabled;
-  --semantic-color-tokens-text-inverse: --text-inverse;
-  --semantic-color-tokens-border-default: --border-default;
-  --semantic-color-tokens-border-subtle: --border-subtle;
-  --semantic-color-tokens-border-strong: --border-strong;
-  --semantic-color-tokens-action-primary: --action-primary;
-  --semantic-color-tokens-action-primary-hover: --action-primary-hover;
-  --semantic-color-tokens-action-primary-active: --action-primary-active;
-  --semantic-color-tokens-action-secondary: --action-secondary;
-  --semantic-color-tokens-state-success-bg: --state-success-bg;
-  --semantic-color-tokens-state-success-text: --state-success-text;
-  --semantic-color-tokens-state-warning-bg: --state-warning-bg;
-  --semantic-color-tokens-state-warning-text: --state-warning-text;
-  --semantic-color-tokens-state-error-bg: --state-error-bg;
-  --semantic-color-tokens-state-error-text: --state-error-text;
-  --semantic-color-tokens-state-info-bg: --state-info-bg;
-  --semantic-color-tokens-state-info-text: --state-info-text;
+  --semantic-color-tokens-surface-default: var(--surface-default);
+  --semantic-color-tokens-surface-canvas: var(--surface-canvas);
+  --semantic-color-tokens-surface-muted: var(--surface-muted);
+  --semantic-color-tokens-surface-raised: var(--surface-raised);
+  --semantic-color-tokens-text-primary: var(--text-primary);
+  --semantic-color-tokens-text-secondary: var(--text-secondary);
+  --semantic-color-tokens-text-disabled: var(--text-disabled);
+  --semantic-color-tokens-text-inverse: var(--text-inverse);
+  --semantic-color-tokens-border-default: var(--border-default);
+  --semantic-color-tokens-border-subtle: var(--border-subtle);
+  --semantic-color-tokens-border-strong: var(--border-strong);
+  --semantic-color-tokens-action-primary: var(--action-primary);
+  --semantic-color-tokens-action-primary-hover: var(--action-primary-hover);
+  --semantic-color-tokens-action-primary-active: var(--action-primary-active);
+  --semantic-color-tokens-action-secondary: var(--action-secondary);
+  --semantic-color-tokens-state-success-bg: var(--state-success-bg);
+  --semantic-color-tokens-state-success-text: var(--state-success-text);
+  --semantic-color-tokens-state-warning-bg: var(--state-warning-bg);
+  --semantic-color-tokens-state-warning-text: var(--state-warning-text);
+  --semantic-color-tokens-state-error-bg: var(--state-danger-bg);
+  --semantic-color-tokens-state-error-text: var(--state-danger-text);
+  --semantic-color-tokens-state-info-bg: var(--state-info-bg);
+  --semantic-color-tokens-state-info-text: var(--state-info-text);
 
   /* --- spacing / spacing --- */
   --spacing-0: 0px;
@@ -241,7 +241,7 @@
   /* --- focusRing / focusRing --- */
   --focus-ring-width: 2;
   --focus-ring-offset: 2;
-  --focus-ring-color: var(--focus-ring, var(--focus-outline, #2c5282));
+  --focus-ring-color: var(--focus-ring, var(--focus-outline, var(--accent-primary)));
   --focus-ring-style: solid;
-  --focus-ring-class: focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2;
+  --focus-ring-class: focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_30%,transparent)] focus-visible:ring-offset-2;
 }

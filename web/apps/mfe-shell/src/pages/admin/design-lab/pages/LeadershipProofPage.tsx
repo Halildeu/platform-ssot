@@ -11,7 +11,7 @@
  * 7. Analytics summary
  */
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Text } from "@mfe/design-system";
 import {
   Trophy,
@@ -35,18 +35,34 @@ import { useDesignLabAnalytics } from "../intelligence/useDesignLabAnalytics";
 /*  Badge data                                                          */
 /* ------------------------------------------------------------------ */
 
-const BADGES = [
+/** Static badges whose values never change at runtime */
+const STATIC_BADGES = [
   { label: "Tests", value: "5910 pass", color: "bg-emerald-500/10 text-emerald-600" },
   { label: "Coverage", value: "85%", color: "bg-emerald-500/10 text-emerald-600" },
   { label: "TypeScript", value: "strict", color: "bg-blue-500/10 text-blue-600" },
-  { label: "Components", value: "232", color: "bg-blue-500/10 text-blue-600" },
-  { label: "Stories", value: "139", color: "bg-blue-500/10 text-blue-600" },
   { label: "Bundle", value: "gated", color: "bg-emerald-500/10 text-emerald-600" },
   { label: "A11y", value: "axe-core", color: "bg-violet-500/10 text-violet-600" },
   { label: "Tokens", value: "DTCG", color: "bg-amber-500/10 text-amber-600" },
   { label: "Node", value: "20 | 22", color: "bg-emerald-500/10 text-emerald-600" },
   { label: "React", value: "18.2 | 18.3", color: "bg-blue-500/10 text-blue-600" },
 ];
+
+/** Build the full badges array with dynamic counts derived from the catalog index */
+function buildBadges(index: { items: unknown[]; summary?: { exported?: number } }) {
+  const componentCount = index.summary?.exported ?? index.items.length;
+  const storyCount = index.items.filter(
+    (item) => (item as { demoMode?: string }).demoMode === "live" || (item as { demoMode?: string }).demoMode === "inspector",
+  ).length || index.items.length;
+
+  return [
+    STATIC_BADGES[0],
+    STATIC_BADGES[1],
+    STATIC_BADGES[2],
+    { label: "Components", value: String(componentCount), color: "bg-blue-500/10 text-blue-600" },
+    { label: "Stories", value: String(storyCount), color: "bg-blue-500/10 text-blue-600" },
+    ...STATIC_BADGES.slice(3),
+  ];
+}
 
 /* ------------------------------------------------------------------ */
 /*  Compatibility matrix summary                                        */
@@ -133,6 +149,7 @@ function Section({
 
 export default function LeadershipProofPage() {
   const { index } = useDesignLab();
+  const badges = useMemo(() => buildBadges(index), [index]);
   const analytics = useDesignLabAnalytics();
 
   const topViewed = analytics.getTopViewed(5);
@@ -171,7 +188,7 @@ export default function LeadershipProofPage() {
         subtitle="Platform kalite göstergeleri"
       >
         <div className="flex flex-wrap gap-2">
-          {BADGES.map((badge) => (
+          {badges.map((badge) => (
             <span
               key={badge.label}
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${badge.color}`}

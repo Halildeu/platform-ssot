@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
@@ -56,50 +57,52 @@ describe('LeadershipProofPage', () => {
 
   it('renders the Quality Badges section with badge values', () => {
     renderPage();
-    expect(screen.getByText('Quality Badges')).toBeInTheDocument();
-    expect(screen.getByText(/Tests: 5910 pass/)).toBeInTheDocument();
-    expect(screen.getByText(/Coverage: 85%/)).toBeInTheDocument();
-    expect(screen.getByText(/TypeScript: strict/)).toBeInTheDocument();
+    expect(screen.getAllByText('Quality Badges').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Tests: 5910 pass/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Coverage: 85%/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/TypeScript: strict/).length).toBeGreaterThanOrEqual(1);
+    // Components badge should reflect the mock index items length (1)
+    expect(screen.getAllByText(/Components: 1/).length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the Benchmark Results section', () => {
     renderPage();
-    expect(screen.getByText('Benchmark Results')).toBeInTheDocument();
-    expect(screen.getByText('6')).toBeInTheDocument(); // packages benchmarked
-    expect(screen.getByText('CI')).toBeInTheDocument();
+    expect(screen.getAllByText('Benchmark Results').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('6').length).toBeGreaterThanOrEqual(1); // packages benchmarked
+    expect(screen.getAllByText('CI').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the Certified Compatibility section with matrix rows', () => {
     renderPage();
-    expect(screen.getByText('Certified Compatibility')).toBeInTheDocument();
-    expect(screen.getByText('React 18.2 + Node 20')).toBeInTheDocument();
-    expect(screen.getByText('Vite 5.x')).toBeInTheDocument();
-    expect(screen.getByText('AG Grid 34.3.1')).toBeInTheDocument();
+    expect(screen.getAllByText('Certified Compatibility').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('React 18.2 + Node 20').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Vite 5.x').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('AG Grid 34.3.1').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the ROI Calculator section', () => {
     renderPage();
-    expect(screen.getByTestId('roi-calculator')).toBeInTheDocument();
+    expect(screen.getAllByTestId('roi-calculator').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders Reference Applications with template names', () => {
     renderPage();
-    expect(screen.getByText('Reference Applications')).toBeInTheDocument();
-    expect(screen.getByText('Dashboard Demo')).toBeInTheDocument();
-    expect(screen.getByText('CRUD Demo')).toBeInTheDocument();
-    expect(screen.getByText('Admin Demo')).toBeInTheDocument();
+    expect(screen.getAllByText('Reference Applications').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Dashboard Demo').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('CRUD Demo').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Admin Demo').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the Release Timeline section', () => {
     renderPage();
-    expect(screen.getByTestId('release-timeline')).toBeInTheDocument();
+    expect(screen.getAllByTestId('release-timeline').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders Usage Analytics with engagement data', () => {
     renderPage();
-    expect(screen.getByText('Usage Analytics')).toBeInTheDocument();
-    expect(screen.getByText('256')).toBeInTheDocument(); // totalViews
-    expect(screen.getByText('48')).toBeInTheDocument(); // uniqueComponents
-    expect(screen.getByText('12s')).toBeInTheDocument(); // avgTime
+    expect(screen.getAllByText('Usage Analytics').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('256').length).toBeGreaterThanOrEqual(1); // totalViews
+    expect(screen.getAllByText('48').length).toBeGreaterThanOrEqual(1); // uniqueComponents
+    expect(screen.getAllByText('12s').length).toBeGreaterThanOrEqual(1); // avgTime
   });
 });

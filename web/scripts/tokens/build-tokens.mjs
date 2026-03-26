@@ -267,7 +267,9 @@ function flattenToCSS(obj, prefix) {
     if (typeof val === "object" && val !== null && !Array.isArray(val)) {
       lines.push(...flattenToCSS(val, `${prefix}-${toKebab(String(key))}`));
     } else {
-      lines.push(`  ${prop}: ${val};`);
+      /* Wrap bare CSS variable references (e.g. "--surface-default") in var() */
+      const cssVal = typeof val === "string" && /^--[\w-]+$/.test(val) ? `var(${val})` : val;
+      lines.push(`  ${prop}: ${cssVal};`);
     }
   }
   return lines;

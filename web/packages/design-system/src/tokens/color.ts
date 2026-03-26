@@ -85,8 +85,8 @@ export const semanticColorTokens = {
   "state-success-text": "--state-success-text",
   "state-warning-bg": "--state-warning-bg",
   "state-warning-text": "--state-warning-text",
-  "state-error-bg": "--state-error-bg",
-  "state-error-text": "--state-error-text",
+  "state-error-bg": "--state-danger-bg",
+  "state-error-text": "--state-danger-text",
   "state-info-bg": "--state-info-bg",
   "state-info-text": "--state-info-text",
 } as const;

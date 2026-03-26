@@ -373,14 +373,14 @@
   {
     "name": "semanticColorTokens.state-error-bg",
     "category": "color",
-    "value": "--state-error-bg",
+    "value": "--state-danger-bg",
     "cssVariable": "--semantic-color-tokens-state-error-bg",
     "description": ""
   },
   {
     "name": "semanticColorTokens.state-error-text",
     "category": "color",
-    "value": "--state-error-text",
+    "value": "--state-danger-text",
     "cssVariable": "--semantic-color-tokens-state-error-text",
     "description": ""
   },
@@ -1444,7 +1444,7 @@
   {
     "name": "focusRing.color",
     "category": "focusRing",
-    "value": "var(--focus-ring, var(--focus-outline, #2c5282))",
+    "value": "var(--focus-ring, var(--focus-outline, var(--accent-primary)))",
     "cssVariable": "--focus-ring-color",
     "description": ""
   },
@@ -1458,7 +1458,7 @@
   {
     "name": "focusRing.class",
     "category": "focusRing",
-    "value": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]/30 focus-visible:ring-offset-2",
+    "value": "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[color-mix(in_oklab,var(--focus-ring)_30%,transparent)] focus-visible:ring-offset-2",
     "cssVariable": "--focus-ring-class",
     "description": ""
   }

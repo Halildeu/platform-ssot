@@ -5,7 +5,7 @@
 export const focusRing = {
   width: 2,
   offset: 2,
-  color: "var(--focus-ring, var(--focus-outline, #2c5282))",
+  color: "var(--focus-ring, var(--focus-outline, var(--accent-primary)))",
   style: "solid",
   /* Utility class */
   class:

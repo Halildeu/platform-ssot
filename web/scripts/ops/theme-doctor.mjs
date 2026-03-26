@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Theme Doctor v2.0 — full-stack UI health check.
+ * Theme Doctor v7.1 — full-stack UI health check.
  *
  * Theme & Token (10 checks):
  *  1.  Attribute consistency     (data-theme / data-mode / data-appearance)
@@ -1223,11 +1223,21 @@ function extractCSSVars(css) {
   return vars;
 }
 
-// 34. Token Layer Drift — tokens.css vs theme.css gap
-check('token-layer-drift', 'Token layer gap: tokens.css (DS) ↔ theme.css (app)', () => {
+// 34. Token Layer Drift — tokens.css vs theme.css gap + broken semantic refs
+check('token-layer-drift', 'Token layer gap: tokens.css (DS) ↔ theme.css (app) + broken refs', () => {
   const tokensCss = readSafe(TOKENS_CSS);
   const themeCss = readSafe(THEME_CSS);
   if (!tokensCss) return { status: 'warn', message: 'tokens.css not found at packages/design-system/src/tokens/build/tokens.css' };
+
+  /* --- Sub-check A: broken semantic refs (var() missing) --- */
+  const brokenRefs = [];
+  for (const line of tokensCss.split('\n')) {
+    const m = line.match(/^\s+--([\w-]+)\s*:\s*(--[\w-]+)\s*;$/);
+    if (m) {
+      /* Value is a bare CSS variable name without var() wrapper — this is broken CSS */
+      brokenRefs.push({ token: `--${m[1]}`, value: m[2], fix: `var(${m[2]})` });
+    }
+  }
 
   const tokensVars = extractCSSVars(tokensCss);
   const themeVars = extractCSSVars(themeCss);
@@ -1248,6 +1258,19 @@ check('token-layer-drift', 'Token layer gap: tokens.css (DS) ↔ theme.css (app)
     .sort((a, b) => b[1].length - a[1].length)
     .slice(0, 6)
     .map(([cat, vars]) => `${cat}: ${vars.length}`);
+
+  /* If broken refs found, always fail */
+  if (brokenRefs.length > 0) {
+    return {
+      status: 'fail',
+      message: `${brokenRefs.length} broken semantic refs in tokens.css (bare --name without var()) + ${appOnly.length} app-only tokens`,
+      details: [
+        ...brokenRefs.slice(0, 8).map(b => `BROKEN: ${b.token}: ${b.value} → should be ${b.fix}`),
+        `Categories: ${catSummary.join(', ')}`,
+      ],
+      fix: FIX_HINT ? 'Fix tokens.css: --semantic-color-tokens-surface-default: --surface-default → var(--surface-default). Or remove if dead code.' : undefined,
+    };
+  }
 
   if (appOnly.length === 0) return { status: 'pass', message: `Token layers in sync — ${tokensVars.size} DS tokens, ${themeVars.size} app tokens` };
   /* tokens.css = raw palette (L0), theme.css = semantic (L1) — gap is by design for runtime theming */
@@ -1271,7 +1294,7 @@ check('missing-semantic-tokens', 'Component var() refs missing from all CSS laye
   /* Scan DS component files for var(--xxx) references */
   const scanDirs = [DS_SRC, join(ROOT, 'packages', 'x-form-builder', 'src'), join(ROOT, 'packages', 'x-data-grid', 'src'), join(ROOT, 'packages', 'x-charts', 'src')];
   const referencedVars = new Map(); /* var name → [files] */
-  const skipPaths = ['__tests__', '__stories__', '__visual__', 'design-lab', 'demos', 'catalog/component-docs'];
+  const skipPaths = ['__tests__', '__stories__', '__visual__', 'design-lab', 'demos', 'catalog/component-docs', 'intelligence/', 'mcp/'];
 
   for (const dir of scanDirs) {
     for (const file of walkDir(dir, '.tsx').concat(walkDir(dir, '.ts')).concat(walkDir(dir, '.css'))) {
@@ -1280,6 +1303,11 @@ check('missing-semantic-tokens', 'Component var() refs missing from all CSS laye
       const content = readSafe(file);
       for (const m of content.matchAll(/var\(--([a-z][a-z0-9-]*)/g)) {
         const name = m[1];
+        /* Skip template literal fragments: var(--spacing-${key}) → captures "spacing-" with trailing dash */
+        if (name.endsWith('-')) continue;
+        /* Skip doc/suggestion strings: var(--surface-*) */
+        const afterIdx = m.index + m[0].length;
+        if (afterIdx < content.length && content[afterIdx] === '*') continue;
         if (!referencedVars.has(name)) referencedVars.set(name, []);
         referencedVars.get(name).push(rel);
       }
@@ -1296,8 +1324,25 @@ check('missing-semantic-tokens', 'Component var() refs missing from all CSS laye
   missing.sort((a, b) => b.refCount - a.refCount);
 
   if (missing.length === 0) return { status: 'pass', message: `All ${referencedVars.size} component var() refs have definitions` };
+
+  /* Critical tokens: high-impact tokens used across many components */
+  const criticalTokenNames = ['text-tertiary', 'surface-canvas-bg', 'elevation-surface', 'elevation-overlay', 'surface-active', 'text-disabled'];
+  const missingCritical = missing.filter(m => criticalTokenNames.includes(m.token.replace('--', '')));
+
+  if (missingCritical.length > 0) {
+    return {
+      status: 'fail',
+      message: `${missingCritical.length} CRITICAL token(s) missing + ${missing.length - missingCritical.length} other var() refs undefined`,
+      details: [
+        ...missingCritical.map(m => `🔴 ${m.token} (${m.refCount} refs) — ${m.files[0]}`),
+        '---',
+        ...missing.filter(m => !criticalTokenNames.includes(m.token.replace('--', ''))).slice(0, 5).map(m => `${m.token} (${m.refCount} refs) — ${m.files[0]}`),
+      ],
+      fix: FIX_HINT ? 'Add critical tokens to theme.css: --text-tertiary, --surface-canvas-bg, --elevation-surface, --elevation-overlay' : undefined,
+    };
+  }
   return {
-    status: missing.length > 10 ? 'warn' : 'pass',
+    status: missing.length > 3 ? 'warn' : 'pass',
     message: `${missing.length} var() refs in components have no definition in any CSS layer`,
     details: missing.slice(0, 8).map(m => `${m.token} (${m.refCount} refs) — ${m.files[0]}`),
     fix: FIX_HINT ? 'Add missing tokens to tokens.css or theme.css' : undefined,
@@ -2952,6 +2997,164 @@ check('api-error-format', 'Standardized API error extraction pattern', () => {
   };
 });
 
+/* ================================================================== */
+/*  TOKEN GAP DETECTION CHECKS (v7.1)                                  */
+/* ================================================================== */
+
+// 60. Token Naming Consistency — error vs danger state naming
+check('token-naming-consistency', 'State token naming consistency (error vs danger)', () => {
+  const tokensCss = readSafe(TOKENS_CSS);
+  const themeCss = readSafe(THEME_CSS);
+  const themeInline = readSafe(THEME_INLINE_CSS);
+
+  const tokensError = [...tokensCss.matchAll(/--(state-error[\w-]*)/g)].map(m => m[1]);
+  const tokensDanger = [...tokensCss.matchAll(/--(state-danger[\w-]*)/g)].map(m => m[1]);
+  const themeError = [...themeCss.matchAll(/--(state-error[\w-]*)/g)].map(m => m[1]);
+  const themeDanger = [...themeCss.matchAll(/--(state-danger[\w-]*)/g)].map(m => m[1]);
+
+  /* Check if generated-theme-inline aliases error→danger */
+  const hasAlias = themeInline.includes('state-error') && themeInline.includes('state-danger');
+
+  const details = [
+    `tokens.css: ${tokensError.length} --state-error-*, ${tokensDanger.length} --state-danger-*`,
+    `theme.css:  ${themeError.length} --state-error-*, ${themeDanger.length} --state-danger-*`,
+    `@theme inline alias: ${hasAlias ? 'yes (error→danger)' : 'no'}`,
+  ];
+
+  /* Also scan components for inconsistent usage */
+  const scanDirs = [DS_SRC, join(ROOT, 'packages', 'x-form-builder', 'src')];
+  let errorUsage = 0;
+  let dangerUsage = 0;
+  for (const dir of scanDirs) {
+    for (const file of walkDir(dir, '.tsx')) {
+      const content = readSafe(file);
+      if (content.includes('state-error')) errorUsage++;
+      if (content.includes('state-danger')) dangerUsage++;
+    }
+  }
+  details.push(`Component usage: ${errorUsage} files use "error", ${dangerUsage} files use "danger"`);
+
+  const bothExist = (tokensError.length > 0 || themeError.length > 0) && (tokensDanger.length > 0 || themeDanger.length > 0);
+  if (!bothExist) return { status: 'pass', message: 'Consistent state token naming', details };
+
+  /* If alias exists (error→danger) in @theme inline AND tokens.css semantic refs
+     point to canonical --state-danger-*, the dual naming is properly bridged */
+  const tokensSemanticRefsDanger = tokensCss.includes('--state-danger-bg') || tokensCss.includes('var(--state-danger');
+  if (hasAlias && tokensSemanticRefsDanger) {
+    return {
+      status: 'pass',
+      message: `Dual naming bridged: "danger" canonical, "error" aliased via @theme inline (${errorUsage} error, ${dangerUsage} danger usages)`,
+      details,
+    };
+  }
+
+  return {
+    status: 'warn',
+    message: `Dual naming without proper bridging: "error" (${tokensError.length + themeError.length} defs, ${errorUsage} usages) + "danger" (${tokensDanger.length + themeDanger.length} defs, ${dangerUsage} usages)`,
+    details,
+    fix: FIX_HINT ? 'Standardize: pick one canonical name (danger or error) and alias the other. Current @theme inline aliases error→danger — update tokens.css semantic refs to point to --state-danger-*' : undefined,
+  };
+});
+
+// 61. Theme Inline Completeness — component-used tokens missing from @theme inline
+check('theme-inline-completeness', 'Component-used tokens present in @theme inline for TW4 utility generation', () => {
+  const themeCss = readSafe(THEME_CSS);
+  const themeInline = readSafe(THEME_INLINE_CSS);
+  if (!themeInline) return { status: 'warn', message: 'generated-theme-inline.css not found' };
+
+  /* Extract all tokens covered by @theme inline:
+     Both the LHS definitions (--color-action-primary → strips to "action-primary")
+     and RHS var() references (var(--action-primary-bg) → "action-primary-bg") */
+  const inlineCovered = new Set();
+  for (const line of themeInline.split('\n')) {
+    /* LHS: --color-surface-default → "surface-default" (how TW4 generates utility names) */
+    const lhs = line.match(/^\s+--(color-|shadow-|ring-|radius-|spacing-|font-size-)?([\w-]+)\s*:/);
+    if (lhs) inlineCovered.add(lhs[2]);
+    /* RHS: var(--action-primary-bg) → "action-primary-bg" */
+    for (const m of line.matchAll(/var\(--([\w-]+)/g)) inlineCovered.add(m[1]);
+  }
+
+  /* Extract all --X definitions from theme.css :root */
+  const themeRootDefs = new Set();
+  const rootBlock = themeCss.split('[data-mode=')[0] || '';
+  for (const m of rootBlock.matchAll(/^\s+--([\w-]+)\s*:/gm)) themeRootDefs.add(m[1]);
+
+  /* Scan components for TW class usage to find which tokens need @theme inline mapping */
+  const scanDirs = [DS_SRC, join(ROOT, 'packages', 'x-form-builder', 'src'), join(ROOT, 'packages', 'x-data-grid', 'src'), join(ROOT, 'packages', 'x-charts', 'src')];
+  const skipPaths = ['__tests__', '__stories__', '__visual__', 'design-lab', 'demos', 'catalog/component-docs', 'intelligence/', 'mcp/'];
+  const componentTokenUsage = new Map(); /* token → file count */
+
+  for (const dir of scanDirs) {
+    for (const file of [...walkDir(dir, '.tsx'), ...walkDir(dir, '.css')]) {
+      const rel = relative(ROOT, file);
+      if (skipPaths.some(p => rel.includes(p))) continue;
+      const content = readSafe(file);
+      /* Look for Tailwind classes using token names: bg-surface-hover, text-text-tertiary, etc. */
+      for (const m of content.matchAll(/\b(?:bg|text|border|ring|shadow|outline|from|via|to)-([\w][\w-]*?)(?=[\s"'`\\)/\]]|$)/g)) {
+        const tokenName = m[1];
+        componentTokenUsage.set(tokenName, (componentTokenUsage.get(tokenName) || 0) + 1);
+      }
+    }
+  }
+
+  /* Find tokens defined in theme.css and used by components but NOT covered in @theme inline */
+  const semanticPrefixes = ['surface-', 'text-', 'action-', 'border-', 'state-', 'accent-', 'selection-', 'focus-', 'data-table-', 'interactive-', 'elevation-'];
+  const unmapped = [];
+  for (const token of themeRootDefs) {
+    if (!semanticPrefixes.some(p => token.startsWith(p))) continue;
+    if (inlineCovered.has(token)) continue;
+    /* Check if any component uses a TW utility that would need this token */
+    const usageCount = componentTokenUsage.get(token) || 0;
+    if (usageCount > 0) {
+      unmapped.push({ token: `--${token}`, usageCount });
+    }
+  }
+  unmapped.sort((a, b) => b.usageCount - a.usageCount);
+
+  if (unmapped.length === 0) return { status: 'pass', message: `All component-used tokens have @theme inline mapping (${inlineCovered.size} covered)` };
+  return {
+    status: unmapped.length > 5 ? 'warn' : 'pass',
+    message: `${unmapped.length} tokens used by components but missing from @theme inline — TW4 utilities won't generate`,
+    details: unmapped.slice(0, 10).map(u => `${u.token} (${u.usageCount} usages) — no TW4 utility`),
+    fix: FIX_HINT ? 'Add missing tokens to generated-theme-inline.css @theme inline block: --color-<name>: var(--<name>);' : undefined,
+  };
+});
+
+// 62. Focus Ring Hardcode — detect hardcoded hex in focus ring system
+check('focus-ring-hardcode', 'Focus ring system: no hardcoded color values', () => {
+  const tokensCss = readSafe(TOKENS_CSS);
+  const focusRingTs = readSafe(join(ROOT, 'packages', 'design-system', 'src', 'tokens', 'focusRing.ts'));
+
+  const violations = [];
+
+  /* Check tokens.css for hardcoded hex in focus-ring-color */
+  for (const line of tokensCss.split('\n')) {
+    if (line.includes('focus-ring') && /#[0-9a-fA-F]{3,8}/.test(line)) {
+      const hex = line.match(/#[0-9a-fA-F]{3,8}/)[0];
+      /* Skip if hex is inside a nested var() fallback chain — only flag top-level hardcodes */
+      violations.push({ file: 'tokens.css', line: line.trim(), hex });
+    }
+  }
+
+  /* Check focusRing.ts for hardcoded hex */
+  if (focusRingTs) {
+    for (const line of focusRingTs.split('\n')) {
+      const hexMatch = line.match(/#[0-9a-fA-F]{6}/);
+      if (hexMatch && !line.trim().startsWith('//') && !line.trim().startsWith('*')) {
+        violations.push({ file: 'focusRing.ts', line: line.trim(), hex: hexMatch[0] });
+      }
+    }
+  }
+
+  if (violations.length === 0) return { status: 'pass', message: 'Focus ring system uses token references only — no hardcoded hex' };
+  return {
+    status: 'fail',
+    message: `${violations.length} hardcoded hex value(s) in focus ring system — breaks dark/HC mode`,
+    details: violations.map(v => `${v.file}: ${v.hex} in "${v.line.substring(0, 80)}"`),
+    fix: FIX_HINT ? 'Replace #2c5282 with var(--accent-primary) or remove fallback entirely — theme.css always defines --focus-outline' : undefined,
+  };
+});
+
 /* ------------------------------------------------------------------ */
 /*  Preview & Coverage Checks                                          */
 /* ------------------------------------------------------------------ */
@@ -2999,7 +3202,7 @@ check('docs-truth', 'Documentation truth — phantom imports and stale reference
 if (JSON_MODE) {
   const report = {
     tool: 'theme-doctor',
-    version: '7.0.0',
+    version: '7.1.0',
     timestamp: new Date().toISOString(),
     summary: { pass: passCount, warn: warnCount, fail: failCount, total: results.length },
     checks: results,
@@ -3008,7 +3211,7 @@ if (JSON_MODE) {
 } else {
   console.log('');
   console.log('╔══════════════════════════════════════════════════════════════╗');
-  console.log(`║         🩺 Theme Doctor v7.0 (${results.length} checks)                ║`);
+  console.log(`║         🩺 Theme Doctor v7.1 (${results.length} checks)                ║`);
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 

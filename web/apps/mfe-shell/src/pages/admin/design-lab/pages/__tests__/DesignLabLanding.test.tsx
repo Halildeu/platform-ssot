@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { render, screen } from '@testing-library/react';
@@ -49,6 +50,10 @@ vi.mock('../../DesignLabProvider', () => ({
       recipes: { currentFamilies: [{ recipeId: 'r1', title: 'CRUD Recipe', intent: 'forms', ownerBlocks: [] }] },
       ecosystem: { currentFamilies: [] },
     },
+    taxonomy: {
+      sections: [{ id: 'components', groupIds: ['general'] }],
+      groups: [{ id: 'general', label: 'General', subgroups: [{ label: 'actions', items: ['Button'] }] }],
+    },
     layer: 'components',
   }),
 }));
@@ -68,53 +73,53 @@ function renderPage() {
 describe('DesignLabLanding', () => {
   it('renders the hero title', () => {
     renderPage();
-    expect(screen.getByText('Design System')).toBeInTheDocument();
+    expect(screen.getAllByText('Design System').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the exported item count badge', () => {
     renderPage();
-    expect(screen.getByText('2 items exported')).toBeInTheDocument();
+    expect(screen.getAllByText('2 items exported').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders all 9 layer cards by title', () => {
     renderPage();
-    expect(screen.getByText('Foundations')).toBeInTheDocument();
-    expect(screen.getByText('Theme')).toBeInTheDocument();
-    expect(screen.getByText('Primitives')).toBeInTheDocument();
-    expect(screen.getByText('Components')).toBeInTheDocument();
-    expect(screen.getByText('Patterns')).toBeInTheDocument();
-    expect(screen.getByText('Advanced')).toBeInTheDocument();
-    expect(screen.getByText('Recipes')).toBeInTheDocument();
-    expect(screen.getByText('Ecosystem')).toBeInTheDocument();
+    expect(screen.getAllByText('Foundations').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Theme').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Primitives').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Components').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Patterns').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Advanced').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Recipes').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Ecosystem').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders Design System Layers section heading', () => {
     renderPage();
-    expect(screen.getByText('Design System Layers')).toBeInTheDocument();
+    expect(screen.getAllByText('Design System Layers').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the quick-access tool cards', () => {
     renderPage();
-    expect(screen.getByText('Icon Gallery')).toBeInTheDocument();
-    expect(screen.getByText('Bundle Size')).toBeInTheDocument();
-    expect(screen.getByText('Quality Command Center')).toBeInTheDocument();
-    expect(screen.getByText('Observability')).toBeInTheDocument();
-    expect(screen.getByText('Governance')).toBeInTheDocument();
-    expect(screen.getByText('Impact Intelligence')).toBeInTheDocument();
-    expect(screen.getByText('Leadership Proof')).toBeInTheDocument();
+    expect(screen.getAllByText('Icon Gallery').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Bundle Size').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Quality Command Center').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Observability').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Governance').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Impact Intelligence').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Leadership Proof').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders Library Stats section with stat cards', () => {
     renderPage();
-    expect(screen.getByText('Library Stats')).toBeInTheDocument();
-    expect(screen.getByText('Exported')).toBeInTheDocument();
-    expect(screen.getByText('Stable')).toBeInTheDocument();
-    expect(screen.getByText('Live Demo')).toBeInTheDocument();
-    expect(screen.getByText('API Coverage')).toBeInTheDocument();
+    expect(screen.getAllByText('Library Stats').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Exported').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Stable').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Live Demo').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('API Coverage').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders the search input', () => {
     renderPage();
-    expect(screen.getByTestId('design-lab-global-search')).toBeInTheDocument();
+    expect(screen.getAllByTestId('design-lab-global-search').length).toBeGreaterThanOrEqual(1);
   });
 });

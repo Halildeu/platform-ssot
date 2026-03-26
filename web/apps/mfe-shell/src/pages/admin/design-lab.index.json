@@ -117,9 +117,9 @@
         "docs/03-delivery/TEST-PLANS/TP-0302-release-deploy-e2e-v0-1.md"
       ],
       "catalogMetrics": {
-        "exported": 232,
+        "exported": 248,
         "planned": 0,
-        "stable": 232,
+        "stable": 248,
         "beta": 0,
         "liveDemo": 0,
         "apiCatalogItems": 132,
@@ -141,7 +141,7 @@
       }
     },
     "registrySummary": {
-      "stable": 232,
+      "stable": 248,
       "beta": 0,
       "apiCatalogItems": 132
     }
