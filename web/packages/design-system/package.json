@@ -116,7 +116,7 @@
     "./dist/cjs/advanced/data-grid/setup.cjs"
   ],
   "scripts": {
-    "start": "npx kill-port 3004 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
+    "start": "npx kill-port 3004 || true && webpack serve --config webpack.dev.cjs --no-watch-options-stdin",
     "scaffold:component": "node scripts/scaffold-component.mjs",
     "build": "rm -rf dist && tsup && npx tsc --project tsconfig.build.json && node scripts/post-build-use-client.mjs",
     "lint": "../../node_modules/.bin/eslint --config eslint.config.mjs src",
