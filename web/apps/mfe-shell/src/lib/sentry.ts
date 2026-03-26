@@ -14,13 +14,20 @@ interface SentryConfig {
 let initialized = false;
 
 export function initSentry(config?: Partial<SentryConfig>): void {
-  const dsn = config?.dsn || import.meta.env?.VITE_SENTRY_DSN;
+  const dsn = config?.dsn
+    || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SENTRY_DSN)
+    || process.env.VITE_SENTRY_DSN;
   if (!dsn || initialized) return;
 
   const sentryConfig: SentryConfig = {
     dsn,
-    environment: config?.environment || import.meta.env?.MODE || 'development',
-    release: config?.release || import.meta.env?.VITE_APP_VERSION,
+    environment: config?.environment
+      || (typeof import.meta !== 'undefined' && import.meta.env?.MODE)
+      || process.env.NODE_ENV
+      || 'development',
+    release: config?.release
+      || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_APP_VERSION)
+      || process.env.VITE_APP_VERSION,
     tracesSampleRate: config?.tracesSampleRate ?? 0.1,
     replaysSessionSampleRate: config?.replaysSessionSampleRate ?? 0.1,
   };
