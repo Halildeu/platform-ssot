@@ -1,7 +1,7 @@
 # API Reference
 
-> Auto-generated on 2026-03-24 by `generate-api-reference.mjs`
-> 95 component interfaces documented.
+> Auto-generated on 2026-03-26 by `generate-api-reference.mjs`
+> 107 component interfaces documented.
 
 ## Table of Contents
 
@@ -10,6 +10,7 @@
 - [Alert](#alert)
 - [Avatar](#avatar)
 - [Badge](#badge)
+- [ButtonDefault](#buttondefault)
 - [Card](#card)
 - [CardHeader](#cardheader)
 - [Checkbox](#checkbox)
@@ -47,6 +48,17 @@
 - [AnchorToc](#anchortoc)
 - [ApprovalCheckpoint](#approvalcheckpoint)
 - [ApprovalReview](#approvalreview)
+- [AppSidebar](#appsidebar)
+- [AppSidebarFooter](#appsidebarfooter)
+- [AppSidebarGroup](#appsidebargroup)
+- [AppSidebarHeader](#appsidebarheader)
+- [AppSidebarNav](#appsidebarnav)
+- [AppSidebarNavItem](#appsidebarnavitem)
+- [AppSidebarResizer](#appsidebarresizer)
+- [AppSidebarSearch](#appsidebarsearch)
+- [AppSidebarSection](#appsidebarsection)
+- [AppSidebarSeparator](#appsidebarseparator)
+- [AppSidebarTrigger](#appsidebartrigger)
 - [AreaChart](#areachart)
 - [Autocomplete](#autocomplete)
 - [AvatarGroup](#avatargroup)
@@ -160,6 +172,17 @@
 | `size` | `BadgeSize` | No | `md` | Badge size controlling padding and font size. @default "md" |
 | `dot` | `boolean` | No | `false` | Render as a dot (no children) |
 | `asChild` | `boolean` | No | `false` | Render via Slot — merges Badge props onto the child element. |
+
+---
+
+## ButtonDefault
+
+**Category:** primitives
+**Interface:** `ButtonDefaultProps`
+**Source:** `src/primitives/button/Button.tsx`
+**Extends:** `Omit<ButtonProps<'button'>, keyof React.ComponentPropsWithoutRef<'button'>>`
+
+_No props defined._
 
 ---
 
@@ -305,7 +328,17 @@
 **Interface:** `FieldControlShellProps`
 **Source:** `src/primitives/_shared/FieldControlPrimitives.tsx`
 
-_No props defined._
+| Prop | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `inputId` | `string` | Yes | - | ID of the associated input element for label association. |
+| `label` | `React.ReactNode` | No | - | Field label displayed above the input. |
+| `description` | `React.ReactNode` | No | - | Descriptive text below the label. |
+| `hint` | `React.ReactNode` | No | - | Help text displayed below the input. |
+| `error` | `React.ReactNode` | No | - | Error message displayed below the input. |
+| `countLabel` | `string` | No | - | Character count label displayed beside the input. |
+| `required` | `boolean` | No | `false` | Whether to show the required indicator. |
+| `fullWidth` | `boolean` | No | `true` | Whether the shell spans the full container width. |
+| `children` | `React.ReactNode` | Yes | - | Field input element(s) to wrap. |
 
 ---
 
@@ -912,6 +945,127 @@ _No props defined._
 
 ---
 
+## AppSidebar
+
+**Category:** components
+**Interface:** `AppSidebarProps`
+**Source:** `src/components/app-sidebar/AppSidebar.tsx`
+**Extends:** `AppSidebarPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarFooter
+
+**Category:** components
+**Interface:** `AppSidebarFooterProps`
+**Source:** `src/components/app-sidebar/AppSidebarFooter.tsx`
+**Extends:** `AppSidebarFooterPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarGroup
+
+**Category:** components
+**Interface:** `AppSidebarGroupProps`
+**Source:** `src/components/app-sidebar/AppSidebarGroup.tsx`
+**Extends:** `AppSidebarGroupPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarHeader
+
+**Category:** components
+**Interface:** `AppSidebarHeaderProps`
+**Source:** `src/components/app-sidebar/AppSidebarHeader.tsx`
+**Extends:** `AppSidebarHeaderPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarNav
+
+**Category:** components
+**Interface:** `AppSidebarNavProps`
+**Source:** `src/components/app-sidebar/AppSidebarNav.tsx`
+**Extends:** `AppSidebarNavPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarNavItem
+
+**Category:** components
+**Interface:** `AppSidebarNavItemProps`
+**Source:** `src/components/app-sidebar/AppSidebarNavItem.tsx`
+**Extends:** `AppSidebarNavItemPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarResizer
+
+**Category:** components
+**Interface:** `AppSidebarResizerProps`
+**Source:** `src/components/app-sidebar/AppSidebarResizer.tsx`
+**Extends:** `AppSidebarResizerPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarSearch
+
+**Category:** components
+**Interface:** `AppSidebarSearchProps`
+**Source:** `src/components/app-sidebar/AppSidebarSearch.tsx`
+**Extends:** `AppSidebarSearchPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarSection
+
+**Category:** components
+**Interface:** `AppSidebarSectionProps`
+**Source:** `src/components/app-sidebar/AppSidebarSection.tsx`
+**Extends:** `AppSidebarSectionPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarSeparator
+
+**Category:** components
+**Interface:** `AppSidebarSeparatorProps`
+**Source:** `src/components/app-sidebar/AppSidebarSeparator.tsx`
+**Extends:** `AppSidebarSeparatorPropsBase`
+
+_No props defined._
+
+---
+
+## AppSidebarTrigger
+
+**Category:** components
+**Interface:** `AppSidebarTriggerProps`
+**Source:** `src/components/app-sidebar/AppSidebarTrigger.tsx`
+**Extends:** `AppSidebarTriggerPropsBase`
+
+_No props defined._
+
+---
+
 ## AreaChart
 
 **Category:** components
@@ -1330,6 +1484,7 @@ _No props defined._
 **Category:** components
 **Interface:** `DetailSectionTabsProps`
 **Source:** `src/components/detail-section-tabs/DetailSectionTabs.tsx`
+**Extends:** `AccessControlledProps`
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -1873,8 +2028,8 @@ _No props defined._
 |------|------|----------|---------|-------------|
 | `value` | `string` | Yes | - | Text or URL to encode in the QR code. |
 | `size` | `number` | No | `128` | Size of the QR code in pixels. @default 128 |
-| `color` | `string` | No | `var(--text-primary, #000000)` | Foreground color for QR modules. @default "var(--text-primary, #000000)" |
-| `bgColor` | `string` | No | `var(--surface-canvas, #ffffff)` | Background color behind the QR code. @default "var(--surface-canvas, #ffffff)" |
+| `color` | `string` | No | `var(--text-primary)` | Foreground color for QR modules. @default "var(--text-primary)" |
+| `bgColor` | `string` | No | `var(--surface-canvas)` | Background color behind the QR code. @default "var(--surface-canvas)" |
 | `errorLevel` | `QRErrorLevel` | No | `M` | Reed-Solomon error correction level. @default "M" |
 | `icon` | `string` | No | - | URL of a center icon overlay image. |
 | `iconSize` | `number` | No | - | Size of the center icon in pixels. Defaults to 25% of the QR size. |
@@ -2415,7 +2570,7 @@ _No props defined._
 | `gap` | `[number, number]` | No | - | Horizontal and vertical gap between watermark tiles in pixels. @default [100,100] |
 | `offset` | `[number, number]` | No | - | X/Y offset of the watermark within each tile. |
 | `fontSize` | `number` | No | - | Font size in pixels for text watermarks. @default 14 |
-| `fontColor` | `string` | No | `var(--text-disabled, rgba(0,0,0,0.15))` | CSS color value for text watermarks. |
+| `fontColor` | `string` | No | `var(--text-disabled)` | CSS color value for text watermarks. |
 | `opacity` | `number` | No | - | Opacity of the watermark layer (0-1). @default 0.15 |
 | `zIndex` | `number` | No | - | CSS z-index of the watermark overlay. @default 9 |
 | `children` | `React.ReactNode` | No | - | Content to render beneath the watermark. |

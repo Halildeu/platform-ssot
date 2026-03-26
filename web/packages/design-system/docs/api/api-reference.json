@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-03-24T07:49:36.324Z",
-  "componentCount": 95,
+  "generatedAt": "2026-03-26T14:04:33.005Z",
+  "componentCount": 107,
   "components": [
     {
       "name": "Alert",
@@ -187,6 +187,14 @@
           "defaultValue": "false"
         }
       ]
+    },
+    {
+      "name": "ButtonDefault",
+      "interfaceName": "ButtonDefaultProps",
+      "category": "primitives",
+      "filePath": "src/primitives/button/Button.tsx",
+      "extends": "Omit<ButtonProps<'button'>, keyof React.ComponentPropsWithoutRef<'button'>>",
+      "props": []
     },
     {
       "name": "Card",
@@ -708,7 +716,82 @@
       "interfaceName": "FieldControlShellProps",
       "category": "primitives",
       "filePath": "src/primitives/_shared/FieldControlPrimitives.tsx",
-      "props": []
+      "props": [
+        {
+          "name": "inputId",
+          "type": "string",
+          "required": true,
+          "description": "ID of the associated input element for label association.",
+          "deprecated": false,
+          "experimental": false
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Field label displayed above the input.",
+          "deprecated": false,
+          "experimental": false
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Descriptive text below the label.",
+          "deprecated": false,
+          "experimental": false
+        },
+        {
+          "name": "hint",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Help text displayed below the input.",
+          "deprecated": false,
+          "experimental": false
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Error message displayed below the input.",
+          "deprecated": false,
+          "experimental": false
+        },
+        {
+          "name": "countLabel",
+          "type": "string",
+          "required": false,
+          "description": "Character count label displayed beside the input.",
+          "deprecated": false,
+          "experimental": false
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": "Whether to show the required indicator.",
+          "deprecated": false,
+          "experimental": false,
+          "defaultValue": "false"
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "Whether the shell spans the full container width.",
+          "deprecated": false,
+          "experimental": false,
+          "defaultValue": "true"
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Field input element(s) to wrap.",
+          "deprecated": false,
+          "experimental": false
+        }
+      ]
     },
     {
       "name": "HStack",
@@ -3329,6 +3412,94 @@
       ]
     },
     {
+      "name": "AppSidebar",
+      "interfaceName": "AppSidebarProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebar.tsx",
+      "extends": "AppSidebarPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarFooter",
+      "interfaceName": "AppSidebarFooterProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarFooter.tsx",
+      "extends": "AppSidebarFooterPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarGroup",
+      "interfaceName": "AppSidebarGroupProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarGroup.tsx",
+      "extends": "AppSidebarGroupPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarHeader",
+      "interfaceName": "AppSidebarHeaderProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarHeader.tsx",
+      "extends": "AppSidebarHeaderPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarNav",
+      "interfaceName": "AppSidebarNavProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarNav.tsx",
+      "extends": "AppSidebarNavPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarNavItem",
+      "interfaceName": "AppSidebarNavItemProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarNavItem.tsx",
+      "extends": "AppSidebarNavItemPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarResizer",
+      "interfaceName": "AppSidebarResizerProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarResizer.tsx",
+      "extends": "AppSidebarResizerPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarSearch",
+      "interfaceName": "AppSidebarSearchProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarSearch.tsx",
+      "extends": "AppSidebarSearchPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarSection",
+      "interfaceName": "AppSidebarSectionProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarSection.tsx",
+      "extends": "AppSidebarSectionPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarSeparator",
+      "interfaceName": "AppSidebarSeparatorProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarSeparator.tsx",
+      "extends": "AppSidebarSeparatorPropsBase",
+      "props": []
+    },
+    {
+      "name": "AppSidebarTrigger",
+      "interfaceName": "AppSidebarTriggerProps",
+      "category": "components",
+      "filePath": "src/components/app-sidebar/AppSidebarTrigger.tsx",
+      "extends": "AppSidebarTriggerPropsBase",
+      "props": []
+    },
+    {
       "name": "AreaChart",
       "interfaceName": "AreaChartProps",
       "category": "components",
@@ -5291,6 +5462,7 @@
       "interfaceName": "DetailSectionTabsProps",
       "category": "components",
       "filePath": "src/components/detail-section-tabs/DetailSectionTabs.tsx",
+      "extends": "AccessControlledProps",
       "props": [
         {
           "name": "tabs",
@@ -8029,19 +8201,19 @@
           "name": "color",
           "type": "string",
           "required": false,
-          "description": "Foreground color for QR modules. @default \"var(--text-primary, #000000)\"",
+          "description": "Foreground color for QR modules. @default \"var(--text-primary)\"",
           "deprecated": false,
           "experimental": false,
-          "defaultValue": "var(--text-primary, #000000)"
+          "defaultValue": "var(--text-primary)"
         },
         {
           "name": "bgColor",
           "type": "string",
           "required": false,
-          "description": "Background color behind the QR code. @default \"var(--surface-canvas, #ffffff)\"",
+          "description": "Background color behind the QR code. @default \"var(--surface-canvas)\"",
           "deprecated": false,
           "experimental": false,
-          "defaultValue": "var(--surface-canvas, #ffffff)"
+          "defaultValue": "var(--surface-canvas)"
         },
         {
           "name": "errorLevel",
@@ -10515,7 +10687,7 @@
           "description": "CSS color value for text watermarks.",
           "deprecated": false,
           "experimental": false,
-          "defaultValue": "var(--text-disabled, rgba(0,0,0,0.15))"
+          "defaultValue": "var(--text-disabled)"
         },
         {
           "name": "opacity",

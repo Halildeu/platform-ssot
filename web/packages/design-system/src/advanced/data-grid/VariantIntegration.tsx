@@ -31,6 +31,7 @@ import { cn } from "../../utils/cn";
 import { useAccordion } from "../../headless/hooks/useAccordion";
 import { IconSettings } from "../../icons/user/IconSettings";
 import { IconClose } from "../../icons/action/IconClose";
+import { IconSave } from "../../icons/action/IconSave";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -818,7 +819,7 @@ export const VariantIntegration = <RowData = unknown,>({
             disabled={pendingAction === `save-${activeId}`}
             title={m.saveTitle ?? "Save current state to variant"}
           >
-            \uD83D\uDCBE
+            <IconSave size={14} />
           </button>
         )}
 
