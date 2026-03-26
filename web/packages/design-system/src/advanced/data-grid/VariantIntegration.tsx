@@ -406,14 +406,15 @@ export const VariantIntegration = <RowData = unknown,>({
           onActiveVariantChange?.(null);
         }
         setConfirmDeleteId(null);
-        await loadVariants();
+        // Optimistic state update — don't rely on loadVariants which may read stale cache
+        setVariants((prev) => prev.filter((v) => v.id !== variantId));
       } catch {
-        // silent
+        // silent — variant may still be in localStorage if API and local delete both failed
       } finally {
         setPendingAction(null);
       }
     },
-    [activeId, onActiveVariantChange, loadVariants],
+    [activeId, onActiveVariantChange],
   );
 
   const handleClone = useCallback(
