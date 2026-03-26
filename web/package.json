@@ -185,7 +185,10 @@
     "dev:inspect": "vite --inspect",
     "build:analyze": "vite build --mode analyze",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "dev:frontend": "bash ./scripts/dev-frontend.sh",
+    "stop:frontend": "bash ./scripts/stop-frontend.sh",
+    "dev:full": "cd ../backend && docker compose up -d && cd ../web && bash ./scripts/dev-frontend.sh"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
