@@ -590,6 +590,8 @@ export const VariantIntegration = <RowData = unknown,>({
                 }}
                 onBlur={() => handleRename(v.id)}
                 onClick={(e) => e.stopPropagation()}
+                onKeyUp={(e) => e.stopPropagation()}
+                onInput={(e) => e.stopPropagation()}
                 className="h-5 w-full rounded-xs border border-border-default bg-surface-default px-1 text-xs outline-hidden"
                 autoFocus
               />
@@ -841,6 +843,8 @@ export const VariantIntegration = <RowData = unknown,>({
           ref={managerRef}
           className="fixed z-[9999] w-96 max-h-[70vh] overflow-y-auto rounded-lg border border-border-default bg-surface-default shadow-lg"
           data-component="variant-manager"
+          onKeyDown={(e) => e.stopPropagation()}
+          onKeyUp={(e) => e.stopPropagation()}
           style={{
             top: toggleRef.current
               ? toggleRef.current.getBoundingClientRect().bottom + 4
@@ -877,8 +881,11 @@ export const VariantIntegration = <RowData = unknown,>({
               placeholder={m.variantNamePlaceholder ?? "Varyant adi"}
               className="h-7 flex-1 rounded-xs border border-border-default bg-surface-default px-2 text-xs outline-hidden focus:border-action-primary"
               onKeyDown={(e) => {
+                e.stopPropagation();
                 if (e.key === "Enter") handleCreate();
               }}
+              onKeyUp={(e) => e.stopPropagation()}
+              onInput={(e) => e.stopPropagation()}
             />
             <button
               type="button"
