@@ -15,6 +15,7 @@
  * - getAdvancedFilterModel() / setAdvancedFilterModel()
  */
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { resolveAccessState, accessStyles, type AccessControlledProps } from '../../internal/access-controller';
 import type { GridApi, ColumnState, AdvancedFilterModel } from "ag-grid-community";
 import {
@@ -833,12 +834,23 @@ export const VariantIntegration = <RowData = unknown,>({
         </button>
       </div>
 
-      {/* Variant manager panel */}
-      {showManager && (
+      {/* Variant manager panel — portal to body to avoid overflow clipping */}
+      {showManager && typeof document !== "undefined" && createPortal(
         <div
           ref={managerRef}
-          className="absolute right-0 top-full z-50 mt-1 w-96 max-h-[70vh] overflow-y-auto rounded-lg border border-border-default bg-surface-default shadow-lg"
+          className="fixed z-[9999] w-96 max-h-[70vh] overflow-y-auto rounded-lg border border-border-default bg-surface-default shadow-lg"
           data-component="variant-manager"
+          style={{
+            top: toggleRef.current
+              ? toggleRef.current.getBoundingClientRect().bottom + 4
+              : 200,
+            left: toggleRef.current
+              ? Math.min(
+                  toggleRef.current.getBoundingClientRect().right - 384, // 384 = w-96
+                  window.innerWidth - 400,
+                )
+              : 100,
+          }}
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border-subtle px-3 py-2">
@@ -914,7 +926,8 @@ export const VariantIntegration = <RowData = unknown,>({
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );
