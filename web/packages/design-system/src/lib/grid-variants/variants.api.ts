@@ -762,11 +762,33 @@ export const updateGridVariant = async (payload: UpdateGridVariantPayload): Prom
 
 export const cloneGridVariant = async (payload: CloneGridVariantPayload): Promise<GridVariant> => {
   const { variantId, ...body } = payload;
+
+  // Local fallback: find source variant and create a personal copy
+  const localClone = (): GridVariant => {
+    const gridId = findGridIdByVariant(variantId) ?? 'unknown-grid';
+    const source = readLocalVariants(gridId).find((v) => v.id === variantId);
+    if (!source) throw new Error(`Variant ${variantId} not found in local storage`);
+    const cloned: GridVariant = {
+      ...source,
+      id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `clone-${Date.now()}`,
+      name: `${source.name} (Kopya)`,
+      isGlobal: false,
+      isGlobalDefault: false,
+      isDefault: false,
+      isUserDefault: false,
+      isUserSelected: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    upsertLocalVariant(gridId, cloned);
+    return cloned;
+  };
+
   try {
     const response = await api.post<VariantDto>(
       `${VARIANTS_BASE_URL}/${encodeURIComponent(variantId)}/clone`,
       body,
-      { headers: getJsonHeaders() },
+      { headers: getJsonHeaders(), timeout: 3000 },
     );
     const cloned = response.data as VariantDto;
     const normalized: GridVariant = {
@@ -777,8 +799,8 @@ export const cloneGridVariant = async (payload: CloneGridVariantPayload): Promis
     upsertLocalVariant(normalized.gridId, normalized);
     return normalized;
   } catch (error) {
-    console.warn('Global varyant kişisel kopyaya dönüştürülemedi.', error);
-    throw error;
+    console.warn('Global varyant kişisel kopyaya dönüştürülemedi, yerel kopya oluşturuluyor.', error);
+    return localClone();
   }
 };
 
