@@ -1,0 +1,80 @@
+---
+title: "X-Kanban"
+description: "Board and workflow visualization with drag-and-drop columns, swimlanes, and WIP limits."
+---
+
+## Quick Start
+
+```tsx
+import { KanbanBoard } from '@mfe/x-kanban';
+
+<KanbanBoard
+  columns={['Backlog', 'In Progress', 'Review', 'Done']}
+  items={tasks}
+  onMove={handleMove}
+/>
+```
+
+## Components
+
+| Component | Purpose |
+|-----------|---------|
+| `KanbanBoard` | Full board with columns and drag-and-drop |
+| `KanbanColumn` | Single column container |
+| `KanbanCard` | Draggable card item |
+| `KanbanSwimlane` | Horizontal row grouping |
+| `KanbanToolbar` | Board-level action toolbar |
+| `KanbanCardDetail` | Expanded card detail view |
+| `KanbanMetrics` | Board metrics and analytics display |
+
+## WIP Limits
+
+Set work-in-progress limits per column to enforce workflow policies:
+
+```tsx
+<KanbanBoard
+  columns={[
+    { title: 'Backlog' },
+    { title: 'In Progress', wipLimit: 5 },
+    { title: 'Review', wipLimit: 3 },
+    { title: 'Done' },
+  ]}
+  items={tasks}
+  onMove={handleMove}
+/>
+```
+
+## Swimlanes
+
+Group cards horizontally by a field:
+
+```tsx
+<KanbanBoard
+  columns={columns}
+  items={tasks}
+  swimlaneField="priority"
+  onMove={handleMove}
+/>
+```
+
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useKanban` | Board state management |
+| `useDragDrop` | Drag-and-drop engine (framework-agnostic) |
+| `useDndKitKanban` | dnd-kit integration for kanban |
+| `useSortableCard` | dnd-kit sortable card binding |
+| `useDroppableColumn` | dnd-kit droppable column binding |
+| `useKanbanFilter` | Board filtering logic |
+| `useWipPolicy` | WIP limit enforcement and violation detection |
+| `useKanbanVariants` | Board variant configuration |
+| `useKanbanSchedulerSync` | Cross-package: kanban-to-scheduler sync |
+| `useResponsiveKanban` | Mobile-responsive board layout |
+
+## Drag and Drop
+
+Cards support drag-and-drop between columns with animated transitions.
+The `onMove` callback receives source and destination metadata.
+Use `useDndKitKanban` for the dnd-kit powered engine, or `useDragDrop`
+for the framework-agnostic fallback.

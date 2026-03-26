@@ -1,0 +1,90 @@
+---
+title: "Known Issues"
+description: "Current known issues, limitations, and planned resolutions for the @mfe platform."
+---
+
+## AG Grid v34 Enterprise Features Require License
+
+**Severity**: Expected behavior
+**Impact**: Server-Side Row Model (SSRM), integrated charts, and Excel export are unavailable without an AG Grid Enterprise license key.
+
+**Affected packages**: `@mfe/x-data-grid`
+
+**Workaround**: Use client-side row model for datasets under 50K rows. Use CSV export instead of Excel export. Use `@mfe/x-charts` as a standalone chart solution instead of AG Grid integrated charts.
+
+**Planned fix**: License provisioning documented in deployment guide. Enterprise license is included in production builds via `AG_GRID_LICENSE_KEY` environment variable.
+
+---
+
+## Module Federation Requires webpack 5.90+
+
+**Severity**: Configuration requirement
+**Impact**: Module Federation runtime errors if host or remote apps use webpack versions below 5.90. Manifests as `Shared module is not available for eager consumption` or chunk loading failures.
+
+**Affected packages**: `@mfe/shell`, all remote apps
+
+**Workaround**: Pin webpack to `>=5.90.0` in your `package.json`:
+```json
+{
+  "devDependencies": {
+    "webpack": "^5.90.0"
+  }
+}
+```
+
+**Planned fix**: v1.5 will include a pre-flight check that validates webpack version at build time and emits a clear error message.
+
+---
+
+## Vite CJS Deprecation Warnings
+
+**Severity**: Cosmetic (no functional impact)
+**Impact**: Console warnings during `vite dev` and `vite build`:
+```
+The CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html
+```
+
+**Affected packages**: All packages using Vite for dev/build
+
+**Workaround**: Warnings can be suppressed with `NODE_NO_WARNINGS=1` but this is not recommended as it hides other useful warnings. The warnings have no impact on build output or runtime behavior.
+
+**Planned fix**: Full ESM migration tracked for v1.6. Requires all config files to use `.mts` extension and `"type": "module"` in package.json.
+
+---
+
+## React 19 Support
+
+**Severity**: Planned limitation
+**Impact**: React 19 is not officially supported in v1.x. While basic rendering may work, the following are known issues:
+- `forwardRef` deprecation warnings (React 19 makes ref a regular prop)
+- Suspense boundary behavior changes may affect lazy-loaded remotes
+- New `use()` hook not yet leveraged
+
+**Affected packages**: All packages
+
+**Workaround**: Stay on React 18.x for production. React 19 can be tested with the `next` release channel.
+
+**Planned fix**: React 19 support is the headline feature of @mfe v2.0, scheduled for Q4 2026. Migration guide will be published 3 months before release.
+
+---
+
+## Safari < 15 Not Supported
+
+**Severity**: Platform limitation
+**Impact**: The following features do not work in Safari versions prior to 15:
+- CSS `gap` in flexbox layouts (Safari 14.1+)
+- `dialog` element (Safari 15.4+)
+- CSS `color-mix()` for theme tokens (Safari 16.2+)
+- `structuredClone` used in state management (Safari 15.4+)
+
+**Affected packages**: All packages
+
+**Workaround**: No polyfills are provided. Users on older Safari versions should update their browser or OS.
+
+**Planned fix**: This is a permanent platform boundary. The [compatibility matrix](/trust/compatibility) documents all supported browser versions. Safari 15+ represents >97% of active Safari users as of early 2026.
+
+---
+
+## Tracking
+
+Issues linked to known limitations are tagged with the `known-issue` label in the repository. When a fix ships, the corresponding entry is removed from this page and a note is added to the changelog.

@@ -1,5 +1,8 @@
 
 export default new Map([
+["src/content/docs/blocks/creating-blocks.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fblocks%2Fcreating-blocks.mdx&astroContentModuleFlag=true")],
+["src/content/docs/blocks/customization.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fblocks%2Fcustomization.mdx&astroContentModuleFlag=true")],
+["src/content/docs/blocks/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fblocks%2Findex.mdx&astroContentModuleFlag=true")],
 ["src/content/docs/components/button.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fcomponents%2Fbutton.mdx&astroContentModuleFlag=true")],
 ["src/content/docs/components/data-grid.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fcomponents%2Fdata-grid.mdx&astroContentModuleFlag=true")],
 ["src/content/docs/components/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fcomponents%2Findex.mdx&astroContentModuleFlag=true")],
@@ -17,5 +20,21 @@ export default new Map([
 ["src/content/docs/getting-started.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fgetting-started.mdx&astroContentModuleFlag=true")],
 ["src/content/docs/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Findex.mdx&astroContentModuleFlag=true")],
 ["src/content/docs/installation.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Finstallation.mdx&astroContentModuleFlag=true")],
-["src/content/docs/theming.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftheming.mdx&astroContentModuleFlag=true")]]);
+["src/content/docs/migration/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fmigration%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/docs/theming.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftheming.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/comparison.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Fcomparison.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/compatibility.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Fcompatibility.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/deprecation-policy.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Fdeprecation-policy.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/known-issues.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Fknown-issues.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/quality-dashboard.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Fquality-dashboard.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/roi.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Froi.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/support.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Fsupport.mdx&astroContentModuleFlag=true")],
+["src/content/docs/trust/troubleshooting.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Ftrust%2Ftroubleshooting.mdx&astroContentModuleFlag=true")],
+["src/content/docs/x-suite/charts.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fx-suite%2Fcharts.mdx&astroContentModuleFlag=true")],
+["src/content/docs/x-suite/data-grid.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fx-suite%2Fdata-grid.mdx&astroContentModuleFlag=true")],
+["src/content/docs/x-suite/editor.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fx-suite%2Feditor.mdx&astroContentModuleFlag=true")],
+["src/content/docs/x-suite/form-builder.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fx-suite%2Fform-builder.mdx&astroContentModuleFlag=true")],
+["src/content/docs/x-suite/index.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fx-suite%2Findex.mdx&astroContentModuleFlag=true")],
+["src/content/docs/x-suite/kanban.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fx-suite%2Fkanban.mdx&astroContentModuleFlag=true")],
+["src/content/docs/x-suite/scheduler.mdx", () => import("astro:content-layer-deferred-module?astro%3Acontent-layer-deferred-module=&fileName=src%2Fcontent%2Fdocs%2Fx-suite%2Fscheduler.mdx&astroContentModuleFlag=true")]]);
 		

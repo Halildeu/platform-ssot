@@ -1,0 +1,74 @@
+---
+title: "X-Data-Grid"
+description: "Recipe layer over AG Grid 34.3 with column builder, server-side patterns, and cross-package composition."
+---
+
+## Quick Start
+
+```tsx
+import { EntityGridTemplate, useColumnBuilder } from '@mfe/x-data-grid';
+
+const columns = useColumnBuilder<Invoice>()
+  .text('invoiceNo', { header: 'Invoice #', pinned: 'left' })
+  .currency('amount', { header: 'Amount' })
+  .date('dueDate', { header: 'Due Date' })
+  .status('status', { variants: ['draft', 'sent', 'paid'] })
+  .build();
+
+<EntityGridTemplate rows={invoices} columns={columns} />
+```
+
+## Core Components
+
+| Export | Description |
+|--------|-------------|
+| `EntityGridTemplate` | Primary grid component (re-exported from design-system) |
+| `GridShell` | Low-level grid shell wrapper |
+| `GridToolbar` | Toolbar for grid actions |
+| `TablePagination` | Pagination control |
+
+## Recipe Components
+
+| Export | Description |
+|--------|-------------|
+| `DataGridFilterChips` | Active filter chip display |
+| `DataGridSelectionBar` | Bulk-selection action bar |
+| `ServerDataSource` | Server-side data source adapter |
+| `MasterDetailGrid` | Expandable rows with nested grids |
+| `TreeDataGrid` | Hierarchical row grouping |
+| `PivotGrid` | Pivot table layout |
+| `EditableGrid` | Inline cell editing |
+| `RowGroupingGrid` | Row grouping with aggregation |
+
+## Column Builder
+
+The fluent `useColumnBuilder` API provides type-safe column definitions:
+
+```tsx
+const columns = useColumnBuilder<Product>()
+  .text('name', { flex: 2 })
+  .number('stock', { editable: true })
+  .currency('price', { currency: 'TRY' })
+  .action('edit', { icon: 'pencil', onClick: handleEdit })
+  .build();
+```
+
+## Server-Side Data
+
+For large datasets, use the `ServerDataSource` component:
+
+```tsx
+import { ServerDataSource } from '@mfe/x-data-grid';
+
+<ServerDataSource config={{ endpoint: '/api/invoices', pageSize: 100 }} />
+```
+
+## Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useColumnBuilder` | Fluent column definition API |
+| `useGridExport` | Excel/CSV export (`ExcelExportOptions`, `CsvExportOptions`) |
+| `useGridState` | Grid state persistence (column order, sort, filters) |
+| `useGridChartDrilldown` | Cross-package: grid-to-chart drill-down |
+| `useGridFormSync` | Cross-package: grid-to-form synchronization |

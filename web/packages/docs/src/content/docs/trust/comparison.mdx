@@ -1,0 +1,71 @@
+---
+title: "Platform Comparison"
+description: "An honest assessment of how our unified platform compares to assembling individual best-of-breed libraries."
+---
+
+## Component Coverage
+
+| Category | Our Platform | Alternative |
+|----------|-------------|-------------|
+| **Data Grid** | Built-in (AG Grid powered) | AG Grid / MUI X Data Grid |
+| **Charts** | Built-in | Recharts / Nivo / MUI X Charts |
+| **Rich Text Editor** | Built-in | Tiptap / Lexical / Slate |
+| **Scheduler / Calendar** | Built-in | FullCalendar / MUI X Date Pickers |
+| **Kanban Board** | Built-in | react-beautiful-dnd + custom |
+| **Form Builder** | Built-in | SurveyJS / React Hook Form + custom |
+
+## Dimension Comparison
+
+| Dimension | Our Platform | Mix of 6 Libraries |
+|-----------|-------------|---------------------|
+| **Bundle Size** | Single tree-shakeable bundle, shared dependencies deduplicated | Each library ships its own runtime; duplicated utilities and styles |
+| **TypeScript** | Strict mode across all components, unified type definitions | Varies per library; some have incomplete or `@types/` packages |
+| **Accessibility (A11y)** | Consistent WCAG 2.1 AA compliance, single audit process | Each library has its own a11y posture; gaps between integrations |
+| **Theme Integration** | Single design token system, one theme applied everywhere | Manual alignment between 6 different theming approaches |
+| **SSR Support** | Verified across all components | Mixed support; some libraries require workarounds |
+| **Enterprise Support** | Single vendor, single SLA, single point of contact | 6 separate license agreements, support channels, and upgrade paths |
+
+## Integration Complexity
+
+| Concern | Our Platform | Mix of 6 Libraries |
+|---------|-------------|---------------------|
+| **API Consistency** | Unified prop patterns, shared event model, common data types | Each library defines its own API conventions |
+| **Styling** | One token system, one CSS strategy | Competing CSS approaches (CSS-in-JS, CSS modules, inline styles) |
+| **State Management** | Components work with a single store pattern | Each library may impose its own state model |
+| **Testing** | Single test harness, unified mocking utilities | Different testing approaches per library |
+| **Upgrades** | One release cadence, one changelog, one migration guide | 6 independent release schedules with potential breaking changes |
+
+## Where Alternatives Excel
+
+We believe in honest comparison. Here is where individual libraries may have an edge:
+
+| Library | Strength |
+|---------|----------|
+| **AG Grid** | Deepest feature set for extreme data grid use cases (100k+ rows, server-side row model, pivoting) |
+| **MUI X** | Largest community and ecosystem, extensive documentation |
+| **Tiptap** | Most extensible editor architecture with collaborative editing |
+| **FullCalendar** | Widest calendar view options and plugin ecosystem |
+| **SurveyJS** | Purpose-built survey engine with advanced logic branching |
+
+## Our Advantage
+
+The value of a unified platform is not in any single component being the absolute best in its category. The value is in the **compound effect** of everything working together:
+
+- **Single design system**: Every component shares the same visual language, spacing scale, color tokens, and interaction patterns.
+- **Single release cadence**: One upgrade, one changelog, one migration guide. No dependency matrix to manage across 6 libraries.
+- **Single CI pipeline**: All components tested together. Breaking changes caught before they reach production.
+- **Unified developer experience**: Learn one API pattern, apply it everywhere. No context switching between library conventions.
+- **Guaranteed compatibility**: Grid, charts, editor, scheduler, kanban, and forms are tested together in every release.
+
+## Decision Framework
+
+Choose our platform when:
+- You need 3+ component categories from the table above.
+- Design consistency across the application is a priority.
+- You want a single upgrade and support path.
+- Your team values unified developer experience over per-component depth.
+
+Consider individual libraries when:
+- You only need one component category.
+- You need a feature that is unique to a specific library (e.g., collaborative editing via Tiptap).
+- You have an existing investment in a specific library ecosystem.

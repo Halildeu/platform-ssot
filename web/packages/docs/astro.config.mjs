@@ -31,6 +31,22 @@ export default defineConfig({
           label: 'Enterprise',
           autogenerate: { directory: 'enterprise' },
         },
+        {
+          label: 'X-Suite',
+          autogenerate: { directory: 'x-suite' },
+        },
+        {
+          label: 'Blocks',
+          autogenerate: { directory: 'blocks' },
+        },
+        {
+          label: 'Migration',
+          autogenerate: { directory: 'migration' },
+        },
+        {
+          label: 'Trust & Support',
+          autogenerate: { directory: 'trust' },
+        },
       ],
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/Halildeu/mfe-design-system' },
