@@ -8,6 +8,7 @@ export {
   updateVariantPreference,
   deleteGridVariant,
   mapVariantDtoToGridVariant,
+  onGlobalVariantChange,
 } from "./variants.api";
 export type {
   CreateGridVariantPayload,

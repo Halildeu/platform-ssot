@@ -34,6 +34,8 @@ const LOCAL_STORAGE_NAMESPACE = 'grid-variants';
 const LOCAL_PREFERENCE_NAMESPACE = 'grid-variants-preferences';
 const DEFAULT_VARIANT_NAME = 'Adsız Varyant';
 const LOCAL_CACHE_ENABLED = true;
+const GLOBAL_CACHE_TTL_MS = 5 * 60 * 1000; // 5 dakika — global variant cache süresi
+const GLOBAL_CACHE_TS_KEY = 'grid-variants-global-ts';
 const FETCH_BASE_URL =
   typeof window !== 'undefined' && window.location?.origin ? window.location.origin : 'http://localhost';
 
@@ -380,6 +382,67 @@ const writeLocalVariants = (gridId: string, variants: GridVariant[]) => {
   }
 };
 
+// ---------------------------------------------------------------------------
+// Global variant cache TTL — paylaşılan varyantlar süreli cache'lenir
+// ---------------------------------------------------------------------------
+
+interface GlobalCacheTimestamps {
+  [gridId: string]: number; // Date.now() timestamp
+}
+
+const readGlobalCacheTs = (gridId: string): number => {
+  if (!hasBrowserEnv()) return 0;
+  try {
+    const raw = window.localStorage.getItem(GLOBAL_CACHE_TS_KEY);
+    if (!raw) return 0;
+    const parsed = JSON.parse(raw) as GlobalCacheTimestamps;
+    return parsed[gridId] ?? 0;
+  } catch {
+    return 0;
+  }
+};
+
+const writeGlobalCacheTs = (gridId: string): void => {
+  if (!hasBrowserEnv()) return;
+  try {
+    const raw = window.localStorage.getItem(GLOBAL_CACHE_TS_KEY);
+    const parsed: GlobalCacheTimestamps = raw ? JSON.parse(raw) : {};
+    parsed[gridId] = Date.now();
+    window.localStorage.setItem(GLOBAL_CACHE_TS_KEY, JSON.stringify(parsed));
+  } catch {
+    /* silent */
+  }
+};
+
+const isGlobalCacheExpired = (gridId: string): boolean => {
+  const ts = readGlobalCacheTs(gridId);
+  if (ts === 0) return true; // hiç cache yok
+  return Date.now() - ts > GLOBAL_CACHE_TTL_MS;
+};
+
+/**
+ * Global varyant değişiklik tespiti — server updatedAt vs local cache.
+ * Değişmişse true döner → yeniden çekilmeli.
+ */
+const hasGlobalVariantsChanged = (
+  gridId: string,
+  serverVariants: GridVariant[],
+): boolean => {
+  const cached = readLocalVariants(gridId).filter((v) => v.isGlobal);
+  const serverGlobals = serverVariants.filter((v) => v.isGlobal);
+
+  if (cached.length !== serverGlobals.length) return true;
+
+  for (const sv of serverGlobals) {
+    const cv = cached.find((c) => c.id === sv.id);
+    if (!cv) return true;
+    if (cv.updatedAt !== sv.updatedAt) return true;
+    if (cv.name !== sv.name) return true;
+    if (cv.isGlobalDefault !== sv.isGlobalDefault) return true;
+  }
+  return false;
+};
+
 const upsertLocalVariant = (gridId: string, variant: GridVariant): GridVariant[] => {
   const existing = readLocalVariants(gridId).filter((item) => item.id !== variant.id);
   const normalizedExisting = existing.map((item) => {
@@ -483,7 +546,40 @@ const makeLocalVariant = (
   };
 };
 
+/**
+ * Global cache listeners — admin global variant değiştirdiğinde diğer
+ * kullanıcılara bildirim göndermek için.
+ */
+type GlobalChangeListener = (gridId: string, changed: GridVariant[]) => void;
+const _globalChangeListeners: GlobalChangeListener[] = [];
+
+/** Global variant değişiklik dinleyicisi kaydet */
+export const onGlobalVariantChange = (listener: GlobalChangeListener): (() => void) => {
+  _globalChangeListeners.push(listener);
+  return () => {
+    const idx = _globalChangeListeners.indexOf(listener);
+    if (idx >= 0) _globalChangeListeners.splice(idx, 1);
+  };
+};
+
+const notifyGlobalChange = (gridId: string, changed: GridVariant[]): void => {
+  for (const listener of _globalChangeListeners) {
+    try { listener(gridId, changed); } catch { /* silent */ }
+  }
+};
+
 export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> => {
+  // Kişisel variant'lar her zaman local'dan okunabilir (hızlı)
+  // Global variant'lar cache süresi dolmuşsa server'dan yenilenir
+  const localVariants = readLocalVariants(gridId);
+  const personalLocal = localVariants.filter((v) => !v.isGlobal);
+  const globalCacheOk = !isGlobalCacheExpired(gridId);
+
+  // Global cache hâlâ taze ve local'da veri var → hızlı dönüş
+  if (globalCacheOk && localVariants.length > 0) {
+    return localVariants;
+  }
+
   if (typeof fetch === 'function') {
     try {
       const res = await fetch(`${FETCH_BASE_URL}${VARIANTS_BASE_URL}?gridId=${encodeURIComponent(gridId)}`, {
@@ -501,7 +597,17 @@ export const fetchGridVariants = async (gridId: string): Promise<GridVariant[]> 
       const normalized = (list ?? [])
         .map((variant) => mapVariantDtoToGridVariant(variant as VariantDto))
         .sort(compareGridVariants);
+
+      // Global değişiklik kontrolü — admin değiştirdi mi?
+      const globalChanged = hasGlobalVariantsChanged(gridId, normalized);
+
       writeLocalVariants(gridId, normalized);
+      writeGlobalCacheTs(gridId);
+
+      if (globalChanged && normalized.some((v) => v.isGlobal)) {
+        notifyGlobalChange(gridId, normalized.filter((v) => v.isGlobal));
+      }
+
       return normalized;
     } catch {
       const fallback = readLocalVariants(gridId);
