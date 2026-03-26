@@ -335,7 +335,7 @@ export const VariantIntegration = <RowData = unknown,>({
       setInternalActiveId(variantId);
       onActiveVariantChange?.(variantId);
 
-      updateVariantPreference({ variantId, isSelected: true }).catch(() => {});
+      updateVariantPreference({ variantId, isSelected: true, gridId }).catch(() => {});
     },
     [gridApi, variants, onActiveVariantChange],
   );
@@ -435,7 +435,7 @@ export const VariantIntegration = <RowData = unknown,>({
     async (variantId: string, isDefault: boolean) => {
       setPendingAction(`default-${variantId}`);
       try {
-        await updateVariantPreference({ variantId, isDefault });
+        await updateVariantPreference({ variantId, isDefault, gridId });
         await loadVariants();
       } catch {
         // silent
