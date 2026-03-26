@@ -867,7 +867,10 @@ export const updateVariantPreference = async (payload: UpdateVariantPreferencePa
       return normalized;
     } catch (error) {
       console.warn('Varyant tercih güncellemesi yapılamadı, yerel tercih kullanılacak.', error);
-      return fallbackUpdate();
+      const result = fallbackUpdate();
+      const gridKey = payload.gridId ?? result.gridId ?? 'unknown-grid';
+      enforceSingleUserDefault(gridKey, result);
+      return result;
     }
   }
   try {
