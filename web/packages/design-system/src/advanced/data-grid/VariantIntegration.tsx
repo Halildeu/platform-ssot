@@ -837,7 +837,7 @@ export const VariantIntegration = <RowData = unknown,>({
       {showManager && (
         <div
           ref={managerRef}
-          className="absolute right-0 top-full z-50 mt-1 w-96 rounded-lg border border-border-default bg-surface-default shadow-lg"
+          className="absolute right-0 top-full z-50 mt-1 w-96 max-h-[70vh] overflow-y-auto rounded-lg border border-border-default bg-surface-default shadow-lg"
           data-component="variant-manager"
         >
           {/* Header */}
