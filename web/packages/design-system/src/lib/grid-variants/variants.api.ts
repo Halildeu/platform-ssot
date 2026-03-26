@@ -708,6 +708,7 @@ export const createGridVariant = async (payload: CreateGridVariantPayload): Prom
   try {
     const response = await api.post<VariantDto>(VARIANTS_BASE_URL, payload, {
       headers: getJsonHeaders(),
+      timeout: 3000,
     });
     const created = response.data as VariantDto;
     const normalized: GridVariant = mapVariantDtoToGridVariant(created);
@@ -727,7 +728,7 @@ export const updateGridVariant = async (payload: UpdateGridVariantPayload): Prom
     const response = await api.put<VariantDto>(
       `${VARIANTS_BASE_URL}/${encodeURIComponent(id)}`,
       body,
-      { headers: getJsonHeaders() },
+      { headers: getJsonHeaders(), timeout: 3000 },
     );
     const updated = response.data as VariantDto;
     const normalized: GridVariant = mapVariantDtoToGridVariant(updated);
@@ -877,7 +878,7 @@ export const updateVariantPreference = async (payload: UpdateVariantPreferencePa
     const response = await api.patch<VariantDto>(
       `${VARIANTS_BASE_URL}/${encodeURIComponent(variantId)}/preference`,
       body,
-      { headers: getJsonHeaders() },
+      { headers: getJsonHeaders(), timeout: 3000 },
     );
     const updated = response.data as VariantDto;
     const normalized: GridVariant = mapVariantDtoToGridVariant(updated);
@@ -903,6 +904,7 @@ export const deleteGridVariant = async (id: string): Promise<void> => {
   try {
     await api.delete(`${VARIANTS_BASE_URL}/${encodeURIComponent(id)}`, {
       headers: getAuthHeaders(),
+      timeout: 3000,
     });
     // server success, also cleanup locally
     if (hasBrowserEnv()) {
