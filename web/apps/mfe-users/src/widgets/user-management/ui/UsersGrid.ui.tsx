@@ -333,6 +333,7 @@ const UsersGrid: React.FC<UsersGridProps> = ({
       cellSelection: true,
       multiSortKey: 'ctrl',
       rowGroupPanelShow: 'always',
+      enableAdvancedFilter: true,
       // AG Grid v34: cacheBlockSize sadece serverSide row modelde geçerli
       ...(dataSourceMode === 'server'
         ? { cacheBlockSize: SERVER_CACHE_BLOCK_SIZE, maxBlocksInCache: 1, blockLoadDebounceMillis: 25 }
