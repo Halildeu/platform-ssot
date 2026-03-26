@@ -9,9 +9,9 @@
     "generate": "node scripts/generate-component-docs.mjs"
   },
   "dependencies": {
-    "@astrojs/starlight": "0.28.4",
+    "@astrojs/starlight": "0.38.2",
     "@pagefind/default-ui": "^1.3.0",
-    "astro": "4.16.19",
+    "astro": "6.0.8",
     "sharp": "^0.33.0"
   }
 }

@@ -32,9 +32,9 @@ export default defineConfig({
           autogenerate: { directory: 'enterprise' },
         },
       ],
-      social: {
-        github: 'https://github.com/Halildeu/mfe-design-system',
-      },
+      social: [
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/Halildeu/mfe-design-system' },
+      ],
       customCss: ['./src/styles/custom.css'],
     }),
   ],
