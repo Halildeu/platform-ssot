@@ -29,7 +29,26 @@ import {
 import { setupAgGridLicense } from "../../lib/ag-grid-license";
 
 /* ── License ─────────────────────────────────────────────────────── */
-setupAgGridLicense();
+// Immediate attempt (works when process.env is available via DefinePlugin)
+const immediateResult = setupAgGridLicense();
+
+// Deferred retry — window.__env__ may not be populated yet at module load time
+// (shell injects it via <script> tag, which runs before MFE chunks but after
+//  the initial module scope evaluation in some webpack federation configurations)
+if (!immediateResult && typeof window !== 'undefined') {
+  const retrySetup = () => {
+    if (!setupAgGridLicense()) {
+      // Final fallback: schedule one more attempt after DOM is ready
+      if (document.readyState !== 'complete') {
+        window.addEventListener('load', () => setupAgGridLicense(), { once: true });
+      }
+    }
+  };
+  // Micro-task retry: runs after current script block completes
+  Promise.resolve().then(retrySetup);
+  // Macro-task retry: runs after all synchronous scripts
+  setTimeout(retrySetup, 0);
+}
 
 /* ── Targeted module registration (v34.3.1) ──────────────────────── */
 /*  Only modules actually consumed by MFE grid components.            */

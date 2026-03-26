@@ -61,7 +61,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 import { createRoot } from 'react-dom/client';
+import { setupAgGridLicense } from '@mfe/design-system';
 import ShellApp from './ShellApp';
+
+// AG Grid lisansını MFE'ler yüklenmeden önce set et
+setupAgGridLicense();
 
 const container = document.getElementById('root');
 if (!container) {

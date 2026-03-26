@@ -10,6 +10,10 @@
     // webpack DefinePlugin replaces process.env at compile time,
     // but design-system (separate chunk) reads from window.__env__.
     window.__env__ = window.__env__ || {};
+    // AG Grid license will be set from window.__env__ after HtmlWebpackPlugin injects values
+    // The actual LicenseManager.setLicenseKey() call happens in setup.ts
+    // but we also store it globally for earliest possible access
+    window.__AG_GRID_LICENSE_EARLY__ = true;
     // Debug: capture first uncaught errors before React loads
     window.__earlyErrors = [];
     window.addEventListener('error', function(e) {
