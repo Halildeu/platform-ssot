@@ -14,7 +14,6 @@
     "apps/mfe-access",
     "apps/mfe-audit",
     "apps/mfe-users",
-    "apps/docs",
     "packages/shared-http",
     "packages/design-system",
     "packages/shared-types",

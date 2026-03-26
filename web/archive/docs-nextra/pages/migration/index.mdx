@@ -1,0 +1,57 @@
+# Migration Guides
+
+How to migrate from popular libraries to @mfe/design-system
+and X Suite packages.
+
+## Available Guides
+
+| From | To | Effort |
+|------|-----|--------|
+| MUI DataGrid | @mfe/x-data-grid | Medium |
+| AG Grid (raw) | @mfe/x-data-grid | Low |
+| Recharts | @mfe/x-charts | Low |
+| Draft.js | @mfe/x-editor | High |
+| react-beautiful-dnd | @mfe/x-kanban | Medium |
+| FullCalendar | @mfe/x-scheduler | Medium |
+| react-jsonschema-form | @mfe/x-form-builder | Low |
+
+## General Approach
+
+Each migration follows a three-phase approach:
+
+### Phase 1 — Adapter Layer
+
+Install the @mfe package alongside the existing library.
+Create thin adapter components that map old props to new ones:
+
+```tsx
+// Temporary adapter during migration
+function LegacyGrid(props: OldGridProps) {
+  const columns = mapOldColumnsToNew(props.columns);
+  return <DataGrid rows={props.data} columns={columns} />;
+}
+```
+
+### Phase 2 — Incremental Replacement
+
+Replace adapters with direct @mfe usage one page at a time.
+Run both libraries in parallel during the transition.
+
+### Phase 3 — Cleanup
+
+Remove the legacy library dependency and adapter code.
+Run the full test suite to verify feature parity.
+
+## Codemods
+
+Automated codemods are available for common transformations:
+
+```bash
+npx @mfe/codemod mui-datagrid-to-xdg ./src
+npx @mfe/codemod recharts-to-xcharts ./src
+```
+
+## Need Help?
+
+Open an issue on the [platform-ssot](https://github.com/Halildeu/platform-ssot)
+repository with the `migration` label.

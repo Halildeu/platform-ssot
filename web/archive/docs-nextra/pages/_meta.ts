@@ -1,0 +1,15 @@
+export default {
+  index: 'Introduction',
+  'getting-started': 'Getting Started',
+  'x-suite': 'X Suite',
+  blocks: 'Blocks',
+  migration: 'Migration',
+  compatibility: 'Compatibility Matrix',
+  'quality-dashboard': 'Quality Dashboard',
+  'known-issues': 'Known Issues',
+  comparison: 'Comparison',
+  'deprecation-policy': 'Deprecation Policy',
+  troubleshooting: 'Troubleshooting',
+  roi: 'ROI',
+  support: 'Support & Issue Triage',
+};
