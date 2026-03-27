@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "npx kill-port 3004 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
+    "start:vite": "npx kill-port 3004 || true && vite",
     "build": "webpack --mode=production --config webpack.prod.js",
+    "build:vite": "vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "npm-run-all test:users test:variants",
     "test:variants": "bash -lc 'shopt -s nullglob; files=(../../packages/design-system/src/lib/grid-variants/__tests__/*.test.ts); if [ ${#files[@]} -eq 0 ]; then echo \"[mfe-users] no variants tests found (skip)\"; exit 0; fi; tsx --test \"${files[@]}\"'",

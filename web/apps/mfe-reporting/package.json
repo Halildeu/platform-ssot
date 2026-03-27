@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "npx kill-port 3007 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
+    "start:vite": "npx kill-port 3007 || true && vite",
     "build": "webpack --mode=production --config webpack.prod.js",
+    "build:vite": "vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "echo \"no tests\""
   },
