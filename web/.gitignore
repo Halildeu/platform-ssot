@@ -10,3 +10,7 @@ apps/docs/out/
 # Evidence registry (generated)
 .evidence/
 apps/mfe-shell/.env.local
+
+# Module Federation temp files
+.__mf__temp/
+.mf/
