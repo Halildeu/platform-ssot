@@ -68,19 +68,20 @@ function buildRemotes() {
     users: readEnvBoolean(['VITE_SHELL_ENABLE_USERS_REMOTE', 'SHELL_ENABLE_USERS_REMOTE']),
   };
 
-  const remotes: Record<string, { type: string; name: string; entry: string }> = {};
+  // All remotes must be declared so MF plugin can resolve their imports
+  // at static analysis time. Disabled remotes use a stub entry that returns
+  // empty modules — the dynamic import() in shell-services-wiring.ts
+  // will catch the error and gracefully skip.
+  const STUB = 'data:text/javascript,export default {}; export function configureShellServices(){}';
 
-  // Optional remotes — only include if enabled
-  if (enabled.suggestions) remotes.mfe_suggestions = { type: 'module', name: 'mfe_suggestions', entry: 'http://localhost:3001/remoteEntry.js' };
-  if (enabled.ethic) remotes.mfe_ethic = { type: 'module', name: 'mfe_ethic', entry: 'http://localhost:3002/remoteEntry.js' };
-  if (enabled.access) remotes.mfe_access = { type: 'module', name: 'mfe_access', entry: 'http://localhost:3005/remoteEntry.js' };
-  if (enabled.audit) remotes.mfe_audit = { type: 'module', name: 'mfe_audit', entry: 'http://localhost:3006/remoteEntry.js' };
-  if (enabled.users) remotes.mfe_users = { type: 'module', name: 'mfe_users', entry: 'http://localhost:3004/remoteEntry.js' };
-
-  // Reporting is always required
-  remotes.mfe_reporting = { type: 'module', name: 'mfe_reporting', entry: 'http://localhost:3007/remoteEntry.js' };
-
-  return remotes;
+  return {
+    mfe_suggestions: { type: 'module', name: 'mfe_suggestions', entry: enabled.suggestions ? 'http://localhost:3001/remoteEntry.js' : STUB },
+    mfe_ethic:       { type: 'module', name: 'mfe_ethic',       entry: enabled.ethic ? 'http://localhost:3002/remoteEntry.js' : STUB },
+    mfe_access:      { type: 'module', name: 'mfe_access',      entry: enabled.access ? 'http://localhost:3005/remoteEntry.js' : STUB },
+    mfe_audit:       { type: 'module', name: 'mfe_audit',       entry: enabled.audit ? 'http://localhost:3006/remoteEntry.js' : STUB },
+    mfe_users:       { type: 'module', name: 'mfe_users',       entry: enabled.users ? 'http://localhost:3004/remoteEntry.js' : STUB },
+    mfe_reporting:   { type: 'module', name: 'mfe_reporting',   entry: 'http://localhost:3007/remoteEntry.js' },
+  };
 }
 
 /* ------------------------------------------------------------------ */
@@ -145,12 +146,16 @@ export default defineConfig(({ mode }) => {
     ],
 
     resolve: {
-      alias: {
-        '@platform/capabilities': path.resolve(__dirname, '../../packages/platform-capabilities/src'),
-        '@mfe/design-system': path.resolve(__dirname, '../../packages/design-system/src'),
-        '@mfe/i18n-dicts': path.resolve(__dirname, '../../packages/i18n-dicts/src'),
-        '@mfe/shared-http': path.resolve(__dirname, '../../packages/shared-http/src'),
-      },
+      alias: [
+        // Monorepo packages — resolve to source for live editing.
+        // NOTE: These overlap with MF shared config. MF warns about it but
+        // in dev mode aliases take priority (which is what we want for HMR).
+        // In production build, MF shared takes priority via the build plugin.
+        { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
+        { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
+        { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
+        { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+      ],
     },
 
     /* Env injection — replaces DefinePlugin + InjectRuntimeEnv */
@@ -181,6 +186,39 @@ export default defineConfig(({ mode }) => {
         },
         '/api': { target: 'http://localhost:8080', changeOrigin: true, secure: false },
       },
+    },
+
+    /* Pre-bundle critical deps — dependency scan fails due to MF virtual modules */
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-dom/client',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        'react-router',
+        'react-router-dom',
+        '@reduxjs/toolkit',
+        'react-redux',
+        '@tanstack/react-query',
+        'clsx',
+        'tailwind-merge',
+        'axios',
+        'zod',
+        'keycloak-js',
+        'ag-grid-community',
+        'ag-grid-enterprise',
+        'ag-grid-react',
+      ],
+      /* Exclude MF remotes from optimization */
+      exclude: [
+        'mfe_suggestions',
+        'mfe_ethic',
+        'mfe_access',
+        'mfe_audit',
+        'mfe_users',
+        'mfe_reporting',
+      ],
     },
 
     build: {
