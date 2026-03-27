@@ -228,6 +228,29 @@ export default defineConfig(({ mode }) => {
       ],
     },
 
+    /* Warm up critical modules at server start — eliminates first-load delay */
+    warmup: {
+      clientFiles: [
+        './src/index.tsx',
+        './src/app/bootstrap.tsx',
+        './src/app/ShellApp.tsx',
+        './src/app/layout/ShellLayout.tsx',
+        './src/app/router/AppRouter.tsx',
+        './src/app/providers/AuthBootstrapper.tsx',
+        './src/app/store/store.ts',
+        './src/app/theme/theme-context.provider.tsx',
+        './src/app/config/query-config.ts',
+        './src/app/config/shell-services-wiring.ts',
+        './src/app/config/http-config.ts',
+        './src/app/i18n/index.ts',
+        './src/app/auth/auth-config.ts',
+        './src/pages/home/*.tsx',
+        '../../packages/design-system/src/index.ts',
+        '../../packages/design-system/src/components/index.ts',
+        '../../packages/design-system/src/primitives/index.ts',
+      ],
+    },
+
     build: {
       target: 'esnext',
       outDir: 'dist',
