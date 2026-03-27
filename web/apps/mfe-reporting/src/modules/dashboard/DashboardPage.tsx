@@ -305,18 +305,28 @@ const KpiFallbackCard: React.FC<{ kpi: KpiResult; onClick: () => void }> = ({ kp
   );
 };
 
+const abbreviateNumber = (n: number): string => {
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
+  if (abs >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (abs >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return n.toFixed(0);
+};
+
 const FallbackChart: React.FC<{ data: Array<{ label: string; value: number }> }> = ({ data }) => (
-  <div className="flex flex-col gap-1">
+  <div className="flex flex-col gap-1 overflow-hidden">
     {data.slice(0, 10).map((d, i) => (
-      <div key={i} className="flex items-center gap-2 text-sm">
-        <span className="w-24 truncate text-text-subtle">{d.label}</span>
-        <div className="flex-1">
+      <div key={i} className="flex min-w-0 items-center gap-2 text-sm">
+        <span className="w-24 shrink-0 truncate text-text-subtle">{d.label}</span>
+        <div className="min-w-0 flex-1">
           <div
             className="h-4 rounded-xs bg-action-primary-bg"
             style={{ width: `${Math.min(100, (d.value / Math.max(...data.map((x) => x.value), 1)) * 100)}%` }}
           />
         </div>
-        <span className="w-12 text-right text-text-primary">{d.value}</span>
+        <span className="w-16 shrink-0 truncate text-right text-text-primary" title={String(d.value)}>
+          {abbreviateNumber(d.value)}
+        </span>
       </div>
     ))}
   </div>
