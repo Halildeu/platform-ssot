@@ -204,16 +204,31 @@ service_port() {
 }
 
 service_command() {
-  case "$1" in
-    shell) printf 'cd apps/mfe-shell && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
-    suggestions) printf 'cd apps/mfe-suggestions && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
-    ethic) printf 'cd apps/mfe-ethic && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
-    users) printf 'cd apps/mfe-users && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
-    access) printf 'cd apps/mfe-access && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
-    audit) printf 'cd apps/mfe-audit && exec npx webpack serve --config webpack.dev.js --hot --no-watch-options-stdin\n' ;;
-    reporting) printf 'cd apps/mfe-reporting && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
-    *) return 1 ;;
-  esac
+  # WEB_BUNDLER=vite → use Vite dev server; default (webpack) → use webpack
+  local bundler="${WEB_BUNDLER:-webpack}"
+  if [ "$bundler" = "vite" ]; then
+    case "$1" in
+      shell)       printf 'cd apps/mfe-shell && exec npx vite\n' ;;
+      suggestions) printf 'cd apps/mfe-suggestions && exec npx vite\n' ;;
+      ethic)       printf 'cd apps/mfe-ethic && exec npx vite\n' ;;
+      users)       printf 'cd apps/mfe-users && exec npx vite\n' ;;
+      access)      printf 'cd apps/mfe-access && exec npx vite\n' ;;
+      audit)       printf 'cd apps/mfe-audit && exec npx vite\n' ;;
+      reporting)   printf 'cd apps/mfe-reporting && exec npx vite\n' ;;
+      *) return 1 ;;
+    esac
+  else
+    case "$1" in
+      shell)       printf 'cd apps/mfe-shell && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+      suggestions) printf 'cd apps/mfe-suggestions && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+      ethic)       printf 'cd apps/mfe-ethic && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+      users)       printf 'cd apps/mfe-users && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+      access)      printf 'cd apps/mfe-access && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+      audit)       printf 'cd apps/mfe-audit && exec npx webpack serve --config webpack.dev.js --hot --no-watch-options-stdin\n' ;;
+      reporting)   printf 'cd apps/mfe-reporting && exec npx webpack serve --config webpack.dev.js --no-watch-options-stdin\n' ;;
+      *) return 1 ;;
+    esac
+  fi
 }
 
 service_check_url() {
