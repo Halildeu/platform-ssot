@@ -88,5 +88,8 @@ export default defineConfig(({ mode }) => ({
   build: {
     target: 'esnext',
     outDir: 'dist',
+    rolldownOptions: {
+      external: [/^mfe_shell\//],
+    },
   },
 }));

@@ -84,5 +84,10 @@ export default defineConfig(({ mode }) => ({
   build: {
     target: 'esnext',
     outDir: 'dist',
+    // MF remote imports resolved at runtime via Module Federation container.
+    // Mark as external so rolldown doesn't try to resolve named exports statically.
+    rolldownOptions: {
+      external: [/^mfe_shell\//],
+    },
   },
 }));
