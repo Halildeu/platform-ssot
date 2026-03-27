@@ -6,14 +6,9 @@
  * Import path: `@mfe/design-system/unstable/interaction-core`
  */
 
-if (process.env.NODE_ENV === 'development') {
-  console.warn(
-    '[@mfe/design-system] You are importing from an unstable module ' +
-    '(@mfe/design-system/unstable/interaction-core). This API is NOT ' +
-    'covered by semver guarantees and may change without notice. ' +
-    'Prefer @mfe/design-system/headless for stable alternatives.'
-  );
-}
+// Runtime warning removed — JSDoc @unstable tag + package.json export path
+// provide sufficient signal. Internal DS modules import this heavily,
+// making per-import console.warn too noisy for dev workflows.
 
 /* ------------------------------------------------------------------ */
 /*  Interaction Core — Centralized interaction policy                  */
