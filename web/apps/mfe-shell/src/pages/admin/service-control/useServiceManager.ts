@@ -2,9 +2,10 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 
 export type ServiceInfo = {
   name: string;
-  container: string;
+  container: string | null;
   port: number | null;
   category: string;
+  type?: 'docker' | 'process';
   containerId: string | null;
   containerStatus: string;
   running: boolean;

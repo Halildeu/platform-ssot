@@ -89,9 +89,13 @@ export function ServiceCard({ service, actionPending, onStart, onStop, onRestart
         )}
       </div>
 
-      {/* Docker health badge */}
-      {service.dockerHealth && (
-        <div className="mt-2">
+      {/* Type + health badge */}
+      <div className="mt-2 flex items-center gap-1.5">
+        {service.type === 'process' ? (
+          <span className="inline-block rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-medium text-indigo-700">
+            process{service.containerId ? ` (${service.containerId})` : ''}
+          </span>
+        ) : service.dockerHealth ? (
           <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${
             service.dockerHealth === 'healthy'
               ? 'bg-emerald-100 text-emerald-700'
@@ -101,16 +105,16 @@ export function ServiceCard({ service, actionPending, onStart, onStop, onRestart
           }`}>
             docker: {service.dockerHealth}
           </span>
-        </div>
-      )}
+        ) : null}
+      </div>
 
       {/* Actions */}
       <div className="mt-3 flex items-center gap-1.5">
         <button
           onClick={() => onStart(service.name)}
-          disabled={isPending || service.running}
+          disabled={isPending || service.running || service.type === 'process'}
           className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-medium text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-40 disabled:cursor-not-allowed"
-          title="Start"
+          title={service.type === 'process' ? 'Use npm scripts to start' : 'Start'}
         >
           <Play className="h-3.5 w-3.5" />
           Start

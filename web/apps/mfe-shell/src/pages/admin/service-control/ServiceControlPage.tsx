@@ -21,6 +21,7 @@ const CATEGORIES = [
   { key: 'business', label: 'Business' },
   { key: 'data', label: 'Data' },
   { key: 'observability', label: 'Observability' },
+  { key: 'frontend', label: 'Frontend' },
 ];
 
 export default function ServiceControlPage() {
