@@ -4,23 +4,13 @@ import { useDashboardData } from './useDashboardData';
 import { ChartCard } from './ChartCard';
 import type { ChartResult, ChartDataRow, KpiResult, DrillToDto } from './types';
 
-// Import design-system components
-let SmartDashboard: React.ComponentType<any> | null = null;
-let BarChart: React.ComponentType<any> | null = null;
-let LineChart: React.ComponentType<any> | null = null;
-let PieChart: React.ComponentType<any> | null = null;
-let AreaChart: React.ComponentType<any> | null = null;
-
-try {
-  const ds = require('@mfe/design-system');
-  SmartDashboard = ds.SmartDashboard;
-  BarChart = ds.BarChart;
-  LineChart = ds.LineChart;
-  PieChart = ds.PieChart;
-  AreaChart = ds.AreaChart;
-} catch {
-  // design-system not available — will render fallback
-}
+import {
+  SmartDashboard,
+  BarChart,
+  LineChart,
+  PieChart,
+  AreaChart,
+} from '@mfe/design-system';
 
 type DashboardPageProps = {
   dashboardKey: string;
@@ -320,7 +310,7 @@ const FallbackChart: React.FC<{ data: Array<{ label: string; value: number }> }>
         <span className="w-24 shrink-0 truncate text-text-subtle">{d.label}</span>
         <div className="min-w-0 flex-1">
           <div
-            className="h-4 rounded-xs bg-action-primary-bg"
+            className="h-4 rounded-xs bg-action-primary"
             style={{ width: `${Math.min(100, (d.value / Math.max(...data.map((x) => x.value), 1)) * 100)}%` }}
           />
         </div>
