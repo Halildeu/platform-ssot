@@ -41,7 +41,8 @@ const entry: DesignLabComponentDocEntry = {
   "whereUsed": [
     "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
-  ]
+  ],
+    "dependsOn": ["Avatar","Descriptions","Text"]
 },
   apiItem: {
   "name": "EntitySummaryBlock",

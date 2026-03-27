@@ -32,7 +32,8 @@ const entry: DesignLabComponentDocEntry = {
       "layout"
     ],
     "importStatement": "import { Card, CardHeader, CardBody, CardFooter } from '@mfe/design-system';",
-    "whereUsed": []
+    "whereUsed": [],
+    "dependsOn": ["Slot"]
   },
   apiItem: {
     "name": "Card",

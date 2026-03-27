@@ -79,7 +79,6 @@ type AdvancedConditionNode = {
 };
 
 type ServerSideRequestExtras = IServerSideGetRowsParams<UserSummary>['request'] & {
-  advancedFilterModel?: AgAdvancedFilterModel | null;
   sortModel?: Array<{ colId?: string; sort?: 'asc' | 'desc' }>;
 };
 
@@ -550,9 +549,6 @@ const UsersGrid: React.FC<UsersGridProps> = ({
           });
           onLoadingChange?.(true);
           try {
-            const requestExtras = params.request as ServerSideRequestExtras;
-            const agAdvancedFilterModel = requestExtras.advancedFilterModel ?? null;
-
             const baseParams = buildEntityGridQueryParams({
               request: params.request,
               quickFilterText,
@@ -576,19 +572,6 @@ const UsersGrid: React.FC<UsersGridProps> = ({
                 return next;
               },
             }) as UsersQueryParams;
-
-            // Helper sort/advanced/search hesaplamalarını yaptı; domain ekleri yoksa temizle
-            // Advanced filter modelini encode edemedi ise fallback
-            if (baseParams.advancedFilter === undefined && agAdvancedFilterModel) {
-              const backendAdvancedFilter = mapAdvancedFilterModel(agAdvancedFilterModel);
-              if (backendAdvancedFilter) {
-                try {
-                  baseParams.advancedFilter = encodeURIComponent(JSON.stringify(backendAdvancedFilter));
-                } catch (encodeError) {
-                  debugLog('server:getRows:advancedFilterEncodeError', encodeError);
-                }
-              }
-            }
 
             const response = await fetchUsers(baseParams);
             const reason = response.meta?.reason;

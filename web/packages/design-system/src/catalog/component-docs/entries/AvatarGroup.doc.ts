@@ -31,7 +31,8 @@ const entry: DesignLabComponentDocEntry = {
       "identity"
     ],
     "importStatement": "import { AvatarGroup } from '@mfe/design-system';",
-    "whereUsed": []
+    "whereUsed": [],
+    "dependsOn": ["Avatar"]
   },
   apiItem: {
     "name": "AvatarGroup",

@@ -40,7 +40,8 @@ const entry: DesignLabComponentDocEntry = {
   "whereUsed": [
     "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
-  ]
+  ],
+    "dependsOn": ["Button","EmptyState","Skeleton","Spinner","Text"]
 },
   apiItem: {
   "name": "EmptyErrorLoading",

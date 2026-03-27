@@ -61,7 +61,8 @@ const entry: DesignLabComponentDocEntry = {
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerNoInfoShowcase.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/paginationShared.tsx",
     "web/apps/mfe-shell/src/pages/runtime/ThemeMatrixPage.tsx"
-  ]
+  ],
+    "dependsOn": ["Slot"]
 },
   apiItem: {
   "name": "Text",

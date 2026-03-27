@@ -21,6 +21,18 @@ export interface BuildEntityGridQueryParamsOptions {
   mapFilterModel?: (model: IServerSideGetRowsRequest['filterModel']) => Partial<EntityGridQueryParams>;
 }
 
+/**
+ * AG Grid v34 puts the AdvancedFilterModel inside `filterModel` (not a separate property).
+ * AdvancedFilterModel always has a `filterType` field:
+ *  - join node: `{ filterType: 'join', type: 'AND'|'OR', conditions: [...] }`
+ *  - condition node: `{ filterType: 'text'|'number'|'date'|..., colId: '...', type: '...', filter: '...' }`
+ * Regular column FilterModel is a plain Record<colId, filterObj> without a top-level `filterType`.
+ */
+const isAdvancedFilterModel = (model: unknown): model is AgAdvancedFilterModel => {
+  if (!model || typeof model !== 'object') return false;
+  return 'filterType' in model;
+};
+
 const toSortParam = (sortModel: SortModelItem[] | undefined): string | undefined => {
   if (!Array.isArray(sortModel) || sortModel.length === 0) {
     return undefined;
@@ -55,20 +67,26 @@ export const buildEntityGridQueryParams = (
     params.sort = sortParam;
   }
 
-  if (typeof mapFilterModel === 'function') {
-    const extras = mapFilterModel(request.filterModel ?? {});
-    Object.assign(params, extras);
-  }
-
-  if (typeof mapAdvancedFilter === 'function') {
-    const model = (request as { advancedFilterModel?: AgAdvancedFilterModel | null }).advancedFilterModel ?? null;
-    const advanced = mapAdvancedFilter(model);
-    if (advanced) {
-      try {
-        params.advancedFilter = encodeURIComponent(JSON.stringify(advanced));
-      } catch {
-        // encode errors are ignored; caller may choose to log
+  // AG Grid v34: when enableAdvancedFilter is true, filterModel contains AdvancedFilterModel.
+  // When disabled, filterModel contains column FilterModel. Detect and route accordingly.
+  const filterModel = request.filterModel;
+  if (isAdvancedFilterModel(filterModel)) {
+    // Advanced Filter active — route to mapAdvancedFilter
+    if (typeof mapAdvancedFilter === 'function') {
+      const advanced = mapAdvancedFilter(filterModel);
+      if (advanced) {
+        try {
+          params.advancedFilter = encodeURIComponent(JSON.stringify(advanced));
+        } catch {
+          // encode errors are ignored; caller may choose to log
+        }
       }
+    }
+  } else {
+    // Column filters — route to mapFilterModel
+    if (typeof mapFilterModel === 'function') {
+      const extras = mapFilterModel(filterModel ?? {});
+      Object.assign(params, extras);
     }
   }
 

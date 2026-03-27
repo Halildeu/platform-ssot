@@ -145,7 +145,11 @@ export const GridToolbar = <RowData = unknown>({
     gridApi.setGridOption?.("quickFilterText", "");
     setQuickFilter("");
     onQuickFilterChange?.("");
-  }, [gridApi, onQuickFilterChange]);
+    // For SSRM, trigger server refresh after clearing all filters
+    if (isServerMode) {
+      gridApi.refreshServerSide?.({ purge: true });
+    }
+  }, [gridApi, isServerMode, onQuickFilterChange]);
 
   const handleExcelExport = useCallback(
     (scope: "visible" | "all") => {

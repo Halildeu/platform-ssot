@@ -4,6 +4,7 @@ import { Text } from "@mfe/design-system";
 import { Search, ZoomIn, ZoomOut, Maximize2, Filter } from "lucide-react";
 import { useDesignLab } from "../DesignLabProvider";
 import type { DesignLabIndexItem } from "../DesignLabProvider";
+import depsData from "../../design-lab.deps.v1.json";
 
 /* ------------------------------------------------------------------ */
 /*  DependencyGraphPage — Interactive component dependency visualization */
@@ -30,6 +31,8 @@ type GraphNode = {
 type GraphEdge = {
   source: string;
   target: string;
+  /** true = internal DS component dependency, false = app-level usage */
+  internal?: boolean;
 };
 
 /* ---- Layer colors ---- */
@@ -122,10 +125,14 @@ export default function DependencyGraphPage() {
     const nameSet = new Set(items.map((i) => i.name));
 
     const edgeList: GraphEdge[] = [];
-    for (const item of items) {
-      for (const dep of item.whereUsed ?? []) {
+    const deps = depsData as Record<string, { dependsOn?: string[]; usedByComponents?: string[] }>;
+
+    // Build edges from dependsOn data (component-to-component)
+    for (const [name, rel] of Object.entries(deps)) {
+      if (!nameSet.has(name)) continue;
+      for (const dep of rel.dependsOn ?? []) {
         if (nameSet.has(dep)) {
-          edgeList.push({ source: item.name, target: dep });
+          edgeList.push({ source: name, target: dep, internal: true });
         }
       }
     }

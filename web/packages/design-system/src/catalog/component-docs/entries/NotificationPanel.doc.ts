@@ -26,7 +26,8 @@ const entry: DesignLabComponentDocEntry = {
     "design_tokens"
   ],
   "importStatement": "import { NotificationPanel } from '@mfe/design-system';",
-  "whereUsed": []
+  "whereUsed": [],
+    "dependsOn": ["NotificationItemCard"]
 },
   apiItem: {
   "name": "NotificationPanel",

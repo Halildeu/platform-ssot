@@ -31,6 +31,10 @@ export type DesignLabIndexItemDocument = {
   sectionIds: string[];
   qualityGates: string[];
   tags?: string[];
+  /** Internal design-system components this item depends on */
+  dependsOn?: string[];
+  /** Components that depend on this item (reverse of dependsOn) */
+  usedByComponents?: string[];
   uxPrimaryThemeId?: string;
   uxPrimarySubthemeId?: string;
   roadmapWaveId?: string;

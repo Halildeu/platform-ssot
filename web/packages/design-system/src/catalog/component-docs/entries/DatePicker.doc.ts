@@ -40,7 +40,8 @@ const entry: DesignLabComponentDocEntry = {
   "whereUsed": [
     "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
-  ]
+  ],
+    "dependsOn": ["Text"]
 },
   apiItem: {
   "name": "DatePicker",

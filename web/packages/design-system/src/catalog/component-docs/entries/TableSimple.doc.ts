@@ -40,7 +40,8 @@ const entry: DesignLabComponentDocEntry = {
     "web/stories/TableSimple.stories.tsx",
     "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabTableSimpleShowcase.tsx"
-  ]
+  ],
+    "dependsOn": ["EmptyState","Skeleton","Text"]
 },
   apiItem: {
   "name": "TableSimple",

@@ -40,7 +40,8 @@ const entry: DesignLabComponentDocEntry = {
     "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/detail-tabs/DesignLabComponentOverviewPanels.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
-  ]
+  ],
+    "dependsOn": ["Badge","EmptyState","Text","ThemePreviewCard"]
 },
   apiItem: {
   "name": "ThemePresetGallery",

@@ -47,7 +47,8 @@ const entry: DesignLabComponentDocEntry = {
     "web/apps/mfe-shell/src/pages/unauthorized/UnauthorizedPage.ui.tsx",
     "web/apps/mfe-shell/src/widgets/app-shell/ui/LoginPopover.ui.tsx",
     "web/apps/mfe-suggestions/src/App.tsx"
-  ]
+  ],
+    "dependsOn": ["Slot","Spinner"]
 },
   apiItem: {
   "name": "Button",

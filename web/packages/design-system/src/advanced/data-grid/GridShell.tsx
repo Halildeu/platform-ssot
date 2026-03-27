@@ -13,6 +13,7 @@ import { resolveAccessState, accessStyles, type AccessControlledProps } from '..
 import { AgGridReact } from "ag-grid-react";
 import type {
   ColDef,
+  FilterChangedEvent,
   GridApi,
   GridOptions,
   GridReadyEvent,
@@ -83,6 +84,8 @@ export interface GridShellProps<RowData = unknown> extends AccessControlledProps
   enableCharts?: boolean;
   /** AG Charts theme overrides for integrated charts */
   chartThemeOverrides?: Record<string, unknown>;
+  /** Callback fired when any filter (column or advanced) changes */
+  onFilterChanged?: (event: FilterChangedEvent<RowData>) => void;
   /** Children rendered below the grid (e.g., pagination) */
   children?: React.ReactNode;
 }
@@ -136,6 +139,7 @@ function GridShellInner<RowData = unknown>(
     height = 600,
     enableCharts = false,
     chartThemeOverrides,
+    onFilterChanged,
     className,
     gridKey,
     children,
@@ -186,6 +190,17 @@ function GridShellInner<RowData = unknown>(
     [onPaginationChanged],
   );
 
+  const handleFilterChanged = useCallback(
+    (event: FilterChangedEvent<RowData>) => {
+      onFilterChanged?.(event);
+      // For SSRM, trigger server refresh so the datasource re-fetches with updated filterModel
+      if (rowModelType === "serverSide" && gridApiRef.current) {
+        gridApiRef.current.refreshServerSide?.({ purge: true });
+      }
+    },
+    [onFilterChanged, rowModelType],
+  );
+
   return (
     <div
       data-access-state={accessState.state}
@@ -222,6 +237,7 @@ function GridShellInner<RowData = unknown>(
           onGridReady={handleGridReady}
           onRowDoubleClicked={handleRowDoubleClicked}
           onPaginationChanged={handlePaginationChanged}
+          onFilterChanged={handleFilterChanged}
           {...gridOptions}
         />
       </div>

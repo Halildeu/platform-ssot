@@ -36,7 +36,8 @@ const entry: DesignLabComponentDocEntry = {
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabTableSimpleShowcase.tsx",
     "web/apps/mfe-users/src/widgets/user-management/ui/UsersGrid.ui.tsx"
-  ]
+  ],
+    "dependsOn": ["Slot"]
 },
   apiItem: {
   "name": "Badge",

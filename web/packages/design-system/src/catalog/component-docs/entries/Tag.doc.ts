@@ -29,7 +29,8 @@ const entry: DesignLabComponentDocEntry = {
     "web/apps/mfe-shell/src/features/theme/theme-matrix-gallery.tsx",
     "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx"
-  ]
+  ],
+    "dependsOn": ["Slot"]
 },
   apiItem: {
   "name": "Tag",

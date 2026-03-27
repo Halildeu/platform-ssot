@@ -185,6 +185,11 @@ function applyVariantState<RowData>(api: GridApi<RowData>, state: GridVariantSta
   if (typeof state.quickFilterText === "string") {
     api.setGridOption?.("quickFilterText", state.quickFilterText);
   }
+  // Refresh SSRM after applying variant state so filters/sort take effect
+  const rowModelType = api.getGridOption?.("rowModelType");
+  if (rowModelType === "serverSide") {
+    api.refreshServerSide?.({ purge: true });
+  }
 }
 
 /* ------------------------------------------------------------------ */

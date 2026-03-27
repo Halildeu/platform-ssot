@@ -26,7 +26,8 @@ const entry: DesignLabComponentDocEntry = {
   "whereUsed": [
     "web/apps/mfe-access/src/widgets/access-management/ui/AccessGrid.ui.tsx",
     "web/apps/mfe-audit/src/app/components/AuditEventFeed.tsx"
-  ]
+  ],
+    "dependsOn": ["IconButton","Text","usePaginationState"]
 },
   apiItem: {
   "name": "useAgGridTablePagination",

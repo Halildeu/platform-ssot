@@ -38,7 +38,8 @@ const entry: DesignLabComponentDocEntry = {
     "roadmapWaveId": "wave_13_enterprise_x_suite",
     "acceptanceContractId": "ui-library-wave-13-enterprise-x-suite-v1",
     "importStatement": "import { VariantIntegration } from '@mfe/design-system';",
-    "whereUsed": []
+    "whereUsed": [],
+    "dependsOn": ["IconClose","IconSave","IconSettings"]
   },
   apiItem: {
     "name": "VariantIntegration",

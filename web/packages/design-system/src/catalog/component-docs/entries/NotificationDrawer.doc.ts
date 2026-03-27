@@ -30,7 +30,8 @@ const entry: DesignLabComponentDocEntry = {
   "whereUsed": [
     "web/apps/mfe-shell/src/widgets/app-shell/ui/NotificationCenter.ui.tsx",
     "web/stories/NotificationDrawer.stories.tsx"
-  ]
+  ],
+    "dependsOn": ["NotificationPanel"]
 },
   apiItem: {
   "name": "NotificationDrawer",

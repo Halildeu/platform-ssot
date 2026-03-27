@@ -42,7 +42,8 @@ const entry: DesignLabComponentDocEntry = {
     "web/apps/mfe-shell/src/pages/admin/design-lab/page-shell/DesignLabSidebar.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/DesignLabShowcaseContent.tsx",
     "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/pagination/DesignLabPaginationServerDenseShowcase.tsx"
-  ]
+  ],
+    "dependsOn": ["Slot","Spinner"]
 },
   apiItem: {
   "name": "IconButton",
