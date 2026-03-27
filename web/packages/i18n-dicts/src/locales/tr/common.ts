@@ -12,6 +12,7 @@ const common = {
   'shell.nav.audit': 'Denetim',
   'shell.nav.users': 'Kullanıcılar',
   'shell.nav.themes': 'Temalar',
+  'shell.nav.services': 'Servisler',
   'shell.nav.designLab': 'Design Lab',
   'shell.nav.more': 'Daha Fazla',
   'shell.nav.welcome': 'Ana Sayfaya Hoş Geldiniz',

@@ -12,6 +12,7 @@ const common = {
   'shell.nav.audit': 'Audit',
   'shell.nav.users': 'Users',
   'shell.nav.themes': 'Themes',
+  'shell.nav.services': 'Services',
   'shell.nav.designLab': 'Design Lab',
   'shell.nav.more': 'More',
   'shell.nav.welcome': 'Welcome to the Home Page',

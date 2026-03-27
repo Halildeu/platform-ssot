@@ -75,6 +75,7 @@ export const ShellHeader: React.FC = () => {
     if (hasPermission(PERMISSIONS.THEME_ADMIN)) {
       items.push({ key: "/admin/themes", path: "/admin/themes", label: t("shell.nav.themes") });
     }
+    items.push({ key: "/admin/services", path: "/admin/services", label: t("shell.nav.services") });
     return items;
   }, [ethicEnabled, hasPermission, suggestionsEnabled, t]);
 
