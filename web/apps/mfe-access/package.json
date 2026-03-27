@@ -4,10 +4,10 @@
   "description": "Access yönetimi mikro-frontend i",
   "main": "dist/remoteEntry.js",
   "scripts": {
-    "start": "npx kill-port 3005 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
-    "build": "webpack --mode=production --config webpack.prod.js",
-    "start:vite": "vite",
-    "build:vite": "vite build",
+    "start": "npx kill-port 3005 || true && vite",
+    "build": "vite build",
+    "start:webpack": "npx kill-port 3005 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
+    "build:webpack": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "npm run test:unit && npm run build",
     "test:unit": "tsx --tsconfig ./tsconfig.json --test src/app/App.test.ts src/widgets/access-management/ui/AccessFilterBar.test.tsx src/widgets/access-management/ui/AccessVariantToolbar.test.tsx src/widgets/access-management/ui/BulkPermissionModal.test.tsx src/widgets/access-management/ui/RoleCloneModal.test.tsx src/widgets/access-management/ui/AccessRoleDrawer.test.tsx src/widgets/access-management/ui/AccessGrid.test.tsx src/widgets/permission-registry/PermissionRegistryPanel.test.tsx"

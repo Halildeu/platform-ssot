@@ -204,8 +204,8 @@ service_port() {
 }
 
 service_command() {
-  # WEB_BUNDLER=vite → use Vite dev server; default (webpack) → use webpack
-  local bundler="${WEB_BUNDLER:-webpack}"
+  # WEB_BUNDLER=webpack → use webpack dev server; default (vite) → use Vite
+  local bundler="${WEB_BUNDLER:-vite}"
   if [ "$bundler" = "vite" ]; then
     case "$1" in
       shell)       printf 'cd apps/mfe-shell && exec npx vite\n' ;;
