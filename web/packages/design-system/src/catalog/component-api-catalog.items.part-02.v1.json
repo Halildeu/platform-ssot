@@ -1,0 +1,104 @@
+{
+  "items": [
+    {
+      "name": "CardFooter",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "CardHeader",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Carousel",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Cascader",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Checkbox",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "CitationPanel",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ColorPicker",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Combobox",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "CommandPalette",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ConfidenceBadge",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ContextMenu",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "DEFAULT_THEME_AXES",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "DatePicker",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Descriptions",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "DesignSystemMCPServer",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "DesignSystemProvider",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "DetailDrawer",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "DetailSectionTabs",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "DetailSummary",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Dialog",
+      "props": [],
+      "slots": []
+    }
+  ]
+}

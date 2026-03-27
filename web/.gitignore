@@ -14,4 +14,3 @@ apps/mfe-shell/.env.local
 # Module Federation temp files
 .__mf__temp/
 .mf/
-packages/design-system/src/**/*.d.ts

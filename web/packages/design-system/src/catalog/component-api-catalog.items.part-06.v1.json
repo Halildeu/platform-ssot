@@ -1,0 +1,104 @@
+{
+  "items": [
+    {
+      "name": "Switch",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "THEME_APPEARANCE_OPTIONS",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "THEME_ATTRIBUTE_MAP",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "THEME_DENSITY_OPTIONS",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "THEME_ELEVATION_OPTIONS",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "THEME_MOTION_OPTIONS",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "THEME_RADIUS_OPTIONS",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "TablePagination",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "TableSimple",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Tabs",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Tag",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Text",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "TextArea",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "TextInput",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "Textarea",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ThemePresetCompare",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ThemePresetGallery",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ThemePreviewCard",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "ThemeProvider",
+      "props": [],
+      "slots": []
+    },
+    {
+      "name": "TimePicker",
+      "props": [],
+      "slots": []
+    }
+  ]
+}

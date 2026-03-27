@@ -1,0 +1,1398 @@
+{
+  "version": 1,
+  "subject_id": "design_system_component_registry",
+  "items": [
+    {
+      "name": "AIActionAuditTimeline",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "AIGuidedAuthoring",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "AILayoutBuilder",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Accordion",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "AdaptiveForm",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "AgGridServer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Alert",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "AnchorToc",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ApprovalCheckpoint",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ApprovalReview",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "AreaChart",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Avatar",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "AvatarGroup",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Badge",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "BarChart",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Breadcrumb",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Button",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Calendar",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Card",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "CardBody",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "CardFooter",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "CardHeader",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Carousel",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Cascader",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Checkbox",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "CitationPanel",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ColorPicker",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Combobox",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "CommandPalette",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ConfidenceBadge",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ContextMenu",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DEFAULT_THEME_AXES",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DatePicker",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Descriptions",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DesignSystemMCPServer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DesignSystemProvider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DetailDrawer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DetailSectionTabs",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DetailSummary",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Dialog",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "DirectionProvider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Divider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Dropdown",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "EmptyErrorLoading",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "EmptyState",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "EntityGridTemplate",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "EntitySummaryBlock",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "FilterBar",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "FloatButton",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "FormDrawer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "FormField",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "GridShell",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "GridToolbar",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "HStack",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "IconButton",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Input",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "JsonViewer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LazyAgGrid",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LazyCalendar",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LazyCharts",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LazyColorPicker",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LazyJsonViewer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LazyTransfer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LazyTreeTable",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LineChart",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LinkInline",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "List",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "LocaleProvider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "MasterDetail",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Mentions",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "MenuBar",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Modal",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "NavigationRail",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "NotificationDrawer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "NotificationItemCard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "NotificationPanel",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "PageHeader",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "PageLayout",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Pagination",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "PieChart",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Popover",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "PromptComposer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "QRCode",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Radio",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "RadioGroup",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Rating",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "RecommendationCard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "RenderWhenVisible",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ReportFilterPanel",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "SearchFilterListing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "SearchInput",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Segmented",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Select",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Skeleton",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Slider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "SmartDashboard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Spinner",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Stack",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Steps",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "SummaryStrip",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Switch",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "THEME_APPEARANCE_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "THEME_ATTRIBUTE_MAP",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "THEME_DENSITY_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "THEME_ELEVATION_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "THEME_MOTION_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "THEME_RADIUS_OPTIONS",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "TablePagination",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "TableSimple",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Tabs",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Tag",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Text",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "TextArea",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "TextInput",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Textarea",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ThemePresetCompare",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ThemePresetGallery",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ThemePreviewCard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ThemeProvider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "TimePicker",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Timeline",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "ToastProvider",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Tooltip",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "TourCoachmarks",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Transfer",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Tree",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "TreeTable",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Upload",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "VStack",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "VariantIntegration",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "VirtualList",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "Watermark",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "component"
+    },
+    {
+      "name": "applyTokenSet",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "auditComponent",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "auditElement",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "buildAuthHeaders",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "buildEntityGridQueryParams",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "cloneGridVariant",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "cn",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "compareGridVariants",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createAccordionItemsFromSections",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createAccordionPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createGridVariant",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createLazyComponent",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createMenuBarItemsFromRoutes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createMenuBarPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createNavigationDestinationItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createNavigationRailPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createPageHeaderStatItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createPageHeaderTagItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createPageLayoutBreadcrumbItems",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createPageLayoutPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "createSegmentedPreset",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "darkTheme",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "deleteGridVariant",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "density",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "duration",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "easing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "elevation",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "fetchGridVariants",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "focusRing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "fontFamily",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "fontSize",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "fontWeight",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "generateCode",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getAuditRules",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getBundleReport",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getChartColorPalette",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getChartThemeOverrides",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getComponentA11yChecklist",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getComponentCatalog",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getComponentDoc",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getComponentExamples",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getComponentSizes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getComponentTokens",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getDesignTokens",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getKeyboardContract",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getRecommendations",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getResolvedToken",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getSupportedChecklistTypes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getSupportedComponentTypes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getThemeAxes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "getThemeContract",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "hasKeyboardContract",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "letterSpacing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "lightTheme",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "lineHeight",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "opacity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "palette",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "radius",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "registerGridVariantsTokenResolver",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "registerTokenResolver",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "resetTokenResolver",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "resolveAccessState",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "resolveMenuBarActiveValue",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "resolveNavigationRailActiveValue",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "resolveSegmentedNextValue",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "resolveThemeModeKey",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "searchComponents",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "semanticColorTokens",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setAppearance",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setDensity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setElevation",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setMotion",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setOverlayIntensity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setOverlayOpacity",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setRadius",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setSurfaceTone",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setTableSurfaceTone",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "setupAgGridLicense",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "shouldBlockInteraction",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "spacing",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "subscribeThemeAxes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "suggestComponent",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "testKeyboardNavigation",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "tokenSetToChartColors",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "tokenSetToCss",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "tokenSetToGridTheme",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "updateGridVariant",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "updateThemeAxes",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "updateVariantPreference",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "useAgGridTablePagination",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "useDatasourceModeAdapter",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "useDeferredRender",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "useIntersectionObserver",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "useLocale",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "usePaginationState",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "useTheme",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "useToast",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "validateUsage",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "withAccessGuard",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    },
+    {
+      "name": "zIndex",
+      "availability": "exported",
+      "lifecycle": "stable",
+      "kind": "utility"
+    }
+  ]
+}

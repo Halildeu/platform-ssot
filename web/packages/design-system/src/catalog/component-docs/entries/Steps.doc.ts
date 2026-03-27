@@ -1,0 +1,128 @@
+import type { DesignLabComponentDocEntry } from '../types';
+
+const entry: DesignLabComponentDocEntry = {
+  name: "Steps",
+  indexItem: {
+  "name": "Steps",
+  "kind": "component",
+  "availability": "exported",
+  "lifecycle": "stable",
+  "maturity": "beta",
+  "group": "navigation",
+  "subgroup": "steps",
+  "taxonomyGroupId": "navigation",
+  "taxonomySubgroup": "Steps",
+  "demoMode": "live",
+  "description": "Steps primitivei; cok adimli wizard ve release progress akislari icin status-rich navigation katmani sunar.",
+  "sectionIds": [
+    "component_library_management",
+    "navigation_patterns",
+    "governance_contribution"
+  ],
+  "qualityGates": [
+    "design_tokens",
+    "preview_visibility",
+    "registry_export_sync",
+    "ux_catalog_alignment",
+    "a11y_keyboard_support"
+  ],
+  "tags": [
+    "wave-2",
+    "navigation",
+    "beta",
+    "progress"
+  ],
+  "uxPrimaryThemeId": "data_entry_validation_recovery",
+  "uxPrimarySubthemeId": "multi_step_wizard_progress",
+  "roadmapWaveId": "wave_2_navigation",
+  "acceptanceContractId": "ui-library-wave-2-navigation-v1",
+  "importStatement": "import { Steps } from '@mfe/design-system';",
+  "whereUsed": [
+    "web/apps/mfe-shell/src/pages/admin/DesignLabPage.tsx",
+    "web/apps/mfe-shell/src/pages/admin/design-lab/showcase/preview-components/DesignLabStepsShowcase.tsx"
+  ]
+},
+  apiItem: {
+  "name": "Steps",
+  "variantAxes": [
+    "orientation: horizontal | vertical",
+    "size: sm | md",
+    "mode: static | interactive"
+  ],
+  "stateModel": [
+    "complete",
+    "current",
+    "upcoming",
+    "error",
+    "optional"
+  ],
+    "previewStates": [
+      "error",
+      "loading",
+      "interactive-progress",
+      "dark-theme"
+    ],
+    "behaviorModel": [
+      "complete",
+      "current",
+      "upcoming",
+      "optional"
+    ],
+  "props": [
+    {
+      "name": "items",
+      "type": "StepItem[]",
+      "default": "-",
+      "required": true,
+      "description": "Her adimin title, description, status ve optional bilgisini tasir."
+    },
+    {
+      "name": "value / defaultValue",
+      "type": "string",
+      "default": "-",
+      "required": false,
+      "description": "Controlled veya uncontrolled aktif adim secimi."
+    },
+    {
+      "name": "interactive",
+      "type": "boolean",
+      "default": "false",
+      "required": false,
+      "description": "Wizard veya review akislari icin tiklanabilir adim davranisini acar."
+    },
+    {
+      "name": "orientation",
+      "type": "'horizontal' | 'vertical'",
+      "default": "horizontal",
+      "required": false,
+      "description": "Progress kalibinin sayfa icindeki akisini belirler."
+    },
+    {
+      "name": "size",
+      "type": "'sm' | 'md' | 'lg'",
+      "default": "md",
+      "required": false,
+      "description": "Bilesen boyut varyantini belirler."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "default": "-",
+      "required": false,
+      "description": "Root element icin ek CSS sinifi."
+    }
+  ],
+  "previewFocus": [
+    "interactive progress",
+    "vertical status-rich flow",
+    "current step emphasis"
+  ],
+  "regressionFocus": [
+    "aria-current step",
+    "interactive change handling",
+    "status fallback ordering"
+  ]
+},
+};
+
+export default entry;

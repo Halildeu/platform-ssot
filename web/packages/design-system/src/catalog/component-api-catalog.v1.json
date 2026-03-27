@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "subject_id": "design_system_api_catalog",
+  "wave_id": "initial",
+  "source": {
+    "itemsAuthority": [
+      "packages/design-system/src/catalog/component-api-catalog.items.part-01.v1.json",
+      "packages/design-system/src/catalog/component-api-catalog.items.part-02.v1.json",
+      "packages/design-system/src/catalog/component-api-catalog.items.part-03.v1.json",
+      "packages/design-system/src/catalog/component-api-catalog.items.part-04.v1.json",
+      "packages/design-system/src/catalog/component-api-catalog.items.part-05.v1.json",
+      "packages/design-system/src/catalog/component-api-catalog.items.part-06.v1.json",
+      "packages/design-system/src/catalog/component-api-catalog.items.part-07.v1.json",
+      "packages/design-system/src/catalog/component-api-catalog.items.part-08.v1.json"
+    ]
+  }
+}
