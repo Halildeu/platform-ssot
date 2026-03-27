@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LifeBuoy,
   Search,
+  Server,
   Settings,
 } from 'lucide-react';
 import {
@@ -144,6 +145,14 @@ export const Sidebar: React.FC = () => {
         dataTestId: 'nav-reporting',
         disabled: !canReport,
       },
+      {
+        key: 'services',
+        label: 'Services',
+        to: canThemeAdmin ? '/admin/services' : undefined,
+        icon: <Server className="h-4 w-4" aria-hidden />,
+        dataTestId: 'nav-services',
+        disabled: !canThemeAdmin,
+      },
     ];
   }, [hasPermission, permitAllMode]);
 
@@ -162,6 +171,9 @@ export const Sidebar: React.FC = () => {
     }
     if (currentPath.startsWith('/admin/reports')) {
       return 'reporting';
+    }
+    if (currentPath.startsWith('/admin/services')) {
+      return 'services';
     }
     return 'home';
   }, [homePath, location.pathname]);

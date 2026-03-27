@@ -45,6 +45,12 @@ const devConfig = {
         secure: false,
       },
       {
+        context: ['/api/services'],
+        target: 'http://localhost:8795', // service-manager-api (Docker management)
+        changeOrigin: true,
+        secure: false,
+      },
+      {
         context: ['/cockpit-api'],
         target: 'http://localhost:8790', // orchestrator cockpit-serve
         changeOrigin: true,

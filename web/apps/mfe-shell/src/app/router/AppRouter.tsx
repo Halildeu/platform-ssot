@@ -32,6 +32,9 @@ import { DesignLabRoutes } from "../../pages/admin/design-lab/DesignLabRoutes";
 const XSuiteDashboardPage = React.lazy(
   () => import("../../pages/admin/XSuiteDashboardPage"),
 );
+const ServiceControlPage = React.lazy(
+  () => import("../../pages/admin/service-control/ServiceControlPage"),
+);
 
 /* ------------------------------------------------------------------ */
 /*  AppRouter — All application routes                                 */
@@ -160,6 +163,14 @@ export const AppRouter: React.FC = () => {
           element={
             <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
               <XSuiteDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/services"
+          element={
+            <ProtectedRoute requiredPermissions={[PERMISSIONS.THEME_ADMIN]}>
+              <ServiceControlPage />
             </ProtectedRoute>
           }
         />
