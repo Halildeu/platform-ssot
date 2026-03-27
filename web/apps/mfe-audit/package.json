@@ -5,6 +5,8 @@
   "scripts": {
     "start": "webpack serve --config webpack.dev.js --hot --no-watch-options-stdin",
     "build": "webpack --config webpack.prod.js",
+    "start:vite": "vite",
+    "build:vite": "vite build",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "test": "jest --passWithNoTests"
   },
