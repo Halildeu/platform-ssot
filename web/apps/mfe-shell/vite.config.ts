@@ -148,16 +148,19 @@ export default defineConfig(({ mode }) => {
     ],
 
     resolve: {
-      alias: [
-        // Monorepo packages — resolve to source for live editing.
-        // NOTE: These overlap with MF shared config. MF warns about it but
-        // in dev mode aliases take priority (which is what we want for HMR).
-        // In production build, MF shared takes priority via the build plugin.
-        { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
-        { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
-        { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
-        { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
-      ],
+      alias: process.env.VITE_SOURCE_PACKAGES === '1'
+        ? [
+            // Source mode: resolve to src/ for live HMR (slower cold-load, ~250 requests)
+            { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
+            { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
+            { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
+            { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+          ]
+        : [
+            // Default: resolve via node_modules (pre-built, fast cold-load, ~70 requests)
+            // Run `pnpm --filter @mfe/design-system build` after DS changes
+            { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
+          ],
     },
 
     /* Env injection — replaces DefinePlugin + InjectRuntimeEnv */
@@ -225,6 +228,11 @@ export default defineConfig(({ mode }) => {
         'mfe_audit',
         'mfe_users',
         'mfe_reporting',
+      ],
+      /* Force monorepo packages into dep optimization — eliminates 177 @fs requests */
+      entries: [
+        'src/index.tsx',
+        'src/app/bootstrap.tsx',
       ],
     },
 
