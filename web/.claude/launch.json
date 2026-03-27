@@ -8,6 +8,19 @@
       "port": 3000
     },
     {
+      "name": "mfe-shell-vite",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--config", "apps/mfe-shell/vite.config.ts"],
+      "port": 3000,
+      "env": {
+        "SHELL_ENABLE_SUGGESTIONS_REMOTE": "false",
+        "SHELL_ENABLE_ETHIC_REMOTE": "false",
+        "SHELL_ENABLE_ACCESS_REMOTE": "false",
+        "SHELL_ENABLE_AUDIT_REMOTE": "false",
+        "SHELL_ENABLE_USERS_REMOTE": "false"
+      }
+    },
+    {
       "name": "mfe-suggestions",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["start", "--prefix", "apps/mfe-suggestions"],

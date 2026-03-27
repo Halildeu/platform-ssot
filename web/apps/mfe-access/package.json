@@ -6,8 +6,6 @@
   "scripts": {
     "start": "npx kill-port 3005 || true && vite",
     "build": "vite build",
-    "start:webpack": "npx kill-port 3005 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
-    "build:webpack": "webpack --mode=production --config webpack.prod.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "npm run test:unit && npm run build",
     "test:unit": "tsx --tsconfig ./tsconfig.json --test src/app/App.test.ts src/widgets/access-management/ui/AccessFilterBar.test.tsx src/widgets/access-management/ui/AccessVariantToolbar.test.tsx src/widgets/access-management/ui/BulkPermissionModal.test.tsx src/widgets/access-management/ui/RoleCloneModal.test.tsx src/widgets/access-management/ui/AccessRoleDrawer.test.tsx src/widgets/access-management/ui/AccessGrid.test.tsx src/widgets/permission-registry/PermissionRegistryPanel.test.tsx"
@@ -27,27 +25,14 @@
     "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.0",
-    "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1",
     "@types/node": "^24.0.14",
     "@tanstack/react-query-devtools": "^5.90.10",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "eslint": "^9.13.0",
     "@mfe/i18n-dicts": "*",
-    "babel-loader": "^10.0.0",
-    "css-loader": "^7.1.2",
-    "html-webpack-plugin": "^5.6.3",
-    "postcss-loader": "^8.1.1",
     "react-test-renderer": "18.2.0",
-    "style-loader": "^4.0.0",
     "typescript": "^5.8.3",
-    "tsx": "^4.20.6",
-    "webpack": "^5.105.0",
-    "webpack-cli": "^7.0.0",
-    "webpack-dev-server": "^5.2.3",
-    "webpack-merge": "^6.0.1"
+    "tsx": "^4.20.6"
   }
 }
