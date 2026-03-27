@@ -7,6 +7,23 @@ import { readFileSync } from 'node:fs';
 
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
+const singleton = (name: string, fallback: string | boolean = false) => ({
+  singleton: true,
+  requiredVersion: deps[name] ?? fallback,
+});
+const sharedCore = {
+  react: singleton('react'),
+  'react-dom': singleton('react-dom'),
+  'react-router': singleton('react-router'),
+  'react-router-dom': singleton('react-router-dom'),
+};
+const sharedProdOnly = {
+  '@reduxjs/toolkit': singleton('@reduxjs/toolkit'),
+  'react-redux': singleton('react-redux'),
+  '@mfe/design-system': singleton('@mfe/design-system', false),
+  clsx: singleton('clsx'),
+  'tailwind-merge': singleton('tailwind-merge'),
+};
 
 export default defineConfig(({ mode }) => ({
   plugins: [
@@ -26,19 +43,10 @@ export default defineConfig(({ mode }) => ({
       exposes: {
         './EthicApp': './src/App.tsx',
       },
-      /* Dev: shared deps disabled — pnpm workspace hoisting guarantees singletons.
-       * Prod: shared enabled for proper chunk deduplication across remotes. */
-      shared: mode === 'production' ? {
-        react:              { singleton: true, requiredVersion: deps.react },
-        'react-dom':        { singleton: true, requiredVersion: deps['react-dom'] },
-        'react-router':     { singleton: true, requiredVersion: deps['react-router'] },
-        'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
-        '@reduxjs/toolkit': { singleton: true, requiredVersion: deps['@reduxjs/toolkit'] },
-        'react-redux':      { singleton: true, requiredVersion: deps['react-redux'] },
-        '@mfe/design-system': { singleton: true, requiredVersion: false },
-        clsx:               { singleton: true, requiredVersion: deps.clsx },
-        'tailwind-merge':   { singleton: true, requiredVersion: deps['tailwind-merge'] },
-      } : {},
+      shared: {
+        ...sharedCore,
+        ...(mode === 'production' ? sharedProdOnly : {}),
+      },
     }),
   ],
 
@@ -66,6 +74,7 @@ export default defineConfig(({ mode }) => ({
   },
 
   server: {
+    host: '127.0.0.1',
     port: 3002,
     strictPort: true,
     cors: true,

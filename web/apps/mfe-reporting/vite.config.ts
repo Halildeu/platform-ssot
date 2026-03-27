@@ -11,6 +11,26 @@ import { readFileSync } from 'node:fs';
 
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
+const singleton = (name: string, fallback: string | boolean = false) => ({
+  singleton: true,
+  requiredVersion: deps[name] ?? fallback,
+});
+const sharedCore = {
+  react: singleton('react'),
+  'react-dom': singleton('react-dom'),
+  'react-router': singleton('react-router'),
+  'react-router-dom': singleton('react-router-dom'),
+  '@tanstack/react-query': singleton('@tanstack/react-query'),
+};
+const sharedProdOnly = {
+  'ag-grid-community': singleton('ag-grid-community'),
+  'ag-grid-enterprise': singleton('ag-grid-enterprise'),
+  'ag-grid-react': singleton('ag-grid-react'),
+  '@platform/capabilities': singleton('@platform/capabilities', false),
+  '@mfe/design-system': singleton('@mfe/design-system', false),
+  '@mfe/shared-http': singleton('@mfe/shared-http', false),
+  '@mfe/i18n-dicts': singleton('@mfe/i18n-dicts', false),
+};
 
 /* ------------------------------------------------------------------ */
 /*  Vite Config                                                         */
@@ -26,6 +46,7 @@ export default defineConfig(({ mode }) => {
       federation({
         name: 'mfe_reporting',
         filename: 'remoteEntry.js',
+        dts: false,
         remotes: {
           mfe_shell: { type: 'module', name: 'mfe_shell', entry: 'http://localhost:3000/remoteEntry.js' },
         },
@@ -34,22 +55,10 @@ export default defineConfig(({ mode }) => {
           './grid': './src/grid/index.ts',
           './shell-services': './src/app/services/shell-services.ts',
         },
-        /* Dev: shared deps disabled — pnpm workspace hoisting guarantees singletons.
-         * Prod: shared enabled for proper chunk deduplication across remotes. */
-        shared: mode === 'production' ? {
-          react: { singleton: true, requiredVersion: deps.react },
-          'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
-          'react-router': { singleton: true, requiredVersion: deps['react-router'] },
-          'react-router-dom': { singleton: true, requiredVersion: deps['react-router-dom'] },
-          '@tanstack/react-query': { singleton: true, requiredVersion: deps['@tanstack/react-query'] },
-          'ag-grid-community': { singleton: true, requiredVersion: deps['ag-grid-community'] },
-          'ag-grid-enterprise': { singleton: true, requiredVersion: deps['ag-grid-enterprise'] },
-          'ag-grid-react': { singleton: true, requiredVersion: deps['ag-grid-react'] },
-          '@platform/capabilities': { singleton: true, requiredVersion: false },
-          '@mfe/design-system': { singleton: true, requiredVersion: false },
-          '@mfe/shared-http': { singleton: true, requiredVersion: false },
-          '@mfe/i18n-dicts': { singleton: true, requiredVersion: false },
-        } : {},
+        shared: {
+          ...sharedCore,
+          ...(mode === 'production' ? sharedProdOnly : {}),
+        },
       }),
     ],
 
@@ -62,6 +71,7 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
+      host: '127.0.0.1',
       port: 3007,
       strictPort: true,
       headers: { 'Access-Control-Allow-Origin': '*' },

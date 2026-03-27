@@ -91,6 +91,26 @@ function buildRemotes() {
 
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
+const singleton = (name: string, fallback: string | boolean = false) => ({
+  singleton: true,
+  requiredVersion: deps[name] ?? fallback,
+});
+const sharedCore = {
+  react: singleton('react'),
+  'react-dom': singleton('react-dom'),
+  'react-router': singleton('react-router'),
+  'react-router-dom': singleton('react-router-dom'),
+  '@reduxjs/toolkit': singleton('@reduxjs/toolkit'),
+  'react-redux': singleton('react-redux'),
+  '@tanstack/react-query': singleton('@tanstack/react-query'),
+};
+const sharedProdOnly = {
+  clsx: singleton('clsx'),
+  'tailwind-merge': singleton('tailwind-merge'),
+  'ag-grid-community': singleton('ag-grid-community'),
+  'ag-grid-enterprise': singleton('ag-grid-enterprise'),
+  'ag-grid-react': singleton('ag-grid-react'),
+};
 
 /* ------------------------------------------------------------------ */
 /*  Vite Config                                                         */
@@ -126,23 +146,12 @@ export default defineConfig(({ mode }) => {
           './services': './src/app/services/shell-services.ts',
           './i18n': './src/app/i18n/index.ts',
         },
-        /* Dev mode: shared deps disabled to prevent optimizeDeps hang (MF #376, Vite #19316).
-         * In dev, all apps resolve deps through pnpm workspace hoisting — singleton
-         * is guaranteed by single node_modules tree. Shared config only needed for prod build. */
-        shared: mode === 'production' ? {
-          react:                { singleton: true, requiredVersion: deps.react },
-          'react-dom':          { singleton: true, requiredVersion: deps['react-dom'] },
-          'react-router':       { singleton: true, requiredVersion: deps['react-router'] },
-          'react-router-dom':   { singleton: true, requiredVersion: deps['react-router-dom'] },
-          '@reduxjs/toolkit':   { singleton: true, requiredVersion: deps['@reduxjs/toolkit'] },
-          'react-redux':        { singleton: true, requiredVersion: deps['react-redux'] },
-          '@tanstack/react-query': { singleton: true, requiredVersion: deps['@tanstack/react-query'] },
-          clsx:                 { singleton: true, requiredVersion: deps.clsx },
-          'tailwind-merge':     { singleton: true, requiredVersion: deps['tailwind-merge'] },
-          'ag-grid-community':  { singleton: true, requiredVersion: deps['ag-grid-community'] },
-          'ag-grid-enterprise': { singleton: true, requiredVersion: deps['ag-grid-enterprise'] },
-          'ag-grid-react':      { singleton: true, requiredVersion: deps['ag-grid-react'] },
-        } : {},
+        /* Dev mode also needs core singleton sharing.
+         * Without this, remotes load their own React runtime and routes white-screen with invalid hook calls. */
+        shared: {
+          ...sharedCore,
+          ...(mode === 'production' ? sharedProdOnly : {}),
+        },
       }),
     ],
 
@@ -161,6 +170,7 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
+      host: '127.0.0.1',
       port: 3000,
       strictPort: true,
       proxy: {
@@ -219,8 +229,9 @@ export default defineConfig(({ mode }) => {
         '@mfe/i18n-dicts',
         '@platform/capabilities',
       ],
-      /* Exclude MF remotes from optimization */
+      /* Exclude MF remotes + heavy lazy deps from optimization */
       exclude: [
+        'shiki',
         'mfe_suggestions',
         'mfe_ethic',
         'mfe_access',
