@@ -3,10 +3,9 @@
 
 import React from 'react';
 
-// Inject webpack DefinePlugin env vars into window.__env__ so that
+// Inject build-time env vars into window.__env__ so that
 // design-system (separate chunk) can read them at runtime.
-// DefinePlugin replaces process.env with a JSON object, but this only
-// works within the same webpack compilation scope.
+// Vite's define config replaces process.env with a JSON object.
 if (typeof window !== 'undefined') {
   (window as any).__env__ = {
     ...(window as any).__env__,

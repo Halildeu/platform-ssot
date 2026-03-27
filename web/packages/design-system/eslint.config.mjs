@@ -21,7 +21,7 @@ export default tseslint.config(
       'src/__visual__/**',
       '**/*.stories.ts',
       '**/*.stories.tsx',
-      'webpack.*.js',
+      'vite.config.ts',
       '*.config.ts',
       '*.config.js',
     ],
