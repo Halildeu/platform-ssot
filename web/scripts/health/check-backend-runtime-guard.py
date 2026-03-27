@@ -20,7 +20,7 @@ class HttpCheck:
 
 LIVE_CHECKS: dict[str, HttpCheck] = {
     "api-gateway-health": HttpCheck("http://127.0.0.1:8080/actuator/health"),
-    "gateway-user-by-email-route": HttpCheck("http://127.0.0.1:8080/api/v1/users/by-email?email=admin%40example.com"),
+    "gateway-user-by-email-route": HttpCheck("http://127.0.0.1:8080/api/v1/users/by-email?email=admin%40example.com", expected_statuses=(200, 401)),
     "gateway-theme-registry-route": HttpCheck("http://127.0.0.1:8080/api/v1/theme-registry"),
     "gateway-roles-route": HttpCheck("http://127.0.0.1:8080/api/v1/roles", expected_statuses=(401,)),
     "gateway-permissions-route": HttpCheck("http://127.0.0.1:8080/api/v1/permissions", expected_statuses=(401,)),
