@@ -104,7 +104,7 @@ export default defineConfig(({ mode }) => {
     publicDir: 'public',
 
     plugins: [
-      /* Inject runtime env into HTML — replaces HtmlWebpackPlugin InjectRuntimeEnv hook */
+      /* Inject runtime env into HTML */
       {
         name: 'inject-runtime-env',
         transformIndexHtml(html) {
@@ -148,19 +148,12 @@ export default defineConfig(({ mode }) => {
     ],
 
     resolve: {
-      alias: process.env.VITE_SOURCE_PACKAGES === '1'
-        ? [
-            // Source mode: resolve to src/ for live HMR (slower cold-load, ~250 requests)
-            { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
-            { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
-            { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
-            { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
-          ]
-        : [
-            // Default: resolve via node_modules (pre-built, fast cold-load, ~70 requests)
-            // Run `pnpm --filter @mfe/design-system build` after DS changes
-            { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
-          ],
+      alias: [
+        { find: '@platform/capabilities', replacement: path.resolve(__dirname, '../../packages/platform-capabilities/src') },
+        { find: '@mfe/design-system', replacement: path.resolve(__dirname, '../../packages/design-system/src') },
+        { find: '@mfe/i18n-dicts', replacement: path.resolve(__dirname, '../../packages/i18n-dicts/src') },
+        { find: '@mfe/shared-http', replacement: path.resolve(__dirname, '../../packages/shared-http/src') },
+      ],
     },
 
     /* Env injection — replaces DefinePlugin + InjectRuntimeEnv */
@@ -193,7 +186,9 @@ export default defineConfig(({ mode }) => {
       },
     },
 
-    /* Pre-bundle deps — reduces HTTP request waterfall on first load */
+    /* Pre-bundle ALL deps including monorepo packages — critical for cold-load speed.
+     * Without this, Vite serves 250+ individual HTTP requests (one per module).
+     * With this, monorepo sources get bundled into optimized chunks like node_modules. */
     optimizeDeps: {
       include: [
         'react',
@@ -219,6 +214,11 @@ export default defineConfig(({ mode }) => {
         'ag-grid-react',
         '@sentry/react',
         'lucide-react',
+        // Monorepo packages — pre-bundle to eliminate @fs waterfall
+        '@mfe/design-system',
+        '@mfe/shared-http',
+        '@mfe/i18n-dicts',
+        '@platform/capabilities',
       ],
       /* Exclude MF remotes from optimization */
       exclude: [
@@ -228,11 +228,6 @@ export default defineConfig(({ mode }) => {
         'mfe_audit',
         'mfe_users',
         'mfe_reporting',
-      ],
-      /* Force monorepo packages into dep optimization — eliminates 177 @fs requests */
-      entries: [
-        'src/index.tsx',
-        'src/app/bootstrap.tsx',
       ],
     },
 
