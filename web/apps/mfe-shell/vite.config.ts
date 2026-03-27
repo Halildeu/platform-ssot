@@ -119,6 +119,7 @@ export default defineConfig(({ mode }) => {
       federation({
         name: 'mfe_shell',
         filename: 'remoteEntry.js',
+        dts: false, // Disable DTS download — remote types not needed for POC
         remotes: buildRemotes(),
         exposes: {
           './logic': './src/exposed-logic.ts',
