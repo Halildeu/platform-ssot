@@ -29,7 +29,8 @@ function loadDotEnvLocal(): Record<string, string> {
 /** Build runtime env payload (same allowlist as webpack.common.js) */
 function buildRuntimeEnv(mode: string): Record<string, string> {
   const dotEnv = loadDotEnvLocal();
-  const merged = { ...process.env, ...dotEnv };
+  // process.env takes priority over .env.local (same as webpack.common.js)
+  const merged = { ...dotEnv, ...process.env };
   const allowlist = new Set([
     'NODE_ENV', 'AUTH_MODE', 'AG_GRID_LICENSE_KEY',
     'SHELL_SKIP_REMOTE_SERVICES',

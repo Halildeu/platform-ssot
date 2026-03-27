@@ -55,7 +55,7 @@ export type { SearchInputProps, SearchInputSize } from "./search-input";
 /* Feedback */
 export { ToastProvider, useToast } from "./toast";
 export type { ToastProviderProps, ToastData, ToastVariant, ToastPosition } from "./toast";
-export { EmptyState } from "./empty-state";
+export { EmptyState, EmptyState as Empty } from "./empty-state";
 export type { EmptyStateProps } from "./empty-state";
 
 /* Selection */
