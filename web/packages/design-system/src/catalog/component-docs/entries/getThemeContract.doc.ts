@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "theme",
   "subgroup": "runtime",
   "taxonomyGroupId": "theme_api",
-  "taxonomySubgroup": "Token viewer (semantic/raw)",
+  "taxonomySubgroup": "getThemeContract",
   "demoMode": "inspector",
   "description": "Aktif semantic theme contract bilgisini okur.",
   "sectionIds": [

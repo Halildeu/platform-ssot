@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "menu_navigation",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createMenuBarPreset",
   "demoMode": "inspector",
   "description": "Route veya app menu girdilerini MenuBarItem dizisine normalize eder ve aktif root badge override'ini uygular.",
   "sectionIds": [

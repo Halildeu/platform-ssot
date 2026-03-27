@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_editor",
     "subgroup": "editor",
     "taxonomyGroupId": "x_editor",
-    "taxonomySubgroup": "X-Editor",
+    "taxonomySubgroup": "Rich text editor",
     "demoMode": "planned",
     "description": "Zengin metin duzenleme icin ana bilesen. Bold, italic, liste, link gibi formatlama secenekleri ile HTML veya JSON cikti formatini destekler.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_kanban",
     "subgroup": "kanban",
     "taxonomyGroupId": "x_kanban",
-    "taxonomySubgroup": "X-Kanban Card Detail",
+    "taxonomySubgroup": "Kanban card detail",
     "demoMode": "planned",
     "description": "Kanban kart detay overlay bileseni; kart icerigini, yorumlari, etiketi ve atamalari tam gorunumde sunar.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Variant Management",
+    "taxonomySubgroup": "Column builder",
     "demoMode": "live",
     "description": "Grid variant save/load/clone yonetimi; kisisel ve paylasilan varyantlar, schema version uyumluluk kontrolu ve localStorage + API dual persistence destegi.",
     "sectionIds": [

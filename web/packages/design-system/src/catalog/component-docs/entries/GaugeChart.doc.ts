@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Gauge",
+    "taxonomySubgroup": "Gauge chart",
     "demoMode": "live",
     "description": "Tekil metrik degerini yari daire gosterge ile goruntuleyen gauge grafigi; esik degerleri ve renk gecisleri destekler.",
     "sectionIds": [

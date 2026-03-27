@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "theme",
   "subgroup": "options",
   "taxonomyGroupId": "constants",
-  "taxonomySubgroup": "Density / radius / motion presets",
+  "taxonomySubgroup": "THEME_MOTION_OPTIONS",
   "demoMode": "inspector",
   "description": "THEME_MOTION_OPTIONS için kanonik katalog girdisi.",
   "sectionIds": [

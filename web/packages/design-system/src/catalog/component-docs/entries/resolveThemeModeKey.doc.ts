@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "theme",
   "subgroup": "runtime",
   "taxonomyGroupId": "theme_setters",
-  "taxonomySubgroup": "Token viewer (semantic/raw)",
+  "taxonomySubgroup": "resolveThemeModeKey",
   "demoMode": "inspector",
   "description": "resolveThemeModeKey için kanonik katalog girdisi.",
   "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "forms",
   "subgroup": "combobox",
   "taxonomyGroupId": "hooks",
-  "taxonomySubgroup": "Hooks (useX)",
+  "taxonomySubgroup": "useAsyncCombobox",
   "demoMode": "inspector",
   "description": "Debounced async option yukleme, abort ve reload davranisini combobox akislarina tasiyan hook.",
   "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "runtime",
   "subgroup": "access",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Permission gates",
+  "taxonomySubgroup": "shouldBlockInteraction",
   "demoMode": "inspector",
   "description": "shouldBlockInteraction için kanonik katalog girdisi.",
   "sectionIds": [

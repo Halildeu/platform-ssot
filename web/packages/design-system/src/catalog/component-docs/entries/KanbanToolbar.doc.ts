@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_kanban",
     "subgroup": "kanban",
     "taxonomyGroupId": "x_kanban",
-    "taxonomySubgroup": "X-Kanban",
+    "taxonomySubgroup": "Kanban toolbar",
     "demoMode": "planned",
     "description": "Kanban tahtasi icin arama, filtreleme ve kolon ekleme aksiyonlarini barindiran toolbar bileseni.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Editable",
+    "taxonomySubgroup": "Editable grid",
     "demoMode": "planned",
     "description": "Hucre ici duzenleme destekli grid bileseni; inline editing, validasyon ve batch kaydetme islevselligi sunar.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_form_builder",
     "subgroup": "form_builder",
     "taxonomyGroupId": "x_form_builder",
-    "taxonomySubgroup": "X-FormBuilder",
+    "taxonomySubgroup": "Field renderer",
     "demoMode": "planned",
     "description": "Form schema icerisindeki tek bir alani tipine gore uygun input bilesenine donusturen render bileseni.",
     "sectionIds": [

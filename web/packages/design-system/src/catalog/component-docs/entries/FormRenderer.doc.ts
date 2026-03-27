@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_form_builder",
     "subgroup": "form_builder",
     "taxonomyGroupId": "x_form_builder",
-    "taxonomySubgroup": "X-FormBuilder",
+    "taxonomySubgroup": "Form renderer",
     "demoMode": "planned",
     "description": "JSON schema tabanli dinamik form render eden container bilesen. Deger yonetimi, validasyon ve submit/reset aksiyonlarini bunyesinde toplar.",
     "sectionIds": [

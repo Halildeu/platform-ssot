@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Sparkline",
+    "taxonomySubgroup": "Sparkline chart",
     "demoMode": "planned",
     "description": "Kompakt satir ici sparkline grafigi; tablolar ve kartlar icinde mini trend gosterimi saglar.",
     "sectionIds": [

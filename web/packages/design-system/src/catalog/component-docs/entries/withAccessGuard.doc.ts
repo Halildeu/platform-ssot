@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "runtime",
   "subgroup": "access",
   "taxonomyGroupId": "hocs",
-  "taxonomySubgroup": "Permission gates",
+  "taxonomySubgroup": "withAccessGuard",
   "demoMode": "inspector",
   "description": "Readonly/disabled guard davranisini event handler seviyesinde uygular.",
   "sectionIds": [

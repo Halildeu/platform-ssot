@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Mini",
+    "taxonomySubgroup": "Mini chart",
     "demoMode": "planned",
     "description": "Kucuk boyutlu ozet grafik bileseni; donut, bar ve progress turlerini destekler, dashboard widget ve kart iceriklerinde kullanilir.",
     "sectionIds": [

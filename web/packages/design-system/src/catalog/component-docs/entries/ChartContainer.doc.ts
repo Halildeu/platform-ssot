@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Container",
+    "taxonomySubgroup": "Chart container",
     "demoMode": "live",
     "description": "Tum chart bilesenleri icin ortak sarmalayici; baslik, aciklama, loading, error ve empty state yonetimini tek noktadan saglar.",
     "sectionIds": [

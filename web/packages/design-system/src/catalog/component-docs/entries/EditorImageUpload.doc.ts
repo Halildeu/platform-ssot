@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_editor",
     "subgroup": "editor",
     "taxonomyGroupId": "x_editor",
-    "taxonomySubgroup": "X-Editor Image Upload",
+    "taxonomySubgroup": "Editor image upload",
     "demoMode": "planned",
     "description": "Editor icerisinde gorsel yukleme ve yerlistirme overlay bileseni; surukle-birak, dosya secimi ve URL ile ekleme destegi saglar.",
     "sectionIds": [

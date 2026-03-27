@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "data-grid",
   "subgroup": "variants",
   "taxonomyGroupId": "theme_setters",
-  "taxonomySubgroup": "Feature flags",
+  "taxonomySubgroup": "toggleVariantDefault",
   "demoMode": "inspector",
   "description": "Grid default varyantini belirleyen utility.",
   "sectionIds": [

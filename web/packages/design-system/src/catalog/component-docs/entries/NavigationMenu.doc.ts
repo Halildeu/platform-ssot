@@ -15,7 +15,7 @@ const entry: DesignLabComponentDocEntry = {
     group: 'navigation',
     subgroup: 'navigation_menu',
     taxonomyGroupId: 'navigation',
-    taxonomySubgroup: 'Navigation Menu',
+    taxonomySubgroup: 'Navigation menu / side nav',
     demoMode: 'live',
     description: 'MenuBar primitive ustunde buyuk bilgi mimarisi, overflow kontrolu ve top-level link akisi icin navigation menu recipe vitrini sunar.',
     sectionIds: baseIndexItem.sectionIds,

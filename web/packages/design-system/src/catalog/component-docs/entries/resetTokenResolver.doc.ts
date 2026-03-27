@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "runtime",
   "subgroup": "auth",
   "taxonomyGroupId": "theme_api",
-  "taxonomySubgroup": "HTTP helpers",
+  "taxonomySubgroup": "resetTokenResolver",
   "demoMode": "inspector",
   "description": "resetTokenResolver için kanonik katalog girdisi.",
   "sectionIds": [

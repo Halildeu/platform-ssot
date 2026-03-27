@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_kanban",
     "subgroup": "kanban",
     "taxonomyGroupId": "x_kanban",
-    "taxonomySubgroup": "X-Kanban",
+    "taxonomySubgroup": "Kanban column",
     "demoMode": "planned",
     "description": "Kanban tahtasinda tek bir kolonu temsil eden container bilesen. Kart drop alani ve baslik gosterimi saglar.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Dashboard",
+    "taxonomySubgroup": "Chart dashboard",
     "demoMode": "planned",
     "description": "Birden fazla grafik ve KPI widget'ini grid layout icinde duzenleyen dashboard container bileseni.",
     "sectionIds": [

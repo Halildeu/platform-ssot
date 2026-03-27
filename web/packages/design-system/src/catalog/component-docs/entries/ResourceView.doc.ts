@@ -10,8 +10,8 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_scheduler",
     "subgroup": "scheduler",
-    "taxonomyGroupId": "data_display",
-    "taxonomySubgroup": "X-Scheduler Resource",
+    "taxonomyGroupId": "x_scheduler",
+    "taxonomySubgroup": "Resource view",
     "demoMode": "planned",
     "description": "Kaynak bazli takvim gorunumu; her kaynak icin ayri satir ile etkinlikleri zaman cizgisi uzerinde gorsellestirir.",
     "sectionIds": [

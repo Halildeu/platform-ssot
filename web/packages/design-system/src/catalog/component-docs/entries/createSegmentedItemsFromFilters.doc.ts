@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "segmented_toggle",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createSegmentedPreset",
   "demoMode": "inspector",
   "description": "Filter girdilerini badge/count mantigi ile SegmentedItem dizisine normalize eder.",
   "sectionIds": [

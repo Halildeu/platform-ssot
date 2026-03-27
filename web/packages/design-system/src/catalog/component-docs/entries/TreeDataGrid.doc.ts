@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Tree",
+    "taxonomySubgroup": "Tree data grid",
     "demoMode": "planned",
     "description": "Hiyerarsik agac yapisi icinde veri gosteren grid bileseni; parent-child iliskileri ile genisletilebilir satir yapisi saglar.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "feedback",
   "subgroup": "toast_notification",
   "taxonomyGroupId": "hooks",
-  "taxonomySubgroup": "Hooks (useX)",
+  "taxonomySubgroup": "useToast",
   "demoMode": "inspector",
   "description": "Context bagli toast API'sini push, dismiss ve severity helper'lariyla sunan hook.",
   "sectionIds": [

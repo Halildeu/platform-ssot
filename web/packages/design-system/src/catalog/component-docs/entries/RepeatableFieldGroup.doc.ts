@@ -10,8 +10,8 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_form_builder",
     "subgroup": "form_builder",
-    "taxonomyGroupId": "data_entry",
-    "taxonomySubgroup": "X-FormBuilder Repeatable",
+    "taxonomyGroupId": "x_form_builder",
+    "taxonomySubgroup": "Repeatable field group",
     "demoMode": "planned",
     "description": "Dinamik olarak satir eklenip cikarilabilen tekrarlanabilir alan grubu bileseni; dizi tipindeki form verileri icin kullanilir.",
     "sectionIds": [

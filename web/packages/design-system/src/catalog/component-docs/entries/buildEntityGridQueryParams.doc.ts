@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "data-grid",
   "subgroup": "entity-grid",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Server-side pagination helpers",
+  "taxonomySubgroup": "buildEntityGridQueryParams",
   "demoMode": "inspector",
   "description": "Grid state bilgisini backend query param’lerine ceviren helper.",
   "sectionIds": [

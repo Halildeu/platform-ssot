@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "theme",
   "subgroup": "runtime",
   "taxonomyGroupId": "theme_setters",
-  "taxonomySubgroup": "Theme editor (axes)",
+  "taxonomySubgroup": "setDensity",
   "demoMode": "inspector",
   "description": "setDensity için kanonik katalog girdisi.",
   "sectionIds": [

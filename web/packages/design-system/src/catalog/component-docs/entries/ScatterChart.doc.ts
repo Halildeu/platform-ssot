@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Scatter & Bubble",
+    "taxonomySubgroup": "Scatter chart",
     "demoMode": "live",
     "description": "Scatter ve bubble modlarini destekleyen nokta grafigi; coklu seri, boyut ekseni ve legend entegrasyonu sunar.",
     "sectionIds": [

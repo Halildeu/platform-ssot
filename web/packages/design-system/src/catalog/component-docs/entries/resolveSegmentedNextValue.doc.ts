@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "segmented_toggle",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "resolveSegmentedNextValue",
   "demoMode": "inspector",
   "description": "Single veya multiple segmented seciminde bir item tetiklendiginde yeni value dizisini deterministik olarak hesaplar.",
   "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_editor",
     "subgroup": "editor",
     "taxonomyGroupId": "x_editor",
-    "taxonomySubgroup": "X-Editor",
+    "taxonomySubgroup": "Editor menu bubble",
     "demoMode": "planned",
     "description": "Metin secimi uzerinde gorunen yuzey (floating) formatlama menusu. Secim bazli hizli formatlama aksiyonlari saglar.",
     "sectionIds": [

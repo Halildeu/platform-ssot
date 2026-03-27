@@ -10,8 +10,8 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_scheduler",
     "subgroup": "scheduler",
-    "taxonomyGroupId": "data_display",
-    "taxonomySubgroup": "X-Scheduler Agenda",
+    "taxonomyGroupId": "x_scheduler",
+    "taxonomySubgroup": "Agenda view",
     "demoMode": "planned",
     "description": "Takvim etkinliklerini kronolojik liste gorunumunde sunan agenda bileseni; gun bazli gruplama ve hizli filtre destegi saglar.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_kanban",
     "subgroup": "kanban",
     "taxonomyGroupId": "x_kanban",
-    "taxonomySubgroup": "X-Kanban",
+    "taxonomySubgroup": "Kanban card",
     "demoMode": "planned",
     "description": "Kanban tahtasinda tek bir karti gorsel olarak temsil eden bilesen. Suruklenebilir ve tiklanabilir yapida calisir.",
     "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_scheduler",
     "subgroup": "scheduler",
     "taxonomyGroupId": "x_scheduler",
-    "taxonomySubgroup": "X-Scheduler",
+    "taxonomySubgroup": "Scheduler",
     "demoMode": "planned",
     "description": "Takvim tabanli etkinlik ve kaynak yonetimi icin ana container bileseni. Gun, hafta ve ay gorunumlerini destekler.",
     "sectionIds": [

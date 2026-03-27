@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Server Utilities",
+    "taxonomySubgroup": "Server data source",
     "demoMode": "live",
     "description": "X-Data-Grid icin server-side veri kaynagi olusturan fabrika fonksiyonu; sayfalama, siralama ve cache yonetimini soyutlar.",
     "sectionIds": [

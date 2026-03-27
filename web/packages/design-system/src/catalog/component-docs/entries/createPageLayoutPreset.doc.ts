@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "page_blocks",
   "subgroup": "page_shell",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createPageLayoutPreset",
   "demoMode": "inspector",
   "description": "Content-only, detail-sidebar ve ops-workspace gibi canonical PageLayout preset varsayimlarini dondurur.",
   "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_kanban",
     "subgroup": "kanban",
     "taxonomyGroupId": "x_kanban",
-    "taxonomySubgroup": "X-Kanban",
+    "taxonomySubgroup": "Kanban board",
     "demoMode": "planned",
     "description": "Surukle-birak destekli kolon bazli kanban tahtasi container bileseni. Kart tasima, kolon ekleme ve ozel kart renderlamaya olanak tanir.",
     "sectionIds": [

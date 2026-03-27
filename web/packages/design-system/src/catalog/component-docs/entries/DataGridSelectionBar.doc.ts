@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Selection Controls",
+    "taxonomySubgroup": "Selection bar",
     "demoMode": "live",
     "description": "Grid satirlari secildiginde ortaya cikan toplu islem barini yonetir; secim sayisi, temizleme ve slot bazli aksiyon alani sunar.",
     "sectionIds": [

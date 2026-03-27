@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Stat",
+    "taxonomySubgroup": "Stat widget",
     "demoMode": "planned",
     "description": "Istatistik ozet widget'i; ikon, deger, baslik ve karsilastirma bilgisini kompakt formatta sunar.",
     "sectionIds": [

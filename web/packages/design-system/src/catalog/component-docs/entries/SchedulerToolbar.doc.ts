@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_scheduler",
     "subgroup": "scheduler",
     "taxonomyGroupId": "x_scheduler",
-    "taxonomySubgroup": "X-Scheduler",
+    "taxonomySubgroup": "Scheduler toolbar",
     "demoMode": "planned",
     "description": "Takvim gorunum modu degistirme, tarih navigasyonu ve bugune don aksiyonlarini barindiran ust toolbar bileseni.",
     "sectionIds": [

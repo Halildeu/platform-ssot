@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "disclosure",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createAccordionPreset",
   "demoMode": "inspector",
   "description": "FAQ, compact disclosure ve settings gibi canonical accordion varsayimlarini tek helper ile dondurur.",
   "sectionIds": [

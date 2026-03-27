@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Filter Controls",
+    "taxonomySubgroup": "Filter chips",
     "demoMode": "live",
     "description": "Aktif grid filtrelerini chip olarak goruntuleyen ve tek tek veya toplu temizleme imkani sunan yardimci bilesen.",
     "sectionIds": [

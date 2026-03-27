@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "menu_navigation",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createNavigationRailPreset",
   "demoMode": "inspector",
   "description": "Route veya destination girdilerini NavigationRailItem dizisine normalize eder ve aktif destination badge override'ini uygular.",
   "sectionIds": [

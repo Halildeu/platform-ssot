@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "page_blocks",
   "subgroup": "page_shell",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createPageLayoutPreset",
   "demoMode": "inspector",
   "description": "Tuple veya typed stat girdilerini PageHeaderStatItem dizisine normalize eder.",
   "sectionIds": [

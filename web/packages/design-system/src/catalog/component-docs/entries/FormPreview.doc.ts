@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_form_builder",
     "subgroup": "form_builder",
     "taxonomyGroupId": "x_form_builder",
-    "taxonomySubgroup": "X-FormBuilder",
+    "taxonomySubgroup": "Form preview",
     "demoMode": "planned",
     "description": "Form schemasinin canli on izlemesini gosteren salt okunur bilesen. Tasarim sirasinda form gorunumunu dogrulamak icin kullanilir.",
     "sectionIds": [

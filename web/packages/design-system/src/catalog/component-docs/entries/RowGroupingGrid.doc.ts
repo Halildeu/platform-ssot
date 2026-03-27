@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Row Grouping",
+    "taxonomySubgroup": "Row grouping grid",
     "demoMode": "planned",
     "description": "Satir gruplama islevselligi sunan grid bileseni; coklu seviye gruplama, agrega satirlari ve grup baslik ozellestirme destegi saglar.",
     "sectionIds": [

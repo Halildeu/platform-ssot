@@ -10,8 +10,8 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_scheduler",
     "subgroup": "scheduler",
-    "taxonomyGroupId": "data_display",
-    "taxonomySubgroup": "X-Scheduler Event Form",
+    "taxonomyGroupId": "x_scheduler",
+    "taxonomySubgroup": "Event form",
     "demoMode": "planned",
     "description": "Takvim etkinligi olusturma ve duzenleme formu; tarih/saat, tekrar, katilimci ve hatirlatici alanlari icerir.",
     "sectionIds": [

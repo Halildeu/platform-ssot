@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "data-grid",
   "subgroup": "pagination",
   "taxonomyGroupId": "hooks",
-  "taxonomySubgroup": "Hooks (useX)",
+  "taxonomySubgroup": "useAgGridTablePagination",
   "demoMode": "inspector",
   "description": "AG Grid pagination API'sini TablePagination ile esitler ve grid footer state'ini tek hook uzerinden yonetir.",
   "sectionIds": [

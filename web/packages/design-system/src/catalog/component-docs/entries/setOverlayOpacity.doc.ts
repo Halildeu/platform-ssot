@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "theme",
   "subgroup": "runtime",
   "taxonomyGroupId": "theme_setters",
-  "taxonomySubgroup": "Overlay intensity tools",
+  "taxonomySubgroup": "setOverlayOpacity",
   "demoMode": "inspector",
   "description": "setOverlayOpacity için kanonik katalog girdisi.",
   "sectionIds": [

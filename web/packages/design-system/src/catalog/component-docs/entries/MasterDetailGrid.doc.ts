@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Master Detail",
+    "taxonomySubgroup": "Master-detail grid",
     "demoMode": "planned",
     "description": "Satir genisletme ile detay paneli gosteren master-detail grid bileseni; ic ice grid veya ozel icerik render destegi saglar.",
     "sectionIds": [

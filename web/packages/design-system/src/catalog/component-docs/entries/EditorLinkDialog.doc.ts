@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_editor",
     "subgroup": "editor",
     "taxonomyGroupId": "x_editor",
-    "taxonomySubgroup": "X-Editor Link Dialog",
+    "taxonomySubgroup": "Editor link dialog",
     "demoMode": "planned",
     "description": "Editor icerisinde baglanti ekleme ve duzenleme icin overlay dialog bileseni; URL, metin ve yeni sekmede acma secenekleri sunar.",
     "sectionIds": [

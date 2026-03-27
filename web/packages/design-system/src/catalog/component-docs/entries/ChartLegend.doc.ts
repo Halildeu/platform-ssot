@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Legend",
+    "taxonomySubgroup": "Chart legend",
     "demoMode": "planned",
     "description": "Grafik serileri icin interaktif legend bileseni; seri goster/gizle toggle ve renk eslemesi saglar.",
     "sectionIds": [

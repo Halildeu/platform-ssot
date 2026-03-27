@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "menu_navigation",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createNavigationRailPreset",
   "demoMode": "inspector",
   "description": "Workspace, compact utility ve ops side nav gibi canonical navigation rail presetlerini tek helper ile dondurur.",
   "sectionIds": [

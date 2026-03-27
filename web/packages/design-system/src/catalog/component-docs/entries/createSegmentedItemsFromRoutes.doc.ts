@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "segmented_toggle",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createSegmentedPreset",
   "demoMode": "inspector",
   "description": "Route girdilerini SegmentedItem dizisine normalize eder ve current route icin badge override'i uygular.",
   "sectionIds": [

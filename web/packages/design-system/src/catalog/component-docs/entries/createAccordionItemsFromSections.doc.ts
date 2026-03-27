@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "disclosure",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createAccordionPreset",
   "demoMode": "inspector",
   "description": "Typed section girdilerini nested disclosure yapisina donusturup AccordionItem dizisine normalize eder.",
   "sectionIds": [

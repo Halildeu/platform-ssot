@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "menu_navigation",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "resolveNavigationRailActiveValue",
   "demoMode": "inspector",
   "description": "Current value, current path ve enabled item listesine gore aktif navigation rail destination'ini deterministik olarak hesaplar.",
   "sectionIds": [

@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Waterfall",
+    "taxonomySubgroup": "Waterfall chart",
     "demoMode": "live",
     "description": "Kumulatif artis ve azalis adimlarini goruntuleyen waterfall grafigi; baglanti cizgileri, toplam sutunu ve etiket destegi sunar.",
     "sectionIds": [

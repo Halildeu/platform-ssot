@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "data-grid",
   "subgroup": "variants",
   "taxonomyGroupId": "hooks",
-  "taxonomySubgroup": "Hooks (useX)",
+  "taxonomySubgroup": "useGridVariants",
   "demoMode": "inspector",
   "description": "Grid varyantlarini kullanip durum yoneten hook.",
   "sectionIds": [

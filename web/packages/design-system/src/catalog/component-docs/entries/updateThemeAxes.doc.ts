@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "theme",
   "subgroup": "runtime",
   "taxonomyGroupId": "theme_api",
-  "taxonomySubgroup": "Theme editor (axes)",
+  "taxonomySubgroup": "updateThemeAxes",
   "demoMode": "inspector",
   "description": "Theme axes patch uygulayan runtime controller.",
   "sectionIds": [

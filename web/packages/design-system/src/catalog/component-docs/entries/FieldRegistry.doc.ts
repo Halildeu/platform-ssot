@@ -10,8 +10,8 @@ const entry: DesignLabComponentDocEntry = {
     "maturity": "beta",
     "group": "x_form_builder",
     "subgroup": "form_builder",
-    "taxonomyGroupId": "data_entry",
-    "taxonomySubgroup": "X-FormBuilder Registry",
+    "taxonomyGroupId": "x_form_builder",
+    "taxonomySubgroup": "Field registry",
     "demoMode": "planned",
     "description": "Form alan tiplerini bilesen esleme kayit defteri fonksiyonu; ozel alan tiplerinin FormRenderer ile entegrasyonunu saglar.",
     "sectionIds": [

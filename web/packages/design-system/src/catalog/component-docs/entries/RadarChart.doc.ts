@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Radar",
+    "taxonomySubgroup": "Radar chart",
     "demoMode": "live",
     "description": "Cok boyutlu veri karsilastirmasi icin radar (orumcek ag) grafigi; tekli ve coklu seri, dolgulu mod ve legend destegi sunar.",
     "sectionIds": [

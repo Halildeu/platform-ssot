@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_charts",
     "subgroup": "charts",
     "taxonomyGroupId": "x_charts",
-    "taxonomySubgroup": "X-Charts Treemap",
+    "taxonomySubgroup": "Treemap chart",
     "demoMode": "live",
     "description": "Hiyerarsik veri dagilimini alan bazli dikdortgenlerle goruntuleyen treemap grafigi; duz ve ic ice veri yapisi destegi sunar.",
     "sectionIds": [

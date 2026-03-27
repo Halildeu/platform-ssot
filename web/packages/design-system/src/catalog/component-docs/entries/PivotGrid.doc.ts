@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     "group": "x_data_grid",
     "subgroup": "data_grid",
     "taxonomyGroupId": "x_data_grid",
-    "taxonomySubgroup": "X-Data-Grid Pivot",
+    "taxonomySubgroup": "Pivot grid",
     "demoMode": "planned",
     "description": "Pivot tablo islevselligi sunan grid bileseni; satir/sutun gruplama, agrega fonksiyonlari ve dinamik eksik degistirme destegi saglar.",
     "sectionIds": [

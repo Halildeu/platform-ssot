@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
     group: 'navigation',
     subgroup: 'sidebar',
     taxonomyGroupId: 'navigation',
-    taxonomySubgroup: 'Sidebar / Shell',
+    taxonomySubgroup: 'Navigation menu / side nav',
     demoMode: 'live',
     description:
       'Composable, collapsible sidebar compound component with header, nav, search, groups, sections, resizer, and footer slots. Persists state to localStorage, auto-collapses on mobile, and supports keyboard navigation, drag-to-resize, and nested nav items up to 3 levels.',

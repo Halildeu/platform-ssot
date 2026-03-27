@@ -11,7 +11,7 @@ const entry: DesignLabComponentDocEntry = {
   "group": "navigation",
   "subgroup": "breadcrumb",
   "taxonomyGroupId": "utilities",
-  "taxonomySubgroup": "Functions",
+  "taxonomySubgroup": "createBreadcrumbItemsFromRoute",
   "demoMode": "inspector",
   "description": "String veya typed route girdilerini BreadcrumbItem dizisine normalize eder ve current fallback'ini uygular.",
   "sectionIds": [
