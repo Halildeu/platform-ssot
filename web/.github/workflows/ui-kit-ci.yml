@@ -144,11 +144,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox webkit
-      - name: Start dev server
+      - name: Start dev server (Vite)
         run: |
           cd apps/mfe-shell
-          SKIP_BACKEND_GUARD=1 npx webpack serve --config webpack.dev.js --port 3000 &
-          npx wait-on http://localhost:3000 --timeout 60000
+          AUTH_MODE=permitAll SHELL_ENABLE_SUGGESTIONS_REMOTE=false SHELL_ENABLE_ETHIC_REMOTE=false SHELL_ENABLE_ACCESS_REMOTE=false SHELL_ENABLE_AUDIT_REMOTE=false SHELL_ENABLE_USERS_REMOTE=false npx vite --port 3000 &
+          npx wait-on http://localhost:3000 --timeout 30000
       - name: Run visual regression tests
         run: npx playwright test e2e/visual/
       - name: Run interaction tests
