@@ -8,11 +8,13 @@ import type {
   ProcessCellForExportParams,
   AdvancedFilterModel as AgAdvancedFilterModel,
 } from 'ag-grid-community';
+// MF virtual modules in dev don't re-export named bindings (MF #376),
+// so import grid utilities from @mfe/design-system directly.
 import type { GridExportConfig } from 'mfe_reporting/grid';
-import { buildEntityGridQueryParams } from 'mfe_reporting/grid';
+import { buildEntityGridQueryParams } from '@mfe/design-system';
 // Ağır AG Grid bağımlılıklarını ilk ekranda yüklememek için lazy-load
 const EntityGridTemplate = React.lazy(() =>
-  import('mfe_reporting/grid').then((m) => ({ default: m.EntityGridTemplate })),
+  import('@mfe/design-system').then((m) => ({ default: m.EntityGridTemplate })),
 );
 import type { UserSummary, UserModuleAccessLevel } from '@mfe/shared-types';
 import { Badge, Button, Empty, type BadgeTone } from '@mfe/design-system';
