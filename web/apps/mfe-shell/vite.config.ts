@@ -190,7 +190,7 @@ export default defineConfig(({ mode }) => {
       },
     },
 
-    /* Pre-bundle critical deps — dependency scan fails due to MF virtual modules */
+    /* Pre-bundle deps — reduces HTTP request waterfall on first load */
     optimizeDeps: {
       include: [
         'react',
@@ -201,8 +201,11 @@ export default defineConfig(({ mode }) => {
         'react-router',
         'react-router-dom',
         '@reduxjs/toolkit',
+        '@reduxjs/toolkit/query',
+        '@reduxjs/toolkit/query/react',
         'react-redux',
         '@tanstack/react-query',
+        '@tanstack/react-query-devtools',
         'clsx',
         'tailwind-merge',
         'axios',
@@ -211,6 +214,8 @@ export default defineConfig(({ mode }) => {
         'ag-grid-community',
         'ag-grid-enterprise',
         'ag-grid-react',
+        '@sentry/react',
+        'lucide-react',
       ],
       /* Exclude MF remotes from optimization */
       exclude: [
