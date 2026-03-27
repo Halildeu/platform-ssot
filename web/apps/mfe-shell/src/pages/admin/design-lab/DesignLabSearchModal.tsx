@@ -84,8 +84,29 @@ export function useSearchModal() {
         setOpen(false);
       }
     }
+    // Listen for sidebar Cmd+K event
+    function handleSidebarSearch() {
+      setOpen(true);
+    }
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("design-lab:open-search", handleSidebarSearch);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("design-lab:open-search", handleSidebarSearch);
+    };
+  }, []);
+
+  // Auto-open from ?search=open query param (when navigated from sidebar)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("search") === "open") {
+      setOpen(true);
+      // Clean up URL
+      params.delete("search");
+      const clean = params.toString();
+      const newUrl = window.location.pathname + (clean ? `?${clean}` : "");
+      window.history.replaceState(null, "", newUrl);
+    }
   }, []);
 
   return { open, setOpen };

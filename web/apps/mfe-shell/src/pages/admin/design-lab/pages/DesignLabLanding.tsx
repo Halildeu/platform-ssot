@@ -140,7 +140,7 @@ export default function DesignLabLanding() {
         iconBg: LAYER_ICON_BG.patterns,
         title: t("designlab.landing.layer.patterns.title"),
         description: t("designlab.landing.layer.patterns.description"),
-        count: index.pages?.currentFamilies.length ?? 0,
+        count: index.items.filter((i) => ["layout_surfaces", "page_blocks"].includes(i.taxonomyGroupId)).length,
         href: "/admin/design-lab/patterns",
       },
       {
@@ -170,7 +170,7 @@ export default function DesignLabLanding() {
         iconBg: LAYER_ICON_BG.recipes,
         title: t("designlab.landing.layer.recipes.title"),
         description: t("designlab.landing.layer.recipes.description"),
-        count: index.recipes?.currentFamilies.length ?? 0,
+        count: index.items.filter((i) => ["tables_grid_addons", "ai_native_helpers"].includes(i.taxonomyGroupId)).length,
         href: "/admin/design-lab/recipes",
       },
       {
@@ -180,7 +180,7 @@ export default function DesignLabLanding() {
         iconBg: LAYER_ICON_BG.ecosystem,
         title: t("designlab.landing.layer.ecosystem.title"),
         description: t("designlab.landing.layer.ecosystem.description"),
-        count: index.ecosystem?.currentFamilies.length ?? 0,
+        count: index.items.filter((i) => ["enterprise", "enterprise_data", "enterprise_admin", "enterprise_analytics", "x_data_grid", "x_charts", "x_scheduler", "x_kanban", "x_editor", "x_form_builder"].includes(i.taxonomyGroupId)).length,
         href: "/admin/design-lab/ecosystem",
       },
     ],

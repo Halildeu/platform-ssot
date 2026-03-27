@@ -140,11 +140,49 @@ body {
     outline: 2px solid Highlight;
     outline-offset: 2px;
   }
+
+  /* Active/selected states — prevent invisible elements */
+  [aria-current="page"],
+  [aria-selected="true"],
+  [data-state="active"],
+  [data-active],
+  .bg-action-primary {
+    forced-color-adjust: none;
+    background-color: Highlight !important;
+    color: HighlightText !important;
+    border-color: ButtonText !important;
+  }
+
+  /* Steps — active/completed indicators */
+  [aria-current="step"],
+  [data-step-status="active"],
+  [data-step-status="completed"] {
+    forced-color-adjust: none;
+    background-color: Highlight !important;
+    color: HighlightText !important;
+  }
+
+  /* Disabled states */
+  [aria-disabled="true"],
+  [disabled] {
+    forced-color-adjust: none;
+    color: GrayText !important;
+    border-color: GrayText !important;
+  }
 }
 
 @media (prefers-contrast: more) {
   :root {
     --border-subtle: oklch(60% 0 0);
     --border-default: oklch(80% 0 0);
+    --action-primary: oklch(55% 0.25 265);
+    --text-inverse: oklch(100% 0 0);
+  }
+
+  /* Ensure active buttons have strong contrast */
+  [aria-current="page"],
+  [aria-selected="true"] {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
   }
 }

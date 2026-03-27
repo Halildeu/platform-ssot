@@ -192,16 +192,14 @@ export const Sidebar: React.FC = () => {
   ], []);
 
   const openCommandPalette = () => {
-    dispatch(
-      pushNotification({
-        id: 'sidebar-cmd',
-        message: 'Komut paleti hazırlanıyor',
-        description: 'Ctrl+K ile açılacak komut paleti yakında aktif edilecek.',
-        type: 'info',
-        meta: { source: 'sidebar', open: true },
-      }),
-    );
-    dispatch(toggleOpen(true));
+    // If already in Design Lab, Cmd+K is handled by DesignLabSearchModal
+    // If elsewhere, navigate to Design Lab with search=open param
+    if (location.pathname.startsWith('/admin/design-lab')) {
+      // Dispatch a custom event that DesignLabSearchModal can listen to
+      window.dispatchEvent(new CustomEvent('design-lab:open-search'));
+    } else {
+      navigate('/admin/design-lab?search=open');
+    }
   };
 
   const handleToggleFolders = () => {
