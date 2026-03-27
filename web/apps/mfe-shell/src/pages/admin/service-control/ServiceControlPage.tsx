@@ -41,7 +41,7 @@ export default function ServiceControlPage() {
 
   const [activeTab, setActiveTab] = useState('all');
   const [logTarget, setLogTarget] = useState<string | null>(null);
-  const [confirmAction, setConfirmAction] = useState<'start' | 'stop' | null>(null);
+  const [confirmAction, setConfirmAction] = useState<'start' | 'stop' | 'restart' | null>(null);
 
   const filtered = useMemo(() => {
     if (activeTab === 'all') return services;
@@ -52,7 +52,7 @@ export default function ServiceControlPage() {
   const downCount = services.filter((s) => s.health === 'DOWN' || s.health === 'TIMEOUT').length;
   const unknownCount = services.length - upCount - downCount;
 
-  const handleBulk = (action: 'start' | 'stop') => {
+  const handleBulk = (action: 'start' | 'stop' | 'restart') => {
     setConfirmAction(null);
     bulkAction(action);
   };
@@ -85,6 +85,7 @@ export default function ServiceControlPage() {
         total={services.length}
         onRefresh={refresh}
         onStartAll={() => setConfirmAction('start')}
+        onRestartAll={() => setConfirmAction('restart')}
         onStopAll={() => setConfirmAction('stop')}
         actionPending={actionPending}
         lastRefresh={lastRefresh}
@@ -178,12 +179,14 @@ export default function ServiceControlPage() {
           <div className="fixed inset-0 z-50 bg-black/30" onClick={() => setConfirmAction(null)} />
           <div className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border-subtle bg-surface-default p-6 shadow-2xl">
             <Text as="h3" className="text-base font-semibold text-text-primary">
-              {confirmAction === 'start' ? 'Tum servisleri baslat?' : 'Tum servisleri durdur?'}
+              {confirmAction === 'start' && 'Tum servisleri baslat?'}
+              {confirmAction === 'restart' && 'Tum servisleri yeniden baslat?'}
+              {confirmAction === 'stop' && 'Tum servisleri durdur?'}
             </Text>
             <Text variant="secondary" className="mt-2 text-sm">
-              {confirmAction === 'start'
-                ? `${services.length} servisin tamami baslatilacak.`
-                : `${services.length} servisin tamami durdurulacak. Bu islem uygulamayi gecici olarak kullanilmaz hale getirebilir.`}
+              {confirmAction === 'start' && `${services.length} servisin tamami baslatilacak.`}
+              {confirmAction === 'restart' && `${services.length} servis sirayla yeniden baslatilacak. Kisa sureli kesinti olabilir.`}
+              {confirmAction === 'stop' && `${services.length} servisin tamami durdurulacak. Bu islem uygulamayi gecici olarak kullanilmaz hale getirebilir.`}
             </Text>
             <div className="mt-5 flex items-center justify-end gap-2">
               <button
@@ -197,10 +200,12 @@ export default function ServiceControlPage() {
                 className={`rounded-lg px-4 py-2 text-sm font-semibold text-white transition ${
                   confirmAction === 'start'
                     ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : 'bg-rose-600 hover:bg-rose-700'
+                    : confirmAction === 'restart'
+                      ? 'bg-blue-600 hover:bg-blue-700'
+                      : 'bg-rose-600 hover:bg-rose-700'
                 }`}
               >
-                {confirmAction === 'start' ? 'Baslat' : 'Durdur'}
+                {confirmAction === 'start' ? 'Baslat' : confirmAction === 'restart' ? 'Yeniden Baslat' : 'Durdur'}
               </button>
             </div>
           </div>
@@ -217,6 +222,7 @@ function PageHeader({
   total,
   onRefresh,
   onStartAll,
+  onRestartAll,
   onStopAll,
   actionPending,
   lastRefresh,
@@ -225,6 +231,7 @@ function PageHeader({
   total: number;
   onRefresh: () => void;
   onStartAll?: () => void;
+  onRestartAll?: () => void;
   onStopAll?: () => void;
   actionPending?: string | null;
   lastRefresh?: string;
@@ -276,6 +283,16 @@ function PageHeader({
           >
             <Play className="h-3.5 w-3.5" />
             Tumu Baslat
+          </button>
+        )}
+        {onRestartAll && (
+          <button
+            onClick={onRestartAll}
+            disabled={!!actionPending}
+            className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            Tumu Restart
           </button>
         )}
         {onStopAll && (
