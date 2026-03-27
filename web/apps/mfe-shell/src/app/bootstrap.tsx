@@ -44,6 +44,10 @@ if (process.env.NODE_ENV === 'development') {
     'act(...)',
     'ReactDOM.render is no longer supported',
     'Vite CJS',
+    // React 18.3 deprecation warning fired by 3rd-party libs (AG Grid, lucide-react)
+    // that still use the old React.forwardRef((props) => ...) one-arg pattern.
+    // Not actionable from our code; suppress in dev to reduce noise.
+    'forwardRef render functions accept exactly two parameters',
   ];
   const origWarn = console.warn;
   const origError = console.error;
