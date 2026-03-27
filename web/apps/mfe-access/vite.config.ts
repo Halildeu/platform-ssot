@@ -8,7 +8,7 @@ import { readFileSync } from 'node:fs';
 const pkg = JSON.parse(readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
 const deps = pkg.dependencies as Record<string, string>;
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     tailwindcss(),
@@ -27,7 +27,9 @@ export default defineConfig({
         './AccessApp': './src/app/AccessApp.ui.tsx',
         './shell-services': './src/app/services/shell-services.ts',
       },
-      shared: {
+      /* Dev: shared deps disabled — pnpm workspace hoisting guarantees singletons.
+       * Prod: shared enabled for proper chunk deduplication across remotes. */
+      shared: mode === 'production' ? {
         react:              { singleton: true, requiredVersion: deps.react },
         'react-dom':        { singleton: true, requiredVersion: deps['react-dom'] },
         'react-router':     { singleton: true, requiredVersion: deps['react-router'] },
@@ -38,7 +40,7 @@ export default defineConfig({
         'ag-grid-enterprise': { singleton: true, requiredVersion: deps['ag-grid-enterprise'] },
         '@mfe/design-system': { singleton: true, requiredVersion: false },
         '@mfe/shared-http':   { singleton: true, requiredVersion: false },
-      },
+      } : {},
     }),
   ],
 
@@ -78,4 +80,4 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'dist',
   },
-});
+}));

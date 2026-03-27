@@ -119,14 +119,17 @@ export default defineConfig(({ mode }) => {
       federation({
         name: 'mfe_shell',
         filename: 'remoteEntry.js',
-        dts: false, // Disable DTS download — remote types not needed for POC
+        dts: false,
         remotes: buildRemotes(),
         exposes: {
           './logic': './src/exposed-logic.ts',
           './services': './src/app/services/shell-services.ts',
           './i18n': './src/app/i18n/index.ts',
         },
-        shared: {
+        /* Dev mode: shared deps disabled to prevent optimizeDeps hang (MF #376, Vite #19316).
+         * In dev, all apps resolve deps through pnpm workspace hoisting — singleton
+         * is guaranteed by single node_modules tree. Shared config only needed for prod build. */
+        shared: mode === 'production' ? {
           react:                { singleton: true, requiredVersion: deps.react },
           'react-dom':          { singleton: true, requiredVersion: deps['react-dom'] },
           'react-router':       { singleton: true, requiredVersion: deps['react-router'] },
@@ -134,16 +137,12 @@ export default defineConfig(({ mode }) => {
           '@reduxjs/toolkit':   { singleton: true, requiredVersion: deps['@reduxjs/toolkit'] },
           'react-redux':        { singleton: true, requiredVersion: deps['react-redux'] },
           '@tanstack/react-query': { singleton: true, requiredVersion: deps['@tanstack/react-query'] },
-          '@mfe/design-system': { singleton: true, requiredVersion: false },
           clsx:                 { singleton: true, requiredVersion: deps.clsx },
           'tailwind-merge':     { singleton: true, requiredVersion: deps['tailwind-merge'] },
           'ag-grid-community':  { singleton: true, requiredVersion: deps['ag-grid-community'] },
           'ag-grid-enterprise': { singleton: true, requiredVersion: deps['ag-grid-enterprise'] },
           'ag-grid-react':      { singleton: true, requiredVersion: deps['ag-grid-react'] },
-          '@platform/capabilities': { singleton: true, requiredVersion: false },
-          '@mfe/shared-http':   { singleton: true, requiredVersion: false },
-          '@mfe/i18n-dicts':    { singleton: true, requiredVersion: false },
-        },
+        } : {},
       }),
     ],
 
@@ -214,7 +213,7 @@ export default defineConfig(({ mode }) => {
         'ag-grid-react',
         '@sentry/react',
         'lucide-react',
-        // Monorepo packages — pre-bundle to eliminate @fs waterfall
+        // Monorepo packages — resolved via alias, pre-bundle for speed
         '@mfe/design-system',
         '@mfe/shared-http',
         '@mfe/i18n-dicts',

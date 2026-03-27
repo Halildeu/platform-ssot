@@ -34,7 +34,9 @@ export default defineConfig(({ mode }) => {
           './grid': './src/grid/index.ts',
           './shell-services': './src/app/services/shell-services.ts',
         },
-        shared: {
+        /* Dev: shared deps disabled — pnpm workspace hoisting guarantees singletons.
+         * Prod: shared enabled for proper chunk deduplication across remotes. */
+        shared: mode === 'production' ? {
           react: { singleton: true, requiredVersion: deps.react },
           'react-dom': { singleton: true, requiredVersion: deps['react-dom'] },
           'react-router': { singleton: true, requiredVersion: deps['react-router'] },
@@ -47,7 +49,7 @@ export default defineConfig(({ mode }) => {
           '@mfe/design-system': { singleton: true, requiredVersion: false },
           '@mfe/shared-http': { singleton: true, requiredVersion: false },
           '@mfe/i18n-dicts': { singleton: true, requiredVersion: false },
-        },
+        } : {},
       }),
     ],
 
