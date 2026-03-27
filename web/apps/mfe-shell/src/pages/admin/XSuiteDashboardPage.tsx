@@ -1,64 +1,117 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from '@mfe/design-system';
 import { isEnabled } from '../../lib/feature-flags';
 
-// Direct imports from design-system (already works in mfe-shell)
-// X-Charts: only import our custom SVG/React components, not AG Charts wrappers
-let ChartDashboard: React.FC<any> | null = null;
-let KPICard: React.FC<any> | null = null;
-let StatWidget: React.FC<any> | null = null;
-let SparklineChart: React.FC<any> | null = null;
-let ChartContainer: React.FC<any> | null = null;
-let ChartLegend: React.FC<any> | null = null;
-let DataGridFilterChips: React.FC<any> | null = null;
-let DataGridSelectionBar: React.FC<any> | null = null;
-let RichTextEditor: React.FC<any> | null = null;
-let FormRenderer: React.FC<any> | null = null;
+/* ---- Types ---- */
 
-// Feature-flag gated loading — kill switches allow runtime disable
-if (isEnabled('x-charts-dashboard')) {
-  try {
-    const xCharts = require('@mfe/x-charts');
-    ChartDashboard = xCharts.ChartDashboard;
-    KPICard = xCharts.KPICard;
-    StatWidget = xCharts.StatWidget;
-    SparklineChart = xCharts.SparklineChart;
-    ChartContainer = xCharts.ChartContainer;
-    ChartLegend = xCharts.ChartLegend;
-  } catch (e: unknown) {
-    console.warn('[X-Suite] x-charts not available:', e);
-  }
+interface XSuiteModules {
+  ChartDashboard: React.FC<any> | null;
+  KPICard: React.FC<any> | null;
+  StatWidget: React.FC<any> | null;
+  SparklineChart: React.FC<any> | null;
+  ChartContainer: React.FC<any> | null;
+  ChartLegend: React.FC<any> | null;
+  DataGridFilterChips: React.FC<any> | null;
+  DataGridSelectionBar: React.FC<any> | null;
+  RichTextEditor: React.FC<any> | null;
+  FormRenderer: React.FC<any> | null;
+  loading: boolean;
 }
 
-if (isEnabled('x-data-grid')) {
-  try {
-    const xGrid = require('@mfe/x-data-grid');
-    DataGridFilterChips = xGrid.DataGridFilterChips;
-    DataGridSelectionBar = xGrid.DataGridSelectionBar;
-  } catch (e: unknown) {
-    console.warn('[X-Suite] x-data-grid not available:', e);
+const INITIAL_STATE: XSuiteModules = {
+  ChartDashboard: null,
+  KPICard: null,
+  StatWidget: null,
+  SparklineChart: null,
+  ChartContainer: null,
+  ChartLegend: null,
+  DataGridFilterChips: null,
+  DataGridSelectionBar: null,
+  RichTextEditor: null,
+  FormRenderer: null,
+  loading: true,
+};
+
+/* ---- Async loader ---- */
+
+async function loadXSuiteModules(): Promise<Omit<XSuiteModules, 'loading'>> {
+  const modules: Omit<XSuiteModules, 'loading'> = { ...INITIAL_STATE };
+
+  // Feature-flag gated loading — kill switches allow runtime disable
+  if (isEnabled('x-charts-dashboard')) {
+    try {
+      const xCharts = await import('@mfe/x-charts');
+      modules.ChartDashboard = xCharts.ChartDashboard;
+      modules.KPICard = xCharts.KPICard;
+      modules.StatWidget = xCharts.StatWidget;
+      modules.SparklineChart = xCharts.SparklineChart;
+      modules.ChartContainer = xCharts.ChartContainer;
+      modules.ChartLegend = xCharts.ChartLegend;
+    } catch (e: unknown) {
+      console.warn('[X-Suite] x-charts not available:', e);
+    }
   }
+
+  if (isEnabled('x-data-grid')) {
+    try {
+      const xGrid = await import('@mfe/x-data-grid');
+      modules.DataGridFilterChips = xGrid.DataGridFilterChips;
+      modules.DataGridSelectionBar = xGrid.DataGridSelectionBar;
+    } catch (e: unknown) {
+      console.warn('[X-Suite] x-data-grid not available:', e);
+    }
+  }
+
+  if (isEnabled('x-editor-tiptap')) {
+    try {
+      const xEditor = await import('@mfe/x-editor');
+      modules.RichTextEditor = xEditor.RichTextEditor;
+    } catch (e: unknown) {
+      console.warn('[X-Suite] x-editor not available:', e);
+    }
+  }
+
+  if (isEnabled('x-form-builder')) {
+    try {
+      const xFormBuilder = await import('@mfe/x-form-builder');
+      modules.FormRenderer = xFormBuilder.FormRenderer;
+    } catch (e: unknown) {
+      console.warn('[X-Suite] x-form-builder not available:', e);
+    }
+  }
+
+  return modules;
 }
 
-if (isEnabled('x-editor-tiptap')) {
-  try {
-    const xEditor = require('@mfe/x-editor');
-    RichTextEditor = xEditor.RichTextEditor;
-  } catch (e: unknown) {
-    console.warn('[X-Suite] x-editor not available:', e);
-  }
-}
-
-if (isEnabled('x-form-builder')) {
-  try {
-    const xFormBuilder = require('@mfe/x-form-builder');
-    FormRenderer = xFormBuilder.FormRenderer;
-  } catch (e: unknown) {
-    console.warn('[X-Suite] x-form-builder not available:', e);
-  }
-}
+/* ---- Page component ---- */
 
 export default function XSuiteDashboardPage() {
+  const [m, setM] = useState<XSuiteModules>(INITIAL_STATE);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadXSuiteModules().then((result) => {
+      if (!cancelled) {
+        setM({ ...result, loading: false });
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const {
+    ChartDashboard, KPICard, StatWidget, SparklineChart,
+    ChartContainer, ChartLegend, DataGridFilterChips,
+    DataGridSelectionBar, RichTextEditor, FormRenderer, loading,
+  } = m;
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center p-6">
+        <Text variant="secondary" className="text-sm">Loading X Suite packages…</Text>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-8 p-6">
       <div>

@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "start": "npx kill-port 3000 || true && webpack serve --config webpack.dev.js --no-watch-options-stdin",
+    "start:vite": "npx kill-port 3000 || true && vite",
     "build": "webpack --mode=production --config webpack.prod.js",
+    "build:vite": "vite build",
+    "preview:vite": "vite preview",
     "generate:manifest-schema": "node scripts/generate-page-manifest-schema.mjs",
     "generate:pseudo-locale": "node scripts/generate-pseudolocale.mjs",
     "test": "vitest run --environment jsdom",

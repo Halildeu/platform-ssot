@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Text } from "@mfe/design-system";
 
@@ -13,88 +13,100 @@ import { Text } from "@mfe/design-system";
 /*    ?component=KPICard   — component name to render                  */
 /*    ?variant=default     — (reserved) variant key                    */
 /*                                                                     */
-/*  This page tries to load each X package via try/catch require().    */
+/*  This page tries to load each X package via async import().         */
 /*  If the package is not bundled, a friendly message is shown.        */
 /* ------------------------------------------------------------------ */
 
-/* ---- Package component maps (populated at module load) ---- */
+/* ---- Types ---- */
 
-const _runtimeComponents: Record<string, React.ComponentType<any>> = {};
-const _loadErrors: string[] = [];
-
-try {
-  const xCharts = require("@mfe/x-charts");
-  for (const key of [
-    "KPICard", "SparklineChart", "MiniChart", "ChartDashboard",
-    "StatWidget", "ChartLegend", "ChartContainer", "GaugeChart",
-    "RadarChart", "ScatterChart", "TreemapChart", "HeatmapChart",
-    "WaterfallChart",
-  ]) {
-    if (xCharts[key]) _runtimeComponents[key] = xCharts[key];
-  }
-} catch {
-  _loadErrors.push("@mfe/x-charts");
+interface RuntimeState {
+  components: Record<string, React.ComponentType<any>>;
+  loadErrors: string[];
+  loading: boolean;
 }
 
-try {
-  const xGrid = require("@mfe/x-data-grid");
-  for (const key of [
-    "DataGridFilterChips", "DataGridSelectionBar", "MasterDetailGrid",
-    "TreeDataGrid", "PivotGrid", "EditableGrid", "RowGroupingGrid",
-  ]) {
-    if (xGrid[key]) _runtimeComponents[key] = xGrid[key];
-  }
-} catch {
-  _loadErrors.push("@mfe/x-data-grid");
-}
+/* ---- Async package loader ---- */
 
-try {
-  const xEditor = require("@mfe/x-editor");
-  for (const key of [
-    "RichTextEditor", "EditorToolbar", "SlashCommandMenu",
-    "MentionList", "EditorTableMenu", "EditorLinkDialog",
-    "EditorImageUpload", "EditorMenuBubble",
-  ]) {
-    if (xEditor[key]) _runtimeComponents[key] = xEditor[key];
-  }
-} catch {
-  _loadErrors.push("@mfe/x-editor");
-}
+async function loadRuntimePackages(): Promise<Omit<RuntimeState, "loading">> {
+  const components: Record<string, React.ComponentType<any>> = {};
+  const loadErrors: string[] = [];
 
-try {
-  const xForm = require("@mfe/x-form-builder");
-  for (const key of [
-    "FormRenderer", "FieldRenderer", "FormPreview", "FormSummary",
-    "MultiStepForm", "RepeatableFieldGroup",
-  ]) {
-    if (xForm[key]) _runtimeComponents[key] = xForm[key];
+  try {
+    const xCharts = await import("@mfe/x-charts");
+    for (const key of [
+      "KPICard", "SparklineChart", "MiniChart", "ChartDashboard",
+      "StatWidget", "ChartLegend", "ChartContainer", "GaugeChart",
+      "RadarChart", "ScatterChart", "TreemapChart", "HeatmapChart",
+      "WaterfallChart",
+    ]) {
+      if (xCharts[key]) components[key] = xCharts[key];
+    }
+  } catch {
+    loadErrors.push("@mfe/x-charts");
   }
-} catch {
-  _loadErrors.push("@mfe/x-form-builder");
-}
 
-try {
-  const xKanban = require("@mfe/x-kanban");
-  for (const key of [
-    "KanbanBoard", "KanbanColumn", "KanbanCard", "KanbanToolbar",
-    "KanbanSwimlane", "KanbanCardDetail", "KanbanMetrics",
-  ]) {
-    if (xKanban[key]) _runtimeComponents[key] = xKanban[key];
+  try {
+    const xGrid = await import("@mfe/x-data-grid");
+    for (const key of [
+      "DataGridFilterChips", "DataGridSelectionBar", "MasterDetailGrid",
+      "TreeDataGrid", "PivotGrid", "EditableGrid", "RowGroupingGrid",
+    ]) {
+      if (xGrid[key]) components[key] = xGrid[key];
+    }
+  } catch {
+    loadErrors.push("@mfe/x-data-grid");
   }
-} catch {
-  _loadErrors.push("@mfe/x-kanban");
-}
 
-try {
-  const xScheduler = require("@mfe/x-scheduler");
-  for (const key of [
-    "Scheduler", "SchedulerToolbar", "AgendaView", "EventForm",
-    "SchedulerEvent", "ResourceView",
-  ]) {
-    if (xScheduler[key]) _runtimeComponents[key] = xScheduler[key];
+  try {
+    const xEditor = await import("@mfe/x-editor");
+    for (const key of [
+      "RichTextEditor", "EditorToolbar", "SlashCommandMenu",
+      "MentionList", "EditorTableMenu", "EditorLinkDialog",
+      "EditorImageUpload", "EditorMenuBubble",
+    ]) {
+      if (xEditor[key]) components[key] = xEditor[key];
+    }
+  } catch {
+    loadErrors.push("@mfe/x-editor");
   }
-} catch {
-  _loadErrors.push("@mfe/x-scheduler");
+
+  try {
+    const xForm = await import("@mfe/x-form-builder");
+    for (const key of [
+      "FormRenderer", "FieldRenderer", "FormPreview", "FormSummary",
+      "MultiStepForm", "RepeatableFieldGroup",
+    ]) {
+      if (xForm[key]) components[key] = xForm[key];
+    }
+  } catch {
+    loadErrors.push("@mfe/x-form-builder");
+  }
+
+  try {
+    const xKanban = await import("@mfe/x-kanban");
+    for (const key of [
+      "KanbanBoard", "KanbanColumn", "KanbanCard", "KanbanToolbar",
+      "KanbanSwimlane", "KanbanCardDetail", "KanbanMetrics",
+    ]) {
+      if (xKanban[key]) components[key] = xKanban[key];
+    }
+  } catch {
+    loadErrors.push("@mfe/x-kanban");
+  }
+
+  try {
+    const xScheduler = await import("@mfe/x-scheduler");
+    for (const key of [
+      "Scheduler", "SchedulerToolbar", "AgendaView", "EventForm",
+      "SchedulerEvent", "ResourceView",
+    ]) {
+      if (xScheduler[key]) components[key] = xScheduler[key];
+    }
+  } catch {
+    loadErrors.push("@mfe/x-scheduler");
+  }
+
+  return { components, loadErrors };
 }
 
 /* ---- Default props (same as PlaygroundPreview) ---- */
@@ -124,11 +136,35 @@ export default function XSuiteRuntimePreview() {
   const componentName = params.get("component") || "";
   const _variant = params.get("variant") || "default";
 
+  const [state, setState] = useState<RuntimeState>({
+    components: {},
+    loadErrors: [],
+    loading: true,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+    loadRuntimePackages().then((result) => {
+      if (!cancelled) {
+        setState({ ...result, loading: false });
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
   const { Component, defaultProps } = useMemo(() => {
-    const Comp = _runtimeComponents[componentName] || null;
+    const Comp = state.components[componentName] || null;
     const dp = RUNTIME_DEFAULT_PROPS[componentName] || {};
     return { Component: Comp, defaultProps: dp };
-  }, [componentName]);
+  }, [componentName, state.components]);
+
+  if (state.loading) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center p-8">
+        <Text variant="secondary" className="text-sm">Loading X Suite packages…</Text>
+      </div>
+    );
+  }
 
   if (!componentName) {
     return (
@@ -140,9 +176,9 @@ export default function XSuiteRuntimePreview() {
           <Text variant="secondary" className="mt-1 text-xs">
             Add ?component=ComponentName to the URL to preview a component.
           </Text>
-          {_loadErrors.length > 0 && (
+          {state.loadErrors.length > 0 && (
             <Text variant="secondary" className="mt-3 text-xs">
-              Unavailable packages: {_loadErrors.join(", ")}
+              Unavailable packages: {state.loadErrors.join(", ")}
             </Text>
           )}
         </div>
@@ -162,9 +198,9 @@ export default function XSuiteRuntimePreview() {
             runtime context. The package may not be installed or the component
             is not exported.
           </Text>
-          {_loadErrors.length > 0 && (
+          {state.loadErrors.length > 0 && (
             <Text variant="secondary" className="mt-3 text-xs">
-              Failed packages: {_loadErrors.join(", ")}
+              Failed packages: {state.loadErrors.join(", ")}
             </Text>
           )}
         </div>
