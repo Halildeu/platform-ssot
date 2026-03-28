@@ -230,6 +230,7 @@ export const FilterValueEditor: React.FC<FilterValueEditorProps> = ({
                 </label>
               ))
             )}
+          </div>
         </div>
       );
     }
